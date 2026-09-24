@@ -287,16 +287,28 @@ function __rrd_proxy_init($logopt = 'WEBLOG')
     if ($font !== '') {
         // rrdproxy splits the value on blanks and keeps any quotes as part of it.
         if (rrdtool_proxy_token_is_safe($font)) {
-            rrdtool_execute('setenv RRD_DEFAULT_FONT ' . $font, false, RRDTOOL_OUTPUT_NULL, $rrdproxy, $logopt);
+            $set = rrdtool_execute('setenv RRD_DEFAULT_FONT ' . $font, false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt);
+            if ($set === null) {
+                cacti_log('CACTI2RRDP ERROR: The RRDtool Proxy Server did not answer during session setup.', false, $logopt, POLLER_VERBOSITY_LOW);
+                socket_close($rrdp_socket);
+                return false;
+            }
+            if ($set === false) {
+                cacti_log('CACTI2RRDP WARNING: The RRDtool Proxy Server refused the default font path.', false, $logopt, POLLER_VERBOSITY_LOW);
+            }
         } else {
             cacti_log('CACTI2RRDP WARNING: The RRDtool default font path contains a blank, a quote or a backslash and was not sent to the RRDtool Proxy Server.', false, $logopt, POLLER_VERBOSITY_LOW);
         }
     }
 
     // rrdproxy has no plaintext mode and answers this with an error. The request
-    // is still sent so the proxy sees the same session, but the answer is ignored:
-    // frames stay encrypted whatever it says.
-    rrdtool_execute('setcnn encryption off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt);
+    // is still sent so the proxy sees the same session, and frames stay encrypted
+    // whatever it says; only a missing answer means the session is gone.
+    if (rrdtool_execute('setcnn encryption off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt) === null) {
+        cacti_log('CACTI2RRDP ERROR: The RRDtool Proxy Server did not answer during session setup.', false, $logopt, POLLER_VERBOSITY_LOW);
+        socket_close($rrdp_socket);
+        return false;
+    }
 
     return $rrdproxy;
 }
