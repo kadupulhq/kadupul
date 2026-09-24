@@ -30,6 +30,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
+        // cli_parity_scenarios.py compares the shim against this frozen original.
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/analyze_database.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {

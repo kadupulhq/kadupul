@@ -160,6 +160,7 @@ def main():
         'script-server-test-hash': 'Integration test source differs',
         'missing-script-server-check': 'Incomplete Symfony integration checks',
         'cli-parity-test-hash': 'Integration test source differs',
+        'cli-original-test-hash': 'Integration test source differs',
         'missing-cli-parity-check': 'Incomplete Symfony integration checks',
     }
     for source in required:
@@ -206,6 +207,8 @@ def main():
                 evidence['checks'].remove('script server refuses includes outside the base path')
             elif case == 'cli-parity-test-hash':
                 evidence['source_sha256']['tests/Symfony/cli_parity_scenarios.py'] = '0' * 64
+            elif case == 'cli-original-test-hash':
+                evidence['source_sha256']['tests/Fixtures/legacy-cli/analyze_database.php'] = '0' * 64
             elif case == 'missing-cli-parity-check':
                 evidence['checks'].remove('analyze: shim analyzes every table through the kernel container')
             elif case == 'missing-device-creation-check':
