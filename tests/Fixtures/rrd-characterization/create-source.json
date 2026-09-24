@@ -1,0 +1,51 @@
+[
+    {
+        "returned": "./rrdtool create \\\n<DIR>/rra/router_traffic_11.rrd \\\n--start 0 --step 300  \\\nDS:traffic_in:COUNTER:600:0:1000000000 \\\nDS:errors_inout_per202:COUNTER:600:10:11 \\\nDS:drops:ABSOLUTE:600:0:U \\\nDS:rate:DERIVE:600:0:42 \\\nDS:gauge:GAUGE:120:-5:U \\\nDS:dderive:DDERIVE:600:U:U \\\nRRA:AVERAGE:0.5:1:600 \\\nRRA:AVERAGE:0.5:6:700 \\\nRRA:MAX:0.5:1:600 \\\nRRA:LAST:0.5:288:797 \\\n",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            11,
+            true
+        ]
+    },
+    {
+        "returned": "./rrdtool create \\\n<DIR>/rra/plain_12.rrd \\\n--start 0 --step 60  \\\nDS:value:GAUGE:120:U:10000000000000 \\\nRRA:AVERAGE:0.5:1:600 \\\n",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            12,
+            true
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            13,
+            true
+        ]
+    },
+    {
+        "returned": "./rrdtool create \\\n<DIR>/rra/3/nested_14.rrd \\\n--start 0 --step 300  \\\nDS:traffic_in:COUNTER:600:0:1000000000 \\\nDS:errors_inout_per202:COUNTER:600:10:11 \\\nDS:drops:ABSOLUTE:600:0:U \\\nDS:rate:DERIVE:600:0:42 \\\nDS:gauge:GAUGE:120:-5:U \\\nDS:dderive:DDERIVE:600:U:U \\\nRRA:AVERAGE:0.5:1:600 \\\nRRA:AVERAGE:0.5:6:700 \\\nRRA:MAX:0.5:1:600 \\\nRRA:LAST:0.5:288:797 \\\n",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            14,
+            true
+        ]
+    },
+    {
+        "returned": true,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            "rra/3"
+        ]
+    }
+]

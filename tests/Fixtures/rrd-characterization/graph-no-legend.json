@@ -1,0 +1,97 @@
+{
+    "returned": "",
+    "printed": "",
+    "diagnostics": [],
+    "commands": [
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info rra/router_traffic_11.rrd\r\nquit\r\n"
+            ]
+        },
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info rra/router_errors_12.rrd\r\nquit\r\n"
+            ]
+        },
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "graph -",
+                "--imgformat=PNG",
+                "--start='1700000000'",
+                "--end='1700003600'",
+                "--pango-markup ",
+                "--title='Traffic &amp; &lt;errors&gt; &quot;quoted&quot; &apos;single&apos; 100% a:b café router-1.example uplink 'A' \"B\" & <C>: 10%'",
+                "--vertical-label='bits/s &amp; &lt;b&gt; &quot;q&quot; 5% x:y 日本'",
+                "--slope-mode",
+                "--base=1000",
+                "--height=200",
+                "--width=700",
+                "--tabwidth '40'",
+                "--rigid",
+                "--alt-autoscale",
+                "--upper-limit='100'",
+                "--lower-limit='0'",
+                "--no-legend",
+                "COMMENT:\"From 2023/11/14 22\\:13\\:20 To 2023/11/14 23\\:13\\:20\\c\"",
+                "COMMENT:\"  \\n\"",
+                "--color BACK#F3F3F3",
+                "--color CANVAS#FDFDFD",
+                "--color SHADEA#CBCBCB",
+                "--color SHADEB#999999",
+                "--color FONT#000000",
+                "--color AXIS#2C4D43",
+                "--color ARROW#2C4D43",
+                "--color FRAME#2C4D43",
+                "--border 1",
+                "--font TITLE:7.7:'Arial'",
+                "--font AXIS:8:'Arial'",
+                "--font LEGEND:8:'Courier'",
+                "--font UNIT:8:'Arial'",
+                "--font WATERMARK:6:'Arial'",
+                "DEF:a='rra/router_traffic_11.rrd':'traffic_in':AVERAGE",
+                "DEF:b='rra/router_traffic_11.rrd':'traffic_in':MAX",
+                "DEF:c='rra/router_traffic_11.rrd':'traffic_in':MIN",
+                "DEF:d='rra/router_traffic_11.rrd':'traffic_out':AVERAGE",
+                "DEF:e='rra/router_errors_12.rrd':'errors':AVERAGE",
+                "DEF:f='rra/router_errors_12.rrd':'errors':MAX",
+                "CDEF:cdeff='d,8,*'",
+                "VDEF:vdefg='cdeff,95,PERCENT'",
+                "CDEF:cdefj='TIME,<now-300>,GT,f,f,UN,0,f,IF,IF,U,/'",
+                "AREA:a#00CF00FF:         ",
+                "LINE1:cdeff#002A9780::dashes=5,3:dash-offset=2",
+                "GPRINT:vdefg:'%8.2lf %s' ",
+                "GPRINT:d:LAST:'%8.2lf %s' ",
+                "LINE2:e#FF0000FF:",
+                "SHIFT:e:3600",
+                "LINE3:cdefj#0000FFFF:",
+                "AREA:a#00FF004D::STACK",
+                "SHIFT:a:60",
+                "LINE1.50:d#123456FF::STACK:dashes=4",
+                "TICK:e#FF00FFFF:0.5:",
+                "HRULE:95#FF9900FF::dashes=2:dash-offset=1",
+                "VRULE:1700001800#000000FF:        \r\nquit\r\n"
+            ]
+        }
+    ],
+    "args": [
+        7,
+        0,
+        {
+            "graph_start": 1700000000,
+            "graph_end": 1700003600,
+            "graph_nolegend": true
+        },
+        false,
+        [],
+        0
+    ]
+}

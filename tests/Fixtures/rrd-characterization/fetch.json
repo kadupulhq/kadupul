@@ -1,0 +1,138 @@
+[
+    {
+        "returned": {
+            "data_source_names": [
+                "traffic_in",
+                "traffic_out"
+            ],
+            "timestamp": {
+                "start_time": "1700000300",
+                "end_time": "1700000900"
+            },
+            "values": [
+                {
+                    "1700000300": "1.0000000000e+00",
+                    "1700000900": "3"
+                },
+                {
+                    "1700000600": "2.5000000000e+03"
+                }
+            ]
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "fetch <DIR>/rra/router_traffic_11.rrd AVERAGE -s 1700000000 -e 1700001000 -r 300\r\nquit\r\n"
+                ]
+            }
+        ],
+        "args": [
+            11,
+            1700000000,
+            1700001000
+        ]
+    },
+    {
+        "returned": {
+            "data_source_names": [
+                "traffic_in",
+                "traffic_out"
+            ],
+            "timestamp": {
+                "start_time": "1700000300",
+                "end_time": "1700000900"
+            },
+            "values": [
+                {
+                    "1700000300": "1.0000000000e+00",
+                    "1700000600": "U",
+                    "1700000900": "3"
+                },
+                {
+                    "1700000300": "U",
+                    "1700000600": "2.5000000000e+03",
+                    "1700000900": "U"
+                }
+            ]
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "fetch <DIR>/rra/router_traffic_11.rrd MAX -s 1700000000 -e 1700001000 -r 60\r\nquit\r\n"
+                ]
+            }
+        ],
+        "args": [
+            11,
+            1700000000,
+            1700001000,
+            60,
+            true,
+            null,
+            "MAX"
+        ]
+    },
+    {
+        "returned": {
+            "data_source_names": [
+                "traffic_in",
+                "traffic_out"
+            ],
+            "timestamp": {
+                "start_time": "1700000300",
+                "end_time": "1700000900"
+            },
+            "values": [
+                {
+                    "1700000300": "1.0000000000e+00",
+                    "1700000900": "3"
+                },
+                {
+                    "1700000600": "2.5000000000e+03"
+                }
+            ]
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "fetch rra/other.rrd LAST -s 1700000000 -e 1700001000 -r 300\r\nquit\r\n"
+                ]
+            }
+        ],
+        "args": [
+            0,
+            1700000000,
+            1700001000,
+            0,
+            false,
+            "rra/other.rrd",
+            "LAST"
+        ]
+    },
+    {
+        "returned": [],
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            0,
+            1700000000,
+            1700001000
+        ]
+    }
+]

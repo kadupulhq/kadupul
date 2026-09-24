@@ -1,0 +1,58 @@
+[
+    {
+        "returned": "update x.rrd N:1",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            "update x.rrd N:1",
+            "public key"
+        ]
+    },
+    {
+        "returned": "OK u:0.00",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            "OK u:0.00"
+        ]
+    },
+    {
+        "returned": {
+            "thrown": "Error",
+            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            "update x.rrd N:1",
+            "public key"
+        ]
+    },
+    {
+        "returned": {
+            "thrown": "Error",
+            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            "010QUJD"
+        ]
+    },
+    {
+        "returned": {
+            "thrown": "Error",
+            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            "POLLER"
+        ]
+    }
+]

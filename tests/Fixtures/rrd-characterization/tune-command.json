@@ -1,0 +1,102 @@
+[
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "tune",
+                    "<DIR>/rra/router_traffic_21.rrd",
+                    "--heartbeat",
+                    "traffic_in:600",
+                    "--minimum",
+                    "traffic_in:U",
+                    "--maximum",
+                    "traffic_in:1e9",
+                    "--data-source-type",
+                    "traffic_in:DERIVE",
+                    "--data-source-rename",
+                    "traffic_in:in'bound \"x\""
+                ],
+                "stdin": [
+                    ""
+                ]
+            }
+        ],
+        "args": [
+            {
+                "data_source_id": 21,
+                "data-source-type": "3",
+                "heartbeat": "600",
+                "minimum": "U",
+                "maximum": "1e9",
+                "data-source-rename": "in'bound \"x\""
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [
+            "2: Undefined array key \"\""
+        ],
+        "commands": [
+            {
+                "argv": [
+                    "tune",
+                    "<DIR>/rra/router_traffic_21.rrd",
+                    "--minimum",
+                    "traffic_in:0"
+                ],
+                "stdin": [
+                    ""
+                ]
+            }
+        ],
+        "args": [
+            {
+                "heartbeat": "",
+                "minimum": "0",
+                "maximum": "",
+                "data-source-type": "",
+                "data-source-rename": "",
+                "data_source_id": 21
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [
+            "2: Undefined array key \"\""
+        ],
+        "commands": [],
+        "args": [
+            {
+                "heartbeat": "",
+                "minimum": "",
+                "maximum": "",
+                "data-source-type": "",
+                "data-source-rename": "",
+                "data_source_id": 21
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            {
+                "data_source_id": 22,
+                "data-source-type": "3",
+                "heartbeat": "600",
+                "minimum": "U",
+                "maximum": "1e9",
+                "data-source-rename": "in'bound \"x\""
+            }
+        ]
+    }
+]

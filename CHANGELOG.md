@@ -239,6 +239,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- Add tests that pin the graph, export, create, tune and fetch commands `lib/rrd.php` sends to RRDtool, so moving that file into the Graphing module can be checked against current output.
+
 - Add a generated inventory of HTTP entry points and their gates, verified in CI, and a real-install sweep that requires anonymous, revoked-realm and console-only callers to be refused.
 
 - Add a Symfony device details page with permission-filtered metadata, site, status and escaped notes, preserving inventory navigation.

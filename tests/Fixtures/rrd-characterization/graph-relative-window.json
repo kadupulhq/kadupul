@@ -1,0 +1,27 @@
+{
+    "returned": null,
+    "printed": "<pre>./rrdtool graph - \\\n--imgformat=PNG \\\n--start=&apos;-86400&apos; \\\n--end=&apos;-300&apos; \\\n--pango-markup  \\\n--title=&apos;Traffic &amp; &lt;errors&gt; &quot;quoted&quot; &apos;single&apos; 100% a:b café router-1.example uplink &apos;A&apos; &quot;B&quot; &amp;\n&lt;C&gt;: 10%&apos; \\\n--vertical-label=&apos;bits/s &amp; &lt;b&gt; &quot;q&quot; 5% x:y 日本&apos; \\\n--slope-mode \\\n--base=1000 \\\n--height=200 \\\n--width=700 \\\n--tabwidth &apos;40&apos; \\\n--rigid \\\n--alt-autoscale \\\n--upper-limit=&apos;100&apos; \\\n--lower-limit=&apos;0&apos; \\\nCOMMENT:&quot;From <date> To <date>\\c&quot; \\\nCOMMENT:&quot;  \\n&quot; \\\n--color BACK#F3F3F3 \\\n--color CANVAS#FDFDFD \\\n--color SHADEA#CBCBCB \\\n--color SHADEB#999999 \\\n--color FONT#000000 \\\n--color AXIS#2C4D43 \\\n--color ARROW#2C4D43 \\\n--color FRAME#2C4D43 \\\n--border 1 \\\n--font TITLE:11:&apos;Arial&apos; \\\n--font AXIS:8:&apos;Arial&apos; \\\n--font LEGEND:8:&apos;Courier&apos; \\\n--font UNIT:8:&apos;Arial&apos; \\\n--font WATERMARK:6:&apos;Arial&apos; \\\nDEF:a=&apos;rra/router_traffic_11.rrd&apos;:&apos;traffic_in&apos;:AVERAGE \\\nAREA:a#3366CC99:&apos;Inbound\\: 50%&apos; </pre><span class=\"textInfo\">RRDtool Command lengths = 912 characters.</span><br>",
+    "diagnostics": [],
+    "commands": [
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info rra/router_traffic_11.rrd\r\nquit\r\n"
+            ]
+        }
+    ],
+    "args": [
+        7,
+        0,
+        {
+            "graph_start": 0,
+            "graph_end": 0,
+            "print_source": true
+        },
+        false,
+        [],
+        0
+    ]
+}
