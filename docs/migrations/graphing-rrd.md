@@ -63,9 +63,10 @@ is proposed separately. RRDtool proxy splits each command on whitespace and
 resolves path operands and `DEF` paths exactly as sent, so quoting breaks its
 path checks. Array commands already go to the proxy as bare tokens, and an
 argument that is empty or holds whitespace, a quote, a backslash, CR, LF or NUL
-is refused before anything is sent. String commands (create, update and graph
-`DEF` paths) still carry the encoder's quoting; the proxy hardening slice turns
-them into arrays before the proxy client works again.
+is refused before anything is sent. The create and update strings write their
+path the same way for the proxy. Graph `DEF` paths still carry the encoder's
+quoting; the proxy hardening slice turns graph commands into arrays before the
+proxy client works again.
 
 Titles, vertical labels and legend text are HTML-escaped before they reach
 RRDtool, so the characters `&`, `<` and `>` reach the image as entities. That output is

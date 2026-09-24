@@ -498,6 +498,32 @@ function rrdtool_pipe_command(array $command, $logopt)
     }
 }
 
+/** True when the RRDtool proxy can carry the argument as one bare token. */
+function rrdtool_proxy_token_is_safe($argument)
+{
+    $argument = (string) $argument;
+
+    return $argument !== '' && !preg_match('/[\s\'"\\\\\0]/', $argument);
+}
+
+/**
+ * Write an RRD path for a command that rrdtool_execute() sends as a string:
+ * quoted for the local pipe, bare for the RRDtool proxy, which resolves paths
+ * as sent. False when the path cannot be sent on the transport in use; a line
+ * break is refused rather than removed, since removing it names another file.
+ */
+function rrdtool_command_path($path)
+{
+    global $config;
+
+    $path = (string) $path;
+    if (($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location')) {
+        return rrdtool_proxy_token_is_safe($path) ? $path : false;
+    }
+
+    return strpbrk($path, "\r\n\0") === false ? rrdtool_pipe_quote($path) : false;
+}
+
 /**
  * Join an argument array for the RRDtool proxy as bare tokens. rrdproxy splits
  * on whitespace and resolves path operands with realpath() as sent
@@ -509,8 +535,7 @@ function rrdtool_proxy_command(array $command, $logopt)
 {
     $verb = array_shift($command);
     foreach ($command as $argument) {
-        $argument = (string) $argument;
-        if ($argument === '' || preg_match('/[\s\'"\\\\\0]/', $argument)) {
+        if (!rrdtool_proxy_token_is_safe($argument)) {
             cacti_log('ERROR: RRDtool ' . $verb . ' was not sent to the RRDtool proxy. An argument is empty or contains whitespace, a quote, a backslash or NUL.', false, $logopt);
             return false;
         }
@@ -1198,10 +1223,9 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        try {
-            $quoted_path = rrdtool_pipe_quote($data_source_path);
-        } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
-            cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. ' . $e->getMessage(), false, 'POLLER');
+        $quoted_path = rrdtool_command_path($data_source_path);
+        if ($quoted_path === false) {
+            cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its path cannot be sent to RRDtool.', false, 'POLLER');
             return false;
         }
 
@@ -1251,10 +1275,9 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
         if (is_array($rrd_fields['times']) && cacti_sizeof($rrd_fields['times'])) {
             // Samples for a path RRDtool cannot be given stay queued, as for
             // any other failed update.
-            try {
-                $quoted_path = rrdtool_pipe_quote($rrd_path);
-            } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
-                cacti_log('ERROR: RRD pending samples retained for Data Source ' . $rrd_fields['local_data_id'] . '. ' . $e->getMessage(), false, 'POLLER');
+            $quoted_path = rrdtool_command_path($rrd_path);
+            if ($quoted_path === false) {
+                cacti_log('ERROR: RRD pending samples retained for Data Source ' . $rrd_fields['local_data_id'] . '. Its path cannot be sent to RRDtool.', false, 'POLLER');
                 $failed = true;
                 continue;
             }
