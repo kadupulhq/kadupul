@@ -490,8 +490,13 @@ function rrdtool_execute()
 function rrdtool_pipe_command(array $command, $logopt)
 {
     $verb = array_shift($command);
+    $encoder = rrdtool_pipe_encoder();
     try {
-        return $verb . ' ' . implode(' ', array_map('rrdtool_pipe_quote', $command));
+        // Arguments are refused, not cleaned: removing a line break from a
+        // path would name another file.
+        return $verb . ' ' . implode(' ', array_map(function ($argument) use ($encoder) {
+            return $encoder->quote((string) $argument);
+        }, $command));
     } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
         cacti_log('ERROR: RRDtool ' . $verb . ' was not run. ' . $e->getMessage(), false, $logopt);
         return false;
@@ -3125,6 +3130,11 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
  */
 function rrdtool_pipe_quote($argument)
 {
+    return rrdtool_pipe_encoder()->quote(str_replace(array("\r", "\n"), '', (string) $argument));
+}
+
+function rrdtool_pipe_encoder()
+{
     // This file can be loaded without include/global.php, and so without the
     // Composer autoloader, as the RRD maintenance tests do.
     if (!class_exists(\Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder::class)) {
@@ -3132,9 +3142,7 @@ function rrdtool_pipe_quote($argument)
         require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/PipeEncoder.php';
     }
 
-    $encoder = new \Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder();
-
-    return $encoder->quote(str_replace(array("\r", "\n"), '', (string) $argument));
+    return new \Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder();
 }
 
 /**

@@ -863,11 +863,9 @@ function rrdcheck_rrdtool_execute($command, &$pipes)
             $command_line = array_shift($command);
 
             if (cacti_sizeof($command)) {
-                try {
-                    $command_line .= ' ' . implode(' ', array_map('rrdtool_pipe_quote', $command));
-                } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
-                    cacti_log('ERROR: RRDtool ' . $command_line . ' was not run. ' . $e->getMessage(), false, 'RRDCHECK');
+                $command_line = rrdtool_pipe_command(array_merge(array($command_line), $command), 'RRDCHECK');
 
+                if ($command_line === false) {
                     return;
                 }
             }
