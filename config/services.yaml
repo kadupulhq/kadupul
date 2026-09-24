@@ -5,6 +5,9 @@ services:
 
     Kadupul\Platform\Infrastructure\:
         resource: '../src/Platform/Infrastructure/'
+        # Built by InstallationConnectionMiddleware around each DBAL driver; a
+        # container service of its own would have no driver to wrap.
+        exclude: '../src/Platform/Infrastructure/Doctrine/InstallationConnectionDriver.php'
 
     # Public so a cli/ shim can reach it through the kernel container before running
     # a command, instead of passing the output mode as a hidden command option.

@@ -527,7 +527,7 @@ dynamic_include	./script_server.php:300	            include_once($include_file);
 dynamic_include	./scripts/ss_netsnmp_lmsensors.php:26		include($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./snmpagent_persist.php:147				include( $path_mibcache );
 dynamic_include	./spikekill.php:16	include_once($config['base_path'] . '/lib/spikekill.php');
-dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.php:111	        require $path;
+dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.php:124	        require $path;
 dynamic_include	./tools/verify-offline.php:17	$kernel = require $root . '/config/bootstrap.php';
 fs_write	./cactid.php:82		$STDERR = fopen('/dev/null', 'wb');
 fs_write	./cactid.php:93		$STDERR = fopen('null', 'wb');

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class InstallationConfiguration implements LegacyConfiguration
 {
     private ?array $configuration = null;
+    private ?array $settings = null;
 
     public function __construct(private readonly string $projectDir, private readonly ?RequestStack $requests = null) {}
 
@@ -95,12 +96,24 @@ final class InstallationConfiguration implements LegacyConfiguration
     }
 
     /**
+     * config.php is read once per instance, so values() and databaseTargets()
+     * derive from the same load. A refused load is not kept and is refused
+     * again on the next call.
+     *
+     * @return array<string, mixed>
+     */
+    private function load(): array
+    {
+        return $this->settings ??= $this->read();
+    }
+
+    /**
      * Variables that include/config.php defines. Trusted installation
      * configuration only; never load global.php or a page.
      *
      * @return array<string, mixed>
      */
-    private function load(): array
+    private function read(): array
     {
         // config.php may write into $config, as it does under global.php.
         $config = [];

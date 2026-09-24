@@ -10,6 +10,7 @@ namespace Kadupul\Platform\Infrastructure\Doctrine;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Doctrine\DBAL\Driver\Middleware\AbstractDriverMiddleware;
+use Kadupul\Platform\Infrastructure\DatabaseTls;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 
 /**
@@ -39,18 +40,7 @@ final class InstallationConnectionDriver extends AbstractDriverMiddleware
         if (array_any(['host', 'database'], static fn(string $key): bool => str_contains((string) $config[$key], ';') || str_contains((string) $config[$key], "\0"))) {
             throw new \RuntimeException('Invalid database configuration.');
         }
-        $options = $params['driverOptions'] + [\PDO::ATTR_EMULATE_PREPARES => false];
-        if ($config['ssl']) {
-            if ($config['ssl_ca'] === '') {
-                throw new \RuntimeException('Database TLS requires a CA certificate.');
-            }
-            $options[\Pdo\Mysql::ATTR_SSL_CA] = $config['ssl_ca'];
-            $options[\Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = true;
-            if ($config['ssl_cert'] !== '') {
-                $options[\Pdo\Mysql::ATTR_SSL_CERT] = $config['ssl_cert'];
-                $options[\Pdo\Mysql::ATTR_SSL_KEY] = $config['ssl_key'];
-            }
-        }
+        $options = array_replace($params['driverOptions'] + [\PDO::ATTR_EMULATE_PREPARES => false], DatabaseTls::options($config));
 
         return parent::connect(array_replace($params, [
             'host' => (string) $config['host'],

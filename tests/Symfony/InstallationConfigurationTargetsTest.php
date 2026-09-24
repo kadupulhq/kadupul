@@ -103,4 +103,32 @@ final class InstallationConfigurationTargetsTest extends TestCase
         $this->expectExceptionMessage('Online primary configuration is required for collector Sites administration.');
         (new InstallationConfiguration($this->root, $requests))->values();
     }
+
+    public function testConfigurationFileIsRequiredOnlyOnce(): void
+    {
+        // A global survives the require's own scope, so it counts the loads.
+        $configuration = $this->config("\$GLOBALS['kadupul_config_loads'] = (\$GLOBALS['kadupul_config_loads'] ?? 0) + 1;\n");
+        try {
+            $configuration->databaseTargets();
+            $configuration->values();
+            $configuration->databaseTargets();
+            (new CollectorIdentity($configuration))->isRemoteCollector();
+            self::assertSame(1, $GLOBALS['kadupul_config_loads']);
+        } finally {
+            unset($GLOBALS['kadupul_config_loads']);
+        }
+    }
+
+    public function testARefusedLoadIsRefusedAgain(): void
+    {
+        $configuration = new InstallationConfiguration($this->root);
+        foreach ([1, 2] as $attempt) {
+            try {
+                $configuration->databaseTargets();
+                self::fail('A missing config.php was accepted on attempt ' . $attempt . '.');
+            } catch (\RuntimeException $error) {
+                self::assertSame('Installation configuration is required.', $error->getMessage());
+            }
+        }
+    }
 }
