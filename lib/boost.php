@@ -1628,6 +1628,13 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
         return 'OK';
     }
 
+    // Refuse a path RRDtool cannot receive before any existence check or create runs.
+    $quoted_path = rrdtool_command_path($rrd_path);
+    if ($quoted_path === false) {
+        cacti_log('ERROR: RRD update for Data Source ' . $local_data_id . ' was not run. Its path cannot be sent to RRDtool.', false, 'BOOST');
+        return 'ERROR: Invalid RRD path';
+    }
+
     // Only old unacknowledged streams need draining: acknowledged writers have
     // already committed preceding commands and must remain reusable by callers.
     if (cacti_version_compare(get_rrdtool_version(), '1.5', '<') && is_resource($rrdtool_pipe)
@@ -1682,12 +1689,6 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
     }
 
     if ($valid_entry) {
-        $quoted_path = rrdtool_command_path($rrd_path);
-        if ($quoted_path === false) {
-            cacti_log('ERROR: RRD update for Data Source ' . $local_data_id . ' was not run. Its path cannot be sent to RRDtool.', false, 'BOOST');
-            return 'ERROR: Invalid RRD path';
-        }
-
         if ($rrd_update_template != '') {
             cacti_log("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
