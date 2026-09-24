@@ -172,3 +172,55 @@ test('the help describes the contract the code implements', function () use ($ro
 
     expect($wrong)->toBe(array());
 });
+
+/*
+ * The usage block is its own regression: it named only two of the options and
+ * left its first bracket unclosed, which the option list above would not catch.
+ */
+test('the usage block lists every option and balances its brackets', function () use ($root) {
+    $source = file_get_contents($root . '/cli/remove_graphs.php');
+    $start  = strpos($source, 'usage: remove_graphs.php');
+    expect($start)->not->toBeFalse();
+
+    $end = strpos($source, 'PHP_EOL . PHP_EOL;', $start);
+    expect($end)->not->toBeFalse();
+
+    // Recover the printed text, not the source, so quoting cannot hide a defect.
+    $printed = '';
+    foreach (explode("\n", substr($source, $start - 200, $end - $start + 220)) as $line) {
+        if (preg_match('/print (?:PHP_EOL \. )?"(.*)" \. PHP_EOL/', $line, $matches)) {
+            $printed .= stripcslashes($matches[1]) . "\n";
+        }
+    }
+
+    expect(substr_count($printed, '['))->toBe(substr_count($printed, ']'));
+
+    $missing = array();
+    foreach (array('--graph-template-id', '--host-template-id', '--host-id',
+        '--graph-regex', '--all', '--list', '--force', '--preserve') as $option) {
+        if (strpos($printed, $option) === false) {
+            $missing[] = $option;
+        }
+    }
+
+    expect($missing)->toBe(array());
+    expect($printed)->toContain('usage: remove_graphs.php');
+});
+
+/* The help is user-facing text; a stray escape would print verbatim. */
+test('no help line prints a stray backslash', function () use ($root) {
+    $source = file_get_contents($root . '/cli/remove_graphs.php');
+    $start  = strpos($source, 'function display_help()');
+    $stray  = array();
+
+    foreach (explode("\n", substr($source, $start)) as $line) {
+        if (preg_match('/print (?:PHP_EOL \. )?"(.*?)"/', $line, $matches)) {
+            // Inside a double-quoted string only a few escapes are real.
+            if (preg_match('/\\\\[^nrtvef\\\\$"0-7xu]/', $matches[1])) {
+                $stray[] = trim($line);
+            }
+        }
+    }
+
+    expect($stray)->toBe(array());
+});
