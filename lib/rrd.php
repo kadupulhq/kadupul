@@ -511,6 +511,24 @@ function rrdtool_proxy_token_is_safe($argument)
     return $argument !== '' && !preg_match('/[\s\'"\\\\\0]/', $argument);
 }
 
+/**
+ * Make the RRD paths in a proxy command relative to the RRA root. The root is
+ * replaced only where a path starts (line start, whitespace, '=', ':' or a
+ * quote) and only when a separator or the end of the path follows, so the same
+ * text nested inside a path, or a sibling such as /rrafast, is left alone.
+ */
+function rrdtool_proxy_relative_paths($command_line)
+{
+    global $config;
+
+    $rra_path = rtrim((string) ($config['rra_path'] ?? ''), '/');
+    if ($rra_path === '') {
+        return $command_line;
+    }
+
+    return preg_replace('~(?<=^|[\s=:\'"])' . preg_quote($rra_path, '~') . '(?=[/\\\\\s:\'"]|$)~', '.', $command_line);
+}
+
 /** Whether rrdtool_execute() sends commands to the RRDtool proxy. */
 function rrdtool_uses_proxy()
 {
@@ -1048,7 +1066,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     Also make sure to replace all of the fancy "\"s at the end of the line,
     but make sure not to get rid of the "\n"s that are supposed to be
     in there (text format) */
-    $command_line = str_replace(array($config['rra_path'], "\\\n"), array('.', ' '), $command_line);
+    $command_line = rrdtool_proxy_relative_paths(str_replace("\\\n", ' ', $command_line));
 
     /* output information to the log file if appropriate */
     cacti_log('CACTI2RRDP: ' . read_config_option('path_rrdtool') . " $command_line", $log_to_stdout, $logopt, POLLER_VERBOSITY_DEBUG);

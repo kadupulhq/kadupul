@@ -52,7 +52,7 @@ if($response!==null){$packet=$response."_EOP_\r\n_EOT_\r\n";if(socket_write($soc
 socket_shutdown($sockets[1],1);
 $pipe=array($sockets[0],'fixture-key');$values='1700000060:42';
 if($operation==='boost-update'){$result=boost_rrdtool_function_update(1,'/fixture/sample.rrd','value',$values,$pipe);}
-elseif($operation==='update'||$operation==='update-unsafe'){$path=$operation==='update'?'/fixture/sample.rrd':"/fixture/it's a.rrd";$result=rrdtool_function_update(array($path=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('value'=>'42')))),$pipe);}
+elseif($operation==='update'||$operation==='update-unsafe'||$operation==='update-nested'){$path=$operation==='update'?'/fixture/sample.rrd':($operation==='update-nested'?'/fixture/sub/fixture/sample.rrd':"/fixture/it's a.rrd");$result=rrdtool_function_update(array($path=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('value'=>'42')))),$pipe);}
 elseif($operation==='paths-spaced-root'){$config['rra_path']='/fixture dir';$result=array(rrdtool_command_path('/fixture dir/sample.rrd'),rrdtool_proxy_command(array('file_exists','/fixture dir/sample.rrd'),'POLLER'),rrdtool_command_path('/fixture dir/it s.rrd'));}
 elseif($operation==='value-not-path'){$result=array(rrdtool_command_argument('/fixturefast'),rrdtool_command_path('/fixture/sample.rrd'),rrdtool_command_path('/fixture/sub/fixture/file.rrd'),rrdtool_command_path('/fixturefast/x.rrd'),rrdtool_command_path('/fixture'));}
 elseif($operation==='paths'){$result=array(rrdtool_command_path('/fixture/sample.rrd'),rrdtool_command_path('/fixture/it s.rrd'),rrdtool_command_path("/fixture/it's.rrd"));}
@@ -114,6 +114,10 @@ test('proxied updates carry a bare path, and a path the proxy cannot carry is no
     $direct = rrd_proxy_create_guard_run($this, 'update', 'OK u:0.00 s:0.00 r:0.00');
     expect($direct[0])->toBeFalse()
         ->and($direct[2])->toBe("file_exists ./sample.rrd_EOT_\r\nupdate ./sample.rrd --skip-past-updates --template value 1700000060:42_EOT_\r\n");
+
+    // The RRA root is rewritten only where the path starts, so a nested copy of it survives the transport.
+    $nested = rrd_proxy_create_guard_run($this, 'update-nested', 'OK u:0.00 s:0.00 r:0.00');
+    expect($nested[2])->toBe("file_exists ./sub/fixture/sample.rrd_EOT_\r\nupdate ./sub/fixture/sample.rrd --skip-past-updates --template value 1700000060:42_EOT_\r\n");
 
     $unsafe = rrd_proxy_create_guard_run($this, 'update-unsafe', 'OK u:0.00 s:0.00 r:0.00');
     expect($unsafe[0])->toBeFalse()->and($unsafe[2])->toBeFalse();
