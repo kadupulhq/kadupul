@@ -13,13 +13,22 @@ migration and requires a newer PHP.
 ## Requirements
 
 - PHP 8.1 or later, built as a CLI binary so data collection can run from cron
-- MySQL 8.0 or later, or MariaDB 10.6 or later
+- MySQL or MariaDB
 - RRDtool 1.3 or later, 1.5 or later recommended
 - NET-SNMP 5.5 or later
 - A web server with PHP support
 
-Continuous integration runs PHP 8.1 through 8.4, MySQL 8.0, 8.4 and 9.7, and
-MariaDB 10.6, 10.11 and 11.8.
+`composer.json` requires PHP 8.1, and the database versions below are the ones
+regression tests run against rather than a statement of what is supported:
+
+| | Tested against |
+|---|---|
+| PHP | 8.1, 8.2, 8.3, 8.4 |
+| MySQL | 8.0, 8.4, 9.7 |
+| MariaDB | 10.6, 10.11, 11.8 |
+
+PHP's POSIX extension is required (`ext-posix` in `composer.json`), which
+standard Windows builds of PHP do not provide.
 
 ### php-snmp
 
@@ -50,10 +59,20 @@ See [filesystem requirements](docs/testing/spikekill-safety.md).
 Schema changes are committed to `cacti.sql`, used for new installations, and to
 the installer upgrade path, used for existing ones. A source checkout does not
 change its version number between releases, so the upgrade may not run on its
-own. If you see errors about missing tables or columns, force the upgrade with
-the database upgrade script or set the version in the database directly.
+own. If you see errors about missing tables or columns, force the upgrade:
 
-Upgrading from a pre-1.x release requires the database upgrade script.
+```sh
+sudo -u cacti php -q cli/upgrade_database.php --forcever=`cat include/cacti_version`
+```
+
+Or set the version in the database directly, to the version you are upgrading
+*from*. Naming the wrong one makes the installer upgrade from the wrong point:
+
+```sql
+update version set cacti = '1.1.38';
+```
+
+Upgrading from a pre-1.x release requires the upgrade script above.
 
 Recommended MySQL and MariaDB settings are printed at upgrade time; apply the
 ones the installer reports for your instance rather than copying a fixed list.
