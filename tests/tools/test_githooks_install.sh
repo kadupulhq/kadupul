@@ -14,8 +14,8 @@ chmod +x "$fixture/.githooks/install"
 cd "$fixture"
 git init -q .
 
-# A global hooksPath would leak into every case below and decide the result,
-# so pin an empty config file for the whole run.
+# The contributor's own global hooksPath would otherwise decide every case
+# below, so point Git at a config file this test owns and can set per case.
 export GIT_CONFIG_GLOBAL="$fixture/gitconfig"
 export GIT_CONFIG_SYSTEM=/dev/null
 : > "$GIT_CONFIG_GLOBAL"
@@ -59,6 +59,28 @@ if .githooks/install >/dev/null 2>&1; then
 fi
 [ "$(hooks_path)" = '' ] || {
 	printf 'FAIL: the empty hooks path was modified\n' >&2
+	exit 1
+}
+
+# A global hooks directory is the case the guard was written for: the value
+# belongs to no repository, so configuring this one would drop those checks
+# here without saying so. Nothing local must be written either.
+git config --local --unset core.hooksPath 2>/dev/null || true
+git config --global core.hooksPath "$fixture/global-hooks"
+if .githooks/install >"$fixture/out" 2>&1; then
+	printf 'FAIL: a global hooks path was overwritten\n' >&2
+	exit 1
+fi
+[ "$(git config --global --get core.hooksPath)" = "$fixture/global-hooks" ] || {
+	printf 'FAIL: the global hooks path was modified\n' >&2
+	exit 1
+}
+if git config --local --get core.hooksPath >/dev/null 2>&1; then
+	printf 'FAIL: a local hooks path was written despite the refusal\n' >&2
+	exit 1
+fi
+grep -F "$fixture/global-hooks" "$fixture/out" >/dev/null || {
+	printf 'FAIL: the refusal did not name the configured path\n' >&2
 	exit 1
 }
 
