@@ -54,6 +54,10 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Run cli/convert_tables.php through kadupul:database:convert-tables, with --json and --dry-run. The flags are unchanged apart from the broken --installer. The command now requires an operator with the Console Access and Installation/Upgrades realms, and never sends DDL for a table name the server does not list.
+
+- Run cli/fix_mediumint.php through kadupul:database:widen-id-columns, with --json and --dry-run. Each table now gets its own statement, as the 1.2.17 upgrade does, and bigint or non-integer columns are no longer rewritten. The command requires the Console Access and Installation/Upgrades realms.
+
 - Run cli/analyze_database.php through a Symfony command, and add kadupul:database:analyze with --json and an explicit operator. The flags are unchanged. The command now requires an operator with the Console Access and Settings/Utilities realms.
 
 - Configure the `local`, `main` and `web` database connections through DoctrineBundle, which fills credentials from `include/config.php` when a connection opens. The Inventory reads now use the `web` connection. The bundle is added for idiomatic DBAL configuration. Its `doctrine:database:create`, `doctrine:database:drop` and `dbal:run-sql` console commands are removed, because the installer owns the schema.

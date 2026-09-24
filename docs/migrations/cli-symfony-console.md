@@ -105,9 +105,14 @@ operator chosen by a command-line flag:
 - The actor is the account named by `--as=<username>`, or, when that is
   absent, the `admin_user` setting. That matches whose authority the old
   scripts effectively used.
-- The account must exist, be enabled and not be locked. Realm checks are the
-  same ones the web path applies (realm 8 for console access, realm 15 for
-  installation administration). A command refuses to run otherwise.
+- The account must exist, be enabled, not be locked and have no password
+  change pending. Each command needs realm 8 (console access) plus the realm
+  the web page for the same action needs: realm 15 for installation
+  administration, realm 26 for the installer's schema changes. Realms are read
+  the way `include/auth.php` reads them, directly or from an enabled group.
+  While nobody holds realm 26, a direct realm 15 grant counts for it, as on
+  the web, but nothing is written. The web page itself needs no realm 8, so
+  the command-line check is stricter. A command refuses to run otherwise.
 - The account is read from the database the command works on. Collectors
   hold a replicated copy of `user_auth*` and `settings`, so a collector run
   with `--local` needs no main database. An unreachable main database never
@@ -213,6 +218,78 @@ PHP 8.4:
   rather than a silenced `@` call; best-effort writes catch it explicitly.
 - External commands go through Symfony Process with an argument array, never a
   shell string, and an explicit timeout. Caller input never reaches a shell.
+
+## Write commands
+
+These rules apply to every command that changes the schema or rows.
+`kadupul:database:convert-tables` and `kadupul:database:widen-id-columns`
+are the first.
+
+- **Flags.** A write command runs when called if its original did, and needs
+  `--confirm` only where its original did, as `remove_device` does. Under
+  `bin/console` every write command also takes `--dry-run`: it reads the same
+  state, reports each statement it would run, and runs none. A dry run
+  passes the same realm check on the same target database; a refusal is
+  audited as denied, and a dry run records no per-statement audit events.
+  Shims do not accept `--dry-run`, because no original had it.
+- **Decide, then apply.** The use case reads the state it needs once, decides
+  every change in Domain code that touches no database, then applies the
+  changes in order. Human, JSON and legacy output are all built from that one
+  result.
+- **Statement boundaries.** MySQL and MariaDB commit DDL implicitly, so a
+  schema change runs as one `ALTER TABLE` per table, outside any transaction.
+  A failed statement is reported, logged and audited, and the run goes on to
+  the next table, as the originals did. Nothing is retried and nothing claims
+  to roll back. A command that changes rows runs its use case inside one
+  `Connection::transactional()` call and never issues DDL inside it.
+- **Target database.** On a remote collector the command writes to the main
+  database unless `--local` is given, which is what the originals did. A
+  missing main configuration fails with `Main database is not configured.`
+  and never falls back to the local database. The schema is read from the
+  target connection's own `DATABASE()`, not from the local database's name.
+- **Authorization.** The command needs the realm the web UI requires for the
+  same action, cited in the command's entry in `docs/symfony-migration.md`,
+  checked through `ConsoleOperator` on the target database before any
+  statement. A refusal runs nothing and records a denied audit event.
+- **Identifiers and values.** Table names in DDL come from the target's
+  `information_schema` or `SHOW TABLES`, or from class constants; column names
+  come from `SHOW COLUMNS`. An operator-supplied name is used only if it is an
+  exact match in that list. Every identifier is quoted with
+  `quoteSingleIdentifier()`. Engines, charsets, collations, row formats and
+  column types come from enums or constants. Values such as column defaults
+  are quoted with the platform's `quoteStringLiteral()`.
+- **Operator log.** A command writes the lines its original wrote to
+  `cacti.log` through `LegacyOperatorLog`, with the same environ and text. A
+  failed statement also writes the two `DBCALL` lines `db_execute()` wrote,
+  without its backtrace. Log writes are best effort and never change the
+  result.
+- **Audit.** Each statement sent records one `AuditEvent` through
+  `IdentityAccess\Contract\AuditTrail`: the actor, the command, the target
+  database, the dry-run flag, the table and whether it succeeded. A table
+  name the catalog does not list records one `failed` event, since no
+  statement is sent for it. A refusal records one denied event, which also
+  carries the target database. The target is `database-table` with the id
+  `<database>:<table>`; a table name outside `[A-Za-z0-9_.:-]`, or longer
+  than 64 characters, uses the type `database-table-sha256` with the id
+  `<database>:` and the SHA-256 of the name, so every attempt is recorded. A
+  refused dry run records the command's action with a `.dry-run` suffix, for
+  example `database.convert-tables.dry-run`, so a query for refusals must
+  match both action names. As in `SiteWriteAudit`, the sink is best effort
+  and never replaces the result of a statement that already ran; an event
+  the audit schema rejects is a bug and fails the command. Run write commands as the web server's user, so that
+  `log/kadupul-audit.jsonl` and `log/cacti.log` stay writable by web requests.
+- **Exit codes and results.** In legacy mode the exit code is the original's,
+  including 0 after its own validation errors and after failed statements.
+  Under `bin/console` it is 0 when every statement succeeded, 1 when any
+  failed, the run stopped or the operator was refused, and 2 for invalid
+  input. JSON `status` is `ok`,
+  `partial`, `failed`, `invalid` or `denied`. Database exception text never
+  reaches stdout or stderr.
+- **Parity.** Each scenario resets the same starting state before the
+  original and before the shim, and compares the resulting schema
+  (`information_schema.TABLES`, `information_schema.COLUMNS`,
+  `SHOW CREATE TABLE`) or rows, as well as stdout, stderr and the exit code.
+  The security checks are listed in `tests/Symfony/merge_coverage.php`.
 
 ## Pilot: device commands
 

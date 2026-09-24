@@ -994,3 +994,80 @@ Known differences from the original script:
   `ERROR: Database analysis failed` and exit 1.
 - On a primary installation, the command opens a separate connection for the
   main database, with the same credentials as the local one.
+
+`php bin/console kadupul:database:convert-tables` converts installation
+tables to InnoDB (`--innodb`), to `utf8mb4_unicode_ci` (`--utf8`) or to
+latin1 (`--latin1`), with the old `--table`, `--skip-innodb` (space
+separated), `--size`, `--rebuild`, `--dynamic`, `--force` and `--local`
+options. It needs the Console Access and Installation/Upgrades realms, the
+realm the install wizard's table conversion requires. `--dry-run` lists the
+statements without running them. `--json` prints `status`, `database`,
+`dry_run` and `tables`, each with `name`, `result` (`converted`, `failed`,
+`planned`, `skipped` or `too_large`), `rows` and, when one was built,
+`statement`. The installer converts the tables it queued in-process, with
+no operator, as the web install wizard's own step. Operators who run the
+command or `cli/convert_tables.php` from a shell still need realm 26.
+
+Known differences from `cli/convert_tables.php`:
+
+- It needs an operator with the Console Access and Installation/Upgrades
+  realms, checked on the database it converts. The original ran for anyone
+  who could run it. An admin who has not yet changed the initial password is
+  refused from a shell; the installer's in-process conversion needs no
+  operator.
+- While no user and no enabled group with members holds Installation/Upgrades,
+  an operator with a direct Settings/Utilities grant may run it, as
+  `include/auth.php` allows on the web. The web path then writes a realm 26
+  row for every such user; the command allows only the current run and
+  writes no row. It stays stricter than the web path: the operator still
+  needs Console Access and must not have a password change pending.
+- An invalid flag prints the error and help without the version line.
+- `--installer` is rejected as an invalid parameter. The original required a
+  path without its separator and died with a PHP fatal error, exit 255.
+- `--size` must be a whole number, and `--size=`, `--table=` and
+  `--skip-innodb=` with no value are invalid parameters.
+- A table name that does not exactly match (letter case included) a table the
+  server lists is reported as `Failed` and logged, without sending `ALTER TABLE`. The original sent the
+  statement, logged the server's error and printed PHP warnings.
+- Skip-table names must match a table exactly; the original matched them with
+  `LIKE`.
+- `--dynamic` on a table that needs only the row format change runs
+  `ROW_FORMAT=Dynamic`. The original built a statement with a trailing comma,
+  which failed.
+- With `--innodb`, the command stops with `InnoDB Engine is not enabled` when
+  the server reports InnoDB as `NO` or `DISABLED`, or does not list it. The
+  original compared against `off`, which no server reports.
+- On a remote collector the command reads the main database's own tables. The
+  original looked them up under the local database's name.
+- A failed statement is logged with the two `DBCALL` lines and no backtrace;
+  the statement text in them differs in quoting and spacing.
+- Output is printed after every table is done.
+- On a primary installation the main connection is a second connection with
+  the same credentials, as for `kadupul:database:analyze`.
+
+`php bin/console kadupul:database:widen-id-columns` widens the id columns
+that `cli/fix_mediumint.php` widened to `int(10) unsigned`. It needs the
+Console Access and Installation/Upgrades realms, the realm of the 1.2.17
+upgrade step that runs the same change. `--local`, `--debug`, `--as`,
+`--dry-run` and `--json` behave as for the convert command; JSON has
+`status`, `database`, `dry_run`, `adjusted` and `tables`.
+
+Known differences from `cli/fix_mediumint.php`:
+
+- It needs an operator with the Console Access and Installation/Upgrades
+  realms, with the same fallback to direct Settings/Utilities holders while
+  nobody holds Installation/Upgrades.
+- Every table outside the named list gets its own statement, as in
+  `install/upgrades/1_2_17.php`. The original appended those columns to the
+  last named table's statement, which then failed, and counted them per
+  column; the command counts tables.
+- Only integer columns narrower than `int unsigned` are changed. The original
+  also rewrote `bigint` columns, which narrowed them, and non-integer columns.
+  MySQL 8's `int unsigned`, printed without a display width, counts as
+  already converted.
+- A nullable column with a default stays nullable. The original made it
+  `NOT NULL`.
+- Columns match by exact name; the original used `LIKE`.
+- On a remote collector the command reads the main database's own table list.
+- A failed statement is logged with the two `DBCALL` lines and no backtrace.
+- An invalid flag prints the error and help without the version line.
