@@ -263,7 +263,9 @@ test('a generated graph command renders in RRDtool', function () {
         // Paths in the command are relative to the directory RRDtool runs in.
         $create = "create 'rra/router'\"'\"'s traffic_11.rrd' --start 1699990000 --step 300 DS:traffic_in:GAUGE:600:U:U DS:traffic_out:GAUGE:600:U:U"
             . ' RRA:AVERAGE:0.5:1:100 RRA:MIN:0.5:1:100 RRA:MAX:0.5:1:100 RRA:LAST:0.5:1:100';
-        $environment = array('PATH' => getenv('PATH'), 'LANG' => 'C', 'LC_ALL' => 'C');
+        // Fontconfig warns on stderr when it has no writable cache, as on CI
+        // runners, so give it one inside the scratch directory.
+        $environment = array('PATH' => getenv('PATH'), 'LANG' => 'C', 'LC_ALL' => 'C', 'HOME' => $directory, 'XDG_CACHE_HOME' => $directory . '/cache');
         $process = proc_open(array($binary, '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
         fwrite($pipes[0], $create . "\n" . $graph[0]['stdin']);
         fclose($pipes[0]);
@@ -273,8 +275,9 @@ test('a generated graph command renders in RRDtool', function () {
         fclose($pipes[2]);
         proc_close($process);
     } finally {
-        foreach (array_merge(glob($directory . '/rra/*'), array($directory . '/rra')) as $file) {
-            is_dir($file) ? rmdir($file) : unlink($file);
+        $entries = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($entries as $entry) {
+            $entry->isDir() ? rmdir($entry->getPathname()) : unlink($entry->getPathname());
         }
         rmdir($directory);
     }
