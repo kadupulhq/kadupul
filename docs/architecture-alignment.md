@@ -17,7 +17,7 @@ changes a boundary.
 | Route rollback controls | Partial | Legacy pages remain deployed and provide operational rollback. There is no route-level feature-flag service. | Add explicit per-route cutover flags before replacing a legacy URL. |
 | Authorized transactional writes | Implemented for listed Inventory slices | Application commands authorize before ports; write adapters recheck authorization and revisions under transaction locks. Behavioral probes exercise revocation races and rollback. | Remove each legacy writer only after its compatibility harness passes. |
 | Asynchronous work | Partial | Symfony Messenger and Scheduler run row-cache cleanup with explicit enablement and failure limits. Most migrated writes remain synchronous. | Require idempotency, retry, and failure behavior before moving a command to Messenger. |
-| Structured audit | Partial | IdentityAccess Contract AuditEvent defines a closed, versioned event. Device edit correlates the Symfony adapter with its isolated worker and records success, post-authorization failure, and persistence-recheck denial in a dedicated JSONL sink. | Record application-level denials, move every migrated write to the contract, add tamper-evident archival, and set an operator retention policy. |
+| Structured audit | Partial | IdentityAccess Contract AuditEvent defines a closed, versioned event. Device edit, device creation, and device template assignment correlate the Symfony adapter with the isolated worker; site creation, editing, deletion, and duplication record each site after the adapter transaction resolves. Each records success, post-authorization failure, and persistence-recheck denial in a dedicated JSONL sink. | Move device collector assignment and the bulk device state writes to the contract once the open state-worker changes land, record application-level denials, add tamper-evident archival, and set an operator retention policy. |
 | IdentityAccess | Partial | Public actor, console-access, locale, contact, and audit contracts exist; legacy sessions remain behind adapters. | Migrate credential issuance, external providers, logout, and CSRF ownership before retiring native-session compatibility. |
 | Inventory | Partial | Device and site reads plus selected edit/create/lifecycle/assignment commands use domain/application/port boundaries. | Complete remaining advanced settings, plugin contributions, exports, and legacy route cutover. |
 | Alerting | Partial | Test mail and administrator notification paths have application ports and infrastructure adapters. | Move alert rules, evaluation, incidents, and notification intent behind the module boundary. |
@@ -38,6 +38,11 @@ rejects symbolic links and non-regular files, locks each append, and enforces
 0600 permissions. The correlation identifier is generated in trusted adapter
 code, passed as data over the fixed worker protocol, and validated again in the
 worker. A rejected or malformed worker request receives a worker-generated
+identifier.
+
+Site writes run in the Symfony process rather than a worker. Their adapter
+records through the same sink once commit or rollback returns, and a bulk
+operation writes one event per selected site under a single correlation
 identifier.
 
 Administrators who can write the installation log directory can still rotate or

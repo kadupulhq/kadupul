@@ -36,6 +36,13 @@ services:
     Kadupul\IdentityAccess\Contract\ConsoleAccess:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
 
+    Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    Kadupul\IdentityAccess\Contract\AuditTrail:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail
+
     Kadupul\Inventory\Infrastructure\:
         resource: '../src/Inventory/Infrastructure/'
 

@@ -263,6 +263,35 @@ final class DeviceCreateTest extends TestCase
         }
     }
 
+    public function testAdapterSendsAFreshTrustedCorrelationIdentifier(): void
+    {
+        $directory = sys_get_temp_dir() . '/kadupul-create-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/bin', 0700, true);
+        file_put_contents($directory . '/bin/legacy-device-create.php', '<?php file_put_contents(__DIR__ . "/commands", stream_get_contents(STDIN) . "\\n", FILE_APPEND); echo "KADUPUL_CREATE_RESULT=" . json_encode(["status" => "ok", "id" => 7]);');
+        try {
+            $db = new \PDO('sqlite::memory:');
+            $db->exec("CREATE TABLE settings (name TEXT,value TEXT); INSERT INTO settings VALUES ('path_php_binary', '')");
+            $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
+            $database->method('get')->willReturn($db);
+            $creator = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator($directory, $database);
+            foreach ([1, 2] as $attempt) {
+                $creator->create(42, new NewDevice(['description' => 'Test ' . $attempt, 'hostname' => 'localhost']));
+            }
+            $commands = array_map(static fn(string $line): array => json_decode($line, true, 16, JSON_THROW_ON_ERROR), file($directory . '/bin/commands', FILE_IGNORE_NEW_LINES));
+            self::assertCount(2, $commands);
+            foreach ($commands as $command) {
+                self::assertSame(['correlation_id', 'actor', 'fields'], array_keys($command));
+                self::assertMatchesRegularExpression('/^[a-f0-9]{32}$/D', $command['correlation_id']);
+            }
+            self::assertNotSame($commands[0]['correlation_id'], $commands[1]['correlation_id']);
+        } finally {
+            @unlink($directory . '/bin/commands');
+            unlink($directory . '/bin/legacy-device-create.php');
+            rmdir($directory . '/bin');
+            rmdir($directory);
+        }
+    }
+
     public static function workerResults(): iterable
     {
         yield 'missing configured executable' => ['', 1, \RuntimeException::class, true];

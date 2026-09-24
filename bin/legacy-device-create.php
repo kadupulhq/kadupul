@@ -5,6 +5,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+use Kadupul\IdentityAccess\Contract\AuditEvent;
+use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail;
+use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyWorkerAudit;
 use Kadupul\Inventory\Domain\NewDevice;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationCredentials;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier;
@@ -35,16 +38,19 @@ $status = 'failed';
 $id = null;
 $transactionStarted = false;
 $writeStarted = false;
+$audit = new LegacyWorkerAudit(new LegacyAuditTrail(dirname(__DIR__)), 'inventory.device.create', 'device', 'new');
 try {
     $input = stream_get_contents(STDIN, 500001);
     if (strlen($input) > 500000) {
         throw new InvalidArgumentException('Payload too large');
     }
     $command = json_decode($input, true, 16, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'fields']) !== []
+    if (!is_array($command) || array_diff(array_keys($command), ['correlation_id', 'actor', 'fields']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0 || !is_array($command['fields'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
+    $audit->correlate($command['correlation_id'] ?? null);
+    $audit->actorId = $command['actor'];
     $device = new NewDevice($command['fields']);
     // The legacy connection defaults to utf8mb3 and permissive SQL modes.
     // Preserve validated Unicode and fail instead of silently truncating input.
@@ -61,6 +67,8 @@ try {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
+    $audit->decision = AuditEvent::ALLOWED;
+    $audit->outcome = AuditEvent::FAILED;
     $fields = $device->fields;
     if (((int) $fields['host_template_id'] !== 0 && !db_fetch_cell_prepared('SELECT id FROM host_template WHERE id = ? LOCK IN SHARE MODE', [$fields['host_template_id']]))
         || ((int) $fields['site_id'] !== 0 && !db_fetch_cell_prepared('SELECT id FROM sites WHERE id = ? LOCK IN SHARE MODE', [$fields['site_id']]))
@@ -117,15 +125,15 @@ try {
     $transactionStarted = false;
     $id = (int) $saved;
     $status = 'ok';
+    $audit->targetId = (string) $id;
+    $audit->outcome = AuditEvent::SUCCEEDED;
     cacti_log('INVENTORY: User ' . $command['actor'] . ' created device ' . $id, false, 'AUDIT');
 } catch (InvalidArgumentException) {
     $status = $writeStarted ? 'failed' : 'invalid';
 } catch (Throwable) {
     // Return stable codes only; discard credentials, diagnostics and plugin output.
 } finally {
-    if ($transactionStarted) {
-        db_rollback_transaction();
-    }
+    $audit->recordAfter($transactionStarted ? db_rollback_transaction(...) : null);
 }
 while (ob_get_level() > 0) {
     ob_end_clean();
