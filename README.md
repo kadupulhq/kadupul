@@ -1,251 +1,113 @@
-# Cacti ™
+# Kadupul
 
-[![Cacti Commit Audit](https://github.com/Cacti/cacti/actions/workflows/syntax.yml/badge.svg)](https://github.com/Cacti/cacti/actions/workflows/syntax.yml)
-[![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
-[![Translation Status](https://translate.cacti.net/widgets/cacti/-/core/svg-badge.svg)](https://translate.cacti.net
-"Translation Status")
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/cacti/cacti.svg)](http://isitmaintained.com/project/cacti/cacti
-"Average time to resolve an issue")
-[![Percentage of open issues](http://isitmaintained.com/badge/open/cacti/cacti.svg)](http://isitmaintained.com/project/cacti/cacti
-"Percentage of issues still open")
+Network monitoring and graphing. Kadupul polls devices over SNMP and scripts,
+stores measurements in RRD files, and renders graphs with RRDtool.
+It is an independent fork of [Cacti](https://github.com/Cacti/cacti), without affiliation or endorsement from that project.
 
------------------------------------------------------------------------------
+This is the `lts/1.2` branch, which tracks the 1.2 series and keeps its
+formatting, database schema and plugin API. `main` carries the Symfony
+migration and requires a newer PHP.
 
-## Running Cacti from the `develop` Branch
-
-### IMPORTANT
-
-When using source or by downloading the code directly from the repository, it is
-important to run the database upgrade script if you experience any errors
-referring to missing tables or columns in the database.
-
-Changes to the database are committed to the `cacti.sql` file which is used for
-new installations and committed to the installer database upgrade for existing
-installations. Because the version number does not change until release in the
-`develop` branch, which will result in the database upgrade not running, it is
-important to either use the database upgrade script to force the current version
-or update the version in the database.
-
-#### Upgrading from Pre-Cacti 1.x Releases
-
-When Cacti was first developed nearly 20 years ago, MySQL was not as mature as it
-is now.  When The Cacti Group went about engineering Cacti 1.x, a decision was
-made to force users to use the InnoDB storage engine for many of the Tables.  This
-was done as the InnoDB storage engine provides a better user experience when your
-web site has several concurrent logins.  Though a little slower, it also provides
-greater resiliency for the developers.
-
-With that said, there are several changes that you MUST perform to MySQL/MariaDB
-before you upgrade, and a service restart is required.  Depending on your release
-of MariaDB or MySQL, the following settings will either be required, or already
-enabled as default:
-
-```
-[mysqld]
-
-# required for multiple language support
-character-set-server = utf8mb4
-collation-server = utf8mb4_unicode_ci
-
-# Memory tunables - Cacti provides recommendations at upgrade time
-max_heap_table_size = XXX
-max_allowed_packet = 500M
-tmp_table_size = XXX
-join_buffer_size = XXX
-sort_buffer_size = XXX
-
-# important for compatibility
-sql_mode=NO_ENGINE_SUBSTITUTION
-
-# innodb settings - Cacti provides recommendations at upgrade time
-innodb_buffer_pool_instances = XXX
-innodb_flush_log_at_trx_commit = 2
-innodb_buffer_pool_size = XXX
-innodb_sort_buffer_size = XXX
-innodb_doublewrite = ON
-
-# required
-innodb_file_per_table = ON
-innodb_file_format = Barracuda
-innodb_large_prefix = 1
-
-# not all version support
-innodb_flush_log_at_timeout = 3
-
-# for SSD's/NVMe
-innodb_read_io_threads = 32
-innodb_write_io_threads = 16
-innodb_io_capacity = 10000
-innodb_io_capacity_max = 20000
-innodb_flush_method = O_DIRECT
-```
-
-The *required* settings are very important.  Otherwise, you will encounter issues
-upgrading.  The settings with XXX, Cacti will provide a recommendation at upgrade time.
-It is not out of the ordinary to have to restart MySQL/MariaDB during the upgrade
-to tune these settings.  Please make special note of this before you begin your upgrade.
-
-Before you upgrade, you should make these required changes, then restart MySQL/MariaDB.  After that, you can save yourself some time and potential errors by running the following scripts (assuming you are using bash):
-
-```
-for table in `mysql -e "SELECT TABLE_NAME FROM information_schema.TABLES WHERE table_schema='cacti' AND engine!='MEMORY'" cacti | grep -v TABLE_NAME`;
-do
-   echo "Converting $table";
-   mysql -e "ALTER TABLE $table ENGINE=InnoDB ROW_FORMAT=Dynamic CHARSET=utf8mb4" cacti;
-done
-```
-
-This will convert any tables that are either InnoDB or MyISAM to Barracuda file format, dynamic row format and utf8mb4.  Note, that if you have been using MySQL or MariaDB without innodb_file_per_table set to on, you might be better in backing up your database, resetting InnoDB by removing your ib* files in the /var/lib/mysql directory, and after which restoring your database and MySQL/MariaDB tables and permissions.  Before you take such a step, you should always practice on a test server until you feel comfortable with the change.
-
-Good luck, and enjoy Cacti!
-
-#### Running Database Upgrade Script
-
-```
-sudo -u cacti php -q cli/upgrade_database.php --forcever=`cat include/cacti_version`
-```
-
-#### Updating Cacti Version in Database
-
-```
-update version set cacti = '1.1.38';
-```
-
-***Note:*** Change the above version to the correct version or risk the
-installer upgrading from a previous version.
-
------------------------------------------------------------------------------
-
-## About
-
-Cacti is a complete network graphing solution designed to harness the power of
-RRDtool's data storage and graphing functionality providing the following
-features:
-
-- Remote and local data collectors
-
-- Device discovery
-
-- Automation of device and graph creation
-
-- Graph and device templating
-
-- Custom data collection methods
-
-- User, group and domain access controls
-
-All of this is wrapped in an intuitive, easy to use interface that makes sense
-for both LAN-sized installations and complex networks with thousands of devices.
-
-Developed in the early 2000s by Ian Berry as a high school project, it has been
-used by thousands of companies and enthusiasts to monitor and manage their
-Enterprise Networks and Data Centers.
+[Documentation](https://kadupulhq.github.io/website/) · [Issue tracker](https://github.com/kadupulhq/kadupul/issues) · [Discussions](https://github.com/kadupulhq/kadupul/discussions)
 
 ## Requirements
 
-Cacti should be able to run on any Linux, UNIX, or Windows based operating
-system with the following requirements:
+- PHP 8.1 or later, built as a CLI binary so data collection can run from cron
+- MySQL or MariaDB
+- RRDtool 1.3 or later, 1.5 or later recommended
+- NET-SNMP 5.5 or later
+- A web server with PHP support
 
-- PHP 5.4+
+`composer.json` requires PHP 8.1, and the database versions below are the ones
+regression tests run against rather than a statement of what is supported:
 
-- MySQL 5.1+
+| | Tested against |
+|---|---|
+| PHP | 8.1, 8.2, 8.3, 8.4 |
+| MySQL | 8.0, 8.4, 9.7 |
+| MariaDB | 10.6, 10.11, 11.8 |
 
-- RRDtool 1.3+, 1.5+ recommended
-
-- NET-SNMP 5.5+
-
-- Web Server with PHP support
-
-PHP Must also be compiled as a standalone cgi or cli binary. This is required
-for data gathering via cron.
+PHP's POSIX extension is required (`ext-posix` in `composer.json`), which
+standard Windows builds of PHP do not provide.
 
 ### php-snmp
 
-We mark the php-snmp module as optional.  So long as you are not using ipv6
-devices, or using snmpv3 engine IDs or contexts, then using php-snmp should be
-safe.  Otherwise, you should consider uninstalling the php-snmp module as it
-will create problems.  We are aware of the problem with php-snmp and looking to
-get involved in the php project to resolve these issues.
+The php-snmp module is optional. It is safe so long as you are not using IPv6
+devices, SNMPv3 engine IDs or SNMPv3 contexts. Otherwise consider uninstalling
+it, because it will create problems.
 
 ### RRDtool
 
-RRDtool is available in multiple versions and a majority of them are supported
-by Cacti. Please remember to confirm your Cacti settings for the RRDtool version
-if you having problem rendering graphs.
+Multiple RRDtool versions are supported. If graphs fail to render, confirm the
+configured RRDtool version first.
 
-## Documentation
+## Platform requirements
 
-Documentation is available with the Cacti releases and also available for
-viewing on the [Documentation
-Repository](https://github.com/Cacti/documentation/blob/develop/README.md).
+Local Unix RRD storage requires PHP's POSIX extension for account identity and
+filesystem trust checks. This applies to ordinary poller writes as well as
+exclusive maintenance. Without it, local writers fail closed and retain queued
+samples; enable the extension for both CLI and web PHP before running collection.
 
-## Contribute
+Spike removal and exclusive RRD maintenance are unavailable on Windows because
+Windows ACL validation is not implemented. Ordinary Windows updates use
+synchronous RRDtool acknowledgements; Unix capacity evidence does not establish
+Windows throughput. Remote RRDtool proxy storage retains its existing path.
+See [filesystem requirements](docs/testing/spikekill-safety.md).
 
-Check out the main [Cacti](http://www.cacti.net) web site for downloads, change
-logs, release notes and more!
+## Running from source
 
-### Community forums
+Schema changes are committed to `cacti.sql`, used for new installations, and to
+the installer upgrade path, used for existing ones. A source checkout does not
+change its version number between releases, so the upgrade may not run on its
+own. If you see errors about missing tables or columns, force the upgrade:
 
-Given the large scope of Cacti, the forums tend to generate a respectable amount
-of traffic. Doing your part in answering basic questions goes a long way since
-we cannot be everywhere at once. Contribute to the Cacti community by
-participating on the [Cacti Community Forums](http://forums.cacti.net).
+```sh
+sudo -u cacti php -q cli/upgrade_database.php --forcever=`cat include/cacti_version`
+```
 
-### GitHub Documentation
+Or set the version in the database directly, to the version you are upgrading
+*from*. Replace the placeholder with that version: naming a different one makes
+the installer replay migrations from the wrong point, which on an existing
+database can fail part way or change data it should not touch.
 
-Get involved in creating and editing Cacti Documentation!  Fork, change and
-submit a pull request to help improve the documentation on
-[GitHub](https://github.com/cacti/documentation).
+```sql
+update version set cacti = '<version you are upgrading from>';
+```
 
-### GitHub Development
+Upgrading from a pre-1.x release requires the upgrade script above.
 
-Get involved in development of Cacti! Join the developers and community on
-[GitHub](https://github.com/cacti)!
-
------------------------------------------------------------------------------
+Recommended MySQL and MariaDB settings are printed at upgrade time; apply the
+ones the installer reports for your instance rather than copying a fixed list.
 
 ## Functionality
 
 ### Data Sources
 
-Cacti handles the gathering of data through the concept of data sources. Data
-sources utilize input methods to gather data from devices, hosts, databases,
-scripts, etc...  The possibilities are endless as to the nature of the data you
-are able to collect.  Data sources are the direct link to the underlying RRD
-files; how data is stored within RRD files and how data is retrieved from RRD
-files.
+Data sources gather data through input methods: devices, hosts, databases,
+scripts and so on. Data sources are the direct link to the underlying RRD
+files, governing how data is stored in them and how it is retrieved.
 
 ### Graphs
 
-Graphs, the heart and soul of Cacti, are created by RRDtool using the defined
-data sources definition.
+Graphs are created by RRDtool from the data source definitions.
 
 ### Templating
 
-Bringing it all together, Cacti uses and extensive template system that allows
-for the creation and consumption of portable templates. Graph, data source, and
-RRA templates allow for the easy creation of graphs and data sources out of the
-box.  Along with the Cacti community support, templates have become the standard
-way to support graphing any number of devices in use in today computing and
-networking environments.
+Graph, data source and RRA templates allow the creation and consumption of
+portable definitions, so graphing a new device does not start from scratch.
 
 ### Data Collection (The Poller)
 
-Local and remote data collection support with the ability to set collection
-intervals. Check out ***Data Source Profile*** with in Cacti for more
-information. Data Source Profiles can be applied to graphs at creation time or
-at the data template level.
+Local and remote data collection, with configurable collection intervals
+through Data Source Profiles. A profile can be applied to graphs at creation
+time or at the data template level.
 
-Remote data collection has been made easy through replication of resources to
-remote data collectors. Even when connectivity to the main Cacti installation is
-lost from remote data collector, it will store collected data until connectivity
-is restored. Remote data collection only requires MySQL and HTTP/HTTPS access
-back to the main Cacti installation location.
+Remote data collection replicates resources to remote data collectors. A remote
+collector that loses connectivity to the main installation stores its collected
+data until connectivity returns. It requires only MySQL and HTTP or HTTPS access
+back to the main installation.
 
 ### Network Discovery and Automation
-
-Cacti provides administrators a series of network automation functionality in
-order to reduce the time and effort it takes to setup and manage devices.
 
 - Multiple definable network discovery rules
 
@@ -253,15 +115,10 @@ order to reduce the time and effort it takes to setup and manage devices.
 
 ### Plugin Framework
 
-Cacti is more than a network monitoring system, it is an operations framework
-that allows the extension and augmentation of Cacti functionality. The Cacti
-Group continues to maintain an assortment of plugins.  If you are looking to add
-features to Cacti, there is quite a bit of reference material to choose from on
-GitHub.
+The plugin framework allows functionality to be extended and augmented without
+modifying the core. The 1.2 plugin API is preserved on this branch.
 
 ### Dynamic Graph Viewing Experience
-
-Cacti allows for many runtime augmentations while viewing graphs:
 
 - Dynamically loaded tree and graph view
 
@@ -281,15 +138,13 @@ Cacti allows for many runtime augmentations while viewing graphs:
 
 ### User, Groups and Permissions
 
-Support for per user and per group permissions at a per realm (area of Cacti),
-per graph, per graph tree, per device, etc... The permission model in Cacti is
-role based access control (RBAC) to allow for flexible assignment of
-permissions. Support for enforcement of password complexity, password age and
-changing of expired passwords.
+Per user and per group permissions at a per realm, per graph, per graph tree
+and per device level. The permission model is role based access control (RBAC).
+Password complexity, password age and expired password changes can be enforced.
 
 ## RRDtool Graph Options
 
-Cacti supports most RRDtool graphing abilities including:
+Most RRDtool graphing abilities are supported.
 
 ### Graph Options
 
@@ -323,18 +178,26 @@ Cacti supports most RRDtool graphing abilities including:
 
 - Text alignment
 
+## Documentation
+
+- [Getting started](https://kadupulhq.github.io/website/start/what-kadupul-is/)
+- [Installation](https://kadupulhq.github.io/website/start/install/)
+- [Documentation map](https://kadupulhq.github.io/website/map/)
+- [Compatibility](https://kadupulhq.github.io/website/project/compatibility-with-cacti/)
+
+## Contributing
+
+Both documents live on `main` and apply to this branch too. Read
+[CONTRIBUTING.md](https://github.com/kadupulhq/kadupul/blob/main/CONTRIBUTING.md)
+before opening a pull request, and report vulnerabilities through
+[SECURITY.md](https://github.com/kadupulhq/kadupul/blob/main/SECURITY.md).
+
+## License
+
+[GPL-2.0-or-later](LICENSE) for code inherited from Cacti; files added by this
+project are GPL-3.0-or-later. Dependencies retain their own license terms.
+See the [licensing documentation](https://kadupulhq.github.io/website/project/license/).
+
 -----------------------------------------------------------------------------
 Copyright (c) 2004-2026 - The Cacti Group, Inc.
-
-### RRD storage platform requirements
-
-Local Unix RRD storage requires PHP's POSIX extension for account identity and
-filesystem trust checks. This applies to ordinary poller writes as well as
-exclusive maintenance. Without it, local writers fail closed and retain queued
-samples; enable the extension for both CLI and web PHP before running collection.
-
-Spike removal and exclusive RRD maintenance are unavailable on Windows because
-Windows ACL validation is not implemented. Ordinary Windows updates use
-synchronous RRDtool acknowledgements; Unix capacity evidence does not establish
-Windows throughput. Remote RRDtool proxy storage retains its existing path.
-See [filesystem requirements](docs/testing/spikekill-safety.md).
+Copyright (c) 2026 - The Kadupul project and contributors
