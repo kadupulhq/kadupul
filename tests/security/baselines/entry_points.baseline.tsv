@@ -9,6 +9,7 @@ app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAcc
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/new	symfony:inventory_device_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/remove	symfony:inventory_device_remove	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}	symfony:inventory_device_details	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/collector	symfony:inventory_device_collector	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/edit	symfony:inventory_device_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3

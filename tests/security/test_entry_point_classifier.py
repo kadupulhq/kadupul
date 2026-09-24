@@ -123,6 +123,8 @@ SELF_GATED_SHAPES = {
     'check under another condition': (
         'remote_agent.php', BOOT + 'if ($x) {\n\t' + REFUSE % 'exit;' + '}\n', 'unknown'),
     'refusal that carries on': ('remote_agent.php', BOOT + REFUSE % "print 'denied';", 'unknown'),
+    # Only statements at the top of the refusal body count as stopping it.
+    'refusal whose exit is nested': ('remote_agent.php', BOOT + REFUSE % 'if ($flag) {\n\t\texit;\n\t}', 'unknown'),
     'check joined to another condition': (
         'remote_agent.php', BOOT + 'if (!remote_client_authorized() && $x) {\n\texit;\n}\n', 'unknown'),
     'refusal with an else branch': (
@@ -359,6 +361,14 @@ final class Sites
         }
     }
 
+    public function earlyReturn(bool $flag): void
+    {
+        if ($flag) {
+            return;
+        }
+        $this->checked();
+    }
+
     // A return leaves only this method; the action carries on.
     public function returnsOnNull(): void
     {
@@ -537,6 +547,13 @@ final class ServiceActions
         return new Response();
     }
 
+    #[Route('/via-early-return', name: 'via_early_return')]
+    public function viaEarlyReturn(Sites $sites, bool $flag): Response
+    {
+        $sites->earlyReturn($flag);
+        return new Response();
+    }
+
     #[Route('/after-other-call', name: 'after_other_call')]
     public function afterOtherCall(Sites $sites): Response
     {
@@ -592,6 +609,177 @@ final class WhoActions
     }
 }
 '''
+# A query that throws on refusal, handed as a callable to a helper that turns
+# the throw into a response, which the action returns.
+CHECKED_QUERY = '''<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+final class CheckedQuery
+{
+    public function __construct(private ConsoleAccess $access) {}
+
+    public function __invoke(array $ids): array
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null || !$this->access->canManageDevices($actor)) {
+            throw new \\RuntimeException();
+        }
+        return [];
+    }
+}
+'''
+SELECTION = '''<?php
+namespace Kadupul\\Fixture;
+use Symfony\\Component\\HttpFoundation\\Request;
+use Symfony\\Component\\HttpFoundation\\Response;
+use Symfony\\Component\\HttpFoundation\\StreamedResponse;
+final class Selection
+{
+    public function prepare(Request $request, callable $prepare): array|Response
+    {
+        try {
+            $ids = $request->query->all();
+            $rows = $prepare($ids);
+            return [$rows];
+        } catch (\\RuntimeException $error) {
+            return $this->deny($error->getMessage());
+        }
+    }
+
+    public function catchesNull(Request $request, callable $prepare): ?array
+    {
+        try {
+            $rows = $prepare([]);
+        } catch (\\RuntimeException) {
+            return null;
+        }
+        return $rows;
+    }
+
+    public function effectFirst(Request $request, callable $prepare): array|Response
+    {
+        unlink('/tmp/x');
+        try {
+            $rows = $prepare([]);
+        } catch (\\RuntimeException) {
+            return $this->deny('');
+        }
+        return $rows;
+    }
+
+    public function earlyReturn(Request $request, callable $prepare): array|Response
+    {
+        if ($request->isMethod('HEAD')) {
+            return [];
+        }
+        try {
+            $rows = $prepare([]);
+        } catch (\\RuntimeException) {
+            return $this->deny('');
+        }
+        return $rows;
+    }
+
+    public function streamed(Request $request, callable $prepare, callable $callback): array|Response
+    {
+        try {
+            $rows = $prepare([]);
+        } catch (\\RuntimeException) {
+            return new StreamedResponse($callback, 403);
+        }
+        return $rows;
+    }
+
+    public function nullableDeny(Request $request, callable $prepare): array|Response|null
+    {
+        try {
+            $rows = $prepare([]);
+        } catch (\\RuntimeException) {
+            return $this->maybeDeny();
+        }
+        return $rows;
+    }
+
+    public function publicDeny(Request $request, callable $prepare): array|Response
+    {
+        try {
+            $rows = $prepare([]);
+        } catch (\\RuntimeException) {
+            return $this->openDeny();
+        }
+        return $rows;
+    }
+
+    public function impureDeny(Request $request, callable $prepare): array|Response
+    {
+        try {
+            $rows = $prepare([]);
+        } catch (\\RuntimeException) {
+            return $this->loggedDeny();
+        }
+        return $rows;
+    }
+
+    private function deny(string $message): Response
+    {
+        return new Response($message, 403);
+    }
+
+    private function maybeDeny(): ?Response
+    {
+        return null;
+    }
+
+    public function openDeny(): Response
+    {
+        return new Response('', 403);
+    }
+
+    private function loggedDeny(): Response
+    {
+        unlink('/tmp/x');
+        return new Response('', 403);
+    }
+}
+'''
+HANDED_ACTION = '''
+    #[Route('/%s', name: '%s')]
+    public function %s(Request $request, CheckedQuery $query, Selection $selection, Sites $sites, $other, callable $callback): Response
+    {
+%s
+        return new Response();
+    }
+'''
+GUARD = '''        if ($prepared instanceof Response) {
+            return $prepared;
+        }'''
+HANDED = {
+    'handed': ('$prepared = $selection->prepare($request, $query);\n' + GUARD, 'symfony:handed'),
+    'handed-unguarded': ('$prepared = $selection->prepare($request, $query);', 'unknown'),
+    'handed-late-guard': ('$prepared = $selection->prepare($request, $query);\n$sites->unchecked();\n' + GUARD, 'unknown'),
+    'handed-other-guard': ('$prepared = $selection->prepare($request, $query);\n' + GUARD.replace('($prepared', '($other'), 'unknown'),
+    'handed-returns-other': ('$prepared = $selection->prepare($request, $query);\n' + GUARD.replace('return $prepared', 'return $other'), 'unknown'),
+    'handed-rebound': ('$query = $other;\n$prepared = $selection->prepare($request, $query);\n' + GUARD, 'unknown'),
+    'handed-untyped': ('$prepared = $selection->prepare($request, $other);\n' + GUARD, 'unknown'),
+    'handed-null-catch': ('$prepared = $selection->catchesNull($request, $query);\n' + GUARD, 'unknown'),
+    'handed-effect-first': ('$prepared = $selection->effectFirst($request, $query);\n' + GUARD, 'unknown'),
+    'handed-early-return': ('$prepared = $selection->earlyReturn($request, $query);\n' + GUARD, 'unknown'),
+    'handed-streamed': ('$prepared = $selection->streamed($request, $query, $callback);\n' + GUARD, 'unknown'),
+    'handed-nullable-deny': ('$prepared = $selection->nullableDeny($request, $query);\n' + GUARD, 'unknown'),
+    'handed-public-deny': ('$prepared = $selection->publicDeny($request, $query);\n' + GUARD, 'unknown'),
+    'handed-impure-deny': ('$prepared = $selection->impureDeny($request, $query);\n' + GUARD, 'unknown'),
+}
+HANDED_CONTROLLER = '''<?php
+namespace Kadupul\\Fixture;
+use Symfony\\Component\\HttpFoundation\\Request;
+use Symfony\\Component\\HttpFoundation\\Response;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+final class HandedActions
+{%s}
+''' % ''.join(HANDED_ACTION % (route, route.replace('-', '_'), route.replace('-', '_'),
+                               '\n'.join('        ' + line.strip() if not line.startswith('        ') else line
+                                         for line in body.split('\n')))
+              for route, (body, _) in HANDED.items())
 ALIASED_CONTROLLER = '''<?php
 namespace Kadupul\\Fixture;
 use Symfony\\Component\\Routing\\Attribute\\Route as Path;
@@ -641,6 +829,8 @@ ROUTES = {
     'app.php/who-guarded': 'symfony:who_guarded',
     'app.php/who-discarded': 'unknown',
     'app.php/session': 'unknown',
+    'app.php/via-early-return': 'unknown',
+    **{'app.php/' + route: expected for route, (_, expected) in HANDED.items()},
 }
 # canManageDevices() counts only in a guard on the checked actor.
 GRANTS = {
@@ -651,6 +841,7 @@ GRANTS = {
     'app.php/who-guarded': 'ConsoleAccess realm 8',
     'app.php/effect-in-device-guard': 'ConsoleAccess realm 8',
     'app.php/effect-before-device-check': 'ConsoleAccess realm 8',
+    'app.php/handed': 'ConsoleAccess realm 8 + realm 3',
 }
 
 REALMS = "<?php\n$user_auth_realm_filenames = array(\n\t'page.php' => 3,\n\t\"dq.php\" => 3,\n\t'open.php' => -1,\n);\n"
@@ -773,7 +964,9 @@ def main():
         for path, text in (('src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', SESSION),
                            ('src/Fixture/TwoActions.php', CONTROLLER), ('src/Fixture/Sites.php', SERVICE),
                            ('src/Fixture/ServiceActions.php', SERVICE_CONTROLLER), ('src/Fixture/Who.php', WHO),
-                           ('src/Fixture/WhoActions.php', WHO_CONTROLLER)):
+                           ('src/Fixture/WhoActions.php', WHO_CONTROLLER),
+                           ('src/Fixture/CheckedQuery.php', CHECKED_QUERY), ('src/Fixture/Selection.php', SELECTION),
+                           ('src/Fixture/HandedActions.php', HANDED_CONTROLLER)):
             (root / path).parent.mkdir(parents=True, exist_ok=True)
             (root / path).write_text(text)
         # A check in one action, or in one method of a used class, must not

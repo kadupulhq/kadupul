@@ -190,6 +190,12 @@ const PURE_METHODS = [
     'Symfony\Contracts\Translation\TranslatorInterface' => ['trans'],
     'Symfony\Component\Routing\Generator\UrlGeneratorInterface' => ['generate'],
 ];
+// Responses whose constructor only stores its arguments.
+const PURE_RESPONSES = [
+    'Symfony\Component\HttpFoundation\Response',
+    'Symfony\Component\HttpFoundation\JsonResponse',
+    'Symfony\Component\HttpFoundation\RedirectResponse',
+];
 const PURE_STATIC_CALLS = [
     'Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters' => ['parse', 'context'],
     'Kadupul\Inventory\Infrastructure\Symfony\SiteListParameters' => ['parse', 'context'],
@@ -509,6 +515,39 @@ function inert_statement(Stmt $stmt, string $root, string $source): bool
     }
 
     return false;
+}
+
+/**
+ * Variables the nodes may rebind, or ['*' => true] when a variable variable
+ * could rebind any of them. Array element writes count, which is stricter
+ * than needed but keeps the list simple.
+ *
+ * @return array<string, true>
+ */
+function rebound(mixed $nodes, bool $declarations): array
+{
+    $names = [];
+    foreach (walk($nodes, $declarations) as $node) {
+        if ($node instanceof Expr\Variable && !is_string($node->name)) {
+            return ['*' => true];
+        }
+        $targets = match (true) {
+            $node instanceof Expr\Assign, $node instanceof Expr\AssignRef, $node instanceof Expr\AssignOp => [$node->var],
+            $node instanceof Stmt\Foreach_ => [$node->valueVar, $node->keyVar],
+            $node instanceof Stmt\Global_, $node instanceof Stmt\Unset_ => $node->vars,
+            $node instanceof Stmt\Static_ => array_map(fn(Node\StaticVar $v) => $v->var, $node->vars),
+            $node instanceof Stmt\Catch_ => [$node->var],
+            $node instanceof Expr\ClosureUse && $node->byRef => [$node->var],
+            default => [],
+        };
+        foreach (walk($targets, $declarations) as $inner) {
+            if (is_variable($inner)) {
+                $names[$inner->name] = true;
+            }
+        }
+    }
+
+    return $names;
 }
 
 function inert_file(string $root, string $path): bool
@@ -1314,18 +1353,22 @@ function find_method(Stmt\ClassLike $class, string $method): ?Stmt\ClassMethod
 
 /**
  * The class a receiver holds inside one method: $this, a typed parameter or a
- * typed $this->property.
+ * typed $this->property. $bound gives the class a caller passed for a
+ * callable parameter. A parameter the body can rebind has no known class.
  *
+ * @param array<string, string> $bound
  * @return Closure(Expr): ?string
  */
-function receiver_types(string $root, string $class, Stmt\ClassMethod $method): Closure
+function receiver_types(string $root, string $class, Stmt\ClassMethod $method, array $bound = []): Closure
 {
     $loaded = load_class($root, $class);
     $properties = $loaded === null ? [] : property_types($loaded);
+    $written = rebound($method->stmts ?? [], true);
     $params = [];
     foreach ($method->params as $param) {
-        if (is_variable($param->var) && type_name($param->type) !== null) {
-            $params[$param->var->name] = type_name($param->type);
+        $type = is_variable($param->var) ? (type_name($param->type) ?? $bound[$param->var->name] ?? null) : null;
+        if ($type !== null && !$param->byRef && !isset($written[$param->var->name]) && !isset($written['*'])) {
+            $params[$param->var->name] = $type;
         }
     }
 
@@ -1430,10 +1473,12 @@ function is_device_denial(Expr $expr, string $var, Closure $type_of): bool
 }
 
 /**
- * The condition of an if with no other branch whose body ends in return or
- * throw, so a true condition stops the action.
+ * The condition of an if with no other branch whose body ends in throw, or in
+ * a return $stops accepts, so a true condition stops the action.
+ *
+ * @param (Closure(?Expr): bool)|null $stops
  */
-function refusal_guard(string $root, ?Stmt $stmt, bool $return_stops, Closure $type_of): ?Expr
+function refusal_guard(string $root, ?Stmt $stmt, ?Closure $stops, Closure $type_of): ?Expr
 {
     if (!$stmt instanceof Stmt\If_ || $stmt->elseifs !== [] || $stmt->else !== null || $stmt->stmts === []) {
         return null;
@@ -1441,7 +1486,7 @@ function refusal_guard(string $root, ?Stmt $stmt, bool $return_stops, Closure $t
     // Nothing but the refusal itself may run for the caller being refused.
     $body = $stmt->stmts;
     $last = array_pop($body);
-    $refusal = $last instanceof Stmt\Return_ && $return_stops ? $last->expr
+    $refusal = $last instanceof Stmt\Return_ && $stops !== null && $stops($last->expr) ? $last->expr
         : ($last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_ ? $last->expr->expr : false);
 
     return $refusal !== false && pure($root, $body, $type_of) && pure($root, $refusal, $type_of) ? $stmt->cond : null;
@@ -1452,13 +1497,15 @@ function refusal_guard(string $root, ?Stmt $stmt, bool $return_stops, Closure $t
  * its result is assigned at the method's top level, only literal assignments
  * come before it, and the next statement stops on a null actor; a negated
  * canManageDevices() of that variable counts in the same guard or the one
- * right after it. Only the action itself may stop with return: a return in a
- * callee hands control back to the caller, so there only throw stops.
+ * right after it. Only the action itself may stop with any return: a return
+ * in a callee hands control back to the caller, so there only throw stops,
+ * or a return the caller is known to refuse on (see refused_on()).
  *
  * @param list<Stmt> $stmts
+ * @param (Closure(?Expr): bool)|null $stops
  * @return array<string, true>
  */
-function guarded_checks(string $root, array $stmts, Closure $type_of, bool $action): array
+function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $stops): array
 {
     $list = array_values($stmts);
     foreach ($list as $i => $stmt) {
@@ -1472,13 +1519,13 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, bool $acti
         }
         // The null check comes first, so no other disjunct runs before it, and
         // the rest may only check the device grant or compute.
-        $guard = refusal_guard($root, $list[$i + 1] ?? null, $action, $type_of);
+        $guard = refusal_guard($root, $list[$i + 1] ?? null, $stops, $type_of);
         $terms = $guard === null ? [] : disjuncts($guard);
         if ($terms === [] || !is_null_check($terms[0], $var)) {
             return [];
         }
         $checks = ['consoleActor' => true];
-        $next = refusal_guard($root, $list[$i + 2] ?? null, $action, $type_of);
+        $next = refusal_guard($root, $list[$i + 2] ?? null, $stops, $type_of);
         foreach ([$terms, $next === null ? [] : disjuncts($next)] as $group) {
             $denial = false;
             foreach ($group as $expr) {
@@ -1564,7 +1611,7 @@ function pure(string $root, mixed $nodes, Closure $type_of): bool
             return false;
         }
         if (($node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall)
-            && !isset($messages[spl_object_id($node)]) && !pure_method_call($node, $type_of)) {
+            && !isset($messages[spl_object_id($node)]) && !pure_method_call($root, $node, $type_of)) {
             return false;
         }
     }
@@ -1601,7 +1648,7 @@ function pure_new(string $root, string $class): bool
     return true;
 }
 
-function pure_method_call(Expr\MethodCall|Expr\NullsafeMethodCall $call, Closure $type_of): bool
+function pure_method_call(string $root, Expr\MethodCall|Expr\NullsafeMethodCall $call, Closure $type_of): bool
 {
     if (!$call->name instanceof Node\Identifier) {
         return false;
@@ -1609,7 +1656,8 @@ function pure_method_call(Expr\MethodCall|Expr\NullsafeMethodCall $call, Closure
     $name = $call->name->toString();
     $target = call_target($call, $type_of);
     if ($target !== null) {
-        return in_array($name, PURE_METHODS[$target[0]] ?? [], true);
+        return in_array($name, PURE_METHODS[$target[0]] ?? [], true)
+            || (is_variable($call->var, 'this') && pure_private($root, $target[0], $name));
     }
     // $request->query->all() reads a request bag.
     $bag = $call->var instanceof Expr\PropertyFetch && $call->var->name instanceof Node\Identifier
@@ -1620,34 +1668,100 @@ function pure_method_call(Expr\MethodCall|Expr\NullsafeMethodCall $call, Closure
 }
 
 /**
+ * A private method whose body is pure. $this->name() always runs this class's
+ * own private method, so no subclass can replace it. A reference parameter
+ * could rebind a caller's receiver, so a method with one is refused.
+ */
+function pure_private(string $root, string $class, string $name): bool
+{
+    static $open = [];
+    $key = strtolower($root . '|' . $class . '::' . $name);
+    $loaded = load_class($root, $class);
+    $method = $loaded === null ? null : find_method($loaded, $name);
+    if (isset($open[$key]) || $method === null || !$method->isPrivate() || $method->isStatic() || $method->stmts === null
+        || array_filter($method->params, fn(Node\Param $p) => $p->byRef) !== []) {
+        return false;
+    }
+    $open[$key] = true;
+    try {
+        return pure($root, $method->stmts, receiver_types($root, $class, $method));
+    } finally {
+        unset($open[$key]);
+    }
+}
+
+/**
+ * True when the value is certainly a response: a plain response built here,
+ * or a call to a private method of $class whose declared return type is one,
+ * which PHP enforces on every return.
+ */
+function returns_response(string $root, string $class, ?Expr $expr): bool
+{
+    if ($expr instanceof Expr\New_) {
+        return $expr->class instanceof Name && in_array($expr->class->toString(), PURE_RESPONSES, true);
+    }
+    if ($expr instanceof Expr\Ternary) {
+        return $expr->if !== null && returns_response($root, $class, $expr->if) && returns_response($root, $class, $expr->else);
+    }
+    if (!$expr instanceof Expr\MethodCall || !is_variable($expr->var, 'this') || !$expr->name instanceof Node\Identifier) {
+        return false;
+    }
+    $loaded = load_class($root, $class);
+    $method = $loaded === null ? null : find_method($loaded, $expr->name->toString());
+
+    return $method !== null && $method->isPrivate() && !$method->isStatic() && $method->returnType instanceof Name
+        && in_array($method->returnType->toString(), PURE_RESPONSES, true);
+}
+
+/**
+ * True when no return under $nodes leaves before the guard runs, other than
+ * one $stops accepts.
+ *
+ * @param (Closure(?Expr): bool)|null $stops
+ */
+function stops_on_return(mixed $nodes, ?Closure $stops): bool
+{
+    foreach (walk($nodes, false) as $node) {
+        if ($node instanceof Stmt\Return_ && ($stops === null || !$stops($node->expr))) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * The service call a method makes first, when everything that can run before
  * it is pure: the statements ahead of it, the other parts of its statement,
  * its arguments, and the catch blocks of a try it sits in, which run when an
  * earlier statement or the guard throws. Those must also stop the method, or
- * code after the try runs with the refusal swallowed.
+ * code after the try runs with the refusal swallowed. A return ahead of the
+ * call leaves before the guard, so it too must be one $stops accepts.
  *
  * @param list<Stmt> $stmts
- * @return array{0: string, 1: string}|null
+ * @param (Closure(?Expr): bool)|null $stops
+ * @return array{0: array{0: string, 1: string}, 1: Expr\CallLike}|null the target and the call
  */
-function first_service_call(string $root, array $stmts, Closure $type_of, bool $action): ?array
+function first_service_call(string $root, array $stmts, Closure $type_of, ?Closure $stops): ?array
 {
     foreach ($stmts as $stmt) {
         if ($stmt instanceof Stmt\TryCatch) {
             if ($stmt->finally !== null || !pure($root, $stmt->catches, $type_of)) {
                 return null;
             }
-            $found = first_service_call($root, $stmt->stmts, $type_of, $action);
+            $found = first_service_call($root, $stmt->stmts, $type_of, $stops);
             if ($found !== null) {
                 foreach ($stmt->catches as $catch) {
                     $last = $catch->stmts === [] ? null : $catch->stmts[count($catch->stmts) - 1];
-                    if (!($action && $last instanceof Stmt\Return_)
-                        && !($last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_)) {
+                    $returns = $last instanceof Stmt\Return_ && $stops !== null && $stops($last->expr);
+                    $throws = $last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_;
+                    if (!($returns || $throws) || !stops_on_return($catch->stmts, $stops)) {
                         return null;
                     }
                 }
                 return $found;
             }
-            if (!pure($root, $stmt->stmts, $type_of)) {
+            if (!pure($root, $stmt->stmts, $type_of) || !stops_on_return($stmt, $stops)) {
                 return null;
             }
             continue;
@@ -1661,7 +1775,7 @@ function first_service_call(string $root, array $stmts, Closure $type_of, bool $
             }
         }
         if ($service === null) {
-            if (!pure($root, $stmt, $type_of)) {
+            if (!pure($root, $stmt, $type_of) || !stops_on_return($stmt, $stops)) {
                 return null;
             }
             continue;
@@ -1676,28 +1790,68 @@ function first_service_call(string $root, array $stmts, Closure $type_of, bool $
         if ($expr !== $node || !pure($root, $node->getRawArgs(), $type_of)) {
             return null;
         }
-        return $target;
+        return [$target, $node];
     }
 
     return null;
 }
 
 /**
+ * True when the action assigns the call's result at its top level and the
+ * very next statement is if ($result instanceof Response) { return $result; }.
+ * A helper that answers a refusal by returning a response then stops the
+ * action as surely as a throw.
+ *
+ * @param list<Stmt> $stmts
+ */
+function refused_on(array $stmts, Expr\CallLike $call): bool
+{
+    $list = array_values($stmts);
+    foreach ($list as $i => $stmt) {
+        $assign = expression_of($stmt);
+        if (!$assign instanceof Expr\Assign || $assign->expr !== $call || !is_variable($assign->var)) {
+            continue;
+        }
+        $var = $assign->var->name;
+        $guard = $list[$i + 1] ?? null;
+        $cond = $guard instanceof Stmt\If_ ? $guard->cond : null;
+
+        return $guard instanceof Stmt\If_ && $guard->elseifs === [] && $guard->else === null
+            && $cond instanceof Expr\Instanceof_ && is_variable($cond->expr, $var) && $cond->class instanceof Name
+            && $cond->class->toString() === 'Symfony\Component\HttpFoundation\Response'
+            && count($guard->stmts) === 1 && $guard->stmts[0] instanceof Stmt\Return_
+            && $guard->stmts[0]->expr !== null && is_variable($guard->stmts[0]->expr, $var);
+    }
+
+    return false;
+}
+
+/**
  * @param array<string, true> $seen
+ * @param array<string, string> $bound classes the caller passed for callable parameters
+ * @param (Closure(?Expr): bool)|null $stops returns the caller refuses on
  * @return array<string, true>
  */
-function method_checks(string $root, string $class, Stmt\ClassMethod $method, int $depth, array &$seen): array
+function method_checks(string $root, string $class, Stmt\ClassMethod $method, int $depth, array &$seen, array $bound = [], ?Closure $stops = null): array
 {
-    $type_of = receiver_types($root, $class, $method);
-    $checks = guarded_checks($root, $method->stmts ?? [], $type_of, $depth === 0);
+    $type_of = receiver_types($root, $class, $method, $bound);
+    // Any return ends the action itself.
+    if ($depth === 0) {
+        $stops = fn(?Expr $e): bool => true;
+    }
+    $checks = guarded_checks($root, $method->stmts ?? [], $type_of, $stops);
     if ($checks !== [] || $depth >= CALL_DEPTH) {
         return $checks;
     }
     // Without its own guard, a method is covered only by the first service it
     // calls, and only when that service guards and nothing but pure code can
     // run ahead of it.
-    $target = first_service_call($root, $method->stmts ?? [], $type_of, $depth === 0);
-    if ($target === null || (in_array($target[0], ACCESS_TYPES, true) && $target[1] !== 'consoleActor')) {
+    $found = first_service_call($root, $method->stmts ?? [], $type_of, $stops);
+    if ($found === null) {
+        return [];
+    }
+    [$target, $call] = $found;
+    if (in_array($target[0], ACCESS_TYPES, true) && $target[1] !== 'consoleActor') {
         return [];
     }
     [$type, $name] = $target;
@@ -1708,8 +1862,25 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     $seen[$key] = true;
     $loaded = load_class($root, $type);
     $callee = $loaded === null ? null : find_method($loaded, $name);
+    if ($callee === null) {
+        return [];
+    }
+    // A service handed as a callable is the class the caller's variable holds.
+    $args = plain_args($call) ?? [];
+    $handed = [];
+    foreach ($callee->params as $i => $param) {
+        $arg = $args[$i] ?? null;
+        if ($param->type instanceof Node\Identifier && $param->type->toLowerString() === 'callable'
+            && is_variable($param->var) && !$param->variadic && $arg !== null && $type_of($arg) !== null) {
+            $handed[$param->var->name] = $type_of($arg);
+        }
+    }
+    // Only the action's own guard ends the request; one level down a
+    // returned response would go back to a caller that carries on.
+    $refuses = $depth === 0 && refused_on($method->stmts ?? [], $call)
+        ? fn(?Expr $e): bool => returns_response($root, $type, $e) : null;
 
-    return $callee === null ? [] : method_checks($root, $type, $callee, $depth + 1, $seen);
+    return method_checks($root, $type, $callee, $depth + 1, $seen, $handed, $refuses);
 }
 
 /**
