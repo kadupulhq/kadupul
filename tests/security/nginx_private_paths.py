@@ -38,7 +38,9 @@ def main():
         tools = ['tools/dependencies/install-legacy.php', 'tools/verify-offline.php',
                  'tools/migrate/assess.php', 'bin/legacy-device-edit.php', 'bin/console']
         guards = []
-        for index, relative in enumerate(tools):
+        # Nginx serves the theme hash builder, so only its PHP guard stands
+        # between a request and a CSS rewrite.
+        for index, relative in enumerate(tools + ['include/themes/midwinter/update_hash.php']):
             path = stage / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / relative, path)

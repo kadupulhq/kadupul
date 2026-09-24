@@ -86,7 +86,7 @@ cmd_exec	./poller_boost.php:556	        $process = proc_open($arguments, $descri
 cmd_exec	./poller_realtime.php:235					shell_exec($command);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./remote_agent.php:481								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-cmd_exec	./script_server.php:168					exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
+cmd_exec	./script_server.php:175	                exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
 cmd_exec	./snmpagent_mibcache.php:32			popen('start "CactiSNMPCacheChild" /I ' . $php . ' ' . $extra_args, 'r');
 cmd_exec	./snmpagent_mibcache.php:34			exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./snmpagent_persist.php:64		pclose(popen('start "CactiSNMPCache" /I /B ' . $php . ' ' . $extra_args, 'r'));
@@ -523,7 +523,7 @@ dynamic_include	./reports_user.php:9	include_once($config['library_path'] . '/re
 dynamic_include	./rrdcheck.php:8	include_once ($config['library_path'] . '/functions.php');
 dynamic_include	./rrdcleaner.php:10	include_once ($config['library_path'] . '/rrd.php');
 dynamic_include	./rrdcleaner.php:9	include_once ($config['library_path'] . '/functions.php');
-dynamic_include	./script_server.php:293				include_once($include_file);
+dynamic_include	./script_server.php:300	            include_once($include_file);
 dynamic_include	./scripts/ss_netsnmp_lmsensors.php:26		include($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./snmpagent_persist.php:147				include( $path_mibcache );
 dynamic_include	./spikekill.php:16	include_once($config['base_path'] . '/lib/spikekill.php');
@@ -546,7 +546,7 @@ fs_write	./cli/splice_rrd.php:875		return file_put_contents($xmlfile, $output);
 fs_write	./host.php:590		$stdout = fopen('php://output', 'w');
 fs_write	./include/global_languages.php:939			file_put_contents($config['i18n_log'], $text . $eol, $mode);
 fs_write	./include/global_languages.php:947			file_put_contents($config['i18n_text_log'], $text . $eol, $mode);
-fs_write	./include/themes/midwinter/update_hash.php:43			file_put_contents($cssFile, $fileUpdated);
+fs_write	./include/themes/midwinter/update_hash.php:50			file_put_contents($cssFile, $fileUpdated);
 fs_write	./install/functions.php:1042			file_put_contents($config['base_path'] . '/log/' . $logfile . '.log', sprintf($format_log1, $day, $time, $levelname, $data, PHP_EOL), $flags);
 fs_write	./install/functions.php:1043			file_put_contents($config['base_path'] . '/log/install-complete.log', sprintf($format_log2, $day, $time, $sectionname, $levelname, $data, PHP_EOL), $flags);
 fs_write	./install/functions.php:348			file_put_contents($cacheFile, '<[version]> ' . $cacti_upgrade_version . ' <[status]> ' . $status . ' <[sql]> ' . clean_up_lines($sql) . ' <[error]> ' . $database_last_error . PHP_EOL, FILE_APPEND);
@@ -589,8 +589,8 @@ fs_write	./lib/spikekill.php:514			$source_handle = @fopen($this->rrdfile, 'rb')
 fs_write	./lib/spikekill.php:932			$original = @fopen($rrdfile, 'rb');
 fs_write	./package_import.php:373					file_put_contents($xmlfile, $data);
 fs_write	./package_import.php:79		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
-fs_write	./script_server.php:32		define('STDIN', fopen('php://stdin', 'r'));
-fs_write	./script_server.php:33		define('STDOUT', fopen('php://stdout', 'w'));
+fs_write	./script_server.php:39	    define('STDIN', fopen('php://stdin', 'r'));
+fs_write	./script_server.php:40	    define('STDOUT', fopen('php://stdout', 'w'));
 fs_write	./scripts/ss_net_snmp_disk_bytes.php:209			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./snmpagent_mibcachechild.php:72		$lock = fopen($path_mibcache_lock, 'w');
