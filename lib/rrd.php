@@ -1888,16 +1888,6 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
                     $graph_opts .= '--alt-y-grid' . RRD_NL;
                 }
                 break;
-            case 'unit_value':
-                if (!empty($value)) {
-                    $graph_opts .= '--y-grid=' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                }
-                break;
-            case 'unit_exponent_value':
-                if (preg_match('/^[0-9]+$/', $value)) {
-                    $graph_opts .= '--units-exponent=' . $value . RRD_NL;
-                }
-                break;
             case 'height':
                 if (isset($graph_data_array['graph_height']) && preg_match('/^[0-9]+$/', $graph_data_array['graph_height'])) {
                     $graph_opts .= '--height=' . $graph_data_array['graph_height'] . RRD_NL;

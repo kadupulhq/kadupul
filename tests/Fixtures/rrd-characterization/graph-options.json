@@ -318,8 +318,6 @@
         "--base=1024",
         "--height=200",
         "--width=700",
-        "--y-grid='1:5'",
-        "--units-exponent=3",
         "--alt-y-grid",
         "--tabwidth '40'",
         "--rigid",
