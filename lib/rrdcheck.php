@@ -866,7 +866,8 @@ function rrdcheck_rrdtool_execute($command, &$pipes)
                 $command_line = rrdtool_pipe_command(array_merge(array($command_line), $command), 'RRDCHECK');
 
                 if ($command_line === false) {
-                    return;
+                    // Callers split the output, so a refused path reads as no output.
+                    return '';
                 }
             }
 
