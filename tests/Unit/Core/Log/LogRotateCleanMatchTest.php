@@ -137,6 +137,17 @@ test('lookalikes on either side of the name survive', function () {
 	));
 });
 
+/*
+ * PCRE's $ also matches just before a trailing newline, so an anchored pattern
+ * ending in $ accepted "cacti.log-20200101\n", a name a user can create on any
+ * filesystem that allows it. The pattern ends in \z for that reason.
+ */
+test('a name with a trailing newline is not treated as a rotation', function () {
+	$result = clean_directory(array('cacti.log', "cacti.log-20200101\n", 'cacti.log-20200101'));
+
+	expect($result['survivors'])->toBe(array('cacti.log', "cacti.log-20200101\n"));
+});
+
 /* The active log has no date, so it must never match its own cleanup. */
 test('the active log is never a candidate', function () {
 	$result = clean_directory(array('cacti.log'));
