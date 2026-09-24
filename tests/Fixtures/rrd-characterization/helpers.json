@@ -303,6 +303,15 @@
     {
         "fn": "rrdtool_parse_error",
         "options": [],
+        "returned": "Failed to open data file, poller may not have run yet:\n\nmissing.rrd\n(RRA Folder: (Custom))",
+        "args_after": [
+            "ERROR: opening '<ROOT>/missing.rrd': No such file or directory"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_parse_error",
+        "options": [],
         "returned": "Website does not have write access to folder, may be unable to create/update RRDs:\n\nrra/unwritable/",
         "args_after": [
             "ERROR: opening 'rra/unwritable/x.rrd': Permission denied"

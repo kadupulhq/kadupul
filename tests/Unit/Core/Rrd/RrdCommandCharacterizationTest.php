@@ -256,6 +256,8 @@ test('pure helpers match their golden', function () {
         // A file outside the install is shown as a custom folder; one inside it relative to rra/.
         array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening 'rra/missing.rrd': No such file or directory")),
         array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening '" . $root . "/rra/missing.rrd': No such file or directory")),
+        // Inside the install but not under rra/: the install path is not a folder to show.
+        array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening '" . $root . "/missing.rrd': No such file or directory")),
         array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening 'rra/unwritable/x.rrd': Permission denied")),
         array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening '/nonexistent/dir/x.rrd': No such file or directory")),
         array('fn' => 'rrdtool_function_set_font', 'args' => array('title', '', $themefonts)),

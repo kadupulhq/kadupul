@@ -4754,11 +4754,13 @@ function rrdtool_parse_error($string)
             $rra_path = dirname($filename) . "/";
             if (!is_resource_writable($rra_path)) {
                 $message = __('Website does not have write access to %s, may be unable to create/update RRDs', 'folder');
-                $rra_name = str_replace($config['base_path'], '', $rra_path);
+                $rra_name = strncmp($rra_path, $config['base_path'] . '/', strlen($config['base_path']) + 1) === 0 ? substr($rra_path, strlen($config['base_path'])) : $rra_path;
                 $rra_path = "";
             } else {
-                if (stripos($filename, $config['base_path']) !== false) {
-                    $rra_file = str_replace($config['base_path'] . '/rra/', '', $filename);
+                // Only a file under the install's rra/ folder has a folder to show.
+                $rra_root = $config['base_path'] . '/rra/';
+                if (strncmp($filename, $rra_root, strlen($rra_root)) === 0) {
+                    $rra_file = substr($filename, strlen($rra_root));
                     $rra_name = basename($rra_file);
                     $rra_path = dirname($rra_file);
                 } else {
