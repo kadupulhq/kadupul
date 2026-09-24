@@ -97,7 +97,9 @@ def main():
         'src/Inventory/Domain/NewDevice.php',
         'src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
-        'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php')]
+        'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
+        'script_server.php',
+        'include/themes/midwinter/update_hash.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -142,6 +144,8 @@ def main():
         'unmeasured-DoctrineDeviceCreationCatalog.php': 'Missing measured execution: src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'unmeasured-LegacyDeviceCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'path-traversal': 'Invalid integration source path',
+        'script-server-test-hash': 'Integration test source differs',
+        'missing-script-server-check': 'Incomplete Symfony integration checks',
     }
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
@@ -181,6 +185,10 @@ def main():
                 evidence['source_sha256']['tests/Symfony/device_creation_review_scenarios.py'] = '0' * 64
             elif case == 'creation-plugin-test-hash':
                 evidence['source_sha256']['tests/Fixtures/plugins/compatibility_test/setup.php'] = '0' * 64
+            elif case == 'script-server-test-hash':
+                evidence['source_sha256']['tests/Symfony/script_server_scenarios.py'] = '0' * 64
+            elif case == 'missing-script-server-check':
+                evidence['checks'].remove('script server refuses includes outside the base path')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case == 'missing-removal-callback-check':

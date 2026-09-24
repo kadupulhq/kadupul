@@ -91,6 +91,7 @@ log/*
 !log/.gitkeep
 cache/*
 !cache/.gitkeep
+!cache/.htaccess
 rra/*.rrd
 rra/*.xml
 scripts/*.pid
