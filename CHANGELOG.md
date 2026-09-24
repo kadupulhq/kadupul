@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Quote graph titles and vertical labels for RRDtool after substituting `|host_*|` and `|query_*|` values, not before. A quote in a substituted value, such as a device description, ended the argument early, so the graph failed to render or showed a mangled title.
+
 - Match the whole filename against the rotation format before purging a log. Cleanup accepted any name containing the log basename plus an eight digit run, so a neighbouring file with an old date in its name was deleted.
 
 - Clean each configured log once during rotation; a call after the loop re-scanned whichever log the loop left behind and counted it twice.

@@ -56,6 +56,15 @@ dataset('rrd graph scenarios', function () {
         . '<legend><entry>Inbound</entry><entry>col1-d</entry></legend></meta><data><row><t>1700000300</t><v>1.0e+00</v><v>NaN</v></row>'
         . "<row><t>1700000600</t><v>2.5e+00</v><v>3.0e+00</v></row></data></xport>\n";
 
+    // A substituted value is not HTML-escaped and must not end the quoted argument.
+    $quoting = array('title_cache' => 'Link |host_description|', 'vertical_label' => '|host_description| bps');
+    $quoting_db = rrd_characterization_graph_db(rrd_characterization_graph($quoting), $area);
+    foreach ($quoting_db as $index => $row) {
+        if ($row['sql'] === 'FROM host AS h LEFT JOIN sites') {
+            $quoting_db[$index]['result']['description'] = 'O\'Brien "core" \\ 50%: a b';
+        }
+    }
+
     return array(
         'every item type' => array('graph-items', rrd_characterization_graph_scenario($window)),
         'print_source' => array('graph-print-source', rrd_characterization_graph_scenario($window + array('print_source' => true))),
@@ -79,6 +88,7 @@ dataset('rrd graph scenarios', function () {
             $area,
             array('cookies' => array('CactiColorMode' => 'dark'))
         )),
+        'quotes in a substituted title' => array('graph-substituted-quotes', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $quoting_db))),
         'export to file' => array('graph-export', rrd_characterization_graph_scenario($window + array('export' => true, 'export_filename' => 'rra/graph_7.png', 'graphv' => true), array(), array('image_format_id' => '3'), $area)),
         'missing rrd file' => array('graph-missing-rrd', rrd_characterization_graph_scenario($window + array('print_source' => true), array(), array(), $area, array('files' => array()))),
         'xport' => array('graph-xport', rrd_characterization_graph_scenario(

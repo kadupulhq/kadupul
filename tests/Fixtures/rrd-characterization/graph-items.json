@@ -29,7 +29,7 @@
                 "--start='1700000000'",
                 "--end='1700003600'",
                 "--pango-markup ",
-                "--title='Traffic &amp; &lt;errors&gt; &quot;quoted&quot; &apos;single&apos; 100% a:b café router-1.example uplink 'A' \"B\" & <C>: 10%'",
+                "--title='Traffic &amp; &lt;errors&gt; &quot;quoted&quot; &apos;single&apos; 100% a:b café router-1.example uplink '\"'\"'A'\"'\"' \"B\" & <C>: 10%'",
                 "--vertical-label='bits/s &amp; &lt;b&gt; &quot;q&quot; 5% x:y 日本'",
                 "--slope-mode",
                 "--base=1000",
