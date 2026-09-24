@@ -165,6 +165,26 @@ test('commands on an RRD path with a space and a quote match their golden', func
     rrd_characterization_golden('path-quoting', rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)));
 });
 
+test('a create path RRDtool cannot receive is refused before any directory is made', function () {
+    $scenario = rrd_characterization_path_quoting_scenario(array('extended_paths' => 'on'));
+    array_unshift($scenario['db'], array('sql' => 'SELECT name, data_source_path FROM data_template_data', 'params' => array(34), 'result' => array('name' => 'Break', 'data_source_path' => "<path_rra>/new\ndir/x.rrd")));
+    $scenario['calls'] = array(
+        // Fetch loads lib/boost.php before it looks at its arguments.
+        array('fn' => 'rrdtool_function_fetch', 'args' => array(0, 1700000000, 1700001000)),
+        array('fn' => 'rrdtool_function_create', 'args' => array(34, false)),
+        array('fn' => 'boost_rrdtool_function_create', 'args' => array(34, false, false)),
+        array('fn' => 'rrdtool_function_create', 'args' => array(32, false)),
+        array('fn' => 'boost_rrdtool_function_create', 'args' => array(32, false, false)),
+        array('fn' => 'is_dir', 'args' => array("rra/new\ndir")),
+    );
+    $results = array_slice(rrd_characterization_run($this, $scenario)['results'], 1);
+
+    foreach (array_slice($results, 0, 4) as $result) {
+        expect($result['returned'])->toBeFalse()->and($result['sent'])->toBe(array());
+    }
+    expect($results[4]['returned'])->toBeFalse();
+});
+
 test('a line break in a substituted maximum never splits the create command', function () {
     $path = "rra/it's a.rrd";
     $observed = array();

@@ -1499,16 +1499,17 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 
     $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
 
+    // Refuse a path RRDtool cannot receive before anything touches the disk.
+    $quoted_path = $show_source == true ? '' : rrdtool_create_path($data_source_path, $local_data_id, 'BOOST');
+    if ($quoted_path === false) {
+        return false;
+    }
+
     list($owner_id, $group_id) = rrdtool_create_structured_path($data_source_path, read_config_option('storage_location') > 0, $rrdtool_pipe, 'BOOST');
 
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        $quoted_path = rrdtool_create_path($data_source_path, $local_data_id, 'BOOST');
-        if ($quoted_path === false) {
-            return false;
-        }
-
         $success = rrdtool_execute("create $quoted_path $create_ds$create_rra", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
 
         if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
