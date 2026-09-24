@@ -18,7 +18,7 @@ namespace StructuredPathOwnershipTest;
  * @param int $dir_gid   GID the directory currently has.
  * @param int $owner_id  UID of rra/, the value the loop should converge on.
  * @param int    $group_id GID of rra/.
- * @param string $file     The file holding the loop; rrd.php and boost.php both have one.
+ * @param string $file     The file holding the loop.
  * @param string $fail     'chown' or 'chgrp' to make that call fail, '' for neither.
  * @param string $rrd      The data source path; its directory decides how many
  *                         segments the loop walks.
@@ -93,11 +93,10 @@ echo json_encode($GLOBALS["calls"]);
 
 /*
  * The group test read the directory UID, so it compared an owner against a
- * group. lib/rrd.php and lib/boost.php each carry their own copy of the loop,
- * and boost_rrdtool_function_create() reaches the boost one, so both are
- * exercised here rather than only the one the issue happened to name.
+ * group. rrdtool_function_create() and boost_rrdtool_function_create() both
+ * reach the one copy of the loop, in rrdtool_create_structured_path().
  */
-$copies = array('lib/rrd.php', 'lib/boost.php');
+$copies = array('lib/rrd.php');
 
 test('a directory whose UID equals the target GID still gets its group fixed', function () use ($copies) {
     foreach ($copies as $file) {

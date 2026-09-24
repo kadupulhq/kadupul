@@ -586,6 +586,64 @@ function rrdtool_create_path($path, $local_data_id, $logopt)
 }
 
 /**
+ * Check for structured path configuration and, if in place, verify that the
+ * RRD's directory exists and create it if not. $use_proxy is the caller's own
+ * storage_location test; $logopt tags the proxy commands.
+ */
+function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_pipe, $owner_id, $group_id, $logopt)
+{
+    global $config;
+
+    if (read_config_option('extended_paths') == 'on') {
+        if ($use_proxy) {
+            if (false === rrdtool_execute(array('is_dir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt)) {
+                if (false === rrdtool_execute(array('mkdir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt)) {
+                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
+                }
+            }
+        } elseif (!is_dir(dirname($data_source_path))) {
+            if ($config['is_web'] == false || is_writable($config['rra_path'])) {
+                if (mkdir(dirname($data_source_path), 0775, true)) {
+                    if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
+                        $success  = true;
+                        $paths    = explode('/', str_replace($config['rra_path'], '/', dirname($data_source_path)));
+                        $spath    = '';
+
+                        foreach ($paths as $path) {
+                            if ($path == '') {
+                                continue;
+                            }
+
+                            $spath .= '/' . $path;
+
+                            $powner_id = fileowner($config['rra_path'] . $spath);
+                            $pgroup_id = filegroup($config['rra_path'] . $spath);
+
+                            if ($powner_id != $owner_id) {
+                                $success = chown($config['rra_path'] . $spath, $owner_id);
+                            }
+
+                            if ($pgroup_id != $group_id && $success) {
+                                $success = chgrp($config['rra_path'] . $spath, $group_id);
+                            }
+
+                            if (!$success) {
+                                cacti_log("ERROR: Unable to set directory permissions for '" . $config['rra_path'] . $spath . "'", false);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
+                }
+            } else {
+                cacti_log("WARNING: Poller has not created structured path '" . dirname($data_source_path) . "' yet.", false);
+            }
+        }
+    }
+}
+
+/**
  * Join an argument array for the RRDtool proxy as bare tokens. rrdproxy splits
  * on whitespace and resolves path operands with realpath() as sent
  * (rrdp_resolve_command_paths() in its lib/functions.php at 54aad57), so
@@ -1230,57 +1288,8 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
         $group_id = filegroup($config['rra_path']);
     }
 
-    /**
-     * check for structured path configuration, if in place verify directory
-     * exists and if not create it.
-     */
-    if (read_config_option('extended_paths') == 'on') {
-        if (read_config_option('storage_location')) {
-            if (false === rrdtool_execute(array('is_dir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
-                if (false === rrdtool_execute(array('mkdir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
-                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
-                }
-            }
-        } elseif (!is_dir(dirname($data_source_path))) {
-            if ($config['is_web'] == false || is_writable($config['rra_path'])) {
-                if (mkdir(dirname($data_source_path), 0775, true)) {
-                    if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-                        $success  = true;
-                        $paths    = explode('/', str_replace($config['rra_path'], '/', dirname($data_source_path)));
-                        $spath    = '';
-
-                        foreach ($paths as $path) {
-                            if ($path == '') {
-                                continue;
-                            }
-
-                            $spath .= '/' . $path;
-
-                            $powner_id = fileowner($config['rra_path'] . $spath);
-                            $pgroup_id = filegroup($config['rra_path'] . $spath);
-
-                            if ($powner_id != $owner_id) {
-                                $success = chown($config['rra_path'] . $spath, $owner_id);
-                            }
-
-                            if ($pgroup_id != $group_id && $success) {
-                                $success = chgrp($config['rra_path'] . $spath, $group_id);
-                            }
-
-                            if (!$success) {
-                                cacti_log("ERROR: Unable to set directory permissions for '" . $config['rra_path'] . $spath . "'", false);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
-                }
-            } else {
-                cacti_log("WARNING: Poller has not created structured path '" . dirname($data_source_path) . "' yet.", false);
-            }
-        }
-    }
+    // The owner and group are only looked up off Windows.
+    rrdtool_create_structured_path($data_source_path, read_config_option('storage_location'), $rrdtool_pipe, $owner_id ?? null, $group_id ?? null, 'POLLER');
 
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";

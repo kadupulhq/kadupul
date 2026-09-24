@@ -1513,57 +1513,8 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
         $group_id = filegroup($config['rra_path']);
     }
 
-    /**
-     * check for structured path configuration, if in place verify directory
-     * exists and if not create it.
-     */
-    if (read_config_option('extended_paths') == 'on') {
-        if (read_config_option('storage_location') > 0) {
-            if (false === rrdtool_execute(array('is_dir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST')) {
-                if (false === rrdtool_execute(array('mkdir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST')) {
-                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
-                }
-            }
-        } elseif (!is_dir(dirname($data_source_path))) {
-            if ($config['is_web'] == false || is_writable($config['rra_path'])) {
-                if (mkdir(dirname($data_source_path), 0775, true)) {
-                    if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-                        $success  = true;
-                        $paths    = explode('/', str_replace($config['rra_path'], '/', dirname($data_source_path)));
-                        $spath    = '';
-
-                        foreach ($paths as $path) {
-                            if ($path == '') {
-                                continue;
-                            }
-
-                            $spath .= '/' . $path;
-
-                            $powner_id = fileowner($config['rra_path'] . $spath);
-                            $pgroup_id = filegroup($config['rra_path'] . $spath);
-
-                            if ($powner_id != $owner_id) {
-                                $success = chown($config['rra_path'] . $spath, $owner_id);
-                            }
-
-                            if ($pgroup_id != $group_id && $success) {
-                                $success = chgrp($config['rra_path'] . $spath, $group_id);
-                            }
-
-                            if (!$success) {
-                                cacti_log("ERROR: Unable to set directory permissions for '" . $config['rra_path'] . $spath . "'", false);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
-                }
-            } else {
-                cacti_log("WARNING: Poller has not created structured path '" . dirname($data_source_path) . "' yet.", false);
-            }
-        }
-    }
+    // The owner and group are only looked up off Windows.
+    rrdtool_create_structured_path($data_source_path, read_config_option('storage_location') > 0, $rrdtool_pipe, $owner_id ?? null, $group_id ?? null, 'BOOST');
 
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
