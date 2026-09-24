@@ -377,3 +377,15 @@ test('--all on the command line selects everything', function () {
     expect($result['status'])->toBe(0)
         ->and($result['where'])->toBe('WHERE gl.id > 0');
 });
+
+/*
+ * The bare-list exception is one of the two facts the help now states, and it
+ * depends on the 'list' mapping. Cover it from argv too, not just by injection.
+ */
+test('a bare --list on the command line lists every graph', function () {
+    $result = parsed_selection(array('--list'));
+
+    expect($result['status'])->toBe(0)
+        ->and($result['where'])->toBe('WHERE gl.id > 0')
+        ->and($result['out'])->not->toContain('must use the --all option');
+});
