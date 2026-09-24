@@ -27,6 +27,7 @@ $input = json_decode($argv[1], true, 32, JSON_THROW_ON_ERROR);
 $userId = (int) $input['user'];
 $siteId = (int) $input['site'];
 $_COOKIE['Cacti'] = $input['cookie'];
+$audit = new \Kadupul\Inventory\Infrastructure\Legacy\SiteWriteAudit(new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail(getcwd()));
 $kernel = new Kernel('test', true);
 $kernel->boot();
 $container = $kernel->getContainer()->get('test.service_container');
@@ -54,7 +55,7 @@ try {
                 return $this->delegate->canManageDevices($actor);
             }
         };
-        $editor = new LegacySiteEditor($database, $revoking);
+        $editor = new LegacySiteEditor($database, $revoking, $audit);
         $site = $editor->find($siteId);
         $revision = $site->revision();
         $site->revise('Must not be saved', '', $revision);
@@ -97,7 +98,7 @@ try {
                 return $allowed;
             }
         };
-        $editor = new LegacySiteEditor($database, $guard);
+        $editor = new LegacySiteEditor($database, $guard, $audit);
         $mutations = [
             'account' => "UPDATE user_auth SET enabled = '' WHERE id = $userId",
             'console' => "DELETE FROM user_auth_realm WHERE user_id = $userId AND realm_id = 8",

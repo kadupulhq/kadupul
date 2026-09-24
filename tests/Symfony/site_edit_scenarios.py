@@ -141,7 +141,7 @@ $access = new class implements Kadupul\IdentityAccess\Contract\ConsoleAccess {
     public function canManageDevices(Kadupul\IdentityAccess\Contract\Actor $actor): bool { return $this->allowed; }
 };
 $access->actor = new Kadupul\IdentityAccess\Contract\Actor(ACTOR_ID, 'test');
-$editor = new Kadupul\Inventory\Infrastructure\Legacy\LegacySiteEditor($db, $access);
+$editor = new Kadupul\Inventory\Infrastructure\Legacy\LegacySiteEditor($db, $access, new Kadupul\Inventory\Infrastructure\Legacy\SiteWriteAudit(new Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail('/var/www/html')));
 $site = $editor->find(SITE_ID);
 $revision = $site->revision();
 $site->revise('Adapter edit', '', $revision);
@@ -164,6 +164,15 @@ echo json_encode($results);
         expected = {'revoked': 'denied', 'different': 'denied', 'anonymous': 'denied', 'stale': 'conflict', 'deleted': 'missing', 'missing_read': True}
         expected.update({case + '_rolled_back': True for case in ('revoked', 'different', 'anonymous', 'stale', 'deleted')})
         check(result['exit'] == 0 and json.loads(result['stdout']) == expected, 'site persistence rechecks actor and revision and rolls back rejected saves')
+        audit = harness.command('cat', '/var/www/html/log/kadupul-audit.jsonl', check=True)['stdout']
+        events = [json.loads(line) for line in audit.splitlines()]
+        edits = [(event['decision'], event['outcome']) for event in events
+                 if event.get('action') == 'inventory.site.edit' and event.get('target') == {'type': 'site', 'id': str(site_id)}
+                 and event.get('actor') == {'id': user_id}]
+        check(edits[:1] == [('allowed', 'succeeded')] and edits[-5:] == [('denied', 'denied')] * 3 + [('allowed', 'failed')] * 2,
+              'site edits record structured success, persistence denial and post-authorization failure')
+        check(all(marker not in audit for marker in ('<site>東京', 'alert(1)', 'Adapter edit', 'adapter concurrent edit', 'changed. Reload')),
+              'structured site audit excludes submitted fields and exception text')
         check(session.request(path)['status'] == 404 and post(parser.fields)[0] == 404, 'deleted sites cannot be edited or recreated by stale forms')
     finally:
         harness.sql(f'DELETE FROM sites WHERE id={site_id}')
