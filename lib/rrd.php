@@ -634,7 +634,13 @@ function rrdtool_create_path($path, $local_data_id, $logopt)
  */
 function rrdtool_create_prepare($data_source_path, $show_source, $use_proxy, $rrdtool_pipe, $local_data_id, $logopt)
 {
-    $quoted_path = $show_source == true ? '' : rrdtool_create_path($data_source_path, $local_data_id, $logopt);
+    // Showing the command must not touch the disk; the owner and group are
+    // only used once the file is created.
+    if ($show_source == true) {
+        return array('', null, null);
+    }
+
+    $quoted_path = rrdtool_create_path($data_source_path, $local_data_id, $logopt);
     if ($quoted_path === false) {
         return false;
     }

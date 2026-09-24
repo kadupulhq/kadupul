@@ -60,7 +60,7 @@ test('create source matches its golden for each data source shape', function () 
             array('fn' => 'rrdtool_function_create', 'args' => array(11, true)),
             array('fn' => 'rrdtool_function_create', 'args' => array(12, true)),
             array('fn' => 'rrdtool_function_create', 'args' => array(13, true)),
-            // Structured paths create the directory even when only showing the source.
+            // Showing the source with structured paths creates no directory.
             array('fn' => 'rrdtool_function_create', 'args' => array(14, true), 'options' => array('extended_paths' => 'on')),
             array('fn' => 'is_dir', 'args' => array('rra/3')),
         ),
