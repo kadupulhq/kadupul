@@ -38,7 +38,8 @@ second implementation or a module boundary needs one.
 | --- | --- |
 | Characterization tests for generated commands and helpers | PR #406 |
 | `RrdCommand` and a pipe-mode encoder replacing shell escaping on the pipe | PR #410 |
-| Remaining `cacti_escapeshellarg()` calls on the pipe in `lib/rrd.php` moved to the encoder | This PR |
+| Remaining `cacti_escapeshellarg()` calls on the pipe in `lib/rrd.php` moved to the encoder | PR #421 |
+| RRD file paths and the remaining pipe commands in `lib/rrd.php`, `lib/boost.php`, `lib/rrdcheck.php` and `lib/rrd_maintenance.php` quoted with the encoder | This PR |
 | One-shot calls through `symfony/process` argument arrays; long-lived pipe in `LocalRrdtool` | Pending |
 | Proxy client hardening without a wire format change | Pending |
 | Graph command generation split by option, definition, item type and legend | Pending |

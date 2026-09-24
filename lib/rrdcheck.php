@@ -149,7 +149,7 @@ function do_rrdcheck($thread_id = 1)
             $file = $rrdval['data_source_path'];
 
             if ($use_proxy) {
-                $file_exists = rrdtool_execute('file_exists ' . cacti_escapeshellarg($file), true, RRDTOOL_OUTPUT_BOOLEAN, false, 'RRDCHECK');
+                $file_exists = rrdtool_execute(['file_exists', $file], true, RRDTOOL_OUTPUT_BOOLEAN, false, 'RRDCHECK');
             } else {
                 clearstatcache();
                 $file_exists = file_exists($file);
@@ -205,7 +205,7 @@ function do_rrdcheck($thread_id = 1)
                 }
 
                 if ($use_proxy) {
-                    $output = rrdtool_execute('info ' . cacti_escapeshellarg($file), false, RRDTOOL_OUTPUT_STDOUT, false, 'RRDCHECK');
+                    $output = rrdtool_execute(['info', $file], false, RRDTOOL_OUTPUT_STDOUT, false, 'RRDCHECK');
                 } else {
                     $output = rrdcheck_rrdtool_execute(['info', $file], $pipes);
                 }
@@ -863,13 +863,13 @@ function rrdcheck_rrdtool_execute($command, &$pipes)
             $command_line = array_shift($command);
 
             if (cacti_sizeof($command)) {
-                $escaped_args = array();
+                try {
+                    $command_line .= ' ' . implode(' ', array_map('rrdtool_pipe_quote', $command));
+                } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
+                    cacti_log('ERROR: RRDtool ' . $command_line . ' was not run. ' . $e->getMessage(), false, 'RRDCHECK');
 
-                foreach ($command as $arg) {
-                    $escaped_args[] = cacti_escapeshellarg($arg);
+                    return;
                 }
-
-                $command_line .= ' ' . implode(' ', $escaped_args);
             }
 
             $command = $command_line;
