@@ -3,15 +3,17 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('unknown proxy existence never authorizes destructive RRD creation', function ($operation, $response) {
+/** Run one create guard against a fake proxy that answers file_exists with $response. */
+function rrd_proxy_create_guard_run($test, string $operation, ?string $response): array
+{
     if (!function_exists('socket_create_pair')) {
-        $this->markTestSkipped('The sockets extension is required.');
+        $test->markTestSkipped('The sockets extension is required.');
     }
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/proxy-create-guard-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
     file_put_contents($dir . '/global_arrays.php', '<?php');
-    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $coverage = $test->getTestResultObject()->getCodeCoverage();
     $bootstrap = '';
     if ($coverage !== null) {
         $bootstrap = 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
@@ -55,20 +57,32 @@ PHP;
             throw new RuntimeException($error . $output);
         }
         expect($status)->toBe(0);
-        $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-        expect($result[0])->toBe($operation === 'boost-update' ? 'ERROR: Unable to confirm RRD existence' : -1);
-        expect($result[1])->toBe('1700000060:42');
-        expect($result[2])->toStartWith('file_exists ')->not->toContain('create ')->not->toContain('update ');
-        expect(substr_count($result[2], '_EOT_'))->toBe(1);
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
             $coverage->merge(unserialize(file_get_contents($reports[0])));
         }
+
+        return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
     } finally {
         foreach (glob($dir . '/*') as $file) {
             unlink($file);
         }
         rmdir($dir);
     }
+}
+
+test('unknown proxy existence never authorizes destructive RRD creation', function ($operation, $response) {
+    $result = rrd_proxy_create_guard_run($this, $operation, $response);
+    expect($result[0])->toBe($operation === 'boost-update' ? 'ERROR: Unable to confirm RRD existence' : -1);
+    expect($result[1])->toBe('1700000060:42');
+    expect($result[2])->toStartWith('file_exists ')->not->toContain('create ')->not->toContain('update ');
+    expect(substr_count($result[2], '_EOT_'))->toBe(1);
 })->with(array('boost-update', 'boost-create', 'direct-create'))->with(array(null, 'invalid OK u:0.00'));
+
+test('an existing proxied RRD is checked with a bare path and never recreated', function ($operation) {
+    $result = rrd_proxy_create_guard_run($this, $operation, 'OK u:0.00 s:0.00 r:0.00');
+
+    expect($result[0])->toBe(-1)
+        ->and($result[2])->toBe("file_exists ./sample.rrd_EOT_\r\n");
+})->with(array('boost-create', 'direct-create'));

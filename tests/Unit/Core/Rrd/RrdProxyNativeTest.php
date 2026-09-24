@@ -73,7 +73,7 @@ SOURCE;
     array("ERROR: expected OK u:0\n", false, 'expected OK u:0'),
 ));
 
-test('array commands reach the proxy quoted, and a NUL is not sent', function () {
+test('array commands reach the proxy as bare tokens, and unsafe arguments are not sent', function () {
     if (!function_exists('socket_create_pair')) {
         $this->markTestSkipped('The sockets extension is required.');
     }
@@ -97,10 +97,13 @@ if (!socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $sockets)) { exit(2); }
 foreach ($sockets as $socket) {
     socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec'=>2,'usec'=>0));
 }
-$refused = rrdtool_execute(array('info', "/fixture/it\0s.rrd"), false, RRDTOOL_OUTPUT_STDOUT, array($sockets[0], 'fixture-key'));
+$refused = array();
+foreach (array("/fixture/it\0s.rrd", '/fixture/it s.rrd', "/fixture/it's.rrd", '') as $path) {
+    $refused[] = rrdtool_execute(array('info', $path), false, RRDTOOL_OUTPUT_STDOUT, array($sockets[0], 'fixture-key'));
+}
 $packet = "info output\nOK u:0.00 s:0.00 r:0.00\n_EOP_\r\n_EOT_\r\n";
 if (socket_write($sockets[1], $packet) !== strlen($packet)) { exit(3); }
-$output = rrdtool_execute(array('info', "/fixture/it's a.rrd"), false, RRDTOOL_OUTPUT_STDOUT, array($sockets[0], 'fixture-key'));
+$output = rrdtool_execute(array('info', '/fixture/sample.rrd'), false, RRDTOOL_OUTPUT_STDOUT, array($sockets[0], 'fixture-key'));
 $command = socket_read($sockets[1], 4096, PHP_BINARY_READ);
 echo json_encode(array($refused, $output, $command));
 socket_close($sockets[0]);
@@ -115,8 +118,8 @@ SOURCE;
         fclose($pipes[2]);
         $this->assertSame(0, proc_close($process), $error . $output);
         expect($error)->toBe('');
-        // The first command read is the second one sent, so the NUL never reached the socket.
-        expect(json_decode($output, true, 512, JSON_THROW_ON_ERROR))->toBe(array(false, 'info output', "info './it'\"'\"'s a.rrd'_EOT_\r\n"));
+        // The only command read is the safe one, so the refused ones never reached the socket.
+        expect(json_decode($output, true, 512, JSON_THROW_ON_ERROR))->toBe(array(array(false, false, false, false), 'info output', "info ./sample.rrd_EOT_\r\n"));
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
