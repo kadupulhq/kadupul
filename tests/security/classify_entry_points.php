@@ -121,6 +121,13 @@ const REVIEWED_INCLUDES = [
 // Fragment requires that end a direct request, traced by hand: the path is
 // built from $config, which only the bootstrap defines, so without it the
 // require names a file under / and PHP stops. Nothing after it runs.
+// Globals a file writes at its top level, traced by hand, each with why the
+// write cannot change what an includer trusts.
+const REVIEWED_GLOBALS = [
+    'install/cli_check.php' => [
+        'original_memory_limit' => 'saves ini_get(\'memory_limit\') for the memory report in lib/utility.php; no gate reads it',
+    ],
+];
 const HALTING_REQUIRES = [
     'include/csrf.php' => 'include/vendor/csrf/csrf-conf.php',
 ];
@@ -481,8 +488,11 @@ function is_declaration(Stmt $stmt): bool
 function inert_statement(Stmt $stmt, string $root, string $source): bool
 {
     if (is_declaration($stmt) || $stmt instanceof Stmt\Use_ || $stmt instanceof Stmt\GroupUse
-        || $stmt instanceof Stmt\Global_ || $stmt instanceof Stmt\Nop) {
+        || $stmt instanceof Stmt\Nop) {
         return true;
+    }
+    if ($stmt instanceof Stmt\Global_) {
+        return inert_global($stmt, $root, $source);
     }
     if ($stmt instanceof Stmt\Namespace_) {
         return $stmt->stmts === [] && $stmt->getAttribute('kind') === Stmt\Namespace_::KIND_SEMICOLON;
@@ -550,6 +560,29 @@ function rebound(mixed $nodes, bool $declarations): array
     }
 
     return $names;
+}
+
+/**
+ * At the top level of a requested page global changes nothing, but in a file
+ * included from a function it binds the name to the caller's global. The
+ * classifier credits inert and preamble statements without review as if
+ * their writes were local scratch, and reads the auth.php flags as the
+ * page's own, so a global naming either is not inert. Writes elsewhere run
+ * behind a gate or in code the classifier already refuses or pins.
+ */
+function inert_global(Stmt\Global_ $stmt, string $root, string $source): bool
+{
+    $others = array_filter(program($root, $source) ?? [], fn(Stmt $s) => !$s instanceof Stmt\Global_
+        && (inert_statement($s, $root, $source) || preamble_statement($s)));
+    $written = rebound($others, false) + array_fill_keys(['guest_account', 'auth_json', 'auth_text'], true);
+    foreach ($stmt->vars as $var) {
+        if (!is_variable($var) || isset($written['*'])
+            || (isset($written[$var->name]) && !array_key_exists($var->name, REVIEWED_GLOBALS[$source] ?? []))) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function inert_file(string $root, string $path): bool

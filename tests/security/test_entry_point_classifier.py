@@ -65,6 +65,11 @@ NEW_CASES = {
     # isset() is true for false, so the guest path still applies.
     'guest flag set to false': ("<?php\n$guest_account = false;\n" + AUTH, 'guest-or-realm:3'),
     'guest flag set to null': ("<?php\n$guest_account = null;\n" + AUTH, 'realm:3'),
+    # Included from a function, global makes the literal write a global one.
+    'global with a literal write before the auth include': ("<?php\nglobal $x;\n$x = 1;\n" + AUTH, 'unknown'),
+    'global with a literal write': ("<?php\nglobal $x;\n$x = 'a';\n", 'unknown'),
+    'global naming the guest flag': ("<?php\nglobal $guest_account;\n" + AUTH, 'unknown'),
+    'global nothing writes before the auth include': ("<?php\nglobal $x;\n" + AUTH, 'realm:3'),
 }
 
 FRAGMENT_EFFECTS = {
