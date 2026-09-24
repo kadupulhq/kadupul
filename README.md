@@ -66,10 +66,12 @@ sudo -u cacti php -q cli/upgrade_database.php --forcever=`cat include/cacti_vers
 ```
 
 Or set the version in the database directly, to the version you are upgrading
-*from*. Naming the wrong one makes the installer upgrade from the wrong point:
+*from*. Replace the placeholder with that version: naming a different one makes
+the installer replay migrations from the wrong point, which on an existing
+database can fail part way or change data it should not touch.
 
 ```sql
-update version set cacti = '1.1.38';
+update version set cacti = '<version you are upgrading from>';
 ```
 
 Upgrading from a pre-1.x release requires the upgrade script above.
