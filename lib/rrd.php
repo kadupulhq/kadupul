@@ -511,6 +511,14 @@ function rrdtool_proxy_token_is_safe($argument)
     return $argument !== '' && !preg_match('/[\s\'"\\\\\0]/', $argument);
 }
 
+/** Whether rrdtool_execute() sends commands to the RRDtool proxy. */
+function rrdtool_uses_proxy()
+{
+    global $config;
+
+    return ($config['force_storage_location_local'] ?? false) !== true && (bool) read_config_option('storage_location');
+}
+
 /**
  * Write one argument, such as an RRD path, for a command that rrdtool_execute()
  * sends as a string: quoted for the local pipe, bare for the RRDtool proxy,
@@ -520,10 +528,8 @@ function rrdtool_proxy_token_is_safe($argument)
  */
 function rrdtool_command_argument($argument)
 {
-    global $config;
-
     $argument = (string) $argument;
-    if (($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location')) {
+    if (rrdtool_uses_proxy()) {
         return rrdtool_proxy_token_is_safe($argument) ? $argument : false;
     }
 
@@ -536,9 +542,7 @@ function rrdtool_command_argument($argument)
  */
 function rrdtool_command_path($path)
 {
-    global $config;
-
-    if (($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location')) {
+    if (rrdtool_uses_proxy()) {
         $path = rrdtool_proxy_token($path);
     }
 
@@ -682,9 +686,19 @@ function rrdtool_proxy_token($argument)
 {
     global $config;
 
-    $rra_path = (string) ($config['rra_path'] ?? '');
+    $argument = (string) $argument;
+    $rra_path = rtrim((string) ($config['rra_path'] ?? ''), '/');
+    if ($rra_path === '') {
+        return $argument;
+    }
 
-    return $rra_path === '' ? (string) $argument : str_replace($rra_path, '.', (string) $argument);
+    // Only a leading root at a directory boundary is rewritten; the same text
+    // elsewhere in a path, or a sibling such as /rrafast, is another place.
+    if ($argument === $rra_path) {
+        return '.';
+    }
+
+    return strncmp($argument, $rra_path . '/', strlen($rra_path) + 1) === 0 ? '.' . substr($argument, strlen($rra_path)) : $argument;
 }
 
 /**
