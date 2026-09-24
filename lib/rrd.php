@@ -252,7 +252,7 @@ function __rrd_proxy_init($logopt = 'WEBLOG')
     }
 
     $request = $client_key . $terminator;
-    if (@socket_write($rrdp_socket, $request) !== strlen($request)) {
+    if (!rrdtool_proxy_write($rrdp_socket, $request)) {
         cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Unable to send the client key.', false, $logopt, POLLER_VERBOSITY_LOW);
         socket_close($rrdp_socket);
         return false;
@@ -323,7 +323,8 @@ function rrdtool_proxy_read_key($socket, $logopt, $timeout = 10, $max_bytes = 16
             return false;
         }
         socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => intdiv($remaining, 1000000000), 'usec' => max(1, intdiv($remaining % 1000000000, 1000))));
-        $recv = @socket_read($socket, 4096, PHP_BINARY_READ);
+        // Never ask for more than the cap leaves, so the buffer cannot outgrow it.
+        $recv = @socket_read($socket, min(4096, $max_bytes + strlen($terminator) - strlen($received)), PHP_BINARY_READ);
         if ($recv === false) {
             cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Time-out while reading', false, $logopt, POLLER_VERBOSITY_LOW);
             return false;
@@ -421,6 +422,20 @@ function __rrd_close($rrdtool_pipe)
     rrdtool_reset_language();
 }
 
+/** Write all of $data; socket_write() may send only part of it. False on an error or no progress. */
+function rrdtool_proxy_write($socket, $data)
+{
+    while ($data !== '') {
+        $written = @socket_write($socket, $data);
+        if ($written === false || $written === 0) {
+            return false;
+        }
+        $data = substr($data, $written);
+    }
+
+    return true;
+}
+
 function __rrd_proxy_close($rrdp)
 {
     /* close the rrdtool proxy server connection */
@@ -428,7 +443,7 @@ function __rrd_proxy_close($rrdp)
     if ($rrdp) {
         $quit = encrypt('quit', $rrdp[1]);
         if ($quit !== false) {
-            @socket_write($rrdp[0], $quit . $terminator);
+            rrdtool_proxy_write($rrdp[0], $quit . $terminator);
         }
         @socket_shutdown($rrdp[0], 2);
         @socket_close($rrdp[0]);
@@ -1148,7 +1163,13 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
         }
         return null;
     }
-    socket_write($rrdp_socket, $frame . $end_of_sequence);
+    if (!rrdtool_proxy_write($rrdp_socket, $frame . $end_of_sequence)) {
+        cacti_log('CACTI2RRDP ERROR: Unable to send the command to the RRDtool proxy.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
+        if ($rrdp_auto_close) {
+            __rrd_proxy_close($rrdp);
+        }
+        return null;
+    }
 
     $input = '';
     $output = '';
