@@ -19,8 +19,8 @@ not a claim that the procedural application has already been decomposed.
 
 Symfony owns the application lifecycle and composition root. Platform owns
 health, response security headers and installation configuration adapters.
-IdentityAccess owns the current-actor query and public Actor/ConsoleAccess
-contracts, including the closed audit-event boundary used to attribute security
+IdentityAccess owns the current-actor query and public Actor/ConsoleAccess/
+ConsoleOperator contracts, including the closed audit-event boundary used to attribute security
 decisions. Inventory owns device-list criteria, its ListDevices use case,
 read models and DeviceCatalog port, plus the Device aggregate, EditDevice command
 and DeviceEditor port. Site administration reads use the ListSites query and
@@ -99,7 +99,12 @@ controller and Twig rendering. Its application use case depends on a catalog por
 and IdentityAccess's public access contract. Native session and legacy-schema SQL
 are confined to adapters; new routes do not bootstrap the procedural application.
 Platform's PDO/configuration contracts are technical integration APIs used only
-by infrastructure, never domain/application services.
+by infrastructure, never domain/application services. Platform's own
+`Application/` layer is the exception this constrains rather than escapes: it
+holds installation-maintenance use cases such as `AnalyzeDatabase`, and it
+reaches the database only through an `Application/Port` such as
+`DatabaseMaintenance`, never by importing `Platform/Contract` or `Infrastructure`
+directly.
 
 Assignable-site, device-creation choice, device-site filter, device details
 and site catalog reads use Doctrine DBAL. Each Inventory infrastructure adapter

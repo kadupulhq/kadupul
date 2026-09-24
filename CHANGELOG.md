@@ -36,6 +36,10 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Run cli/analyze_database.php through a Symfony command, and add kadupul:database:analyze with --json and an explicit operator. The flags are unchanged. The command now requires an operator with the Console Access and Settings/Utilities realms.
+
+- Configure the `local`, `main` and `web` database connections through DoctrineBundle, which fills credentials from `include/config.php` when a connection opens. The Inventory reads now use the `web` connection. The bundle is added for idiomatic DBAL configuration. Its `doctrine:database:create`, `doctrine:database:drop` and `dbal:run-sql` console commands are removed, because the installer owns the schema.
+
 - Normalize malformed device-removal worker acknowledgements to the safe uncertain-outcome response.
 
 - Add Symfony device-removal confirmation with graph/data retention choices, shared-dependency protection and verified remote cleanup.

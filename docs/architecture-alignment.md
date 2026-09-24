@@ -23,6 +23,7 @@ changes a boundary.
 | Inventory | Partial | Device and site reads plus selected edit/create/lifecycle/assignment commands use domain/application/port boundaries. | Complete remaining advanced settings, plugin contributions, exports, and legacy route cutover. |
 | Alerting | Partial | Test mail and administrator notification paths have application ports and infrastructure adapters. | Move alert rules, evaluation, incidents, and notification intent behind the module boundary. |
 | Collection and Graphing | Planned | These capabilities remain in the procedural application; the architecture document defines ownership only. | Establish a first tested use case and port before adding module scaffolding. |
+| Command-line tools | Foundation | cli/analyze_database.php forwards to kadupul:database:analyze through LegacyCli; parity scenarios compare it with the frozen original. | Migrate the device scripts after the open device stack merges. |
 
 ## Audit event policy
 
