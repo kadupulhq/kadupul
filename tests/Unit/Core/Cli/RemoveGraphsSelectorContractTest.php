@@ -273,3 +273,107 @@ test('the printed usage block lists every option and balances its brackets', fun
 test('the help does not call --list the only selectorless mode', function () {
     expect(strpos(rendered_help(), 'the one mode that accepts no'))->toBeFalse();
 });
+
+/**
+ * Run the command's real getopt() spec and its real option-to-selector loop
+ * against an argv, then feed the result straight into the selection block, so
+ * the chain from command line to WHERE clause is covered rather than assumed.
+ *
+ * @param array $argv The tokens to pass as if they were the command line.
+ *
+ * @return array{status: int, out: string, where: string|null}
+ */
+function parsed_selection(array $argv)
+{
+    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/remove_graphs.php');
+    expect($source)->not->toBeFalse();
+
+    // The spec and the mapping loop, taken from the file rather than retyped.
+    $spec_start = strpos($source, '$shortopts =');
+    $loop_start = strpos($source, 'foreach ($options as $arg => $value) {', $spec_start);
+    expect($spec_start)->not->toBeFalse();
+    expect($loop_start)->not->toBeFalse();
+
+    $open  = strpos($source, '{', $loop_start);
+    $depth = 0;
+    $loop_end = $open;
+
+    for ($i = $open; $i < strlen($source); $i++) {
+        if ($source[$i] === '{') {
+            $depth++;
+        } elseif ($source[$i] === '}') {
+            $depth--;
+
+            if ($depth === 0) {
+                $loop_end = $i + 1;
+
+                break;
+            }
+        }
+    }
+
+    $parser = substr($source, $spec_start, $loop_end - $spec_start);
+    expect($parser)->toContain('getopt(');
+
+    $sel_start = strpos($source, "\$sql_where  = 'WHERE gl.id > 0';");
+    $sel_end   = strpos($source, '$graphs = db_fetch_assoc(', $sel_start);
+    $selection = substr($source, $sel_start, $sel_end - $sel_start);
+
+    $code = 'function cacti_sizeof($a) { return is_array($a) ? count($a) : 0; }'
+        . 'function db_qstr_rlike($r) { return "RLIKE " . chr(39) . $r . chr(39); }'
+        . 'function display_help() {} function display_version() {}'
+        . '$host_ids = array(); $host_template_ids = array(); $graph_template_ids = array(); $regex = array();'
+        . '$all = false; $list = false; $force = false; $preserve = false; $quietMode = false;'
+        . '$listHosts = false; $listHostTemplates = false; $listGraphTemplates = false; $graphType = "";'
+        . $parser . $selection
+        . 'echo "WHERE:" . $sql_where;';
+
+    $command = array_merge(array(PHP_BINARY, '-r', $code, '--'), $argv);
+    $pipes   = array();
+    $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    expect($process)->not->toBeFalse();
+
+    $out = stream_get_contents($pipes[1]);
+    $err = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    $status = proc_close($process);
+
+    $where = strpos($out, 'WHERE:') !== false ? substr($out, strpos($out, 'WHERE:') + 6) : null;
+
+    return array('status' => $status, 'out' => $out, 'err' => $err, 'where' => $where);
+}
+
+/*
+ * The cases above inject the selector arrays directly. This one starts from an
+ * argv so a parser change that stopped populating them would be caught.
+ */
+test('selectors given on the command line reach the selection', function () {
+    $result = parsed_selection(array('--host-id=5', '--graph-template-id=3'));
+
+    expect($result['status'])->toBe(0)
+        ->and($result['where'])->toContain('gl.host_id IN (5)')
+        ->and($result['where'])->toContain('gl.graph_template_id IN (3)');
+});
+
+/* Each selector is declared with "::", so a repeat arrives as an array. */
+test('a repeated selector keeps every value', function () {
+    $result = parsed_selection(array('--host-id=5', '--host-id=7', '--host-id=9'));
+
+    expect($result['status'])->toBe(0)
+        ->and($result['where'])->toContain('gl.host_id IN (5,7,9)');
+});
+
+test('an argv with no selector is refused the same way', function () {
+    $result = parsed_selection(array());
+
+    expect($result['status'])->toBe(1)
+        ->and($result['out'])->toContain('must use the --all option');
+});
+
+test('--all on the command line selects everything', function () {
+    $result = parsed_selection(array('--all'));
+
+    expect($result['status'])->toBe(0)
+        ->and($result['where'])->toBe('WHERE gl.id > 0');
+});
