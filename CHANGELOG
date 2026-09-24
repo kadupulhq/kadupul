@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Match the whole filename against the rotation format before purging a log, so cleanup no longer deletes an unrelated file whose name merely contains the log basename and an old date
 -issue: Correct the remove_graphs help, which called --graph-template-id mandatory when any one of the four selectors is enough, and did not mention that a bare --list lists every Graph or that an empty selection is refused without --all
 -issue: Use $rdatabase_retries for a remote poller's connection to the main server, which passed the local $database_retries and ignored the configured remote value
 -issue: Read the group of a newly created structured RRD directory with filegroup() rather than fileowner() in both rrd and boost, so a root-run poller no longer skips a needed chgrp when the directory owner id happens to equal the target group id

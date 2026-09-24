@@ -494,33 +494,27 @@ function logrotate_file_clean($name, $log, $date, $rotation) {
 
 		cacti_log('Cacti Log Rotation - Purging all ' . $name . ' logs before '. $e, true, 'MAINT');
 
-		foreach ($dir as $d) {
-			$fileparts = explode('-', $d);
-			$matches   = false;
+		/* The only names logrotate_file_rotate() creates are the log basename
+		   followed by -YYYYMMDD, plus -N when that name was already taken.
+		   Anything else in the directory belongs to somebody else. */
+		$rotation_format = '/^' . preg_quote($baselogname, '/') . '-(\d{8})(?:-\d{1,2})?$/';
 
-			if (strpos($d, $baselogname) !== false) {
-				if ($fileparts > 1) {
-					foreach($fileparts as $p) {
-						// Is it in the form YYYYMMDD?
-						if (is_numeric($p) && strlen($p) == 8) {
-							$matches = true;
-							if ($p < $e) {
-								if (is_writable($baselogdir . $d)) {
-									@unlink($baselogdir . $d);
-									cacti_log('Cacti Log Rotation - Purging ' . $name  . ' Log : ' . $d, true, 'MAINT');
-								} else {
-									cacti_log('Cacti Log Rotation - ERROR: Can not purge ' . $name  . ' Log : ' . $d, true, 'MAINT');
-								}
-							} else {
-								cacti_log('Cacti Log Rotation - NOTE: Not expired, keeping ' . $name . ' Log : ' . $d, true, 'MAINT', POLLER_VERBOSITY_HIGH);
-							}
-						}
-					}
-				}
+		foreach ($dir as $d) {
+			if (!preg_match($rotation_format, $d, $fileparts)) {
+				cacti_log('Cacti Log Rotation - NOTE: File not in expected naming format, ignoring ' . $name . ' Log : ' . $d, true, 'MAINT', POLLER_VERBOSITY_DEBUG);
+
+				continue;
 			}
 
-			if ($matches) {
-				cacti_log('Cacti Log Rotation - NOTE: File not in expected naming format, ignoring ' . $name . ' Log : ' . $d, true, 'MAINT', POLLER_VERBOSITY_DEBUG);
+			if ($fileparts[1] < $e) {
+				if (is_writable($baselogdir . $d)) {
+					@unlink($baselogdir . $d);
+					cacti_log('Cacti Log Rotation - Purging ' . $name  . ' Log : ' . $d, true, 'MAINT');
+				} else {
+					cacti_log('Cacti Log Rotation - ERROR: Can not purge ' . $name  . ' Log : ' . $d, true, 'MAINT');
+				}
+			} else {
+				cacti_log('Cacti Log Rotation - NOTE: Not expired, keeping ' . $name . ' Log : ' . $d, true, 'MAINT', POLLER_VERBOSITY_HIGH);
 			}
 		}
 	}
