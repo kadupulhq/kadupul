@@ -2907,6 +2907,43 @@ function cacti_rrdtool_valid_bound($value) {
 }
 
 /**
+ * cacti_rrdtool_valid_offset - validate a numeric value written bare into an
+ *   RRDtool command
+ *
+ *   SHIFT offsets and TIC fractions are concatenated into the command stream
+ *   unquoted. That stream splits arguments on whitespace and takes a new
+ *   command after a newline, and is_numeric() accepts both leading and
+ *   trailing whitespace, so the value must also carry none.
+ *
+ * @param  (mixed) $value - the stored graph item value
+ *
+ * @return (bool) True when the value can be emitted as a bare number
+ */
+function cacti_rrdtool_valid_offset($value) {
+	$value = (string) $value;
+
+	return $value === trim($value) && is_numeric($value);
+}
+
+/**
+ * cacti_rrdtool_valid_dash_list - validate an RRDtool dashes value
+ *
+ *   A comma separated list of lengths, written bare into the command stream,
+ *   so it must carry no whitespace at all. The editors anchor their patterns
+ *   with \z, but rows stored before that are unconstrained and an imported
+ *   template never passes through them.
+ *
+ * @param  (mixed) $value - the stored dashes value
+ *
+ * @return (bool) True when the value can be emitted as a bare dash list
+ */
+function cacti_rrdtool_valid_dash_list($value) {
+	$value = (string) $value;
+
+	return preg_match('/^[0-9]+(?:,[0-9]+)*\z/', $value) === 1;
+}
+
+/**
  * cacti_rrdtool_valid_ds_name - validate an RRDtool data source name
  *
  * @param  (string) $name - Data source name
