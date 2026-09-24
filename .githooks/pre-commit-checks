@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Validate staged content only. The working tree is never rewritten.
+#
+# This branch keeps Cacti's original formatting and ships no
+# .php-cs-fixer.php, so there is no style stage here. The main branch's copy
+# of this file has one because it has the configuration to check against.
+# Adding a style stage to this branch means adding that configuration first,
+# and that is a decision about the branch rather than about this hook.
+
+set -euo pipefail
+
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+
+merge_head=$(git rev-parse -q --verify MERGE_HEAD 2>/dev/null || true)
+checked=()
+php_files=()
+
+while IFS= read -r -d '' status; do
+	IFS= read -r -d '' first
+	case "$status" in
+		R*)
+			IFS= read -r -d '' file
+			;;
+		*)
+			file=$first
+			;;
+	esac
+
+	# During a merge, an incoming file whose staged blob exactly matches the
+	# second parent was already validated on that branch. Check only content
+	# authored here or produced while resolving a conflict.
+	if [ -n "$merge_head" ] && git cat-file -e "$merge_head:$file" 2>/dev/null; then
+		staged_oid=$(git rev-parse ":$file")
+		incoming_oid=$(git rev-parse "$merge_head:$file")
+
+		if [ "$staged_oid" = "$incoming_oid" ]; then
+			continue
+		fi
+	fi
+
+	# Vendored and generated trees are not this repository's to format.
+	case "$file" in
+		include/vendor/*|tests/vendor/*|tests/fixtures/*|node_modules/*) continue ;;
+	esac
+
+	checked+=("$file")
+
+	case "$file" in
+		*.php) php_files+=("$file") ;;
+	esac
+done < <(git diff --cached --name-status --diff-filter=ACMR -M -z)
+
+# Whitespace is checked over the same set as everything else, after the merge
+# and vendor filtering rather than before it, so one list decides what this
+# hook looks at.
+if [ "${#checked[@]}" -gt 0 ]; then
+	git diff --cached --check -- "${checked[@]}"
+fi
+
+if [ "${#php_files[@]}" -eq 0 ]; then
+	exit 0
+fi
+
+# Lint at the oldest version the branch supports, which is what the CI matrix
+# starts from. A newer interpreter accepts syntax that 8.1 rejects, so linting
+# with one would let a file through that breaks for part of the supported
+# range. A result from the wrong runtime is not evidence.
+if ! command -v mise >/dev/null 2>&1 || ! mise where php@8.1 >/dev/null 2>&1; then
+	echo 'PHP 8.1 is required to lint staged files. Install it with: mise install php@8.1' >&2
+	exit 1
+fi
+
+php_cmd=(mise exec php@8.1 -- php)
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT HUP INT TERM
+
+# Validate the staged blob rather than the file on disk, so unstaged edits are
+# neither inspected nor able to hide a fault in what is being committed.
+for file in "${php_files[@]}"; do
+	target="$tmp/staged/$file"
+	mkdir -p "$(dirname "$target")"
+	git show ":$file" > "$target"
+done
+
+failed=0
+
+for file in "${php_files[@]}"; do
+	if ! "${php_cmd[@]}" -l "$tmp/staged/$file" >/dev/null; then
+		echo "PHP syntax failed on 8.1: $file" >&2
+		failed=1
+	fi
+done
+
+exit "$failed"
