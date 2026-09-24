@@ -524,6 +524,8 @@ function rrdtool_command_argument($argument)
 
     $argument = (string) $argument;
     if (($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location')) {
+        $argument = rrdtool_proxy_token($argument);
+
         return rrdtool_proxy_token_is_safe($argument) ? $argument : false;
     }
 
@@ -537,9 +539,24 @@ function rrdtool_command_argument($argument)
  * quoting breaks its path checks. An argument it cannot carry bare is refused
  * and nothing is sent.
  */
+/**
+ * __rrd_proxy_execute() sends paths relative to the RRA root, so a token is
+ * checked in that form: a space in the local RRA directory never reaches the
+ * proxy.
+ */
+function rrdtool_proxy_token($argument)
+{
+    global $config;
+
+    $rra_path = (string) ($config['rra_path'] ?? '');
+
+    return $rra_path === '' ? (string) $argument : str_replace($rra_path, '.', (string) $argument);
+}
+
 function rrdtool_proxy_command(array $command, $logopt)
 {
-    $verb = array_shift($command);
+    $verb    = array_shift($command);
+    $command = array_map('rrdtool_proxy_token', $command);
     foreach ($command as $argument) {
         if (!rrdtool_proxy_token_is_safe($argument)) {
             cacti_log('ERROR: RRDtool ' . $verb . ' was not sent to the RRDtool proxy. An argument is empty or contains whitespace, a quote, a backslash or NUL.', false, $logopt);
