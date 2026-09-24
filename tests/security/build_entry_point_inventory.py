@@ -31,7 +31,7 @@ def git_files(pattern, root=None):
 
 def nginx_denies():
     """Deny rules and the literal paths they name, from the reference vhost."""
-    text = (ROOT / 'tests/e2e/nginx.conf').read_text()
+    text = re.sub(r'#.*', '', (ROOT / 'tests/e2e/nginx.conf').read_text())
     rules, named = [], set()
     for flag, pattern in re.findall(r'location\s+(~\*?)\s+(\S+)\s*\{\s*return\s+404;', text):
         rules.append(re.compile(pattern, re.I if flag == '~*' else 0))
@@ -49,6 +49,12 @@ def nginx_denies():
                 named.add(path)
     if not rules:
         raise SystemExit('ERROR: no deny locations parsed from tests/e2e/nginx.conf')
+    # A deny written any other way would drop out of the inventory and out of
+    # the Apache parity check, so every refusal in the vhost must be parsed.
+    refusals = len(re.findall(r'\b(?:return\s+4\d\d|deny\s+all|internal\s*;)', text))
+    if refusals != len(rules):
+        raise SystemExit('ERROR: tests/e2e/nginx.conf has %d refusals but only %d parse as '
+                         '"location ~ PATTERN { return 404; }"' % (refusals, len(rules)))
     return rules, named
 
 

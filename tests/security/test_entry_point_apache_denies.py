@@ -81,17 +81,30 @@ def main():
     except SystemExit as error:
         if 'newdir/' not in str(error) or 'lib/' in str(error):
             failures.append('gap report names the wrong paths: %s' % error)
-    with tempfile.TemporaryDirectory() as directory:
-        (Path(directory) / 'tests/e2e').mkdir(parents=True)
-        (Path(directory) / 'tests/e2e/nginx.conf').write_text('server {\n}\n')
-        saved, inventory.ROOT = inventory.ROOT, Path(directory)
-        try:
-            inventory.nginx_denies()
-            failures.append('a vhost without deny locations was accepted')
-        except SystemExit:
-            pass
-        finally:
-            inventory.ROOT = saved
+    # A vhost without denies, or with one the parser cannot read, stops the
+    # generator instead of dropping that deny from the inventory.
+    parsed = 'location ~* ^/(lib)(/|$) {\n    return 404;\n}\n'
+    vhosts = {
+        'no deny locations': 'server {\n}\n',
+        'deny with another status': parsed + 'location ~* ^/secret(/|$) {\n    return 403;\n}\n',
+        'deny with its return on the opening line': parsed + 'location ~* ^/secret(/|$) { add_header X 1; return 404; }\n',
+        'deny by prefix location': parsed + 'location ^~ /secret/ {\n    return 404;\n}\n',
+        'deny all directive': parsed + 'location ~* ^/secret(/|$) {\n    deny all;\n}\n',
+        'deny inside an if': parsed + 'if ($uri ~ ^/secret) {\n    return 404;\n}\n',
+        'internal location': parsed + 'location ~* ^/secret(/|$) {\n    internal;\n}\n',
+    }
+    for case, vhost in vhosts.items():
+        with tempfile.TemporaryDirectory() as directory:
+            (Path(directory) / 'tests/e2e').mkdir(parents=True)
+            (Path(directory) / 'tests/e2e/nginx.conf').write_text(vhost)
+            saved, inventory.ROOT = inventory.ROOT, Path(directory)
+            try:
+                inventory.nginx_denies()
+                failures.append('nginx.conf with %s was accepted' % case)
+            except SystemExit:
+                pass
+            finally:
+                inventory.ROOT = saved
     for failure in failures:
         print('FAIL ' + failure)
     if failures:
