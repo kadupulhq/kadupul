@@ -23,6 +23,7 @@ function rrd_proxy_create_guard_run($test, string $operation, ?string $response)
 $config=array('rra_path'=>'/fixture','include_path'=>__DIR__);
 require $root.'/include/global_constants.php';
 function cacti_log(...$args){}
+function cacti_sizeof($value){return is_array($value)?count($value):0;}
 function read_config_option($key){return $key==='storage_location'?1:'';}
 function get_data_source_path(...$args){return '/fixture/sample.rrd';}
 function get_rrdtool_version(){return '1.7.2';}
@@ -39,6 +40,8 @@ if($response!==null){$packet=$response."_EOP_\r\n_EOT_\r\n";if(socket_write($soc
 socket_shutdown($sockets[1],1);
 $pipe=array($sockets[0],'fixture-key');$values='1700000060:42';
 if($operation==='boost-update'){$result=boost_rrdtool_function_update(1,'/fixture/sample.rrd','value',$values,$pipe);}
+elseif($operation==='update'||$operation==='update-unsafe'){$path=$operation==='update'?'/fixture/sample.rrd':"/fixture/it's a.rrd";$result=rrdtool_function_update(array($path=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('value'=>'42')))),$pipe);}
+elseif($operation==='paths'){$result=array(rrdtool_command_path('/fixture/sample.rrd'),rrdtool_command_path('/fixture/it s.rrd'),rrdtool_command_path("/fixture/it's.rrd"));}
 elseif($operation==='boost-create'){$result=boost_rrdtool_function_create(1,false,$pipe);}
 else{$result=rrdtool_function_create(1,false,$pipe);}
 $command=socket_read($sockets[1],4096,PHP_BINARY_READ);
@@ -86,3 +89,21 @@ test('an existing proxied RRD is checked with a bare path and never recreated', 
     expect($result[0])->toBe(-1)
         ->and($result[2])->toBe("file_exists ./sample.rrd_EOT_\r\n");
 })->with(array('boost-create', 'direct-create'));
+
+test('proxied updates carry a bare path, and a path the proxy cannot carry is not sent', function () {
+    // The fake proxy acknowledges only file_exists, so each update ends unacknowledged.
+    $boost = rrd_proxy_create_guard_run($this, 'boost-update', 'OK u:0.00 s:0.00 r:0.00');
+    expect($boost[0])->toBe('ERROR: RRDtool did not acknowledge the update')
+        ->and($boost[2])->toBe("file_exists ./sample.rrd_EOT_\r\nupdate ./sample.rrd --skip-past-updates --template value 1700000060:42_EOT_\r\n");
+
+    $direct = rrd_proxy_create_guard_run($this, 'update', 'OK u:0.00 s:0.00 r:0.00');
+    expect($direct[0])->toBeFalse()
+        ->and($direct[2])->toBe("file_exists ./sample.rrd_EOT_\r\nupdate ./sample.rrd --skip-past-updates --template value 1700000060:42_EOT_\r\n");
+
+    $unsafe = rrd_proxy_create_guard_run($this, 'update-unsafe', 'OK u:0.00 s:0.00 r:0.00');
+    expect($unsafe[0])->toBeFalse()->and($unsafe[2])->toBeFalse();
+
+    // Create writes its path the same way as update.
+    $paths = rrd_proxy_create_guard_run($this, 'paths', null);
+    expect($paths[0])->toBe(array('/fixture/sample.rrd', false, false));
+});
