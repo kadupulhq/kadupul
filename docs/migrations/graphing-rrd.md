@@ -41,7 +41,8 @@ second implementation or a module boundary needs one.
 | Remaining `cacti_escapeshellarg()` calls on the pipe in `lib/rrd.php` moved to the encoder | PR #421 |
 | RRD file paths and the remaining pipe commands in `lib/rrd.php`, `lib/boost.php`, `lib/rrdcheck.php`, `lib/rrd_maintenance.php`, `lib/dsstats.php`, `lib/functions.php` and `poller_maintenance.php` quoted with the encoder | PR #426 |
 | One-shot calls through `symfony/process` argument arrays; long-lived pipe in `LocalRrdtool` | Pending |
-| Proxy client restored on phpseclib 4 and hardened without a wire format change | This PR |
+| Proxy client restored on phpseclib 4 and hardened without a wire format change | PR #436 |
+| Graph and export `DEF` paths sent to the proxy bare and relative to the RRA directory | This PR |
 | Graph command generation split by option, definition, item type and legend | Pending |
 | Web-side graph reads through DBAL; collector writes stay on `db_*` | Pending |
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
@@ -75,12 +76,41 @@ or holds whitespace, a quote, a backslash, CR, LF or NUL is refused before
 anything is sent. The create and update strings write their path the same way
 for the proxy.
 
+`rrdtool_def_path()` writes the RRD path of a graph or export `DEF`. The local
+pipe gets it quoted, as before. rrdproxy reads a `DEF` path up to the first
+`:` and resolves it as sent, so the proxy gets it bare and relative to the RRA
+directory, and a graph whose path holds a blank, a quote, a backslash or a
+colon, or lies outside the RRA directory, is refused before it is sent, with
+the graph error image. Legends, `COMMENT` text and titles keep the encoder's
+quoting on both transports; rrdproxy passes them on and `rrdtool -` removes the
+quotes. The data source name in a `DEF` stays quoted too, since rrdproxy keeps
+everything after the path as it is.
+
+Through rrdproxy 54aad57, exports (`xport`, and with it CSV export) work; the
+interop test passes one through rrdproxy's own path resolution to a real
+RRDtool. Data Source statistics work as well: their `graph x ...` command
+names an output file first, and their `DEF` paths already reached the proxy
+bare through `rrdtool_proxy_relative_paths()`, so `lib/dsstats.php` is
+unchanged. Graph images (`graph` and `graphv`) do
+not, for two reasons in rrdproxy's `lib/functions.php`:
+
+- It refuses any command in which a blank, `=`, `:` or `,` comes before `/` or
+  `\` (line 412). Kadupul adds `COMMENT:"  \n"` after the date range of every
+  graph with a start and end, and a legend such as `In / Out` has the same
+  sequence.
+- It takes the first token after `graph -` that does not start with `-` as the
+  output file and prefixes it with the RRA directory (lines 442 and 469). That
+  token is a word of the title or the first graph element, not the output.
+
+A test marked KNOWN LIMITATION in `RrdProxyInteropTest` pins both, so a fixed
+rrdproxy fails it. rrdproxy also splits each command on whitespace and joins
+it with single blanks (lines 447 and 485), inside quotes as well, so two blanks
+in a legend or title arrive as one.
+
 Remaining proxy work:
 
-- Graph `DEF` paths still carry the encoder's quoting, which
-  `rrdp_resolve_command_paths()` does not recognize as a `DEF`. Proxied graphs
-  are not supported until graph commands become arrays; they were not tested
-  against rrdproxy here.
+- Graph images need an rrdproxy that recognizes `-` as the output and accepts
+  the date `COMMENT`.
 - Reads after the key exchange have no time limit, as before.
 - The protocol needs a version and a matching proxy release before any of
   these can change: frames carry no MAC, so CBC ciphertext can be altered
