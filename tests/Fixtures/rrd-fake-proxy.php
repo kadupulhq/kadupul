@@ -56,7 +56,11 @@ function fake_proxy_write($socket, string $data): void
 function fake_proxy_read($socket, string &$input)
 {
     while (($end = strpos($input, "_EOT_\r\n")) === false) {
-        $recv = @socket_read($socket, 100000, PHP_BINARY_READ);
+        // A slow proxy takes the request a few bytes at a time.
+        $recv = @socket_read($socket, $GLOBALS['setup']['read_chunk'] ?? 100000, PHP_BINARY_READ);
+        if (isset($GLOBALS['setup']['read_chunk'])) {
+            usleep(1000);
+        }
         if ($recv === false || $recv === '') {
             return null;
         }

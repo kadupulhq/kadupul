@@ -290,6 +290,77 @@ test('a failed key exchange connects to nothing and sends no command', function 
     'closed mid-key' => array(array(), array('key_reply' => 'close'), 'CACTI2RRDP ERROR: Public RSA Key Exchange - Session closed by Proxy.'),
 ));
 
+test('a proxy that reads the request a few bytes at a time still gets all of it', function () {
+    $client = rrd_proxy_interop_key();
+    $proxy = rrd_proxy_interop_key();
+    $result = rrd_proxy_interop_session($this, null, array(
+        'rsa_public_key' => $client['public'], 'rsa_private_key' => $client['private'], 'rrdp_fingerprint' => $proxy['fingerprint'],
+    ), array(
+        'proxy_private_key' => $proxy['private'], 'proxy_public_key' => $proxy['public'], 'client_fingerprint' => $client['fingerprint'], 'read_chunk' => 64,
+    ));
+    expect($result)->toBe(array('connected' => true, 'output' => '', 'problems' => array(), 'proxy_received' => array('setcnn encryption off', 'info ./sample.rrd', 'quit')));
+});
+
+test('a short socket write is finished rather than treated as a failure', function () {
+    if (!function_exists('socket_create_pair')) {
+        $this->markTestSkipped('The sockets extension is required.');
+    }
+    $program = '$root=' . var_export(dirname(__DIR__, 4), true) . ';' . <<<'PHP'
+require $root . '/include/global_constants.php';
+function cacti_log(...$args) {}
+require $root . '/lib/rrd.php';
+if (!socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $sockets)) { exit(2); }
+// A blocking write returns early, with part of its data sent, once the reader
+// has stalled for the send timeout. This reader takes 2 KiB at a time and
+// stalls a little longer than that, so every write is cut short.
+socket_set_option($sockets[0], SOL_SOCKET, SO_SNDBUF, 1024);
+socket_set_option($sockets[0], SOL_SOCKET, SO_SNDTIMEO, array('sec' => 0, 'usec' => 300000));
+$data = random_bytes(8192);
+// The reader stops after the expected length: it inherits the writing end of
+// the pair too, so it would never see end of file.
+$reader = proc_open(array(PHP_BINARY, '-r', 'stream_set_read_buffer(STDIN, 0); $h = ""; while (strlen($h) < $argv[1] && ($b = fread(STDIN, 2048)) !== false && $b !== "") { $h .= $b; usleep(320000); } echo strlen($h), " ", md5($h);', (string) strlen($data)),
+    array(0 => socket_export_stream($sockets[1]), 1 => array('pipe', 'w')), $pipes);
+$short = @socket_write($sockets[0], $data);
+$sent = rrdtool_proxy_write($sockets[0], substr($data, (int) $short));
+$received = stream_get_contents($pipes[1]);
+proc_close($reader);
+echo json_encode(array(is_int($short) && $short > 0 && $short < strlen($data), $sent, $received === strlen($data) . ' ' . md5($data)));
+PHP;
+    expect(json_decode(rrd_proxy_interop_php($this, $program, array(), true), true, 512, JSON_THROW_ON_ERROR))->toBe(array(true, true, true));
+});
+
+test('an oversize key reply is refused without reading past the cap', function () {
+    if (!function_exists('socket_create_pair')) {
+        $this->markTestSkipped('The sockets extension is required.');
+    }
+    $program = '$root=' . var_export(dirname(__DIR__, 4), true) . ';' . <<<'PHP'
+require $root . '/include/global_constants.php';
+$logged = array();
+function cacti_log($message, ...$args) { $GLOBALS['logged'][] = $message; }
+require $root . '/lib/rrd.php';
+if (!socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $sockets)) { exit(2); }
+foreach ($sockets as $socket) {
+    socket_set_option($socket, SOL_SOCKET, SO_SNDBUF, 262144);
+    socket_set_option($socket, SOL_SOCKET, SO_RCVBUF, 262144);
+}
+// The cap, the terminator and more, all in one burst, with no terminator inside the cap.
+$burst = str_repeat('A', 16384 + 7) . "_EOT_\r\n" . str_repeat('B', 5000);
+$written = 0;
+while ($written < strlen($burst)) {
+    $written += socket_write($sockets[1], substr($burst, $written));
+}
+socket_shutdown($sockets[1], 1);
+$key = rrdtool_proxy_read_key($sockets[0], 'POLLER', 2);
+$left = '';
+while (($chunk = socket_read($sockets[0], 65536, PHP_BINARY_READ)) !== false && $chunk !== '') {
+    $left .= $chunk;
+}
+echo json_encode(array($key, $logged, strlen($burst) - strlen($left)));
+PHP;
+    expect(json_decode(rrd_proxy_interop_php($this, $program, array(), true), true, 512, JSON_THROW_ON_ERROR))
+        ->toBe(array(false, array('CACTI2RRDP ERROR: Public RSA Key Exchange - The proxy reply exceeds 16384 bytes.'), 16384 + 7));
+});
+
 test('a font path the proxy would split or keep quotes in is not sent', function () {
     $client = rrd_proxy_interop_key();
     $proxy = rrd_proxy_interop_key();
