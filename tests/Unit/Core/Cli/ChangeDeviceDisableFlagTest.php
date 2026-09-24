@@ -167,10 +167,10 @@ test('every option in the argument loop ends its own case', function () use ($ro
     expect($fallen)->toBe(array());
 });
 
-test('change_device states which numeric value disables', function () use ($root) {
+test('both device CLIs state which numeric value disables', function () use ($root) {
     $wrong = array();
 
-    foreach (array('change_device.php') as $script) {
+    foreach (array('change_device.php', 'add_device.php') as $script) {
         $source = file_get_contents($root . '/cli/' . $script);
         $line   = '';
 
