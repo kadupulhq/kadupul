@@ -43,6 +43,7 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateAssignments.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCollectorAssignments.php',
         'src/Inventory/Infrastructure/Legacy/DeviceWriteAuthorization.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceMutationSelection.php',
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorReplication.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceTemplateType.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceCollectorType.php',
@@ -51,6 +52,17 @@ def main():
         'bin/legacy-device-template.php',
         'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'bin/legacy-device-state.php',
+        'bin/legacy-device-remove.php',
+        'src/Inventory/Domain/DeviceRemoval.php',
+        'src/Inventory/Application/Command/RemoveDevices.php',
+        'src/Inventory/Application/Query/PrepareDeviceRemoval.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceRemovals.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceRemovalSnapshot.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceRemovalDependencies.php',
+        'src/Inventory/Infrastructure/Symfony/DeviceSelectionForm.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceRemovalDependencyReceipt.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceRemovalType.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceRemovalController.php',
         'src/Inventory/Domain/DeviceState.php',
         'src/Inventory/Domain/DeviceSelection.php',
         'src/Inventory/Application/Command/SetDevicesEnabled.php',
@@ -102,6 +114,9 @@ def main():
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
         'missing-check': 'Incomplete Symfony integration',
+        'missing-removal-callback-check': 'Incomplete Symfony integration',
+        'missing-removal-shared-check': 'Incomplete Symfony integration',
+        'missing-removal-rollback-check': 'Incomplete Symfony integration',
         'wrong-handler': 'Wrong integration suite',
         'missing-reports': 'Missing integration coverage',
         'invalid-hit': 'Invalid PCOV',
@@ -176,6 +191,11 @@ def main():
                 evidence['checks'].remove('script server refuses includes outside the base path')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
+            elif case == 'missing-removal-callback-check':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'rejected removal emits no bulk action callback']
+            elif case in ['missing-removal-shared-check', 'missing-removal-rollback-check']:
+                omitted = 'remote removal rejects outside graph references before cleanup' if case == 'missing-removal-shared-check' else 'remote removal failure rolls back dependent cleanup'
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':

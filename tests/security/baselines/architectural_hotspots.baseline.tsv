@@ -343,9 +343,9 @@ dynamic_include	./lib/api_automation.php:2368		include_once($config['base_path']
 dynamic_include	./lib/api_automation.php:2369		include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_automation.php:3063					include_once($config['base_path'] . '/plugins/thold/thold-functions.php');
 dynamic_include	./lib/api_automation.php:3066					include_once($config['base_path'] . '/plugins/thold/thold_functions.php');
-dynamic_include	./lib/api_device.php:1095	    include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./lib/api_device.php:1096	    include_once($config['base_path'] . '/lib/variables.php');
-dynamic_include	./lib/api_device.php:1097	    include_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./lib/api_device.php:1175	    include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_device.php:1176	    include_once($config['base_path'] . '/lib/variables.php');
+dynamic_include	./lib/api_device.php:1177	    include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./lib/boost.php:1317		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/boost.php:1621			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:315			include_once($config['library_path'] . '/poller.php');

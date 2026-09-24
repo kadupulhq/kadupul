@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Remove devices'|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Remove devices'|trans({}, 'inventory') }}</h1>
+    <p>{{ 'Device removal cannot be undone here. Choose whether to retain graphs and disabled data sources or remove them.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'Shared data sources and aggregate graphs must be detached before graph removal. Retained graphs and data sources become unassigned.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'Affected remote collectors must be online. Failed removal may leave remote or plugin changes; inspect the outcome before retrying.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'RRD file cleanup follows the configured maintenance policy.'|trans({}, 'inventory') }}</p>
+    <ul>{% for item in devices %}<li>{{ item.device.description }} (#{{ item.device.id }}), {{ item.device.hostname }}, {{ '%graphs% graphs, %sources% data sources'|trans({'%graphs%': item.graphIds|length, '%sources%': item.dataSourceIds|length}, 'inventory') }}</li>{% endfor %}</ul>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">{{ 'Confirm removal'|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and validated list context. #}
+    <p><a href="{{ path('inventory_devices', filters) }}">{{ 'Cancel'|trans({}, 'inventory') }}</a></p>
+</main>
+{% endblock %}

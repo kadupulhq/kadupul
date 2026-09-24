@@ -7,6 +7,7 @@
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
+use Kadupul\Inventory\Domain\DeviceRemoval;
 use PDO;
 
 /** Verifies the legacy transfer inside the isolated worker; never exports row data. */
@@ -85,10 +86,22 @@ final class DeviceCollectorReplication
         }
     }
 
+    public function assertRemovalScope(PDO $source, DeviceRemoval $snapshot): void
+    {
+        if (!$source->inTransaction()) {
+            throw new \LogicException('Collector removal scope requires a transaction');
+        }
+        $lock = $source->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' ? '' : ' FOR UPDATE';
+        foreach (['graph_local' => $snapshot->graphIds, 'data_local' => $snapshot->dataSourceIds] as $table => $expected) {
+            $query = $source->prepare("SELECT id FROM $table WHERE host_id = ? ORDER BY id" . $lock);
+            if (!$query->execute([$snapshot->device->id]) || array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN)) !== $expected) {
+                throw new \RuntimeException('Collector removal scope changed');
+            }
+        }
+    }
+
     public function purgeDependents(PDO $source, int $deviceId): void
     {
-        // Delete children while their ownership can still be discovered. The
-        // legacy purge removes the parent rows without foreign-key cascades.
         foreach ([
             'data_input_data' => 'data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ?))',
             'data_template_rrd' => 'local_data_id IN (SELECT id FROM data_local WHERE host_id = ?)',
@@ -106,17 +119,201 @@ final class DeviceCollectorReplication
         }
     }
 
-    public function verifyPurged(PDO $source, int $deviceId): void
+    /** Capture stable dependent identities, including composite polling keys. */
+    public function purgeReviewedDependents(PDO $source, DeviceRemoval $snapshot): array
     {
+        if (!$source->inTransaction()) {
+            throw new \LogicException('Reviewed collector cleanup requires a transaction');
+        }
+        $lock = $source->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' ? '' : ' FOR UPDATE';
+        $templateIds = $rrdIds = $graphItemIds = [];
+        if ($snapshot->dataSourceIds !== []) {
+            $query = $source->prepare('SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (' . implode(',', array_fill(0, count($snapshot->dataSourceIds), '?')) . ')) ORDER BY id' . $lock);
+            if (!$query->execute([$snapshot->device->id, ...$snapshot->dataSourceIds])) {
+                throw new \RuntimeException('Collector dependent scope unavailable');
+            }
+            $templateIds = array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN));
+            $query = $source->prepare('SELECT id FROM data_template_rrd WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (' . implode(',', array_fill(0, count($snapshot->dataSourceIds), '?')) . ')) ORDER BY id' . $lock);
+            if (!$query->execute([$snapshot->device->id, ...$snapshot->dataSourceIds])) {
+                throw new \RuntimeException('Collector RRD scope unavailable');
+            }
+            $rrdIds = array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN));
+        }
+        if ($snapshot->graphIds !== []) {
+            $query = $source->prepare('SELECT id FROM graph_templates_item WHERE local_graph_id IN (SELECT id FROM graph_local WHERE host_id = ? AND id IN (' . implode(',', array_fill(0, count($snapshot->graphIds), '?')) . ')) ORDER BY id' . $lock);
+            if (!$query->execute([$snapshot->device->id, ...$snapshot->graphIds])) {
+                throw new \RuntimeException('Collector graph item scope unavailable');
+            }
+            $graphItemIds = array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN));
+        }
+        $inputFields = [];
+        if ($templateIds !== []) {
+            $query = $source->prepare('SELECT data_template_data_id, data_input_field_id FROM data_input_data WHERE data_template_data_id IN (' . implode(',', array_fill(0, count($templateIds), '?')) . ') ORDER BY data_template_data_id, data_input_field_id' . $lock);
+            if (!$query->execute($templateIds)) {
+                throw new \RuntimeException('Collector input field scope unavailable');
+            }
+            $inputFields = array_map(static fn(array $row): array => [
+                'data_template_data_id' => (int) $row['data_template_data_id'],
+                'data_input_field_id' => (int) $row['data_input_field_id'],
+            ], $query->fetchAll(PDO::FETCH_ASSOC));
+            usort($inputFields, static fn(array $left, array $right): int => [$left['data_template_data_id'], $left['data_input_field_id']] <=> [$right['data_template_data_id'], $right['data_input_field_id']]);
+        }
+        $placements = [];
+        foreach (['graph_tree_items' => 'tree_items', 'reports_items' => 'report_items', 'poller_item' => 'poller_items'] as $table => $key) {
+            $columns = $table === 'poller_item' ? 'local_data_id, rrd_name' : 'id';
+            $query = $source->prepare("SELECT $columns FROM $table WHERE host_id = ?" . $lock);
+            if (!$query || !$query->execute([$snapshot->device->id])) {
+                throw new \RuntimeException('Collector placement scope unavailable');
+            }
+            $placements[$key] = $query->fetchAll(PDO::FETCH_ASSOC);
+            if ($query->errorCode() !== '00000') {
+                throw new \RuntimeException('Collector placement scope unavailable');
+            }
+        }
+        $this->assertNoOutsideReferences($source, $snapshot->graphIds, $rrdIds);
+        // Delete children while their ownership can still be discovered. The
+        // legacy purge removes the parent rows without foreign-key cascades.
+        if ($templateIds !== []) {
+            $query = $source->prepare('SELECT data_template_data_id, data_input_field_id FROM data_input_data WHERE data_template_data_id IN (' . implode(',', array_fill(0, count($templateIds), '?')) . ') ORDER BY data_template_data_id, data_input_field_id' . $lock);
+            if (!$query->execute($templateIds)) {
+                throw new \RuntimeException('Collector input field scope unavailable');
+            }
+            $currentFields = array_map(static fn(array $row): array => [
+                'data_template_data_id' => (int) $row['data_template_data_id'],
+                'data_input_field_id' => (int) $row['data_input_field_id'],
+            ], $query->fetchAll(PDO::FETCH_ASSOC));
+            usort($currentFields, static fn(array $left, array $right): int => [$left['data_template_data_id'], $left['data_input_field_id']] <=> [$right['data_template_data_id'], $right['data_input_field_id']]);
+            if ($currentFields !== $inputFields) {
+                throw new \RuntimeException('Collector input field scope changed');
+            }
+        }
+        foreach ([
+            'poller_output' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s))', $snapshot->dataSourceIds],
+            'poller_output_boost' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s))', $snapshot->dataSourceIds],
+        ] as $table => [$where, $ids]) {
+            if ($ids === []) {
+                continue;
+            }
+            $where = sprintf($where, implode(',', array_fill(0, count($ids), '?')));
+            $parameters = [$snapshot->device->id, ...$ids];
+            $delete = $source->prepare("DELETE FROM $table WHERE $where");
+            if (!$delete->execute($parameters)) {
+                throw new \RuntimeException('Previous collector dependent cleanup failed');
+            }
+            $verify = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where");
+            if (!$verify->execute($parameters) || (int) $verify->fetchColumn() !== 0) {
+                throw new \RuntimeException('Previous collector dependents remain');
+            }
+        }
+        foreach ([
+            'data_template_data' => [$templateIds, 'data_template_data'],
+            'data_template_rrd' => [$rrdIds, 'data_template_rrd'],
+            'graph_templates_item' => [$graphItemIds, 'graph_templates_item'],
+        ] as $table => [$reviewedIds, $identity]) {
+            [$where, $parents] = match ($table) {
+                'data_template_data', 'data_template_rrd' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (' . implode(',', array_fill(0, count($snapshot->dataSourceIds), '?')) . '))', [$snapshot->device->id, ...$snapshot->dataSourceIds]],
+                default => ['local_graph_id IN (SELECT id FROM graph_local WHERE host_id = ? AND id IN (' . implode(',', array_fill(0, count($snapshot->graphIds), '?')) . '))', [$snapshot->device->id, ...$snapshot->graphIds]],
+            };
+            if ($reviewedIds === []) {
+                continue;
+            }
+            $current = $source->prepare("SELECT id FROM $table WHERE $where ORDER BY id$lock");
+            if (!$current->execute($parents) || array_map('intval', $current->fetchAll(PDO::FETCH_COLUMN)) !== $reviewedIds) {
+                throw new \RuntimeException('Collector dependent scope changed');
+            }
+            $delete = $source->prepare("DELETE FROM $table WHERE id IN (" . implode(',', array_fill(0, count($reviewedIds), '?')) . ") AND $where");
+            if (!$delete->execute([...$reviewedIds, ...$parents])) {
+                throw new \RuntimeException('Previous collector dependent cleanup failed');
+            }
+        }
+        foreach ($inputFields as $field) {
+            $delete = $source->prepare('DELETE FROM data_input_data WHERE data_template_data_id = ? AND data_input_field_id = ?');
+            if (!$delete->execute([$field['data_template_data_id'], $field['data_input_field_id']]) || $delete->rowCount() !== 1) {
+                throw new \RuntimeException('Previous collector input field cleanup failed');
+            }
+        }
+        return ['templates' => $templateIds, 'rrds' => $rrdIds, 'graph_items' => $graphItemIds] + $placements;
+    }
+
+    public function verifyPurged(PDO $source, int $deviceId, ?DeviceRemoval $snapshot = null, array $reviewedDependents = []): void
+    {
+        $lock = $source->inTransaction() && $source->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite' ? ' FOR UPDATE' : '';
         foreach (['host' => 'id', 'host_graph' => 'host_id', 'host_snmp_query' => 'host_id', 'host_snmp_cache' => 'host_id', 'poller_item' => 'host_id', 'poller_reindex' => 'host_id', 'graph_tree_items' => 'host_id', 'reports_items' => 'host_id', 'data_local' => 'host_id', 'graph_local' => 'host_id'] as $table => $column) {
-            $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column = ?");
+            $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column = ?" . $lock);
             if (!$query->execute([$deviceId]) || (int) $query->fetchColumn() !== 0) {
                 throw new \RuntimeException('Previous collector cleanup could not be confirmed');
             }
         }
-        $query = $source->prepare("SELECT COUNT(*) FROM poller_command WHERE SUBSTRING_INDEX(command, ':', 1) = ?");
+        if ($snapshot !== null) {
+            foreach (['graph_local' => $snapshot->graphIds, 'data_local' => $snapshot->dataSourceIds] as $table => $ids) {
+                if ($ids === []) {
+                    continue;
+                }
+                $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE id IN (" . implode(',', array_fill(0, count($ids), '?')) . ')' . $lock);
+                if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
+                    throw new \RuntimeException('Reviewed collector association remains');
+                }
+            }
+        }
+        if ($snapshot !== null) {
+            foreach ([
+                'poller_output' => ['local_data_id', $snapshot->dataSourceIds],
+                'poller_output_boost' => ['local_data_id', $snapshot->dataSourceIds],
+                'data_template_data' => ['local_data_id', $snapshot->dataSourceIds],
+                'data_template_rrd' => ['local_data_id', $snapshot->dataSourceIds],
+                'graph_templates_item' => ['local_graph_id', $snapshot->graphIds],
+                'data_input_data' => ['data_template_data_id', $reviewedDependents['templates'] ?? []],
+            ] as $table => [$column, $ids]) {
+                if ($ids === []) {
+                    continue;
+                }
+                // Parents have already been removed: do not rediscover ownership
+                // through joins that would hide newly inserted orphan children.
+                $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column IN (" . implode(',', array_fill(0, count($ids), '?')) . ')' . $lock);
+                if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
+                    throw new \RuntimeException('Reviewed collector dependents remain');
+                }
+            }
+        }
+        if ($snapshot !== null) {
+            foreach (['data_template_data' => 'templates', 'data_template_rrd' => 'rrds', 'graph_templates_item' => 'graph_items'] as $table => $key) {
+                $ids = $reviewedDependents[$key] ?? [];
+                if ($ids === []) {
+                    continue;
+                }
+                $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE id IN (" . implode(',', array_fill(0, count($ids), '?')) . ')' . $lock);
+                if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
+                    throw new \RuntimeException('Reviewed collector dependent identity remains');
+                }
+            }
+            foreach (['graph_tree_items' => 'tree_items', 'reports_items' => 'report_items', 'poller_item' => 'poller_items'] as $table => $key) {
+                foreach ($reviewedDependents[$key] ?? [] as $identity) {
+                    $where = $table === 'poller_item' ? 'local_data_id = ? AND rrd_name = ?' : 'id = ?';
+                    $parameters = $table === 'poller_item' ? [$identity['local_data_id'], $identity['rrd_name']] : [$identity['id']];
+                    $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where" . $lock);
+                    if (!$query || !$query->execute($parameters) || ($count = $query->fetchColumn()) === false || (int) $count !== 0) {
+                        throw new \RuntimeException('Reviewed collector placement identity remains');
+                    }
+                }
+            }
+            $this->assertNoOutsideReferences($source, $snapshot->graphIds, $reviewedDependents['rrds'] ?? []);
+        }
+        $query = $source->prepare("SELECT COUNT(*) FROM poller_command WHERE SUBSTRING_INDEX(command, ':', 1) = ?" . $lock);
         if (!$query->execute([(string) $deviceId]) || (int) $query->fetchColumn() !== 0) {
             throw new \RuntimeException('Previous collector commands remain');
         }
     }
+    private function assertNoOutsideReferences(PDO $source, array $graphIds, array $rrdIds): void
+    {
+        if ($rrdIds === []) {
+            return;
+        }
+        $lock = $source->inTransaction() && $source->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite' ? ' FOR UPDATE' : '';
+        $graphs = implode(',', array_map('intval', $graphIds)) ?: '-1';
+        $query = $source->prepare('SELECT COUNT(*) FROM graph_templates_item WHERE task_item_id IN (' . implode(',', array_fill(0, count($rrdIds), '?')) . ") AND local_graph_id NOT IN ($graphs)" . $lock);
+        if (!$query->execute($rrdIds) || ($count = $query->fetchColumn()) === false || (int) $count !== 0) {
+            throw new \RuntimeException('Collector data is shared with an unreviewed graph');
+        }
+    }
+
 }
