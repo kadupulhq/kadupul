@@ -12,6 +12,10 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Match the whole filename against the rotation format before purging a log. Cleanup accepted any name containing the log basename plus an eight digit run, so a neighbouring file with an old date in its name was deleted.
+
+- Clean each configured log once during rotation; a call after the loop re-scanned whichever log the loop left behind and counted it twice.
+
 - Describe the selectors `cli/remove_graphs.php` actually accepts. Its help called `--graph-template-id` mandatory when any one of the four selectors is enough, and did not mention that an empty selection is refused without `--all` or that a bare `--list` lists every Graph.
 
 - Pass `$rdatabase_retries` when a remote poller connects to the main server. Every other argument came from its `$rdatabase_` counterpart, so configuring the remote retry count alone had no effect and the local value governed the retry policy for a remote host.
