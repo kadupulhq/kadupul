@@ -39,7 +39,7 @@ second implementation or a module boundary needs one.
 | Characterization tests for generated commands and helpers | PR #406 |
 | `RrdCommand` and a pipe-mode encoder replacing shell escaping on the pipe | PR #410 |
 | Remaining `cacti_escapeshellarg()` calls on the pipe in `lib/rrd.php` moved to the encoder | PR #421 |
-| RRD file paths and the remaining pipe commands in `lib/rrd.php`, `lib/boost.php`, `lib/rrdcheck.php` and `lib/rrd_maintenance.php` quoted with the encoder | This PR |
+| RRD file paths and the remaining pipe commands in `lib/rrd.php`, `lib/boost.php`, `lib/rrdcheck.php`, `lib/rrd_maintenance.php`, `lib/dsstats.php`, `lib/functions.php` and `poller_maintenance.php` quoted with the encoder | This PR |
 | One-shot calls through `symfony/process` argument arrays; long-lived pipe in `LocalRrdtool` | Pending |
 | Proxy client hardening without a wire format change | Pending |
 | Graph command generation split by option, definition, item type and legend | Pending |
@@ -59,7 +59,10 @@ restores the client against the current RSA and Rijndael wire format and changes
 nothing the proxy sees: constant-time fingerprint comparison, bounded
 reads during key exchange, no global encryption state and typed failures. An
 authenticated format needs a matching proxy release and a protocol version, and
-is proposed separately.
+is proposed separately. RRDtool proxy splits each command on whitespace and
+resolves path operands and `DEF` paths exactly as sent, so the proxy transport
+sends paths bare and refuses a path it cannot carry. Other arguments keep the
+encoder's quoting.
 
 Titles, vertical labels and legend text are HTML-escaped before they reach
 RRDtool, so the characters `&`, `<` and `>` reach the image as entities. That output is

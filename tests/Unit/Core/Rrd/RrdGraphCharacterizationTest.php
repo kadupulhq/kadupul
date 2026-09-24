@@ -113,6 +113,23 @@ dataset('rrd graph scenarios', function () {
         }
     }
 
+    // CR and LF in a substituted value would end the command line; they are removed.
+    $newline_db = $quoting_db;
+    foreach ($newline_db as $index => $row) {
+        if ($row['sql'] === 'FROM host AS h LEFT JOIN sites') {
+            $newline_db[$index]['result']['description'] = "core\r\nedge\rleft\nright";
+        }
+    }
+
+    // Different quoted values in the title and the vertical label show a swapped placeholder.
+    $pair = array('title_cache' => 'Link |host_description|', 'vertical_label' => '|query_ifAlias| bps');
+    $pair_db = rrd_characterization_if_alias(rrd_characterization_graph_db(rrd_characterization_graph($pair), $area), 'it\'s "alias"');
+    foreach ($pair_db as $index => $row) {
+        if ($row['sql'] === 'FROM host AS h LEFT JOIN sites') {
+            $pair_db[$index]['result']['description'] = 'O\'Brien "host"';
+        }
+    }
+
     $nul_items = array_merge($area, array(rrd_characterization_item(2, 'COMMENT', array('text_format' => 'Host |host_description|'))));
     $nul_db = rrd_characterization_graph_db(rrd_characterization_graph(), $nul_items);
     foreach ($nul_db as $index => $row) {
@@ -170,6 +187,8 @@ dataset('rrd graph scenarios', function () {
             array('db' => rrd_characterization_if_alias($right_axis_db, "core\0edge"))
         )),
         'quotes in a substituted title' => array('graph-substituted-quotes', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $quoting_db))),
+        'CR and LF in a substituted title and vertical label' => array('graph-substituted-newlines', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $newline_db))),
+        'different quoted values in the title and vertical label' => array('graph-substituted-pair', rrd_characterization_graph_scenario($window, array(), $pair, $area, array('db' => $pair_db))),
         'export to file' => array('graph-export', rrd_characterization_graph_scenario($window + array('export' => true, 'export_filename' => 'rra/graph_7.png', 'graphv' => true), array(), array('image_format_id' => '3'), $area)),
         'missing rrd file' => array('graph-missing-rrd', rrd_characterization_graph_scenario($window + array('print_source' => true), array(), array(), $area, array('files' => array()))),
         'xport' => array('graph-xport', rrd_characterization_graph_scenario(
