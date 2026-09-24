@@ -1,0 +1,131 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+namespace Kadupul\Platform\Infrastructure\Symfony\Console;
+
+use Kadupul\Platform\Application\Command\ConvertTables;
+use Kadupul\Platform\Application\Command\InstallationAccessDenied;
+use Kadupul\Platform\Application\ReadModel\ConversionOutcome;
+use Kadupul\Platform\Application\ReadModel\ConversionReport;
+use Kadupul\Platform\Application\ReadModel\TableResult;
+use Kadupul\Platform\Domain\Schema\ConversionOptions;
+use Kadupul\Platform\Domain\Schema\ConversionProblem;
+use Kadupul\Platform\Domain\Schema\InvalidConversionOptions;
+use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
+use Psr\Clock\ClockInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\MapInput;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
+#[AsCommand(name: 'kadupul:database:convert-tables', description: 'Convert installation tables to InnoDB, utf8mb4 or latin1.')]
+final readonly class ConvertTablesCommand
+{
+    private const string UTILITY = 'Kadupul Database Conversion Utility';
+
+    public function __construct(
+        private ConvertTables $convert,
+        private InstallationVersion $version,
+        private CliPresentation $presentation,
+        private ResultRenderer $renderer,
+        private ClockInterface $clock,
+    ) {}
+
+    public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] ConvertTablesInput $input): int
+    {
+        $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
+        $legacy = new ConvertTablesLegacyArguments();
+        try {
+            if ($this->presentation->legacy !== LegacyRequest::Run) {
+                return $this->renderer->legacyRequest($this->presentation->legacy, $this->version->line(self::UTILITY, $this->clock->now()), $legacy, $output);
+            }
+            // The use case also refuses '', but only as a denial; an empty --as=
+            // is a usage error and is reported as one.
+            if ($input->as === '') {
+                return $this->renderer->emptyOperator($io, $output, $mode);
+            }
+            $options = $input->options();
+            $report = ($this->convert)($options, $input->local, $input->as, !$input->dryRun);
+        } catch (InvalidConversionOptions $invalid) {
+            return $this->invalid($io, $output, $mode, $invalid->problem, $legacy);
+        } catch (InstallationAccessDenied) {
+            return $this->renderer->denied($io, $output, $mode);
+        } catch (\Throwable $error) {
+            // failed() names only MainDatabaseNotConfigured, by type; other text stays hidden.
+            return $this->renderer->failed($io, $output, $mode, $error, 'Table conversion failed');
+        }
+
+        return $this->report($io, $output, $mode, $options, $report, $legacy);
+    }
+
+    private function invalid(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, ConversionProblem $problem, ConvertTablesLegacyArguments $legacy): int
+    {
+        [$human, $error] = match ($problem) {
+            ConversionProblem::TableAndSkip => ['Use --table or --skip-innodb, not both.', 'table and skip-innodb cannot be combined'],
+            ConversionProblem::NoConversion => ['Choose --innodb, --utf8 or --latin1.', 'no conversion selected'],
+            ConversionProblem::Size => ['The --size option needs a whole number of rows.', 'size must be a whole number'],
+        };
+        // The original printed its own two errors, then its help, and exited 0.
+        $exit = match (true) {
+            $mode !== OutputMode::Legacy => Command::INVALID,
+            $problem === ConversionProblem::Size => Command::FAILURE,
+            default => Command::SUCCESS,
+        };
+        $lines = $mode === OutputMode::Legacy ? $legacy->problem($problem, $this->version->line(self::UTILITY, $this->clock->now())) : [];
+
+        return $this->renderer->failure($io, $output, $mode, $human, new CommandResult(['status' => 'invalid', 'error' => $error], $lines, $exit));
+    }
+
+    private function report(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, ConversionOptions $options, ConversionReport $report, ConvertTablesLegacyArguments $legacy): int
+    {
+        if ($mode === OutputMode::Legacy) {
+            $versionLine = $report->outcome === ConversionOutcome::SkipTableMissing ? $this->version->line(self::UTILITY, $this->clock->now()) : '';
+            // convert_tables.php exited 0 on every one of these paths, and printed
+            // its innodb_file_per_table refusal without a newline.
+            $result = new CommandResult([], $legacy->report($report, $options, $versionLine), Command::SUCCESS, $report->outcome !== ConversionOutcome::FilePerTableDisabled);
+
+            return $this->renderer->render($result, $mode, $output);
+        }
+        $database = $report->main ? 'main' : 'local';
+        if ($report->outcome !== ConversionOutcome::Completed) {
+            [$human, $error] = match ($report->outcome) {
+                ConversionOutcome::SkipTableMissing => ['Skip table ' . $report->missingSkipTable . ' does not exist.', 'Skip table does not exist'],
+                ConversionOutcome::InnodbDisabled => ['InnoDB is not enabled.', 'InnoDB is not enabled'],
+                default => ['innodb_file_per_table is not enabled.', 'innodb_file_per_table is not enabled'],
+            };
+            $json = ['status' => 'failed', 'database' => $database, 'error' => $error] + ($report->missingSkipTable === null ? [] : ['table' => $report->missingSkipTable]);
+
+            return $this->renderer->failure($io, $output, $mode, $human, new CommandResult($json, [], Command::FAILURE));
+        }
+        $exit = $report->failed() === 0 ? Command::SUCCESS : Command::FAILURE;
+        $tables = array_map(
+            static fn(array $table): array => ['name' => $table['name'], 'result' => $table['result']->value, 'rows' => $table['rows']]
+                + ($table['statement'] === null ? [] : ['statement' => $table['statement']]),
+            $report->tables,
+        );
+        if ($mode === OutputMode::Json) {
+            $json = ['status' => $exit === Command::SUCCESS ? 'ok' : 'partial', 'database' => $database, 'dry_run' => $report->dryRun, 'tables' => $tables];
+
+            return $this->renderer->render(new CommandResult($json, [], $exit), $mode, $output);
+        }
+        $io->listing(array_map(
+            static fn(array $table): string => OutputFormatter::escape($table['name'] . ': ' . str_replace('_', ' ', $table['result']) . (isset($table['statement']) ? ' (' . $table['statement'] . ')' : '')),
+            $tables,
+        ));
+        $changed = count(array_filter($report->tables, static fn(array $table): bool => in_array($table['result'], [TableResult::Converted, TableResult::Planned], true)));
+        $summary = sprintf($report->dryRun ? 'Planned %d of %d tables' : 'Converted %d of %d tables', $changed, count($tables));
+        if ($exit === Command::SUCCESS) {
+            $io->success($summary . '.');
+        } else {
+            $io->warning(sprintf('%s; %d failed.', $summary, $report->failed()));
+        }
+
+        return $exit;
+    }
+}

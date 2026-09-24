@@ -34,10 +34,18 @@ services:
 
     Kadupul\Platform\Application\Port\DatabaseMaintenance:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance
+    Kadupul\Platform\Application\Port\TableConversion:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion
+    Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
     Kadupul\Platform\Application\Port\Clock:
         alias: Kadupul\Platform\Infrastructure\Symfony\SystemClock
     Kadupul\Platform\Application\Command\AnalyzeDatabase: ~
     Kadupul\Platform\Application\Command\MaintenanceTarget: ~
+    Kadupul\Platform\Application\Command\SchemaChangeAudit: ~
+    Kadupul\Platform\Application\Command\TableConversionStep: ~
+    Kadupul\Platform\Application\Command\ConvertTables: ~
 
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'
