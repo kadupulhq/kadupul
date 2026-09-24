@@ -135,15 +135,14 @@ test('proxied updates carry a bare path, and a path the proxy cannot carry is no
 test('a proxied create sends a substituted maximum bare, or not at all when the proxy cannot carry it', function ($function) {
     $missing = "ERROR: opening './sample.rrd': No such file or directory";
 
-    // A number goes as it is, and a single safe token stays bare because the proxy would keep quotes as text.
-    foreach (array('100' => 'DS:value:GAUGE:600:0:100', 'fast' => 'DS:value:GAUGE:600:0:fast') as $alias => $ds) {
-        $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':' . $alias, $missing);
-        expect($result[2])->toStartWith("file_exists ./sample.rrd_EOT_\r\ncreate ./sample.rrd ")
-            ->toContain($ds . ' ')->not->toContain("'");
-    }
+    // A number goes as it is.
+    $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':100', $missing);
+    expect($result[2])->toStartWith("file_exists ./sample.rrd_EOT_\r\ncreate ./sample.rrd ")
+        ->toContain('DS:value:GAUGE:600:0:100 ')->not->toContain("'");
 
-    // More than one token is refused before anything but the existence check is sent.
-    foreach (array('10 --daemon x', "it's") as $alias) {
+    // Anything else is refused before anything but the existence check is sent:
+    // the proxy client would rewrite the RRA root inside it, and RRDtool rejects it anyway.
+    foreach (array('fast', '/fixturefast', '10 --daemon x', "it's") as $alias) {
         $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':' . $alias, $missing);
         expect($result[0])->toBeFalse()->and($result[2])->toBe("file_exists ./sample.rrd_EOT_\r\n");
     }

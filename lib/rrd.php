@@ -576,7 +576,9 @@ function rrdtool_create_maximum($minimum, $maximum, $local_data_id, $logopt)
         return $maximum;
     }
 
-    $argument = rrdtool_command_argument($maximum);
+    // The proxy client rewrites the RRA root anywhere in a command string, so
+    // any other maximum could reach the proxy changed. RRDtool would reject it anyway.
+    $argument = rrdtool_uses_proxy() ? false : rrdtool_command_argument($maximum);
     if ($argument === false) {
         cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its maximum cannot be sent to RRDtool.', false, $logopt);
     }
