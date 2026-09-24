@@ -396,7 +396,7 @@ function display_help() {
 	print "    --host-id=ID            Select the Graphs of these Devices." . PHP_EOL;
 	print "    --graph-regex=R         Select the Graphs whose name matches this expression." . PHP_EOL;
 	print "    --all                   Select every Graph.  Ignores the four options above." . PHP_EOL;
-	print "    --force                 Actually remove the Graphs, dont just count them." . PHP_EOL;
+	print "    --force                 Actually remove the Graphs, don't just count them." . PHP_EOL;
 	print "    --preserve              Preserve the Data Sources.  Default is to remove." . PHP_EOL . PHP_EOL;
 
 	print "Any one of the four selectors is enough, and they narrow the selection together." . PHP_EOL;
