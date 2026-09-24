@@ -89,7 +89,7 @@ final class AnalyzeDatabaseCommandTest extends TestCase
 
     private function tester(DatabaseMaintenance $maintenance): CommandTester
     {
-        $analyze = new AnalyzeDatabase($this->access, $this->access, $maintenance, new SystemClock(new MockClock()));
+        $analyze = new AnalyzeDatabase($this->access, $maintenance, new SystemClock(new MockClock()));
         $version = new InstallationVersion($this->root, $this->db, new Filesystem());
         $command = new AnalyzeDatabaseCommand($analyze, $version, $this->presentation, new ResultRenderer());
 
@@ -218,7 +218,7 @@ final class AnalyzeDatabaseCommandTest extends TestCase
         self::assertSame(Command::INVALID, $tester->execute(['--as' => '']));
         // select() was never reached, so no operator lookup could have run.
         $this->expectException(\LogicException::class);
-        $this->access->consoleActor();
+        $this->access->actor();
     }
 
     public function testCollectorLocalRunNeedsNoMainDatabase(): void

@@ -54,10 +54,6 @@ try {
             {
                 return $this->delegate->canManageDevices($actor);
             }
-            public function canAdministerInstallation(Actor $actor): bool
-            {
-                return $this->delegate->canAdministerInstallation($actor);
-            }
         };
         $editor = new LegacySiteEditor($database, $revoking, $audit);
         $site = $editor->find($siteId);
@@ -100,10 +96,6 @@ try {
                     $this->rival->rollBack();
                 }
                 return $allowed;
-            }
-            public function canAdministerInstallation(Actor $actor): bool
-            {
-                return $this->delegate->canAdministerInstallation($actor);
             }
         };
         $editor = new LegacySiteEditor($database, $guard, $audit);

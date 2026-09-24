@@ -13,7 +13,6 @@ use Doctrine\DBAL\Driver\PDO\MySQL\Driver as MySqlDriver;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Result;
 use Kadupul\IdentityAccess\Contract\Actor;
-use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\IdentityAccess\Contract\ConsoleOperator;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Application\Command\AnalyzeDatabase;
@@ -48,10 +47,10 @@ final class AnalyzeDatabaseTest extends TestCase
         (new Filesystem())->remove($this->root);
     }
 
-    private function access(bool $allowed): ConsoleAccess
+    private function access(bool $allowed): ConsoleOperator&MockObject
     {
-        $access = $this->createMock(ConsoleAccess::class);
-        $access->method('consoleActor')->willReturn(new Actor(1, 'admin'));
+        $access = $this->createMock(ConsoleOperator::class);
+        $access->method('actor')->willReturn(new Actor(1, 'admin'));
         $access->method('canAdministerInstallation')->willReturn($allowed);
 
         return $access;
@@ -59,7 +58,7 @@ final class AnalyzeDatabaseTest extends TestCase
 
     private function analyze(DatabaseMaintenance $maintenance): AnalyzeDatabase
     {
-        return new AnalyzeDatabase($this->access(true), $this->createStub(ConsoleOperator::class), $maintenance, new SystemClock($this->clock));
+        return new AnalyzeDatabase($this->access(true), $maintenance, new SystemClock($this->clock));
     }
 
     /** Every call the use case makes must carry the same target it computed. */
@@ -138,7 +137,7 @@ final class AnalyzeDatabaseTest extends TestCase
         $m = $this->createMock(DatabaseMaintenance::class);
         $m->expects(self::never())->method('tables');
         $this->expectException(InstallationAccessDenied::class);
-        (new AnalyzeDatabase($this->access(false), $this->createStub(ConsoleOperator::class), $m, new SystemClock($this->clock)))(false, null);
+        (new AnalyzeDatabase($this->access(false), $m, new SystemClock($this->clock)))(false, null);
     }
 
     public function testCollectorWithoutMainConfigurationFails(): void
@@ -161,12 +160,12 @@ final class AnalyzeDatabaseTest extends TestCase
     #[DataProvider('operatorDatabases')]
     public function testOperatorIsCheckedOnTheTargetDatabase(bool $collector, bool $local, OperatorDatabase $expected): void
     {
-        $operator = $this->createMock(ConsoleOperator::class);
+        $operator = $this->access(true);
         $operator->expects(self::once())->method('select')->with('ops', $expected);
         $m = $this->createStub(DatabaseMaintenance::class);
         $m->method('isRemoteCollector')->willReturn($collector);
         $m->method('tables')->willReturn([]);
-        (new AnalyzeDatabase($this->access(true), $operator, $m, new SystemClock($this->clock)))($local, 'ops');
+        (new AnalyzeDatabase($operator, $m, new SystemClock($this->clock)))($local, 'ops');
     }
 
     /** @return iterable<string, array{bool, bool, OperatorDatabase}> */
@@ -181,13 +180,11 @@ final class AnalyzeDatabaseTest extends TestCase
     public function testEmptyOperatorIsRefusedBeforeAnyLookup(): void
     {
         $operator = $this->createMock(ConsoleOperator::class);
-        $operator->expects(self::never())->method('select');
-        $access = $this->createMock(ConsoleAccess::class);
-        $access->expects(self::never())->method(self::anything());
+        $operator->expects(self::never())->method(self::anything());
         $m = $this->createMock(DatabaseMaintenance::class);
         $m->expects(self::never())->method(self::anything());
         $this->expectException(InstallationAccessDenied::class);
-        (new AnalyzeDatabase($access, $operator, $m, new SystemClock($this->clock)))(false, '');
+        (new AnalyzeDatabase($operator, $m, new SystemClock($this->clock)))(false, '');
     }
 
     public function testTableNamesAreQuotedAsIdentifiers(): void

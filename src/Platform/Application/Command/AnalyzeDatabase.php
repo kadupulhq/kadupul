@@ -7,7 +7,6 @@
 
 namespace Kadupul\Platform\Application\Command;
 
-use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\IdentityAccess\Contract\ConsoleOperator;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Application\Port\Clock;
@@ -18,7 +17,6 @@ use Kadupul\Platform\Application\ReadModel\AnalysisReport;
 final readonly class AnalyzeDatabase
 {
     public function __construct(
-        private ConsoleAccess $access,
         private ConsoleOperator $operator,
         private DatabaseMaintenance $maintenance,
         private Clock $clock,
@@ -36,8 +34,8 @@ final readonly class AnalyzeDatabase
         // including the primary with --local, stayed on the local connection.
         $target = !$local && $this->maintenance->isRemoteCollector() ? DatabaseTarget::Main : DatabaseTarget::Local;
         $this->operator->select($operator, $target === DatabaseTarget::Main ? OperatorDatabase::Main : OperatorDatabase::Local);
-        $actor = $this->access->consoleActor();
-        if ($actor === null || !$this->access->canAdministerInstallation($actor)) {
+        $actor = $this->operator->actor();
+        if ($actor === null || !$this->operator->canAdministerInstallation($actor)) {
             throw new InstallationAccessDenied();
         }
         $start = $this->clock->now();

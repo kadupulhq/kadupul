@@ -56,7 +56,7 @@ final class CliConsoleAccessTest extends TestCase
     public function testAdminUserSettingIsTheDefaultActor(): void
     {
         $this->db->executeStatement("INSERT INTO settings VALUES ('admin_user', '1')");
-        $actor = $this->access(null)->consoleActor();
+        $actor = $this->access(null)->actor();
         self::assertSame([1, 'admin'], [$actor?->id, $actor?->username]);
         self::assertTrue($this->access(null)->canAdministerInstallation($actor));
     }
@@ -64,22 +64,25 @@ final class CliConsoleAccessTest extends TestCase
     public function testNamedOperatorGetsRealmThroughGroup(): void
     {
         $access = $this->access('ops');
-        $actor = $access->consoleActor();
+        $actor = $access->actor();
         self::assertSame(2, $actor?->id);
         self::assertTrue($access->canAdministerInstallation($actor));
-        self::assertFalse($access->canManageDevices($actor));
+        // Membership alone grants nothing; only the group's own realm 15 row does.
+        $this->db->executeStatement('DELETE FROM user_auth_group_realm WHERE group_id = 9 AND realm_id = 15');
+        self::assertSame(2, $access->actor()?->id);
+        self::assertFalse($access->canAdministerInstallation($actor));
     }
 
     public function testAbsentAdminUserRowFallsBackToTheDeclaredDefault(): void
     {
-        self::assertSame(1, $this->access(null)->consoleActor()?->id);
+        self::assertSame(1, $this->access(null)->actor()?->id);
     }
 
     #[DataProvider('malformedAdminUsers')]
     public function testMalformedAdminUserResolvesNoActor(string $value): void
     {
         $this->db->executeStatement("INSERT INTO settings VALUES ('admin_user', ?)", [$value]);
-        self::assertNull($this->access(null)->consoleActor());
+        self::assertNull($this->access(null)->actor());
     }
 
     /** @return iterable<string, array{string}> */
@@ -97,55 +100,59 @@ final class CliConsoleAccessTest extends TestCase
         $this->db->executeStatement("INSERT INTO user_auth_group VALUES (10, '')");
         $this->db->executeStatement('INSERT INTO user_auth_group_members VALUES (10, 12)');
         $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (10, 8), (10, 15)');
-        self::assertNull($this->access('grouped')->consoleActor());
+        self::assertNull($this->access('grouped')->actor());
         $this->db->executeStatement("UPDATE user_auth_group SET enabled = 'on' WHERE id = 10");
-        self::assertSame(12, $this->access('grouped')->consoleActor()?->id);
+        self::assertSame(12, $this->access('grouped')->actor()?->id);
     }
 
     public function testLockedAccountResolvesNoActor(): void
     {
-        self::assertNull($this->access('locked')->consoleActor());
-        self::assertNull($this->access('off')->consoleActor());
+        self::assertNull($this->access('locked')->actor());
+        self::assertNull($this->access('off')->actor());
     }
 
     public function testUnknownOperatorAndMissingRealmLookTheSame(): void
     {
-        self::assertNull($this->access('nobody')->consoleActor());
-        $ops = $this->access('ops');
-        self::assertFalse($ops->canManageDevices($ops->consoleActor()));
+        self::assertNull($this->access('nobody')->actor());
+        $this->db->executeStatement("INSERT INTO user_auth VALUES (13, 'viewer', 0, 'on', '', '')");
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (13, 8)');
+        $viewer = $this->access('viewer');
+        $actor = $viewer->actor();
+        self::assertSame(13, $actor?->id);
+        self::assertFalse($viewer->canAdministerInstallation($actor));
     }
 
     public function testUnsupportedAuthMethodResolvesNoActor(): void
     {
         $this->db->executeStatement("INSERT INTO settings VALUES ('auth_method', '1')");
-        self::assertNotNull($this->access('ops')->consoleActor());
+        self::assertNotNull($this->access('ops')->actor());
         $this->db->executeStatement("UPDATE settings SET value = '0' WHERE name = 'auth_method'");
-        self::assertNull($this->access('ops')->consoleActor());
+        self::assertNull($this->access('ops')->actor());
     }
 
     public function testGuestAccountResolvesNoActor(): void
     {
-        self::assertNotNull($this->access('guest')->consoleActor());
+        self::assertNotNull($this->access('guest')->actor());
         $this->db->executeStatement("INSERT INTO settings VALUES ('guest_user', '5')");
-        self::assertNull($this->access('guest')->consoleActor());
+        self::assertNull($this->access('guest')->actor());
         $this->db->executeStatement("UPDATE settings SET value = 'guest' WHERE name = 'guest_user'");
-        self::assertNull($this->access('guest')->consoleActor());
+        self::assertNull($this->access('guest')->actor());
     }
 
     public function testAccountWithoutConsoleRealmResolvesNoActor(): void
     {
-        self::assertNull($this->access('noconsole')->consoleActor());
+        self::assertNull($this->access('noconsole')->actor());
     }
 
     public function testPendingPasswordChangeResolvesNoActor(): void
     {
-        self::assertNull($this->access('pending')->consoleActor());
+        self::assertNull($this->access('pending')->actor());
     }
 
     public function testAmbiguousUsernameResolvesNoActor(): void
     {
-        self::assertNull($this->access('dup')->consoleActor());
-        self::assertNull($this->access('twin')->consoleActor());
+        self::assertNull($this->access('dup')->actor());
+        self::assertNull($this->access('twin')->actor());
     }
 
     public function testOperatorIsReadFromTheSelectedDatabase(): void
@@ -156,14 +163,14 @@ final class CliConsoleAccessTest extends TestCase
         }
         $access = new CliConsoleAccess($this->db, $main);
         $access->select('ops', OperatorDatabase::Main);
-        self::assertNull($access->consoleActor());
+        self::assertNull($access->actor());
         $access->select('ops', OperatorDatabase::Local);
-        self::assertSame(2, $access->consoleActor()?->id);
+        self::assertSame(2, $access->actor()?->id);
     }
 
     public function testResolvingBeforeSelectingIsAnError(): void
     {
         $this->expectException(\LogicException::class);
-        (new CliConsoleAccess($this->db, $this->db))->consoleActor();
+        (new CliConsoleAccess($this->db, $this->db))->actor();
     }
 }

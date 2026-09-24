@@ -27,10 +27,6 @@ $access = new class implements \Kadupul\IdentityAccess\Contract\ConsoleAccess {
     {
         return $this->allowed;
     }
-    public function canAdministerInstallation(\Kadupul\IdentityAccess\Contract\Actor $actor): bool
-    {
-        return false;
-    }
 };
 $pdo->exec("INSERT INTO sites (id,name) VALUES (1,'First'),(2,'Second'); INSERT INTO host (id,description,hostname,site_id) VALUES (1,'Device','localhost',1)");
 $trail = new class ($pdo) implements \Kadupul\IdentityAccess\Contract\AuditTrail {

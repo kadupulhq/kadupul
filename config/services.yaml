@@ -33,15 +33,14 @@ services:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance
     Kadupul\Platform\Application\Port\Clock:
         alias: Kadupul\Platform\Infrastructure\Symfony\SystemClock
-    Kadupul\Platform\Application\Command\AnalyzeDatabase:
-        arguments:
-            $access: '@Kadupul\IdentityAccess\Infrastructure\Cli\CliConsoleAccess'
+    Kadupul\Platform\Application\Command\AnalyzeDatabase: ~
 
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'
 
-    # The same shared instance as AnalyzeDatabase's $access, so the operator the
-    # use case selects is the one it then checks.
+    # One shared instance, so the operator AnalyzeDatabase selects is the one it
+    # then checks. Command-line only: ConsoleAccess stays on the session adapter,
+    # and CliConsoleAccess does not implement it, so no route can resolve it.
     Kadupul\IdentityAccess\Contract\ConsoleOperator:
         alias: Kadupul\IdentityAccess\Infrastructure\Cli\CliConsoleAccess
 

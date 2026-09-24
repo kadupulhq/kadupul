@@ -9,7 +9,6 @@ namespace Kadupul\IdentityAccess\Infrastructure\Cli;
 
 use Doctrine\DBAL\Connection;
 use Kadupul\IdentityAccess\Contract\Actor;
-use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\IdentityAccess\Contract\ConsoleOperator;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
@@ -22,7 +21,7 @@ use Kadupul\IdentityAccess\Contract\OperatorDatabase;
  * the local copy is as valid a source as main. An unreachable main database is
  * never swapped for the local one; the caller picks the database.
  */
-final class CliConsoleAccess implements ConsoleAccess, ConsoleOperator
+final class CliConsoleAccess implements ConsoleOperator
 {
     private ?string $username = null;
     private ?Connection $database = null;
@@ -40,7 +39,7 @@ final class CliConsoleAccess implements ConsoleAccess, ConsoleOperator
     }
 
     #[\Override]
-    public function consoleActor(): ?Actor
+    public function actor(): ?Actor
     {
         $db = $this->database();
         $authMethod = $db->fetchOne("SELECT value FROM settings WHERE name = 'auth_method'");
@@ -77,12 +76,6 @@ final class CliConsoleAccess implements ConsoleAccess, ConsoleOperator
         }
 
         return new Actor($id, (string) $user['username']);
-    }
-
-    #[\Override]
-    public function canManageDevices(Actor $actor): bool
-    {
-        return $this->hasRealm($actor->id, 3);
     }
 
     #[\Override]

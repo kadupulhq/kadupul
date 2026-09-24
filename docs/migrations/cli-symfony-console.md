@@ -98,14 +98,16 @@ differences listed in `docs/symfony-migration.md` say otherwise. Under
 
 Use cases authorize an `Actor`. Web requests resolve it from the shared
 session. The command line has no session, so a new IdentityAccess adapter
-implements `ConsoleAccess` for the CLI:
+implements `ConsoleOperator`, a contract for command-line use only. It does
+not implement the web `ConsoleAccess` contract, so no route can resolve an
+operator chosen by a command-line flag:
 
 - The actor is the account named by `--as=<username>`, or, when that is
   absent, the `admin_user` setting. That matches whose authority the old
   scripts effectively used.
 - The account must exist, be enabled and not be locked. Realm checks are the
-  same ones the web path applies (realm 8 for console access, realm 3 for
-  device management). A command refuses to run otherwise.
+  same ones the web path applies (realm 8 for console access, realm 15 for
+  installation administration). A command refuses to run otherwise.
 - The account is read from the database the command works on. Collectors
   hold a replicated copy of `user_auth*` and `settings`, so a collector run
   with `--local` needs no main database. An unreachable main database never

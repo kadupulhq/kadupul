@@ -29,11 +29,6 @@ $access = new class implements \Kadupul\IdentityAccess\Contract\ConsoleAccess {
     {
         return $this->allowed;
     }
-
-    public function canAdministerInstallation(\Kadupul\IdentityAccess\Contract\Actor $actor): bool
-    {
-        return false;
-    }
 };
 final class SiteCreationFailureStatement extends \PDOStatement
 {

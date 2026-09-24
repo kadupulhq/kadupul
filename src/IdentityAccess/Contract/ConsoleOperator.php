@@ -7,7 +7,13 @@
 
 namespace Kadupul\IdentityAccess\Contract;
 
-/** Names the account a command-line run acts as, before ConsoleAccess resolves it. */
+/**
+ * The account a command-line run acts as. Command-line use only: it names an
+ * account and applies the same account and realm checks as the web path, but
+ * it does not authenticate anyone. Web code resolves actors through
+ * ConsoleAccess, which this contract deliberately does not extend, so no
+ * route can reach an operator chosen by a command-line flag.
+ */
 interface ConsoleOperator
 {
     /**
@@ -16,4 +22,9 @@ interface ConsoleOperator
      * database does not depend on reaching the main one.
      */
     public function select(?string $username, OperatorDatabase $database): void;
+
+    /** Null when the selected account may not use the console at all. */
+    public function actor(): ?Actor;
+
+    public function canAdministerInstallation(Actor $actor): bool;
 }
