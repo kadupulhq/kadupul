@@ -1344,15 +1344,18 @@ function is_device_denial(Expr $expr, string $var, Closure $type_of): bool
  * The condition of an if with no other branch whose body ends in return or
  * throw, so a true condition stops the action.
  */
-function refusal_guard(?Stmt $stmt, bool $return_stops): ?Expr
+function refusal_guard(string $root, ?Stmt $stmt, bool $return_stops, Closure $type_of): ?Expr
 {
     if (!$stmt instanceof Stmt\If_ || $stmt->elseifs !== [] || $stmt->else !== null || $stmt->stmts === []) {
         return null;
     }
-    $last = $stmt->stmts[count($stmt->stmts) - 1];
-    $stops = ($return_stops && $last instanceof Stmt\Return_) || ($last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_);
+    // Nothing but the refusal itself may run for the caller being refused.
+    $body = $stmt->stmts;
+    $last = array_pop($body);
+    $refusal = $last instanceof Stmt\Return_ && $return_stops ? $last->expr
+        : ($last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_ ? $last->expr->expr : false);
 
-    return $stops ? $stmt->cond : null;
+    return $refusal !== false && pure($root, $body, $type_of) && pure($root, $refusal, $type_of) ? $stmt->cond : null;
 }
 
 /**
@@ -1378,14 +1381,29 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, bool $acti
             }
             return [];
         }
-        $guard = refusal_guard($list[$i + 1] ?? null, $action);
-        if ($guard === null || !array_filter(disjuncts($guard), fn(Expr $e) => is_null_check($e, $var))) {
+        // The null check comes first, so no other disjunct runs before it, and
+        // the rest may only check the device grant or compute.
+        $guard = refusal_guard($root, $list[$i + 1] ?? null, $action, $type_of);
+        $terms = $guard === null ? [] : disjuncts($guard);
+        if ($terms === [] || !is_null_check($terms[0], $var)) {
             return [];
         }
         $checks = ['consoleActor' => true];
-        $next = refusal_guard($list[$i + 2] ?? null, $action);
-        foreach ([...disjuncts($guard), ...($next === null ? [] : disjuncts($next))] as $expr) {
-            if (is_device_denial($expr, $var, $type_of)) {
+        $next = refusal_guard($root, $list[$i + 2] ?? null, $action, $type_of);
+        foreach ([$terms, $next === null ? [] : disjuncts($next)] as $group) {
+            $denial = false;
+            foreach ($group as $expr) {
+                if (is_device_denial($expr, $var, $type_of)) {
+                    $denial = true;
+                } elseif (!is_null_check($expr, $var) && !pure($root, $expr, $type_of)) {
+                    if ($group === $terms) {
+                        return [];
+                    }
+                    $denial = false;
+                    break;
+                }
+            }
+            if ($denial) {
                 $checks['canManageDevices'] = true;
             }
         }
@@ -1400,7 +1418,7 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, bool $acti
  * so running it ahead of a guard changes nothing. Anything else, including a
  * call to a service the lists above do not name, is not pure.
  */
-function pure(mixed $nodes, Closure $type_of): bool
+function pure(string $root, mixed $nodes, Closure $type_of): bool
 {
     foreach (walk($nodes, false) as $node) {
         if ($node instanceof Expr\Include_ || $node instanceof Expr\Eval_ || $node instanceof Expr\ShellExec
@@ -1425,13 +1443,39 @@ function pure(mixed $nodes, Closure $type_of): bool
             && in_array($node->name->toString(), PURE_STATIC_CALLS[$node->class->toString()] ?? [], true))) {
             return false;
         }
-        if ($node instanceof Expr\New_ && !($node->class instanceof Name
-            && (str_starts_with($node->class->toString(), 'Symfony\Component\HttpFoundation\\')
-                || (class_exists($node->class->toString()) && is_a($node->class->toString(), Throwable::class, true)
-                    && (new ReflectionClass($node->class->toString()))->isInternal())))) {
+        if ($node instanceof Expr\New_ && !($node->class instanceof Name && pure_new($root, $node->class->toString()))) {
             return false;
         }
         if (($node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall) && !pure_method_call($node, $type_of)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * A Symfony response, a builtin exception, or a project exception whose
+ * constructor only passes pure values to its parent.
+ */
+function pure_new(string $root, string $class): bool
+{
+    if (str_starts_with($class, 'Symfony\Component\HttpFoundation\\')) {
+        return true;
+    }
+    if (class_exists($class, false) || interface_exists($class, false)) {
+        return is_a($class, Throwable::class, true) && (new ReflectionClass($class))->isInternal();
+    }
+    $loaded = load_class($root, $class);
+    if (!$loaded instanceof Stmt\Class_ || $loaded->extends === null || !pure_new($root, $loaded->extends->toString())) {
+        return false;
+    }
+    $constructor = find_method($loaded, '__construct');
+    foreach ($constructor?->stmts ?? [] as $stmt) {
+        $call = expression_of($stmt);
+        if (!$call instanceof Expr\StaticCall || !$call->class instanceof Name || $call->class->toLowerString() !== 'parent'
+            || !$call->name instanceof Node\Identifier || $call->name->toLowerString() !== '__construct'
+            || !pure($root, $call->getRawArgs(), fn(Expr $e): ?string => null)) {
             return false;
         }
     }
@@ -1469,14 +1513,14 @@ function pure_method_call(Expr\MethodCall|Expr\NullsafeMethodCall $call, Closure
  * @param list<Stmt> $stmts
  * @return array{0: string, 1: string}|null
  */
-function first_service_call(array $stmts, Closure $type_of, bool $action): ?array
+function first_service_call(string $root, array $stmts, Closure $type_of, bool $action): ?array
 {
     foreach ($stmts as $stmt) {
         if ($stmt instanceof Stmt\TryCatch) {
-            if ($stmt->finally !== null || !pure($stmt->catches, $type_of)) {
+            if ($stmt->finally !== null || !pure($root, $stmt->catches, $type_of)) {
                 return null;
             }
-            $found = first_service_call($stmt->stmts, $type_of, $action);
+            $found = first_service_call($root, $stmt->stmts, $type_of, $action);
             if ($found !== null) {
                 foreach ($stmt->catches as $catch) {
                     $last = $catch->stmts === [] ? null : $catch->stmts[count($catch->stmts) - 1];
@@ -1487,7 +1531,7 @@ function first_service_call(array $stmts, Closure $type_of, bool $action): ?arra
                 }
                 return $found;
             }
-            if (!pure($stmt->stmts, $type_of)) {
+            if (!pure($root, $stmt->stmts, $type_of)) {
                 return null;
             }
             continue;
@@ -1501,7 +1545,7 @@ function first_service_call(array $stmts, Closure $type_of, bool $action): ?arra
             }
         }
         if ($service === null) {
-            if (!pure($stmt, $type_of)) {
+            if (!pure($root, $stmt, $type_of)) {
                 return null;
             }
             continue;
@@ -1513,7 +1557,7 @@ function first_service_call(array $stmts, Closure $type_of, bool $action): ?arra
         if ($expr instanceof Expr\Assign && is_variable($expr->var) && !is_variable($expr->var, 'this')) {
             $expr = $expr->expr;
         }
-        if ($expr !== $node || !pure($node->getRawArgs(), $type_of)) {
+        if ($expr !== $node || !pure($root, $node->getRawArgs(), $type_of)) {
             return null;
         }
         return $target;
@@ -1536,7 +1580,7 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     // Without its own guard, a method is covered only by the first service it
     // calls, and only when that service guards and nothing but pure code can
     // run ahead of it.
-    $target = first_service_call($method->stmts ?? [], $type_of, $depth === 0);
+    $target = first_service_call($root, $method->stmts ?? [], $type_of, $depth === 0);
     if ($target === null || (in_array($target[0], ACCESS_TYPES, true) && $target[1] !== 'consoleActor')) {
         return [];
     }

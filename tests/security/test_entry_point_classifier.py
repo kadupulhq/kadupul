@@ -211,6 +211,54 @@ final class TwoActions
         return new Response();
     }
 
+    #[Route('/effect-in-guard', name: 'effect_in_guard')]
+    public function effectInGuard(Sites $sites): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            $sites->unchecked();
+            return new Response('', 401);
+        }
+        return new Response();
+    }
+
+    #[Route('/effect-before-null-check', name: 'effect_before_null_check')]
+    public function effectBeforeNullCheck(Sites $sites): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($sites->unchecked() || $actor === null) {
+            return new Response('', 401);
+        }
+        return new Response();
+    }
+
+    #[Route('/effect-in-device-guard', name: 'effect_in_device_guard')]
+    public function effectInDeviceGuard(Sites $sites): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return new Response('', 401);
+        }
+        if (!$this->access->canManageDevices($actor)) {
+            $sites->unchecked();
+            return new Response('', 403);
+        }
+        return new Response();
+    }
+
+    #[Route('/effect-before-device-check', name: 'effect_before_device_check')]
+    public function effectBeforeDeviceCheck(Sites $sites): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return new Response('', 401);
+        }
+        if ($sites->unchecked() || !$this->access->canManageDevices($actor)) {
+            return new Response('', 403);
+        }
+        return new Response();
+    }
+
     #[Route('/devices', name: 'devices')]
     public function devices(): Response
     {
@@ -264,6 +312,15 @@ final class Sites
 
     public function unchecked(): void
     {
+    }
+
+    public function effectBeforeThrow(): void
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            $this->unchecked();
+            throw new \\RuntimeException();
+        }
     }
 
     // A callee's catch that returns hands control back to the action.
@@ -368,6 +425,13 @@ final class ServiceActions
         return new Response();
     }
 
+    #[Route('/via-effect-before-throw', name: 'via_effect_before_throw')]
+    public function viaEffectBeforeThrow(Sites $sites): Response
+    {
+        $sites->effectBeforeThrow();
+        return new Response();
+    }
+
     #[Route('/catch-swallows', name: 'catch_swallows')]
     public function catchSwallows(Sites $sites): Response
     {
@@ -435,6 +499,7 @@ final class Who
 '''
 WHO_CONTROLLER = '''<?php
 namespace Kadupul\\Fixture;
+use Symfony\\Component\\HttpFoundation\\Response;
 use Symfony\\Component\\Routing\\Attribute\\Route;
 final class WhoActions
 {
@@ -498,6 +563,11 @@ ROUTES = {
     'app.php/effect-in-catch': 'unknown',
     'app.php/pure-then-checked': 'symfony:pure_then_checked',
     'app.php/catch-swallows': 'unknown',
+    'app.php/effect-in-guard': 'unknown',
+    'app.php/effect-before-null-check': 'unknown',
+    'app.php/effect-in-device-guard': 'symfony:effect_in_device_guard',
+    'app.php/effect-before-device-check': 'symfony:effect_before_device_check',
+    'app.php/via-effect-before-throw': 'unknown',
     'app.php/catch-empty': 'unknown',
     'app.php/via-callee-catch': 'unknown',
     'app.php/effect-first': 'unknown',
@@ -513,6 +583,8 @@ GRANTS = {
     'app.php/devices-split': 'ConsoleAccess realm 8 + realm 3',
     'app.php/devices-discarded': 'ConsoleAccess realm 8',
     'app.php/who-guarded': 'ConsoleAccess realm 8',
+    'app.php/effect-in-device-guard': 'ConsoleAccess realm 8',
+    'app.php/effect-before-device-check': 'ConsoleAccess realm 8',
 }
 
 REALMS = "<?php\n$user_auth_realm_filenames = array(\n\t'page.php' => 3,\n\t\"dq.php\" => 3,\n\t'open.php' => -1,\n);\n"
