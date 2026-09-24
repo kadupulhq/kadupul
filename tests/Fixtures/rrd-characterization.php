@@ -156,6 +156,8 @@ function __esc()
     return htmlspecialchars(call_user_func_array('__', func_get_args()), ENT_QUOTES);
 }
 
+// include/global.php loads this before lib/rrd.php in the application.
+require $root . '/include/vendor/autoload.php';
 require $root . '/include/global_constants.php';
 require $root . '/lib/functions.php';
 require $root . '/lib/auth.php';
