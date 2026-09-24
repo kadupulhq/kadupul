@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Use $rdatabase_retries for a remote poller's connection to the main server, which passed the local $database_retries and ignored the configured remote value
 -issue: Read the group of a newly created structured RRD directory with filegroup() rather than fileowner() in both rrd and boost, so a root-run poller no longer skips a needed chgrp when the directory owner id happens to equal the target group id
 -issue: change_device --disable now matches its help, with 1 disabling and 0 enabling, and refuses other numeric values
 -issue: change_device --bulk_walk no longer falls through to the version banner and exit without applying the change
