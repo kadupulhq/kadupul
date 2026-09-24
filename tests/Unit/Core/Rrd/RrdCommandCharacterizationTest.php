@@ -111,6 +111,52 @@ test('fetch command and parsing match their golden', function () {
     rrd_characterization_golden('fetch', rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)));
 });
 
+/** A data source whose path has a space and a quote, and one whose path has a NUL. */
+function rrd_characterization_path_quoting_scenario(array $options = array()): array
+{
+    return array(
+        'files' => array("it's a.rrd"),
+        'options' => $options + array('extended_paths' => '', 'default_interface_speed' => '') + rrd_characterization_options(),
+        'replies' => array('fetch' => " value\n\n1700000300: 1.0000000000e+00\n", 'last' => "1700000300\n"),
+        'db' => array(
+            array('sql' => 'SELECT name, data_source_path FROM data_template_data', 'params' => array(31), 'result' => array('name' => 'Quoted', 'data_source_path' => "<path_rra>/it's a.rrd")),
+            array('sql' => 'SELECT name, data_source_path FROM data_template_data', 'params' => array(32), 'result' => array('name' => 'Nul', 'data_source_path' => "<path_rra>/it\0s.rrd")),
+            array('sql' => 'SELECT name, data_source_path FROM data_template_data', 'params' => array(33), 'result' => array('name' => 'New', 'data_source_path' => "<path_rra>/new 'one'.rrd")),
+            array('sql' => 'SELECT dsp.step, dspr.steps, dspr.rows, dspr.timespan FROM data_source_profiles', 'result' => array(array('step' => '300', 'steps' => '1', 'rows' => '600', 'timespan' => '86400'))),
+            array('sql' => 'LEFT JOIN data_source_profiles_cf AS dspc', 'result' => array(array('rrd_step' => '300', 'x_files_factor' => '0.5', 'steps' => '1', 'rows' => '600', 'consolidation_function_id' => '1', 'rra_order' => '600'))),
+            array('sql' => 'SELECT data_template_id FROM data_local', 'result' => '0'),
+            array('sql' => 'FROM data_template_rrd AS dtr WHERE local_data_id', 'result' => array(
+                array('id' => '301', 'data_source_name' => 'value', 'rrd_heartbeat' => '600', 'rrd_minimum' => '0', 'rrd_maximum' => '|query_ifAlias|', 'data_source_type_id' => '1'),
+            )),
+            array('sql' => 'SELECT host_id, snmp_query_id, snmp_index FROM data_local', 'result' => array('host_id' => '3', 'snmp_query_id' => '1', 'snmp_index' => '2')),
+            array('sql' => 'field_name="ifHighSpeed"', 'result' => ''),
+            array('sql' => 'field_name="ifSpeed"', 'result' => ''),
+            array('sql' => 'dtr.data_source_name, dtd.name FROM data_template_rrd', 'result' => array('data_source_name' => 'value', 'name' => 'Quoted')),
+            // A device value in the maximum must stay inside its DS argument.
+            array('sql' => 'field_name, field_value FROM host_snmp_cache', 'result' => array(array('field_name' => 'ifAlias', 'field_value' => "10 --daemon x'y"))),
+        ),
+    );
+}
+
+test('commands on an RRD path with a space and a quote match their golden', function () {
+    $path = "rra/it's a.rrd";
+    $scenario = rrd_characterization_path_quoting_scenario();
+    $scenario['calls'] = array(
+        array('fn' => 'rrdtool_function_info', 'args' => array(31)),
+        array('fn' => 'rrdtool_function_fetch', 'args' => array(31, 1700000000, 1700001000, 300)),
+        array('fn' => 'rrdtool_function_create', 'args' => array(33, true)),
+        array('fn' => 'boost_rrdtool_get_last_update_time', 'args' => array($path, false)),
+        array('fn' => 'rrdtool_function_create', 'args' => array(33, false)),
+        // A NUL is refused before RRDtool starts and the caller sees its usual failure.
+        array('fn' => 'rrdtool_function_info', 'args' => array(32)),
+        array('fn' => 'rrdtool_function_fetch', 'args' => array(32, 1700000000, 1700001000, 300)),
+        array('fn' => 'rrdtool_function_fetch', 'args' => array(0, 1700000000, 1700001000, 300, false, "rra/it\0s.rrd")),
+        array('fn' => 'rrdtool_function_create', 'args' => array(32, false)),
+        array('fn' => 'rrdtool_function_update', 'args' => array(array("rra/it\0s.rrd" => array('local_data_id' => 32, 'data_template_id' => 0, 'times' => array(1700000600 => array('value' => '5')))))),
+    );
+    rrd_characterization_golden('path-quoting', rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)));
+});
+
 test('pure helpers match their golden', function () {
     $format = array('graph_start' => 1700000000, 'graph_end' => 1700086400);
     $window = array('graph_opts' => '--start=x', 'graph_defs' => 'DEF:a=x:y:AVERAGE' . " \\\n", 'txt_graph_items' => 'AREA:a', 'graph_id' => 7, 'start' => 1700179200, 'end' => 1700438400);
@@ -203,4 +249,46 @@ test('proxy payload encryption matches its golden', function () {
         ),
     );
     rrd_characterization_golden('proxy-encryption', rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)));
+});
+
+test('an RRD path with a space and a quote round-trips through RRDtool', function () {
+    $binary = getenv('RRDTOOL_TEST_BINARY');
+    if (!$binary || !is_executable($binary)) {
+        $this->markTestSkipped('RRDTOOL_TEST_BINARY is required');
+    }
+    $path = "rra/it's a.rrd";
+    $scenario = rrd_characterization_path_quoting_scenario(array('path_rrdtool' => $binary));
+    unset($scenario['files']);
+    foreach ($scenario['db'] as $index => $row) {
+        if ($row['sql'] === 'field_name, field_value FROM host_snmp_cache') {
+            $scenario['db'][$index]['result'][0]['field_value'] = '100';
+        }
+        if (($row['params'] ?? null) === array(33)) {
+            unset($scenario['db'][$index]);
+        }
+    }
+    $scenario['db'] = array_values($scenario['db']);
+    // create --start 0 starts the RRD at midnight today, so samples follow now.
+    $t = intdiv(time(), 300) * 300 + 600;
+    $scenario['calls'] = array(
+        // Fetch loads lib/boost.php before it looks at its arguments.
+        array('fn' => 'rrdtool_function_fetch', 'args' => array(0, $t, $t)),
+        array('fn' => 'rrdtool_function_create', 'args' => array(31, false)),
+        array('fn' => 'rrdtool_function_update', 'args' => array(array($path => array('local_data_id' => 31, 'data_template_id' => 0, 'times' => array($t => array('value' => '5')))))),
+        array('fn' => 'boost_rrdtool_function_update', 'args' => array(31, $path, 'value', ($t + 300) . ':6', false)),
+        array('fn' => 'boost_rrdtool_get_last_update_time', 'args' => array($path, false)),
+        array('fn' => 'rrdtool_function_info', 'args' => array(31)),
+        array('fn' => 'rrdtool_function_fetch', 'args' => array(31, $t - 300, $t + 300, 300)),
+    );
+    $results = array_slice(array_column(rrd_characterization_run($this, $scenario)['results'], 'returned'), 1);
+
+    expect($results[0])->toBe('')
+        ->and($results[1])->toBe(1)
+        ->and($results[2])->toBe('OK')
+        ->and($results[3])->toBe((string) ($t + 300))
+        ->and($results[4]['last_update'])->toBe((string) ($t + 300))
+        ->and($results[4]['ds']['value']['max'])->toBe('1.0000000000e+02')
+        // The first sample follows a gap longer than the heartbeat, so it only
+        // makes the second one known.
+        ->and($results[5]['values'][0])->toBe(array($t + 300 => '6.0000000000e+00'));
 });
