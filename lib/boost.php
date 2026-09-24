@@ -1481,7 +1481,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
                 if ($data_source['rrd_maximum'] == '|query_ifSpeed|' || $data_source['rrd_maximum'] == '|query_ifHighSpeed|') {
                     $data_source['rrd_maximum'] = $speed;
                 } else {
-                    $data_source['rrd_maximum'] = substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']);
+                    $data_source['rrd_maximum'] = trim(substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']));
                 }
             } elseif (($data_source['rrd_maximum'] != 'U') && (int) $data_source['rrd_maximum'] <= (int) $data_source['rrd_minimum']) {
                 /* max > min required, but take care of an "Undef" value */
@@ -1493,9 +1493,16 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
                 $data_source['rrd_maximum'] = 'U';
             }
 
-            // A substituted maximum is device data. Anything but a number or U
+            // A substituted maximum is device data. A line break would start
+            // another RRDtool command, and is_numeric() accepts one around a
+            // number, so it is refused first. Anything else but a number or U
             // is quoted so it stays inside this DS argument, where RRDtool
             // rejects it instead of reading it as more arguments.
+            if (strpbrk((string) $data_source['rrd_maximum'], "\r\n\0") !== false) {
+                cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. The data source maximum contains a line break or NUL.', false, 'BOOST');
+                return false;
+            }
+
             if (!is_numeric($data_source['rrd_maximum']) && $data_source['rrd_maximum'] !== 'U') {
                 try {
                     $data_source['rrd_maximum'] = rrdtool_pipe_quote($data_source['rrd_maximum']);
