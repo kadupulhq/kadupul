@@ -56,7 +56,7 @@ print 'New User:      ' . $new_user . PHP_EOL;
 
 /* Check that user exists */
 $user_auth = db_fetch_row("SELECT * FROM user_auth WHERE username = '" . $template_user . "' AND realm = 0");
-if (! isset($user_auth)) {
+if (!cacti_sizeof($user_auth)) {
 	print "Error: Template user does not exist!" . PHP_EOL . PHP_EOL;
 	exit(1);
 }
@@ -69,7 +69,7 @@ if (user_copy($template_user, $new_user) === false) {
 }
 
 $user_auth = db_fetch_row("SELECT * FROM user_auth WHERE username = '" . $new_user . "' AND realm = 0");
-if (! isset($user_auth)) {
+if (!cacti_sizeof($user_auth)) {
 	print 'Error: User not copied!' . PHP_EOL . PHP_EOL;
 	exit(1);
 }
