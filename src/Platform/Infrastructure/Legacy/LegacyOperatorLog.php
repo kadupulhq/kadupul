@@ -8,6 +8,7 @@
 namespace Kadupul\Platform\Infrastructure\Legacy;
 
 use Doctrine\DBAL\Connection;
+use Psr\Clock\ClockInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -21,7 +22,18 @@ final readonly class LegacyOperatorLog
     private const array DATE = [0 => 'm%1$sd%1$sY', 1 => 'M%1$sd%1$sY', 2 => 'd%1$sm%1$sY', 3 => 'd%1$sM%1$sY', 4 => 'Y%1$sm%1$sd', 5 => 'Y%1$sM%1$sd'];
     private const array SEPARATOR = [0 => '-', 1 => '/', 2 => '.'];
 
-    public function __construct(private string $projectDir, private Filesystem $filesystem, private ?\Closure $syslog = null) {}
+    /**
+     * @param string $os PHP_OS, which include/global.php reads to set cacti_server_os
+     * @param (\Closure(int, int, string): void)|null $syslog test-only: receives the
+     *     facility, priority and line instead of the system logger
+     */
+    public function __construct(
+        private string $projectDir,
+        private Filesystem $filesystem,
+        private ClockInterface $clock,
+        private string $os = PHP_OS,
+        private ?\Closure $syslog = null,
+    ) {}
 
     /**
      * Callers must not pass $environ = 'POLLER': there is no poller id here, so
@@ -49,7 +61,7 @@ final readonly class LegacyOperatorLog
             // able to create one anywhere the process can write.
             if (is_dir(dirname($file))) {
                 try {
-                    $this->filesystem->appendToFile($file, date(sprintf($format, $separator) . ' H:i:s') . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
+                    $this->filesystem->appendToFile($file, $this->clock->now()->format(sprintf($format, $separator) . ' H:i:s') . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
                 } catch (IOException) {
                     // Best effort, as in cacti_log(): a log failure must not fail the command.
                 }
@@ -75,12 +87,15 @@ final readonly class LegacyOperatorLog
 
     private function send(int $priority, string $line): void
     {
+        // cacti_log() logs to LOG_USER when cacti_server_os is 'win32', which
+        // global.php sets whenever PHP_OS contains "WIN".
+        $facility = str_contains($this->os, 'WIN') ? LOG_USER : LOG_SYSLOG;
         if ($this->syslog !== null) {
-            ($this->syslog)($priority, $line);
+            ($this->syslog)($facility, $priority, $line);
 
             return;
         }
-        openlog('Cacti', LOG_NDELAY | LOG_PID, LOG_SYSLOG);
+        openlog('Cacti', LOG_NDELAY | LOG_PID, $facility);
         syslog($priority, $line);
         closelog();
     }

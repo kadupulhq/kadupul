@@ -89,7 +89,7 @@ final class InstallationConnectionDriver extends AbstractDriverMiddleware
 
         return match ($target) {
             ConnectionTarget::Local => $targets['local'],
-            ConnectionTarget::Main => $targets['main'] ?? throw new \RuntimeException('Main database is not configured.'),
+            ConnectionTarget::Main => $targets['main'] ?? throw new MainDatabaseNotConfigured(),
         };
     }
 }

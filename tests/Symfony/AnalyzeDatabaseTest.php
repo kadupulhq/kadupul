@@ -19,6 +19,7 @@ use Kadupul\Platform\Application\Command\AnalyzeDatabase;
 use Kadupul\Platform\Application\Command\InstallationAccessDenied;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
+use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
 use Kadupul\Platform\Infrastructure\Legacy\CollectorIdentity;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
@@ -95,7 +96,7 @@ final class AnalyzeDatabaseTest extends TestCase
             $local,
             $main ?? $local,
             new CollectorIdentity(new InstallationConfiguration($this->root)),
-            new LegacyOperatorLog($this->root, new Filesystem()),
+            new LegacyOperatorLog($this->root, new Filesystem(), $this->clock),
         );
     }
 
@@ -146,8 +147,8 @@ final class AnalyzeDatabaseTest extends TestCase
         // it first connects; the use case must let that propagate.
         $m = $this->createMock(DatabaseMaintenance::class);
         $m->method('isRemoteCollector')->willReturn(true);
-        $m->method('binlogEnabled')->with(DatabaseTarget::Main)->willThrowException(new \RuntimeException('Main database is not configured.'));
-        $this->expectExceptionMessage('Main database is not configured.');
+        $m->method('binlogEnabled')->with(DatabaseTarget::Main)->willThrowException(new MainDatabaseNotConfigured());
+        $this->expectException(MainDatabaseNotConfigured::class);
         $this->analyze($m)(false, null);
     }
 
@@ -234,7 +235,7 @@ final class AnalyzeDatabaseTest extends TestCase
 
         $this->adapter($local, $main)->recordStats(DatabaseTarget::Main, 'message');
 
-        self::assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} - SYSTEM message\n$/', (string) file_get_contents($this->root . '/log/main.log'));
+        self::assertSame("2026-01-01 00:00:00 - SYSTEM message\n", (string) file_get_contents($this->root . '/log/main.log'));
         self::assertFileDoesNotExist($this->root . '/log/local.log');
     }
 
@@ -256,24 +257,28 @@ final class AnalyzeDatabaseTest extends TestCase
         $db = DriverManager::getConnection($params);
 
         $tables = ['kadupul_analyze_a', 'kadupul_analyze_b', 'kadupul_analyze_c'];
-        foreach ($tables as $table) {
-            $db->executeStatement('DROP TABLE IF EXISTS `' . $table . '`');
-            $db->executeStatement('CREATE TABLE `' . $table . '` (id INT PRIMARY KEY)');
-        }
+        // Setup sits inside the try too, so a table created before a failing
+        // CREATE is still dropped.
+        try {
+            foreach ($tables as $table) {
+                $db->executeStatement('DROP TABLE IF EXISTS `' . $table . '`');
+                $db->executeStatement('CREATE TABLE `' . $table . '` (id INT PRIMARY KEY)');
+            }
 
-        $maintenance = $this->adapter($db);
-        self::assertSame([], array_diff($tables, $maintenance->tables(DatabaseTarget::Local)));
-        $maintenance->binlogEnabled(DatabaseTarget::Local);
-        foreach ($tables as $table) {
-            self::assertTrue($maintenance->analyze(DatabaseTarget::Local, $table, false));
-        }
+            $maintenance = $this->adapter($db);
+            self::assertSame([], array_diff($tables, $maintenance->tables(DatabaseTarget::Local)));
+            $maintenance->binlogEnabled(DatabaseTarget::Local);
+            foreach ($tables as $table) {
+                self::assertTrue($maintenance->analyze(DatabaseTarget::Local, $table, false));
+            }
 
-        // An unconsumed ANALYZE TABLE result set would make the server refuse
-        // the next statement; confirm a normal query still runs afterward.
-        self::assertSame('1', (string) $db->fetchOne('SELECT 1'));
-
-        foreach ($tables as $table) {
-            $db->executeStatement('DROP TABLE IF EXISTS `' . $table . '`');
+            // An unconsumed ANALYZE TABLE result set would make the server refuse
+            // the next statement; confirm a normal query still runs afterward.
+            self::assertSame('1', (string) $db->fetchOne('SELECT 1'));
+        } finally {
+            foreach ($tables as $table) {
+                $db->executeStatement('DROP TABLE IF EXISTS `' . $table . '`');
+            }
         }
     }
 }

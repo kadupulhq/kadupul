@@ -12,6 +12,7 @@ use Doctrine\DBAL\DriverManager;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class LegacyOperatorLogTest extends TestCase
@@ -32,6 +33,11 @@ final class LegacyOperatorLogTest extends TestCase
         (new Filesystem())->remove($this->root);
     }
 
+    private function log(?\Closure $syslog = null, string $os = 'Linux'): LegacyOperatorLog
+    {
+        return new LegacyOperatorLog($this->root, new Filesystem(), new MockClock('2026-03-04 05:06:07'), $os, $syslog);
+    }
+
     private function set(string $name, string $value): void
     {
         $this->db->executeStatement('REPLACE INTO settings (name, value) VALUES (?, ?)', [$name, $value]);
@@ -39,30 +45,30 @@ final class LegacyOperatorLogTest extends TestCase
 
     public function testDefaultsWriteOneLineInTheLegacyFormat(): void
     {
-        (new LegacyOperatorLog($this->root, new Filesystem()))->record($this->db, 'SYSTEM', "ANALYSIS STATS: done.\n  Total 1");
+        $this->log()->record($this->db, 'SYSTEM', "ANALYSIS STATS: done.\n  Total 1");
         $line = file_get_contents($this->root . '/log/cacti.log');
-        self::assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} - SYSTEM ANALYSIS STATS: done\. Total 1\n$/', $line);
+        self::assertSame("2026-03-04 05:06:07 - SYSTEM ANALYSIS STATS: done. Total 1\n", $line);
     }
 
     public function testDateFormatSettingsAreHonoured(): void
     {
         $this->set('default_date_format', '0');
         $this->set('default_datechar', '1');
-        (new LegacyOperatorLog($this->root, new Filesystem()))->record($this->db, 'SYSTEM', 'x');
-        self::assertMatchesRegularExpression('#^\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2} - SYSTEM x\n$#', file_get_contents($this->root . '/log/cacti.log'));
+        $this->log()->record($this->db, 'SYSTEM', 'x');
+        self::assertSame("03/04/2026 05:06:07 - SYSTEM x\n", file_get_contents($this->root . '/log/cacti.log'));
     }
 
     public function testVerbosityNoneWritesNothing(): void
     {
         $this->set('log_verbosity', '1');
-        (new LegacyOperatorLog($this->root, new Filesystem()))->record($this->db, 'SYSTEM', 'x');
+        $this->log()->record($this->db, 'SYSTEM', 'x');
         self::assertFileDoesNotExist($this->root . '/log/cacti.log');
     }
 
     public function testUnwritableLogFileIsIgnored(): void
     {
         $this->set('path_cactilog', $this->root . '/missing/dir/cacti.log');
-        (new LegacyOperatorLog($this->root, new Filesystem()))->record($this->db, 'SYSTEM', 'x');
+        $this->log()->record($this->db, 'SYSTEM', 'x');
         self::assertFileDoesNotExist($this->root . '/missing/dir/cacti.log');
     }
 
@@ -71,7 +77,7 @@ final class LegacyOperatorLogTest extends TestCase
         // A directory in place of the file makes the append itself fail, which
         // the missing-directory case above never reaches.
         $this->set('path_cactilog', $this->root . '/log');
-        (new LegacyOperatorLog($this->root, new Filesystem()))->record($this->db, 'SYSTEM', 'x');
+        $this->log()->record($this->db, 'SYSTEM', 'x');
         self::assertDirectoryExists($this->root . '/log');
     }
 
@@ -80,9 +86,9 @@ final class LegacyOperatorLogTest extends TestCase
         $this->set('log_destination', '3');
         $this->set('log_pstats', 'on');
         $sent = [];
-        (new LegacyOperatorLog($this->root, new Filesystem(), static function (int $priority, string $line) use (&$sent): void {
+        $this->log(static function (int $facility, int $priority, string $line) use (&$sent): void {
             $sent[] = [$priority, $line];
-        }))->record($this->db, 'SYSTEM', 'ANALYSIS STATS: done');
+        })->record($this->db, 'SYSTEM', 'ANALYSIS STATS: done');
         self::assertSame([[LOG_INFO, 'SYSTEM: ANALYSIS STATS: done']], $sent);
         self::assertFileDoesNotExist($this->root . '/log/cacti.log');
     }
@@ -91,9 +97,9 @@ final class LegacyOperatorLogTest extends TestCase
     private function syslogged(string $message): array
     {
         $sent = [];
-        (new LegacyOperatorLog($this->root, new Filesystem(), static function (int $priority, string $line) use (&$sent): void {
+        $this->log(static function (int $facility, int $priority, string $line) use (&$sent): void {
             $sent[] = [$priority, $line];
-        }))->record($this->db, 'SYSTEM', $message);
+        })->record($this->db, 'SYSTEM', $message);
 
         return $sent;
     }
@@ -132,9 +138,9 @@ final class LegacyOperatorLogTest extends TestCase
         $this->set('log_perror', '');
         $this->set('log_pstats', 'on');
         $sent = [];
-        (new LegacyOperatorLog($this->root, new Filesystem(), static function (int $priority, string $line) use (&$sent): void {
+        $this->log(static function (int $facility, int $priority, string $line) use (&$sent): void {
             $sent[] = [$priority, $line];
-        }))->record($this->db, 'SYSTEM', 'ERROR: boom STATS: also');
+        })->record($this->db, 'SYSTEM', 'ERROR: boom STATS: also');
         self::assertSame([], $sent);
     }
 
@@ -143,9 +149,29 @@ final class LegacyOperatorLogTest extends TestCase
         $this->set('log_destination', '3');
         $this->set('log_pwarn', 'on');
         $sent = [];
-        (new LegacyOperatorLog($this->root, new Filesystem(), static function (int $priority, string $line) use (&$sent): void {
+        $this->log(static function (int $facility, int $priority, string $line) use (&$sent): void {
             $sent[] = [$priority, $line];
-        }))->record($this->db, 'SYSTEM', 'WARNING: x STATS: y');
+        })->record($this->db, 'SYSTEM', 'WARNING: x STATS: y');
         self::assertSame([[LOG_WARNING, 'SYSTEM: WARNING: x STATS: y']], $sent);
+    }
+
+    #[DataProvider('facilities')]
+    public function testSyslogFacilityFollowsTheServerOs(string $os, int $facility): void
+    {
+        $this->set('log_destination', '3');
+        $sent = [];
+        $this->log(static function (int $facility, int $priority, string $line) use (&$sent): void {
+            $sent[] = [$facility, $priority, $line];
+        }, $os)->record($this->db, 'SYSTEM', 'ERROR: a');
+        self::assertSame([[$facility, LOG_CRIT, 'SYSTEM: ERROR: a']], $sent);
+    }
+
+    /** @return iterable<string, array{string, int}> */
+    public static function facilities(): iterable
+    {
+        yield 'windows' => ['WINNT', LOG_USER];
+        yield 'linux' => ['Linux', LOG_SYSLOG];
+        // global.php matches "WIN" case-sensitively, so Darwin is not Windows.
+        yield 'darwin' => ['Darwin', LOG_SYSLOG];
     }
 }

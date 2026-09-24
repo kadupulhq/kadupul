@@ -15,8 +15,12 @@ use Kadupul\Platform\Application\Command\AnalyzeDatabase;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Infrastructure\Doctrine\InstallationConnectionMiddleware;
+use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
+use Kadupul\Platform\Infrastructure\Legacy\CollectorIdentity;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
+use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
+use Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance;
 use Kadupul\Platform\Infrastructure\Symfony\Console\AnalyzeDatabaseCommand;
 use Kadupul\Platform\Infrastructure\Symfony\Console\AnalyzeDatabaseLegacyArguments;
 use Kadupul\Platform\Infrastructure\Symfony\Console\CliPresentation;
@@ -91,7 +95,8 @@ final class AnalyzeDatabaseCommandTest extends TestCase
     {
         $analyze = new AnalyzeDatabase($this->access, $maintenance, new SystemClock(new MockClock()));
         $version = new InstallationVersion($this->root, $this->db, new Filesystem());
-        $command = new AnalyzeDatabaseCommand($analyze, $version, $this->presentation, new ResultRenderer());
+        // A year that is not the current one proves the version line reads the clock.
+        $command = new AnalyzeDatabaseCommand($analyze, $version, $this->presentation, new ResultRenderer(), new MockClock('2031-06-01 00:00:00'));
 
         return new CommandTester(new Command(null, $command));
     }
@@ -133,7 +138,7 @@ final class AnalyzeDatabaseCommandTest extends TestCase
         $this->presentation->forLegacy(LegacyRequest::Version);
         $tester = $this->tester($this->maintenance());
         self::assertSame(0, $tester->execute([]));
-        self::assertMatchesRegularExpression('/^Kadupul Analyze Database Utility, Version 1\.3\.0 \(DB: 1\.3\.0\), Copyright \(C\) 2004-\d{4} The Cacti Group\n$/', $tester->getDisplay());
+        self::assertSame("Kadupul Analyze Database Utility, Version 1.3.0 (DB: 1.3.0), Copyright (C) 2004-2031 The Cacti Group\n", $tester->getDisplay());
     }
 
     public function testMissingVersionFileFailsOnlyTheVersionLine(): void
@@ -156,7 +161,7 @@ final class AnalyzeDatabaseCommandTest extends TestCase
         $tester = $this->tester($this->maintenance());
         self::assertSame(0, $tester->execute([]));
         self::assertSame(
-            'Kadupul Analyze Database Utility, Version 1.3.0 (DB: 1.3.0), Copyright (C) 2004-' . date('Y') . " The Cacti Group\n"
+            "Kadupul Analyze Database Utility, Version 1.3.0 (DB: 1.3.0), Copyright (C) 2004-2031 The Cacti Group\n"
             . "\nusage: analyze_database.php [-d|--debug]\n\n"
             . "A utility to recalculate the cardinality of indexes within the Kadupul database.\n"
             . "It's important to periodically run this utility especially on larger systems.\n\n"
@@ -234,6 +239,9 @@ final class AnalyzeDatabaseCommandTest extends TestCase
         $tester = $this->tester($maintenance);
         self::assertSame(0, $tester->execute(['--json' => true, '--local' => true]));
         self::assertSame('local', json_decode($tester->getDisplay(), true)['database']);
+        // DBAL converts only driver exceptions on connect, so the typed one
+        // must arrive as itself, not wrapped in a DBAL exception.
+        $this->expectException(MainDatabaseNotConfigured::class);
         $this->expectExceptionMessage('Main database is not configured.');
         $main->fetchOne('SELECT 1');
     }
@@ -254,10 +262,38 @@ final class AnalyzeDatabaseCommandTest extends TestCase
     {
         $maintenance = $this->createMock(DatabaseMaintenance::class);
         $maintenance->method('isRemoteCollector')->willReturn(true);
-        $maintenance->method('binlogEnabled')->willThrowException(new \RuntimeException('Main database is not configured.'));
+        $maintenance->method('binlogEnabled')->willThrowException(new MainDatabaseNotConfigured());
         $tester = $this->tester($maintenance);
         self::assertSame(1, $tester->execute(['--json' => true]));
         self::assertSame(['status' => 'failed', 'error' => 'Main database is not configured'], json_decode($tester->getDisplay(), true));
+    }
+
+    public function testMissingMainIsNamedThroughTheRealConnectionStack(): void
+    {
+        // A collector with no rdatabase_* settings, run without --local: the
+        // first query on main opens it through DBAL and the real middleware.
+        (new Filesystem())->dumpFile($this->root . '/include/config.php', "<?php\n\$database_type = 'mysql';\n\$poller_id = 3;\n");
+        $configuration = new InstallationConfiguration($this->root);
+        $middleware = new InstallationConnectionMiddleware(fn(): InstallationConfiguration => $configuration);
+        $main = DriverManager::getConnection(['driver' => 'pdo_mysql', 'driverOptions' => ['kadupul_target' => 'main']], (new Configuration())->setMiddlewares([$middleware]));
+        $this->access = new CliConsoleAccess($this->db, $main);
+        $maintenance = new DbalDatabaseMaintenance($this->db, $main, new CollectorIdentity($configuration), new LegacyOperatorLog($this->root, new Filesystem(), new MockClock()));
+        $tester = $this->tester($maintenance);
+        self::assertSame(Command::FAILURE, $tester->execute(['--json' => true]));
+        self::assertSame(['status' => 'failed', 'error' => 'Main database is not configured'], json_decode($tester->getDisplay(), true));
+        $this->presentation->forLegacy(LegacyRequest::Run);
+        self::assertSame(Command::FAILURE, $tester->execute([]));
+        self::assertSame("ERROR: Main database is not configured\n", $tester->getDisplay());
+    }
+
+    public function testMatchingTextAloneDoesNotNameTheMainDatabase(): void
+    {
+        $maintenance = $this->createMock(DatabaseMaintenance::class);
+        $maintenance->method('isRemoteCollector')->willReturn(true);
+        $maintenance->method('binlogEnabled')->willThrowException(new \RuntimeException('Main database is not configured.'));
+        $tester = $this->tester($maintenance);
+        self::assertSame(1, $tester->execute(['--json' => true]));
+        self::assertSame(['status' => 'failed', 'error' => 'Database analysis failed'], json_decode($tester->getDisplay(), true));
     }
 
     public function testUnexpectedFailureHidesItsMessage(): void

@@ -24,6 +24,7 @@ final class LegacyCli
      */
     public static function run(string $command, string $map, array $argv, ?OutputInterface $output = null): int
     {
+        self::raiseRuntimeLimits();
         $injected = $output !== null;
         $output ??= new ConsoleOutput(OutputInterface::VERBOSITY_NORMAL, false);
         $deprecation = !$injected && $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
@@ -52,5 +53,24 @@ final class LegacyCli
         $application->setCatchExceptions(false);
 
         return $application->run(new ArrayInput(['command' => $command] + $input), $output);
+    }
+
+    /**
+     * include/cli_check.php ran this before anything else, and the shims no
+     * longer load it. The loose comparisons are copied on purpose: ini_get()
+     * returns strings, and '-1' must compare equal to -1 as it did there.
+     */
+    private static function raiseRuntimeLimits(): void
+    {
+        $defaultLimit = -1;
+        $defaultTime = -1;
+        $memoryLimit = ini_get('memory_limit');
+        $executionTime = ini_get('max_execution_time');
+        if ($memoryLimit != $defaultLimit) {
+            ini_set('memory_limit', $defaultLimit);
+        }
+        if ($executionTime < $defaultTime && $executionTime >= 0) {
+            ini_set('max_execution_time', $defaultTime);
+        }
     }
 }

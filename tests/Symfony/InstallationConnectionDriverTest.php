@@ -12,6 +12,7 @@ use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Doctrine\DBAL\Driver\Exception as DriverFailure;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver as MySqlDriver;
 use Kadupul\Platform\Infrastructure\Doctrine\InstallationConnectionDriver;
+use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -67,6 +68,7 @@ final class InstallationConnectionDriverTest extends TestCase
     public function testMissingMainFailsOnlyWhenConnecting(): void
     {
         $driver = $this->driver("\$poller_id = 3;\n");
+        $this->expectException(MainDatabaseNotConfigured::class);
         $this->expectExceptionMessage('Main database is not configured.');
         $driver->connect(['driverOptions' => ['kadupul_target' => 'main']]);
     }

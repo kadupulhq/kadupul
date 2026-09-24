@@ -10,7 +10,9 @@ namespace Kadupul\Platform\Infrastructure\Symfony\Console;
 use Kadupul\Platform\Application\Command\AnalyzeDatabase;
 use Kadupul\Platform\Application\Command\InstallationAccessDenied;
 use Kadupul\Platform\Application\ReadModel\AnalysisReport;
+use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
+use Psr\Clock\ClockInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\MapInput;
 use Symfony\Component\Console\Command\Command;
@@ -25,6 +27,7 @@ final readonly class AnalyzeDatabaseCommand
         private InstallationVersion $version,
         private CliPresentation $presentation,
         private ResultRenderer $renderer,
+        private ClockInterface $clock,
     ) {}
 
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] AnalyzeDatabaseInput $input): int
@@ -49,12 +52,11 @@ final readonly class AnalyzeDatabaseCommand
             $report = ($this->analyze)($input->local, $input->as);
         } catch (InstallationAccessDenied) {
             return $this->fail($io, $output, $mode, 'Unknown or unauthorized operator.', new CommandResult(['status' => 'denied'], ['ERROR: Unknown or unauthorized operator'], Command::FAILURE));
-        } catch (\Throwable $error) {
-            // Exception text can carry SQL or connection details, so only this one
-            // fixed message, raised by the connection driver itself, is passed on.
-            $message = $error instanceof \RuntimeException && $error->getMessage() === 'Main database is not configured.' ? 'Main database is not configured' : 'Database analysis failed';
-
-            return $this->fail($io, $output, $mode, $message . '.', new CommandResult(['status' => 'failed', 'error' => $message], ['ERROR: ' . $message], Command::FAILURE));
+        } catch (MainDatabaseNotConfigured) {
+            return $this->databaseFailure($io, $output, $mode, 'Main database is not configured');
+        } catch (\Throwable) {
+            // Exception text can carry SQL or connection details, so it is never shown.
+            return $this->databaseFailure($io, $output, $mode, 'Database analysis failed');
         }
 
         return $this->report($io, $output, $mode, $report);
@@ -62,7 +64,12 @@ final readonly class AnalyzeDatabaseCommand
 
     private function versionLine(): string
     {
-        return 'Kadupul Analyze Database Utility, Version ' . $this->version->text() . ', Copyright (C) 2004-' . date('Y') . ' The Cacti Group';
+        return 'Kadupul Analyze Database Utility, Version ' . $this->version->text() . ', Copyright (C) 2004-' . $this->clock->now()->format('Y') . ' The Cacti Group';
+    }
+
+    private function databaseFailure(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $message): int
+    {
+        return $this->fail($io, $output, $mode, $message . '.', new CommandResult(['status' => 'failed', 'error' => $message], ['ERROR: ' . $message], Command::FAILURE));
     }
 
     private function fail(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $human, CommandResult $result): int

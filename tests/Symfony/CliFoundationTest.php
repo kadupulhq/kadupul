@@ -138,4 +138,26 @@ final class CliFoundationTest extends TestCase
         self::assertStringContainsString('ERROR: Invalid Parameter --bogus', $text);
         self::assertStringContainsString('usage: x.php', $text);
     }
+
+    public function testLegacyCliAppliesTheCliCheckLimitsBeforeParsingArguments(): void
+    {
+        // The rejected flag returns before the kernel boots, so the limits
+        // must already be in place by then, as cli_check.php had them.
+        $memory = (string) ini_get('memory_limit');
+        $time = (string) ini_get('max_execution_time');
+        putenv('KADUPUL_CLI_QUIET_DEPRECATION=1');
+        try {
+            ini_set('memory_limit', '512M');
+            ini_set('max_execution_time', '600');
+            LegacyCli::run('kadupul:none', get_class($this->map()), ['x.php', '--bogus'], new BufferedOutput());
+            self::assertSame('-1', ini_get('memory_limit'));
+            // cli_check.php only raised a limit below -1 that was also at least
+            // 0, which no value is, so an existing time limit is left alone.
+            self::assertSame('600', ini_get('max_execution_time'));
+        } finally {
+            putenv('KADUPUL_CLI_QUIET_DEPRECATION');
+            ini_set('max_execution_time', $time);
+            ini_set('memory_limit', $memory);
+        }
+    }
 }
