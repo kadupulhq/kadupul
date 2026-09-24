@@ -134,17 +134,29 @@ test('every option in the argument loop ends its own case', function () use ($ro
 	expect($fallen)->toBe(array());
 });
 
-test('the --disable help states which value disables', function () use ($root) {
-	$source = file_get_contents($root . '/cli/change_device.php');
-	$help   = preg_grep('/--disable\s/', explode("\n", $source));
-	$line   = '';
+test('both device CLIs state which numeric value disables', function () use ($root) {
+	$wrong = array();
 
-	foreach ($help as $candidate) {
-		if (strpos($candidate, 'print') !== false && strpos($candidate, 'usage:') === false) {
-			$line = $candidate;
+	foreach (array('change_device.php', 'add_device.php') as $script) {
+		$source = file_get_contents($root . '/cli/' . $script);
+		$line   = '';
+
+		foreach (preg_grep('/--disable\s/', explode("\n", $source)) as $candidate) {
+			if (strpos($candidate, 'print') !== false && strpos($candidate, 'usage:') === false) {
+				$line = $candidate;
+			}
+		}
+
+		/* The old wording, "0, 1 to ... and 0 to enable it", gave 0 both
+		   meanings. Naming 1 before 0 is what makes it unambiguous. Collect
+		   the offenders rather than pass a message to toContain(), whose
+		   second argument is another needle. */
+		if (strpos($line, '0 to enable') === false
+			|| strpos($line, '0, 1 to') !== false
+			|| strpos($line, '1 to') > strpos($line, '0 to enable')) {
+			$wrong[$script] = trim($line);
 		}
 	}
 
-	expect($line)->toContain('1 to disable')
-		->and($line)->toContain('0 to enable');
+	expect($wrong)->toBe(array());
 });

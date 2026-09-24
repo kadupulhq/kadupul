@@ -499,7 +499,7 @@ function display_help() {
 	print "    --location     '', The physical location of the Device.\n";
 	print "    --notes        '', General information about this host.  Must be enclosed using double quotes.\n";
 	print "    --external-id  '', An external ID to align Cacti devices with devices from other systems.\n";
-	print "    --disable      0, 1 to add this host but to disable checks and 0 to enable it\n";
+	print "    --disable      1 to add this host with checks disabled, 0 to enable it\n";
 	print "    --poller       0, numeric poller id that will perform data collection for the device.\n";
 	print "    --site         0, numeric site id that will be associated with the device.\n";
 	print "    --threads      1, numeric number of threads to poll device with.\n";
