@@ -7,6 +7,23 @@ set -euo pipefail
 root=$(git rev-parse --show-toplevel)
 cd "$root"
 
+# core.hooksPath holds one value. Pointing it here silently replaces whatever
+# the contributor already had, which for anyone running a global hooks
+# directory means losing those checks for this repository without being told.
+existing=$(git config --get core.hooksPath || true)
+
+if [ -n "$existing" ] && [ "$existing" != '.githooks' ]; then
+	printf 'core.hooksPath is already set to %s\n' "$existing"
+	printf '\n'
+	printf 'Setting it to .githooks replaces those hooks for this repository.\n'
+	printf 'If they already run %s/.githooks/pre-commit, nothing is needed here.\n' "$root"
+	printf 'Look for that in %s/pre-commit.\n' "$existing"
+	printf '\n'
+	printf 'To replace them anyway:\n'
+	printf '  git config --local core.hooksPath .githooks\n'
+	exit 1
+fi
+
 git config --local core.hooksPath .githooks
 
 printf 'Kadupul Git hooks enabled for %s\n' "$root"
