@@ -229,6 +229,23 @@ test('Kadupul and rrdproxy each read the frames the other writes', function () {
     expect(rrd_proxy_interop_frames($this, 'rrdproxy', $keys, array(), array('OK u:0.00', $foreign))['decrypted'])->toBe(array(false, false));
 });
 
+test('malformed frames and keys that are not RSA are refused', function () {
+    $keys = rrd_proxy_interop_key();
+    $good = rrd_proxy_interop_frames($this, 'kadupul', $keys, array('OK u:0.00'), array())['encrypted'][0];
+    $frames = array(
+        'zz' . substr($good, 2),
+        '158' . substr($good, 3, 100),
+        '000' . substr($good, 3),
+        substr($good, 0, 347) . '!!!!',
+        substr($good, 0, 3) . str_repeat('A', 344) . substr($good, 347),
+    );
+    expect(rrd_proxy_interop_frames($this, 'kadupul', $keys, array(), $frames)['decrypted'])->toBe(array(false, false, false, false, false));
+    $ec = openssl_pkey_new(array('private_key_type' => OPENSSL_KEYTYPE_EC, 'curve_name' => 'prime256v1'));
+    openssl_pkey_export($ec, $ec_private);
+    $ec_keys = array('private' => $ec_private, 'public' => openssl_pkey_get_details($ec)['key']);
+    expect(rrd_proxy_interop_frames($this, 'kadupul', $ec_keys, array('OK u:0.00'), array($good)))->toBe(array('encrypted' => array(false), 'decrypted' => array(false)));
+});
+
 test('a proxy session exchanges keys, checks the fingerprint and carries commands both ways', function ($counterpart) {
     $rrdproxy = rrd_proxy_interop_rrdproxy();
     if ($counterpart === 'rrdproxy' && $rrdproxy === null) {
