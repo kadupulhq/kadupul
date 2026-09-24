@@ -3,12 +3,16 @@
 """Run each frozen original and its shim against the same database and compare."""
 from pathlib import Path
 import re
+import shlex
 
 ROOT = '/var/www/html'
 QUIET = 'KADUPUL_CLI_QUIET_DEPRECATION=1'
 ORIGINAL = 'tests/Fixtures/legacy-cli/analyze_database.php'
 SHIM = 'cli/analyze_database.php'
 COMPLETE = 'ANALYSIS STATS: Analyzing Kadupul Tables Complete'
+# Only the wall-clock time of day may differ between two runs; the date
+# layout and its separator come from settings and are compared as written.
+CLOCK = re.compile(r'^(\S+) \d{2}:\d{2}:\d{2} - ')
 
 # (label, arguments, allowed difference). Only argument sets the original
 # accepts belong here; --as exists only in the shim and is checked on its own.
@@ -23,7 +27,8 @@ CASES = [
 
 
 def run(harness, script, arguments, env=QUIET):
-    command = f"cd {ROOT} && {env} php {script} " + ' '.join(arguments)
+    # Quoted, so a table name with a backtick reaches PHP as typed.
+    command = f"cd {ROOT} && {env} php {script} " + ' '.join(shlex.quote(argument) for argument in arguments)
     return harness.command('sh', '-c', command)
 
 
@@ -31,17 +36,20 @@ def normalise(text):
     return re.sub(r'Copyright \(C\) 2004-\d{4}', 'Copyright (C) 2004-YEAR', text)
 
 
-def install_original(harness):
+def install_original(harness, fixture=ORIGINAL):
     # The image leaves tests/ out of its build context, so the frozen copy is
     # placed at the path its relative require expects.
-    source = Path(__file__).resolve().parents[2] / ORIGINAL
-    harness.command('mkdir', '-p', f'{ROOT}/{Path(ORIGINAL).parent}', check=True)
-    harness.compose('cp', str(source), f'web:{ROOT}/{ORIGINAL}')
+    source = Path(__file__).resolve().parents[2] / fixture
+    harness.command('mkdir', '-p', f'{ROOT}/{Path(fixture).parent}', check=True)
+    harness.compose('cp', str(source), f'web:{ROOT}/{fixture}')
 
 
-def completions(harness):
-    log = harness.command('cat', f'{ROOT}/log/cacti.log', check=True)['stdout']
-    return log.count(COMPLETE)
+def log_lines(harness):
+    return harness.command('cat', f'{ROOT}/log/cacti.log', check=True)['stdout'].splitlines()
+
+
+def clock_free(lines, marker):
+    return [CLOCK.sub(r'\1 HH:MM:SS - ', line) for line in lines if marker in line]
 
 
 def verify_cli_parity(harness, check):
@@ -62,10 +70,20 @@ def verify_cli_parity(harness, check):
 
 
 def verify_cases(harness, check):
-    before = completions(harness)
+    logged = []
     for label, arguments, allowed in CASES:
+        marks = len(log_lines(harness))
         original = run(harness, ORIGINAL, arguments)
+        between = len(log_lines(harness))
         shim = run(harness, SHIM, arguments)
+        lines = log_lines(harness)
+        # The elapsed seconds in the message are a clock reading too.
+        original_log = [re.sub(r'Total time \d+ seconds', 'Total time N seconds', line) for line in clock_free(lines[marks:between], COMPLETE)]
+        shim_log = [re.sub(r'Total time \d+ seconds', 'Total time N seconds', line) for line in clock_free(lines[between:], COMPLETE)]
+        if shim_log != original_log:
+            print(f'{label}: original log {original_log!r}\n{label}: shim log {shim_log!r}', flush=True)
+        check(shim_log == original_log, f'{label}: shim logs the same completion line, date included')
+        logged += shim_log
         expected = normalise(original['stdout'])
         actual = normalise(shim['stdout'])
         if allowed == 'version line before the error':
@@ -84,7 +102,7 @@ def verify_cases(harness, check):
             check(shim['exit'] == 0 and "NOTE: Analyzing Table -> 'settings' Successful\n" in shim['stdout'],
                   'analyze: shim analyzes every table through the kernel container')
     # Three run cases each for the original and the shim.
-    check(completions(harness) - before == 6, 'both the original and the shim log the completion line')
+    check(len(logged) == 3, 'both the original and the shim log the completion line')
 
 
 def verify_shim_only(harness, check):

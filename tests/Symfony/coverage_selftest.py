@@ -112,7 +112,35 @@ def main():
         'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php',
         'src/Platform/Infrastructure/Persistence/DbalDatabaseMaintenance.php',
         'src/Platform/Infrastructure/Legacy/InstallationVersion.php',
-        'src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php')]
+        'src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php',
+        'cli/convert_tables.php',
+        'src/Platform/Application/Command/ConvertTables.php',
+        'src/Platform/Application/Command/MaintenanceRealm.php',
+        'src/Platform/Application/Command/MaintenanceScope.php',
+        'src/Platform/Application/Command/MaintenanceTarget.php',
+        'src/Platform/Application/Command/SchemaChangeAudit.php',
+        'src/Platform/Application/Command/TableConversionStep.php',
+        'src/Platform/Application/Port/TableCatalog.php',
+        'src/Platform/Application/Port/TableConversion.php',
+        'src/Platform/Application/ReadModel/ConversionOutcome.php',
+        'src/Platform/Application/ReadModel/ConversionReport.php',
+        'src/Platform/Application/ReadModel/TableOutcome.php',
+        'src/Platform/Application/ReadModel/TableResult.php',
+        'src/Platform/Domain/Schema/ConversionFlag.php',
+        'src/Platform/Domain/Schema/ConversionOptions.php',
+        'src/Platform/Domain/Schema/ConversionProblem.php',
+        'src/Platform/Domain/Schema/InvalidConversionOptions.php',
+        'src/Platform/Domain/Schema/TableChange.php',
+        'src/Platform/Domain/Schema/TableCharset.php',
+        'src/Platform/Domain/Schema/TableSkip.php',
+        'src/Platform/Domain/Schema/TableStatus.php',
+        'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
+        'src/Platform/Infrastructure/Legacy/InstallerTableResult.php',
+        'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
+        'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
+        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesCommand.php',
+        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesLegacyArguments.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -162,6 +190,10 @@ def main():
         'cli-parity-test-hash': 'Integration test source differs',
         'cli-original-test-hash': 'Integration test source differs',
         'missing-cli-parity-check': 'Incomplete Symfony integration checks',
+        'cli-schema-test-hash': 'Integration test source differs',
+        'cli-convert-original-test-hash': 'Integration test source differs',
+        'missing-cli-schema-check': 'Incomplete Symfony integration checks',
+        'missing-installer-conversion-check': 'Incomplete Symfony integration checks',
     }
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
@@ -211,6 +243,14 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/legacy-cli/analyze_database.php'] = '0' * 64
             elif case == 'missing-cli-parity-check':
                 evidence['checks'].remove('analyze: shim analyzes every table through the kernel container')
+            elif case == 'cli-schema-test-hash':
+                evidence['source_sha256']['tests/Symfony/cli_schema_scenarios.py'] = '0' * 64
+            elif case == 'cli-convert-original-test-hash':
+                evidence['source_sha256']['tests/Fixtures/legacy-cli/convert_tables.php'] = '0' * 64
+            elif case == 'missing-cli-schema-check':
+                evidence['checks'].remove('convert tables refuses an operator without the Installation/Upgrades realm')
+            elif case == 'missing-installer-conversion-check':
+                evidence['checks'].remove('installer converts a queued MyISAM table to InnoDB and utf8mb4 in-process')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case == 'missing-removal-callback-check':

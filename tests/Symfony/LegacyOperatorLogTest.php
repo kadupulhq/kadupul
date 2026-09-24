@@ -43,11 +43,44 @@ final class LegacyOperatorLogTest extends TestCase
         $this->db->executeStatement('REPLACE INTO settings (name, value) VALUES (?, ?)', [$name, $value]);
     }
 
-    public function testDefaultsWriteOneLineInTheLegacyFormat(): void
+    public function testMissingDateRowsWriteOneLineInTheLegacyFormat(): void
     {
         $this->log()->record($this->db, 'SYSTEM', "ANALYSIS STATS: done.\n  Total 1");
         $line = file_get_contents($this->root . '/log/cacti.log');
-        self::assertSame("2026-03-04 05:06:07 - SYSTEM ANALYSIS STATS: done. Total 1\n", $line);
+        self::assertSame("03/04/2026 05:06:07 - SYSTEM ANALYSIS STATS: done. Total 1\n", $line);
+    }
+
+    /**
+     * Each expectation is what include/global.php:528 defined as
+     * CACTI_DATE_TIME_FORMAT for these rows in the behavior stack. It runs
+     * before global_settings.php, so a missing row reads as null, not as the
+     * declared default, and date_time_format() compares loosely.
+     */
+    #[DataProvider('dateSettings')]
+    public function testDateSettingsFollowTheLegacyBootstrap(?string $format, ?string $separator, string $date): void
+    {
+        if ($format !== null) {
+            $this->set('default_date_format', $format);
+        }
+        if ($separator !== null) {
+            $this->set('default_datechar', $separator);
+        }
+        $this->log()->record($this->db, 'SYSTEM', 'x');
+        self::assertSame($date . " 05:06:07 - SYSTEM x\n", file_get_contents($this->root . '/log/cacti.log'));
+    }
+
+    /** @return iterable<string, array{?string, ?string, string}> */
+    public static function dateSettings(): iterable
+    {
+        yield 'no rows' => [null, null, '03/04/2026'];
+        yield 'declared defaults' => ['4', '0', '2026-03-04'];
+        yield 'day first with dots' => ['2', '2', '04.03.2026'];
+        yield 'unknown values' => ['abc', 'x', '2026/03/04'];
+        yield 'empty values' => ['', '', '2026/03/04'];
+        yield 'leading spaces' => [' 1', ' 1', 'Mar/04/2026'];
+        yield 'numeric prefix and padded separator' => ['4abc', '01', '2026/03/04'];
+        yield 'format row only' => ['5', null, '2026/Mar/04'];
+        yield 'separator row only' => [null, '2', '03.04.2026'];
     }
 
     public function testDateFormatSettingsAreHonoured(): void

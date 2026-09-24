@@ -236,7 +236,7 @@ final class AnalyzeDatabaseTest extends TestCase
 
         $this->adapter($local, $main)->recordStats(DatabaseTarget::Main, 'message');
 
-        self::assertSame("2026-01-01 00:00:00 - SYSTEM message\n", (string) file_get_contents($this->root . '/log/main.log'));
+        self::assertSame("01/01/2026 00:00:00 - SYSTEM message\n", (string) file_get_contents($this->root . '/log/main.log'));
         self::assertFileDoesNotExist($this->root . '/log/local.log');
     }
 

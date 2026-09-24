@@ -120,7 +120,7 @@ final class DbalTableConversionTest extends TestCase
     public function testRecordFailureWritesTheOriginalConvertLine(): void
     {
         $this->adapter($this->sqlite())->recordFailure(DatabaseTarget::Local, "FATAL: Conversion of Table 'a' Failed.  Command: 'ALTER TABLE `a`  ENGINE=Innodb'");
-        self::assertMatchesRegularExpression("/^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} - CONVERT FATAL: Conversion of Table 'a' Failed\\.  Command: 'ALTER TABLE `a`  ENGINE=Innodb'\n$/", $this->log());
+        self::assertMatchesRegularExpression("/^\\d{2}\\/\\d{2}\\/\\d{4} \\d{2}:\\d{2}:\\d{2} - CONVERT FATAL: Conversion of Table 'a' Failed\\.  Command: 'ALTER TABLE `a`  ENGINE=Innodb'\n$/", $this->log());
     }
 
     public function testLoggingNeverFailsTheCommand(): void
