@@ -10,22 +10,7 @@
 // Composer autoloader holding the phpseclib it requires, by default the one in
 // the checkout.
 
-/** A throwaway RSA pair in the PKCS#8 form rsa_check_keypair() stores, with its fingerprint. */
-function rrd_proxy_interop_key(): array
-{
-    $key = openssl_pkey_new(array('private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA));
-    openssl_pkey_export($key, $private);
-    $details = openssl_pkey_get_details($key);
-    // MD5 of the OpenSSH public key blob, which rrdproxy displays and administrators copy.
-    $blob = pack('N', 7) . 'ssh-rsa';
-    foreach (array($details['rsa']['e'], $details['rsa']['n']) as $integer) {
-        $integer = ltrim($integer, "\0");
-        $integer = (ord($integer[0]) & 0x80) ? "\0" . $integer : $integer;
-        $blob .= pack('N', strlen($integer)) . $integer;
-    }
-
-    return array('private' => $private, 'public' => $details['key'], 'fingerprint' => implode(':', str_split(md5($blob), 2)));
-}
+require_once dirname(__DIR__, 3) . '/Helpers/RrdFakeProxy.php';
 
 /** The rrdproxy checkout and autoloader, or null when the environment names none. */
 function rrd_proxy_interop_rrdproxy(): ?array
@@ -114,16 +99,12 @@ function rrd_proxy_interop_session($test, ?array $rrdproxy, array $client, array
     $root = dirname(__DIR__, 4);
     $directory = sys_get_temp_dir() . '/rrd-fake-proxy-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
-    file_put_contents($directory . '/proxy.json', json_encode($proxy + array(
-        'autoload' => $rrdproxy['autoload'] ?? $root . '/include/vendor/autoload.php',
-        'rrdproxy' => $rrdproxy['source'] ?? null,
-        'key_reply' => 'key',
-        'replies' => array(),
-    ), JSON_THROW_ON_ERROR));
-    $server = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', $root . '/tests/Fixtures/rrd-fake-proxy.php', $directory), array(1 => array('pipe', 'w'), 2 => array('file', $directory . '/proxy.stderr', 'w')), $pipes);
+    $server = null;
     try {
-        $port = trim((string) fgets($pipes[1]));
-        expect($port)->toMatch('/^\d+$/', (string) @file_get_contents($directory . '/proxy.stderr'));
+        list($server, $stdout, $port) = rrd_fake_proxy_start($directory, $proxy + array(
+            'autoload' => $rrdproxy['autoload'] ?? $root . '/include/vendor/autoload.php',
+            'rrdproxy' => $rrdproxy['source'] ?? null,
+        ));
         $options = $client + array('storage_location' => 1, 'rrdp_server' => '127.0.0.1', 'rrdp_port' => $port);
         $program = '$root=' . var_export($root, true) . ';$options=' . var_export($options, true) . ';' . <<<'PHP'
 $config = array('rra_path' => '/fixture');
@@ -143,9 +124,7 @@ echo json_encode(array('connected' => $rrdp !== false, 'output' => $output, 'pro
 }))));
 PHP;
         $result = json_decode(rrd_proxy_interop_php($test, $program, array(), true), true, 512, JSON_THROW_ON_ERROR);
-        fclose($pipes[1]);
-        expect(proc_close($server))->toBe(0)->and(file_get_contents($directory . '/proxy.stderr'))->toBe('');
-        $result['proxy_received'] = json_decode(file_get_contents($directory . '/commands.json'), true, 512, JSON_THROW_ON_ERROR);
+        $result['proxy_received'] = rrd_fake_proxy_finish($directory, $server, $stdout);
 
         return $result;
     } finally {
@@ -445,3 +424,138 @@ PHP;
     expect(json_decode(rrd_proxy_interop_php($this, $program, array(), true), true, 512, JSON_THROW_ON_ERROR))
         ->toBe(array(false, array('CACTI2RRDP ERROR: Public RSA Key Exchange - Time-out while reading'), true));
 });
+
+/**
+ * The command Kadupul's graph builder sends to the proxy for a two-source
+ * graph, with $graph_data_array choosing graph, graphv or xport.
+ */
+function rrd_proxy_interop_built_command($test, array $graph_data_array): string
+{
+    require_once dirname(__DIR__, 3) . '/Helpers/RrdCharacterization.php';
+    $items = array(
+        rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '00CF00', 'text_format' => 'Inbound  peak')),
+        rrd_characterization_item(2, 'LINE1', rrd_characterization_ds('errors') + array('hex' => 'FF0000', 'text_format' => 'Errors')),
+    );
+    $db = rrd_characterization_graph_db(rrd_characterization_graph(), $items);
+    $paths = array(11 => '<path_rra>/router_traffic_11.rrd', 12 => '<path_rra>/errors/router_errors_12.rrd');
+    foreach ($db as $index => $row) {
+        if ($row['sql'] === 'SELECT name, data_source_path FROM data_template_data') {
+            $db[$index]['result']['data_source_path'] = $paths[$row['params'][0]];
+        }
+    }
+    $output = rrd_characterization_proxy_run($test, array(
+        'options' => rrd_characterization_options(),
+        'db' => $db,
+        'calls' => array(array('fn' => 'rrdtool_function_graph', 'args' => array(7, 0, array('graph_start' => 1700000000, 'graph_end' => 1700003600) + $graph_data_array, false, array(), 0))),
+    ), 3);
+    $built = array_values(array_filter($output['received'], function ($command) {
+        return preg_match('/^(graph|graphv|xport) /', $command) === 1;
+    }));
+    expect($built)->toHaveCount(1);
+
+    return $built[0];
+}
+
+/**
+ * Pass $command through rrdproxy's own checks and path resolution against an
+ * RRA directory holding the two RRDs, then to `rrdtool -` in that directory,
+ * as rrdproxy's lib/client.php does at 54aad57 (lines 218-254).
+ */
+function rrd_proxy_interop_through_rrdproxy($test, array $rrdproxy, string $binary, string $command): array
+{
+    $rra = sys_get_temp_dir() . '/rrd-proxy-rra-' . bin2hex(random_bytes(8));
+    mkdir($rra . '/errors', 0700, true);
+    $rrds = array('router_traffic_11.rrd' => array('traffic_in', 'traffic_out'), 'errors/router_errors_12.rrd' => array('errors'));
+    $script = '';
+    foreach ($rrds as $file => $sources) {
+        $script .= 'create ' . $file . ' --start 1699990000 --step 300';
+        foreach ($sources as $source) {
+            $script .= ' DS:' . $source . ':GAUGE:600:U:U';
+        }
+        $script .= ' RRA:AVERAGE:0.5:1:100 RRA:MIN:0.5:1:100 RRA:MAX:0.5:1:100 RRA:LAST:0.5:1:100' . "\n";
+        for ($time = 1699990300; $time <= 1700003600; $time += 300) {
+            $script .= 'update ' . $file . ' ' . $time . str_repeat(':' . ($time % 7), count($sources)) . "\n";
+        }
+    }
+    $environment = array('PATH' => getenv('PATH'), 'LANG' => 'C', 'LC_ALL' => 'C', 'HOME' => $rra, 'XDG_CACHE_HOME' => $rra . '/cache');
+    $process = proc_open(array($binary, '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('file', '/dev/null', 'w')), $pipes, $rra, $environment);
+    fwrite($pipes[0], $script);
+    fclose($pipes[0]);
+    $created = stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    proc_close($process);
+    expect($created)->not->toContain('ERROR');
+
+    $program = '$rrdproxy=' . var_export($rrdproxy, true) . ';$binary=' . var_export($binary, true) . ';$rra=' . var_export($rra, true)
+        . ';$command=' . var_export($command, true) . ';$environment=' . var_export($environment, true) . ';' . <<<'PHP'
+require $rrdproxy['autoload'];
+require $rrdproxy['source'] . '/lib/functions.php';
+$rrdp_config['path_rra'] = $rra;
+list($cmd, $cmd_options) = explode(' ', trim($command), 2);
+$unsafe = rrdp_command_has_unsafe_path($cmd_options);
+$resolved = rrdp_resolve_command_paths($cmd, $cmd_options);
+$stdout = null;
+if (!$unsafe && $resolved !== false) {
+    $process = proc_open(array($binary, '-', $rra), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('file', '/dev/null', 'w')), $pipes, $rra, $environment);
+    fwrite($pipes[0], $cmd . ' ' . $resolved . "\r\n");
+    fclose($pipes[0]);
+    $stdout = stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    proc_close($process);
+}
+echo json_encode(array('unsafe' => $unsafe, 'resolved' => $resolved === false ? false : str_replace(realpath($rra), '<RRA>', $resolved), 'stdout' => $stdout === null ? null : str_replace(realpath($rra), '<RRA>', $stdout)), JSON_INVALID_UTF8_SUBSTITUTE);
+PHP;
+    try {
+        return json_decode(rrd_proxy_interop_php($test, $program, array(), true), true, 512, JSON_THROW_ON_ERROR);
+    } finally {
+        $entries = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($rra, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($entries as $entry) {
+            $entry->isDir() ? rmdir($entry->getPathname()) : unlink($entry->getPathname());
+        }
+        rmdir($rra);
+    }
+}
+
+test('an xport built by Kadupul passes rrdproxy and returns data from RRDtool', function () {
+    $rrdproxy = rrd_proxy_interop_rrdproxy();
+    $binary = getenv('RRDTOOL_TEST_BINARY');
+    if ($rrdproxy === null || !$binary || !is_executable($binary)) {
+        $this->markTestSkipped('Set RRDPROXY_SOURCE to an rrdproxy checkout and RRDTOOL_TEST_BINARY to run it.');
+    }
+    $command = rrd_proxy_interop_built_command($this, array('export_csv' => true));
+    expect($command)->toContain(' DEF:a=./router_traffic_11.rrd:')->toContain(' DEF:b=./errors/router_errors_12.rrd:');
+
+    $result = rrd_proxy_interop_through_rrdproxy($this, $rrdproxy, $binary, $command);
+    expect($result['unsafe'])->toBeFalse()
+        ->and($result['resolved'])->toContain('DEF:a=<RRA>/router_traffic_11.rrd:')
+        ->and($result['stdout'])->not->toContain('ERROR')
+        ->and($result['stdout'])->toMatch('/<row><v>[0-9.e+-]+<\/v><v>[0-9.e+-]+<\/v><\/row>/')
+        ->and($result['stdout'])->toMatch('/^OK u:/m')
+        // rrdproxy joins its tokens with single blanks, inside quotes too.
+        ->and($command)->toContain("'Inbound  peak'")
+        ->and($result['stdout'])->toContain('<entry>Inbound peak</entry>');
+});
+
+// KNOWN LIMITATION of rrdproxy at 54aad57, pinned so that a fixed rrdproxy
+// fails this test and the documentation in docs/migrations/graphing-rrd.md
+// can be revised. Its lib/functions.php refuses any command with a blank,
+// '=', ':' or ',' before '/' or '\' (line 412), as in the COMMENT:"  \n"
+// Kadupul adds after the date range of any graph with a start and end. Past
+// that, it takes the first bare token after `graph -` as the output file and
+// rewrites it (lines 442 and 469): here a word of the title, or the first
+// graph element when nothing comes before it.
+test('KNOWN LIMITATION: rrdproxy refuses a graph built by Kadupul and would misread it', function (array $graph_data_array) {
+    $rrdproxy = rrd_proxy_interop_rrdproxy();
+    $binary = getenv('RRDTOOL_TEST_BINARY');
+    if ($rrdproxy === null || !$binary || !is_executable($binary)) {
+        $this->markTestSkipped('Set RRDPROXY_SOURCE to an rrdproxy checkout and RRDTOOL_TEST_BINARY to run it.');
+    }
+    $command = rrd_proxy_interop_built_command($this, $graph_data_array);
+    expect($command)->toContain(' DEF:a=./router_traffic_11.rrd:');
+
+    $result = rrd_proxy_interop_through_rrdproxy($this, $rrdproxy, $binary, $command);
+    expect($result['unsafe'])->toBeTrue()
+        ->and($command)->toContain(' COMMENT:"  \\n"')
+        ->and($command)->toContain(" --title='Traffic &amp; ")
+        ->and($result['resolved'])->toContain(" --title='Traffic <RRA>/&amp; ");
+})->with(array('graph' => array(array()), 'graphv' => array(array('graphv' => true))));
