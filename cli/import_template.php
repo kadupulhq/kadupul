@@ -126,7 +126,7 @@ if (cacti_sizeof($parms)) {
 
 			$debug_data = import_xml_data($xml_data, false, $id, $remove_orphans, $replace_svalues);
 
-			import_display_results($debug_data, array(), $preview_only);
+			import_display_results($debug_data, array(), false, $preview_only);
 		} else {
 			print "ERROR: file $filename is not readable, or does not exist" . PHP_EOL . PHP_EOL;
 			exit(1);
