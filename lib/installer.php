@@ -2850,8 +2850,10 @@ class Installer implements JsonSerializable
                 html_end_box(false);
 
                 if ($show_warning) {
-                    $output .= Installer::sectionWarning(__('One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, as an account with the Installation/Upgrades realm and no pending password change (--as=<user>), then refresh this page. For example: '));
+                    $output .= Installer::sectionWarning(__('One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: '));
                     $output .= Installer::sectionCode(read_config_option('path_php_binary') . ' -q ' . $config['base_path'] . '/cli/convert_tables.php -u -i');
+                    // A separate msgid, so the translations of the sentence above still apply.
+                    $output .= Installer::sectionWarning(__('Run it as an account with the Installation/Upgrades realm and no pending password change, for example with --as=<user>.'));
                 }
 
                 $output .= Installer::sectionNormal(__('The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process.'));
