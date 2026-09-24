@@ -318,12 +318,13 @@ test('proxy payload encryption matches its golden', function () {
     $scenario = array(
         'options' => rrd_characterization_options(),
         'calls' => array(
-            array('fn' => 'encrypt', 'args' => array('update x.rrd N:1', 'public key'), 'globals' => array('encryption' => false)),
+            // There is no plaintext mode: a key that does not load, a plaintext
+            // reply and a malformed frame all fail.
+            array('fn' => 'encrypt', 'args' => array('update x.rrd N:1', 'public key')),
             array('fn' => 'decrypt', 'args' => array('OK u:0.00')),
-            array('fn' => 'encrypt', 'args' => array('update x.rrd N:1', 'public key'), 'globals' => array('encryption' => true), 'catch' => true),
-            array('fn' => 'decrypt', 'args' => array('010QUJD'), 'catch' => true),
-            // Proxy setup builds the RSA object before it opens a socket.
-            array('fn' => '__rrd_proxy_init', 'args' => array('POLLER'), 'options' => array('storage_location' => '1'), 'catch' => true),
+            array('fn' => 'decrypt', 'args' => array('010QUJD')),
+            // Without a client key pair, proxy setup stops before it opens a socket.
+            array('fn' => '__rrd_proxy_init', 'args' => array('POLLER'), 'options' => array('storage_location' => '1')),
         ),
     );
     rrd_characterization_golden('proxy-encryption', rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)));

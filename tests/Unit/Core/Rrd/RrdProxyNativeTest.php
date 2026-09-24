@@ -19,24 +19,27 @@ test('production proxy routing requires an acknowledgement over a real socket', 
     $bootstrap .= <<<'SOURCE'
 $config = array('rra_path'=>'/fixture');
 require $root.'/include/global_constants.php';
+require $root.'/include/vendor/autoload.php';
+require $root.'/tests/Helpers/RrdProxyFrames.php';
 function cacti_log(...$args) {}
-function read_config_option($key) { return $key === 'storage_location' ? 1 : ''; }
-// Exercise the supported plaintext protocol on an in-process socket pair.
+function read_config_option($key) { return $key === 'storage_location' ? 1 : ($key === 'rsa_private_key' ? $GLOBALS['proxy_key'] : ''); }
+// Exercise the encrypted protocol on an in-process socket pair.
 require $root.'/lib/rrd.php';
-$encryption = false;
+$proxy_key = rrd_proxy_test_key();
+$public_key = rrd_proxy_test_public_key($proxy_key);
 if (!socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $sockets)) { exit(2); }
 foreach ($sockets as $socket) {
     socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec'=>2,'usec'=>0));
 }
 if ($response !== null) {
-    $packet = $response."_EOP_\r\n_EOT_\r\n";
+    $packet = encrypt($response, $public_key)."_EOP_\r\n_EOT_\r\n";
     if (socket_write($sockets[1], $packet) !== strlen($packet)) { exit(3); }
 }
 socket_shutdown($sockets[1], 1);
 $stale =& rrdtool_last_rejection();
 $stale = 'stale rejection from previous command';
-$result = rrdtool_execute('update /fixture/sample.rrd 1700000060:42', false, RRDTOOL_OUTPUT_BOOLEAN, array($sockets[0], 'fixture-key'));
-$command = socket_read($sockets[1], 4096, PHP_BINARY_READ);
+$result = rrdtool_execute('update /fixture/sample.rrd 1700000060:42', false, RRDTOOL_OUTPUT_BOOLEAN, array($sockets[0], $public_key));
+$command = rrd_proxy_test_plaintext(socket_read($sockets[1], 4096, PHP_BINARY_READ));
 echo json_encode(array($result, rrdtool_last_rejection(), $command));
 socket_close($sockets[0]);
 socket_close($sockets[1]);
@@ -89,22 +92,25 @@ test('array commands reach the proxy as bare tokens, and unsafe arguments are no
     $bootstrap .= <<<'SOURCE'
 $config = array('rra_path'=>'/fixture');
 require $root.'/include/global_constants.php';
+require $root.'/include/vendor/autoload.php';
+require $root.'/tests/Helpers/RrdProxyFrames.php';
 function cacti_log(...$args) {}
-function read_config_option($key) { return $key === 'storage_location' ? 1 : ''; }
+function read_config_option($key) { return $key === 'storage_location' ? 1 : ($key === 'rsa_private_key' ? $GLOBALS['proxy_key'] : ''); }
 require $root.'/lib/rrd.php';
-$encryption = false;
+$proxy_key = rrd_proxy_test_key();
+$public_key = rrd_proxy_test_public_key($proxy_key);
 if (!socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $sockets)) { exit(2); }
 foreach ($sockets as $socket) {
     socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec'=>2,'usec'=>0));
 }
 $refused = array();
 foreach (array("/fixture/it\0s.rrd", '/fixture/it s.rrd', "/fixture/it's.rrd", '') as $path) {
-    $refused[] = rrdtool_execute(array('info', $path), false, RRDTOOL_OUTPUT_STDOUT, array($sockets[0], 'fixture-key'));
+    $refused[] = rrdtool_execute(array('info', $path), false, RRDTOOL_OUTPUT_STDOUT, array($sockets[0], $public_key));
 }
-$packet = "info output\nOK u:0.00 s:0.00 r:0.00\n_EOP_\r\n_EOT_\r\n";
+$packet = encrypt("info output\nOK u:0.00 s:0.00 r:0.00\n", $public_key)."_EOP_\r\n_EOT_\r\n";
 if (socket_write($sockets[1], $packet) !== strlen($packet)) { exit(3); }
-$output = rrdtool_execute(array('info', '/fixture/sample.rrd'), false, RRDTOOL_OUTPUT_STDOUT, array($sockets[0], 'fixture-key'));
-$command = socket_read($sockets[1], 4096, PHP_BINARY_READ);
+$output = rrdtool_execute(array('info', '/fixture/sample.rrd'), false, RRDTOOL_OUTPUT_STDOUT, array($sockets[0], $public_key));
+$command = rrd_proxy_test_plaintext(socket_read($sockets[1], 4096, PHP_BINARY_READ));
 echo json_encode(array($refused, $output, $command));
 socket_close($sockets[0]);
 socket_close($sockets[1]);
