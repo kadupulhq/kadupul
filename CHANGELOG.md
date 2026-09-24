@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Mark stacked areas as stacked in graph export metadata, and key that metadata, and the name given to an unnamed export column, by the column's own number. The flag compared against a type name no item has, and the numbering started after the count of every graph item, so no key matched a column.
+
 - Show a blank line, not a NUL byte and `x27`, between the message and the file name in the graph error image for a missing or unwritable RRD file, and show a file outside the Kadupul directory as a custom RRA folder instead of its full directory.
 
 - Quote RRD file paths, and data source maximums taken from device data, in the RRDtool commands that create, update, fetch, inspect, dump, restore, remove and archive RRD files, including Boost, RRD check and Data Source statistics, so a path with a space or a quote works and neither value can add arguments to the command.

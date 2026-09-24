@@ -2540,6 +2540,10 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
     $i = 0;
 
+    /* XPORT columns count from 1, as rrdxport2array() numbers them */
+    $j = 1;
+    $stacked_columns = array();
+
     /* hack for rrdtool 1.2.x support */
     $graph_item_stack_type = '';
 
@@ -3161,7 +3165,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                     } else {
                         $legend_name = $graph_variables['text_format'][$graph_item_id];
                     }
-                    $stacked_columns['col' . $j] = ($graph_item_types[$graph_item['graph_type_id']] == 'STACK') ? 1 : 0;
+                    $stacked_columns['col' . $j] = ($graph_item_types[$graph_item['graph_type_id']] == 'AREA:STACK') ? 1 : 0;
                     $j++;
 
                     $txt_graph_items .= 'XPORT:' . rrdtool_pipe_quote($data_source_name) . ':' . str_replace(':', '', rrdtool_pipe_quote($legend_name)) ;
