@@ -145,6 +145,17 @@ test('lookalikes on either side of the name survive', function () {
  * filesystem that allows it. The pattern ends in \z for that reason.
  */
 test('a name with a trailing newline is not treated as a rotation', function () {
+    // Windows forbids a control character in a filename, so the fixture cannot
+    // exist there. Ask the filesystem rather than the OS name: a Unix host with
+    // a mounted filesystem that refuses it would fail the same way.
+    $probe = sys_get_temp_dir() . '/kadupul-nl-probe-' . bin2hex(random_bytes(6)) . "\n";
+
+    if (@file_put_contents($probe, 'x') === false) {
+        $this->markTestSkipped('This filesystem will not create a name containing a newline.');
+    }
+
+    unlink($probe);
+
     $result = clean_directory(array('cacti.log', "cacti.log-20200101\n", 'cacti.log-20200101'));
 
     expect($result['survivors'])->toBe(array('cacti.log', "cacti.log-20200101\n"));
