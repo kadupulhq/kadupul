@@ -109,6 +109,32 @@ SELF_GATED_MOVED = {
     'check only in a comment': "<?php\nrequire(__DIR__ . '/include/global.php');\n// if (!remote_client_authorized()) {}\n",
     'check only in a function body': "<?php\nfunction f() {\n\tif (!remote_client_authorized()) {\n\t\texit;\n\t}\n}\n",
 }
+# The check counts only in its reviewed guard shape: the whole condition of a
+# statement that stops the request on the refused side.
+BOOT = "<?php\nrequire(__DIR__ . '/include/global.php');\n"
+REFUSE = "if (!remote_client_authorized()) {\n\t%s\n}\n"
+SESSION_SWITCH = "switch ($_GET['a']) {\n\tcase 'x':\n\t\t%s\n\tdefault:\n\t\tif (!isset($_SESSION['sess_user_id'])) {\n\t\t\texit;\n\t\t}\n}\n"
+REALM_IF = "if (is_realm_allowed($page['id'] + 10000)) {\n\tprint 1;\n}%s\n"
+SELF_GATED_SHAPES = {
+    'refusal that exits': ('remote_agent.php', BOOT + REFUSE % 'exit;', 'anonymous-allowed'),
+    'refusal that returns': ('remote_agent.php', BOOT + REFUSE % 'return;', 'anonymous-allowed'),
+    'refusal that throws': ('remote_agent.php', BOOT + REFUSE % 'throw new Exception();', 'anonymous-allowed'),
+    'discarded check': ('remote_agent.php', BOOT + '!remote_client_authorized();\n', 'unknown'),
+    'check under another condition': (
+        'remote_agent.php', BOOT + 'if ($x) {\n\t' + REFUSE % 'exit;' + '}\n', 'unknown'),
+    'refusal that carries on': ('remote_agent.php', BOOT + REFUSE % "print 'denied';", 'unknown'),
+    'check joined to another condition': (
+        'remote_agent.php', BOOT + 'if (!remote_client_authorized() && $x) {\n\texit;\n}\n', 'unknown'),
+    'refusal with an else branch': (
+        'remote_agent.php', BOOT + (REFUSE % 'exit;').rstrip() + " else {\n\tprint 1;\n}\n", 'unknown'),
+    'switch whose other case exits': ('auth_changepassword.php', BOOT + SESSION_SWITCH % 'exit;', 'authenticated'),
+    'switch whose other case falls through': ('auth_changepassword.php', BOOT + SESSION_SWITCH % 'print 1;', 'unknown'),
+    'switch whose other case breaks before exit': (
+        'auth_changepassword.php', BOOT + SESSION_SWITCH % 'break;\n\t\texit;', 'unknown'),
+    'admission whose else exits': ('link.php', BOOT + REALM_IF % ' else {\n\texit;\n}', 'realm:10000+id'),
+    'admission without an else': ('link.php', BOOT + REALM_IF % '', 'unknown'),
+    'admission whose else carries on': ('link.php', BOOT + REALM_IF % " else {\n\tprint 'no';\n}", 'unknown'),
+}
 
 SESSION = '''<?php
 namespace Kadupul\\IdentityAccess\\Infrastructure\\Legacy;
@@ -678,6 +704,12 @@ def main():
             got = gate(root, 'remote_agent.php', source)[0]
             if got != 'unknown':
                 failures.append('self-gated %s: expected unknown, got %s' % (case, got))
+        for case, (name, source, expected) in SELF_GATED_SHAPES.items():
+            count += 1
+            got = gate(root, name, source)[0]
+            (root / name).unlink()
+            if got != expected:
+                failures.append('self-gated %s: expected %s, got %s' % (case, expected, got))
 
         for case, text in UNREADABLE_REALMS.items():
             count += 1

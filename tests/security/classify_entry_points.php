@@ -36,41 +36,55 @@ use PhpParser\PrettyPrinter\Standard;
 
 /*
  * Pages that bootstrap with include/global.php or nothing at all and then
- * apply their own check. The check is a PHP expression matched as a node
- * outside function bodies, and the detail pins every top-level statement up
- * to and including the one that holds it, so code added ahead of the check
- * or an edit to it shows as drift.
+ * apply their own check. The check is a PHP expression, and the detail pins
+ * every top-level statement up to and including the one that holds it, so
+ * code added ahead of the check or an edit to it shows as drift.
+ *
+ * The shape says where the check must sit to count:
+ * - refusal: the whole condition of an if with no other branch whose body
+ *   reaches exit, return or throw (see exits()), at the top level or opening the default case of a top-level switch
+ *   whose other cases all exit;
+ * - admission: the whole condition of an if whose else exits, at the top
+ *   level or ending the else of a top-level if whose own branch exits;
+ * - anchor: anywhere outside functions. It only marks the end of the pinned
+ *   code, so it is allowed only on a page that claims no gate.
  */
 const SELF_GATED = [
     'auth_login.php' => [
         'anonymous-allowed',
         "db_execute_prepared('INSERT IGNORE INTO user_log\n\t\t\t(username, user_id, result, ip, time)\n\t\t\tVALUES (?, ?, 1, ?, NOW())', array(\$username, \$user['id'], \$client_addr))",
         'login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function',
+        'anchor',
     ],
     'auth_changepassword.php' => [
         'authenticated',
         "!isset(\$_SESSION['sess_user_id'])",
         'own session check; action=checkpass answers anonymously with the password policy verdict',
+        'refusal',
     ],
     'csp_report.php' => [
         'anonymous-allowed',
         "require_once(__DIR__ . '/lib/csp_report_endpoint.php')",
         'CSP violation report sink; browsers post reports without credentials',
+        'anchor',
     ],
     'link.php' => [
         'realm:10000+id',
         "is_realm_allowed(\$page['id'] + 10000)",
         'own realm check per external link id',
+        'admission',
     ],
     'remote_agent.php' => [
         'anonymous-allowed',
         '!remote_client_authorized()',
         'no user session; remote_client_authorized() admits registered poller addresses only',
+        'refusal',
     ],
     'service_check.php' => [
         'anonymous-allowed',
         "db_fetch_cell('SELECT cacti FROM version')",
         'service probe; prints success or fail for the schema version only',
+        'anchor',
     ],
 ];
 
@@ -823,26 +837,101 @@ function auth_early_returns(string $root): array
 }
 
 /**
+ * True when the statements reach exit, return or throw. At a page's top level
+ * each of them ends the request. A break, continue or goto ahead of it, even
+ * nested, can leave the block first, so it does not count.
+ *
+ * @param list<Stmt> $stmts
+ */
+function exits(array $stmts): bool
+{
+    foreach ($stmts as $stmt) {
+        $expr = expression_of($stmt);
+        if ($stmt instanceof Stmt\Return_ || $expr instanceof Expr\Exit_ || $expr instanceof Expr\Throw_) {
+            return true;
+        }
+        foreach (walk($stmt, false) as $node) {
+            if ($node instanceof Stmt\Break_ || $node instanceof Stmt\Continue_ || $node instanceof Stmt\Goto_) {
+                return false;
+            }
+        }
+    }
+
+    return false;
+}
+
+function refusal_if(?Stmt $stmt, Expr $check): bool
+{
+    return $stmt instanceof Stmt\If_ && $stmt->elseifs === [] && $stmt->else === null
+        && same_node($stmt->cond, $check) && exits($stmt->stmts);
+}
+
+function admission_if(?Stmt $stmt, Expr $check): bool
+{
+    return $stmt instanceof Stmt\If_ && $stmt->elseifs === [] && $stmt->else !== null
+        && same_node($stmt->cond, $check) && exits($stmt->else->stmts);
+}
+
+function guards(Stmt $stmt, Expr $check, string $shape): bool
+{
+    if ($shape === 'anchor') {
+        foreach (walk($stmt, false) as $node) {
+            if (same_node($node, $check)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    if ($shape === 'refusal') {
+        if (refusal_if($stmt, $check)) {
+            return true;
+        }
+        // Without a default case an unmatched value skips the whole switch,
+        // so the guard must open the default and every other case must exit.
+        if (!$stmt instanceof Stmt\Switch_) {
+            return false;
+        }
+        $guarded = false;
+        foreach ($stmt->cases as $case) {
+            $body = array_values(array_filter($case->stmts, fn(Stmt $s) => !$s instanceof Stmt\Nop));
+            if ($case->cond === null && refusal_if($body[0] ?? null, $check)) {
+                $guarded = true;
+            } elseif (!exits($case->stmts)) {
+                return false;
+            }
+        }
+        return $guarded;
+    }
+    if ($shape === 'admission') {
+        if (admission_if($stmt, $check)) {
+            return true;
+        }
+        $else = $stmt instanceof Stmt\If_ && $stmt->elseifs === [] && $stmt->else !== null && exits($stmt->stmts)
+            ? $stmt->else->stmts : [];
+        return $else !== [] && admission_if($else[count($else) - 1], $check);
+    }
+    fail('unknown self-gated shape ' . $shape);
+}
+
+/**
  * @param list<Stmt> $stmts
  * @return array{0: string, 1: string}|null
  */
 function self_gated(string $path, array $stmts): ?array
 {
-    [$gate, $fingerprint, $reason] = SELF_GATED[$path];
+    [$gate, $fingerprint, $reason, $shape] = SELF_GATED[$path];
+    if ($shape === 'anchor' && $gate !== 'anonymous-allowed') {
+        fail($path . ': an anchor proves no gate, so it cannot label ' . $gate);
+    }
     $parsed = (new ParserFactory())->createForNewestSupportedVersion()->parse('<?php ' . $fingerprint . ';');
-    $needle = $parsed[0]->expr;
+    $check = $parsed[0]->expr;
     foreach ($stmts as $i => $stmt) {
-        if (is_declaration($stmt)) {
-            continue;
-        }
-        foreach (walk($stmt, false) as $node) {
-            if (same_node($node, $needle)) {
-                return [$gate, $reason . '; reviewed at ' . digest(array_slice($stmts, 0, $i + 1))];
-            }
+        if (!is_declaration($stmt) && guards($stmt, $check, $shape)) {
+            return [$gate, $reason . '; reviewed at ' . digest(array_slice($stmts, 0, $i + 1))];
         }
     }
 
-    return ['unknown', 'self-gated check not found: ' . $fingerprint];
+    return ['unknown', 'self-gated check not found as a ' . $shape . ': ' . $fingerprint];
 }
 
 /**
