@@ -175,6 +175,14 @@ const REVIEWED_FRAGMENT_CALLS = [
     ],
 ];
 
+// Non-literal output at a fragment's top level, traced by hand, each matched
+// as a whole expression with why it shows nothing to an anonymous caller.
+const REVIEWED_FRAGMENT_OUTPUT = [
+    'include/runtime.php' => [
+        ['$message', 'the PHP version notice, assigned from a literal in the same block'],
+    ],
+];
+
 const INCLUDE_PREFIXES = ['base_path' => '', 'include_path' => 'include', 'library_path' => 'lib'];
 
 const SUPERGLOBALS = ['GLOBALS', '_SERVER', '_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_REQUEST', '_ENV'];
@@ -1180,6 +1188,28 @@ function is_redirect(array $active): bool
     return true;
 }
 
+// A string or number written in the source, or a concatenation of them.
+function literal_text(Expr $expr): bool
+{
+    if ($expr instanceof Expr\BinaryOp\Concat) {
+        return literal_text($expr->left) && literal_text($expr->right);
+    }
+
+    return $expr instanceof Scalar\String_ || $expr instanceof Scalar\Int_ || $expr instanceof Scalar\Float_;
+}
+
+function reviewed_output(string $path, Expr $expr): bool
+{
+    foreach (REVIEWED_FRAGMENT_OUTPUT[$path] ?? [] as [$snippet]) {
+        $parsed = (new ParserFactory())->createForNewestSupportedVersion()->parse('<?php ' . $snippet . ';');
+        if (same_node($expr, $parsed[0]->expr)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function reviewed_call(string $path, Node $node): bool
 {
     foreach (REVIEWED_FRAGMENT_CALLS[$path] ?? [] as [$snippet]) {
@@ -1277,6 +1307,19 @@ function fragment(string $root, string $path, array $active, array $by, array $f
             }
             if ($node instanceof Expr\FuncCall && !$node->name instanceof Name) {
                 return ['unknown', 'fragment makes a dynamic function call'];
+            }
+            // A digest proves only that the output code is unchanged, not that
+            // what it prints is safe to show an anonymous caller.
+            $printed = match (true) {
+                $node instanceof Stmt\Echo_ => $node->exprs,
+                $node instanceof Expr\Print_ => [$node->expr],
+                $node instanceof Expr\Exit_ && $node->expr !== null && !$node->expr instanceof Scalar\Int_ => [$node->expr],
+                default => [],
+            };
+            foreach ($printed as $expr) {
+                if (!literal_text($expr) && !reviewed_output($path, $expr)) {
+                    return ['unknown', 'fragment prints a value that is not a literal on line ' . $node->getStartLine()];
+                }
             }
             // A method, static call or constructor runs code the name list
             // cannot see, and so does a function handed a callable.

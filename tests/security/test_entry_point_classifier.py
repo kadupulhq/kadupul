@@ -97,6 +97,12 @@ NEW_FRAGMENT_EFFECTS = {
     'effect behind a call that does not always run': "<?php\nif (1 || helper()) {\n\tunlink($_GET['f']);\n}\n",
     # The effect is in the included file, which the fragment's pin does not cover.
     'include of a file with top-level code': "<?php\ninclude('./lib/evil.php');\n",
+    'echo of request data': "<?php\necho $_SERVER['HTTP_COOKIE'];\n",
+    'echo of a literal joined to a variable': "<?php\necho 'a' . $x;\n",
+    'print of a variable': "<?php\nprint $x;\n",
+    'exit with a variable': "<?php\nexit($x);\n",
+    # Reviewed for include/runtime.php only, so it does not carry over.
+    'reviewed output in another file': "<?php\n$message = 'x';\necho $message;\n",
 }
 # helper() is declared only in lib/helpers.php, which a direct request of the
 # fragment never loads, so PHP stops there and the unlink never runs.
@@ -106,7 +112,8 @@ HALTING = "<?php\nrequire_once($config['include_path'] . '/vendor/csrf/csrf-conf
 NOT_HALTING = "<?php\nrequire_once(__DIR__ . '/vendor/csrf/csrf-conf.php');\nsystem($_GET['c']);\n"
 FRAGMENT_INCLUDES_DECLARATIONS = "<?php\ninclude('./lib/declarations.php');\n"
 FRAGMENT_HALTS = "<?php\n$x = helper();\nunlink($_GET['f']);\n"
-FRAGMENT_TEXT = "<?php\n$label = 'PHP Mail() and `quoted` text';\necho $label;\n"
+FRAGMENT_TEXT = "<?php\n$label = 'PHP Mail() and `quoted` text';\necho 'PHP Mail() and `quoted` text', 1;\n"
+RUNTIME = "<?php\nif (PHP_VERSION_ID < 80400) {\n\t$message = 'too old';\n\techo $message;\n\texit(1);\n}\n"
 
 # remote_agent.php is self-gated on !remote_client_authorized().
 SELF_GATED = "<?php\nrequire(__DIR__ . '/include/global.php');\n%sif (!remote_client_authorized()) {\n\texit;\n}\n"
@@ -959,9 +966,17 @@ def main():
             if got != expected:
                 failures.append('include/csrf.php with %s: expected %s, got %s' % (source.splitlines()[1], expected, got))
         (root / 'include/csrf.php').unlink()
+        # The one reviewed non-literal output, only where it was reviewed.
+        count += 1
+        (root / 'runtime_host.php').write_text("<?php\ninclude('./include/runtime.php');\n")
+        got = gate(root, 'include/runtime.php', RUNTIME)[0]
+        if got != 'anonymous-allowed':
+            failures.append('include/runtime.php with its version notice: expected anonymous-allowed, got %s' % got)
+        (root / 'include/runtime.php').unlink()
+        (root / 'runtime_host.php').unlink()
         # Reformatting a fragment keeps its pin.
         count += 1
-        spaced = FRAGMENT_TEXT.replace('echo $label;', "/* note */\necho   $label ;")
+        spaced = FRAGMENT_TEXT.replace("echo 'PHP", "/* note */\necho   'PHP")
         if gate(root, 'fragment.php', spaced) != gate(root, 'fragment.php', FRAGMENT_TEXT):
             failures.append('fragment pin changed on a formatting-only edit')
 
