@@ -109,11 +109,28 @@ test('expired rotations are still removed and current ones kept', function () {
     expect($result['survivors'])->toBe(array('cacti.log', 'cacti.log-20260916'));
 });
 
-/* logrotate_file_rotate() appends -N when the dated name is already taken. */
+/* logrotate_file_rotate() counts from 1 to 99 unpadded, so those are the
+   only counters it can produce, and the pattern accepts no others. */
 test('a numbered collision rotation is recognised', function () {
     $result = clean_directory(array('cacti.log', 'cacti.log-20200101-1', 'cacti.log-20200101-99'));
 
     expect($result['survivors'])->toBe(array('cacti.log'));
+});
+
+test('a counter the writer cannot emit is not treated as a rotation', function () {
+    $result = clean_directory(array(
+        'cacti.log',
+        'cacti.log-20200101-0',
+        'cacti.log-20200101-01',
+        'cacti.log-20200101-100',
+    ));
+
+    expect($result['survivors'])->toBe(array(
+        'cacti.log',
+        'cacti.log-20200101-0',
+        'cacti.log-20200101-01',
+        'cacti.log-20200101-100',
+    ));
 });
 
 test('lookalikes on either side of the name survive', function () {

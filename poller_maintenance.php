@@ -486,7 +486,7 @@ function logrotate_file_clean($name, $log, $date, $rotation)
         /* The only names logrotate_file_rotate() creates are the log basename
            followed by -YYYYMMDD, plus -N when that name was already taken.
            Anything else in the directory belongs to somebody else. */
-        $rotation_format = '/^' . preg_quote($baselogname, '/') . '-(\d{8})(?:-\d{1,2})?\z/';
+        $rotation_format = '/^' . preg_quote($baselogname, '/') . '-(\d{8})(?:-[1-9]\d?)?\z/';
 
         foreach ($dir as $d) {
             if (!preg_match($rotation_format, $d, $fileparts)) {
