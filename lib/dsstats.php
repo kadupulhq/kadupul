@@ -263,8 +263,15 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
 
     $use_proxy = (read_config_option('storage_location') ? true : false);
 
+    // No RRDtool transport can carry a line break or NUL in a path.
+    if (strpbrk($rrdfile, "\r\n\0") !== false) {
+        cacti_log('ERROR: Data Source statistics skipped for Local Data ID ' . $local_data_id . '. The RRD path contains a line break or NUL.', false, 'DSSTATS');
+
+        return;
+    }
+
     if ($use_proxy) {
-        $file_exists = rrdtool_execute("file_exists $rrdfile", true, RRDTOOL_OUTPUT_BOOLEAN, false, 'DSSTATS');
+        $file_exists = rrdtool_execute(array('file_exists', $rrdfile), true, RRDTOOL_OUTPUT_BOOLEAN, false, 'DSSTATS');
     } else {
         clearstatcache();
         $file_exists = file_exists($rrdfile);
@@ -274,9 +281,9 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
     if ($file_exists) {
         /* high speed or snail speed */
         if ($use_proxy) {
-            $info = rrdtool_execute("info $rrdfile", false, RRDTOOL_OUTPUT_STDOUT, false, 'DSSTATS');
+            $info = rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT, false, 'DSSTATS');
         } else {
-            $info = dsstats_rrdtool_execute("info $rrdfile", $pipes);
+            $info = dsstats_rrdtool_execute(array('info', $rrdfile), $pipes);
         }
 
         /* don't do anything if RRDfile did not return data */
@@ -318,8 +325,8 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
             $defs     = 'abcdefghijklmnopqrstuvwxyz012345789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $i        = 0;
             $j        = 0;
-            $def      = '';
-            $command  = '';
+            $def      = array();
+            $command  = array();
             $dsvalues = array();
 
             /* escape the file name if on Windows */
@@ -331,14 +338,16 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
             if (cacti_sizeof($dsnames)) {
                 foreach ($dsnames as $dsname => $present) {
                     if ($average) {
-                        $def .= 'DEF:' . $defs[$j] . $defs[$i] . "=\"" . $rrdfile . "\":" . $dsname . ':AVERAGE ';
-                        $command .= ' VDEF:' . $defs[$j] . $defs[$i] . '_out=' . $defs[$j] . $defs[$i] . ',AVERAGE PRINT:' . $defs[$j] . $defs[$i] . '_out:%lf';
+                        $def[] = 'DEF:' . $defs[$j] . $defs[$i] . '=' . $rrdfile . ':' . $dsname . ':AVERAGE';
+                        $command[] = 'VDEF:' . $defs[$j] . $defs[$i] . '_out=' . $defs[$j] . $defs[$i] . ',AVERAGE';
+                        $command[] = 'PRINT:' . $defs[$j] . $defs[$i] . '_out:%lf';
                         $i++;
                     }
 
                     if ($max) {
-                        $def .= 'DEF:' . $defs[$j] . $defs[$i] . "=\"" . $rrdfile . "\":" . $dsname . ':MAX ';
-                        $command .= ' VDEF:' . $defs[$j] . $defs[$i] . '_out=' . $defs[$j] . $defs[$i] . ',MAXIMUM PRINT:' . $defs[$j] . $defs[$i] . '_out:%lf';
+                        $def[] = 'DEF:' . $defs[$j] . $defs[$i] . '=' . $rrdfile . ':' . $dsname . ':MAX';
+                        $command[] = 'VDEF:' . $defs[$j] . $defs[$i] . '_out=' . $defs[$j] . $defs[$i] . ',MAXIMUM';
+                        $command[] = 'PRINT:' . $defs[$j] . $defs[$i] . '_out:%lf';
                         $i++;
                     }
 
@@ -366,7 +375,7 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
             }
 
             /* now execute the graph command */
-            $stats_cmd = 'graph x --start now-1' . $interval . ' --end now ' . trim($def) . ' ' . trim($command);
+            $stats_cmd = array_merge(array('graph', 'x', '--start', 'now-1' . $interval, '--end', 'now'), $def, $command);
 
             //print $stats_cmd . PHP_EOL;
 
@@ -1110,6 +1119,13 @@ function dsstats_rrdtool_execute($command, &$pipes)
     static $broken = false;
 
     $stdout = '';
+
+    if (is_array($command)) {
+        $command = rrdtool_pipe_command($command, 'DSSTATS');
+        if ($command === false) {
+            return;
+        }
+    }
 
     if ($command == '') return;
 

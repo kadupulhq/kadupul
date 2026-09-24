@@ -483,6 +483,282 @@ function rrdtool_execute()
     }
 }
 
+/**
+ * Join an argument array into one command line: the verb as given and every
+ * argument quoted. A command that cannot be written is logged and not sent.
+ */
+function rrdtool_pipe_command(array $command, $logopt)
+{
+    $verb = array_shift($command);
+    $encoder = rrdtool_pipe_encoder();
+    try {
+        // Arguments are refused, not cleaned: removing a line break from a
+        // path would name another file.
+        return $verb . ' ' . implode(' ', array_map(function ($argument) use ($encoder) {
+            return $encoder->quote((string) $argument);
+        }, $command));
+    } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
+        cacti_log('ERROR: RRDtool ' . $verb . ' was not run. ' . $e->getMessage(), false, $logopt);
+        return false;
+    }
+}
+
+/** True when the RRDtool proxy can carry the argument as one bare token. */
+function rrdtool_proxy_token_is_safe($argument)
+{
+    $argument = (string) $argument;
+
+    return $argument !== '' && !preg_match('/[\s\'"\\\\\0]/', $argument);
+}
+
+/**
+ * Make the RRD paths in a proxy command relative to the RRA root. The root is
+ * replaced only where a path starts (line start, whitespace, '=', ':' or a
+ * quote) and only when a separator or the end of the path follows, so the same
+ * text nested inside a path, or a sibling such as /rrafast, is left alone.
+ */
+function rrdtool_proxy_relative_paths($command_line)
+{
+    global $config;
+
+    $rra_path = rtrim((string) ($config['rra_path'] ?? ''), '/');
+    if ($rra_path === '') {
+        return $command_line;
+    }
+
+    return preg_replace('~(?<=^|[\s=:\'"])' . preg_quote($rra_path, '~') . '(?=[/\\\\\s:\'"]|$)~', '.', $command_line);
+}
+
+/** Whether rrdtool_execute() sends commands to the RRDtool proxy. */
+function rrdtool_uses_proxy()
+{
+    global $config;
+
+    return ($config['force_storage_location_local'] ?? false) !== true && (bool) read_config_option('storage_location');
+}
+
+/**
+ * Write one argument, such as an RRD path, for a command that rrdtool_execute()
+ * sends as a string: quoted for the local pipe, bare for the RRDtool proxy,
+ * which resolves paths as sent. False when the argument cannot be sent on the
+ * transport in use; a line break is refused rather than removed, since
+ * removing it from a path names another file.
+ */
+function rrdtool_command_argument($argument)
+{
+    $argument = (string) $argument;
+    if (rrdtool_uses_proxy()) {
+        return rrdtool_proxy_token_is_safe($argument) ? $argument : false;
+    }
+
+    return strpbrk($argument, "\r\n\0") === false ? rrdtool_pipe_encoder()->quote($argument) : false;
+}
+
+/**
+ * As rrdtool_command_argument(), for an RRD path. The proxy receives paths
+ * relative to the RRA root, so the rewrite applies to paths and nothing else.
+ */
+function rrdtool_command_path($path)
+{
+    if (rrdtool_uses_proxy()) {
+        $path = rrdtool_proxy_token($path);
+    }
+
+    return rrdtool_command_argument($path);
+}
+
+/**
+ * The DS maximum as rrdtool_function_create() and boost_rrdtool_function_create()
+ * write it, or false, logged under $logopt, when the RRD must not be created.
+ * A minimum and maximum of zero become U.
+ *
+ * A substituted maximum is device data. A line break would start another
+ * RRDtool command, and is_numeric() accepts one around a number, so it is
+ * refused first. Anything else but a number or U must stay inside this DS
+ * argument, where RRDtool rejects it: the local pipe quotes it, and the proxy,
+ * which would keep quotes as text, takes it only as one bare token.
+ */
+function rrdtool_create_maximum($minimum, $maximum, $local_data_id, $logopt)
+{
+    /* min==max==0 won't work with rrdtool */
+    if ($minimum == 0 && $maximum == 0) {
+        $maximum = 'U';
+    }
+
+    if (strpbrk((string) $maximum, "\r\n\0") !== false) {
+        cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. The data source maximum contains a line break or NUL.', false, $logopt);
+        return false;
+    }
+
+    if (is_numeric($maximum) || $maximum === 'U') {
+        return $maximum;
+    }
+
+    // The proxy client rewrites the RRA root anywhere in a command string, so
+    // any other maximum could reach the proxy changed. RRDtool would reject it anyway.
+    $argument = rrdtool_uses_proxy() ? false : rrdtool_command_argument($maximum);
+    if ($argument === false) {
+        cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its maximum cannot be sent to RRDtool.', false, $logopt);
+    }
+
+    return $argument;
+}
+
+/** The RRA arguments of a create command, one per RRA row. */
+function rrdtool_create_rras($rras, $consolidation_functions)
+{
+    $create_rra = '';
+    /* loop through each available RRA for this DS */
+    foreach ($rras as $rra) {
+        $create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
+    }
+
+    return $create_rra;
+}
+
+/** As rrdtool_command_path(), logging under $logopt when the RRD cannot be created. */
+function rrdtool_create_path($path, $local_data_id, $logopt)
+{
+    $quoted_path = rrdtool_command_path($path);
+    if ($quoted_path === false) {
+        cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its path cannot be sent to RRDtool.', false, $logopt);
+    }
+
+    return $quoted_path;
+}
+
+/**
+ * Refuse a create path RRDtool cannot receive before anything touches the
+ * disk, then make its structured-path directory. Returns false, or the path as
+ * the create command writes it and the RRA root's owner and group.
+ */
+function rrdtool_create_prepare($data_source_path, $show_source, $use_proxy, $rrdtool_pipe, $local_data_id, $logopt)
+{
+    $quoted_path = $show_source == true ? '' : rrdtool_create_path($data_source_path, $local_data_id, $logopt);
+    if ($quoted_path === false) {
+        return false;
+    }
+
+    list($owner_id, $group_id) = rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_pipe, $logopt);
+
+    return array($quoted_path, $owner_id, $group_id);
+}
+
+/**
+ * Check for structured path configuration and, if in place, verify that the
+ * RRD's directory exists and create it if not. $use_proxy is the caller's own
+ * storage_location test; $logopt tags the proxy commands.
+ *
+ * Returns the owner and group of the RRA root, which the caller also gives the
+ * new RRD; both are null on Windows, where they are not looked up.
+ */
+function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_pipe, $logopt)
+{
+    global $config;
+
+    $owner_id = null;
+    $group_id = null;
+    if ($config['cacti_server_os'] != 'win32') {
+        $owner_id = fileowner($config['rra_path']);
+        $group_id = filegroup($config['rra_path']);
+    }
+
+    if (read_config_option('extended_paths') == 'on') {
+        if ($use_proxy) {
+            if (false === rrdtool_execute(array('is_dir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt)) {
+                if (false === rrdtool_execute(array('mkdir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt)) {
+                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
+                }
+            }
+        } elseif (!is_dir(dirname($data_source_path))) {
+            if ($config['is_web'] == false || is_writable($config['rra_path'])) {
+                if (mkdir(dirname($data_source_path), 0775, true)) {
+                    if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
+                        $success  = true;
+                        $paths    = explode('/', str_replace($config['rra_path'], '/', dirname($data_source_path)));
+                        $spath    = '';
+
+                        foreach ($paths as $path) {
+                            if ($path == '') {
+                                continue;
+                            }
+
+                            $spath .= '/' . $path;
+
+                            $powner_id = fileowner($config['rra_path'] . $spath);
+                            $pgroup_id = filegroup($config['rra_path'] . $spath);
+
+                            if ($powner_id != $owner_id) {
+                                $success = chown($config['rra_path'] . $spath, $owner_id);
+                            }
+
+                            if ($pgroup_id != $group_id && $success) {
+                                $success = chgrp($config['rra_path'] . $spath, $group_id);
+                            }
+
+                            if (!$success) {
+                                cacti_log("ERROR: Unable to set directory permissions for '" . $config['rra_path'] . $spath . "'", false);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
+                }
+            } else {
+                cacti_log("WARNING: Poller has not created structured path '" . dirname($data_source_path) . "' yet.", false);
+            }
+        }
+    }
+
+    return array($owner_id, $group_id);
+}
+
+/**
+ * __rrd_proxy_execute() sends paths relative to the RRA root, so a token is
+ * checked in that form: a space in the local RRA directory never reaches the
+ * proxy.
+ */
+function rrdtool_proxy_token($argument)
+{
+    global $config;
+
+    $argument = (string) $argument;
+    $rra_path = rtrim((string) ($config['rra_path'] ?? ''), '/');
+    if ($rra_path === '') {
+        return $argument;
+    }
+
+    // Only a leading root at a directory boundary is rewritten; the same text
+    // elsewhere in a path, or a sibling such as /rrafast, is another place.
+    if ($argument === $rra_path) {
+        return '.';
+    }
+
+    return strncmp($argument, $rra_path . '/', strlen($rra_path) + 1) === 0 ? '.' . substr($argument, strlen($rra_path)) : $argument;
+}
+
+/**
+ * Join an argument array for the RRDtool proxy as bare tokens. rrdproxy splits
+ * on whitespace and resolves path operands with realpath() as sent
+ * (rrdp_resolve_command_paths() in its lib/functions.php at 54aad57), so
+ * quoting breaks its path checks. An argument it cannot carry bare is refused
+ * and nothing is sent.
+ */
+function rrdtool_proxy_command(array $command, $logopt)
+{
+    $verb    = array_shift($command);
+    $command = array_map('rrdtool_proxy_token', $command);
+    foreach ($command as $argument) {
+        if (!rrdtool_proxy_token_is_safe($argument)) {
+            cacti_log('ERROR: RRDtool ' . $verb . ' was not sent to the RRDtool proxy. An argument is empty or contains whitespace, a quote, a backslash or NUL.', false, $logopt);
+            return false;
+        }
+    }
+
+    return $verb . ' ' . implode(' ', $command);
+}
+
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG')
 {
     global $config;
@@ -491,11 +767,8 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 
 
     if (is_array($command_line)) {
-        $cmd = array_shift($command_line);
-        try {
-            $command_line = $cmd . ' ' . implode(' ', array_map('rrdtool_pipe_quote', $command_line));
-        } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
-            cacti_log('ERROR: RRDtool ' . $cmd . ' was not run. ' . $e->getMessage(), false, $logopt);
+        $command_line = rrdtool_pipe_command($command_line, $logopt);
+        if ($command_line === false) {
             return false;
         }
     }
@@ -777,6 +1050,13 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     $end_of_packet = "_EOP_\r\n";
     $end_of_sequence = "_EOT_\r\n";
 
+    if (is_array($command_line)) {
+        $command_line = rrdtool_proxy_command($command_line, $logopt);
+        if ($command_line === false) {
+            return false;
+        }
+    }
+
     if (!is_numeric($output_flag)) {
         $output_flag = RRDTOOL_OUTPUT_STDOUT;
     }
@@ -786,7 +1066,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     Also make sure to replace all of the fancy "\"s at the end of the line,
     but make sure not to get rid of the "\n"s that are supposed to be
     in there (text format) */
-    $command_line = str_replace(array($config['rra_path'], "\\\n"), array('.', ' '), $command_line);
+    $command_line = rrdtool_proxy_relative_paths(str_replace("\\\n", ' ', $command_line));
 
     /* output information to the log file if appropriate */
     cacti_log('CACTI2RRDP: ' . read_config_option('path_rrdtool') . " $command_line", $log_to_stdout, $logopt, POLLER_VERBOSITY_DEBUG);
@@ -947,7 +1227,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     exist, the last thing we want to do is overright data! */
     if ($show_source != true) {
         if (read_config_option('storage_location')) {
-            if (rrdtool_execute("file_exists $data_source_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
+            if (rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
                 return -1;
             }
         } elseif (file_exists($data_source_path)) {
@@ -1053,7 +1333,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
                 if ($data_source['rrd_maximum'] == '|query_ifSpeed|' || $data_source['rrd_maximum'] == '|query_ifHighSpeed|') {
                     $data_source['rrd_maximum'] = $speed;
                 } else {
-                    $data_source['rrd_maximum'] = substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']);
+                    $data_source['rrd_maximum'] = trim(substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']), " \t\n\r\x0B");
                 }
             } elseif ($data_source['rrd_maximum'] != 'U' && (float) $data_source['rrd_maximum'] <= (float) $data_source['rrd_minimum']) {
                 /* max > min required, but take care of an "Undef" value */
@@ -1064,82 +1344,27 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
                 }
             }
 
-            /* min==max==0 won't work with rrdtool */
-            if ($data_source['rrd_minimum'] == 0 && $data_source['rrd_maximum'] == 0) {
-                $data_source['rrd_maximum'] = 'U';
+            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $local_data_id, 'POLLER');
+            if ($data_source['rrd_maximum'] === false) {
+                return false;
             }
 
             $create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
         }
     }
 
-    $create_rra = '';
-    /* loop through each available RRA for this DS */
-    foreach ($rras as $rra) {
-        $create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
+    $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
+
+    $prepared = rrdtool_create_prepare($data_source_path, $show_source, read_config_option('storage_location'), $rrdtool_pipe, $local_data_id, 'POLLER');
+    if ($prepared === false) {
+        return false;
     }
-
-    if ($config['cacti_server_os'] != 'win32') {
-        $owner_id = fileowner($config['rra_path']);
-        $group_id = filegroup($config['rra_path']);
-    }
-
-    /**
-     * check for structured path configuration, if in place verify directory
-     * exists and if not create it.
-     */
-    if (read_config_option('extended_paths') == 'on') {
-        if (read_config_option('storage_location')) {
-            if (false === rrdtool_execute('is_dir ' . dirname($data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
-                if (false === rrdtool_execute('mkdir ' . dirname($data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
-                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
-                }
-            }
-        } elseif (!is_dir(dirname($data_source_path))) {
-            if ($config['is_web'] == false || is_writable($config['rra_path'])) {
-                if (mkdir(dirname($data_source_path), 0775, true)) {
-                    if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-                        $success  = true;
-                        $paths    = explode('/', str_replace($config['rra_path'], '/', dirname($data_source_path)));
-                        $spath    = '';
-
-                        foreach ($paths as $path) {
-                            if ($path == '') {
-                                continue;
-                            }
-
-                            $spath .= '/' . $path;
-
-                            $powner_id = fileowner($config['rra_path'] . $spath);
-                            $pgroup_id = filegroup($config['rra_path'] . $spath);
-
-                            if ($powner_id != $owner_id) {
-                                $success = chown($config['rra_path'] . $spath, $owner_id);
-                            }
-
-                            if ($pgroup_id != $group_id && $success) {
-                                $success = chgrp($config['rra_path'] . $spath, $group_id);
-                            }
-
-                            if (!$success) {
-                                cacti_log("ERROR: Unable to set directory permissions for '" . $config['rra_path'] . $spath . "'", false);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
-                }
-            } else {
-                cacti_log("WARNING: Poller has not created structured path '" . dirname($data_source_path) . "' yet.", false);
-            }
-        }
-    }
+    list($quoted_path, $owner_id, $group_id) = $prepared;
 
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        $success = rrdtool_execute("create $data_source_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+        $success = rrdtool_execute("create $quoted_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
 
         if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
             if (file_exists($data_source_path)) {
@@ -1183,9 +1408,18 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
         $create_rrd_file = false;
 
         if (is_array($rrd_fields['times']) && cacti_sizeof($rrd_fields['times'])) {
+            // Samples for a path RRDtool cannot be given stay queued, as for
+            // any other failed update.
+            $quoted_path = rrdtool_command_path($rrd_path);
+            if ($quoted_path === false) {
+                cacti_log('ERROR: RRD pending samples retained for Data Source ' . $rrd_fields['local_data_id'] . '. Its path cannot be sent to RRDtool.', false, 'POLLER');
+                $failed = true;
+                continue;
+            }
+
             /* create the rrd if one does not already exist */
             if (read_config_option('storage_location') > 0) {
-                $file_exists = rrdtool_execute("file_exists $rrd_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+                $file_exists = rrdtool_execute(array('file_exists', $rrd_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
             } else {
                 $file_exists = file_exists($rrd_path);
             }
@@ -1291,7 +1525,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
                 // Never advance this RRD's timestamp after dropping a valid field.
                 // A schema mismatch must retain the full sample for replay after repair.
-                $updated = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+                $updated = rrdtool_execute("update $quoted_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 
                 if ($updated !== true) {
                     $rejection = rrdtool_last_rejection();
@@ -1462,9 +1696,9 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
     boost_fetch_cache_check($local_data_id, $rrdtool_pipe);
 
     /* build and run the rrdtool fetch command with all of our data */
-    $cmd_line = "fetch $data_source_path $cf -s $start_time -e $end_time";
+    $cmd_line = array('fetch', $data_source_path, $cf, '-s', $start_time, '-e', $end_time);
     if ($resolution > 0) {
-        $cmd_line .= " -r $resolution";
+        array_push($cmd_line, '-r', $resolution);
     }
 
     $output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
@@ -3026,6 +3260,11 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
  */
 function rrdtool_pipe_quote($argument)
 {
+    return rrdtool_pipe_encoder()->quote(str_replace(array("\r", "\n"), '', (string) $argument));
+}
+
+function rrdtool_pipe_encoder()
+{
     // This file can be loaded without include/global.php, and so without the
     // Composer autoloader, as the RRD maintenance tests do.
     if (!class_exists(\Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder::class)) {
@@ -3033,9 +3272,7 @@ function rrdtool_pipe_quote($argument)
         require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/PipeEncoder.php';
     }
 
-    $encoder = new \Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder();
-
-    return $encoder->quote(str_replace(array("\r", "\n"), '', (string) $argument));
+    return new \Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder();
 }
 
 /**
@@ -3335,7 +3572,7 @@ function rrdtool_function_get_resstep($local_data_ids, $graph_start, $graph_end,
 function rrdtool_file_exists(string $data_source_path, mixed $rrdtool_pipe = null): bool
 {
     if (read_config_option('storage_location')) {
-        if (!rrdtool_execute("file_exists $data_source_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
+        if (!rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
             return false;
         }
     } elseif (!file_exists($data_source_path)) {
@@ -3358,8 +3595,7 @@ function rrdtool_function_info($local_data_id)
     $data_source_path = get_data_source_path($local_data_id, true);
 
     /* Execute rrdtool info command */
-    $cmd_line = ' info ' . $data_source_path;
-    $output = rrdtool_execute($cmd_line, RRDTOOL_OUTPUT_NULL, RRDTOOL_OUTPUT_STDOUT);
+    $output = rrdtool_execute(array('info', $data_source_path), RRDTOOL_OUTPUT_NULL, RRDTOOL_OUTPUT_STDOUT);
     if ($output == '') {
         return false;
     }
@@ -4057,7 +4293,7 @@ function rrd_datasource_add($file_array, $ds_array, $debug)
         foreach ($file_array as $file) {
             /* create a DOM object from an rrdtool dump */
             $dom = new domDocument;
-            $xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
             if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
                 $check['err_msg'] = __('Error while parsing the XML of rrdtool dump');
                 return $check;
@@ -4132,7 +4368,7 @@ function rrd_rra_delete($file_array, $rra_array, $debug)
         foreach ($file_array as $file) {
             /* create a DOM document from an rrdtool dump */
             $dom = new domDocument;
-            $xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
             if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
                 $check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
                 return $check;
@@ -4193,7 +4429,7 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug)
         foreach ($file_array as $file) {
             /* create a DOM document from an rrdtool dump */
             $dom = new domDocument;
-            $xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
             if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
                 $check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
                 return $check;
@@ -4756,14 +4992,21 @@ function gradient($vname = false, $start_color = '#0000a0', $end_color = '#f0f0f
     // We don't use alpha blending for the area right now
     $alpha = 'ff';
 
+    // Double quotes keep existing graph commands unchanged. RRDtool ends a
+    // double-quoted run at the next ", so a label with one uses the encoder.
+    $legend = '';
+    if ($label != false && strlen($label) > 2) {
+        $legend = strpbrk($label, "\"\0\r\n") === false ? '"' . $label . '"' : rrdtool_pipe_quote($label);
+    }
+
     for ($i = $steps; $i > 0; $i--) {
         $factor = $i / $steps;
         $r = round($r1 + $diff_r * $factor);
         $g = round($g1 + $diff_g * $factor);
         $b = round($b1 + $diff_b * $factor);
 
-        if ($i == $steps && $label != false && strlen($label) > 2) {
-            $spline .=  sprintf("AREA:%s%d#%02X%02X%02X%s:\"%s\" " . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha, $label);
+        if ($i == $steps && $legend !== '') {
+            $spline .=  sprintf("AREA:%s%d#%02X%02X%02X%s:%s " . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha, $legend);
         } else {
             $spline .=  sprintf("AREA:%s%d#%02X%02X%02X%s " . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha);
         }

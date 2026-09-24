@@ -40,7 +40,7 @@
     {
         "fn": "gradient",
         "options": [],
-        "returned": "CDEF:ac140minimum=a,a,-  \\\nCDEF:var34024=a,ac140minimum,-,4,/,4,*,ac140minimum,+  \\\nCDEF:var34023=a,ac140minimum,-,4,/,3,*,ac140minimum,+  \\\nCDEF:var34022=a,ac140minimum,-,4,/,2,*,ac140minimum,+  \\\nCDEF:var34021=a,ac140minimum,-,4,/,1,*,ac140minimum,+  \\\nAREA:var34024#F0F0F0ff:\"Inbound \"x\"\"  \\\nAREA:var34023#B4B4DCff  \\\nAREA:var34022#7878C8ff  \\\nAREA:var34021#3C3CB4ff  \\\nAREA:var34024#F0F0F000  \\\n",
+        "returned": "CDEF:ac140minimum=a,a,-  \\\nCDEF:var34024=a,ac140minimum,-,4,/,4,*,ac140minimum,+  \\\nCDEF:var34023=a,ac140minimum,-,4,/,3,*,ac140minimum,+  \\\nCDEF:var34022=a,ac140minimum,-,4,/,2,*,ac140minimum,+  \\\nCDEF:var34021=a,ac140minimum,-,4,/,1,*,ac140minimum,+  \\\nAREA:var34024#F0F0F0ff:'Inbound \"x\"'  \\\nAREA:var34023#B4B4DCff  \\\nAREA:var34022#7878C8ff  \\\nAREA:var34021#3C3CB4ff  \\\nAREA:var34024#F0F0F000  \\\n",
         "args_after": [
             "a",
             "#0000a0",
@@ -76,6 +76,19 @@
             false,
             2,
             "10"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "gradient",
+        "options": [],
+        "returned": "CDEF:cc140minimum=c,c,-  \\\nCDEF:var34022=c,cc140minimum,-,2,/,2,*,cc140minimum,+  \\\nCDEF:var34021=c,cc140minimum,-,2,/,1,*,cc140minimum,+  \\\nAREA:var34022#FFFFFFff:\"it's\"  \\\nAREA:var34021#808080ff  \\\nAREA:var34022#FFFFFF00  \\\n",
+        "args_after": [
+            "c",
+            "#000000",
+            "#ffffff",
+            "it's",
+            2
         ],
         "diagnostics": []
     },

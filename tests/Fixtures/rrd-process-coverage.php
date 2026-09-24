@@ -70,6 +70,8 @@ $coverageFilter->includeFile($coverageRoot . '/lib/rrd_maintenance.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/poller.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/boost.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/api_data_source.php');
+$coverageFilter->includeFile($coverageRoot . '/lib/rrdcheck.php');
+$coverageFilter->includeFile($coverageRoot . '/lib/dsstats.php');
 if (defined('RRD_TEST_INSTALLER_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/installer.php');
     $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_1_6.php');

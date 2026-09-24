@@ -1251,13 +1251,13 @@ function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe)
     }
 
     if (read_config_option('storage_location')) {
-        $file_exists = rrdtool_execute("file_exists $rrd_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
+        $file_exists = rrdtool_execute(array('file_exists', $rrd_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
     } else {
         $file_exists = file_exists($rrd_path);
     }
 
     if ($file_exists == true) {
-        $return_value = rrdtool_execute("last $rrd_path", true, RRDTOOL_OUTPUT_STDOUT, false, 'BOOST');
+        $return_value = rrdtool_execute(array('last', $rrd_path), true, RRDTOOL_OUTPUT_STDOUT, false, 'BOOST');
     }
 
     return trim($return_value);
@@ -1382,7 +1382,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
     exist, the last thing we want to do is overwrite data! */
     if ($show_source != true) {
         if (read_config_option('storage_location')) {
-            $file_exists = rrdtool_execute("file_exists $data_source_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+            $file_exists = rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
         } else {
             $file_exists = file_exists($data_source_path);
         }
@@ -1481,89 +1481,34 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
                 if ($data_source['rrd_maximum'] == '|query_ifSpeed|' || $data_source['rrd_maximum'] == '|query_ifHighSpeed|') {
                     $data_source['rrd_maximum'] = $speed;
                 } else {
-                    $data_source['rrd_maximum'] = substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']);
+                    $data_source['rrd_maximum'] = trim(substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']), " \t\n\r\x0B");
                 }
             } elseif (($data_source['rrd_maximum'] != 'U') && (int) $data_source['rrd_maximum'] <= (int) $data_source['rrd_minimum']) {
                 /* max > min required, but take care of an "Undef" value */
                 $data_source['rrd_maximum'] = (int) $data_source['rrd_minimum'] + 1;
             }
 
-            /* min==max==0 won't work with rrdtool */
-            if ($data_source['rrd_minimum'] == 0 && $data_source['rrd_maximum'] == 0) {
-                $data_source['rrd_maximum'] = 'U';
+            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $local_data_id, 'BOOST');
+            if ($data_source['rrd_maximum'] === false) {
+                return false;
             }
 
             $create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
         }
     }
 
-    $create_rra = '';
-    /* loop through each available RRA for this DS */
-    foreach ($rras as $rra) {
-        $create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
+    $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
+
+    $prepared = rrdtool_create_prepare($data_source_path, $show_source, read_config_option('storage_location') > 0, $rrdtool_pipe, $local_data_id, 'BOOST');
+    if ($prepared === false) {
+        return false;
     }
-
-    if ($config['cacti_server_os'] != 'win32') {
-        $owner_id = fileowner($config['rra_path']);
-        $group_id = filegroup($config['rra_path']);
-    }
-
-    /**
-     * check for structured path configuration, if in place verify directory
-     * exists and if not create it.
-     */
-    if (read_config_option('extended_paths') == 'on') {
-        if (read_config_option('storage_location') > 0) {
-            if (false === rrdtool_execute('is_dir ' . dirname($data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST')) {
-                if (false === rrdtool_execute('mkdir ' . dirname($data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST')) {
-                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
-                }
-            }
-        } elseif (!is_dir(dirname($data_source_path))) {
-            if ($config['is_web'] == false || is_writable($config['rra_path'])) {
-                if (mkdir(dirname($data_source_path), 0775, true)) {
-                    if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-                        $success  = true;
-                        $paths    = explode('/', str_replace($config['rra_path'], '/', dirname($data_source_path)));
-                        $spath    = '';
-
-                        foreach ($paths as $path) {
-                            if ($path == '') {
-                                continue;
-                            }
-
-                            $spath .= '/' . $path;
-
-                            $powner_id = fileowner($config['rra_path'] . $spath);
-                            $pgroup_id = filegroup($config['rra_path'] . $spath);
-
-                            if ($powner_id != $owner_id) {
-                                $success = chown($config['rra_path'] . $spath, $owner_id);
-                            }
-
-                            if ($pgroup_id != $group_id && $success) {
-                                $success = chgrp($config['rra_path'] . $spath, $group_id);
-                            }
-
-                            if (!$success) {
-                                cacti_log("ERROR: Unable to set directory permissions for '" . $config['rra_path'] . $spath . "'", false);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
-                }
-            } else {
-                cacti_log("WARNING: Poller has not created structured path '" . dirname($data_source_path) . "' yet.", false);
-            }
-        }
-    }
+    list($quoted_path, $owner_id, $group_id) = $prepared;
 
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        $success = rrdtool_execute("create $data_source_path $create_ds$create_rra", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+        $success = rrdtool_execute("create $quoted_path $create_ds$create_rra", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
 
         if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
             if (!chown($data_source_path, (int) $owner_id)) {
@@ -1603,6 +1548,13 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
         return 'OK';
     }
 
+    // Refuse a path RRDtool cannot receive before any existence check or create runs.
+    $quoted_path = rrdtool_command_path($rrd_path);
+    if ($quoted_path === false) {
+        cacti_log('ERROR: RRD update for Data Source ' . $local_data_id . ' was not run. Its path cannot be sent to RRDtool.', false, 'BOOST');
+        return 'ERROR: Invalid RRD path';
+    }
+
     // Only old unacknowledged streams need draining: acknowledged writers have
     // already committed preceding commands and must remain reusable by callers.
     if (cacti_version_compare(get_rrdtool_version(), '1.5', '<') && is_resource($rrdtool_pipe)
@@ -1613,7 +1565,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
     /* create the rrd if one does not already exist */
     if (read_config_option('storage_location')) {
-        $file_exists = rrdtool_execute("file_exists $rrd_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
+        $file_exists = rrdtool_execute(array('file_exists', $rrd_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
     } else {
         $file_exists = file_exists($rrd_path);
     }
@@ -1641,7 +1593,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
         if (strpbrk($rrd_update_values, "\r\n\0") !== false) {
             return 'ERROR: Invalid legacy update values';
         }
-        $last_update = rrdtool_execute('last ' . cacti_escapeshellarg($rrd_path), false, RRDTOOL_OUTPUT_STDOUT, false, 'BOOST');
+        $last_update = rrdtool_execute(array('last', $rrd_path), false, RRDTOOL_OUTPUT_STDOUT, false, 'BOOST');
         if (!is_string($last_update) || !ctype_digit(trim($last_update))) {
             return 'ERROR: Unable to read last RRD timestamp';
         }
@@ -1660,11 +1612,11 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
         if ($rrd_update_template != '') {
             cacti_log("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
-            $result = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
+            $result = rrdtool_execute("update $quoted_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
         } else {
             cacti_log("update $rrd_path $update_options $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
-            $result = rrdtool_execute("update $rrd_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
+            $result = rrdtool_execute("update $quoted_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
         }
 
         return $result === true ? 'OK' : 'ERROR: RRDtool did not acknowledge the update';

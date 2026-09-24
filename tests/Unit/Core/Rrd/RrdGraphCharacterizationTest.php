@@ -113,6 +113,23 @@ dataset('rrd graph scenarios', function () {
         }
     }
 
+    // CR and LF in a substituted value would end the command line; they are removed.
+    $newline_db = $quoting_db;
+    foreach ($newline_db as $index => $row) {
+        if ($row['sql'] === 'FROM host AS h LEFT JOIN sites') {
+            $newline_db[$index]['result']['description'] = "core\r\nedge\rleft\nright";
+        }
+    }
+
+    // Different quoted values in the title and the vertical label show a swapped placeholder.
+    $pair = array('title_cache' => 'Link |host_description|', 'vertical_label' => '|query_ifAlias| bps');
+    $pair_db = rrd_characterization_if_alias(rrd_characterization_graph_db(rrd_characterization_graph($pair), $area), 'it\'s "alias"');
+    foreach ($pair_db as $index => $row) {
+        if ($row['sql'] === 'FROM host AS h LEFT JOIN sites') {
+            $pair_db[$index]['result']['description'] = 'O\'Brien "host"';
+        }
+    }
+
     $nul_items = array_merge($area, array(rrd_characterization_item(2, 'COMMENT', array('text_format' => 'Host |host_description|'))));
     $nul_db = rrd_characterization_graph_db(rrd_characterization_graph(), $nul_items);
     foreach ($nul_db as $index => $row) {
@@ -130,6 +147,13 @@ dataset('rrd graph scenarios', function () {
         'no legend' => array('graph-no-legend', rrd_characterization_graph_scenario($window + array('graph_nolegend' => true))),
         'relative window' => array('graph-relative-window', rrd_characterization_graph_scenario(array('graph_start' => 0, 'graph_end' => 0, 'print_source' => true), array(), array(), $area)),
         'gradient area' => array('graph-gradient', rrd_characterization_graph_scenario($window, array('enable_rrdtool_gradient_support' => 'on'), array(), $area)),
+        // gradient() is reached only from graph generation, whose wrapper turns the refusal into the error answer.
+        'a NUL in a gradient legend' => array('graph-gradient-nul', rrd_characterization_graph_scenario(
+            $window + array('print_source' => true),
+            array('enable_rrdtool_gradient_support' => 'on'),
+            array(),
+            array(rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '3366CC', 'text_format' => "In\0bound")))
+        )),
         'business hours' => array('graph-business-hours', rrd_characterization_graph_scenario(
             array('graph_start' => 1699900000, 'graph_end' => 1700400000),
             array('business_hours_enable' => 'on', 'business_hours_start' => '08:00', 'business_hours_end' => '17:30', 'business_hours_max_days' => '8', 'business_hours_color' => 'ffeeaa80', 'business_hours_hideWeekends' => ''),
@@ -170,6 +194,8 @@ dataset('rrd graph scenarios', function () {
             array('db' => rrd_characterization_if_alias($right_axis_db, "core\0edge"))
         )),
         'quotes in a substituted title' => array('graph-substituted-quotes', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $quoting_db))),
+        'CR and LF in a substituted title and vertical label' => array('graph-substituted-newlines', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $newline_db))),
+        'different quoted values in the title and vertical label' => array('graph-substituted-pair', rrd_characterization_graph_scenario($window, array(), $pair, $area, array('db' => $pair_db))),
         'export to file' => array('graph-export', rrd_characterization_graph_scenario($window + array('export' => true, 'export_filename' => 'rra/graph_7.png', 'graphv' => true), array(), array('image_format_id' => '3'), $area)),
         'missing rrd file' => array('graph-missing-rrd', rrd_characterization_graph_scenario($window + array('print_source' => true), array(), array(), $area, array('files' => array()))),
         'xport' => array('graph-xport', rrd_characterization_graph_scenario(

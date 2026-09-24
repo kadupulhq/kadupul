@@ -8,7 +8,7 @@
                 "-"
             ],
             "stdin": [
-                "info 'rra/router'\"'\"'s traffic_11.rrd'\r\nquit\r\n"
+                "info 'rra/router_traffic_11.rrd'\r\nquit\r\n"
             ]
         },
         {
@@ -16,19 +16,17 @@
                 "-"
             ],
             "stdin": [
-                "graph /dev/null",
+                "graph -",
                 "--imgformat=PNG",
                 "--start='1700000000'",
                 "--end='1700003600'",
                 "--pango-markup ",
-                "--title='Router&apos;s O'\"'\"'Brien \"core\" 50%: a b'",
-                "--vertical-label='bits'",
+                "--title='Link coreedgeleftright'",
+                "--vertical-label='coreedgeleftright bps'",
                 "--slope-mode",
                 "--base=1000",
                 "--height=200",
                 "--width=700",
-                "--right-axis '1:0'",
-                "--right-axis-label 'O'\"'\"'Brien \"core\" 50%: a b out'",
                 "--tabwidth '40'",
                 "--rigid",
                 "--alt-autoscale",
@@ -45,18 +43,13 @@
                 "--color ARROW#2C4D43",
                 "--color FRAME#2C4D43",
                 "--border 1",
-                "--font TITLE:10:'fonts/My Font'\"'\"'s.ttf'",
-                "--font AXIS:8:'DejaVu Sans'",
-                "--font LEGEND:8:",
-                "--font UNIT:7:",
-                "--font WATERMARK:8:",
-                "DEF:a='rra/router'\"'\"'s traffic_11.rrd':'traffic_in':AVERAGE",
-                "DEF:b='rra/router'\"'\"'s traffic_11.rrd':'traffic_out':AVERAGE",
-                "AREA:a#00CF00FF:'In&apos;s &quot;peak&quot; 50%\\: a b' ",
-                "GPRINT:a:LAST:'Now\\:%8.2lf %s it'\"'\"'s \"q\"' ",
-                "LINE1:b#002A97FF:''",
-                "GPRINT:b:LAST:'Out&apos;s\\:%6.1lf%% '\"'\"'x'\"'\"'' ",
-                "COMMENT:'Don&apos;t &quot;stop&quot; 100%\\: now\\n' \r\nquit\r\n"
+                "--font TITLE:11:'Arial'",
+                "--font AXIS:8:'Arial'",
+                "--font LEGEND:8:'Courier'",
+                "--font UNIT:8:'Arial'",
+                "--font WATERMARK:6:'Arial'",
+                "DEF:a='rra/router_traffic_11.rrd':'traffic_in':AVERAGE",
+                "AREA:a#3366CC99:'Inbound\\: 50%' \r\nquit\r\n"
             ]
         }
     ],
@@ -65,8 +58,7 @@
         0,
         {
             "graph_start": 1700000000,
-            "graph_end": 1700003600,
-            "output_filename": "/dev/null"
+            "graph_end": 1700003600
         },
         false,
         [],

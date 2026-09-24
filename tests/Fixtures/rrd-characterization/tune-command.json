@@ -128,5 +128,33 @@
             false,
             1
         ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            [
+                "info",
+                "rra/router\ntraffic_21.rrd"
+            ],
+            false,
+            1
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            [
+                "info",
+                "rra/router\rtraffic_21.rrd"
+            ],
+            false,
+            1
+        ]
     }
 ]

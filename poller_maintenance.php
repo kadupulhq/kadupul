@@ -678,7 +678,7 @@ function remove_files($file_array, &$retained = 0)
             } else {
                 switch ($file['action']) {
                     case '1':
-                        if (rrdtool_execute('unlink ' . $file['name'], false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt = 'MAINT')) {
+                        if (rrdtool_execute(array('unlink', $file['name']), false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt = 'MAINT')) {
                             maint_debug('Deleted: ' . $file['name']);
                         } else {
                             cacti_log("WARNING RRDfile Maintenance is unable to remove {$file['name']} from the RRDproxy!", true, 'MAINT');
@@ -689,7 +689,7 @@ function remove_files($file_array, &$retained = 0)
 
                         break;
                     case '3':
-                        if (rrdtool_execute('archive ' . $file['name'], false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt = 'MAINT')) {
+                        if (rrdtool_execute(array('archive', $file['name']), false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt = 'MAINT')) {
                             maint_debug("Moved: {file['name']} to: RRDproxy Archive");
                         } else {
                             cacti_log("WARNING RRDfile Maintenance is unable to move {$file['name']} to the RRDproxy Archive!", true, 'MAINT');
