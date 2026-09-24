@@ -33,7 +33,8 @@ LOGIN_TARGETS = ('', 'index.php', 'auth_login.php')
 # (HTTP 200) for anonymous callers and the Permission Denied page (HTTP 200)
 # for accounts without the realm, retitled Installation In Progress for realm
 # 26. graph_json.php and graph_image.php answer anonymous callers in JSON and
-# text. Symfony answers 401 or 403.
+# text. Symfony answers 401 or 403. A 404 or 405 is not a refusal: a route
+# whose check was removed would answer the same for a missing row or method.
 REFUSALS = [
     ('login-form', lambda r: 'login_username' in r['body']),
     ('permission-denied', lambda r: 'You are not permitted to access this section' in r['body']),
@@ -44,7 +45,11 @@ REFUSALS = [
     # target could be a success page.
     ('redirect', lambda r: r['status'] in (301, 302, 303) and not r['admin_layout']
         and urllib.parse.urlsplit(r['location']).path.rsplit('/', 1)[-1] in LOGIN_TARGETS),
-    ('status', lambda r: r['status'] in (401, 403, 404, 405) and not r['admin_layout']),
+    ('status', lambda r: r['status'] in (401, 403) and not r['admin_layout']),
+    # A legacy page may refuse the method before its auth include, as
+    # install/step_json.php does for GET; the classifier admits only a bare
+    # refusal there, and the POST to the same page must still meet the gate.
+    ('method', lambda r: r['status'] == 405 and not r['symfony'] and not r['admin_layout']),
 ]
 
 # Paths whose operation segment names a mutation get GET only, even though an
@@ -102,6 +107,7 @@ class Client:
         if token:
             self.token = token[1]
         return {'status': response.status, 'location': response.headers.get('Location') or '', 'body': body,
+                'symfony': path.startswith(('app.php', 'public/index.php')),
                 'admin_layout': bool(re.search(r"(?:id=['\"]main_logo|class=['\"]cactiPageHead)", body))}
 
     def login(self, username, password):
@@ -160,10 +166,15 @@ def refusal(response):
     return next((name for name, test in REFUSALS if test(response)), None)
 
 
-def sample(entry, detail):
-    """Concrete URL for a route template; numeric ids use 1."""
+def sample(entry, detail, ids):
+    """Concrete URL for a route template; {id} names the fixture row of its kind."""
     requirements = dict(re.findall(r'(\w+)=([\w|]+)', detail.split('requirements=', 1)[1].split(';')[0])) if 'requirements=' in detail else {}
-    return re.sub(r'\{(\w+)\}', lambda m: requirements[m[1]].split('|')[0] if m[1] in requirements else '1', entry)
+
+    def value(m):
+        if m[1] == 'id':
+            return str(ids[entry.split('/')[2]])
+        return requirements[m[1]].split('|')[0]
+    return re.sub(r'\{(\w+)\}', value, entry)
 
 
 def entries():
@@ -184,7 +195,7 @@ def main():
     def expect(label, response):
         verdict = refusal(response)
         contract = verdict or 'NOT REFUSED'
-        if verdict in ('status', 'redirect'):
+        if verdict in ('status', 'method', 'redirect'):
             contract += ':%d' % response['status']
         if verdict == 'redirect':
             contract += ' to ' + urllib.parse.urlsplit(response['location']).path.rsplit('/', 1)[-1]
@@ -214,6 +225,11 @@ def main():
         # the missing-page redirect.
         rig.sql("INSERT INTO external_links (id, sortorder, enabled, contentfile, title, style) VALUES (1, 1, 'on', 'basic-example.html', 'Sweep', 'CONSOLE');")
         guest = rig.sql("SELECT value FROM settings WHERE name = 'guest_user'").strip()
+        # Real rows for the {id} routes, so a refusal cannot be a missing row.
+        ids = {
+            'devices': int(rig.sql("INSERT INTO host (description, hostname, poller_id, disabled) VALUES ('entry-sweep', 'sweep.invalid', 1, ''); SELECT LAST_INSERT_ID()").strip()),
+            'sites': int(rig.sql("INSERT INTO sites (name, notes) VALUES ('entry-sweep', ''); SELECT LAST_INSERT_ID()").strip()),
+        }
         # guest-or-* pages admit anonymous callers once a guest user is set, so
         # the main pass means nothing unless none is.
         if guest not in ('', '0'):
@@ -239,12 +255,17 @@ def main():
             ('console index.php', console.request('index.php'), lambda r: r['status'] == 200 and refusal(r) is None),
             ('console app.php/session', console.request('app.php/session'), lambda r: r['status'] == 200),
         ]
+        rows = entries()
+        # The same URLs the sweep requests must reach the row for an admin.
+        for entry, gate, detail in rows:
+            if entry.startswith('app.php/') and '{id}' in entry:
+                url = sample(entry, detail, ids)
+                controls.append(('admin ' + url, admin.request(url), lambda r: r['status'] == 200))
         for label, response, test in controls:
             if not test(response):
                 failures.append('control %s: expected admission, got HTTP %d' % (label, response['status']))
 
         counted = 0
-        rows = entries()
         stage_denied_paths(rig, rows)
         css_before = theme_css_digest(rig)
 
@@ -274,7 +295,7 @@ def main():
             protected = gate.startswith('realm:') or gate == 'authenticated' or (gate.startswith('symfony:') and 'ConsoleAccess' in detail)
             url = entry + ('?id=1' if entry == 'link.php' else '')
             if entry.startswith('app.php/'):
-                url = sample(entry, detail)
+                url = sample(entry, detail, ids)
             post = not gate.startswith('symfony:') or ('POST' in detail.split(';')[0] and not MUTATING_SEGMENTS.search(entry))
 
             if protected:
@@ -357,7 +378,7 @@ def main():
             if not gated:
                 continue
             counted += 1
-            url = sample(entry, detail) if entry.startswith('app.php/') else entry + ('?id=1' if entry == 'link.php' else '')
+            url = sample(entry, detail, ids) if entry.startswith('app.php/') else entry + ('?id=1' if entry == 'link.php' else '')
             # A fresh client each time, so a guest session from one page
             # cannot carry into the next.
             response = Client(base).request(url)
