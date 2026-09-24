@@ -27,4 +27,11 @@ interface ConsoleOperator
     public function actor(): ?Actor;
 
     public function canAdministerInstallation(Actor $actor): bool;
+
+    /**
+     * Realm 26, Installation/Upgrades. Core schema changes on the web run only
+     * in the install wizard (lib/installer.php, install/upgrades/), which that
+     * realm guards, so command-line schema changes need it too.
+     */
+    public function canUpgradeInstallation(Actor $actor): bool;
 }

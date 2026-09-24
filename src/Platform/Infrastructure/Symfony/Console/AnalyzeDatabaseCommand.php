@@ -10,7 +10,6 @@ namespace Kadupul\Platform\Infrastructure\Symfony\Console;
 use Kadupul\Platform\Application\Command\AnalyzeDatabase;
 use Kadupul\Platform\Application\Command\InstallationAccessDenied;
 use Kadupul\Platform\Application\ReadModel\AnalysisReport;
-use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
 use Psr\Clock\ClockInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -34,52 +33,23 @@ final readonly class AnalyzeDatabaseCommand
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
         try {
-            // Only a cli/ shim asks for version or help this way, and it has no
-            // way to pass --json, so these are legacy lines only.
             if ($this->presentation->legacy !== LegacyRequest::Run) {
-                $lines = [$this->versionLine()];
-                if ($this->presentation->legacy === LegacyRequest::Help) {
-                    $lines = [...$lines, ...(new AnalyzeDatabaseLegacyArguments())->help()];
-                }
-
-                return $this->renderer->render(new CommandResult([], $lines), OutputMode::Legacy, $output);
+                return $this->renderer->legacyRequest($this->presentation->legacy, $this->version->line('Kadupul Analyze Database Utility', $this->clock->now()), new AnalyzeDatabaseLegacyArguments(), $output);
             }
             // The use case also refuses '', but only as a denial; an empty --as=
             // is a usage error and is reported as one.
             if ($input->as === '') {
-                return $this->fail($io, $output, $mode, 'The --as option needs an operator name.', new CommandResult(['status' => 'invalid', 'error' => 'The --as option needs an operator name'], ['ERROR: Invalid Parameter --as='], Command::INVALID));
+                return $this->renderer->emptyOperator($io, $output, $mode);
             }
             $report = ($this->analyze)($input->local, $input->as);
         } catch (InstallationAccessDenied) {
-            return $this->fail($io, $output, $mode, 'Unknown or unauthorized operator.', new CommandResult(['status' => 'denied'], ['ERROR: Unknown or unauthorized operator'], Command::FAILURE));
-        } catch (MainDatabaseNotConfigured) {
-            return $this->databaseFailure($io, $output, $mode, 'Main database is not configured');
-        } catch (\Throwable) {
-            // Exception text can carry SQL or connection details, so it is never shown.
-            return $this->databaseFailure($io, $output, $mode, 'Database analysis failed');
+            return $this->renderer->denied($io, $output, $mode);
+        } catch (\Throwable $error) {
+            // failed() names only MainDatabaseNotConfigured, by type; other text stays hidden.
+            return $this->renderer->failed($io, $output, $mode, $error, 'Database analysis failed');
         }
 
         return $this->report($io, $output, $mode, $report);
-    }
-
-    private function versionLine(): string
-    {
-        return 'Kadupul Analyze Database Utility, Version ' . $this->version->text() . ', Copyright (C) 2004-' . $this->clock->now()->format('Y') . ' The Cacti Group';
-    }
-
-    private function databaseFailure(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $message): int
-    {
-        return $this->fail($io, $output, $mode, $message . '.', new CommandResult(['status' => 'failed', 'error' => $message], ['ERROR: ' . $message], Command::FAILURE));
-    }
-
-    private function fail(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $human, CommandResult $result): int
-    {
-        if ($mode !== OutputMode::Human) {
-            return $this->renderer->render($result, $mode, $output);
-        }
-        $io->getErrorStyle()->error($human);
-
-        return $result->exit;
     }
 
     private function report(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, AnalysisReport $report): int

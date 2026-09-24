@@ -84,15 +84,49 @@ final class CliConsoleAccess implements ConsoleOperator
         return $this->hasRealm($actor->id, 15);
     }
 
+    #[\Override]
+    public function canUpgradeInstallation(Actor $actor): bool
+    {
+        if ($this->hasRealm($actor->id, 26)) {
+            return true;
+        }
+        // include/auth.php:191-240 covers installations upgraded from before
+        // realm 26 existed: when no user and no enabled group with members holds
+        // it, every user with a direct realm 15 row may install. The web path
+        // makes that grant permanent with an INSERT; this only allows the run
+        // and writes nothing. Removing realm 26 from everyone therefore reopens
+        // schema changes to every direct realm 15 holder, as it does on the web.
+        return !$this->anyoneHoldsUpgradeRealm() && $this->hasDirectRealm($actor->id, 15);
+    }
+
+    private function hasDirectRealm(int $id, int $realm): bool
+    {
+        return $id > 0 && $this->database()->fetchOne('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?', [$id, $realm]) !== false;
+    }
+
+    /** auth.php's holder count: any direct row, even for a missing or disabled user, or an enabled group with members. */
+    private function anyoneHoldsUpgradeRealm(): bool
+    {
+        $db = $this->database();
+        if ($db->fetchOne('SELECT realm_id FROM user_auth_realm WHERE realm_id = 26 LIMIT 1') !== false) {
+            return true;
+        }
+
+        return $db->fetchOne("SELECT r.realm_id FROM user_auth_group_realm r
+            INNER JOIN user_auth_group_members m ON m.group_id = r.group_id
+            INNER JOIN user_auth_group g ON g.id = r.group_id
+            WHERE g.enabled = 'on' AND r.realm_id = 26 LIMIT 1") !== false;
+    }
+
     private function hasRealm(int $id, int $realm): bool
     {
         if ($id <= 0) {
             return false;
         }
-        $db = $this->database();
-        if ($db->fetchOne('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?', [$id, $realm]) !== false) {
+        if ($this->hasDirectRealm($id, $realm)) {
             return true;
         }
+        $db = $this->database();
 
         return $db->fetchOne("SELECT r.realm_id FROM user_auth_group_realm r
             INNER JOIN user_auth_group_members m ON m.group_id = r.group_id

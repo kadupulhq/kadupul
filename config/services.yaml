@@ -37,6 +37,7 @@ services:
     Kadupul\Platform\Application\Port\Clock:
         alias: Kadupul\Platform\Infrastructure\Symfony\SystemClock
     Kadupul\Platform\Application\Command\AnalyzeDatabase: ~
+    Kadupul\Platform\Application\Command\MaintenanceTarget: ~
 
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'

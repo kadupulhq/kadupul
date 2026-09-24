@@ -13,7 +13,11 @@ namespace Kadupul\Platform\Infrastructure\Symfony\Console;
  */
 abstract class LegacyArguments
 {
-    /** @return array<string, array{0: ?string, 1: bool}> old flag => [new option or null for a special mode, takes a value] */
+    /**
+     * @return array<string, array{0: ?string, 1: bool, 2?: string}> old flag =>
+     *     [new option or null for a special mode, takes a value, optional PCRE the value must match].
+     *     The pattern is checked only for a flag that takes a value.
+     */
     abstract protected function flags(): array;
 
     /** @return list<string> */
@@ -46,6 +50,11 @@ abstract class LegacyArguments
                 return [[], $this->special($flag)];
             }
             if ($takesValue && ($value === null || $value === '')) {
+                throw new InvalidLegacyArgument($argument);
+            }
+            // A value the command would reject anyway is refused here, before the
+            // kernel boots, so the error names the flag as the operator typed it.
+            if ($takesValue && isset($flags[$flag][2]) && preg_match($flags[$flag][2], (string) $value) !== 1) {
                 throw new InvalidLegacyArgument($argument);
             }
             $input['--' . $option] = $takesValue ? $value : true;

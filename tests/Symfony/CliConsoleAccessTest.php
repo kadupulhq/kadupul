@@ -20,7 +20,12 @@ final class CliConsoleAccessTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->db = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        $this->db = $this->seeded();
+    }
+
+    private function seeded(): Connection
+    {
+        $db = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
         // NOCASE stands in for MySQL's case-insensitive username collation.
         foreach ([
             "CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)",
@@ -41,8 +46,10 @@ final class CliConsoleAccessTest extends TestCase
             "INSERT INTO user_auth_group_members VALUES (9, 2)",
             "INSERT INTO user_auth_group_realm VALUES (9, 15), (9, 8)",
         ] as $statement) {
-            $this->db->executeStatement($statement);
+            $db->executeStatement($statement);
         }
+
+        return $db;
     }
 
     private function access(?string $as): CliConsoleAccess
@@ -71,6 +78,117 @@ final class CliConsoleAccessTest extends TestCase
         $this->db->executeStatement('DELETE FROM user_auth_group_realm WHERE group_id = 9 AND realm_id = 15');
         self::assertSame(2, $access->actor()?->id);
         self::assertFalse($access->canAdministerInstallation($actor));
+    }
+
+    public function testUpgradeRealmComesDirectlyOrFromAnEnabledGroupOnly(): void
+    {
+        $this->db->executeStatement("INSERT INTO settings VALUES ('admin_user', '1')");
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (1, 26)');
+        $admin = $this->access(null);
+        self::assertTrue($admin->canUpgradeInstallation($admin->actor() ?? self::fail('admin resolves')));
+        $ops = $this->access('ops');
+        $actor = $ops->actor() ?? self::fail('ops resolves');
+        // Group 9 grants realms 8 and 15: enough to analyze, not to change the schema.
+        self::assertTrue($ops->canAdministerInstallation($actor));
+        self::assertFalse($ops->canUpgradeInstallation($actor));
+        $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (9, 26)');
+        self::assertTrue($ops->canUpgradeInstallation($actor));
+        $this->db->executeStatement("UPDATE user_auth_group SET enabled = '' WHERE id = 9");
+        self::assertFalse($ops->canUpgradeInstallation($actor));
+    }
+
+    /** Admin (direct realm 15) and ops (realm 15 through group 9 only) under the realm 26 fallback. */
+    private function upgradeGrants(): array
+    {
+        $admin = $this->access('admin');
+        $ops = $this->access('ops');
+
+        return [
+            $admin->canUpgradeInstallation($admin->actor() ?? self::fail('admin resolves')),
+            $ops->canUpgradeInstallation($ops->actor() ?? self::fail('ops resolves')),
+        ];
+    }
+
+    public function testWithNoRealm26HolderADirectRealm15HolderMayUpgrade(): void
+    {
+        self::assertSame([true, false], $this->upgradeGrants());
+    }
+
+    public function testTheFallbackGrantWritesNothing(): void
+    {
+        $count = static fn(Connection $db): mixed => $db->fetchOne('SELECT COUNT(*) FROM user_auth_realm');
+        $before = $count($this->db);
+        self::assertSame([true, false], $this->upgradeGrants());
+        self::assertSame($before, $count($this->db));
+    }
+
+    /** @return iterable<string, array{string, array{bool, bool}}> */
+    public static function realm26Holders(): iterable
+    {
+        yield 'direct row for a disabled user' => ['INSERT INTO user_auth_realm VALUES (4, 26)', [false, false]];
+        yield 'direct row for a missing user' => ['INSERT INTO user_auth_realm VALUES (99, 26)', [false, false]];
+        yield 'enabled group with members' => ['INSERT INTO user_auth_group_realm VALUES (9, 26)', [false, true]];
+    }
+
+    /** @param array{bool, bool} $expected */
+    #[DataProvider('realm26Holders')]
+    public function testAnyRealm26HolderEndsTheFallback(string $grant, array $expected): void
+    {
+        $this->db->executeStatement($grant);
+        self::assertSame($expected, $this->upgradeGrants());
+    }
+
+    public function testADisabledGroupDoesNotHoldRealm26(): void
+    {
+        // A group of its own, so disabling it leaves ops's realm 8 from group 9.
+        $this->db->executeStatement("INSERT INTO user_auth_group VALUES (13, '')");
+        $this->db->executeStatement('INSERT INTO user_auth_group_members VALUES (13, 1), (13, 2)');
+        $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (13, 26)');
+        self::assertSame([true, false], $this->upgradeGrants());
+    }
+
+    public function testAGroupWithoutMembersDoesNotHoldRealm26(): void
+    {
+        $this->db->executeStatement("INSERT INTO user_auth_group VALUES (12, 'on')");
+        $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (12, 26)');
+        self::assertSame([true, false], $this->upgradeGrants());
+    }
+
+    public function testTheFallbackIsDecidedOnTheSelectedDatabase(): void
+    {
+        // Only the local copy has a realm 26 holder.
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (4, 26)');
+        $access = new CliConsoleAccess($this->db, $this->seeded());
+        $access->select('admin', OperatorDatabase::Main);
+        self::assertTrue($access->canUpgradeInstallation($access->actor() ?? self::fail('admin resolves on main')));
+        $access->select('admin', OperatorDatabase::Local);
+        self::assertFalse($access->canUpgradeInstallation($access->actor() ?? self::fail('admin resolves locally')));
+    }
+
+    public function testTheFallbackKeepsTheAccountChecks(): void
+    {
+        // Both hold a direct realm 15, but pending must change its password and
+        // noconsole lacks realm 8, so neither resolves to an actor to check.
+        self::assertNull($this->access('pending')->actor());
+        self::assertNull($this->access('noconsole')->actor());
+    }
+
+    public function testRealm15CheckIgnoresTheRealm26Fallback(): void
+    {
+        $grants = function (): array {
+            $admin = $this->access('admin');
+            $ops = $this->access('ops');
+
+            return [
+                $admin->canAdministerInstallation($admin->actor() ?? self::fail('admin resolves')),
+                $ops->canAdministerInstallation($ops->actor() ?? self::fail('ops resolves')),
+            ];
+        };
+        self::assertSame([true, true], $grants());
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (99, 26)');
+        self::assertSame([true, true], $grants());
+        $this->db->executeStatement('DELETE FROM user_auth_group_realm WHERE group_id = 9 AND realm_id = 15');
+        self::assertSame([true, false], $grants());
     }
 
     public function testAbsentAdminUserRowFallsBackToTheDeclaredDefault(): void

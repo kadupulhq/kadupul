@@ -7,6 +7,7 @@
 
 namespace Kadupul\Tests;
 
+use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
 use Kadupul\Platform\Infrastructure\Symfony\Console\CliPresentation;
 use Kadupul\Platform\Infrastructure\Symfony\Console\CommandResult;
 use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
@@ -16,7 +17,9 @@ use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 use Kadupul\Platform\Infrastructure\Symfony\Console\OutputMode;
 use Kadupul\Platform\Infrastructure\Symfony\Console\ResultRenderer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class CliFoundationTest extends TestCase
 {
@@ -26,7 +29,8 @@ final class CliFoundationTest extends TestCase
             protected function flags(): array
             {
                 return ['--local' => ['local', false], '-d' => ['debug', false], '--debug' => ['debug', false],
-                    '--name' => ['name', true], '--version' => [null, false], '-v' => [null, false], '--help' => [null, false]];
+                    '--name' => ['name', true], '--size' => ['size', true, '/^\d+$/D'],
+                    '--version' => [null, false], '-v' => [null, false], '--help' => [null, false]];
             }
 
             protected function special(string $flag): LegacyRequest
@@ -70,6 +74,52 @@ final class CliFoundationTest extends TestCase
     {
         $this->expectException(InvalidLegacyArgument::class);
         $this->map()->translate(['--name']);
+    }
+
+    public function testAValuePatternRejectsAValueOutsideIt(): void
+    {
+        self::assertSame([['--size' => '12'], null], $this->map()->translate(['--size=12']));
+        try {
+            $this->map()->translate(['--size=1e3']);
+            self::fail('Expected rejection');
+        } catch (InvalidLegacyArgument $error) {
+            self::assertSame('--size=1e3', $error->argument);
+        }
+    }
+
+    public function testLegacyOutputCanEndWithoutANewline(): void
+    {
+        $out = new BufferedOutput();
+        self::assertSame(0, (new ResultRenderer())->render(new CommandResult([], ['NOTE: x', 'no newline'], 0, false), OutputMode::Legacy, $out));
+        self::assertSame("NOTE: x\nno newline", $out->fetch());
+    }
+
+    public function testLegacyRequestPrintsTheVersionLineAndHelpAddsTheRest(): void
+    {
+        $renderer = new ResultRenderer();
+        foreach ([[LegacyRequest::Version, "V 1\n"], [LegacyRequest::Help, "V 1\nusage: x.php\n"]] as [$request, $expected]) {
+            $out = new BufferedOutput();
+            self::assertSame(0, $renderer->legacyRequest($request, 'V 1', $this->map(), $out));
+            self::assertSame($expected, $out->fetch());
+        }
+    }
+
+    public function testFailuresNameOnlyAMissingMainDatabase(): void
+    {
+        $renderer = new ResultRenderer();
+        $out = new BufferedOutput();
+        $io = new SymfonyStyle(new ArrayInput([]), $out);
+        self::assertSame(1, $renderer->failed($io, $out, OutputMode::Json, new MainDatabaseNotConfigured(), 'X failed'));
+        self::assertSame(['status' => 'failed', 'error' => 'Main database is not configured'], json_decode($out->fetch(), true));
+        // The type names the problem, not the text, so a look-alike stays generic.
+        self::assertSame(1, $renderer->failed($io, $out, OutputMode::Json, new \RuntimeException('Main database is not configured.'), 'X failed'));
+        self::assertSame(['status' => 'failed', 'error' => 'X failed'], json_decode($out->fetch(), true));
+        self::assertSame(1, $renderer->failed($io, $out, OutputMode::Legacy, new \RuntimeException("SQLSTATE[28000] 'cacti'@'db'"), 'X failed'));
+        self::assertSame("ERROR: X failed\n", $out->fetch());
+        self::assertSame(2, $renderer->emptyOperator($io, $out, OutputMode::Legacy));
+        self::assertSame("ERROR: Invalid Parameter --as=\n", $out->fetch());
+        self::assertSame(1, $renderer->denied($io, $out, OutputMode::Json));
+        self::assertSame(['status' => 'denied'], json_decode($out->fetch(), true));
     }
 
     public function testRenderModes(): void
