@@ -282,6 +282,9 @@ jobs:
           BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
         run: bash tests/tools/check_php_style.sh "$BASE"
 
+      - name: Check the hook installer
+        run: bash tests/tools/test_githooks_install.sh
+
   javascript:
     name: JavaScript
     runs-on: ubuntu-latest

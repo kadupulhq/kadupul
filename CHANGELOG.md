@@ -16,6 +16,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Clean each configured log once during rotation; a call after the loop re-scanned whichever log the loop left behind and counted it twice.
 
+- Keep `.githooks/install` from replacing a `core.hooksPath` that is set to an empty value. Git reads an empty value as "run no hooks", so the installer treated a deliberate choice as though nothing were configured and silently turned hooks back on.
+
 - Describe the selectors `cli/remove_graphs.php` actually accepts. Its help called `--graph-template-id` mandatory when any one of the four selectors is enough, and did not mention that an empty selection is refused without `--all` or that a bare `--list` lists every Graph.
 
 - Pass `$rdatabase_retries` when a remote poller connects to the main server. Every other argument came from its `$rdatabase_` counterpart, so configuring the remote retry count alone had no effect and the local value governed the retry policy for a remote host.
