@@ -47,7 +47,7 @@
                 "--color FRAME#141414",
                 "--border 0",
                 "--font TITLE:12:'DejaVu Sans Bold'",
-                "--font AXIS:7:'Mono '\\''x'\\'''",
+                "--font AXIS:7:'Mono '\"'\"'x'\"'\"''",
                 "--font LEGEND:8:",
                 "--font UNIT:9:'Sans'",
                 "--font WATERMARK:5:'Sans'",

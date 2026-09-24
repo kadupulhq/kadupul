@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Quote the graph arguments Kadupul writes to RRDtool, such as data source paths in DEF clauses, legend, GPRINT and COMMENT text, axis options and font names, the way RRDtool reads them rather than the way a shell does. A single quote in one of these values made RRDtool reject the whole graph, and a pair of them left stray backslashes in the text. The quoting is now the same on Windows, where values used to be wrapped in double quotes with backslash escapes that RRDtool does not honour. `|host_*|` and `|query_*|` values in axis labels and the other graph options are now substituted before quoting, so a quote in them stays inside the argument. A value containing a NUL byte now produces the graph error image, and RRD tuning refuses one, instead of failing with a PHP error.
+
 - Quote graph titles and vertical labels for RRDtool after substituting `|host_*|` and `|query_*|` values, not before. A quote in a substituted value, such as a device description, ended the argument early, so the graph failed to render or showed a mangled title.
 
 - Match the whole filename against the rotation format before purging a log. Cleanup accepted any name containing the log basename plus an eight digit run, so a neighbouring file with an old date in its name was deleted.
