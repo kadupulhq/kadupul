@@ -548,6 +548,7 @@ function rrdtool_command_path($path)
 /**
  * The DS maximum as rrdtool_function_create() and boost_rrdtool_function_create()
  * write it, or false, logged under $logopt, when the RRD must not be created.
+ * A minimum and maximum of zero become U.
  *
  * A substituted maximum is device data. A line break would start another
  * RRDtool command, and is_numeric() accepts one around a number, so it is
@@ -555,8 +556,13 @@ function rrdtool_command_path($path)
  * argument, where RRDtool rejects it: the local pipe quotes it, and the proxy,
  * which would keep quotes as text, takes it only as one bare token.
  */
-function rrdtool_create_maximum($maximum, $local_data_id, $logopt)
+function rrdtool_create_maximum($minimum, $maximum, $local_data_id, $logopt)
 {
+    /* min==max==0 won't work with rrdtool */
+    if ($minimum == 0 && $maximum == 0) {
+        $maximum = 'U';
+    }
+
     if (strpbrk((string) $maximum, "\r\n\0") !== false) {
         cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. The data source maximum contains a line break or NUL.', false, $logopt);
         return false;
@@ -574,6 +580,18 @@ function rrdtool_create_maximum($maximum, $local_data_id, $logopt)
     return $argument;
 }
 
+/** The RRA arguments of a create command, one per RRA row. */
+function rrdtool_create_rras($rras, $consolidation_functions)
+{
+    $create_rra = '';
+    /* loop through each available RRA for this DS */
+    foreach ($rras as $rra) {
+        $create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
+    }
+
+    return $create_rra;
+}
+
 /** As rrdtool_command_path(), logging under $logopt when the RRD cannot be created. */
 function rrdtool_create_path($path, $local_data_id, $logopt)
 {
@@ -589,10 +607,20 @@ function rrdtool_create_path($path, $local_data_id, $logopt)
  * Check for structured path configuration and, if in place, verify that the
  * RRD's directory exists and create it if not. $use_proxy is the caller's own
  * storage_location test; $logopt tags the proxy commands.
+ *
+ * Returns the owner and group of the RRA root, which the caller also gives the
+ * new RRD; both are null on Windows, where they are not looked up.
  */
-function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_pipe, $owner_id, $group_id, $logopt)
+function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_pipe, $logopt)
 {
     global $config;
+
+    $owner_id = null;
+    $group_id = null;
+    if ($config['cacti_server_os'] != 'win32') {
+        $owner_id = fileowner($config['rra_path']);
+        $group_id = filegroup($config['rra_path']);
+    }
 
     if (read_config_option('extended_paths') == 'on') {
         if ($use_proxy) {
@@ -641,6 +669,8 @@ function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_
             }
         }
     }
+
+    return array($owner_id, $group_id);
 }
 
 /**
@@ -1263,12 +1293,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
                 }
             }
 
-            /* min==max==0 won't work with rrdtool */
-            if ($data_source['rrd_minimum'] == 0 && $data_source['rrd_maximum'] == 0) {
-                $data_source['rrd_maximum'] = 'U';
-            }
-
-            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_maximum'], $local_data_id, 'POLLER');
+            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $local_data_id, 'POLLER');
             if ($data_source['rrd_maximum'] === false) {
                 return false;
             }
@@ -1277,19 +1302,9 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
         }
     }
 
-    $create_rra = '';
-    /* loop through each available RRA for this DS */
-    foreach ($rras as $rra) {
-        $create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
-    }
+    $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
 
-    if ($config['cacti_server_os'] != 'win32') {
-        $owner_id = fileowner($config['rra_path']);
-        $group_id = filegroup($config['rra_path']);
-    }
-
-    // The owner and group are only looked up off Windows.
-    rrdtool_create_structured_path($data_source_path, read_config_option('storage_location'), $rrdtool_pipe, $owner_id ?? null, $group_id ?? null, 'POLLER');
+    list($owner_id, $group_id) = rrdtool_create_structured_path($data_source_path, read_config_option('storage_location'), $rrdtool_pipe, 'POLLER');
 
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";

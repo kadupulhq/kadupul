@@ -1488,12 +1488,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
                 $data_source['rrd_maximum'] = (int) $data_source['rrd_minimum'] + 1;
             }
 
-            /* min==max==0 won't work with rrdtool */
-            if ($data_source['rrd_minimum'] == 0 && $data_source['rrd_maximum'] == 0) {
-                $data_source['rrd_maximum'] = 'U';
-            }
-
-            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_maximum'], $local_data_id, 'BOOST');
+            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $local_data_id, 'BOOST');
             if ($data_source['rrd_maximum'] === false) {
                 return false;
             }
@@ -1502,19 +1497,9 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
         }
     }
 
-    $create_rra = '';
-    /* loop through each available RRA for this DS */
-    foreach ($rras as $rra) {
-        $create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
-    }
+    $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
 
-    if ($config['cacti_server_os'] != 'win32') {
-        $owner_id = fileowner($config['rra_path']);
-        $group_id = filegroup($config['rra_path']);
-    }
-
-    // The owner and group are only looked up off Windows.
-    rrdtool_create_structured_path($data_source_path, read_config_option('storage_location') > 0, $rrdtool_pipe, $owner_id ?? null, $group_id ?? null, 'BOOST');
+    list($owner_id, $group_id) = rrdtool_create_structured_path($data_source_path, read_config_option('storage_location') > 0, $rrdtool_pipe, 'BOOST');
 
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
