@@ -226,6 +226,7 @@ test('a NUL in a Boost RRD path writes nothing to RRDtool', function () {
 });
 
 test('pure helpers match their golden', function () {
+    $root = dirname(__DIR__, 4);
     $format = array('graph_start' => 1700000000, 'graph_end' => 1700086400);
     $window = array('graph_opts' => '--start=x', 'graph_defs' => 'DEF:a=x:y:AVERAGE' . " \\\n", 'txt_graph_items' => 'AREA:a', 'graph_id' => 7, 'start' => 1700179200, 'end' => 1700438400);
     $hours = array('business_hours_enable' => 'on', 'business_hours_start' => '09:15', 'business_hours_end' => '17:00', 'business_hours_max_days' => '7', 'business_hours_color' => '00ff0040', 'business_hours_hideWeekends' => '');
@@ -251,7 +252,9 @@ test('pure helpers match their golden', function () {
         array('fn' => 'add_business_hours', 'args' => array(array('start' => 1700000000, 'end' => 1701000000) + $window), 'options' => array('business_hours_max_days' => '7')),
         array('fn' => 'add_business_hours', 'args' => array(array('start' => 1700020000, 'end' => 1700030000) + $window), 'options' => array('business_hours_end' => '06:00')),
         array('fn' => 'rrdtool_parse_error', 'args' => array('plain rrdtool failure')),
+        // A file outside the install is shown as a custom folder; one inside it relative to rra/.
         array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening 'rra/missing.rrd': No such file or directory")),
+        array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening '" . $root . "/rra/missing.rrd': No such file or directory")),
         array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening 'rra/unwritable/x.rrd': Permission denied")),
         array('fn' => 'rrdtool_parse_error', 'args' => array("ERROR: opening '/nonexistent/dir/x.rrd': No such file or directory")),
         array('fn' => 'rrdtool_function_set_font', 'args' => array('title', '', $themefonts)),
@@ -299,7 +302,11 @@ test('pure helpers match their golden', function () {
         $result = $output['results'][$index];
         // is_resource_writable() probes with a uniqid() file name.
         $diagnostics = preg_replace('/[0-9a-f]{13,}\.tmp/', '<probe>.tmp', $result['diagnostics']);
-        $observed[] = array('fn' => $call['fn'], 'options' => $call['options'] ?? array(), 'returned' => $result['returned'], 'args_after' => $result['args'], 'diagnostics' => $diagnostics);
+        $args_after = $result['args'];
+        array_walk_recursive($args_after, function (&$value) use ($root) {
+            $value = is_string($value) ? str_replace($root, '<ROOT>', $value) : $value;
+        });
+        $observed[] = array('fn' => $call['fn'], 'options' => $call['options'] ?? array(), 'returned' => $result['returned'], 'args_after' => $args_after, 'diagnostics' => $diagnostics);
     }
     rrd_characterization_golden('helpers', $observed);
 });

@@ -4756,7 +4756,7 @@ function rrdtool_parse_error($string)
                 $rra_name = str_replace($config['base_path'], '', $rra_path);
                 $rra_path = "";
             } else {
-                if (stripos($filename, $config['base_path']) >= 0) {
+                if (stripos($filename, $config['base_path']) !== false) {
                     $rra_file = str_replace($config['base_path'] . '/rra/', '', $filename);
                     $rra_name = basename($rra_file);
                     $rra_path = dirname($rra_file);
@@ -4774,7 +4774,8 @@ function rrdtool_parse_error($string)
                 $rra_path = '(' . __('RRA Folder') . ': ' . ((empty($rra_path) || $rra_path == ".") ? __('Root') : $rra_path) . ')';
             }
 
-            $string = $message . ":\n\0x27\n" . $rra_name;
+            // rrdtool_create_error_image() keeps the blank line as a gap before the file name.
+            $string = $message . ":\n\n" . $rra_name;
             if (!empty($rra_path)) {
                 $string .= "\n" . $rra_path;
             }
@@ -4896,6 +4897,7 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
     $texth = ($lines * $font_size + (($lines - 1) * $padding));
     $ypos  = round((200 / 2) + ($texth / 2), 0);
 
+    /* blank lines still take their place, as $texth counts them */
     /* set the font of the image */
     if (isset($font_file) && file_exists($font_file) && is_readable($font_file) && function_exists('imagettftext')) {
         foreach ($strings as $string) {
@@ -4903,8 +4905,8 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
                 if (@imagettftext($image, $font_size, 0, $xpos, $ypos, $text_color, $font_file, $string) === false) {
                     cacti_log('TTF text overlay failed');
                 }
-                $ypos -= ($font_size + $padding);
             }
+            $ypos -= ($font_size + $padding);
         }
     } else {
         foreach ($strings as $string) {
@@ -4912,8 +4914,8 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
                 if (@imagestring($image, $font_size, $xpos, $ypos, $string, $text_color) === false) {
                     cacti_log('Text overlay failed');
                 }
-                $ypos -= ($font_size + $padding);
             }
+            $ypos -= ($font_size + $padding);
         }
     }
 
