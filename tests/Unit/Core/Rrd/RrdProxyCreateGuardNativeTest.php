@@ -12,7 +12,7 @@ function rrd_proxy_create_guard_run($test, string $operation, ?string $response)
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/proxy-create-guard-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
-    file_put_contents($dir . '/global_arrays.php', '<?php');
+    file_put_contents($dir . '/global_arrays.php', '<?php $data_source_types = array(1 => "GAUGE"); $consolidation_functions = array(1 => "AVERAGE");');
     $coverage = $test->getTestResultObject()->getCodeCoverage();
     $bootstrap = '';
     if ($coverage !== null) {
@@ -20,7 +20,9 @@ function rrd_proxy_create_guard_run($test, string $operation, ?string $response)
     }
     $program = '<?php ' . $bootstrap . '$root=' . var_export($root, true) . ';$operation=' . var_export($operation, true)
         . ';$response=' . var_export($response, true) . ';' . <<<'PHP'
-$config=array('rra_path'=>'/fixture','include_path'=>__DIR__);
+// max:<boost|direct>:<alias> creates an RRD whose maximum is the substituted alias.
+$max=str_starts_with($operation,'max:')?explode(':',$operation,3):null;
+$config=array('rra_path'=>'/fixture','include_path'=>__DIR__,'cacti_server_os'=>$max?'win32':'unix');
 require $root.'/include/global_constants.php';
 function cacti_log(...$args){}
 function cacti_sizeof($value){return is_array($value)?count($value):0;}
@@ -29,8 +31,15 @@ function get_data_source_path(...$args){return '/fixture/sample.rrd';}
 function get_rrdtool_version(){return '1.7.2';}
 function cacti_version_compare($a,$b,$op){return version_compare($a,$b,$op);}
 function cacti_escapeshellarg($value){return escapeshellarg($value);}
-function db_fetch_cell_prepared(...$args){throw new RuntimeException('Unknown existence reached create preparation');}
-function db_fetch_assoc_prepared(...$args){throw new RuntimeException('Unknown existence reached create preparation');}
+function db_fetch_cell_prepared($sql,...$args){if($GLOBALS['max']){return str_contains($sql,'data_template_id')?'0':'';}throw new RuntimeException('Unknown existence reached create preparation');}
+function db_fetch_assoc_prepared($sql,...$args){
+    if(!$GLOBALS['max']){throw new RuntimeException('Unknown existence reached create preparation');}
+    if(str_contains($sql,'data_source_profiles_cf')){return array(array('rrd_step'=>'300','x_files_factor'=>'0.5','steps'=>'1','rows'=>'600','consolidation_function_id'=>'1'));}
+    return array(array('id'=>'301','data_source_name'=>'value','rrd_heartbeat'=>'600','rrd_minimum'=>'0','rrd_maximum'=>'|query_ifAlias|','data_source_type_id'=>'1'));
+}
+function db_fetch_row_prepared($sql,...$args){return array('id'=>'1','data_template_id'=>'0','host_id'=>'3','snmp_query_id'=>'1','snmp_index'=>'2');}
+function get_data_source_item_name(...$args){return 'value';}
+function substitute_snmp_query_data(...$args){return $GLOBALS['max'][2];}
 require $root.'/lib/rrd.php';
 require $root.'/lib/boost.php';
 $encryption=false;
@@ -41,7 +50,8 @@ socket_shutdown($sockets[1],1);
 $pipe=array($sockets[0],'fixture-key');$values='1700000060:42';
 if($operation==='boost-update'){$result=boost_rrdtool_function_update(1,'/fixture/sample.rrd','value',$values,$pipe);}
 elseif($operation==='update'||$operation==='update-unsafe'){$path=$operation==='update'?'/fixture/sample.rrd':"/fixture/it's a.rrd";$result=rrdtool_function_update(array($path=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('value'=>'42')))),$pipe);}
-elseif($operation==='paths'){$result=array(rrdtool_command_path('/fixture/sample.rrd'),rrdtool_command_path('/fixture/it s.rrd'),rrdtool_command_path("/fixture/it's.rrd"));}
+elseif($operation==='paths'){$result=array(rrdtool_command_argument('/fixture/sample.rrd'),rrdtool_command_argument('/fixture/it s.rrd'),rrdtool_command_argument("/fixture/it's.rrd"));}
+elseif($max){$result=$max[1]==='boost'?boost_rrdtool_function_create(1,false,$pipe):rrdtool_function_create(1,false,$pipe);}
 elseif($operation==='boost-create'){$result=boost_rrdtool_function_create(1,false,$pipe);}
 else{$result=rrdtool_function_create(1,false,$pipe);}
 $command=socket_read($sockets[1],4096,PHP_BINARY_READ);
@@ -107,3 +117,20 @@ test('proxied updates carry a bare path, and a path the proxy cannot carry is no
     $paths = rrd_proxy_create_guard_run($this, 'paths', null);
     expect($paths[0])->toBe(array('/fixture/sample.rrd', false, false));
 });
+
+test('a proxied create sends a substituted maximum bare, or not at all when the proxy cannot carry it', function ($function) {
+    $missing = "ERROR: opening './sample.rrd': No such file or directory";
+
+    // A number goes as it is, and a single safe token stays bare because the proxy would keep quotes as text.
+    foreach (array('100' => 'DS:value:GAUGE:600:0:100', 'fast' => 'DS:value:GAUGE:600:0:fast') as $alias => $ds) {
+        $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':' . $alias, $missing);
+        expect($result[2])->toStartWith("file_exists ./sample.rrd_EOT_\r\ncreate ./sample.rrd ")
+            ->toContain($ds . ' ')->not->toContain("'");
+    }
+
+    // More than one token is refused before anything but the existence check is sent.
+    foreach (array('10 --daemon x', "it's") as $alias) {
+        $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':' . $alias, $missing);
+        expect($result[0])->toBeFalse()->and($result[2])->toBe("file_exists ./sample.rrd_EOT_\r\n");
+    }
+})->with(array('direct', 'boost'));
