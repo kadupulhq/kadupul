@@ -498,6 +498,27 @@ function rrdtool_pipe_command(array $command, $logopt)
     }
 }
 
+/**
+ * Join an argument array for the RRDtool proxy as bare tokens. rrdproxy splits
+ * on whitespace and resolves path operands with realpath() as sent
+ * (rrdp_resolve_command_paths() in its lib/functions.php at 54aad57), so
+ * quoting breaks its path checks. An argument it cannot carry bare is refused
+ * and nothing is sent.
+ */
+function rrdtool_proxy_command(array $command, $logopt)
+{
+    $verb = array_shift($command);
+    foreach ($command as $argument) {
+        $argument = (string) $argument;
+        if ($argument === '' || preg_match('/[\s\'"\\\\\0]/', $argument)) {
+            cacti_log('ERROR: RRDtool ' . $verb . ' was not sent to the RRDtool proxy. An argument is empty or contains whitespace, a quote, a backslash or NUL.', false, $logopt);
+            return false;
+        }
+    }
+
+    return $verb . ' ' . implode(' ', $command);
+}
+
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG')
 {
     global $config;
@@ -790,7 +811,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     $end_of_sequence = "_EOT_\r\n";
 
     if (is_array($command_line)) {
-        $command_line = rrdtool_pipe_command($command_line, $logopt);
+        $command_line = rrdtool_proxy_command($command_line, $logopt);
         if ($command_line === false) {
             return false;
         }

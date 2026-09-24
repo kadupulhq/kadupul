@@ -60,9 +60,12 @@ nothing the proxy sees: constant-time fingerprint comparison, bounded
 reads during key exchange, no global encryption state and typed failures. An
 authenticated format needs a matching proxy release and a protocol version, and
 is proposed separately. RRDtool proxy splits each command on whitespace and
-resolves path operands and `DEF` paths exactly as sent, so the proxy transport
-sends paths bare and refuses a path it cannot carry. Other arguments keep the
-encoder's quoting.
+resolves path operands and `DEF` paths exactly as sent, so quoting breaks its
+path checks. Array commands already go to the proxy as bare tokens, and an
+argument that is empty or holds whitespace, a quote, a backslash, CR, LF or NUL
+is refused before anything is sent. String commands (create, update and graph
+`DEF` paths) still carry the encoder's quoting; the proxy hardening slice turns
+them into arrays before the proxy client works again.
 
 Titles, vertical labels and legend text are HTML-escaped before they reach
 RRDtool, so the characters `&`, `<` and `>` reach the image as entities. That output is
