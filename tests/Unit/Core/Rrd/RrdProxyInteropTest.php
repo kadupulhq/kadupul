@@ -290,6 +290,38 @@ test('a failed key exchange connects to nothing and sends no command', function 
     'closed mid-key' => array(array(), array('key_reply' => 'close'), 'CACTI2RRDP ERROR: Public RSA Key Exchange - Session closed by Proxy.'),
 ));
 
+test('a key pair that cannot decrypt replies is refused before connecting', function ($private) {
+    if (!function_exists('socket_create')) {
+        $this->markTestSkipped('The sockets extension is required.');
+    }
+    $root = dirname(__DIR__, 4);
+    $client = rrd_proxy_interop_key();
+    $private = $private === 'other' ? rrd_proxy_interop_key()['private'] : $private;
+    // A listener that no connection should reach.
+    $listener = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+    socket_bind($listener, '127.0.0.1', 0);
+    socket_listen($listener);
+    socket_getsockname($listener, $address, $port);
+    $options = array('storage_location' => 1, 'rrdp_server' => '127.0.0.1', 'rrdp_port' => $port, 'rsa_public_key' => $client['public'], 'rsa_private_key' => $private, 'rrdp_fingerprint' => $client['fingerprint']);
+    $program = '$root=' . var_export($root, true) . ';$options=' . var_export($options, true) . ';' . <<<'PHP'
+$config = array('rra_path' => '/fixture');
+require $root . '/include/global_constants.php';
+require $root . '/include/vendor/autoload.php';
+$logged = array();
+function cacti_log($message, ...$args) { $GLOBALS['logged'][] = $message; }
+function read_config_option($key) { return $GLOBALS['options'][$key] ?? ''; }
+require $root . '/lib/rrd.php';
+echo json_encode(array(__rrd_proxy_init('POLLER'), $logged));
+PHP;
+    $result = json_decode(rrd_proxy_interop_php($this, $program, array(), true), true, 512, JSON_THROW_ON_ERROR);
+    socket_set_nonblock($listener);
+    $attempt = @socket_accept($listener);
+    socket_close($listener);
+
+    expect($result)->toBe(array(false, array("CACTI2RRDP ERROR: This server's RSA private key is missing or does not match its public key.")))
+        ->and($attempt)->toBeFalse();
+})->with(array('missing' => array(''), 'from another pair' => array('other'), 'not a key' => array('not a key')));
+
 test('a proxy that hangs up during session setup is not used', function () {
     $client = rrd_proxy_interop_key();
     $proxy = rrd_proxy_interop_key();
