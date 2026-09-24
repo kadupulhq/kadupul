@@ -1058,12 +1058,47 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	/* ok, if that passes lets check to make sure an rra does not already
 	exist, the last thing we want to do is overright data! */
 	if ($show_source != true) {
-		if (read_config_option('storage_location')) {
+		/**
+		 * rrd_init(), rrd_close() and rrdtool_execute() all route on
+		 * force_storage_location_local as well as the setting, so a
+		 * check that consults the setting alone asks the proxy about a
+		 * file this process is about to write locally, and the local
+		 * link refusal below never runs. Route it the same way.
+		 */
+		$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
+			&& read_config_option('storage_location');
+
+		if ($remote_storage) {
 			if (rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
 				return -1;
 			}
 		} elseif (file_exists($data_source_path)) {
 			return -1;
+		} elseif (is_link($data_source_path)) {
+			/**
+			 * file_exists() follows the link and so reports false for a
+			 * dangling one, which let the guard above pass. rrdtool then
+			 * creates the file the link names, and the chown and chgrp below
+			 * follow it too, so a link planted where an RRD is about to be
+			 * created redirected a root-run poller's write and the ownership
+			 * change that follows it.
+			 *
+			 * Local storage only. Under storage_location the file lives on the
+			 * proxy host and rrdtool_build_path_command() allows only
+			 * file_exists, filemtime, is_dir, mkdir, rmdir, unlink and archive,
+			 * so there is no verb to ask the proxy whether a path is a link.
+			 * The ownership change is withheld there regardless, because
+			 * realpath() of a remote directory fails locally and the
+			 * containment test below returns false.
+			 */
+			cacti_log("ERROR: Refusing to create an RRDfile through the symbolic link '$data_source_path'.", false, 'POLLER');
+
+			/**
+			 * false, not -1: callers treat -1 as "the file is already
+			 * there" and carry on to the update, so a refusal that
+			 * returned it would log and then write anyway.
+			 */
+			return false;
 		}
 	}
 
@@ -1255,13 +1290,35 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	} else {
 		$success = rrdtool_execute("create $data_source_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
 
-		if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
+		/**
+		 * Local storage only. Under remote storage rrdtool_execute() sent
+		 * the create to the proxy, so the file this block would inspect is
+		 * a local path that happens to share the configured name, and
+		 * changing its ownership touches a file this run never wrote.
+		 */
+		if (!$remote_storage && $config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
 			if (file_exists($data_source_path)) {
-				if (!chown($data_source_path, $owner_id)) {
-					cacti_log("ERROR: Unable to set ownership for '$data_source_path'", false, 'POLLER');
-				}
-				if (!chgrp($data_source_path, $group_id)) {
-					cacti_log("ERROR: Unable to set group for '$data_source_path'", false, 'POLLER');
+				/**
+				 * lchown/lchgrp act on the final component rather than
+				 * following it, which narrows the window a swapped link
+				 * leaves open. The containment test is what stops ownership
+				 * of a file outside the RRA directory being given away: the
+				 * owner comes from that directory, so applying it elsewhere
+				 * hands an unrelated path to the Cacti account.
+				 */
+				$owned_path = cacti_rrd_owned_path($data_source_path);
+
+				if ($owned_path === false || is_link($owned_path) || !is_file($owned_path)) {
+					cacti_log("WARNING: Ownership not applied to '$data_source_path'; not a regular"
+						. ' file inside the RRA directory', false, 'POLLER');
+				} else {
+					if (!lchown($owned_path, $owner_id)) {
+						cacti_log("ERROR: Unable to set ownership for '$owned_path'", false, 'POLLER');
+					}
+
+					if (!lchgrp($owned_path, $group_id)) {
+						cacti_log("ERROR: Unable to set group for '$owned_path'", false, 'POLLER');
+					}
 				}
 			} else {
 				cacti_log("ERROR: RRD file '$data_source_path' does not exist for ownership assignment", false, 'POLLER');
