@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Read the current group of a newly created structured RRD directory with `filegroup()` rather than `fileowner()`, so a root-run poller no longer skips a needed `chgrp` when the directory UID happens to equal the target GID, nor runs one when the group is already correct.
+
 - End the `--bulk_walk` case in `cli/change_device.php`, which fell through to the version branch so a valid size printed the version banner and exited without applying the change or reading later arguments.
 
 - Map a numeric `--disable` in `cli/change_device.php` the way its help and `cli/add_device.php` do, with 1 disabling polling and 0 enabling it, and refuse a numeric value that is neither instead of reading every nonzero value as enable.
