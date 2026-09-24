@@ -27,7 +27,7 @@
                     "-"
                 ],
                 "stdin": [
-                    "fetch <DIR>/rra/router_traffic_11.rrd AVERAGE -s 1700000000 -e 1700001000 -r 300\r\nquit\r\n"
+                    "fetch '<DIR>/rra/router_traffic_11.rrd' 'AVERAGE' '-s' '1700000000' '-e' '1700001000' '-r' '300'\r\nquit\r\n"
                 ]
             }
         ],
@@ -68,7 +68,7 @@
                     "-"
                 ],
                 "stdin": [
-                    "fetch <DIR>/rra/router_traffic_11.rrd MAX -s 1700000000 -e 1700001000 -r 60\r\nquit\r\n"
+                    "fetch '<DIR>/rra/router_traffic_11.rrd' 'MAX' '-s' '1700000000' '-e' '1700001000' '-r' '60'\r\nquit\r\n"
                 ]
             }
         ],
@@ -110,7 +110,7 @@
                     "-"
                 ],
                 "stdin": [
-                    "fetch rra/other.rrd LAST -s 1700000000 -e 1700001000 -r 300\r\nquit\r\n"
+                    "fetch 'rra/other.rrd' 'LAST' '-s' '1700000000' '-e' '1700001000' '-r' '300'\r\nquit\r\n"
                 ]
             }
         ],

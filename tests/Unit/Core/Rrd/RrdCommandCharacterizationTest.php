@@ -125,6 +125,7 @@ test('pure helpers match their golden', function () {
         array('fn' => 'gradient', 'args' => array('a', '#0000a0', '#f0f0f0', 'Inbound "x"', 4)),
         array('fn' => 'gradient', 'args' => array('cdefb', '336699', 'ffcc00', 'ab', 3, '50%', '80')),
         array('fn' => 'gradient', 'args' => array('b', '#102030', '#405060', false, 2, '10')),
+        array('fn' => 'gradient', 'args' => array('c', '#000000', '#ffffff', "it's", 2)),
         array('fn' => 'colourBrightness', 'args' => array('#1a2b3c', 0.4)),
         array('fn' => 'colourBrightness', 'args' => array('abcdef', -40)),
         array('fn' => 'colourBrightness', 'args' => array('#FFF', 0.5)),

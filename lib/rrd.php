@@ -483,6 +483,21 @@ function rrdtool_execute()
     }
 }
 
+/**
+ * Join an argument array into one command line: the verb as given and every
+ * argument quoted. A command that cannot be written is logged and not sent.
+ */
+function rrdtool_pipe_command(array $command, $logopt)
+{
+    $verb = array_shift($command);
+    try {
+        return $verb . ' ' . implode(' ', array_map('rrdtool_pipe_quote', $command));
+    } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
+        cacti_log('ERROR: RRDtool ' . $verb . ' was not run. ' . $e->getMessage(), false, $logopt);
+        return false;
+    }
+}
+
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG')
 {
     global $config;
@@ -491,11 +506,8 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 
 
     if (is_array($command_line)) {
-        $cmd = array_shift($command_line);
-        try {
-            $command_line = $cmd . ' ' . implode(' ', array_map('rrdtool_pipe_quote', $command_line));
-        } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
-            cacti_log('ERROR: RRDtool ' . $cmd . ' was not run. ' . $e->getMessage(), false, $logopt);
+        $command_line = rrdtool_pipe_command($command_line, $logopt);
+        if ($command_line === false) {
             return false;
         }
     }
@@ -777,6 +789,13 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     $end_of_packet = "_EOP_\r\n";
     $end_of_sequence = "_EOT_\r\n";
 
+    if (is_array($command_line)) {
+        $command_line = rrdtool_pipe_command($command_line, $logopt);
+        if ($command_line === false) {
+            return false;
+        }
+    }
+
     if (!is_numeric($output_flag)) {
         $output_flag = RRDTOOL_OUTPUT_STDOUT;
     }
@@ -947,7 +966,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     exist, the last thing we want to do is overright data! */
     if ($show_source != true) {
         if (read_config_option('storage_location')) {
-            if (rrdtool_execute("file_exists $data_source_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
+            if (rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
                 return -1;
             }
         } elseif (file_exists($data_source_path)) {
@@ -1069,6 +1088,18 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
                 $data_source['rrd_maximum'] = 'U';
             }
 
+            // A substituted maximum is device data. Anything but a number or U
+            // is quoted so it stays inside this DS argument, where RRDtool
+            // rejects it instead of reading it as more arguments.
+            if (!is_numeric($data_source['rrd_maximum']) && $data_source['rrd_maximum'] !== 'U') {
+                try {
+                    $data_source['rrd_maximum'] = rrdtool_pipe_quote($data_source['rrd_maximum']);
+                } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
+                    cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. ' . $e->getMessage(), false, 'POLLER');
+                    return false;
+                }
+            }
+
             $create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
         }
     }
@@ -1090,8 +1121,8 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
      */
     if (read_config_option('extended_paths') == 'on') {
         if (read_config_option('storage_location')) {
-            if (false === rrdtool_execute('is_dir ' . dirname($data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
-                if (false === rrdtool_execute('mkdir ' . dirname($data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
+            if (false === rrdtool_execute(array('is_dir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
+                if (false === rrdtool_execute(array('mkdir', dirname($data_source_path)), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
                     cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
                 }
             }
@@ -1139,7 +1170,14 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        $success = rrdtool_execute("create $data_source_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+        try {
+            $quoted_path = rrdtool_pipe_quote($data_source_path);
+        } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
+            cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. ' . $e->getMessage(), false, 'POLLER');
+            return false;
+        }
+
+        $success = rrdtool_execute("create $quoted_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
 
         if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
             if (file_exists($data_source_path)) {
@@ -1183,9 +1221,19 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
         $create_rrd_file = false;
 
         if (is_array($rrd_fields['times']) && cacti_sizeof($rrd_fields['times'])) {
+            // Samples for a path RRDtool cannot be given stay queued, as for
+            // any other failed update.
+            try {
+                $quoted_path = rrdtool_pipe_quote($rrd_path);
+            } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
+                cacti_log('ERROR: RRD pending samples retained for Data Source ' . $rrd_fields['local_data_id'] . '. ' . $e->getMessage(), false, 'POLLER');
+                $failed = true;
+                continue;
+            }
+
             /* create the rrd if one does not already exist */
             if (read_config_option('storage_location') > 0) {
-                $file_exists = rrdtool_execute("file_exists $rrd_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+                $file_exists = rrdtool_execute(array('file_exists', $rrd_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
             } else {
                 $file_exists = file_exists($rrd_path);
             }
@@ -1291,7 +1339,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
                 // Never advance this RRD's timestamp after dropping a valid field.
                 // A schema mismatch must retain the full sample for replay after repair.
-                $updated = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+                $updated = rrdtool_execute("update $quoted_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 
                 if ($updated !== true) {
                     $rejection = rrdtool_last_rejection();
@@ -1462,9 +1510,9 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
     boost_fetch_cache_check($local_data_id, $rrdtool_pipe);
 
     /* build and run the rrdtool fetch command with all of our data */
-    $cmd_line = "fetch $data_source_path $cf -s $start_time -e $end_time";
+    $cmd_line = array('fetch', $data_source_path, $cf, '-s', $start_time, '-e', $end_time);
     if ($resolution > 0) {
-        $cmd_line .= " -r $resolution";
+        array_push($cmd_line, '-r', $resolution);
     }
 
     $output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
@@ -3335,7 +3383,7 @@ function rrdtool_function_get_resstep($local_data_ids, $graph_start, $graph_end,
 function rrdtool_file_exists(string $data_source_path, mixed $rrdtool_pipe = null): bool
 {
     if (read_config_option('storage_location')) {
-        if (!rrdtool_execute("file_exists $data_source_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
+        if (!rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
             return false;
         }
     } elseif (!file_exists($data_source_path)) {
@@ -3358,8 +3406,7 @@ function rrdtool_function_info($local_data_id)
     $data_source_path = get_data_source_path($local_data_id, true);
 
     /* Execute rrdtool info command */
-    $cmd_line = ' info ' . $data_source_path;
-    $output = rrdtool_execute($cmd_line, RRDTOOL_OUTPUT_NULL, RRDTOOL_OUTPUT_STDOUT);
+    $output = rrdtool_execute(array('info', $data_source_path), RRDTOOL_OUTPUT_NULL, RRDTOOL_OUTPUT_STDOUT);
     if ($output == '') {
         return false;
     }
@@ -4057,7 +4104,7 @@ function rrd_datasource_add($file_array, $ds_array, $debug)
         foreach ($file_array as $file) {
             /* create a DOM object from an rrdtool dump */
             $dom = new domDocument;
-            $xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
             if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
                 $check['err_msg'] = __('Error while parsing the XML of rrdtool dump');
                 return $check;
@@ -4132,7 +4179,7 @@ function rrd_rra_delete($file_array, $rra_array, $debug)
         foreach ($file_array as $file) {
             /* create a DOM document from an rrdtool dump */
             $dom = new domDocument;
-            $xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
             if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
                 $check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
                 return $check;
@@ -4193,7 +4240,7 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug)
         foreach ($file_array as $file) {
             /* create a DOM document from an rrdtool dump */
             $dom = new domDocument;
-            $xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
             if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
                 $check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
                 return $check;
@@ -4756,14 +4803,21 @@ function gradient($vname = false, $start_color = '#0000a0', $end_color = '#f0f0f
     // We don't use alpha blending for the area right now
     $alpha = 'ff';
 
+    // Double quotes keep existing graph commands unchanged. RRDtool ends a
+    // double-quoted run at the next ", so a label with one uses the encoder.
+    $legend = '';
+    if ($label != false && strlen($label) > 2) {
+        $legend = strpbrk($label, "\"\0\r\n") === false ? '"' . $label . '"' : rrdtool_pipe_quote($label);
+    }
+
     for ($i = $steps; $i > 0; $i--) {
         $factor = $i / $steps;
         $r = round($r1 + $diff_r * $factor);
         $g = round($g1 + $diff_g * $factor);
         $b = round($b1 + $diff_b * $factor);
 
-        if ($i == $steps && $label != false && strlen($label) > 2) {
-            $spline .=  sprintf("AREA:%s%d#%02X%02X%02X%s:\"%s\" " . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha, $label);
+        if ($i == $steps && $legend !== '') {
+            $spline .=  sprintf("AREA:%s%d#%02X%02X%02X%s:%s " . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha, $legend);
         } else {
             $spline .=  sprintf("AREA:%s%d#%02X%02X%02X%s " . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha);
         }
