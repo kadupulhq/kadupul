@@ -1,0 +1,74 @@
+{
+    "returned": {
+        "meta": {
+            "start": "1700000000",
+            "step": "300",
+            "end": "1700000600",
+            "rows": "2",
+            "columns": "2",
+            "legend": {
+                "col1": "Inbound",
+                "col2": "col1-d"
+            },
+            "stacked_columns": {
+                "col4": 0,
+                "col5": 0,
+                "col6": 0
+            },
+            "title_cache": "Traffic & <errors> \"quoted\" 'single' 100% a:b café |host_hostname| |query_ifAlias|",
+            "vertical_label": "bits/s & <b> \"q\" 5% x:y 日本",
+            "local_graph_id": 7,
+            "host_id": "3"
+        },
+        "data": {
+            "1": {
+                "timestamp": "1700000300",
+                "col1": "1.0e+00",
+                "col2": "NaN"
+            },
+            "2": {
+                "timestamp": "1700000600",
+                "col1": "2.5e+00",
+                "col2": "3.0e+00"
+            }
+        }
+    },
+    "printed": "",
+    "diagnostics": [],
+    "commands": [
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info rra/router_traffic_11.rrd\r\nquit\r\n"
+            ]
+        },
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info rra/router_errors_12.rrd\r\nquit\r\n"
+            ]
+        },
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "xport --start='1699999999'",
+                "--end='1700003600'",
+                "--maxrows=10000",
+                "DEF:a='rra/router_traffic_11.rrd':'traffic_in':AVERAGE",
+                "DEF:b='rra/router_traffic_11.rrd':'traffic_out':AVERAGE",
+                "DEF:c='rra/router_errors_12.rrd':'errors':AVERAGE",
+                "CDEF:cdefb='b,8,*'",
+                "XPORT:'a':'Inbound 50%'",
+                "XPORT:'cdefb':'col5-cdefb'",
+                "XPORT:'c':'Errors \"all\"'  \r\nquit\r\n"
+            ]
+        }
+    ],
+    "xport_meta": []
+}

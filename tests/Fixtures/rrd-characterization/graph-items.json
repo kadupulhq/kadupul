@@ -1,0 +1,91 @@
+{
+    "returned": "",
+    "printed": "",
+    "diagnostics": [],
+    "commands": [
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info rra/router_traffic_11.rrd\r\nquit\r\n"
+            ]
+        },
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info rra/router_errors_12.rrd\r\nquit\r\n"
+            ]
+        },
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "graph -",
+                "--imgformat=PNG",
+                "--start='1700000000'",
+                "--end='1700003600'",
+                "--pango-markup ",
+                "--title='Traffic &amp; &lt;errors&gt; &quot;quoted&quot; &apos;single&apos; 100% a:b café router-1.example uplink 'A' \"B\" & <C>: 10%'",
+                "--vertical-label='bits/s &amp; &lt;b&gt; &quot;q&quot; 5% x:y 日本'",
+                "--slope-mode",
+                "--base=1000",
+                "--height=200",
+                "--width=700",
+                "--tabwidth '40'",
+                "--rigid",
+                "--alt-autoscale",
+                "--upper-limit='100'",
+                "--lower-limit='0'",
+                "COMMENT:\"From 2023/11/14 22\\:13\\:20 To 2023/11/14 23\\:13\\:20\\c\"",
+                "COMMENT:\"  \\n\"",
+                "--color BACK#F3F3F3",
+                "--color CANVAS#FDFDFD",
+                "--color SHADEA#CBCBCB",
+                "--color SHADEB#999999",
+                "--color FONT#000000",
+                "--color AXIS#2C4D43",
+                "--color ARROW#2C4D43",
+                "--color FRAME#2C4D43",
+                "--border 1",
+                "--font TITLE:11:'Arial'",
+                "--font AXIS:8:'Arial'",
+                "--font LEGEND:8:'Courier'",
+                "--font UNIT:8:'Arial'",
+                "--font WATERMARK:6:'Arial'",
+                "DEF:a='rra/router_traffic_11.rrd':'traffic_in':AVERAGE",
+                "DEF:b='rra/router_traffic_11.rrd':'traffic_in':MAX",
+                "DEF:c='rra/router_traffic_11.rrd':'traffic_in':MIN",
+                "DEF:d='rra/router_traffic_11.rrd':'traffic_out':AVERAGE",
+                "DEF:e='rra/router_errors_12.rrd':'errors':AVERAGE",
+                "DEF:f='rra/router_errors_12.rrd':'errors':MAX",
+                "CDEF:cdeff='d,8,*'",
+                "VDEF:vdefg='cdeff,95,PERCENT'",
+                "CDEF:cdefj='TIME,<now-300>,GT,f,f,UN,0,f,IF,IF,U,/'",
+                "AREA:a#00CF00FF:'Inbound &quot;peak&quot; 100%\\: café      ' ",
+                "GPRINT:a:LAST:'Current\\:%8.2lf %s' ",
+                "GPRINT:a:AVERAGE:'Average 5%\\:%8.2lf %s' ",
+                "GPRINT:b:MAX:'Maximum\\:%8.2lf %s' ",
+                "GPRINT:c:MIN:'Minimum\\:%8.2lf %s\\n' ",
+                "LINE1:cdeff#002A9780:'Outbound &lt;bits&gt;                 ':dashes=5,3:dash-offset=2",
+                "GPRINT:vdefg:'95th\\: 50%%%8.2lf %s\\n' ",
+                "GPRINT:d:LAST:'Last\\:%8.2lf %s' ",
+                "LINE2:e#FF0000FF:'Errors uplink &apos;A&apos; &quot;B&quot; &amp; &lt;C&gt;\\: 10%'",
+                "SHIFT:e:3600",
+                "LINE3:cdefj#0000FFFF:'Errors max                      '",
+                "AREA:a#00FF004D:'Stacked                         ':STACK",
+                "SHIFT:a:60",
+                "LINE1.50:d#123456FF:'Line stack                      ':STACK:dashes=4",
+                "TICK:e#FF00FFFF:0.5:'Tick'",
+                "HRULE:95#FF9900FF:'Threshold\\: 95% Core &lt;router&gt; &amp; &quot;edge&quot;\\n':dashes=2:dash-offset=1",
+                "VRULE:1700001800#000000FF:'Change\\: &quot;deploy&quot;'",
+                "COMMENT:'Host Core &lt;router&gt; &amp; &quot;edge&quot; &amp; &lt;b&gt;bold&lt;/b&gt; 50%\\: done\\n' ",
+                "COMMENT:' \\n' ",
+                "TEXTALIGN:center  \r\nquit\r\n"
+            ]
+        }
+    ]
+}

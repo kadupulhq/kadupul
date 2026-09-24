@@ -1,0 +1,15 @@
+{
+    "returned": "ERROR: RRD file does not exist: rra/router_traffic_11.rrd",
+    "printed": "",
+    "diagnostics": [],
+    "commands": [
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info rra/router_traffic_11.rrd\r\nquit\r\n"
+            ]
+        }
+    ]
+}
