@@ -19,10 +19,11 @@ namespace StructuredPathOwnershipTest;
  * @param int $owner_id  UID of rra/, the value the loop should converge on.
  * @param int    $group_id GID of rra/.
  * @param string $file     The file holding the loop; rrd.php and boost.php both have one.
+ * @param string $fail     'chown' or 'chgrp' to make that call fail, '' for neither.
  *
  * @return array<int, string> The ownership calls the loop made, in order.
  */
-function structured_path_calls($dir_uid, $dir_gid, $owner_id, $group_id, $file = 'lib/rrd.php')
+function structured_path_calls($dir_uid, $dir_gid, $owner_id, $group_id, $file = 'lib/rrd.php', $fail = '')
 {
     $source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
     expect($source)->not->toBeFalse();
@@ -59,9 +60,10 @@ namespace Probe;
 $calls = array();
 function fileowner($path) { return $GLOBALS["dir_uid"]; }
 function filegroup($path) { return $GLOBALS["dir_gid"]; }
-function chown($path, $uid) { $GLOBALS["calls"][] = "chown:" . $uid; return true; }
-function chgrp($path, $gid) { $GLOBALS["calls"][] = "chgrp:" . $gid; return true; }
-function cacti_log($message, $flag = true) { $GLOBALS["calls"][] = "log"; }
+function chown($path, $uid) { $GLOBALS["calls"][] = "chown:" . $uid; return $GLOBALS["fail"] !== "chown"; }
+function chgrp($path, $gid) { $GLOBALS["calls"][] = "chgrp:" . $gid; return $GLOBALS["fail"] !== "chgrp"; }
+function cacti_log($message, $flag = true) { $GLOBALS["calls"][] = "log:" . (strpos($message, "ERROR: Unable to set directory permissions") === 0 ? "permissions" : "other"); }
+$GLOBALS["fail"] = ' . var_export($fail, true) . ';
 $GLOBALS["dir_uid"] = ' . (int) $dir_uid . ';
 $GLOBALS["dir_gid"] = ' . (int) $dir_gid . ';
 $owner_id = ' . (int) $owner_id . ';
@@ -139,6 +141,33 @@ test('a directory wrong in both is corrected once each', function () use ($copie
 
         if ($calls !== array('chown:0', 'chgrp:500')) {
             $wrong[$file] = $calls;
+        }
+    }
+
+    expect($wrong)->toBe(array());
+});
+
+/*
+ * A failed chown or chgrp has to log and stop, not carry on to the next path
+ * segment as if the directory were correct. The stubs returned true before, so
+ * nothing reached the `if (!$success)` branch.
+ */
+test('a failed ownership change is logged and stops the walk', function () use ($copies) {
+    $wrong = array();
+
+    foreach ($copies as $file) {
+        // chown fails first, so the chgrp below it must not run at all.
+        $calls = structured_path_calls(42, 999, 0, 500, $file, 'chown');
+
+        if ($calls !== array('chown:0', 'log:permissions')) {
+            $wrong[$file . ' chown'] = $calls;
+        }
+
+        // chgrp fails after a successful chown.
+        $calls = structured_path_calls(42, 999, 0, 500, $file, 'chgrp');
+
+        if ($calls !== array('chown:0', 'chgrp:500', 'log:permissions')) {
+            $wrong[$file . ' chgrp'] = $calls;
         }
     }
 
