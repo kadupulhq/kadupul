@@ -167,6 +167,50 @@ test('every option in the argument loop ends its own case', function () use ($ro
     expect($fallen)->toBe(array());
 });
 
+/*
+ * The structural check above proves the break is there. This runs the case to
+ * prove what that break is for: a valid size must apply and leave the switch,
+ * not reach the version branch it used to fall into.
+ */
+test('a valid --bulk_walk applies its size instead of printing the version', function () use ($root) {
+    $source = file_get_contents($root . '/cli/change_device.php');
+    $start  = strpos($source, "case '--bulk_walk':");
+    $end    = strpos($source, "case '--help':", $start);
+
+    expect($start)->not->toBeFalse();
+    expect($end)->not->toBeFalse();
+
+    // The slice deliberately includes the --version branch below it, which is
+    // where the missing break used to land.
+    $fragment = substr($source, $start, $end - $start);
+    expect($fragment)->toContain('display_version();');
+
+    $code = '$overrides = array(); $value = "10";'
+        . 'function display_version() { echo "BANNER"; }'
+        . 'function display_help() { echo "HELP"; }'
+        . 'switch ("--bulk_walk") {' . $fragment . '}'
+        . 'echo json_encode($overrides);';
+
+    $pipes   = array();
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $code),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes
+    );
+    expect($process)->not->toBeFalse();
+
+    $out = stream_get_contents($pipes[1]);
+    $err = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    $status = proc_close($process);
+
+    expect($err)->toBe('');
+    expect($status)->toBe(0);
+    expect(strpos($out, 'BANNER'))->toBeFalse();
+    expect(json_decode($out, true))->toBe(array('bulk_walk_size' => '10'));
+});
+
 test('both device CLIs state which numeric value disables', function () use ($root) {
     $wrong = array();
 
