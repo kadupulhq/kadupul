@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Pass `$rdatabase_retries` when a remote poller connects to the main server. Every other argument came from its `$rdatabase_` counterpart, so configuring the remote retry count alone had no effect and the local value governed the retry policy for a remote host.
+
 - Read the current group of a newly created structured RRD directory with `filegroup()` rather than `fileowner()` in both `lib/rrd.php` and `lib/boost.php`, so a root-run poller no longer skips a needed `chgrp` when the directory UID happens to equal the target GID, nor runs one when the group is already correct.
 
 - End the `--bulk_walk` case in `cli/change_device.php`, which fell through to the version branch so a valid size printed the version banner and exited without applying the change or reading later arguments.
