@@ -87,6 +87,9 @@ test('tune command matches its golden', function () {
             array('fn' => 'rrdtool_function_tune', 'args' => array(array('data-source-rename' => "in\0bound") + $all)),
             // Array arguments are quoted for the pipe; a NUL is refused before RRDtool starts.
             array('fn' => 'rrdtool_execute', 'args' => array(array('info', "<path_rra>/router\0traffic_21.rrd"), false, 1)),
+            // A line break in an array argument is refused too, not removed, since removing it names another file.
+            array('fn' => 'rrdtool_execute', 'args' => array(array('info', "rra/router\ntraffic_21.rrd"), false, 1)),
+            array('fn' => 'rrdtool_execute', 'args' => array(array('info', "rra/router\rtraffic_21.rrd"), false, 1)),
         ),
     );
     rrd_characterization_golden('tune-command', rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)));
