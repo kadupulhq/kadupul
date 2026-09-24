@@ -118,6 +118,24 @@ def apache_denied(path, htaccess):
     return denied
 
 
+def denied_rows(entries, htaccess, opt_in):
+    """Rows for the Nginx-denied entries; stops on one Apache would serve."""
+    rows, gaps = [], []
+    for entry in sorted(entries):
+        if apache_denied(entry, htaccess):
+            apache = 'apache .htaccess'
+        elif apache_denied(entry, opt_in):
+            apache = OPT_IN
+        else:
+            gaps.append(entry)
+            continue
+        rows.append((entry, 'web-server-denied', 'nginx; ' + apache))
+    # Nginx and Apache installs must refuse the same paths.
+    if gaps:
+        raise SystemExit('ERROR: Nginx denies these paths but no Apache .htaccess or .htaccess.dist rule does: ' + ', '.join(gaps))
+    return rows
+
+
 def plugin_realms(root):
     """api_plugin_load_realms() maps plugin_realms rows to id + 100."""
     sql = (root / 'cacti.sql').read_text() if (root / 'cacti.sql').is_file() else ''
@@ -161,19 +179,7 @@ def main():
     for path in denied:
         owner = [n for n in named if path == n or (n.endswith('/') and path.startswith(n))]
         entries.add(max(owner, key=len) if owner else path)
-    gaps = []
-    for entry in sorted(entries):
-        if apache_denied(entry, htaccess):
-            apache = 'apache .htaccess'
-        elif apache_denied(entry, opt_in):
-            apache = OPT_IN
-        else:
-            gaps.append(entry)
-            continue
-        rows.append((entry, 'web-server-denied', 'nginx; ' + apache))
-    # Nginx and Apache installs must refuse the same paths.
-    if gaps:
-        raise SystemExit('ERROR: Nginx denies these paths but no Apache .htaccess or .htaccess.dist rule does: ' + ', '.join(gaps))
+    rows += denied_rows(entries, htaccess, opt_in)
 
     print('entry\tgate\tdetail')
     for row in sorted(rows):

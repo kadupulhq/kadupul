@@ -1463,20 +1463,28 @@ function pure_method_call(Expr\MethodCall|Expr\NullsafeMethodCall $call, Closure
  * The service call a method makes first, when everything that can run before
  * it is pure: the statements ahead of it, the other parts of its statement,
  * its arguments, and the catch blocks of a try it sits in, which run when an
- * earlier statement throws.
+ * earlier statement or the guard throws. Those must also stop the method, or
+ * code after the try runs with the refusal swallowed.
  *
  * @param list<Stmt> $stmts
  * @return array{0: string, 1: string}|null
  */
-function first_service_call(array $stmts, Closure $type_of): ?array
+function first_service_call(array $stmts, Closure $type_of, bool $action): ?array
 {
     foreach ($stmts as $stmt) {
         if ($stmt instanceof Stmt\TryCatch) {
             if ($stmt->finally !== null || !pure($stmt->catches, $type_of)) {
                 return null;
             }
-            $found = first_service_call($stmt->stmts, $type_of);
+            $found = first_service_call($stmt->stmts, $type_of, $action);
             if ($found !== null) {
+                foreach ($stmt->catches as $catch) {
+                    $last = $catch->stmts === [] ? null : $catch->stmts[count($catch->stmts) - 1];
+                    if (!($action && $last instanceof Stmt\Return_)
+                        && !($last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_)) {
+                        return null;
+                    }
+                }
                 return $found;
             }
             if (!pure($stmt->stmts, $type_of)) {
@@ -1528,7 +1536,7 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     // Without its own guard, a method is covered only by the first service it
     // calls, and only when that service guards and nothing but pure code can
     // run ahead of it.
-    $target = first_service_call($method->stmts ?? [], $type_of);
+    $target = first_service_call($method->stmts ?? [], $type_of, $depth === 0);
     if ($target === null || (in_array($target[0], ACCESS_TYPES, true) && $target[1] !== 'consoleActor')) {
         return [];
     }

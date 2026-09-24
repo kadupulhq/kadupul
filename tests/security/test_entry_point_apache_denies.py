@@ -8,6 +8,7 @@ served. Opt-in rows must be denied only once .htaccess.dist is enabled. Without
 this, a generator that always answered "denied" would pass.
 """
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -73,6 +74,24 @@ def main():
         failures.append('unsupported <RequireAll> section accepted')
     except SystemExit:
         pass
+    # A path Nginx denies and no Apache rule covers stops the generator by name.
+    try:
+        inventory.denied_rows(['lib/', 'newdir/'], rules, rules)
+        failures.append('Nginx-only deny newdir/ did not stop the generator')
+    except SystemExit as error:
+        if 'newdir/' not in str(error) or 'lib/' in str(error):
+            failures.append('gap report names the wrong paths: %s' % error)
+    with tempfile.TemporaryDirectory() as directory:
+        (Path(directory) / 'tests/e2e').mkdir(parents=True)
+        (Path(directory) / 'tests/e2e/nginx.conf').write_text('server {\n}\n')
+        saved, inventory.ROOT = inventory.ROOT, Path(directory)
+        try:
+            inventory.nginx_denies()
+            failures.append('a vhost without deny locations was accepted')
+        except SystemExit:
+            pass
+        finally:
+            inventory.ROOT = saved
     for failure in failures:
         print('FAIL ' + failure)
     if failures:

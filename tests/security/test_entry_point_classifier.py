@@ -266,6 +266,16 @@ final class Sites
     {
     }
 
+    // A callee's catch that returns hands control back to the action.
+    public function catchReturns(): void
+    {
+        try {
+            $this->checked();
+        } catch (\\RuntimeException) {
+            return;
+        }
+    }
+
     // A return leaves only this method; the action carries on.
     public function returnsOnNull(): void
     {
@@ -355,6 +365,35 @@ final class ServiceActions
         } catch (\\RuntimeException) {
             unlink('/tmp/x');
         }
+        return new Response();
+    }
+
+    #[Route('/catch-swallows', name: 'catch_swallows')]
+    public function catchSwallows(Sites $sites): Response
+    {
+        try {
+            $sites->checked();
+        } catch (\\RuntimeException) {
+            $status = 502;
+        }
+        $sites->unchecked();
+        return new Response();
+    }
+
+    #[Route('/catch-empty', name: 'catch_empty')]
+    public function catchEmpty(Sites $sites): Response
+    {
+        try {
+            $sites->checked();
+        } catch (\\RuntimeException) {
+        }
+        return new Response();
+    }
+
+    #[Route('/via-callee-catch', name: 'via_callee_catch')]
+    public function viaCalleeCatch(Sites $sites): Response
+    {
+        $sites->catchReturns();
         return new Response();
     }
 
@@ -458,6 +497,9 @@ ROUTES = {
     'app.php/conditional-call': 'unknown',
     'app.php/effect-in-catch': 'unknown',
     'app.php/pure-then-checked': 'symfony:pure_then_checked',
+    'app.php/catch-swallows': 'unknown',
+    'app.php/catch-empty': 'unknown',
+    'app.php/via-callee-catch': 'unknown',
     'app.php/effect-first': 'unknown',
     'app.php/nested-guard': 'unknown',
     'app.php/who-guarded': 'symfony:who_guarded',
