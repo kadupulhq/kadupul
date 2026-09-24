@@ -46,6 +46,10 @@ services:
     Kadupul\Platform\Application\Command\SchemaChangeAudit: ~
     Kadupul\Platform\Application\Command\TableConversionStep: ~
     Kadupul\Platform\Application\Command\ConvertTables: ~
+    # Public because lib/installer.php fetches it from the kernel container. It
+    # converts with no operator, so no command or controller may depend on it.
+    Kadupul\Platform\Infrastructure\Legacy\InstallerTableConversion:
+        public: true
 
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'

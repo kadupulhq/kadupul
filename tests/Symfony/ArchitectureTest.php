@@ -65,6 +65,53 @@ final class ArchitectureTest extends TestCase
         }
     }
 
+    /**
+     * TableConversionStep sends DDL with no operator check and no audit. Only
+     * ConvertTables, which adds both, and the installer's adapter may use it,
+     * and only lib/installer.php may call that adapter, so a new command
+     * cannot pick up unchecked DDL by injecting either one.
+     */
+    public function testOnlyTheInstallerConvertsTablesWithoutAnOperator(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $allowed = [
+            'TableConversionStep' => [
+                'src/Platform/Application/Command/TableConversionStep.php',
+                'src/Platform/Application/Command/ConvertTables.php',
+                'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
+                'config/services.yaml',
+            ],
+            'InstallerTableConversion' => [
+                'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
+                'config/services.yaml',
+                'lib/installer.php',
+            ],
+        ];
+        // Tests may use both; the rest are dependencies, build output or state.
+        $skipped = ['.git', '.superpowers', 'node_modules', 'tests', 'var', 'vendor'];
+        $directories = new \RecursiveCallbackFilterIterator(
+            new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS),
+            static fn(\SplFileInfo $file): bool => !$file->isDir() || !in_array($file->getFilename(), $skipped, true),
+        );
+        $found = array_fill_keys(array_keys($allowed), []);
+        foreach (new \RecursiveIteratorIterator($directories) as $file) {
+            if (!in_array($file->getExtension(), ['php', 'yaml', 'yml'], true)) {
+                continue;
+            }
+            $source = (string) file_get_contents($file->getPathname());
+            foreach (array_keys($allowed) as $class) {
+                if (str_contains($source, $class)) {
+                    $found[$class][] = substr($file->getPathname(), strlen($root) + 1);
+                }
+            }
+        }
+        foreach ($allowed as $class => $files) {
+            sort($files);
+            sort($found[$class]);
+            self::assertSame($files, $found[$class], $class);
+        }
+    }
+
     public function testSymfonyEntryPointsDoNotBootstrapLegacyApplication(): void
     {
         foreach (['app.php', 'public/index.php', 'sites.php'] as $file) {

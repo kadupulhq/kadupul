@@ -10,7 +10,6 @@
 // Forwarding shim: flags, output and exit codes match the original script.
 // The behavior now lives in bin/console kadupul:database:convert-tables; the
 // frozen original, kept for parity, is tests/Fixtures/legacy-cli/convert_tables.php.
-// lib/installer.php runs this file for each table it queued and reads its stdout.
 if (PHP_SAPI !== 'cli') {
     if (!headers_sent()) {
         http_response_code(404);

@@ -1044,6 +1044,8 @@ Known differences from `cli/convert_tables.php`:
 - Output is printed after every table is done.
 - On a primary installation the main connection is a second connection with
   the same credentials, as for `kadupul:database:analyze`.
+- On a remote collector the installer converts the collector's local
+  database, the one its queue describes. The original script converted main.
 
 `php bin/console kadupul:database:widen-id-columns` widens the id columns
 that `cli/fix_mediumint.php` widened to `int(10) unsigned`. It needs the

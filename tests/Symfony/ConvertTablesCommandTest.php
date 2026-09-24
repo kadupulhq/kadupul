@@ -132,7 +132,8 @@ final class ConvertTablesCommandTest extends TestCase
         self::assertSame(0, $tester->execute(['--table' => 'host', '--utf8' => true, '--innodb' => true, '--dynamic' => true]));
         $display = $tester->getDisplay();
         self::assertSame(self::HEADER . "Converting Database Tables to InnoDB and  utf8 with less than '1000000' Records\nConverting Table > 'host' Successful\n", $display);
-        // lib/installer.php:3625-3627 dequeues the table only when both match.
+        // The installer ran this line through the shim, and dequeued the table
+        // only when both matched, until it began converting in-process.
         self::assertTrue(stripos($display, 'Converting table') !== false && stripos($display, 'Successful') !== false);
     }
 
