@@ -326,7 +326,13 @@ $received = stream_get_contents($pipes[1]);
 proc_close($reader);
 echo json_encode(array(is_int($short) && $short > 0 && $short < strlen($data), $sent, $received === strlen($data) . ' ' . md5($data)));
 PHP;
-    expect(json_decode(rrd_proxy_interop_php($this, $program, array(), true), true, 512, JSON_THROW_ON_ERROR))->toBe(array(true, true, true));
+    $result = json_decode(rrd_proxy_interop_php($this, $program, array(), true), true, 512, JSON_THROW_ON_ERROR);
+    // Whether a local socket cuts a write short depends on the kernel; a run
+    // that could not force one has not exercised the loop.
+    if ($result[0] !== true) {
+        $this->markTestSkipped('This platform did not cut the first write short.');
+    }
+    expect($result)->toBe(array(true, true, true));
 });
 
 test('an oversize key reply is refused without reading past the cap', function () {
