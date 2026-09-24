@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -issue: Remove the Refresh Poller Table Per Cycle setting, which had no reader and described rebuilding a MEMORY table that 1.2.32 converts to InnoDB; the upgrade drops the stored row
+-issue: add_graphs --list-snmp-values now refuses an empty --snmp-field and keeps the supplied one; the guard assigned to $snmpField instead of comparing, so it never fired and emptied the field it was about to use
 -issue: copy_user now exits non-zero when the template user is missing or the copy fails; die() with a string printed the error and still reported success
 -issue: md5sum --quiet now exits with a distinct code when a hash does not match, instead of dying with an undefined constant EXIT_MD5ERR
 -issue: Clean each configured log once during rotation; a stray call after the loop re-scanned whichever log the loop left behind and inflated the reported count

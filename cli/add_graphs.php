@@ -487,7 +487,7 @@ if (cacti_sizeof($parms)) {
 
 			if (cacti_sizeof($dsGraph['snmpField'])) {
 				foreach($dsGraph['snmpField'] as $snmpField) {
-					if ($snmpField = "") {
+					if ($snmpField == '') {
 						print "ERROR: You must supply a valid snmp-field before you can list its values\n";
 						print "Try --list-snmp-fields\n";
 						exit(1);
