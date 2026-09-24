@@ -149,3 +149,128 @@ test('the installer already passed the remote retry count', function () use ($va
     expect($arguments[0])->toBe('main.invalid')
         ->and($arguments[RETRIES])->toBe(1);
 });
+
+/**
+ * Run the whole remote-poller branch of include/global.php, not just one
+ * statement, so the enclosing condition, the defaulting above the call and the
+ * $conn_mode guard are all exercised. The bootstrap itself cannot be included
+ * standalone, so the block is taken from the file and given stub collaborators.
+ *
+ * @param array  $vars      Configuration variables; omit one to leave it unset.
+ * @param int    $poller_id The poller id the block tests.
+ * @param string $conn_mode The offline/online global.
+ *
+ * @return array<int, array> One entry per db_connect_real() call, in order.
+ */
+function bootstrap_connect_calls(array $vars, $poller_id = 2, $conn_mode = 'online')
+{
+    $source = file_get_contents(dirname(__DIR__, 4) . '/include/global.php');
+    expect($source)->not->toBeFalse();
+
+    /* That condition appears twice in the file; anchor on the local connect,
+       which only the bootstrap branch contains, then walk back to its if. */
+    $local = strpos($source, '$local_db_cnn_id = db_connect_real(');
+    expect($local)->not->toBeFalse();
+
+    $start = strrpos(substr($source, 0, $local), 'if ($config[\'poller_id\']');
+    expect($start)->not->toBeFalse();
+
+    // Stop after the $conn_mode block, which holds the remote call.
+    $guard = strpos($source, 'if ($conn_mode != \'offline\') {', $start);
+    expect($guard)->not->toBeFalse();
+
+    $open  = strpos($source, '{', $guard);
+    $depth = 0;
+    $end   = $open;
+
+    for ($i = $open; $i < strlen($source); $i++) {
+        if ($source[$i] === '{') {
+            $depth++;
+        } elseif ($source[$i] === '}') {
+            $depth--;
+
+            if ($depth === 0) {
+                $end = $i + 1;
+
+                break;
+            }
+        }
+    }
+
+    // Close the outer if, whose body this slice cuts short.
+    $block = substr($source, $start, $end - $start) . "\n}\n";
+
+    $assignments = '';
+    foreach ($vars as $name => $value) {
+        $assignments .= '$' . $name . ' = ' . var_export($value, true) . ';';
+    }
+
+    $code = '$calls = array();'
+        . 'function db_connect_real() { $GLOBALS["calls"][] = func_get_args(); return new \stdClass(); }'
+        . 'function db_fetch_cell($sql, $a = "", $b = true, $c = false) { return strpos($sql, "version") !== false ? "1.2.31" : 0; }'
+        . '$config = array("poller_id" => ' . (int) $poller_id . ', "connection" => "online", "is_web" => false);'
+        . '$conn_mode = ' . var_export($conn_mode, true) . ';'
+        . $assignments . $block
+        . 'echo json_encode($GLOBALS["calls"]);';
+
+    $pipes   = array();
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $code),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes
+    );
+    expect($process)->not->toBeFalse();
+
+    $out = stream_get_contents($pipes[1]);
+    $err = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    proc_close($process);
+
+    expect($err)->toBe('');
+
+    $calls = json_decode($out, true);
+    expect($calls)->toBeArray($out);
+
+    return $calls;
+}
+
+/*
+ * The fix relies on the defaulting a few lines above the call, so check that
+ * rather than assert it: with the variable unset the remote call must still
+ * receive 2, the same value an unset local retry count gets.
+ */
+test('an unset remote retry count still reaches the call as the default', function () use ($vars) {
+    $without = $vars;
+    unset($without['rdatabase_retries']);
+
+    $calls = bootstrap_connect_calls($without);
+
+    expect(count($calls))->toBe(2)
+        ->and($calls[0][0])->toBe('local.invalid')
+        ->and($calls[0][RETRIES])->toBe(5)
+        ->and($calls[1][0])->toBe('main.invalid')
+        ->and($calls[1][RETRIES])->toBe(2);
+});
+
+test('a configured remote retry count reaches the call through the whole branch', function () use ($vars) {
+    $calls = bootstrap_connect_calls($vars);
+
+    expect(count($calls))->toBe(2)
+        ->and($calls[1][0])->toBe('main.invalid')
+        ->and($calls[1][RETRIES])->toBe(1);
+});
+
+test('an offline poller makes no remote connection at all', function () use ($vars) {
+    $calls = bootstrap_connect_calls($vars, 2, 'offline');
+
+    expect(count($calls))->toBe(1)
+        ->and($calls[0][0])->toBe('local.invalid');
+});
+
+test('the branch is skipped entirely on the main server', function () use ($vars) {
+    $without = $vars;
+    unset($without['rdatabase_hostname']);
+
+    expect(bootstrap_connect_calls($without, 1))->toBe(array());
+});
