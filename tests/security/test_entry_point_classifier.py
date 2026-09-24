@@ -158,7 +158,10 @@ final class LegacyAuthenticatedSession implements ConsoleAccess
 CONTROLLER = '''<?php
 namespace Kadupul\\Fixture;
 use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Symfony\\Component\\HttpFoundation\\BinaryFileResponse;
+use Symfony\\Component\\HttpFoundation\\JsonResponse;
 use Symfony\\Component\\HttpFoundation\\Response;
+use Symfony\\Component\\HttpFoundation\\StreamedResponse;
 use Symfony\\Component\\Routing\\Attribute\\Route;
 final class TwoActions
 {
@@ -306,6 +309,37 @@ final class TwoActions
         }
         if (!$this->access->canManageDevices($actor)) {
             throw new \\RuntimeException();
+        }
+        return new Response();
+    }
+
+    #[Route('/json-refusal', name: 'json_refusal')]
+    public function jsonRefusal(): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return new JsonResponse([], 401);
+        }
+        return new Response();
+    }
+
+    // The callback runs while the refused response is sent.
+    #[Route('/streamed-refusal', name: 'streamed_refusal')]
+    public function streamedRefusal(callable $callback): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return new StreamedResponse($callback, 401);
+        }
+        return new Response();
+    }
+
+    #[Route('/file-refusal', name: 'file_refusal')]
+    public function fileRefusal(): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return new BinaryFileResponse('/etc/hostname', 401);
         }
         return new Response();
     }
@@ -829,6 +863,9 @@ ROUTES = {
     'app.php/who-guarded': 'symfony:who_guarded',
     'app.php/who-discarded': 'unknown',
     'app.php/session': 'unknown',
+    'app.php/json-refusal': 'symfony:json_refusal',
+    'app.php/streamed-refusal': 'unknown',
+    'app.php/file-refusal': 'unknown',
     'app.php/via-early-return': 'unknown',
     **{'app.php/' + route: expected for route, (_, expected) in HANDED.items()},
 }

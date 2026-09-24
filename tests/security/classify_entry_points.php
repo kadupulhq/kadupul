@@ -190,7 +190,9 @@ const PURE_METHODS = [
     'Symfony\Contracts\Translation\TranslatorInterface' => ['trans'],
     'Symfony\Component\Routing\Generator\UrlGeneratorInterface' => ['generate'],
 ];
-// Responses whose constructor only stores its arguments.
+// Responses whose constructor only stores its arguments. StreamedResponse
+// and BinaryFileResponse run a callback or read a file while the response is
+// sent, so building one ahead of a guard is not pure.
 const PURE_RESPONSES = [
     'Symfony\Component\HttpFoundation\Response',
     'Symfony\Component\HttpFoundation\JsonResponse',
@@ -1620,12 +1622,12 @@ function pure(string $root, mixed $nodes, Closure $type_of): bool
 }
 
 /**
- * A Symfony response, a builtin exception, or a project exception whose
+ * A plain Symfony response, a builtin exception, or a project exception whose
  * constructor only passes pure values to its parent.
  */
 function pure_new(string $root, string $class): bool
 {
-    if (str_starts_with($class, 'Symfony\Component\HttpFoundation\\')) {
+    if (in_array($class, PURE_RESPONSES, true)) {
         return true;
     }
     if (class_exists($class, false) || interface_exists($class, false)) {
