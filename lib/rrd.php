@@ -546,6 +546,46 @@ function rrdtool_command_path($path)
 }
 
 /**
+ * The DS maximum as rrdtool_function_create() and boost_rrdtool_function_create()
+ * write it, or false, logged under $logopt, when the RRD must not be created.
+ *
+ * A substituted maximum is device data. A line break would start another
+ * RRDtool command, and is_numeric() accepts one around a number, so it is
+ * refused first. Anything else but a number or U must stay inside this DS
+ * argument, where RRDtool rejects it: the local pipe quotes it, and the proxy,
+ * which would keep quotes as text, takes it only as one bare token.
+ */
+function rrdtool_create_maximum($maximum, $local_data_id, $logopt)
+{
+    if (strpbrk((string) $maximum, "\r\n\0") !== false) {
+        cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. The data source maximum contains a line break or NUL.', false, $logopt);
+        return false;
+    }
+
+    if (is_numeric($maximum) || $maximum === 'U') {
+        return $maximum;
+    }
+
+    $argument = rrdtool_command_argument($maximum);
+    if ($argument === false) {
+        cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its maximum cannot be sent to RRDtool.', false, $logopt);
+    }
+
+    return $argument;
+}
+
+/** As rrdtool_command_path(), logging under $logopt when the RRD cannot be created. */
+function rrdtool_create_path($path, $local_data_id, $logopt)
+{
+    $quoted_path = rrdtool_command_path($path);
+    if ($quoted_path === false) {
+        cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its path cannot be sent to RRDtool.', false, $logopt);
+    }
+
+    return $quoted_path;
+}
+
+/**
  * Join an argument array for the RRDtool proxy as bare tokens. rrdproxy splits
  * on whitespace and resolves path operands with realpath() as sent
  * (rrdp_resolve_command_paths() in its lib/functions.php at 54aad57), so
@@ -1170,24 +1210,9 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
                 $data_source['rrd_maximum'] = 'U';
             }
 
-            // A substituted maximum is device data. A line break would start
-            // another RRDtool command, and is_numeric() accepts one around a
-            // number, so it is refused first. Anything else but a number or U
-            // must stay inside this DS argument, where RRDtool rejects it: the
-            // local pipe quotes it, and the proxy, which would keep quotes as
-            // text, takes it only as one bare token.
-            if (strpbrk((string) $data_source['rrd_maximum'], "\r\n\0") !== false) {
-                cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. The data source maximum contains a line break or NUL.', false, 'POLLER');
+            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_maximum'], $local_data_id, 'POLLER');
+            if ($data_source['rrd_maximum'] === false) {
                 return false;
-            }
-
-            if (!is_numeric($data_source['rrd_maximum']) && $data_source['rrd_maximum'] !== 'U') {
-                $maximum = rrdtool_command_argument($data_source['rrd_maximum']);
-                if ($maximum === false) {
-                    cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its maximum cannot be sent to RRDtool.', false, 'POLLER');
-                    return false;
-                }
-                $data_source['rrd_maximum'] = $maximum;
             }
 
             $create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
@@ -1260,9 +1285,8 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        $quoted_path = rrdtool_command_path($data_source_path);
+        $quoted_path = rrdtool_create_path($data_source_path, $local_data_id, 'POLLER');
         if ($quoted_path === false) {
-            cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its path cannot be sent to RRDtool.', false, 'POLLER');
             return false;
         }
 
