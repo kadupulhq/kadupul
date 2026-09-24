@@ -43,7 +43,12 @@ final class ArchitectureTest extends TestCase
                     $parts = explode('\\', $name);
                     $targetModule = $parts[1];
                     $targetLayer = $parts[2] ?? '';
-                    if (in_array($layer, ['Domain', 'Application'], true)) {
+                    // A Domain/Application file may depend on its own module's other
+                    // Domain/Application code (including its own namespace declaration,
+                    // which tokenizes the same way as a use import) but never reaches
+                    // Platform's Contract or Infrastructure layers, its own included.
+                    $ownModuleUseCase = $targetModule === $module && in_array($targetLayer, ['Domain', 'Application'], true);
+                    if (in_array($layer, ['Domain', 'Application'], true) && !$ownModuleUseCase) {
                         self::assertNotSame('Platform', $targetModule, $relative . ' imports technical integration API ' . $name);
                     }
                     if ($targetModule !== $module) {

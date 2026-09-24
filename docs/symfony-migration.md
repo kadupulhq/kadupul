@@ -960,3 +960,37 @@ and plugin effects may survive rollback and failures return an explicit uncertai
 outcome. Primary local devices disappear; remote devices retain the legacy
 cleanup tombstone until maintenance purges it. This is not a restore facility.
 LTS is unchanged.
+
+
+## Command-line tools
+
+`php bin/console kadupul:database:analyze` recalculates index cardinality for
+every table. On a remote collector it analyzes the main database unless
+`--local` is given. It acts as the account named by `--as`, or the
+`admin_user` setting, which must be enabled, unlocked and hold the Console
+Access and Settings/Utilities realms. An empty `--as=` is rejected with exit
+2. `--json` prints one object with `status`, `database`, `binlog_enabled` and
+`tables`. The operator is checked against the database the command analyzes.
+Collectors hold a replicated copy of the accounts, so on a remote collector
+`--local` works without reaching the main database.
+
+`cli/analyze_database.php` still works with its old flags. It now
+forwards to the command and prints a deprecation note on stderr; set
+`KADUPUL_CLI_QUIET_DEPRECATION=1` to silence it in cron.
+
+Known differences from the original script:
+
+- It needs an operator: the `--as` account or `admin_user` (user 1 when that
+  setting is absent), with the Console Access and Settings/Utilities realms.
+  The original ran for anyone who could run it.
+- An invalid flag prints the error and help without the version line, because
+  the shim rejects the flag before it boots the kernel.
+- Any database fault prints the generic `ERROR: Database analysis failed`.
+  Only a missing main configuration is named.
+- Output is printed after all tables finish, not as each one completes.
+- With `include/cacti_version` missing, the original printed
+  `ERROR: failed to find cacti version file` and exited 0 on every path. The
+  command still analyzes; `--version` and `--help` print
+  `ERROR: Database analysis failed` and exit 1.
+- On a primary installation, the command opens a separate connection for the
+  main database, with the same credentials as the local one.

@@ -5,6 +5,14 @@ services:
 
     Kadupul\Platform\Infrastructure\:
         resource: '../src/Platform/Infrastructure/'
+        # Built by InstallationConnectionMiddleware around each DBAL driver; a
+        # container service of its own would have no driver to wrap.
+        exclude: '../src/Platform/Infrastructure/Doctrine/InstallationConnectionDriver.php'
+
+    # Public so a cli/ shim can reach it through the kernel container before running
+    # a command, instead of passing the output mode as a hidden command option.
+    Kadupul\Platform\Infrastructure\Symfony\Console\CliPresentation:
+        public: true
 
     Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration:
         arguments:
@@ -16,8 +24,28 @@ services:
     Kadupul\Platform\Contract\DatabaseConnection:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
 
+    Kadupul\Platform\Infrastructure\Legacy\InstallationVersion:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    Kadupul\Platform\Application\Port\DatabaseMaintenance:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance
+    Kadupul\Platform\Application\Port\Clock:
+        alias: Kadupul\Platform\Infrastructure\Symfony\SystemClock
+    Kadupul\Platform\Application\Command\AnalyzeDatabase: ~
+
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'
+
+    # One shared instance, so the operator AnalyzeDatabase selects is the one it
+    # then checks. Command-line only: ConsoleAccess stays on the session adapter,
+    # and CliConsoleAccess does not implement it, so no route can resolve it.
+    Kadupul\IdentityAccess\Contract\ConsoleOperator:
+        alias: Kadupul\IdentityAccess\Infrastructure\Cli\CliConsoleAccess
 
     # Session expiry/revocation must commit independently of application writes.
     # Rolling back a site edit must never restore a rejected credential.
@@ -65,7 +93,7 @@ services:
 
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceSites:
         arguments:
-            $database: '@kadupul.inventory.read_database'
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Inventory\Application\Port\DeviceSites:
         alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceSites
 
@@ -73,7 +101,7 @@ services:
 
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceDetailsReader:
         arguments:
-            $database: '@kadupul.inventory.read_database'
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Inventory\Application\Port\DeviceDetailsReader:
         alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceDetailsReader
 
@@ -81,7 +109,7 @@ services:
 
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteCatalog:
         arguments:
-            $database: '@kadupul.inventory.read_database'
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Inventory\Application\Port\SiteCatalog:
         alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteCatalog
 
@@ -161,26 +189,21 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog:
         arguments:
-            $database: '@kadupul.inventory.read_database'
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Inventory\Application\Port\DeviceCreationCatalog:
         alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog
 
     Kadupul\Inventory\Application\Query\ListAssignableSites: ~
 
-    kadupul.inventory.read_database:
-        class: Doctrine\DBAL\Connection
-        lazy: true
-        factory: ['@Kadupul\Inventory\Infrastructure\Persistence\InventoryReadConnectionFactory', 'create']
-
     # Device-visibility policies must be read on the connection that runs the
     # filtered query, so both come from the same read connection.
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceVisibility:
         arguments:
-            $database: '@kadupul.inventory.read_database'
+            $database: '@doctrine.dbal.web_connection'
 
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog:
         arguments:
-            $database: '@kadupul.inventory.read_database'
+            $database: '@doctrine.dbal.web_connection'
 
     Kadupul\Inventory\Application\Port\SiteAssignmentCatalog:
         alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog
@@ -216,3 +239,15 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Query\PrepareDeviceStateChange: ~
     Kadupul\Inventory\Application\Command\SetDevicesEnabled: ~
+
+when@test:
+    services:
+        # A when@ block parses its own "services" key independently of the main
+        # one above, so _defaults must be repeated here to get autowiring.
+        _defaults:
+            autowire: true
+            autoconfigure: true
+
+        # Proves a command sees the CliPresentation a shim sets through the kernel
+        # container. Test-only: prod and dev never load this service.
+        Kadupul\Tests\Fixtures\PresentationProbeCommand: ~

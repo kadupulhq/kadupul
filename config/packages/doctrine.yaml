@@ -1,0 +1,15 @@
+# Credentials come from include/config.php through
+# InstallationConnectionMiddleware at connect time, never from here.
+doctrine:
+    dbal:
+        default_connection: local
+        connections:
+            local:
+                driver: pdo_mysql
+                options: { kadupul_target: local }
+            main:
+                driver: pdo_mysql
+                options: { kadupul_target: main }
+            web:
+                driver: pdo_mysql
+                options: { kadupul_target: web }
