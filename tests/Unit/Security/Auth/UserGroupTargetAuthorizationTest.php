@@ -195,3 +195,31 @@ test('the realm save carries the parent predicate, not just an existence check',
 		expect(strpos($write, 'BARE '))->toBeFalse($write);
 	}
 });
+
+/*
+ * The single statement closes the window only while the delete path stays in
+ * autocommit. Each DELETE there commits before the next one runs, so a parent
+ * this SELECT can still see has not had its children cleaned up yet, and a
+ * parent already gone yields no row to insert. Wrapping user_group_remove() in
+ * a transaction reopens it under READ COMMITTED, where the read does not lock:
+ * measured on MySQL 8.0.46 and MariaDB 10.11, the transactional deleter strands
+ * a realm row at READ COMMITTED and blocks correctly at REPEATABLE READ. The
+ * remedy if that day comes is LOCK IN SHARE MODE on the SELECT, which held at
+ * both levels on both engines. This guard exists so the change is deliberate.
+ */
+test('the group delete path relies on autocommit', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/user_group_admin.php');
+	$remove = test_php_function_source($source, 'user_group_remove');
+
+	expect($remove)->not->toBeFalse();
+
+	foreach (array('db_begin_transaction', 'START TRANSACTION', 'db_commit_transaction') as $needle) {
+		// Making the delete atomic needs LOCK IN SHARE MODE added above.
+		expect(strpos($remove, $needle))->toBeFalse($needle);
+	}
+
+	// The parent has to go first; children-first would strand nothing but
+	// would leave the parent readable to a write that then outlives cleanup.
+	expect(strpos($remove, 'DELETE FROM user_auth_group WHERE'))
+		->toBeLessThan(strpos($remove, 'DELETE FROM user_auth_group_realm'));
+});
