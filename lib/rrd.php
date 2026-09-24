@@ -524,12 +524,25 @@ function rrdtool_command_argument($argument)
 
     $argument = (string) $argument;
     if (($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location')) {
-        $argument = rrdtool_proxy_token($argument);
-
         return rrdtool_proxy_token_is_safe($argument) ? $argument : false;
     }
 
     return strpbrk($argument, "\r\n\0") === false ? rrdtool_pipe_encoder()->quote($argument) : false;
+}
+
+/**
+ * As rrdtool_command_argument(), for an RRD path. The proxy receives paths
+ * relative to the RRA root, so the rewrite applies to paths and nothing else.
+ */
+function rrdtool_command_path($path)
+{
+    global $config;
+
+    if (($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location')) {
+        $path = rrdtool_proxy_token($path);
+    }
+
+    return rrdtool_command_argument($path);
 }
 
 /**
@@ -1247,7 +1260,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        $quoted_path = rrdtool_command_argument($data_source_path);
+        $quoted_path = rrdtool_command_path($data_source_path);
         if ($quoted_path === false) {
             cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its path cannot be sent to RRDtool.', false, 'POLLER');
             return false;
@@ -1299,7 +1312,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
         if (is_array($rrd_fields['times']) && cacti_sizeof($rrd_fields['times'])) {
             // Samples for a path RRDtool cannot be given stay queued, as for
             // any other failed update.
-            $quoted_path = rrdtool_command_argument($rrd_path);
+            $quoted_path = rrdtool_command_path($rrd_path);
             if ($quoted_path === false) {
                 cacti_log('ERROR: RRD pending samples retained for Data Source ' . $rrd_fields['local_data_id'] . '. Its path cannot be sent to RRDtool.', false, 'POLLER');
                 $failed = true;

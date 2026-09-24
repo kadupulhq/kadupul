@@ -1583,7 +1583,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        $quoted_path = rrdtool_command_argument($data_source_path);
+        $quoted_path = rrdtool_command_path($data_source_path);
         if ($quoted_path === false) {
             cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its path cannot be sent to RRDtool.', false, 'BOOST');
             return false;
@@ -1630,7 +1630,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
     }
 
     // Refuse a path RRDtool cannot receive before any existence check or create runs.
-    $quoted_path = rrdtool_command_argument($rrd_path);
+    $quoted_path = rrdtool_command_path($rrd_path);
     if ($quoted_path === false) {
         cacti_log('ERROR: RRD update for Data Source ' . $local_data_id . ' was not run. Its path cannot be sent to RRDtool.', false, 'BOOST');
         return 'ERROR: Invalid RRD path';

@@ -50,8 +50,9 @@ socket_shutdown($sockets[1],1);
 $pipe=array($sockets[0],'fixture-key');$values='1700000060:42';
 if($operation==='boost-update'){$result=boost_rrdtool_function_update(1,'/fixture/sample.rrd','value',$values,$pipe);}
 elseif($operation==='update'||$operation==='update-unsafe'){$path=$operation==='update'?'/fixture/sample.rrd':"/fixture/it's a.rrd";$result=rrdtool_function_update(array($path=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('value'=>'42')))),$pipe);}
-elseif($operation==='paths-spaced-root'){$config['rra_path']='/fixture dir';$result=array(rrdtool_command_argument('/fixture dir/sample.rrd'),rrdtool_proxy_command(array('file_exists','/fixture dir/sample.rrd'),'POLLER'),rrdtool_command_argument('/fixture dir/it s.rrd'));}
-elseif($operation==='paths'){$result=array(rrdtool_command_argument('/fixture/sample.rrd'),rrdtool_command_argument('/fixture/it s.rrd'),rrdtool_command_argument("/fixture/it's.rrd"));}
+elseif($operation==='paths-spaced-root'){$config['rra_path']='/fixture dir';$result=array(rrdtool_command_path('/fixture dir/sample.rrd'),rrdtool_proxy_command(array('file_exists','/fixture dir/sample.rrd'),'POLLER'),rrdtool_command_path('/fixture dir/it s.rrd'));}
+elseif($operation==='value-not-path'){$result=array(rrdtool_command_argument('/fixturefast'),rrdtool_command_path('/fixture/sample.rrd'));}
+elseif($operation==='paths'){$result=array(rrdtool_command_path('/fixture/sample.rrd'),rrdtool_command_path('/fixture/it s.rrd'),rrdtool_command_path("/fixture/it's.rrd"));}
 elseif($max){$result=$max[1]==='boost'?boost_rrdtool_function_create(1,false,$pipe):rrdtool_function_create(1,false,$pipe);}
 elseif($operation==='boost-create'){$result=boost_rrdtool_function_create(1,false,$pipe);}
 else{$result=rrdtool_function_create(1,false,$pipe);}
@@ -121,6 +122,10 @@ test('proxied updates carry a bare path, and a path the proxy cannot carry is no
     // The RRA root is sent as '.', so a space in it never reaches the proxy.
     $spaced = rrd_proxy_create_guard_run($this, 'paths-spaced-root', null);
     expect($spaced[0])->toBe(array('./sample.rrd', 'file_exists ./sample.rrd', false));
+
+    // Only paths are made relative; a value that merely starts like the RRA root is sent as is.
+    $value = rrd_proxy_create_guard_run($this, 'value-not-path', null);
+    expect($value[0])->toBe(array('/fixturefast', './sample.rrd'));
 });
 
 test('a proxied create sends a substituted maximum bare, or not at all when the proxy cannot carry it', function ($function) {
