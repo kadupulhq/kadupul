@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Leave the data source type alone when tuning an RRD file with an empty or unknown type, instead of raising a PHP warning and, for an unknown type, sending RRDtool an empty type.
+
 - Stop creating the structured-path directory for an RRD file when only showing its RRDtool create command.
 
 - Pass `--y-grid` and `--units-exponent` to RRDtool once, quoted, instead of twice with the exponent once unquoted. The graph renders the same.

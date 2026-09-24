@@ -83,6 +83,7 @@ test('tune command matches its golden', function () {
             array('fn' => 'rrdtool_function_tune', 'args' => array($all)),
             array('fn' => 'rrdtool_function_tune', 'args' => array(array('heartbeat' => '', 'minimum' => '0', 'maximum' => '', 'data-source-type' => '', 'data-source-rename' => '') + $all)),
             array('fn' => 'rrdtool_function_tune', 'args' => array(array('heartbeat' => '', 'minimum' => '', 'maximum' => '', 'data-source-type' => '', 'data-source-rename' => '') + $all)),
+            array('fn' => 'rrdtool_function_tune', 'args' => array(array('heartbeat' => '', 'minimum' => '', 'maximum' => '5', 'data-source-type' => '99', 'data-source-rename' => '') + $all)),
             array('fn' => 'rrdtool_function_tune', 'args' => array(array('data_source_id' => 22) + $all)),
             array('fn' => 'rrdtool_function_tune', 'args' => array(array('data-source-rename' => "in\0bound") + $all)),
             // Array arguments are quoted for the pipe; a NUL is refused before RRDtool starts.

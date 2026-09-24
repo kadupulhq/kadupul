@@ -1577,7 +1577,7 @@ function rrdtool_function_tune($rrd_tune_array)
     include($config['include_path'] . '/global_arrays.php');
 
     $data_source_name = get_data_source_item_name($rrd_tune_array['data_source_id']);
-    $data_source_type = $data_source_types[$rrd_tune_array['data-source-type']];
+    $data_source_type = $data_source_types[$rrd_tune_array['data-source-type']] ?? '';
     $data_source_path = get_data_source_path($rrd_tune_array['data_source_id'], true);
 
     // escapeshellarg() throws on a NUL, which would end the request with a PHP error.
@@ -1601,7 +1601,8 @@ function rrdtool_function_tune($rrd_tune_array)
         $rrd_tune .= ' --maximum ' . cacti_escapeshellarg($data_source_name . ':' . $rrd_tune_array['maximum']);
     }
 
-    if ($rrd_tune_array['data-source-type'] != '') {
+    // An empty or unknown type leaves the data source type unchanged.
+    if ($data_source_type != '') {
         $rrd_tune .= ' --data-source-type ' . cacti_escapeshellarg($data_source_name . ':' . $data_source_type);
     }
 
