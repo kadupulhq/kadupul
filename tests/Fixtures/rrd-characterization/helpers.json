@@ -351,7 +351,7 @@
     {
         "fn": "rrdtool_function_set_font",
         "options": [],
-        "returned": "--font AXIS:8:'O'\\''Brien' \\\n",
+        "returned": "--font AXIS:8:'O'\"'\"'Brien' \\\n",
         "args_after": [
             "axis",
             "",

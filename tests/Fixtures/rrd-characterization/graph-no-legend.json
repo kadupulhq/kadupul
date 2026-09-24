@@ -66,19 +66,19 @@
                 "CDEF:cdeff='d,8,*'",
                 "VDEF:vdefg='cdeff,95,PERCENT'",
                 "CDEF:cdefj='TIME,<now-300>,GT,f,f,UN,0,f,IF,IF,U,/'",
-                "AREA:a#00CF00FF:         ",
-                "LINE1:cdeff#002A9780::dashes=5,3:dash-offset=2",
+                "AREA:a#00CF00FF:''         ",
+                "LINE1:cdeff#002A9780:'':dashes=5,3:dash-offset=2",
                 "GPRINT:vdefg:'%8.2lf %s' ",
                 "GPRINT:d:LAST:'%8.2lf %s' ",
-                "LINE2:e#FF0000FF:",
+                "LINE2:e#FF0000FF:''",
                 "SHIFT:e:3600",
-                "LINE3:cdefj#0000FFFF:",
-                "AREA:a#00FF004D::STACK",
+                "LINE3:cdefj#0000FFFF:''",
+                "AREA:a#00FF004D:'':STACK",
                 "SHIFT:a:60",
-                "LINE1.50:d#123456FF::STACK:dashes=4",
-                "TICK:e#FF00FFFF:0.5:",
-                "HRULE:95#FF9900FF::dashes=2:dash-offset=1",
-                "VRULE:1700001800#000000FF:        \r\nquit\r\n"
+                "LINE1.50:d#123456FF:'':STACK:dashes=4",
+                "TICK:e#FF00FFFF:0.5:''",
+                "HRULE:95#FF9900FF:'':dashes=2:dash-offset=1",
+                "VRULE:1700001800#000000FF:''        \r\nquit\r\n"
             ]
         }
     ],
