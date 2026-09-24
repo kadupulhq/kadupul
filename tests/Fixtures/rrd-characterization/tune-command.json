@@ -38,9 +38,7 @@
     {
         "returned": null,
         "printed": "",
-        "diagnostics": [
-            "2: Undefined array key \"\""
-        ],
+        "diagnostics": [],
         "commands": [
             {
                 "argv": [
@@ -68,9 +66,7 @@
     {
         "returned": null,
         "printed": "",
-        "diagnostics": [
-            "2: Undefined array key \"\""
-        ],
+        "diagnostics": [],
         "commands": [],
         "args": [
             {
@@ -78,6 +74,34 @@
                 "minimum": "",
                 "maximum": "",
                 "data-source-type": "",
+                "data-source-rename": "",
+                "data_source_id": 21
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "tune",
+                    "<DIR>/rra/router_traffic_21.rrd",
+                    "--maximum",
+                    "traffic_in:5"
+                ],
+                "stdin": [
+                    ""
+                ]
+            }
+        ],
+        "args": [
+            {
+                "heartbeat": "",
+                "minimum": "",
+                "maximum": "5",
+                "data-source-type": "99",
                 "data-source-rename": "",
                 "data_source_id": 21
             }

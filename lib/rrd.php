@@ -634,7 +634,13 @@ function rrdtool_create_path($path, $local_data_id, $logopt)
  */
 function rrdtool_create_prepare($data_source_path, $show_source, $use_proxy, $rrdtool_pipe, $local_data_id, $logopt)
 {
-    $quoted_path = $show_source == true ? '' : rrdtool_create_path($data_source_path, $local_data_id, $logopt);
+    // Showing the command must not touch the disk; the owner and group are
+    // only used once the file is created.
+    if ($show_source == true) {
+        return array('', null, null);
+    }
+
+    $quoted_path = rrdtool_create_path($data_source_path, $local_data_id, $logopt);
     if ($quoted_path === false) {
         return false;
     }
@@ -1571,7 +1577,7 @@ function rrdtool_function_tune($rrd_tune_array)
     include($config['include_path'] . '/global_arrays.php');
 
     $data_source_name = get_data_source_item_name($rrd_tune_array['data_source_id']);
-    $data_source_type = $data_source_types[$rrd_tune_array['data-source-type']];
+    $data_source_type = $data_source_types[$rrd_tune_array['data-source-type']] ?? '';
     $data_source_path = get_data_source_path($rrd_tune_array['data_source_id'], true);
 
     // escapeshellarg() throws on a NUL, which would end the request with a PHP error.
@@ -1595,7 +1601,8 @@ function rrdtool_function_tune($rrd_tune_array)
         $rrd_tune .= ' --maximum ' . cacti_escapeshellarg($data_source_name . ':' . $rrd_tune_array['maximum']);
     }
 
-    if ($rrd_tune_array['data-source-type'] != '') {
+    // An empty or unknown type leaves the data source type unchanged.
+    if ($data_source_type != '') {
         $rrd_tune .= ' --data-source-type ' . cacti_escapeshellarg($data_source_name . ':' . $data_source_type);
     }
 
@@ -1886,16 +1893,6 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
             case 'alt_y_grid':
                 if ($value == CHECKED) {
                     $graph_opts .= '--alt-y-grid' . RRD_NL;
-                }
-                break;
-            case 'unit_value':
-                if (!empty($value)) {
-                    $graph_opts .= '--y-grid=' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                }
-                break;
-            case 'unit_exponent_value':
-                if (preg_match('/^[0-9]+$/', $value)) {
-                    $graph_opts .= '--units-exponent=' . $value . RRD_NL;
                 }
                 break;
             case 'height':
@@ -2540,6 +2537,10 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
     $i = 0;
 
+    /* XPORT columns count from 1, as rrdxport2array() numbers them */
+    $j = 1;
+    $stacked_columns = array();
+
     /* hack for rrdtool 1.2.x support */
     $graph_item_stack_type = '';
 
@@ -3161,7 +3162,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                     } else {
                         $legend_name = $graph_variables['text_format'][$graph_item_id];
                     }
-                    $stacked_columns['col' . $j] = ($graph_item_types[$graph_item['graph_type_id']] == 'STACK') ? 1 : 0;
+                    $stacked_columns['col' . $j] = ($graph_item_types[$graph_item['graph_type_id']] == 'AREA:STACK') ? 1 : 0;
                     $j++;
 
                     $txt_graph_items .= 'XPORT:' . rrdtool_pipe_quote($data_source_name) . ':' . str_replace(':', '', rrdtool_pipe_quote($legend_name)) ;
@@ -4753,11 +4754,13 @@ function rrdtool_parse_error($string)
             $rra_path = dirname($filename) . "/";
             if (!is_resource_writable($rra_path)) {
                 $message = __('Website does not have write access to %s, may be unable to create/update RRDs', 'folder');
-                $rra_name = str_replace($config['base_path'], '', $rra_path);
+                $rra_name = strncmp($rra_path, $config['base_path'] . '/', strlen($config['base_path']) + 1) === 0 ? substr($rra_path, strlen($config['base_path'])) : $rra_path;
                 $rra_path = "";
             } else {
-                if (stripos($filename, $config['base_path']) >= 0) {
-                    $rra_file = str_replace($config['base_path'] . '/rra/', '', $filename);
+                // Only a file under the install's rra/ folder has a folder to show.
+                $rra_root = $config['base_path'] . '/rra/';
+                if (strncmp($filename, $rra_root, strlen($rra_root)) === 0) {
+                    $rra_file = substr($filename, strlen($rra_root));
                     $rra_name = basename($rra_file);
                     $rra_path = dirname($rra_file);
                 } else {
@@ -4774,7 +4777,8 @@ function rrdtool_parse_error($string)
                 $rra_path = '(' . __('RRA Folder') . ': ' . ((empty($rra_path) || $rra_path == ".") ? __('Root') : $rra_path) . ')';
             }
 
-            $string = $message . ":\n\0x27\n" . $rra_name;
+            // rrdtool_create_error_image() keeps the blank line as a gap before the file name.
+            $string = $message . ":\n\n" . $rra_name;
             if (!empty($rra_path)) {
                 $string .= "\n" . $rra_path;
             }
@@ -4896,6 +4900,7 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
     $texth = ($lines * $font_size + (($lines - 1) * $padding));
     $ypos  = round((200 / 2) + ($texth / 2), 0);
 
+    /* blank lines still take their place, as $texth counts them */
     /* set the font of the image */
     if (isset($font_file) && file_exists($font_file) && is_readable($font_file) && function_exists('imagettftext')) {
         foreach ($strings as $string) {
@@ -4903,8 +4908,8 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
                 if (@imagettftext($image, $font_size, 0, $xpos, $ypos, $text_color, $font_file, $string) === false) {
                     cacti_log('TTF text overlay failed');
                 }
-                $ypos -= ($font_size + $padding);
             }
+            $ypos -= ($font_size + $padding);
         }
     } else {
         foreach ($strings as $string) {
@@ -4912,8 +4917,8 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
                 if (@imagestring($image, $font_size, $xpos, $ypos, $string, $text_color) === false) {
                     cacti_log('Text overlay failed');
                 }
-                $ypos -= ($font_size + $padding);
             }
+            $ypos -= ($font_size + $padding);
         }
     }
 

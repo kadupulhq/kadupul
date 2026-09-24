@@ -12,6 +12,16 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Leave the data source type alone when tuning an RRD file with an empty or unknown type, instead of raising a PHP warning and, for an unknown type, sending RRDtool an empty type.
+
+- Stop creating the structured-path directory for an RRD file when only showing its RRDtool create command.
+
+- Pass `--y-grid` and `--units-exponent` to RRDtool once, quoted, instead of twice with the exponent once unquoted. The graph renders the same.
+
+- Mark stacked areas as stacked in graph export metadata, and key that metadata, and the name given to an unnamed export column, by the column's own number. The flag compared against a type name no item has, and the numbering started after the count of every graph item, so no key matched a column.
+
+- Show a blank line, not a NUL byte and `x27`, between the message and the file name in the graph error image for a missing or unwritable RRD file, and show a file outside the Kadupul directory as a custom RRA folder instead of its full directory.
+
 - Quote RRD file paths, and data source maximums taken from device data, in the RRDtool commands that create, update, fetch, inspect, dump, restore, remove and archive RRD files, including Boost, RRD check and Data Source statistics, so a path with a space or a quote works and neither value can add arguments to the command.
 
 - Quote the graph arguments Kadupul writes to RRDtool, such as data source paths in DEF clauses, legend, GPRINT and COMMENT text, axis options and font names, the way RRDtool reads them rather than the way a shell does. A single quote in one of these values made RRDtool reject the whole graph, and a pair of them left stray backslashes in the text. The quoting is now the same on Windows, where values used to be wrapped in double quotes with backslash escapes that RRDtool does not honour. `|host_*|` and `|query_*|` values in axis labels and the other graph options are now substituted before quoting, so a quote in them stays inside the argument. A value containing a NUL byte now produces the graph error image, and RRD tuning refuses one, instead of failing with a PHP error.

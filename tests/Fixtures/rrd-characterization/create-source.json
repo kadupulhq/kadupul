@@ -40,7 +40,7 @@
         ]
     },
     {
-        "returned": true,
+        "returned": false,
         "printed": "",
         "diagnostics": [],
         "commands": [],
