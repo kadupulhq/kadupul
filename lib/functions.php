@@ -900,6 +900,21 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 }
 
 /**
+ * The form_input_validate() pattern for a data source minimum or maximum: the
+ * whole value is a number or U, or one of $tokens, such as 'ifSpeed' for
+ * |query_ifSpeed|. The create command writes these values unquoted.
+ */
+function data_source_limit_pattern(array $tokens = array())
+{
+    $alternatives = array('-?(?:[0-9]+(?:\.[0-9]*)?|[0-9]*\.[0-9]+)(?:[eE][+\-]?[0-9]+)?', 'U');
+    foreach ($tokens as $token) {
+        $alternatives[] = preg_quote('|query_' . $token . '|', '/');
+    }
+
+    return '^(?:' . implode('|', $alternatives) . ')\z';
+}
+
+/**
  * check_changed - determines if a request variable has changed between page loads
  *
  * @return - true if the value changed between loads
