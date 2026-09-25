@@ -7,10 +7,12 @@ namespace DataSourceLimitValidationTest;
 
 require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
 
-$root = dirname(__DIR__, 3);
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'form_input_validate'));
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'is_error_message'));
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents($root . '/data_sources.php'), 'form_save'));
+// lib/functions.php cannot be loaded here, since other test files stub its
+// functions, so the pattern matrix runs its real functions from source.
+$functions = file_get_contents(dirname(__DIR__, 3) . '/lib/functions.php');
+foreach (array('form_input_validate', 'is_error_message', 'data_source_limit_pattern') as $function) {
+    eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($functions, $function));
+}
 
 function cacti_sizeof($value)
 {
@@ -20,133 +22,129 @@ function read_config_option($name)
 {
     return '';
 }
-function raise_message($id, ...$args)
-{
-    $GLOBALS['limit_messages'][] = $id;
-}
+function raise_message(...$args) {}
 function cacti_log(...$args) {}
-function isset_request_var($name)
-{
-    return isset($_REQUEST[$name]);
-}
-function isempty_request_var($name)
-{
-    return empty($_REQUEST[$name]);
-}
-function get_request_var($name)
-{
-    return $_REQUEST[$name] ?? '';
-}
-function get_filter_request_var($name, ...$args)
-{
-    return get_request_var($name);
-}
-function get_nfilter_request_var($name, $default = '')
-{
-    return $_REQUEST[$name] ?? $default;
-}
-function sql_save($save, $table)
-{
-    $GLOBALS['limit_saved'][$table] = $save;
 
-    return 5;
-}
-function db_fetch_cell_prepared(...$args)
-{
-    return '0';
-}
-function set_config_option(...$args) {}
-function update_data_source_title_cache(...$args) {}
-function generate_data_source_path(...$args) {}
-function update_poller_cache(...$args) {}
-function header(...$args) {}
-
-/** The validation pattern a page passes to form_input_validate() for $field. */
-function limit_pattern(string $page, string $field): string
-{
-    $source = file_get_contents(dirname(__DIR__, 3) . '/' . $page);
-    $call = preg_quote("\$save3['$field']", '/') . '\s*=\s*form_input_validate\([^\n]*?, (\'\^(?:[^\'\\\\]|\\\\.)*\'),';
-    if (preg_match('/' . $call . '/', $source, $match) !== 1) {
-        throw new \RuntimeException("No validation found for $field in $page");
-    }
-
-    // A single-quoted literal escapes only a backslash and a quote.
-    return strtr(substr($match[1], 1, -1), array('\\\\' => '\\', "\\'" => "'"));
-}
-
-/** Whether form_input_validate() accepts $value with the page's own pattern. */
-function limit_accepted(string $page, string $field, string $value): bool
+function limit_accepted(array $tokens, string $value): bool
 {
     $_SESSION = array();
-    form_input_validate($value, $field, limit_pattern($page, $field), false, 3);
+    form_input_validate($value, 'rrd_minimum', data_source_limit_pattern($tokens), false, 3);
 
     return !is_error_message();
+}
+
+/**
+ * Post one save to the real $page in a child process, with $fields over a
+ * valid request, and return what it saved and which fields failed.
+ */
+function limit_save($test, string $page, array $fields): array
+{
+    $root = dirname(__DIR__, 3);
+    $requests = array(
+        'data_sources.php' => array(
+            'save_component_data_source' => '1', 'local_data_id' => '5', 'data_template_id' => '0', '_data_template_id' => '0',
+            'host_id' => '0', '_host_id' => '0', 'current_rrd' => '7', 'data_template_data_id' => '3',
+            'local_data_template_data_id' => '0', 'data_input_id' => '1', '_data_input_id' => '1', 'name' => 'Traffic',
+            'data_source_path' => 'rra/traffic_5.rrd', 'data_source_profile_id' => '1', 'rrd_step' => '300',
+            'rrd_heartbeat' => '600', 'data_source_type_id' => '1', 'data_source_name' => 'value',
+        ),
+        'data_templates.php' => array(
+            'save_component_template' => '1', 'data_template_id' => '4', 'data_template_data_id' => '3',
+            'data_template_rrd_id' => '7', 'data_input_id' => '1', 'name' => 'Traffic', 'template_name' => 'Traffic',
+            'data_source_profile_id' => '1', 'data_source_type_id' => '1', 'data_source_name' => 'value',
+        ),
+    );
+    $request = $fields + array('action' => 'save', 'rrd_minimum' => '0', 'rrd_maximum' => 'U') + $requests[$page];
+    $directory = sys_get_temp_dir() . '/limit-save-' . bin2hex(random_bytes(8));
+    mkdir($directory . '/include', 0700, true);
+    file_put_contents($directory . '/include/auth.php', '<?php');
+    symlink($root . '/lib', $directory . '/lib');
+    $coverage = $test->getTestResultObject()->getCodeCoverage();
+    $environment = getenv();
+    $environment['LIMIT_COVERAGE'] = $coverage === null ? '0' : '1';
+    try {
+        $process = proc_open(
+            array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~',
+                $root . '/tests/Fixtures/data-source-limit-save.php', $root, $page, json_encode($request)),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            $directory,
+            $environment
+        );
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0, $stderr)->and($stderr)->toBe('');
+        if ($coverage !== null) {
+            foreach (glob($directory . '/*.coverage') as $report) {
+                $coverage->merge(unserialize(file_get_contents($report)));
+            }
+        }
+
+        return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+    } finally {
+        foreach (glob($directory . '/*.coverage') as $report) {
+            unlink($report);
+        }
+        unlink($directory . '/lib');
+        unlink($directory . '/include/auth.php');
+        rmdir($directory . '/include');
+        rmdir($directory);
+    }
 }
 
 $numbers = array('0', '-5', '2.5', '.5', '5.', '1e3', '-2.5E-3', 'U');
 $refused = array('5 x', '0;x', '1U', 'U 0', 'x U', "5\n", '-', '1e', '0x10', ' 0', '+5', 'u');
 
-test('a data source minimum accepts only a number or U', function ($page, $value, $expected) {
-    expect(limit_accepted($page, 'rrd_minimum', $value))->toBe($expected);
+test('a limit pattern accepts a number or U and nothing around it', function ($value, $expected) {
+    foreach (array(array(), array('ifSpeed'), array('ifSpeed', 'ifHighSpeed')) as $tokens) {
+        expect(limit_accepted($tokens, $value))->toBe($expected);
+    }
 })->with(function () use ($numbers, $refused) {
-    $cases = array();
-    foreach (array('data_sources.php', 'data_templates.php') as $page) {
-        foreach ($numbers as $value) {
-            $cases[] = array($page, $value, true);
-        }
-        foreach (array_merge($refused, array('|query_ifSpeed|', '|query_ifHighSpeed|')) as $value) {
-            $cases[] = array($page, $value, false);
-        }
-    }
-
-    return $cases;
-});
-
-test('a data source maximum accepts only a number, U or an interface speed', function ($page, $value, $expected) {
-    expect(limit_accepted($page, 'rrd_maximum', $value))->toBe($expected);
-})->with(function () use ($numbers, $refused) {
-    $cases = array();
-    foreach ($numbers as $value) {
-        $cases[] = array('data_sources.php', $value, true);
-        $cases[] = array('data_templates.php', $value, true);
-    }
-    foreach ($refused as $value) {
-        $cases[] = array('data_sources.php', $value, false);
-        $cases[] = array('data_templates.php', $value, false);
-    }
-    foreach (array('|query_ifSpeed|', '|query_ifHighSpeed|') as $token) {
-        $cases[] = array('data_sources.php', $token, true);
-        $cases[] = array('data_sources.php', $token . ' x', false);
-        $cases[] = array('data_sources.php', 'x ' . $token, false);
-    }
-    $cases[] = array('data_templates.php', '|query_ifSpeed|', true);
-    $cases[] = array('data_templates.php', '|query_ifSpeed| x', false);
-    $cases[] = array('data_templates.php', 'x |query_ifSpeed|', false);
-    // Templates never offered the high speed token.
-    $cases[] = array('data_templates.php', '|query_ifHighSpeed|', false);
-
-    return $cases;
-});
-
-test('a data source item that fails validation is not stored', function ($minimum, $stored) {
-    $_SESSION = array();
-    $GLOBALS['limit_saved'] = array();
-    $GLOBALS['limit_messages'] = array();
-    $_REQUEST = array(
-        'save_component_data_source' => '1', 'local_data_id' => '5', 'data_template_id' => '0', '_data_template_id' => '0',
-        'host_id' => '0', '_host_id' => '0', 'current_rrd' => '7', 'data_template_data_id' => '3',
-        'local_data_template_data_id' => '0', 'data_input_id' => '1', '_data_input_id' => '1', 'name' => 'Traffic',
-        'data_source_path' => 'rra/traffic_5.rrd', 'data_source_profile_id' => '1', 'rrd_step' => '300',
-        'rrd_maximum' => 'U', 'rrd_minimum' => $minimum, 'rrd_heartbeat' => '600', 'data_source_type_id' => '1',
-        'data_source_name' => 'value',
+    return array_merge(
+        array_map(fn($value) => array($value, true), $numbers),
+        array_map(fn($value) => array($value, false), $refused)
     );
+});
 
-    form_save();
+test('a limit pattern accepts only the interface speed tokens it is given', function ($tokens, $value, $expected) {
+    expect(limit_accepted($tokens, $value))->toBe($expected);
+})->with(array(
+    array(array(), '|query_ifSpeed|', false),
+    array(array('ifSpeed'), '|query_ifSpeed|', true),
+    array(array('ifSpeed'), '|query_ifHighSpeed|', false),
+    array(array('ifSpeed', 'ifHighSpeed'), '|query_ifHighSpeed|', true),
+    array(array('ifSpeed'), '|query_ifSpeed| x', false),
+    array(array('ifSpeed'), 'x |query_ifSpeed|', false),
+    array(array('ifSpeed'), '|query_ifSpeedx', false),
+));
 
-    expect(isset($GLOBALS['limit_saved']['data_template_rrd']))->toBe($stored);
-    if ($stored) {
-        expect($GLOBALS['limit_saved']['data_template_rrd']['rrd_minimum'])->toBe($minimum);
-    } else {
-        expect($_SESSION['sess_error_fields'])->toBe(array('rrd_minimum' => 'rrd_minimum'));
+test('a data source page stores a valid minimum and maximum', function ($page, $fields) {
+    $result = limit_save($this, $page, $fields);
+
+    expect($result['errors'])->toBe(array());
+    foreach ($fields as $field => $value) {
+        expect($result['saved']['data_template_rrd'][$field])->toBe($value);
     }
-})->with(array(array('0', true), array('U', true), array('5 x', false), array('0;x', false)));
+})->with(array(
+    array('data_sources.php', array('rrd_minimum' => '-2.5', 'rrd_maximum' => '|query_ifHighSpeed|')),
+    array('data_sources.php', array('rrd_minimum' => 'U', 'rrd_maximum' => '1e9')),
+    array('data_templates.php', array('rrd_minimum' => '-2.5', 'rrd_maximum' => '|query_ifSpeed|')),
+    array('data_templates.php', array('rrd_minimum' => 'U', 'rrd_maximum' => '1e9')),
+));
+
+test('a data source page stores nothing for a limit that fails validation', function ($page, $field, $value) {
+    $result = limit_save($this, $page, array($field => $value));
+
+    expect($result['errors'])->toBe(array($field))
+        ->and($result['saved'])->not->toHaveKey('data_template_rrd');
+})->with(array(
+    array('data_sources.php', 'rrd_minimum', '5 x'),
+    array('data_sources.php', 'rrd_minimum', '0;x'),
+    array('data_sources.php', 'rrd_minimum', '|query_ifSpeed|'),
+    array('data_sources.php', 'rrd_maximum', '100 x'),
+    array('data_templates.php', 'rrd_minimum', '5 x'),
+    array('data_templates.php', 'rrd_minimum', '0;x'),
+    array('data_templates.php', 'rrd_maximum', '|query_ifHighSpeed|'),
+));
