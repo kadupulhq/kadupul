@@ -177,6 +177,35 @@ function display_help()
     print "    --debug|-d     Output debug information.  Similar to cacti's DEBUG logging level.\n\n";
 }
 
+/**
+ * Create the realtime copy of a data source's RRD: the definition that
+ * rrdtool_function_create() shows, with the realtime path and step, sent
+ * through the RRDtool pipe. No shell is involved.
+ */
+function create_realtime_rrd($local_data_id, $data_source_path, $rt_graph_path, $rrdtool_pipe)
+{
+    $command     = @rrdtool_function_create($local_data_id, true);
+    $prefix      = read_config_option('path_rrdtool') . ' create' . RRD_NL . $data_source_path;
+    $quoted_path = rrdtool_command_path($rt_graph_path);
+
+    if (!is_string($command) || !str_starts_with($command, $prefix) || $quoted_path === false) {
+        cacti_log('ERROR: Realtime RRD for Data Source ' . $local_data_id . ' was not created.', false, 'POLLER');
+
+        return false;
+    }
+
+    /* minimum refresh interval */
+    $definition = preg_replace('/--step\s(\d+)/', '--step ' . (int) read_config_option('realtime_interval'), substr($command, strlen($prefix)));
+
+    if (rrdtool_execute('create ' . $quoted_path . $definition, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER') === false) {
+        cacti_log('ERROR: Realtime RRD for Data Source ' . $local_data_id . ' was not created. RRDtool refused it.', false, 'POLLER');
+
+        return false;
+    }
+
+    return true;
+}
+
 /* process_poller_output REAL TIME MODIFIED */
 function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval)
 {
@@ -218,34 +247,11 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval)
 
             /* create rt rrd */
             if (!file_exists($rt_graph_path)) {
-                /* get the syntax */
-                $command = @rrdtool_function_create($item['local_data_id'], true);
-
-                /* replace path */
-                $command = str_replace($data_source_path, $rt_graph_path, $command);
-
-                /* minimum refresh interval */
-                $step = read_config_option('realtime_interval');
-
-                /* replace step */
-                $command = preg_replace('/--step\s(\d+)/', '--step ' . $step, $command);
-
-                /* WIN32: before sending this command off to rrdtool, get rid
-                of all of the '\' characters. Unix does not care; win32 does.
-                Also make sure to replace all of the fancy "\"s at the end of the line,
-                but make sure not to get rid of the "\n"s that are supposed to be
-                in there (text format) */
-                $command = str_replace("\\\n", " ", $command);
-
-                /* create the rrdfile */
-                shell_exec($command);
-
-                /* change permissions so that the poller can clear */
-                @chmod($rt_graph_path, 0644);
-            } else {
-                /* change permissions so that the poller can clear */
-                @chmod($rt_graph_path, 0644);
+                create_realtime_rrd($item['local_data_id'], $data_source_path, $rt_graph_path, $rrdtool_pipe);
             }
+
+            /* change permissions so that the poller can clear */
+            @chmod($rt_graph_path, 0644);
 
             /* now, let's update the path to keep the RRDs updated */
             $item['rrd_path'] = $rt_graph_path;
