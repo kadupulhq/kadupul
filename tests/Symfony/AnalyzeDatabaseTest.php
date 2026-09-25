@@ -26,6 +26,7 @@ use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
 use Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance;
 use Kadupul\Platform\Infrastructure\Symfony\SystemClock;
+use Kadupul\Tests\Fixtures\RealMariaDb;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -34,6 +35,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class AnalyzeDatabaseTest extends TestCase
 {
+    use RealMariaDb;
+
     private string $root;
     private MockClock $clock;
 
@@ -242,20 +245,7 @@ final class AnalyzeDatabaseTest extends TestCase
 
     public function testAnalyzeAgainstARealMariaDbConnection(): void
     {
-        $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
-        if ($dsn === false || $dsn === '') {
-            self::markTestSkipped('Set KADUPUL_TEST_MYSQL_DSN to run against a real MariaDB.');
-        }
-        // The variable holds a PDO DSN, shared with tests/security; its keys
-        // happen to match DBAL's parameter names.
-        $params = ['driver' => 'pdo_mysql', 'user' => getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', 'password' => getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''];
-        foreach (explode(';', (string) preg_replace('/^mysql:/', '', $dsn)) as $pair) {
-            [$key, $value] = explode('=', $pair, 2) + [1 => ''];
-            if (in_array($key, ['host', 'port', 'dbname', 'unix_socket', 'charset'], true)) {
-                $params[$key] = $key === 'port' ? (int) $value : $value;
-            }
-        }
-        $db = DriverManager::getConnection($params);
+        $db = $this->realMariaDb();
 
         $tables = ['kadupul_analyze_a', 'kadupul_analyze_b', 'kadupul_analyze_c'];
         // Setup sits inside the try too, so a table created before a failing
