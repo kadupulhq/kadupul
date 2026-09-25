@@ -97,16 +97,23 @@ function suite_isolation_is_ampersand($type) {
  * What a file declares in the process that loads it.
  *
  * 'namespace' is the first namespace declared, or '' for the global one.
- * 'functions' holds the names of the functions declared at the top level of
- * the global namespace, which are the only ones that can collide with another
- * file. 'globals' maps each key written to $GLOBALS while the file loads to
- * the line that wrote it; those writes are what reaches another file's tests,
- * so two files in one suite writing the same key overwrite each other before a
- * single test has run. A key that is not a plain string is recorded as '?'.
  *
- * 'writes' holds every key the file assigns to $GLOBALS anywhere, at load or
- * from inside a function, which is what makes two files contend for one key
- * even when only one of them writes it at load.
+ * 'functions' holds the names of the functions declared in the global
+ * namespace outside a class body, which are the ones that can collide with
+ * another file. A function declared inside an if, or inside another function,
+ * counts: PHP declares it globally when that code runs.
+ *
+ * 'globals' maps each $GLOBALS key the file writes while it loads to the line
+ * that wrote it. Those writes are what reaches another file's tests, so two
+ * files in one suite writing the same key overwrite each other before a single
+ * test has run. Load time means outside every function and closure body, at
+ * any brace depth. A key that is not a plain string is recorded as '?'.
+ *
+ * 'writes' holds every key the file writes anywhere, at load or from inside a
+ * function, which is what makes two files contend for one key even when only
+ * one of them writes it at load. Assignment, ++, --, unset() and a
+ * by-reference bind all count, as does a name declared with the global keyword,
+ * which reaches the same slot without naming $GLOBALS.
  *
  * 'braced' says the file declares a namespace with a brace. The reader takes
  * the first namespace for the whole file, so a braced one may be followed by a
@@ -118,13 +125,31 @@ function suite_isolation_is_ampersand($type) {
  * @return array{namespace:string,braced:bool,functions:array<int,string>,globals:array<string,int>,writes:array<int,string>}
  */
 function suite_isolation_declarations($path) {
-	$tokens = token_get_all(file_get_contents($path));
+	$source = @file_get_contents($path);
+
+	if ($source === false) {
+		/* an unreadable file tokenises to nothing, and every rule below then
+		 * passes it, so say so rather than report a clean file */
+		throw new RuntimeException('Cannot read ' . $path);
+	}
+
+	$tokens = token_get_all($source);
 	$result = array('namespace' => '', 'braced' => false, 'functions' => array(), 'globals' => array(), 'writes' => array());
 
-	$depth      = 0;
-	$class_body = array();
-	$namespace  = '';
-	$count      = count($tokens);
+	$depth     = 0;
+	$bodies    = array();
+	$namespace = '';
+	$count     = count($tokens);
+
+	$inside = static function ($kind) use (&$bodies) {
+		foreach ($bodies as $body) {
+			if ($body['kind'] === $kind) {
+				return true;
+			}
+		}
+
+		return false;
+	};
 
 	for ($i = 0; $i < $count; $i++) {
 		$token = $tokens[$i];
@@ -133,34 +158,11 @@ function suite_isolation_declarations($path) {
 			if ($token === '{') {
 				$depth++;
 			} elseif ($token === '}') {
-				if (end($class_body) === $depth) {
-					array_pop($class_body);
+				if ($bodies !== array() && end($bodies)['depth'] === $depth) {
+					array_pop($bodies);
 				}
 
 				$depth--;
-			}
-
-			continue;
-		}
-
-		/**
-		 * A method is not a global function, but a function declared inside an
-		 * if or inside another function is: PHP declares it when that code
-		 * runs, and the usual shape is a function_exists() guard, which is
-		 * exactly the collision this guard exists to find. So track class-like
-		 * bodies rather than brace depth.
-		 */
-		if (in_array($token[0], array(T_CLASS, T_INTERFACE, T_TRAIT), true) || (defined('T_ENUM') && $token[0] === T_ENUM)) {
-			for ($j = $i + 1; $j < $count; $j++) {
-				if ($tokens[$j] === '{') {
-					$class_body[] = $depth + 1;
-
-					break;
-				}
-
-				if ($tokens[$j] === ';' || $tokens[$j] === '(') {
-					break;
-				}
 			}
 
 			continue;
@@ -203,16 +205,70 @@ function suite_isolation_declarations($path) {
 			continue;
 		}
 
-		/* a closure or an arrow function has no name, so nothing to collide */
-		if ($token[0] === T_FUNCTION && $class_body === array() && $namespace === '') {
+		/* a method is not a global function, so track class-like bodies */
+		if (in_array($token[0], array(T_CLASS, T_INTERFACE, T_TRAIT), true) || (defined('T_ENUM') && $token[0] === T_ENUM)) {
+			for ($j = $i + 1; $j < $count; $j++) {
+				if ($tokens[$j] === '{') {
+					$bodies[] = array('kind' => 'class', 'depth' => $depth + 1);
+
+					break;
+				}
+
+				if ($tokens[$j] === ';' || $tokens[$j] === '(') {
+					break;
+				}
+			}
+
+			continue;
+		}
+
+		if ($token[0] === T_FUNCTION) {
+			/* the name, if any: a closure has none and cannot collide */
 			for ($j = $i + 1; $j < $count; $j++) {
 				if (is_array($tokens[$j]) && $tokens[$j][0] === T_STRING) {
-					$result['functions'][] = $tokens[$j][1];
+					if (!$inside('class') && $namespace === '') {
+						$result['functions'][] = $tokens[$j][1];
+					}
 
 					break;
 				}
 
 				if ($tokens[$j] === '(' || $tokens[$j] === ';') {
+					break;
+				}
+			}
+
+			/* and the body, so a write inside it is not a load-time one */
+			for ($j = $i + 1; $j < $count; $j++) {
+				if ($tokens[$j] === '{') {
+					$bodies[] = array('kind' => 'function', 'depth' => $depth + 1);
+
+					break;
+				}
+
+				if ($tokens[$j] === ';') {
+					break;
+				}
+			}
+
+			continue;
+		}
+
+		/**
+		 * global $x; reaches the same slot as $GLOBALS['x'] without naming it,
+		 * and a fixture that declares a name global almost always writes it.
+		 * Record it as contention rather than as a load-time write, because
+		 * the statement itself writes nothing.
+		 */
+		if ($token[0] === T_GLOBAL) {
+			for ($j = $i + 1; $j < $count; $j++) {
+				if (is_array($tokens[$j]) && $tokens[$j][0] === T_VARIABLE) {
+					$result['writes'][] = ltrim($tokens[$j][1], '$');
+
+					continue;
+				}
+
+				if ($tokens[$j] === ';') {
 					break;
 				}
 			}
@@ -293,7 +349,7 @@ function suite_isolation_declarations($path) {
 			if ($mutates) {
 				$result['writes'][] = $key;
 
-				if ($depth === 0) {
+				if (!$inside('function')) {
 					$result['globals'][$key] = $token[2];
 				}
 			}

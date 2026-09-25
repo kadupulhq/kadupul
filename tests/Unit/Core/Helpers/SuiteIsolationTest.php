@@ -398,6 +398,50 @@ it('reports a function declared inside a conditional', function () {
 	}
 });
 
+it('records a load-time write inside a top-level conditional', function () {
+	// The brace depth is not zero there, but the write still happens while the
+	// file loads, so it reaches every sibling.
+	$fixture = "<?php\nif (PHP_SAPI === 'cli') {\n\t\$GLOBALS['in_a_conditional'] = 1;\n}\n";
+
+	$path = sys_get_temp_dir() . '/suite-isolation-cwrite-' . getmypid() . '-' . mt_rand() . '.php';
+
+	file_put_contents($path, $fixture);
+
+	try {
+		expect(array_keys(\suite_isolation_declarations($path)['globals']))->toBe(array('in_a_conditional'));
+	} finally {
+		unlink($path);
+	}
+});
+
+it('separates a load-time write from one made when the code runs', function () {
+	$fixture = "<?php\nfunction writer() {\n\tglobal \$via_keyword;\n\n\t\$GLOBALS['in_a_function'] = 1;\n\t\$via_keyword = 2;\n}\n\n\$closure = function () { \$GLOBALS['in_a_closure'] = 1; };\n\nclass Holder {\n\tpublic function method() { \$GLOBALS['in_a_method'] = 1; }\n}\n";
+
+	$path = sys_get_temp_dir() . '/suite-isolation-fwrite-' . getmypid() . '-' . mt_rand() . '.php';
+
+	file_put_contents($path, $fixture);
+
+	try {
+		$declared = \suite_isolation_declarations($path);
+
+		// None of these run while the file loads, so none can beat a sibling,
+		// but each still contends for the key if a sibling writes it at load.
+		// The global keyword reaches the same slot without naming $GLOBALS.
+		expect($declared['globals'])->toBe(array());
+		expect($declared['writes'])->toBe(array('via_keyword', 'in_a_function', 'in_a_closure', 'in_a_method'));
+		expect($declared['functions'])->toBe(array('writer'));
+	} finally {
+		unlink($path);
+	}
+});
+
+it('fails rather than reporting a file it could not read', function () {
+	// An unreadable file tokenises to nothing, and every rule then passes it.
+	expect(static function () {
+		\suite_isolation_declarations('/nonexistent/suite-isolation.php');
+	})->toThrow(\RuntimeException::class);
+});
+
 it('reports the mutations that are not assignments', function () {
 	$fixture = "<?php\n\$GLOBALS['counter'] = 0;\n\$GLOBALS['counter']++;\n++\$GLOBALS['other'];\nunset(\$GLOBALS['gone']);\n\$bound = &\$GLOBALS['bound'];\n\$mask = 1 & \$GLOBALS['read_only'];\n\$look = \$GLOBALS['plain_read'];\n";
 

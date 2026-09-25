@@ -64,7 +64,10 @@ A file in a shared configuration shares a process with its neighbours, so:
 - Do not mutate a `$GLOBALS` key another file in the configuration mutates.
   Every file loads before any test runs, so a load-time write beats a sibling
   that sets the same key from inside its own call and then reads it back.
-  Assignment, `++`, `--`, `unset()` and a by-reference bind all count.
+  Assignment, `++`, `--`, `unset()` and a by-reference bind all count, as does
+  a name declared with the `global` keyword, which reaches the same slot
+  without naming `$GLOBALS`. A write inside a top-level `if` is a load-time
+  write; one inside a function, a closure or a method is not.
 - Own a value the code under test reads, `$GLOBALS['config']` above all, inside
   the call rather than at load. A fixture that set it at load had its value
   replaced by a sibling, and then read a directory the sibling had removed.
