@@ -24,6 +24,7 @@ array_shift($parms);
 
 $debug		= false;
 $host_id	= 'all';
+$query_id	= false;
 $host_descr	= '';
 
 if (cacti_sizeof($parms)) {
@@ -77,21 +78,23 @@ $sql_where = "WHERE data_input_fields.type_code='output_type'";
 /* determine the hosts to reindex */
 if (strtolower($host_id) == 'all') {
     /* NOP */
-} else if (is_numeric($host_id)) {
-    $sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE ') . 'data_local.host_id = ' . $host_id;
 } else {
-    print "ERROR: You must specify either a host_id or 'all' to proceed.\n";
-    display_help();
-    exit;
+    if (!ctype_digit((string) $host_id) || (int) $host_id < 1) {
+        fwrite(STDERR, "ERROR: --host-id must be a positive integer or 'all'.\n");
+        exit(1);
+    }
+
+    $sql_where .= ' AND data_local.host_id = ' . (int) $host_id;
 }
 
 /* determine data queries to rerun */
-if (is_numeric($query_id)) {
-    $sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE ') . 'data_local.snmp_query_id= ' . $query_id;
-} else {
-    print "ERROR: You must specify either a query_id or 'all' to proceed.\n";
-    display_help();
-    exit;
+if ($query_id === false || (strtolower((string) $query_id) !== 'all' && (!ctype_digit((string) $query_id) || (int) $query_id < 1))) {
+    fwrite(STDERR, "ERROR: --qid must be a positive query ID or 'all'.\n");
+    exit(1);
+}
+
+if (strtolower((string) $query_id) !== 'all') {
+    $sql_where .= ' AND data_local.snmp_query_id = ' . (int) $query_id;
 }
 
 /* get all object that have to be scanned */
@@ -145,12 +148,12 @@ function display_help()
 {
     display_version();
 
-    print "\nusage: reorder_data_query.php --host-id=[id|all] [--qid=[query_id]] [--debug|-d]\n\n";
+    print "\nusage: reorder_data_query.php --host-id=[id|all] --qid=[query_id|all] [--debug|-d]\n\n";
     print "A utility to Re-order Kadupul Data Queries for a Device or system in batch mode.\n\n";
     print "Required:\n";
-    print "    --host-id=N    - The Device id to be reindexed; defaults to 'all' to reindex all Devices.\n\n";
+    print "    --host-id=N|all - The Device id to be reindexed, or 'all' for every Device.\n";
+    print "    --qid=query_id|all - The query id to reindex, or 'all' for every query.\n\n";
     print "Optional:\n";
-    print "    --qid=query_id - Only index on a specific data query id\n";
     print "    --debug | -d   - Display verbose output during execution\n\n";
 }
 

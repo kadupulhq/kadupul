@@ -120,23 +120,23 @@ if (cacti_sizeof($parms) == 0) {
 
     if ($displayGroups) {
         displayGroups($quietMode);
-        exit(1);
+        exit(0);
     }
 
     if ($displayUsers) {
         displayUsers($quietMode);
-        exit(1);
+        exit(0);
     }
 
     if ($displayTrees) {
         displayTrees($quietMode);
-        exit(1);
+        exit(0);
     }
 
     if ($displayHosts) {
         $hosts = getHosts();
         displayHosts($hosts, $quietMode);
-        exit(1);
+        exit(0);
     }
 
     if ($displayGraphs) {
@@ -147,14 +147,14 @@ if (cacti_sizeof($parms) == 0) {
             exit(1);
         } else {
             displayHostGraphs($hostId, $quietMode);
-            exit(1);
+            exit(0);
         }
     }
 
     if ($displayGraphTemplates) {
         $graphTemplates = getGraphTemplates();
         displayGraphTemplates($graphTemplates, $quietMode);
-        exit(1);
+        exit(0);
     }
 
     /* verify, that a valid userid is provided */

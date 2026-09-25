@@ -62,8 +62,8 @@ foreach ($parms as $parameter) {
         case '--host-id':
             $host_id = trim($value);
 
-            if (!is_numeric($host_id)) {
-                print 'ERROR: You must supply a valid Device Id to run this script!' . PHP_EOL;
+            if (!ctype_digit($host_id) || (int) $host_id < 1) {
+                fwrite(STDERR, 'ERROR: --host-id must be a positive integer.' . PHP_EOL);
 
                 exit(1);
             }
@@ -190,16 +190,16 @@ switch ($type) {
         $sql_params = array();
 
         if ($host_id !== false) {
-            $sql_where .= 'AND id = ?';
+            $sql_where .= 'AND h.id = ?';
             $sql_params[] = $host_id;
         }
 
         if ($host_template_id !== false) {
-            $sql_where .= 'AND host_template_id = ?';
+            $sql_where .= 'AND h.host_template_id = ?';
             $sql_params[] = $host_template_id;
         }
 
-        $rows = db_fetch_cell_prepared("SELECT count(id) FROM host WHERE disabled='' " . $sql_where, $sql_params);
+        $rows = db_fetch_cell_prepared("SELECT count(h.id) FROM host AS h WHERE h.disabled='' " . $sql_where, $sql_params);
 
         $hosts_per_process = ceil($rows / $threads);
 
@@ -276,7 +276,7 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
     for ($thread_id = 1; $h_done < $rows; $thread_id++) {
         pushout_debug("Launching Process ID $thread_id");
 
-        pushout_launch_child($thread_id, $threads);
+        pushout_launch_child($thread_id, $threads, $host_id);
 
         $h_done += $hosts_per_process;
     }
@@ -311,7 +311,7 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
  *
  * @return - NULL
  */
-function pushout_launch_child($thread_id, $threads)
+function pushout_launch_child($thread_id, $threads, $host_id = false)
 {
     global $config, $debug, $host_template_id, $data_template_id;
 
@@ -321,7 +321,7 @@ function pushout_launch_child($thread_id, $threads)
 
     cacti_log(sprintf('NOTE: Launching Push out hosts Number %s for Type %s', $thread_id, 'child'), true, 'PUSHOUT', POLLER_VERBOSITY_MEDIUM);
 
-    exec_background($php_binary, $config['base_path'] . "/cli/push_out_hosts.php --type=child --threads=$threads --child=$thread_id " . ($debug ? " --debug" : "") . ($host_template_id ? " --host-template-id=$host_template_id" : "") . ($data_template_id ? " --data-template-id=$data_template_id" : ""));
+    exec_background($php_binary, $config['base_path'] . "/cli/push_out_hosts.php --type=child --threads=$threads --child=$thread_id " . ($debug ? " --debug" : "") . ($host_id !== false ? " --host-id=$host_id" : "") . ($host_template_id ? " --host-template-id=$host_template_id" : "") . ($data_template_id ? " --data-template-id=$data_template_id" : ""));
 }
 
 /**

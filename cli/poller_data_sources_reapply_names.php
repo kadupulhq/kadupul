@@ -34,6 +34,22 @@ $debug   = false;
 $host_id = '';
 $filter  = '';
 
+/** Validate device selectors before building the SQL filter. */
+function validate_reapply_host_selector($host_id)
+{
+    if (strtolower($host_id) === 'all') {
+        return true;
+    }
+
+    foreach (explode(',', $host_id) as $host) {
+        if (!ctype_digit($host) || (int) $host < 1 || (int) $host > 4294967295) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 if (cacti_sizeof($parms)) {
     foreach ($parms as $parameter) {
         if (strpos($parameter, '=')) {
@@ -76,6 +92,11 @@ if (cacti_sizeof($parms)) {
 }
 
 /* form the 'where' clause for our main sql query */
+if (!validate_reapply_host_selector($host_id)) {
+    fwrite(STDERR, "ERROR: Specify --host-id=all or a comma-separated list of positive device IDs.\n");
+    exit(1);
+}
+
 if ($filter != '') {
     $sql_where = "AND (data_template_data.name_cache like '%" . $filter . "%'" .
     " OR data_template_data.local_data_id like '%" . $filter . "%'" .
@@ -105,7 +126,7 @@ if (strtolower($host_id) == 'all') {
 } else {
     print "ERROR: You must specify either a host_id or 'all' to proceed.\n";
     display_help();
-    exit;
+    exit(1);
 }
 
 $data_source_list_sql = "SELECT data_template_data.local_data_id, data_template_data.name_cache, data_template_data.active,
