@@ -48,6 +48,14 @@ second implementation or a module boundary needs one.
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
 | Callers moved to Graphing services; wrappers marked `#[\Deprecated]` | Pending |
 
+Duplicate code in `lib/rrd.php` is shared through procedural helpers ahead of
+the split: `rrdtool_cdef_magic_variables()`, `rrdtool_cdef_magic_append()` and
+`rrdtool_cdef_step_replace()` for the magic CDEF variables,
+`rrdtool_info2html_table()` for the data source and RRA boxes, and
+`rrd_xml_transform()` for the dump, edit and restore loop of
+`rrd_datasource_add()`, `rrd_rra_delete()` and `rrd_rra_clone()`. A move of
+those callers takes its helper along.
+
 Each slice keeps the characterization tests passing unchanged. A slice that
 has to change a pinned output says so and states why.
 

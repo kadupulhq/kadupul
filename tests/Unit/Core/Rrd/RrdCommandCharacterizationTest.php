@@ -373,3 +373,37 @@ test('an RRD path with a space and a quote round-trips through RRDtool', functio
         // makes the second one known.
         ->and($results[5]['values'][0])->toBe(array($t + 300 => '6.0000000000e+00'));
 });
+
+test('RRD file information HTML matches its golden', function () {
+    $info = array(
+        'filename' => 'rra/router_traffic_11.rrd', 'rrd_version' => '0003', 'step' => '300', 'last_update' => '1700000000',
+        'ds' => array(
+            'traffic_in' => array('type' => 'COUNTER', 'minimal_heartbeat' => '600', 'min' => '0', 'max' => '1000000000', 'last_ds' => '12345', 'value' => '1.5', 'unknown_sec' => '0'),
+            'traffic_out' => array('type' => 'DERIVE', 'minimal_heartbeat' => '600', 'min' => 'U', 'max' => 'U', 'last_ds' => 'U', 'value' => 'NaN', 'unknown_sec' => 'x'),
+            'errors' => array('min' => 'abc', 'max' => 'NaN'),
+            'odd' => array('type' => 'GAUGE', 'max' => 'xyz'),
+        ),
+        'rra' => array(
+            '0' => array('cf' => 'AVERAGE', 'rows' => '600', 'cur_row' => '12', 'pdp_per_row' => '1', 'xff' => '0.5', 'cdp_prep' => array(array('value' => 'NaN', 'unknown_datapoints' => '0'))),
+            '1' => array('cf' => 'MAX', 'rows' => '700', 'cur_row' => '3', 'pdp_per_row' => '6', 'xff' => '0.25', 'cdp_prep' => array(array('value' => '2.5000000000e+00', 'unknown_datapoints' => '1'))),
+            'cacti_2' => array('cf' => 'LAST', 'rows' => '10', 'xff' => '0.5'),
+        ),
+    );
+    $diff = array(
+        'step' => 'wrong step',
+        'ds' => array('traffic_in' => array('type' => 'x', 'minimal_heartbeat' => 'x'), 'errors' => array('error' => 'missing')),
+        'rra' => array('1' => array('rows' => 'x', 'xff' => 'x'), 'cacti_2' => array('error' => 'missing')),
+    );
+    $calls = array(
+        array('fn' => 'define', 'args' => array('CACTI_DATE_TIME_FORMAT', 'Y-m-d H:i:s')),
+        array('fn' => 'rrdtool_info2html', 'args' => array($info)),
+        array('fn' => 'rrdtool_info2html', 'args' => array($info, $diff)),
+        array('fn' => 'rrdtool_info2html', 'args' => array(array('ds' => array(), 'rra' => array()) + $info)),
+    );
+    $output = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => $calls));
+    $observed = array();
+    foreach (array_slice($output['results'], 1) as $result) {
+        $observed[] = array('printed' => explode("\n", $result['printed']), 'diagnostics' => $result['diagnostics']);
+    }
+    rrd_characterization_golden('info-html', $observed);
+});
