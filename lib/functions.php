@@ -834,22 +834,32 @@ function get_selected_theme()
 
     // Validate the selected UI theme before using it in a filesystem path.
     if (!is_scalar($theme) || !isset($themes[(string) $theme]) || !file_exists($config['base_path'] . '/include/themes/' . (string) $theme . '/main.css')) {
+        $fallback_theme = null;
+
         foreach ($themes as $t => $name) {
-            if ($t != 'classic') {
-                if (file_exists($config['base_path'] . '/include/themes/' . $t . '/main.css')) {
-                    $theme = $t;
+            $candidate = (string) $t;
 
-                    db_execute_prepared(
-                        'UPDATE settings_user
-						SET value = ?
-						WHERE user_id = ?
-						AND name = "selected_theme"',
-                        array($theme, $_SESSION['sess_user_id'])
-                    );
+            if (file_exists($config['base_path'] . '/include/themes/' . $candidate . '/main.css')) {
+                $fallback_theme = $candidate;
 
-                    break;
-                }
+                break;
             }
+        }
+
+        if ($fallback_theme === null) {
+            $fallback_theme = isset($themes['classic']) ? 'classic' : (string) (array_key_first($themes) ?? 'modern');
+        }
+
+        $theme = $fallback_theme;
+
+        if (isset($_SESSION['sess_user_id'])) {
+            db_execute_prepared(
+                'UPDATE settings_user
+				SET value = ?
+				WHERE user_id = ?
+				AND name = "selected_theme"',
+                array($theme, $_SESSION['sess_user_id'])
+            );
         }
     }
 
@@ -3479,9 +3489,9 @@ function move_graph_group($graph_template_item_id, $graph_group_array, $target_i
     );
 
     if (empty($graph_item['local_graph_id'])) {
-        $sql_where = 'graph_template_id = ' . $graph_item['graph_template_id'] . ' AND local_graph_id = 0';
+        $filters = array('graph_template_id' => $graph_item['graph_template_id'], 'local_graph_id' => 0);
     } else {
-        $sql_where = 'local_graph_id = ' . $graph_item['local_graph_id'];
+        $filters = array('local_graph_id' => $graph_item['local_graph_id']);
     }
 
     /* get a list of parent+children of our target group */
@@ -3490,9 +3500,9 @@ function move_graph_group($graph_template_item_id, $graph_group_array, $target_i
     /* if this "parent" item has no children, then treat it like a regular gprint */
     if (cacti_sizeof($target_graph_group_array) == 0) {
         if ($direction == 'next') {
-            move_item_down('graph_templates_item', $graph_template_item_id, $sql_where);
+            move_item_down('graph_templates_item', $graph_template_item_id, $filters);
         } elseif ($direction == 'previous') {
-            move_item_up('graph_templates_item', $graph_template_item_id, $sql_where);
+            move_item_up('graph_templates_item', $graph_template_item_id, $filters);
         }
 
         return;
@@ -3501,10 +3511,12 @@ function move_graph_group($graph_template_item_id, $graph_group_array, $target_i
     /* start the sequence at '1' */
     $sequence_counter = 1;
 
+    $where_params = array();
+    $where_clause = build_where_from_array($filters, $where_params);
     $graph_items = db_fetch_assoc_prepared("SELECT id, sequence
 		FROM graph_templates_item
-		WHERE $sql_where
-		ORDER BY sequence");
+		WHERE $where_clause
+		ORDER BY sequence", $where_params);
 
     if (cacti_sizeof($graph_items)) {
         foreach ($graph_items as $item) {
