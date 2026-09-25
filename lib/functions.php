@@ -775,8 +775,14 @@ function get_selected_theme() {
 
 	// shortcut if theme is set in session
 	if (isset($_SESSION['selected_theme'])) {
-		if (file_exists($config['base_path'] . '/include/themes/' . $_SESSION['selected_theme'] . '/main.css')) {
-			return $_SESSION['selected_theme'];
+		$session_theme = $_SESSION['selected_theme'];
+
+		if (is_scalar($session_theme)) {
+			$session_theme = (string) $session_theme;
+
+			if (isset($themes[$session_theme]) && file_exists($config['base_path'] . '/include/themes/' . $session_theme . '/main.css')) {
+				return $session_theme;
+			}
 		}
 	}
 
@@ -798,12 +804,13 @@ function get_selected_theme() {
 			array($_SESSION['sess_user_id']), '', false);
 
 		// user has a theme
-		if (!empty($user_theme)) {
-			$theme = $user_theme;
+		if (!empty($user_theme) && is_scalar($user_theme)) {
+			$theme = (string) $user_theme;
 		}
 	}
 
-	if (!file_exists($config['base_path'] . '/include/themes/' . $theme . '/main.css')) {
+	// Validate the selected UI theme before using it in a filesystem path.
+	if (!is_scalar($theme) || !isset($themes[(string) $theme]) || !file_exists($config['base_path'] . '/include/themes/' . (string) $theme . '/main.css')) {
 		foreach($themes as $t => $name) {
 			if ($t != 'classic') {
 				if (file_exists($config['base_path'] . '/include/themes/' . $t . '/main.css')) {
@@ -3767,6 +3774,8 @@ function get_item($tblname, $field, $startid, $lmt_query, $direction) {
 	if (is_array($lmt_query)) {
 		$where_clause = build_where_from_array($lmt_query, $params);
 	} else {
+		// Legacy callers may pass a trusted SQL fragment. New callers should
+		// pass an associative filter array so values use prepared parameters.
 		$where_clause = $lmt_query;
 	}
 
@@ -8912,6 +8921,17 @@ function cacti_validate_theme($requested) {
 	}
 
 	$requested = basename((string) $requested);
+	$default   = basename((string) $default);
+
+	if (!isset($valid_themes[$default])) {
+		if (isset($valid_themes['modern'])) {
+			$default = 'modern';
+		} elseif (count($valid_themes) > 0) {
+			$default = array_key_first($valid_themes);
+		} else {
+			$default = 'modern';
+		}
+	}
 
 	return isset($valid_themes[$requested]) ? $requested : $default;
 }

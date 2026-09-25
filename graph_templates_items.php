@@ -397,7 +397,7 @@ function item_movedown() {
 		move_graph_group(get_request_var('id'), $arr, $next_id, 'next');
 	} elseif (!preg_match('/(AREA|STACK|LINE)/', $text_type)) {
 		/* this is so we know the "other" graph item to propagate the changes to */
-		$next_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0', 'next');
+		$next_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0), 'next');
 
 		move_item_down('graph_templates_item', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0');
 	}
@@ -429,7 +429,7 @@ function item_moveup() {
 		move_graph_group(get_request_var('id'), $arr, $next_id, 'previous');
 	} elseif (!preg_match('/(AREA|STACK|LINE)/', $text_type)) {
 		/* this is so we know the "other" graph item to propagate the changes to */
-		$last_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0', 'previous');
+		$last_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0), 'previous');
 
 		move_item_up('graph_templates_item', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0');
 	}
@@ -869,4 +869,3 @@ function item_edit() {
 	</script>
 	<?php
 }
-
