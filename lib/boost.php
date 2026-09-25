@@ -1488,12 +1488,12 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
                 $data_source['rrd_maximum'] = (int) $data_source['rrd_minimum'] + 1;
             }
 
-            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $local_data_id, 'BOOST');
-            if ($data_source['rrd_maximum'] === false) {
+            $ds = rrdtool_create_ds($data_source_name, $data_source_types[$data_source['data_source_type_id']], $data_source, $local_data_id, 'BOOST');
+            if ($ds === false) {
                 return false;
             }
 
-            $create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
+            $create_ds .= $ds;
         }
     }
 

@@ -280,9 +280,9 @@ function form_save()
 
                         $save3['data_template_id'] = get_filter_request_var('data_template_id');
 
-                        $save3['rrd_maximum'] = form_input_validate(get_nfilter_request_var("rrd_maximum$name_modifier"), "rrd_maximum$name_modifier", "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$|\|query_ifSpeed\||\|query_ifHighSpeed\|", false, 3);
+                        $save3['rrd_maximum'] = form_input_validate(get_nfilter_request_var("rrd_maximum$name_modifier"), "rrd_maximum$name_modifier", data_source_limit_pattern(array('ifSpeed', 'ifHighSpeed')), false, 3);
 
-                        $save3['rrd_minimum'] = form_input_validate(get_nfilter_request_var("rrd_minimum$name_modifier"), "rrd_minimum$name_modifier", "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$|\|query_ifSpeed\||\|query_ifHighSpeed\|", false, 3);
+                        $save3['rrd_minimum'] = form_input_validate(get_nfilter_request_var("rrd_minimum$name_modifier"), "rrd_minimum$name_modifier", data_source_limit_pattern(), false, 3);
 
                         $save3['rrd_heartbeat'] = form_input_validate(get_nfilter_request_var("rrd_heartbeat$name_modifier"), "rrd_heartbeat$name_modifier", '^[0-9]+$', false, 3);
 
@@ -302,6 +302,13 @@ function form_save()
 
                                 exit;
                             }
+                        }
+
+                        // An item whose own fields failed is not stored. Another item's error
+                        // stays in the session and must not stop this one.
+                        $item_fields = array("rrd_maximum$name_modifier", "rrd_minimum$name_modifier", "rrd_heartbeat$name_modifier", "data_source_type_id$name_modifier", "data_source_name$name_modifier", "data_input_field_id$name_modifier");
+                        if (array_intersect($item_fields, array_keys($_SESSION['sess_error_fields'] ?? array()))) {
+                            continue;
                         }
 
                         $data_template_rrd_id = sql_save($save3, 'data_template_rrd');

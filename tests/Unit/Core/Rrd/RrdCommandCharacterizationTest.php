@@ -186,6 +186,48 @@ test('a create path RRDtool cannot receive is refused before any directory is ma
     expect($results[4]['returned'])->toBeFalse();
 });
 
+/** The quoting scenario with $minimum stored as the minimum of data source 33. */
+function rrd_characterization_minimum_scenario(string $minimum): array
+{
+    $scenario = rrd_characterization_path_quoting_scenario();
+    foreach ($scenario['db'] as $index => $row) {
+        if (str_starts_with($row['sql'], 'FROM data_template_rrd AS dtr WHERE')) {
+            $scenario['db'][$index]['result'][0]['rrd_minimum'] = $minimum;
+        }
+    }
+    $scenario['calls'] = array(
+        // Fetch loads lib/boost.php before it looks at its arguments.
+        array('fn' => 'rrdtool_function_fetch', 'args' => array(0, 1700000000, 1700001000)),
+        array('fn' => 'rrdtool_function_create', 'args' => array(33, true)),
+        array('fn' => 'rrdtool_function_create', 'args' => array(33, false)),
+        array('fn' => 'boost_rrdtool_function_create', 'args' => array(33, true, false)),
+        array('fn' => 'boost_rrdtool_function_create', 'args' => array(33, false, false)),
+    );
+
+    return $scenario;
+}
+
+test('a stored minimum other than a number or U refuses the create and sends nothing', function ($minimum) {
+    $results = array_slice(rrd_characterization_run($this, rrd_characterization_minimum_scenario($minimum))['results'], 1);
+
+    expect($results)->toHaveCount(4);
+    foreach ($results as $result) {
+        expect($result['returned'])->toBeFalse()->and($result['sent'])->toBe(array());
+    }
+})->with(array('5 x', '0;x', '-', '1e', '0x10', ' 0', "0\n", '|query_ifSpeed|', ''));
+
+test('a stored numeric or U minimum is written unchanged', function ($minimum) {
+    $results = array_slice(rrd_characterization_run($this, rrd_characterization_minimum_scenario($minimum))['results'], 1);
+
+    foreach (array(0, 2) as $shown) {
+        expect($results[$shown]['returned'])->toContain('DS:value:GAUGE:600:' . $minimum . ':');
+    }
+    foreach (array(1, 3) as $created) {
+        expect($results[$created]['sent'])->toHaveCount(1)
+            ->and($results[$created]['sent'][0]['stdin'])->toContain(' DS:value:GAUGE:600:' . $minimum . ':');
+    }
+})->with(array('0', '-5', '2.5', '.5', '5.', '1e3', '-2.5E-3', '+5', 'U'));
+
 test('a line break in a substituted maximum never splits the create command', function () {
     $path = "rra/it's a.rrd";
     $observed = array();
