@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	The configuration a bare pest or phpunit run picks up. It bootstraps the
+	source-scan helpers rather than ../include/global.php, which needs a
+	database that a unit run does not have.
+
+	Name a file or a directory when using it. A whole-tree run in one process
+	is not supported: Pest rejects processIsolation, and several global function
+	names are declared by two files each, which is a fatal error in whichever
+	loads second. Use tests/run_unit_suite.py for the whole tree; it gives each
+	file its own process.
+-->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="../include/global.php"
+         bootstrap="bootstrap-unit.php"
          colors="true">
     <testsuites>
         <testsuite name="Unit">
