@@ -14,15 +14,11 @@ final class AnalyzeDatabaseLegacyArguments extends LegacyArguments
     {
         // --as is not in the original script; the shim accepts it so operators
         // can name an account without moving to bin/console first.
-        return ['-d' => ['debug', false], '--debug' => ['debug', false], '--local' => ['local', false], '--as' => ['as', true],
-            '--version' => [null, false], '-V' => [null, false], '-v' => [null, false],
-            '--help' => [null, false], '-H' => [null, false], '-h' => [null, false]];
-    }
-
-    #[\Override]
-    protected function special(string $flag): LegacyRequest
-    {
-        return in_array($flag, ['--version', '-V', '-v'], true) ? LegacyRequest::Version : LegacyRequest::Help;
+        return [
+            '-d' => ['debug', false], '--debug' => ['debug', false],
+            '--local' => ['local', false], '--as' => ['as', true],
+            ...self::versionAndHelp(),
+        ];
     }
 
     /** The original's help text after its version line, which the command prepends. */
@@ -35,11 +31,5 @@ final class AnalyzeDatabaseLegacyArguments extends LegacyArguments
             'Optional:',
             '     --local   - Perform the action on the Remote Data Collector if run from there',
             '-d | --debug   - Display verbose output during execution', ''];
-    }
-
-    #[\Override]
-    public function invalid(string $argument): array
-    {
-        return ['ERROR: Invalid Parameter ' . $argument, ''];
     }
 }
