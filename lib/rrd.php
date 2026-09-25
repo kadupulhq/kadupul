@@ -637,6 +637,10 @@ function rrdtool_command_path($path)
 {
     if (rrdtool_uses_proxy()) {
         $path = rrdtool_proxy_token($path);
+        // The proxy serves only files under its RRA root, and a '..' component could leave it.
+        if (preg_match('~(^|/)\.\.(/|$)~', (string) $path) === 1) {
+            return false;
+        }
     }
 
     return rrdtool_command_argument($path);
