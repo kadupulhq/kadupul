@@ -10,8 +10,10 @@ namespace Kadupul\Platform\Infrastructure\Persistence;
 use Kadupul\Platform\Application\Port\ColumnCatalog;
 use Kadupul\Platform\Application\Port\ColumnWidening;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
-use Kadupul\Platform\Domain\Schema\ColumnChange;
 use Kadupul\Platform\Domain\Schema\ColumnDefinition;
+use Kadupul\Platform\Domain\Schema\ColumnExtra;
+use Kadupul\Platform\Domain\Schema\ColumnSpec;
+use Kadupul\Platform\Domain\Schema\ColumnType;
 
 final readonly class DbalColumnWidening implements ColumnWidening
 {
@@ -22,6 +24,7 @@ final readonly class DbalColumnWidening implements ColumnWidening
         JOIN information_schema.TABLES t ON t.TABLE_SCHEMA = c.TABLE_SCHEMA AND t.TABLE_NAME = c.TABLE_NAME
         WHERE c.TABLE_SCHEMA = DATABASE() AND t.TABLE_TYPE = 'BASE TABLE'";
     private const string ORDER = ' ORDER BY CAST(c.TABLE_NAME AS BINARY), c.ORDINAL_POSITION';
+    private const string WIDE = 'int(10) unsigned';
 
     public function __construct(private MaintenanceConnections $connections) {}
 
@@ -37,14 +40,16 @@ final readonly class DbalColumnWidening implements ColumnWidening
     public function statement(DatabaseTarget $target, string $table, array $columns): string
     {
         $db = $this->connections->for($target);
-        $platform = $db->getDatabasePlatform();
-        $changes = array_map(static fn(ColumnDefinition $column): ColumnChange => $column->change(), $columns);
-        $clauses = array_map(static fn(ColumnChange $change): string => 'MODIFY COLUMN ' . $db->quoteSingleIdentifier($change->name) . ' int(10) unsigned ' . match (true) {
-            $change->autoIncrement => 'NOT NULL AUTO_INCREMENT',
-            $change->default !== null => ($change->nullable ? '' : 'NOT NULL ') . 'DEFAULT ' . $platform->quoteStringLiteral($change->default),
-            !$change->nullable => 'NOT NULL',
-            default => 'DEFAULT NULL',
-        }, $changes);
+        $type = ColumnType::parse(self::WIDE) ?? throw new \LogicException('Not a column type: ' . self::WIDE);
+        $clauses = array_map(static function (ColumnDefinition $column) use ($db, $type): string {
+            $change = $column->change();
+            // An AUTO_INCREMENT column is always NOT NULL and keeps no default.
+            $spec = $change->autoIncrement
+                ? new ColumnSpec($change->name, $type, true, null, false, ColumnExtra::AutoIncrement)
+                : new ColumnSpec($change->name, $type, !$change->nullable, $change->default, false, ColumnExtra::None);
+
+            return ColumnDdl::modify($db, $spec, true);
+        }, $columns);
 
         return 'ALTER TABLE ' . $db->quoteSingleIdentifier($table) . ' ' . implode(', ', $clauses);
     }
@@ -75,26 +80,13 @@ final readonly class DbalColumnWidening implements ColumnWidening
                 (string) $row['COLUMN_NAME'],
                 (string) $row['COLUMN_TYPE'],
                 $row['IS_NULLABLE'] === 'YES',
-                self::defaultValue($row['COLUMN_DEFAULT'] === null ? null : (string) $row['COLUMN_DEFAULT']),
+                // Only integer columns are widened, so a string default
+                // that reads "NULL" cannot be mistaken for SQL NULL here.
+                ColumnDdl::defaultValue($row['COLUMN_DEFAULT'] === null ? null : (string) $row['COLUMN_DEFAULT']),
                 (string) $row['EXTRA'],
             );
         }
 
         return new ColumnCatalog($columns);
-    }
-
-    /**
-     * The value SHOW COLUMNS would print. MariaDB 10.2.7 and later quote a
-     * string literal and write DEFAULT NULL as the bare word NULL; MySQL gives
-     * the value itself and SQL NULL. Only integer columns are widened, so a
-     * string default that reads "NULL" cannot be mistaken here.
-     */
-    private static function defaultValue(?string $raw): ?string
-    {
-        return match (true) {
-            $raw === null, $raw === 'NULL' => null,
-            strlen($raw) >= 2 && str_starts_with($raw, "'") && str_ends_with($raw, "'") => str_replace("''", "'", substr($raw, 1, -1)),
-            default => $raw,
-        };
     }
 }

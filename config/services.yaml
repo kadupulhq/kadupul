@@ -32,9 +32,10 @@ services:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance
     Kadupul\Platform\Application\Port\TableConversion:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion
-    Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion: ~
     Kadupul\Platform\Application\Port\ColumnWidening:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalColumnWidening
+    Kadupul\Platform\Infrastructure\Persistence\CactiSchemaFile: ~
+    Kadupul\Platform\Infrastructure\Legacy\LegacyWorkerProcess: ~
     Kadupul\Platform\Application\Port\Clock:
         alias: Kadupul\Platform\Infrastructure\Symfony\SystemClock
     Kadupul\Platform\Application\Command\AnalyzeDatabase: ~
@@ -43,6 +44,16 @@ services:
     Kadupul\Platform\Application\Command\TableConversionStep: ~
     Kadupul\Platform\Application\Command\ConvertTables: ~
     Kadupul\Platform\Application\Command\WidenIdColumns: ~
+    Kadupul\Platform\Application\Command\AuditDatabase: ~
+    Kadupul\Platform\Application\Port\SchemaAudit:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalSchemaAudit
+    Kadupul\Platform\Application\Port\AuditBaselineStore:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalAuditBaselineStore
+    Kadupul\Platform\Infrastructure\Persistence\DbalAuditBaselineStore:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    Kadupul\Platform\Application\Port\InstallationUpgrade:
+        alias: Kadupul\Platform\Infrastructure\Legacy\LegacyInstallationUpgrade
     # Public because lib/installer.php fetches it from the kernel container. It
     # converts with no operator, so no command or controller may depend on it.
     Kadupul\Platform\Infrastructure\Legacy\InstallerTableConversion:
