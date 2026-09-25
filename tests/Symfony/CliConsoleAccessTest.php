@@ -191,6 +191,41 @@ final class CliConsoleAccessTest extends TestCase
         self::assertSame([true, false], $grants());
     }
 
+    /** @return iterable<string, array{string}> */
+    public static function groupTables(): iterable
+    {
+        foreach (['user_auth_group_realm', 'user_auth_group', 'user_auth_group_members'] as $table) {
+            yield $table => [$table];
+        }
+    }
+
+    /**
+     * A database upgraded from before 1.x may lack any of the group tables.
+     * auth.php then counts only direct rows, so a grant held through group 9
+     * vanishes and querying the missing table must not throw.
+     */
+    #[DataProvider('groupTables')]
+    public function testWithoutAGroupTableOnlyDirectRealmsCount(string $table): void
+    {
+        // Group 9 also holds realm 26, which would end the fallback if it counted.
+        $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (9, 26)');
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (2, 8)');
+        $this->db->executeStatement('DROP TABLE ' . $table);
+
+        $admin = $this->access('admin');
+        $actor = $admin->actor() ?? self::fail('admin resolves');
+        self::assertTrue($admin->canAdministerInstallation($actor));
+        self::assertTrue($admin->canUpgradeInstallation($actor), 'direct realm 15 through the fallback');
+
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (1, 26)');
+        self::assertTrue($this->access('admin')->canUpgradeInstallation($actor), 'direct realm 26');
+
+        $ops = $this->access('ops');
+        $actor = $ops->actor() ?? self::fail('ops resolves through its direct realm 8');
+        self::assertSame([false, false], [$ops->canAdministerInstallation($actor), $ops->canUpgradeInstallation($actor)]);
+        self::assertNull($this->access('noconsole')->actor());
+    }
+
     public function testAbsentAdminUserRowFallsBackToTheDeclaredDefault(): void
     {
         self::assertSame(1, $this->access(null)->actor()?->id);

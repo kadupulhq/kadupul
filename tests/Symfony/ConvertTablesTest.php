@@ -322,7 +322,7 @@ final class ConvertTablesTest extends TestCase
         $conversion = $this->conversion();
         $conversion->method('tableStatuses')->willReturn(new TableCatalog([$name => self::myisam()]));
         $conversion->method('statement')->willReturn('ALTER TABLE x');
-        $conversion->expects(self::once())->method('convert')->with(DatabaseTarget::Local, $name)->willReturn(true);
+        $conversion->expects(self::once())->method('convert')->with(DatabaseTarget::Local, $name, new TableChange(false, null, true))->willReturn(true);
 
         $this->convert($conversion)(self::options([ConversionFlag::Innodb], $name), false, null, true);
 
