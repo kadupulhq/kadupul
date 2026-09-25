@@ -132,7 +132,7 @@ dynamic_include	./cli/add_graphs.php:18	require_once($config['base_path'] . '/li
 dynamic_include	./cli/add_graphs.php:19	require_once($config['base_path'] . '/lib/sort.php');
 dynamic_include	./cli/add_graphs.php:20	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/add_graphs.php:21	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/add_perms.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
+dynamic_include	./cli/add_perms.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_tree.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_tree.php:11	require_once($config['base_path'] . '/lib/api_tree.php');
 dynamic_include	./cli/apply_automation_rules.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
@@ -193,10 +193,10 @@ dynamic_include	./cli/install_cacti.php:151	include_once($config['base_path'] . 
 dynamic_include	./cli/install_cacti.php:152	include_once($config['base_path'] . '/lib/installer.php');
 dynamic_include	./cli/install_cacti.php:153	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/install_cacti.php:154	include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/poller_data_sources_reapply_names.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./cli/poller_data_sources_reapply_names.php:11	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/poller_data_sources_reapply_names.php:12	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/poller_graphs_reapply_names.php:10	require_once($config['base_path'] . '/lib/api_graph.php');
+dynamic_include	./cli/poller_data_sources_reapply_names.php:11	require_once($config['base_path'] . '/lib/api_data_source.php');
+dynamic_include	./cli/poller_data_sources_reapply_names.php:12	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/poller_data_sources_reapply_names.php:13	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/poller_graphs_reapply_names.php:11	require_once($config['base_path'] . '/lib/api_graph.php');
 dynamic_include	./cli/poller_output_empty.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/poller_output_empty.php:11	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./cli/poller_output_empty.php:12	require_once($config['base_path'] . '/lib/dsstats.php');
@@ -217,9 +217,9 @@ dynamic_include	./cli/poller_reindex_hosts.php:20	require_once($config['base_pat
 dynamic_include	./cli/poller_reindex_hosts.php:21	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/poller_replicate.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/push_out_hosts.php:13	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/rebuild_poller_cache.php:19	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/rebuild_poller_cache.php:20	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./cli/rebuild_poller_cache.php:21	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/rebuild_poller_cache.php:20	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/rebuild_poller_cache.php:21	require_once($config['base_path'] . '/lib/api_data_source.php');
+dynamic_include	./cli/rebuild_poller_cache.php:22	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/refresh_csrf.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/refresh_csrf.php:11	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/remove_broken_graphs.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
@@ -239,8 +239,8 @@ dynamic_include	./cli/remove_graphs.php:14	require_once($config['base_path'] . '
 dynamic_include	./cli/remove_graphs.php:15	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/remove_graphs.php:16	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/removespikes.php:14	require_once($config['base_path'] . '/lib/spikekill.php');
-dynamic_include	./cli/reorder_data_query.php:10	require_once($config['base_path'] . '/lib/snmp.php');
-dynamic_include	./cli/reorder_data_query.php:11	require_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./cli/reorder_data_query.php:11	require_once($config['base_path'] . '/lib/snmp.php');
+dynamic_include	./cli/reorder_data_query.php:12	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./cli/repair_graphs.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/repair_graphs.php:12	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/repair_graphs.php:13	require_once($config['base_path'] . '/lib/template.php');
