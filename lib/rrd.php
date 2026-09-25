@@ -3322,7 +3322,7 @@ function rrdtool_pipe_quote($argument)
 
 /**
  * Run one RRDtool command to completion without a shell, discarding its
- * output. Its stderr is passed on to ours, where popen() left it.
+ * output. Its stderr is passed on to ours, where the shell pipe left it.
  */
 function rrdtool_run_process(array $argv)
 {
@@ -3331,7 +3331,7 @@ function rrdtool_run_process(array $argv)
         require_once __DIR__ . '/../include/vendor/autoload.php';
     }
 
-    // getenv() and no timeout, as popen() had: the child sees what putenv() set.
+    // getenv() and no timeout, as the shell pipe had: the child sees what putenv() set.
     $process = new \Symfony\Component\Process\Process($argv, null, getenv(), null, null);
     try {
         $process->run(function ($type, $buffer) {
@@ -3340,7 +3340,7 @@ function rrdtool_run_process(array $argv)
             }
         });
     } catch (\Symfony\Component\Process\Exception\RuntimeException $e) {
-        // A failed popen() was silent as well.
+        // Failing to start the shell pipe was silent as well.
     }
 }
 
