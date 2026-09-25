@@ -1342,6 +1342,8 @@ function rrdtool_rejection_is_permanent($reason) {
 }
 
 function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null) {
+	global $config;
+
 	static $retained_logs = array();
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
@@ -1363,8 +1365,33 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 		}
 
 		if (is_array($rrd_fields['times']) && cacti_sizeof($rrd_fields['times'])) {
+			$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
+				&& read_config_option('storage_location');
+
+			/**
+			 * The refusal in rrdtool_function_create() is only reached when
+			 * this function decides the file is absent. file_exists() follows
+			 * a link, so a link whose target is already there reads as an
+			 * existing RRD, the create is skipped, and the update below is
+			 * written through the link. Refuse it here as well, ahead of the
+			 * existence question.
+			 *
+			 * Local storage only, for the same reason as the create: the proxy
+			 * has no verb that asks whether a path is a link.
+			 */
+			if (!$remote_storage && is_link($rrd_path)) {
+				cacti_log("ERROR: Refusing to update an RRDfile through the symbolic link '$rrd_path'.", false, 'POLLER');
+
+				foreach ($rrd_fields['times'] as $update_time => $field_array) {
+					$completed[$rrd_path][$update_time] = false;
+				}
+
+				$failed = true;
+				continue;
+			}
+
 			/* create the rrd if one does not already exist */
-			if (read_config_option('storage_location') > 0) {
+			if ($remote_storage) {
 				$file_exists = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 			} else {
 				$file_exists = file_exists($rrd_path);

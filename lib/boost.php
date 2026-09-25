@@ -2223,7 +2223,7 @@ function boost_rrdtool_pipe_creates($action, $rrdtool_pipe, $rrd_path = '') {
    @arg $rrd_update_template  - the order in which values need to be added
    @arg $rrd_update_values    - values to include in the database */
 function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, &$rrd_update_values, &$rrdtool_pipe, &$retry_budget = null) {
-	global $debug;
+	global $debug, $config;
 
 	// Bound synchronous recovery work while retaining any unacknowledged rows.
 	if ($retry_budget === null) {
@@ -2265,8 +2265,27 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		$rrdtool_pipe = false;
 	}
 
+	$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
+		&& read_config_option('storage_location');
+
+	/**
+	 * The refusal in boost_rrdtool_function_create() is only reached when this
+	 * function decides the file is absent. file_exists() follows a link, so a
+	 * link whose target is already there reads as an existing RRD, the create
+	 * is skipped, and the update below is written through the link. Refuse it
+	 * here as well, ahead of the existence question.
+	 *
+	 * Local storage only, for the same reason as the create: the proxy has no
+	 * verb that asks whether a path is a link.
+	 */
+	if (!$remote_storage && is_link($rrd_path)) {
+		cacti_log("ERROR: Refusing to update an RRDfile through the symbolic link '$rrd_path'.", false, 'BOOST');
+
+		return 'ERROR';
+	}
+
 	// create the rrd if one does not already exist
-	if (read_config_option('storage_location')) {
+	if ($remote_storage) {
 		$file_exists = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 	} else {
 		$file_exists = file_exists($rrd_path);

@@ -89,6 +89,73 @@ it('confirms file_exists is true for a symlink whose target is present', functio
 	}
 });
 
+it('refuses a link in the updater that decides whether to create', function () {
+	require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
+	$updaters = array(
+		'lib/rrd.php'   => 'rrdtool_function_update',
+		'lib/boost.php' => 'boost_rrdtool_function_update',
+	);
+
+	foreach ($updaters as $file => $function) {
+		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
+
+		expect($source)->not->toBeFalse();
+
+		$body = \test_php_function_source($source, $function);
+
+		// The create's refusal is only reached when the updater decides the
+		// file is absent, and a link whose target exists reads as present, so
+		// the create is skipped and the update goes through the link.
+		expect($body)->toContain('is_link($rrd_path)');
+		expect($body)->toContain('Refusing to update an RRDfile through the symbolic link');
+
+		$link = strpos($body, 'is_link($rrd_path)');
+
+		foreach (array('file_exists($rrd_path)', "rrdtool_execute_path_command('file_exists'") as $existence) {
+			$at = strpos($body, $existence);
+
+			expect($at)->not->toBeFalse();
+			expect($link)->toBeLessThan($at);
+		}
+	}
+});
+
+it('retains the samples the updater refused to write', function () {
+	require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
+	$body = \test_php_function_source(
+		file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'),
+		'rrdtool_function_update'
+	);
+
+	$at = strpos($body, 'Refusing to update an RRDfile through the symbolic link');
+	$to = strpos($body, 'continue;', $at);
+
+	expect($at)->not->toBeFalse();
+	expect($to)->not->toBeFalse();
+
+	// The caller reads $completed to decide what to delete, and $failed to
+	// report the cycle, so a refusal that set neither would drop the samples
+	// and call the run a success.
+	$window = substr($body, $at, $to - $at);
+
+	expect($window)->toContain('$completed[$rrd_path][$update_time] = false;');
+	expect($window)->toContain('$failed = true;');
+
+	// Boost signals the same thing with its own contract: anything but OK
+	// keeps the page queued.
+	$boost = \test_php_function_source(
+		file_get_contents(dirname(__DIR__, 4) . '/lib/boost.php'),
+		'boost_rrdtool_function_update'
+	);
+
+	$at = strpos($boost, 'Refusing to update an RRDfile through the symbolic link');
+	$to = strpos($boost, ';', strpos($boost, 'return ', $at));
+
+	expect(substr($boost, strpos($boost, 'return ', $at), $to - strpos($boost, 'return ', $at)))->toBe("return 'ERROR'");
+});
+
 it('tests for a link before it trusts an existence result', function () {
 	require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
