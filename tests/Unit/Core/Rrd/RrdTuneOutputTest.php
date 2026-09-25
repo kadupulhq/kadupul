@@ -39,12 +39,11 @@ test('known defect: rrdtool_tune prints file paths and messages into HTML unesca
 
 test('rrdtool_tune can be called repeatedly in one process', function () {
     $calls = rrd_tune_output_calls(true);
-    // An empty diff prints nothing, so only the declaration can fail.
-    $calls[1]['args'][1] = array();
     $calls[] = $calls[1];
     $output = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => $calls));
 
     expect($output['results'])->toHaveCount(3)
-        ->and($output['results'][1]['printed'])->toBe('')
-        ->and($output['results'][2]['printed'])->toBe('');
+        ->and($output['results'][1]['printed'])->not->toBe('')
+        ->and($output['results'][2]['printed'])->toBe($output['results'][1]['printed'])
+        ->and($output['results'][2]['printed'])->toContain('Step <i>300</i> expected');
 });
