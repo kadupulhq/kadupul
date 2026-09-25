@@ -60,7 +60,7 @@ test('every structure RRA fatal exit maps to exactly one expectation', function 
 
 test('real fatal branches print diagnostics and exit nonzero before continuing', function ($fragment, $expected) {
 	$setup = 'define("PHP_DEOL", PHP_EOL . PHP_EOL); function display_help() { echo "HELP", PHP_EOL; } '
-		. '$new_base_path = "fixture-dir"; $new_rrd_path = "fixture-new.rrd"; $old_rrd_path = "fixture-old.rrd"; ';
+		. '$new_base_path = "fixture-dir"; $new_rrd_path = "fixture-new.rrd"; $old_rrd_path = "fixture-old.rrd"; $pattern = "invalid"; ';
 	$process = proc_open(array(PHP_BINARY, '-r', $setup . $fragment . 'echo "UNREACHABLE";'),
 		array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
 	expect(is_resource($process))->toBeTrue();
