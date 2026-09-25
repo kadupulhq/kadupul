@@ -2121,9 +2121,9 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
 
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe = false, &$xport_meta = array(), $user = 0)
 {
-    // A NUL in a device or query value cannot be written to RRDtool. The
-    // command is refused before anything reaches the pipe, and the caller
-    // gets the same answer as for a missing RRD file instead of a fatal error.
+    // A value RRDtool cannot receive (a NUL in device or query data), or a DEF
+    // path the RRDtool proxy cannot carry, refuses the command before anything
+    // is sent; the caller gets the same answer as for a missing RRD file.
     try {
         return __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe, $xport_meta, $user);
     } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
