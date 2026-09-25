@@ -60,6 +60,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Run cli/audit_database.php through kadupul:database:audit, with --json and --dry-run. The flags are unchanged apart from --dry-run, --json and a bare, empty or spaced --as, which the shim now refuses; it takes the operator only as --as=NAME. The command requires an operator with the Console Access and Installation/Upgrades realms. It reads docs/audit_schema.sql itself instead of piping it into the mysql client with the database password on the command line, and it builds each repair statement from typed parts, so no text from the file or the server reaches the database unquoted. The upgrade and each plugin upgrade run with no shell, so a plugin's recorded version reaches its script as one argument. The schema dump targets the configured database server, so MYSQL_HOST and similar variables cannot point it elsewhere. A failed upgrade now stops the run before any repair.
+
 - Bind the project directory once in the service configuration and share the command-line preflight with `kadupul:database:analyze`. Behaviour is unchanged.
 
 - Run cli/convert_tables.php through kadupul:database:convert-tables, with --json and --dry-run. The flags are unchanged apart from the broken --installer. The command now requires an operator with the Console Access and Installation/Upgrades realms, and never sends DDL for a table name the server does not list. While nobody holds Installation/Upgrades, a direct Settings/Utilities grant counts for it, as on the web, without writing a realm row.

@@ -7,15 +7,22 @@
 
 namespace Kadupul\Tests;
 
+use Kadupul\Platform\Application\Command\InstallationAccessDenied;
+use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
+use Kadupul\Platform\Infrastructure\Symfony\Console\AnalyzeDatabaseLegacyArguments;
+use Kadupul\Platform\Infrastructure\Symfony\Console\AuditDatabaseLegacyArguments;
 use Kadupul\Platform\Infrastructure\Symfony\Console\CliPresentation;
 use Kadupul\Platform\Infrastructure\Symfony\Console\CommandResult;
+use Kadupul\Platform\Infrastructure\Symfony\Console\ConvertTablesLegacyArguments;
 use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyCli;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 use Kadupul\Platform\Infrastructure\Symfony\Console\OutputMode;
 use Kadupul\Platform\Infrastructure\Symfony\Console\ResultRenderer;
+use Kadupul\Platform\Infrastructure\Symfony\Console\WidenIdColumnsLegacyArguments;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -122,6 +129,29 @@ final class CliFoundationTest extends TestCase
         self::assertSame(['status' => 'denied'], json_decode($out->fetch(), true));
     }
 
+    public function testRefusedRendersADenialAsOneAndHidesEveryOtherMessage(): void
+    {
+        $renderer = new ResultRenderer();
+        $out = new BufferedOutput();
+        $io = new SymfonyStyle(new ArrayInput([]), $out);
+        self::assertSame(1, $renderer->refused($io, $out, OutputMode::Legacy, new InstallationAccessDenied(7, DatabaseTarget::Local), 'X failed'));
+        self::assertSame("ERROR: Unknown or unauthorized operator\n", $out->fetch());
+        self::assertSame(1, $renderer->refused($io, $out, OutputMode::Json, new MainDatabaseNotConfigured(), 'X failed'));
+        self::assertSame(['status' => 'failed', 'error' => 'Main database is not configured'], json_decode($out->fetch(), true));
+        self::assertSame(1, $renderer->refused($io, $out, OutputMode::Legacy, new \RuntimeException("SQLSTATE[28000] 'cacti'@'db'"), 'X failed'));
+        self::assertSame("ERROR: X failed\n", $out->fetch());
+    }
+
+    public function testWrittenPutsTheSharedKeysFirstAndFailsOnAnyFailure(): void
+    {
+        $renderer = new ResultRenderer();
+        $out = new BufferedOutput();
+        self::assertSame(0, $renderer->written($out, false, true, 0, ['tables' => []]));
+        self::assertSame('{"status":"ok","database":"local","dry_run":true,"tables":[]}' . "\n", $out->fetch());
+        self::assertSame(1, $renderer->written($out, true, false, 2, ['adjusted' => 3, 'tables' => ['a/b']]));
+        self::assertSame('{"status":"partial","database":"main","dry_run":false,"adjusted":3,"tables":["a/b"]}' . "\n", $out->fetch());
+    }
+
     public function testRenderModes(): void
     {
         $result = new CommandResult(['status' => 'failed', 'path' => 'a/b'], ['NOTE: x', 'ERROR: <y>'], 1);
@@ -209,5 +239,57 @@ final class CliFoundationTest extends TestCase
             ini_set('max_execution_time', $time);
             ini_set('memory_limit', $memory);
         }
+    }
+
+    /**
+     * Every shim's map, with the command it runs.
+     *
+     * @return iterable<string, array{class-string<LegacyArguments>, string}>
+     */
+    public static function shims(): iterable
+    {
+        yield 'analyze_database.php' => [AnalyzeDatabaseLegacyArguments::class, 'kadupul:database:analyze'];
+        yield 'audit_database.php' => [AuditDatabaseLegacyArguments::class, 'kadupul:database:audit'];
+        yield 'convert_tables.php' => [ConvertTablesLegacyArguments::class, 'kadupul:database:convert-tables'];
+        yield 'fix_mediumint.php' => [WidenIdColumnsLegacyArguments::class, 'kadupul:database:widen-id-columns'];
+    }
+
+    /** @param class-string<LegacyArguments> $map */
+    #[DataProvider('shims')]
+    public function testEveryShimTakesTheSharedFlags(string $map, string $command): void
+    {
+        $arguments = new $map();
+        foreach (['--version', '-V', '-v'] as $flag) {
+            self::assertSame(LegacyRequest::Version, $arguments->translate([$flag])[1], $flag);
+        }
+        foreach (['--help', '-H', '-h'] as $flag) {
+            self::assertSame(LegacyRequest::Help, $arguments->translate([$flag])[1], $flag);
+        }
+        self::assertSame([['--as' => 'ops'], null], $arguments->translate(['--as=ops']));
+        try {
+            $arguments->translate(['--as=']);
+            self::fail('An empty --as was accepted.');
+        } catch (InvalidLegacyArgument $error) {
+            self::assertSame('--as=', $error->argument);
+        }
+        // No original script took these; bin/console alone offers them, so the
+        // shim refuses them before the kernel boots. The note names the command.
+        putenv('KADUPUL_CLI_QUIET_DEPRECATION');
+        foreach (['--dry-run', '--json'] as $flag) {
+            $output = new BufferedOutput();
+            self::assertSame(1, LegacyCli::run($command, $map, ['x.php', $flag], $output), $flag);
+            self::assertStringStartsWith('NOTE: x.php is deprecated; use bin/console ' . $command . ".\nERROR: Invalid Parameter " . $flag . "\n", $output->fetch());
+        }
+    }
+
+    public function testUsageIsTheHelpPrintedAsAFailure(): void
+    {
+        $output = new BufferedOutput();
+
+        $exit = (new ResultRenderer())->legacyRequest(LegacyRequest::Usage, 'Version line', new ConvertTablesLegacyArguments(), $output);
+
+        // audit_database.php with no arguments printed its help and exited 1.
+        self::assertSame(1, $exit);
+        self::assertStringStartsWith("Version line\n\nusage: convert_tables.php", $output->fetch());
     }
 }
