@@ -7,9 +7,13 @@
 
 /*
  * Both RRD create paths guarded against overwriting an existing file with
- * file_exists(). That call follows a symbolic link, so it reports false for a
- * dangling one and the guard passed. rrdtool then created the file the link
- * named, and the chown/chgrp that follow under a root poller followed it too.
+ * file_exists(). That call follows a symbolic link, so neither answer it gives
+ * refuses one. A dangling link reported false, the guard passed, rrdtool created
+ * the file the link named, and the chown/chgrp that follow under a root poller
+ * followed it too. A link whose target was already there reported true, the
+ * guard returned -1, and the caller read that as "the file exists" and wrote its
+ * update through the link. The refusal therefore has to come before the
+ * existence test, not after it.
  *
  * data_source_path is stored from the request under '^[^\r\n]*$'
  * (data_sources.php:245) and rrd_check_path() deliberately does not confine a
@@ -52,6 +56,65 @@ it('confirms file_exists is false for a dangling symlink', function () {
 		unlink($link);
 	} finally {
 		@rmdir($dir);
+	}
+});
+
+it('confirms file_exists is true for a symlink whose target is present', function () {
+	$dir = sys_get_temp_dir() . '/rrd-livelink-' . getmypid() . '-' . mt_rand();
+
+	mkdir($dir, 0700, true);
+
+	try {
+		$link   = $dir . '/data.rrd';
+		$target = $dir . '/present-target';
+
+		file_put_contents($target, 'x');
+
+		expect(symlink($target, $link))->toBeTrue();
+
+		// The other half of the defect. A guard that reads this as "the file is
+		// already there" returns -1, and the caller then updates through the
+		// link, so ordering the link test after the existence test is not enough.
+		expect(file_exists($link))->toBeTrue();
+		expect(is_link($link))->toBeTrue();
+
+		file_put_contents($link, 'y');
+
+		expect(file_get_contents($target))->toBe('y');
+
+		unlink($link);
+		unlink($target);
+	} finally {
+		@rmdir($dir);
+	}
+});
+
+it('tests for a link before it trusts an existence result', function () {
+	require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
+	$creators = array(
+		'lib/rrd.php'   => 'rrdtool_function_create',
+		'lib/boost.php' => 'boost_rrdtool_function_create',
+	);
+
+	foreach ($creators as $file => $function) {
+		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
+
+		expect($source)->not->toBeFalse();
+
+		$body = \test_php_function_source($source, $function);
+		$link = strpos($body, 'is_link($data_source_path)');
+
+		expect($link)->not->toBeFalse();
+
+		// Both the local call and the proxy verb follow the link, so the refusal
+		// has to come before either of them rather than in the same chain.
+		foreach (array('file_exists($data_source_path)', "rrdtool_execute_path_command('file_exists'") as $existence) {
+			$at = strpos($body, $existence);
+
+			expect($at)->not->toBeFalse();
+			expect($link)->toBeLessThan($at);
+		}
 	}
 });
 

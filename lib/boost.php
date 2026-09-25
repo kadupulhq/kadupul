@@ -1915,22 +1915,14 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 		$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
 			&& read_config_option('storage_location');
 
-		if ($remote_storage) {
-			$file_exists = rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
-		} else {
-			$file_exists = file_exists($data_source_path);
-		}
-
-		if ($file_exists !== false) {
-			return -1;
-		}
-
 		/**
-		 * file_exists() follows the link and so reports false for a dangling
-		 * one, which lets the check above pass. rrdtool then creates the file
-		 * the link names, and the chown and chgrp below follow it too, so a
-		 * link planted where an RRD is about to be created redirected a
-		 * root-run poller's write and the ownership change that follows it.
+		 * Neither answer file_exists() can give about a link refuses it,
+		 * because it follows one. False, for a dangling link, let the check
+		 * pass and rrdtool created the file the link named, with the chown and
+		 * chgrp below following it too. True, for a link whose target is
+		 * already there, returns -1, which callers read as "the file exists"
+		 * and follow with an update written through the link. So test the path
+		 * itself before asking whether anything exists at it.
 		 *
 		 * Local storage only. Under storage_location the file lives on the
 		 * proxy host and rrdtool_build_path_command() allows only file_exists,
@@ -1948,6 +1940,16 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 			 * returned it would log and then write anyway.
 			 */
 			return false;
+		}
+
+		if ($remote_storage) {
+			$file_exists = rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+		} else {
+			$file_exists = file_exists($data_source_path);
+		}
+
+		if ($file_exists !== false) {
+			return -1;
 		}
 	}
 

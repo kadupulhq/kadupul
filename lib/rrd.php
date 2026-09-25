@@ -1068,29 +1068,23 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 		$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
 			&& read_config_option('storage_location');
 
-		if ($remote_storage) {
-			if (rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
-				return -1;
-			}
-		} elseif (file_exists($data_source_path)) {
-			return -1;
-		} elseif (is_link($data_source_path)) {
-			/**
-			 * file_exists() follows the link and so reports false for a
-			 * dangling one, which let the guard above pass. rrdtool then
-			 * creates the file the link names, and the chown and chgrp below
-			 * follow it too, so a link planted where an RRD is about to be
-			 * created redirected a root-run poller's write and the ownership
-			 * change that follows it.
-			 *
-			 * Local storage only. Under storage_location the file lives on the
-			 * proxy host and rrdtool_build_path_command() allows only
-			 * file_exists, filemtime, is_dir, mkdir, rmdir, unlink and archive,
-			 * so there is no verb to ask the proxy whether a path is a link.
-			 * The ownership change is withheld there regardless, because
-			 * realpath() of a remote directory fails locally and the
-			 * containment test below returns false.
-			 */
+		/**
+		 * Neither answer file_exists() can give about a link refuses it,
+		 * because it follows one. False, for a dangling link, let the guard
+		 * pass and rrdtool created the file the link named, with the chown and
+		 * chgrp below following it too. True, for a link whose target is
+		 * already there, returns -1, which callers read as "the file exists"
+		 * and follow with an update written through the link. So test the path
+		 * itself before asking whether anything exists at it.
+		 *
+		 * Local storage only. Under storage_location the file lives on the
+		 * proxy host and rrdtool_build_path_command() allows only file_exists,
+		 * filemtime, is_dir, mkdir, rmdir, unlink and archive, so there is no
+		 * verb to ask the proxy whether a path is a link. The ownership change
+		 * is withheld there regardless, because realpath() of a remote
+		 * directory fails locally and the containment test below returns false.
+		 */
+		if (!$remote_storage && is_link($data_source_path)) {
 			cacti_log("ERROR: Refusing to create an RRDfile through the symbolic link '$data_source_path'.", false, 'POLLER');
 
 			/**
@@ -1099,6 +1093,14 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 			 * returned it would log and then write anyway.
 			 */
 			return false;
+		}
+
+		if ($remote_storage) {
+			if (rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
+				return -1;
+			}
+		} elseif (file_exists($data_source_path)) {
+			return -1;
 		}
 	}
 
