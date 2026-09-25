@@ -1488,6 +1488,11 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
                 $data_source['rrd_maximum'] = (int) $data_source['rrd_minimum'] + 1;
             }
 
+            $data_source['rrd_minimum'] = rrdtool_create_minimum($data_source['rrd_minimum'], $local_data_id, 'BOOST');
+            if ($data_source['rrd_minimum'] === false) {
+                return false;
+            }
+
             $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $local_data_id, 'BOOST');
             if ($data_source['rrd_maximum'] === false) {
                 return false;

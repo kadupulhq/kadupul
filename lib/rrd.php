@@ -706,6 +706,26 @@ function rrdtool_def_path($path)
 }
 
 /**
+ * The DS minimum as rrdtool_function_create() and boost_rrdtool_function_create()
+ * write it, or false, logged under $logopt, when the RRD must not be created.
+ *
+ * The minimum is written unquoted, and the shown create text is also run by the
+ * realtime poller, so only a number or U without blanks may reach it. Older
+ * form validation let other text through, and rows saved then are still read.
+ */
+function rrdtool_create_minimum($minimum, $local_data_id, $logopt)
+{
+    $minimum = (string) $minimum;
+    if ($minimum === 'U' || (is_numeric($minimum) && !preg_match('/\s/', $minimum))) {
+        return $minimum;
+    }
+
+    cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its minimum is not a number or U.', false, $logopt);
+
+    return false;
+}
+
+/**
  * The DS maximum as rrdtool_function_create() and boost_rrdtool_function_create()
  * write it, or false, logged under $logopt, when the RRD must not be created.
  * A minimum and maximum of zero become U.
@@ -1504,6 +1524,11 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
                 } else {
                     $data_source['rrd_maximum'] = (float) $data_source['rrd_minimum'] + 1;
                 }
+            }
+
+            $data_source['rrd_minimum'] = rrdtool_create_minimum($data_source['rrd_minimum'], $local_data_id, 'POLLER');
+            if ($data_source['rrd_minimum'] === false) {
+                return false;
             }
 
             $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $local_data_id, 'POLLER');
