@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -13,8 +14,8 @@ require_once($config['base_path'] . '/lib/data_query.php');
 ini_set('max_execution_time', '0');
 
 if ($config['poller_id'] > 1) {
-	print "FATAL: This utility is designed for the main Data Collector only" . PHP_EOL;
-	exit(1);
+    print "FATAL: This utility is designed for the main Data Collector only" . PHP_EOL;
+    exit(1);
 }
 
 /* process calling arguments */
@@ -26,48 +27,48 @@ $host_id	= 'all';
 $host_descr	= '';
 
 if (cacti_sizeof($parms)) {
-	foreach($parms as $parameter) {
-		if (strpos($parameter, '=')) {
-			list($arg, $value) = explode('=', $parameter, 2);
-		} else {
-			$arg = $parameter;
-			$value = '';
-		}
+    foreach ($parms as $parameter) {
+        if (strpos($parameter, '=')) {
+            list($arg, $value) = explode('=', $parameter, 2);
+        } else {
+            $arg = $parameter;
+            $value = '';
+        }
 
-		switch ($arg) {
-			case '-id':
-			case '--id':
-			case '--host-id':
-				$host_id = $value;
-				break;
-			case '-qid':
-			case '--qid':
-				$query_id = $value;
-				break;
-			case '-d':
-			case '--debug':
-				$debug = true;
-				break;
-			case '--version':
-			case '-V':
-			case '-v':
-				display_version();
-				exit(0);
-			case '--help':
-			case '-H':
-			case '-h':
-				display_help();
-				exit(0);
-			default:
-				print 'ERROR: Invalid Parameter ' . $parameter . "\n\n";
-				display_help();
-				exit(1);
-		}
-	}
+        switch ($arg) {
+            case '-id':
+            case '--id':
+            case '--host-id':
+                $host_id = $value;
+                break;
+            case '-qid':
+            case '--qid':
+                $query_id = $value;
+                break;
+            case '-d':
+            case '--debug':
+                $debug = true;
+                break;
+            case '--version':
+            case '-V':
+            case '-v':
+                display_version();
+                exit(0);
+            case '--help':
+            case '-H':
+            case '-h':
+                display_help();
+                exit(0);
+            default:
+                print 'ERROR: Invalid Parameter ' . $parameter . "\n\n";
+                display_help();
+                exit(1);
+        }
+    }
 } else {
-	print "ERROR: You must supply input parameters\n\n";
-	display_help();
-	exit(1);
+    print "ERROR: You must supply input parameters\n\n";
+    display_help();
+    exit(1);
 }
 
 
@@ -75,22 +76,22 @@ $sql_where = "WHERE data_input_fields.type_code='output_type'";
 
 /* determine the hosts to reindex */
 if (strtolower($host_id) == 'all') {
-	/* NOP */
-}else if (is_numeric($host_id)) {
-	$sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE ' ) . 'data_local.host_id = ' . $host_id;
+    /* NOP */
+} else if (is_numeric($host_id)) {
+    $sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE ') . 'data_local.host_id = ' . $host_id;
 } else {
-	print "ERROR: You must specify either a host_id or 'all' to proceed.\n";
-	display_help();
-	exit;
+    print "ERROR: You must specify either a host_id or 'all' to proceed.\n";
+    display_help();
+    exit;
 }
 
 /* determine data queries to rerun */
 if (is_numeric($query_id)) {
-	$sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE ' ) . 'data_local.snmp_query_id= ' . $query_id;
+    $sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE ') . 'data_local.snmp_query_id= ' . $query_id;
 } else {
-	print "ERROR: You must specify either a query_id or 'all' to proceed.\n";
-	display_help();
-	exit;
+    print "ERROR: You must specify either a query_id or 'all' to proceed.\n";
+    display_help();
+    exit;
 }
 
 /* get all object that have to be scanned */
@@ -113,47 +114,51 @@ debug("There are '" . cacti_sizeof($data_queries) . "' data query index items to
 
 $i = 1;
 if (cacti_sizeof($data_queries)) {
-	foreach ($data_queries as $data_query) {
-		if (!$debug) print '.';
-		/* fetch current index_order from data_query XML definition and put it into host_snmp_query */
-		update_data_query_sort_cache($data_query['host_id'], $data_query['snmp_query_id']);
-		/* build array required for function call */
-		$data_query['snmp_index_on'] = get_best_data_query_index_type($data_query['host_id'], $data_query['snmp_query_id']);
-		/* as we request the output_type, 'value' gives the snmp_query_graph_id */
-		$data_query['snmp_query_graph_id'] = $data_query['value'];
-		debug("Data Query #'" . $i . "' host: '" . $data_query['host_id'] .
-			"' SNMP Query Id: '" . $data_query['snmp_query_id'] .
-			"' Index: " . $data_query['snmp_index'] .
-			"' Index On: " . $data_query['snmp_index_on']
-			);
-		update_snmp_index_order($data_query);
-		$i++;
-	}
+    foreach ($data_queries as $data_query) {
+        if (!$debug) print '.';
+        /* fetch current index_order from data_query XML definition and put it into host_snmp_query */
+        update_data_query_sort_cache($data_query['host_id'], $data_query['snmp_query_id']);
+        /* build array required for function call */
+        $data_query['snmp_index_on'] = get_best_data_query_index_type($data_query['host_id'], $data_query['snmp_query_id']);
+        /* as we request the output_type, 'value' gives the snmp_query_graph_id */
+        $data_query['snmp_query_graph_id'] = $data_query['value'];
+        debug(
+            "Data Query #'" . $i . "' host: '" . $data_query['host_id'] .
+            "' SNMP Query Id: '" . $data_query['snmp_query_id'] .
+            "' Index: " . $data_query['snmp_index'] .
+            "' Index On: " . $data_query['snmp_index_on']
+        );
+        update_snmp_index_order($data_query);
+        $i++;
+    }
 }
 
 /*  display_version - displays version information */
-function display_version() {
-	$version = get_cacti_cli_version();
-	print "Kadupul Reorder Data Query Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+function display_version()
+{
+    $version = get_cacti_cli_version();
+    print "Kadupul Reorder Data Query Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /*	display_help - displays the usage of the function */
-function display_help () {
-	display_version();
+function display_help()
+{
+    display_version();
 
-	print "\nusage: reorder_data_query.php --host-id=[id|all] [--qid=[query_id]] [--debug|-d]\n\n";
-	print "A utility to Re-order Kadupul Data Queries for a Device or system in batch mode.\n\n";
-	print "Required:\n";
-	print "    --host-id=N    - The Device id to be reindexed; defaults to 'all' to reindex all Devices.\n\n";
-	print "Optional:\n";
-	print "    --qid=query_id - Only index on a specific data query id\n";
-	print "    --debug | -d   - Display verbose output during execution\n\n";
+    print "\nusage: reorder_data_query.php --host-id=[id|all] [--qid=[query_id]] [--debug|-d]\n\n";
+    print "A utility to Re-order Kadupul Data Queries for a Device or system in batch mode.\n\n";
+    print "Required:\n";
+    print "    --host-id=N    - The Device id to be reindexed; defaults to 'all' to reindex all Devices.\n\n";
+    print "Optional:\n";
+    print "    --qid=query_id - Only index on a specific data query id\n";
+    print "    --debug | -d   - Display verbose output during execution\n\n";
 }
 
-function debug($message) {
-	global $debug;
+function debug($message)
+{
+    global $debug;
 
-	if ($debug) {
-		print "DEBUG: " . trim($message) . "\n";
-	}
+    if ($debug) {
+        print "DEBUG: " . trim($message) . "\n";
+    }
 }
