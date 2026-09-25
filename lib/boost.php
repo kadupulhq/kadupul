@@ -1259,27 +1259,52 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	$locks               = false;
 	$temp_table          = false;
 
+	/**
+	 * Staging failures used to be invisible. The archive cleanup below deletes
+	 * every row for this data source, not the rows that were read, so a copy
+	 * that never happened meant those samples were dropped without ever being
+	 * written to the RRD. Carry the result through to $updates_ok instead.
+	 */
+	$staging_ok = true;
+
 	if (cacti_count($archive_tables)) {
 		$temp_table = 'poller_output_boost_temp_' . $local_data_id . '_' . mt_rand();
 
-		db_execute("CREATE TEMPORARY TABLE $temp_table LIKE poller_output_boost");
+		if (db_execute("CREATE TEMPORARY TABLE $temp_table LIKE poller_output_boost") === false) {
+			cacti_log("ERROR: Boost could not stage archived samples for Local Data ID '$local_data_id'; retaining them.", false, 'BOOST');
 
-		foreach($archive_tables as $index => $table) {
-			db_execute_prepared("INSERT IGNORE INTO $temp_table
-				SELECT *
-				FROM $table
-				WHERE local_data_id = ?",
-				array($local_data_id), false);
+			$staging_ok = false;
+			$temp_table = false;
+		}
+
+		if ($temp_table !== false) {
+			foreach($archive_tables as $index => $table) {
+				if (db_execute_prepared("INSERT IGNORE INTO $temp_table
+					SELECT *
+					FROM $table
+					WHERE local_data_id = ?",
+					array($local_data_id)) === false) {
+					cacti_log("ERROR: Boost could not stage archive table '$table' for Local Data ID '$local_data_id'; retaining its samples.", false, 'BOOST');
+
+					$staging_ok = false;
+
+					break;
+				}
+			}
 		}
 	}
 
-	if ($temp_table !== false) {
-		db_execute_prepared("INSERT IGNORE INTO $temp_table
+	if ($temp_table !== false && $staging_ok) {
+		if (db_execute_prepared("INSERT IGNORE INTO $temp_table
 			SELECT *
 			FROM poller_output_boost
 			WHERE local_data_id = ?
 			AND time < FROM_UNIXTIME(?)",
-			array($local_data_id, $timestamp), false);
+			array($local_data_id, $timestamp)) === false) {
+			cacti_log("ERROR: Boost could not stage live samples for Local Data ID '$local_data_id'; retaining them.", false, 'BOOST');
+
+			$staging_ok = false;
+		}
 
 		$query_string = "SELECT po.local_data_id, dl.data_template_id,
 			UNIX_TIMESTAMP(po.time) AS timestamp, po.rrd_name, po.output
@@ -1302,7 +1327,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	$sql_params[] = $timestamp;
 
 	$boost_results   = 0;
-	$updates_ok      = true;
+	$updates_ok      = $staging_ok;
 	$rrdp_auto_close = $owned_rrd_pipe;
 	$cursor          = false;
 
@@ -1431,7 +1456,12 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 			}
 
 			if ($time != $item['timestamp']) {
-				if ($outlen > $upd_string_len) {
+				// Gated on $updates_ok like the final flush below. Without it a
+				// run that has already given up still wrote this buffer, which
+				// after a staging failure means live samples land in the RRD
+				// while the retained archived samples are older and are then
+				// rejected for good.
+				if ($outlen > $upd_string_len && $updates_ok) {
 					boost_timer('rrdupdate', BOOST_TIMER_START);
 					$return_value = boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_tmpl, $outbuf, $rrdtool_pipe);
 					boost_timer('rrdupdate', BOOST_TIMER_END);
