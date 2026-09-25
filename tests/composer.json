@@ -4,7 +4,7 @@
     "description": "Test-runner deps for the CSP nonce migration suite.",
     "type": "project",
     "require-dev": {
-        "pestphp/pest": "^1.23",
+        "pestphp/pest": "^4.7",
         "nikic/php-parser": "^5.0"
     },
     "config": {
