@@ -32,11 +32,28 @@ sed 's@^SCRIPTPATH=.*@SCRIPTPATH="/var/www/html/tests/tools"@' ../../../tests/to
 	| "${DC[@]}" exec -T cacti-master sh -c 'cd /var/www/html && bash -s'
 
 echo '[09] database audit report runs against the installed MariaDB schema'
+baseline_backup=/tmp/kadupul-audit-schema-test.sql
+"${DC[@]}" exec -T cacti-master mv /var/www/html/docs/audit_schema.sql "$baseline_backup"
+restore_audit_baseline() {
+	"${DC[@]}" exec -T cacti-master mv "$baseline_backup" /var/www/html/docs/audit_schema.sql
+}
+trap restore_audit_baseline EXIT
+if audit_output=$(run_cli audit_database.php --report 2>&1); then
+	echo "FAIL: database audit succeeded without its baseline: $audit_output" >&2
+	exit 1
+fi
+if grep -qiE 'Scanning Table:|Audit Complete|Repair Completed' <<< "$audit_output"; then
+	echo "FAIL: database audit continued after its baseline failed: $audit_output" >&2
+	exit 1
+fi
+restore_audit_baseline
+trap - EXIT
+
 if ! audit_output=$(run_cli audit_database.php --report 2>&1); then
 	echo "FAIL: database audit reported an error: $audit_output" >&2
 	exit 1
 fi
-if grep -qiE 'TLS/SSL error|Failed to load the audit schema baseline' <<< "$audit_output"; then
+if grep -qiE 'TLS/SSL error|FATAL: Failed Load the Audit Schema|FATAL: Failed to find Audit Schema|FATAL: Unable to load the audit schema baseline' <<< "$audit_output"; then
 	echo "FAIL: database audit could not load its baseline: $audit_output" >&2
 	exit 1
 fi
