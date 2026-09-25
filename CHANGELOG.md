@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
 Targeting `v1.3.0`, the first planned application release. See
