@@ -1221,6 +1221,13 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	}
 	$previous_error_reporting = error_reporting();
 	$boost_handler_installed = false;
+
+	/* Declared before the try because the finally reads them: anything throwing
+	   between here and a later assignment would otherwise make the cleanup
+	   touch an undefined variable. */
+	$locks      = false;
+	$temp_table = false;
+
 	try {
 
 	/* suppress warnings */
@@ -1233,6 +1240,31 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	/* install the boost error handler */
 	set_error_handler('boost_error_handler');
 	$boost_handler_installed = true;
+
+	/**
+	 * Serialize with the Boost child writing the same RRDfile. Before rrdtool
+	 * 1.5 there is no --skip-past-updates, so two writers racing on one file
+	 * lose samples. The child takes this same lock in poller_boost.php; this
+	 * function released it without ever acquiring it, because the acquisition
+	 * was dropped when an unbounded wait loop was removed here. Bounded, as
+	 * the child's is, so a held lock cannot hang a web request: on timeout the
+	 * rows stay queued for the next run.
+	 */
+	if (cacti_version_compare(get_rrdtool_version(), '1.5', '<')) {
+		$lock_deadline = microtime(true) + max(1, min(30, (int) read_config_option('boost_rrd_update_max_runtime')));
+
+		while (!db_fetch_cell("SELECT GET_LOCK('boost.single_ds.$local_data_id', 1)")) {
+			if (microtime(true) >= $lock_deadline) {
+				cacti_log("ERROR: Boost timed out acquiring the RRD lock for Local Data ID '$local_data_id'; queued rows were retained.", false, 'BOOST');
+
+				return -1;
+			}
+
+			usleep(50000);
+		}
+
+		$locks = true;
+	}
 
 
 	$max_rows = (int) read_config_option('boost_rrd_update_max_records_per_select');
@@ -1256,8 +1288,6 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	$query_string        = '';
 	$sql_params          = array();
-	$locks               = false;
-	$temp_table          = false;
 
 	/**
 	 * Staging failures used to be invisible. The archive cleanup below deletes
@@ -1628,10 +1658,6 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		}
 	}
 
-	if ($temp_table !== false) {
-		db_execute("DROP TEMPORARY TABLE $temp_table");
-	}
-
 	if ($rrdp_auto_close) {
 		boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
 		rrd_close($rrdtool_pipe);
@@ -1689,12 +1715,26 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		cacti_log("WARNING: Boost retained staged rows for Local Data ID '$local_data_id' because the handoff was not fully acknowledged.", false, 'BOOST');
 	}
 
-	if (cacti_version_compare(get_rrdtool_version(), '1.5', '<')) {
-		db_execute("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
-	}
-
 	return $updates_ok ? $boost_results : -1;
 	} finally {
+		/**
+		 * Cleaned up here rather than beside the return so a throw, or the
+		 * lock timeout's early return, cannot leave either behind. The lock
+		 * goes first: it is held on a session that outlives this call, while a
+		 * temporary table dies with the connection, so a throw from the drop
+		 * must not be what stops the release from running.
+		 */
+		if ($locks) {
+			try {
+				db_execute("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
+			} catch (\Throwable $release_error) {
+				cacti_log("WARNING: Boost could not release the RRD lock for Local Data ID '$local_data_id'.", false, 'BOOST');
+			}
+		}
+
+		if ($temp_table !== false) {
+			db_execute("DROP TEMPORARY TABLE IF EXISTS $temp_table");
+		}
 		if ($boost_handler_installed) {
 			restore_error_handler();
 		}

@@ -468,6 +468,11 @@ test('on-demand Boost restores caller state and closes only its own writer after
     $bootstrap .= '$config = array("cacti_server_os" => "unix", "rra_path" => __DIR__, "library_path" => ' . var_export($root . '/lib', true) . '); define("CACTI_LOCALE", "en-US");' .
         'function read_config_option($name) { return $name === "path_rrdtool" ? ' . var_export($binary, true) . ' : ""; }' .
         'function cacti_escapeshellarg($value) { return escapeshellarg($value); } function cacti_log(...$args) {} function cacti_system_zone_set() {}' .
+        // boost_process_poller_output() consults the RRDtool version before it
+        // reads any rows, and this bootstrap does not load lib/functions.php,
+        // where the real accessor and its read_default_config_option() live.
+        'function get_rrdtool_version() { return "1.8"; }' .
+        'function cacti_version_compare(...$args) { return version_compare(...$args); }' .
         'function db_fetch_assoc(...$args) { throw new RuntimeException("fixture query failed"); }' .
         'require ' . var_export($root . '/lib/rrd.php', true) . '; require ' . var_export($root . '/lib/boost.php', true) . ';' .
         '$pipe = ' . ($supplied ? 'rrd_init()' : 'false') . '; $handler = function () { return true; }; set_error_handler($handler); error_reporting(E_ALL);' .
