@@ -18,6 +18,7 @@ use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
 /**
@@ -98,6 +99,7 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     /** db_dump_data() preferred mariadb-dump when either of these existed (lib/database.php:2345-2348). */
     private const array MARIADB_DUMP = ['/usr/bin/mariadb-dump', '/usr/local/bin/mariadb-dump'];
+    private const array MYSQL_DUMP = ['/usr/bin/mysqldump', '/usr/local/bin/mysqldump'];
 
     /** @param float $dumpTimeout seconds the dump may run; a test shortens it */
     public function __construct(
@@ -187,7 +189,7 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
             return false;
         }
         $database = (string) $credentials['database'];
-        $binary = array_any(self::MARIADB_DUMP, static fn(string $file): bool => is_file($file)) ? 'mariadb-dump' : 'mysqldump';
+        $binary = $this->dumpBinary();
         // db_dump_data()'s options, aimed at the configured server rather than
         // the client's default. The password travels in MYSQL_PWD, as
         // db_dump_data() passed it: both clients read it, and a process's
@@ -227,6 +229,24 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
         }
 
         return true;
+    }
+
+    private function dumpBinary(): string
+    {
+        foreach (self::MARIADB_DUMP as $binary) {
+            if (is_file($binary) && is_executable($binary)) {
+                return $binary;
+            }
+        }
+        foreach (self::MYSQL_DUMP as $binary) {
+            if (is_file($binary) && is_executable($binary)) {
+                return $binary;
+            }
+        }
+
+        $finder = new ExecutableFinder();
+
+        return $finder->find('mariadb-dump') ?? $finder->find('mysqldump') ?? 'mysqldump';
     }
 
     /**

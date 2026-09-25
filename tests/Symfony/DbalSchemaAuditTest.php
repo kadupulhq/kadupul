@@ -606,6 +606,7 @@ final class DbalSchemaAuditTest extends TestCase
         $bin = $this->root . '/fake-bin';
         $script = '#!' . PHP_BINARY . "\n<?php\n"
             . 'file_put_contents(' . var_export($this->root . '/argv.json', true) . ', json_encode(array_slice($argv, 1)));' . "\n"
+            . 'file_put_contents(' . var_export($this->root . '/binary.json', true) . ', json_encode(realpath($argv[0])));' . "\n"
             . 'file_put_contents(' . var_export($this->root . '/env.json', true) . ', json_encode(getenv()));' . "\n"
             . ($sleep === null
                 ? 'print "-- dump of " . implode(" ", array_slice($argv, 1)) . "\n";' . "\n"
@@ -658,6 +659,7 @@ final class DbalSchemaAuditTest extends TestCase
         });
 
         $argv = json_decode((string) file_get_contents($this->root . '/argv.json'), true);
+        self::assertSame(realpath($bin . '/mariadb-dump'), json_decode((string) file_get_contents($this->root . '/binary.json'), true));
         self::assertSame(['--extended-insert=FALSE', '--host=db.example', '--port=3307', '--ssl-ca=/tls/ca.pem', '--ssl-key=/tls/key.pem',
             '--user=-u-root', '--', 'cacti', 'table_columns', 'table_indexes'], $argv);
         self::assertStringNotContainsString('p w', implode(' ', $argv));
