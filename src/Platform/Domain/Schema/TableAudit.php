@@ -13,6 +13,7 @@ final readonly class TableAudit
     /**
      * @param list<string> $findings the ERROR and WARNING lines --report prints, in order
      * @param list<AlterClause> $clauses in the order the original collected them
+     * @param list<WidenedColumn> $widened columns left wider than the audit schema lists them
      */
     public function __construct(
         public string $table,
@@ -21,6 +22,7 @@ final readonly class TableAudit
         public int $errors,
         public int $warnings,
         public array $clauses,
+        public array $widened = [],
     ) {}
 
     /** @param bool $output true for --report, false for --repair and --alters, which print no findings */
@@ -42,6 +44,7 @@ final readonly class TableAudit
             $columns['errors'] + $indexes['errors'],
             $columns['warnings'],
             [...$columns['clauses'], ...$indexes['clauses']],
+            $columns['widened'],
         );
     }
 

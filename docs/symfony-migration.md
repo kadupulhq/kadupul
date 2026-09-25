@@ -1159,6 +1159,19 @@ Known differences from `cli/audit_database.php`:
   renames a column to the letter case a `MODIFY COLUMN` spells it in, so the
   original's repair also renamed such a column to the audit schema's case;
   the command keeps the live name and changes only the definition.
+- A column the server holds in a wider type than `docs/audit_schema.sql`
+  lists is never modified. `kadupul:database:widen-id-columns` leaves such
+  columns, for example `rrdcheck.local_data_id` once `local_data_id` needed
+  widening elsewhere. The original sent a `MODIFY COLUMN` back to the listed
+  type, which narrowed the column and, under a lenient SQL mode, truncated
+  larger values without an error. A smaller integer type, a shorter `char` or
+  `varchar`, or a `decimal` with fewer digits on either side of the point
+  counts as narrower. `--report` prints `WARNING Col: '<column>', widened
+  locally.  Audit schema: '<type>', Is: '<type>'.  Not narrowed.` instead of
+  the column's `ERROR` lines and counts it as a warning. `--repair` and
+  `--alters` print the same line after the table's `Scanning Table` line,
+  with `-- ` before it under `--alters`. Under `--json` each table lists
+  these columns in `widened`.
 - A column that is `NOT NULL` with no default in the audit schema, and whose
   `Extra` has drifted, is modified with `DEFAULT '1'`, as the original did:
   its comparison turns the missing default into `true`, which prints as `1`.

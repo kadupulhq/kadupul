@@ -28,6 +28,7 @@ use Kadupul\Platform\Domain\Schema\RebuildIndex;
 use Kadupul\Platform\Domain\Schema\TableAudit;
 use Kadupul\Platform\Domain\Schema\TableStatus;
 use Kadupul\Platform\Domain\Schema\UnbuildableClause;
+use Kadupul\Platform\Domain\Schema\WidenedColumn;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -87,6 +88,67 @@ final class AuditSchemaTest extends TestCase
         self::assertSame($findings, $result['lines']);
         self::assertSame($legacy, isset($result['clauses'][0]) ? $result['clauses'][0]->legacy() : null);
         self::assertSame($legacy === null ? 0 : 1, $result['errors']);
+    }
+
+    /**
+     * The audit schema's type first, then the live one.
+     *
+     * @return iterable<string, array{string, string, bool}>
+     */
+    public static function narrowings(): iterable
+    {
+        $integers = ['tinyint(3) unsigned', 'smallint(5) unsigned', 'mediumint(8) unsigned', 'int(10) unsigned', 'bigint(20) unsigned'];
+        foreach ($integers as $i => $listed) {
+            foreach ($integers as $j => $live) {
+                yield $listed . ' over ' . $live => [$listed, $live, $i < $j];
+            }
+        }
+        yield 'the sign alone' => ['mediumint(8)', 'mediumint(8) unsigned', false];
+        yield 'a smaller signed integer' => ['mediumint(8)', 'int(11)', true];
+        yield 'the display width alone' => ['int(10) unsigned', 'int(11) unsigned', false];
+        yield 'a shorter varchar' => ['varchar(100)', 'varchar(255)', true];
+        yield 'the same varchar' => ['varchar(255)', 'varchar(255)', false];
+        yield 'a longer varchar' => ['varchar(255)', 'varchar(100)', false];
+        yield 'a shorter char' => ['char(2)', 'char(3)', true];
+        yield 'a char shorter than a varchar' => ['char(20)', 'varchar(40)', true];
+        yield 'a varchar shorter than a char' => ['varchar(20)', 'char(40)', true];
+        yield 'fewer decimal digits' => ['decimal(10,2)', 'decimal(12,2)', true];
+        yield 'fewer digits after the point' => ['decimal(12,2)', 'decimal(12,4)', true];
+        yield 'fewer digits before the point' => ['decimal(10,4)', 'decimal(10,2)', true];
+        yield 'the same decimal' => ['decimal(10,2)', 'decimal(10,2)', false];
+        yield 'a wider decimal' => ['decimal(12,4)', 'decimal(10,2)', false];
+        yield 'a decimal at the default precision' => ['decimal', 'decimal(10,0)', false];
+        yield 'an integer over a varchar' => ['int(10) unsigned', 'varchar(255)', false];
+        yield 'text over mediumtext' => ['text', 'mediumtext', false];
+        yield 'double over decimal' => ['double', 'decimal(20,2)', false];
+    }
+
+    #[DataProvider('narrowings')]
+    public function testOnlyASmallerIntegerStringOrDecimalNarrows(string $listed, string $live, bool $narrows): void
+    {
+        $type = static fn(string $text): ColumnType => ColumnType::parse($text) ?? throw new \LogicException('Not a column type: ' . $text);
+
+        self::assertSame($narrows, $type($listed)->narrows($type($live)));
+    }
+
+    public function testAColumnWiderThanTheAuditSchemaIsReportedAndNeverNarrowed(): void
+    {
+        // What widen-id-columns leaves in data_local: the audit schema still
+        // lists mediumint, and its default differs too.
+        $live = self::live('data_local', ['int(10) unsigned', 'NO', 'MUL', '0', '']);
+        $baseline = self::baseline('data_local', ['mediumint(8) unsigned', 'NO', 'MUL', '5', '']);
+
+        foreach ([true, false] as $output) {
+            $result = ColumnDrift::audit($live, $baseline, PluginSchemaChanges::none(), $output);
+
+            self::assertSame($output ? ["WARNING Col: 'x', widened locally.  Audit schema: 'mediumint(8) unsigned', Is: 'int(10) unsigned'.  Not narrowed."] : [], $result['lines']);
+            self::assertSame([[], 0, 1], [$result['clauses'], $result['errors'], $result['warnings']]);
+            self::assertSame([['x', 'int(10) unsigned', 'mediumint(8) unsigned']], array_map(static fn(WidenedColumn $column): array => [$column->field, $column->type, $column->baseline], $result['widened']));
+        }
+        $audit = TableAudit::of($live, $baseline, PluginSchemaChanges::none(), true);
+        self::assertNull($audit->alter($live->status));
+        self::assertSame(1, $audit->warnings);
+        self::assertCount(1, $audit->widened);
     }
 
     public function testTheModifyCarriesTypedPartsFromTheRewrittenRow(): void

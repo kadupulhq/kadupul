@@ -15,6 +15,7 @@ use Kadupul\Platform\Application\Command\MaintenanceTarget;
 use Kadupul\Platform\Application\Port\AuditBaselineStore;
 use Kadupul\Platform\Application\Port\AuditCatalog;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
+use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Application\Port\InstallationUpgrade;
 use Kadupul\Platform\Application\Port\SchemaAudit;
 use Kadupul\Platform\Application\ReadModel\AlterResult;
@@ -193,6 +194,50 @@ final class AuditDatabaseCommandTest extends TestCase
 
         self::assertSame(0, $tester->execute(['--repair' => true]));
         self::assertStringEndsWith("\n" . self::SEPARATOR . "\nExecuting Alter for Table : host - Success\n" . self::SEPARATOR . "\nRepair Completed!  All 1 Alters succeeded!\n", $tester->getDisplay());
+    }
+
+    /** The audit schema lists host.ping narrower than the server holds it. */
+    private function widenedStore(): AuditBaselineStore
+    {
+        $store = $this->createStub(AuditBaselineStore::class);
+        $store->method('read')->willReturn(new AuditBaseline([
+            new BaselineColumn('host', 1, 'ping', 'mediumint(8) unsigned', 'NO', '', '400', ''),
+            new BaselineColumn('settings', 1, 'name', 'varchar(75)', 'NO', 'PRI', '', ''),
+        ], []));
+        $store->method('replace')->willReturn(true);
+
+        return $store;
+    }
+
+    public function testLegacyRepairLeavesAWidenedColumnAndSaysSo(): void
+    {
+        $schema = $this->createMock(SchemaAudit::class);
+        $schema->method('codeVersion')->willReturn('1.3.0');
+        $schema->method('databaseVersion')->willReturn('1.3.0');
+        $schema->method('catalog')->willReturn($this->schema()->catalog(DatabaseTarget::Local));
+        $schema->expects(self::never())->method('alter');
+        $this->presentation->forLegacy(LegacyRequest::Run);
+        $tester = $this->tester($schema, $this->widenedStore());
+
+        self::assertSame(0, $tester->execute(['--repair' => true]));
+        self::assertSame(implode("\n", [
+            'SUCCESS: Loaded the Audit Schema',
+            sprintf('Scanning Table: %-45s', "'host'") . ' - Completed',
+            "WARNING Col: 'ping', widened locally.  Audit schema: 'mediumint(8) unsigned', Is: 'int(10) unsigned'.  Not narrowed.",
+            sprintf('Scanning Table: %-45s', "'settings'") . ' - Completed',
+            self::SEPARATOR,
+            'Repair Completed!  No changes performed.',
+        ]) . "\n", $tester->getDisplay());
+    }
+
+    public function testJsonListsAWidenedColumn(): void
+    {
+        $tester = $this->tester(null, $this->widenedStore());
+
+        self::assertSame(0, $tester->execute(['--report' => true, '--json' => true]));
+        $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
+        self::assertSame([[['column' => 'ping', 'type' => 'int(10) unsigned', 'baseline' => 'mediumint(8) unsigned']], 0, 1], [$json['tables'][0]['widened'], $json['tables'][0]['errors'], $json['tables'][0]['warnings']]);
+        self::assertSame([], $json['tables'][1]['widened']);
     }
 
     public function testLegacyAltersProposesWithoutRunning(): void

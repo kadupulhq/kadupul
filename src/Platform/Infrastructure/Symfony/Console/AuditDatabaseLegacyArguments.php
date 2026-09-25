@@ -184,10 +184,23 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
             : ['Audit was clean, no errors or warnings']), self::SEPARATOR];
     }
 
-    /** @return list<string> */
+    /**
+     * The original printed only the scan line here. A column it would have
+     * narrowed now gets a line of its own, after its table's.
+     *
+     * @return list<string>
+     */
     private static function scans(AuditReport $report, string $prefix): array
     {
-        return array_map(static fn(TableAudit $table): string => sprintf($prefix . 'Scanning Table: %-45s', "'" . $table->table . "'") . ' - Completed', $report->tables);
+        $lines = [];
+        foreach ($report->tables as $table) {
+            $lines[] = sprintf($prefix . 'Scanning Table: %-45s', "'" . $table->table . "'") . ' - Completed';
+            foreach ($table->widened as $column) {
+                $lines[] = $prefix . $column->line();
+            }
+        }
+
+        return $lines;
     }
 
     /** @return list<string> */

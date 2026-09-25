@@ -22,7 +22,7 @@ final class ColumnDrift
 
     /**
      * @param bool $output true for --report, which prints what it finds
-     * @return array{lines: list<string>, errors: int, warnings: int, clauses: list<AlterClause>}
+     * @return array{lines: list<string>, errors: int, warnings: int, clauses: list<AlterClause>, widened: list<WidenedColumn>}
      */
     public static function audit(LiveTable $table, AuditBaseline $baseline, PluginSchemaChanges $plugins, bool $output): array
     {
@@ -30,6 +30,7 @@ final class ColumnDrift
         $errors = 0;
         $warnings = 0;
         $clauses = [];
+        $widened = [];
         $altered = [];
         $added = [];
         $latin = $table->latin();
@@ -45,6 +46,11 @@ final class ColumnDrift
                 continue;
             }
             $dbc = $found->row();
+            // The one departure from the original: a column wider than the
+            // audit schema lists is never modified, since the MODIFY would
+            // narrow it back.
+            $wider = self::widened($c, $dbc);
+            $differs = false;
             foreach (self::ATTRIBUTES as $dbcol => $col) {
                 if ($col == 'Type' && $dbc[$dbcol] == 'text') {
                     if ($latin) {
@@ -66,6 +72,11 @@ final class ColumnDrift
                 }
                 $c[$col] = trim(str_replace('DEFAULT_GENERATED', '', $c[$col]));
                 if (($c[$col] != $dbc[$dbcol] && $c[$col] != $adbccol) && $c[$col] != 'mediumtext') {
+                    if ($wider !== null) {
+                        $differs = true;
+
+                        continue;
+                    }
                     if ($output && $col != 'Key') {
                         if ($col == 'Extra' && $dbc[$dbcol] == '1' && $c[$col] == '') {
                             // The original skipped the rest of this attribute here, the
@@ -81,6 +92,13 @@ final class ColumnDrift
                     }
                 }
             }
+            if ($differs && $wider !== null) {
+                if ($output) {
+                    $lines[] = $wider->line();
+                }
+                $widened[] = $wider;
+                $warnings++;
+            }
         }
         foreach ($baseline->columns($table->name) as $column) {
             if (!$table->hasColumnLike($column->field) && array_search($column->field, $added) === false) {
@@ -93,7 +111,25 @@ final class ColumnDrift
             }
         }
 
-        return ['lines' => $lines, 'errors' => $errors, 'warnings' => $warnings, 'clauses' => $clauses];
+        return ['lines' => $lines, 'errors' => $errors, 'warnings' => $warnings, 'clauses' => $clauses, 'widened' => $widened];
+    }
+
+    /**
+     * The column, when the audit schema lists it in a type narrower than the
+     * live one. Types outside ColumnType's grammar are never narrower.
+     *
+     * @param array{Field: string, Type: string} $live the column as SHOW COLUMNS printed it
+     * @param array<string, mixed> $dbc the baseline row as loaded
+     */
+    private static function widened(array $live, array $dbc): ?WidenedColumn
+    {
+        $type = ColumnType::parse((string) $live['Type']);
+        $listed = ColumnType::parse((string) $dbc['table_type']);
+        if ($type === null || $listed === null || !$listed->narrows($type)) {
+            return null;
+        }
+
+        return new WidenedColumn((string) $live['Field'], (string) $live['Type'], (string) $dbc['table_type']);
     }
 
     /**

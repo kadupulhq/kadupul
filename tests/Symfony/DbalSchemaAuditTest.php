@@ -9,9 +9,15 @@ namespace Kadupul\Tests;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Kadupul\Platform\Application\Command\AuditDatabase;
+use Kadupul\Platform\Application\Command\WidenIdColumns;
+use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
+use Kadupul\Platform\Application\Port\InstallationUpgrade;
+use Kadupul\Platform\Application\ReadModel\AuditReport;
 use Kadupul\Platform\Domain\Schema\AddColumn;
 use Kadupul\Platform\Domain\Schema\AuditBaseline;
+use Kadupul\Platform\Domain\Schema\AuditMode;
 use Kadupul\Platform\Domain\Schema\BaselineColumn;
 use Kadupul\Platform\Domain\Schema\BaselineIndex;
 use Kadupul\Platform\Domain\Schema\ColumnExtra;
@@ -23,14 +29,18 @@ use Kadupul\Platform\Domain\Schema\LiveTable;
 use Kadupul\Platform\Domain\Schema\ModifyColumn;
 use Kadupul\Platform\Domain\Schema\RebuildIndex;
 use Kadupul\Platform\Domain\Schema\TableAlter;
+use Kadupul\Platform\Domain\Schema\TableAudit;
 use Kadupul\Platform\Domain\Schema\TableStatus;
 use Kadupul\Platform\Domain\Schema\UnbuildableClause;
+use Kadupul\Platform\Domain\Schema\WidenedColumn;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
 use Kadupul\Platform\Infrastructure\Persistence\DbalAuditBaselineStore;
+use Kadupul\Platform\Infrastructure\Persistence\DbalColumnWidening;
 use Kadupul\Platform\Infrastructure\Persistence\DbalSchemaAudit;
 use Kadupul\Platform\Infrastructure\Persistence\MaintenanceConnections;
+use Kadupul\Tests\Fixtures\MaintenanceOperator;
 use Kadupul\Tests\Fixtures\RealMariaDb;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
@@ -38,6 +48,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class DbalSchemaAuditTest extends TestCase
 {
+    use MaintenanceOperator;
     use RealMariaDb;
 
     private const string PROBE = 'kadupul_audit_probe';
@@ -99,7 +110,7 @@ final class DbalSchemaAuditTest extends TestCase
 
     private function dropAll(Connection $db): void
     {
-        $db->executeStatement('DROP TABLE IF EXISTS settings, table_columns, table_indexes, plugin_db_changes, ' . self::PROBE . ', '
+        $db->executeStatement('DROP TABLE IF EXISTS settings, table_columns, table_indexes, plugin_db_changes, poller_item, rrdcheck, version, ' . self::PROBE . ', '
             . $db->quoteSingleIdentifier(self::HOSTILE) . ', ' . $db->quoteSingleIdentifier(ucfirst(self::PROBE)));
     }
 
@@ -427,6 +438,66 @@ final class DbalSchemaAuditTest extends TestCase
         } finally {
             $this->dropAll($db);
         }
+    }
+
+    /**
+     * widen-id-columns, then a repair against the shipped audit schema. Once
+     * poller_item.local_data_id needs widening, local_data_id joins the names
+     * widened in every table, rrdcheck's included, which the audit schema
+     * still lists as mediumint. The original sent a MODIFY back to mediumint;
+     * under a lenient SQL mode that truncated ids above 16777215 silently.
+     */
+    public function testARepairAfterWidenIdColumnsNarrowsNothingOnARealMariaDb(): void
+    {
+        $db = $this->mariaDb();
+        try {
+            (new Filesystem())->copy(dirname(__DIR__, 2) . '/docs/audit_schema.sql', $this->root . DbalAuditBaselineStore::FILE);
+            $db->executeStatement("CREATE TABLE version (cacti char(20) NOT NULL DEFAULT '') ENGINE=InnoDB");
+            $db->executeStatement("INSERT INTO version VALUES ('1.3.0')");
+            $db->executeStatement("CREATE TABLE poller_item (local_data_id mediumint(8) unsigned NOT NULL DEFAULT '0') ENGINE=InnoDB");
+            // rrdcheck as docs/audit_schema.sql lists it.
+            $db->executeStatement("CREATE TABLE rrdcheck (local_data_id mediumint(8) unsigned NOT NULL, test_date timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+                message varchar(250) DEFAULT '') ENGINE=InnoDB ROW_FORMAT=Dynamic DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+            $audit = $this->audit($db);
+            $store = $this->store($db);
+            self::assertSame([0, 0], self::counts($this->auditDatabase($audit, $store)(AuditMode::Report, false, null, false), 'rrdcheck'));
+
+            (new WidenIdColumns($this->maintenanceTarget(), new DbalColumnWidening($this->connections($db)), $this->recordingAudit()))(false, null, true);
+            self::assertSame('int(10) unsigned', self::idType($db, 'rrdcheck'));
+            $db->executeStatement('INSERT INTO rrdcheck (local_data_id) VALUES (16777216)');
+
+            $report = $this->auditDatabase($audit, $store)(AuditMode::Repair, false, null, true);
+
+            $table = array_find($report->tables, static fn(TableAudit $table): bool => $table->table === 'rrdcheck');
+            self::assertSame([['local_data_id', 'int(10) unsigned', 'mediumint(8) unsigned']], array_map(static fn(WidenedColumn $column): array => [$column->field, $column->type, $column->baseline], $table?->widened ?? []));
+            self::assertSame([0, 1], self::counts($report, 'rrdcheck'));
+            self::assertSame([], array_values(array_filter($report->alters, static fn(array $alter): bool => $alter['table'] === 'rrdcheck')));
+            self::assertSame('int(10) unsigned', self::idType($db, 'rrdcheck'));
+            self::assertSame('16777216', (string) $db->fetchOne('SELECT local_data_id FROM rrdcheck'));
+        } finally {
+            $this->dropAll($db);
+        }
+    }
+
+    private function auditDatabase(DbalSchemaAudit $audit, DbalAuditBaselineStore $store): AuditDatabase
+    {
+        $maintenance = $this->createStub(DatabaseMaintenance::class);
+        $maintenance->method('isRemoteCollector')->willReturn(false);
+
+        return new AuditDatabase($this->maintenanceTarget(), $maintenance, $audit, $store, $this->createStub(InstallationUpgrade::class), $this->recordingAudit());
+    }
+
+    /** @return array{int, int} errors and warnings of one audited table */
+    private static function counts(AuditReport $report, string $name): array
+    {
+        $table = array_find($report->tables, static fn(TableAudit $table): bool => $table->table === $name);
+
+        return [$table?->errors ?? -1, $table?->warnings ?? -1];
+    }
+
+    private static function idType(Connection $db, string $table): string
+    {
+        return (string) ($db->fetchAssociative('SHOW COLUMNS FROM ' . $db->quoteSingleIdentifier($table) . " LIKE 'local_data_id'")['Type'] ?? '');
     }
 
     public function testAFailedAlterIsLoggedWithTheServerMessageOnARealMariaDb(): void

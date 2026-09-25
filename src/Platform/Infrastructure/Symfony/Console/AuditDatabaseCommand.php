@@ -14,6 +14,7 @@ use Kadupul\Platform\Application\ReadModel\AuditReport;
 use Kadupul\Platform\Application\ReadModel\BaselineOutcome;
 use Kadupul\Platform\Domain\Schema\AuditMode;
 use Kadupul\Platform\Domain\Schema\TableAudit;
+use Kadupul\Platform\Domain\Schema\WidenedColumn;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\MapInput;
@@ -100,6 +101,7 @@ final readonly class AuditDatabaseCommand
         }
         $tables = array_map(static fn(TableAudit $table): array => [
             'name' => $table->table, 'status' => $table->status->value, 'errors' => $table->errors, 'warnings' => $table->warnings, 'findings' => $table->findings,
+            'widened' => array_map(static fn(WidenedColumn $column): array => ['column' => $column->field, 'type' => $column->type, 'baseline' => $column->baseline], $table->widened),
         ], $report->tables);
         $alters = array_map(static fn(array $alter): array => ['table' => $alter['table'], 'result' => $alter['result']->value]
             + ($alter['statement'] === null ? [] : ['statement' => $alter['statement']]), $report->alters);

@@ -36,6 +36,31 @@ final readonly class ColumnType
         return new self($base, $length, $scale, $unsigned, $zerofill);
     }
 
+    /**
+     * Whether changing a column of type $live to this type could lose values:
+     * a smaller integer, a shorter char or varchar, or a decimal with fewer
+     * digits on either side of the point. Other pairs are never compared, so
+     * they never count as narrower.
+     */
+    public function narrows(self $live): bool
+    {
+        $integers = [ColumnBase::Tinyint, ColumnBase::Smallint, ColumnBase::Mediumint, ColumnBase::Int, ColumnBase::Bigint];
+        $strings = [ColumnBase::Char, ColumnBase::Varchar];
+
+        return match (true) {
+            in_array($this->base, $integers, true) && in_array($live->base, $integers, true) => array_search($this->base, $integers, true) < array_search($live->base, $integers, true),
+            in_array($this->base, $strings, true) && in_array($live->base, $strings, true) => $this->length < $live->length,
+            $this->base === ColumnBase::Decimal && $live->base === ColumnBase::Decimal => $this->whole() < $live->whole() || ($this->scale ?? 0) < ($live->scale ?? 0),
+            default => false,
+        };
+    }
+
+    /** Digits before a decimal's point; MariaDB's default precision is 10. */
+    private function whole(): int
+    {
+        return ($this->length ?? 10) - ($this->scale ?? 0);
+    }
+
     public function sql(): string
     {
         $size = $this->length === null ? '' : '(' . $this->length . ($this->scale === null ? '' : ',' . $this->scale) . ')';
