@@ -232,54 +232,117 @@ function boost_get_total_rows($stop_after = 0) {
 	return $rows;
 }
 
+/**
+ * Errors raised while Boost holds the error handler.
+ *
+ * The handler does not return false, so PHP's own reporting never runs for
+ * anything it sees. Gating the log on POLLER_VERBOSITY_DEBUG therefore did not
+ * make a warning quieter, it discarded it: a flush that failed on an undefined
+ * index or a failed fopen left no record anywhere, and the only way to find out
+ * why was to raise the verbosity and wait for the fault to happen again. Log
+ * the classes that mean something went wrong at any verbosity, and keep the
+ * notice and deprecation noise on DEBUG as before.
+ */
 function boost_error_handler($errno, $errmsg, $filename, $linenum, $vars = []) {
-	if (read_config_option('log_verbosity') >= POLLER_VERBOSITY_DEBUG) {
-		/* define all error types */
-		$errortype = array(
-			E_ERROR             => 'Error',
-			E_WARNING           => 'Warning',
-			E_PARSE             => 'Parsing Error',
-			E_NOTICE            => 'Notice',
-			E_CORE_ERROR        => 'Core Error',
-			E_CORE_WARNING      => 'Core Warning',
-			E_COMPILE_ERROR     => 'Compile Error',
-			E_COMPILE_WARNING   => 'Compile Warning',
-			E_USER_ERROR        => 'User Error',
-			E_USER_WARNING      => 'User Warning',
-			E_USER_NOTICE       => 'User Notice'
-		);
-
-		/* E_STRICT's value has always been 2048; PHP 8.4 deprecates reading
-		 * the constant itself, so use the literal instead */
-		$errortype[2048] = 'Runtime Notice';
-
-		if (defined('E_RECOVERABLE_ERROR')) {
-			$errortype[E_RECOVERABLE_ERROR] = 'Catchable Fatal Error';
-		}
-
-		if (defined('E_DEPRECATED')) {
-			$errortype[E_DEPRECATED] = 'Deprecated Warning';
-		}
-
-		/* create an error string for the log */
-		$err = "ERRNO:'"  . $errno   . "' TYPE:'"    . ($errortype[$errno] ?? 'Unknown Error') .
-			"' MESSAGE:'" . $errmsg  . "' IN FILE:'" . $filename .
-			"' LINE NO:'" . $linenum . "'";
-
-		// let's ignore some lesser issues
-		if (substr_count($errmsg, 'date_default_timezone')) {
-			return;
-		}
-
-		if (substr_count($errmsg, 'Only variables')) {
-			return;
-		}
-
-		// log the error to the Cacti log
-		cacti_log('PROGERR: ' . $err, false, 'BOOST');
+	/**
+	 * PHP hands a user handler the errors silenced with @ as well, and leaves
+	 * it to apply the mask itself. The DEBUG gate hid that; logging at any
+	 * verbosity does not, and the paths this handler covers silence expected
+	 * failures that way: @stream_select and @fwrite on the rrdtool pipe,
+	 * @unlink and @rename in the atomic cache write, and @socket_connect on
+	 * the RRDproxy failover. Same form as aggregate_error_handler().
+	 */
+	if (($errno & error_reporting()) == 0) {
+		return true;
 	}
 
-	return;
+	/* long-standing suppressions, at every verbosity */
+	if (substr_count($errmsg, 'date_default_timezone')) {
+		return true;
+	}
+
+	if (substr_count($errmsg, 'Only variables')) {
+		return true;
+	}
+
+	/* define all error types */
+	$errortype = array(
+		E_ERROR             => 'Error',
+		E_WARNING           => 'Warning',
+		E_PARSE             => 'Parsing Error',
+		E_NOTICE            => 'Notice',
+		E_CORE_ERROR        => 'Core Error',
+		E_CORE_WARNING      => 'Core Warning',
+		E_COMPILE_ERROR     => 'Compile Error',
+		E_COMPILE_WARNING   => 'Compile Warning',
+		E_USER_ERROR        => 'User Error',
+		E_USER_WARNING      => 'User Warning',
+		E_USER_NOTICE       => 'User Notice'
+	);
+
+	/* E_STRICT's value has always been 2048; PHP 8.4 deprecates reading
+	 * the constant itself, so use the literal instead */
+	$errortype[2048] = 'Runtime Notice';
+
+	if (defined('E_RECOVERABLE_ERROR')) {
+		$errortype[E_RECOVERABLE_ERROR] = 'Catchable Fatal Error';
+	}
+
+	if (defined('E_DEPRECATED')) {
+		$errortype[E_DEPRECATED] = 'Deprecated Warning';
+	}
+
+	$debug_only = array(E_NOTICE, E_USER_NOTICE, 2048);
+
+	if (defined('E_DEPRECATED')) {
+		$debug_only[] = E_DEPRECATED;
+	}
+
+	if (defined('E_USER_DEPRECATED')) {
+		$debug_only[] = E_USER_DEPRECATED;
+	}
+
+	$debug = read_config_option('log_verbosity') >= POLLER_VERBOSITY_DEBUG;
+
+	if (!$debug && in_array($errno, $debug_only, true)) {
+		return true;
+	}
+
+	/* create an error string for the log */
+	$err = "ERRNO:'"  . $errno   . "' TYPE:'"    . ($errortype[$errno] ?? 'Unknown Error') .
+		"' MESSAGE:'" . $errmsg  . "' IN FILE:'" . $filename .
+		"' LINE NO:'" . $linenum . "'";
+
+	/**
+	 * A flush walks every queued row, so a warning inside the loop can be
+	 * raised once per sample. Cap the repeats of one message per process and
+	 * say so once, rather than trading a silent failure for a log that fills
+	 * the disk. DEBUG still records everything.
+	 */
+	static $seen = array();
+
+	if (!$debug) {
+		$key = $errno . '@' . $filename . ':' . $linenum;
+
+		if (!isset($seen[$key])) {
+			$seen[$key] = 0;
+		}
+
+		$seen[$key]++;
+
+		if ($seen[$key] > BOOST_ERROR_REPEAT_LIMIT) {
+			if ($seen[$key] == BOOST_ERROR_REPEAT_LIMIT + 1) {
+				cacti_log('PROGERR: Suppressing further repeats of ' . $err, false, 'BOOST');
+			}
+
+			return true;
+		}
+	}
+
+	// log the error to the Cacti log
+	cacti_log('PROGERR: ' . $err, false, 'BOOST');
+
+	return true;
 }
 
 function boost_check_correct_enabled() {
