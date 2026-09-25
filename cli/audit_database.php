@@ -1030,7 +1030,7 @@ function create_tables($load = true)
                 exit(1);
             }
 
-            exec($db_shell .
+            exec(cacti_escapeshellarg($db_shell) .
                 $ssl_option .
                 ' -u' . cacti_escapeshellarg($database_username) .
                 ' -p' . cacti_escapeshellarg($database_password) .
