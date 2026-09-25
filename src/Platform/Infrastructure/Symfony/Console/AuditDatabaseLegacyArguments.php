@@ -44,8 +44,9 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
      * value only as --as=NAME; a bare or empty --as is refused rather than
      * falling back to admin_user, and "--as --report" cannot make --report
      * the operator.
-     * --dry-run and --json, which only bin/console offers, are refused rather
-     * than ignored, so "--repair --dry-run" cannot run a real repair.
+     * --dry-run, --json and --force, which only bin/console offers, are
+     * refused rather than ignored, so "--repair --dry-run" cannot run a real
+     * repair.
      */
     #[\Override]
     public function translate(array $argv): array
@@ -74,7 +75,7 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
                 $input['--as'] = $value;
                 continue;
             }
-            if ($name === 'dry-run' || $name === 'json') {
+            if (in_array($name, ['dry-run', 'json', 'force'], true)) {
                 throw new InvalidLegacyArgument($argument);
             }
             if ($value === '') {

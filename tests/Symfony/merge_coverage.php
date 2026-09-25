@@ -154,12 +154,14 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'audit refuses an operator without the Installation/Upgrades realm',
         'audit refuses --dry-run through the shim before any statement',
         'audit refuses --json through the shim before any statement',
+        'audit refuses --force through the shim before any statement',
         'audit refuses --as through the shim before any statement',
         'audit refuses --as admin through the shim before any statement',
         'audit refuses an unauthorized --as with no mode instead of printing the help',
         'audit fallback still needs a direct Settings/Utilities grant',
         'audit falls back to Settings/Utilities while nobody holds Installation/Upgrades',
         'audit --dry-run through bin/console plans the repair and changes nothing, not even the audit tables',
+        'audit --repair through bin/console without --force plans the repair and changes nothing',
         'audit refuses a remote collector before any statement, --help included',
         'audit scenarios leave the schema, settings, grants and docs/ as they found them'];
     foreach ($checks as $check) {

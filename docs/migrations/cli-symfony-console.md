@@ -304,6 +304,10 @@ additions, which the original requires:
 
 - **Target database.** `audit_database.php` refused a remote collector
   outright, before reading its arguments, and the audit does the same.
+- **Confirmation.** `--repair` is the one write mode that plans by default.
+  It changes the schema only with `--force`, or after the operator has seen
+  the plan on a terminal and answered yes to a question that defaults to no.
+  The shim keeps the original's immediate repair.
 - **Transactions.** The audit's only row writes are the baseline inserts
   into `table_columns` and `table_indexes`. They run in one
   `transactional()`, after the DDL that resets the two tables, which commits

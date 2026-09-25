@@ -244,19 +244,23 @@ final class CliFoundationTest extends TestCase
     /**
      * Every shim's map, with the command it runs.
      *
-     * @return iterable<string, array{class-string<LegacyArguments>, string}>
+     * @return iterable<string, array{0: class-string<LegacyArguments>, 1: string, 2?: list<string>}>
      */
     public static function shims(): iterable
     {
         yield 'analyze_database.php' => [AnalyzeDatabaseLegacyArguments::class, 'kadupul:database:analyze'];
-        yield 'audit_database.php' => [AuditDatabaseLegacyArguments::class, 'kadupul:database:audit'];
+        // convert_tables.php had its own --force, so only the audit refuses it.
+        yield 'audit_database.php' => [AuditDatabaseLegacyArguments::class, 'kadupul:database:audit', ['--force']];
         yield 'convert_tables.php' => [ConvertTablesLegacyArguments::class, 'kadupul:database:convert-tables'];
         yield 'fix_mediumint.php' => [WidenIdColumnsLegacyArguments::class, 'kadupul:database:widen-id-columns'];
     }
 
-    /** @param class-string<LegacyArguments> $map */
+    /**
+     * @param class-string<LegacyArguments> $map
+     * @param list<string> $consoleOnly further flags only the command's bin/console form takes
+     */
     #[DataProvider('shims')]
-    public function testEveryShimTakesTheSharedFlags(string $map, string $command): void
+    public function testEveryShimTakesTheSharedFlags(string $map, string $command, array $consoleOnly = []): void
     {
         $arguments = new $map();
         foreach (['--version', '-V', '-v'] as $flag) {
@@ -275,7 +279,7 @@ final class CliFoundationTest extends TestCase
         // No original script took these; bin/console alone offers them, so the
         // shim refuses them before the kernel boots. The note names the command.
         putenv('KADUPUL_CLI_QUIET_DEPRECATION');
-        foreach (['--dry-run', '--json'] as $flag) {
+        foreach (['--dry-run', '--json', ...$consoleOnly] as $flag) {
             $output = new BufferedOutput();
             self::assertSame(1, LegacyCli::run($command, $map, ['x.php', $flag], $output), $flag);
             self::assertStringStartsWith('NOTE: x.php is deprecated; use bin/console ' . $command . ".\nERROR: Invalid Parameter " . $flag . "\n", $output->fetch());

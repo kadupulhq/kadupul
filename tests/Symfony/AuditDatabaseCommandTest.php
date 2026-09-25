@@ -407,7 +407,7 @@ final class AuditDatabaseCommandTest extends TestCase
     {
         $tester = $this->tester($this->unaltered(), null, false, $this->failedUpgrade());
 
-        self::assertSame(1, $tester->execute(['--upgrade' => true, '--repair' => true, '--json' => true]));
+        self::assertSame(1, $tester->execute(['--upgrade' => true, '--repair' => true, '--force' => true, '--json' => true]));
         $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
         self::assertSame(['status' => 'failed', 'database' => 'local', 'dry_run' => false, 'mode' => 'repair', 'upgrade' => 'failed', 'error' => 'upgrade failed'], $json);
     }
@@ -416,7 +416,7 @@ final class AuditDatabaseCommandTest extends TestCase
     {
         $tester = $this->tester($this->unaltered(), null, false, $this->failedUpgrade());
 
-        self::assertSame(1, $tester->execute(['--upgrade' => true, '--repair' => true], ['capture_stderr_separately' => true]));
+        self::assertSame(1, $tester->execute(['--upgrade' => true, '--repair' => true, '--force' => true], ['capture_stderr_separately' => true]));
         self::assertStringContainsString('The upgrade failed, so the audit did not run.', $tester->getErrorOutput());
     }
 
@@ -426,7 +426,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $upgrade->method('run')->willReturn(new UpgradeOutput('', '', true));
         $tester = $this->tester($this->schema(true, '1.2.31'), null, false, $upgrade);
 
-        self::assertSame(0, $tester->execute(['--upgrade' => true, '--repair' => true, '--json' => true]));
+        self::assertSame(0, $tester->execute(['--upgrade' => true, '--repair' => true, '--force' => true, '--json' => true]));
         $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
         self::assertSame(['ok', 'upgraded', 'altered'], [$json['status'], $json['upgrade'], $json['alters'][0]['result']]);
     }
@@ -435,7 +435,7 @@ final class AuditDatabaseCommandTest extends TestCase
     {
         $tester = $this->tester($this->schema(false));
 
-        self::assertSame(1, $tester->execute(['--repair' => true, '--json' => true]));
+        self::assertSame(1, $tester->execute(['--repair' => true, '--force' => true, '--json' => true]));
         $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
         self::assertSame(['status', 'database', 'dry_run', 'mode', 'upgrade', 'baseline', 'tables', 'alters', 'imported', 'exported'], array_keys($json));
         self::assertSame(['partial', 'local', false, 'repair', 'loaded', 'none'], [$json['status'], $json['database'], $json['dry_run'], $json['mode'], $json['baseline'], $json['upgrade']]);
@@ -468,8 +468,67 @@ final class AuditDatabaseCommandTest extends TestCase
     {
         $tester = $this->tester($this->schema(false));
 
-        self::assertSame(1, $tester->execute(['--repair' => true]));
+        self::assertSame(1, $tester->execute(['--repair' => true, '--force' => true]));
         self::assertStringContainsString('Audited 2 tables, 1 with problems; 1 failed.', $tester->getDisplay());
+    }
+
+    /** A primary whose host table a repair would alter, and whose alters the test counts. */
+    private function counted(int $alters): SchemaAudit
+    {
+        $schema = $this->createMock(SchemaAudit::class);
+        $stub = $this->schema();
+        $schema->method('codeVersion')->willReturn('1.3.0');
+        $schema->method('databaseVersion')->willReturn('1.3.0');
+        $schema->method('catalog')->willReturn($stub->catalog(DatabaseTarget::Local));
+        $schema->method('statement')->willReturn('ALTER TABLE `host` MODIFY COLUMN `ping` int(10) unsigned NOT NULL DEFAULT \'400\'');
+        $schema->expects(self::exactly($alters))->method('alter')->willReturn(true);
+
+        return $schema;
+    }
+
+    public function testRepairUnderBinConsoleOnlyPlansWithoutForce(): void
+    {
+        $tester = $this->tester($this->counted(0));
+
+        self::assertSame(0, $tester->execute(['--repair' => true, '--json' => true]));
+        $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
+        self::assertSame(['ok', true, 'planned', 'planned'], [$json['status'], $json['dry_run'], $json['baseline'], $json['alters'][0]['result']]);
+        self::assertSame([], $this->events);
+
+        $this->presentation = new CliPresentation();
+        $quiet = $this->tester($this->counted(0));
+        self::assertSame(0, $quiet->execute(['--repair' => true], ['interactive' => false]));
+        self::assertStringContainsString('host: planned', $quiet->getDisplay());
+        self::assertStringContainsString('Nothing was changed. Add --force to repair without this question.', preg_replace('/\s+/', ' ', $quiet->getDisplay()));
+        self::assertStringNotContainsString('Run these statements now?', $quiet->getDisplay());
+    }
+
+    public function testRepairUnderBinConsoleAsksAndDefaultsToNo(): void
+    {
+        foreach ([[['no'], 0], [[''], 0], [['yes'], 1]] as [$answers, $alters]) {
+            $this->events = [];
+            $tester = $this->tester($this->counted($alters));
+            $tester->setInputs($answers);
+
+            self::assertSame(0, $tester->execute(['--repair' => true]));
+            $display = $tester->getDisplay();
+            self::assertStringContainsString('host: planned', $display);
+            self::assertStringContainsString('Run these statements now? (yes/no) [no]', $display);
+            self::assertSame($alters === 1, str_contains($display, 'host: altered'));
+            self::assertSame($alters === 1 ? ['database-table local:host'] : [], array_values(array_filter(
+                array_map(static fn(AuditEvent $e): string => $e->targetType . ' ' . $e->targetId, $this->events),
+                static fn(string $target): bool => str_ends_with($target, ':host'),
+            )));
+        }
+    }
+
+    public function testForceRepairsWithoutAsking(): void
+    {
+        $tester = $this->tester($this->counted(1));
+
+        self::assertSame(0, $tester->execute(['--repair' => true, '--force' => true]));
+        self::assertStringContainsString('host: altered', $tester->getDisplay());
+        self::assertStringNotContainsString('Run these statements now?', $tester->getDisplay());
     }
 
     public function testHumanUpgradeRequiredGoesToStderr(): void
@@ -619,7 +678,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $process = new Process([PHP_BINARY, 'bin/console', 'help', 'kadupul:database:audit'], dirname(__DIR__, 2), ['APP_ENV' => 'test', 'APP_DEBUG' => '1']);
         $process->mustRun();
         $help = $process->getOutput();
-        foreach (['--report', '--repair', '--alters', '--upgrade', '--create', '--load', '--dry-run', '--as=AS', '--json'] as $expected) {
+        foreach (['--report', '--repair', '--force', '--alters', '--upgrade', '--create', '--load', '--dry-run', '--as=AS', '--json'] as $expected) {
             self::assertStringContainsString($expected, $help);
         }
         self::assertStringNotContainsString('legacy', $help);

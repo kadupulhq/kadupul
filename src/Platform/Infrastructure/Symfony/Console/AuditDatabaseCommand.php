@@ -40,6 +40,34 @@ final readonly class AuditDatabaseCommand
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
         $legacy = new AuditDatabaseLegacyArguments();
+        // The shim repairs at once, as the script did. Under bin/console a
+        // repair changes the schema only with --force or after the operator
+        // has seen the plan and said yes.
+        $ask = $mode !== OutputMode::Legacy && $input->mode() === AuditMode::Repair && !$input->force && !$input->dryRun;
+        $report = $this->run($io, $output, $mode, $legacy, $input, !$input->dryRun && !$ask);
+        if (!$report instanceof AuditReport) {
+            return $report;
+        }
+        if ($mode === OutputMode::Legacy) {
+            return $this->legacy($output, $report, $legacy, $input->alters);
+        }
+        $exit = $this->report($io, $output, $mode, $report);
+        if (!$ask || $mode !== OutputMode::Human || $report->alters === []) {
+            return $exit;
+        }
+        if (!$io->confirm('Run these statements now?', false)) {
+            $io->note('Nothing was changed. Add --force to repair without this question.');
+
+            return $exit;
+        }
+        $applied = $this->run($io, $output, $mode, $legacy, $input, true);
+
+        return $applied instanceof AuditReport ? $this->report($io, $output, $mode, $applied) : $applied;
+    }
+
+    /** The use case's report, or the exit code of a run that ended before it. */
+    private function run(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, AuditDatabaseLegacyArguments $legacy, AuditDatabaseInput $input, bool $apply): AuditReport|int
+    {
         try {
             // The script refused a remote collector before it read any argument, --help included.
             if ($this->audit->refusesThisCollector()) {
@@ -52,7 +80,7 @@ final readonly class AuditDatabaseCommand
             // A shim with no mode prints the help after the version check, as the
             // script did; under bin/console a missing mode is a usage error.
             $auditMode = $input->mode();
-            $report = $auditMode === null && $mode !== OutputMode::Legacy ? null : ($this->audit)($auditMode, $input->upgrade, $input->as, !$input->dryRun);
+            $report = $auditMode === null && $mode !== OutputMode::Legacy ? null : ($this->audit)($auditMode, $input->upgrade, $input->as, $apply);
         } catch (RemoteCollectorRefused) {
             return $this->renderer->failure($io, $output, $mode, 'The audit runs on the main data collector only.', new CommandResult(
                 ['status' => 'failed', 'error' => 'main data collector only'],
@@ -63,14 +91,8 @@ final readonly class AuditDatabaseCommand
             // An export that timed out lands here too; its message names the dump command.
             return $this->renderer->refused($io, $output, $mode, $error, 'Database audit failed');
         }
-        if ($report === null) {
-            return $this->renderer->failure($io, $output, $mode, 'Choose --report, --repair, --alters, --create or --load.', new CommandResult(['status' => 'invalid', 'error' => 'no mode selected'], [], Command::INVALID));
-        }
-        if ($mode === OutputMode::Legacy) {
-            return $this->legacy($output, $report, $legacy, $input->alters);
-        }
 
-        return $this->report($io, $output, $mode, $report);
+        return $report ?? $this->renderer->failure($io, $output, $mode, 'Choose --report, --repair, --alters, --create or --load.', new CommandResult(['status' => 'invalid', 'error' => 'no mode selected'], [], Command::INVALID));
     }
 
     private function legacy(OutputInterface $output, AuditReport $report, AuditDatabaseLegacyArguments $legacy, bool $alters): int

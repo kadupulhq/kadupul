@@ -343,7 +343,7 @@ def verify_audit_shim_only(harness, check, admin, tables, version):
     verify_refusals(harness, check, admin, AUDIT_SHIM, ['--repair'], schema, start, 'audit')
     # Flags only bin/console offers, and --as in any form but --as=NAME, are
     # refused before the kernel boots; the original ignored them and ran.
-    for arguments in (['--repair', '--dry-run'], ['--report', '--json'], ['--repair', '--as'], ['--repair', '--as', 'admin']):
+    for arguments in (['--repair', '--dry-run'], ['--report', '--json'], ['--repair', '--force'], ['--repair', '--as'], ['--repair', '--as', 'admin']):
         flag = arguments[1]
         refused = run(harness, AUDIT_SHIM, arguments)
         check(refused['exit'] == 1 and refused['stdout'].startswith(f'ERROR: Invalid Parameter {flag}\n\nusage: audit_database.php')
@@ -365,6 +365,12 @@ def verify_audit_shim_only(harness, check, admin, tables, version):
     check(report.get('dry_run') is True and report.get('baseline') == 'planned' and alters.get(DRIFTED, {}).get('result') == 'planned'
           and 'statement' in alters.get(DRIFTED, {}) and schema(harness) == start,
           'audit --dry-run through bin/console plans the repair and changes nothing, not even the audit tables')
+    # No terminal answers the confirmation, so without --force this only plans.
+    unforced = run(harness, 'bin/console', ['kadupul:database:audit', '--repair', '--json'])
+    report = json.loads(unforced['stdout']) if unforced['exit'] == 0 else {}
+    alters = {alter['table']: alter for alter in report.get('alters', [])}
+    check(report.get('dry_run') is True and alters.get(DRIFTED, {}).get('result') == 'planned' and schema(harness) == start,
+          'audit --repair through bin/console without --force plans the repair and changes nothing')
     verify_remote_collector(harness, check, start)
 
 

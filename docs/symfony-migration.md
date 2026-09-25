@@ -1108,7 +1108,8 @@ Known differences from `cli/fix_mediumint.php`:
 `docs/audit_schema.sql` (`--report`), prints the statements that would make
 them match (`--alters`), runs them (`--repair`), reloads the audit tables
 (`--create`), or rewrites the file from this database for developers
-(`--load`). `--upgrade` first runs `cli/upgrade_database.php` and the plugin
+(`--load`). `--repair` changes the schema only with `--force`; without it
+the run plans, and on a terminal it then asks before it runs the plan. `--upgrade` first runs `cli/upgrade_database.php` and the plugin
 upgrades when the database version is behind the code. It needs the Console
 Access and Installation/Upgrades realms, the realm of the install wizard,
 which is the only place the web UI changes the core schema
@@ -1227,8 +1228,13 @@ Known differences from `cli/audit_database.php`:
 - Any database fault prints the generic `ERROR: Database audit failed`.
 - `--dry-run` exists only under `bin/console`; there it runs no statement,
   including the audit tables' reload, which every original mode ran.
-- The shim refuses `--dry-run`, `--json`, a bare or empty `--as`, and
-  `--as NAME` with a space, before it loads anything: it prints `ERROR:
+- Under `bin/console`, `--repair` without `--force` runs as `--dry-run` does
+  and changes nothing. On a terminal the command then shows the plan and
+  asks `Run these statements now?`, which defaults to no; a yes runs the
+  audit again and repairs. Under `--json`, or with no terminal, it only plans,
+  so `dry_run` is `true`. The shim repairs at once, as the original did.
+- The shim refuses `--dry-run`, `--json`, `--force`, a bare or empty `--as`,
+  and `--as NAME` with a space, before it loads anything: it prints `ERROR:
   Invalid Parameter <flag>`, a blank line and the help, and exits 1. The
   original ignored all of them and ran, so `--repair --dry-run` ran a real
   repair. `--as` takes its value only as `--as=NAME`, as in the other

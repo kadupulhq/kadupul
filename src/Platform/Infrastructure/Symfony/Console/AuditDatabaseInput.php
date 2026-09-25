@@ -16,8 +16,11 @@ final class AuditDatabaseInput
     #[Option(description: 'Report how the schema differs from docs/audit_schema.sql.')]
     public bool $report = false;
 
-    #[Option(description: 'Change the schema to match docs/audit_schema.sql.')]
+    #[Option(description: 'Change the schema to match docs/audit_schema.sql. Without --force this only plans, and asks first on a terminal.')]
     public bool $repair = false;
+
+    #[Option(description: 'Run the --repair statements without asking.')]
+    public bool $force = false;
 
     #[Option(description: 'Print the statements a repair would run instead of running them.')]
     public bool $alters = false;
