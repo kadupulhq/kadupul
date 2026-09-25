@@ -67,7 +67,7 @@ function cacti_sizeof($value): int
 /** Load a function's actual source from lib/functions.php into this test namespace. */
 function load_production_function(string $name): void
 {
-    $source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+    $source = file_get_contents(dirname(__DIR__, 3) . '/lib/functions.php');
     $tokens = token_get_all($source);
     $length = count($tokens);
 
