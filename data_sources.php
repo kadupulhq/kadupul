@@ -304,8 +304,10 @@ function form_save()
                             }
                         }
 
-                        // A field that failed validation must not be stored.
-                        if (is_error_message()) {
+                        // An item whose own fields failed is not stored. Another item's error
+                        // stays in the session and must not stop this one.
+                        $item_fields = array("rrd_maximum$name_modifier", "rrd_minimum$name_modifier", "rrd_heartbeat$name_modifier", "data_source_type_id$name_modifier", "data_source_name$name_modifier", "data_input_field_id$name_modifier");
+                        if (array_intersect($item_fields, array_keys($_SESSION['sess_error_fields'] ?? array()))) {
                             continue;
                         }
 
