@@ -1349,10 +1349,18 @@ function load_audit_database() {
 		return false;
 	}
 
-	db_execute('TRUNCATE table_columns');
-	db_execute('TRUNCATE table_indexes');
+	if (db_execute('TRUNCATE table_columns') === false || db_execute('TRUNCATE table_indexes') === false) {
+		fwrite(STDERR, "ERROR: Unable to clear the audit schema tables.\n");
+
+		return false;
+	}
 
 	$tables = db_fetch_assoc('SHOW TABLES');
+	if ($tables === false) {
+		fwrite(STDERR, "ERROR: Unable to list database tables for the audit baseline.\n");
+
+		return false;
+	}
 
 	if (cacti_sizeof($tables)) {
 		foreach($tables as $table) {
@@ -1360,13 +1368,18 @@ function load_audit_database() {
 
 			$columns = db_fetch_assoc('SHOW COLUMNS IN ' . $table_name);
 			$indexes = db_fetch_assoc('SHOW INDEXES IN ' . $table_name);
+			if ($columns === false || $indexes === false) {
+				fwrite(STDERR, "ERROR: Unable to inspect table $table_name for the audit baseline.\n");
+
+				return false;
+			}
 
 			print 'Importing Table: ' . $table_name;
 
 			$i = 1;
 			if (cacti_sizeof($columns)) {
 				foreach($columns as $c) {
-					db_execute_prepared('INSERT INTO table_columns
+					if (db_execute_prepared('INSERT INTO table_columns
 						(table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra)
 						VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
 						array(
@@ -1379,7 +1392,11 @@ function load_audit_database() {
 							$c['Default'],
 							$c['Extra']
 						)
-					);
+					) === false) {
+						fwrite(STDERR, "ERROR: Unable to save column $table_name.{$c['Field']} to the audit baseline.\n");
+
+						return false;
+					}
 
 					$i++;
 				}
@@ -1389,7 +1406,7 @@ function load_audit_database() {
 
 			if (cacti_sizeof($indexes)) {
 				foreach($indexes as $i) {
-					db_execute_prepared('INSERT INTO table_indexes
+					if (db_execute_prepared('INSERT INTO table_indexes
 						(idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name,
 						idx_collation, idx_cardinality, idx_sub_part, idx_packed, idx_null, idx_index_type, idx_comment)
 						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -1407,7 +1424,11 @@ function load_audit_database() {
 							$i['Index_type'],
 							$i['Comment']
 						)
-					);
+					) === false) {
+						fwrite(STDERR, "ERROR: Unable to save index {$i['Key_name']} on $table_name to the audit baseline.\n");
+
+						return false;
+					}
 				}
 			}
 		}

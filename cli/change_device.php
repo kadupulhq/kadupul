@@ -327,7 +327,6 @@ if (isset($overrides['ip'])) {
 
 /* process the various lists into validation arrays */
 $host_templates = getHostTemplates();
-$addresses      = getAddresses();
 /* process templates */
 if (!isset($host_templates[$host['host_template_id']])) {
 	print "ERROR: Unknown template id (" . $host['host_template_id'] . ")\n";
@@ -344,9 +343,22 @@ if ($host['hostname'] == '') {
 	exit(1);
 }
 
-if (isset($addresses[$host['hostname']]) && (int) $addresses[$host['hostname']] !== (int) $device_id && !$proxy) {
-	fwrite(STDERR, "ERROR: The requested IP is already assigned to another device; specify --proxy to allow a shared address.\n");
-	exit(1);
+if (!$proxy) {
+	$duplicate_device_id = db_fetch_cell_prepared('SELECT id
+		FROM host
+		WHERE hostname = ? AND id != ?
+		ORDER BY id
+		LIMIT 1', array($host['hostname'], (int) $device_id));
+
+	if ($duplicate_device_id === false) {
+		fwrite(STDERR, "ERROR: Unable to verify whether the requested IP is already assigned.\n");
+		exit(1);
+	}
+
+	if ($duplicate_device_id) {
+		fwrite(STDERR, "ERROR: The requested IP is already assigned to another device; specify --proxy to allow a shared address.\n");
+		exit(1);
+	}
 }
 
 if (!ctype_digit((string) $host['snmp_version']) || (int) $host['snmp_version'] > 3) {

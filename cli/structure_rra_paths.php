@@ -350,6 +350,15 @@ foreach ($data_sources as $info) {
 				if (!update_database($info)) {
 					$warn_count++;
 					$database_failure = true;
+					$done_count--;
+
+					clearstatcache(true, $old_rrd_path);
+					if (structure_rra_is_safe_dest($old_rrd_path) && !file_exists($old_rrd_path) && !is_link($old_rrd_path) && rename($new_rrd_path, $old_rrd_path)) {
+						struct_debug("Restored RRD File after database update failure: '$new_rrd_path' > '$old_rrd_path'");
+					} else {
+						fwrite(STDERR, "FATAL: Database update failed and the RRD file could not be restored from '$new_rrd_path' to '$old_rrd_path'.\n");
+						exit(6);
+					}
 				}
 			} else {
 				print "FATAL: Could not Move RRD File '$old_rrd_path' to '$new_rrd_path'" . PHP_EOL;
