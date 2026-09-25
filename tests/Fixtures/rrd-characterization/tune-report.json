@@ -1,0 +1,12 @@
+{
+    "html": {
+        "returned": null,
+        "printed": "<tr class='tableHeader '><th colspan='1' >Errors Found</th></tr><tr><td>Step <i>300</i> expected</td></tr><tr><td>Type <script>x</script> differs</td></tr><tr><td>Heartbeat & 600</td></tr><tr><td>Rows \"700\"</td></tr></table></div><div class='break'></div><tr class='tableHeader '><th colspan='1' >Optional Tuning Recommendations</th></tr><tr><td>./rrdtool tune rra/<b>router</b>_11.rrd --heartbeat <b>in</b>:600</td></tr><tr><td>./rrdtool resize rra/<b>router</b>_11.rrd 1 GROW 100</td></tr><tr><td>rename rra/<b>router</resize.rrd to rra/<b>router</b>_11.rrd</td></tr></table></div><div class='break'></div>",
+        "diagnostics": []
+    },
+    "cli": {
+        "returned": null,
+        "printed": "Step <i>300</i> expected\nType <script>x</script> differs\nHeartbeat & 600\nRows \"700\"\n./rrdtool tune rra/<b>router</b>_11.rrd --heartbeat <b>in</b>:600\n./rrdtool resize rra/<b>router</b>_11.rrd 1 GROW 100\nrename rra/<b>router</resize.rrd to rra/<b>router</b>_11.rrd\n",
+        "diagnostics": []
+    }
+}

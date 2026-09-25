@@ -9,8 +9,12 @@
 // intended behavior change: run the tests with RRD_GOLDEN_UPDATE=1 and review
 // the diff.
 
-/** Run $calls in a child process that loads the real lib/rrd.php against fixture rows. */
-function rrd_characterization_run($test, array $scenario): array
+/**
+ * Run $calls in a child process that loads the real lib/rrd.php against fixture
+ * rows. With $fatal the child must die instead, and the result is its exit
+ * status and raw output, since it never reaches the per-call report.
+ */
+function rrd_characterization_run($test, array $scenario, bool $fatal = false): array
 {
     $root = dirname(__DIR__, 2);
     $coverage = $test->getTestResultObject()->getCodeCoverage();
@@ -24,8 +28,33 @@ function rrd_characterization_run($test, array $scenario): array
     // Stands in for RRDtool: records each invocation exactly as PHP made it and
     // answers the commands whose output the caller parses.
     $rrdtool = '#!' . PHP_BINARY . "\n<?php\n" . <<<'FAKE'
-        $input = stream_get_contents(STDIN);
         $scenario = json_decode(file_get_contents(__DIR__ . '/scenario.json'), true);
+        // Line mode answers each line as `rrdtool -` does, so an acknowledged
+        // pipe gets its reply. RRDtool refuses file_exists and is_dir, which
+        // only rrdproxy knows, and runs mkdir itself without creating parents;
+        // RrdForcedLocalTransportTest checks both against the real binary.
+        if (!empty($scenario['line_mode'])) {
+            while (($line = fgets(STDIN)) !== false) {
+                $line = trim($line, " \r\n");
+                $command = strtok($line, ' ');
+                if ($command === 'quit') {
+                    break;
+                }
+                file_put_contents(__DIR__ . '/stdin.log', json_encode(array('argv' => array_slice($argv, 1), 'stdin' => $line), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
+                if ($command === 'file_exists' || $command === 'is_dir') {
+                    echo "ERROR: unknown function '" . $command . "'\n";
+                    continue;
+                }
+                if ($command === 'mkdir') {
+                    $path = str_replace("'\"'\"'", "'", substr($line, 7, -1));
+                    echo @mkdir($path) ? "OK u:0.00 s:0.00 r:0.00\n" : 'ERROR: mkdir ' . $path . ": No such file or directory\n";
+                    continue;
+                }
+                echo ($scenario['replies'][$command] ?? '') . "OK u:0.00 s:0.00 r:0.00\n";
+            }
+            exit(0);
+        }
+        $input = stream_get_contents(STDIN);
         file_put_contents(__DIR__ . '/stdin.log', json_encode(array('argv' => array_slice($argv, 1), 'stdin' => $input), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
         $command = strtok(ltrim($input), " \r\n");
         if ($command === 'info') {
@@ -55,12 +84,20 @@ function rrd_characterization_run($test, array $scenario): array
         fclose($pipes[1]);
         $status = proc_close($process);
         $error = file_get_contents($directory . '/stderr');
-        PHPUnit\Framework\Assert::assertSame(0, $status, $error . $output);
-        PHPUnit\Framework\Assert::assertSame('', $error);
+        if ($fatal) {
+            PHPUnit\Framework\Assert::assertSame(255, $status, $error . $output);
+        } else {
+            PHPUnit\Framework\Assert::assertSame(0, $status, $error . $output);
+            PHPUnit\Framework\Assert::assertSame('', $error);
+        }
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
             $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
+
+        if ($fatal) {
+            return array('status' => $status, 'stdout' => str_replace($directory, '<DIR>', $output), 'stderr' => str_replace(array($directory, $root), array('<DIR>', '<ROOT>'), $error));
         }
 
         return json_decode(str_replace($directory, '<DIR>', $output), true, 512, JSON_THROW_ON_ERROR);
