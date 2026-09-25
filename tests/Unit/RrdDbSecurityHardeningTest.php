@@ -22,28 +22,27 @@ test('rrdtool_function_create does not use shell_exec with chown', function () u
 		->toBeFalse();
 });
 
-test('rrdtool_function_create uses native chown()', function () use ($rrdSource) {
+test('rrdtool_function_create sets ownership through the native-call helper', function () use ($rrdSource) {
 	$start = strpos($rrdSource, 'function rrdtool_function_create(');
 	expect($start)->not->toBeFalse();
 
 	$end  = strpos($rrdSource, "\nfunction ", $start + 10);
 	$body = substr($rrdSource, $start, $end - $start);
 
-	// Uses PHP's native chown() function
-	expect(str_contains($body, 'chown('))
+	expect(str_contains($body, 'rrdtool_set_rrd_ownership('))
 		->toBeTrue();
 });
 
-test('rrdtool_function_create uses native chgrp()', function () use ($rrdSource) {
-	$start = strpos($rrdSource, 'function rrdtool_function_create(');
+test('the RRD ownership helper uses native lchown() and lchgrp()', function () use ($rrdSource) {
+	$start = strpos($rrdSource, 'function rrdtool_set_rrd_ownership(');
 	expect($start)->not->toBeFalse();
 
 	$end  = strpos($rrdSource, "\nfunction ", $start + 10);
 	$body = substr($rrdSource, $start, $end - $start);
 
-	// Uses PHP's native chgrp() function
-	expect(str_contains($body, 'chgrp('))
-		->toBeTrue();
+	// Native calls that never follow a symbolic link, not a shell command.
+	expect(str_contains($body, 'lchown('))->toBeTrue()
+		->and(str_contains($body, 'lchgrp('))->toBeTrue();
 });
 
 // --- lib/database.php: db_dump_data ---
