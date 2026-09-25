@@ -2,6 +2,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            string $projectDir: '%kernel.project_dir%'
 
     Kadupul\Platform\Infrastructure\:
         resource: '../src/Platform/Infrastructure/'
@@ -14,9 +16,7 @@ services:
     Kadupul\Platform\Infrastructure\Symfony\Console\CliPresentation:
         public: true
 
-    Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration: ~
 
     Kadupul\Platform\Contract\LegacyConfiguration:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration
@@ -24,21 +24,15 @@ services:
     Kadupul\Platform\Contract\DatabaseConnection:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
 
-    Kadupul\Platform\Infrastructure\Legacy\InstallationVersion:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Platform\Infrastructure\Legacy\InstallationVersion: ~
 
-    Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog: ~
 
     Kadupul\Platform\Application\Port\DatabaseMaintenance:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance
     Kadupul\Platform\Application\Port\TableConversion:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion
-    Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion: ~
     Kadupul\Platform\Application\Port\ColumnWidening:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalColumnWidening
     Kadupul\Platform\Application\Port\Clock:
@@ -80,9 +74,7 @@ services:
     Kadupul\IdentityAccess\Contract\ConsoleAccess:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
 
-    Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail: ~
 
     Kadupul\IdentityAccess\Contract\AuditTrail:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail
@@ -95,9 +87,7 @@ services:
     Kadupul\Inventory\Application\Query\FindEditableDevice: ~
     Kadupul\Inventory\Application\Command\EditDevice: ~
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor: ~
 
     Kadupul\Inventory\Application\Port\DeviceEditor:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor
@@ -198,9 +188,7 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteLifecycle
     Kadupul\Inventory\Application\Command\CreateDevice: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceCreation: ~
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator: ~
     Kadupul\Inventory\Application\Port\DeviceCreator:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog:
@@ -224,33 +212,25 @@ services:
     Kadupul\Inventory\Application\Port\SiteAssignmentCatalog:
         alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments: ~
     Kadupul\Inventory\Application\Port\DeviceTemplateAssignments:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments
     Kadupul\Inventory\Application\Command\AssignDeviceTemplate: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceTemplateAssignment: ~
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments: ~
     Kadupul\Inventory\Application\Port\DeviceCollectorAssignments:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments
     Kadupul\Inventory\Application\Command\AssignDeviceCollector: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceCollectorAssignment: ~
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceRemovals:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceRemovals: ~
     Kadupul\Inventory\Application\Port\DeviceRemovals:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceRemovals
     Kadupul\Inventory\Application\Query\PrepareDeviceRemoval: ~
     Kadupul\Inventory\Application\Command\RemoveDevices: ~
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates: ~
     Kadupul\Inventory\Application\Port\DeviceStates:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Query\PrepareDeviceStateChange: ~

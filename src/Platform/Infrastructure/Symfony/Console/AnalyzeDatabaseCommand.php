@@ -33,13 +33,9 @@ final readonly class AnalyzeDatabaseCommand
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
         try {
-            if ($this->presentation->legacy !== LegacyRequest::Run) {
-                return $this->renderer->legacyRequest($this->presentation->legacy, $this->version->line('Kadupul Analyze Database Utility', $this->clock->now()), new AnalyzeDatabaseLegacyArguments(), $output);
-            }
-            // The use case also refuses '', but only as a denial; an empty --as=
-            // is a usage error and is reported as one.
-            if ($input->as === '') {
-                return $this->renderer->emptyOperator($io, $output, $mode);
+            $early = $this->renderer->preflight($this->presentation->legacy, fn(): string => $this->version->line('Kadupul Analyze Database Utility', $this->clock->now()), new AnalyzeDatabaseLegacyArguments(), $input->as, $io, $output, $mode);
+            if ($early !== null) {
+                return $early;
             }
             $report = ($this->analyze)($input->local, $input->as);
         } catch (InstallationAccessDenied) {
