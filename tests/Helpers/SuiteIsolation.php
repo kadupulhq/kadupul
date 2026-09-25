@@ -41,7 +41,9 @@ function suite_isolation_files($config) {
 	$base  = dirname(realpath($config));
 	$files = array();
 
-	foreach ($xpath->query('//file') as $entry) {
+	/* only inside testsuites: phpunit-audit.xml also names lib/audit.php under
+	 * <source><include>, which is coverage scope rather than a test file */
+	foreach ($xpath->query('//testsuites//file') as $entry) {
 		$path = $base . '/' . ltrim(preg_replace('#^\./#', '', trim($entry->textContent)), '/');
 
 		if (is_file($path)) {
@@ -49,7 +51,7 @@ function suite_isolation_files($config) {
 		}
 	}
 
-	foreach ($xpath->query('//directory') as $entry) {
+	foreach ($xpath->query('//testsuites//directory') as $entry) {
 		$suffix = $entry->hasAttribute('suffix') ? $entry->getAttribute('suffix') : '.php';
 		$path   = $base . '/' . ltrim(preg_replace('#^\./#', '', trim($entry->textContent)), '/');
 
@@ -71,6 +73,24 @@ function suite_isolation_files($config) {
 	sort($files);
 
 	return array_values(array_unique($files));
+}
+
+/**
+ * PHP 8.1 splits the ampersand into two tokens by what follows it, and neither
+ * says whether this one binds or masks. The caller decides from what precedes.
+ *
+ * @param int|string $type
+ *
+ * @return bool
+ */
+function suite_isolation_is_ampersand($type) {
+	foreach (array('T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG', 'T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG') as $name) {
+		if (defined($name) && $type === constant($name)) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -101,9 +121,10 @@ function suite_isolation_declarations($path) {
 	$tokens = token_get_all(file_get_contents($path));
 	$result = array('namespace' => '', 'braced' => false, 'functions' => array(), 'globals' => array(), 'writes' => array());
 
-	$depth     = 0;
-	$namespace = '';
-	$count     = count($tokens);
+	$depth      = 0;
+	$class_body = array();
+	$namespace  = '';
+	$count      = count($tokens);
 
 	for ($i = 0; $i < $count; $i++) {
 		$token = $tokens[$i];
@@ -112,7 +133,34 @@ function suite_isolation_declarations($path) {
 			if ($token === '{') {
 				$depth++;
 			} elseif ($token === '}') {
+				if (end($class_body) === $depth) {
+					array_pop($class_body);
+				}
+
 				$depth--;
+			}
+
+			continue;
+		}
+
+		/**
+		 * A method is not a global function, but a function declared inside an
+		 * if or inside another function is: PHP declares it when that code
+		 * runs, and the usual shape is a function_exists() guard, which is
+		 * exactly the collision this guard exists to find. So track class-like
+		 * bodies rather than brace depth.
+		 */
+		if (in_array($token[0], array(T_CLASS, T_INTERFACE, T_TRAIT), true) || (defined('T_ENUM') && $token[0] === T_ENUM)) {
+			for ($j = $i + 1; $j < $count; $j++) {
+				if ($tokens[$j] === '{') {
+					$class_body[] = $depth + 1;
+
+					break;
+				}
+
+				if ($tokens[$j] === ';' || $tokens[$j] === '(') {
+					break;
+				}
 			}
 
 			continue;
@@ -156,7 +204,7 @@ function suite_isolation_declarations($path) {
 		}
 
 		/* a closure or an arrow function has no name, so nothing to collide */
-		if ($token[0] === T_FUNCTION && $depth === 0 && $namespace === '') {
+		if ($token[0] === T_FUNCTION && $class_body === array() && $namespace === '') {
 			for ($j = $i + 1; $j < $count; $j++) {
 				if (is_array($tokens[$j]) && $tokens[$j][0] === T_STRING) {
 					$result['functions'][] = $tokens[$j][1];
@@ -175,7 +223,55 @@ function suite_isolation_declarations($path) {
 		if ($token[0] === T_VARIABLE && $token[1] === '$GLOBALS') {
 			$key = '?';
 
-			/* only an assignment leaves something behind; a read does not */
+			/**
+			 * A read leaves nothing behind, so only a mutation counts. An
+			 * assignment is the common one, but ++, --, unset() and a
+			 * by-reference bind all change the value the next file sees, and
+			 * a guard that recognised only '=' could be stepped around.
+			 */
+			$mutates = false;
+
+			/* unset($GLOBALS['k']) and &$GLOBALS['k'] put the operator first */
+			for ($back = $i - 1; $back >= 0; $back--) {
+				if (is_array($tokens[$back]) && in_array($tokens[$back][0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT), true)) {
+					continue;
+				}
+
+				if (is_array($tokens[$back]) && in_array($tokens[$back][0], array(T_INC, T_DEC), true)) {
+					$mutates = true;
+				} elseif ($tokens[$back] === '&' || (is_array($tokens[$back]) && suite_isolation_is_ampersand($tokens[$back][0]))) {
+					/* a bind, = &$GLOBALS[...], rather than a bitwise and */
+					for ($outer = $back - 1; $outer >= 0; $outer--) {
+						if (is_array($tokens[$outer]) && $tokens[$outer][0] === T_WHITESPACE) {
+							continue;
+						}
+
+						if ($tokens[$outer] === '=') {
+							$mutates = true;
+						}
+
+						break;
+					}
+				} elseif (is_array($tokens[$back]) && $tokens[$back][0] === T_UNSET) {
+					$mutates = true;
+				} elseif ($tokens[$back] === '(') {
+					/* the token before the paren decides; unset( is the case */
+					for ($outer = $back - 1; $outer >= 0; $outer--) {
+						if (is_array($tokens[$outer]) && $tokens[$outer][0] === T_WHITESPACE) {
+							continue;
+						}
+
+						if (is_array($tokens[$outer]) && $tokens[$outer][0] === T_UNSET) {
+							$mutates = true;
+						}
+
+						break;
+					}
+				}
+
+				break;
+			}
+
 			for ($j = $i + 1; $j < $count; $j++) {
 				if (is_array($tokens[$j]) && $tokens[$j][0] === T_CONSTANT_ENCAPSED_STRING && $key === '?') {
 					$key = trim($tokens[$j][1], "'\"");
@@ -183,18 +279,22 @@ function suite_isolation_declarations($path) {
 					continue;
 				}
 
-				if ($tokens[$j] === '=' || (is_array($tokens[$j]) && in_array($tokens[$j][0], array(T_PLUS_EQUAL, T_CONCAT_EQUAL, T_COALESCE_EQUAL), true))) {
-					$result['writes'][] = $key;
-
-					if ($depth === 0) {
-						$result['globals'][$key] = $token[2];
-					}
+				if ($tokens[$j] === '=' || (is_array($tokens[$j]) && in_array($tokens[$j][0], array(T_PLUS_EQUAL, T_MINUS_EQUAL, T_MUL_EQUAL, T_DIV_EQUAL, T_CONCAT_EQUAL, T_COALESCE_EQUAL, T_INC, T_DEC), true))) {
+					$mutates = true;
 
 					break;
 				}
 
 				if ($tokens[$j] === ';' || $tokens[$j] === ',' || $tokens[$j] === ')') {
 					break;
+				}
+			}
+
+			if ($mutates) {
+				$result['writes'][] = $key;
+
+				if ($depth === 0) {
+					$result['globals'][$key] = $token[2];
 				}
 			}
 		}

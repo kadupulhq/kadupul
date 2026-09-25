@@ -27,6 +27,9 @@
  * namespace, which collide with any file that loads lib/functions.php. That is
  * a migration, not a guard, and the per-file runner is the stronger isolation
  * regardless.
+ *
+ * Nor does it read the Helpers/ files a suite requires. Two of those could
+ * collide with each other in the same way, and nothing here would say so.
  */
 
 namespace SuiteIsolationTest;
@@ -34,17 +37,51 @@ namespace SuiteIsolationTest;
 require_once dirname(__DIR__, 3) . '/Helpers/SuiteIsolation.php';
 
 /**
- * Every phpunit configuration whose files share one process. phpunit-unit.xml
- * is excluded because run_unit_suite.py always appends one file name to it, so
- * its directory entry never decides what loads.
+ * Every phpunit configuration in the repository, under tests/ and at the root,
+ * where the workflows keep three of them.
+ *
+ * @return array<int,string>
+ */
+function every_config() : array {
+	$tests = dirname(__DIR__, 3);
+	$root  = dirname($tests);
+
+	return array_values(array_unique(array_merge(
+		glob($tests . '/phpunit*.xml'),
+		glob($root . '/phpunit*.xml')
+	)));
+}
+
+/**
+ * The configurations whose files do not share a process, with the reason. Each
+ * reason is asserted below, so an entry cannot become untrue quietly.
+ *
+ * @return array<string,string>
+ */
+function exempt_configs() : array {
+	return array(
+		/* run_unit_suite.py appends one file name to it */
+		'tests/phpunit-unit.xml' => 'tests/run_unit_suite.py',
+		/* the csv workflow loops, naming one file per run */
+		'phpunit-csv.xml'        => '.github/workflows/csv-window-coverage.yml',
+		/* nothing runs these two; they declare the whole tree, which cannot
+		 * load in one process */
+		'tests/phpunit.xml'      => '',
+		'phpunit.xml'            => '',
+	);
+}
+
+/**
+ * Every configuration whose files share one process.
  *
  * @return array<int,string>
  */
 function shared_configs() : array {
-	$tests = dirname(__DIR__, 3);
+	$root   = dirname(dirname(__DIR__, 3)) . '/';
+	$exempt = exempt_configs();
 
-	return array_values(array_filter(glob($tests . '/phpunit-*.xml'), static function ($path) {
-		return basename($path) !== 'phpunit-unit.xml';
+	return array_values(array_filter(every_config(), static function ($path) use ($root, $exempt) {
+		return !isset($exempt[str_replace($root, '', $path)]);
 	}));
 }
 
@@ -59,25 +96,50 @@ it('finds the shared configurations it means to check', function () {
 });
 
 it('declares no global function twice inside one process', function () {
+	require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 	foreach (shared_configs() as $config) {
-		$owner  = array();
-		$second = array();
+		$declared = array();
 
 		foreach (\suite_isolation_files($config) as $path) {
 			foreach (\suite_isolation_declarations($path)['functions'] as $name) {
-				$key = strtolower($name);
-
-				// A second declaration is a fatal error and it ends the whole
-				// run rather than the one file, so the report names both.
-				if (isset($owner[$key])) {
-					$second[] = basename($config) . ': ' . $name . '() declared by ' . basename($path) . ' and ' . basename($owner[$key]);
-				}
-
-				$owner[$key] = $path;
+				$declared[strtolower($name)][$path] = $name;
 			}
 		}
 
-		expect($second)->toBe(array());
+		$wrong = array();
+
+		foreach ($declared as $files) {
+			if (count($files) < 2) {
+				continue;
+			}
+
+			$name   = reset($files);
+			$bodies = array();
+
+			foreach (array_keys($files) as $path) {
+				$source = file_get_contents($path);
+
+				/**
+				 * Two declarations of one name are a fatal error unless both
+				 * are behind a function_exists() guard. Even then only the
+				 * first body runs, for every file in the process, so the
+				 * bodies have to be the same code or one file is quietly
+				 * testing against another's stub.
+				 */
+				if (strpos($source, "function_exists('" . $name . "')") === false) {
+					$wrong[] = basename($config) . ': ' . $name . '() declared by ' . basename($path) . ' without a function_exists guard';
+				}
+
+				$bodies[preg_replace('/\s+/', ' ', \test_php_function_source($source, $name))][] = basename($path);
+			}
+
+			if (count($bodies) > 1) {
+				$wrong[] = basename($config) . ': ' . $name . '() declared with differing bodies by ' . implode(', ', array_merge(...array_values($bodies)));
+			}
+		}
+
+		expect($wrong)->toBe(array());
 	}
 });
 
@@ -256,25 +318,120 @@ it('resolves both a file entry and a directory entry', function () {
 	}
 });
 
+it('accounts for every configuration in the repository', function () {
+	$root   = dirname(dirname(__DIR__, 3)) . '/';
+	$exempt = exempt_configs();
+	$shared = array_map(static function ($path) use ($root) {
+		return str_replace($root, '', $path);
+	}, shared_configs());
+
+	// A new configuration is checked unless it is listed as exempt, so one
+	// cannot be added and go unexamined.
+	foreach (every_config() as $path) {
+		$name = str_replace($root, '', $path);
+
+		expect(isset($exempt[$name]) || in_array($name, $shared, true))->toBeTrue();
+	}
+
+	// The ones the workflows actually run in one process.
+	expect($shared)->toContain('tests/phpunit-boost.xml');
+	expect($shared)->toContain('tests/phpunit-csrf.xml');
+	expect($shared)->toContain('tests/phpunit-spikekill.xml');
+	expect($shared)->toContain('tests/phpunit-cacti-exec.xml');
+	expect($shared)->toContain('phpunit-audit.xml');
+});
+
+it('holds each exemption to the reason given for it', function () {
+	$root = dirname(dirname(__DIR__, 3)) . '/';
+
+	foreach (exempt_configs() as $name => $caller) {
+		if ($caller === '') {
+			// Nothing may start running a whole-tree configuration without
+			// also dealing with the collisions that stop it loading.
+			foreach (glob($root . '.github/workflows/*.yml') as $workflow) {
+				expect(file_get_contents($workflow))->not->toContain('=' . $name);
+			}
+
+			continue;
+		}
+
+		$source = file_get_contents($root . $caller);
+
+		expect($source)->not->toBeFalse();
+
+		// The caller names the configuration and a test file in the same
+		// command, so the configuration's own suite never decides what loads.
+		expect($source)->toContain(basename($name));
+		expect(preg_match('/Test\.php/', $source))->toBe(1);
+	}
+});
+
+it('reads only the test files a configuration lists', function () {
+	$root  = dirname(dirname(__DIR__, 3)) . '/';
+	$files = \suite_isolation_files($root . 'phpunit-audit.xml');
+
+	expect($files)->not->toBeEmpty();
+
+	// phpunit-audit.xml names lib/audit.php under <source><include>, which is
+	// coverage scope. Reading it as a suite file would scan the application.
+	foreach ($files as $path) {
+		expect(basename($path))->toEndWith('Test.php');
+	}
+});
+
+it('reports a function declared inside a conditional', function () {
+	// The usual shape is a function_exists() guard, and PHP declares the
+	// function globally when the branch runs, so it collides like any other.
+	$fixture = "<?php\nif (!function_exists('read_config_option')) {\n\tfunction read_config_option(\$n) { return ''; }\n}\n\nclass Holder { public function method() { return 1; } }\n";
+
+	$path = sys_get_temp_dir() . '/suite-isolation-cond-' . getmypid() . '-' . mt_rand() . '.php';
+
+	file_put_contents($path, $fixture);
+
+	try {
+		$declared = \suite_isolation_declarations($path);
+
+		// The guarded function counts; the method does not.
+		expect($declared['functions'])->toBe(array('read_config_option'));
+	} finally {
+		unlink($path);
+	}
+});
+
+it('reports the mutations that are not assignments', function () {
+	$fixture = "<?php\n\$GLOBALS['counter'] = 0;\n\$GLOBALS['counter']++;\n++\$GLOBALS['other'];\nunset(\$GLOBALS['gone']);\n\$bound = &\$GLOBALS['bound'];\n\$mask = 1 & \$GLOBALS['read_only'];\n\$look = \$GLOBALS['plain_read'];\n";
+
+	$path = sys_get_temp_dir() . '/suite-isolation-mut-' . getmypid() . '-' . mt_rand() . '.php';
+
+	file_put_contents($path, $fixture);
+
+	try {
+		$declared = \suite_isolation_declarations($path);
+
+		// ++, --, unset() and a by-reference bind all change what the next file
+		// sees; a bitwise and and a plain read do not.
+		expect(array_keys($declared['globals']))->toBe(array('counter', 'other', 'gone', 'bound'));
+	} finally {
+		unlink($path);
+	}
+});
+
 it('keeps the per file runner the only isolating entry point', function () {
 	$runner = file_get_contents(dirname(__DIR__, 3) . '/run_unit_suite.py');
 
 	expect($runner)->not->toBeFalse();
 
-	// The exclusion above rests on this: the runner names one file per process,
-	// so phpunit-unit.xml's directory entry never decides what loads.
+	// Pest rejects processIsolation, so the runner naming one file per process
+	// is the whole of the isolation this repository has.
 	expect($runner)->toContain('--configuration=phpunit-unit.xml');
 	expect($runner)->toContain('relative]');
 
-	// And no configuration may bootstrap the application, which needs a
-	// database, while declaring a suite meant to run without one.
+	// And no configuration under tests/ may bootstrap the application, which
+	// needs a database a unit run does not have.
 	foreach (glob(dirname(__DIR__, 3) . '/phpunit*.xml') as $config) {
 		$document = new \DOMDocument();
 
 		expect($document->load($config))->toBeTrue();
-
-		$root = $document->documentElement;
-
-		expect($root->getAttribute('bootstrap'))->not->toContain('global.php');
+		expect($document->documentElement->getAttribute('bootstrap'))->not->toContain('global.php');
 	}
 });

@@ -93,10 +93,16 @@ if (!function_exists('cacti_sizeof')) {
 }
 
 if (!function_exists('cacti_log')) {
+	/**
+	 * One stub for the suite. Two files declared this with different bodies and
+	 * different collection globals, and only the first to load took effect, so
+	 * the other read an empty log whichever way the order fell. Append to both.
+	 */
 	function cacti_log($message, $output = false, $environ = 'SPIKEKILL', $level = '') {
-		global $spikekill_e2e_test_log;
+		global $spikekill_e2e_test_log, $spikekill_shell_test_log;
 
-		$spikekill_e2e_test_log[] = $message;
+		$spikekill_e2e_test_log[]   = $message;
+		$spikekill_shell_test_log[] = $message;
 	}
 }
 
@@ -110,10 +116,7 @@ if (!function_exists('__esc')) {
 }
 
 if (!function_exists('__')) {
-	function __($format) {
-		$args = func_get_args();
-		array_shift($args);
-
+	function __($format, ...$args) {
 		return $args ? vsprintf($format, $args) : $format;
 	}
 }
