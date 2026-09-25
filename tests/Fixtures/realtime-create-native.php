@@ -16,7 +16,11 @@ if (getenv('REALTIME_COVERAGE') === '1') {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('RRD_TEST_CLI_COVERAGE_COPY', $directory . '/poller_realtime.php');
     define('RRD_TEST_CLI_COVERAGE_SOURCE', $root . '/poller_realtime.php');
+    // Pest 1 declares implicitly nullable parameters, which PHP 8.4 reports as
+    // deprecated; only the application code runs with every level on.
+    $reporting = error_reporting(error_reporting() & ~E_DEPRECATED);
     require $root . '/tests/Fixtures/rrd-process-coverage.php';
+    error_reporting($reporting);
 }
 
 // cacti_log() switches to the system zone, so start there; sample times then

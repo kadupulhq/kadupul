@@ -14,7 +14,11 @@ list(, $root, $page, $request) = $argv;
 if (getenv('LIMIT_COVERAGE') === '1') {
     define('DATA_SOURCE_LIMIT_TEST_COVERAGE', true);
     define('RRD_TEST_COVERAGE_DIRECTORY', getcwd());
+    // Pest 1 declares implicitly nullable parameters, which PHP 8.4 reports as
+    // deprecated; only the application code runs with every level on.
+    $reporting = error_reporting(error_reporting() & ~E_DEPRECATED);
     require $root . '/tests/Fixtures/rrd-process-coverage.php';
+    error_reporting($reporting);
 }
 
 $config = array(
