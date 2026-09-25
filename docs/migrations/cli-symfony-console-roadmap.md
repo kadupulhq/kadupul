@@ -6,8 +6,9 @@ design, conventions and write-command rules are in
 Each migrated script becomes a forwarding shim that keeps its flags and output,
 and parity scenarios compare it with a frozen copy of the original.
 
-`cli/index.php` and `cli/.htaccess` stay as they are; they only block web
-access to the directory.
+The `cli/` directory contains 45 command scripts, `index.php`, and `.htaccess`.
+The index redirects web requests to the application root; `.htaccess` blocks
+direct web access to the command directory.
 
 | Group | Scripts | Status |
 | --- | --- | --- |
