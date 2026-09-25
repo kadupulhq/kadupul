@@ -201,6 +201,10 @@ foreach ($scenario['calls'] as $call) {
 
         return true;
     });
+    // Entry points such as poller_realtime.php set single $config keys.
+    foreach ($call['config'] ?? array() as $name => $value) {
+        $config[$name] = $value;
+    }
     foreach ($call['globals'] ?? array() as $name => $value) {
         $GLOBALS[$name] = $value;
     }

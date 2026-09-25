@@ -1,0 +1,279 @@
+[
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": []
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "file_exists 'rra/router_traffic_11.rrd'"
+                ]
+            }
+        ],
+        "args": [
+            "rra/router_traffic_11.rrd"
+        ]
+    },
+    {
+        "returned": "",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "file_exists '<DIR>/rra/router_traffic_11.rrd'"
+                ]
+            },
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "create '<DIR>/rra/router_traffic_11.rrd' ",
+                    "--start 0 --step 300 ",
+                    "DS:value:GAUGE:600:0:100",
+                    "RRA:AVERAGE:0.5:1:600"
+                ]
+            }
+        ],
+        "args": [
+            11,
+            false
+        ]
+    },
+    {
+        "returned": "",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "file_exists '<DIR>/rra/router_traffic_11.rrd'"
+                ]
+            },
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "create '<DIR>/rra/router_traffic_11.rrd' ",
+                    "--start 0 --step 300 ",
+                    "DS:value:GAUGE:600:0:100",
+                    "RRA:AVERAGE:0.5:1:600"
+                ]
+            }
+        ],
+        "args": [
+            11,
+            false,
+            false
+        ]
+    },
+    {
+        "returned": 1,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "file_exists 'rra/realtime/user_abc_11.rrd'"
+                ]
+            },
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "file_exists '<DIR>/rra/router_traffic_11.rrd'"
+                ]
+            },
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "create '<DIR>/rra/router_traffic_11.rrd' ",
+                    "--start 0 --step 300 ",
+                    "DS:value:GAUGE:600:0:100",
+                    "RRA:AVERAGE:0.5:1:600"
+                ]
+            },
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "update 'rra/realtime/user_abc_11.rrd' --skip-past-updates --template value 1700000600:5"
+                ]
+            }
+        ],
+        "args": [
+            {
+                "rra/realtime/user_abc_11.rrd": {
+                    "local_data_id": 11,
+                    "data_template_id": 0,
+                    "times": {
+                        "1700000600": {
+                            "value": "5"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "returned": {
+            "rra": [],
+            "ds": [],
+            "filename": "x"
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "info '<DIR>/rra/router_traffic_11.rrd'"
+                ]
+            }
+        ],
+        "args": [
+            11
+        ]
+    },
+    {
+        "returned": {
+            "data_source_names": [
+                "value"
+            ],
+            "timestamp": {
+                "start_time": "1700000300",
+                "end_time": "1700000300"
+            },
+            "values": [
+                {
+                    "1700000300": "1.0000000000e+00"
+                }
+            ]
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "fetch '<DIR>/rra/router_traffic_11.rrd' 'AVERAGE' '-s' '1700000000' '-e' '1700001000' '-r' '300'"
+                ]
+            }
+        ],
+        "args": [
+            11,
+            1700000000,
+            1700001000,
+            300
+        ]
+    },
+    {
+        "returned": "",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "file_exists '<DIR>/rra/3/nested_12.rrd'"
+                ]
+            },
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "is_dir '<DIR>/rra/3'"
+                ]
+            },
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "mkdir '<DIR>/rra/3'"
+                ]
+            },
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "create '<DIR>/rra/3/nested_12.rrd' ",
+                    "--start 0 --step 300 ",
+                    "DS:value:GAUGE:600:0:100",
+                    "RRA:AVERAGE:0.5:1:600"
+                ]
+            }
+        ],
+        "args": [
+            12,
+            false
+        ]
+    },
+    {
+        "returned": true,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            "rra/3"
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            "rra/router_traffic_11.rrd",
+            {
+                "resize": [
+                    "'rra/router_traffic_11.rrd' 0 GROW 10"
+                ]
+            },
+            false
+        ]
+    },
+    {
+        "returned": -1,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            11,
+            false
+        ]
+    }
+]
