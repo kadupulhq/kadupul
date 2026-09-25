@@ -20,7 +20,6 @@ cmd_exec	./lib/functions.php:2322	                $output = shell_exec($script_p
 cmd_exec	./lib/functions.php:2337	                    $output = shell_exec($php . ' -q ' . $script);
 cmd_exec	./lib/functions.php:2657	                        $output = shell_exec($script_path);
 cmd_exec	./lib/functions.php:3199	        return exec('whoami');
-cmd_exec	./lib/functions.php:3919	    exec($command_line, $out, $err);
 cmd_exec	./lib/functions.php:7298	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v');
 cmd_exec	./lib/functions.php:7300	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v 2>&1');
 cmd_exec	./lib/functions.php:7511	            exec('id -nu', $o, $r);
@@ -88,6 +87,7 @@ cmd_exec	./snmpagent_mibcache.php:34			exec($php . ' ' . $extra_args . ' > /dev/
 cmd_exec	./snmpagent_persist.php:64		pclose(popen('start "CactiSNMPCache" /I /B ' . $php . ' ' . $extra_args, 'r'));
 cmd_exec	./snmpagent_persist.php:66		exec('ps -ef | grep -v grep | grep -v "sh -c" | grep snmpagent_mibcache.php', $output);
 cmd_exec	./snmpagent_persist.php:68			exec($php . ' ' . $extra_args . ' > /dev/null &');
+cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:32	            exec($commandLine, $lines, $status);
 cmd_exec	./utilities.php:202					exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
 cmd_exec	./utilities.php:220				$snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
 cmd_exec	./utilities.php:240				exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);

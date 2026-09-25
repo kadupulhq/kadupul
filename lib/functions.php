@@ -3916,7 +3916,7 @@ function exec_into_array($command_line)
 {
     $out = array();
     $err = 0;
-    exec($command_line, $out, $err);
+    $out = (new \Kadupul\Platform\Infrastructure\Legacy\LegacyCommandOutput())->lines((string) $command_line);
 
     return array_values($out);
 }
