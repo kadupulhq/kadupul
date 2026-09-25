@@ -8,10 +8,8 @@
 namespace Kadupul\Platform\Infrastructure\Symfony\Console;
 
 use Kadupul\Platform\Application\Command\AnalyzeDatabase;
-use Kadupul\Platform\Application\Command\InstallationAccessDenied;
 use Kadupul\Platform\Application\ReadModel\AnalysisReport;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
-use Psr\Clock\ClockInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\MapInput;
 use Symfony\Component\Console\Command\Command;
@@ -26,23 +24,19 @@ final readonly class AnalyzeDatabaseCommand
         private InstallationVersion $version,
         private CliPresentation $presentation,
         private ResultRenderer $renderer,
-        private ClockInterface $clock,
     ) {}
 
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] AnalyzeDatabaseInput $input): int
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
         try {
-            $early = $this->renderer->preflight($this->presentation->legacy, fn(): string => $this->version->line('Kadupul Analyze Database Utility', $this->clock->now()), new AnalyzeDatabaseLegacyArguments(), $input->as, $io, $output, $mode);
+            $early = $this->renderer->preflight($this->presentation->legacy, $this->version, 'Kadupul Analyze Database Utility', new AnalyzeDatabaseLegacyArguments(), $input->as, $io, $output, $mode);
             if ($early !== null) {
                 return $early;
             }
             $report = ($this->analyze)($input->local, $input->as);
-        } catch (InstallationAccessDenied) {
-            return $this->renderer->denied($io, $output, $mode);
         } catch (\Throwable $error) {
-            // failed() names only MainDatabaseNotConfigured, by type; other text stays hidden.
-            return $this->renderer->failed($io, $output, $mode, $error, 'Database analysis failed');
+            return $this->renderer->refused($io, $output, $mode, $error, 'Database analysis failed');
         }
 
         return $this->report($io, $output, $mode, $report);

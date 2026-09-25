@@ -93,12 +93,15 @@ def without_version(text, utility):
     return '\n'.join(line for line in text.splitlines() if not line.startswith(utility))
 
 
-def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot, utility):
-    """Run the original, then the shim, from equal starting schemas.
+def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot, utility,
+            stdout=normalise, stderr_filter=None, log_filter=None, subject='schema'):
+    """Run the original, then the shim, from equal starting states.
 
-    reset() puts the schema back to its starting state and snapshot() reads
-    what the comparison looks at. Returns the shim's result, both logs and
-    both snapshots taken after the runs.
+    reset() puts the state back to its start and snapshot() reads what the
+    comparison looks at; subject names it in the check labels. stdout() masks
+    both outputs, stderr_filter() removes the original's own diagnostics, and
+    log_filter(), when given, masks both cacti.log extracts for a comparison.
+    Returns the two results, both logs and both snapshots taken after the runs.
     """
     original_script, shim_script = scripts
     reset(harness)
@@ -108,29 +111,72 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     after_original = snapshot(harness)
     original_log = log_lines(harness)[marks:]
     reset(harness)
-    check(snapshot(harness) == start, f'{label}: the shim starts from the same schema')
+    check(snapshot(harness) == start, f'{label}: the shim starts from the same {subject}')
     marks = len(log_lines(harness))
     shim = run(harness, shim_script, arguments)
     after_shim = snapshot(harness)
     shim_log = log_lines(harness)[marks:]
-    expected, actual, expected_err = normalise(original['stdout']), normalise(shim['stdout']), original['stderr']
+    expected, actual = stdout(original['stdout']), stdout(shim['stdout'])
+    expected_err = original['stderr'] if stderr_filter is None else stderr_filter(original['stderr'])
     if allowed == 'version line before the error':
         # The original prints its version line inside the help that follows
         # the error; the shim reaches the error before it boots the kernel.
         expected, actual = without_version(expected, utility), '\n'.join(actual.splitlines())
-    if allowed == 'php warnings':
-        # The original indexed the empty information_schema row it got back.
-        expected_err = UNDEFINED_KEY.sub('', expected_err)
-    # The caller compares a schema it allows to differ.
-    same_schema = allowed == SECOND_LOOP_ALLOWED or after_shim == after_original
-    if actual != expected or shim['stderr'] != expected_err or not same_schema:
+    # The caller compares a snapshot it allows to differ.
+    same = allowed == SECOND_LOOP_ALLOWED or after_shim == after_original
+    if actual != expected or shim['stderr'] != expected_err or not same:
         print(f'{label}: original {original!r}\n{label}: shim {shim!r}', flush=True)
     check(shim['exit'] == original['exit'], f'{label}: shim exit code matches the original')
     check(actual == expected, f'{label}: shim stdout matches the original')
     check(shim['stderr'] == expected_err, f'{label}: shim stderr matches the original')
     if allowed != SECOND_LOOP_ALLOWED:
-        check(after_shim == after_original, f'{label}: shim schema matches the original')
-    return shim, original_log, shim_log, after_original, after_shim
+        # "rows" is plural, "schema" and "state" are not.
+        check(after_shim == after_original, f'{label}: shim {subject} {"match" if subject == "rows" else "matches"} the original')
+    if log_filter is not None:
+        if log_filter(shim_log) != log_filter(original_log):
+            print(f'{label}: original log {original_log!r}\n{label}: shim log {shim_log!r}', flush=True)
+        check(log_filter(shim_log) == log_filter(original_log), f'{label}: shim logs the same cacti.log lines, date included')
+    return {'original': original, 'shim': shim, 'original_log': original_log, 'shim_log': shim_log,
+            'after_original': after_original, 'after_shim': after_shim}
+
+
+# The realm each shim requires, as its refusal names it.
+REALMS = {26: 'Installation/Upgrades', 15: 'Settings/Utilities'}
+
+
+def verify_refusals(harness, check, admin, script, arguments, snapshot, start, name, realm=26):
+    """The four ways a shim must refuse before it sends a statement.
+
+    snapshot() must still equal start after each one: that is the evidence
+    the refusal came first.
+    """
+    denied = run(harness, script, arguments + ['--as=nobody'])
+    check(denied['exit'] == 1 and denied['stdout'] == REFUSED and snapshot(harness) == start,
+          f'{name} refuses an unknown operator before any statement')
+    empty = run(harness, script, arguments + ['--as='])
+    check(empty['exit'] == 1 and empty['stdout'].startswith('ERROR: Invalid Parameter --as=\n') and snapshot(harness) == start,
+          f'{name} refuses an empty --as rather than falling back to admin_user')
+    harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{NO_ONE}')")
+    try:
+        nobody = run(harness, script, arguments)
+    finally:
+        harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{admin}')")
+    check(nobody['exit'] == 1 and nobody['stdout'] == REFUSED and snapshot(harness) == start,
+          f'{name} refuses a run with no operator')
+    revoke = f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = {realm};'
+    if realm == 26:
+        # A row for an account that does not exist still counts as a holder in
+        # auth.php, so the realm 15 fallback stays closed here. Realm 15 has
+        # no fallback to close.
+        revoke += f' INSERT INTO user_auth_realm (realm_id, user_id) VALUES (26, {NO_ONE});'
+    harness.sql(revoke)
+    try:
+        refused = run(harness, script, arguments)
+    finally:
+        harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {NO_ONE} AND realm_id = {realm}; '
+                    f'INSERT INTO user_auth_realm (realm_id, user_id) VALUES ({realm}, {admin})')
+    check(refused['exit'] == 1 and refused['stdout'] == REFUSED and snapshot(harness) == start,
+          f'{name} refuses an operator without the {REALMS[realm]} realm')
 
 
 def verify_convert(harness, check, admin):
@@ -152,8 +198,11 @@ def verify_convert_cases(harness, check):
             harness.sql("REPLACE INTO settings (name, value) VALUES ('default_date_format', '2'), ('default_datechar', '2')")
         try:
             base_engine = 'MyISAM' if label == FULL_RUN else None
-            shim, original_log, shim_log, _, _ = compare(harness, check, label, (CONVERT_ORIGINAL, CONVERT_SHIM), arguments, allowed,
-                                                         lambda h: seed(h, base_engine), tables, CONVERT_UTILITY)
+            # The original indexed the empty information_schema row it got back.
+            strip = (lambda text: UNDEFINED_KEY.sub('', text)) if allowed == 'php warnings' else None
+            ran = compare(harness, check, label, (CONVERT_ORIGINAL, CONVERT_SHIM), arguments, allowed,
+                          lambda h: seed(h, base_engine), tables, CONVERT_UTILITY, stderr_filter=strip)
+            shim, original_log, shim_log = ran['shim'], ran['original_log'], ran['shim_log']
         finally:
             if label == FILE_PER_TABLE_OFF:
                 harness.sql('SET GLOBAL innodb_file_per_table = ON')
@@ -195,30 +244,7 @@ def verify_convert_cases(harness, check):
 def verify_convert_shim_only(harness, check, admin):
     seed(harness)
     start = tables(harness)
-    denied = run(harness, CONVERT_SHIM, ['-i', f'--table={MYISAM}', '--as=nobody'])
-    check(denied['exit'] == 1 and denied['stdout'] == REFUSED and tables(harness) == start,
-          'convert tables refuses an unknown operator before any statement')
-    empty = run(harness, CONVERT_SHIM, ['-i', f'--table={MYISAM}', '--as='])
-    check(empty['exit'] == 1 and empty['stdout'].startswith('ERROR: Invalid Parameter --as=\n') and tables(harness) == start,
-          'convert tables refuses an empty --as rather than falling back to admin_user')
-    harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{NO_ONE}')")
-    try:
-        nobody = run(harness, CONVERT_SHIM, ['-i', f'--table={MYISAM}'])
-    finally:
-        harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{admin}')")
-    check(nobody['exit'] == 1 and nobody['stdout'] == REFUSED and tables(harness) == start,
-          'convert tables refuses a run with no operator')
-    # A row for an account that does not exist still counts as a holder in
-    # auth.php, so the realm 15 fallback stays closed here.
-    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 26; '
-                f'INSERT INTO user_auth_realm (realm_id, user_id) VALUES (26, {NO_ONE})')
-    try:
-        refused = run(harness, CONVERT_SHIM, ['-i', f'--table={MYISAM}'])
-    finally:
-        harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {NO_ONE} AND realm_id = 26; '
-                    f'INSERT INTO user_auth_realm (realm_id, user_id) VALUES (26, {admin})')
-    check(refused['exit'] == 1 and refused['stdout'] == REFUSED and tables(harness) == start,
-          'convert tables refuses an operator without the Installation/Upgrades realm')
+    verify_refusals(harness, check, admin, CONVERT_SHIM, ['-i', f'--table={MYISAM}'], tables, start, 'convert tables')
     verify_realm_fallback(harness, check, admin, start)
     quoted = run(harness, CONVERT_SHIM, ['-u', f'--table={MYISAM}`; DROP TABLE {COMPACT}'])
     check(quoted['exit'] == 0 and f"Converting Table > '{MYISAM}`; DROP TABLE {COMPACT}' Failed\n" in quoted['stdout']
@@ -393,10 +419,11 @@ def verify_widen(harness, check, admin):
     try:
         for label, arguments, allowed in WIDEN_CASES:
             reset = narrowed if allowed == SECOND_LOOP_ALLOWED else restore
-            _, original_log, shim_log, after_original, after_shim = compare(
-                harness, check, label, (WIDEN_ORIGINAL, WIDEN_SHIM), arguments, allowed, reset, widen_schema, WIDEN_UTILITY)
-            expected_log = clock_free(original_log, '')
-            if allowed == SECOND_LOOP_ALLOWED:
+            second_loop = allowed == SECOND_LOOP_ALLOWED
+            ran = compare(harness, check, label, (WIDEN_ORIGINAL, WIDEN_SHIM), arguments, allowed, reset, widen_schema, WIDEN_UTILITY,
+                          log_filter=None if second_loop else (lambda lines: clock_free(lines, '')))
+            original_log, shim_log, after_original, after_shim = ran['original_log'], ran['shim_log'], ran['after_original'], ran['after_shim']
+            if second_loop:
                 check(outside(after_shim) == outside(after_original),
                       f'{label}: shim schema matches the original outside the columns its statement missed')
                 widened = [row for row in after_shim[0] if (row[0], row[1]) in SECOND_LOOP]
@@ -405,10 +432,9 @@ def verify_widen(harness, check, admin):
                 # The original's failed statements are the only lines it logs here.
                 check(dbcall(original_log) != [] and failed_statements(original_log) == original_log,
                       f'{label}: only the original logs the statement that failed')
-                expected_log = []
-            if clock_free(shim_log, '') != expected_log:
-                print(f'{label}: original log {original_log!r}\n{label}: shim log {shim_log!r}', flush=True)
-            check(clock_free(shim_log, '') == expected_log, f'{label}: shim logs the same cacti.log lines, date included')
+                if clock_free(shim_log, '') != []:
+                    print(f'{label}: original log {original_log!r}\n{label}: shim log {shim_log!r}', flush=True)
+                check(clock_free(shim_log, '') == [], f'{label}: shim logs the same cacti.log lines, date included')
         verify_widen_shim_only(harness, check, admin)
     finally:
         restore(harness)
@@ -434,7 +460,7 @@ def verify_widen_shim_only(harness, check, admin):
     verify_widen_hostile_name(harness, check)
     narrowed(harness)
     start = widen_schema(harness)
-    verify_widen_refusals(harness, check, admin, start)
+    verify_refusals(harness, check, admin, WIDEN_SHIM, [], widen_schema, start, 'widen')
     (without, before), (allowed, _), written = realm_fallback(harness, admin, lambda: (run(harness, WIDEN_SHIM, []), widen_schema(harness)))
     check(without['exit'] == 1 and without['stdout'] == REFUSED and before == start,
           'widen fallback still needs a direct Settings/Utilities grant')
@@ -460,32 +486,6 @@ def verify_widen_hostile_name(harness, check):
     check(result['exit'] == 0 and f'DEBUG: Updating Table {HOSTILE}.\n' in result['stdout'] and widened[2] == 'int(10) unsigned'
           and len(ids) == 1 and dbcall(log_lines(harness)[marks:]) == [],
           'widen alters a hostile table name as one quoted identifier')
-
-
-def verify_widen_refusals(harness, check, admin, start):
-    denied = run(harness, WIDEN_SHIM, ['--as=nobody'])
-    check(denied['exit'] == 1 and denied['stdout'] == REFUSED and widen_schema(harness) == start,
-          'widen refuses an unknown operator before any statement')
-    empty = run(harness, WIDEN_SHIM, ['--as='])
-    check(empty['exit'] == 1 and empty['stdout'].startswith('ERROR: Invalid Parameter --as=\n') and widen_schema(harness) == start,
-          'widen refuses an empty --as rather than falling back to admin_user')
-    harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{NO_ONE}')")
-    try:
-        nobody = run(harness, WIDEN_SHIM, [])
-    finally:
-        harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{admin}')")
-    check(nobody['exit'] == 1 and nobody['stdout'] == REFUSED and widen_schema(harness) == start,
-          'widen refuses a run with no operator')
-    # A holder that does not exist keeps the realm 15 fallback closed.
-    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 26; '
-                f'INSERT INTO user_auth_realm (realm_id, user_id) VALUES (26, {NO_ONE})')
-    try:
-        refused = run(harness, WIDEN_SHIM, [])
-    finally:
-        harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {NO_ONE} AND realm_id = 26; '
-                    f'INSERT INTO user_auth_realm (realm_id, user_id) VALUES (26, {admin})')
-    check(refused['exit'] == 1 and refused['stdout'] == REFUSED and widen_schema(harness) == start,
-          'widen refuses an operator without the Installation/Upgrades realm')
 
 
 def verify_schema_parity(harness, check):

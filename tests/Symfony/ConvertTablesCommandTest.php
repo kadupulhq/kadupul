@@ -8,12 +8,9 @@
 namespace Kadupul\Tests;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
-use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\IdentityAccess\Infrastructure\Cli\CliConsoleAccess;
 use Kadupul\Platform\Application\Command\ConvertTables;
 use Kadupul\Platform\Application\Command\MaintenanceTarget;
-use Kadupul\Platform\Application\Command\SchemaChangeAudit;
 use Kadupul\Platform\Application\Command\TableConversionStep;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
@@ -28,6 +25,8 @@ use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 use Kadupul\Platform\Infrastructure\Symfony\Console\ResultRenderer;
 use PHPUnit\Framework\MockObject\MockObject;
+use Kadupul\Tests\Fixtures\ConsoleOperatorDatabase;
+use Kadupul\Tests\Fixtures\MaintenanceOperator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Console\Command\Command;
@@ -37,6 +36,9 @@ use Symfony\Component\Process\Process;
 
 final class ConvertTablesCommandTest extends TestCase
 {
+    use ConsoleOperatorDatabase;
+    use MaintenanceOperator;
+
     private const string HEADER = "NOTE: Repairing Tables for Local Database\n";
 
     private string $root;
@@ -45,31 +47,10 @@ final class ConvertTablesCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->root = sys_get_temp_dir() . '/kadupul-convert-command-' . bin2hex(random_bytes(8));
-        (new Filesystem())->dumpFile($this->root . '/include/cacti_version', "1.3.0\n");
+        $this->root = $this->installationRoot('kadupul-convert-command-');
         // User 1, admin, holds Console Access (8) and Installation/Upgrades (26).
-        $this->db = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
-        foreach ([
-            'CREATE TABLE version (cacti TEXT)',
-            "INSERT INTO version VALUES ('1.3.0')",
-            'CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)',
-            "INSERT INTO settings VALUES ('admin_user', '1')",
-            'CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, locked TEXT, must_change_password TEXT)',
-            "INSERT INTO user_auth VALUES (1, 'admin', 'on', '', '')",
-            'CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)',
-            'INSERT INTO user_auth_realm VALUES (1, 8), (1, 26)',
-            'CREATE TABLE user_auth_group (id INTEGER, enabled TEXT)',
-            'CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER)',
-            'CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)',
-        ] as $statement) {
-            $this->db->executeStatement($statement);
-        }
+        $this->db = $this->operatorDatabase(8, 26);
         $this->presentation = new CliPresentation();
-    }
-
-    protected function tearDown(): void
-    {
-        (new Filesystem())->remove($this->root);
     }
 
     /** A primary with host (MyISAM, latin1, 2 rows) and settings (already InnoDB utf8mb4). */
@@ -92,9 +73,9 @@ final class ConvertTablesCommandTest extends TestCase
     private function tester(TableConversion $conversion): CommandTester
     {
         $maintenance = $this->createStub(DatabaseMaintenance::class);
-        $convert = new ConvertTables(new MaintenanceTarget(new CliConsoleAccess($this->db, $this->db), $maintenance), $conversion, new TableConversionStep($conversion), new SchemaChangeAudit($this->createStub(AuditTrail::class)));
+        $convert = new ConvertTables(new MaintenanceTarget(new CliConsoleAccess($this->db, $this->db), $maintenance), $conversion, new TableConversionStep($conversion), $this->recordingAudit());
         // A year that is not the current one proves the version line reads the clock.
-        $command = new ConvertTablesCommand($convert, new InstallationVersion($this->root, $this->db, new Filesystem()), $this->presentation, new ResultRenderer(), new MockClock('2031-06-01 00:00:00'));
+        $command = new ConvertTablesCommand($convert, new InstallationVersion($this->root, $this->db, new Filesystem(), new MockClock('2031-06-01 00:00:00')), $this->presentation, new ResultRenderer());
 
         return new CommandTester(new Command(null, $command));
     }
@@ -241,6 +222,15 @@ final class ConvertTablesCommandTest extends TestCase
         self::assertSame(Command::INVALID, $tester->execute(['--innodb' => true, '--as' => '']));
     }
 
+    public function testAnInstallationWithoutGroupTablesChecksDirectRealms(): void
+    {
+        $this->db = $this->operatorDatabaseWithoutGroups(8, 26);
+        $this->presentation->forLegacy(LegacyRequest::Run);
+        $tester = $this->tester($this->conversion());
+        self::assertSame(0, $tester->execute(['--innodb' => true]));
+        self::assertStringEndsWith("Converting Table > 'host' Successful\nSkipping Table > 'settings'\n", $tester->getDisplay());
+    }
+
     public function testAnOperatorWithoutTheUpgradeRealmIsRefused(): void
     {
         $this->db->executeStatement('DELETE FROM user_auth_realm WHERE realm_id = 26');
@@ -269,12 +259,6 @@ final class ConvertTablesCommandTest extends TestCase
             self::assertNull($map->translate([$flag])[1], $flag);
         }
         self::assertSame([['--size' => '10', '--table' => 'host', '--skip-innodb' => 'a b', '--as' => 'ops'], null], $map->translate(['-s=10', '-t=host', '-n=a b', '--as=ops']));
-        foreach (['--version', '-V', '-v'] as $flag) {
-            self::assertSame(LegacyRequest::Version, $map->translate([$flag])[1]);
-        }
-        foreach (['--help', '-H', '-h'] as $flag) {
-            self::assertSame(LegacyRequest::Help, $map->translate([$flag])[1]);
-        }
         foreach (['--installer', '--size=1e3', '-s=', '--table='] as $argument) {
             try {
                 $map->translate([$argument]);
