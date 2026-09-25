@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -issue: import_template --preview now reports through the command line rather than printing raw HTML, and says the Template would be imported instead of claiming it was; the preview flag reached import_display_results as its web argument
+-security: Validate the graph item value, dashes and dash offset before writing them into the rrdtool command stream, rejecting surrounding whitespace as well as non-numeric text, and anchor the dash patterns at the true end of the value in both graph item editors; the stream splits arguments on whitespace and takes a new command after a newline
 -issue: Boost retains archived samples when staging them fails; the copy into the temporary table was issued with its result discarded and the archive cleanup then deleted every row for the data source whether or not it had been read
 -security: Escape the Data Source Info cells; rrdtool_info2html rendered every value with form_selectable_cell, which prints its contents raw, so a data source path or an RRD field carrying markup was reflected into the page
 -issue: Boost no longer discards buffered samples for a data source that has no graph item; the poller_item fallback for an empty RRD path was guarded by a test that could never be false, and an empty path is treated as a deleted data source and deleted

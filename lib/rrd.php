@@ -2986,11 +2986,18 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINESTACK ||
 				$graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_HRULE ||
 				$graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_VRULE) {
-				if (!empty($graph_item['dashes'])) {
+				/**
+				 * Both are appended to the command stream verbatim. The editors
+				 * now anchor their patterns with \z, but rows stored before
+				 * that are unconstrained and a template can be imported without
+				 * passing through either editor, so the shape is checked again
+				 * at the point of use.
+				 */
+				if (!empty($graph_item['dashes']) && cacti_rrdtool_valid_dash_list($graph_item['dashes'])) {
 					$dash .= ':dashes=' . $graph_item['dashes'];
 				}
 
-				if (!empty($graph_item['dash_offset'])) {
+				if (!empty($graph_item['dash_offset']) && cacti_rrdtool_valid_offset($graph_item['dash_offset'])) {
 					$dash .= ':dash-offset=' . $graph_item['dash_offset'];
 				}
 			}
@@ -3103,7 +3110,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 						$txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_quote_argument($text_format . $hardreturn[$graph_item_id]) . ' ';
 					}
 
-					if ($graph_item['shift'] == CHECKED && abs($graph_item['value']) > 0) {
+					if ($graph_item['shift'] == CHECKED && cacti_rrdtool_valid_offset($graph_item['value']) && abs($graph_item['value']) > 0) {
 						// create a SHIFT statement
 						$txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
 					}
@@ -3114,7 +3121,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 					$txt_graph_items .= 'AREA:' . $data_source_name . $graph_item_color_code . ':' . rrdtool_quote_argument($text_format . $hardreturn[$graph_item_id]) . ':STACK';
 
-					if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      // create a SHIFT statement
+					if ($graph_item['shift'] == CHECKED && cacti_rrdtool_valid_offset($graph_item['value']) && $graph_item['value'] > 0) {      // create a SHIFT statement
 						$txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
 					}
 
@@ -3126,7 +3133,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 					$txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_quote_argument($text_format . $hardreturn[$graph_item_id]) . $dash;
 
-					if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      // create a SHIFT statement
+					if ($graph_item['shift'] == CHECKED && cacti_rrdtool_valid_offset($graph_item['value']) && $graph_item['value'] > 0) {      // create a SHIFT statement
 						$txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
 					}
 
@@ -3136,15 +3143,25 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 					$txt_graph_items .= 'LINE' . $graph_item['line_width'] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_quote_argument($text_format . $hardreturn[$graph_item_id]) . ':STACK' . $dash;
 
-					if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      // create a SHIFT statement
+					if ($graph_item['shift'] == CHECKED && cacti_rrdtool_valid_offset($graph_item['value']) && $graph_item['value'] > 0) {      // create a SHIFT statement
 						$txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
 					}
 
 					break;
 				case GRAPH_ITEM_TYPE_TIC:
-					$_fraction = (empty($graph_item['graph_type_id']) ? '' : (':' . $graph_item['value']));
-					$_legend   = ':' . rrdtool_quote_argument(rrdtool_escape_string(html_escape($graph_variables['text_format'][$graph_item_id])) . $hardreturn[$graph_item_id]);
-					$txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . $_fraction . $_legend;
+					/**
+					 * The fraction is written bare into the command stream, so
+					 * it has to be a plain number. Measured against rrdtool
+					 * 1.11, both TICK:v#rrggbb:legend and TICK:v#rrggbb::legend
+					 * are rejected with "error parsing number", and a rejected
+					 * item fails the whole graph rather than itself. So an
+					 * unusable fraction means this item is skipped, which is
+					 * what VRULE below already does for a value it cannot use.
+					 */
+					if (!empty($graph_item['graph_type_id']) && cacti_rrdtool_valid_offset($graph_item['value'])) {
+						$_legend = ':' . rrdtool_quote_argument(rrdtool_escape_string(html_escape($graph_variables['text_format'][$graph_item_id])) . $hardreturn[$graph_item_id]);
+						$txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . ':' . $graph_item['value'] . $_legend;
+					}
 
 					break;
 				case GRAPH_ITEM_TYPE_HRULE:
@@ -3174,7 +3191,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 						}
 
 						$txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $value . $graph_item_color_code . ':' . rrdtool_quote_argument(rrdtool_escape_string(html_escape($graph_variables['text_format'][$graph_item_id])) . $hardreturn[$graph_item_id]) . $dash;
-					} elseif (is_numeric($graph_item['value'])) {
+					} elseif (cacti_rrdtool_valid_offset($graph_item['value'])) {
 						$value = $graph_item['value'];
 
 						$txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $value . $graph_item_color_code . ':' . rrdtool_quote_argument(rrdtool_escape_string(html_escape($graph_variables['text_format'][$graph_item_id])) . $hardreturn[$graph_item_id]) . $dash;
