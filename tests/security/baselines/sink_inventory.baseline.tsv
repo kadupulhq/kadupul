@@ -338,9 +338,9 @@ dynamic_include	./lib/aggregate.php:817		include_once($config['base_path'] . '/l
 dynamic_include	./lib/api_aggregate.php:1660		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/api_aggregate.php:185		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_aggregate.php:654		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_automation.php:2367		include_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./lib/api_automation.php:2368		include_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./lib/api_automation.php:2369		include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_automation.php:2372		include_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./lib/api_automation.php:2373		include_once($config['base_path'] . '/lib/api_automation_tools.php');
+dynamic_include	./lib/api_automation.php:2374		include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:1175	    include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:1176	    include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:1177	    include_once($config['base_path'] . '/lib/data_query.php');
@@ -543,7 +543,6 @@ fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:339	file_put_contents($newxmlfile, $new_xml);
 fs_write	./cli/splice_rrd.php:39			if (($f = @fopen($path, 'w'))) {
 fs_write	./cli/splice_rrd.php:875		return file_put_contents($xmlfile, $output);
-fs_write	./host.php:590		$stdout = fopen('php://output', 'w');
 fs_write	./include/global_languages.php:939			file_put_contents($config['i18n_log'], $text . $eol, $mode);
 fs_write	./include/global_languages.php:947			file_put_contents($config['i18n_text_log'], $text . $eol, $mode);
 fs_write	./include/themes/midwinter/update_hash.php:43			file_put_contents($cssFile, $fileUpdated);
@@ -806,20 +805,6 @@ header_redirect	./graphs_items.php:45			header('Location: graphs.php?header=fals
 header_redirect	./graphs_new.php:150			header('Location: graphs_new.php?host_id=' . $host_id . '&header=false');
 header_redirect	./graphs_new.php:156			header('Location: graphs_new.php?host_id=' . get_filter_request_var('host_id') . '&header=false');
 header_redirect	./graphs_new.php:30			header('Location: graphs_new.php?host_id=' . get_request_var('host_id') . '&header=false');
-header_redirect	./host.php:108			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:116			header('Location: host.php?header=' . (isset_request_var('header') && get_nfilter_request_var('header') == 'true' ? 'true':'false') . '&action=edit&id=' . get_request_var('host_id') . '&display_dq_details=true');
-header_redirect	./host.php:135			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:142			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:153			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:296			header('Location: host.php?header=false&action=edit&id=' . (empty($host_id) ? get_nfilter_request_var('id') : $host_id));
-header_redirect	./host.php:367			header('Location: host.php?header=false');
-header_redirect	./host.php:55			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:561			header('Location: host.php?header=false');
-header_redirect	./host.php:67			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:75			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:83			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:91			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:99			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 header_redirect	./host_templates.php:110			header('Location: host_templates.php?header=false&action=edit&id=' . (empty($host_template_id) ? get_nfilter_request_var('id') : $host_template_id));
 header_redirect	./host_templates.php:176			header('Location: host_templates.php?header=false');
 header_redirect	./host_templates.php:241			header('Location: host_templates.php?header=false');

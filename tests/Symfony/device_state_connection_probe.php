@@ -34,14 +34,14 @@ $observer = <<<'PHP'
 PHP;
 // Keep original source line numbers for integration coverage attribution.
 $observer = str_replace(["\r", "\n"], ' ', $observer);
-foreach ([
-    '/function api_device_disable_devices\(\$device_ids\): bool\s*\{/',
-    '/function api_device_enable_devices\(\$device_ids\)\s*\{/',
-] as $signature) {
-    if (preg_match_all($signature, $source) !== 1) {
+foreach (['api_device_disable_devices', 'api_device_enable_devices'] as $function) {
+    $pattern = '/function ' . $function . '\(\$device_ids\)(?:: bool)?\s*\{/';
+    if (preg_match_all($pattern, $source) !== 1) {
         throw new RuntimeException('State writer fixture no longer matches');
     }
-    $source = preg_replace_callback($signature, static fn(array $match): string => $match[0] . $observer, $source, 1);
+    // Preserve the matched brace style and every original newline: both legacy
+    // and PER-CS formatting must retain exact coverage source attribution.
+    $source = preg_replace_callback($pattern, static fn(array $match): string => $match[0] . $observer, $source);
 }
 if (!copy($file, $backup) || file_put_contents($file, $source) === false) {
     throw new RuntimeException('Cannot install state writer fixture');

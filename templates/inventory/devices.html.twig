@@ -26,6 +26,13 @@
                 <option value="{{ criteria.siteId }}" selected>{{ 'Selected site (no accessible devices)'|trans({}, 'inventory') }}</option>
             {% endif %}
         </select>
+        <label for="device-template-filter">{{ 'Template ID filter'|trans({}, 'inventory') }}</label>
+        <input id="device-template-filter" type="number" min="0" max="16777215" name="template" value="{{ criteria.templateId }}">
+        <label for="device-collector-filter">{{ 'Collector ID filter'|trans({}, 'inventory') }}</label>
+        <input id="device-collector-filter" type="number" min="1" max="16777215" name="collector" value="{{ criteria.collectorId }}">
+        <label for="device-location-mode">{{ 'Location filter'|trans({}, 'inventory') }}</label>
+        <select id="device-location-mode" name="location_mode"><option value="all"{% if criteria.location is null %} selected{% endif %}>{{ 'All'|trans({}, 'inventory') }}</option><option value="exact"{% if criteria.location is not null %} selected{% endif %}>{{ 'Exact location (empty matches unassigned)'|trans({}, 'inventory') }}</option></select>
+        <input aria-label="{{ 'Location'|trans({}, 'inventory') }}" name="location" value="{{ criteria.location }}" maxlength="255">
         <label for="device-state">{{ 'device.state'|trans({}, 'inventory') }}</label>
         <select id="device-state" name="state">
             {% for value, label in {'all': 'All', 'enabled': 'Enabled', 'disabled': 'Disabled'} %}
@@ -34,7 +41,7 @@
         </select>
         <label for="device-status">{{ 'Status'|trans({}, 'inventory') }}</label>
         <select id="device-status" name="status">
-            {% for value, label in {'all': 'All', 'up': 'Up', 'down': 'Down', 'error': 'Error', 'recovering': 'Recovering', 'unknown': 'Unknown', 'disabled': 'Disabled'} %}
+            {% for value, label in {'all': 'All', 'not-up': 'Not up', 'up': 'Up', 'down': 'Down', 'error': 'Error', 'recovering': 'Recovering', 'unknown': 'Unknown', 'disabled': 'Disabled'} %}
             <option value="{{ value }}"{% if criteria.status == value %} selected{% endif %}>{{ label|trans({}, 'inventory') }}</option>
             {% endfor %}
         </select>
@@ -64,6 +71,7 @@
     {% if completed|default('') == 'sync-template' %}<p><output>{{ 'Selected device templates synchronized.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') in ['assign-site', 'assign-template', 'assign-collector'] %}<p><output>{{ 'Selected device assignments updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') in ['place-tree', 'place-report'] %}<p><output>{{ 'Selected devices placed.'|trans({}, 'inventory') }}</output></p>{% endif %}
+    {% if completed|default('') == 'automation' %}<p><output>{{ 'Device automation rules applied.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'snmp' %}<p><output>{{ 'Selected device SNMP settings updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'options' %}<p><output>{{ 'Selected device options updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'remove' %}<p><output>{{ 'Selected devices removed.'|trans({}, 'inventory') }}</output></p>{% endif %}
@@ -102,6 +110,8 @@
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and allowlisted placement kind. #}
     <button type="submit" formaction="{{ path('inventory_device_placement', {kind: kind}) }}">{{ label|trans({}, 'inventory') }}</button>
     {% endfor %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+    <button type="submit" formaction="{{ path('inventory_device_automation') }}">{{ 'Apply device automation rules'|trans({}, 'inventory') }}</button>
     </form>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
     <p><a href="{{ path('inventory_devices_csv', filters|merge({page: criteria.page})) }}">{{ 'Export this page (CSV)'|trans({}, 'inventory') }}</a></p>

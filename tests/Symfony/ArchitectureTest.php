@@ -62,7 +62,7 @@ final class ArchitectureTest extends TestCase
 
     public function testSymfonyEntryPointsDoNotBootstrapLegacyApplication(): void
     {
-        foreach (['app.php', 'public/index.php', 'sites.php'] as $file) {
+        foreach (['app.php', 'public/index.php', 'sites.php', 'host.php'] as $file) {
             $source = file_get_contents(dirname(__DIR__, 2) . '/' . $file);
             self::assertStringNotContainsString('include/auth.php', $source);
             self::assertStringNotContainsString('include/global.php', $source);
