@@ -660,7 +660,7 @@ function rrdtool_def_path($path)
 
     // An escape leaves a backslash, which rrdtool_command_path() refuses.
     $bare = rrdtool_command_path($path);
-    if ($bare === false || $bare[0] === '/') {
+    if ($bare === false || str_starts_with($bare, '/')) {
         throw new \Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument('The RRDtool proxy can only read an RRD path under the RRA directory without blanks, quotes, backslashes or colons.');
     }
 
