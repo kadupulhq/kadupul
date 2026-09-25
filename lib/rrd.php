@@ -726,6 +726,26 @@ function rrdtool_create_minimum($minimum, $local_data_id, $logopt)
 }
 
 /**
+ * The DS argument of a create command for one data source row, or false,
+ * logged under $logopt, when its minimum or maximum must not reach RRDtool.
+ * $data_source['rrd_maximum'] is the maximum after any substitution.
+ */
+function rrdtool_create_ds($name, $type, array $data_source, $local_data_id, $logopt)
+{
+    $minimum = rrdtool_create_minimum($data_source['rrd_minimum'], $local_data_id, $logopt);
+    if ($minimum === false) {
+        return false;
+    }
+
+    $maximum = rrdtool_create_maximum($minimum, $data_source['rrd_maximum'], $local_data_id, $logopt);
+    if ($maximum === false) {
+        return false;
+    }
+
+    return "DS:$name:$type:" . $data_source['rrd_heartbeat'] . ':' . $minimum . ':' . $maximum . RRD_NL;
+}
+
+/**
  * The DS maximum as rrdtool_function_create() and boost_rrdtool_function_create()
  * write it, or false, logged under $logopt, when the RRD must not be created.
  * A minimum and maximum of zero become U.
@@ -1526,17 +1546,12 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
                 }
             }
 
-            $data_source['rrd_minimum'] = rrdtool_create_minimum($data_source['rrd_minimum'], $local_data_id, 'POLLER');
-            if ($data_source['rrd_minimum'] === false) {
+            $ds = rrdtool_create_ds($data_source_name, $data_source_types[$data_source['data_source_type_id']], $data_source, $local_data_id, 'POLLER');
+            if ($ds === false) {
                 return false;
             }
 
-            $data_source['rrd_maximum'] = rrdtool_create_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $local_data_id, 'POLLER');
-            if ($data_source['rrd_maximum'] === false) {
-                return false;
-            }
-
-            $create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
+            $create_ds .= $ds;
         }
     }
 
