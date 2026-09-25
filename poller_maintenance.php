@@ -770,9 +770,10 @@ function rrdclean_create_path($path)
 
                 // NOTE: chown/chgrp fails for non-root users, checking their
                 // result is therefore irrelevant
-                if (rrdtool_ownership_allowed($path, null, 'MAINT')) {
-                    @lchown($path, $owner_id);
-                    @lchgrp($path, $group_id);
+                $real_path = rrdtool_ownership_path($path, null, 'MAINT');
+                if ($real_path !== false) {
+                    @lchown($real_path, $owner_id);
+                    @lchgrp($real_path, $group_id);
                 }
             }
         } else {
