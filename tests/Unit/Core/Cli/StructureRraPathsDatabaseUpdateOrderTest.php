@@ -177,7 +177,8 @@ test('a failed database path update rolls back and prevents layout activation', 
 
 	expect($out['database_failure'])->toBeTrue()
 		->and($out['rollbacks'])->toBe(1)
-		->and(file_exists($this->info['new_rrd_path']))->toBeTrue();
+		->and(file_exists($this->legacy))->toBeTrue()
+		->and(file_exists($this->info['new_rrd_path']))->toBeFalse();
 })->with(array('UPDATE poller_item', 'UPDATE data_template_data'));
 
 test('data query layout always includes the query ID in the target path', function () {
