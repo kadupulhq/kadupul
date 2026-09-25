@@ -977,11 +977,11 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
     /* output information to the log file if appropriate */
     cacti_log('CACTI2RRD: ' . read_config_option('path_rrdtool') . " $command_line", $log_to_stdout, $logopt, POLLER_VERBOSITY_DEBUG);
 
-    $debug = '';
+    $merge_stderr = false;
     /* if we want to see the error output from rrdtool; make sure to specify this */
     if ($config['cacti_server_os'] != 'win32') {
         if (($output_flag == RRDTOOL_OUTPUT_STDERR || $output_flag == RRDTOOL_OUTPUT_RETURN_STDERR) && !is_resource($rrdtool_pipe)) {
-            $debug .= ' 2>&1';
+            $merge_stderr = true;
         }
     }
 
@@ -1007,6 +1007,10 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
                 0 => array('pipe', 'r'),
                 1 => array('pipe', 'w')
             );
+            /* the shell redirection " 2>&1" this replaces */
+            if ($merge_stderr) {
+                $descriptorspec[2] = array('redirect', 1);
+            }
 
             if ($config['is_web']) {
                 if (isset($_COOKIE['CactiTimeZone'])) {
@@ -1015,7 +1019,7 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
                 }
             }
 
-            $process = proc_open(read_config_option('path_rrdtool') . ' - ' . $debug, $descriptorspec, $pipes);
+            $process = rrdtool_pipe_process($descriptorspec, $pipes);
 
             if (!is_resource($process)) {
                 unset($process);
