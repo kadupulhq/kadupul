@@ -2944,6 +2944,72 @@ function cacti_rrdtool_valid_dash_list($value) {
 }
 
 /**
+ * cacti_rrd_corrected_maximum - bring an RRD maximum above its minimum
+ *
+ *   rrdtool requires max > min. Two creators build DS definitions for the same
+ *   data source, lib/rrd.php and the Boost copy in lib/boost.php, and they
+ *   disagreed: one used (float) with a GAUGE/ABSOLUTE special case, the other
+ *   (int) with none, so the same template could produce two different files.
+ *
+ *   'U' means unbounded on either side. An unbounded minimum has no floor to
+ *   violate, so nothing is corrected; casting it instead read as a floor of
+ *   zero and rewrote a negative maximum to 1, after which every sample above 1
+ *   stored as UNKNOWN. Both bounds are trimmed first, because
+ *   cacti_rrdtool_valid_bound() tolerates surrounding whitespace and ' U '
+ *   would otherwise cast to 0.
+ *
+ * @param  (mixed) $minimum            - the stored rrd_minimum
+ * @param  (mixed) $maximum            - the stored rrd_maximum
+ * @param  (mixed) $data_source_type_id - Cacti data source type id
+ *
+ * @return (mixed) the maximum to write, corrected only when it must be
+ */
+function cacti_rrd_corrected_maximum($minimum, $maximum, $data_source_type_id) {
+	$minimum = trim((string) $minimum);
+	$maximum = trim((string) $maximum);
+
+	if ($minimum === 'U' || $maximum === 'U') {
+		return $maximum;
+	}
+
+	if ((float) $maximum > (float) $minimum) {
+		return $maximum;
+	}
+
+	/**
+	 * min == max == 0 does not work in rrdtool, and it is the schema default
+	 * for rrd_maximum, kept by every COUNTER row because the 1.2.3 upgrade
+	 * rewrote only types 1, 3, 4 and 7. Answering min+1 here would cap such a
+	 * data source at 1 and store every larger rate as UNKNOWN for the life of
+	 * the file. The callers carry a guard for this, but it runs after the
+	 * correction and so never sees the original pair.
+	 */
+	if ((float) $minimum == 0 && (float) $maximum == 0) {
+		return 'U';
+	}
+
+	/* GAUGE and ABSOLUTE carry no accumulated total, so unbounded is safe */
+	if ($data_source_type_id == 1 || $data_source_type_id == 4) {
+		return 'U';
+	}
+
+	/**
+	 * Above about 1e16 a float cannot represent min+1, so the sum equals the
+	 * minimum and rrdtool refuses the definition outright: "min must be less
+	 * than max in DS definition". Unbounded is the only answer that still
+	 * creates the file.
+	 */
+	$raised = (float) $minimum + 1;
+
+	if (!is_finite($raised) || $raised <= (float) $minimum) {
+		return 'U';
+	}
+
+	/* A string, like every other branch, so callers see one type */
+	return (string) $raised;
+}
+
+/**
  * cacti_rrdtool_valid_ds_name - validate an RRDtool data source name
  *
  * @param  (string) $name - Data source name

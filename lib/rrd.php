@@ -1155,9 +1155,9 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 			}
 
 			// Trim the data source maximum
-			$data_source['rrd_maximum'] = trim($data_source['rrd_maximum']);
+			$data_source['rrd_maximum'] = trim((string) $data_source['rrd_maximum']);
 
-			if ($data_source['rrd_maximum'] == 'U') {
+			if ($data_source['rrd_maximum'] === '' || $data_source['rrd_maximum'] == 'U') {
 				/* in case no maximum is given, use "Undef" value */
 				$data_source['rrd_maximum'] = 'U';
 			} elseif (strpos($data_source['rrd_maximum'], '|query_') !== false) {
@@ -1167,13 +1167,9 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 				} else {
 					$data_source['rrd_maximum'] = substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']);
 				}
-			} elseif ($data_source['rrd_maximum'] != 'U' && (float)$data_source['rrd_maximum'] <= (float)$data_source['rrd_minimum']) {
-				/* max > min required, but take care of an "Undef" value */
-				if ($data_source['data_source_type_id'] == 1 || $data_source['data_source_type_id'] == 4) {
-					$data_source['rrd_maximum'] = 'U';
-				} else {
-					$data_source['rrd_maximum'] = (float)$data_source['rrd_minimum'] + 1;
-				}
+			} else {
+				/* max > min required; shared so the Boost creator cannot drift */
+				$data_source['rrd_maximum'] = cacti_rrd_corrected_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $data_source['data_source_type_id']);
 			}
 
 			/* min==max==0 won't work with rrdtool */
@@ -1408,6 +1404,18 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 					/* Enforce strict fail-closed NaN propagation */
 					if ($value === null || $value === '' || !is_numeric($value)) {
+						$rrd_update_values .= 'U';
+					} elseif (!is_finite((float) $value)) {
+						/**
+						 * INF and NAN satisfy is_numeric, so both used to be
+						 * written out, as did a string such as '1e999' that
+						 * parses to infinity. Measured against rrdtool 1.11: a
+						 * COUNTER rejects 'NAN' with "not a simple unsigned integer",
+						 * and rrdtool fails the whole update rather than the one
+						 * field, so the other data sources in it are lost too.
+						 * INF is accepted and stores infinity, which is not a
+						 * reading. Unknown is the honest value for both.
+						 */
 						$rrd_update_values .= 'U';
 					} else {
 						/* Force standard decimal separator to bypass LC_NUMERIC locale

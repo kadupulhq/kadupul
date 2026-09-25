@@ -1994,7 +1994,16 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 				return false;
 			}
 
-			if (empty($data_source['rrd_maximum'])) {
+			$data_source['rrd_maximum'] = trim((string) $data_source['rrd_maximum']);
+
+			/**
+			 * empty() here treated a stored maximum of '0' as absent and made
+			 * it unbounded, while lib/rrd.php sent the same value through the
+			 * correction below, so the two creators still wrote different DS
+			 * definitions after they were given a shared correction. Only an
+			 * empty string or the undefined marker mean unbounded.
+			 */
+			if ($data_source['rrd_maximum'] === '' || $data_source['rrd_maximum'] == 'U') {
 				/* in case no maximum is given, use "Undef" value */
 				$data_source['rrd_maximum'] = 'U';
 			} elseif (strpos($data_source['rrd_maximum'], '|query_') !== false) {
@@ -2007,9 +2016,13 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 				} else {
 					$data_source['rrd_maximum'] = substitute_snmp_query_data($data_source['rrd_maximum'],$data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']);
 				}
-			} elseif (($data_source['rrd_maximum'] != 'U') && (int)$data_source['rrd_maximum']<=(int)$data_source['rrd_minimum']) {
-				/* max > min required, but take care of an "Undef" value */
-				$data_source['rrd_maximum'] = (int)$data_source['rrd_minimum']+1;
+			} else {
+				/**
+				 * max > min required. This used (int) and had no GAUGE or
+				 * ABSOLUTE case, so it wrote a different DS definition than
+				 * lib/rrd.php did for the same data source. Shared now.
+				 */
+				$data_source['rrd_maximum'] = cacti_rrd_corrected_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $data_source['data_source_type_id']);
 			}
 
 			/* min==max==0 won't work with rrdtool */
