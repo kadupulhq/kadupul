@@ -17,6 +17,7 @@ use Kadupul\IdentityAccess\Contract\ConsoleOperator;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Application\Command\AnalyzeDatabase;
 use Kadupul\Platform\Application\Command\InstallationAccessDenied;
+use Kadupul\Platform\Application\Command\MaintenanceTarget;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
@@ -59,7 +60,7 @@ final class AnalyzeDatabaseTest extends TestCase
 
     private function analyze(DatabaseMaintenance $maintenance): AnalyzeDatabase
     {
-        return new AnalyzeDatabase($this->access(true), $maintenance, new SystemClock($this->clock));
+        return new AnalyzeDatabase(new MaintenanceTarget($this->access(true), $maintenance), $maintenance, new SystemClock($this->clock));
     }
 
     /** Every call the use case makes must carry the same target it computed. */
@@ -138,7 +139,7 @@ final class AnalyzeDatabaseTest extends TestCase
         $m = $this->createMock(DatabaseMaintenance::class);
         $m->expects(self::never())->method('tables');
         $this->expectException(InstallationAccessDenied::class);
-        (new AnalyzeDatabase($this->access(false), $m, new SystemClock($this->clock)))(false, null);
+        (new AnalyzeDatabase(new MaintenanceTarget($this->access(false), $m), $m, new SystemClock($this->clock)))(false, null);
     }
 
     public function testCollectorWithoutMainConfigurationFails(): void
@@ -166,7 +167,7 @@ final class AnalyzeDatabaseTest extends TestCase
         $m = $this->createStub(DatabaseMaintenance::class);
         $m->method('isRemoteCollector')->willReturn($collector);
         $m->method('tables')->willReturn([]);
-        (new AnalyzeDatabase($operator, $m, new SystemClock($this->clock)))($local, 'ops');
+        (new AnalyzeDatabase(new MaintenanceTarget($operator, $m), $m, new SystemClock($this->clock)))($local, 'ops');
     }
 
     /** @return iterable<string, array{bool, bool, OperatorDatabase}> */
@@ -185,7 +186,7 @@ final class AnalyzeDatabaseTest extends TestCase
         $m = $this->createMock(DatabaseMaintenance::class);
         $m->expects(self::never())->method(self::anything());
         $this->expectException(InstallationAccessDenied::class);
-        (new AnalyzeDatabase($operator, $m, new SystemClock($this->clock)))(false, '');
+        (new AnalyzeDatabase(new MaintenanceTarget($operator, $m), $m, new SystemClock($this->clock)))(false, '');
     }
 
     public function testTableNamesAreQuotedAsIdentifiers(): void
@@ -235,7 +236,7 @@ final class AnalyzeDatabaseTest extends TestCase
 
         $this->adapter($local, $main)->recordStats(DatabaseTarget::Main, 'message');
 
-        self::assertSame("2026-01-01 00:00:00 - SYSTEM message\n", (string) file_get_contents($this->root . '/log/main.log'));
+        self::assertSame("01/01/2026 00:00:00 - SYSTEM message\n", (string) file_get_contents($this->root . '/log/main.log'));
         self::assertFileDoesNotExist($this->root . '/log/local.log');
     }
 

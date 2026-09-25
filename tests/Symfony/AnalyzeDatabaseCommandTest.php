@@ -12,6 +12,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Kadupul\IdentityAccess\Infrastructure\Cli\CliConsoleAccess;
 use Kadupul\Platform\Application\Command\AnalyzeDatabase;
+use Kadupul\Platform\Application\Command\MaintenanceTarget;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Infrastructure\Doctrine\InstallationConnectionMiddleware;
@@ -93,7 +94,7 @@ final class AnalyzeDatabaseCommandTest extends TestCase
 
     private function tester(DatabaseMaintenance $maintenance): CommandTester
     {
-        $analyze = new AnalyzeDatabase($this->access, $maintenance, new SystemClock(new MockClock()));
+        $analyze = new AnalyzeDatabase(new MaintenanceTarget($this->access, $maintenance), $maintenance, new SystemClock(new MockClock()));
         $version = new InstallationVersion($this->root, $this->db, new Filesystem());
         // A year that is not the current one proves the version line reads the clock.
         $command = new AnalyzeDatabaseCommand($analyze, $version, $this->presentation, new ResultRenderer(), new MockClock('2031-06-01 00:00:00'));

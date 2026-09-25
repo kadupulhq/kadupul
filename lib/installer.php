@@ -2852,6 +2852,8 @@ class Installer implements JsonSerializable
                 if ($show_warning) {
                     $output .= Installer::sectionWarning(__('One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: '));
                     $output .= Installer::sectionCode(read_config_option('path_php_binary') . ' -q ' . $config['base_path'] . '/cli/convert_tables.php -u -i');
+                    // A separate msgid, so the translations of the sentence above still apply.
+                    $output .= Installer::sectionWarning(__('Run it as an account with the Installation/Upgrades realm and no pending password change, for example with --as=<user>.'));
                 }
 
                 $output .= Installer::sectionNormal(__('The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process.'));
@@ -3606,28 +3608,27 @@ class Installer implements JsonSerializable
 
     private function convertDatabase()
     {
-        global $config;
-
-        $tables = db_fetch_assoc("SELECT value FROM settings WHERE name like 'install_table_%'");
+        $tables = db_fetch_assoc("SELECT name, value FROM settings WHERE name like 'install_table_%'");
         if (cacti_sizeof($tables)) {
             log_install_always('', __('Found %s tables to convert', cacti_sizeof($tables)));
             $this->setProgress(Installer::PROGRESS_TABLES_BEGIN);
             $i = 0;
-            foreach ($tables as $key => $table) {
+            foreach ($tables as $table) {
                 $i++;
                 $name = $table['value'];
                 if (!empty($name)) {
                     log_install_always('', __('Converting Table #%s \'%s\'', $i, $name), true);
-                    $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-                        cacti_escapeshellarg($config['base_path'] . '/cli/convert_tables.php') .
-                        ' --table=' . cacti_escapeshellarg($name) .
-                        ' --utf8 --innodb --dynamic');
+                    // In-process and with no operator: the installer is the authority
+                    // here, while cli/convert_tables.php now requires one.
+                    $conversion = \Kadupul\Platform\Infrastructure\Legacy\InstallerTableConversion::run($name);
 
                     set_install_config_option('install_updated', microtime(true));
-                    log_install_debug('convert', sprintf('Convert table #%s \'%s\' results: %s', $i, $name, $results), true);
-                    if ((stripos($results, 'Converting table') !== false && stripos($results, 'Successful') !== false) ||
-                        stripos($results, 'Skipped table') !== false) {
-                        set_install_config_option($key, '');
+                    log_install_debug('convert', sprintf('Convert table #%s \'%s\' results: %s', $i, $name, $conversion->output), true);
+                    if ($conversion->error !== null) {
+                        log_install_always('convert', __('Converting Table #%s \'%s\' failed in-process: %s', $i, $name, $conversion->error), true);
+                    }
+                    if ($conversion->dequeues()) {
+                        set_install_config_option($table['name'], '');
                     }
                 }
             }

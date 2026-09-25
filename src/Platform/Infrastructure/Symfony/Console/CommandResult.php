@@ -15,6 +15,7 @@ final readonly class CommandResult
     /**
      * @param array<string, mixed> $json stable machine-readable keys
      * @param list<string> $legacy the original script's stdout lines
+     * @param bool $finalNewline false when the original printed its last line without one
      */
-    public function __construct(public array $json, public array $legacy, public int $exit = Command::SUCCESS) {}
+    public function __construct(public array $json, public array $legacy, public int $exit = Command::SUCCESS, public bool $finalNewline = true) {}
 }

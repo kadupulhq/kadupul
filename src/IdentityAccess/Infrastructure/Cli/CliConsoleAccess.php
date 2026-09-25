@@ -25,6 +25,7 @@ final class CliConsoleAccess implements ConsoleOperator
 {
     private ?string $username = null;
     private ?Connection $database = null;
+    private ?bool $groupTables = null;
 
     public function __construct(private readonly Connection $localConnection, private readonly Connection $mainConnection) {}
 
@@ -36,6 +37,7 @@ final class CliConsoleAccess implements ConsoleOperator
             OperatorDatabase::Local => $this->localConnection,
             OperatorDatabase::Main => $this->mainConnection,
         };
+        $this->groupTables = null;
     }
 
     #[\Override]
@@ -84,20 +86,67 @@ final class CliConsoleAccess implements ConsoleOperator
         return $this->hasRealm($actor->id, 15);
     }
 
+    #[\Override]
+    public function canUpgradeInstallation(Actor $actor): bool
+    {
+        if ($this->hasRealm($actor->id, 26)) {
+            return true;
+        }
+        // include/auth.php:191-240 covers installations upgraded from before
+        // realm 26 existed: when no user and no enabled group with members holds
+        // it, every user with a direct realm 15 row may install. The web path
+        // makes that grant permanent with an INSERT; this only allows the run
+        // and writes nothing. Removing realm 26 from everyone therefore reopens
+        // schema changes to every direct realm 15 holder, as it does on the web.
+        return !$this->anyoneHoldsUpgradeRealm() && $this->hasDirectRealm($actor->id, 15);
+    }
+
+    private function hasDirectRealm(int $id, int $realm): bool
+    {
+        return $id > 0 && $this->database()->fetchOne('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?', [$id, $realm]) !== false;
+    }
+
+    /** auth.php's holder count: any direct row, even for a missing or disabled user, or an enabled group with members. */
+    private function anyoneHoldsUpgradeRealm(): bool
+    {
+        $db = $this->database();
+        if ($db->fetchOne('SELECT realm_id FROM user_auth_realm WHERE realm_id = 26 LIMIT 1') !== false) {
+            return true;
+        }
+
+        return $this->hasGroupTables() && $db->fetchOne("SELECT r.realm_id FROM user_auth_group_realm r
+            INNER JOIN user_auth_group_members m ON m.group_id = r.group_id
+            INNER JOIN user_auth_group g ON g.id = r.group_id
+            WHERE g.enabled = 'on' AND r.realm_id = 26 LIMIT 1") !== false;
+    }
+
     private function hasRealm(int $id, int $realm): bool
     {
         if ($id <= 0) {
             return false;
         }
-        $db = $this->database();
-        if ($db->fetchOne('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?', [$id, $realm]) !== false) {
+        if ($this->hasDirectRealm($id, $realm)) {
             return true;
         }
+        if (!$this->hasGroupTables()) {
+            return false;
+        }
+        $db = $this->database();
 
         return $db->fetchOne("SELECT r.realm_id FROM user_auth_group_realm r
             INNER JOIN user_auth_group_members m ON m.group_id = r.group_id
             INNER JOIN user_auth_group g ON g.id = r.group_id
             WHERE g.enabled = 'on' AND m.user_id = ? AND r.realm_id = ? LIMIT 1", [$id, $realm]) !== false;
+    }
+
+    /**
+     * include/auth.php skips group realms unless all three tables exist, since
+     * a database upgraded from before 1.x may lack them. Without them only the
+     * direct user_auth_realm rows count, here as there.
+     */
+    private function hasGroupTables(): bool
+    {
+        return $this->groupTables ??= $this->database()->createSchemaManager()->tablesExist(['user_auth_group_realm', 'user_auth_group', 'user_auth_group_members']);
     }
 
     private function database(): Connection

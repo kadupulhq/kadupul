@@ -65,6 +65,115 @@ final class ArchitectureTest extends TestCase
         }
     }
 
+    /**
+     * TableConversionStep sends DDL with no operator check and no audit. Only
+     * ConvertTables, which adds both, and the installer's adapter may use it,
+     * and only lib/installer.php may call that adapter, so a new command
+     * cannot pick up unchecked DDL by injecting either one.
+     */
+    public function testOnlyTheInstallerConvertsTablesWithoutAnOperator(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'TableConversionStep' => [
+                'src/Platform/Application/Command/TableConversionStep.php',
+                'src/Platform/Application/Command/ConvertTables.php',
+                'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
+                'config/services.yaml',
+            ],
+            'InstallerTableConversion' => [
+                'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
+                'config/services.yaml',
+                'lib/installer.php',
+            ],
+        ]);
+    }
+
+    /**
+     * The schema ports send DDL without checking an operator; only their use
+     * cases, which check and audit, and their adapters may name them. The
+     * catalogs name their port in a docblock.
+     */
+    public function testOnlyTheSchemaUseCasesReachTheSchemaPorts(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'TableConversion' => [
+                'src/Platform/Application/Command/ConvertTables.php',
+                'src/Platform/Application/Command/TableConversionStep.php',
+                'src/Platform/Application/Port/TableCatalog.php',
+                'src/Platform/Application/Port/TableConversion.php',
+                'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
+                'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
+                'config/services.yaml',
+            ],
+            'ColumnWidening' => [
+                'src/Platform/Application/Command/WidenIdColumns.php',
+                'src/Platform/Application/Port/ColumnCatalog.php',
+                'src/Platform/Application/Port/ColumnWidening.php',
+                'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+                'config/services.yaml',
+            ],
+        ]);
+    }
+
+    /**
+     * The concrete adapters send the same unchecked DDL as their ports, and
+     * MaintenanceConnections::execute() runs any statement it is given. Only
+     * the container may wire the adapters, and only the adapters may hold the
+     * connections, so no command can inject around the use cases.
+     */
+    public function testOnlyTheSchemaAdaptersReachTheMaintenanceConnections(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'DbalTableConversion' => [
+                'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
+                'config/services.yaml',
+            ],
+            'DbalColumnWidening' => [
+                'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+                'config/services.yaml',
+            ],
+            'MaintenanceConnections' => [
+                'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
+                'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
+                'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+            ],
+        ]);
+    }
+
+    /**
+     * Fails unless each class's short name appears, as a whole word, in
+     * exactly the listed files outside tests and dependencies.
+     *
+     * @param array<string, list<string>> $allowed
+     */
+    private function assertOnlyTheseFilesName(array $allowed): void
+    {
+        $root = dirname(__DIR__, 2);
+        $skipped = ['.git', 'node_modules', 'tests', 'var', 'vendor'];
+        $directories = new \RecursiveCallbackFilterIterator(
+            new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS),
+            static fn(\SplFileInfo $file): bool => !$file->isDir() || !in_array($file->getFilename(), $skipped, true),
+        );
+        $found = array_fill_keys(array_keys($allowed), []);
+        foreach (new \RecursiveIteratorIterator($directories) as $file) {
+            if (!in_array($file->getExtension(), ['php', 'yaml', 'yml'], true)) {
+                continue;
+            }
+            $source = (string) file_get_contents($file->getPathname());
+            foreach (array_keys($allowed) as $class) {
+                // Whole word, so DbalTableConversion does not count as TableConversion.
+                if (preg_match('/\\b' . $class . '\\b/', $source) === 1) {
+                    $found[$class][] = substr($file->getPathname(), strlen($root) + 1);
+                }
+            }
+        }
+        foreach ($allowed as $class => $files) {
+            sort($files);
+            sort($found[$class]);
+            self::assertSame($files, $found[$class], $class);
+        }
+    }
+
     public function testSymfonyEntryPointsDoNotBootstrapLegacyApplication(): void
     {
         foreach (['app.php', 'public/index.php', 'sites.php'] as $file) {

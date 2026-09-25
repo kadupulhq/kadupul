@@ -38,22 +38,27 @@ final readonly class LegacyOperatorLog
     /**
      * Callers must not pass $environ = 'POLLER': there is no poller id here, so
      * cacti_log()'s "Poller[id] PID[pid]" prefix for that environ cannot be reproduced.
+     *
+     * @param ?int $level cacti_log()'s fourth argument, a POLLER_VERBOSITY_* value, or null for none
      */
-    public function record(Connection $settings, string $environ, string $message): void
+    public function record(Connection $settings, string $environ, string $message, ?int $level = null): void
     {
         if (trim($message) === '') {
             return;
         }
-        $value = static function (string $name, string $default) use ($settings): string {
+        $row = static function (string $name) use ($settings): ?string {
             $found = $settings->fetchOne('SELECT value FROM settings WHERE name = ?', [$name]);
 
-            return $found === false ? $default : (string) $found;
+            return $found === false ? null : (string) $found;
         };
+        $value = static fn(string $name, string $default): string => $row($name) ?? $default;
+        if ($level !== null && !self::loudEnough($level, $value('log_verbosity', '2'))) {
+            return;
+        }
         $text = (string) preg_replace('/\s*[\r\n]+\s*/', ' ', $message);
         $destination = (int) $value('log_destination', '1');
         if (($destination === 1 || $destination === 2) && $value('log_verbosity', '2') !== '1') {
-            $format = self::DATE[(int) $value('default_date_format', '4')] ?? self::DATE[4];
-            $separator = self::SEPARATOR[(int) $value('default_datechar', '0')] ?? self::SEPARATOR[1];
+            $format = self::dateFormat($row('default_date_format'), $row('default_datechar'));
             $file = $value('path_cactilog', '');
             $file = $file === '' ? $this->projectDir . '/log/cacti.log' : $file;
             // cacti_log() never creates the log directory, and appendToFile()
@@ -61,7 +66,7 @@ final readonly class LegacyOperatorLog
             // able to create one anywhere the process can write.
             if (is_dir(dirname($file))) {
                 try {
-                    $this->filesystem->appendToFile($file, $this->clock->now()->format(sprintf($format, $separator) . ' H:i:s') . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
+                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
                 } catch (IOException) {
                     // Best effort, as in cacti_log(): a log failure must not fail the command.
                 }
@@ -83,6 +88,40 @@ final readonly class LegacyOperatorLog
                 $this->send($priority, $environ . ': ' . $message);
             }
         }
+    }
+
+    /**
+     * date_time_format() as include/global.php:528 runs it. That line comes
+     * before global_settings.php, so a missing row reads as null rather than
+     * the declared default. The loose comparisons and the key lookup are
+     * PHP's own, so every value maps as it does there: null matches format 0
+     * and misses every separator.
+     */
+    private static function dateFormat(?string $format, ?string $separator): string
+    {
+        $character = isset(self::SEPARATOR[$separator]) ? self::SEPARATOR[$separator] : self::SEPARATOR[1];
+        foreach (self::DATE as $code => $layout) {
+            if ($format == $code) {
+                return sprintf($layout, $character) . ' H:i:s';
+            }
+        }
+
+        return sprintf(self::DATE[4], $character) . ' H:i:s';
+    }
+
+    /**
+     * cacti_log()'s level gate (lib/functions.php:1343-1359), compared as
+     * loosely as there. Selective debug is not honoured: it keys on the running
+     * script's file name, which a command does not have.
+     */
+    private static function loudEnough(int $level, string $verbosity): bool
+    {
+        // POLLER_VERBOSITY_DEVDBG (6) passes its own level and LOW (2) and below.
+        if ($verbosity == 6) {
+            return $level == 6 || $level <= 2;
+        }
+
+        return !($level > $verbosity);
     }
 
     private function send(int $priority, string $line): void

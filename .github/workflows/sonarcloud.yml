@@ -22,6 +22,19 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
+    # The real-MariaDB PHPUnit tests skip without a server; the password
+    # exists only inside this runner.
+    services:
+      database:
+        image: mariadb:11.8
+        env:
+          MARIADB_ROOT_PASSWORD: kadupul-ci-only
+          MARIADB_DATABASE: kadupul_test
+        ports:
+          - 3306/tcp
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -71,6 +84,9 @@ jobs:
         run: npm ci --ignore-scripts && npm run build
 
       - name: Symfony module coverage
+        env:
+          KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
+          KADUPUL_TEST_MYSQL_PASSWORD: kadupul-ci-only
         run: |
           php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests|var)/~' \

@@ -30,4 +30,13 @@ final readonly class InstallationVersion
 
         return $file . ' (DB: ' . $db . ')';
     }
+
+    /**
+     * The first line of every cli/ script's --version and --help output. The
+     * caller passes its clock's time so the copyright year stays testable.
+     */
+    public function line(string $utility, \DateTimeImmutable $now): string
+    {
+        return $utility . ', Version ' . $this->text() . ', Copyright (C) 2004-' . $now->format('Y') . ' The Cacti Group';
+    }
 }

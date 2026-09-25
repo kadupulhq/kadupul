@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Clear each converted table from the installer's queue. It wrote a setting named `0` instead, so the queue was never cleared.
+
 - Restore the RRDtool proxy client, which could not connect on phpseclib 4. It now checks the proxy's key fingerprint in constant time, gives up on a key exchange that is oversized or too slow, and never falls back to unencrypted frames. A default font path with a blank or a quote is no longer sent to the proxy. Fixes #399.
 
 - Leave the data source type alone when tuning an RRD file with an empty or unknown type, instead of raising a PHP warning and, for an unknown type, sending RRDtool an empty type.
@@ -53,6 +55,12 @@ Targeting `v1.3.0`, the first planned application release. See
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
 ### Changed
+
+- Run cli/convert_tables.php through kadupul:database:convert-tables, with --json and --dry-run. The flags are unchanged apart from the broken --installer. The command now requires an operator with the Console Access and Installation/Upgrades realms, and never sends DDL for a table name the server does not list. While nobody holds Installation/Upgrades, a direct Settings/Utilities grant counts for it, as on the web, without writing a realm row.
+
+- Convert the install wizard's queued tables in-process instead of running cli/convert_tables.php, with no operator. On a remote collector it converts the collector's local database, which its queue describes, where the script converted main. A conversion that throws logs `Converting Table #N 'name' failed in-process:` with the exception class and leaves the table queued.
+
+- Run cli/fix_mediumint.php through kadupul:database:widen-id-columns, with --json and --dry-run. Each table now gets its own statement, as the 1.2.17 upgrade does, and bigint or non-integer columns are no longer rewritten. The command requires the Console Access and Installation/Upgrades realms, with the same Settings/Utilities fallback while nobody holds Installation/Upgrades.
 
 - Run cli/analyze_database.php through a Symfony command, and add kadupul:database:analyze with --json and an explicit operator. The flags are unchanged. The command now requires an operator with the Console Access and Settings/Utilities realms.
 
