@@ -4390,8 +4390,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
     }
     $rrd_path = read_config_option('path_rrdtool');
 
-    function print_leaves($array)
-    {
+    $print_leaves = function ($array) use (&$print_leaves) {
         foreach ($array as $key => $line) {
             if (!is_array($line)) {
                 if (CACTI_CLI) {
@@ -4402,11 +4401,10 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
             } else {
                 if ($key === 'tune') continue;
                 if ($key === 'resize') continue;
-                print_leaves($line);
+                $print_leaves($line);
             }
         }
-
-    }
+    };
 
     $cmd = array();
 
@@ -4415,7 +4413,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
             html_header(array(__('Errors Found')));
         }
 
-        print_leaves($diff);
+        $print_leaves($diff);
 
         if (!CACTI_CLI) {
             html_end_box();

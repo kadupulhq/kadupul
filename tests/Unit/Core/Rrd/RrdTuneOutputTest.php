@@ -37,14 +37,14 @@ test('known defect: rrdtool_tune prints file paths and messages into HTML unesca
     rrd_characterization_golden('tune-report', $observed);
 });
 
-test('known defect: a second rrdtool_tune call in one process redeclares print_leaves and ends it', function () {
+test('rrdtool_tune can be called repeatedly in one process', function () {
     $calls = rrd_tune_output_calls(true);
     // An empty diff prints nothing, so only the declaration can fail.
     $calls[1]['args'][1] = array();
     $calls[] = $calls[1];
-    $output = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => $calls), true);
+    $output = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => $calls));
 
-    expect($output['status'])->toBe(255)
-        ->and($output['stdout'])->toBe('')
-        ->and($output['stderr'])->toContain('Cannot redeclare function print_leaves()');
+    expect($output['results'])->toHaveCount(3)
+        ->and($output['results'][1]['printed'])->toBe('')
+        ->and($output['results'][2]['printed'])->toBe('');
 });
