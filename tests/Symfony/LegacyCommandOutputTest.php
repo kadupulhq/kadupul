@@ -59,6 +59,23 @@ final class LegacyCommandOutputTest extends TestCase
         self::assertSame('["fallback"]', $process->getOutput());
     }
 
+    public function testLegacyInstallerBootstrapWorksBeforeComposerAutoloadIsRegistered(): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+        self::assertIsString($source);
+
+        $commandLine = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "pre-autoload";');
+        $code = test_php_function_source($source, 'exec_into_array')
+            . '$commandLine = ' . var_export($commandLine, true) . ';'
+            . 'echo json_encode(exec_into_array($commandLine), JSON_THROW_ON_ERROR);';
+        $process = Process::fromShellCommandline(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg($code));
+        $process->setTimeout(10);
+        $process->run();
+
+        self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
+        self::assertSame('["pre-autoload"]', $process->getOutput());
+    }
+
     private static function phpCommand(string $code): string
     {
         return escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg($code);

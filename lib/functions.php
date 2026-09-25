@@ -3916,6 +3916,15 @@ function exec_into_array($command_line)
 {
     $out = array();
     $err = 0;
+
+    if (!class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyCommandOutput::class)) {
+        // Some installer entry points load this legacy file before the Composer
+        // autoloader. Preserve the original execution path in that bootstrap.
+        exec($command_line, $out, $err);
+
+        return array_values($out);
+    }
+
     $out = (new \Kadupul\Platform\Infrastructure\Legacy\LegacyCommandOutput())->lines((string) $command_line);
 
     return array_values($out);
