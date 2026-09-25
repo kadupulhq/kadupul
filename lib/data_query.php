@@ -2291,12 +2291,14 @@ function update_data_query_sort_cache($host_id, $data_query_id) {
 
 	/* update the cache */
 	/* TODO: if both $sort field and $title_format are empty, this yields funny results */
-	db_execute_prepared('UPDATE host_snmp_query
+	if (db_execute_prepared('UPDATE host_snmp_query
 		SET sort_field = ?,
 		title_format = ?
 		WHERE host_id = ?
 		AND snmp_query_id = ?',
-		array($sort_field, $title_format, $host_id, $data_query_id));
+		array($sort_field, $title_format, $host_id, $data_query_id)) === false) {
+		return false;
+	}
 
 	return $sort_field;
 }

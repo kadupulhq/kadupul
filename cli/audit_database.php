@@ -1419,12 +1419,14 @@ function load_audit_database() {
 		$retval = db_dump_data($database_default, 'table_columns table_indexes', array(), $config['base_path'] . '/docs/audit_schema.sql');
 		if ($retval || !audit_schema_stamp_version($config['base_path'] . '/docs/audit_schema.sql', CACTI_VERSION)) {
 			print 'Finished Creating Audit Schema with ERROR' . PHP_EOL . PHP_EOL;
+			return false;
 		} else {
 			print 'Finished Creating Audit Schema' . PHP_EOL . PHP_EOL;
 		}
 
 	} else {
 		print PHP_EOL . 'FATAL: Docs directory does not exist!' . PHP_EOL . PHP_EOL;
+		return false;
 	}
 
 	return true;

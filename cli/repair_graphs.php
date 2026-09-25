@@ -152,6 +152,11 @@ if (cacti_sizeof($graph)) {
 	foreach($graph as $g) {
 		// Get datasource for supplied data template for current host
 		$ds = db_fetch_assoc_prepared('SELECT * FROM data_local WHERE host_id = ? AND data_template_id = ?', array((int) $g['host_id'], (int) $data_template_id));
+		if ($ds === false) {
+			fwrite(STDERR, "ERROR: Unable to query datasource for graph {$g['id']}.\n");
+			$repair_failed = true;
+			continue;
+		}
 		if (!cacti_sizeof($ds)) {
 			continue;
 		}
@@ -159,6 +164,11 @@ if (cacti_sizeof($graph)) {
 
 		// Get rrd for found datasource
 		$rrd_data = db_fetch_assoc_prepared('SELECT * FROM data_template_rrd WHERE local_data_id = ?', array((int) $ds['id']));
+		if ($rrd_data === false) {
+			fwrite(STDERR, "ERROR: Unable to query RRD data for datasource {$ds['id']}.\n");
+			$repair_failed = true;
+			continue;
+		}
 		if (!cacti_sizeof($rrd_data)) {
 			print "Could not get correct rrd id for datasource=" . $ds["id"] . "\n";
 			continue;
@@ -185,6 +195,11 @@ if (cacti_sizeof($graph)) {
 					WHERE local_data_template_rrd_id = 0 AND local_data_id = 0 AND data_template_id = ?
 				)
 			)', array((int) $rrd_data[0]['id'], (int) $graph_template_id, (int) $g['id'], (int) $data_template_id));
+		if ($graph_templates_items_wrong === false) {
+			fwrite(STDERR, "ERROR: Unable to query graph items for graph {$g['id']}.\n");
+			$repair_failed = true;
+			continue;
+		}
 		if (!cacti_sizeof($graph_templates_items_wrong)) {
 			// Everything correct here.
 			continue;

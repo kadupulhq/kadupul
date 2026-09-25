@@ -146,6 +146,11 @@ $data_queries = db_fetch_assoc_prepared("SELECT data_local.host_id, data_local.s
 	AND data_input_fields.id = data_input_data.data_input_field_id
 	$sql_where", $query_params);
 
+if ($data_queries === false) {
+	fwrite(STDERR, "ERROR: Unable to query data query index items.\n");
+	exit(1);
+}
+
 /* issue warnings and start message if applicable */
 print "WARNING: Do not interrupt this script.  Reordering can take quite some time\n";
 debug("There are '" . cacti_sizeof($data_queries) . "' data query index items to run");

@@ -127,6 +127,11 @@ $sql = "SELECT name, graph_template_id, graphs
 
 $entries = db_fetch_assoc($sql);
 
+if ($entries === false) {
+	fwrite(STDERR, "ERROR: Unable to query graph template integrity.\n");
+	exit(1);
+}
+
 if (cacti_sizeof($entries)) {
 	print 'There are ' . cacti_sizeof($entries) . ' Graph Templates with Broken Graphs.' . PHP_EOL;
 } else {

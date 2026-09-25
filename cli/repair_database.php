@@ -929,6 +929,11 @@ function snmp_index_repairs() {
 			AND data_template_data_id IN (
 				SELECT id FROM data_template_data WHERE data_template_id > 0
 			)");
+		if ($fixes === false) {
+			fwrite(STDERR, "ERROR: Unable to count unchecked Data Query columns.\n");
+			$total_failures++;
+			$fixes = 0;
+		}
 	}
 
 	printf($force
@@ -970,6 +975,11 @@ function snmp_index_repairs() {
 			AND data_template_data_id IN (
 				SELECT id FROM data_template_data WHERE data_template_id > 0
 			)");
+		if ($fixes === false) {
+			fwrite(STDERR, "ERROR: Unable to count invalid host_id attributes.\n");
+			$total_failures++;
+			$fixes = 0;
+		}
 	}
 
 	printf($force
