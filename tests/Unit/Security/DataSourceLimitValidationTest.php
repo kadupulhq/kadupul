@@ -134,6 +134,18 @@ test('a data source page stores a valid minimum and maximum', function ($page, $
     array('data_templates.php', array('rrd_minimum' => 'U', 'rrd_maximum' => '1e9')),
 ));
 
+test('one data source item that fails validation does not stop the others from saving', function () {
+    // Item 7 has a bad minimum; item 8, validated after it, is valid and must still be stored.
+    $result = limit_save($this, 'data_sources.php', array(
+        '_data_template_id' => '2', 'data_template_id' => '2', '__rrd_ids' => array('7', '8'),
+        'rrd_minimum_7' => '5 x', 'rrd_maximum_7' => 'U', 'rrd_heartbeat_7' => '600', 'data_source_type_id_7' => '1', 'data_source_name_7' => 'in',
+        'rrd_minimum_8' => '0', 'rrd_maximum_8' => '100', 'rrd_heartbeat_8' => '600', 'data_source_type_id_8' => '1', 'data_source_name_8' => 'out',
+    ));
+
+    expect($result['errors'])->toBe(array('rrd_minimum_7'))
+        ->and(array_column($result['saved_all']['data_template_rrd'] ?? array(), 'id'))->toBe(array('8'));
+});
+
 test('a data source page stores nothing for a limit that fails validation', function ($page, $field, $value) {
     $result = limit_save($this, $page, array($field => $value));
 

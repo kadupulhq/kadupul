@@ -52,8 +52,15 @@ function db_fetch_row(...$args)
     return array();
 }
 
-function db_fetch_assoc_prepared(...$args)
+function db_fetch_assoc_prepared($sql, ...$args)
 {
+    // A templated data source reads its items; the request names them for the test.
+    if (str_contains($sql, 'FROM data_template_rrd') && isset($_REQUEST['__rrd_ids'])) {
+        return array_map(function ($id) {
+            return array('id' => $id);
+        }, $_REQUEST['__rrd_ids']);
+    }
+
     return array();
 }
 
@@ -85,6 +92,7 @@ function db_column_exists(...$args)
 function sql_save($row, $table, ...$args)
 {
     $GLOBALS['saved'][$table] = $row;
+    $GLOBALS['saved_all'][$table][] = $row;
 
     return 5;
 }
@@ -110,7 +118,7 @@ register_shutdown_function(function () {
     while (ob_get_level()) {
         ob_end_clean();
     }
-    echo json_encode(array('saved' => $GLOBALS['saved'], 'errors' => array_keys($_SESSION['sess_error_fields'] ?? array())));
+    echo json_encode(array('saved' => $GLOBALS['saved'], 'saved_all' => $GLOBALS['saved_all'] ?? array(), 'errors' => array_keys($_SESSION['sess_error_fields'] ?? array())));
 });
 ob_start();
 require $root . '/' . $page;
