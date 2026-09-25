@@ -103,7 +103,9 @@ final class AuditSchemaTest extends TestCase
                 yield $listed . ' over ' . $live => [$listed, $live, $i < $j];
             }
         }
-        yield 'the sign alone' => ['mediumint(8)', 'mediumint(8) unsigned', false];
+        yield 'signed target narrows unsigned live data' => ['int(10)', 'int(10) unsigned', true];
+        yield 'unsigned target narrows signed live data' => ['int(10) unsigned', 'int(10)', true];
+        yield 'the same signed integer' => ['mediumint(8)', 'mediumint(8)', false];
         yield 'a smaller signed integer' => ['mediumint(8)', 'int(11)', true];
         yield 'the display width alone' => ['int(10) unsigned', 'int(11) unsigned', false];
         yield 'a shorter varchar' => ['varchar(100)', 'varchar(255)', true];

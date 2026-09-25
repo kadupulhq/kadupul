@@ -48,11 +48,24 @@ final readonly class ColumnType
         $strings = [ColumnBase::Char, ColumnBase::Varchar];
 
         return match (true) {
-            in_array($this->base, $integers, true) && in_array($live->base, $integers, true) => array_search($this->base, $integers, true) < array_search($live->base, $integers, true),
+            in_array($this->base, $integers, true) && in_array($live->base, $integers, true) => $this->narrowsInteger($live, $integers),
             in_array($this->base, $strings, true) && in_array($live->base, $strings, true) => $this->length < $live->length,
             $this->base === ColumnBase::Decimal && $live->base === ColumnBase::Decimal => $this->whole() < $live->whole() || ($this->scale ?? 0) < ($live->scale ?? 0),
             default => false,
         };
+    }
+
+    /** Signed and unsigned variants of the same integer width have different value ranges. */
+    private function narrowsInteger(self $live, array $integers): bool
+    {
+        $targetRank = array_search($this->base, $integers, true);
+        $liveRank = array_search($live->base, $integers, true);
+
+        if ($targetRank !== $liveRank) {
+            return $targetRank < $liveRank;
+        }
+
+        return ($this->unsigned || $this->zerofill) !== ($live->unsigned || $live->zerofill);
     }
 
     /** Digits before a decimal's point; MariaDB's default precision is 10. */
