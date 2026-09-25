@@ -539,7 +539,13 @@ function cacti_reapply_names_where($host_id, $filter) {
 				return false;
 			}
 
-			$host_ids[] = (int) $host;
+			$normalized_host = ltrim($host, '0');
+			$normalized_host = $normalized_host === '' ? '0' : $normalized_host;
+			if (strlen($normalized_host) > 10 || (strlen($normalized_host) === 10 && strcmp($normalized_host, '4294967295') > 0)) {
+				return false;
+			}
+
+			$host_ids[] = (int) $normalized_host;
 		}
 
 		$where  .= ' AND graph_local.host_id IN (' . implode(',', array_fill(0, count($host_ids), '?')) . ')';
@@ -549,8 +555,14 @@ function cacti_reapply_names_where($host_id, $filter) {
 	}
 
 	if (ctype_digit($host_id)) {
+		$normalized_host = ltrim($host_id, '0');
+		$normalized_host = $normalized_host === '' ? '0' : $normalized_host;
+		if (strlen($normalized_host) > 10 || (strlen($normalized_host) === 10 && strcmp($normalized_host, '4294967295') > 0)) {
+			return false;
+		}
+
 		$where   .= ' AND graph_local.host_id=?';
-		$params[] = (int) $host_id;
+		$params[] = (int) $normalized_host;
 
 		return array($where, $params);
 	}

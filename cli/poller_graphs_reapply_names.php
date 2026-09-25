@@ -123,6 +123,11 @@ $graph_list = db_fetch_assoc_prepared("SELECT
 	WHERE graph_local.id=graph_templates_graph.local_graph_id
 	$sql_where", $sql_params);
 
+if ($graph_list === false) {
+	fwrite(STDERR, "ERROR: Unable to load the selected graphs.\n");
+	exit(1);
+}
+
 /* issue warnings and start message if applicable */
 print "WARNING: Do not interrupt this script.  Interrupting during rename can cause issues\n";
 debug("There are '" . cacti_sizeof($graph_list) . "' Graphs to rename");
