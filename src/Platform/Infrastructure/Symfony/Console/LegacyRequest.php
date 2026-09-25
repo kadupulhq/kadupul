@@ -13,4 +13,6 @@ enum LegacyRequest
     case Run;
     case Version;
     case Help;
+    /** Help printed because nothing was asked for, which audit_database.php treated as an error (exit 1). */
+    case Usage;
 }

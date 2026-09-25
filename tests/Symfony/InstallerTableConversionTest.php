@@ -31,6 +31,7 @@ use Kadupul\Platform\Domain\Schema\TableStatus;
 use Kadupul\Platform\Infrastructure\Legacy\InstallerTableConversion;
 use Kadupul\Platform\Infrastructure\Legacy\InstallerTableResult;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
+use Kadupul\Platform\Infrastructure\Persistence\CactiSchemaFile;
 use Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion;
 use Kadupul\Platform\Infrastructure\Persistence\MaintenanceConnections;
 use Kadupul\Tests\Fixtures\RealMariaDb;
@@ -205,7 +206,7 @@ final class InstallerTableConversionTest extends TestCase
         try {
             $db->executeStatement('DROP TABLE IF EXISTS kadupul_installer_probe');
             $db->executeStatement("CREATE TABLE kadupul_installer_probe (id INT UNSIGNED NOT NULL PRIMARY KEY) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT");
-            $conversion = new DbalTableConversion($root, new Filesystem(), new MaintenanceConnections($db, $db, new LegacyOperatorLog($root, new Filesystem(), new MockClock())));
+            $conversion = new DbalTableConversion(new CactiSchemaFile($root, new Filesystem()), new MaintenanceConnections($db, $db, new LegacyOperatorLog($root, new Filesystem(), new MockClock())));
             $result = $this->adapter($conversion)->convert('kadupul_installer_probe');
             self::assertSame(self::HEADER . "Converting Table > 'kadupul_installer_probe' Successful\n", $result->output);
             self::assertTrue($result->dequeues());

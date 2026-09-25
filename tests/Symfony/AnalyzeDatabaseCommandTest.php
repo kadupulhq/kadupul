@@ -95,9 +95,9 @@ final class AnalyzeDatabaseCommandTest extends TestCase
     private function tester(DatabaseMaintenance $maintenance): CommandTester
     {
         $analyze = new AnalyzeDatabase(new MaintenanceTarget($this->access, $maintenance), $maintenance, new SystemClock(new MockClock()));
-        $version = new InstallationVersion($this->root, $this->db, new Filesystem());
         // A year that is not the current one proves the version line reads the clock.
-        $command = new AnalyzeDatabaseCommand($analyze, $version, $this->presentation, new ResultRenderer(), new MockClock('2031-06-01 00:00:00'));
+        $version = new InstallationVersion($this->root, $this->db, new Filesystem(), new MockClock('2031-06-01 00:00:00'));
+        $command = new AnalyzeDatabaseCommand($analyze, $version, $this->presentation, new ResultRenderer());
 
         return new CommandTester(new Command(null, $command));
     }

@@ -112,6 +112,25 @@ final class ArchitectureTest extends TestCase
                 'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
                 'config/services.yaml',
             ],
+            'SchemaAudit' => [
+                'src/Platform/Application/Command/AuditDatabase.php',
+                'src/Platform/Application/Port/AuditCatalog.php',
+                'src/Platform/Application/Port/SchemaAudit.php',
+                'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
+                'config/services.yaml',
+            ],
+            'AuditBaselineStore' => [
+                'src/Platform/Application/Command/AuditDatabase.php',
+                'src/Platform/Application/Port/AuditBaselineStore.php',
+                'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
+                'config/services.yaml',
+            ],
+            'InstallationUpgrade' => [
+                'src/Platform/Application/Command/AuditDatabase.php',
+                'src/Platform/Application/Port/InstallationUpgrade.php',
+                'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
+                'config/services.yaml',
+            ],
         ]);
     }
 
@@ -132,10 +151,46 @@ final class ArchitectureTest extends TestCase
                 'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
                 'config/services.yaml',
             ],
+            'DbalSchemaAudit' => [
+                'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
+                'config/services.yaml',
+            ],
+            'DbalAuditBaselineStore' => [
+                'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
+                'config/services.yaml',
+            ],
             'MaintenanceConnections' => [
                 'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
                 'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
                 'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+                'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
+                'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
+            ],
+        ]);
+    }
+
+    /**
+     * A legacy worker runs lib/ code, including plugin upgrades, with no
+     * operator check of its own. Only its adapter may start one, and only
+     * the container may wire that adapter, so the upgrade stays behind
+     * AuditDatabase's realm check, and only the adapter names the worker's
+     * file. The worker names its caller in a comment.
+     */
+    public function testOnlyTheWorkerAdaptersStartALegacyWorker(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'LegacyWorkerProcess' => [
+                'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php',
+                'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
+                'config/services.yaml',
+            ],
+            'LegacyInstallationUpgrade' => [
+                'bin/legacy-audit-upgrade.php',
+                'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
+                'config/services.yaml',
+            ],
+            'legacy-audit-upgrade' => [
+                'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
             ],
         ]);
     }

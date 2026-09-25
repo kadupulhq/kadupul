@@ -9,15 +9,9 @@ namespace Kadupul\Tests;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
-use Kadupul\IdentityAccess\Contract\AuditTrail;
-use Kadupul\IdentityAccess\Contract\ConsoleOperator;
-use Kadupul\Platform\Application\Command\MaintenanceTarget;
-use Kadupul\Platform\Application\Command\SchemaChangeAudit;
 use Kadupul\Platform\Application\Command\WidenIdColumns;
 use Kadupul\Platform\Application\Port\ColumnCatalog;
-use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Application\ReadModel\WideningEvent;
 use Kadupul\Platform\Domain\Schema\ColumnChange;
@@ -26,6 +20,8 @@ use Kadupul\Platform\Domain\Schema\IdColumns;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
 use Kadupul\Platform\Infrastructure\Persistence\DbalColumnWidening;
 use Kadupul\Platform\Infrastructure\Persistence\MaintenanceConnections;
+use Kadupul\Tests\Fixtures\ConsoleOperatorDatabase;
+use Kadupul\Tests\Fixtures\MaintenanceOperator;
 use Kadupul\Tests\Fixtures\RealMariaDb;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -34,6 +30,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class ColumnWideningTest extends TestCase
 {
+    use ConsoleOperatorDatabase;
+    use MaintenanceOperator;
     use RealMariaDb;
 
     private const string PROBE = 'kadupul_widen_probe';
@@ -43,13 +41,7 @@ final class ColumnWideningTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->root = sys_get_temp_dir() . '/kadupul-widen-' . bin2hex(random_bytes(8));
-        mkdir($this->root . '/log', 0700, true);
-    }
-
-    protected function tearDown(): void
-    {
-        (new Filesystem())->remove($this->root);
+        $this->root = $this->installationRoot('kadupul-widen-');
     }
 
     #[DataProvider('types')]
@@ -299,7 +291,7 @@ final class ColumnWideningTest extends TestCase
             self::assertSame(['auto_increment, INVISIBLE', '', 'INVISIBLE', 'VIRTUAL GENERATED', 'STORED GENERATED'], array_map(static fn(ColumnDefinition $c): string => $c->extra, $columns));
             self::assertSame([false, true, false, false, false], array_map(static fn(ColumnDefinition $c): bool => $c->changeable(), $columns));
             self::assertTrue($columns[0]->change()->autoIncrement);
-            $report = $this->widenUseCase($db, $this->createStub(AuditTrail::class))(false, null, true);
+            $report = $this->widenUseCase($db)(false, null, true);
             $probe = array_values(array_filter($report->steps, static fn(array $s): bool => $s['table'] === self::PROBE));
             self::assertSame([['graph_id', WideningEvent::Skipped], ['data_id', WideningEvent::Skipped]], array_map(static fn(array $s): array => [$s['column'], $s['event']], $probe));
             self::assertSame(0, $report->tables());
@@ -311,22 +303,17 @@ final class ColumnWideningTest extends TestCase
     public function testAnExpressionDefaultFailsIsReportedAndAuditedOnARealMariaDb(): void
     {
         $db = $this->realMariaDb();
-        $events = [];
-        $trail = $this->createStub(AuditTrail::class);
-        $trail->method('record')->willReturnCallback(static function (AuditEvent $event) use (&$events): void {
-            $events[] = $event;
-        });
         try {
             $db->executeStatement('DROP TABLE IF EXISTS settings, ' . self::PROBE);
             $db->executeStatement('CREATE TABLE settings (name varchar(50) PRIMARY KEY, value varchar(1024))');
             $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?), ('log_verbosity', '5')", [$this->root . '/log/cacti.log']);
             $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (graph_id INT(11) NOT NULL DEFAULT (1 + 1)) ENGINE=InnoDB');
-            $report = $this->widenUseCase($db, $trail)(false, null, true);
+            $report = $this->widenUseCase($db)(false, null, true);
             // MariaDB lists the default as "(1 + 1)"; as a quoted literal it is not an integer.
             self::assertSame([['table' => self::PROBE, 'column' => null, 'event' => WideningEvent::Failed,
                 'statement' => 'ALTER TABLE `kadupul_widen_probe` MODIFY COLUMN `graph_id` int(10) unsigned NOT NULL DEFAULT \'(1 + 1)\'']], $report->altered());
             self::assertSame([1, 1], [$report->tables(), $report->failed()]);
-            self::assertSame([['local:' . self::PROBE, AuditEvent::FAILED]], array_map(static fn(AuditEvent $e): array => [$e->targetId, $e->outcome], $events));
+            self::assertSame([['local:' . self::PROBE, AuditEvent::FAILED]], array_map(static fn(AuditEvent $e): array => [$e->targetId, $e->outcome], $this->events));
             self::assertStringContainsString(' - DBCALL ERROR: A DB Exec Failed!, Error: 1067, SQL: ', $this->log());
             self::assertSame('int(11)', $this->adapter($db)->catalog(DatabaseTarget::Local)->columns(self::PROBE)[0]->type);
         } finally {
@@ -335,12 +322,8 @@ final class ColumnWideningTest extends TestCase
     }
 
     /** The use case over the real adapter, acting as an operator who holds realm 26. */
-    private function widenUseCase(Connection $db, AuditTrail $trail): WidenIdColumns
+    private function widenUseCase(Connection $db): WidenIdColumns
     {
-        $operator = $this->createStub(ConsoleOperator::class);
-        $operator->method('actor')->willReturn(new Actor(1, 'admin'));
-        $operator->method('canUpgradeInstallation')->willReturn(true);
-
-        return new WidenIdColumns(new MaintenanceTarget($operator, $this->createStub(DatabaseMaintenance::class)), $this->adapter($db), new SchemaChangeAudit($trail));
+        return new WidenIdColumns($this->maintenanceTarget(), $this->adapter($db), $this->recordingAudit());
     }
 }
