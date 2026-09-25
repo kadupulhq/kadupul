@@ -99,9 +99,19 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
         rrdtool_reset_language();
         return true; // Boolean writes use the synchronous response-reading fallback.
     }
+    static $shutdown_registered = false;
+    if (!$shutdown_registered) {
+        // Registered before the maintenance lease's handler, so a pipe left
+        // open has its child reaped before the lease is released.
+        register_shutdown_function(function () {
+            foreach (array_merge(rrd_acknowledged_pipes(), rrd_writer_pipes()) as $state) {
+                rrd_close($state['write']);
+            }
+        });
+        $shutdown_registered = true;
+    }
     if ($acknowledged) {
-        $process = proc_open(
-            array(read_config_option('path_rrdtool'), '-'),
+        $process = rrdtool_pipe_process(
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)),
             $streams
         );
@@ -114,27 +124,42 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
         $owned = & rrd_acknowledged_pipes();
         $owned[(int) $streams[0]] = array('write' => $streams[0], 'read' => $streams[1],
             'process' => $process, 'echo' => $output_to_term && empty($config['is_web']), 'failed' => false);
-        static $shutdown_registered = false;
-        if (!$shutdown_registered) {
-            register_shutdown_function(function () {
-                foreach (rrd_acknowledged_pipes() as $state) {
-                    rrd_close($state['write']);
-                }
-            });
-            $shutdown_registered = true;
-        }
         return $streams[0];
     }
 
-    if ($output_to_term) {
-        $command = read_config_option('path_rrdtool') . ' - ';
-    } elseif ($config['cacti_server_os'] == 'win32') {
-        $command = read_config_option('path_rrdtool') . ' - > nul';
-    } else {
-        $command = read_config_option('path_rrdtool') . ' - > /dev/null 2>&1';
+    // Descriptors replace the shell redirections "> /dev/null 2>&1" and, on
+    // Windows, "> nul", which left stderr on the terminal.
+    $descriptors = array(0 => array('pipe', 'r'));
+    if (!$output_to_term) {
+        $descriptors[1] = array('null');
+        if ($config['cacti_server_os'] != 'win32') {
+            $descriptors[2] = array('null');
+        }
     }
+    $process = rrdtool_pipe_process($descriptors, $streams);
+    if (!is_resource($process)) {
+        return false;
+    }
+    $owned = & rrd_writer_pipes();
+    $owned[(int) $streams[0]] = array('write' => $streams[0], 'process' => $process);
 
-    return popen($command, 'w');
+    return $streams[0];
+}
+
+/**
+ * Start `rrdtool -` without a shell. path_rrdtool names the executable itself,
+ * so it is no longer split into words or expanded.
+ */
+function rrdtool_pipe_process($descriptors, &$streams)
+{
+    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
+}
+
+/** Write-only pipes from rrd_init(), and the process each must be closed with. */
+function &rrd_writer_pipes()
+{
+    static $pipes = array();
+    return $pipes;
 }
 
 /** Native response pipes are owned by the same lifetime as their writer lease. */
@@ -433,8 +458,17 @@ function __rrd_close($rrdtool_pipe)
         return;
     }
 
-    /* close the rrdtool file descriptor */
-    if (is_resource($rrdtool_pipe)) {
+    $writers = & rrd_writer_pipes();
+    if (isset($writers[(int) $rrdtool_pipe])) {
+        $process = $writers[(int) $rrdtool_pipe]['process'];
+        unset($writers[(int) $rrdtool_pipe]);
+        if (is_resource($rrdtool_pipe)) {
+            fclose($rrdtool_pipe);
+        }
+        // As pclose() did, wait for RRDtool to finish the queued commands.
+        proc_close($process);
+    } elseif (is_resource($rrdtool_pipe)) {
+        /* close the rrdtool file descriptor */
         pclose($rrdtool_pipe);
     }
 
