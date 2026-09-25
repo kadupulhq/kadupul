@@ -869,15 +869,19 @@ function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_
 
                             $spath .= '/' . $path;
 
+                            if (!rrdtool_ownership_allowed($config['rra_path'] . $spath, $config['rra_path'], $logopt)) {
+                                break;
+                            }
+
                             $powner_id = fileowner($config['rra_path'] . $spath);
                             $pgroup_id = filegroup($config['rra_path'] . $spath);
 
                             if ($powner_id != $owner_id) {
-                                $success = chown($config['rra_path'] . $spath, $owner_id);
+                                $success = lchown($config['rra_path'] . $spath, $owner_id);
                             }
 
                             if ($pgroup_id != $group_id && $success) {
-                                $success = chgrp($config['rra_path'] . $spath, $group_id);
+                                $success = lchgrp($config['rra_path'] . $spath, $group_id);
                             }
 
                             if (!$success) {
@@ -896,6 +900,32 @@ function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_
     }
 
     return array($owner_id, $group_id);
+}
+
+/**
+ * Whether root may change the owner or group of $path: a symbolic link, or a
+ * path that resolves outside $root when one is given, is refused and logged.
+ * Callers check right before lchown() and lchgrp(), which never follow the
+ * last component; a directory above it swapped in between is not covered.
+ */
+function rrdtool_ownership_allowed($path, $root = null, $logopt = 'POLLER')
+{
+    clearstatcache(true);
+
+    $allowed = !is_link($path);
+
+    if ($allowed && $root !== null) {
+        $real_root = realpath($root);
+        $real_path = realpath($path);
+        $allowed   = $real_root !== false && $real_path !== false
+            && strpos($real_path, rtrim($real_root, '/') . '/') === 0;
+    }
+
+    if (!$allowed) {
+        cacti_log("WARNING: Not changing ownership of '$path', a symbolic link or outside the storage directory", false, $logopt);
+    }
+
+    return $allowed;
 }
 
 /**
@@ -1569,15 +1599,15 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
         $success = rrdtool_execute("create $quoted_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
 
         if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-            if (file_exists($data_source_path)) {
-                if (!chown($data_source_path, $owner_id)) {
+            if (!file_exists($data_source_path)) {
+                cacti_log("ERROR: RRD file '$data_source_path' does not exist for ownership assignment", false, 'POLLER');
+            } elseif (rrdtool_ownership_allowed($data_source_path, $config['rra_path'], 'POLLER')) {
+                if (!lchown($data_source_path, $owner_id)) {
                     cacti_log("ERROR: Unable to set ownership for '$data_source_path'", false, 'POLLER');
                 }
-                if (!chgrp($data_source_path, $group_id)) {
+                if (!lchgrp($data_source_path, $group_id)) {
                     cacti_log("ERROR: Unable to set group for '$data_source_path'", false, 'POLLER');
                 }
-            } else {
-                cacti_log("ERROR: RRD file '$data_source_path' does not exist for ownership assignment", false, 'POLLER');
             }
         }
 

@@ -770,8 +770,10 @@ function rrdclean_create_path($path)
 
                 // NOTE: chown/chgrp fails for non-root users, checking their
                 // result is therefore irrelevant
-                @chown($path, $owner_id);
-                @chgrp($path, $group_id);
+                if (rrdtool_ownership_allowed($path, null, 'MAINT')) {
+                    @lchown($path, $owner_id);
+                    @lchgrp($path, $group_id);
+                }
             }
         } else {
             cacti_log("ERROR: RRDfile Maintenance unable to create directory '" . $path . "'", false, 'MAINT');

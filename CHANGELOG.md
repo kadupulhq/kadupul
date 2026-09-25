@@ -14,6 +14,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Accept only a number or `U` as a data source minimum, and only a number, `U` or an interface speed token as a maximum, refuse to create an RRD file whose stored minimum is anything else, and create realtime graph RRD files through the RRDtool pipe instead of a shell. A data source item that fails validation is no longer saved.
 
+- When running as root, never change the owner or group of a new RRD file or directory through a symbolic link, or of one that resolves outside the RRA directory.
+
 - Start RRDtool without a shell, so an RRDtool binary path containing a blank works for graphs, tuning and RRD writes. The path must name the executable alone; extra arguments or shell syntax in it now stop RRD writes as well.
 
 - Send the RRD paths in exports and graphs to the RRDtool proxy bare and relative to the RRA directory, which is how the proxy reads them, so CSV export and other exports work through it. Graph images still fail against rrdproxy 54aad57; see `docs/migrations/graphing-rrd.md`.
