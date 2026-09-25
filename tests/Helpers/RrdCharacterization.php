@@ -9,8 +9,12 @@
 // intended behavior change: run the tests with RRD_GOLDEN_UPDATE=1 and review
 // the diff.
 
-/** Run $calls in a child process that loads the real lib/rrd.php against fixture rows. */
-function rrd_characterization_run($test, array $scenario): array
+/**
+ * Run $calls in a child process that loads the real lib/rrd.php against fixture
+ * rows. With $fatal the child must die instead, and the result is its exit
+ * status and raw output, since it never reaches the per-call report.
+ */
+function rrd_characterization_run($test, array $scenario, bool $fatal = false): array
 {
     $root = dirname(__DIR__, 2);
     $coverage = $test->getTestResultObject()->getCodeCoverage();
@@ -80,12 +84,20 @@ function rrd_characterization_run($test, array $scenario): array
         fclose($pipes[1]);
         $status = proc_close($process);
         $error = file_get_contents($directory . '/stderr');
-        PHPUnit\Framework\Assert::assertSame(0, $status, $error . $output);
-        PHPUnit\Framework\Assert::assertSame('', $error);
+        if ($fatal) {
+            PHPUnit\Framework\Assert::assertSame(255, $status, $error . $output);
+        } else {
+            PHPUnit\Framework\Assert::assertSame(0, $status, $error . $output);
+            PHPUnit\Framework\Assert::assertSame('', $error);
+        }
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
             $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
+
+        if ($fatal) {
+            return array('status' => $status, 'stdout' => str_replace($directory, '<DIR>', $output), 'stderr' => str_replace(array($directory, $root), array('<DIR>', '<ROOT>'), $error));
         }
 
         return json_decode(str_replace($directory, '<DIR>', $output), true, 512, JSON_THROW_ON_ERROR);
