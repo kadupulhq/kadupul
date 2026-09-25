@@ -254,6 +254,11 @@ define('BOOST_TIMER_TOTAL', 2);
 define('BOOST_TIMER_CYCLES', 3);
 define('BOOST_TIMER_OVERHEAD_MULTIPLIER', 20000);
 
+/* repeats of one PHP error site that boost_error_handler() logs below DEBUG
+ * before it says it is suppressing the rest; a flush can raise the same
+ * warning once per queued sample */
+define('BOOST_ERROR_REPEAT_LIMIT', 10);
+
 define('SNMPAGENT_EVENT_SEVERITY_LOW', 1);
 define('SNMPAGENT_EVENT_SEVERITY_MEDIUM', 2);
 define('SNMPAGENT_EVENT_SEVERITY_HIGH', 3);
