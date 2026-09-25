@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * apply_automation_rules.php
+ *
+ * Applies selected Cacti automation rules.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

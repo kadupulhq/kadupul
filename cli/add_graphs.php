@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * add_graphs.php
+ *
+ * Creates graphs from graph templates or data sources for selected devices.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * add_perms.php
+ *
+ * Grants a user access to selected Cacti objects.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

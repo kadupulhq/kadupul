@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * fix_mediumint.php
+ *
+ * Widens supported MEDIUMINT columns in the Cacti database.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -33,6 +40,8 @@ array_shift($parms);
 
 $debug = false;
 $local = false;
+$dry_run = false;
+$failures = 0;
 
 if (cacti_sizeof($parms)) {
 	foreach($parms as $parameter) {
@@ -50,6 +59,9 @@ if (cacti_sizeof($parms)) {
 				break;
 			case '--local':
 				$local = true;
+				break;
+			case '--dry-run':
+				$dry_run = true;
 				break;
 			case '--version':
 			case '-V':
@@ -79,10 +91,14 @@ if (!$local && $config['poller_id'] > 1) {
 
 $total = database_fix_mediumint_columns();
 
-print "NOTE: Column widths adjusted on $total Tables!" . PHP_EOL;
+print ($dry_run ? "NOTE: Column widths would be adjusted on $total Tables." : "NOTE: Column widths adjusted on $total Tables!") . PHP_EOL;
+if ($failures > 0) {
+	print "ERROR: Failed to update $failures Tables." . PHP_EOL;
+	exit(1);
+}
 
 function database_fix_mediumint_columns() {
-	global $database_default;
+	global $database_default, $failures, $dry_run;
 
 	$total = 0;
 
@@ -126,7 +142,7 @@ function database_fix_mediumint_columns() {
 	foreach($tables as $table => $columns) {
 		$columns = explode(',', $columns);
 
-		$sql = 'ALTER TABLE ' . $table;
+		$sql = 'ALTER TABLE ' . database_quote_identifier($table);
 		$i = 0;
 		foreach($columns as $c) {
 			$c = trim($c);
@@ -134,29 +150,20 @@ function database_fix_mediumint_columns() {
 			$attribs = database_get_column_attribs($table, $c);
 
 			if (cacti_sizeof($attribs)) {
-				if (strpos($attribs['Type'], 'mediumint') === false) {
-					if (strpos($attribs['Type'], 'int(10) unsigned') !== false) {
-						debug("Column $c in Table $table already converted.");
-						continue;
-					}
-				}
-
-				if (strtolower($attribs['Extra']) == 'auto_increment') {
-					$sql .= ($i == 0 ? '':', ') . ' MODIFY COLUMN ' . $c . ' int(10) unsigned NOT NULL AUTO_INCREMENT';
-				} else {
-					if ($c != 'id') {
+				$clause = database_mediumint_column_clause($c, $attribs);
+				if ($clause === false) {
+					debug("Skipping non-MEDIUMINT column $c in Table $table (type {$attribs['Type']}).");
+					if (stripos($attribs['Type'], 'int(10) unsigned') !== false && $c != 'id') {
 						$known_columns[$c] = $c;
 					}
-
-					if ($attribs['Default'] != '') {
-						$sql .= ($i == 0 ? '':', ') . ' MODIFY COLUMN ' . $c . ' int(10) unsigned NOT NULL default "' . $attribs['Default'] . '"';
-					} elseif ($attribs['Null'] == 'NO') {
-						$sql .= ($i == 0 ? '':', ') . ' MODIFY COLUMN ' . $c . ' int(10) unsigned NOT NULL';
-					} else {
-						$sql .= ($i == 0 ? '':', ') . ' MODIFY COLUMN ' . $c . ' int(10) unsigned DEFAULT NULL';
-					}
+					continue;
 				}
 
+				if ($c != 'id') {
+					$known_columns[$c] = $c;
+				}
+
+				$sql .= ($i == 0 ? '' : ', ') . $clause;
 				$i++;
 			} else {
 				debug("ERROR: Attributes missing for $table and column $c.");
@@ -165,8 +172,15 @@ function database_fix_mediumint_columns() {
 
 		if ($i > 0) {
 			debug("Updating Table $table.");
-			db_execute($sql);
-			$total++;
+			if ($dry_run) {
+				print 'DRY RUN: ' . $sql . PHP_EOL;
+				$total++;
+			} elseif (db_execute($sql) === false) {
+				$failures++;
+				debug("ERROR: Failed to update Table $table.");
+			} else {
+				$total++;
+			}
 		}
 	}
 
@@ -179,34 +193,34 @@ function database_fix_mediumint_columns() {
 		//print "Checking $table" . PHP_EOL;
 
 		if (!array_key_exists($table, $tables)) {
+			$sql = 'ALTER TABLE ' . database_quote_identifier($table);
+			$i = 0;
 			$columns = array_rekey(
-				db_fetch_assoc("SHOW COLUMNS FROM " . $table),
+				db_fetch_assoc("SHOW COLUMNS FROM " . database_quote_identifier($table)),
 					'Field', array('Type', 'Null', 'Key', 'Default', 'Extra')
 			);
 
 			foreach($columns as $field => $attribs) {
 				if (array_key_exists($field, $known_columns)) {
-					if (strpos($attribs['Type'], 'mediumint') === false) {
-						if (strpos($attribs['Type'], 'int(10) unsigned') !== false) {
-							debug("Column $field in Table $table already converted.");
-							continue;
-						}
+					$clause = database_mediumint_column_clause($field, $attribs);
+					if ($clause === false) {
+						continue;
 					}
 
-					if (strtolower($attribs['Extra']) == 'auto_increment') {
-						$sql .= ($i == 0 ? '':', ') . ' MODIFY COLUMN ' . $field . ' int(10) unsigned NOT NULL AUTO_INCREMENT';
-					} else {
-						if ($attribs['Default'] != '') {
-							$sql .= ($i == 0 ? '':', ') . ' MODIFY COLUMN ' . $field . ' int(10) unsigned NOT NULL default "' . $attribs['Default'] . '"';
-						} elseif ($attribs['Null'] == 'NO') {
-							$sql .= ($i == 0 ? '':', ') . ' MODIFY COLUMN ' . $field . ' int(10) unsigned NOT NULL';
-						} else {
-							$sql .= ($i == 0 ? '':', ') . ' MODIFY COLUMN ' . $field . ' int(10) unsigned DEFAULT NULL';
-						}
-					}
+					$sql .= ($i == 0 ? '' : ', ') . $clause;
+					$i++;
+				}
+			}
 
-					debug("Updating Table $table.");
-					db_execute($sql);
+			if ($i > 0) {
+				debug("Updating Table $table.");
+				if ($dry_run) {
+					print 'DRY RUN: ' . $sql . PHP_EOL;
+					$total++;
+				} elseif (db_execute($sql) === false) {
+					$failures++;
+					debug("ERROR: Failed to update Table $table.");
+				} else {
 					$total++;
 				}
 			}
@@ -214,6 +228,34 @@ function database_fix_mediumint_columns() {
 	}
 
 	return $total;
+}
+
+function database_mediumint_column_clause($column, $attribs) {
+	if (stripos($attribs['Type'], 'mediumint') === false) {
+		return false;
+	}
+
+	$column = database_quote_identifier($column);
+	if (strtolower($attribs['Extra']) == 'auto_increment') {
+		return 'MODIFY COLUMN ' . $column . ' int(10) unsigned NOT NULL AUTO_INCREMENT';
+	}
+
+	$default = $attribs['Default'];
+	$nullability = $attribs['Null'] == 'NO' ? ' NOT NULL' : ' NULL';
+	if ($default !== null && $default !== '') {
+		$default = is_numeric($default) ? (string) $default : db_qstr($default);
+		return 'MODIFY COLUMN ' . $column . ' int(10) unsigned' . $nullability . ' DEFAULT ' . $default;
+	}
+
+	if ($attribs['Null'] == 'NO') {
+		return 'MODIFY COLUMN ' . $column . ' int(10) unsigned NOT NULL';
+	}
+
+	return 'MODIFY COLUMN ' . $column . ' int(10) unsigned NULL DEFAULT NULL';
+}
+
+function database_quote_identifier($identifier) {
+	return '`' . str_replace('`', '``', $identifier) . '`';
 }
 
 function database_get_column_attribs($table, $column) {
@@ -236,12 +278,12 @@ function display_version() {
 /*	display_help - displays the usage of the function */
 function display_help () {
 	display_version();
-	print 'usage: fix_mediumint.php [--debug]' . PHP_EOL . PHP_EOL;
+	print 'usage: fix_mediumint.php [--debug] [--dry-run]' . PHP_EOL . PHP_EOL;
 	print 'Options:' . PHP_EOL;
 	print '--debug    - Display verbose output during execution' . PHP_EOL;
 	print '--local    - Perform the action on the Remote Data Collector if run from there' . PHP_EOL . PHP_EOL;
+	print '--dry-run  - Print proposed ALTER statements without executing them' . PHP_EOL . PHP_EOL;
 	print 'This utility is used to increase the size of key Cacti columns to accomodate' . PHP_EOL;
 	print 'systems with over a million graphs and that have been in service for years.' . PHP_EOL;
 	print 'After some long amount of time, Cacti can run out of auto_increment fields.' . PHP_EOL;
 }
-

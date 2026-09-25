@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * input_whitelist.php
+ *
+ * Inspects or updates the whitelist for Cacti data input commands.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * reorder_data_query.php
+ *
+ * Reorders the fields returned by a data query.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

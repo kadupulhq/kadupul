@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * import_template.php
+ *
+ * Imports or previews a Cacti XML template.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -78,6 +85,10 @@ if (cacti_sizeof($parms)) {
 				break;
 			case '--profile-id':
 				$profile_id = trim($value);
+				if (!ctype_digit($profile_id) || (int) $profile_id <= 0) {
+					fwrite(STDERR, "ERROR: --profile-id must be a positive integer.\n");
+					exit(1);
+				}
 
 				break;
 			case '--help':
@@ -96,7 +107,7 @@ if (cacti_sizeof($parms)) {
 		}
 	}
 
-	if($profile_id > 0) {
+	if ($profile_id !== '') {
 		if ($with_profile) {
 			print "WARNING: '--with-profile' and '--profile-id=N' are exclusive. Ignoring '--with-profile'" . PHP_EOL;
 		} else {
@@ -118,9 +129,11 @@ if (cacti_sizeof($parms)) {
 
 	if ($filename != '') {
 		if(file_exists($filename) && is_readable($filename)) {
-			$fp = fopen($filename,'r');
-			$xml_data = fread($fp,filesize($filename));
-			fclose($fp);
+			$xml_data = file_get_contents($filename);
+			if ($xml_data === false) {
+				fwrite(STDERR, "ERROR: Could not read template file '$filename'.\n");
+				exit(1);
+			}
 
 			print 'Read ' . strlen($xml_data) . ' bytes of XML data' . PHP_EOL;
 

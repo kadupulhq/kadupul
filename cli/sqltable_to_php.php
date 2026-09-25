@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * sqltable_to_php.php
+ *
+ * Generates PHP schema definitions from a database table.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -241,4 +248,3 @@ function display_help() {
 	print "--update           - The utility provides create syntax.  If the update flag is\n";
 	print "                     specified, the utility will provide update syntax\n\n";
 }
-

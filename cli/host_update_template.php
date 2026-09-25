@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * host_update_template.php
+ *
+ * Reapplies a host template to one or more devices.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

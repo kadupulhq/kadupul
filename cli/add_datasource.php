@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * add_datasource.php
+ *
+ * Creates a data source from a data template for an existing device.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -53,15 +60,15 @@ foreach($parms as $parameter) {
 	switch ($arg) {
 	case '--host-id':
 		$host_id = trim($value);
-		if (!is_numeric($host_id)) {
-			print 'ERROR: You must supply a valid host-id to run this script!' . PHP_EOL;
+		if (!ctype_digit($host_id) || (int) $host_id <= 0) {
+			fwrite(STDERR, 'ERROR: Supply a positive integer host ID.' . PHP_EOL);
 			exit(1);
 		}
 		break;
 	case '--data-template-id':
 		$data_template_id = $value;
-		if (!is_numeric($data_template_id)) {
-			print 'ERROR: You must supply a numeric data-template-id!' . PHP_EOL;
+		if (!ctype_digit($data_template_id) || (int) $data_template_id <= 0) {
+			fwrite(STDERR, 'ERROR: Supply a positive integer data-template ID.' . PHP_EOL);
 			exit(1);
 		}
 		break;
@@ -94,11 +101,28 @@ if (!isset($data_template_id)) {
 
 //Following code was copied from data_sources.php->function form_save->save_component_data_source_new
 
+$host_name = db_fetch_cell_prepared('SELECT hostname FROM host WHERE id = ?', array((int) $host_id));
+if ($host_name === false || $host_name === null) {
+	fwrite(STDERR, "ERROR: Host ID $host_id does not exist or could not be read.\n");
+	exit(1);
+}
+
+$template_name = db_fetch_cell_prepared('SELECT name FROM data_template WHERE id = ?', array((int) $data_template_id));
+if ($template_name === false || $template_name === null) {
+	fwrite(STDERR, "ERROR: Data template ID $data_template_id does not exist or could not be read.\n");
+	exit(1);
+}
+
 $save["id"] = "0";
-$save["data_template_id"] = $data_template_id;
-$save["host_id"] = $host_id;
+$save["data_template_id"] = (int) $data_template_id;
+$save["host_id"] = (int) $host_id;
 
 $local_data_id = sql_save($save, "data_local");
+
+if ($local_data_id === false || (int) $local_data_id <= 0) {
+	fwrite(STDERR, "ERROR: Failed to create the data source for host $host_id and template $data_template_id.\n");
+	exit(1);
+}
 
 change_data_template($local_data_id, $data_template_id);
 
@@ -125,4 +149,3 @@ function display_help() {
 	print "--host-id=id - The host id\n";
 	print "--data-template-id=id - The numerical ID of the data template to be added\n";
 }
-

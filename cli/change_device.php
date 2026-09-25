@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * change_device.php
+ *
+ * Updates the configuration of an existing Cacti device.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -50,6 +57,7 @@ $device_id   = '';
 $displayHostTemplates = false;
 $displayCommunities   = false;
 $quietMode            = false;
+$proxy                = false;
 
 $overrides = array();
 foreach($parms as $parameter) {
@@ -71,6 +79,10 @@ foreach($parms as $parameter) {
 
 		case '--id':
 			$device_id = trim($value);
+			if (!ctype_digit($device_id) || (int) $device_id <= 0) {
+				fwrite(STDERR, "ERROR: --id must be a positive integer.\n");
+				exit(1);
+			}
 			break;
 
 		case '--description':
@@ -293,7 +305,7 @@ foreach($parms as $parameter) {
 	}
 }
 
-if (empty($device_id)) {
+if ($device_id === '') {
 	print "ERROR: --id is mandatory parameter.\n";
 	display_help();
 	exit(1);
@@ -315,9 +327,7 @@ if (isset($overrides['ip'])) {
 
 /* process the various lists into validation arrays */
 $host_templates = getHostTemplates();
-$hosts          = getHostsByDescription();
 $addresses      = getAddresses();
-
 /* process templates */
 if (!isset($host_templates[$host['host_template_id']])) {
 	print "ERROR: Unknown template id (" . $host['host_template_id'] . ")\n";
@@ -334,35 +344,45 @@ if ($host['hostname'] == '') {
 	exit(1);
 }
 
-if ($host['snmp_version'] > 3 || $host['snmp_version'] < 0 || !is_numeric($host['snmp_version'])) {
+if (isset($addresses[$host['hostname']]) && (int) $addresses[$host['hostname']] !== (int) $device_id && !$proxy) {
+	fwrite(STDERR, "ERROR: The requested IP is already assigned to another device; specify --proxy to allow a shared address.\n");
+	exit(1);
+}
+
+if (!ctype_digit((string) $host['snmp_version']) || (int) $host['snmp_version'] > 3) {
 	print "ERROR: The snmp version must be between 0 and 3.  If you did not specify one, goto Configuration > Settings > Device Defaults and resave your defaults.\n";
 	exit(1);
 }
+$host['snmp_version'] = (int) $host['snmp_version'];
 
-if (!is_numeric($host['site_id']) || $host['site_id'] < 0) {
+if (!ctype_digit((string) $host['site_id'])) {
 	print "ERROR: You have specified an invalid site id!\n";
 	exit(1);
 }
+$host['site_id'] = (int) $host['site_id'];
 
-if (!is_numeric($host['poller_id']) || $host['poller_id'] < 0) {
+if (!ctype_digit((string) $host['poller_id'])) {
 	print "ERROR: You have specified an invalid poller id!\n";
 	exit(1);
 }
+$host['poller_id'] = (int) $host['poller_id'];
 
 /* process snmp information */
 if ($host['snmp_version'] < 0 || $host['snmp_version'] > 3) {
 	print "ERROR: Invalid snmp version ({$host['snmp_version']})\n";
 	exit(1);
 } elseif ($host['snmp_version'] > 0) {
-	if ($host['snmp_port'] <= 1 || $host['snmp_port'] > 65534) {
+	if (!ctype_digit((string) $host['snmp_port']) || (int) $host['snmp_port'] < 1 || (int) $host['snmp_port'] > 65534) {
 		print "ERROR: Invalid port.  Valid values are from 1-65534\n";
 		exit(1);
 	}
+	$host['snmp_port'] = (int) $host['snmp_port'];
 
-	if ($host['snmp_timeout'] <= 0 || $host['snmp_timeout'] > 20000) {
+	if (!ctype_digit((string) $host['snmp_timeout']) || (int) $host['snmp_timeout'] <= 0 || (int) $host['snmp_timeout'] > 20000) {
 		print "ERROR: Invalid timeout.  Valid values are from 1 to 20000\n";
 		exit(1);
 	}
+	$host['snmp_timeout'] = (int) $host['snmp_timeout'];
 }
 
 /* community/user/password verification */
@@ -376,7 +396,7 @@ if ($host['snmp_version'] < 3) {
 }
 
 if (!$quietMode) {
-	print "Changing device-id: $device_id to {$host['description']} ({$host['hostname']}) as \"{$host_templates[$host['host_template_id']]}\" using SNMP v{$host['snmp_version']} with community \"{$host['snmp_community']}\"\n";
+	print "Changing device-id: $device_id to {$host['description']} ({$host['hostname']}) as \"{$host_templates[$host['host_template_id']]}\" using SNMP v{$host['snmp_version']}\n";
 }
 
 $host_id = api_device_save($device_id, $host['host_template_id'], $host['description'], $host['hostname'],

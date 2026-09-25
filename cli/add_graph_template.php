@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * add_graph_template.php
+ *
+ * Associates a graph template with a device.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -57,16 +64,16 @@ if (cacti_sizeof($parms)) {
 			break;
 		case '--host-id':
 			$host_id = trim($value);
-			if (!is_numeric($host_id)) {
-				print "ERROR: You must supply a valid host-id to run this script!\n";
+			if (!ctype_digit($host_id) || (int) $host_id <= 0) {
+				fwrite(STDERR, "ERROR: Supply a positive integer host ID.\n");
 				exit(1);
 			}
 
 			break;
 		case '--graph-template-id':
 			$graph_template_id = $value;
-			if (!is_numeric($graph_template_id)) {
-				print "ERROR: You must supply a numeric graph-template-id for all hosts!\n";
+			if (!ctype_digit($graph_template_id) || (int) $graph_template_id <= 0) {
+				fwrite(STDERR, "ERROR: Supply a positive integer graph template ID.\n");
 				exit(1);
 			}
 
@@ -127,8 +134,8 @@ if (cacti_sizeof($parms)) {
 	/*
 	 * verify valid host id and get a name for it
 	 */
-	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
-	if (!isset($host_name)) {
+	$host_name = db_fetch_cell_prepared('SELECT hostname FROM host WHERE id = ?', array((int) $host_id));
+	if ($host_name === false || $host_name === null) {
 		print "ERROR: Unknown Host Id ($host_id)\n";
 		exit(1);
 	}
@@ -136,20 +143,23 @@ if (cacti_sizeof($parms)) {
 	/*
 	 * verify valid graph template and get a name for it
 	 */
-	$graph_template_name = db_fetch_cell("SELECT name FROM graph_templates WHERE id = " . $graph_template_id);
-	if (!isset($graph_template_name)) {
+	$graph_template_name = db_fetch_cell_prepared('SELECT name FROM graph_templates WHERE id = ?', array((int) $graph_template_id));
+	if ($graph_template_name === false || $graph_template_name === null) {
 		print "ERROR: Unknown Graph Template Id ($graph_template_id)\n";
 		exit(1);
 	}
 
 	/* check, if graph template was already associated */
-	$exists_already = db_fetch_cell("SELECT host_id FROM host_graph WHERE graph_template_id=$graph_template_id AND host_id=$host_id");
+	$exists_already = db_fetch_cell_prepared('SELECT host_id FROM host_graph WHERE graph_template_id = ? AND host_id = ?', array((int) $graph_template_id, (int) $host_id));
 	if ((isset($exists_already)) &&
 		($exists_already > 0)) {
 		print "ERROR: Graph Template is already associated for host: ($host_id: $host_name) - graph-template: ($graph_template_id: $graph_template_name)\n";
 		exit(1);
 	} else {
-		db_execute("replace into host_graph (host_id,graph_template_id) values (" . $host_id . "," . $graph_template_id . ")");
+		if (!db_execute_prepared('REPLACE INTO host_graph (host_id, graph_template_id) VALUES (?, ?)', array((int) $host_id, (int) $graph_template_id))) {
+			fwrite(STDERR, "ERROR: Failed to associate the graph template with the host.\n");
+			exit(1);
+		}
 
 		automation_hook_graph_template($host_id, $graph_template_id);
 

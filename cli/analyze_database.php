@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * analyze_database.php
+ *
+ * Analyzes database tables and reports storage and index information.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

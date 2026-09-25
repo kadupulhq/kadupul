@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * splice_rrd.php
+ *
+ * Combines RRD data from source files into a target file.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

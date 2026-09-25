@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * remove_graphs.php
+ *
+ * Removes graphs selected by IDs, templates, or filters.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

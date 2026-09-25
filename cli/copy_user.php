@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * copy_user.php
+ *
+ * Copies permissions and settings from one Cacti user to another.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * rebuild_poller_cache.php
+ *
+ * Rebuilds poller cache entries for selected devices and templates.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

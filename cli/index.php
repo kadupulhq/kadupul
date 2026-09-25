@@ -1,4 +1,11 @@
 <?php
+/**
+ * index.php
+ *
+ * Redirects requests from this directory to the Cacti web application.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

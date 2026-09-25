@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * poller_reindex_hosts.php
+ *
+ * Reindexes data queries for selected devices.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -110,27 +117,27 @@ $params = array();
 
 if (strtolower($host_id) == 'all') {
 	$sql_where = '';
-} elseif (is_numeric($host_id) && $host_id > 0) {
+} elseif (ctype_digit((string) $host_id) && (int) $host_id > 0) {
 	$sql_where = 'WHERE host_id = ?';
-	$params[] = $host_id;
+	$params[] = (int) $host_id;
 } else {
 	print 'ERROR: You must specify either a host_id or \'all\' to proceed.' . PHP_EOL;
 
 	display_help();
-	exit;
+	exit(1);
 }
 
 /* determine data queries to rerun */
 if (strtolower($query_id) == 'all') {
 	/* do nothing */
-} elseif (is_numeric($query_id) && $query_id > 0) {
+} elseif (ctype_digit((string) $query_id) && (int) $query_id > 0) {
 	$sql_where .= ($sql_where != '' ? ' AND':'WHERE') . ' snmp_query_id = ?';
-	$params[] = $query_id;
+	$params[] = (int) $query_id;
 } else {
 	print 'ERROR: You must specify either a query_id or \'all\' to proceed.' . PHP_EOL;
 
 	display_help();
-	exit;
+	exit(1);
 }
 
 /* allow for additional filtering on host description */
@@ -148,19 +155,25 @@ $data_queries = db_fetch_assoc_prepared("SELECT description, hostname, host_id, 
 	$sql_where",
 	$params);
 
+if ($data_queries === false) {
+	fwrite(STDERR, "ERROR: Could not load data queries to reindex.\n");
+	exit(1);
+}
+
 /* issue warnings and start message if applicable */
 print 'WARNING: Do not interrupt this script.  Reindexing can take quite some time' . PHP_EOL;
 debug("There are '" . cacti_sizeof($data_queries) . "' data queries to run");
 
-/* silently end if the registered process is still running  */
-if (!$force) {
-	if (!register_process_start('reindex', 'master', 0, 86400)) {
-		print "FATAL: Detected an already running process.  Use --force to override" . PHP_EOL;
-		exit(0);
-	}
+/* --force controls name remapping; it must never bypass process ownership. */
+if (!register_process_start('reindex', 'master', 0, 86400)) {
+	fwrite(STDERR, "FATAL: A reindex operation is already registered. Wait for it to finish before starting another.\n");
+	exit(1);
 }
 
+register_shutdown_function('unregister_process', 'reindex', 'master');
+
 $i = 1;
+$failed_count = 0;
 $total_start = microtime(true);
 if (cacti_sizeof($data_queries)) {
 	foreach ($data_queries as $data_query) {
@@ -170,7 +183,10 @@ if (cacti_sizeof($data_queries)) {
 
 		$start = microtime(true);
 
-		run_data_query($data_query['host_id'], $data_query['snmp_query_id'], false, $force);
+		if (!run_data_query($data_query['host_id'], $data_query['snmp_query_id'], false, $force)) {
+			fwrite(STDERR, sprintf("ERROR: Reindex failed for host %d, data query %d.\n", $data_query['host_id'], $data_query['snmp_query_id']));
+			$failed_count++;
+		}
 
 		$items = db_fetch_cell_prepared('SELECT COUNT(*)
 			FROM host_snmp_cache
@@ -184,6 +200,11 @@ if (cacti_sizeof($data_queries)) {
 			AND snmp_query_id = ?
 			AND snmp_index = ""',
 			array($data_query['host_id'], $data_query['snmp_query_id']));
+
+		if (!is_numeric($items) || !is_numeric($orphans)) {
+			fwrite(STDERR, sprintf("ERROR: Could not verify reindex results for host %d, data query %d.\n", $data_query['host_id'], $data_query['snmp_query_id']));
+			$failed_count++;
+		}
 
 		$end = microtime(true);
 
@@ -204,9 +225,13 @@ if (cacti_sizeof($data_queries)) {
 		$i++;
 	}
 
-	set_config_option('reindex_last_run_time', time());
-	unregister_process('reindex', 'master');
+}
 
+if ($failed_count === 0) {
+	set_config_option('reindex_last_run_time', time());
+} else {
+	fwrite(STDERR, "ERROR: Reindex completed with $failed_count failure(s); completion time was not advanced.\n");
+	exit(1);
 }
 
 function display_version() {

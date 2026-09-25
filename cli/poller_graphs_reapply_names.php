@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * poller_graphs_reapply_names.php
+ *
+ * Reapplies suggested names to selected graphs.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

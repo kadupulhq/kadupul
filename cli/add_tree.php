@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * add_tree.php
+ *
+ * Creates graph trees and nodes, and provides tree object listings.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -48,7 +55,7 @@ if (cacti_sizeof($parms)) {
 	$siteId     = 0;   # The ID of the site to add
 
 	$sortMethods = array('manual' => 1, 'alpha' => 2, 'natural' => 4, 'numeric' => 3);
-	$nodeTypes   = array('header' => 1, 'graph' => 2, 'host' => 3);
+	$nodeTypes   = array('header' => TREE_ITEM_TYPE_HEADER, 'graph' => TREE_ITEM_TYPE_GRAPH, 'host' => TREE_ITEM_TYPE_HOST, 'site' => TREE_ITEM_TYPE_SITE);
 
 	$hostId         = 0;
 	$hostGroupStyle = 1; # 1 = Graph Template,  2 = Data Query Index
@@ -86,11 +93,19 @@ if (cacti_sizeof($parms)) {
 
 				break;
 			case '--parent-node':
-				$parentNode = $value;
+				if (!ctype_digit($value)) {
+					fwrite(STDERR, "ERROR: --parent-node must be a non-negative integer.\n");
+					exit(1);
+				}
+				$parentNode = (int) $value;
 
 				break;
 			case '--tree-id':
-				$treeId = $value;
+				if (!ctype_digit($value) || (int) $value <= 0) {
+					fwrite(STDERR, "ERROR: --tree-id must be a positive integer.\n");
+					exit(1);
+				}
+				$treeId = (int) $value;
 
 				break;
 			case '--node-type':
@@ -98,11 +113,27 @@ if (cacti_sizeof($parms)) {
 
 				break;
 			case '--graph-id':
-				$graphId = $value;
+				if (!ctype_digit($value) || (int) $value <= 0) {
+					fwrite(STDERR, "ERROR: --graph-id must be a positive integer.\n");
+					exit(1);
+				}
+				$graphId = (int) $value;
 
 				break;
 			case '--host-id':
-				$hostId = $value;
+				if (!ctype_digit($value) || (int) $value <= 0) {
+					fwrite(STDERR, "ERROR: --host-id must be a positive integer.\n");
+					exit(1);
+				}
+				$hostId = (int) $value;
+
+				break;
+			case '--site-id':
+				if (!ctype_digit($value) || (int) $value <= 0) {
+					fwrite(STDERR, "ERROR: --site-id must be a positive integer.\n");
+					exit(1);
+				}
+				$siteId = (int) $value;
 
 				break;
 			case '--quiet':
@@ -130,7 +161,11 @@ if (cacti_sizeof($parms)) {
 
 				break;
 			case '--host-group-style':
-				$hostGroupStyle = trim($value);
+				if (!in_array($value, array('1', '2'), true)) {
+					fwrite(STDERR, "ERROR: --host-group-style must be 1 or 2.\n");
+					exit(1);
+				}
+				$hostGroupStyle = (int) $value;
 
 				break;
 			case '--version':
@@ -166,7 +201,7 @@ if (cacti_sizeof($parms)) {
 	}
 
 	if ($displayNodes) {
-		if (!isset($treeId)) {
+		if ($treeId <= 0) {
 			print "ERROR: You must supply a tree_id before you can list its nodes\n";
 			print "Try --list-trees\n";
 			exit(1);
@@ -215,13 +250,17 @@ if (cacti_sizeof($parms)) {
 			exit(1);
 		}
 
-		$existsAlready = db_fetch_cell("SELECT id FROM graph_tree WHERE name = '$name'");
+		$existsAlready = db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE name = ?', array($name));
 		if ($existsAlready) {
 			print "ERROR: Not adding tree - it already exists - tree-id: ($existsAlready)\n";
 			exit(1);
 		}
 
 		$treeId = sql_save($treeOpts, 'graph_tree');
+		if ($treeId === false || (int) $treeId <= 0) {
+			fwrite(STDERR, "ERROR: Failed to create the tree.\n");
+			exit(1);
+		}
 
 		api_tree_sort_branch(0, $treeId);
 
@@ -241,17 +280,18 @@ if (cacti_sizeof($parms)) {
 			exit(1);
 		}
 
-		if (!is_numeric($parentNode)) {
-			print "ERROR: parent-node $parentNode must be numeric > 0\n";
-			display_help();
+		if ($treeId <= 0 || db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE id = ?', array((int) $treeId)) === false) {
+			fwrite(STDERR, "ERROR: Supply an existing --tree-id before creating a node.\n");
 			exit(1);
-		} elseif ($parentNode > 0 ) {
-			$parentNodeExists = db_fetch_cell("SELECT id
-				FROM graph_tree_items
-				WHERE graph_tree_id=$treeId
-				AND id=$parentNode");
+		}
 
-			if (!isset($parentNodeExists)) {
+		if ($parentNode > 0) {
+			$parentNodeExists = db_fetch_cell_prepared("SELECT id
+				FROM graph_tree_items
+				WHERE graph_tree_id = ?
+				AND id = ?", array((int) $treeId, (int) $parentNode));
+
+			if ($parentNodeExists === false) {
 				print "ERROR: parent-node $parentNode does not exist\n";
 				exit(1);
 			}
@@ -277,24 +317,25 @@ if (cacti_sizeof($parms)) {
 			$siteId         = 0;
 			$hostGroupStyle = 1;
 
-			$graphs = db_fetch_assoc('SELECT id
+			$graphs = db_fetch_assoc_prepared('SELECT id
 				FROM graph_local
-				WHERE graph_local.id=' . $graphId);
+				WHERE graph_local.id = ?', array((int) $graphId));
 
 			if (!cacti_sizeof($graphs)) {
 				print "ERROR: No such graph-id ($graphId) exists. Try --list-graphs\n";
 				exit(1);
 			}
 		}else if ($nodeType == 'site') {
-			# Blank out graphId, name fields
+			# Blank out graph and host fields; use the site name as the visible node title.
 			$graphId        = 0;
 			$hostId         = 0;
-			$name           = '';
 
 			if (!isset($sites[$siteId])) {
 				print "ERROR: No such site-id ($siteId) exists. Try --list-sites\n";
 				exit(1);
 			}
+
+			$name = $sites[$siteId]['name'];
 		}else if ($nodeType == 'host') {
 			# Blank out graphId, name fields
 			$graphId        = 0;
@@ -315,6 +356,10 @@ if (cacti_sizeof($parms)) {
 
 		# $nodeId could be a Header Node, a Graph Node, or a Host node.
 		$nodeId = api_tree_item_save(0, $treeId, $itemType, $parentNode, $name, $graphId, $hostId, $siteId, $hostGroupStyle, $sortMethods[$sortMethod], false);
+		if ($nodeId === false || (int) $nodeId <= 0) {
+			fwrite(STDERR, "ERROR: Failed to create the tree node.\n");
+			exit(1);
+		}
 
 		print "Added Node node-id: ($nodeId)\n";
 
