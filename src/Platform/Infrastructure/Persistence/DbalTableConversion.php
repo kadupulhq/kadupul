@@ -11,52 +11,21 @@ use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Application\Port\TableCatalog;
 use Kadupul\Platform\Application\Port\TableConversion;
 use Kadupul\Platform\Domain\Schema\TableChange;
-use Kadupul\Platform\Domain\Schema\TableStatus;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
 
 final readonly class DbalTableConversion implements TableConversion
 {
-    public function __construct(private string $projectDir, private Filesystem $filesystem, private MaintenanceConnections $connections) {}
+    public function __construct(private CactiSchemaFile $schema, private MaintenanceConnections $connections) {}
 
     #[\Override]
     public function baseTables(): array
     {
-        try {
-            $schema = $this->filesystem->readFile($this->projectDir . '/cacti.sql');
-        } catch (IOException) {
-            return [];
-        }
-        $tables = [];
-        foreach (explode("\n", $schema) as $line) {
-            if (str_contains($line, 'CREATE TABLE')) {
-                $tables[] = trim(str_replace(['CREATE TABLE', '`', '(', ' '], '', $line));
-            }
-        }
-
-        return $tables;
+        return $this->schema->baseTables();
     }
 
     #[\Override]
     public function tableStatuses(DatabaseTarget $target): TableCatalog
     {
-        // DATABASE() is the target connection's own schema. The original used
-        // the local database's name even after switching to main.
-        $rows = $this->connections->for($target)->fetchAllAssociative(
-            "SELECT TABLE_NAME, ENGINE, TABLE_COLLATION, ROW_FORMAT, TABLE_ROWS FROM information_schema.TABLES
-            WHERE TABLE_SCHEMA = DATABASE() AND TABLE_TYPE = 'BASE TABLE'",
-        );
-        $statuses = [];
-        foreach ($rows as $row) {
-            $statuses[(string) $row['TABLE_NAME']] = new TableStatus(
-                $row['ENGINE'] === null ? null : (string) $row['ENGINE'],
-                $row['TABLE_COLLATION'] === null ? null : (string) $row['TABLE_COLLATION'],
-                $row['ROW_FORMAT'] === null ? null : (string) $row['ROW_FORMAT'],
-                $row['TABLE_ROWS'] === null ? null : (int) $row['TABLE_ROWS'],
-            );
-        }
-
-        return new TableCatalog($statuses);
+        return $this->connections->tableCatalog($target);
     }
 
     #[\Override]
