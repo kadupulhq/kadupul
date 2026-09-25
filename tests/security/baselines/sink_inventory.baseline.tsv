@@ -1,9 +1,9 @@
 category	location	match
 cmd_exec	./cactid.php:85		exec('pgrep -a php | grep cactid.php', $output);
-cmd_exec	./cli/audit_database.php:1010	            $db_shell = shell_exec('which mysql');
-cmd_exec	./cli/audit_database.php:1021	            exec(cacti_escapeshellarg($db_shell) . ' --version', $version_output, $version_status);
-cmd_exec	./cli/audit_database.php:1033	            exec(cacti_escapeshellarg($db_shell) .
-cmd_exec	./cli/audit_database.php:133	    exec('php ' . $config['base_path'] . '/cli/upgrade_database.php --debug', $output, $return_var);
+cmd_exec	./cli/audit_database.php:1026	            $db_shell = shell_exec('which mysql');
+cmd_exec	./cli/audit_database.php:1038	            exec(cacti_escapeshellarg($db_shell) . ' --version', $version_output, $version_status);
+cmd_exec	./cli/audit_database.php:1050	            exec(cacti_escapeshellarg($db_shell) .
+cmd_exec	./cli/audit_database.php:139	    exec('php ' . $config['base_path'] . '/cli/upgrade_database.php --debug', $output, $return_var);
 cmd_exec	./cli/batchgapfix.php:293		$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/batchgapfix.php:363			exec($command, $output, $return_var);
 cmd_exec	./cli/float_rrdfiles.php:665		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
@@ -148,8 +148,8 @@ dynamic_include	./cli/apply_automation_rules.php:18	require_once($config['base_p
 dynamic_include	./cli/apply_automation_rules.php:19	require_once($config['base_path'] . '/lib/reports.php');
 dynamic_include	./cli/apply_automation_rules.php:20	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/apply_automation_rules.php:21	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/audit_database.php:199	                        include_once($plugin . '/setup.php');
-dynamic_include	./cli/audit_database.php:201	                            include_once($plugin . '/includes/database.php');
+dynamic_include	./cli/audit_database.php:205	                        include_once($plugin . '/setup.php');
+dynamic_include	./cli/audit_database.php:207	                            include_once($plugin . '/includes/database.php');
 dynamic_include	./cli/batchgapfix.php:18	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/change_device.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/change_device.php:12	require_once($config['base_path'] . '/lib/api_device.php');
