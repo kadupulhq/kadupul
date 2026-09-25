@@ -83,7 +83,7 @@ cmd_exec	./lib/utility.php:1898		$json     = shell_exec($php . ' -q ' . $php_fil
 cmd_exec	./lib/utility.php:1966		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:2098		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./poller_boost.php:556	        $process = proc_open($arguments, $descriptors, $pipes);
-cmd_exec	./poller_realtime.php:235					shell_exec($command);
+cmd_exec	./poller_realtime.php:241	                shell_exec($command);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./remote_agent.php:481								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./script_server.php:175	                exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
@@ -488,10 +488,10 @@ dynamic_include	./poller_maintenance.php:14	require_once($config['library_path']
 dynamic_include	./poller_maintenance.php:15	include_once($config['library_path'] . '/poller.php');
 dynamic_include	./poller_maintenance.php:16	require_once($config['library_path'] . '/rrd.php');
 dynamic_include	./poller_maintenance.php:17	require_once($config['library_path'] . '/utility.php');
-dynamic_include	./poller_realtime.php:10	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller_realtime.php:11	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./poller_realtime.php:12	require_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./poller_realtime.php:187		include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./poller_realtime.php:11	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller_realtime.php:12	require_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./poller_realtime.php:13	require_once($config['base_path'] . '/lib/rrd.php');
+dynamic_include	./poller_realtime.php:191	    include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./poller_recovery.php:18	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller_recovery.php:19	require_once($config['base_path'] . '/lib/boost.php');
 dynamic_include	./poller_recovery.php:20	require_once($config['base_path'] . '/lib/dsstats.php');
