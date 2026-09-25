@@ -229,7 +229,7 @@ function user_setting_exists($config_name, $user_id)
 {
     static $user_setting_values = array();
 
-    if (!isset($user_setting_values[$config_name])) {
+    if (!isset($user_setting_values[$user_id]) || !array_key_exists($config_name, $user_setting_values[$user_id])) {
         $value = 0;
         if (db_table_exists('settings_user')) {
             $value = db_fetch_cell_prepared(
@@ -242,13 +242,13 @@ function user_setting_exists($config_name, $user_id)
         }
 
         if ($value !== false && $value > 0) {
-            $user_setting_values[$config_name] = true;
+            $user_setting_values[$user_id][$config_name] = true;
         } else {
-            $user_setting_values[$config_name] = false;
+            $user_setting_values[$user_id][$config_name] = false;
         }
     }
 
-    return $user_setting_values[$config_name];
+    return $user_setting_values[$user_id][$config_name];
 }
 
 /**
@@ -477,18 +477,18 @@ function set_config_option($config_name, $value, $remote = false)
         }
     }
 
-    $config_array = array();
     if ($config['is_web']) {
-        $sess = true;
-    } else {
-        $sess = false;
-    }
+        if (!isset($_SESSION['sess_config_array']) || !is_array($_SESSION['sess_config_array'])) {
+            $_SESSION['sess_config_array'] = array();
+        }
 
-    // Store the array back for later retrieval
-    if ($sess) {
-        $_SESSION['sess_config_array']  = $value;
+        $_SESSION['sess_config_array'][$config_name] = $value;
     } else {
-        $config['config_options_array'] = $value;
+        if (!isset($config['config_options_array']) || !is_array($config['config_options_array'])) {
+            $config['config_options_array'] = array();
+        }
+
+        $config['config_options_array'][$config_name] = $value;
     }
 
     if (!empty($config['DEBUG_SET_CONFIG_OPTION'])) {
@@ -3595,7 +3595,7 @@ function get_graph_group($graph_template_item_id)
         $params[] = $graph_item['graph_template_id'];
         $sql_where = 'graph_template_id = ? AND local_graph_id = 0';
     } else {
-        $params[] = $graph_item['sequence'];
+        $params[] = $graph_item['local_graph_id'];
         $sql_where = 'local_graph_id = ?';
     }
 
@@ -3702,7 +3702,7 @@ function get_graph_parent($graph_template_item_id, $direction)
  * @param $filters - associative array of field => value pairs
  * @param $params  - (byref) array to append parameter values to
  *
- * @return - (string) the WHERE clause fragment, or '1=1' if filters is empty
+ * @return - (string) the WHERE clause fragment, '1=1' if filters is empty, or '1=0' if all supplied fields are invalid
  */
 function build_where_from_array($filters, &$params)
 {
@@ -3720,6 +3720,10 @@ function build_where_from_array($filters, &$params)
 
         $where[]  = "`$field` = ?";
         $params[] = $value;
+    }
+
+    if (empty($where)) {
+        return '1=0';
     }
 
     return implode(' AND ', $where);
