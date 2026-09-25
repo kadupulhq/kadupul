@@ -58,6 +58,10 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
         verify_remote_collector_assignment(harness, session, created[-1], poller, check)
         from device_state_scenarios import verify_remote_device_state
         verify_remote_device_state(harness, session, created[-1], poller, check)
+        from device_legacy_scenarios import verify_device_legacy
+        verify_device_legacy(harness, session, user_id, check)
+        from device_placement_scenarios import verify_device_placement
+        verify_device_placement(harness, session, user_id, check)
         from device_maintenance_scenarios import verify_device_maintenance
         verify_device_maintenance(harness, session, check)
         verify_device_maintenance(harness, session, check, poller)

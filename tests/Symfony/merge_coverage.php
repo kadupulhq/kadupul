@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_maintenance_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'device_legacy_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'coverage_support.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -76,6 +76,26 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk SNMP replaces credentials through Symfony',
         'bulk SNMP verifies remote credentials',
         'bulk SNMP secrets stay out of database diagnostics',
+        'legacy device POST is never replayed',
+        'legacy device GET links do not mutate state',
+        'legacy device entry rechecks revoked management realm',
+        'legacy location suggestions use authorized Inventory query',
+        'Inventory preserves template collector and exact location filters',
+        'existing device automation rules run through Symfony',
+        'device automation preserves action 6 once with full selection',
+        'device automation SQL failure cannot report success',
+        'tree placement verifies final state after callbacks',
+        'report placement verifies final state after callbacks',
+        'tree placement saves through Symfony',
+        'report placement saves through Symfony',
+        'tree legacy placement shares destination locks and rejects duplicates',
+        'report legacy placement shares destination locks and rejects duplicates',
+        'tree placement rolls back entire selection',
+        'report placement rolls back entire selection',
+        'tree placement preserves selected parent',
+        'report placement preserves display settings',
+        'tree placement does not duplicate existing devices',
+        'report placement does not duplicate existing devices',
         'maintenance enables debug through Symfony',
         'maintenance confirms remote debug setting',
         'maintenance SQL rejection cannot report success',
@@ -163,7 +183,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             $relative = substr($path, strlen('/var/www/html/'));
             // Legacy application coverage has its own report. Never import
             // generated configuration/cache, dependencies or installed plugins.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-device-associations.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-device-associations.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -242,6 +262,23 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
         'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
         'src/Inventory/Infrastructure/Legacy/DeviceSnmpWriter.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyDeviceTreePlacement.php',
+        'src/Reporting/Infrastructure/Legacy/LegacyDeviceReportPlacement.php',
+        'host.php',
+        'src/Automation/Infrastructure/Legacy/LegacyDeviceRules.php',
+        'src/Inventory/Application/Command/ApplyDeviceRules.php',
+        'src/Inventory/Application/Query/SuggestDeviceLocations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceLocations.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceAutomationController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/LegacyDevicesController.php',
+        'bin/legacy-device-placement.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyResourceAccess.php',
+        'src/Inventory/Domain/DevicePlacement.php',
+        'src/Inventory/Application/Command/PlaceDevices.php',
+        'src/Inventory/Application/Query/ListDevicePlacementDestinations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDevicePlacements.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DevicePlacementController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DevicePlacementType.php',
         'bin/legacy-device-maintenance.php',
         'src/Inventory/Domain/DeviceMaintenanceRequest.php',
         'src/Inventory/Domain/DeviceMaintenanceState.php',

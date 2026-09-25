@@ -190,8 +190,10 @@ done < "$tmp/.merge-base-files" | sort -zu > "$tmp/.merge-base-dirs"
 )
 base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
 
+# Consume the entire list: grep -q can close a large pipe early, making
+# printf fail with SIGPIPE under pipefail and reversing the membership result.
 for f in "${files[@]}"; do
-	if ! printf '%s\n' "$included" | grep -Fqx -- "$f"; then
+	if ! printf '%s\n' "$included" | grep -Fx -- "$f" >/dev/null; then
 		continue
 	fi
 	base_path=$f
@@ -204,7 +206,7 @@ for f in "${files[@]}"; do
 	done
 	# A file outside the merge-base Finder (moved in, or under an exclusion this
 	# change removes) was never subject to the rules; check it in full as new.
-	if ! printf '%s\n' "$base_included" | grep -Fqx -- "$base_path"; then
+	if ! printf '%s\n' "$base_included" | grep -Fx -- "$base_path" >/dev/null; then
 		checked+=("$f")
 		continue
 	fi
