@@ -64,7 +64,7 @@ function path_check_source()
 test('the RRD ownership helpers act only on plain paths inside the RRA directory', function () {
     $root = dirname(__DIR__, 4);
     $base = realpath(sys_get_temp_dir()) . '/rrd-owner-native-' . bin2hex(random_bytes(6));
-    foreach (array('rra/real', 'rra/a/b', 'rra/c/d', 'rra/f', 'outside', 'archive-target') as $path) {
+    foreach (array('rra/real', 'rra/a/b', 'rra/c/d', 'rra/f', 'rra/-other/host', 'rra-other/host', 'outside', 'archive-target') as $path) {
         mkdir($base . '/' . $path, 0700, true);
     }
     touch($base . '/rra/real/device.rrd');
@@ -105,6 +105,9 @@ $results = array(
     'walk'          => run(fn() => rrdtool_set_structured_path_ownership($base . '/rra/a/b/x.rrd', $uid, $gid, 'POLLER')),
     'walk denied'   => run(fn() => rrdtool_set_structured_path_ownership($base . '/rra/c/d/x.rrd', $unused, $gid, 'POLLER')),
     'walk linked'   => run(fn() => rrdtool_set_structured_path_ownership($base . '/rra/away/e/x.rrd', $uid, $gid, 'POLLER')),
+    // A sibling whose name starts with the RRA directory's; rra/-other exists
+    // so a walk of the wrong path would reach it.
+    'walk sibling'  => run(fn() => rrdtool_set_structured_path_ownership($base . '/rra-other/host/x.rrd', $unused, $unused, 'POLLER')),
     // Any other group this account is in can be given without privilege.
     'walk group'    => run(function () use ($base, $uid) {
         $other = array_values(array_diff(posix_getgroups(), array(filegroup($base . '/rra/f'))));
@@ -144,7 +147,8 @@ SOURCE;
         expect($results['walk'][1])->toBe(array());
         expect($results['walk denied'][1])->toBe(array(":ERROR: Unable to set directory permissions for '/rra/c'"));
         expect($results['walk group'])->toBe(array(true, array()));
-        expect($results['walk linked'][1])->toBe(array($refused('POLLER', '/rra/away')));
+        expect($results['walk sibling'][1])->toBe(array($refused('POLLER', '/rra-other/host')));
+        expect($results['walk linked'][1])->toBe(array($refused('POLLER', '/rra/away/e')));
         expect($results['archive'])->toBe(array(true, array()));
         expect($results['archive link'])->toBe(array(false, array($refused('MAINT', '/archive-link/new'))));
         expect($results['system link'])->toBe(array(true, array()));

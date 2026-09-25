@@ -360,10 +360,11 @@ test('ownership is refused for a link or a path outside the root', function () {
  * @param string $rrd    Path of the new RRD below the fixture base.
  * @param bool   $create Whether RRDtool created the file.
  * @param string $link   Directory under rra/ to create as a link to rra/real.
+ * @param string $marker Text inside the condition that opens the block.
  *
  * @return array<int, string> Calls and log lines, in order.
  */
-function create_ownership_calls($file, $function, $rrd, $create = true, $link = '')
+function create_ownership_calls($file, $function, $rrd, $create = true, $link = '', $marker = 'posix_getuid() == 0')
 {
     $base = realpath(sys_get_temp_dir()) . '/rrd-owner-' . bin2hex(random_bytes(6));
     mkdir($base . '/rra/real', 0700, true);
@@ -382,9 +383,9 @@ function create_ownership_calls($file, $function, $rrd, $create = true, $link = 
 
     $root   = dirname(__DIR__, 4);
     $body   = \test_php_function_source(file_get_contents($root . '/' . $file), $function);
-    $uid = strpos($body, 'posix_getuid() == 0');
+    $uid = strpos($body, $marker);
     expect($uid)->not->toBeFalse();
-    $start = strrpos(substr($body, 0, $uid), 'if (');
+    $start = strrpos(substr($body, 0, $uid + 4), 'if (');
 
     $depth = 0;
     $end   = $start;
@@ -413,6 +414,7 @@ $owner_id = 0;
 $group_id = 0;
 $config = array("cacti_server_os" => "unix", "rra_path" => ' . var_export($base . '/rra', true) . ');
 $data_source_path = ' . var_export($base . $rrd, true) . ';
+$host_dir = $data_source_path;
 ' . substr($body, $start, $end - $start) . '
 echo json_encode($GLOBALS["calls"]);
 ';
@@ -463,6 +465,19 @@ test('a missing RRD keeps the messages it had before', function () {
         ));
 });
 
+/* A device's new RRA directory gets the same check as the poller's. */
+test('a new device directory changes ownership only on a plain path', function () {
+    $marker = 'if (!is_dir($host_dir))';
+
+    expect(create_ownership_calls('lib/api_device.php', 'api_device_save', '/rra/5/7', false, '', $marker))
+        ->toBe(array('lchown:/rra/5/7', 'lchgrp:/rra/5/7'));
+    expect(create_ownership_calls('lib/api_device.php', 'api_device_save', '/rra/alias/7', false, 'alias', $marker))
+        ->toBe(array(
+            "POLLER:WARNING: Not changing ownership of '/rra/alias/7', a symbolic link or outside the storage directory",
+            ":ERROR: Unable to set directory permissions for '/rra/alias/7'",
+        ));
+});
+
 /*
  * Every root ownership change on the RRA tree is checked first and made with
  * lchown() or lchgrp(), so a link swapped in after the check is not followed.
@@ -477,6 +492,7 @@ test('each RRA ownership change is checked and never follows a link', function (
         'rrdtool_set_structured_path_ownership' => array($rrd, array('realpath', 'str_starts_with', 'rrdtool_ownership_path')),
         'rrdtool_set_rrd_ownership'             => array($rrd, array('realpath', 'str_starts_with', 'rrdtool_ownership_path')),
         'rrdclean_create_path'                  => array(file_get_contents($root . '/poller_maintenance.php'), array('rrdtool_ownership_path')),
+        'api_device_save'                       => array(file_get_contents($root . '/lib/api_device.php'), array('rrdtool_ownership_path', 'realpath', 'str_starts_with')),
         'rrdtool_create_structured_path'        => array($rrd, array()),
         'rrdtool_function_create'               => array($rrd, array()),
         'boost_rrdtool_function_create'         => array($boost, array()),
@@ -508,6 +524,6 @@ test('each RRA ownership change is checked and never follows a link', function (
         }
     }
 
-    expect($found)->toBe(6);
+    expect($found)->toBe(8);
     expect($wrong)->toBe(array());
 });
