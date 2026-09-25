@@ -657,14 +657,14 @@ function rrdtool_command_path($path)
  */
 function rrdtool_def_path($path)
 {
-    $path = rrdtool_escape_string($path);
     if (!rrdtool_uses_proxy()) {
-        return rrdtool_pipe_quote($path);
+        return rrdtool_pipe_quote(rrdtool_escape_string($path));
     }
 
-    // An escape leaves a backslash, which rrdtool_command_path() refuses.
+    // Relative first, so a root such as C:/rra still matches; the bare path can
+    // then carry no ':' at all, since rrdproxy ends the DEF path at the first one.
     $bare = rrdtool_command_path($path);
-    if ($bare === false || str_starts_with($bare, '/')) {
+    if ($bare === false || str_starts_with($bare, '/') || str_contains($bare, ':')) {
         throw new \Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument('The RRDtool proxy can only read an RRD path under the RRA directory without blanks, quotes, backslashes or colons.');
     }
 
