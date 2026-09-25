@@ -2145,6 +2145,54 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
     }
 }
 
+/**
+ * The magic CDEF variables in the order they are replaced. 'count' names the
+ * counter a variable shares with its COUNT_ or value twin, 'total' whether it
+ * sums the values or counts the data sources, and 'step' whether it has a _PI
+ * form.
+ */
+function rrdtool_cdef_magic_variables()
+{
+    return array(
+        'ALL_DATA_SOURCES_DUPS'       => array('count' => 'all_dups',       'total' => true,  'step' => true),
+        'ALL_DATA_SOURCES_NODUPS'     => array('count' => 'all_nodups',     'total' => true,  'step' => true),
+        'SIMILAR_DATA_SOURCES_DUPS'   => array('count' => 'similar_dups',   'total' => true,  'step' => true),
+        'SIMILAR_DATA_SOURCES_NODUPS' => array('count' => 'similar_nodups', 'total' => true,  'step' => true),
+        'COUNT_ALL_DS_DUPS'           => array('count' => 'all_dups',       'total' => false, 'step' => false),
+        'COUNT_ALL_DS_NODUPS'         => array('count' => 'all_nodups',     'total' => false, 'step' => false),
+        'COUNT_SIMILAR_DS_DUPS'       => array('count' => 'similar_dups',   'total' => false, 'step' => false),
+        'COUNT_SIMILAR_DS_NODUPS'     => array('count' => 'similar_nodups', 'total' => false, 'step' => false),
+    );
+}
+
+/**
+ * Add $def_name to every requested magic variable that uses counter $count,
+ * converting unknowns to '0' first, then advance the counter.
+ */
+function rrdtool_cdef_magic_append(&$magic_item, &$magic_count, $count, $def_name, $rra_seconds)
+{
+    foreach (rrdtool_cdef_magic_variables() as $name => $variable) {
+        if ($variable['count'] === $count && isset($magic_item[$name])) {
+            $magic_item[$name] .= ($magic_count[$count] == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ',GT,' . ($variable['total'] ? "$def_name,$def_name,UN,0,$def_name" : "1,$def_name,UN,0,1") . ',IF,IF';
+        }
+    }
+
+    $magic_count[$count]++;
+}
+
+/**
+ * Replace $name with the data source step, or the poller interval for an item
+ * without a data source. The step is read even when $name is absent.
+ */
+function rrdtool_cdef_step_replace($name, $cdef_string, $graph_item)
+{
+    if (isset($graph_item['local_data_id'])) {
+        return str_replace($name, db_fetch_cell_prepared('SELECT rrd_step FROM data_template_data WHERE local_data_id = ?', array($graph_item['local_data_id'])), $cdef_string);
+    }
+
+    return str_replace($name, read_config_option('poller_interval'), $cdef_string);
+}
+
 function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe, &$xport_meta, $user)
 {
     global $config, $consolidation_functions, $graph_item_types, $encryption;
@@ -2710,50 +2758,20 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
             if ((!empty($graph_item['cdef_id'])) && (!isset($cdef_cache[$graph_item['cdef_id']][$graph_item['data_template_rrd_id']][$cf_id]))) {
                 $cdef_string 	= $graph_variables['cdef_cache'][$graph_item['graph_templates_item_id']];
-                $magic_item 	= array();
-                $already_seen	= array();
-                $sources_seen	= array();
-
-                $count_all_ds_dups       = 0;
-                $count_all_ds_nodups     = 0;
-                $count_similar_ds_dups   = 0;
-                $count_similar_ds_nodups = 0;
+                $magic_item   = array();
+                $magic_count  = array('all_dups' => 0, 'all_nodups' => 0, 'similar_dups' => 0, 'similar_nodups' => 0);
+                $already_seen = array();
+                $sources_seen = array();
 
                 /* if any of those magic variables are requested ... */
                 if (preg_match('/(ALL_DATA_SOURCES_(NO)?DUPS|SIMILAR_DATA_SOURCES_(NO)?DUPS)/', $cdef_string) ||
                     preg_match('/(COUNT_ALL_DS_(NO)?DUPS|COUNT_SIMILAR_DS_(NO)?DUPS)/', $cdef_string)) {
 
                     /* now walk through each case to initialize array*/
-                    if (preg_match('/ALL_DATA_SOURCES_DUPS/', $cdef_string)) {
-                        $magic_item['ALL_DATA_SOURCES_DUPS'] = '';
-                    }
-
-                    if (preg_match('/ALL_DATA_SOURCES_NODUPS/', $cdef_string)) {
-                        $magic_item['ALL_DATA_SOURCES_NODUPS'] = '';
-                    }
-
-                    if (preg_match('/SIMILAR_DATA_SOURCES_DUPS/', $cdef_string)) {
-                        $magic_item['SIMILAR_DATA_SOURCES_DUPS'] = '';
-                    }
-
-                    if (preg_match('/SIMILAR_DATA_SOURCES_NODUPS/', $cdef_string)) {
-                        $magic_item['SIMILAR_DATA_SOURCES_NODUPS'] = '';
-                    }
-
-                    if (preg_match('/COUNT_ALL_DS_DUPS/', $cdef_string)) {
-                        $magic_item['COUNT_ALL_DS_DUPS'] = '';
-                    }
-
-                    if (preg_match('/COUNT_ALL_DS_NODUPS/', $cdef_string)) {
-                        $magic_item['COUNT_ALL_DS_NODUPS'] = '';
-                    }
-
-                    if (preg_match('/COUNT_SIMILAR_DS_DUPS/', $cdef_string)) {
-                        $magic_item['COUNT_SIMILAR_DS_DUPS'] = '';
-                    }
-
-                    if (preg_match('/COUNT_SIMILAR_DS_NODUPS/', $cdef_string)) {
-                        $magic_item['COUNT_SIMILAR_DS_NODUPS'] = '';
+                    foreach (array_keys(rrdtool_cdef_magic_variables()) as $name) {
+                        if (str_contains($cdef_string, $name)) {
+                            $magic_item[$name] = '';
+                        }
                     }
 
                     /* loop over all graph items */
@@ -2766,57 +2784,21 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                             if (isset($cf_ds_cache[$gi_check['data_template_rrd_id']][$cf_id])) {
                                 $def_name = generate_graph_def_name(strval($cf_ds_cache[$gi_check['data_template_rrd_id']][$cf_id]));
 
-                                /* do we need ALL_DATA_SOURCES_DUPS? */
-                                if (isset($magic_item['ALL_DATA_SOURCES_DUPS'])) {
-                                    $magic_item['ALL_DATA_SOURCES_DUPS'] .= ($count_all_ds_dups == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ",GT,$def_name,$def_name,UN,0,$def_name,IF,IF"; /* convert unknowns to '0' first */
-                                }
-
-                                /* do we need COUNT_ALL_DS_DUPS? */
-                                if (isset($magic_item['COUNT_ALL_DS_DUPS'])) {
-                                    $magic_item['COUNT_ALL_DS_DUPS'] .= ($count_all_ds_dups == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ",GT,1,$def_name,UN,0,1,IF,IF"; /* convert unknowns to '0' first */
-                                }
-
-                                $count_all_ds_dups++;
+                                rrdtool_cdef_magic_append($magic_item, $magic_count, 'all_dups', $def_name, $rra_seconds);
 
                                 /* check if this item also qualifies for NODUPS  */
                                 if (!isset($already_seen[$def_name])) {
-                                    if (isset($magic_item['ALL_DATA_SOURCES_NODUPS'])) {
-                                        $magic_item['ALL_DATA_SOURCES_NODUPS'] .= ($count_all_ds_nodups == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ",GT,$def_name,$def_name,UN,0,$def_name,IF,IF"; /* convert unknowns to '0' first */
-                                    }
-
-                                    if (isset($magic_item['COUNT_ALL_DS_NODUPS'])) {
-                                        $magic_item['COUNT_ALL_DS_NODUPS'] .= ($count_all_ds_nodups == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ",GT,1,$def_name,UN,0,1,IF,IF"; /* convert unknowns to '0' first */
-                                    }
-
-                                    $count_all_ds_nodups++;
+                                    rrdtool_cdef_magic_append($magic_item, $magic_count, 'all_nodups', $def_name, $rra_seconds);
                                     $already_seen[$def_name] = true;
                                 }
 
                                 /* check for SIMILAR data sources */
                                 if ($graph_item['data_source_name'] == $gi_check['data_source_name']) {
-                                    /* do we need SIMILAR_DATA_SOURCES_DUPS? */
-                                    if (isset($magic_item['SIMILAR_DATA_SOURCES_DUPS']) && ($graph_item['data_source_name'] == $gi_check['data_source_name'])) {
-                                        $magic_item['SIMILAR_DATA_SOURCES_DUPS'] .= ($count_similar_ds_dups == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ",GT,$def_name,$def_name,UN,0,$def_name,IF,IF"; /* convert unknowns to '0' first */
-                                    }
-
-                                    /* do we need COUNT_SIMILAR_DS_DUPS? */
-                                    if (isset($magic_item['COUNT_SIMILAR_DS_DUPS']) && ($graph_item['data_source_name'] == $gi_check['data_source_name'])) {
-                                        $magic_item['COUNT_SIMILAR_DS_DUPS'] .= ($count_similar_ds_dups == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ",GT,1,$def_name,UN,0,1,IF,IF"; /* convert unknowns to '0' first */
-                                    }
-
-                                    $count_similar_ds_dups++;
+                                    rrdtool_cdef_magic_append($magic_item, $magic_count, 'similar_dups', $def_name, $rra_seconds);
 
                                     /* check if this item also qualifies for NODUPS  */
                                     if (!isset($sources_seen[$gi_check['data_template_rrd_id']])) {
-                                        if (isset($magic_item['SIMILAR_DATA_SOURCES_NODUPS'])) {
-                                            $magic_item['SIMILAR_DATA_SOURCES_NODUPS'] .= ($count_similar_ds_nodups == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ",GT,$def_name,$def_name,UN,0,$def_name,IF,IF"; /* convert unknowns to '0' first */
-                                        }
-
-                                        if (isset($magic_item['COUNT_SIMILAR_DS_NODUPS']) && ($graph_item['data_source_name'] == $gi_check['data_source_name'])) {
-                                            $magic_item['COUNT_SIMILAR_DS_NODUPS'] .= ($count_similar_ds_nodups == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ",GT,1,$def_name,UN,0,1,IF,IF"; /* convert unknowns to '0' first */
-                                        }
-
-                                        $count_similar_ds_nodups++;
+                                        rrdtool_cdef_magic_append($magic_item, $magic_count, 'similar_nodups', $def_name, $rra_seconds);
                                         $sources_seen[$gi_check['data_template_rrd_id']] = true;
                                     }
                                 } # SIMILAR data sources
@@ -2826,107 +2808,27 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                     /* if there is only one item to total, don't even bother with the summation.
                      * Otherwise cdef=a,b,c,+,+ is fine. */
-                    if ($count_all_ds_dups > 1 && isset($magic_item['ALL_DATA_SOURCES_DUPS'])) {
-                        $magic_item['ALL_DATA_SOURCES_DUPS'] .= str_repeat(',+', ($count_all_ds_dups - 2)) . ',+';
-                    }
-
-                    if ($count_all_ds_nodups > 1 && isset($magic_item['ALL_DATA_SOURCES_NODUPS'])) {
-                        $magic_item['ALL_DATA_SOURCES_NODUPS'] .= str_repeat(',+', ($count_all_ds_nodups - 2)) . ',+';
-                    }
-
-                    if ($count_similar_ds_dups > 1 && isset($magic_item['SIMILAR_DATA_SOURCES_DUPS'])) {
-                        $magic_item['SIMILAR_DATA_SOURCES_DUPS'] .= str_repeat(',+', ($count_similar_ds_dups - 2)) . ',+';
-                    }
-
-                    if ($count_similar_ds_nodups > 1 && isset($magic_item['SIMILAR_DATA_SOURCES_NODUPS'])) {
-                        $magic_item['SIMILAR_DATA_SOURCES_NODUPS'] .= str_repeat(',+', ($count_similar_ds_nodups - 2)) . ',+';
-                    }
-
-                    if ($count_all_ds_dups > 1 && isset($magic_item['COUNT_ALL_DS_DUPS'])) {
-                        $magic_item['COUNT_ALL_DS_DUPS'] .= str_repeat(',+', ($count_all_ds_dups - 2)) . ',+';
-                    }
-
-                    if ($count_all_ds_nodups > 1 && isset($magic_item['COUNT_ALL_DS_NODUPS'])) {
-                        $magic_item['COUNT_ALL_DS_NODUPS'] .= str_repeat(',+', ($count_all_ds_nodups - 2)) . ',+';
-                    }
-
-                    if ($count_similar_ds_dups > 1 && isset($magic_item['COUNT_SIMILAR_DS_DUPS'])) {
-                        $magic_item['COUNT_SIMILAR_DS_DUPS'] .= str_repeat(',+', ($count_similar_ds_dups - 2)) . ',+';
-                    }
-
-                    if ($count_similar_ds_nodups > 1 && isset($magic_item['COUNT_SIMILAR_DS_NODUPS'])) {
-                        $magic_item['COUNT_SIMILAR_DS_NODUPS'] .= str_repeat(',+', ($count_similar_ds_nodups - 2)) . ',+';
+                    foreach (rrdtool_cdef_magic_variables() as $name => $variable) {
+                        if ($magic_count[$variable['count']] > 1 && isset($magic_item[$name])) {
+                            $magic_item[$name] .= str_repeat(',+', ($magic_count[$variable['count']] - 2)) . ',+';
+                        }
                     }
                 }
 
                 /* allow automatic rate calculations on raw gauge data */
-                if (isset($graph_item['local_data_id'])) {
-                    $cdef_string = str_replace('CURRENT_DATA_SOURCE_PI', db_fetch_cell_prepared('SELECT rrd_step FROM data_template_data WHERE local_data_id = ?', array($graph_item['local_data_id'])), $cdef_string);
-                } else {
-                    $cdef_string = str_replace('CURRENT_DATA_SOURCE_PI', read_config_option('poller_interval'), $cdef_string);
-                }
+                $cdef_string = rrdtool_cdef_step_replace('CURRENT_DATA_SOURCE_PI', $cdef_string, $graph_item);
 
                 $cdef_string = str_replace('CURRENT_DATA_SOURCE', generate_graph_def_name(strval((isset($cf_ds_cache[$graph_item['data_template_rrd_id']][$cf_id]) ? $cf_ds_cache[$graph_item['data_template_rrd_id']][$cf_id] : '0'))), $cdef_string);
 
-                /* allow automatic rate calculations on raw gauge data */
-                if (isset($graph_item['local_data_id'])) {
-                    $cdef_string = str_replace('ALL_DATA_SOURCES_DUPS_PI', db_fetch_cell_prepared('SELECT rrd_step FROM data_template_data WHERE local_data_id = ?', array($graph_item['local_data_id'])), $cdef_string);
-                } else {
-                    $cdef_string = str_replace('ALL_DATA_SOURCES_DUPS_PI', read_config_option('poller_interval'), $cdef_string);
-                }
+                /* each _PI form is replaced before the variable it extends */
+                foreach (rrdtool_cdef_magic_variables() as $name => $variable) {
+                    if ($variable['step']) {
+                        $cdef_string = rrdtool_cdef_step_replace($name . '_PI', $cdef_string, $graph_item);
+                    }
 
-                /* ALL|SIMILAR_DATA_SOURCES(NO)?DUPS are to be replaced here */
-                if (isset($magic_item['ALL_DATA_SOURCES_DUPS'])) {
-                    $cdef_string = str_replace('ALL_DATA_SOURCES_DUPS', $magic_item['ALL_DATA_SOURCES_DUPS'], $cdef_string);
-                }
-
-                /* allow automatic rate calculations on raw gauge data */
-                if (isset($graph_item['local_data_id'])) {
-                    $cdef_string = str_replace('ALL_DATA_SOURCES_NODUPS_PI', db_fetch_cell_prepared('SELECT rrd_step FROM data_template_data WHERE local_data_id = ?', array($graph_item['local_data_id'])), $cdef_string);
-                } else {
-                    $cdef_string = str_replace('ALL_DATA_SOURCES_NODUPS_PI', read_config_option('poller_interval'), $cdef_string);
-                }
-
-                if (isset($magic_item['ALL_DATA_SOURCES_NODUPS'])) {
-                    $cdef_string = str_replace('ALL_DATA_SOURCES_NODUPS', $magic_item['ALL_DATA_SOURCES_NODUPS'], $cdef_string);
-                }
-
-                /* allow automatic rate calculations on raw gauge data */
-                if (isset($graph_item['local_data_id'])) {
-                    $cdef_string = str_replace('SIMILAR_DATA_SOURCES_DUPS_PI', db_fetch_cell_prepared('SELECT rrd_step FROM data_template_data WHERE local_data_id = ?', array($graph_item['local_data_id'])), $cdef_string);
-                } else {
-                    $cdef_string = str_replace('SIMILAR_DATA_SOURCES_DUPS_PI', read_config_option('poller_interval'), $cdef_string);
-                }
-
-                if (isset($magic_item['SIMILAR_DATA_SOURCES_DUPS'])) {
-                    $cdef_string = str_replace('SIMILAR_DATA_SOURCES_DUPS', $magic_item['SIMILAR_DATA_SOURCES_DUPS'], $cdef_string);
-                }
-
-                if (isset($graph_item['local_data_id'])) {
-                    $cdef_string = str_replace('SIMILAR_DATA_SOURCES_NODUPS_PI', db_fetch_cell_prepared('SELECT rrd_step FROM data_template_data WHERE local_data_id = ?', array($graph_item['local_data_id'])), $cdef_string);
-                } else {
-                    $cdef_string = str_replace('SIMILAR_DATA_SOURCES_NODUPS_PI', read_config_option('poller_interval'), $cdef_string);
-                }
-
-                if (isset($magic_item['SIMILAR_DATA_SOURCES_NODUPS'])) {
-                    $cdef_string = str_replace('SIMILAR_DATA_SOURCES_NODUPS', $magic_item['SIMILAR_DATA_SOURCES_NODUPS'], $cdef_string);
-                }
-
-                /* COUNT_ALL|SIMILAR_DATA_SOURCES(NO)?DUPS are to be replaced here */
-                if (isset($magic_item['COUNT_ALL_DS_DUPS'])) {
-                    $cdef_string = str_replace('COUNT_ALL_DS_DUPS', $magic_item['COUNT_ALL_DS_DUPS'], $cdef_string);
-                }
-
-                if (isset($magic_item['COUNT_ALL_DS_NODUPS'])) {
-                    $cdef_string = str_replace('COUNT_ALL_DS_NODUPS', $magic_item['COUNT_ALL_DS_NODUPS'], $cdef_string);
-                }
-
-                if (isset($magic_item['COUNT_SIMILAR_DS_DUPS'])) {
-                    $cdef_string = str_replace('COUNT_SIMILAR_DS_DUPS', $magic_item['COUNT_SIMILAR_DS_DUPS'], $cdef_string);
-                }
-
-                if (isset($magic_item['COUNT_SIMILAR_DS_NODUPS'])) {
-                    $cdef_string = str_replace('COUNT_SIMILAR_DS_NODUPS', $magic_item['COUNT_SIMILAR_DS_NODUPS'], $cdef_string);
+                    if (isset($magic_item[$name])) {
+                        $cdef_string = str_replace($name, $magic_item[$name], $cdef_string);
+                    }
                 }
 
                 /* data source item variables */
