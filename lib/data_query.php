@@ -2469,6 +2469,11 @@ function update_snmp_index_order($local_data) {
 			WHERE data_input_fields.type_code IN('index_type', 'index_value', 'output_type')
 			AND snmp_query.id = ?",
 			array($local_data['snmp_query_id'])), 'type_code', 'id');
+		if (!isset($data_input_field['index_type'], $data_input_field['index_value'], $data_input_field['output_type'])) {
+			cacti_log('ERROR: Missing SNMP query index fields for query ' . $local_data['snmp_query_id'], false, 'SYSTEM');
+
+			return false;
+		}
 
 		$snmp_cache_value = db_fetch_cell_prepared('SELECT field_value
 			FROM host_snmp_cache
@@ -2480,7 +2485,7 @@ function update_snmp_index_order($local_data) {
 
 		/* only update data source index if there actually *is* an index returned from host_snmp_cache */
 		if (!empty($snmp_cache_value)) {
-			db_execute_prepared('REPLACE INTO data_input_data
+			return db_execute_prepared('REPLACE INTO data_input_data
 				(data_input_field_id, data_template_data_id, t_value, value)
 				VALUES
 				(?, ?, "", ?),
@@ -2494,12 +2499,15 @@ function update_snmp_index_order($local_data) {
 					/* set the expected output type (ie. bytes, errors, packets) */
 					$data_input_field['output_type'], $local_data['data_template_data_id'], $local_data['snmp_query_graph_id']
 				)
-			);
+			) !== false;
 		}
 
 		/* now that we have put data into the 'data_input_data' table, update the snmp cache for ds's */
 		//update_data_source_data_query_cache($local_data['local_data_id']);
+		return true;
 	}
+
+	return false;
 }
 
 /**
@@ -2638,4 +2646,3 @@ function data_query_duplicate($_data_query_id, $data_query_name) {
 		return $data_query_id;
 	}
 }
-
