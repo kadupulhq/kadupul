@@ -9,7 +9,19 @@ namespace StructuredPathOwnershipTest;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_ownership_allowed'));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_ownership_path'));
+
+/** Load the global path checks the helper relies on, as ImportPackageFileDestinationTest does. */
+function load_path_checks()
+{
+    $functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
+
+    foreach (array('validate_relative_path_within', 'cacti_path_is_within') as $name) {
+        if (!function_exists($name)) {
+            eval(\test_php_function_source($functions, $name));
+        }
+    }
+}
 
 function cacti_log($message, $output = false, $environ = 'CMDPHP')
 {
@@ -60,7 +72,7 @@ function remove_tree($path)
 function structured_path_calls($dir_uid, $dir_gid, $owner_id, $group_id, $file = 'lib/rrd.php', $fail = '', $rrd = '/rra/host/device.rrd', $link = '', $target = 'outside', &$touched = array())
 {
     // The walk resolves real paths, so the directories it visits have to exist.
-    $base = sys_get_temp_dir() . '/rrd-owner-' . bin2hex(random_bytes(6));
+    $base = realpath(sys_get_temp_dir()) . '/rrd-owner-' . bin2hex(random_bytes(6));
     mkdir($base . '/rra/real', 0700, true);
     mkdir($base . '/outside', 0700);
 
@@ -105,6 +117,7 @@ function structured_path_calls($dir_uid, $dir_gid, $owner_id, $group_id, $file =
 
     $probe = '<?php
 namespace Probe;
+require_once ' . var_export(dirname(__DIR__, 4) . '/lib/functions.php', true) . ';
 $calls = array();
 function fileowner($path) { return $GLOBALS["dir_uid"]; }
 function filegroup($path) { return $GLOBALS["dir_gid"]; }
@@ -113,7 +126,7 @@ function lchgrp($path, $gid) { $GLOBALS["calls"][] = "chgrp:" . $gid; $GLOBALS["
 function cacti_log($message, $flag = true, $environ = "") { $GLOBALS["calls"][] = "log:" . (strpos($message, "ERROR: Unable to set directory permissions") === 0 ? "permissions" : (strpos($message, "WARNING: Not changing ownership") === 0 ? "skipped" : "other")); }
 $GLOBALS["touched"] = array();
 $logopt = "POLLER";
-' . \test_php_function_source($source, 'rrdtool_ownership_allowed') . '
+' . \test_php_function_source($source, 'rrdtool_ownership_path') . '
 $GLOBALS["fail"] = ' . var_export($fail, true) . ';
 $GLOBALS["dir_uid"] = ' . (int) $dir_uid . ';
 $GLOBALS["dir_gid"] = ' . (int) $dir_gid . ';
@@ -309,13 +322,14 @@ test('the walk still changes plain directories inside the RRA path', function ()
 
 test('ownership is refused for a link or a path outside the root', function () {
     require_once dirname(__DIR__, 4) . '/lib/rrd.php';
+    load_path_checks();
 
     // Defined at run time, after every test file has declared what it needs.
     if (!function_exists('cacti_log')) {
         eval('function cacti_log(...$args) {}');
     }
 
-    $base = sys_get_temp_dir() . '/rrd-owner-' . bin2hex(random_bytes(6));
+    $base = realpath(sys_get_temp_dir()) . '/rrd-owner-' . bin2hex(random_bytes(6));
     mkdir($base . '/rra/host', 0700, true);
     mkdir($base . '/rra-other', 0700);
     mkdir($base . '/outside', 0700);
@@ -323,39 +337,152 @@ test('ownership is refused for a link or a path outside the root', function () {
     touch($base . '/outside/device.rrd');
     symlink($base . '/outside/device.rrd', $base . '/rra/host/linked.rrd');
     symlink($base . '/outside', $base . '/rra/away');
+    symlink($base . '/rra/host', $base . '/rra/alias');
 
     try {
         $root = $base . '/rra';
 
         // The library's own copy, then the copy logging to this namespace.
-        foreach (array('\\rrdtool_ownership_allowed', __NAMESPACE__ . '\\rrdtool_ownership_allowed') as $allowed) {
+        foreach (array('\\rrdtool_ownership_path', __NAMESPACE__ . '\\rrdtool_ownership_path') as $checked) {
             $GLOBALS['ownership_log'] = array();
 
-            expect($allowed($root . '/host/device.rrd', $root, 'BOOST'))->toBeTrue();
-            expect($allowed($root . '/host', $root))->toBeTrue();
-            expect($allowed($root . '/host/device.rrd'))->toBeTrue();
+            expect($checked($root . '/host/device.rrd', $root, 'BOOST'))->toBe($root . '/host/device.rrd');
+            expect($checked($root . '/host', $root . '/'))->toBe($root . '/host');
+            expect($checked($root . '/host/device.rrd'))->toBe($root . '/host/device.rrd');
             expect($GLOBALS['ownership_log'])->toBe(array());
 
             // A link is refused with or without a root to bound it.
-            expect($allowed($root . '/host/linked.rrd', $root, 'BOOST'))->toBeFalse();
-            expect($allowed($root . '/host/linked.rrd', null, 'MAINT'))->toBeFalse();
+            expect($checked($root . '/host/linked.rrd', $root, 'BOOST'))->toBeFalse();
+            expect($checked($root . '/host/linked.rrd', null, 'MAINT'))->toBeFalse();
 
-            // A plain file reached through a linked directory, or through '..'.
-            expect($allowed($root . '/away/device.rrd', $root))->toBeFalse();
-            expect($allowed($root . '/host/../../outside/device.rrd', $root))->toBeFalse();
+            // A plain file reached through a linked directory, inside the root
+            // or out of it, or through '..'.
+            expect($checked($root . '/alias/device.rrd', $root))->toBeFalse();
+            expect($checked($root . '/away/device.rrd', $root))->toBeFalse();
+            expect($checked($root . '/host/../../outside/device.rrd', $root))->toBeFalse();
 
             // The root itself, a missing path and a sibling sharing its prefix.
-            expect($allowed($root, $root))->toBeFalse();
-            expect($allowed($root . '/host/missing.rrd', $root))->toBeFalse();
-            expect($allowed($base . '/rra-other', $root))->toBeFalse();
+            expect($checked($root, $root))->toBeFalse();
+            expect($checked($root . '/host/missing.rrd', $root))->toBeFalse();
+            expect($checked($base . '/rra-other', $root))->toBeFalse();
         }
 
-        expect(count($GLOBALS['ownership_log']))->toBe(7);
+        expect(count($GLOBALS['ownership_log']))->toBe(8);
         expect($GLOBALS['ownership_log'][0])->toStartWith('BOOST:WARNING: Not changing ownership of');
         expect($GLOBALS['ownership_log'][1])->toStartWith('MAINT:');
     } finally {
         remove_tree($base);
     }
+});
+
+/**
+ * Run the root-only ownership block after RRDtool create in $function, taken
+ * from $file, against a real RRA tree with lchown(), lchgrp(), posix_getuid()
+ * and cacti_log() stubbed.
+ *
+ * @param string $rrd    Path of the new RRD below the fixture base.
+ * @param bool   $create Whether RRDtool created the file.
+ * @param string $link   Directory under rra/ to create as a link to rra/real.
+ *
+ * @return array<int, string> Calls and log lines, in order.
+ */
+function create_ownership_calls($file, $function, $rrd, $create = true, $link = '')
+{
+    $base = realpath(sys_get_temp_dir()) . '/rrd-owner-' . bin2hex(random_bytes(6));
+    mkdir($base . '/rra/real', 0700, true);
+
+    if ($link !== '') {
+        symlink($base . '/rra/real', $base . '/rra/' . $link);
+    }
+
+    if (!is_dir(dirname($base . $rrd))) {
+        mkdir(dirname($base . $rrd), 0700, true);
+    }
+
+    if ($create) {
+        touch($base . $rrd);
+    }
+
+    $root   = dirname(__DIR__, 4);
+    $body   = \test_php_function_source(file_get_contents($root . '/' . $file), $function);
+    $uid = strpos($body, 'posix_getuid() == 0');
+    expect($uid)->not->toBeFalse();
+    $start = strrpos(substr($body, 0, $uid), 'if (');
+
+    $depth = 0;
+    $end   = $start;
+    for ($i = $start; $i < strlen($body); $i++) {
+        if ($body[$i] === '{') {
+            $depth++;
+        } elseif ($body[$i] === '}' && --$depth === 0) {
+            $end = $i + 1;
+
+            break;
+        }
+    }
+
+    $probe = '<?php
+namespace Probe;
+require_once ' . var_export($root . '/lib/functions.php', true) . ';
+function posix_getuid() { return 0; }
+function lchown($path, $uid) { $GLOBALS["calls"][] = "lchown:" . substr($path, strlen($GLOBALS["base"])); return true; }
+function lchgrp($path, $gid) { $GLOBALS["calls"][] = "lchgrp:" . substr($path, strlen($GLOBALS["base"])); return true; }
+function cacti_log($message, $flag = true, $environ = "") { $GLOBALS["calls"][] = $environ . ":" . str_replace($GLOBALS["base"], "", $message); }
+' . \test_php_function_source(file_get_contents($root . '/lib/rrd.php'), 'rrdtool_ownership_path') . '
+$GLOBALS["calls"] = array();
+$GLOBALS["base"] = ' . var_export($base, true) . ';
+$owner_id = 0;
+$group_id = 0;
+$config = array("cacti_server_os" => "unix", "rra_path" => ' . var_export($base . '/rra', true) . ');
+$data_source_path = ' . var_export($base . $rrd, true) . ';
+' . substr($body, $start, $end - $start) . '
+echo json_encode($GLOBALS["calls"]);
+';
+
+    $script = tempnam(sys_get_temp_dir(), 'rrd-owner-');
+    file_put_contents($script, $probe);
+
+    try {
+        $out   = (string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($script) . ' 2>&1');
+        $calls = json_decode($out, true);
+        expect($calls)->toBeArray($out);
+
+        return $calls;
+    } finally {
+        unlink($script);
+        remove_tree($base);
+    }
+}
+
+/*
+ * The new RRD's own ownership change must not act through a linked directory
+ * above it, even one that points back inside the RRA tree.
+ */
+test('a new RRD under a linked directory keeps its ownership', function () {
+    $refused = "WARNING: Not changing ownership of '/rra/alias/device.rrd', a symbolic link or outside the storage directory";
+
+    expect(create_ownership_calls('lib/rrd.php', 'rrdtool_function_create', '/rra/alias/device.rrd', true, 'alias'))
+        ->toBe(array('POLLER:' . $refused));
+    expect(create_ownership_calls('lib/boost.php', 'boost_rrdtool_function_create', '/rra/alias/device.rrd', true, 'alias'))
+        ->toBe(array('BOOST:' . $refused));
+});
+
+test('a new RRD in a plain directory gets its owner and group', function () {
+    $expected = array('lchown:/rra/real/device.rrd', 'lchgrp:/rra/real/device.rrd');
+
+    expect(create_ownership_calls('lib/rrd.php', 'rrdtool_function_create', '/rra/real/device.rrd'))->toBe($expected);
+    expect(create_ownership_calls('lib/boost.php', 'boost_rrdtool_function_create', '/rra/real/device.rrd'))->toBe($expected);
+});
+
+/* A create RRDtool failed reports what it reported before the check existed. */
+test('a missing RRD keeps the messages it had before', function () {
+    expect(create_ownership_calls('lib/rrd.php', 'rrdtool_function_create', '/rra/real/device.rrd', false))
+        ->toBe(array("POLLER:ERROR: RRD file '/rra/real/device.rrd' does not exist for ownership assignment"));
+    expect(create_ownership_calls('lib/boost.php', 'boost_rrdtool_function_create', '/rra/real/device.rrd', false))
+        ->toBe(array(
+            "BOOST:WARNING: Unable to set owner for '/rra/real/device.rrd'",
+            "BOOST:WARNING: Unable to set group for '/rra/real/device.rrd'",
+        ));
 });
 
 /*
@@ -384,7 +511,7 @@ test('each RRA ownership change is checked and never follows a link', function (
                 continue;
             }
 
-            if ($token[1] === 'rrdtool_ownership_allowed') {
+            if ($token[1] === 'rrdtool_ownership_path') {
                 $checked = true;
             } elseif (in_array($token[1], array('chown', 'chgrp'), true)) {
                 $wrong[] = $name . ' calls ' . $token[1];
