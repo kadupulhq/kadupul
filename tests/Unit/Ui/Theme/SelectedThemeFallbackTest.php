@@ -71,4 +71,18 @@ final class SelectedThemeFallbackTest extends TestCase {
 		self::assertSame('classic', $_SESSION['selected_theme']);
 		self::assertSame(array(), $GLOBALS['theme_selected_fallback']['updates']);
 	}
+
+	public function testInvalidScalarAndNonScalarSessionThemesFallBackSafely(): void {
+		$GLOBALS['theme_selected_fallback']['user_theme'] = '';
+		unset($_SESSION['sess_user_id']);
+
+		foreach (array('../../etc/passwd', array('unexpected')) as $requested_theme) {
+			$_SESSION['selected_theme'] = $requested_theme;
+
+			self::assertSame('classic', get_selected_theme());
+			self::assertSame('classic', $_SESSION['selected_theme']);
+		}
+
+		self::assertSame(array(), $GLOBALS['theme_selected_fallback']['updates']);
+	}
 }
