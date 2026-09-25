@@ -7380,11 +7380,18 @@ function get_include_relpath($path)
     global $config;
     $basePath = rtrim($config['base_path'], '/') . '/';
 
-    $npath = '';
-    if (file_exists($path)) {
+    if (is_string($path) && class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyIncludePathResolver::class)) {
+        $npath = (new \Kadupul\Platform\Infrastructure\Legacy\LegacyIncludePathResolver(new \Symfony\Component\Filesystem\Filesystem()))->existingRelativePath($path, $config['base_path']);
+    } elseif (file_exists($path)) {
         $npath = str_replace($basePath, '', $path);
     } elseif (file_exists($basePath . $path)) {
         $npath = $path;
+    } else {
+        $npath = false;
+    }
+
+    if ($npath !== false) {
+        return $npath;
     } elseif (debounce_run_notification('missing:' . $path)) {
         $npath = str_replace($basePath, '', $path);
 
@@ -7393,7 +7400,7 @@ function get_include_relpath($path)
         admin_email(__('Kadupul System Warning'), __('WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file', $config['base_path'] . '/' . $npath));
     }
 
-    return $npath;
+    return $npath === false ? '' : $npath;
 }
 
 function get_md5_include_js($path, $async = false)
