@@ -5,22 +5,24 @@
 
 /**
  * Run a copy of poller_realtime.php against the real lib/rrd.php and RRDtool,
- * with $minimum stored as the data source minimum. Returns the exit status,
- * stdout and stderr; the copy's directory is left for the caller to inspect.
+ * with $minimum and $heartbeat stored for data source 12; data source 11 is
+ * always valid. Returns the exit status, stdout and stderr; the copy's
+ * directory is left for the caller to inspect.
  */
-function realtime_create_run($test, string $directory, string $minimum): array
+function realtime_create_run($test, string $directory, string $minimum, string $heartbeat = '600'): array
 {
     $root = dirname(__DIR__, 4);
     $coverage = $test->getTestResultObject()->getCodeCoverage();
     $environment = getenv();
     $environment['REALTIME_ROOT'] = $root;
     $environment['REALTIME_MINIMUM'] = $minimum;
+    $environment['REALTIME_HEARTBEAT'] = $heartbeat;
     // RRDtool reads the create text's --start 0 as midnight, so the sample is
     // taken now, and never at midnight itself.
     $environment['REALTIME_TIME'] = $test->sampleTime = gmdate('Y-m-d H:i:s', max(time(), strtotime('today UTC') + 1));
     $environment['REALTIME_COVERAGE'] = $coverage === null ? '0' : '1';
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . dirname($directory),
+        array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=/',
             '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $directory . '/poller_realtime.php',
             '--graph=7', '--interval=10', '--poller_id=abc123'),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
@@ -72,30 +74,61 @@ afterEach(function () {
     rmdir($this->dir);
 });
 
-test('the realtime poller creates its RRD through the RRDtool pipe with the realtime step', function () {
+/** The deletions the poller made, one per acknowledged sample. */
+function realtime_create_deleted($test): array
+{
+    $file = $test->dir . '/deleted.json';
+
+    return is_file($file) ? file($file, FILE_IGNORE_NEW_LINES) : array();
+}
+
+/** ERROR lines the poller logged. */
+function realtime_create_errors($test): array
+{
+    $file = $test->dir . '/cacti.log';
+
+    return is_file($file) ? array_values(preg_grep('/ERROR:/', file($file, FILE_IGNORE_NEW_LINES))) : array();
+}
+
+function realtime_create_sample($test, string $local_data_id): string
+{
+    return json_encode(array($local_data_id, 'value', $test->sampleTime, 'abc123', '42'));
+}
+
+test('the realtime poller creates its RRDs through the RRDtool pipe with the realtime step', function () {
     list($status, $stdout, $stderr) = realtime_create_run($this, $this->dir, '0');
 
-    $created = $this->dir . '/cache/user_abc123_11.rrd';
     expect($stderr)->toBe('')
-        ->and($status)->toBe(0, (string) @file_get_contents($this->dir . '/cacti.log'))
-        ->and(is_file($created))->toBeTrue($stdout);
-    exec(escapeshellarg($this->binary) . ' info ' . escapeshellarg($created), $info);
-    expect($info)->toContain('step = 10', 'ds[value].min = 0.0000000000e+00')
-        ->and(file_get_contents($this->dir . '/deleted.json'))->toBe(json_encode(array('11', 'value', $this->sampleTime, 'abc123', '42')) . "\n")
+        ->and($status)->toBe(0, implode("\n", realtime_create_errors($this)))
+        ->and(realtime_create_errors($this))->toBe(array());
+    foreach (array('11', '12') as $local_data_id) {
+        $created = $this->dir . '/cache/user_abc123_' . $local_data_id . '.rrd';
+        expect(is_file($created))->toBeTrue($stdout);
+        $info = array();
+        exec(escapeshellarg($this->binary) . ' info ' . escapeshellarg($created), $info);
+        expect($info)->toContain('step = 10', 'ds[value].min = 0.0000000000e+00');
+    }
+    expect(realtime_create_deleted($this))->toBe(array(realtime_create_sample($this, '11'), realtime_create_sample($this, '12')))
         // The poller never falls back to the data source's own RRD.
         ->and(glob($this->dir . '/rra/*'))->toBe(array());
 });
 
-test('a stored minimum that is not a number or U creates no realtime RRD and runs nothing else', function ($minimum) {
-    list($status, $stdout, $stderr) = realtime_create_run($this, $this->dir, $minimum);
+test('a realtime RRD that cannot be created keeps its sample and not the others', function ($minimum, $heartbeat, $error) {
+    list($status, $stdout, $stderr) = realtime_create_run($this, $this->dir, $minimum, $heartbeat);
 
     // The marker would appear only if the value had been handed to a shell.
     expect(glob($this->dir . '/marker*'))->toBe(array())
         ->and($stderr)->toBe('')
-        ->and(glob($this->dir . '/cache/*'))->toBe(array())
+        ->and($status)->toBe(0, $stdout)
+        ->and(glob($this->dir . '/cache/*'))->toBe(array($this->dir . '/cache/user_abc123_11.rrd'))
         ->and(glob($this->dir . '/rra/*'))->toBe(array())
-        ->and(is_file($this->dir . '/deleted.json'))->toBeFalse($stdout);
+        ->and(realtime_create_deleted($this))->toBe(array(realtime_create_sample($this, '11')));
+    // One refusal, not a second one from the update retrying the create.
+    $errors = realtime_create_errors($this);
+    expect($errors)->toHaveCount(1)
+        ->and($errors[0])->toContain($error);
 })->with(array(
-    'marker' => array('0;touch marker;'),
-    'trailing text' => array('5 x'),
+    'marker' => array('0;touch marker;', '600', 'RRD file for Data Source 12 was not created. Its minimum is not a number or U.'),
+    'trailing text' => array('5 x', '600', 'RRD file for Data Source 12 was not created. Its minimum is not a number or U.'),
+    'refused by RRDtool' => array('0', '0', 'Realtime RRD for Data Source 12 was not created. RRDtool refused it.'),
 ));

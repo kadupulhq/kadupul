@@ -5,9 +5,10 @@
 
 // Stands in for include/cli_check.php when RealtimeCreateNativeTest runs a copy
 // of poller_realtime.php. It loads the real lib/rrd.php and its helpers and
-// answers the database with the rows of one data source. REALTIME_MINIMUM is
-// its stored minimum and REALTIME_TIME the time of its one realtime sample.
-// RRDtool is the real binary, reached through a path that contains a blank.
+// answers the database with two data sources, 11 and 12, each with one
+// realtime sample taken at REALTIME_TIME. Data source 12 stores REALTIME_MINIMUM
+// and REALTIME_HEARTBEAT; 11 is always valid. RRDtool is the real binary,
+// reached through a path that contains a blank.
 
 $root = getenv('REALTIME_ROOT');
 $directory = dirname(realpath($_SERVER['argv'][0]));
@@ -39,30 +40,30 @@ $config = array(
         'realtime_interval' => '10',
         'log_destination' => 1,
         'path_cactilog' => $directory . '/cacti.log',
-        'log_verbosity' => 1,
+        'log_verbosity' => 2,
         'storage_location' => 0,
         'extended_paths' => '',
         'default_interface_speed' => '',
     ),
 );
 
-function realtime_fixture_rows()
+function realtime_fixture_rows($local_data_id)
 {
+    $sample = array('output' => '42', 'time' => getenv('REALTIME_TIME'), 'rrd_path' => '', 'rrd_name' => 'value', 'rrd_num' => '1', 'data_template_id' => '0');
+    $source = array('id' => '301', 'data_source_name' => 'value', 'rrd_heartbeat' => '600', 'rrd_minimum' => '0', 'rrd_maximum' => 'U', 'data_source_type_id' => '1');
+    if ($local_data_id === '12') {
+        $source = array('rrd_minimum' => getenv('REALTIME_MINIMUM'), 'rrd_heartbeat' => getenv('REALTIME_HEARTBEAT')) + $source;
+    }
+
     return array(
-        'FROM poller_output_realtime AS port' => array(array(
-            'output' => '42', 'time' => getenv('REALTIME_TIME'), 'local_data_id' => '11', 'rrd_path' => '',
-            'rrd_name' => 'value', 'rrd_num' => '1', 'data_template_id' => '0',
-        )),
-        'SELECT name, data_source_path FROM data_template_data' => array('name' => 'Traffic', 'data_source_path' => '<path_rra>/traffic_11.rrd'),
+        'FROM poller_output_realtime AS port' => array(array('local_data_id' => '11') + $sample, array('local_data_id' => '12') + $sample),
+        'SELECT name, data_source_path FROM data_template_data' => array('name' => 'Traffic', 'data_source_path' => '<path_rra>/traffic_' . $local_data_id . '.rrd'),
         'LEFT JOIN data_source_profiles_cf AS dspc' => array(array(
             'rrd_step' => '300', 'x_files_factor' => '0.5', 'steps' => '1', 'rows' => '600',
             'consolidation_function_id' => '1', 'rra_order' => '600',
         )),
         'SELECT data_template_id FROM data_local' => '0',
-        'FROM data_template_rrd AS dtr WHERE local_data_id' => array(array(
-            'id' => '301', 'data_source_name' => 'value', 'rrd_heartbeat' => '600',
-            'rrd_minimum' => getenv('REALTIME_MINIMUM'), 'rrd_maximum' => 'U', 'data_source_type_id' => '1',
-        )),
+        'FROM data_template_rrd AS dtr WHERE local_data_id' => array($source),
         'SELECT host_id, snmp_query_id, snmp_index FROM data_local' => array('host_id' => '0', 'snmp_query_id' => '0', 'snmp_index' => ''),
         'field_name="ifHighSpeed"' => '',
         'field_name="ifSpeed"' => '',
@@ -70,10 +71,11 @@ function realtime_fixture_rows()
     );
 }
 
-function realtime_fixture_query($sql)
+/** Rows keyed by local data id answer for the id the query is bound to. */
+function realtime_fixture_query($sql, $params)
 {
     $normalized = trim(preg_replace('/\s+/', ' ', $sql));
-    foreach (realtime_fixture_rows() as $fragment => $result) {
+    foreach (realtime_fixture_rows((string) ($params[0] ?? '')) as $fragment => $result) {
         if (strpos($normalized, $fragment) !== false) {
             return $result;
         }
@@ -84,17 +86,17 @@ function realtime_fixture_query($sql)
 
 function db_fetch_cell_prepared($sql, $params = array(), ...$args)
 {
-    return realtime_fixture_query($sql);
+    return realtime_fixture_query($sql, $params);
 }
 
 function db_fetch_row_prepared($sql, $params = array(), ...$args)
 {
-    return realtime_fixture_query($sql);
+    return realtime_fixture_query($sql, $params);
 }
 
 function db_fetch_assoc_prepared($sql, $params = array(), ...$args)
 {
-    return realtime_fixture_query($sql);
+    return realtime_fixture_query($sql, $params);
 }
 
 function db_execute_prepared($sql, $params = array(), ...$args)
