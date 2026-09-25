@@ -1042,10 +1042,187 @@ function rrdtool_function_interface_speed($data_local) {
 	return $speed;
 }
 
-function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = false) {
-	global $config, $data_source_types, $consolidation_functions, $encryption;
+/**
+ * The DS and RRA part of an rrdtool create command for a data source.
+ *
+ * Both creators built this from the same rows and drifted. Some of the drift
+ * has already cost data: the Boost copy compared the bounds with (int), had no
+ * GAUGE or ABSOLUTE case, and read a stored maximum of 0 as absent, so the two
+ * wrote different DS definitions for one data source. The rest is still
+ * waiting to. Boost joined the RRA and consolidation rows on
+ * dtd.data_source_profile_id rather than on dsp.id, which finds them even when
+ * the profile row itself is gone; x_files_factor is then NULL and the RRA line
+ * it writes is malformed, where lib/rrd.php found no RRA and failed. Boost also
+ * left the RRA order undetermined when two profiles tie on rows times steps,
+ * and said nothing at all when a data source had no RRA.
+ *
+ * So there is one builder, with lib/rrd.php's join, lib/rrd.php's ordering and
+ * a log line either way. What is not here is what each creator does with the
+ * result: the path checks, the directory creation, the ownership and the
+ * execution all differ for reasons of their own.
+ *
+ * @param int    $local_data_id
+ * @param string $facility log facility of the calling creator, POLLER or BOOST
+ *
+ * @return string|false the command text after the path, or false when the data
+ *                      source cannot be described
+ */
+function rrd_create_definition($local_data_id, $facility) {
+	global $config;
 
-	include ($config['include_path'] . '/global_arrays.php');
+	/**
+	 * @var array $data_source_types
+	 * @var array $consolidation_functions
+	 */
+	include($config['include_path'] . '/global_arrays.php');
+
+	/**
+	 * the first thing we must do is make sure there is at least one
+	 * rra associated with this data source... *
+	 *
+	 * UPDATE: As of version 0.6.6, we are splitting this up into two
+	 * SQL strings because of the multiple DS per RRD support. This is
+	 * not a big deal however since this function gets called once per
+	 * data source
+	 */
+	$rras = db_fetch_assoc_prepared('SELECT dtd.rrd_step, dsp.x_files_factor,
+		dspr.steps, dspr.rows, dspc.consolidation_function_id,
+		(dspr.rows*dspr.steps) AS rra_order
+		FROM data_template_data AS dtd
+		LEFT JOIN data_source_profiles AS dsp
+		ON dtd.data_source_profile_id=dsp.id
+		LEFT JOIN data_source_profiles_rra AS dspr
+		ON dsp.id=dspr.data_source_profile_id
+		LEFT JOIN data_source_profiles_cf AS dspc
+		ON dsp.id=dspc.data_source_profile_id
+		WHERE dtd.local_data_id = ?
+		AND (dspr.steps IS NOT NULL OR dspr.rows IS NOT NULL)
+		ORDER BY dspc.consolidation_function_id, rra_order, dspr.steps',
+		array($local_data_id)
+	);
+
+	/* if we find that this DS has no RRA associated; get out.  This would
+	 * indicate that a data source has been deleted
+	 */
+	if (cacti_sizeof($rras) <= 0) {
+		cacti_log("ERROR: There are no RRA's assigned to local_data_id: $local_data_id.", false, $facility);
+
+		return false;
+	}
+
+	/* create the "--step" line */
+	$create_ds = RRD_NL . '--start 0 --step '. $rras[0]['rrd_step'] . ' ' . RRD_NL;
+
+	/**
+	 * We have to check for Non-Templated Data Source first as they may not include
+	 * a graph.  So, for that case, we need the RRDfile to include all data sources
+	 */
+	$data_template_id = db_fetch_cell_prepared('SELECT data_template_id
+		FROM data_local
+		WHERE id = ?',
+		array($local_data_id));
+
+	if ($data_template_id > 0) {
+		$data_sources = db_fetch_assoc_prepared('SELECT DISTINCT dtr.id, dtr.data_source_name, dtr.rrd_heartbeat,
+			dtr.rrd_minimum, dtr.rrd_maximum, dtr.data_source_type_id
+			FROM data_template_rrd AS dtr
+			INNER JOIN graph_templates_item AS gti
+			ON dtr.id = gti.task_item_id
+			WHERE dtr.local_data_id = ?
+			ORDER BY local_data_template_rrd_id',
+			array($local_data_id)
+		);
+	} else {
+		$data_sources = db_fetch_assoc_prepared('SELECT DISTINCT dtr.id, dtr.data_source_name, dtr.rrd_heartbeat,
+			dtr.rrd_minimum, dtr.rrd_maximum, dtr.data_source_type_id
+			FROM data_template_rrd AS dtr
+			WHERE dtr.local_data_id = ?
+			ORDER BY local_data_template_rrd_id',
+			array($local_data_id)
+		);
+	}
+
+	/**
+	 * ONLY make a new DS entry if:
+	 *
+	 * - There are multiple data sources and this item is not the main one.
+	 * - There are only one data source (then use it)
+	 */
+	if (cacti_sizeof($data_sources)) {
+		/* only a |query_ maximum needs the device, and most do not have one */
+		$data_local = false;
+		$speed      = false;
+
+		foreach ($data_sources as $data_source) {
+			/* use the cacti ds name by default or the user defined one, if entered */
+			$data_source_name = get_data_source_item_name($data_source['id']);
+
+			if (!cacti_rrdtool_valid_ds_name($data_source_name)) {
+				cacti_log("ERROR: Invalid RRD data source name for local_data_id: $local_data_id.", false, $facility);
+
+				return false;
+			}
+
+			// Trim the data source maximum
+			$data_source['rrd_maximum'] = trim((string) $data_source['rrd_maximum']);
+
+			/**
+			 * empty() here treated a stored maximum of '0' as absent and made
+			 * it unbounded. Only an empty string or the undefined marker mean
+			 * unbounded.
+			 */
+			if ($data_source['rrd_maximum'] === '' || $data_source['rrd_maximum'] == 'U') {
+				/* in case no maximum is given, use "Undef" value */
+				$data_source['rrd_maximum'] = 'U';
+			} elseif (strpos($data_source['rrd_maximum'], '|query_') !== false) {
+				/* in case a query variable is given, evaluate it */
+				if ($data_local === false) {
+					$data_local = db_fetch_row_prepared('SELECT host_id,
+						snmp_query_id, snmp_index
+						FROM data_local
+						WHERE id = ?',
+						array($local_data_id)
+					);
+
+					$speed = rrdtool_function_interface_speed($data_local);
+				}
+
+				if ($data_source['rrd_maximum'] == '|query_ifSpeed|' || $data_source['rrd_maximum'] == '|query_ifHighSpeed|') {
+					$data_source['rrd_maximum'] = $speed;
+				} else {
+					$data_source['rrd_maximum'] = substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']);
+				}
+			} else {
+				/* max > min required */
+				$data_source['rrd_maximum'] = cacti_rrd_corrected_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $data_source['data_source_type_id']);
+			}
+
+			/* min==max==0 won't work with rrdtool */
+			if ($data_source['rrd_minimum'] == 0 && $data_source['rrd_maximum'] == 0) {
+				$data_source['rrd_maximum'] = 'U';
+			}
+
+			if (!cacti_rrdtool_valid_bound($data_source['rrd_minimum']) || !cacti_rrdtool_valid_bound($data_source['rrd_maximum'])) {
+				cacti_log("ERROR: Invalid RRD data source bounds for local_data_id: $local_data_id.", false, $facility);
+
+				return false;
+			}
+
+			$create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
+		}
+	}
+
+	$create_rra = '';
+	/* loop through each available RRA for this DS */
+	foreach ($rras as $rra) {
+		$create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
+	}
+
+	return $create_ds . $create_rra;
+}
+
+function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = false) {
+	global $config;
 
 	$data_source_path = get_data_source_path($local_data_id, true);
 
@@ -1104,130 +1281,10 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 		}
 	}
 
-	/* the first thing we must do is make sure there is at least one
-	rra associated with this data source... *
-	UPDATE: As of version 0.6.6, we are splitting this up into two
-	SQL strings because of the multiple DS per RRD support. This is
-	not a big deal however since this function gets called once per
-	data source */
+	$definition = rrd_create_definition($local_data_id, 'POLLER');
 
-	$rras = db_fetch_assoc_prepared('SELECT dtd.rrd_step, dsp.x_files_factor,
-		dspr.steps, dspr.rows, dspc.consolidation_function_id,
-		(dspr.rows*dspr.steps) AS rra_order
-		FROM data_template_data AS dtd
-		LEFT JOIN data_source_profiles AS dsp
-		ON dtd.data_source_profile_id=dsp.id
-		LEFT JOIN data_source_profiles_rra AS dspr
-		ON dsp.id=dspr.data_source_profile_id
-		LEFT JOIN data_source_profiles_cf AS dspc
-		ON dsp.id=dspc.data_source_profile_id
-		WHERE dtd.local_data_id = ?
-		AND (dspr.steps IS NOT NULL OR dspr.rows IS NOT NULL)
-		ORDER BY dspc.consolidation_function_id, rra_order, dspr.steps',
-		array($local_data_id)
-	);
-
-	/* if we find that this DS has no RRA associated; get out */
-	if (cacti_sizeof($rras) <= 0) {
-		cacti_log("ERROR: There are no RRA's assigned to local_data_id: $local_data_id.");
+	if ($definition === false) {
 		return false;
-	}
-
-	/* create the "--step" line */
-	$create_ds = RRD_NL . '--start 0 --step '. $rras[0]['rrd_step'] . ' ' . RRD_NL;
-
-	/**
-	 * We have to check for Non-Templated Data Source first as they may not include
-	 * a graph.  So, for that case, we need the RRDfile to include all data sources
-	 */
-	$data_template_id = db_fetch_cell_prepared('SELECT data_template_id
-		FROM data_local
-		WHERE id = ?',
-		array($local_data_id));
-
-	if ($data_template_id > 0) {
-		$data_sources = db_fetch_assoc_prepared('SELECT DISTINCT dtr.id, dtr.data_source_name, dtr.rrd_heartbeat,
-			dtr.rrd_minimum, dtr.rrd_maximum, dtr.data_source_type_id
-			FROM data_template_rrd AS dtr
-			INNER JOIN graph_templates_item AS gti
-			ON dtr.id = gti.task_item_id
-			WHERE local_data_id = ?
-			ORDER BY local_data_template_rrd_id',
-			array($local_data_id)
-		);
-	} else {
-		$data_sources = db_fetch_assoc_prepared('SELECT DISTINCT dtr.id, dtr.data_source_name, dtr.rrd_heartbeat,
-			dtr.rrd_minimum, dtr.rrd_maximum, dtr.data_source_type_id
-			FROM data_template_rrd AS dtr
-			WHERE local_data_id = ?
-			ORDER BY local_data_template_rrd_id',
-			array($local_data_id)
-		);
-	}
-
-	/**
-	 * ONLY make a new DS entry if:
-	 *
-	 * - There are multiple data sources and this item is not the main one.
-	 * - There are only one data source (then use it)
-	 */
-	if (cacti_sizeof($data_sources)) {
-		$data_local = db_fetch_row_prepared('SELECT host_id,
-			snmp_query_id, snmp_index
-			FROM data_local
-			WHERE id = ?',
-			array($local_data_id)
-		);
-
-		$speed = rrdtool_function_interface_speed($data_local);
-
-		foreach ($data_sources as $data_source) {
-			/* use the cacti ds name by default or the user defined one, if entered */
-			$data_source_name = get_data_source_item_name($data_source['id']);
-
-			if (!cacti_rrdtool_valid_ds_name($data_source_name)) {
-				cacti_log("ERROR: Invalid RRD data source name for local_data_id: $local_data_id.", false, 'POLLER');
-
-				return false;
-			}
-
-			// Trim the data source maximum
-			$data_source['rrd_maximum'] = trim((string) $data_source['rrd_maximum']);
-
-			if ($data_source['rrd_maximum'] === '' || $data_source['rrd_maximum'] == 'U') {
-				/* in case no maximum is given, use "Undef" value */
-				$data_source['rrd_maximum'] = 'U';
-			} elseif (strpos($data_source['rrd_maximum'], '|query_') !== false) {
-				/* in case a query variable is given, evaluate it */
-				if ($data_source['rrd_maximum'] == '|query_ifSpeed|' || $data_source['rrd_maximum'] == '|query_ifHighSpeed|') {
-					$data_source['rrd_maximum'] = $speed;
-				} else {
-					$data_source['rrd_maximum'] = substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']);
-				}
-			} else {
-				/* max > min required; shared so the Boost creator cannot drift */
-				$data_source['rrd_maximum'] = cacti_rrd_corrected_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $data_source['data_source_type_id']);
-			}
-
-			/* min==max==0 won't work with rrdtool */
-			if ($data_source['rrd_minimum'] == 0 && $data_source['rrd_maximum'] == 0) {
-				$data_source['rrd_maximum'] = 'U';
-			}
-
-			if (!cacti_rrdtool_valid_bound($data_source['rrd_minimum']) || !cacti_rrdtool_valid_bound($data_source['rrd_maximum'])) {
-				cacti_log("ERROR: Invalid RRD data source bounds for local_data_id: $local_data_id.", false, 'POLLER');
-
-				return false;
-			}
-
-			$create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
-		}
-	}
-
-	$create_rra = '';
-	/* loop through each available RRA for this DS */
-	foreach ($rras as $rra) {
-		$create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
 	}
 
 	if ($config['cacti_server_os'] != 'win32') {
@@ -1288,9 +1345,9 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	}
 
 	if ($show_source == true) {
-		return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
+		return read_config_option('path_rrdtool') . ' create' . RRD_NL . $data_source_path . $definition;
 	} else {
-		$success = rrdtool_execute("create $data_source_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+		$success = rrdtool_execute("create $data_source_path $definition", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
 
 		/**
 		 * Local storage only. Under remote storage rrdtool_execute() sent
