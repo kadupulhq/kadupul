@@ -1968,7 +1968,44 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 	/* ok, if that passes lets check to make sure an rra does not already
 	exist, the last thing we want to do is overwrite data! */
 	if ($show_source != true) {
-		if (read_config_option('storage_location')) {
+		/**
+		 * rrd_init(), rrd_close() and rrdtool_execute() all route on
+		 * force_storage_location_local as well as the setting, so a
+		 * check that consults the setting alone asks the proxy about a
+		 * file this process is about to write locally, and the local
+		 * link refusal below never runs. Route it the same way.
+		 */
+		$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
+			&& read_config_option('storage_location');
+
+		/**
+		 * Neither answer file_exists() can give about a link refuses it,
+		 * because it follows one. False, for a dangling link, let the check
+		 * pass and rrdtool created the file the link named, with the chown and
+		 * chgrp below following it too. True, for a link whose target is
+		 * already there, returns -1, which callers read as "the file exists"
+		 * and follow with an update written through the link. So test the path
+		 * itself before asking whether anything exists at it.
+		 *
+		 * Local storage only. Under storage_location the file lives on the
+		 * proxy host and rrdtool_build_path_command() allows only file_exists,
+		 * filemtime, is_dir, mkdir, rmdir, unlink and archive, so there is no
+		 * verb to ask the proxy whether a path is a link. The ownership change
+		 * is withheld there regardless, because realpath() of a remote
+		 * directory fails locally and the containment test returns false.
+		 */
+		if (!$remote_storage && is_link($data_source_path)) {
+			cacti_log("ERROR: Refusing to create an RRDfile through the symbolic link '$data_source_path'.", false, 'BOOST');
+
+			/**
+			 * false, not -1: callers treat -1 as "the file is already
+			 * there" and carry on to the update, so a refusal that
+			 * returned it would log and then write anyway.
+			 */
+			return false;
+		}
+
+		if ($remote_storage) {
 			$file_exists = rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 		} else {
 			$file_exists = file_exists($data_source_path);
@@ -2171,13 +2208,30 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 	} else {
 		$success = rrdtool_execute("create $data_source_path $create_ds$create_rra", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
 
-		if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-			if (!chown($data_source_path, (int) $owner_id)) {
-				cacti_log("WARNING: Unable to set owner for '" . $data_source_path . "'", false, 'BOOST');
+		$owned_path = cacti_rrd_owned_path($data_source_path);
+		/**
+		 * Local storage only: under remote storage the create went to the
+		 * proxy, so a local file of the same configured name is not the
+		 * one this run wrote.
+		 */
+		$may_own    = !$remote_storage && $config['cacti_server_os'] != 'win32' && posix_getuid() == 0;
+
+		if ($may_own && ($owned_path === false || is_link($owned_path) || !is_file($owned_path))) {
+			cacti_log("WARNING: Ownership not applied to '$data_source_path'; not a regular"
+				. ' file inside the RRA directory', false, 'BOOST');
+		} elseif ($may_own) {
+			/**
+			 * lchown/lchgrp act on the final component rather than following
+			 * it, which narrows the window a swapped link leaves open. The
+			 * containment test above is what stops ownership of a file outside
+			 * the RRA directory being given away.
+			 */
+			if (!lchown($owned_path, (int) $owner_id)) {
+				cacti_log("WARNING: Unable to set owner for '" . $owned_path . "'", false, 'BOOST');
 			}
 
-			if (!chgrp($data_source_path, (int) $group_id)) {
-				cacti_log("WARNING: Unable to set group for '" . $data_source_path . "'", false, 'BOOST');
+			if (!lchgrp($owned_path, (int) $group_id)) {
+				cacti_log("WARNING: Unable to set group for '" . $owned_path . "'", false, 'BOOST');
 			}
 		}
 
@@ -2232,7 +2286,7 @@ function boost_rrdtool_pipe_creates($action, $rrdtool_pipe, $rrd_path = '') {
    @arg $rrd_update_template  - the order in which values need to be added
    @arg $rrd_update_values    - values to include in the database */
 function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, &$rrd_update_values, &$rrdtool_pipe, &$retry_budget = null) {
-	global $debug;
+	global $debug, $config;
 
 	// Bound synchronous recovery work while retaining any unacknowledged rows.
 	if ($retry_budget === null) {
@@ -2274,8 +2328,27 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		$rrdtool_pipe = false;
 	}
 
+	$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
+		&& read_config_option('storage_location');
+
+	/**
+	 * The refusal in boost_rrdtool_function_create() is only reached when this
+	 * function decides the file is absent. file_exists() follows a link, so a
+	 * link whose target is already there reads as an existing RRD, the create
+	 * is skipped, and the update below is written through the link. Refuse it
+	 * here as well, ahead of the existence question.
+	 *
+	 * Local storage only, for the same reason as the create: the proxy has no
+	 * verb that asks whether a path is a link.
+	 */
+	if (!$remote_storage && is_link($rrd_path)) {
+		cacti_log("ERROR: Refusing to update an RRDfile through the symbolic link '$rrd_path'.", false, 'BOOST');
+
+		return 'ERROR';
+	}
+
 	// create the rrd if one does not already exist
-	if (read_config_option('storage_location')) {
+	if ($remote_storage) {
 		$file_exists = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 	} else {
 		$file_exists = file_exists($rrd_path);
