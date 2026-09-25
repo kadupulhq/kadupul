@@ -56,7 +56,8 @@ $pipe=array($sockets[0],$public_key);$values='1700000060:42';
 if($operation==='boost-update'){$result=boost_rrdtool_function_update(1,'/fixture/sample.rrd','value',$values,$pipe);}
 elseif($operation==='update'||$operation==='update-unsafe'||$operation==='update-nested'){$path=$operation==='update'?'/fixture/sample.rrd':($operation==='update-nested'?'/fixture/sub/fixture/sample.rrd':"/fixture/it's a.rrd");$result=rrdtool_function_update(array($path=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('value'=>'42')))),$pipe);}
 elseif($operation==='paths-spaced-root'){$config['rra_path']='/fixture dir';$result=array(rrdtool_command_path('/fixture dir/sample.rrd'),rrdtool_proxy_command(array('file_exists','/fixture dir/sample.rrd'),'POLLER'),rrdtool_command_path('/fixture dir/it s.rrd'));}
-elseif($operation==='value-not-path'){$result=array(rrdtool_command_argument('/fixturefast'),rrdtool_command_path('/fixture/sample.rrd'),rrdtool_command_path('/fixture/sub/fixture/file.rrd'),rrdtool_command_path('/fixturefast/x.rrd'),rrdtool_command_path('/fixture'));}
+elseif($operation==='def-windows-root'){$config['rra_path']='C:/rra';$result=array(rrdtool_def_path('C:/rra/sub/x.rrd'));try{rrdtool_def_path('C:/rra/a:b.rrd');$result[]='sent';}catch(\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e){$result[]='refused';}}
+elseif($operation==='value-not-path'){$result=array(rrdtool_command_argument('/fixturefast'),rrdtool_command_path('/fixture/sample.rrd'),rrdtool_command_path('/fixture/sub/fixture/file.rrd'),rrdtool_command_path('/fixturefast/x.rrd'),rrdtool_command_path('/fixture'),rrdtool_command_path('/fixture/../outside.rrd'),rrdtool_command_path('/fixture/sub/..'),rrdtool_command_path('/fixture/a..b.rrd'));}
 elseif($operation==='paths'){$result=array(rrdtool_command_path('/fixture/sample.rrd'),rrdtool_command_path('/fixture/it s.rrd'),rrdtool_command_path("/fixture/it's.rrd"));}
 elseif($max){$result=$max[1]==='boost'?boost_rrdtool_function_create(1,false,$pipe):rrdtool_function_create(1,false,$pipe);}
 elseif($operation==='boost-create'){$result=boost_rrdtool_function_create(1,false,$pipe);}
@@ -133,9 +134,14 @@ test('proxied updates carry a bare path, and a path the proxy cannot carry is no
     expect($spaced[0])->toBe(array('./sample.rrd', 'file_exists ./sample.rrd', false));
 
     // Only paths are made relative; a value that merely starts like the RRA root is sent as is.
+    // A Windows root such as C:/rra is made relative before anything is escaped.
+    $windows = rrd_proxy_create_guard_run($this, 'def-windows-root', null);
+    expect($windows[0])->toBe(array('./sub/x.rrd', 'refused'));
+
     $value = rrd_proxy_create_guard_run($this, 'value-not-path', null);
     // Only a leading root at a directory boundary becomes '.'.
-    expect($value[0])->toBe(array('/fixturefast', './sample.rrd', './sub/fixture/file.rrd', '/fixturefast/x.rrd', '.'));
+    // A '..' component could leave the proxy's RRA root, so it is refused; '..' inside a name is not a component.
+    expect($value[0])->toBe(array('/fixturefast', './sample.rrd', './sub/fixture/file.rrd', '/fixturefast/x.rrd', '.', false, false, './a..b.rrd'));
 });
 
 test('a proxied create sends a substituted maximum bare, or not at all when the proxy cannot carry it', function ($function) {

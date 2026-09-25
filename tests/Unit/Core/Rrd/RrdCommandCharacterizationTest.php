@@ -348,7 +348,9 @@ test('an RRD path with a space and a quote round-trips through RRDtool', functio
     }
     $scenario['db'] = array_values($scenario['db']);
     // create --start 0 starts the RRD at midnight today, so samples follow now.
-    $t = intdiv(time(), 300) * 300 + 600;
+    // 900 s ahead keeps the first sample more than one heartbeat (600 s) after
+    // midnight, so it stays unknown even in the first minutes of a day.
+    $t = intdiv(time(), 300) * 300 + 900;
     $scenario['calls'] = array(
         // Fetch loads lib/boost.php before it looks at its arguments.
         array('fn' => 'rrdtool_function_fetch', 'args' => array(0, $t, $t)),

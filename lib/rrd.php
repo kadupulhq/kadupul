@@ -637,9 +637,38 @@ function rrdtool_command_path($path)
 {
     if (rrdtool_uses_proxy()) {
         $path = rrdtool_proxy_token($path);
+        // The proxy serves only files under its RRA root, and a '..' component could leave it.
+        if (preg_match('~(^|/)\.\.(/|$)~', (string) $path) === 1) {
+            return false;
+        }
     }
 
     return rrdtool_command_argument($path);
+}
+
+/**
+ * As rrdtool_command_path(), for the RRD path in a DEF. RRDtool reads a DEF
+ * path up to the next ':', so ':' and '"' are escaped, which also covers a
+ * Windows drive letter (D\:/path/to/rra). rrdproxy resolves a DEF path as
+ * sent, taking it to the first ':' (rrdp_resolve_command_paths() in its
+ * lib/functions.php at 54aad57), so the proxy gets the path bare and relative
+ * to the RRA root. A path the proxy cannot carry that way is refused, and the
+ * graph with it.
+ */
+function rrdtool_def_path($path)
+{
+    if (!rrdtool_uses_proxy()) {
+        return rrdtool_pipe_quote(rrdtool_escape_string($path));
+    }
+
+    // Relative first, so a root such as C:/rra still matches; the bare path can
+    // then carry no ':' at all, since rrdproxy ends the DEF path at the first one.
+    $bare = rrdtool_command_path($path);
+    if ($bare === false || str_starts_with($bare, '/') || str_contains($bare, ':')) {
+        throw new \Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument('The RRDtool proxy can only read an RRD path under the RRA directory without blanks, quotes, backslashes or colons.');
+    }
+
+    return $bare;
 }
 
 /**
@@ -2096,9 +2125,9 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
 
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe = false, &$xport_meta = array(), $user = 0)
 {
-    // A NUL in a device or query value cannot be written to RRDtool. The
-    // command is refused before anything reaches the pipe, and the caller
-    // gets the same answer as for a missing RRD file instead of a fatal error.
+    // A value RRDtool cannot receive (a NUL in device or query data), or a DEF
+    // path the RRDtool proxy cannot carry, refuses the command before anything
+    // is sent; the caller gets the same answer as for a missing RRD file.
     try {
         return __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe, $xport_meta, $user);
     } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
@@ -2468,15 +2497,12 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                     return rrdtool_create_error_image(__('The Kadupul Poller has not run yet.'));
                 }
 
-                /* FOR WIN32: Escape all colon for drive letters (ex. D\:/path/to/rra) */
-                $data_source_path = rrdtool_escape_string($data_source_path);
-
                 if (!empty($data_source_path)) {
                     /* NOTE: (Update) Data source DEF names are created using the graph_item_id; then passed
                     to a function that matches the digits with letters. rrdtool likes letters instead
                     of numbers in DEF names; especially with CDEFs. CDEFs are created
                     the same way, except a 'cdef' is put on the beginning of the hash */
-                    $graph_defs .= 'DEF:' . generate_graph_def_name(strval($i)) . '=' . rrdtool_pipe_quote($data_source_path) . ':' . rrdtool_pipe_quote($graph_item['data_source_name']) . ':' . $consolidation_functions[$graph_cf] . RRD_NL;
+                    $graph_defs .= 'DEF:' . generate_graph_def_name(strval($i)) . '=' . rrdtool_def_path($data_source_path) . ':' . rrdtool_pipe_quote($graph_item['data_source_name']) . ':' . $consolidation_functions[$graph_cf] . RRD_NL;
 
                     $cf_ds_cache[$graph_item['data_template_rrd_id']][$graph_cf] = "$i";
 

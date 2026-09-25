@@ -197,6 +197,11 @@ foreach ($scenario['calls'] as $call) {
     foreach ($call['globals'] ?? array() as $name => $value) {
         $GLOBALS[$name] = $value;
     }
+    // A proxy scenario gives the call one session, as a request would, since
+    // the fake proxy takes a single connection.
+    if (isset($call['rrdp_argument'])) {
+        $args[$call['rrdp_argument']] = rrd_init();
+    }
     $before = time();
     ob_start();
     try {
@@ -209,6 +214,10 @@ foreach ($scenario['calls'] as $call) {
         $returned = array('thrown' => get_class($thrown), 'message' => $thrown->getMessage());
     }
     $printed = ob_get_clean();
+    if (isset($call['rrdp_argument'])) {
+        rrd_close($args[$call['rrdp_argument']]);
+        $args[$call['rrdp_argument']] = '<rrdp>';
+    }
     $after = time();
     restore_error_handler();
     $sent = array();

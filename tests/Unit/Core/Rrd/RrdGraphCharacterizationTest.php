@@ -314,3 +314,65 @@ test('a generated graph command renders in RRDtool', function () {
     expect(preg_match_all('/^OK u:/m', $stdout))->toBe(2);
     expect($stdout)->toMatch('/^\d+x\d+$/m');
 });
+
+/**
+ * A graph scenario whose RRD paths are the ones in $paths, by local data id,
+ * written as get_data_source_path() stores them.
+ */
+function rrd_characterization_proxy_graph_scenario(array $graph_data_array, array $items, array $paths): array
+{
+    $scenario = rrd_characterization_graph_scenario($graph_data_array, array(), array(), $items);
+    foreach ($scenario['db'] as $index => $row) {
+        if ($row['sql'] === 'SELECT name, data_source_path FROM data_template_data' && isset($paths[$row['params'][0]])) {
+            $scenario['db'][$index]['result']['data_source_path'] = $paths[$row['params'][0]];
+        }
+    }
+
+    return $scenario;
+}
+
+/** Reduce a proxy run to what its golden records: the commands the proxy received, split like the local ones. */
+function rrd_characterization_proxy_observed(array $output): array
+{
+    $result = $output['results'][0];
+    $received = array();
+    foreach ($output['received'] as $command) {
+        $received[] = rrd_characterization_segments(rrd_characterization_clock($command, $result['clock']));
+    }
+
+    return array('returned' => $result['returned'], 'printed' => $result['printed'], 'diagnostics' => $result['diagnostics'], 'received' => $received);
+}
+
+test('a graph through the RRDtool proxy sends DEF paths bare and relative, and legends quoted', function () {
+    $in = rrd_characterization_ds('traffic_in');
+    $items = array(
+        rrd_characterization_item(1, 'AREA', $in + array('hex' => '00CF00', 'text_format' => 'Inbound "peak": a  b')),
+        rrd_characterization_item(2, 'LINE1', rrd_characterization_ds('errors') + array('hex' => 'FF0000', 'text_format' => 'Errors')),
+        rrd_characterization_item(3, 'GPRINT_LAST', $in + array('text_format' => 'Now:', 'gprint_text' => '%8.2lf %s')),
+    );
+    $scenario = rrd_characterization_proxy_graph_scenario(
+        array('graph_start' => 1700000000, 'graph_end' => 1700003600),
+        $items,
+        array(11 => '<path_rra>/router_traffic_11.rrd', 12 => '<path_rra>/errors/router_errors_12.rrd')
+    );
+    $output = rrd_characterization_proxy_run($this, $scenario, 3);
+    rrd_characterization_golden('graph-proxy', rrd_characterization_proxy_observed($output));
+});
+
+test('a DEF path the RRDtool proxy cannot carry refuses the graph before it is sent', function (array $paths, string $golden) {
+    $area = array(rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '3366CC', 'text_format' => 'Inbound')));
+    $scenario = rrd_characterization_proxy_graph_scenario(array('graph_start' => 1700000000, 'graph_end' => 1700003600, 'get_error' => true), $area, $paths);
+    $output = rrd_characterization_proxy_run($this, $scenario, 3);
+    $observed = rrd_characterization_proxy_observed($output);
+    expect(array_filter($observed['received'], function ($command) {
+        return strncmp($command[0], 'graph', 5) === 0;
+    }))->toBe(array());
+    rrd_characterization_golden($golden, $observed);
+})->with(array(
+    // rrdproxy would end the path at the colon.
+    'a colon' => array(array(11 => '<path_rra>/router:traffic_11.rrd'), 'graph-proxy-def-colon'),
+    // rrdproxy refuses an absolute path, as for a realtime cache outside the RRA directory.
+    'outside the RRA directory' => array(array(11 => '/var/cache/realtime/user_1_11.rrd'), 'graph-proxy-def-outside'),
+    // The file check is refused first, so nothing reaches the proxy at all.
+    'a blank' => array(array(11 => '<path_rra>/router traffic_11.rrd'), 'graph-proxy-def-blank'),
+));

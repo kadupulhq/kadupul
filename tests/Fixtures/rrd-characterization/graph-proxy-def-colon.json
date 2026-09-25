@@ -1,0 +1,16 @@
+{
+    "returned": "ERROR: The Graph contains a value RRDtool cannot accept.",
+    "printed": "",
+    "diagnostics": [],
+    "received": [
+        [
+            "setcnn encryption off"
+        ],
+        [
+            "file_exists ./router:traffic_11.rrd"
+        ],
+        [
+            "quit"
+        ]
+    ]
+}
