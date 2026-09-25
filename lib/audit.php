@@ -96,3 +96,27 @@ function audit_extract_create_table(string $schema_sql, string $table) {
 
 	return trim($matches[0]);
 }
+
+/**
+ * Return the client-specific option that disables TLS for a non-TLS database.
+ *
+ * @param bool   $database_ssl  Whether TLS is enabled for the database.
+ * @param string $client_version Version output from the selected CLI client.
+ *
+ * @return string|false The option, or false when the client is unknown.
+ */
+function audit_database_ssl_option($database_ssl, $client_version) {
+	if (!empty($database_ssl)) {
+		return '';
+	}
+
+	if (stripos($client_version, 'MariaDB') !== false) {
+		return ' --skip-ssl';
+	}
+
+	if (preg_match('/(?:mysql|percona)/i', $client_version)) {
+		return ' --ssl-mode=DISABLED';
+	}
+
+	return false;
+}

@@ -117,7 +117,7 @@
     "line": 188,
     "fn": "api_device_remove_multi",
     "before": "\t\t$host_id = api_device_remove_multi($ids);",
-    "after": "\t\tapi_device_remove_multi($ids);"
+    "after": "\t\tapi_device_remove_multi($ids_found);"
   },
   {
     "key": "AaCs2PLDIug_wyaLilqR",

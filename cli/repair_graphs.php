@@ -139,6 +139,11 @@ if (isset($host_id)) {
 $graph = db_fetch_assoc_prepared($graph_sql, $graph_params);
 $repair_failed = false;
 
+if ($graph === false) {
+	fwrite(STDERR, "ERROR: Unable to query graphs for repair.\n");
+	exit(1);
+}
+
 if (cacti_sizeof($graph)) {
 	if (!$show_sql) {
 		print "\nCorrupted graphs:\n";

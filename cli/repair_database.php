@@ -371,6 +371,12 @@ function simple_checks() {
 		LEFT JOIN data_template_data AS dtd
 		ON dl.id = dtd.local_data_id
 		WHERE dtd.local_data_id IS NULL');
+	if ($incomplete === false) {
+		fwrite(STDERR, "ERROR: Unable to count incomplete data sources; stopping database repair.\n");
+		$total_failures++;
+
+		return;
+	}
 
 	if ($force) {
 		$delete_status = db_execute('DELETE dl
@@ -403,6 +409,12 @@ function simple_checks() {
 		LEFT JOIN data_local AS dl
 		ON pi.local_data_id = dl.id
 		WHERE dl.id IS NULL');
+	if ($orphaned === false) {
+		fwrite(STDERR, "ERROR: Unable to count orphaned poller items; stopping database repair.\n");
+		$total_failures++;
+
+		return;
+	}
 
 	if ($force) {
 		$delete_status = db_execute('DELETE pi

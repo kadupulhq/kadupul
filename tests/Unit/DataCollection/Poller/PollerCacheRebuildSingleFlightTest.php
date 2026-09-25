@@ -86,7 +86,7 @@ ob_start();
 function pushout_debug($message) {}
 function register_process_start() { $GLOBALS['calls'][] = 'register'; return true; }
 function unregister_process() { $GLOBALS['calls'][] = 'unregister'; }
-function pushout_master_handler() { $GLOBALS['calls'][] = 'rebuild'; }
+function pushout_master_handler() { $GLOBALS['calls'][] = 'rebuild'; return true; }
 function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true, $db_conn = false) { $GLOBALS['calls'][] = array($sql, $params); return $GLOBALS['input']['lock']; }
 function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array()) { $GLOBALS['calls'][] = array($sql, $params); return true; }
 CODE;

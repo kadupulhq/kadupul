@@ -22,6 +22,13 @@ test('legacy audit identifiers are safely quoted', function () {
 		->and(audit_quote_identifier('legacy`name'))->toBe('`legacy``name`');
 });
 
+test('audit schema import selects the TLS option supported by its database client', function () {
+	expect(audit_database_ssl_option(false, 'mysql  Ver 8.0.42 for Linux'))->toBe(' --ssl-mode=DISABLED')
+		->and(audit_database_ssl_option(false, 'mariadb  Ver 15.1 Distrib 10.11.8-MariaDB'))->toBe(' --skip-ssl')
+		->and(audit_database_ssl_option(true, 'mysql  Ver 8.0.42 for Linux'))->toBe('')
+		->and(audit_database_ssl_option(false, 'unknown database client'))->toBeFalse();
+});
+
 test('missing core tables are deduplicated and sorted', function () {
 	expect(audit_missing_core_tables(
 		array('version', 'user_auth_row_cache', 'host', 'host', null),

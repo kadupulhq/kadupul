@@ -35,6 +35,7 @@ function run_statement($statement) {
 	$host_where = $devices_where = 'fixture condition';
 	$using_guest_account = true;
 	$ids = array(7, 9);
+	$ids_found = $ids;
 	$auth_realms = array(0 => 'Local');
 	$user_realm = 0;
 	$usernames = array(array('id' => 7, 'username' => 'fixture'));

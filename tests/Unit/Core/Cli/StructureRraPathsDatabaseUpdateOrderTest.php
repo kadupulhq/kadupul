@@ -53,10 +53,14 @@ function structure_rra_loop_scenario($base, $pattern, $info) {
 		$functions .= $match[0];
 	}
 
-	$code = '$writes = array(); $debug = false;'
+	$code = '$writes = array(); $debug = false; $rollbacks = 0;'
+		. '$fail_query = ' . var_export($info['fail_query'] ?? '', true) . ';'
+		. 'function db_begin_transaction() { return true; }'
+		. 'function db_commit_transaction() { return true; }'
+		. 'function db_rollback_transaction() { global $rollbacks; $rollbacks++; return true; }'
 		. 'function db_fetch_cell($sql) { return 1; }'
 		. 'function db_fetch_cell_prepared($sql, $params = array()) { return "traffic_in"; }'
-		. 'function db_execute_prepared($sql, $params = array()) { global $writes; $writes[] = array("sql" => preg_replace("/\s+/", " ", trim($sql)), "params" => $params); return true; }'
+		. 'function db_execute_prepared($sql, $params = array()) { global $writes, $fail_query; $writes[] = array("sql" => preg_replace("/\s+/", " ", trim($sql)), "params" => $params); return $fail_query === "" || strpos($sql, $fail_query) === false; }'
 		. 'function clean_up_file_name($string) { return $string; }'
 		. 'eval(' . var_export($functions, true) . ');'
 		. '$config = array("cacti_server_os" => "unix");'
@@ -64,11 +68,11 @@ function structure_rra_loop_scenario($base, $pattern, $info) {
 		. '$pattern = ' . var_export($pattern, true) . ';'
 		. '$owner_id = fileowner($base_rra_path); $group_id = filegroup($base_rra_path);'
 		. '$data_sources = array(' . var_export($info, true) . ');'
-		. '$total_count = 1; $done_count = 0; $warn_count = 0; $skip_count = 0; $started = false;'
+		. '$total_count = 1; $done_count = 0; $warn_count = 0; $skip_count = 0; $started = false; $database_failure = false;'
 		. 'ob_start();'
 		. 'eval(' . var_export($loop[0], true) . ');'
 		. '$printed = ob_get_clean();'
-		. 'echo json_encode(array("writes" => $writes, "printed" => $printed));';
+		. 'echo json_encode(array("writes" => $writes, "printed" => $printed, "database_failure" => $database_failure, "rollbacks" => $rollbacks, "warn_count" => $warn_count));';
 
 	$pipes   = array();
 	$process = proc_open(array(PHP_BINARY, '-r', $code), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
@@ -163,6 +167,24 @@ test('a fallback file that is moved updates the database to the new path', funct
 		->and(file_get_contents($this->info['new_rrd_path']))->toBe('rrd')
 		->and($out['writes'])->toContain(array('sql' => 'UPDATE poller_item SET rrd_path = ? WHERE local_data_id = ?', 'params' => array($this->info['new_rrd_path'], 42)))
 		->and($out['writes'])->toContain(array('sql' => 'UPDATE data_template_data SET data_source_path = ? WHERE local_data_id = ?', 'params' => array('<path_rra>/7/42.rrd', 42)));
+});
+
+test('a failed database path update rolls back and prevents layout activation', function ($failedQuery) {
+	file_put_contents($this->legacy, 'rrd');
+	$info = array_merge($this->info, array('fail_query' => $failedQuery));
+
+	$out = structure_rra_loop_scenario($this->base, 'device', $info);
+
+	expect($out['database_failure'])->toBeTrue()
+		->and($out['rollbacks'])->toBe(1)
+		->and(file_exists($this->info['new_rrd_path']))->toBeTrue();
+})->with(array('UPDATE poller_item', 'UPDATE data_template_data'));
+
+test('data query layout always includes the query ID in the target path', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/structure_rra_paths.php');
+
+	expect($source)->toContain("$" . "info['host_id'] . '/' . $" . "info['snmp_query_id'] . '/' . $" . "local_data_id")
+		->and($source)->toContain("$" . "info['hash_id'] . '/' . $" . "info['host_id'] . '/' . $" . "info['snmp_query_id'] . '/' . $" . "local_data_id");
 });
 
 test('a data source with no file anywhere still has the database pointed at the new path, as in 1.2.31', function () {

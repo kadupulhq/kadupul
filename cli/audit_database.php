@@ -1299,7 +1299,21 @@ function create_tables($load = true) {
 				return false;
 			}
 
-			$ssl_option = empty($database_ssl) ? ' --skip-ssl' : '';
+			$version_output = array();
+			$version_status = 0;
+			exec(cacti_escapeshellarg($db_shell) . ' --version', $version_output, $version_status);
+
+			$ssl_option = $version_status === 0
+				? audit_database_ssl_option($database_ssl, implode(' ', $version_output))
+				: false;
+
+			if ($ssl_option === false) {
+				unlink($defaults_file);
+				fwrite(STDERR, "FATAL: Unable to determine a safe TLS option for the database client.\n");
+
+				return false;
+			}
+
 			exec(cacti_escapeshellarg($db_shell) .
 				' --defaults-extra-file=' . cacti_escapeshellarg($defaults_file) .
 				$ssl_option .

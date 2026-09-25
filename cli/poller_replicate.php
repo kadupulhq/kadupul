@@ -142,6 +142,7 @@ if (cacti_sizeof($pollers)) {
 			array($poller['id']))) {
 			fwrite(STDERR, "ERROR: Could not record synchronization completion for poller {$poller['id']}.\n");
 			$failed = true;
+			continue;
 		}
 
 		cacti_log('STATS: Poller ID ' . $poller['id'] . ' fully Replicated', false, 'POLLER');

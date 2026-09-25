@@ -193,6 +193,11 @@ if (cacti_sizeof($parms)) {
 		FROM host
 		WHERE id IN ($ids_sql)
 		ORDER BY description");
+	if ($hosts === false) {
+		fwrite(STDERR, "ERROR: Could not look up the selected devices.\n");
+		exit(1);
+	}
+
 	$ids_found = is_array($hosts) ? array_column($hosts, 'id') : array();
 
 	if (!$quiet) {

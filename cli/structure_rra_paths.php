@@ -149,14 +149,14 @@ if ($pattern == 'device') {
 	$pattern1  = "CONCAT('<path_rra>/', host_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
 	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id, '/', local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
 } elseif ($pattern == 'device_dq') {
-	$pattern1  = "CONCAT('<path_rra>/', host_id, '/', IF(snmp_query_id > 0, CONCAT(snmp_query_id, '/'), ''), local_data_id, '.rrd') AS new_data_source_path,";
-	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id, '/', IF(snmp_query_id > 0, CONCAT(snmp_query_id, '/'), ''), local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
+	$pattern1  = "CONCAT('<path_rra>/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
+	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
 } elseif ($pattern == 'hash_device') {
 	$pattern1  = "CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
 	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
 } elseif ($pattern == 'hash_device_dq') {
-	$pattern1  = "CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', IF(snmp_query_id > 0, CONCAT(snmp_query_id, '/'), ''), local_data_id, '.rrd') AS new_data_source_path,";
-	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', IF(snmp_query_id > 0, CONCAT(snmp_query_id, '/'), ''), local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
+	$pattern1  = "CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
+	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
 }
 
 $sql_params = array();
@@ -164,11 +164,11 @@ $sql_params = array();
 if ($pattern == 'device') {
 	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id, '/', dtd.local_data_id, '.rrd')";
 } elseif ($pattern == 'device_dq') {
-	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id, '/', IF(dl.snmp_query_id > 0, CONCAT(dl.snmp_query_id, '/'), ''), dtd.local_data_id, '.rrd')";
+	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id, '/', dl.snmp_query_id, '/', dtd.local_data_id, '.rrd')";
 } elseif ($pattern == 'hash_device') {
 	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id % $maxdirs, '/', dl.host_id, '/', dtd.local_data_id, '.rrd')";
 } else {
-	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id % $maxdirs, '/', dl.host_id, '/', IF(dl.snmp_query_id > 0, CONCAT(dl.snmp_query_id, '/'), ''), dtd.local_data_id, '.rrd')";
+	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id % $maxdirs, '/', dl.host_id, '/', dl.snmp_query_id, '/', dtd.local_data_id, '.rrd')";
 }
 
 $sql_where = 'WHERE ' . $path_where;
@@ -197,12 +197,18 @@ $data_sources = db_fetch_assoc_prepared("SELECT dtd.local_data_id, dl.host_id % 
 	$sql_where",
 	$sql_params);
 
+if ($data_sources === false) {
+	fwrite(STDERR, "FATAL: Unable to query data sources for the RRD path migration.\n");
+	exit(1);
+}
+
 /* setup some counters */
 $total_count = cacti_sizeof($data_sources);
 $done_count = 0;
 $warn_count = 0;
 $skip_count = 0;
 $started    = false;
+$database_failure = false;
 
 printf('NOTE: Found:%s Data Sources.  Beginning Process' . PHP_EOL, number_format($total_count));
 
@@ -287,11 +293,11 @@ foreach ($data_sources as $info) {
 		if ($pattern == 'device') {
             $data_source_path2 = $base_rra_path . '/' . $info['host_id'] . '/' . $local_data_id . '.rrd';
 		} elseif ($pattern == 'device_dq') {
-			$data_source_path2 = $base_rra_path . '/' . $info['host_id'] . '/' . ($info['snmp_query_id'] > 0 ? $info['snmp_query_id'] . '/' : '') . $local_data_id . '.rrd';
+			$data_source_path2 = $base_rra_path . '/' . $info['host_id'] . '/' . $info['snmp_query_id'] . '/' . $local_data_id . '.rrd';
 		} elseif ($pattern == 'hash_device') {
 			$data_source_path2 = $base_rra_path . '/' . $info['hash_id'] . '/' . $info['host_id'] . '/' . $local_data_id . '.rrd';
 		} elseif ($pattern == 'hash_device_dq') {
-			$data_source_path2 = $base_rra_path . '/' . $info['hash_id'] . '/' . $info['host_id'] . '/' . ($info['snmp_query_id'] > 0 ? $info['snmp_query_id'] . '/' : '') . $local_data_id . '.rrd';
+			$data_source_path2 = $base_rra_path . '/' . $info['hash_id'] . '/' . $info['host_id'] . '/' . $info['snmp_query_id'] . '/' . $local_data_id . '.rrd';
 		}
 
 		if (file_exists($data_source_path1)) {
@@ -306,7 +312,9 @@ foreach ($data_sources as $info) {
 			print "WARNING: Legacy RRA Path '$old_rrd_path' Does not exist, Skipping" . PHP_EOL;
 
 			/* alter database; there is no file whose move could be refused */
-			update_database($info);
+			if (!update_database($info)) {
+				$database_failure = true;
+			}
 		}
 	}
 
@@ -339,7 +347,10 @@ foreach ($data_sources as $info) {
 				}
 
 				/* alter database */
-				update_database($info);
+				if (!update_database($info)) {
+					$warn_count++;
+					$database_failure = true;
+				}
 			} else {
 				print "FATAL: Could not Move RRD File '$old_rrd_path' to '$new_rrd_path'" . PHP_EOL;
 				exit(3);
@@ -352,7 +363,10 @@ foreach ($data_sources as $info) {
 			   file that gets moved updates the database after rename(), and
 			   one that is refused leaves it untouched */
 			if ($found_elsewhere) {
-				update_database($info);
+				if (!update_database($info)) {
+					$warn_count++;
+					$database_failure = true;
+				}
 			}
 		}
 	}
@@ -361,10 +375,10 @@ foreach ($data_sources as $info) {
 }
 
 /* Enable the new layout only after all selected files and rows were migrated. */
-if (!$warn_count) {
+if (!$warn_count && !$database_failure) {
 	set_config_option('extended_paths', 'on');
 } else {
-	print "WARNING: Extended paths were not enabled because one or more RRD files were skipped or refused." . PHP_EOL;
+	print "WARNING: Extended paths were not enabled because one or more files or database rows were not migrated." . PHP_EOL;
 }
 
 $end = microtime(true);
@@ -374,6 +388,10 @@ $stats = sprintf('Time:%0.2f Renamed:%s Skipped:%s Warnings:%s', $end - $start, 
 cacti_log("RRDSTRUCT STATS: $stats", false, 'SYSTEM');
 
 print "NOTE: RRD Restructure Complete: $stats" . PHP_EOL;
+
+if ($database_failure) {
+	exit(1);
+}
 
 /**
  * struct_debug - Simple debug function for restructuring
@@ -399,19 +417,44 @@ function struct_debug($string) {
  * @return (void)
  */
 function update_database($info) {
+	if (!db_begin_transaction()) {
+		fwrite(STDERR, "ERROR: Could not start a transaction for the RRD path update.\n");
+
+		return false;
+	}
+
 	/* update table poller_item */
-	db_execute_prepared('UPDATE poller_item
+	if (db_execute_prepared('UPDATE poller_item
 		SET rrd_path = ?
 		WHERE local_data_id = ?',
-		array($info['new_rrd_path'], $info['local_data_id']));
+		array($info['new_rrd_path'], $info['local_data_id'])) === false) {
+		db_rollback_transaction();
+		fwrite(STDERR, "ERROR: Could not update the poller item path for local_data_id {$info['local_data_id']}.\n");
+
+		return false;
+	}
 
 	/* update table data_template_data */
-	db_execute_prepared('UPDATE data_template_data
+	if (db_execute_prepared('UPDATE data_template_data
 		SET data_source_path = ?
 		WHERE local_data_id = ?',
-		array($info['new_data_source_path'], $info['local_data_id']));
+		array($info['new_data_source_path'], $info['local_data_id'])) === false) {
+		db_rollback_transaction();
+		fwrite(STDERR, "ERROR: Could not update the data source path for local_data_id {$info['local_data_id']}.\n");
+
+		return false;
+	}
+
+	if (!db_commit_transaction()) {
+		db_rollback_transaction();
+		fwrite(STDERR, "ERROR: Could not commit the RRD path update for local_data_id {$info['local_data_id']}.\n");
+
+		return false;
+	}
 
 	struct_debug("Database Changes Complete for File '" . $info['new_rrd_path'] . "'");
+
+	return true;
 }
 
 /**
