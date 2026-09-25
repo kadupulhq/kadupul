@@ -97,6 +97,51 @@ function rrd_characterization_quoting_scenario(): array
     return $scenario;
 }
 
+/**
+ * Every magic CDEF variable, on items that repeat a data source (traffic_in
+ * twice), share a data source name across files (traffic_in in the errors
+ * file) or have no data source at all (the HRULE falls back to the poller
+ * interval). The RRD step differs from the poller interval so the two _PI
+ * sources stay apart.
+ */
+function rrd_characterization_magic_cdef_scenario(): array
+{
+    $in = rrd_characterization_ds('traffic_in');
+    $similar = array('data_template_rrd_id' => '104', 'local_data_id' => '12', 'local_data_template_rrd_id' => '4', 'rrd_minimum' => '0', 'rrd_maximum' => 'U', 'data_source_name' => 'traffic_in', 'snmp_query_id' => '1', 'snmp_index' => '2');
+    $items = array(
+        rrd_characterization_item(1, 'AREA', $in + array('hex' => '00CF00', 'text_format' => 'In', 'cdef_id' => '3')),
+        rrd_characterization_item(2, 'STACK', $in + array('hex' => '00FF00', 'text_format' => 'In again', 'cdef_id' => '4')),
+        rrd_characterization_item(3, 'LINE1', rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'text_format' => 'Out', 'cdef_id' => '3')),
+        rrd_characterization_item(4, 'LINE2', $similar + array('hex' => 'FF0000', 'text_format' => 'Similar in', 'cdef_id' => '3')),
+        rrd_characterization_item(5, 'LINE3', rrd_characterization_ds('errors') + array('hex' => '0000FF', 'text_format' => 'Errors', 'cdef_id' => '5')),
+        rrd_characterization_item(6, 'HRULE', array('hex' => 'FF9900', 'value' => '95', 'text_format' => 'Rule', 'cdef_id' => '3')),
+    );
+    $scenario = rrd_characterization_graph_scenario(array('graph_start' => 1700000000, 'graph_end' => 1700003600), array(), array(), $items);
+    foreach ($scenario['db'] as $index => $row) {
+        if ($row['sql'] === 'SELECT rrd_step FROM data_template_data WHERE local_data_id') {
+            $scenario['db'][$index]['result'] = '60';
+        }
+    }
+    $scenario['db'] = array_merge(
+        $scenario['db'],
+        rrd_characterization_rpn('cdef', 3, array(
+            41 => array('6', 'ALL_DATA_SOURCES_DUPS,ALL_DATA_SOURCES_NODUPS,SIMILAR_DATA_SOURCES_DUPS,SIMILAR_DATA_SOURCES_NODUPS'),
+            42 => array('6', 'COUNT_ALL_DS_DUPS,COUNT_ALL_DS_NODUPS,COUNT_SIMILAR_DS_DUPS,COUNT_SIMILAR_DS_NODUPS'),
+            43 => array('6', 'CURRENT_DATA_SOURCE_PI,CURRENT_DATA_SOURCE,+,+,+,+,+,+,+,+,+'),
+        )),
+        // Each _PI name also contains its plain name, which is still accumulated
+        // but replaced only after the _PI form.
+        rrd_characterization_rpn('cdef', 4, array(
+            51 => array('6', 'ALL_DATA_SOURCES_DUPS_PI,ALL_DATA_SOURCES_NODUPS_PI,SIMILAR_DATA_SOURCES_DUPS_PI,SIMILAR_DATA_SOURCES_NODUPS_PI,COUNT_ALL_DS_DUPS,+,+,+,+'),
+        )),
+        rrd_characterization_rpn('cdef', 5, array(
+            61 => array('6', 'SIMILAR_DATA_SOURCES_DUPS,COUNT_SIMILAR_DS_NODUPS,/,ALL_DATA_SOURCES_DUPS_PI,*'),
+        )),
+    );
+
+    return $scenario;
+}
+
 dataset('rrd graph scenarios', function () {
     $window = array('graph_start' => 1700000000, 'graph_end' => 1700003600);
     $area = array(rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '3366CC', 'alpha' => '99', 'text_format' => 'Inbound: 50%')));
@@ -171,6 +216,7 @@ dataset('rrd graph scenarios', function () {
             $area,
             array('cookies' => array('CactiColorMode' => 'dark'))
         )),
+        'magic CDEF variables' => array('graph-cdef-magic', rrd_characterization_magic_cdef_scenario()),
         'quotes, spaces, percent, colon and double quotes in arguments' => array('graph-pipe-quoting', rrd_characterization_quoting_scenario()),
         'a NUL in a substituted comment' => array('graph-unrepresentable', rrd_characterization_graph_scenario(
             $window + array('print_source' => true),

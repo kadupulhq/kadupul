@@ -128,6 +128,13 @@ function __()
 
 define('CACTI_LOCALE', 'en-US');
 
+// The real one formats through intl in the session locale; en-US grouping
+// with no decimals is what it produces for the defaults used here.
+function number_format_i18n($number, $decimals = null, $baseu = 1024)
+{
+    return number_format((float) $number, $decimals ?? 0);
+}
+
 function __x()
 {
     $args = func_get_args();
