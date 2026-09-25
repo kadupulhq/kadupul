@@ -86,8 +86,8 @@ foreach ($parms as $parameter) {
 		case '--host-id':
 			$host_id = trim($value);
 
-			if (!is_numeric($host_id)) {
-				print 'ERROR: You must supply a valid Device Id to run this script!' . PHP_EOL;
+			if (!ctype_digit($host_id) || (int) $host_id < 1) {
+				print 'ERROR: --host-id must be a positive integer.' . PHP_EOL;
 
 				exit(1);
 			}
@@ -96,8 +96,8 @@ foreach ($parms as $parameter) {
 		case '--host-template-id':
 			$host_template_id = trim($value);
 
-			if (!is_numeric($host_template_id)) {
-				print 'ERROR: You must supply a valid Device Template Id to run this script!' . PHP_EOL;
+			if (!ctype_digit($host_template_id) || (int) $host_template_id < 1) {
+				print 'ERROR: --host-template-id must be a positive integer.' . PHP_EOL;
 
 				exit(1);
 			}
@@ -106,8 +106,8 @@ foreach ($parms as $parameter) {
 		case '--data-template-id':
 			$data_template_id = trim($value);
 
-			if (!is_numeric($data_template_id)) {
-				print 'ERROR: You must supply a valid Data Template Id to run this script!' . PHP_EOL;
+			if (!ctype_digit($data_template_id) || (int) $data_template_id < 1) {
+				print 'ERROR: --data-template-id must be a positive integer.' . PHP_EOL;
 
 				exit(1);
 			}
@@ -118,16 +118,21 @@ foreach ($parms as $parameter) {
 
 			break;
 		case '--threads':
-			if (!is_numeric(trim($value))) {
-				print 'ERROR: You must supply a valid Number of Treads or skip this parameter for default value (' . $threads . ')' . PHP_EOL;
+			if (!ctype_digit(trim($value)) || (int) trim($value) < 1) {
+				print 'ERROR: --threads must be a positive integer.' . PHP_EOL;
 				exit(1);
 			}
 
-			$threads = $value;
+			$threads = (int) $value;
 
 			break;
 		case '--child':
-			$thread_id = $value;
+			if (!ctype_digit((string) $value) || (int) $value < 1) {
+				print 'ERROR: --child must be a positive integer.' . PHP_EOL;
+				exit(1);
+			}
+
+			$thread_id = (int) $value;
 
 			break;
 		case '--force':
@@ -160,6 +165,27 @@ foreach ($parms as $parameter) {
 	}
 }
 
+if (!in_array($type, array('rmaster', 'child'), true)) {
+	print 'ERROR: --type must be either rmaster or child.' . PHP_EOL;
+	exit(1);
+}
+if ($type === 'child' && $thread_id < 1) {
+	print 'ERROR: Child workers require a positive --child identifier.' . PHP_EOL;
+	exit(1);
+}
+
+if (!ctype_digit((string) $threads) || (int) $threads < 1) {
+	print 'ERROR: The configured process count must be a positive integer.' . PHP_EOL;
+	exit(1);
+}
+$threads = (int) $threads;
+
+foreach (array('host_id' => $host_id, 'host_template_id' => $host_template_id, 'data_template_id' => $data_template_id) as $option_name => $option_value) {
+	if ($option_value !== false) {
+		$$option_name = (int) $option_value;
+	}
+}
+
 /* install signal handlers for UNIX only */
 if (function_exists('pcntl_signal')) {
 	pcntl_signal(SIGTERM, 'sig_handler');
@@ -172,19 +198,6 @@ $start = microtime(true);
 /* set new timeout and memory settings */
 ini_set('max_execution_time', '0');
 ini_set('memory_limit', '-1');
-
-$sql_where = '';
-$params    = array();
-
-if ($host_id > 0) {
-	$sql_where = ' AND h.id = ?';
-	$params[]  = $host_id;
-}
-
-if ($host_template_id > 0) {
-	$sql_where .= ' AND h.host_template_id = ?';
-	$params[] = $host_template_id;
-}
 
 /* issue warnings and start message if applicable */
 print 'WARNING: Do not interrupt this script.  Rebuilding Poller Cache can take quite some time' . PHP_EOL;
@@ -212,9 +225,10 @@ if ($type == 'rmaster' && !db_fetch_cell_prepared('SELECT GET_LOCK(?, 0)', array
 }
 
 /* Collect data as determined by the type */
+$exit_status = 0;
 switch ($type) {
 	case 'rmaster':
-		pushout_master_handler($forcerun, $host_id, $host_template_id, $data_template_id, $threads);
+		$exit_status = pushout_master_handler($forcerun, $host_id, $host_template_id, $data_template_id, $threads) ? 0 : 1;
 
 		unregister_process('pushout', 'rmaster', 0);
 
@@ -238,6 +252,19 @@ switch ($type) {
 		}
 
 		$rows = db_fetch_cell_prepared("SELECT count(id) FROM host WHERE disabled='' " . $sql_where, $sql_params);
+		if (!is_numeric($rows)) {
+			fwrite(STDERR, "ERROR: Unable to count hosts for the child process.\n");
+			$exit_status = 1;
+			unregister_process('pushout', 'child', $thread_id);
+			break;
+		}
+
+		if ((int) $rows === 0) {
+			cacti_log(sprintf('ERROR: Child process %s found no hosts in its assigned range.', $thread_id), true, 'PUSHOUT');
+			$exit_status = 1;
+			unregister_process('pushout', 'child', $thread_id);
+			break;
+		}
 
 		$hosts_per_process = ceil($rows/$threads);
 
@@ -249,6 +276,11 @@ switch ($type) {
 			ON h.id=dl.host_id
 			WHERE h.disabled='' " . $sql_where,
 			$sql_params);
+		if ($rows === false) {
+			fwrite(STDERR, "ERROR: Unable to load hosts for the child process.\n");
+			$exit_status = 1;
+			$rows = array();
+		}
 
 		cacti_log(sprintf('Child Started Process %s with %d hosts, from: %d', $thread_id, $hosts_per_process, ($thread_id-1)*$hosts_per_process), true, 'PUSHOUT');
 
@@ -259,8 +291,9 @@ switch ($type) {
 
 			if ($row['dl_count'] > 0) {
 				push_out_host($row['id'], 0, $data_template_id);
-			} else {
-				db_execute_prepared('DELETE FROM poller_item WHERE host_id = ?', array($row['id']));
+			} elseif (db_execute_prepared('DELETE FROM poller_item WHERE host_id = ?', array($row['id'])) === false) {
+				fwrite(STDERR, "ERROR: Failed to clear stale poller items for host {$row['id']}.\n");
+				$exit_status = 1;
 			}
 		}
 
@@ -273,7 +306,7 @@ switch ($type) {
 
 pushout_debug('Polling Ending');
 
-exit(0);
+exit($exit_status);
 
 function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_template_id, $threads) {
 	global $type;
@@ -295,6 +328,12 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
 		FROM host
 		WHERE disabled = '' " . $sql_where, $sql_params);
 
+	if (!is_numeric($rows)) {
+		fwrite(STDERR, "ERROR: Unable to count hosts for the poller cache rebuild.\n");
+
+		return false;
+	}
+
 	if ($rows == 0) {
 		print 'WARNING: There are no hosts to process' . PHP_EOL;;
 
@@ -310,7 +349,7 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
 	for ($thread_id = 1; $h_done < $rows; $thread_id++) {
 		pushout_debug("Launching Process ID $thread_id");
 
-		pushout_launch_child($thread_id, $threads);
+		pushout_launch_child($thread_id, $threads, $host_id);
 
 		$h_done += $hosts_per_process;
 	}
@@ -345,7 +384,7 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
  *
  * @return - NULL
  */
-function pushout_launch_child($thread_id, $threads) {
+function pushout_launch_child($thread_id, $threads, $host_id = false) {
 	global $config, $debug, $host_template_id, $data_template_id;
 
 	$php_binary = read_config_option('path_php_binary');
@@ -354,7 +393,7 @@ function pushout_launch_child($thread_id, $threads) {
 
 	cacti_log(sprintf('NOTE: Launching Push out hosts Number %s for Type %s', $thread_id, 'child'), true, 'PUSHOUT', POLLER_VERBOSITY_MEDIUM);
 
-	exec_background($php_binary, $config['base_path'] . "/cli/push_out_hosts.php --type=child --threads=$threads --child=$thread_id " . ($debug ? " --debug":"") . ($host_template_id ? " --host-template-id=$host_template_id":"") . ($data_template_id ? " --data-template-id=$data_template_id":""));
+	exec_background($php_binary, $config['base_path'] . "/cli/push_out_hosts.php --type=child --threads=$threads --child=$thread_id " . ($debug ? " --debug":"") . ($host_id !== false ? " --host-id=$host_id":"") . ($host_template_id ? " --host-template-id=$host_template_id":"") . ($data_template_id ? " --data-template-id=$data_template_id":""));
 }
 
 /**
