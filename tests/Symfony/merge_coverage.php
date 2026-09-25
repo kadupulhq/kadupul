@@ -26,15 +26,16 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'cli_audit_scenarios.py', 'coverage_support.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
-        // cli_parity_scenarios.py and cli_schema_scenarios.py compare the shims
-        // against these frozen originals.
+        // cli_parity_scenarios.py, cli_schema_scenarios.py and
+        // cli_audit_scenarios.py compare the shims against these frozen originals.
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/analyze_database.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/convert_tables.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/fix_mediumint.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/audit_database.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -131,7 +132,36 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'widen fallback still needs a direct Settings/Utilities grant',
         'widen falls back to Settings/Utilities while nobody holds Installation/Upgrades',
         'widen --dry-run through bin/console plans each table and changes nothing',
-        'widen scenarios leave the schema as they found it'];
+        'widen scenarios leave the schema as they found it',
+        'audit report on a drifted table: shim stdout matches the original',
+        'audit repair on a drifted table: shim schema matches the original',
+        'audit repair on a drifted table: shim logs the same cacti.log lines, date included',
+        'audit repair: shim drops the stray index and restores the drifted table through the kernel container',
+        'audit repair with a failing alter: shim logs the same cacti.log lines, date included',
+        'audit repair with a failing alter: shim logs the refused statement without the backtrace',
+        'audit report with the audit schema missing: shim stdout matches the original',
+        'audit report with an unparsable audit schema: shim names the line that does not parse instead of the client error',
+        'audit report when table_columns cannot be created: shim stops without a trailing newline',
+        'audit upgrade from the previous version: shim stdout matches the original',
+        'audit upgrade: shim upgrades the database to the code version',
+        'audit upgrade without a mode: shim stdout matches the original',
+        'audit load: shim schema matches the original',
+        'audit load with a failing export: shim leaves the previous audit schema file where the original truncated it',
+        'audit load without a docs directory: shim stdout matches the original',
+        'audit refuses an unknown operator before any statement',
+        'audit refuses an empty --as rather than falling back to admin_user',
+        'audit refuses a run with no operator',
+        'audit refuses an operator without the Installation/Upgrades realm',
+        'audit refuses --dry-run through the shim before any statement',
+        'audit refuses --json through the shim before any statement',
+        'audit refuses --as through the shim before any statement',
+        'audit refuses --as admin through the shim before any statement',
+        'audit refuses an unauthorized --as with no mode instead of printing the help',
+        'audit fallback still needs a direct Settings/Utilities grant',
+        'audit falls back to Settings/Utilities while nobody holds Installation/Upgrades',
+        'audit --dry-run through bin/console plans the repair and changes nothing, not even the audit tables',
+        'audit refuses a remote collector before any statement, --help included',
+        'audit scenarios leave the schema, settings, grants and docs/ as they found them'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -156,7 +186,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server, theme hash builder and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'include/themes/midwinter/update_hash.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'include/themes/midwinter/update_hash.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -294,6 +324,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Domain/Schema/TableStatus.php',
         'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
         'src/Platform/Infrastructure/Legacy/InstallerTableResult.php',
+        'src/Platform/Infrastructure/Persistence/CactiSchemaFile.php',
         'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
         'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
         'src/Platform/Infrastructure/Symfony/Console/ConvertTablesCommand.php',
@@ -312,7 +343,53 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
-        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php'];
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php',
+        'cli/audit_database.php',
+        'bin/legacy-audit-upgrade.php',
+        'src/Platform/Domain/Schema/AuditMode.php',
+        'src/Platform/Domain/Schema/BaselineColumn.php',
+        'src/Platform/Domain/Schema/BaselineIndex.php',
+        'src/Platform/Domain/Schema/AuditBaseline.php',
+        'src/Platform/Domain/Schema/InvalidAuditSchema.php',
+        'src/Platform/Domain/Schema/AuditSchemaDump.php',
+        'src/Platform/Domain/Schema/BaselineName.php',
+        'src/Platform/Domain/Schema/LiveTable.php',
+        'src/Platform/Domain/Schema/PluginSchemaChanges.php',
+        'src/Platform/Domain/Schema/ColumnBase.php',
+        'src/Platform/Domain/Schema/ColumnType.php',
+        'src/Platform/Domain/Schema/ColumnExtra.php',
+        'src/Platform/Domain/Schema/ColumnSpec.php',
+        'src/Platform/Domain/Schema/IndexAlgorithm.php',
+        'src/Platform/Domain/Schema/DefaultCharset.php',
+        'src/Platform/Domain/Schema/AlterClause.php',
+        'src/Platform/Domain/Schema/ModifyColumn.php',
+        'src/Platform/Domain/Schema/AddColumn.php',
+        'src/Platform/Domain/Schema/DropIndex.php',
+        'src/Platform/Domain/Schema/RebuildIndex.php',
+        'src/Platform/Domain/Schema/UnbuildableClause.php',
+        'src/Platform/Domain/Schema/ColumnDrift.php',
+        'src/Platform/Domain/Schema/IndexDrift.php',
+        'src/Platform/Domain/Schema/AuditTableStatus.php',
+        'src/Platform/Domain/Schema/TableAudit.php',
+        'src/Platform/Domain/Schema/TableAlter.php',
+        'src/Platform/Application/Port/AuditCatalog.php',
+        'src/Platform/Application/Port/SchemaAudit.php',
+        'src/Platform/Application/Port/AuditBaselineStore.php',
+        'src/Platform/Application/Port/InstallationUpgrade.php',
+        'src/Platform/Application/ReadModel/UpgradeOutput.php',
+        'src/Platform/Application/ReadModel/AuditOutcome.php',
+        'src/Platform/Application/ReadModel/BaselineOutcome.php',
+        'src/Platform/Application/ReadModel/AlterResult.php',
+        'src/Platform/Application/ReadModel/AuditReport.php',
+        'src/Platform/Application/Command/AuditRun.php',
+        'src/Platform/Application/Command/AuditDatabase.php',
+        'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
+        'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseLegacyArguments.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseCommand.php',
+        'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
+        'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);
