@@ -44,9 +44,14 @@ test('rrdtool stdin command paths and bounds are validated at sinks', function (
 	expect($rrdSource)->toContain('!cacti_rrdtool_valid_ds_template($rrd_update_template)');
 	expect($rrdSource)->toContain('rrdtool_execute_path_command(\'file_exists\', $rrd_path');
 	expect($boostSource)->toContain('!cacti_rrdtool_valid_path($data_source_path)');
-	expect($boostSource)->toContain('!cacti_rrdtool_valid_bound($data_source[\'rrd_minimum\'])');
 	expect($boostSource)->toContain('!cacti_rrdtool_valid_ds_template($rrd_update_template)');
 	expect($boostSource)->toContain('rrdtool_execute_path_command(\'file_exists\', $rrd_path');
+
+	// The bound check used to sit in both creators. It now runs once, in
+	// rrd_create_definition(), which both of them call; the copies had drifted
+	// three ways and two of the differences cost data.
+	expect($boostSource)->toContain('rrd_create_definition($local_data_id, \'BOOST\')');
+	expect($rrdSource)->toContain('rrd_create_definition($local_data_id, \'POLLER\')');
 });
 
 test('shell command binaries and rrdfile arguments are escaped', function () use ($rrdSource, $pollerLibSource, $spikekillSource) {

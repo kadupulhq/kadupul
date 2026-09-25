@@ -351,7 +351,6 @@ dynamic_include	./lib/api_device.php:946		include_once($config['base_path'] . '/
 dynamic_include	./lib/api_device.php:947		include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:948		include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./lib/boost.php:1211		include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./lib/boost.php:1814		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/boost.php:2263			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:605			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:797		include_once($config['library_path'] . '/poller.php');
@@ -414,7 +413,6 @@ dynamic_include	./lib/reports.php:408		include_once($config['base_path'] . '/lib
 dynamic_include	./lib/reports.php:409		include_once($config['base_path'] . '/lib/html_reports.php');
 dynamic_include	./lib/reports.php:691		include_once($config['library_path'] . '/html_tree.php');
 dynamic_include	./lib/reports.php:768		include_once($config['base_path'] . '/lib/time.php');
-dynamic_include	./lib/rrd.php:1048		include ($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/rrd.php:1479		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/rrd.php:1658		include_once($config['library_path'] . '/boost.php');
 dynamic_include	./lib/rrd.php:1710		include($config['include_path'] . '/global_arrays.php');
