@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Validate selected UI themes against installed theme directories before constructing paths, and bind graph-template ordering filters as parameters.
+
 - Accept only a number or `U` as a data source minimum, and only a number, `U` or an interface speed token as a maximum, refuse to create an RRD file whose stored minimum is anything else, and create realtime graph RRD files through the RRDtool pipe instead of a shell. A data source item that fails validation is no longer saved.
 
 - Start RRDtool without a shell, so an RRDtool binary path containing a blank works for graphs, tuning and RRD writes. The path must name the executable alone; extra arguments or shell syntax in it now stop RRD writes as well.
