@@ -62,7 +62,8 @@ cmd_exec	./lib/poller.php:50	 * @param  (resource) $proc_fd - the file descripto
 cmd_exec	./lib/poller.php:86	                $fp = popen($command, 'r');
 cmd_exec	./lib/poller.php:88	                $fp = popen($command, 'rb');
 cmd_exec	./lib/rrd.php:155	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
-cmd_exec	./lib/rrd_maintenance.php:416	    $process = @proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/rrd_maintenance.php:235	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
+cmd_exec	./lib/rrd_maintenance.php:417	    $process = @proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/rrdcheck.php:836	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
