@@ -1736,7 +1736,7 @@ function rrdtool_function_tune($rrd_tune_array)
     $data_source_type = $data_source_types[$rrd_tune_array['data-source-type']] ?? '';
     $data_source_path = get_data_source_path($rrd_tune_array['data_source_id'], true);
 
-    // escapeshellarg() throws on a NUL, which would end the request with a PHP error.
+    // A NUL cannot be passed in an argument, and escapeshellarg() throws on one.
     foreach (array($data_source_name, $data_source_path, $rrd_tune_array['heartbeat'], $rrd_tune_array['minimum'], $rrd_tune_array['maximum'], $rrd_tune_array['data-source-rename']) as $value) {
         if (strpos((string) $value, "\0") !== false) {
             cacti_log('ERROR: RRD tuning refused a value containing a NUL byte; no changes were made.');
@@ -1744,32 +1744,39 @@ function rrdtool_function_tune($rrd_tune_array)
         }
     }
 
-    $rrd_tune = '';
+    $rrd_tune = array();
     if ($rrd_tune_array['heartbeat'] != '') {
-        $rrd_tune .= ' --heartbeat ' . cacti_escapeshellarg($data_source_name . ':' . $rrd_tune_array['heartbeat']);
+        $rrd_tune['--heartbeat'] = $data_source_name . ':' . $rrd_tune_array['heartbeat'];
     }
 
     if ($rrd_tune_array['minimum'] != '') {
-        $rrd_tune .= ' --minimum ' . cacti_escapeshellarg($data_source_name . ':' . $rrd_tune_array['minimum']);
+        $rrd_tune['--minimum'] = $data_source_name . ':' . $rrd_tune_array['minimum'];
     }
 
     if ($rrd_tune_array['maximum'] != '') {
-        $rrd_tune .= ' --maximum ' . cacti_escapeshellarg($data_source_name . ':' . $rrd_tune_array['maximum']);
+        $rrd_tune['--maximum'] = $data_source_name . ':' . $rrd_tune_array['maximum'];
     }
 
     // An empty or unknown type leaves the data source type unchanged.
     if ($data_source_type != '') {
-        $rrd_tune .= ' --data-source-type ' . cacti_escapeshellarg($data_source_name . ':' . $data_source_type);
+        $rrd_tune['--data-source-type'] = $data_source_name . ':' . $data_source_type;
     }
 
     if ($rrd_tune_array['data-source-rename'] != '') {
-        $rrd_tune .= ' --data-source-rename ' . cacti_escapeshellarg($data_source_name . ':' . $rrd_tune_array['data-source-rename']);
+        $rrd_tune['--data-source-rename'] = $data_source_name . ':' . $rrd_tune_array['data-source-rename'];
     }
 
-    if ($rrd_tune != '') {
+    if (count($rrd_tune)) {
         if (file_exists($data_source_path) == true) {
             if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
-                $rrdtool_cmd = cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' tune ' . cacti_escapeshellarg($data_source_path) . $rrd_tune;
+                // The shell-quoted form is kept for the log only. CR and LF are
+                // removed from each argument, as cacti_escapeshellarg() does.
+                $rrdtool_argv = array(read_config_option('path_rrdtool'), 'tune', str_replace(array("\r", "\n"), '', $data_source_path));
+                $rrdtool_cmd = cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' tune ' . cacti_escapeshellarg($data_source_path);
+                foreach ($rrd_tune as $option => $value) {
+                    array_push($rrdtool_argv, $option, str_replace(array("\r", "\n"), '', $value));
+                    $rrdtool_cmd .= ' ' . $option . ' ' . cacti_escapeshellarg($value);
+                }
                 require_once __DIR__ . '/rrd_maintenance.php';
                 /* A web request must not wait indefinitely behind a polling cycle. */
                 $lock = rrd_maintenance_acquire(true, true, 5, $busy);
@@ -1779,13 +1786,7 @@ function rrdtool_function_tune($rrd_tune_array)
                     return false;
                 }
                 try {
-                    $fp = popen($rrdtool_cmd, 'r');
-                    if (is_resource($fp)) {
-                        while (!feof($fp)) {
-                            fread($fp, 8192);
-                        }
-                        pclose($fp);
-                    }
+                    rrdtool_run_process($rrdtool_argv);
                 } finally {
                     rrd_maintenance_release($lock);
                 }
@@ -3317,6 +3318,30 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 function rrdtool_pipe_quote($argument)
 {
     return rrdtool_pipe_encoder()->quote(str_replace(array("\r", "\n"), '', (string) $argument));
+}
+
+/**
+ * Run one RRDtool command to completion without a shell, discarding its
+ * output. Its stderr is passed on to ours, where popen() left it.
+ */
+function rrdtool_run_process(array $argv)
+{
+    // As rrdtool_pipe_encoder(): this file can be loaded without the autoloader.
+    if (!class_exists(\Symfony\Component\Process\Process::class)) {
+        require_once __DIR__ . '/../include/vendor/autoload.php';
+    }
+
+    // getenv() and no timeout, as popen() had: the child sees what putenv() set.
+    $process = new \Symfony\Component\Process\Process($argv, null, getenv(), null, null);
+    try {
+        $process->run(function ($type, $buffer) {
+            if ($type === \Symfony\Component\Process\Process::ERR) {
+                file_put_contents('php://stderr', $buffer);
+            }
+        });
+    } catch (\Symfony\Component\Process\Exception\RuntimeException $e) {
+        // A failed popen() was silent as well.
+    }
 }
 
 function rrdtool_pipe_encoder()
