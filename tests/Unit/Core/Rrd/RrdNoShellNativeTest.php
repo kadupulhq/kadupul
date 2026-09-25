@@ -52,7 +52,10 @@ function get_data_source_item_name($id){return 'value';}
 function get_data_source_path($id,$expand){return __DIR__.'/it is.rrd';}
 require $root.'/lib/rrd.php';
 $result=null;
-if($mode==='acknowledged'||$mode==='writer-null'||$mode==='writer-terminal'){
+if($mode==='writer-shutdown'){
+    // Left open: the shutdown handler must close it and wait for the child.
+    $result=rrdtool_execute('update it.rrd N:1',false,RRDTOOL_OUTPUT_NULL,rrd_init(false));
+}elseif($mode==='acknowledged'||$mode==='writer-null'||$mode==='writer-terminal'){
     $pipe=rrd_init($mode==='writer-terminal',false,$mode==='acknowledged');
     $result=rrdtool_execute('update it.rrd N:1',false,$mode==='acknowledged'?RRDTOOL_OUTPUT_BOOLEAN:RRDTOOL_OUTPUT_NULL,$pipe);
     rrd_close($pipe);
@@ -62,7 +65,8 @@ if($mode==='acknowledged'||$mode==='writer-null'||$mode==='writer-terminal'){
     $result=rrdtool_execute('info it.rrd',false,$mode==='execute-stdout'?RRDTOOL_OUTPUT_STDOUT:RRDTOOL_OUTPUT_RETURN_STDERR);
 }
 // Anything after rrd_close() or the call itself returned sees the child gone.
-$log=array_map('json_decode',file(__DIR__.'/rrdtool.log',FILE_IGNORE_NEW_LINES));
+// The open writer's child may not have started yet, so the test reads its log.
+$log=$mode==='writer-shutdown'?array():array_map('json_decode',file(__DIR__.'/rrdtool.log',FILE_IGNORE_NEW_LINES));
 echo "\n".json_encode(array($result,$log,$GLOBALS['messages']??array()));
 SOURCE;
     file_put_contents($dir . '/run.php', $program);
@@ -77,6 +81,11 @@ SOURCE;
         $lines = explode("\n", $out);
         list($result, $log, $messages) = json_decode(array_pop($lines), true, 512, JSON_THROW_ON_ERROR);
         $printed = implode("\n", $lines);
+        if ($mode === 'writer-shutdown') {
+            // Read once this process has exited: its shutdown handler waited for the child.
+            $log = array_map('json_decode', file($dir . '/rrdtool.log', FILE_IGNORE_NEW_LINES));
+            expect($log)->toBe(array(array('-'), ' update it.rrd N:1', 'exited'));
+        }
         expect(end($log))->toBe('exited');
         if ($mode === 'tune') {
             // CR and LF leave the rename; the log keeps the old shell-quoted form.
@@ -100,7 +109,7 @@ SOURCE;
             expect($log)->toBe(array(array('-'), ($mode === 'acknowledged' ? '' : ' ') . 'update it.rrd N:1', 'exited'));
             if ($mode === 'acknowledged') {
                 expect($result)->toBeTrue()->and($printed)->toBe('')->and($err)->toBe('');
-            } elseif ($mode === 'writer-null') {
+            } elseif ($mode === 'writer-null' || $mode === 'writer-shutdown') {
                 expect($result)->toBeNull()->and($printed)->toBe('')->and($err)->toBe('');
             } else {
                 expect($result)->toBeNull()->and($printed)->toBe("stdout-marker\nOK u:0.00 s:0.00 r:0.00\n")->and($err)->toBe("stderr-marker\n");
@@ -117,4 +126,4 @@ SOURCE;
         }
         rmdir($dir);
     }
-})->with(array('acknowledged', 'writer-null', 'writer-terminal', 'execute-stdout', 'execute-stderr', 'tune'));
+})->with(array('acknowledged', 'writer-null', 'writer-shutdown', 'writer-terminal', 'execute-stdout', 'execute-stderr', 'tune'));
