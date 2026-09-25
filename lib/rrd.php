@@ -4301,6 +4301,62 @@ function rrd_repair($data_source_id)
 }
 
 /**
+ * rrd_xml_transform - dump each RRD file, let $mutate change the XML, and
+ * restore it in place, or print the XML in debug mode
+ *
+ * @param  (array)    $file_array  - array of rrd files
+ * @param  (bool)     $debug       - print the XML instead of restoring it
+ * @param  (string)   $parse_error - message returned when a dump cannot be parsed
+ * @param  (string)   $logged      - log text for a restored file, followed by its path
+ * @param  (callable) $mutate      - changes the DOMDocument of one file
+ *
+ * @return (mixed) - success (bool) or error message (array)
+ */
+function rrd_xml_transform($file_array, $debug, $parse_error, $logged, $mutate)
+{
+    return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $debug, $parse_error, $logged, $mutate) {
+        /* iterate all given rrd files */
+        foreach ($file_array as $file) {
+            /* create a DOM document from an rrdtool dump */
+            $dom = new domDocument;
+            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+            if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
+                return array('err_msg' => $parse_error);
+            }
+
+            $mutate($dom);
+
+            if ($debug) {
+                print $dom->saveXML();
+            } else {
+                /* for rrdtool restore, we need a file, so write the XML to disk */
+                $xml_file = $file . '.xml';
+                $rc = $dom->save($xml_file);
+                /* verify, if write was successful */
+                if ($rc === false) {
+                    return array('err_msg' => __('ERROR while writing XML file: %s', $xml_file));
+                } else {
+                    /* are we allowed to write the rrd file? */
+                    if (is_writable($file)) {
+                        /* restore the modified XML to rrd */
+                        if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
+                            return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
+                        }
+                        /* scratch that XML file to avoid filling up the disk */
+                        unlink($xml_file);
+                        cacti_log($logged . $file, false, 'UTIL');
+                    } else {
+                        return array('err_msg' => __('ERROR: RRDfile %s not writeable', $file));
+                    }
+                }
+            }
+        }
+
+        return true;
+    });
+}
+
+/**
  * rrd_datasource_add - add a (list of) datasource(s) to an (array of) rrd file(s)
  *
  * @param  (array) $file_array - array of rrd files
@@ -4311,68 +4367,28 @@ function rrd_repair($data_source_id)
  */
 function rrd_datasource_add($file_array, $ds_array, $debug)
 {
-    return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $ds_array, $debug) {
-        global $data_source_types, $consolidation_functions;
+    return rrd_xml_transform($file_array, $debug, __('Error while parsing the XML of rrdtool dump'), 'Added Data Source(s) to RRDfile: ', function ($dom) use ($ds_array) {
+        global $data_source_types;
 
-        /* iterate all given rrd files */
-        foreach ($file_array as $file) {
-            /* create a DOM object from an rrdtool dump */
-            $dom = new domDocument;
-            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
-            if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
-                $check['err_msg'] = __('Error while parsing the XML of rrdtool dump');
-                return $check;
-            }
+        /* rrdtool dump depends on rrd file version:
+         * version 0001 => RRDtool 1.0.x
+         * version 0003 => RRDtool 1.2.x, 1.3.x, 1.4.x, 1.5.x, 1.6.x
+         */
+        $version = trim($dom->getElementsByTagName('version')->item(0)->nodeValue);
 
-            /* rrdtool dump depends on rrd file version:
-             * version 0001 => RRDtool 1.0.x
-             * version 0003 => RRDtool 1.2.x, 1.3.x, 1.4.x, 1.5.x, 1.6.x
-             */
-            $version = trim($dom->getElementsByTagName('version')->item(0)->nodeValue);
-
-            /* now start XML processing */
-            foreach ($ds_array as $ds) {
-                /* first, append the <DS> structure in the rrd header */
-                if ($ds['type'] === $data_source_types[5]) {
-                    rrd_append_compute_ds($dom, $version, $ds['name'], $ds['type'], $ds['cdef']);
-                } else {
-                    rrd_append_ds($dom, $version, $ds['name'], $ds['type'], $ds['heartbeat'], $ds['min'], $ds['max']);
-                }
-                /* now work on the <DS> structure as part of the <cdp_prep> tree */
-                rrd_append_cdp_prep_ds($dom, $version);
-                /* add <V>alues to the <database> tree */
-                rrd_append_value($dom);
-            }
-
-            if ($debug) {
-                print $dom->saveXML();
+        /* now start XML processing */
+        foreach ($ds_array as $ds) {
+            /* first, append the <DS> structure in the rrd header */
+            if ($ds['type'] === $data_source_types[5]) {
+                rrd_append_compute_ds($dom, $version, $ds['name'], $ds['type'], $ds['cdef']);
             } else {
-                /* for rrdtool restore, we need a file, so write the XML to disk */
-                $xml_file = $file . '.xml';
-                $rc = $dom->save($xml_file);
-                /* verify, if write was successful */
-                if ($rc === false) {
-                    $check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
-                    return $check;
-                } else {
-                    /* are we allowed to write the rrd file? */
-                    if (is_writable($file)) {
-                        /* restore the modified XML to rrd */
-                        if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
-                            return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
-                        }
-                        /* scratch that XML file to avoid filling up the disk */
-                        unlink($xml_file);
-                        cacti_log('Added Data Source(s) to RRDfile: ' . $file, false, 'UTIL');
-                    } else {
-                        $check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
-                        return $check;
-                    }
-                }
+                rrd_append_ds($dom, $version, $ds['name'], $ds['type'], $ds['heartbeat'], $ds['min'], $ds['max']);
             }
+            /* now work on the <DS> structure as part of the <cdp_prep> tree */
+            rrd_append_cdp_prep_ds($dom, $version);
+            /* add <V>alues to the <database> tree */
+            rrd_append_value($dom);
         }
-
-        return true;
     });
 }
 
@@ -4387,52 +4403,10 @@ function rrd_datasource_add($file_array, $ds_array, $debug)
  */
 function rrd_rra_delete($file_array, $rra_array, $debug)
 {
-    return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $rra_array, $debug) {
-
-        /* iterate all given rrd files */
-        foreach ($file_array as $file) {
-            /* create a DOM document from an rrdtool dump */
-            $dom = new domDocument;
-            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
-            if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
-                $check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
-                return $check;
-            }
-
-            /* now start XML processing */
-            foreach ($rra_array as $rra) {
-                rrd_delete_rra($dom, $rra, $debug);
-            }
-
-            if ($debug) {
-                print $dom->saveXML();
-            } else {
-                /* for rrdtool restore, we need a file, so write the XML to disk */
-                $xml_file = $file . '.xml';
-                $rc = $dom->save($xml_file);
-                /* verify, if write was successful */
-                if ($rc === false) {
-                    $check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
-                    return $check;
-                } else {
-                    /* are we allowed to write the rrd file? */
-                    if (is_writable($file)) {
-                        /* restore the modified XML to rrd */
-                        if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
-                            return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
-                        }
-                        /* scratch that XML file to avoid filling up the disk */
-                        unlink($xml_file);
-                        cacti_log('Deleted RRA(s) from RRDfile: ' . $file, false, 'UTIL');
-                    } else {
-                        $check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
-                        return $check;
-                    }
-                }
-            }
+    return rrd_xml_transform($file_array, $debug, __('Error while parsing the XML of RRDtool dump'), 'Deleted RRA(s) from RRDfile: ', function ($dom) use ($rra_array, $debug) {
+        foreach ($rra_array as $rra) {
+            rrd_delete_rra($dom, $rra, $debug);
         }
-
-        return true;
     });
 }
 
@@ -4448,52 +4422,10 @@ function rrd_rra_delete($file_array, $rra_array, $debug)
  */
 function rrd_rra_clone($file_array, $cf, $rra_array, $debug)
 {
-    return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $cf, $rra_array, $debug) {
-
-        /* iterate all given rrd files */
-        foreach ($file_array as $file) {
-            /* create a DOM document from an rrdtool dump */
-            $dom = new domDocument;
-            $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
-            if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
-                $check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
-                return $check;
-            }
-
-            /* now start XML processing */
-            foreach ($rra_array as $rra) {
-                rrd_copy_rra($dom, $cf, $rra, $debug);
-            }
-
-            if ($debug) {
-                print $dom->saveXML();
-            } else {
-                /* for rrdtool restore, we need a file, so write the XML to disk */
-                $xml_file = $file . '.xml';
-                $rc = $dom->save($xml_file);
-                /* verify, if write was successful */
-                if ($rc === false) {
-                    $check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
-                    return $check;
-                } else {
-                    /* are we allowed to write the rrd file? */
-                    if (is_writable($file)) {
-                        /* restore the modified XML to rrd */
-                        if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
-                            return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
-                        }
-                        /* scratch that XML file to avoid filling up the disk */
-                        unlink($xml_file);
-                        cacti_log('Cloned RRA(s) in RRDfile: ' . $file, false, 'UTIL');
-                    } else {
-                        $check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
-                        return $check;
-                    }
-                }
-            }
+    return rrd_xml_transform($file_array, $debug, __('Error while parsing the XML of RRDtool dump'), 'Cloned RRA(s) in RRDfile: ', function ($dom) use ($cf, $rra_array, $debug) {
+        foreach ($rra_array as $rra) {
+            rrd_copy_rra($dom, $cf, $rra, $debug);
         }
-
-        return true;
     });
 }
 
