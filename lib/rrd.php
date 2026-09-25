@@ -858,33 +858,7 @@ function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_
             if ($config['is_web'] == false || is_writable($config['rra_path'])) {
                 if (mkdir(dirname($data_source_path), 0775, true)) {
                     if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-                        $success  = true;
-                        $paths    = explode('/', str_replace($config['rra_path'], '/', dirname($data_source_path)));
-                        $spath    = '';
-
-                        foreach ($paths as $path) {
-                            if ($path == '') {
-                                continue;
-                            }
-
-                            $spath .= '/' . $path;
-
-                            $powner_id = fileowner($config['rra_path'] . $spath);
-                            $pgroup_id = filegroup($config['rra_path'] . $spath);
-
-                            if ($powner_id != $owner_id) {
-                                $success = chown($config['rra_path'] . $spath, $owner_id);
-                            }
-
-                            if ($pgroup_id != $group_id && $success) {
-                                $success = chgrp($config['rra_path'] . $spath, $group_id);
-                            }
-
-                            if (!$success) {
-                                cacti_log("ERROR: Unable to set directory permissions for '" . $config['rra_path'] . $spath . "'", false);
-                                break;
-                            }
-                        }
+                        rrdtool_set_structured_path_ownership($data_source_path, $owner_id, $group_id, $logopt);
                     }
                 } else {
                     cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
@@ -896,6 +870,147 @@ function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_
     }
 
     return array($owner_id, $group_id);
+}
+
+/**
+ * Give each directory between the RRA root and $data_source_path the RRA
+ * root's owner and group, stopping at the first one that cannot be changed.
+ */
+function rrdtool_set_structured_path_ownership($data_source_path, $owner_id, $group_id, $logopt)
+{
+    global $config;
+
+    // The whole directory is checked first, so the walk below starts inside
+    // the RRA root rather than wherever the RRA path text also appears.
+    $directory = dirname($data_source_path);
+    if (rrdtool_ownership_path($directory, $config['rra_path'], $logopt) === false) {
+        return;
+    }
+
+    $rra_prefix = rtrim((string) realpath($config['rra_path']), '/') . '/';
+    $success    = true;
+    $paths      = explode('/', substr($directory, strlen(rtrim($config['rra_path'], '/') . '/')));
+    $spath      = '';
+
+    foreach ($paths as $path) {
+        if ($path == '') {
+            continue;
+        }
+
+        $spath .= '/' . $path;
+
+        // lchown() and lchgrp() get only a canonical path inside the RRA root
+        // that no symbolic link leads to.
+        $checked   = rrdtool_ownership_path($config['rra_path'] . $spath, $config['rra_path'], $logopt);
+        $real_path = $checked === false ? false : realpath($checked);
+        if ($real_path === false || !str_starts_with($real_path, $rra_prefix)) {
+            break;
+        }
+
+        $powner_id = fileowner($real_path);
+        $pgroup_id = filegroup($real_path);
+
+        if ($powner_id != $owner_id) {
+            $success = lchown($real_path, $owner_id);
+        }
+
+        if ($pgroup_id != $group_id && $success) {
+            $success = lchgrp($real_path, $group_id);
+        }
+
+        if (!$success) {
+            cacti_log("ERROR: Unable to set directory permissions for '" . $config['rra_path'] . $spath . "'", false);
+            break;
+        }
+    }
+}
+
+/**
+ * Give a new RRD file the RRA root's owner and group. $failed holds the owner
+ * and group failure messages as sprintf() formats; $missing is the message for
+ * a file RRDtool did not create, or null to report both failures instead.
+ */
+function rrdtool_set_rrd_ownership($data_source_path, $owner_id, $group_id, $logopt, $failed, $missing = null)
+{
+    global $config;
+
+    if (!file_exists($data_source_path)) {
+        foreach ($missing === null ? $failed : array($missing) as $message) {
+            cacti_log(sprintf($message, $data_source_path), false, $logopt);
+        }
+
+        return;
+    }
+
+    // lchown() and lchgrp() get only a canonical path inside the RRA root that
+    // no symbolic link leads to.
+    $checked   = rrdtool_ownership_path($data_source_path, $config['rra_path'], $logopt);
+    $real_path = $checked === false ? false : realpath($checked);
+    if ($real_path === false || !str_starts_with($real_path, rtrim((string) realpath($config['rra_path']), '/') . '/')) {
+        return;
+    }
+
+    if (!lchown($real_path, (int) $owner_id)) {
+        cacti_log(sprintf($failed[0], $data_source_path), false, $logopt);
+    }
+
+    if (!lchgrp($real_path, (int) $group_id)) {
+        cacti_log(sprintf($failed[1], $data_source_path), false, $logopt);
+    }
+}
+
+/**
+ * The canonical path root may give to lchown() and lchgrp() for $path, or false,
+ * logged, when that would act through a symbolic link.
+ *
+ * With a $root, every component from $root down to $path must be a plain
+ * directory or file and the result must resolve inside $root. Without one,
+ * which the maintenance archive needs because it may live anywhere, $path must
+ * not be a link and no directory above it may be a link that root does not own.
+ * lchown() never follows the last component; a directory above it swapped for
+ * a link between this check and the call is not covered.
+ */
+function rrdtool_ownership_path($path, $root = null, $logopt = 'POLLER')
+{
+    clearstatcache(true);
+
+    $real_path = false;
+
+    if ($root === null) {
+        $absolute  = str_starts_with($path, '/') ? $path : getcwd() . '/' . $path;
+        $real_path = $path;
+        $walk      = '';
+
+        foreach (explode('/', trim($absolute, '/')) as $part) {
+            $walk .= '/' . $part;
+
+            // A link root made above the target, such as /var on macOS, is
+            // system configuration; one any other account made may be planted.
+            if (is_link($walk) && ($walk === $absolute || (lstat($walk)['uid'] ?? -1) !== 0)) {
+                $real_path = false;
+
+                break;
+            }
+        }
+    } else {
+        $base      = rtrim($root, '/') . '/';
+        $real_root = realpath($root);
+        $checked   = str_starts_with($path, $base) ? validate_relative_path_within(substr($path, strlen($base)), $root) : false;
+
+        if ($checked !== false && $real_root !== false) {
+            $real_path = realpath($checked);
+
+            if ($real_path === false || $real_path !== $checked || !str_starts_with($real_path, rtrim($real_root, '/') . '/')) {
+                $real_path = false;
+            }
+        }
+    }
+
+    if ($real_path === false) {
+        cacti_log("WARNING: Not changing ownership of '$path', a symbolic link or outside the storage directory", false, $logopt);
+    }
+
+    return $real_path;
 }
 
 /**
@@ -1569,16 +1684,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
         $success = rrdtool_execute("create $quoted_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
 
         if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-            if (file_exists($data_source_path)) {
-                if (!chown($data_source_path, $owner_id)) {
-                    cacti_log("ERROR: Unable to set ownership for '$data_source_path'", false, 'POLLER');
-                }
-                if (!chgrp($data_source_path, $group_id)) {
-                    cacti_log("ERROR: Unable to set group for '$data_source_path'", false, 'POLLER');
-                }
-            } else {
-                cacti_log("ERROR: RRD file '$data_source_path' does not exist for ownership assignment", false, 'POLLER');
-            }
+            rrdtool_set_rrd_ownership($data_source_path, $owner_id, $group_id, 'POLLER', array("ERROR: Unable to set ownership for '%s'", "ERROR: Unable to set group for '%s'"), "ERROR: RRD file '%s' does not exist for ownership assignment");
         }
 
         return $success;
