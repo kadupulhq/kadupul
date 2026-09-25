@@ -184,7 +184,12 @@ function display_help()
  */
 function create_realtime_rrd($local_data_id, $data_source_path, $rt_graph_path, $rrdtool_pipe)
 {
-    $command     = @rrdtool_function_create($local_data_id, true);
+    $command = @rrdtool_function_create($local_data_id, true);
+    if ($command === false) {
+        // rrdtool_function_create() has logged why.
+        return false;
+    }
+
     $prefix      = read_config_option('path_rrdtool') . ' create' . RRD_NL . $data_source_path;
     $quoted_path = rrdtool_command_path($rt_graph_path);
 
@@ -240,14 +245,25 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval)
     }
 
     if (cacti_sizeof($results)) {
+        $rrd_update_array = array();
+        $uncreated        = array();
+
         /* create an array keyed off of each .rrd file */
         foreach ($results as $item) {
             $rt_graph_path    = read_config_option('realtime_cache_path') . '/user_' . $poller_id . '_' . $item['local_data_id'] . '.rrd';
             $data_source_path = get_data_source_path($item['local_data_id'], true);
 
+            // A sample whose RRD could not be created stays queued. Updating it
+            // would only repeat the refused create, and fail the other samples.
+            if (isset($uncreated[$rt_graph_path])) {
+                continue;
+            }
+
             /* create rt rrd */
-            if (!file_exists($rt_graph_path)) {
-                create_realtime_rrd($item['local_data_id'], $data_source_path, $rt_graph_path, $rrdtool_pipe);
+            if (!file_exists($rt_graph_path) && !create_realtime_rrd($item['local_data_id'], $data_source_path, $rt_graph_path, $rrdtool_pipe)) {
+                $uncreated[$rt_graph_path] = true;
+
+                continue;
             }
 
             /* change permissions so that the poller can clear */
