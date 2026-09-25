@@ -88,32 +88,8 @@ function structured_path_calls($dir_uid, $dir_gid, $owner_id, $group_id, $file =
     $source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
     expect($source)->not->toBeFalse();
 
-    $start = strpos($source, '$success  = true;');
-    expect($start)->not->toBeFalse();
-
-    // Balance braces from the loop's own opening one; an end marker inside the
-    // body stops short of the closing braces and yields unparsable source.
-    $open  = strpos($source, '{', strpos($source, 'foreach', $start));
-    $depth = 0;
-    $end   = $open;
-
-    for ($i = $open; $i < strlen($source); $i++) {
-        if ($source[$i] === '{') {
-            $depth++;
-        } elseif ($source[$i] === '}') {
-            $depth--;
-
-            if ($depth === 0) {
-                $end = $i + 1;
-
-                break;
-            }
-        }
-    }
-
-    $fragment = substr($source, $start, $end - $start);
+    $fragment = \test_php_function_source($source, 'rrdtool_set_structured_path_ownership');
     expect($fragment)->toContain('$pgroup_id');
-    expect(substr(rtrim($fragment), -1))->toBe('}');
 
     $probe = '<?php
 namespace Probe;
@@ -135,6 +111,7 @@ $group_id = ' . (int) $group_id . ';
 $config = array("rra_path" => ' . var_export($base . '/rra', true) . ');
 $data_source_path = ' . var_export($base . $rrd, true) . ';
 ' . $fragment . '
+rrdtool_set_structured_path_ownership($data_source_path, $owner_id, $group_id, $logopt);
 echo json_encode(array($GLOBALS["calls"], $GLOBALS["touched"]));
 ';
 
@@ -429,6 +406,7 @@ function lchown($path, $uid) { $GLOBALS["calls"][] = "lchown:" . substr($path, s
 function lchgrp($path, $gid) { $GLOBALS["calls"][] = "lchgrp:" . substr($path, strlen($GLOBALS["base"])); return true; }
 function cacti_log($message, $flag = true, $environ = "") { $GLOBALS["calls"][] = $environ . ":" . str_replace($GLOBALS["base"], "", $message); }
 ' . \test_php_function_source(file_get_contents($root . '/lib/rrd.php'), 'rrdtool_ownership_path') . '
+' . \test_php_function_source(file_get_contents($root . '/lib/rrd.php'), 'rrdtool_set_rrd_ownership') . '
 $GLOBALS["calls"] = array();
 $GLOBALS["base"] = ' . var_export($base, true) . ';
 $owner_id = 0;
@@ -488,22 +466,27 @@ test('a missing RRD keeps the messages it had before', function () {
 /*
  * Every root ownership change on the RRA tree is checked first and made with
  * lchown() or lchgrp(), so a link swapped in after the check is not followed.
+ * In the library the path is also canonicalised and bounded in the same
+ * function, the form static analysis recognises.
  */
 test('each RRA ownership change is checked and never follows a link', function () {
     $root  = dirname(__DIR__, 4);
     $rrd   = file_get_contents($root . '/lib/rrd.php');
     $boost = file_get_contents($root . '/lib/boost.php');
     $sites = array(
-        'rrdtool_create_structured_path' => $rrd,
-        'rrdtool_function_create'        => $rrd,
-        'boost_rrdtool_function_create'  => $boost,
-        'rrdclean_create_path'           => file_get_contents($root . '/poller_maintenance.php'),
+        'rrdtool_set_structured_path_ownership' => array($rrd, array('realpath', 'str_starts_with', 'rrdtool_ownership_path')),
+        'rrdtool_set_rrd_ownership'             => array($rrd, array('realpath', 'str_starts_with', 'rrdtool_ownership_path')),
+        'rrdclean_create_path'                  => array(file_get_contents($root . '/poller_maintenance.php'), array('rrdtool_ownership_path')),
+        'rrdtool_create_structured_path'        => array($rrd, array()),
+        'rrdtool_function_create'               => array($rrd, array()),
+        'boost_rrdtool_function_create'         => array($boost, array()),
     );
     $found = 0;
     $wrong = array();
 
-    foreach ($sites as $name => $source) {
-        $checked = false;
+    foreach ($sites as $name => $site) {
+        list($source, $checks) = $site;
+        $seen = array();
 
         // Tokens, so a name in a comment or string is not taken for a call.
         foreach (token_get_all('<?php ' . \test_php_function_source($source, $name)) as $token) {
@@ -511,20 +494,20 @@ test('each RRA ownership change is checked and never follows a link', function (
                 continue;
             }
 
-            if ($token[1] === 'rrdtool_ownership_path') {
-                $checked = true;
-            } elseif (in_array($token[1], array('chown', 'chgrp'), true)) {
+            if (in_array($token[1], array('chown', 'chgrp'), true)) {
                 $wrong[] = $name . ' calls ' . $token[1];
             } elseif (in_array($token[1], array('lchown', 'lchgrp'), true)) {
                 $found++;
 
-                if (!$checked) {
-                    $wrong[] = $name . ' calls ' . $token[1] . ' before the check';
+                if ($checks === array() || array_diff($checks, $seen) !== array()) {
+                    $wrong[] = $name . ' calls ' . $token[1] . ' before the checks';
                 }
+            } else {
+                $seen[] = $token[1];
             }
         }
     }
 
-    expect($found)->toBe(8);
+    expect($found)->toBe(6);
     expect($wrong)->toBe(array());
 });
