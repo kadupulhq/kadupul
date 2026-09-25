@@ -255,14 +255,12 @@ switch ($type) {
 		if (!is_numeric($rows)) {
 			fwrite(STDERR, "ERROR: Unable to count hosts for the child process.\n");
 			$exit_status = 1;
-			unregister_process('pushout', 'child', $thread_id);
 			break;
 		}
 
 		if ((int) $rows === 0) {
 			cacti_log(sprintf('ERROR: Child process %s found no hosts in its assigned range.', $thread_id), true, 'PUSHOUT');
 			$exit_status = 1;
-			unregister_process('pushout', 'child', $thread_id);
 			break;
 		}
 
@@ -299,9 +297,21 @@ switch ($type) {
 
 		$total_time = microtime(true) - $child_start;
 
-		unregister_process('pushout', 'child', $thread_id);
-
 		break;
+}
+
+if ($type == 'child') {
+	if ($exit_status !== 0) {
+		$marked_failed = db_execute_prepared('UPDATE processes
+			SET taskname = ?
+			WHERE tasktype = ? AND taskname = ? AND taskid = ? AND pid = ?',
+			array('child_failed', 'pushout', 'child', $thread_id, getmypid()));
+		if ($marked_failed === false) {
+			fwrite(STDERR, "ERROR: Unable to report child process failure to the master.\n");
+		}
+	} else {
+		unregister_process('pushout', 'child', $thread_id);
+	}
 }
 
 pushout_debug('Polling Ending');
@@ -310,6 +320,12 @@ exit($exit_status);
 
 function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_template_id, $threads) {
 	global $type;
+
+	if (db_execute('DELETE FROM processes WHERE tasktype = "pushout" AND taskname = "child_failed"') === false) {
+		fwrite(STDERR, "ERROR: Unable to clear stale poller cache child failures.\n");
+
+		return false;
+	}
 
 	$sql_where  = '';
 	$sql_params = array();
@@ -371,6 +387,24 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
 		} else {
 			break;
 		}
+	}
+
+	$failed = db_fetch_cell('SELECT COUNT(*)
+		FROM processes
+		WHERE tasktype = "pushout"
+		AND taskname = "child_failed"');
+
+	if (!is_numeric($failed)) {
+		fwrite(STDERR, "ERROR: Unable to read poller cache child failure status.\n");
+
+		return false;
+	}
+
+	if ((int) $failed > 0) {
+		fwrite(STDERR, sprintf("ERROR: %d poller cache child process(es) failed.\n", $failed));
+		db_execute('DELETE FROM processes WHERE tasktype = "pushout" AND taskname = "child_failed"');
+
+		return false;
 	}
 
 	return true;
