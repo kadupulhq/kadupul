@@ -98,37 +98,42 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
-/* form the 'where' clause for our main sql query */
+$sql_where = '';
+$sql_params = array();
+
+/* Keep filter values in the prepared query while preserving LIKE matching. */
 if ($filter != '') {
-	$sql_where = "AND (data_template_data.name_cache like '%" . $filter . "%'" .
-	" OR data_template_data.local_data_id like '%" . $filter . "%'" .
-	" OR data_template.name like '%" . $filter . "%'" .
-	" OR data_input.name like '%" . $filter . "%')";
-} else {
-	$sql_where = "";
+	$sql_where = ' AND (data_template_data.name_cache LIKE ?' .
+		' OR data_template_data.local_data_id LIKE ?' .
+		' OR data_template.name LIKE ?' .
+		' OR data_input.name LIKE ?)';
+	$filter_pattern = '%' . $filter . '%';
+	$sql_params = array($filter_pattern, $filter_pattern, $filter_pattern, $filter_pattern);
 }
 
 if (strtolower($host_id) == 'all') {
 	/* Act on all graphs */
-} elseif (substr_count($host_id, ',')) {
-	$hosts = explode(',', $host_id);
-	$host_str = '';
-
-	foreach ($hosts as $host) {
-		if (is_numeric($host) && $host > 0) {
-			$host_str .= ($host_str != '' ? ', ':'') . $host;
+} elseif (preg_match('/^\d+(,\d+)*$/D', $host_id)) {
+	$host_ids = explode(',', $host_id);
+	foreach ($host_ids as $index => $host) {
+		$normalized_host = ltrim($host, '0');
+		$normalized_host = $normalized_host === '' ? '0' : $normalized_host;
+		if (strlen($normalized_host) > 10 || (strlen($normalized_host) === 10 && strcmp($normalized_host, '4294967295') > 0)) {
+			print "ERROR: Host ID is outside the supported integer range.\n";
+			display_help();
+			exit(1);
 		}
-	}
 
-	$sql_where .= " AND data_local.host_id IN ($host_str)";
-} elseif ($host_id == '0') {
-	$sql_where .= ' AND data_local.host_id=0';
-} elseif (!empty($host_id) && $host_id > 0) {
-	$sql_where .= ' AND data_local.host_id=' . $host_id;
+		$host_ids[$index] = (int) $normalized_host;
+	}
+	$host_ids = array_values(array_unique($host_ids));
+	$placeholders = implode(',', array_fill(0, count($host_ids), '?'));
+	$sql_where .= " AND data_local.host_id IN ($placeholders)";
+	$sql_params = array_merge($sql_params, $host_ids);
 } else {
-	print "ERROR: You must specify either a host_id or 'all' to proceed.\n";
+	print "ERROR: Specify --host-id=all or a comma-separated list of numeric host IDs.\n";
 	display_help();
-	exit;
+	exit(1);
 }
 
 $data_source_list_sql = "SELECT data_template_data.local_data_id, data_template_data.name_cache, data_template_data.active,
@@ -141,7 +146,11 @@ $data_source_list_sql = "SELECT data_template_data.local_data_id, data_template_
 	WHERE data_local.id=data_template_data.local_data_id
 	$sql_where";
 
-$data_source_list = db_fetch_assoc($data_source_list_sql);
+$data_source_list = db_fetch_assoc_prepared($data_source_list_sql, $sql_params);
+if ($data_source_list === false) {
+	fwrite(STDERR, "ERROR: Unable to load the selected data sources.\n");
+	exit(1);
+}
 
 /* issue warnings and start message if applicable */
 if (cacti_sizeof($data_source_list) > 0) {
