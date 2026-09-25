@@ -880,10 +880,17 @@ function rrdtool_set_structured_path_ownership($data_source_path, $owner_id, $gr
 {
     global $config;
 
+    // The whole directory is checked first, so the walk below starts inside
+    // the RRA root rather than wherever the RRA path text also appears.
+    $directory = dirname($data_source_path);
+    if (rrdtool_ownership_path($directory, $config['rra_path'], $logopt) === false) {
+        return;
+    }
+
     $rra_prefix = rtrim((string) realpath($config['rra_path']), '/') . '/';
     $success    = true;
-    $paths    = explode('/', str_replace($config['rra_path'], '/', dirname($data_source_path)));
-    $spath    = '';
+    $paths      = explode('/', substr($directory, strlen(rtrim($config['rra_path'], '/') . '/')));
+    $spath      = '';
 
     foreach ($paths as $path) {
         if ($path == '') {
@@ -894,9 +901,9 @@ function rrdtool_set_structured_path_ownership($data_source_path, $owner_id, $gr
 
         // lchown() and lchgrp() get only a canonical path inside the RRA root
         // that no symbolic link leads to.
-        $real_path = realpath($config['rra_path'] . $spath);
-        if (rrdtool_ownership_path($config['rra_path'] . $spath, $config['rra_path'], $logopt) === false
-            || $real_path === false || !str_starts_with($real_path, $rra_prefix)) {
+        $checked   = rrdtool_ownership_path($config['rra_path'] . $spath, $config['rra_path'], $logopt);
+        $real_path = $checked === false ? false : realpath($checked);
+        if ($real_path === false || !str_starts_with($real_path, $rra_prefix)) {
             break;
         }
 
@@ -937,9 +944,9 @@ function rrdtool_set_rrd_ownership($data_source_path, $owner_id, $group_id, $log
 
     // lchown() and lchgrp() get only a canonical path inside the RRA root that
     // no symbolic link leads to.
-    $real_path = realpath($data_source_path);
-    if (rrdtool_ownership_path($data_source_path, $config['rra_path'], $logopt) === false
-        || $real_path === false || !str_starts_with($real_path, rtrim((string) realpath($config['rra_path']), '/') . '/')) {
+    $checked   = rrdtool_ownership_path($data_source_path, $config['rra_path'], $logopt);
+    $real_path = $checked === false ? false : realpath($checked);
+    if ($real_path === false || !str_starts_with($real_path, rtrim((string) realpath($config['rra_path']), '/') . '/')) {
         return;
     }
 
