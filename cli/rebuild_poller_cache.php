@@ -242,16 +242,16 @@ switch ($type) {
 		$sql_params = array();
 
 		if ($host_id !== false) {
-			$sql_where .= 'AND id = ?';
+			$sql_where .= 'AND h.id = ?';
 			$sql_params[] = $host_id;
 		}
 
 		if ($host_template_id !== false) {
-			$sql_where .= 'AND host_template_id = ?';
+			$sql_where .= 'AND h.host_template_id = ?';
 			$sql_params[] = $host_template_id;
 		}
 
-		$rows = db_fetch_cell_prepared("SELECT count(id) FROM host WHERE disabled='' " . $sql_where, $sql_params);
+		$rows = db_fetch_cell_prepared("SELECT count(h.id) FROM host AS h WHERE h.disabled='' " . $sql_where, $sql_params);
 		if (!is_numeric($rows)) {
 			fwrite(STDERR, "ERROR: Unable to count hosts for the child process.\n");
 			$exit_status = 1;

@@ -149,13 +149,13 @@ if (cacti_sizeof($parms)) {
 	if ($repair) {
 		$exit_code = repair_database() ? 0 : 1;
 	} elseif ($create) {
-		create_tables();
+		$exit_code = create_tables() ? 0 : 1;
 	} elseif ($report) {
 		$exit_code = report_audit_results() === false ? 1 : 0;
 	} elseif ($altersopt) {
 		$exit_code = repair_database(false) ? 0 : 1;
 	} elseif ($loadopt) {
-		load_audit_database();
+		$exit_code = load_audit_database() ? 0 : 1;
 	} else {
 		display_help();
 	}
@@ -531,7 +531,11 @@ function report_audit_results($output = true) {
 
 	$db_name = 'Tables_in_' . $database_default;
 
-	create_tables();
+	if (!create_tables()) {
+		print 'FATAL: Unable to load the audit schema baseline' . PHP_EOL;
+
+		return false;
+	}
 
 	$tables = db_fetch_assoc('SHOW TABLES');
 
@@ -1198,9 +1202,9 @@ function get_column_sequence_number($table, $index, $column) {
 
 function create_tables($load = true) {
 	global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
-	global $altersopt;
+	global $altersopt, $database_ssl;
 
-	db_execute("CREATE TABLE IF NOT EXISTS table_columns (
+	if (db_execute("CREATE TABLE IF NOT EXISTS table_columns (
 		table_name varchar(50) NOT NULL,
 		table_sequence int(10) unsigned NOT NULL,
 		table_field varchar(50) NOT NULL,
@@ -1211,16 +1215,21 @@ function create_tables($load = true) {
 		table_extra varchar(128) default NULL,
 		PRIMARY KEY (table_name, table_sequence, table_field))
 		ENGINE=InnoDB
-		COMMENT='Holds Default Cacti Table Definitions'");
+		COMMENT='Holds Default Cacti Table Definitions'") === false) {
+		fwrite(STDERR, "FATAL: Failed to create table_columns.\n");
+
+		return false;
+	}
 
 	$exists_columns = db_table_exists('table_columns');
 
 	if (!$exists_columns) {
-		print "Failed to create 'table_columns'";
-		exit;
+		fwrite(STDERR, "FATAL: Failed to create table_columns.\n");
+
+		return false;
 	}
 
-	db_execute("CREATE TABLE IF NOT EXISTS table_indexes (
+	if (db_execute("CREATE TABLE IF NOT EXISTS table_indexes (
 		idx_table_name varchar(50) NOT NULL,
 		idx_non_unique int(10) unsigned default NULL,
 		idx_key_name varchar(128) NOT NULL,
@@ -1235,18 +1244,26 @@ function create_tables($load = true) {
 		idx_comment varchar(128) default NULL,
 		PRIMARY KEY (idx_table_name, idx_key_name, idx_seq_in_index, idx_column_name))
 		ENGINE=InnoDB
-		COMMENT='Holds Default Cacti Index Definitions'");
+		COMMENT='Holds Default Cacti Index Definitions'") === false) {
+		fwrite(STDERR, "FATAL: Failed to create table_indexes.\n");
+
+		return false;
+	}
 
 	$exists_indexes = db_table_exists('table_indexes');
 
 	if (!$exists_indexes) {
-		print "Failed to create 'table_indexes'";
-		exit;
+		fwrite(STDERR, "FATAL: Failed to create table_indexes.\n");
+
+		return false;
 	}
 
 	if ($load) {
-		db_execute('TRUNCATE table_columns');
-		db_execute('TRUNCATE table_indexes');
+		if (db_execute('TRUNCATE table_columns') === false || db_execute('TRUNCATE table_indexes') === false) {
+			fwrite(STDERR, "FATAL: Failed to clear the audit schema baseline tables.\n");
+
+			return false;
+		}
 
 		$output = array();
 		$error  = 0;
@@ -1264,8 +1281,9 @@ function create_tables($load = true) {
 			$db_shell = trim((string) shell_exec('which mysql'));
 
 			if ($db_shell == '') {
-				print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
-				exit;
+				fwrite(STDERR, "FATAL: mysql or mariadb command not found.\n");
+
+				return false;
 			}
 		}
 
@@ -1276,12 +1294,15 @@ function create_tables($load = true) {
 			$defaults_file = audit_database_defaults_file($database_username, $database_password, $database_hostname, $database_port);
 
 			if ($defaults_file === false) {
-				print 'FATAL: Unable to create a private credentials file' . PHP_EOL;
-				exit(1);
+				fwrite(STDERR, "FATAL: Unable to create a private credentials file.\n");
+
+				return false;
 			}
 
+			$ssl_option = empty($database_ssl) ? ' --skip-ssl' : '';
 			exec(cacti_escapeshellarg($db_shell) .
 				' --defaults-extra-file=' . cacti_escapeshellarg($defaults_file) .
+				$ssl_option .
 				' ' . cacti_escapeshellarg($database_default) .
 				' < ' . cacti_escapeshellarg($config['base_path'] . '/docs/audit_schema.sql'), $output, $error);
 
@@ -1290,13 +1311,19 @@ function create_tables($load = true) {
 			if ($error == 0) {
 				print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
 			} else {
-				print 'FATAL: Failed Load the Audit Schema' . PHP_EOL;
-				print 'ERROR: ' . implode(",\n   ", $output) . PHP_EOL;
+				fwrite(STDERR, 'FATAL: Failed to load the audit schema.' . PHP_EOL);
+				fwrite(STDERR, 'ERROR: ' . implode(",\n   ", $output) . PHP_EOL);
+
+				return false;
 			}
 		} else {
-			print 'FATAL: Failed to find Audit Schema' . PHP_EOL;
+			fwrite(STDERR, "FATAL: Failed to find docs/audit_schema.sql.\n");
+
+			return false;
 		}
 	}
+
+	return true;
 }
 
 function load_audit_database() {
@@ -1304,7 +1331,9 @@ function load_audit_database() {
 
 	$db_name = 'Tables_in_' . $database_default;
 
-	create_tables(false);
+	if (!create_tables(false)) {
+		return false;
+	}
 
 	db_execute('TRUNCATE table_columns');
 	db_execute('TRUNCATE table_indexes');
@@ -1383,6 +1412,8 @@ function load_audit_database() {
 	} else {
 		print PHP_EOL . 'FATAL: Docs directory does not exist!' . PHP_EOL . PHP_EOL;
 	}
+
+	return true;
 }
 
 /*  display_version - displays version information */
