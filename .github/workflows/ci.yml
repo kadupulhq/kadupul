@@ -271,7 +271,7 @@ jobs:
         with:
           php-version: '8.4'
           coverage: none
-          tools: php-cs-fixer:3.95.25
+          tools: php-cs-fixer:3.95.27
 
       # main moves to PER-CS one edited file at a time, so only the PHP files
       # this push or pull request changes are checked. On a pull request HEAD

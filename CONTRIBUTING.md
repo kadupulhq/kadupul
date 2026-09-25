@@ -36,7 +36,7 @@ The commit-message hook enforces Conventional Commit subjects and a DCO
 `Signed-off-by` trailer. Use `git commit -s`; merge commits are exempt because
 Git generates their messages and the merged commits retain their attestations.
 
-Install php-cs-fixer 3.95.25 on `PATH`, or set `PHP_CS_FIXER` to that pinned
+Install php-cs-fixer 3.95.27 on `PATH`, or set `PHP_CS_FIXER` to that pinned
 executable. GitHub CI remains authoritative and must pass before merge. Local
 AI-review tools are intentionally not required by these hooks.
 
