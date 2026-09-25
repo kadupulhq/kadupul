@@ -943,6 +943,7 @@ function get_column_sequence_number($table, $index, $column)
 function create_tables($load = true)
 {
     global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
+    global $database_ssl;
     global $altersopt;
 
     db_execute("CREATE TABLE IF NOT EXISTS table_columns (
@@ -1015,7 +1016,22 @@ function create_tables($load = true)
         }
 
         if (file_exists($config['base_path'] . '/docs/audit_schema.sql')) {
+            $version_output = array();
+            $version_status = 0;
+            exec(cacti_escapeshellarg($db_shell) . ' --version', $version_output, $version_status);
+
+            $ssl_option = $version_status === 0
+                ? db_client_ssl_option($database_ssl, implode(' ', $version_output))
+                : false;
+
+            if ($ssl_option === false) {
+                fwrite(STDERR, "FATAL: Unable to determine a safe TLS option for the database client.\n");
+
+                exit(1);
+            }
+
             exec($db_shell .
+                $ssl_option .
                 ' -u' . cacti_escapeshellarg($database_username) .
                 ' -p' . cacti_escapeshellarg($database_password) .
                 ' -h' . cacti_escapeshellarg($database_hostname) .

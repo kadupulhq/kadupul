@@ -94,12 +94,16 @@ foreach ($parms as $parameter) {
 
             break;
         case '--threads':
-            if (!is_numeric(trim($value))) {
+            $thread_count = filter_var(trim($value), FILTER_VALIDATE_INT, [
+                'options' => ['min_range' => 1],
+            ]);
+
+            if ($thread_count === false) {
                 print 'ERROR: You must supply a valid Number of Treads or skip this parameter for default value (' . $threads . ')' . PHP_EOL;
                 exit(1);
             }
 
-            $threads = $value;
+            $threads = $thread_count;
 
             break;
         case '--child':

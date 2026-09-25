@@ -9,6 +9,25 @@ export CACTI_E2E_PORT
 
 cd "$(dirname "$0")"
 
+shopt -s nullglob || true
+test_glob="${CACTI_E2E_TEST_GLOB:-tests/[0-9][0-9]-*}"
+test_files=($test_glob)
+matched_tests=()
+for test_file in "${test_files[@]}"; do
+    if [[ -f "$test_file" ]]; then
+        matched_tests+=("$test_file")
+    fi
+done
+test_files=("${matched_tests[@]}")
+if ((${#test_files[@]} == 0)); then
+    echo "[run] no integration tests matched CACTI_E2E_TEST_GLOB: $test_glob" >&2
+    exit 1
+fi
+# Use a portable lexical sort (no associative arrays).
+IFS=$'\n'
+sorted=($(printf '%s\n' "${test_files[@]}" | LC_ALL=C sort))
+IFS=$'\n\t'
+
 DC=(docker compose -f docker-compose.yml)
 KEEP_UP="${KEEP_UP:-0}"
 
@@ -43,12 +62,6 @@ fi
 ./setup.sh
 
 worst=0
-shopt -s nullglob || true
-test_glob="${CACTI_E2E_TEST_GLOB:-tests/[0-9][0-9]-*}"
-test_files=($test_glob)
-# Use a portable lexical sort (no associative arrays).
-IFS=$'\n' sorted=($(printf '%s\n' "${test_files[@]}" | LC_ALL=C sort))
-unset IFS
 
 for t in "${sorted[@]}"; do
     name="$(basename "$t")"

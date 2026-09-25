@@ -49,6 +49,9 @@ echo '[09] data-query reorder accepts its documented all selector'
 run_cli reorder_data_query.php --qid=all >/dev/null
 expect_cli_failure 'reorder rejects host ID zero' reorder_data_query.php --host-id=0
 expect_cli_failure 'reorder rejects malformed query ID' reorder_data_query.php --host-id=all --qid=invalid
+expect_cli_failure 'poller-cache rebuild rejects zero threads' rebuild_poller_cache.php --start=2026-01-01 --end=2026-01-02 --threads=0
+expect_cli_failure 'poller-cache rebuild rejects negative threads' rebuild_poller_cache.php --start=2026-01-01 --end=2026-01-02 --threads=-1
+expect_cli_failure 'poller-cache rebuild rejects fractional threads' rebuild_poller_cache.php --start=2026-01-01 --end=2026-01-02 --threads=1.5
 
 echo '[09] permission list succeeds and invalid grant IDs fail'
 run_cli add_perms.php --list-users --quiet >/dev/null
