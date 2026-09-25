@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Start RRDtool without a shell, so an RRDtool binary path containing a blank works for graphs, tuning and RRD writes. The path must name the executable alone; extra arguments or shell syntax in it now stop RRD writes as well.
+
 - Send the RRD paths in exports and graphs to the RRDtool proxy bare and relative to the RRA directory, which is how the proxy reads them, so CSV export and other exports work through it. Graph images still fail against rrdproxy 54aad57; see `docs/migrations/graphing-rrd.md`.
 
 - Clear each converted table from the installer's queue. It wrote a setting named `0` instead, so the queue was never cleared.

@@ -232,7 +232,8 @@ function rrd_maintenance_pipe($pipe, $lock = null, $release = false, $exclusive 
         register_shutdown_function(function () use (&$pipes) {
             foreach ($pipes as $entry) {
                 if (is_resource($entry[0])) {
-                    pclose($entry[0]);
+                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
+                    function_exists('__rrd_close') ? __rrd_close($entry[0]) : pclose($entry[0]);
                 }
                 rrd_maintenance_release($entry[1]);
             }
