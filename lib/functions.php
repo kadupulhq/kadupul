@@ -4324,7 +4324,10 @@ function get_nearest_timespan($timespan)
  */
 function get_browser_query_string()
 {
-    if (!class_exists(\Symfony\Component\HttpFoundation\Request::class)) {
+    if (
+        !class_exists(\Symfony\Component\HttpFoundation\Request::class)
+        || !class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyRequestContext::class)
+    ) {
         if (!empty($_SERVER['REQUEST_URI'])) {
             return sanitize_uri($_SERVER['REQUEST_URI']);
         }
@@ -4333,6 +4336,12 @@ function get_browser_query_string()
     }
 
     $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+
+    if (empty($request->server->get('REQUEST_URI'))) {
+        $page = get_current_page();
+
+        return sanitize_uri($page . (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']));
+    }
 
     return sanitize_uri((new \Kadupul\Platform\Infrastructure\Legacy\LegacyRequestContext())->browserQueryString($request));
 }
@@ -4344,7 +4353,10 @@ function get_browser_query_string()
  */
 function get_current_page($basename = true)
 {
-    if (!class_exists(\Symfony\Component\HttpFoundation\Request::class)) {
+    if (
+        !class_exists(\Symfony\Component\HttpFoundation\Request::class)
+        || !class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyRequestContext::class)
+    ) {
         if (isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') {
             if ($basename) {
                 return basename($_SERVER['SCRIPT_NAME']);
