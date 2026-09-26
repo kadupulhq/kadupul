@@ -66,6 +66,13 @@ function rrd_maintenance_directory_is_trusted($path)
  * Shared locks outlive queued commands: release only after pclose has waited
  * for the child. Exclusive maintenance refuses active writers by default;
  * callers may explicitly wait when their operation permits it.
+ *
+ * @param bool $exclusive Whether to acquire exclusive write access.
+ * @param bool $wait Whether to wait for a conflicting lock.
+ * @param float|null $timeout Maximum wait duration in seconds.
+ * @param bool|null $busy Set true when another process owns a conflicting lock.
+ *
+ * @return resource|bool Lock handle, Windows shared-lock sentinel, or false.
  */
 function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null, &$busy = null)
 {
@@ -115,7 +122,14 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
     return $handle;
 }
 
-/** Lock configured storage and every possible trusted root for custom RRD paths. */
+/** Lock configured storage and every possible trusted root for custom RRD paths.
+ *
+ * @param array<int, string> $files RRD paths whose trusted ancestors need locks.
+ * @param float $timeout Maximum total wait in seconds.
+ * @param bool|null $busy Set true when a conflicting lock is encountered.
+ *
+ * @return array<int, \Symfony\Component\Lock\SharedLockInterface>|false Acquired locks or false.
+ */
 function rrd_maintenance_acquire_paths($files, $timeout = 0, &$busy = null)
 {
     global $config;
@@ -177,23 +191,61 @@ function rrd_maintenance_acquire_paths($files, $timeout = 0, &$busy = null)
     }
 }
 
-/** Private workspaces prevent shared-temp symlink substitution throughout a rewrite. */
+/** Create a private workspace that prevents shared-temp symlink substitution during rewrites.
+ *
+ * @return string|false Workspace path or false when it cannot be trusted or created.
+ */
 function rrd_maintenance_workspace()
 {
     $directory = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . '/kadupul-rrd-' . bin2hex(random_bytes(16));
-    if (!@mkdir($directory, 0700)) {
+    // Preserve mkdir()'s former single-level behavior: a missing temp root is
+    // a configuration failure, not a directory tree that maintenance should create.
+    if (!is_dir(dirname($directory))) {
+        return false;
+    }
+
+    $filesystem = rrd_maintenance_filesystem();
+    try {
+        $filesystem->mkdir($directory, 0700);
+    } catch (\Symfony\Component\Filesystem\Exception\IOExceptionInterface $exception) {
         return false;
     }
     if (!rrd_maintenance_directory_is_trusted($directory)) {
-        @rmdir($directory);
+        try {
+            $filesystem->remove($directory);
+        } catch (\Symfony\Component\Filesystem\Exception\IOExceptionInterface $exception) {
+            // Preserve the original failure result; the shutdown handler also retries cleanup.
+        }
         return false;
     }
     register_shutdown_function(function () use ($directory) {
+        // This must remove only empty workspaces: partial dumps can be
+        // deliberately retained for manual recovery after a failed operation.
         @rmdir($directory);
     });
     return $directory;
 }
 
+/** Lazily load Symfony Filesystem for native maintenance callers without the app bootstrap.
+ *
+ * @return \Symfony\Component\Filesystem\Filesystem Shared filesystem utility.
+ */
+function rrd_maintenance_filesystem(): \Symfony\Component\Filesystem\Filesystem
+{
+    require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+    \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
+
+    static $filesystem = null;
+
+    return $filesystem ??= new \Symfony\Component\Filesystem\Filesystem();
+}
+
+/** Release one native RRA lease or a collection of leases.
+ *
+ * @param resource|array<mixed>|bool $handle Lease returned by the acquisition helpers.
+ *
+ * @return void
+ */
 function rrd_maintenance_release($handle)
 {
     if (is_array($handle)) {
@@ -346,7 +398,16 @@ function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
     });
 }
 
-/** Caller owns the exclusive storage lease throughout snapshot, restore and rename. */
+/** Restore through a temporary RRD and atomically replace the original file.
+ *
+ * The caller must own the exclusive storage lease throughout this operation.
+ *
+ * @param string $xml_file Recovery XML input retained when restoration fails.
+ * @param string $rrd_file Existing RRD destination.
+ * @param callable(string): bool $restore Callback that writes the candidate RRD.
+ *
+ * @return bool True when the candidate replaced the original successfully.
+ */
 function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
 {
     if (is_link($rrd_file) || strpbrk($xml_file . $rrd_file, "\r\n\0") !== false) {
@@ -390,6 +451,8 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
             cacti_log('ERROR: RRD restore could not preserve ownership; recovery XML retained at ' . $xml_file, false, 'UTIL');
             return false;
         }
+        // Keep native rename here: replacement of the validated RRD must stay
+        // one atomic filesystem operation, without a remove-then-rename fallback.
         if (!@rename($temporary, $rrd_file)) {
             cacti_log('ERROR: RRD restore could not replace original; recovery XML retained at ' . $xml_file, false, 'UTIL');
             return false;
@@ -397,103 +460,65 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
         return true;
     } finally {
         if (file_exists($temporary)) {
-            unlink($temporary);
+            try {
+                rrd_maintenance_filesystem()->remove($temporary);
+            } catch (\Symfony\Component\Filesystem\Exception\IOExceptionInterface $exception) {
+                // Keep cleanup best effort after preserving the original result.
+            }
         }
     }
 }
 
 
-/** Bounded direct-argv RRDtool execution; drains both output streams. */
+/** Run a bounded direct-argv command and stream or capture its output.
+ *
+ * Symfony Process owns process startup, timeout handling, and output draining.
+ *
+ * @param array<int, string> $argv Executable and arguments; no shell parsing is used.
+ * @param resource|null $stdout_handle Destination stream, or null to capture stdout.
+ * @param float $timeout Maximum process runtime in seconds.
+ *
+ * @return array{exit: int|false, stdout: string, stderr: string} Process result.
+ */
 function rrd_maintenance_run_command(array $argv, $stdout_handle, $timeout = 30)
 {
     $capture_stdout = ($stdout_handle === null);
+    require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+    \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
 
-    $descriptors = array(
-        0 => array('pipe', 'r'),
-        1 => $capture_stdout ? array('pipe', 'w') : $stdout_handle,
-        2 => array('pipe', 'w'),
-    );
-
-    $process = @proc_open($argv, $descriptors, $pipes);
-
-    if (!is_resource($process)) {
-        return array('exit' => false, 'stdout' => '', 'stderr' => '');
+    $stdout = '';
+    $stderr = '';
+    $environment = getenv();
+    $environment = is_array($environment) ? $environment : null;
+    $process = new \Symfony\Component\Process\Process($argv, null, $environment, null, max(0.000001, (float) $timeout));
+    if (!$capture_stdout) {
+        // Keep large XML dumps streamed to their caller-owned file handle.
+        $process->disableOutput();
     }
 
-    fclose($pipes[0]);
-
-    if ($capture_stdout) {
-        stream_set_blocking($pipes[1], false);
-    }
-
-    stream_set_blocking($pipes[2], false);
-
-    $stdout    = '';
-    $stderr    = '';
-    $remaining = (int) ($timeout * 1000000);
-    $exit      = null;
-
-    while ($remaining > 0) {
-        $start  = microtime(true);
-        $read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
-        $write  = array();
-        $except = array();
-        $ready = stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
-
-        if ($ready === false || $ready === 0 || (feof($pipes[2]) && (!$capture_stdout || feof($pipes[1])))) {
-            usleep(1000);
-        }
-
-        $status = proc_get_status($process);
-
-        if ($capture_stdout) {
-            $stdout .= stream_get_contents($pipes[1]);
-        }
-
-        $stderr .= stream_get_contents($pipes[2]);
-
-        /* proc_get_status() returns false on a dead handle. Preserve a
-           valid exitcode while it is observable because a later status
-           read or proc_close() can return -1 after the child has
-           already been reaped. */
-        if (!is_array($status) || empty($status['running'])) {
-            if (is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
-                $exit = (int) $status['exitcode'];
+    try {
+        $exit = $process->run(function ($type, $buffer) use (&$stdout, &$stderr, $capture_stdout, $stdout_handle) {
+            if ($type === \Symfony\Component\Process\Process::ERR) {
+                $stderr .= $buffer;
+            } elseif ($capture_stdout) {
+                $stdout .= $buffer;
+            } else {
+                $offset = 0;
+                $length = strlen($buffer);
+                while ($offset < $length) {
+                    $written = @fwrite($stdout_handle, substr($buffer, $offset));
+                    if ($written === false || $written === 0) {
+                        break;
+                    }
+                    $offset += $written;
+                }
             }
-
-            break;
-        }
-
-        $remaining -= (int) ((microtime(true) - $start) * 1000000);
-    }
-
-    if ($capture_stdout) {
-        fclose($pipes[1]);
-    }
-
-    fclose($pipes[2]);
-
-    $status = proc_get_status($process);
-
-    if (is_array($status) && !empty($status['running'])) {
-        if (isset($status['pid']) && function_exists('posix_kill')) {
-            posix_kill($status['pid'], 9);
-        }
-
-        proc_terminate($process, 9);
-        proc_close($process);
-
+        });
+    } catch (\Symfony\Component\Process\Exception\ProcessTimedOutException $exception) {
+        $process->stop(0, defined('SIGKILL') ? SIGKILL : 9);
         return array('exit' => false, 'stdout' => $stdout, 'stderr' => $stderr);
-    }
-
-    if ($exit === null && is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
-        $exit = (int) $status['exitcode'];
-    }
-
-    $close_exit = proc_close($process);
-
-    if ($exit === null) {
-        $exit = $close_exit;
+    } catch (\Symfony\Component\Process\Exception\ProcessStartFailedException $exception) {
+        return array('exit' => false, 'stdout' => $stdout, 'stderr' => $stderr);
     }
 
     return array('exit' => $exit, 'stdout' => $stdout, 'stderr' => $stderr);
