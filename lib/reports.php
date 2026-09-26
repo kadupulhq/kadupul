@@ -55,6 +55,29 @@ function duplicate_reports($_id, $_title) {
 }
 
 function reports_add_devices($report_id, $device_ids, $timespan, $align) {
+    $owns_transaction = (int) db_fetch_cell('SELECT @@in_transaction') === 0;
+    if ($owns_transaction && !db_begin_transaction()) {
+        return false;
+    }
+    try {
+        if (!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ? FOR UPDATE', array($report_id))) {
+            return false;
+        }
+        $result = reports_add_devices_locked($report_id, $device_ids, $timespan, $align);
+        // Legacy batches can report skipped duplicates after adding other items.
+        if ($owns_transaction && !db_commit_transaction()) {
+            return false;
+        }
+        return $result;
+    } finally {
+        if ($owns_transaction && (int) db_fetch_cell('SELECT @@in_transaction') !== 0) {
+            db_rollback_transaction();
+        }
+    }
+}
+
+// Share the report row lock with Symfony before the existence check and insert.
+function reports_add_devices_locked($report_id, $device_ids, $timespan, $align) {
 	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $report_id, 'reports')) {
 		raise_message('reports_not_owner');
 
@@ -73,7 +96,7 @@ function reports_add_devices($report_id, $device_ids, $timespan, $align) {
 				WHERE host_id = ?
 				AND item_type = 5
 				AND report_id = ?
-				AND timespan = ?',
+				AND timespan = ? FOR UPDATE',
 				array($device_id, $report_id, $timespan));
 
 			$device_exists = db_fetch_cell_prepared('SELECT id
@@ -103,8 +126,8 @@ function reports_add_devices($report_id, $device_ids, $timespan, $align) {
 					$local_graph_id    = 0;
 
 					db_execute_prepared('INSERT INTO reports_items
-						(report_id, item_type, host_template_id, site_id, host_id, graph_template_id, local_graph_id, timespan, align, sequence)
-						VALUES (?, 5, ?, ?, ?, ?, ?, ?, ?, ?)',
+						(report_id, item_type, host_template_id, site_id, host_id, graph_template_id, local_graph_id, timespan, align, sequence, item_text)
+						VALUES (?, 5, ?, ?, ?, ?, ?, ?, ?, ?, \'\')',
 						array(
 							$report_id,
 							$host_template_id,

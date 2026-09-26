@@ -36,22 +36,23 @@ function csvRunProduction(string $program, array $input): string
     return $output;
 }
 
-test('host_export emits safe CSV through its production path without deprecated defaults', function () {
-    $program = <<<'CODE'
-$hosts = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
-function host_validate_vars() {}
-function get_device_records(&$total, $limit) { $total = count($GLOBALS['hosts']); return $GLOBALS['hosts']; }
-function cacti_sizeof($value) { return count($value); }
+test('device export emits safe public CSV without deprecated defaults', function () {
+    $program = 'require ' . var_export(dirname(__DIR__, 2) . '/include/vendor/autoload.php', true) . ';';
+    $program .= <<<'CODE'
+$rows = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
+$devices = array_map(fn ($text) => new \Kadupul\Inventory\Application\ReadModel\DeviceSummary(7, $text, $text, false, 'Up', $text, $text), $rows);
+echo (new \Kadupul\Inventory\Infrastructure\Symfony\Export\DevicePageCsv())->encode(new \Kadupul\Inventory\Application\ReadModel\DevicePage($devices, false));
 CODE;
-    $program .= csvProductionFunction('lib/functions.php', 'cacti_csv_safe');
-    $program .= csvProductionFunction('host.php', 'host_export') . 'host_export();';
-    $output = csvRunProduction($program, [['description' => 'quoted "value",here', 'hostname' => "CORP\\jdoe", 'notes' => "first\nsecond\rthird", 'formula' => '=1+1']]);
-    $lines = explode("\n", rtrim($output, "\n"));
-
-    expect(str_getcsv($lines[0], ',', '"', '\\'))->toBe(['description', 'hostname', 'notes', 'formula'])
-        ->and(str_getcsv($lines[1], ',', '"', '\\'))->toBe(['quoted "value",here', 'CORP\jdoe', 'first second third', "'=1+1"])
-        ->and(count($lines))->toBe(2);
-    expect(csvRunProduction($program, []))->toBe('');
+    $text = "=quoted \"value\",here\\path\nsecond";
+    $output = csvRunProduction($program, [$text]);
+    $stream = new SplTempFileObject();
+    $stream->fwrite(substr($output, 3));
+    $stream->rewind();
+    $headers = ['ID', 'Name', 'Hostname', 'Status', 'Location', 'External ID'];
+    expect($stream->fgetcsv(',', '"', ''))->toBe($headers)
+        ->and($stream->fgetcsv(',', '"', ''))->toBe(['7', "'" . $text, "'" . $text, 'Up', "'" . $text, "'" . $text])
+        ->and($stream->fgetcsv(',', '"', ''))->toBeFalse();
+    expect(csvRunProduction($program, []))->toBe("\xEF\xBB\xBFID,Name,Hostname,Status,Location,\"External ID\"\r\n");
 });
 
 function csvBasicAuthProgram(): string
