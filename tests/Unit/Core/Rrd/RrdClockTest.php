@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 $projectRoot = dirname(__DIR__, 4);
-require_once $projectRoot . '/include/vendor/autoload.php';
+require_once $projectRoot . '/src/Platform/Application/Port/Clock.php';
 require_once $projectRoot . '/lib/rrd.php';
 
 test('RRD clock helper uses the supplied application clock', function () {
