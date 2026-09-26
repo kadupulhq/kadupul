@@ -117,21 +117,47 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
     $basePath = sys_get_temp_dir() . '/kadupul-helper-test-' . uniqid();
     mkdir($basePath . '/lib', 0777, true);
     file_put_contents($basePath . '/lib/poller.php', '<?php');
-    $GLOBALS['config'] = ['base_path' => $basePath, 'is_web' => false, 'config_options_array' => ['existing' => 'kept']];
+    $hadConfig = array_key_exists('config', $GLOBALS);
+    $originalConfig = $GLOBALS['config'] ?? null;
+    $hadSession = array_key_exists('_SESSION', $GLOBALS);
+    $originalSession = $_SESSION ?? null;
 
-    set_config_option('written', 'value');
+    try {
+        $GLOBALS['config'] = ['base_path' => $basePath, 'is_web' => false, 'config_options_array' => ['existing' => 'kept']];
+        set_config_option('written', 'value');
+        expect($GLOBALS['config']['config_options_array'])->toBe(['existing' => 'kept', 'written' => 'value']);
 
-    expect($GLOBALS['config']['config_options_array'])->toBe(['existing' => 'kept', 'written' => 'value']);
-    expect($GLOBALS['production_function_db_calls'])->toHaveCount(1);
+        $GLOBALS['config'] = ['base_path' => $basePath, 'is_web' => false, 'config_options_array' => 'invalid'];
+        set_config_option('initialized', 'value');
+        expect($GLOBALS['config']['config_options_array'])->toBe(['initialized' => 'value']);
 
-    $GLOBALS['config'] = ['base_path' => $basePath, 'is_web' => true];
-    $_SESSION['sess_config_array'] = ['existing' => 'kept'];
-    set_config_option('web_written', 'web value');
+        $GLOBALS['config'] = ['base_path' => $basePath, 'is_web' => true];
+        unset($_SESSION['sess_config_array']);
+        set_config_option('web_initialized', 'web value');
+        expect($_SESSION['sess_config_array'])->toBe(['web_initialized' => 'web value']);
 
-    expect($_SESSION['sess_config_array'])->toBe(['existing' => 'kept', 'web_written' => 'web value']);
-    expect($GLOBALS['production_function_db_calls'])->toHaveCount(2);
+        $_SESSION['sess_config_array'] = 'invalid';
+        set_config_option('web_reinitialized', 'web value');
+        expect($_SESSION['sess_config_array'])->toBe(['web_reinitialized' => 'web value']);
 
-    unlink($basePath . '/lib/poller.php');
-    rmdir($basePath . '/lib');
-    rmdir($basePath);
+        $_SESSION['sess_config_array'] = ['existing' => 'kept'];
+        set_config_option('web_written', 'web value');
+        expect($_SESSION['sess_config_array'])->toBe(['existing' => 'kept', 'web_written' => 'web value']);
+        expect($GLOBALS['production_function_db_calls'])->toHaveCount(5);
+    } finally {
+        if ($hadConfig) {
+            $GLOBALS['config'] = $originalConfig;
+        } else {
+            unset($GLOBALS['config']);
+        }
+        if ($hadSession) {
+            $_SESSION = $originalSession;
+        } else {
+            unset($GLOBALS['_SESSION']);
+        }
+
+        @unlink($basePath . '/lib/poller.php');
+        @rmdir($basePath . '/lib');
+        @rmdir($basePath);
+    }
 });
