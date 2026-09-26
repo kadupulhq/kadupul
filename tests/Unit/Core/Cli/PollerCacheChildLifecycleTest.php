@@ -78,3 +78,20 @@ test('child launch returns the process adapter result and preserves selected sco
 			'--data-template-id=9',
 		)));
 });
+
+test('a failed host count stops before per-child pagination math', function () use ($source) {
+	$failure_start = strpos($source, 'if (!is_numeric($rows))');
+	$pagination    = strpos($source, '$hosts_per_process = ceil($rows/$threads);');
+
+	expect($failure_start)->not->toBeFalse()
+		->and($pagination)->not->toBeFalse();
+
+	if ($failure_start === false || $pagination === false) {
+		return;
+	}
+
+	$failure_guard = substr($source, $failure_start, $pagination - $failure_start);
+
+	expect($failure_guard)->toContain('$exit_status = 1;')
+		->and($failure_guard)->toContain('break;');
+});

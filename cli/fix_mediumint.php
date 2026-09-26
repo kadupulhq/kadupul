@@ -237,21 +237,21 @@ function database_mediumint_column_clause($column, $attribs) {
 
 	$column = database_quote_identifier($column);
 	if (strtolower($attribs['Extra']) == 'auto_increment') {
-		return 'MODIFY COLUMN ' . $column . ' int(10) unsigned NOT NULL AUTO_INCREMENT';
+		return ' MODIFY COLUMN ' . $column . ' int(10) unsigned NOT NULL AUTO_INCREMENT';
 	}
 
 	$default = $attribs['Default'];
 	$nullability = $attribs['Null'] == 'NO' ? ' NOT NULL' : ' NULL';
 	if ($default !== null && $default !== '') {
 		$default = is_numeric($default) ? (string) $default : db_qstr($default);
-		return 'MODIFY COLUMN ' . $column . ' int(10) unsigned' . $nullability . ' DEFAULT ' . $default;
+		return ' MODIFY COLUMN ' . $column . ' int(10) unsigned' . $nullability . ' DEFAULT ' . $default;
 	}
 
 	if ($attribs['Null'] == 'NO') {
-		return 'MODIFY COLUMN ' . $column . ' int(10) unsigned NOT NULL';
+		return ' MODIFY COLUMN ' . $column . ' int(10) unsigned NOT NULL';
 	}
 
-	return 'MODIFY COLUMN ' . $column . ' int(10) unsigned NULL DEFAULT NULL';
+	return ' MODIFY COLUMN ' . $column . ' int(10) unsigned NULL DEFAULT NULL';
 }
 
 function database_quote_identifier($identifier) {
