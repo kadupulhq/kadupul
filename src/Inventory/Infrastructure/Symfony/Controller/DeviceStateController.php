@@ -7,6 +7,7 @@
 
 namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 
+use Kadupul\Inventory\Application\Command\ClearDeviceStatistics;
 use Kadupul\Inventory\Application\Command\SetDevicesEnabled;
 use Kadupul\Inventory\Application\Query\PrepareDeviceStateChange;
 use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceStateType;
@@ -20,8 +21,8 @@ use Twig\Environment;
 
 final class DeviceStateController
 {
-    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, \Kadupul\Inventory\Infrastructure\Symfony\DeviceSelectionForm $selectionForm): Response
+    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics'], methods: ['GET', 'HEAD', 'POST'])]
+    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, ClearDeviceStatistics $clearStatistics, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, \Kadupul\Inventory\Infrastructure\Symfony\DeviceSelectionForm $selectionForm): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $prepared = $selectionForm->prepare($request, $prepare);
@@ -43,7 +44,11 @@ final class DeviceStateController
                 try {
                     $data = $form->getData();
                     $selection = $selectionForm->selection($data, $ids);
-                    $setEnabled($selection, $operation === 'enable');
+                    if ($operation === 'clear-statistics') {
+                        $clearStatistics($selection);
+                    } else {
+                        $setEnabled($selection, $operation === 'enable');
+                    }
                     return new RedirectResponse($urls->generate('inventory_devices', $filters + ['completed' => $operation]), 303, $headers);
                 } catch (\RuntimeException|\JsonException|\InvalidArgumentException $error) {
                     $status = $selectionForm->failure($error, $form, 'Device operation outcome is uncertain. Check every selected device before retrying.');

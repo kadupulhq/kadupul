@@ -81,3 +81,8 @@ function compatibility_template_collector_lock($value) {
     }
     return $value;
 }
+
+function compatibility_statistics_action($value) {
+    compatibility_test_record('statistics_action', [$value]);
+    return $value;
+}

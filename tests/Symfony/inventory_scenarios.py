@@ -50,6 +50,8 @@ def verify_inventory(harness, session, user_id, check):
     verify_device_template(harness, session, user_id, allowed[0], ids[0], check)
     from device_collector_scenarios import verify_device_collector
     verify_device_collector(harness, session, allowed[0], ids[0], check)
+    from device_state_scenarios import verify_device_statistics
+    verify_device_statistics(harness, session, allowed, check, hidden=ids[0])
     from device_state_scenarios import verify_device_state
     verify_device_state(harness, session, user_id, allowed, ids[0], check)
     from site_scenarios import verify_sites

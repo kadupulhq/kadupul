@@ -52,6 +52,8 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
         status, _ = submit('create-remote-fixture', {'device_create[poller_id]': str(poller)})
         check(status == 200, 'device creation succeeds on a disposable remote collector')
         check(harness.sql(f'SELECT HEX(notes) FROM create_remote.host WHERE id={created[-1]}').strip().lower() == fields['device_create[notes]'].encode().hex(), 'remote collector preserves four-byte Unicode notes')
+        from device_state_scenarios import verify_device_statistics
+        verify_device_statistics(harness, session, [created[-1]], check, remote=poller)
         from device_template_scenarios import verify_remote_template_assignment
         verify_remote_template_assignment(harness, session, created[-1], check)
         from device_collector_scenarios import verify_remote_collector_assignment

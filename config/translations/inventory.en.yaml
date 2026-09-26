@@ -256,3 +256,8 @@
 "RRD file cleanup follows the configured maintenance policy.": "RRD file cleanup follows the configured maintenance policy."
 "%graphs% graphs, %sources% data sources": "%graphs% graphs, %sources% data sources"
 "Device template updated.": "Device template updated."
+
+"Clear device statistics": "Clear device statistics"
+"Confirm clearing statistics": "Confirm clearing statistics"
+"Selected device statistics cleared.": "Selected device statistics cleared."
+"Reset response times, poll counts and availability for these devices. Graphs, historical data and device settings are retained. Statistics resume with the next poll.": "Reset response times, poll counts and availability for these devices. Graphs, historical data and device settings are retained. Statistics resume with the next poll."
