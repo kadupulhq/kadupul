@@ -232,9 +232,8 @@ function rrd_maintenance_workspace()
  */
 function rrd_maintenance_filesystem(): \Symfony\Component\Filesystem\Filesystem
 {
-    if (!class_exists(\Symfony\Component\Filesystem\Filesystem::class)) {
-        require_once __DIR__ . '/../include/vendor/autoload.php';
-    }
+    require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+    \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
 
     static $filesystem = null;
 
@@ -484,9 +483,8 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
 function rrd_maintenance_run_command(array $argv, $stdout_handle, $timeout = 30)
 {
     $capture_stdout = ($stdout_handle === null);
-    if (!class_exists(\Symfony\Component\Process\Process::class)) {
-        require_once __DIR__ . '/../include/vendor/autoload.php';
-    }
+    require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+    \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
 
     $stdout = '';
     $stderr = '';

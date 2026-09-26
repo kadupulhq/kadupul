@@ -29,9 +29,8 @@ function rrdtool_clock_now(?\Kadupul\Platform\Application\Port\Clock $clock = nu
 
     // This procedural file is also loaded by native/maintenance callers
     // without include/global.php, and therefore without Composer's autoloader.
-    if (!class_exists(\Kadupul\Platform\Infrastructure\Symfony\SystemClock::class)) {
-        require_once __DIR__ . '/../include/vendor/autoload.php';
-    }
+    require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+    \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
 
     $systemClock ??= new \Kadupul\Platform\Infrastructure\Symfony\SystemClock(new \Symfony\Component\Clock\NativeClock());
 
@@ -44,9 +43,8 @@ function rrdtool_clock_now(?\Kadupul\Platform\Application\Port\Clock $clock = nu
  */
 function rrdtool_filesystem(): \Symfony\Component\Filesystem\Filesystem
 {
-    if (!class_exists(\Symfony\Component\Filesystem\Filesystem::class)) {
-        require_once __DIR__ . '/../include/vendor/autoload.php';
-    }
+    require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+    \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
 
     static $filesystem = null;
 
@@ -3560,9 +3558,8 @@ function rrdtool_pipe_quote($argument)
 function rrdtool_run_process(array $argv)
 {
     // As rrdtool_pipe_encoder(): this file can be loaded without the autoloader.
-    if (!class_exists(\Symfony\Component\Process\Process::class)) {
-        require_once __DIR__ . '/../include/vendor/autoload.php';
-    }
+    require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+    \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
 
     // getenv() and no timeout, as the shell pipe had: the child sees what putenv() set.
     $process = new \Symfony\Component\Process\Process($argv, null, getenv(), null, null);
