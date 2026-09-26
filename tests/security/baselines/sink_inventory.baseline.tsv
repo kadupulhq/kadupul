@@ -418,7 +418,7 @@ dynamic_include	./lib/rrd.php:2389	    include_once($config['library_path'] . '/
 dynamic_include	./lib/rrd.php:2390	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/rrd.php:3610	        include($rrdtheme);
 dynamic_include	./lib/rrd.php:4245	    include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:4986	        include($themefile);
+dynamic_include	./lib/rrd.php:4984	        include($themefile);
 dynamic_include	./lib/rrdcheck.php:752	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:783	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
