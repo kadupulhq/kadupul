@@ -29,6 +29,7 @@ final class LegacyResourceWritableTest extends TestCase
                 . '$directoryEntriesBefore = scandir($directory);'
                 . '$results = ['
                 . 'is_resource_writable(\'\'),'
+                . 'is_resource_writable(\'0\'),'
                 . 'is_resource_writable($existing),'
                 . 'file_get_contents($existing),'
                 . 'is_resource_writable($newFile),'
@@ -44,7 +45,7 @@ final class LegacyResourceWritableTest extends TestCase
 
             self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
             self::assertSame(
-                [false, true, 'unchanged', true, false, true, true, false, false],
+                [false, false, true, 'unchanged', true, false, true, true, false, false],
                 json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR)
             );
         } finally {
