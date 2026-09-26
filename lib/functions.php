@@ -4324,11 +4324,26 @@ function get_nearest_timespan($timespan)
  */
 function get_browser_query_string()
 {
-    if (!empty($_SERVER['REQUEST_URI'])) {
-        return sanitize_uri($_SERVER['REQUEST_URI']);
-    } else {
+    if (
+        !class_exists(\Symfony\Component\HttpFoundation\Request::class)
+        || !class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyRequestContext::class)
+    ) {
+        if (!empty($_SERVER['REQUEST_URI'])) {
+            return sanitize_uri($_SERVER['REQUEST_URI']);
+        }
+
         return sanitize_uri(get_current_page() . (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']));
     }
+
+    $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+
+    if (empty($request->server->get('REQUEST_URI'))) {
+        $page = get_current_page();
+
+        return sanitize_uri($page . (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']));
+    }
+
+    return sanitize_uri((new \Kadupul\Platform\Infrastructure\Legacy\LegacyRequestContext())->browserQueryString($request));
 }
 
 /**
@@ -4338,23 +4353,37 @@ function get_browser_query_string()
  */
 function get_current_page($basename = true)
 {
-    if (isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') {
-        if ($basename) {
-            return basename($_SERVER['SCRIPT_NAME']);
+    if (
+        !class_exists(\Symfony\Component\HttpFoundation\Request::class)
+        || !class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyRequestContext::class)
+    ) {
+        if (isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') {
+            if ($basename) {
+                return basename($_SERVER['SCRIPT_NAME']);
+            } else {
+                return $_SERVER['SCRIPT_NAME'];
+            }
+        } elseif (isset($_SERVER['SCRIPT_FILENAME']) && $_SERVER['SCRIPT_FILENAME'] != '') {
+            if ($basename) {
+                return basename($_SERVER['SCRIPT_FILENAME']);
+            } else {
+                return $_SERVER['SCRIPT_FILENAME'];
+            }
         } else {
-            return $_SERVER['SCRIPT_NAME'];
+            cacti_log('ERROR: unable to determine current_page');
         }
-    } elseif (isset($_SERVER['SCRIPT_FILENAME']) && $_SERVER['SCRIPT_FILENAME'] != '') {
-        if ($basename) {
-            return basename($_SERVER['SCRIPT_FILENAME']);
-        } else {
-            return $_SERVER['SCRIPT_FILENAME'];
-        }
-    } else {
+
+        return false;
+    }
+
+    $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+    $page = (new \Kadupul\Platform\Infrastructure\Legacy\LegacyRequestContext())->currentPage($request, $basename);
+
+    if ($page === false) {
         cacti_log('ERROR: unable to determine current_page');
     }
 
-    return false;
+    return $page;
 }
 
 /**
