@@ -45,6 +45,17 @@ final class LegacyCommandOutputTest extends TestCase
         self::assertSame([], exec_into_array($command));
     }
 
+    public function testTrailingWhitespaceMatchesNativeExec(): void
+    {
+        $command = self::phpCommand('fwrite(STDOUT, "value  \\t\\nlast\\t \\n");');
+        $expected = [];
+        exec($command, $expected);
+
+        self::assertSame(['value', 'last'], $expected);
+        self::assertSame($expected, (new LegacyCommandOutput())->lines($command));
+        self::assertSame($expected, exec_into_array($command));
+    }
+
     public function testNativeExecFallbackKeepsWorkingWhenProcOpenIsDisabled(): void
     {
         $autoload = var_export(dirname(__DIR__, 2) . '/include/vendor/autoload.php', true);

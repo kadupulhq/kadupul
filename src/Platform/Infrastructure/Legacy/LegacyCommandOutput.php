@@ -43,6 +43,6 @@ final readonly class LegacyCommandOutput
             array_pop($lines);
         }
 
-        return array_map(static fn(string $line): string => rtrim($line, "\r"), $lines);
+        return array_map(static fn(string $line): string => rtrim($line), $lines);
     }
 }
