@@ -23,7 +23,11 @@ final readonly class LegacyCommandOutput
         try {
             $process = Process::fromShellCommandline($commandLine);
             $process->setTimeout(null);
-            $process->run();
+            $process->run(static function (string $type, string $data): void {
+                if ($type === Process::ERR) {
+                    fwrite(STDERR, $data);
+                }
+            });
             $output = $process->getOutput();
         } catch (ProcessStartFailedException|\Symfony\Component\Process\Exception\LogicException) {
             // Keep the native command path available when process creation is disabled.
@@ -43,6 +47,6 @@ final readonly class LegacyCommandOutput
             array_pop($lines);
         }
 
-        return array_map(static fn(string $line): string => rtrim($line), $lines);
+        return array_map(static fn(string $line): string => rtrim($line, " \t\n\r\v\f"), $lines);
     }
 }

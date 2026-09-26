@@ -27,7 +27,7 @@ final class LegacyCommandOutputTest extends TestCase
 
     public function testCommandOutputMatchesExecForBlankLinesAndNonzeroExit(): void
     {
-        $command = self::phpCommand('fwrite(STDOUT, "first\\n\\nlast\\n\\n"); fwrite(STDERR, "ignored"); exit(7);');
+        $command = self::phpCommand('fwrite(STDOUT, "first\\n\\nlast\\n\\n"); exit(7);');
         $expected = [];
         $status = 0;
         exec($command, $expected, $status);
@@ -47,13 +47,26 @@ final class LegacyCommandOutputTest extends TestCase
 
     public function testTrailingWhitespaceMatchesNativeExec(): void
     {
-        $command = self::phpCommand('fwrite(STDOUT, "value  \\t\\nlast\\t \\n");');
+        $command = self::phpCommand('fwrite(STDOUT, "value  \\t\\nlast\\t \\ntrailing  \\t\\0\\n");');
         $expected = [];
         exec($command, $expected);
 
-        self::assertSame(['value', 'last'], $expected);
+        self::assertSame(['value', 'last', "trailing  \t\0"], $expected);
         self::assertSame($expected, (new LegacyCommandOutput())->lines($command));
         self::assertSame($expected, exec_into_array($command));
+    }
+
+    public function testChildStderrIsForwardedLikeNativeExec(): void
+    {
+        $autoload = var_export(dirname(__DIR__, 2) . '/include/vendor/autoload.php', true);
+        $command = var_export(self::phpCommand('fwrite(STDERR, "forwarded");'), true);
+        $code = 'require ' . $autoload . '; (new \\Kadupul\\Platform\\Infrastructure\\Legacy\\LegacyCommandOutput())->lines(' . $command . ');';
+        $process = Process::fromShellCommandline(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg($code));
+        $process->setTimeout(10);
+        $process->run();
+
+        self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
+        self::assertSame('forwarded', $process->getErrorOutput());
     }
 
     public function testNativeExecFallbackKeepsWorkingWhenProcOpenIsDisabled(): void
