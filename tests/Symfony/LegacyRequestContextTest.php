@@ -75,13 +75,41 @@ namespace Kadupul\Tests {
                 . '$uri = get_browser_query_string();'
                 . '$_SERVER = [];'
                 . '$page = get_current_page();'
-                . 'echo json_encode([$uri, $page, $GLOBALS["logs"]], JSON_THROW_ON_ERROR);';
+                . '$missingUri = get_browser_query_string();'
+                . 'echo json_encode([$uri, $page, $missingUri, $GLOBALS["logs"]], JSON_THROW_ON_ERROR);';
             $process = new Process([PHP_BINARY, '-r', $script]);
             $process->run();
 
             self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
             self::assertSame(
-                ['sanitized:/raw.php?a=1&b=2', false, ['ERROR: unable to determine current_page']],
+                [
+                    'sanitized:/raw.php?a=1&b=2',
+                    false,
+                    'sanitized:',
+                    ['ERROR: unable to determine current_page', 'ERROR: unable to determine current_page'],
+                ],
+                json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR)
+            );
+        }
+
+        public function testWrappersFallBackWhenSymfonyExistsWithoutKadupulAutoloading(): void
+        {
+            $source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+            self::assertIsString($source);
+
+            $script = 'namespace Symfony\\Component\\HttpFoundation { class Request {} }'
+                . 'namespace { function sanitize_uri($uri) { return "sanitized:" . $uri; }'
+                . 'function cacti_log($message) { $GLOBALS["logs"][] = $message; }'
+                . 'eval(' . var_export(test_php_function_source($source, 'get_current_page'), true) . ');'
+                . 'eval(' . var_export(test_php_function_source($source, 'get_browser_query_string'), true) . ');'
+                . '$_SERVER = ["REQUEST_URI" => "/early.php?a=1", "SCRIPT_NAME" => "/early.php"];'
+                . 'echo json_encode([get_browser_query_string(), get_current_page()], JSON_THROW_ON_ERROR); }';
+            $process = new Process([PHP_BINARY, '-r', $script]);
+            $process->run();
+
+            self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
+            self::assertSame(
+                ['sanitized:/early.php?a=1', 'early.php'],
                 json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR)
             );
         }
