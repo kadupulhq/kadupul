@@ -10,6 +10,10 @@ test('production command runner preserves nonzero exit status', function () {
     $coverage = $this->getTestResultObject()->getCodeCoverage();
     $script = "<?php\n";
     if ($coverage !== null) {
+        // The Process adapter loads the application dependencies. Load them
+        // before the legacy test autoloader so child coverage uses the suite's
+        // CodeCoverage version and can be merged by the parent runner.
+        $script .= 'require ' . var_export($root . '/include/vendor/autoload.php', true) . ';';
         $script .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $script .= 'require ' . var_export($root . '/lib/rrd_maintenance.php', true) . ';';
