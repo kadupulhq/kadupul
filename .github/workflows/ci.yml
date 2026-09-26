@@ -124,8 +124,7 @@ jobs:
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
-        # Pest 1 dependency deprecations: see docs/testing/php84-modernization-audit.md.
-        php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-database.xml --colors=never
+        php -d error_reporting=24575 vendor/bin/pest --test-directory=. --configuration=phpunit-database.xml --colors=never
         php Support/verify_row_cache.php
 
   php:
@@ -198,10 +197,9 @@ jobs:
 
       - name: Exercise production CSV paths
         working-directory: tests
-        # The old Pest runner emits dependency deprecations on PHP 8.4. The
-        # isolated production subprocess explicitly enables E_ALL and throws
-        # on every diagnostic, including CSV default-argument deprecations.
-        run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
+        # The isolated production subprocess explicitly enables E_ALL and
+        # throws on every diagnostic, including CSV default-argument deprecations.
+        run: php -d error_reporting=8191 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
 
       - name: Install RRDtool for spike-removal contracts
         run: sudo apt-get update && sudo apt-get install -y rrdtool
@@ -210,12 +208,11 @@ jobs:
         working-directory: tests
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
-        # Pest 1 emits dependency deprecations on PHP 8.4.
-        run: php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-spikekill.xml --colors=never
+        run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --configuration=phpunit-spikekill.xml --colors=never
 
       - name: Verify privileged spike-removal boundaries
         working-directory: tests
-        run: sudo -- "$(command -v php)" -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-spikekill.xml --colors=never
+        run: sudo -- "$(command -v php)" -d error_reporting=24575 vendor/bin/pest --test-directory=. --configuration=phpunit-spikekill.xml --colors=never
 
   application-smoke:
     name: Install, login and poller smoke

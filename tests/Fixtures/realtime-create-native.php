@@ -16,8 +16,8 @@ if (getenv('REALTIME_COVERAGE') === '1') {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('RRD_TEST_CLI_COVERAGE_COPY', $directory . '/poller_realtime.php');
     define('RRD_TEST_CLI_COVERAGE_SOURCE', $root . '/poller_realtime.php');
-    // Pest 1 declares implicitly nullable parameters, which PHP 8.4 reports as
-    // deprecated; only the application code runs with every level on.
+    // Keep legacy bootstrap deprecations out of this child process; the
+    // application scenario below runs with every error level enabled.
     $reporting = error_reporting(error_reporting() & ~E_DEPRECATED);
     require $root . '/tests/Fixtures/rrd-process-coverage.php';
     error_reporting($reporting);
