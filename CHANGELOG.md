@@ -6,21 +6,105 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
+
+### Tests
+
+- Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
+
+### Fixed
+
+- Keep the recursive RRD tuning report printer local to each `rrdtool_tune()` call, so repeated calls in one process do not redeclare a global function. Fixes #445.
+
+- Keep graph-group lookups scoped to the local graph ID, preserve the configuration cache map when setting an option, keep invalid structured filters from becoming unrestricted, and scope user-setting existence cache entries to the user. Public helper signatures and valid filter behavior are unchanged. Fixes #479.
+
+- Accept only a number or `U` as a data source minimum, and only a number, `U` or an interface speed token as a maximum, refuse to create an RRD file whose stored minimum is anything else, and create realtime graph RRD files through the RRDtool pipe instead of a shell. A data source item that fails validation is no longer saved.
+
+- When running as root, change the owner and group of the RRD files and structured-path directories the poller and Boost create, and of the RRA directory made for a new device, only for plain paths inside the RRA directory, never through a symbolic link; RRDfile maintenance likewise skips an archive directory reached through a symbolic link.
+
+- Start RRDtool without a shell, so an RRDtool binary path containing a blank works for graphs, tuning and RRD writes. The path must name the executable alone; extra arguments or shell syntax in it now stop RRD writes as well.
+
+- Send the RRD paths in exports and graphs to the RRDtool proxy bare and relative to the RRA directory, which is how the proxy reads them, so CSV export and other exports work through it. Graph images still fail against rrdproxy 54aad57; see `docs/migrations/graphing-rrd.md`.
+
+- Clear each converted table from the installer's queue. It wrote a setting named `0` instead, so the queue was never cleared.
+
+- Restore the RRDtool proxy client, which could not connect on phpseclib 4. It now checks the proxy's key fingerprint in constant time, gives up on a key exchange that is oversized or too slow, and never falls back to unencrypted frames. A default font path with a blank or a quote is no longer sent to the proxy. Fixes #399.
+
+- Leave the data source type alone when tuning an RRD file with an empty or unknown type, instead of raising a PHP warning and, for an unknown type, sending RRDtool an empty type.
+
+- Stop creating the structured-path directory for an RRD file when only showing its RRDtool create command.
+
+- Pass `--y-grid` and `--units-exponent` to RRDtool once, quoted, instead of twice with the exponent once unquoted. The graph renders the same.
+
+- Mark stacked areas as stacked in graph export metadata, and key that metadata, and the name given to an unnamed export column, by the column's own number. The flag compared against a type name no item has, and the numbering started after the count of every graph item, so no key matched a column.
+
+- Show a blank line, not a NUL byte and `x27`, between the message and the file name in the graph error image for a missing or unwritable RRD file, and show a file outside the Kadupul directory as a custom RRA folder instead of its full directory.
+
+- Quote RRD file paths, and data source maximums taken from device data, in the RRDtool commands that create, update, fetch, inspect, dump, restore, remove and archive RRD files, including Boost, RRD check and Data Source statistics, so a path with a space or a quote works and neither value can add arguments to the command.
+
+- Quote the graph arguments Kadupul writes to RRDtool, such as data source paths in DEF clauses, legend, GPRINT and COMMENT text, axis options and font names, the way RRDtool reads them rather than the way a shell does. A single quote in one of these values made RRDtool reject the whole graph, and a pair of them left stray backslashes in the text. The quoting is now the same on Windows, where values used to be wrapped in double quotes with backslash escapes that RRDtool does not honour. `|host_*|` and `|query_*|` values in axis labels and the other graph options are now substituted before quoting, so a quote in them stays inside the argument. A value containing a NUL byte now produces the graph error image, and RRD tuning refuses one, instead of failing with a PHP error.
+
+- Quote graph titles and vertical labels for RRDtool after substituting `|host_*|` and `|query_*|` values, not before. A quote in a substituted value, such as a device description, ended the argument early, so the graph failed to render or showed a mangled title.
+
+- Match the whole filename against the rotation format before purging a log. Cleanup accepted any name containing the log basename plus an eight digit run, so a neighbouring file with an old date in its name was deleted.
+
+- Clean each configured log once during rotation; a call after the loop re-scanned whichever log the loop left behind and counted it twice.
+
+- Keep `.githooks/install` from replacing a `core.hooksPath` that is set to an empty value. Git reads an empty value as "run no hooks", so the installer treated a deliberate choice as though nothing were configured and silently turned hooks back on.
+
+- Describe the selectors `cli/remove_graphs.php` actually accepts. Its help called `--graph-template-id` mandatory when any one of the four selectors is enough, and did not mention that an empty selection is refused without `--all` or that a bare `--list` lists every Graph.
+
+- Pass `$rdatabase_retries` when a remote poller connects to the main server. Every other argument came from its `$rdatabase_` counterpart, so configuring the remote retry count alone had no effect and the local value governed the retry policy for a remote host.
+
+- Read the current group of a newly created structured RRD directory with `filegroup()` rather than `fileowner()` in both `lib/rrd.php` and `lib/boost.php`, so a root-run poller no longer skips a needed `chgrp` when the directory UID happens to equal the target GID, nor runs one when the group is already correct.
+
+- End the `--bulk_walk` case in `cli/change_device.php`, which fell through to the version branch so a valid size printed the version banner and exited without applying the change or reading later arguments.
+
+- Map a numeric `--disable` in `cli/change_device.php` the way its help and `cli/add_device.php` do, with 1 disabling polling and 0 enabling it, and refuse a numeric value that is neither instead of reading every nonzero value as enable.
+
+- Deny web access under Apache to the internal paths Nginx denies, and stop two command-line scripts from running over HTTP.
+
+- Check every changed PHP file in the style check; a large file list could make it skip some.
+
+- Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
 ### Changed
 
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
 
+
+- Publish the command-line migration roadmap and the safety decisions for the database audit and repair commands in docs/migrations/cli-symfony-console-roadmap.md.
+
+- Bind the project directory once in the service configuration and share the command-line preflight with `kadupul:database:analyze`. Behaviour is unchanged.
+
+- Run cli/convert_tables.php through kadupul:database:convert-tables, with --json and --dry-run. The flags are unchanged apart from the broken --installer. The command now requires an operator with the Console Access and Installation/Upgrades realms, and never sends DDL for a table name the server does not list. While nobody holds Installation/Upgrades, a direct Settings/Utilities grant counts for it, as on the web, without writing a realm row.
+
+- Convert the install wizard's queued tables in-process instead of running cli/convert_tables.php, with no operator. On a remote collector it converts the collector's local database, which its queue describes, where the script converted main. A conversion that throws logs `Converting Table #N 'name' failed in-process:` with the exception class and leaves the table queued.
+
+- Run cli/fix_mediumint.php through kadupul:database:widen-id-columns, with --json and --dry-run. Each table now gets its own statement, as the 1.2.17 upgrade does, and bigint or non-integer columns are no longer rewritten. The command requires the Console Access and Installation/Upgrades realms, with the same Settings/Utilities fallback while nobody holds Installation/Upgrades.
+
+- Run cli/analyze_database.php through a Symfony command, and add kadupul:database:analyze with --json and an explicit operator. The flags are unchanged. The command now requires an operator with the Console Access and Settings/Utilities realms.
+
+- Configure the `local`, `main` and `web` database connections through DoctrineBundle, which fills credentials from `include/config.php` when a connection opens. The Inventory reads now use the `web` connection. The bundle is added for idiomatic DBAL configuration. Its `doctrine:database:create`, `doctrine:database:drop` and `dbal:run-sql` console commands are removed, because the installer owns the schema.
+
 - Normalize malformed device-removal worker acknowledgements to the safe uncertain-outcome response.
 
 - Add Symfony device-removal confirmation with graph/data retention choices, shared-dependency protection and verified remote cleanup.
 
+- Record structured audit events for site creation, editing, deletion and duplication, device creation, and device template assignment, using the correlation-aware contract that device edit introduced.
+
+- Accept optional `$database_read_username` and `$database_read_password` so the Inventory DBAL read connection can use a SELECT-only MySQL user, rejecting a half-configured pair.
+
 - Keep the Inventory DBAL connection lazy through unauthenticated requests and enforce the documented no-remote-assets boundary for migrated Twig pages.
 
 - Use Doctrine DBAL behind the existing Inventory assignable-site read port while preserving installation TLS settings and application APIs.
+
+- Read device-creation defaults and choices through Doctrine DBAL behind the existing port, keeping stored SNMP credentials out of the query.
+
+- Read the device-site filter, device details and site catalog through Doctrine DBAL, with visibility policies read on the same connection and the locked write checks unchanged.
 
 - Add a versioned, correlation-aware audit contract for migrated writes and record structured device-edit persistence decisions and outcomes without submitted fields or credentials.
 
@@ -104,6 +188,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in reachable polling, failed writes, unreachable-device polling, and missing-file fault contracts.
 
 ### Fixed
+
+- Restore the `.DS_Store` ignore rule that a committed merge marker had replaced.
 
 - Preserve the legacy Error device status in Symfony Inventory filtering, display and CSV exports.
 
@@ -206,6 +292,10 @@ Targeting `v1.3.0`, the first planned application release. See
   of stopping the installer with a fatal error.
 
 ### Added
+
+- Add tests that pin the graph, export, create, tune and fetch commands `lib/rrd.php` sends to RRDtool, so moving that file into the Graphing module can be checked against current output.
+
+- Add a generated inventory of HTTP entry points and their gates, verified in CI, and a real-install sweep that requires anonymous, revoked-realm and console-only callers to be refused.
 
 - Add a Symfony device details page with permission-filtered metadata, site, status and escaped notes, preserving inventory navigation.
 

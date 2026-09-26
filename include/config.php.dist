@@ -23,6 +23,14 @@ $database_ssl_ca   = '';
 $database_persist  = false;
 
 /**
+ * Optional MySQL user for the Symfony Inventory read connection. Grant it
+ * SELECT only so those reads cannot write. Set both or neither; when unset the
+ * read connection keeps using the credentials above.
+ */
+#$database_read_username = 'kadupul_read';
+#$database_read_password = 'change-me';
+
+/**
  * Main only: trusted CLI PHP executables for installer probes. By default the
  * current CLI binary is allowed for CLI installs; web installs use PHP_BINDIR/php
  * (php.exe beside the running PHP binary on Windows). Add absolute paths when deployments

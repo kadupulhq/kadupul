@@ -37,7 +37,9 @@ require $root.'/include/global_constants.php';
 define('CACTI_LOCALE','en-US');
 $data_source_types=array(5=>'COMPUTE');
 function read_config_option($key){return $key==='path_rrdtool'?(in_array($GLOBALS['mode'],array('restore-failed','bad-dump'),true)?__DIR__.'/fail-restore':getenv('RRDTOOL_TEST_BINARY')):'';}
-function cacti_log(...$args){}
+function cacti_log($message,...$args){$GLOBALS['logged'][]=str_replace(__DIR__,'<DIR>',$message);}
+$logged=array();$warnings=array();
+set_error_handler(function($level,$message)use(&$warnings){$warnings[]=$level.': '.str_replace(__DIR__,'<DIR>',$message);return true;});
 function cacti_session_close(){}
 function cacti_escapeshellarg($value){return escapeshellarg($value);}
 function cacti_sizeof($value){return is_array($value)?count($value):0;}
@@ -49,6 +51,7 @@ foreach($streams as $stream){stream_get_contents($stream);fclose($stream);}
 if(proc_close($process)!==0){exit(2);}
 $before=hash_file('sha256',$file);
 if($mode==='readonly'){chmod($file,0400);}
+if($mode==='save-failed'){mkdir($file.'.xml');}
 $rra=array('cf'=>'AVERAGE','pdp_per_row'=>1,'xff'=>0.5,'rows'=>10);
 ob_start();
 if($operation==='add'||$operation==='compute'){
@@ -59,6 +62,7 @@ if($operation==='add'||$operation==='compute'){
  $result=rrd_rra_clone(array($file),'MIN',array($rra),$mode==='debug');
 }
 $printed=ob_get_clean();
+if($mode==='save-failed'){rmdir($file.'.xml');}
 putenv('RRDCACHED_ADDRESS');
 chmod($file,0600);
 $process=proc_open(array(getenv('RRDTOOL_TEST_BINARY'),'info',$file),array(1=>array('pipe','w'),2=>array('pipe','w')),$streams);
@@ -66,7 +70,7 @@ $info=stream_get_contents($streams[1]);$error=stream_get_contents($streams[2]);f
 if(proc_close($process)!==0||$error!==''){exit(3);}
 $lease=rrd_maintenance_acquire(false,false,0);
 $released=is_resource($lease);rrd_maintenance_release($lease);
-echo json_encode(array('result'=>$result,'unchanged'=>$before===hash_file('sha256',$file),'xml'=>is_file($file.'.xml'),'info'=>$info,'printed'=>$printed,'released'=>$released));
+echo json_encode(array('result'=>is_array($result)?str_replace(__DIR__,'<DIR>',$result):$result,'unchanged'=>$before===hash_file('sha256',$file),'xml'=>is_file($file.'.xml'),'info'=>$info,'printed'=>$printed,'released'=>$released,'logged'=>$logged,'warnings'=>$warnings));
 SOURCE;
     file_put_contents($directory . '/run.php', $program);
     try {
@@ -94,7 +98,26 @@ SOURCE;
         } elseif ($mode === 'debug') {
             expect($result['result'])->toBeTrue()->and($result['unchanged'])->toBeTrue()->and($result['xml'])->toBeFalse()->and($result['printed'])->toContain('<rrd>');
         } else {
-            expect($result['result'])->toBeArray()->and($result['unchanged'])->toBeTrue()->and($result['xml'])->toBe($mode !== 'bad-dump');
+            expect($result['result'])->toBeArray()->and($result['unchanged'])->toBeTrue()->and($result['xml'])->toBe(!in_array($mode, array('bad-dump', 'save-failed'), true));
+        }
+        // The exact answer, log line and warning of each path, which the
+        // three operations share apart from their wording.
+        $added = in_array($operation, array('add', 'compute'), true);
+        $logged = array('add' => 'Added Data Source(s) to', 'compute' => 'Added Data Source(s) to', 'delete' => 'Deleted RRA(s) from', 'clone' => 'Cloned RRA(s) in')[$operation] . ' RRDfile: <DIR>/live.rrd';
+        $expected = array(
+            'success' => array(true, array($logged), array()),
+            'debug' => array(true, array(), array()),
+            'readonly' => array(array('err_msg' => 'ERROR: RRDfile <DIR>/live.rrd not writeable'), array(), array()),
+            'restore-failed' => array(array('err_msg' => 'RRD restore failed; original and recovery XML preserved. See application log.'), array('ERROR: RRD restore failed; original preserved and recovery XML retained at <DIR>/live.rrd.xml'), array()),
+            'bad-dump' => array(array('err_msg' => 'Error while parsing the XML of ' . ($added ? 'rrdtool' : 'RRDtool') . ' dump'), array(), array()),
+            'save-failed' => array(array('err_msg' => 'ERROR while writing XML file: <DIR>/live.rrd.xml'), array(), array('2: DOMDocument::save(<DIR>/live.rrd.xml): Failed to open stream: Is a directory')),
+        )[$mode];
+        expect(array($result['result'], $result['logged'], $result['warnings']))->toBe($expected);
+        // The dump reply reaches the output buffer; debug adds the modified XML.
+        if ($mode === 'bad-dump') {
+            expect($result['printed'])->toBe("ERROR: injected dump failure\n");
+        } else {
+            expect(substr_count($result['printed'], '<rrd>'))->toBe($mode === 'debug' ? 2 : 1);
         }
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
@@ -107,4 +130,4 @@ SOURCE;
         }
         rmdir($directory);
     }
-})->with(array('add', 'delete', 'clone', 'compute'))->with(array('success', 'debug', 'readonly', 'restore-failed', 'bad-dump'));
+})->with(array('add', 'delete', 'clone', 'compute'))->with(array('success', 'debug', 'readonly', 'restore-failed', 'bad-dump', 'save-failed'));

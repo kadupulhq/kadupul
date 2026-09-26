@@ -26,10 +26,15 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
+        // cli_parity_scenarios.py and cli_schema_scenarios.py compare the shims
+        // against these frozen originals.
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/analyze_database.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/convert_tables.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/fix_mediumint.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -93,7 +98,46 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'device creation serializes direct authorization revocations',
         'device creation serializes group authorization revocations',
         'remote collector preserves four-byte Unicode notes',
-        'SHA384 is preserved without mapping to an invalid protocol'];
+        'SHA384 is preserved without mapping to an invalid protocol',
+        'script server answers valid calls and refuses invalid ones with U',
+        'script server refuses includes outside the base path',
+        'script server never dispatches PHP internals',
+        'script server answers 404 over HTTP',
+        'theme hash builder leaves CSS unchanged over HTTP',
+        'analyze: shim analyzes every table through the kernel container',
+        'analyze invalid flag: shim stdout matches the original',
+        'shim analyzes every table as the operator named by --as',
+        'unknown operator is refused without naming the account',
+        'absent admin_user: shim matches the original',
+        'convert innodb: shim converts the table through the kernel container',
+        'convert installer call: shim schema matches the original',
+        'convert missing table: shim logs the same CONVERT FATAL line, date included',
+        'convert missing table with d.m.Y dates: shim logs the same CONVERT FATAL line, date included',
+        'analyze: shim logs the same completion line, date included',
+        'convert missing table: shim sends no statement for a table the server does not list',
+        'convert tables refuses a run with no operator',
+        'convert tables refuses an operator without the Installation/Upgrades realm',
+        'convert tables refuses an empty --as rather than falling back to admin_user',
+        'convert tables falls back to Settings/Utilities while nobody holds Installation/Upgrades',
+        'convert tables fallback still needs a direct Settings/Utilities grant',
+        'convert tables sends no DDL for a table name the server does not list',
+        'installer converts a queued MyISAM table to InnoDB and utf8mb4 in-process',
+        'installer logs the queued conversion through log_install_always',
+        'widen narrowed columns: shim widens the columns the original statement missed',
+        'widen narrowed columns: only the original logs the statement that failed',
+        'widen narrowed columns debug: shim stdout matches the original',
+        'widen fresh schema: shim logs the same cacti.log lines, date included',
+        'widen never narrows a bigint column',
+        'widen keeps a nullable column nullable',
+        'widen alters a hostile table name as one quoted identifier',
+        'widen refuses an unknown operator before any statement',
+        'widen refuses an empty --as rather than falling back to admin_user',
+        'widen refuses a run with no operator',
+        'widen refuses an operator without the Installation/Upgrades realm',
+        'widen fallback still needs a direct Settings/Utilities grant',
+        'widen falls back to Settings/Utilities while nobody holds Installation/Upgrades',
+        'widen --dry-run through bin/console plans each table and changes nothing',
+        'widen scenarios leave the schema as they found it'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -116,7 +160,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             $relative = substr($path, strlen('/var/www/html/'));
             // Legacy application coverage has its own report. Never import
             // generated configuration/cache, dependencies or installed plugins.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            // The script server, theme hash builder and cli/ shims are listed
+            // because only a subprocess or an HTTP request can reach their entry guards.
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'include/themes/midwinter/update_hash.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -195,7 +241,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Symfony/Form/DeviceSnmpType.php',
         'src/Inventory/Infrastructure/Symfony/Form/DevicePollingType.php',
         'src/Inventory/Application/Query/ListAssignableSites.php',
-        'src/Inventory/Infrastructure/Persistence/InventoryReadConnectionFactory.php',
+        'src/Platform/Infrastructure/Doctrine/InstallationConnectionMiddleware.php',
+        'src/Platform/Infrastructure/Doctrine/InstallationConnectionDriver.php',
         'src/Inventory/Infrastructure/Persistence/DoctrineSiteAssignmentCatalog.php',
         'src/Inventory/Application/Command/CreateSite.php',
         'src/Inventory/Domain/NewSite.php',
@@ -215,9 +262,65 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Application/Command/CreateDevice.php',
         'src/Inventory/Application/Query/PrepareDeviceCreation.php',
         'src/Inventory/Domain/NewDevice.php',
-        'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreationCatalog.php',
+        'src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
-        'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php'];
+        'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
+        'script_server.php',
+        'include/themes/midwinter/update_hash.php',
+        'cli/analyze_database.php',
+        'src/Platform/Infrastructure/Symfony/Console/LegacyCli.php',
+        'src/Platform/Infrastructure/Symfony/Console/LegacyArguments.php',
+        'src/Platform/Infrastructure/Symfony/Console/AnalyzeDatabaseLegacyArguments.php',
+        'src/Platform/Infrastructure/Symfony/Console/CliPresentation.php',
+        'src/Platform/Infrastructure/Symfony/Console/AnalyzeDatabaseCommand.php',
+        'src/Platform/Infrastructure/Symfony/Console/ResultRenderer.php',
+        'src/Platform/Application/Command/AnalyzeDatabase.php',
+        'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php',
+        'src/Platform/Infrastructure/Persistence/DbalDatabaseMaintenance.php',
+        'src/Platform/Infrastructure/Legacy/InstallationVersion.php',
+        'src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php',
+        'cli/convert_tables.php',
+        'src/Platform/Application/Command/ConvertTables.php',
+        'src/Platform/Application/Command/MaintenanceRealm.php',
+        'src/Platform/Application/Command/MaintenanceScope.php',
+        'src/Platform/Application/Command/MaintenanceTarget.php',
+        'src/Platform/Application/Command/SchemaChangeAudit.php',
+        'src/Platform/Application/Command/TableConversionStep.php',
+        'src/Platform/Application/Port/TableCatalog.php',
+        'src/Platform/Application/Port/TableConversion.php',
+        'src/Platform/Application/ReadModel/ConversionOutcome.php',
+        'src/Platform/Application/ReadModel/ConversionReport.php',
+        'src/Platform/Application/ReadModel/TableOutcome.php',
+        'src/Platform/Application/ReadModel/TableResult.php',
+        'src/Platform/Domain/Schema/ConversionFlag.php',
+        'src/Platform/Domain/Schema/ConversionOptions.php',
+        'src/Platform/Domain/Schema/ConversionProblem.php',
+        'src/Platform/Domain/Schema/InvalidConversionOptions.php',
+        'src/Platform/Domain/Schema/TableChange.php',
+        'src/Platform/Domain/Schema/TableCharset.php',
+        'src/Platform/Domain/Schema/TableSkip.php',
+        'src/Platform/Domain/Schema/TableStatus.php',
+        'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
+        'src/Platform/Infrastructure/Legacy/InstallerTableResult.php',
+        'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
+        'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
+        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesCommand.php',
+        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesLegacyArguments.php',
+        'cli/fix_mediumint.php',
+        'src/Platform/Application/Command/WidenIdColumns.php',
+        'src/Platform/Application/Port/ColumnCatalog.php',
+        'src/Platform/Application/Port/ColumnWidening.php',
+        'src/Platform/Application/ReadModel/WideningEvent.php',
+        'src/Platform/Application/ReadModel/WideningReport.php',
+        'src/Platform/Domain/Schema/ColumnChange.php',
+        'src/Platform/Domain/Schema/ColumnDefinition.php',
+        'src/Platform/Domain/Schema/IdColumns.php',
+        'src/Platform/Domain/Schema/IdColumnPlan.php',
+        'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);

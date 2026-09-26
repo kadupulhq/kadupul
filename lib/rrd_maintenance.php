@@ -232,7 +232,8 @@ function rrd_maintenance_pipe($pipe, $lock = null, $release = false, $exclusive 
         register_shutdown_function(function () use (&$pipes) {
             foreach ($pipes as $entry) {
                 if (is_resource($entry[0])) {
-                    pclose($entry[0]);
+                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
+                    function_exists('__rrd_close') ? __rrd_close($entry[0]) : pclose($entry[0]);
                 }
                 rrd_maintenance_release($entry[1]);
             }
@@ -334,7 +335,7 @@ function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
             return false;
         }
         // Keep the existing remote restore protocol; local inode leases do not apply to a proxy.
-        return rrdtool_execute('restore -f ' . cacti_escapeshellarg($xml_file) . ' ' . cacti_escapeshellarg($rrd_file), false, RRDTOOL_OUTPUT_BOOLEAN, $pipe, 'UTIL') === true;
+        return rrdtool_execute(array('restore', '-f', $xml_file, $rrd_file), false, RRDTOOL_OUTPUT_BOOLEAN, $pipe, 'UTIL') === true;
     }
     if (!rrd_maintenance_pipe_is_exclusive($pipe) || is_link($rrd_file) || strpbrk($xml_file . $rrd_file, "\r\n\0") !== false) {
         cacti_log('ERROR: RRD restore requires an exclusive lease and safe regular-file paths.', false, 'UTIL');

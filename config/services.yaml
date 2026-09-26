@@ -2,13 +2,21 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            string $projectDir: '%kernel.project_dir%'
 
     Kadupul\Platform\Infrastructure\:
         resource: '../src/Platform/Infrastructure/'
+        # Built by InstallationConnectionMiddleware around each DBAL driver; a
+        # container service of its own would have no driver to wrap.
+        exclude: '../src/Platform/Infrastructure/Doctrine/InstallationConnectionDriver.php'
 
-    Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    # Public so a cli/ shim can reach it through the kernel container before running
+    # a command, instead of passing the output mode as a hidden command option.
+    Kadupul\Platform\Infrastructure\Symfony\Console\CliPresentation:
+        public: true
+
+    Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration: ~
 
     Kadupul\Platform\Contract\LegacyConfiguration:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration
@@ -16,8 +24,38 @@ services:
     Kadupul\Platform\Contract\DatabaseConnection:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
 
+    Kadupul\Platform\Infrastructure\Legacy\InstallationVersion: ~
+
+    Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog: ~
+
+    Kadupul\Platform\Application\Port\DatabaseMaintenance:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance
+    Kadupul\Platform\Application\Port\TableConversion:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion
+    Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion: ~
+    Kadupul\Platform\Application\Port\ColumnWidening:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalColumnWidening
+    Kadupul\Platform\Application\Port\Clock:
+        alias: Kadupul\Platform\Infrastructure\Symfony\SystemClock
+    Kadupul\Platform\Application\Command\AnalyzeDatabase: ~
+    Kadupul\Platform\Application\Command\MaintenanceTarget: ~
+    Kadupul\Platform\Application\Command\SchemaChangeAudit: ~
+    Kadupul\Platform\Application\Command\TableConversionStep: ~
+    Kadupul\Platform\Application\Command\ConvertTables: ~
+    Kadupul\Platform\Application\Command\WidenIdColumns: ~
+    # Public because lib/installer.php fetches it from the kernel container. It
+    # converts with no operator, so no command or controller may depend on it.
+    Kadupul\Platform\Infrastructure\Legacy\InstallerTableConversion:
+        public: true
+
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'
+
+    # One shared instance, so the operator AnalyzeDatabase selects is the one it
+    # then checks. Command-line only: ConsoleAccess stays on the session adapter,
+    # and CliConsoleAccess does not implement it, so no route can resolve it.
+    Kadupul\IdentityAccess\Contract\ConsoleOperator:
+        alias: Kadupul\IdentityAccess\Infrastructure\Cli\CliConsoleAccess
 
     # Session expiry/revocation must commit independently of application writes.
     # Rolling back a site edit must never restore a rejected credential.
@@ -36,6 +74,11 @@ services:
     Kadupul\IdentityAccess\Contract\ConsoleAccess:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
 
+    Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail: ~
+
+    Kadupul\IdentityAccess\Contract\AuditTrail:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail
+
     Kadupul\Inventory\Infrastructure\:
         resource: '../src/Inventory/Infrastructure/'
 
@@ -44,9 +87,7 @@ services:
     Kadupul\Inventory\Application\Query\FindEditableDevice: ~
     Kadupul\Inventory\Application\Command\EditDevice: ~
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor: ~
 
     Kadupul\Inventory\Application\Port\DeviceEditor:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor
@@ -56,18 +97,27 @@ services:
 
     Kadupul\Inventory\Application\Query\ListDeviceSites: ~
 
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceSites:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Inventory\Application\Port\DeviceSites:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceSites
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceSites
 
     Kadupul\Inventory\Application\Query\FindDeviceDetails: ~
 
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceDetailsReader:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Inventory\Application\Port\DeviceDetailsReader:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceDetailsReader
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceDetailsReader
 
     Kadupul\Inventory\Application\Query\ListSites: ~
 
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Inventory\Application\Port\SiteCatalog:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCatalog
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteCatalog
 
     Kadupul\Inventory\Application\Query\FindEditableSite: ~
     Kadupul\Inventory\Application\Command\EditSite: ~
@@ -138,60 +188,65 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteLifecycle
     Kadupul\Inventory\Application\Command\CreateDevice: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceCreation: ~
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator: ~
     Kadupul\Inventory\Application\Port\DeviceCreator:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Inventory\Application\Port\DeviceCreationCatalog:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog
 
     Kadupul\Inventory\Application\Query\ListAssignableSites: ~
 
-    kadupul.inventory.read_database:
-        class: Doctrine\DBAL\Connection
-        lazy: true
-        factory: ['@Kadupul\Inventory\Infrastructure\Persistence\InventoryReadConnectionFactory', 'create']
+    # Device-visibility policies must be read on the connection that runs the
+    # filtered query, so both come from the same read connection.
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceVisibility:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
 
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog:
         arguments:
-            $database: '@kadupul.inventory.read_database'
+            $database: '@doctrine.dbal.web_connection'
 
     Kadupul\Inventory\Application\Port\SiteAssignmentCatalog:
         alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments: ~
     Kadupul\Inventory\Application\Port\DeviceTemplateAssignments:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments
     Kadupul\Inventory\Application\Command\AssignDeviceTemplate: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceTemplateAssignment: ~
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments: ~
     Kadupul\Inventory\Application\Port\DeviceCollectorAssignments:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments
     Kadupul\Inventory\Application\Command\AssignDeviceCollector: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceCollectorAssignment: ~
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceRemovals:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceRemovals: ~
     Kadupul\Inventory\Application\Port\DeviceRemovals:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceRemovals
     Kadupul\Inventory\Application\Query\PrepareDeviceRemoval: ~
     Kadupul\Inventory\Application\Command\RemoveDevices: ~
 
-    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates: ~
     Kadupul\Inventory\Application\Port\DeviceStates:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Query\PrepareDeviceStateChange: ~
     Kadupul\Inventory\Application\Command\SetDevicesEnabled: ~
-
     Kadupul\Inventory\Application\Port\DeviceStatistics:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Command\ClearDeviceStatistics: ~
+
+when@test:
+    services:
+        # A when@ block parses its own "services" key independently of the main
+        # one above, so _defaults must be repeated here to get autowiring.
+        _defaults:
+            autowire: true
+            autoconfigure: true
+
+        # Proves a command sees the CliPresentation a shim sets through the kernel
+        # container. Test-only: prod and dev never load this service.
+        Kadupul\Tests\Fixtures\PresentationProbeCommand: ~

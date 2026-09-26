@@ -107,6 +107,13 @@ foreach (array('BOOST_TIMER_START' => 0, 'BOOST_TIMER_END' => 1, 'BOOST_TIMER_TO
     'RRDTOOL_OUTPUT_BOOLEAN' => 1) as $name => $value) {
     define($name, $value);
 }
+// Boost quotes the RRD path with the real helper from lib/rrd.php.
+require $root . '/tests/Helpers/PhpSource.php';
+require $root . '/src/Graphing/Infrastructure/Rrd/UnrepresentableArgument.php';
+require $root . '/src/Graphing/Infrastructure/Rrd/PipeEncoder.php';
+foreach (array('rrdtool_pipe_encoder', 'rrdtool_pipe_quote', 'rrdtool_proxy_token_is_safe', 'rrdtool_proxy_token', 'rrdtool_uses_proxy', 'rrdtool_command_argument', 'rrdtool_command_path', 'rrdtool_create_ds', 'rrdtool_create_minimum', 'rrdtool_create_maximum', 'rrdtool_create_rras', 'rrdtool_create_path', 'rrdtool_create_prepare', 'rrdtool_create_structured_path') as $function) {
+    eval(test_php_function_source(file_get_contents($root . '/lib/rrd.php'), $function));
+}
 require $root . '/lib/boost.php';
 $handler = static function () {
     throw new RuntimeException('Unexpected caller warning');

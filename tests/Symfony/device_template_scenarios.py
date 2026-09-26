@@ -1,9 +1,12 @@
 """Device-template assignment through real Symfony forms and legacy writes."""
+import hashlib
 import json
+import uuid
 from pathlib import Path
 from urllib.request import Request
 from urllib.error import HTTPError
 from urllib.parse import urlencode, urlsplit
+from device_create_scenarios import audit_events, run_worker
 from device_edit_scenarios import Inputs
 
 
@@ -28,6 +31,18 @@ def verify_device_template(harness, session, user_id, device_id, hidden_id, chec
     result = harness.php('-r', probe, str(user_id), str(device_id))
     check(result['exit'] == 0 and all(json.loads(result['stdout']).values()), 'template visibility permissions are current and locked through persistence: ' + repr(result))
     check(harness.php('-r', 'require "include/global.php"; function setup_template_change() { api_plugin_register_hook("compatibility_test","device_template_change","compatibility_test_filter","setup.php",true); } setup_template_change();')['exit'] == 0, 'template-change hook fixture registered')
+    def worker(command, **options):
+        correlation_id = uuid.uuid4().hex
+        probe = run_worker(harness, 'bin/legacy-device-template.php', 'KADUPUL_TEMPLATE_RESULT',
+                           {'correlation_id': correlation_id, 'actor': user_id} | command, **options)
+        probe['audit'] = [(event['actor'], event['action'], event['target'], event['decision'], event['outcome'])
+                          for event in audit_events(harness, correlation_id)]
+        return probe
+    def recorded(target, decision, outcome):
+        return [({'id': user_id}, 'inventory.device.assign-template', {'type': 'device', 'id': str(target)}, decision, outcome)]
+    def assignments():
+        return [event for event in harness.jsonl('/var/www/html/log/kadupul-audit.jsonl')
+                if event.get('action') == 'inventory.device.assign-template' and event.get('target') == {'type': 'device', 'id': str(device_id)}]
     def changes(template_id):
         events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
         return sum(json.loads(line).get('args') == [{'device_id': device_id, 'device_template_id': template_id}] for line in events.splitlines())
@@ -55,6 +70,21 @@ def verify_device_template(harness, session, user_id, device_id, hidden_id, chec
         check(harness.sql(f'SELECT host_template_id FROM host WHERE id={device_id}').strip() == str(template), 'selected template assignment persists')
         check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device_id} AND graph_template_id={graph}').strip() == '1', 'template assignment verifies required graph associations')
         check(harness.sql(f'SELECT COUNT(*) FROM host_snmp_query WHERE host_id={device_id} AND snmp_query_id={query}').strip() == '1', 'template assignment verifies required data-query associations')
+        check([(event['actor'], event['decision'], event['outcome']) for event in assignments()][-1:] == [({'id': user_id}, 'allowed', 'succeeded')],
+              'template assignment records the structured audit contract')
+        revision = hashlib.sha256(json.dumps([device_id, template, int(original[1])], separators=(',', ':')).encode()).hexdigest()
+        hidden = worker({'id': hidden_id, 'template_id': template, 'revision': revision})
+        check(hidden['result']['status'] == 'denied' and hidden['audit'] == recorded(hidden_id, 'denied', 'denied'),
+              'template worker records a persistence visibility denial')
+        stale = worker({'id': device_id, 'template_id': template, 'revision': 'password=hunter2-template-marker'})
+        check(stale['result']['status'] == 'conflict' and stale['audit'] == recorded(device_id, 'allowed', 'failed'),
+              'stale template worker command records the post-authorization failure')
+        # The worker blocks on the template row after authorization, inside its transaction.
+        blocked = worker({'id': device_id, 'template_id': template, 'revision': revision},
+                         lock=f'SELECT id FROM host_template WHERE id = {template} FOR UPDATE', wait_for='SELECT id FROM host_template WHERE id = % LOCK IN SHARE MODE')
+        check(blocked['waiting'] and not blocked['pending_record'], 'template assignment audit is not written while its transaction is open')
+        check(blocked['result']['status'] == 'ok' and blocked['audit'] == recorded(device_id, 'allowed', 'succeeded'),
+              'blocked template assignment records success once its commit resolves')
         check(request(fields=fields)[0] == 409, 'template changes invalidate stale assignment forms')
         current = form()
         check(request(fields=current)[0] == 200, 'unchanged template assignment is a no-op')
@@ -68,6 +98,11 @@ def verify_device_template(harness, session, user_id, device_id, hidden_id, chec
         check(request(fields=stale | {'device_template[template_id]': str(template)})[0] == 409, 'collector moves invalidate stale template forms')
         check(request(fields=form() | {'device_template[template_id]': str(template)})[0] == 502, 'offline collector prevents template assignment success')
         check(harness.sql(f'SELECT host_template_id FROM host WHERE id={device_id}').strip() == '0', 'offline collector leaves the primary template unchanged')
+        check([(event['decision'], event['outcome']) for event in assignments()][-1:] == [('allowed', 'failed')],
+              'offline collector records the structured failure outcome')
+        audit = harness.command('cat', '/var/www/html/log/kadupul-audit.jsonl', check=True)['stdout']
+        check(all(marker not in audit for marker in ('hunter2-template-marker', 'Collector unavailable', 'changed. Reload', 'assignment>')),
+              'structured template audit excludes submitted revisions and exception text')
         harness.sql(f'UPDATE host SET poller_id={original[1]} WHERE id={device_id}')
         fields = form()
         harness.sql(f'DELETE FROM host_template WHERE id={template}')

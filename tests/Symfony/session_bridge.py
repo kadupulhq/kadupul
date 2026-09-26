@@ -44,6 +44,12 @@ def main():
               'anonymous Symfony public request is rejected')
         check(anonymous.request('/public/index.php/healthz').get('json') == {'status': 'ok'},
               'standalone health remains available')
+        from script_server_scenarios import verify_script_server
+        verify_script_server(harness, check)
+        from cli_parity_scenarios import verify_cli_parity
+        verify_cli_parity(harness, check)
+        from cli_schema_scenarios import verify_schema_parity
+        verify_schema_parity(harness, check)
 
         # A syntactically valid, attacker-selected ID must never be adopted.
         forged = '0123456789abcdef' * 2

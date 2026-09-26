@@ -21,91 +21,14 @@ Inventory was collected before adding scenarios. A machine-readable companion is
 
 ## Entrypoints
 
-- `about.php`
-- `aggregate_graphs.php`
-- `aggregate_templates.php`
-- `auth_changepassword.php`
-- `auth_login.php`
-- `auth_profile.php`
-- `automation_devices.php`
-- `automation_graph_rules.php`
-- `automation_networks.php`
-- `automation_snmp.php`
-- `automation_templates.php`
-- `automation_tree_rules.php`
-- `cactid.php`
-- `cdef.php`
-- `clog.php`
-- `clog_user.php`
-- `cmd.php`
-- `cmd_realtime.php`
-- `color.php`
-- `color_templates.php`
-- `color_templates_items.php`
-- `csp_report.php`
-- `data_debug.php`
-- `data_input.php`
-- `data_queries.php`
-- `data_source_profiles.php`
-- `data_sources.php`
-- `data_templates.php`
-- `gprint_presets.php`
-- `graph.php`
-- `graph_image.php`
-- `graph_json.php`
-- `graph_realtime.php`
-- `graph_templates.php`
-- `graph_templates_inputs.php`
-- `graph_templates_items.php`
-- `graph_view.php`
-- `graph_xport.php`
-- `graphs.php`
-- `graphs_items.php`
-- `graphs_new.php`
-- `help.php`
-- `host.php`
-- `host_templates.php`
-- `index.php`
-- `link.php`
-- `links.php`
-- `logout.php`
-- `managers.php`
-- `package_import.php`
-- `permission_denied.php`
-- `plugins.php`
-- `poller.php`
-- `poller_automation.php`
-- `poller_boost.php`
-- `poller_commands.php`
-- `poller_dsstats.php`
-- `poller_maintenance.php`
-- `poller_realtime.php`
-- `poller_recovery.php`
-- `poller_reports.php`
-- `poller_rrdcheck.php`
-- `poller_spikekill.php`
-- `pollers.php`
-- `remote_agent.php`
-- `reports_admin.php`
-- `reports_user.php`
-- `rrdcheck.php`
-- `rrdcleaner.php`
-- `script_server.php`
-- `service_check.php`
-- `settings.php`
-- `sites.php`
-- `snmpagent_mibcache.php`
-- `snmpagent_mibcachechild.php`
-- `snmpagent_persist.php`
-- `spikekill.php`
-- `templates_export.php`
-- `templates_import.php`
-- `tree.php`
-- `user_admin.php`
-- `user_domains.php`
-- `user_group_admin.php`
-- `utilities.php`
-- `vdef.php`
+The HTTP entry points and the gate on each are generated, not listed here.
+`tests/security/baselines/entry_points.baseline.tsv` is produced by
+`tests/security/build_entry_point_inventory.py`, which reads each gate from
+the PHP AST through `tests/security/classify_entry_points.php`, and checked in CI by
+`tests/security/verify_entry_point_inventory.sh`, which fails on drift and on
+any entry point without a recognised gate. `tests/security/entry_point_authorization.py`
+requests each one on a real install and requires anonymous, revoked-realm and
+console-only callers to be refused where the baseline says they must be.
 
 ## CLI scripts
 

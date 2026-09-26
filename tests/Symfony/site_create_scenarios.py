@@ -64,9 +64,14 @@ def verify_site_create(harness, session, user_id, check):
             check(row[key] == fields['site_create[' + key + ']'], 'site creation persists ' + key)
         check(float(row['latitude']) == 48.8566 and float(row['longitude']) == 2.3522 and row['zoom'] == 12, 'site creation persists map values without losing precision')
         check(int(harness.sql("SELECT COUNT(*) FROM settings WHERE name IN ('time_last_change_site','time_last_change_site_device') AND CAST(value AS UNSIGNED)>1").strip()) == 2, 'site creation updates both legacy cache markers')
+        audit = harness.command('cat', '/var/www/html/log/kadupul-audit.jsonl', check=True)['stdout']
+        check(any(event.get('action') == 'inventory.site.create' and event.get('target') == {'type': 'site', 'id': str(site_id)}
+                  and event.get('actor') == {'id': user_id} and (event.get('decision'), event.get('outcome')) == ('allowed', 'succeeded')
+                  for event in map(json.loads, audit.splitlines())), 'successful site creation records the structured audit contract')
+        check('12 Road' not in audit and 'create-site-fixture' not in audit, 'structured site audit excludes submitted creation fields')
         probe = Path(__file__).with_name('site_creation_probe.php').read_text().removeprefix('<?php')
         result = harness.php('-r', probe)
-        check(result['exit'] == 0 and json.loads(result['stdout']) == {'rollback': True, 'authorization': True}, 'site creation rollback and persistence authorization are enforced: ' + str(result['exit']) + ' ' + result['stderr'])
+        check(result['exit'] == 0 and json.loads(result['stdout']) == {'rollback': True, 'authorization': True, 'audit': True}, 'site creation rollback and persistence authorization are enforced: ' + str(result['exit']) + ' ' + result['stderr'])
     finally:
         for site_id in created:
             harness.sql(f'DELETE FROM sites WHERE id={site_id}')

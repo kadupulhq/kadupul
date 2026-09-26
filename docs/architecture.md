@@ -19,8 +19,8 @@ not a claim that the procedural application has already been decomposed.
 
 Symfony owns the application lifecycle and composition root. Platform owns
 health, response security headers and installation configuration adapters.
-IdentityAccess owns the current-actor query and public Actor/ConsoleAccess
-contracts, including the closed audit-event boundary used to attribute security
+IdentityAccess owns the current-actor query and public Actor/ConsoleAccess/
+ConsoleOperator contracts, including the closed audit-event boundary used to attribute security
 decisions. Inventory owns device-list criteria, its ListDevices use case,
 read models and DeviceCatalog port, plus the Device aggregate, EditDevice command
 and DeviceEditor port. Site administration reads use the ListSites query and
@@ -99,15 +99,39 @@ controller and Twig rendering. Its application use case depends on a catalog por
 and IdentityAccess's public access contract. Native session and legacy-schema SQL
 are confined to adapters; new routes do not bootstrap the procedural application.
 Platform's PDO/configuration contracts are technical integration APIs used only
-by infrastructure, never domain/application services.
+by infrastructure, never domain/application services. Platform's own
+`Application/` layer is the exception this constrains rather than escapes: it
+holds installation-maintenance use cases such as `AnalyzeDatabase`, and it
+reaches the database only through an `Application/Port` such as
+`DatabaseMaintenance`, never by importing `Platform/Contract` or `Infrastructure`
+directly.
 
-Assignable-site reads are the first Doctrine DBAL persistence slice. The
-Inventory infrastructure adapter receives a module-owned DBAL connection and
-implements the existing application port, so neither the use case nor its
-domain-facing result changes. The connection factory preserves the installation
-database's TLS and native-prepare settings. Other reads and all write
-transactions continue through their existing adapters until migrated with
-equivalent behavioral coverage.
+Assignable-site, device-creation choice, device-site filter, device details
+and site catalog reads use Doctrine DBAL. Each Inventory infrastructure adapter
+receives a module-owned DBAL connection and implements the existing application
+port, so neither the use case nor its domain-facing result changes. The
+connection factory preserves the installation database's TLS and native-prepare
+settings. Other reads and all write transactions continue through their
+existing adapters until migrated with equivalent behavioral coverage.
+
+The permission-filtered DBAL reads build their device-visibility predicate from
+policies read on the same DBAL connection, so the policy and the query that
+embeds it never come from different connections. `DeviceVisibilityRules` holds
+the visibility modes and policy defaults once; the PDO predicate used by the
+device list and by the locked write checks calls the same rules. Locked checks
+stay on PDO inside their write transactions. The device list moves after its
+search rewrite lands and is then the last permission-filtered read on PDO.
+
+The Inventory DBAL connection reads `settings`, `sites`, `host`,
+`host_template`, `poller`, `graph_local`, `user_auth`, `user_auth_perms`,
+`user_auth_group`, `user_auth_group_members` and `user_auth_group_perms`.
+
+Doctrine is a query layer here, not a schema owner. `cacti.sql` and the
+`install/upgrades` scripts still create and upgrade every table. The project has
+no ORM mapping and no Doctrine Migrations configuration, because a second
+migration path could apply changes the installer does not know about. A table
+moves to Doctrine-managed schema only after it has one documented owner and
+upgrade tests cover both the installer and the migration.
 
 Migrated Twig pages currently make no stylesheet, script, image, media or frame
 requests. A template boundary test rejects static remote resource URLs while

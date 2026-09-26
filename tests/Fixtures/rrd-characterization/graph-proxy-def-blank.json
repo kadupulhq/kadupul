@@ -1,0 +1,13 @@
+{
+    "returned": "ERROR: RRD file does not exist: <DIR>/rra/router traffic_11.rrd",
+    "printed": "",
+    "diagnostics": [],
+    "received": [
+        [
+            "setcnn encryption off"
+        ],
+        [
+            "quit"
+        ]
+    ]
+}

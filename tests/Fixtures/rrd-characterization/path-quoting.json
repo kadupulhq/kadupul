@@ -1,0 +1,176 @@
+[
+    {
+        "returned": {
+            "rra": [
+                {
+                    "cf": "AVERAGE"
+                }
+            ],
+            "ds": []
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "info '<DIR>/rra/it'\"'\"'s a.rrd'\r\nquit\r\n"
+                ]
+            }
+        ],
+        "args": [
+            31
+        ]
+    },
+    {
+        "returned": {
+            "data_source_names": [
+                "value"
+            ],
+            "timestamp": {
+                "start_time": "1700000300",
+                "end_time": "1700000300"
+            },
+            "values": [
+                {
+                    "1700000300": "1.0000000000e+00"
+                }
+            ]
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "fetch '<DIR>/rra/it'\"'\"'s a.rrd' 'AVERAGE' '-s' '1700000000' '-e' '1700001000' '-r' '300'\r\nquit\r\n"
+                ]
+            }
+        ],
+        "args": [
+            31,
+            1700000000,
+            1700001000,
+            300
+        ]
+    },
+    {
+        "returned": "./rrdtool create \\\n<DIR>/rra/new 'one'.rrd \\\n--start 0 --step 300  \\\nDS:value:GAUGE:600:0:'10 --daemon x'\"'\"'y' \\\nRRA:AVERAGE:0.5:1:600 \\\n",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            33,
+            true
+        ]
+    },
+    {
+        "returned": "1700000300",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "last 'rra/it'\"'\"'s a.rrd'\r\nquit\r\n"
+                ]
+            }
+        ],
+        "args": [
+            "rra/it's a.rrd",
+            false
+        ]
+    },
+    {
+        "returned": "",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "-"
+                ],
+                "stdin": [
+                    "create '<DIR>/rra/new '\"'\"'one'\"'\"'.rrd' ",
+                    "--start 0 --step 300 ",
+                    "DS:value:GAUGE:600:0:'10 --daemon x'\"'\"'y'",
+                    "RRA:AVERAGE:0.5:1:600  \r\nquit\r\n"
+                ]
+            }
+        ],
+        "args": [
+            33,
+            false
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            32
+        ]
+    },
+    {
+        "returned": [],
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            32,
+            1700000000,
+            1700001000,
+            300
+        ]
+    },
+    {
+        "returned": [],
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            0,
+            1700000000,
+            1700001000,
+            300,
+            false,
+            "rra/it\u0000s.rrd"
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            32,
+            false
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            {
+                "rra/it\u0000s.rrd": {
+                    "local_data_id": 32,
+                    "data_template_id": 0,
+                    "times": {
+                        "1700000600": {
+                            "value": "5"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+]
