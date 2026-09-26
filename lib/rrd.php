@@ -27,6 +27,12 @@ function rrdtool_clock_now(?\Kadupul\Platform\Application\Port\Clock $clock = nu
         return $clock->now();
     }
 
+    // This procedural file is also loaded by native/maintenance callers
+    // without include/global.php, and therefore without Composer's autoloader.
+    if (!class_exists(\Kadupul\Platform\Infrastructure\Symfony\SystemClock::class)) {
+        require_once __DIR__ . '/../include/vendor/autoload.php';
+    }
+
     $systemClock ??= new \Kadupul\Platform\Infrastructure\Symfony\SystemClock(new \Symfony\Component\Clock\NativeClock());
 
     return $systemClock->now();
