@@ -198,6 +198,12 @@ function rrd_maintenance_acquire_paths($files, $timeout = 0, &$busy = null)
 function rrd_maintenance_workspace()
 {
     $directory = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . '/kadupul-rrd-' . bin2hex(random_bytes(16));
+    // Preserve mkdir()'s former single-level behavior: a missing temp root is
+    // a configuration failure, not a directory tree that maintenance should create.
+    if (!is_dir(dirname($directory))) {
+        return false;
+    }
+
     $filesystem = rrd_maintenance_filesystem();
     try {
         $filesystem->mkdir($directory, 0700);
