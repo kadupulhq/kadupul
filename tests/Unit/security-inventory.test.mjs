@@ -5,26 +5,16 @@ import { mkdtempSync, readFileSync, rmSync, readdirSync, statSync, writeFileSync
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { runInNewContext } from 'node:vm';
 import { collect, reconcile, priority } from '../../tools/security/inventory.mjs';
 
 const issue = { key: 'sonar-1', rule: 'phpsecurity:S2076', component: 'project:host.php', line: 180 };
 
-test('device reindex button supplies a token to the POST loader without submitting a form', () => {
+test('legacy device entry delegates to Symfony without emitting mutation links', () => {
   const source = readFileSync(new URL('../../host.php', import.meta.url), 'utf8');
-  const line = source.split('\n').find(value => value.includes('host.php?action=reindex&host_id='));
-  assert.match(line, /data-post-action='true'/);
-  assert.match(line, /<button type='button'/);
-  assert.ok(!line.includes(' href='));
-  const handler = line.match(/onclick='([^']+)'/)[1];
-  const calls = [];
-  const result = runInNewContext(`(function() { ${handler} }).call(link)`, {
-    link: { dataset: { url: 'host.php?action=reindex&host_id=7' } },
-    csrfMagicToken: 'test-token',
-    loadPageUsingPost: (url, body) => calls.push([url, body.__csrf_magic, body.header]),
-  });
-  assert.equal(result, false);
-  assert.deepEqual(calls, [['host.php?action=reindex&host_id=7', 'test-token', 'false']]);
+  assert.match(source, /inventory\/devices\/legacy/);
+  assert.match(source, /kernel->handle/);
+  assert.ok(!source.includes('host.php?action=reindex'));
+  assert.ok(!source.includes('api_reindex_host'));
 });
 function alert(key, number = 1) {
   return { number, rule: { id: issue.rule }, most_recent_instance: {

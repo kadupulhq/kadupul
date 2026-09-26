@@ -29,7 +29,7 @@ final class DeviceAssignmentLock
             }
             $lock->fetchColumn();
         }
-        $row = db_fetch_row_prepared("SELECT id, description, host_template_id, poller_id, site_id FROM host WHERE id = ? AND deleted = '' FOR UPDATE", [$deviceId]);
+        $row = db_fetch_row_prepared("SELECT id, description, host_template_id, poller_id, site_id, snmp_version FROM host WHERE id = ? AND deleted = '' FOR UPDATE", [$deviceId]);
         $provider = new class ($connection) implements DatabaseConnection {
             public function __construct(private PDO $connection) {}
             public function get(): PDO
