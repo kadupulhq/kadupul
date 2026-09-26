@@ -6,6 +6,11 @@
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
 require_once $coverageRoot . '/tests/vendor/autoload.php';
+$testVendorPath = $coverageRoot . '/tests/vendor';
+$testLoader = Composer\Autoload\ClassLoader::getRegisteredLoaders()[$testVendorPath] ?? null;
+if (!$testLoader instanceof Composer\Autoload\ClassLoader) {
+    throw new RuntimeException('Unable to locate the test dependency autoloader');
+}
 // The application later prepends its own Composer loader, which carries an
 // older php-code-coverage RawCodeCoverageData class. Load PHPUnit 12's class
 // first so child coverage collection cannot mix incompatible library versions.
@@ -113,7 +118,11 @@ $childCoverageFile = RRD_TEST_COVERAGE_DIRECTORY . '/child-' . getmypid() . '.co
 register_shutdown_function(function () use ($childCoverage, $childCoverageFile) {
     // Append collection after application shutdown handlers so implicit pipe
     // close/drain is measured too, not just the main body of the child script.
-    register_shutdown_function(function () use ($childCoverage, $childCoverageFile) {
+    register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $testLoader) {
+        // Application bootstrap prepends its Composer loader. Restore the test
+        // loader as first choice before PHPUnit 12 lazily creates its analyser.
+        $testLoader->unregister();
+        $testLoader->register(true);
         $childCoverage->stop();
         if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
             // Measure the real copied CLI, then map only its filename. Refuse
