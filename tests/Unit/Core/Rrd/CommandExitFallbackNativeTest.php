@@ -8,7 +8,7 @@ test('production command runner preserves nonzero exit status', function () {
     $directory = sys_get_temp_dir() . '/command-exit-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
     $coverage = $this->getTestResultObject()->getCodeCoverage();
-    $script = '<?php';
+    $script = "<?php\n";
     if ($coverage !== null) {
         $script .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
