@@ -11,13 +11,15 @@ follows [Semantic Versioning](VERSIONING.md).
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
+### Tests
+
+- Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
+
 ### Fixed
 
 - Keep the recursive RRD tuning report printer local to each `rrdtool_tune()` call, so repeated calls in one process do not redeclare a global function. Fixes #445.
 
-### Tests
-
-- Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
+- Keep graph-group lookups scoped to the local graph ID, preserve the configuration cache map when setting an option, keep invalid structured filters from becoming unrestricted, and scope user-setting existence cache entries to the user. Public helper signatures and valid filter behavior are unchanged. Fixes #479.
 
 - Accept only a number or `U` as a data source minimum, and only a number, `U` or an interface speed token as a maximum, refuse to create an RRD file whose stored minimum is anything else, and create realtime graph RRD files through the RRDtool pipe instead of a shell. A data source item that fails validation is no longer saved.
 
