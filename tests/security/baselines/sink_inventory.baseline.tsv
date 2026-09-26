@@ -61,7 +61,7 @@ cmd_exec	./lib/poller.php:50	 * @param  (resource) $proc_fd - the file descripto
 cmd_exec	./lib/poller.php:86	                $fp = popen($command, 'r');
 cmd_exec	./lib/poller.php:88	                $fp = popen($command, 'rb');
 cmd_exec	./lib/rrd.php:199	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
-cmd_exec	./lib/rrd_maintenance.php:284	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
+cmd_exec	./lib/rrd_maintenance.php:282	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
 cmd_exec	./lib/rrdcheck.php:836	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
@@ -575,7 +575,7 @@ fs_write	./lib/poller.php:1736	                            file_put_contents($my
 fs_write	./lib/reports.php:1698			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1755			$f = fopen($fn, 'wb');
 fs_write	./lib/rrd.php:3578	                file_put_contents('php://stderr', $buffer);
-fs_write	./lib/rrd_maintenance.php:347	            $handle = @fopen($probe, 'x+b');
+fs_write	./lib/rrd_maintenance.php:345	            $handle = @fopen($probe, 'x+b');
 fs_write	./lib/rrd_maintenance.php:93	    $handle = @fopen($canonical, 'r');
 fs_write	./lib/spikekill.php:1127				$handle    = @fopen($desired_path, 'xb');
 fs_write	./lib/spikekill.php:1145					$handle    = @fopen($candidate, 'xb');

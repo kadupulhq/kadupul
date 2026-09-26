@@ -213,11 +213,9 @@ function rrd_maintenance_workspace()
         return false;
     }
     register_shutdown_function(function () use ($directory) {
-        try {
-            rrd_maintenance_filesystem()->remove($directory);
-        } catch (\Symfony\Component\Filesystem\Exception\IOExceptionInterface $exception) {
-            // Shutdown cleanup is best effort, as it was with rmdir().
-        }
+        // This must remove only empty workspaces: partial dumps can be
+        // deliberately retained for manual recovery after a failed operation.
+        @rmdir($directory);
     });
     return $directory;
 }
