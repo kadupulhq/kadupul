@@ -59,11 +59,43 @@ final class LegacyResourceWritableTest extends TestCase
 
     public function testLegacyWritableProbeReportsPermissionDeniedPathsAsNotWritable(): void
     {
-        if (PHP_OS_FAMILY === 'Windows' || !function_exists('posix_geteuid')) {
+        if (PHP_OS_FAMILY === 'Windows' || !function_exists('posix_geteuid') || !function_exists('posix_getpwnam')) {
             self::markTestSkipped('Permission bits and an unprivileged process are required.');
         }
 
-        $root = '/tmp/kadupul-resource-permissions-' . bin2hex(random_bytes(6));
+        $temporaryDirectory = sys_get_temp_dir();
+        $processUser = null;
+
+        if (posix_geteuid() === 0) {
+            $unprivilegedUser = posix_getpwnam('nobody');
+
+            if (!is_array($unprivilegedUser)) {
+                self::markTestSkipped('An unprivileged nobody account is required when the test runner is root.');
+            }
+
+            $temporaryDirectoryMode = @fileperms($temporaryDirectory);
+            $temporaryDirectoryOwner = @fileowner($temporaryDirectory);
+            $temporaryDirectoryGroup = @filegroup($temporaryDirectory);
+
+            if ($temporaryDirectoryMode === false || $temporaryDirectoryOwner === false || $temporaryDirectoryGroup === false) {
+                self::markTestSkipped('The configured temporary directory permissions cannot be inspected.');
+            }
+
+            $temporaryDirectoryMode &= 0777;
+            $nobodyCanTraverseTemporaryDirectory = (
+                $unprivilegedUser['uid'] === $temporaryDirectoryOwner && ($temporaryDirectoryMode & 0100) !== 0
+            ) || (
+                $unprivilegedUser['gid'] === $temporaryDirectoryGroup && ($temporaryDirectoryMode & 0010) !== 0
+            ) || ($temporaryDirectoryMode & 0001) !== 0;
+
+            if (!$nobodyCanTraverseTemporaryDirectory) {
+                self::markTestSkipped('The configured temporary directory is not accessible to the nobody account.');
+            }
+
+            $processUser = 'nobody';
+        }
+
+        $root = rtrim($temporaryDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'kadupul-resource-permissions-' . bin2hex(random_bytes(6));
         mkdir($root, 0700);
         mkdir($root . '/locked', 0700);
         file_put_contents($root . '/locked/existing.txt', 'unchanged');
@@ -81,10 +113,8 @@ final class LegacyResourceWritableTest extends TestCase
                 . 'is_resource_writable($root . "/locked/")], JSON_THROW_ON_ERROR);';
             $process = new Process([PHP_BINARY, '-r', $script]);
 
-            if (posix_geteuid() === 0) {
-                $nobody = posix_getpwnam('nobody');
-                self::assertIsArray($nobody, 'A nobody account is required when the test runner is root.');
-                $process->setUser('nobody');
+            if ($processUser !== null) {
+                $process->setUser($processUser);
             }
 
             $process->run();
