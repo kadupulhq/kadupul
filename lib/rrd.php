@@ -38,6 +38,21 @@ function rrdtool_clock_now(?\Kadupul\Platform\Application\Port\Clock $clock = nu
     return $systemClock->now();
 }
 
+/** Return the shared filesystem utility for procedural RRD callers.
+ *
+ * @return \Symfony\Component\Filesystem\Filesystem Lazily created filesystem utility.
+ */
+function rrdtool_filesystem(): \Symfony\Component\Filesystem\Filesystem
+{
+    if (!class_exists(\Symfony\Component\Filesystem\Filesystem::class)) {
+        require_once __DIR__ . '/../include/vendor/autoload.php';
+    }
+
+    static $filesystem = null;
+
+    return $filesystem ??= new \Symfony\Component\Filesystem\Filesystem();
+}
+
 function escape_command($command)
 {
     return $command;		# we escape every single argument now, no need for 'special' escaping
@@ -885,11 +900,12 @@ function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_
             }
         } elseif (!is_dir(dirname($data_source_path))) {
             if ($config['is_web'] == false || is_writable($config['rra_path'])) {
-                if (mkdir(dirname($data_source_path), 0775, true)) {
+                try {
+                    rrdtool_filesystem()->mkdir(dirname($data_source_path), 0775);
                     if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
                         rrdtool_set_structured_path_ownership($data_source_path, $owner_id, $group_id, $logopt);
                     }
-                } else {
+                } catch (\Symfony\Component\Filesystem\Exception\IOExceptionInterface $exception) {
                     cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", false);
                 }
             } else {
@@ -2089,6 +2105,16 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
     return $fetch_array;
 }
 
+/** Build graph options using the render's captured time for relative options.
+ *
+ * @param int|string $graph_start Start bound passed to RRDtool.
+ * @param int|string $graph_end End bound passed to RRDtool.
+ * @param array<string, mixed> $graph Graph variables, updated during processing.
+ * @param array<string, mixed> $graph_data_array Graph options and metadata.
+ * @param \DateTimeImmutable|null $now Shared time snapshot; defaults to the system clock.
+ *
+ * @return string RRDtool graph options.
+ */
 function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &$graph_data_array, ?\DateTimeImmutable $now = null)
 {
     global $config, $image_types;
@@ -2335,6 +2361,18 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
     return $graph_opts;
 }
 
+/** Render one graph using a single clock instant for all relative time calculations.
+ *
+ * @param int $local_graph_id Graph identifier.
+ * @param int $rra_id Round-robin archive identifier.
+ * @param array<string, mixed> $graph_data_array Graph options.
+ * @param resource|array|false|null $rrdtool_pipe Existing local or proxy pipe.
+ * @param array<string, mixed> $xport_meta Export metadata, updated by reference.
+ * @param int $user User identifier.
+ * @param \Kadupul\Platform\Application\Port\Clock|null $clock Optional application clock.
+ *
+ * @return mixed RRDtool graph result, or false when rendering is rejected.
+ */
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe = false, &$xport_meta = array(), $user = 0, ?\Kadupul\Platform\Application\Port\Clock $clock = null)
 {
     // A value RRDtool cannot receive (a NUL in device or query data), or a DEF
@@ -2381,6 +2419,17 @@ function rrdtool_cdef_magic_variables()
  * Add $def_name to every requested magic variable that uses counter $count,
  * converting unknowns to '0' first, then advance the counter.
  */
+/** Add time-based graph data source expressions for one CDEF magic counter.
+ *
+ * @param array<int, string> $magic_item CDEF expressions, updated by reference.
+ * @param array<string, int> $magic_count Expression counts, updated by reference.
+ * @param string $count Magic variable counter name.
+ * @param string $def_name Data definition name.
+ * @param int $rra_seconds Archive step in seconds.
+ * @param \DateTimeImmutable|null $now Shared render time snapshot.
+ *
+ * @return void
+ */
 function rrdtool_cdef_magic_append(&$magic_item, &$magic_count, $count, $def_name, $rra_seconds, ?\DateTimeImmutable $now = null)
 {
     $now ??= rrdtool_clock_now();
@@ -2407,6 +2456,18 @@ function rrdtool_cdef_step_replace($name, $cdef_string, $graph_item)
     return str_replace($name, read_config_option('poller_interval'), $cdef_string);
 }
 
+/** Internal graph implementation receiving the optional application clock.
+ *
+ * @param int $local_graph_id Graph identifier.
+ * @param int $rra_id Round-robin archive identifier.
+ * @param array<string, mixed> $graph_data_array Graph options.
+ * @param resource|array|false|null $rrdtool_pipe Existing local or proxy pipe.
+ * @param array<string, mixed> $xport_meta Export metadata, updated by reference.
+ * @param int $user User identifier.
+ * @param \Kadupul\Platform\Application\Port\Clock|null $clock Optional application clock.
+ *
+ * @return mixed RRDtool graph result.
+ */
 function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe, &$xport_meta, $user, ?\Kadupul\Platform\Application\Port\Clock $clock = null)
 {
     global $config, $consolidation_functions, $graph_item_types, $encryption;
@@ -3449,10 +3510,11 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                 $output_flag = RRDTOOL_OUTPUT_GRAPH_DATA;
                 $output = rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrdtool_pipe);
 
-                if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
-                    fwrite($fp, $output, strlen($output));
-                    fclose($fp);
-                    chmod($graph_data_array['export_realtime'], 0644);
+                try {
+                    rrdtool_filesystem()->dumpFile($graph_data_array['export_realtime'], (string) $output);
+                    rrdtool_filesystem()->chmod($graph_data_array['export_realtime'], 0644);
+                } catch (\Symfony\Component\Filesystem\Exception\IOExceptionInterface $exception) {
+                    // Preserve the legacy return contract when realtime export storage fails.
                 }
 
                 return $output;
@@ -3566,11 +3628,29 @@ function rrdtool_escape_string($text, $ignore_percent = true)
     }
 }
 
+/** Export graph data with the same clock snapshot behavior as graph rendering.
+ *
+ * @param int $local_graph_id Graph identifier.
+ * @param int $rra_id Round-robin archive identifier.
+ * @param array<string, mixed> $xport_data_array Export options.
+ * @param array<string, mixed> $xport_meta Export metadata, updated by reference.
+ * @param int $user User identifier.
+ * @param \Kadupul\Platform\Application\Port\Clock|null $clock Optional application clock.
+ *
+ * @return mixed RRDtool export result.
+ */
 function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$xport_meta, $user = 0, ?\Kadupul\Platform\Application\Port\Clock $clock = null)
 {
     return rrdtool_function_graph($local_graph_id, $rra_id, $xport_data_array, null, $xport_meta, $user, $clock);
 }
 
+/** Format the graph's date legend against the render's captured time.
+ *
+ * @param array<string, mixed> $graph_data_array Graph options and date metadata.
+ * @param \DateTimeImmutable|null $now Shared time snapshot.
+ *
+ * @return string RRDtool legend definition.
+ */
 function rrdtool_function_format_graph_date(&$graph_data_array, ?\DateTimeImmutable $now = null)
 {
     $now ??= rrdtool_clock_now();
@@ -3771,6 +3851,16 @@ function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item)
     }
 }
 
+/** Select an RRA step using graph bounds and a stable relative-time snapshot.
+ *
+ * @param int|string|array<int, int|string> $local_data_ids Data source identifiers.
+ * @param int|string $graph_start Graph start bound.
+ * @param int|string $graph_end Graph end bound.
+ * @param string $type Resolution selection mode.
+ * @param \DateTimeImmutable|null $now Shared time snapshot.
+ *
+ * @return int Selected resolution in seconds.
+ */
 function rrdtool_function_get_resstep($local_data_ids, $graph_start, $graph_end, $type = 'res', ?\DateTimeImmutable $now = null)
 {
     if (!is_array($local_data_ids)) {
@@ -4490,7 +4580,8 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
                         return false;
                     }
                     $resize_rrd = getcwd() . '/resize.rrd';
-                    return rename($resize_rrd, $rrd_file);
+                    // Preserve native rename's atomic replacement behavior.
+                    return @rename($resize_rrd, $rrd_file);
                 });
                 if ($resized !== true) {
                     cacti_log('ERROR: RRD resize failed; original file retained.', false, 'UTIL');
@@ -5299,6 +5390,13 @@ function colourBrightness($hex, $percent)
  *
  * @return (array) - the graph_array containing AREA definitions for the business hours
  *
+ */
+/** Add business-hour shading using the graph render's captured time.
+ *
+ * @param array<string, mixed> $data Graph data and options.
+ * @param \DateTimeImmutable|null $now Shared time snapshot.
+ *
+ * @return array<string, mixed> Graph data with shading options added.
  */
 function add_business_hours($data, ?\DateTimeImmutable $now = null)
 {

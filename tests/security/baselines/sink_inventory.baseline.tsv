@@ -60,9 +60,8 @@ cmd_exec	./lib/poller.php:49	 * @param  (array)    $pipes - the array of r/w pip
 cmd_exec	./lib/poller.php:50	 * @param  (resource) $proc_fd - the file descriptor returned from proc_open()
 cmd_exec	./lib/poller.php:86	                $fp = popen($command, 'r');
 cmd_exec	./lib/poller.php:88	                $fp = popen($command, 'rb');
-cmd_exec	./lib/rrd.php:184	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
-cmd_exec	./lib/rrd_maintenance.php:235	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
-cmd_exec	./lib/rrd_maintenance.php:417	    $process = @proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/rrd.php:199	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
+cmd_exec	./lib/rrd_maintenance.php:310	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
 cmd_exec	./lib/rrdcheck.php:836	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
@@ -406,19 +405,19 @@ dynamic_include	./lib/reports.php:661		include_once($config['library_path'] . '/
 dynamic_include	./lib/reports.php:738		include_once($config['base_path'] . '/lib/time.php');
 dynamic_include	./lib/reports.php:998		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/reports.php:999		include_once($config['library_path'] . '/data_query.php');
-dynamic_include	./lib/rrd.php:1568	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:1908	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:2010	    include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:2096	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:2414	    include_once($config['library_path'] . '/cdef.php');
-dynamic_include	./lib/rrd.php:2415	    include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/rrd.php:2416	    include_once($config['library_path'] . '/graph_variables.php');
-dynamic_include	./lib/rrd.php:2417	    include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:2418	    include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/rrd.php:2419	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:3642	        include($rrdtheme);
-dynamic_include	./lib/rrd.php:4277	    include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:5016	        include($themefile);
+dynamic_include	./lib/rrd.php:1584	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1924	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:2026	    include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:2122	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:2475	    include_once($config['library_path'] . '/cdef.php');
+dynamic_include	./lib/rrd.php:2476	    include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/rrd.php:2477	    include_once($config['library_path'] . '/graph_variables.php');
+dynamic_include	./lib/rrd.php:2478	    include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:2479	    include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/rrd.php:2480	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:3722	        include($rrdtheme);
+dynamic_include	./lib/rrd.php:4367	    include_once($config['library_path'] . '/time.php');
+dynamic_include	./lib/rrd.php:5107	        include($themefile);
 dynamic_include	./lib/rrdcheck.php:752	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:783	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
@@ -575,10 +574,8 @@ fs_write	./lib/poller.php:1707	                                            file_
 fs_write	./lib/poller.php:1736	                            file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1698			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1755			$f = fopen($fn, 'wb');
-fs_write	./lib/rrd.php:3452	                if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
-fs_write	./lib/rrd.php:3516	                file_put_contents('php://stderr', $buffer);
-fs_write	./lib/rrd_maintenance.php:298	            $handle = @fopen($probe, 'x+b');
-fs_write	./lib/rrd_maintenance.php:86	    $handle = @fopen($canonical, 'r');
+fs_write	./lib/rrd.php:3578	                file_put_contents('php://stderr', $buffer);
+fs_write	./lib/rrd_maintenance.php:373	            $handle = @fopen($probe, 'x+b');
 fs_write	./lib/spikekill.php:1127				$handle    = @fopen($desired_path, 'xb');
 fs_write	./lib/spikekill.php:1145					$handle    = @fopen($candidate, 'xb');
 fs_write	./lib/spikekill.php:1166			$source_handle = fopen($source, 'rb');
@@ -593,6 +590,7 @@ fs_write	./scripts/ss_net_snmp_disk_bytes.php:209			file_put_contents("$tmpdir/$
 fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./snmpagent_mibcachechild.php:72		$lock = fopen($path_mibcache_lock, 'w');
 fs_write	./snmpagent_mibcachechild.php:76			file_put_contents($path_mibcache, '<?php $cache = ' . var_export($cache, true) . ';', LOCK_EX);
+fs_write	./src/Graphing/Infrastructure/Rrd/DirectoryFlockStore.php:142	            $handle = @fopen($this->canonicalPath, 'r');
 fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:29	            $handle = @fopen($path, is_file($path) ? 'c+b' : 'x+b');
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);

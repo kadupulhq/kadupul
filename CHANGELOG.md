@@ -73,7 +73,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
-- Use one application `Clock` instant for relative graph bounds, RRA selection, time-based CDEFs and annotations, legends, and business-hours shading. Existing graph calls retain the system-clock default.
+- Use Symfony Clock, Filesystem, Lock, and Process components in RRD graph and maintenance operations while preserving procedural callers, shared/exclusive directory locks, and the long-lived RRDtool pipe.
 
 - Publish the command-line migration roadmap and the safety decisions for the database audit and repair commands in docs/migrations/cli-symfony-console-roadmap.md.
 
