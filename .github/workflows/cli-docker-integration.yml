@@ -1,0 +1,65 @@
+name: CLI maintenance Docker integration
+
+on:
+  pull_request:
+    branches: [main, lts/1.2]
+    paths:
+      - 'cli/**'
+      - 'include/**'
+      - 'lib/**'
+      - 'cacti.sql'
+      - 'lib/api_tree.php'
+      - 'lib/data_query.php'
+      - 'lib/maintenance_cli.php'
+      - 'lib/utility.php'
+      - 'docs/audit_schema.sql'
+      - '.dockerignore'
+      - 'include/global_constants.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'tests/e2e/docker/**'
+      - 'tests/tools/check_cli_version.sh'
+      - '.github/workflows/cli-docker-integration.yml'
+  push:
+    branches: [main, lts/1.2]
+    paths:
+      - 'cli/**'
+      - 'include/**'
+      - 'lib/**'
+      - 'cacti.sql'
+      - 'lib/api_tree.php'
+      - 'lib/data_query.php'
+      - 'lib/maintenance_cli.php'
+      - 'lib/utility.php'
+      - 'docs/audit_schema.sql'
+      - '.dockerignore'
+      - 'include/global_constants.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'tests/e2e/docker/**'
+      - 'tests/tools/check_cli_version.sh'
+      - '.github/workflows/cli-docker-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cli-docker-integration-${{ github.event.pull_request.base.ref || github.ref }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cli-database:
+    name: CLI integration against MariaDB
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Run CLI maintenance integration suite
+        env:
+          CACTI_E2E_TEST_GLOB: tests/09-cli-maintenance-integration.sh
+        run: tests/e2e/docker/run.sh

@@ -63,8 +63,12 @@ RUN mkdir -p /var/cacti-state \
 # The bind-mount approach used previously meant the host's
 # include/config.php (whatever the developer had) clobbered our
 # container-friendly config, killing every protected request.
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 COPY --chown=www-data:www-data . /var/www/html
-RUN rm -f /var/www/html/include/config.php
+RUN composer install --working-dir=/var/www/html --no-dev --prefer-dist --no-interaction --no-progress \
+ && rm -f /var/www/html/include/config.php \
+ && mkdir -p /var/www/html/log /var/www/html/cache/boost /var/www/html/cache/mibcache /var/www/html/cache/realtime /var/www/html/cache/spikekill /var/www/html/rra \
+ && chown -R www-data:www-data /var/www/html/log /var/www/html/cache /var/www/html/rra
 
 # Inline entrypoint. When ROLE=poller, generate a self-signed cert and switch Apache
 # to HTTPS on 443. Otherwise serve plain HTTP on 80.
@@ -112,6 +116,7 @@ if [ ! -f /var/www/html/include/config.php ] && [ -f /var/www/html/include/confi
         -e "s/\\\$database_password *=.*/\$database_password = '${DB_PASS:-cactiuser}';/" \
         -e "s|\\\$url_path *=.*|\$url_path = '/';|" \
         /var/www/html/include/config.php
+    printf '\n$config["rrd_maintenance_trusted_uids"] = array(%s);\n$config["rrd_maintenance_trusted_gids"] = array(%s);\n' "$(id -u www-data)" "$(id -g www-data)" >> /var/www/html/include/config.php
 fi
 
 exec "$@"
