@@ -39,15 +39,19 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 
 		$url = $config['url_path'] . 'remote_agent.php?action=runquery&host_id=' . $host_id . '&data_query_id=' . $snmp_query_id;
 
-		$response = call_remote_data_collector($poller_id, $url);
+		$response = cacti_http(get_url_type() . '://' . $hostname . $url, max(1, min(300, (int) read_config_option('remote_agent_timeout'))), array($hostname));
 
 		if ($response != '') {
 			$response = json_decode($response, true);
 
+			if (!is_array($response) || !is_array($response['data_query'] ?? null) || !is_bool($response['result'] ?? null)) {
+				return false;
+			}
+			$_SESSION['inventory_diagnostics_sanitized'] = ($response['diagnostics_sanitized'] ?? false) === true;
 			$_SESSION['debug_log']['data_query'] = $response['data_query'];
 
-			if (isset($_SESSION['debug_log']['response'])) {
-				$result = $_SESSION['debug_log']['response'];
+			if (isset($response['result'])) {
+				$result = $response['result'];
 				unset($_SESSION['debug_log']['response']);
 
 				automation_execute_data_query($host_id, $snmp_query_id);

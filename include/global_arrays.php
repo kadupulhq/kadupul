@@ -980,10 +980,10 @@ if ($config['poller_id'] == 1 || $config['connection'] == 'online') {
 		),
 		__('Create') => array(
 			'graphs_new.php' => __('New Graphs'),
-			'host.php?action=edit&create=true' => __('New Device')
+			'app.php/inventory/devices/new' => __('New Device')
 		),
 		__('Management') => array(
-			'host.php'             => __('Devices'),
+			'app.php/inventory/devices' => __('Devices'),
 			'sites.php'            => __('Sites'),
 			'tree.php'             => __('Trees'),
 			'graphs.php'           => __('Graphs'),
@@ -1039,7 +1039,7 @@ if ($config['poller_id'] == 1 || $config['connection'] == 'online') {
 } else {
 	$menu = array(
 		__('Management') => array(
-			'host.php' => __('Devices')
+			'app.php/inventory/devices' => __('Devices')
 			),
 		__('Data Collection') => array(
 			'pollers.php' => __('Data Collectors')
@@ -1279,6 +1279,8 @@ $user_auth_realm_filenames = array(
 	'sites.php' => 3,
 	'pollers.php' => 3,
 	'host.php' => 3,
+	'app.php/inventory/devices' => 3,
+	'app.php/inventory/devices/new' => 3,
 	'host_templates.php' => 12,
 	'index.php' => 8,
 	'install.php' => 26,

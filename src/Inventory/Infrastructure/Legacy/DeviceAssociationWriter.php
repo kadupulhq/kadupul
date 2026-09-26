@@ -15,6 +15,19 @@ final class DeviceAssociationWriter
 {
     public function apply(PDO $primary, ?PDO $remote, DeviceAssociations $device, DeviceAssociationChange $change): void
     {
+        if ($change->kind === 'query') {
+            if ($change->operation !== 'remove') {
+                foreach (array_filter([$primary, $remote]) as $database) {
+                    $this->requireQuery($database, $change->targetId);
+                }
+            }
+            match ($change->operation) {
+                'add' => api_device_dq_add($device->id, $change->targetId, $change->reindexMethod),
+                'change' => api_device_dq_change($device->id, $change->targetId, $change->reindexMethod),
+                'remove' => api_device_dq_remove($device->id, $change->targetId),
+            };
+            return;
+        }
         if ($change->operation === 'remove') {
             foreach (array_filter([$primary, $remote]) as $database) {
                 $query = $database->prepare('DELETE FROM host_graph WHERE host_id = ? AND graph_template_id = ?');
@@ -41,10 +54,34 @@ final class DeviceAssociationWriter
     {
         foreach (array_filter([$primary, $remote]) as $database) {
             $query = $database->prepare("SELECT site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''");
-            $query->execute([$device->id]);
+            if (!$query->execute([$device->id])) {
+                throw new \RuntimeException('Device identity could not be confirmed');
+            }
             $row = $query->fetch(PDO::FETCH_ASSOC);
             if (!$row || (int) $row['site_id'] !== $device->siteId || (int) $row['poller_id'] !== $device->pollerId || (int) $row['host_template_id'] !== $device->templateId) {
                 throw new \RuntimeException('Device identity changed');
+            }
+            if ($change->kind === 'query') {
+                if ($change->operation !== 'remove') {
+                    $this->requireQuery($database, $change->targetId);
+                }
+                $query = $database->prepare('SELECT reindex_method FROM host_snmp_query WHERE host_id = ? AND snmp_query_id = ?');
+                if (!$query->execute([$device->id, $change->targetId])) {
+                    throw new \RuntimeException('Data-query association could not be confirmed');
+                }
+                $method = $query->fetchColumn();
+                if ($change->operation === 'remove' ? $method !== false : ($method === false || (int) $method !== $change->reindexMethod)) {
+                    throw new \RuntimeException('Data-query association could not be confirmed');
+                }
+                if ($change->operation === 'remove') {
+                    foreach (['host_snmp_cache' => 'snmp_query_id', 'poller_reindex' => 'data_query_id'] as $table => $column) {
+                        $query = $database->prepare("SELECT COUNT(*) FROM $table WHERE host_id = ? AND $column = ?");
+                        if (!$query->execute([$device->id, $change->targetId]) || ($count = $query->fetchColumn()) === false || (int) $count !== 0) {
+                            throw new \RuntimeException('Data-query cache cleanup could not be confirmed');
+                        }
+                    }
+                }
+                continue;
             }
             // Addition requires both catalog and mapping in one observation.
             // Removal must also reject orphan mappings without a catalog row.
@@ -55,6 +92,13 @@ final class DeviceAssociationWriter
             if (!$query->execute([$device->id, $change->targetId]) || (int) $query->fetchColumn() !== ($change->operation === 'add' ? 1 : 0)) {
                 throw new \RuntimeException('Association could not be confirmed');
             }
+        }
+    }
+    private function requireQuery(PDO $database, int $targetId): void
+    {
+        $query = $database->prepare('SELECT COUNT(*) FROM snmp_query WHERE id = ?');
+        if (!$query->execute([$targetId]) || (int) $query->fetchColumn() !== 1) {
+            throw new \RuntimeException('Data query unavailable');
         }
     }
 }

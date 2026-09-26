@@ -26,7 +26,7 @@ use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
 
 final class DeviceAssociationController
 {
-    #[Route('/inventory/devices/{id}/associations/{kind}', name: 'inventory_device_associations', requirements: ['id' => '[1-9][0-9]{0,7}', 'kind' => 'graph'], methods: ['GET', 'HEAD', 'POST'])]
+    #[Route('/inventory/devices/{id}/associations/{kind}', name: 'inventory_device_associations', requirements: ['id' => '[1-9][0-9]{0,7}', 'kind' => 'graph|query'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(int $id, string $kind, Request $request, PrepareDeviceAssociations $prepare, ChangeDeviceAssociation $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
@@ -46,7 +46,7 @@ final class DeviceAssociationController
             return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
         }
         $editParameters = ['id' => $id, 'kind' => $kind, 'list' => $filters];
-        $form = $forms->create(DeviceAssociationType::class, ['revision' => $device->revision()], ['action' => $urls->generate('inventory_device_associations', $editParameters), 'targets' => $device->items + $view['available']]);
+        $form = $forms->create(DeviceAssociationType::class, ['revision' => $device->revision()] + ($kind === 'query' ? ['reindex' => $view['default_reindex']] : []), ['kind' => $kind, 'snmp_enabled' => $device->snmpVersion !== 0, 'action' => $urls->generate('inventory_device_associations', $editParameters), 'targets' => $device->items + $view['available']]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
@@ -54,7 +54,10 @@ final class DeviceAssociationController
             if ($form->isValid()) {
                 $data = $form->getData();
                 try {
-                    $assign($id, new \Kadupul\Inventory\Domain\DeviceAssociationChange($kind, (string) $data['operation'], $data['target']), (string) $data['revision']);
+                    if ($kind === 'query' && !is_int($data['reindex'])) {
+                        throw new \InvalidArgumentException('Select a valid association change.');
+                    }
+                    $assign($id, new \Kadupul\Inventory\Domain\DeviceAssociationChange($kind, (string) $data['operation'], $data['target'], $data['reindex'] ?? 0), (string) $data['revision']);
                     return new RedirectResponse($urls->generate('inventory_device_associations', $editParameters + ['saved' => 1]), 303, $headers);
                 } catch (InventoryAccessDenied $error) {
                     return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
@@ -69,6 +72,6 @@ final class DeviceAssociationController
                 }
             }
         }
-        return new Response($twig->render('inventory/associations.html.twig', ['device' => $device, 'form' => $form->createView(), 'saved' => ($query['saved'] ?? null) === '1', 'filters' => $filters]), $status, $headers);
+        return new Response($twig->render('inventory/associations.html.twig', ['kind' => $kind, 'device' => $device, 'form' => $form->createView(), 'saved' => ($query['saved'] ?? null) === '1', 'filters' => $filters]), $status, $headers);
     }
 }

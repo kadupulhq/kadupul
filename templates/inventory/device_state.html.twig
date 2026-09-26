@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
-{% set heading = {'snmp': 'Change device SNMP settings', 'options': 'Change device options', 'enable': 'Enable devices', 'disable': 'Disable devices', 'clear-statistics': 'Clear device statistics', 'sync-template': 'Synchronize device templates'}[operation] %}
-{% set confirmation = {'snmp': 'Confirm SNMP changes', 'options': 'Confirm option changes', 'enable': 'Confirm enabling', 'disable': 'Confirm disabling', 'clear-statistics': 'Confirm clearing statistics', 'sync-template': 'Confirm synchronization'}[operation] %}
+{% set heading = {'automation': 'Apply device automation rules', 'snmp': 'Change device SNMP settings', 'options': 'Change device options', 'enable': 'Enable devices', 'disable': 'Disable devices', 'clear-statistics': 'Clear device statistics', 'sync-template': 'Synchronize device templates'}[operation] %}
+{% set confirmation = {'automation': 'Confirm applying automation rules', 'snmp': 'Confirm SNMP changes', 'options': 'Confirm option changes', 'enable': 'Confirm enabling', 'disable': 'Confirm disabling', 'clear-statistics': 'Confirm clearing statistics', 'sync-template': 'Confirm synchronization'}[operation] %}
 {% block title %}{{ heading|trans({}, 'inventory') }} · Kadupul{% endblock %}
 {% block body %}
 <main>
     <h1>{{ heading|trans({}, 'inventory') }}</h1>
-    {% if operation == 'snmp' %}
+    {% if operation == 'automation' %}
+    <p>{{ 'Apply existing graph and tree automation rules to the selected devices. Rules may create graphs, data sources and tree entries.'|trans({}, 'inventory') }}</p>
+    {% elseif operation == 'snmp' %}
     <p>{{ 'Apply these SNMP settings to every selected device. Keep each device’s stored credentials or explicitly replace them. Stored secrets are never displayed.'|trans({}, 'inventory') }}</p>
     {% elseif operation == 'options' %}
     <p>{{ 'Only checked options are changed. Unchecked options retain their current values. Selecting an empty location clears it.'|trans({}, 'inventory') }}</p>

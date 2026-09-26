@@ -24,13 +24,14 @@ try {
         throw new InvalidArgumentException('Invalid command');
     }
     $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'kind', 'operation', 'target', 'revision']) !== []
+    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'kind', 'operation', 'target', 'revision', 'reindex']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_int($command['id'] ?? null) || $command['id'] < 1 || $command['id'] > 16777215
+        || !is_int($command['target'] ?? null) || !is_int($command['reindex'] ?? 0)
         || !is_string($command['revision'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
-    $change = new DeviceAssociationChange($command['kind'] ?? '', $command['operation'] ?? '', $command['target'] ?? 0);
+    $change = new DeviceAssociationChange($command['kind'] ?? '', $command['operation'] ?? '', $command['target'] ?? 0, $command['reindex'] ?? 0);
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
     if ($connection->exec('SET NAMES utf8mb4') === false || $connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
         throw new RuntimeException('Connection validation unavailable');
@@ -50,7 +51,7 @@ try {
     $records = new DeviceAssociationRecords();
     $device = $records->snapshot($connection, $row, $change->kind, true);
     $device->assertChange($change, $command['revision']);
-    if ($change->operation === 'add' && !array_key_exists($change->targetId, $records->available($connection, $change->kind, true))) {
+    if ($change->operation !== 'remove' && !array_key_exists($change->targetId, $records->available($connection, $change->kind, true, $device->snmpVersion))) {
         throw new InvalidArgumentException('Invalid association target');
     }
     $query = $connection->prepare('SELECT id FROM poller WHERE id = ? FOR UPDATE');
@@ -72,7 +73,8 @@ try {
             throw new RuntimeException('Remote device unavailable');
         }
         if ($change->operation !== 'remove') {
-            $query = $remote->prepare('SELECT id FROM graph_templates WHERE id = ? FOR UPDATE');
+            $catalog = $change->kind === 'query' ? 'snmp_query' : 'graph_templates';
+            $query = $remote->prepare("SELECT id FROM $catalog WHERE id = ? FOR UPDATE");
             $query->execute([$change->targetId]);
             if (!$query->fetchColumn()) {
                 throw new RuntimeException('Remote association target unavailable');

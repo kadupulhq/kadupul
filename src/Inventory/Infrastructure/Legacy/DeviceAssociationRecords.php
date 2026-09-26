@@ -14,15 +14,28 @@ final class DeviceAssociationRecords
 {
     public function snapshot(PDO $db, array $row, string $kind, bool $lock = false): DeviceAssociations
     {
+        if ($kind === 'query') {
+            $sql = ("SELECT hq.snmp_query_id, COALESCE(sq.name, '') AS name, hq.reindex_method FROM host_snmp_query hq LEFT JOIN snmp_query sq ON sq.id = hq.snmp_query_id WHERE hq.host_id = ? ORDER BY hq.snmp_query_id" . ($lock ? ' FOR UPDATE' : ''));
+            $rows = $this->read($db, $sql, [(int) $row['id']], PDO::FETCH_ASSOC);
+            $items = $methods = [];
+            foreach ($rows as $item) {
+                $items[(int) $item['snmp_query_id']] = $item['name'];
+                $methods[(int) $item['snmp_query_id']] = (int) $item['reindex_method'];
+            }
+            return new DeviceAssociations((int) $row['id'], (string) $row['description'], (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], $items, $methods, $kind, (int) $row['snmp_version']);
+        }
         if ($kind !== 'graph') {
             throw new \InvalidArgumentException('Invalid association kind.');
         }
         $sql = ("SELECT hg.graph_template_id, COALESCE(gt.name, '') AS name FROM host_graph hg LEFT JOIN graph_templates gt ON gt.id = hg.graph_template_id WHERE hg.host_id = ? ORDER BY hg.graph_template_id" . ($lock ? ' FOR UPDATE' : ''));
         $items = $this->read($db, $sql, [(int) $row['id']], PDO::FETCH_KEY_PAIR);
-        return new DeviceAssociations((int) $row['id'], (string) $row['description'], (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], $items);
+        return new DeviceAssociations((int) $row['id'], (string) $row['description'], (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], $items, [], 'graph', (int) $row['snmp_version']);
     }
-    public function available(PDO $db, string $kind, bool $lock = false): array
+    public function available(PDO $db, string $kind, bool $lock = false, int $snmpVersion = 0): array
     {
+        if ($kind === 'query') {
+            return $this->read($db, "SELECT id, COALESCE(name, '') AS name FROM snmp_query WHERE id > 0" . ($snmpVersion === 0 ? " AND data_input_id <> 2" : "") . " ORDER BY id" . ($lock ? ' LOCK IN SHARE MODE' : ''), [], PDO::FETCH_KEY_PAIR);
+        }
         if ($kind !== 'graph') {
             throw new \InvalidArgumentException('Invalid association kind.');
         }
@@ -36,7 +49,7 @@ final class DeviceAssociationRecords
             throw new \RuntimeException('Association snapshot unavailable');
         }
         $rows = $query->fetchAll($mode);
-        if (!is_array($rows)) {
+        if (!is_array($rows) || $query->errorCode() !== '00000') {
             throw new \RuntimeException('Association snapshot unavailable');
         }
         return $rows;

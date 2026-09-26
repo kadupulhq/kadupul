@@ -995,3 +995,39 @@ templates can be added. The worker rechecks visibility and locks the device and
 association rows, preserves automation/plugin hooks on addition, verifies primary
 and remote state and retains existing graphs on removal. Primary rollback cannot
 undo remote or automation side effects; failures require inspection before retry.
+
+
+### Data-query associations and reindex settings
+
+`/inventory/devices/{id}/associations/query` extends the association use case with
+query addition, removal and reindex-method changes. Revisions include methods and
+SNMP availability; uptime reindex is unavailable when SNMP is disabled. The worker
+uses the existing data-query APIs and verifies the stored association/method on
+both collectors. Removal confirms query cache and reindex-state cleanup while
+retaining graphs. Discovery follows device availability; saving an association is
+not evidence that a live discovery completed. Explicit diagnostic actions are a
+separate workflow.
+
+
+### Device maintenance
+
+`/inventory/devices/{id}/maintenance` uses `MaintainDevice` and a `DeviceMaintenance`
+port for reindex-all, query reload/diagnostics, polling cache refresh, debug controls
+and connectivity. Symfony owns forms, authorization, CSRF and escaped output. The
+isolated worker rechecks device/query revisions and collector availability. It
+redacts stored credentials from bounded plain-text diagnostics and does not report
+false query results or disabled devices as completed reindex operations. Debug
+settings are updated with locking and verified on affected collectors. Primary
+rollback cannot undo remote effects or external probes.
+
+### Device tree and report placement
+
+Inventory now coordinates bounded device selections through `PlaceDevices`. Destination catalogs and writes belong to Graphing and Reporting contracts. Their legacy adapters enforce ownership and realm permissions, reject another user's tree edit lock and invalid branches, preserve existing placements, and verify additions. The isolated worker rechecks device authorization and revisions under site-before-device locks, invokes legacy action hooks, and commits the primary transaction only after confirmation. Plugin side effects may survive a rollback; failures must be inspected before retrying.
+
+### Legacy device entry and menus
+
+`host.php` now boots the Symfony kernel using the same base-path preserving bridge as Sites. The framework rechecks authentication and realm access. List/edit/create/export links translate to typed routes; old GET association and maintenance links only open fresh forms. Every old POST returns 409 without interpreting serialized selections or executing a mutation. Unsupported legacy actions return 405. Location suggestions now query only authorized devices, with explicit bounded search rather than the global `cur_device_id` session filter.
+
+The list retains collector/template/exact-location filters and the core not-up status filter. Legacy sort columns other than name/hostname are rejected rather than silently ignored. CSV compatibility intentionally uses the bounded public-data export; it never exports SNMP credentials or unrestricted host rows.
+
+Applying already configured device automation rules is available through a Symfony confirmation and `ApplyDeviceRules`, with rule execution owned by the Automation adapter. Rule authoring/administration remains a later module migration. Existing mutating hooks remain in the isolated workers. Legacy UI injection hooks (`device_top`, `host_edit_*`, `device_edit_*`, `device_filters`, `device_sql_where`, `device_display_text`, `device_table_*`, `device_change_javascript`) and custom `device_action_array`, `device_action_prepare` and `device_action_execute` hooks no longer run on core device pages. Plugin-owned pages are outside this queue; plugin authors must provide their own routes or a typed Symfony extension before relying on the new core UI. This is a main-only compatibility change and must be reviewed before release.

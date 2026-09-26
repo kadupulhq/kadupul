@@ -60,4 +60,18 @@ final class DeviceAssociationTest extends TestCase
             }
         }
     }
+    public function testQueryMethodChangesInvalidateConfirmation(): void
+    {
+        $before = new DeviceAssociations(7, 'Router', 0, 1, 0, [3 => 'Query'], [3 => 2], 'query');
+        $after = new DeviceAssociations(7, 'Router', 0, 1, 0, [3 => 'Query'], [3 => 3], 'query');
+        $this->expectException(DeviceEditConflict::class);
+        $after->assertChange(new DeviceAssociationChange('query', 'change', 3, 0), $before->revision());
+    }
+    public function testUptimeReindexRequiresSnmp(): void
+    {
+        $device = new DeviceAssociations(7, 'Router', 0, 1, 0, [], [], 'query', 0);
+        $this->expectException(\InvalidArgumentException::class);
+        $device->assertChange(new DeviceAssociationChange('query', 'add', 3, 1), $device->revision());
+    }
+
 }

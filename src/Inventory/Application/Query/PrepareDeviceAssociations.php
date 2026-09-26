@@ -20,6 +20,6 @@ final readonly class PrepareDeviceAssociations
             throw new InventoryAccessDenied($actor === null);
         }
         $device = $this->store->findVisible($actor->id, $id, $kind);
-        return ['device' => $device, 'available' => $device === null ? [] : $this->store->available($kind)];
+        return ['default_reindex' => $device !== null && $kind === 'query' && $device->snmpVersion !== 0 ? $this->store->defaultReindexMethod() : 0, 'device' => $device, 'available' => $device === null ? [] : $this->store->available($kind, $device->snmpVersion)];
     }
 }

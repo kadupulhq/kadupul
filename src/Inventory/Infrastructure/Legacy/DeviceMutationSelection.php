@@ -14,7 +14,7 @@ use RuntimeException;
 /** Read and lock the common device scope before a legacy mutation worker acts. */
 final class DeviceMutationSelection
 {
-    public function lock(PDO $connection, int $actorId, array $ids, callable $markStatus, array $additionalSites = [], array $additionalPollers = []): array
+    public function lock(PDO $connection, int $actorId, array $ids, callable $markStatus, array $additionalSiteIds = [], array $additionalPollerIds = []): array
     {
         if (!(new DeviceWriteAuthorization())->allows($connection, $actorId)) {
             $markStatus('denied');
@@ -33,14 +33,11 @@ final class DeviceMutationSelection
             $markStatus('missing');
             throw new RuntimeException('Devices unavailable');
         }
-        $sites = array_unique([...array_map(static fn($row) => (int) $row['site_id'], $associations), ...array_map('intval', $additionalSites)]);
+        $sites = array_unique(array_map(static fn($row) => (int) $row['site_id'], $associations));
         sort($sites, SORT_NUMERIC);
         foreach ($sites as $siteId) {
             if ($siteId > 0) {
-                $lockedSite = $read($connection, 'SELECT id FROM sites WHERE id = ? FOR UPDATE', [$siteId]);
-                if (in_array($siteId, array_map('intval', $additionalSites), true) && count($lockedSite) !== 1) {
-                    throw new RuntimeException('Assignment site unavailable');
-                }
+                $siteLocks[$siteId] = $read($connection, 'SELECT id FROM sites WHERE id = ? FOR UPDATE', [$siteId]);
             }
         }
         $rows = $read($connection, "SELECT id, description, hostname, disabled, status, site_id, poller_id, host_template_id, location, device_threads, snmp_port, snmp_timeout, max_oids, bulk_walk_size, availability_method, ping_method, ping_port, ping_timeout, ping_retries, snmp_version, snmp_auth_protocol, snmp_priv_protocol, snmp_context, snmp_engine_id FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id FOR UPDATE", $ids);
@@ -61,15 +58,12 @@ final class DeviceMutationSelection
             $markStatus('missing');
             throw new RuntimeException('Devices unavailable');
         }
-        $pollers = array_unique([...array_map(static fn($row) => (int) $row['poller_id'], $rows), ...array_map('intval', $additionalPollers)]);
+        $pollers = array_unique(array_map(static fn($row) => (int) $row['poller_id'], $rows));
         sort($pollers, SORT_NUMERIC);
         foreach ($pollers as $pollerId) {
-            $lockedPoller = $read($connection, 'SELECT id, disabled FROM poller WHERE id = ? FOR UPDATE', [$pollerId]);
-            if (in_array($pollerId, array_map('intval', $additionalPollers), true) && (count($lockedPoller) !== 1 || $lockedPoller[0]['disabled'] !== '')) {
-                throw new RuntimeException('Assignment collector unavailable');
-            }
+            $pollerLocks[$pollerId] = $read($connection, 'SELECT id, disabled FROM poller WHERE id = ? FOR UPDATE', [$pollerId]);
         }
 
-        return ['associations' => $associations, 'rows' => $rows, 'pollers' => $pollers, 'read' => $read];
+        return ['associations' => $associations, 'rows' => $rows, 'pollers' => $pollers, 'read' => $read, 'site_locks' => $siteLocks, 'poller_locks' => $pollerLocks];
     }
 }
