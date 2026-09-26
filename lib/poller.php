@@ -2025,12 +2025,14 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 		replicate_out_table($rcnn_id, $data, 'poller_reindex', $remote_poller_id, false, array('assert_value'));
 
 		// Since we are doing an update, remove stale data
-		db_execute('DELETE pr
+		if (replicate_out_execute('DELETE pr
 			FROM poller_reindex AS pr
 			LEFT JOIN host_snmp_query AS hsq
 			ON pr.host_id = hsq.host_id
 			AND pr.data_query_id = hsq.snmp_query_id
-			WHERE hsq.host_id IS NULL', false, $rcnn_id);
+			WHERE hsq.host_id IS NULL', false, $rcnn_id) === false) {
+			replicate_log('ERROR: Unable to remove stale poller reindex rows.');
+		}
 
 		$data = db_fetch_assoc_prepared('SELECT pi.*
 			FROM poller_item AS pi
@@ -2041,18 +2043,26 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 		// Remove anything not updated recently
 		$time = db_fetch_cell('SELECT MAX(UNIX_TIMESTAMP(last_updated)) FROM poller_item', '', false, $rcnn_id);
 
-		if (!empty($time)) {
+		if ($time === false) {
+			$replicate_out_success = false;
+			replicate_log('ERROR: Unable to read the remote poller item timestamp.');
+		} elseif (!empty($time)) {
 			// You must update the last_updated locally
-			db_execute_prepared('UPDATE poller_item
+			if (db_execute_prepared('UPDATE poller_item
 				SET last_updated = FROM_UNIXTIME(?)
 				WHERE poller_id = ?',
-				array($time, $remote_poller_id));
+				array($time, $remote_poller_id)) === false) {
+				$replicate_out_success = false;
+				replicate_log('ERROR: Unable to update local poller item timestamps.');
+			}
 
-			db_execute_prepared("DELETE FROM poller_item
+			if (replicate_out_execute("DELETE FROM poller_item
 				WHERE last_updated < ?
 				AND last_updated > '0000-00-00'
 				AND last_updated NOT NULL",
-				array(date('Y-m-d H:i:s', $time)), false, $rcnn_id);
+				false, $rcnn_id) === false) {
+				replicate_log('ERROR: Unable to remove stale remote poller items.');
+			}
 		}
 
 		$data = db_fetch_assoc_prepared('SELECT dl.*
@@ -2132,11 +2142,17 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 		WHERE poller_id = ?',
 		array($remote_poller_id));
 
-	if (cacti_sizeof($stats)) {
-		db_execute_prepared('UPDATE poller
+	if ($stats === false) {
+		$replicate_out_success = false;
+		replicate_log('ERROR: Unable to read poller item statistics.');
+	} elseif (cacti_sizeof($stats)) {
+		if (db_execute_prepared('UPDATE poller
 			SET snmp = ?, script = ?, server = ?
 			WHERE id = ?',
-			array($stats['snmp'], $stats['script'], $stats['server'], $remote_poller_id));
+			array($stats['snmp'], $stats['script'], $stats['server'], $remote_poller_id)) === false) {
+			$replicate_out_success = false;
+			replicate_log('ERROR: Unable to update poller item statistics.');
+		}
 	}
 
 	if ($class != 'plugins' && $config['is_web']) {
@@ -2471,6 +2487,12 @@ function replicate_table_to_poller($conn, &$data, $table, $exclude = false) {
 		return false;
 	}
 	$max_packet  = db_fetch_row("SHOW GLOBAL VARIABLES LIKE 'max_allowed_packet'", true, $conn);
+	if ($max_packet === false) {
+		$replicate_out_success = false;
+		replicate_log('ERROR: Unable to read max_allowed_packet for the remote database.');
+
+		return false;
+	}
 
 	if (cacti_sizeof($max_packet)) {
 		$max_packet = $max_packet['Value'];
