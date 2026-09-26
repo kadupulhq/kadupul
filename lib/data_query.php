@@ -232,15 +232,21 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 
 			if (!$forced_type) {
 				// See if the index is in the host cache
-				$current_index = db_fetch_cell_prepared('SELECT snmp_index
+				$current_index_row = db_fetch_row_prepared('SELECT snmp_index
 					FROM host_snmp_cache
 					WHERE host_id = ?
 					AND snmp_query_id = ?
 					AND field_name = ?
 					AND field_value = ?',
 					array($host_id, $snmp_query_id, $data_source['sort_field'], $data_source['query_index']));
+
+				if ($current_index_row === false) {
+					return false;
+				}
+
+				$current_index = $current_index_row['snmp_index'] ?? '';
 			} else {
-				$current_value = db_fetch_cell_prepared('SELECT value
+				$current_value_row = db_fetch_row_prepared('SELECT value
 					FROM data_input_data AS did
 					INNER JOIN data_input_fields AS dif
 					ON did.data_input_field_id=dif.id
@@ -253,24 +259,41 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 					AND data_name="index_value"',
 					array($data_source['local_data_id'], $snmp_query_id));
 
-				$current_index = db_fetch_cell_prepared('SELECT snmp_index
+				if ($current_value_row === false) {
+					return false;
+				}
+
+				$current_value = $current_value_row['value'] ?? '';
+				$current_index_row = db_fetch_row_prepared('SELECT snmp_index
 					FROM host_snmp_cache
 					WHERE host_id = ?
 					AND snmp_query_id = ?
 					AND field_name = ?
 					AND field_value = ?',
 					array($host_id, $snmp_query_id, $previous_sort_field, $current_value));
+
+				if ($current_index_row === false) {
+					return false;
+				}
+
+				$current_index = $current_index_row['snmp_index'] ?? '';
 			}
 
 			if ($remap) {
 				if ($new_sort_field != $previous_sort_field) {
-					$new_field_value = db_fetch_cell_prepared('SELECT field_value
+					$new_field_value_row = db_fetch_row_prepared('SELECT field_value
 						FROM host_snmp_cache
 						WHERE host_id = ?
 						AND snmp_query_id = ?
 						AND field_name = ?
 						AND snmp_index = ?',
 						array($host_id, $snmp_query_id, $new_sort_field, $current_index));
+
+					if ($new_field_value_row === false) {
+						return false;
+					}
+
+					$new_field_value = $new_field_value_row['field_value'] ?? '';
 
 					$did_map_data = db_fetch_row_prepared('SELECT value, data_input_field_id, data_template_data_id,
 						host_id, snmp_query_id
@@ -2477,13 +2500,19 @@ function update_snmp_index_order($local_data) {
 			return false;
 		}
 
-		$snmp_cache_value = db_fetch_cell_prepared('SELECT field_value
+		$snmp_cache_row = db_fetch_row_prepared('SELECT field_value
 			FROM host_snmp_cache
 			WHERE host_id = ?
 			AND snmp_query_id = ?
 			AND field_name = ?
 			AND snmp_index = ?',
 			array($local_data['host_id'], $local_data['snmp_query_id'], $local_data['snmp_index_on'], $local_data['snmp_index']));
+
+		if ($snmp_cache_row === false) {
+			return false;
+		}
+
+		$snmp_cache_value = $snmp_cache_row['field_value'] ?? '';
 
 		/* only update data source index if there actually *is* an index returned from host_snmp_cache */
 		if (!empty($snmp_cache_value)) {
