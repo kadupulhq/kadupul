@@ -6,6 +6,7 @@
 namespace MaintenancePurgeLeaseTest;
 
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
+require_once dirname(__DIR__, 4) . '/lib/rrd.php';
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 $source = file_get_contents(dirname(__DIR__, 4) . '/poller_maintenance.php');
 foreach (array('rrdfile_purge', 'remove_files', 'rrdclean_create_path') as $name) {
