@@ -88,10 +88,21 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
 
 \test('production graph grouping binds local graph ID instead of parent sequence', function () {
     reset_db_calls();
-    $GLOBALS['graph_item_types'] = [1 => 'LINE1'];
-    get_graph_group(5);
+    $hadGraphItemTypes = array_key_exists('graph_item_types', $GLOBALS);
+    $originalGraphItemTypes = $GLOBALS['graph_item_types'] ?? null;
 
-    expect($GLOBALS['production_function_db_calls'][1][1])->toBe([9, 42]);
+    try {
+        $GLOBALS['graph_item_types'] = [1 => 'LINE1'];
+        get_graph_group(5);
+
+        expect($GLOBALS['production_function_db_calls'][1][1])->toBe([9, 42]);
+    } finally {
+        if ($hadGraphItemTypes) {
+            $GLOBALS['graph_item_types'] = $originalGraphItemTypes;
+        } else {
+            unset($GLOBALS['graph_item_types']);
+        }
+    }
 });
 
 \test('production structured filters fail closed and get_item carries only safe parameters', function () {
@@ -110,6 +121,18 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
     $params = [];
     expect(build_where_from_array(['host_id' => 7], $params))->toBe('`host_id` = ?');
     expect($params)->toBe([7]);
+
+    $params = [];
+    expect(build_where_from_array(['host_id' => 7, 'bad-name' => 8], $params))->toBe('`host_id` = ?');
+    expect($params)->toBe([7]);
+});
+
+\test('production structured filters reject field names containing SQL syntax or whitespace', function () {
+    foreach (['host_id;DROP', '`host_id`', 'host id'] as $field) {
+        $params = [];
+        expect(build_where_from_array([$field => 7], $params))->toBe('1=0');
+        expect($params)->toBe([]);
+    }
 });
 
 \test('production configuration writes initialize and preserve web and CLI cache maps', function () {
