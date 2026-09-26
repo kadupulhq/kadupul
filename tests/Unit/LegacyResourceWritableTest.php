@@ -8,8 +8,6 @@
 namespace Kadupul\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
@@ -18,9 +16,9 @@ final class LegacyResourceWritableTest extends TestCase
     public function testLegacyWritableProbePreservesItsCurrentFilesystemBehavior(): void
     {
         $root = sys_get_temp_dir() . '/kadupul-resource-writable-' . bin2hex(random_bytes(6));
-        $filesystem = new Filesystem();
-        $filesystem->mkdir($root);
-        $filesystem->dumpFile($root . '/existing.txt', 'unchanged');
+        mkdir($root);
+        file_put_contents($root . '/existing.txt', 'unchanged');
+        mkdir($root . '/probe-directory');
 
         try {
             $source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
@@ -29,7 +27,7 @@ final class LegacyResourceWritableTest extends TestCase
                 . '$root = ' . var_export($root, true) . ';'
                 . '$existing = $root . \'/existing.txt\';'
                 . '$newFile = $root . \'/new.txt\';'
-                . '$directory = $root . \'/probe-directory\'; mkdir($directory);'
+                . '$directory = $root . \'/probe-directory\';'
                 . '$directoryEntriesBefore = scandir($directory);'
                 . '$results = ['
                 . 'is_resource_writable(\'\'),'
@@ -44,57 +42,30 @@ final class LegacyResourceWritableTest extends TestCase
                 . 'is_resource_writable($root . \'/absent/file.txt\')'
                 . '];'
                 . 'echo json_encode($results, JSON_THROW_ON_ERROR);';
-            $process = new Process([PHP_BINARY, '-r', $script]);
-            $process->run();
+            $process = $this->runPhp($script);
 
-            self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
             self::assertSame(
                 [false, false, true, 'unchanged', true, false, true, true, false, false],
-                json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR)
+                json_decode($process, true, flags: JSON_THROW_ON_ERROR)
             );
         } finally {
-            $filesystem->remove($root);
+            unlink($root . '/existing.txt');
+            rmdir($root . '/probe-directory');
+            rmdir($root);
         }
     }
 
     public function testLegacyWritableProbeReportsPermissionDeniedPathsAsNotWritable(): void
     {
-        if (PHP_OS_FAMILY === 'Windows' || !function_exists('posix_geteuid') || !function_exists('posix_getpwnam')) {
-            self::markTestSkipped('Permission bits and an unprivileged process are required.');
+        if (PHP_OS_FAMILY === 'Windows' || !function_exists('posix_geteuid')) {
+            self::markTestSkipped('POSIX permission bits are required.');
+        }
+
+        if (posix_geteuid() === 0) {
+            self::markTestSkipped('Root can bypass the permission restrictions this case verifies.');
         }
 
         $temporaryDirectory = sys_get_temp_dir();
-        $processUser = null;
-
-        if (posix_geteuid() === 0) {
-            $unprivilegedUser = posix_getpwnam('nobody');
-
-            if (!is_array($unprivilegedUser)) {
-                self::markTestSkipped('An unprivileged nobody account is required when the test runner is root.');
-            }
-
-            $temporaryDirectoryMode = @fileperms($temporaryDirectory);
-            $temporaryDirectoryOwner = @fileowner($temporaryDirectory);
-            $temporaryDirectoryGroup = @filegroup($temporaryDirectory);
-
-            if ($temporaryDirectoryMode === false || $temporaryDirectoryOwner === false || $temporaryDirectoryGroup === false) {
-                self::markTestSkipped('The configured temporary directory permissions cannot be inspected.');
-            }
-
-            $temporaryDirectoryMode &= 0777;
-            $nobodyCanTraverseTemporaryDirectory = (
-                $unprivilegedUser['uid'] === $temporaryDirectoryOwner && ($temporaryDirectoryMode & 0100) !== 0
-            ) || (
-                $unprivilegedUser['gid'] === $temporaryDirectoryGroup && ($temporaryDirectoryMode & 0010) !== 0
-            ) || ($temporaryDirectoryMode & 0001) !== 0;
-
-            if (!$nobodyCanTraverseTemporaryDirectory) {
-                self::markTestSkipped('The configured temporary directory is not accessible to the nobody account.');
-            }
-
-            $processUser = 'nobody';
-        }
-
         $root = rtrim($temporaryDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'kadupul-resource-permissions-' . bin2hex(random_bytes(6));
         mkdir($root, 0700);
         mkdir($root . '/locked', 0700);
@@ -111,15 +82,8 @@ final class LegacyResourceWritableTest extends TestCase
                 . 'echo json_encode([is_resource_writable($root . "/locked/existing.txt"),'
                 . 'is_resource_writable($root . "/locked/new.txt"),'
                 . 'is_resource_writable($root . "/locked/")], JSON_THROW_ON_ERROR);';
-            $process = new Process([PHP_BINARY, '-r', $script]);
-
-            if ($processUser !== null) {
-                $process->setUser($processUser);
-            }
-
-            $process->run();
-            self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
-            self::assertSame([false, false, false], json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR));
+            $output = $this->runPhp($script);
+            self::assertSame([false, false, false], json_decode($output, true, flags: JSON_THROW_ON_ERROR));
         } finally {
             chmod($root . '/locked', 0700);
             chmod($root . '/locked/existing.txt', 0600);
@@ -127,5 +91,27 @@ final class LegacyResourceWritableTest extends TestCase
             rmdir($root . '/locked');
             rmdir($root);
         }
+    }
+
+    private function runPhp(string $script): string
+    {
+        $pipes = [];
+        $process = proc_open(
+            [PHP_BINARY, '-r', $script],
+            [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
+            $pipes
+        );
+
+        self::assertIsResource($process);
+
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        self::assertSame(0, proc_close($process), $error);
+        self::assertIsString($output);
+
+        return $output;
     }
 }
