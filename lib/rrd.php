@@ -879,6 +879,13 @@ function rrdtool_create_prepare($data_source_path, $show_source, $use_proxy, $rr
  *
  * Returns the owner and group of the RRA root, which the caller also gives the
  * new RRD; both are null on Windows, where they are not looked up.
+ *
+ * @param string $data_source_path RRD file path, possibly under an extended path.
+ * @param bool $use_proxy Whether creation will use the configured RRDtool proxy.
+ * @param resource|array|false|null $rrdtool_pipe Existing local or proxy pipe.
+ * @param string $logopt Log category for proxy and filesystem errors.
+ *
+ * @return array{int|null, int|null} RRA root owner and group identifiers.
  */
 function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_pipe, $logopt)
 {
@@ -1990,34 +1997,21 @@ function rrdtool_function_tune($rrd_tune_array)
     }
 }
 
-/* rrdtool_function_fetch - given a data source, return all of its data in an array
-   @arg $local_data_id - the data source to fetch data for
-   @arg $start_time - the start time to use for the data calculation. this value can
-     either be absolute (unix timestamp) or relative (to now)
-   @arg $end_time - the end time to use for the data calculation. this value can
-     either be absolute (unix timestamp) or relative (to now)
-   @arg $resolution - the accuracy of the data measured in seconds
-   @arg $show_unknown - Show unknown 'NAN' values in the output as 'U'
-   @arg $rrdtool_file - Don't force Kadupul to calculate the file
-   @arg $cf - Specify the consolidation function to use
-   @arg $rrdtool_pipe - a pipe to an rrdtool command
-   @returns - (array) an array containing all data in this data source broken down
-     by each data source item. the maximum of all data source items is included in
-     an item called 'nth_percentile_maximum'.  The array will look as follows:
-
-     $fetch_array['data_source_names'][0] = 'ds1'
-     $fetch_array['data_source_names'][1] = 'ds2'
-     $fetch_array['data_source_names'][2] = 'nth_percentile_maximum'
-     $fetch_array['start_time'] = $timestamp;
-     $fetch_array['end_time']   = $timestamp;
-     $fetch_array['values'][$dsindex1][...]  = $value;
-     $fetch_array['values'][$dsindex2][...]  = $value;
-     $fetch_array['values'][$nth_index][...] = $value;
-
-     Again, the 'nth_percentile_maximum' will have the maximum value amongst all the
-     data sources for each set of data.  So, if you have traffic_in and traffic_out,
-     each member element in the array will have the maximum of traffic_in and traffic_out
-     in it.
+/** Fetch a data source's values, grouped by data source item and timestamp.
+ *
+ * Relative bounds are interpreted against the current system time. The result
+ * includes the maximum of all data source items as `nth_percentile_maximum`.
+ *
+ * @param int $local_data_id Data source to fetch.
+ * @param int|string $start_time Absolute timestamp or relative start bound.
+ * @param int|string $end_time Absolute timestamp or relative end bound.
+ * @param int $resolution Requested resolution in seconds.
+ * @param bool $show_unknown Whether unknown values should be returned as `U`.
+ * @param string|null $rrdtool_file Optional explicit RRD path.
+ * @param string $cf Consolidation function.
+ * @param resource|array|false|null $rrdtool_pipe Existing local or proxy pipe.
+ *
+ * @return array<string, mixed> Fetched names, bounds, and timestamped values.
  */
 function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolution = 0, $show_unknown = false, $rrdtool_file = null, $cf = 'AVERAGE', $rrdtool_pipe = false)
 {
