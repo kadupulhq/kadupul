@@ -15,6 +15,8 @@ namespace Kadupul\Tests\ThemeSelectedFallback;
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 function read_config_option($name) {
 	return $GLOBALS['theme_selected_fallback']['configured'];
 }
@@ -38,11 +40,11 @@ function file_exists($path) {
 }
 
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
-if ($source === false || preg_match('/^function get_selected_theme\(\).*?^}\R/ms', $source, $matches) !== 1) {
-	throw new \RuntimeException('Unable to extract get_selected_theme() from lib/functions.php');
+if ($source === false) {
+    throw new \RuntimeException('Unable to read lib/functions.php');
 }
 
-eval('namespace Kadupul\\Tests\\ThemeSelectedFallback;' . $matches[0]); // nosemgrep: php.lang.security.eval-use.eval-use
+eval('namespace Kadupul\\Tests\\ThemeSelectedFallback;' . \test_php_function_source($source, 'get_selected_theme')); // nosemgrep: php.lang.security.eval-use.eval-use
 
 final class SelectedThemeFallbackTest extends TestCase {
 	protected function setUp(): void {
