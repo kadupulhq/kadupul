@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Validate the selected UI theme against installed theme directories before constructing paths, and bind graph-template ordering filters as parameters
 -issue: Build the RRD create definition once for both creators, which kept separate copies that drifted. Boost joined the RRA and consolidation rows around the data source profile rather than through it, so a deleted profile still produced RRA lines with an empty x-files factor where the poller found no RRA and refused; it left the RRA order undetermined when two profiles tie on rows times steps; and it said nothing at all when a data source had no RRA. The poller read the device row and its interface speed on every create, which only a |query_ maximum needs
 -issue: Boost records a PHP warning or error raised during a flush at any log verbosity; its error handler suppresses PHP's own reporting, so gating the log on DEBUG discarded the only record of why a flush failed. The handler now also applies the reporting mask, which it had never checked, so a failure silenced with @ on the rrdtool pipe, the atomic cache write or the RRDproxy failover stays silent. Notices and deprecations stay on DEBUG, and repeats of one error site are capped below DEBUG so a warning raised once per sample cannot fill the log
 -issue: import_template --preview now reports through the command line rather than printing raw HTML, and says the Template would be imported instead of claiming it was; the preview flag reached import_display_results as its web argument

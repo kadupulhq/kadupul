@@ -80,6 +80,62 @@ it('theme allowlist algorithm — rejects theme names satisfying basename but no
 	expect(cacti_validate_theme('attacker_uploaded_theme'))->toBe('modern');
 });
 
+it('theme allowlist algorithm — falls back to the first discovered theme when the configured default is invalid', function () {
+	$themeRoot = sys_get_temp_dir() . '/cacti-theme-fallback-' . bin2hex(random_bytes(8));
+	mkdir($themeRoot . '/include/themes/first-installed', 0777, true);
+	file_put_contents($themeRoot . '/include/themes/first-installed/rrdtheme.php', '<?php');
+
+	try {
+		expect(run_cacti_theme_fallback_probe($themeRoot, 'invalid/default'))->toBe('first-installed');
+	} finally {
+		unlink($themeRoot . '/include/themes/first-installed/rrdtheme.php');
+		rmdir($themeRoot . '/include/themes/first-installed');
+		rmdir($themeRoot . '/include/themes');
+		rmdir($themeRoot . '/include');
+		rmdir($themeRoot);
+	}
+});
+
+it('theme allowlist algorithm — uses modern when the configured default is invalid and no theme is installed', function () {
+	$themeRoot = sys_get_temp_dir() . '/cacti-theme-fallback-' . bin2hex(random_bytes(8));
+	mkdir($themeRoot . '/include/themes', 0777, true);
+
+	try {
+		expect(run_cacti_theme_fallback_probe($themeRoot, 'invalid/default'))->toBe('modern');
+	} finally {
+		rmdir($themeRoot . '/include/themes');
+		rmdir($themeRoot . '/include');
+		rmdir($themeRoot);
+	}
+});
+
+function run_cacti_theme_fallback_probe($themeRoot, $default)
+{
+	$root = dirname(__DIR__, 4);
+	$program = ''
+		. 'function read_config_option($name) { return $GLOBALS["theme_fallback_default"]; } '
+		. '$GLOBALS["config"] = array("base_path" => $argv[1]); '
+		. '$GLOBALS["theme_fallback_default"] = $argv[2]; '
+		. 'require ' . var_export($root . '/tests/Helpers/PhpSource.php', true) . '; '
+		. '$source = file_get_contents(' . var_export($root . '/lib/functions.php', true) . '); '
+		. 'eval(test_php_function_source($source, "cacti_validate_theme")); '
+		. 'echo cacti_validate_theme("attacker");';
+	$process = proc_open(array(PHP_BINARY, '-r', $program, $themeRoot, $default), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+	if (!is_resource($process)) {
+		throw new RuntimeException('Unable to start isolated theme fallback probe');
+	}
+	$output = stream_get_contents($pipes[1]);
+	$error = stream_get_contents($pipes[2]);
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+	$status = proc_close($process);
+	if ($status !== 0) {
+		throw new RuntimeException('Theme fallback probe failed (' . $status . '): ' . $error . $output);
+	}
+
+	return $output;
+}
+
 it('theme allowlist algorithm — is case-sensitive (filesystem names are case-sensitive on POSIX)', function () {
 	expect(cacti_validate_theme('MODERN'))->toBe('modern');
 	expect(cacti_validate_theme('Modern'))->toBe('modern');
