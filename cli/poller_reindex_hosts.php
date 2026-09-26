@@ -228,10 +228,20 @@ if (cacti_sizeof($data_queries)) {
 }
 
 if ($failed_count === 0) {
-	set_config_option('reindex_last_run_time', time());
+	if (!poller_reindex_record_completion_time(time())) {
+		fwrite(STDERR, "ERROR: Could not persist the reindex completion time.\n");
+		exit(1);
+	}
 } else {
 	fwrite(STDERR, "ERROR: Reindex completed with $failed_count failure(s); completion time was not advanced.\n");
 	exit(1);
+}
+
+function poller_reindex_record_completion_time($timestamp) {
+	set_config_option('reindex_last_run_time', $timestamp);
+	$persisted = db_fetch_cell_prepared('SELECT value FROM settings WHERE name = ?', array('reindex_last_run_time'));
+
+	return $persisted !== false && is_numeric($persisted) && (int) $persisted === (int) $timestamp;
 }
 
 function display_version() {

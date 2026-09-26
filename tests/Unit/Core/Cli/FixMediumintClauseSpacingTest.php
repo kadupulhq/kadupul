@@ -38,3 +38,14 @@ test('mediumint clauses include a separator after the quoted ALTER TABLE name', 
 
 	expect($clause)->toStartWith(' MODIFY COLUMN `poller_id` int(10) unsigned NOT NULL');
 });
+
+test('failed discovered-table queries stop conversion and report failure', function () use ($source) {
+	$query = strpos($source, '$other_tables = db_fetch_assoc(\'SHOW TABLES\')');
+	$guard = strpos($source, 'if ($other_tables === false)', $query);
+	$loop  = strpos($source, 'foreach($other_tables as $t)', $query);
+
+	expect($query)->not->toBeFalse()
+		->and($guard)->not->toBeFalse()
+		->and($loop)->not->toBeFalse()
+		->and($guard)->toBeLessThan($loop);
+});

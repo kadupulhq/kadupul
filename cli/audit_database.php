@@ -910,6 +910,11 @@ function report_audit_results($output = true) {
 					FROM table_indexes
 					WHERE idx_table_name = ?',
 					array($table_name));
+				if ($db_indexes === false) {
+					fwrite(STDERR, "ERROR: Unable to read canonical audit indexes for $table_name. Audit stopped without repair proposals.\n");
+
+					return false;
+				}
 
 				if (cacti_sizeof($db_indexes)) {
 					foreach($db_indexes as $i) {

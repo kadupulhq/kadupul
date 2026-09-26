@@ -185,6 +185,12 @@ function database_fix_mediumint_columns() {
 	}
 
 	$other_tables = db_fetch_assoc('SHOW TABLES');
+	if ($other_tables === false) {
+		$failures++;
+		fwrite(STDERR, "ERROR: Unable to discover tables for MEDIUMINT conversion.\n");
+
+		return $total;
+	}
 
 	foreach($other_tables as $t) {
 		$table   = $t['Tables_in_' . $database_default];
@@ -195,8 +201,16 @@ function database_fix_mediumint_columns() {
 		if (!array_key_exists($table, $tables)) {
 			$sql = 'ALTER TABLE ' . database_quote_identifier($table);
 			$i = 0;
+			$table_columns = db_fetch_assoc("SHOW COLUMNS FROM " . database_quote_identifier($table));
+			if ($table_columns === false) {
+				$failures++;
+				fwrite(STDERR, "ERROR: Unable to inspect columns for table $table.\n");
+
+				return $total;
+			}
+
 			$columns = array_rekey(
-				db_fetch_assoc("SHOW COLUMNS FROM " . database_quote_identifier($table)),
+				$table_columns,
 					'Field', array('Type', 'Null', 'Key', 'Default', 'Extra')
 			);
 

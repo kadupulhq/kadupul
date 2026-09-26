@@ -194,36 +194,61 @@ if (cacti_sizeof($parms)) {
 	/*
 	 * Now, add the data query and run it once to get the cache filled
 	 */
-	$exists_already = db_fetch_cell_prepared('SELECT host_id FROM host_snmp_query WHERE host_id = ? AND snmp_query_id = ? AND reindex_method = ?', array((int) $host_id, (int) $data_query_id, (int) $reindex_method));
-	if ((isset($exists_already)) &&
-		($exists_already > 0)) {
+	$exists_already = db_fetch_cell_prepared('SELECT COUNT(*) FROM host_snmp_query WHERE host_id = ? AND snmp_query_id = ? AND reindex_method = ?', array((int) $host_id, (int) $data_query_id, (int) $reindex_method));
+	if ($exists_already === false || !is_numeric($exists_already)) {
+		fwrite(STDERR, "ERROR: Could not verify whether the data query is already associated.\n");
+		exit(1);
+	}
+
+	if ((int) $exists_already > 0) {
 		print "ERROR: Data Query is already associated for host: ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: " . $reindex_types[$reindex_method] . ")\n";
 		exit(1);
 	} else {
-		if (!db_execute_prepared('REPLACE INTO host_snmp_query
-			(host_id, snmp_query_id, reindex_method)
-			VALUES (?, ?, ?)', array((int) $host_id, (int) $data_query_id, (int) $reindex_method))) {
-			fwrite(STDERR, "ERROR: Failed to associate the data query.\n");
-			exit(1);
-		}
+		$result = add_data_query_association((int) $host_id, (int) $data_query_id, (int) $reindex_method);
+		if ($result !== 'success') {
+			if ($result === 'reindex_failed') {
+				fwrite(STDERR, "ERROR: Initial data query reindex failed; the association was rolled back.\n");
+			} else {
+				fwrite(STDERR, "ERROR: Failed to associate the data query.\n");
+			}
 
-		/* recache snmp data */
-		if (!run_data_query((int) $host_id, (int) $data_query_id)) {
-			fwrite(STDERR, "ERROR: Data query association was saved, but its initial reindex failed.\n");
 			exit(1);
 		}
 	}
 
-	if (is_error_message()) {
-		print "ERROR: Failed to add this data query for host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: " . $reindex_types[$reindex_method] . ")\n";
-		exit(1);
-	} else {
-		print "Success - Host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: " . $reindex_types[$reindex_method] . ")\n";
-		exit;
-	}
+	print "Success - Host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: " . $reindex_types[$reindex_method] . ")\n";
+	exit;
 } else {
 	display_help();
 	exit;
+}
+
+function add_data_query_association($host_id, $data_query_id, $reindex_method) {
+	if (!db_begin_transaction()) {
+		return 'transaction_failed';
+	}
+
+	if (db_execute_prepared('REPLACE INTO host_snmp_query
+		(host_id, snmp_query_id, reindex_method)
+		VALUES (?, ?, ?)', array($host_id, $data_query_id, $reindex_method)) === false) {
+		db_rollback_transaction();
+
+		return 'association_failed';
+	}
+
+	if (!run_data_query($host_id, $data_query_id) || is_error_message()) {
+		db_rollback_transaction();
+
+		return 'reindex_failed';
+	}
+
+	if (!db_commit_transaction()) {
+		db_rollback_transaction();
+
+		return 'commit_failed';
+	}
+
+	return 'success';
 }
 
 /*  display_version - displays version information */

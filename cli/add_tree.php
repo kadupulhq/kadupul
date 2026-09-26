@@ -250,7 +250,12 @@ if (cacti_sizeof($parms)) {
 			exit(1);
 		}
 
-		$existsAlready = db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE name = ?', array($name));
+		$existsAlready = database_tree_name_exists($name);
+		if ($existsAlready === null) {
+			fwrite(STDERR, "ERROR: Could not verify whether the tree name already exists.\n");
+			exit(1);
+		}
+
 		if ($existsAlready) {
 			print "ERROR: Not adding tree - it already exists - tree-id: ($existsAlready)\n";
 			exit(1);
@@ -375,6 +380,16 @@ if (cacti_sizeof($parms)) {
 }
 
 /*  display_version - displays version information */
+function database_tree_name_exists($name) {
+	$count = db_fetch_cell_prepared('SELECT COUNT(*) FROM graph_tree WHERE name = ?', array($name));
+
+	if ($count === false || !is_numeric($count)) {
+		return null;
+	}
+
+	return (int) $count > 0;
+}
+
 function display_version() {
 	$version = get_cacti_cli_version();
 	print "Cacti Add Tree Utility, Version $version, " . COPYRIGHT_YEARS . "\n";

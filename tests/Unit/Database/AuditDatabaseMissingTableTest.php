@@ -92,3 +92,17 @@ test('database audit query failures fail closed', function () {
 		->and($source)->toContain('audit_quote_identifier($after)')
 		->and($source)->toContain('$exit_code = report_audit_results() === false ? 1 : 0;');
 });
+
+test('canonical index metadata failures stop the audit before the missing-index pass', function () {
+	$source = file_get_contents(dirname(__DIR__, 3) . '/cli/audit_database.php');
+	expect($source)->not->toBeFalse();
+
+	$query = strpos($source, '$db_indexes = db_fetch_assoc_prepared(');
+	$guard = strpos($source, 'if ($db_indexes === false)', $query);
+	$loop  = strpos($source, 'if (cacti_sizeof($db_indexes))', $query);
+
+	expect($query)->not->toBeFalse()
+		->and($guard)->not->toBeFalse()
+		->and($loop)->not->toBeFalse()
+		->and($guard)->toBeLessThan($loop);
+});
