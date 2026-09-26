@@ -117,14 +117,30 @@ $save["id"] = "0";
 $save["data_template_id"] = (int) $data_template_id;
 $save["host_id"] = (int) $host_id;
 
+if (!db_begin_transaction()) {
+	fwrite(STDERR, "ERROR: Could not start a transaction to create the data source.\n");
+	exit(1);
+}
+
 $local_data_id = sql_save($save, "data_local");
 
 if ($local_data_id === false || (int) $local_data_id <= 0) {
+	db_rollback_transaction();
 	fwrite(STDERR, "ERROR: Failed to create the data source for host $host_id and template $data_template_id.\n");
 	exit(1);
 }
 
-change_data_template($local_data_id, $data_template_id);
+if (!change_data_template($local_data_id, $data_template_id)) {
+	db_rollback_transaction();
+	fwrite(STDERR, "ERROR: Failed to apply template $data_template_id to data source $local_data_id; the data source creation was rolled back.\n");
+	exit(1);
+}
+
+if (!db_commit_transaction()) {
+	db_rollback_transaction();
+	fwrite(STDERR, "ERROR: Failed to commit data source $local_data_id; the data source creation was rolled back.\n");
+	exit(1);
+}
 
 /* update the title cache */
 update_data_source_title_cache($local_data_id);

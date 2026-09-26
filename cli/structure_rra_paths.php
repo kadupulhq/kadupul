@@ -342,6 +342,14 @@ foreach ($data_sources as $info) {
 						struct_debug("Permissions set for '$new_rrd_path'");
 					} else {
 						print "FATAL: Could not Set Permissions for File '$new_rrd_path'" . PHP_EOL;
+						clearstatcache(true, $old_rrd_path);
+						if (structure_rra_is_safe_dest($old_rrd_path) && !file_exists($old_rrd_path) && !is_link($old_rrd_path) && rename($new_rrd_path, $old_rrd_path)) {
+							$done_count--;
+							struct_debug("Restored RRD File after permission failure: '$new_rrd_path' > '$old_rrd_path'");
+						} else {
+							fwrite(STDERR, "FATAL: Permission update failed and the RRD file could not be restored from '$new_rrd_path' to '$old_rrd_path'.\n");
+						}
+
 						exit(6);
 					}
 				}

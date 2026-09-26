@@ -613,6 +613,11 @@ function report_audit_results($output = true) {
 			$table_name = $table[$db_name];
 
 			$status  = db_fetch_row('SHOW TABLE STATUS LIKE "' . $table_name . '"');
+			if ($status === false || !isset($status['Collation'])) {
+				fwrite(STDERR, "ERROR: Unable to inspect table status for $table_name. Audit stopped without repair proposals.\n");
+
+				return false;
+			}
 
 			if ($status['Collation'] == 'utf8mb4_unicode_ci' || $status['Collation'] == 'utf8_general_ci') {
 				$collation = 'utf8';
@@ -631,6 +636,11 @@ function report_audit_results($output = true) {
 				FROM table_columns
 				WHERE table_name = ?',
 				array($table_name));
+			if ($table_exists === false) {
+				fwrite(STDERR, "ERROR: Unable to check canonical audit metadata for $table_name.\n");
+
+				return false;
+			}
 
 			if (!$table_exists) {
 				$plugin_table = db_fetch_row_prepared('SELECT *
@@ -672,6 +682,11 @@ function report_audit_results($output = true) {
 			$exists  = db_fetch_cell_prepared('SELECT COUNT(*) FROM table_columns
 				WHERE table_name = ?',
 				array($table_name));
+			if ($columns === false || $exists === false) {
+				fwrite(STDERR, "ERROR: Unable to inspect columns or canonical column metadata for $table_name. Audit stopped without repair proposals.\n");
+
+				return false;
+			}
 
 			if ($exists) {
 				if (cacti_sizeof($columns)) {
@@ -683,6 +698,11 @@ function report_audit_results($output = true) {
 							WHERE table_name = ?
 							AND table_field = ?',
 							array($table_name, $c['Field']));
+						if ($dbc === false) {
+							fwrite(STDERR, "ERROR: Unable to read canonical column metadata for $table_name. Audit stopped without repair proposals.\n");
+
+							return false;
+						}
 
 						if (!cacti_sizeof($dbc)) {
 							$plugin_column = db_fetch_row_prepared('SELECT *
@@ -691,6 +711,11 @@ function report_audit_results($output = true) {
 								AND `column` = ?
 								AND method = ?',
 								array($table_name, $c['Field'], 'addcolumn'));
+							if ($plugin_column === false) {
+								fwrite(STDERR, "ERROR: Unable to inspect plugin column metadata for $table_name.\n");
+
+								return false;
+							}
 
 							if (!cacti_sizeof($plugin_column)) {
 								if ($output) {
@@ -768,6 +793,11 @@ function report_audit_results($output = true) {
 					FROM table_columns
 					WHERE table_name = ?',
 					array($table_name));
+				if ($db_columns === false) {
+					fwrite(STDERR, "ERROR: Unable to list canonical columns for $table_name. Audit stopped without repair proposals.\n");
+
+					return false;
+				}
 
 				if (cacti_sizeof($db_columns)) {
 					foreach($db_columns as $dbc) {
@@ -792,6 +822,11 @@ function report_audit_results($output = true) {
 				 */
 
 				$indexes = db_fetch_assoc('SHOW INDEXES IN ' . $table_name);
+				if ($indexes === false) {
+					fwrite(STDERR, "ERROR: Unable to inspect indexes for $table_name. Audit stopped without repair proposals.\n");
+
+					return false;
+				}
 
 				$idx_added = array();
 				$idx_dropped = array();
@@ -803,6 +838,11 @@ function report_audit_results($output = true) {
 							WHERE idx_table_name = ?
 							AND idx_key_name = ?',
 							array($i['Table'], $i['Key_name']));
+						if ($key_exists === false) {
+							fwrite(STDERR, "ERROR: Unable to read canonical index metadata for $table_name. Audit stopped without repair proposals.\n");
+
+							return false;
+						}
 
 						$dbc = db_fetch_row_prepared('SELECT *
 							FROM table_indexes
@@ -812,6 +852,11 @@ function report_audit_results($output = true) {
 							AND idx_column_name = ?
 							ORDER BY idx_seq_in_index',
 							array($i['Table'], $i['Key_name'], $i['Seq_in_index'], $i['Column_name']));
+						if ($dbc === false) {
+							fwrite(STDERR, "ERROR: Unable to read canonical index columns for $table_name. Audit stopped without repair proposals.\n");
+
+							return false;
+						}
 
 						if (!cacti_sizeof($dbc)) {
 							if ($key_exists) {
@@ -1006,6 +1051,9 @@ function audit_schema_stamp_version($filename, $version) {
 
 function make_column_props(&$dbc) {
 	$alter_cmd = '';
+	if (($dbc['table_default'] ?? null) === "\x01NULL") {
+		$dbc['table_default'] = null;
+	}
 
 	if (isset($dbc['table_default'])) {
 		$dbc['table_default'] = str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $dbc['table_default']);
