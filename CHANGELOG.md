@@ -73,6 +73,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Use one application `Clock` instant for relative graph bounds, RRA selection, time-based CDEFs and annotations, legends, and business-hours shading. Existing graph calls retain the system-clock default.
+
 - Publish the command-line migration roadmap and the safety decisions for the database audit and repair commands in docs/migrations/cli-symfony-console-roadmap.md.
 
 - Bind the project directory once in the service configuration and share the command-line preflight with `kadupul:database:analyze`. Behaviour is unchanged.
