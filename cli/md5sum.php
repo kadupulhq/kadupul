@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * md5sum.php
+ *
+ * Creates or verifies an MD5 manifest for a Cacti installation.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

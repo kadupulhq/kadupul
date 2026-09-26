@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * install_cacti.php
+ *
+ * Runs the command-line Cacti installer.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

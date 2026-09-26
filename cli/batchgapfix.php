@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * batchgapfix.php
+ *
+ * Fills or floats gaps in selected RRD data using parallel workers.
+ *
+ * @package Cacti\CLI
+ */
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -107,7 +114,7 @@ foreach($parms as $parameter) {
 	default:
 		print 'ERROR: Invalid Parameter ' . $parameter . PHP_EOL . PHP_EOL;
 		display_help();
-		exit;
+		exit(1);
 	}
 }
 
@@ -118,8 +125,8 @@ if ($end_time === false || $start_time === false) {
 }
 
 // Secondary time checks
-if ($end_time < $start_time) {
-	print 'FATAL: End Time is less than start time!' . PHP_EOL;
+if ($end_time <= $start_time) {
+	print 'FATAL: End Time must be later than start time!' . PHP_EOL;
 	exit(1);
 }
 
@@ -145,24 +152,27 @@ if ($method != 'fill' && $method != 'float') {
 	exit(1);
 }
 
-if ($avgnan != 'last' && $method != 'avg') {
+if ($avgnan != 'last' && $avgnan != 'avg') {
 	print 'FATAL: Invalid --avgnan value.  Options are \'last\' and \'avg\'.' . PHP_EOL;
 	exit(1);
 }
 
-if ($threads <= 0 || $threads > 40) {
+if (!ctype_digit((string) $threads) || (int) $threads <= 0 || (int) $threads > 40) {
 	print 'FATAL: Invalid --threads value.  Threads can be from 1 to 40 inclusive.' . PHP_EOL;
 	exit(1);
 }
+$threads = (int) $threads;
 
 if ($host_ids !== false) {
-	$host_ids = explode(',', $host_ids);
-	foreach($host_ids as $id) {
-		if (!is_numeric($id)) {
-			print 'FATAL: The list of --host-ids must be a comma delimited list of numeric Cacti host_ids!' . PHP_EOL;
+	$host_ids = array_map('trim', explode(',', $host_ids));
+	foreach($host_ids as $index => $id) {
+		if (!ctype_digit($id) || (int) $id <= 0) {
+			print 'FATAL: The list of --host-ids must contain positive integer Cacti host IDs!' . PHP_EOL;
 			exit(1);
 		}
+		$host_ids[$index] = (int) $id;
 	}
+	$host_ids = array_values(array_unique($host_ids));
 
 	$sql_where = 'WHERE dtd.data_source_path IS NOT NULL AND gl.host_id IN(' . implode(',', $host_ids) . ')';
 } else {

@@ -22,6 +22,7 @@ $expectedCodes = array(
 	'specifying a Device ID'               => 1,
 	'specifying a Device Template ID'      => 1,
 	'Explicitly Instruct This Script'      => 1,
+	'Unsupported extended path pattern'    => 1,
 	'Could NOT Make New Directory'         => 1,
 	'Set Permissions for Directory'        => 5,
 	'Set Permissions for File'             => 6,
@@ -46,7 +47,7 @@ foreach ($matches[0] as $index => $fragment) {
 dataset('structure RRA fatal branches', $cases);
 
 test('every structure RRA fatal exit maps to exactly one expectation', function () use ($matches, $cases, $expectedCodes, $matched) {
-	expect(count($matches[0]))->toBe(10);
+	expect(count($matches[0]))->toBe(11);
 
 	foreach ($cases as $name => $case) {
 		expect($case[1])->not->toBeNull($name);
@@ -59,7 +60,7 @@ test('every structure RRA fatal exit maps to exactly one expectation', function 
 
 test('real fatal branches print diagnostics and exit nonzero before continuing', function ($fragment, $expected) {
 	$setup = 'define("PHP_DEOL", PHP_EOL . PHP_EOL); function display_help() { echo "HELP", PHP_EOL; } '
-		. '$new_base_path = "fixture-dir"; $new_rrd_path = "fixture-new.rrd"; $old_rrd_path = "fixture-old.rrd"; ';
+		. '$new_base_path = "fixture-dir"; $new_rrd_path = "fixture-new.rrd"; $old_rrd_path = "fixture-old.rrd"; $pattern = "invalid"; ';
 	$process = proc_open(array(PHP_BINARY, '-r', $setup . $fragment . 'echo "UNREACHABLE";'),
 		array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
 	expect(is_resource($process))->toBeTrue();

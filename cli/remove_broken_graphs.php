@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * remove_broken_graphs.php
+ *
+ * Reports or removes graphs whose template items reference missing data sources.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -101,9 +108,9 @@ if (!$report && !$remove) {
 
 print 'Running Query to find Broken Graphs.  This Query may run for some time depending the number of Graph in your System' . PHP_EOL;
 
-$sql = "SELECT name, graph_template_id, graphs, local_graph_ids
+$sql = "SELECT name, graph_template_id, graphs
 	FROM (
-		SELECT graph_template_id, GROUP_CONCAT(DISTINCT local_graph_id SEPARATOR ', ') AS local_graph_ids, COUNT(DISTINCT local_graph_id) AS graphs
+		SELECT graph_template_id, COUNT(DISTINCT local_graph_id) AS graphs
 		FROM graph_templates_item
 		WHERE local_graph_id > 0
 		AND graph_template_id > 0
@@ -119,6 +126,11 @@ $sql = "SELECT name, graph_template_id, graphs, local_graph_ids
 	ON gt.id = gti.graph_template_id";
 
 $entries = db_fetch_assoc($sql);
+
+if ($entries === false) {
+	fwrite(STDERR, "ERROR: Unable to query graph template integrity.\n");
+	exit(1);
+}
 
 if (cacti_sizeof($entries)) {
 	print 'There are ' . cacti_sizeof($entries) . ' Graph Templates with Broken Graphs.' . PHP_EOL;
@@ -136,15 +148,35 @@ if (cacti_sizeof($entries)) {
 	print '-------------------------------------------------------------------------------------' . PHP_EOL;
 
 	foreach($entries as $e) {
+		$broken_graph_rows = db_fetch_assoc_prepared('SELECT DISTINCT local_graph_id
+			FROM graph_templates_item
+			WHERE local_graph_id > 0
+			AND graph_template_id = ?
+			AND task_item_id > 0
+			AND task_item_id NOT IN (
+				SELECT id FROM data_template_rrd WHERE local_data_id > 0
+			)
+			ORDER BY local_graph_id', array((int) $e['graph_template_id']));
+
+		if ($broken_graph_rows === false) {
+			fwrite(STDERR, "ERROR: Could not load broken graph IDs for template {$e['graph_template_id']}.\n");
+			exit(1);
+		}
+
+		$local_graph_ids = array_map('intval', array_column($broken_graph_rows, 'local_graph_id'));
+		if (cacti_sizeof($local_graph_ids) != (int) $e['graphs']) {
+			fwrite(STDERR, "ERROR: Broken graph count changed while processing template {$e['graph_template_id']}; refusing to continue.\n");
+			exit(1);
+		}
+
 		if ($report) {
 			printf('Graph Template: %s, Contains \'%s\' broken Graphs' . PHP_EOL, $e['name'], $e['graphs']);
 			print 'Graphs:' . PHP_EOL;
 			print '-------------------------------------------------------------------------------------' . PHP_EOL;
-			print wordwrap($e['local_graph_ids'], $columns-5, PHP_EOL) . PHP_EOL;
+			print wordwrap(implode(', ', $local_graph_ids), $columns-5, PHP_EOL) . PHP_EOL;
 			print '-------------------------------------------------------------------------------------' . PHP_EOL;
 		} else {
 			print '-------------------------------------------------------------------------------------' . PHP_EOL;
-			$local_graph_ids = explode(', ', $e['local_graph_ids']);
 			printf('Started removing \'%s\' broken Graphs for Graph Template %s' . PHP_EOL, $e['graphs'], $e['name']);
 			print '-------------------------------------------------------------------------------------' . PHP_EOL;
 			if (cacti_sizeof($local_graph_ids)) {

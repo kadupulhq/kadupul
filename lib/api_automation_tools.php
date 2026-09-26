@@ -450,6 +450,9 @@ function displayInputFields($input_fields, $quietMode = false) {
 }
 
 function displayGraphTemplates($templates, $quietMode = false) {
+	if ($templates === false) {
+		return false;
+	}
 	if (!$quietMode) {
 		print 'Known Graph Templates: (id, name)' . PHP_EOL;
 	}
@@ -463,9 +466,14 @@ function displayGraphTemplates($templates, $quietMode = false) {
 	if (!$quietMode) {
 		print PHP_EOL;
 	}
+
+	return true;
 }
 
 function displayHosts($hosts, $quietMode = false) {
+	if ($hosts === false) {
+		return false;
+	}
 	if (!$quietMode) {
 		print 'Known Devices: (id, hostname, template, description)' . PHP_EOL;
 	}
@@ -479,6 +487,8 @@ function displayHosts($hosts, $quietMode = false) {
 	if (!$quietMode) {
 		print PHP_EOL;
 	}
+
+	return true;
 }
 
 function displaySites($sites, $quietMode = false) {
@@ -507,6 +517,9 @@ function displayTrees($quietMode = false) {
 	$trees = db_fetch_assoc('SELECT id, sort_type, name
 		FROM graph_tree
 		ORDER BY id');
+	if ($trees === false) {
+		return false;
+	}
 
 	if (cacti_sizeof($trees)) {
 		foreach ($trees as $tree) {
@@ -519,6 +532,8 @@ function displayTrees($quietMode = false) {
 	if (!$quietMode) {
 		print PHP_EOL;
 	}
+
+	return true;
 }
 
 function displayTreeNodes($tree_id, $nodeType = '', $parentNode = 0, $quietMode = false) {
@@ -649,6 +664,9 @@ function displayHostGraphs($host_id, $quietMode = false) {
 		AND graph_local.host_id = ?
 		ORDER BY graph_templates_graph.local_graph_id',
 		array($host_id));
+	if ($graphs === false) {
+		return false;
+	}
 
 	if (cacti_sizeof($graphs)) {
 		foreach ($graphs as $graph) {
@@ -662,6 +680,8 @@ function displayHostGraphs($host_id, $quietMode = false) {
 	if (!$quietMode) {
 		print PHP_EOL;
 	}
+
+	return true;
 }
 
 function displayUsers($quietMode = false) {
@@ -672,6 +692,9 @@ function displayUsers($quietMode = false) {
 	$groups = db_fetch_assoc('SELECT id, username, full_name
 		FROM user_auth
 		ORDER BY id');
+	if ($groups === false) {
+		return false;
+	}
 
 	if (cacti_sizeof($groups)) {
 		foreach ($groups as $group) {
@@ -684,4 +707,6 @@ function displayUsers($quietMode = false) {
 	if (!$quietMode) {
 		print PHP_EOL;
 	}
+
+	return true;
 }

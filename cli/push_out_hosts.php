@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * push_out_hosts.php
+ *
+ * Deprecated compatibility wrapper for rebuilding the poller cache.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

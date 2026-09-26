@@ -3027,6 +3027,40 @@ function cacti_rrd_corrected_maximum($minimum, $maximum, $data_source_type_id) {
 }
 
 /**
+ * cacti_rrd_owned_path - the path to apply RRDfile ownership to, if any
+ *
+ *   The owner is taken from the configured RRA directory, so applying it to a
+ *   file outside that directory hands ownership of an unrelated path to the
+ *   Cacti account. A custom data_source_path is allowed by design, so the file
+ *   is still created; only the ownership change is withheld.
+ *
+ *   Returns a path rebuilt from the resolved directory and the basename rather
+ *   than echoing the caller's string, so the value that reaches lchown() is
+ *   the validated one. The basename is used deliberately: realpath() on the
+ *   file itself would resolve a symlink and defeat lchown().
+ *
+ * @param  (string) $path - the RRDfile path
+ *
+ * @return (string|false) the path to change, or false to leave ownership alone
+ */
+function cacti_rrd_owned_path($path) {
+	global $config;
+
+	$base = realpath($config['rra_path']);
+	$dir  = realpath(dirname((string) $path));
+
+	if ($base === false || $dir === false) {
+		return false;
+	}
+
+	if ($dir !== $base && strpos($dir, $base . DIRECTORY_SEPARATOR) !== 0) {
+		return false;
+	}
+
+	return $dir . DIRECTORY_SEPARATOR . basename((string) $path);
+}
+
+/**
  * cacti_rrdtool_valid_ds_name - validate an RRDtool data source name
  *
  * @param  (string) $name - Data source name

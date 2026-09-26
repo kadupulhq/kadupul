@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * poller_graphs_reapply_names.php
+ *
+ * Reapplies suggested names to selected graphs.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -115,6 +122,11 @@ $graph_list = db_fetch_assoc_prepared("SELECT
 	LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id)
 	WHERE graph_local.id=graph_templates_graph.local_graph_id
 	$sql_where", $sql_params);
+
+if ($graph_list === false) {
+	fwrite(STDERR, "ERROR: Unable to load the selected graphs.\n");
+	exit(1);
+}
 
 /* issue warnings and start message if applicable */
 print "WARNING: Do not interrupt this script.  Interrupting during rename can cause issues\n";

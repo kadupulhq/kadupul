@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * analyze_database.php
+ *
+ * Analyzes database tables and reports storage and index information.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -76,28 +83,39 @@ print "NOTE: Analyzing All Cacti Database Tables\n";
 if (!$local && $config['poller_id'] > 1) {
 	db_switch_remote_to_main();
 
-	print "NOTE: Repairing Tables for Main Database" . PHP_EOL;
+	print "NOTE: Analyzing Tables for Main Database" . PHP_EOL;
 } else {
-	print "NOTE: Repairing Tables for Local Database" . PHP_EOL;
+	print "NOTE: Analyzing Tables for Local Database" . PHP_EOL;
 }
 
-$tables = db_fetch_assoc('SHOW TABLES FROM `' . $database_default . '`');
+$tables = db_fetch_assoc('SHOW TABLES FROM `' . str_replace('`', '``', $database_default) . '`');
+$failed = !is_array($tables) || cacti_sizeof($tables) === 0;
 
 if (cacti_sizeof($tables)) {
 	foreach($tables AS $table) {
+		$table_name = $table['Tables_in_' . $database_default];
+		$quoted_table = '`' . str_replace('`', '``', $table_name) . '`';
+		print "NOTE: Analyzing Table -> '$table_name'";
+
 		if (db_binlog_enabled()) {
-			print "NOTE: Analyzing Table -> '" . $table['Tables_in_' . $database_default] . "' without writing to the binlog";
-			$status = db_execute('ANALYZE TABLE NO_WRITE_TO_BINLOG ' . $table['Tables_in_' . $database_default] . $form);
+			print ' without writing to the binlog';
+			$status = db_execute('ANALYZE TABLE NO_WRITE_TO_BINLOG ' . $quoted_table . $form);
 		} else {
-			print "NOTE: Analyzing Table -> '" . $table['Tables_in_' . $database_default] . "'";
-			$status = db_execute('ANALYZE TABLE ' . $table['Tables_in_' . $database_default] . $form);
+			$status = db_execute('ANALYZE TABLE ' . $quoted_table . $form);
 		}
 
-		print ($status == 0 ? ' Failed' : ' Successful') . "\n";
+		if ($status === false) {
+			print ' Failed' . PHP_EOL;
+			$failed = true;
+		} else {
+			print ' Successful' . PHP_EOL;
+		}
 	}
 
-	cacti_log('ANALYSIS STATS: Analyzing Cacti Tables Complete.  Total time ' . (time() - $start) . ' seconds.', false, 'SYSTEM');
+	cacti_log('ANALYSIS STATS: Analyzing Cacti Tables ' . ($failed ? 'completed with errors' : 'complete') . '. Total time ' . (time() - $start) . ' seconds.', false, 'SYSTEM');
 }
+
+exit($failed ? 1 : 0);
 
 /*  display_version - displays version information */
 function display_version() {

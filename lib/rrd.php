@@ -1042,38 +1042,49 @@ function rrdtool_function_interface_speed($data_local) {
 	return $speed;
 }
 
-function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = false) {
-	global $config, $data_source_types, $consolidation_functions, $encryption;
+/**
+ * The DS and RRA part of an rrdtool create command for a data source.
+ *
+ * Both creators built this from the same rows and drifted. Some of the drift
+ * has already cost data: the Boost copy compared the bounds with (int), had no
+ * GAUGE or ABSOLUTE case, and read a stored maximum of 0 as absent, so the two
+ * wrote different DS definitions for one data source. The rest is still
+ * waiting to. Boost joined the RRA and consolidation rows on
+ * dtd.data_source_profile_id rather than on dsp.id, which finds them even when
+ * the profile row itself is gone; x_files_factor is then NULL and the RRA line
+ * it writes is malformed, where lib/rrd.php found no RRA and failed. Boost also
+ * left the RRA order undetermined when two profiles tie on rows times steps,
+ * and said nothing at all when a data source had no RRA.
+ *
+ * So there is one builder, with lib/rrd.php's join, lib/rrd.php's ordering and
+ * a log line either way. What is not here is what each creator does with the
+ * result: the path checks, the directory creation, the ownership and the
+ * execution all differ for reasons of their own.
+ *
+ * @param int    $local_data_id
+ * @param string $facility log facility of the calling creator, POLLER or BOOST
+ *
+ * @return string|false the command text after the path, or false when the data
+ *                      source cannot be described
+ */
+function rrd_create_definition($local_data_id, $facility) {
+	global $config;
 
-	include ($config['include_path'] . '/global_arrays.php');
+	/**
+	 * @var array $data_source_types
+	 * @var array $consolidation_functions
+	 */
+	include($config['include_path'] . '/global_arrays.php');
 
-	$data_source_path = get_data_source_path($local_data_id, true);
-
-	if (!cacti_rrdtool_valid_path($data_source_path) || !rrd_check_path($data_source_path)) {
-		cacti_log("ERROR: Invalid RRD file path for local_data_id: $local_data_id.", false, 'POLLER');
-
-		return false;
-	}
-
-	/* ok, if that passes lets check to make sure an rra does not already
-	exist, the last thing we want to do is overright data! */
-	if ($show_source != true) {
-		if (read_config_option('storage_location')) {
-			if (rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
-				return -1;
-			}
-		} elseif (file_exists($data_source_path)) {
-			return -1;
-		}
-	}
-
-	/* the first thing we must do is make sure there is at least one
-	rra associated with this data source... *
-	UPDATE: As of version 0.6.6, we are splitting this up into two
-	SQL strings because of the multiple DS per RRD support. This is
-	not a big deal however since this function gets called once per
-	data source */
-
+	/**
+	 * the first thing we must do is make sure there is at least one
+	 * rra associated with this data source... *
+	 *
+	 * UPDATE: As of version 0.6.6, we are splitting this up into two
+	 * SQL strings because of the multiple DS per RRD support. This is
+	 * not a big deal however since this function gets called once per
+	 * data source
+	 */
 	$rras = db_fetch_assoc_prepared('SELECT dtd.rrd_step, dsp.x_files_factor,
 		dspr.steps, dspr.rows, dspc.consolidation_function_id,
 		(dspr.rows*dspr.steps) AS rra_order
@@ -1090,9 +1101,12 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 		array($local_data_id)
 	);
 
-	/* if we find that this DS has no RRA associated; get out */
+	/* if we find that this DS has no RRA associated; get out.  This would
+	 * indicate that a data source has been deleted
+	 */
 	if (cacti_sizeof($rras) <= 0) {
-		cacti_log("ERROR: There are no RRA's assigned to local_data_id: $local_data_id.");
+		cacti_log("ERROR: There are no RRA's assigned to local_data_id: $local_data_id.", false, $facility);
+
 		return false;
 	}
 
@@ -1114,7 +1128,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 			FROM data_template_rrd AS dtr
 			INNER JOIN graph_templates_item AS gti
 			ON dtr.id = gti.task_item_id
-			WHERE local_data_id = ?
+			WHERE dtr.local_data_id = ?
 			ORDER BY local_data_template_rrd_id',
 			array($local_data_id)
 		);
@@ -1122,7 +1136,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 		$data_sources = db_fetch_assoc_prepared('SELECT DISTINCT dtr.id, dtr.data_source_name, dtr.rrd_heartbeat,
 			dtr.rrd_minimum, dtr.rrd_maximum, dtr.data_source_type_id
 			FROM data_template_rrd AS dtr
-			WHERE local_data_id = ?
+			WHERE dtr.local_data_id = ?
 			ORDER BY local_data_template_rrd_id',
 			array($local_data_id)
 		);
@@ -1135,21 +1149,16 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	 * - There are only one data source (then use it)
 	 */
 	if (cacti_sizeof($data_sources)) {
-		$data_local = db_fetch_row_prepared('SELECT host_id,
-			snmp_query_id, snmp_index
-			FROM data_local
-			WHERE id = ?',
-			array($local_data_id)
-		);
-
-		$speed = rrdtool_function_interface_speed($data_local);
+		/* only a |query_ maximum needs the device, and most do not have one */
+		$data_local = false;
+		$speed      = false;
 
 		foreach ($data_sources as $data_source) {
 			/* use the cacti ds name by default or the user defined one, if entered */
 			$data_source_name = get_data_source_item_name($data_source['id']);
 
 			if (!cacti_rrdtool_valid_ds_name($data_source_name)) {
-				cacti_log("ERROR: Invalid RRD data source name for local_data_id: $local_data_id.", false, 'POLLER');
+				cacti_log("ERROR: Invalid RRD data source name for local_data_id: $local_data_id.", false, $facility);
 
 				return false;
 			}
@@ -1157,18 +1166,34 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 			// Trim the data source maximum
 			$data_source['rrd_maximum'] = trim((string) $data_source['rrd_maximum']);
 
+			/**
+			 * empty() here treated a stored maximum of '0' as absent and made
+			 * it unbounded. Only an empty string or the undefined marker mean
+			 * unbounded.
+			 */
 			if ($data_source['rrd_maximum'] === '' || $data_source['rrd_maximum'] == 'U') {
 				/* in case no maximum is given, use "Undef" value */
 				$data_source['rrd_maximum'] = 'U';
 			} elseif (strpos($data_source['rrd_maximum'], '|query_') !== false) {
 				/* in case a query variable is given, evaluate it */
+				if ($data_local === false) {
+					$data_local = db_fetch_row_prepared('SELECT host_id,
+						snmp_query_id, snmp_index
+						FROM data_local
+						WHERE id = ?',
+						array($local_data_id)
+					);
+
+					$speed = rrdtool_function_interface_speed($data_local);
+				}
+
 				if ($data_source['rrd_maximum'] == '|query_ifSpeed|' || $data_source['rrd_maximum'] == '|query_ifHighSpeed|') {
 					$data_source['rrd_maximum'] = $speed;
 				} else {
 					$data_source['rrd_maximum'] = substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']);
 				}
 			} else {
-				/* max > min required; shared so the Boost creator cannot drift */
+				/* max > min required */
 				$data_source['rrd_maximum'] = cacti_rrd_corrected_maximum($data_source['rrd_minimum'], $data_source['rrd_maximum'], $data_source['data_source_type_id']);
 			}
 
@@ -1178,7 +1203,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 			}
 
 			if (!cacti_rrdtool_valid_bound($data_source['rrd_minimum']) || !cacti_rrdtool_valid_bound($data_source['rrd_maximum'])) {
-				cacti_log("ERROR: Invalid RRD data source bounds for local_data_id: $local_data_id.", false, 'POLLER');
+				cacti_log("ERROR: Invalid RRD data source bounds for local_data_id: $local_data_id.", false, $facility);
 
 				return false;
 			}
@@ -1191,6 +1216,75 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	/* loop through each available RRA for this DS */
 	foreach ($rras as $rra) {
 		$create_rra .= 'RRA:' . $consolidation_functions[$rra['consolidation_function_id']] . ':' . $rra['x_files_factor'] . ':' . $rra['steps'] . ':' . $rra['rows'] . RRD_NL;
+	}
+
+	return $create_ds . $create_rra;
+}
+
+function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = false) {
+	global $config;
+
+	$data_source_path = get_data_source_path($local_data_id, true);
+
+	if (!cacti_rrdtool_valid_path($data_source_path) || !rrd_check_path($data_source_path)) {
+		cacti_log("ERROR: Invalid RRD file path for local_data_id: $local_data_id.", false, 'POLLER');
+
+		return false;
+	}
+
+	/* ok, if that passes lets check to make sure an rra does not already
+	exist, the last thing we want to do is overright data! */
+	if ($show_source != true) {
+		/**
+		 * rrd_init(), rrd_close() and rrdtool_execute() all route on
+		 * force_storage_location_local as well as the setting, so a
+		 * check that consults the setting alone asks the proxy about a
+		 * file this process is about to write locally, and the local
+		 * link refusal below never runs. Route it the same way.
+		 */
+		$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
+			&& read_config_option('storage_location');
+
+		/**
+		 * Neither answer file_exists() can give about a link refuses it,
+		 * because it follows one. False, for a dangling link, let the guard
+		 * pass and rrdtool created the file the link named, with the chown and
+		 * chgrp below following it too. True, for a link whose target is
+		 * already there, returns -1, which callers read as "the file exists"
+		 * and follow with an update written through the link. So test the path
+		 * itself before asking whether anything exists at it.
+		 *
+		 * Local storage only. Under storage_location the file lives on the
+		 * proxy host and rrdtool_build_path_command() allows only file_exists,
+		 * filemtime, is_dir, mkdir, rmdir, unlink and archive, so there is no
+		 * verb to ask the proxy whether a path is a link. The ownership change
+		 * is withheld there regardless, because realpath() of a remote
+		 * directory fails locally and the containment test below returns false.
+		 */
+		if (!$remote_storage && is_link($data_source_path)) {
+			cacti_log("ERROR: Refusing to create an RRDfile through the symbolic link '$data_source_path'.", false, 'POLLER');
+
+			/**
+			 * false, not -1: callers treat -1 as "the file is already
+			 * there" and carry on to the update, so a refusal that
+			 * returned it would log and then write anyway.
+			 */
+			return false;
+		}
+
+		if ($remote_storage) {
+			if (rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
+				return -1;
+			}
+		} elseif (file_exists($data_source_path)) {
+			return -1;
+		}
+	}
+
+	$definition = rrd_create_definition($local_data_id, 'POLLER');
+
+	if ($definition === false) {
+		return false;
 	}
 
 	if ($config['cacti_server_os'] != 'win32') {
@@ -1251,17 +1345,39 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	}
 
 	if ($show_source == true) {
-		return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
+		return read_config_option('path_rrdtool') . ' create' . RRD_NL . $data_source_path . $definition;
 	} else {
-		$success = rrdtool_execute("create $data_source_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+		$success = rrdtool_execute("create $data_source_path $definition", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
 
-		if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
+		/**
+		 * Local storage only. Under remote storage rrdtool_execute() sent
+		 * the create to the proxy, so the file this block would inspect is
+		 * a local path that happens to share the configured name, and
+		 * changing its ownership touches a file this run never wrote.
+		 */
+		if (!$remote_storage && $config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
 			if (file_exists($data_source_path)) {
-				if (!chown($data_source_path, $owner_id)) {
-					cacti_log("ERROR: Unable to set ownership for '$data_source_path'", false, 'POLLER');
-				}
-				if (!chgrp($data_source_path, $group_id)) {
-					cacti_log("ERROR: Unable to set group for '$data_source_path'", false, 'POLLER');
+				/**
+				 * lchown/lchgrp act on the final component rather than
+				 * following it, which narrows the window a swapped link
+				 * leaves open. The containment test is what stops ownership
+				 * of a file outside the RRA directory being given away: the
+				 * owner comes from that directory, so applying it elsewhere
+				 * hands an unrelated path to the Cacti account.
+				 */
+				$owned_path = cacti_rrd_owned_path($data_source_path);
+
+				if ($owned_path === false || is_link($owned_path) || !is_file($owned_path)) {
+					cacti_log("WARNING: Ownership not applied to '$data_source_path'; not a regular"
+						. ' file inside the RRA directory', false, 'POLLER');
+				} else {
+					if (!lchown($owned_path, $owner_id)) {
+						cacti_log("ERROR: Unable to set ownership for '$owned_path'", false, 'POLLER');
+					}
+
+					if (!lchgrp($owned_path, $group_id)) {
+						cacti_log("ERROR: Unable to set group for '$owned_path'", false, 'POLLER');
+					}
 				}
 			} else {
 				cacti_log("ERROR: RRD file '$data_source_path' does not exist for ownership assignment", false, 'POLLER');
@@ -1283,6 +1399,8 @@ function rrdtool_rejection_is_permanent($reason) {
 }
 
 function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null) {
+	global $config;
+
 	static $retained_logs = array();
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
@@ -1304,8 +1422,33 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 		}
 
 		if (is_array($rrd_fields['times']) && cacti_sizeof($rrd_fields['times'])) {
+			$remote_storage = (!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true)
+				&& read_config_option('storage_location');
+
+			/**
+			 * The refusal in rrdtool_function_create() is only reached when
+			 * this function decides the file is absent. file_exists() follows
+			 * a link, so a link whose target is already there reads as an
+			 * existing RRD, the create is skipped, and the update below is
+			 * written through the link. Refuse it here as well, ahead of the
+			 * existence question.
+			 *
+			 * Local storage only, for the same reason as the create: the proxy
+			 * has no verb that asks whether a path is a link.
+			 */
+			if (!$remote_storage && is_link($rrd_path)) {
+				cacti_log("ERROR: Refusing to update an RRDfile through the symbolic link '$rrd_path'.", false, 'POLLER');
+
+				foreach ($rrd_fields['times'] as $update_time => $field_array) {
+					$completed[$rrd_path][$update_time] = false;
+				}
+
+				$failed = true;
+				continue;
+			}
+
 			/* create the rrd if one does not already exist */
-			if (read_config_option('storage_location') > 0) {
+			if ($remote_storage) {
 				$file_exists = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 			} else {
 				$file_exists = file_exists($rrd_path);

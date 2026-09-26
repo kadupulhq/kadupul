@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * import_package.php
+ *
+ * Imports or previews a signed Cacti package.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -97,6 +104,10 @@ if (cacti_sizeof($parms)) {
 				$profile_set = true;
 
 				$profile_id = trim($value);
+				if (!ctype_digit($profile_id) || (int) $profile_id <= 0) {
+					fwrite(STDERR, "ERROR: --profile-id must be a positive integer.\n");
+					exit(1);
+				}
 
 				break;
 			case '--preview':
@@ -154,14 +165,14 @@ if (cacti_sizeof($parms)) {
 		$profile_id = db_fetch_cell('SELECT id FROM data_source_profiles ORDER BY `default` DESC LIMIT 1');
 	}
 
+	if ($profile_id === false || $profile_id === null || $profile_id === '') {
+		fwrite(STDERR, "FATAL: No valid Data Source Profile found for package import.\n");
+		exit(1);
+	}
+
 	if ($filename != '') {
-		if (file_exists($filename) && is_readable($filename) && file_exists($filename) && !is_dir($filename)) {
-			$fp   = fopen($filename, 'r');
-			$data = fread($fp, filesize($filename));
-
-			fclose($fp);
-
-			print 'Read ' . strlen($data) . ' bytes of Package data' . PHP_EOL;
+		if (is_file($filename) && is_readable($filename)) {
+			print 'Processing package file' . PHP_EOL;
 
 			$result = import_package($filename, $profile_id, $remove_orphans, $replace_svalues, $preview_only);
 

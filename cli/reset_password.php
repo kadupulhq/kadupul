@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * reset_password.php
+ *
+ * Resets the password for a local Cacti user.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2026 The Kadupul project and contributors                 |

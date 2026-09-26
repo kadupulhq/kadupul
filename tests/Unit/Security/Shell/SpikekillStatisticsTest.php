@@ -10,7 +10,9 @@ if (!function_exists('number_format_i18n')) {
     function number_format_i18n($value, $decimals = 0) { return number_format($value, $decimals); }
 }
 if (!function_exists('__')) {
-    function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+	function __($format, ...$args) {
+		return $args ? vsprintf($format, $args) : $format;
+	}
 }
 
 test('statistics preserve unavailable values and align all sixteen columns', function ($value, $expected, $html) {

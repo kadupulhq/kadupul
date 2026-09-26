@@ -1856,7 +1856,8 @@ function poller_connect_to_remote($poller_id) {
  * @return (bool)
  */
 function replicate_out($remote_poller_id = 1, $class = 'all') {
-	global $config;
+	global $config, $replicate_out_success;
+	$replicate_out_success = true;
 
 	replicate_log('Attempting to replicate to Poller ' . $remote_poller_id);
 
@@ -2024,12 +2025,14 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 		replicate_out_table($rcnn_id, $data, 'poller_reindex', $remote_poller_id, false, array('assert_value'));
 
 		// Since we are doing an update, remove stale data
-		db_execute('DELETE pr
+		if (replicate_out_execute('DELETE pr
 			FROM poller_reindex AS pr
 			LEFT JOIN host_snmp_query AS hsq
 			ON pr.host_id = hsq.host_id
 			AND pr.data_query_id = hsq.snmp_query_id
-			WHERE hsq.host_id IS NULL', false, $rcnn_id);
+			WHERE hsq.host_id IS NULL', false, $rcnn_id) === false) {
+			replicate_log('ERROR: Unable to remove stale poller reindex rows.');
+		}
 
 		$data = db_fetch_assoc_prepared('SELECT pi.*
 			FROM poller_item AS pi
@@ -2040,18 +2043,26 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 		// Remove anything not updated recently
 		$time = db_fetch_cell('SELECT MAX(UNIX_TIMESTAMP(last_updated)) FROM poller_item', '', false, $rcnn_id);
 
-		if (!empty($time)) {
+		if ($time === false) {
+			$replicate_out_success = false;
+			replicate_log('ERROR: Unable to read the remote poller item timestamp.');
+		} elseif (!empty($time)) {
 			// You must update the last_updated locally
-			db_execute_prepared('UPDATE poller_item
+			if (db_execute_prepared('UPDATE poller_item
 				SET last_updated = FROM_UNIXTIME(?)
 				WHERE poller_id = ?',
-				array($time, $remote_poller_id));
+				array($time, $remote_poller_id)) === false) {
+				$replicate_out_success = false;
+				replicate_log('ERROR: Unable to update local poller item timestamps.');
+			}
 
-			db_execute_prepared("DELETE FROM poller_item
+			if (replicate_out_execute("DELETE FROM poller_item
 				WHERE last_updated < ?
 				AND last_updated > '0000-00-00'
 				AND last_updated NOT NULL",
-				array(date('Y-m-d H:i:s', $time)), false, $rcnn_id);
+				false, $rcnn_id) === false) {
+				replicate_log('ERROR: Unable to remove stale remote poller items.');
+			}
 		}
 
 		$data = db_fetch_assoc_prepared('SELECT dl.*
@@ -2131,11 +2142,17 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 		WHERE poller_id = ?',
 		array($remote_poller_id));
 
-	if (cacti_sizeof($stats)) {
-		db_execute_prepared('UPDATE poller
+	if ($stats === false) {
+		$replicate_out_success = false;
+		replicate_log('ERROR: Unable to read poller item statistics.');
+	} elseif (cacti_sizeof($stats)) {
+		if (db_execute_prepared('UPDATE poller
 			SET snmp = ?, script = ?, server = ?
 			WHERE id = ?',
-			array($stats['snmp'], $stats['script'], $stats['server'], $remote_poller_id));
+			array($stats['snmp'], $stats['script'], $stats['server'], $remote_poller_id)) === false) {
+			$replicate_out_success = false;
+			replicate_log('ERROR: Unable to update poller item statistics.');
+		}
 	}
 
 	if ($class != 'plugins' && $config['is_web']) {
@@ -2143,7 +2160,7 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 		raise_message('poller_sync');
 	}
 
-	return true;
+	return $replicate_out_success;
 }
 
 /**
@@ -2160,9 +2177,16 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
  * @param  (bool)   $truncate         - A flag that if true, truncates, otherwise updates
  * @param  (array)  $exclude          - An array of column names to not update on replication
  *
- * @return (void)
+ * @return (bool) True when the replication writes succeeded
  */
 function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate = true, $exclude = false, $level = POLLER_VERBOSITY_NONE) {
+	global $replicate_out_success;
+	if ($data === false) {
+		$replicate_out_success = false;
+		replicate_log('ERROR: Unable to load local rows for table ' . $table . '; remote table was not changed.', $level);
+
+		return false;
+	}
 	// Get the create table syntax just in case
 	$create_table = db_fetch_row("SHOW CREATE TABLE `$table`");
 
@@ -2171,11 +2195,12 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 	} else {
 		cacti_log("WARNING: Replicate Out Unable to get Table Schema for $table.  Table does not exist!", false, 'POLLER');
 		$create = '';
-		return;
+		$replicate_out_success = false;
+		return false;
 	}
 
 	if (!db_table_exists($table, false, $conn) && $create != '') {
-		db_execute($create, false, $conn);
+		replicate_out_execute($create, false, $conn);
 	}
 
 	if (cacti_sizeof($data)) {
@@ -2183,6 +2208,12 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 		$local_columns  = db_fetch_assoc('SHOW COLUMNS FROM ' . $table);
 		$remote_columns = db_fetch_assoc('SHOW COLUMNS FROM ' . $table, false, $conn);
 		$remote_rows    = db_fetch_cell('SELECT COUNT(*) FROM ' . $table, '', false, $conn);
+		if ($local_columns === false || $remote_columns === false || $remote_rows === false) {
+			$replicate_out_success = false;
+			replicate_log('ERROR: Unable to inspect table ' . $table . '; remote table was not changed.', $level);
+
+			return false;
+		}
 
 		if ($exclude !== false && !is_array($exclude)) {
 			$exclude = array($exclude);
@@ -2197,12 +2228,12 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 			$create = db_fetch_row('SHOW CREATE TABLE ' . $table);
 			if (isset($create["CREATE TABLE `$table`"]) || isset($create['Create Table'])) {
 				replicate_log('NOTE: Replication Recreating Remote Table Structure for ' . $table, $level);
-				db_execute('DROP TABLE IF EXISTS ' . $table, true, $conn);
+				replicate_out_execute('DROP TABLE IF EXISTS ' . $table, true, $conn);
 
 				if (isset($create["CREATE TABLE `$table`"])) {
-					db_execute($create["CREATE TABLE `$table`"], true, $conn);
+					replicate_out_execute($create["CREATE TABLE `$table`"], true, $conn);
 				} else {
-					db_execute($create['Create Table'], true, $conn);
+					replicate_out_execute($create['Create Table'], true, $conn);
 				}
 			}
 		}
@@ -2211,7 +2242,7 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 			$prefix = "REPLACE INTO $table (";
 			$suffix = '';
 
-			db_execute("TRUNCATE TABLE $table", true, $conn);
+			replicate_out_execute("TRUNCATE TABLE $table", true, $conn);
 		} else {
 			$prefix = "INSERT INTO $table (";
 			$suffix = ' ON DUPLICATE KEY UPDATE ';
@@ -2265,7 +2296,7 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 			$rowcnt++;
 
 			if ($rowcnt > 1000) {
-				db_execute($prefix . $sql . $suffix, true, $conn);
+				replicate_out_execute($prefix . $sql . $suffix, true, $conn);
 				$rows_affected = db_affected_rows($conn);
 				$rows_log      = ((($rows_done % 100000) + $rows_affected) > 100000);
 				$rows_done    += $rows_affected;
@@ -2279,7 +2310,7 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 		}
 
 		if ($rowcnt > 0) {
-			db_execute($prefix . $sql . $suffix, true, $conn);
+			replicate_out_execute($prefix . $sql . $suffix, true, $conn);
 			$rows_done += db_affected_rows($conn);
 		}
 
@@ -2292,20 +2323,34 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 
 			if (isset($create["CREATE TABLE `$table`"]) || isset($create['Create Table'])) {
 				replicate_log('NOTE: Replication Creating Remote Table Structure for ' . $table, $level);
-				db_execute('DROP TABLE IF EXISTS ' . $table, true, $conn);
+				replicate_out_execute('DROP TABLE IF EXISTS ' . $table, true, $conn);
 
 				if (isset($create["CREATE TABLE `$table`"])) {
-					db_execute($create["CREATE TABLE `$table`"], true, $conn);
+					replicate_out_execute($create["CREATE TABLE `$table`"], true, $conn);
 				} else {
-					db_execute($create['Create Table'], true, $conn);
+					replicate_out_execute($create['Create Table'], true, $conn);
 				}
 			}
 		} else {
 			replicate_log('INFO: Table ' . $table . ' Not Replicated to Remote Poller ' . $remote_poller_id . ' Due to No Rows Found', $level);
 
-			db_execute("TRUNCATE TABLE $table", true, $conn);
+			replicate_out_execute("TRUNCATE TABLE $table", true, $conn);
 		}
 	}
+
+	return $replicate_out_success;
+}
+
+function replicate_out_execute($sql, $silent = false, $conn = false) {
+	global $replicate_out_success;
+
+	$result = db_execute($sql, $silent, $conn);
+
+	if ($result === false) {
+		$replicate_out_success = false;
+	}
+
+	return $result;
 }
 
 function replicate_log($text, $level = POLLER_VERBOSITY_NONE) {
@@ -2434,7 +2479,20 @@ function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, 
 }
 
 function replicate_table_to_poller($conn, &$data, $table, $exclude = false) {
+	global $replicate_out_success;
+	if ($data === false) {
+		$replicate_out_success = false;
+		replicate_log('ERROR: Unable to load local rows for table ' . $table . '; remote table was not changed.');
+
+		return false;
+	}
 	$max_packet  = db_fetch_row("SHOW GLOBAL VARIABLES LIKE 'max_allowed_packet'", true, $conn);
+	if ($max_packet === false) {
+		$replicate_out_success = false;
+		replicate_log('ERROR: Unable to read max_allowed_packet for the remote database.');
+
+		return false;
+	}
 
 	if (cacti_sizeof($max_packet)) {
 		$max_packet = $max_packet['Value'];
@@ -2452,6 +2510,12 @@ function replicate_table_to_poller($conn, &$data, $table, $exclude = false) {
 		$skipcols  = array();
 
 		$remote_rows = db_fetch_cell("SELECT COUNT(*) FROM $table", '', true, $conn);
+		if ($remote_rows === false) {
+			$replicate_out_success = false;
+		replicate_log('ERROR: Unable to inspect remote table ' . $table . '; table was not changed.');
+
+			return false;
+		}
 
 		if ($exclude !== false && !is_array($exclude)) {
 			$exclude = array($exclude);
@@ -2495,7 +2559,7 @@ function replicate_table_to_poller($conn, &$data, $table, $exclude = false) {
 			$sqllen += strlen($sql_row);
 
 			if ($rowcnt > 150000 || ($sqllen + 1000 > $max_packet)) {
-				db_execute($prefix . $sql . $suffix, true, $conn);
+				replicate_out_execute($prefix . $sql . $suffix, true, $conn);
 				$rows_done += db_affected_rows($conn);
 				$sql = '';
 				$rowcnt = 0;
@@ -2504,12 +2568,14 @@ function replicate_table_to_poller($conn, &$data, $table, $exclude = false) {
 		}
 
 		if ($rowcnt > 0) {
-			db_execute($prefix . $sql . $suffix, true, $conn);
+			replicate_out_execute($prefix . $sql . $suffix, true, $conn);
 			$rows_done += db_affected_rows($conn);
 		}
 
 		cacti_log('NOTE: Table ' . $table . ' Replicated to Poller With ' . $rows_done . ' Rows Updated', true, 'REPLICATE', POLLER_VERBOSITY_MEDIUM);
 	}
+
+	return $replicate_out_success;
 }
 
 function poller_recovery_flush_boost($poller_id) {

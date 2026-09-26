@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * removespikes.php
+ *
+ * Removes detected spikes from a specified RRD file.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * refresh_csrf.php
+ *
+ * Rotates the Cacti CSRF secret and removes a stale legacy secret file.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

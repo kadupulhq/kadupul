@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * audit_database.php
+ *
+ * Compares the live database schema with the audit baseline and optionally repairs or reloads it.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -44,6 +51,10 @@ $report     = false;
 $repair     = false;
 $altersopt  = false;
 $missingopt = false;
+$prune_plugins = false;
+$allow_fork_repairs = false;
+$audit_warning_count = 0;
+$audit_baseline_version = null;
 
 if (cacti_sizeof($parms)) {
 	$shortopts = 'VvHh';
@@ -56,6 +67,8 @@ if (cacti_sizeof($parms)) {
 		'repair',
 		'alters',
 		'missing-tables',
+		'prune-plugins',
+		'allow-fork-repairs',
 		'version',
 		'help'
 	);
@@ -86,6 +99,14 @@ if (cacti_sizeof($parms)) {
 			break;
 		case 'missing-tables':
 			$missingopt = true;
+
+			break;
+		case 'prune-plugins':
+			$prune_plugins = true;
+
+			break;
+		case 'allow-fork-repairs':
+			$allow_fork_repairs = true;
 
 			break;
 		case 'upgrade':
@@ -128,13 +149,13 @@ if (cacti_sizeof($parms)) {
 	if ($repair) {
 		$exit_code = repair_database() ? 0 : 1;
 	} elseif ($create) {
-		create_tables();
+		$exit_code = create_tables() ? 0 : 1;
 	} elseif ($report) {
 		$exit_code = report_audit_results() === false ? 1 : 0;
 	} elseif ($altersopt) {
 		$exit_code = repair_database(false) ? 0 : 1;
 	} elseif ($loadopt) {
-		load_audit_database();
+		$exit_code = load_audit_database() ? 0 : 1;
 	} else {
 		display_help();
 	}
@@ -229,7 +250,7 @@ function audit_database_defaults_file($username, $password, $hostname, $port) {
 }
 
 function upgrade_database() {
-	global $config;
+	global $config, $prune_plugins;
 
 	$php_binary = read_config_option('path_php_binary');
 	$start      = microtime(true);
@@ -378,7 +399,9 @@ function upgrade_database() {
 			$pname = $p['directory'];
 
 			if (!file_exists($config['base_path'] . '/plugins/' . $pname . '/INFO')) {
-				if (file_exists($config['base_path'] . '/plugins/' . $pname . '/setup.php')) {
+				if (!$prune_plugins) {
+					cacti_log("WARNING: Plugin $pname is registered but its INFO file is missing. Registration preserved; use --prune-plugins to remove it.", true, 'UPGRADE');
+				} elseif (file_exists($config['base_path'] . '/plugins/' . $pname . '/setup.php')) {
 					cacti_log("NOTE: Uninstalling Plugin $pname which is not supported.  Preserving tables.", true, 'UPGRADE');
 
 					api_plugin_uninstall($pname, false);
@@ -412,11 +435,24 @@ function plugin_installed($plugin) {
 }
 
 function repair_database($run = true) {
-	global $altersopt, $database_default;
+	global $altersopt, $database_default, $audit_warning_count, $allow_fork_repairs, $audit_baseline_version;
 
 	$alters = report_audit_results(false);
 
 	if ($alters === false) {
+		return false;
+	}
+
+	$baseline_is_current = $audit_baseline_version === CACTI_VERSION;
+	if ($run && cacti_sizeof($alters) && (!$baseline_is_current || $audit_warning_count > 0) && !$allow_fork_repairs) {
+		if (!$baseline_is_current) {
+			print 'FATAL: Audit baseline provenance is unknown or does not match Cacti ' . CACTI_VERSION . '.' . PHP_EOL;
+			print 'Regenerate docs/audit_schema.sql from a pristine install, or review the proposed ALTER statements and use --allow-fork-repairs.' . PHP_EOL;
+		} else {
+			print 'FATAL: The audit found ' . $audit_warning_count . ' warning(s) for schema elements outside the canonical baseline.' . PHP_EOL;
+			print 'Review the report and proposed ALTER statements, then rerun with --allow-fork-repairs only if they are appropriate for this fork.' . PHP_EOL;
+		}
+
 		return false;
 	}
 
@@ -486,11 +522,20 @@ function repair_database($run = true) {
 }
 
 function report_audit_results($output = true) {
-	global $config, $database_default, $altersopt, $missingopt;
+	global $config, $database_default, $altersopt, $missingopt, $audit_warning_count, $audit_baseline_version;
+
+	$audit_baseline_version = audit_schema_source_version($config['base_path'] . '/docs/audit_schema.sql');
+	if ($output && $audit_baseline_version !== CACTI_VERSION) {
+		print 'WARNING: Audit baseline provenance is ' . ($audit_baseline_version === null ? 'missing' : "'$audit_baseline_version'") . '; this Cacti release is ' . CACTI_VERSION . '.' . PHP_EOL;
+	}
 
 	$db_name = 'Tables_in_' . $database_default;
 
-	create_tables();
+	if (!create_tables()) {
+		print 'FATAL: Unable to load the audit schema baseline' . PHP_EOL;
+
+		return false;
+	}
 
 	$tables = db_fetch_assoc('SHOW TABLES');
 
@@ -501,6 +546,7 @@ function report_audit_results($output = true) {
 	}
 
 	$alters  = array();
+	$audit_warnings = 0;
 	$missing_tables = array();
 
 	/* 1.2.31 audited only the tables present; listing and creating absent core
@@ -567,6 +613,11 @@ function report_audit_results($output = true) {
 			$table_name = $table[$db_name];
 
 			$status  = db_fetch_row('SHOW TABLE STATUS LIKE "' . $table_name . '"');
+			if ($status === false || !isset($status['Collation'])) {
+				fwrite(STDERR, "ERROR: Unable to inspect table status for $table_name. Audit stopped without repair proposals.\n");
+
+				return false;
+			}
 
 			if ($status['Collation'] == 'utf8mb4_unicode_ci' || $status['Collation'] == 'utf8_general_ci') {
 				$collation = 'utf8';
@@ -585,6 +636,11 @@ function report_audit_results($output = true) {
 				FROM table_columns
 				WHERE table_name = ?',
 				array($table_name));
+			if ($table_exists === false) {
+				fwrite(STDERR, "ERROR: Unable to check canonical audit metadata for $table_name.\n");
+
+				return false;
+			}
 
 			if (!$table_exists) {
 				$plugin_table = db_fetch_row_prepared('SELECT *
@@ -626,6 +682,11 @@ function report_audit_results($output = true) {
 			$exists  = db_fetch_cell_prepared('SELECT COUNT(*) FROM table_columns
 				WHERE table_name = ?',
 				array($table_name));
+			if ($columns === false || $exists === false) {
+				fwrite(STDERR, "ERROR: Unable to inspect columns or canonical column metadata for $table_name. Audit stopped without repair proposals.\n");
+
+				return false;
+			}
 
 			if ($exists) {
 				if (cacti_sizeof($columns)) {
@@ -637,6 +698,11 @@ function report_audit_results($output = true) {
 							WHERE table_name = ?
 							AND table_field = ?',
 							array($table_name, $c['Field']));
+						if ($dbc === false) {
+							fwrite(STDERR, "ERROR: Unable to read canonical column metadata for $table_name. Audit stopped without repair proposals.\n");
+
+							return false;
+						}
 
 						if (!cacti_sizeof($dbc)) {
 							$plugin_column = db_fetch_row_prepared('SELECT *
@@ -645,6 +711,11 @@ function report_audit_results($output = true) {
 								AND `column` = ?
 								AND method = ?',
 								array($table_name, $c['Field'], 'addcolumn'));
+							if ($plugin_column === false) {
+								fwrite(STDERR, "ERROR: Unable to inspect plugin column metadata for $table_name.\n");
+
+								return false;
+							}
 
 							if (!cacti_sizeof($plugin_column)) {
 								if ($output) {
@@ -654,6 +725,7 @@ function report_audit_results($output = true) {
 								$warnings++;
 							}
 						} else {
+							$baseline_default = $dbc['table_default'];
 							foreach($cols as $dbcol => $col) {
 								if ($col == 'Type' && $dbc[$dbcol] == 'text') {
 									if ($collation == 'latin') {
@@ -662,8 +734,8 @@ function report_audit_results($output = true) {
 								}
 
 								/* work around MariaDB compatibility issue */
-								$c[$col]     = ! $c[$col] ?: str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $c[$col]);
-								$dbc[$dbcol] = ! $dbc[$dbcol] ?: str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $dbc[$dbcol]);
+								$c[$col]     = audit_normalize_schema_attribute($c[$col]);
+								$dbc[$dbcol] = audit_normalize_schema_attribute($dbc[$dbcol]);
 
 								/* work around MySQL 8.x simplified int columns */
 								if (strpos($dbc[$dbcol], 'int(') !== false) {
@@ -698,7 +770,11 @@ function report_audit_results($output = true) {
 									}
 
 									if (array_search($dbc['table_field'], $col_alter) === false) {
-										$alter_cmds[] = make_column_alter($table_name, $dbc);
+										$alter_dbc = $dbc;
+										if ($baseline_default === null) {
+											$alter_dbc['table_default'] = null;
+										}
+										$alter_cmds[] = make_column_alter($table_name, $alter_dbc);
 										$col_alter[]  = $dbc['table_field'];
 										$errors++;
 									}
@@ -717,6 +793,11 @@ function report_audit_results($output = true) {
 					FROM table_columns
 					WHERE table_name = ?',
 					array($table_name));
+				if ($db_columns === false) {
+					fwrite(STDERR, "ERROR: Unable to list canonical columns for $table_name. Audit stopped without repair proposals.\n");
+
+					return false;
+				}
 
 				if (cacti_sizeof($db_columns)) {
 					foreach($db_columns as $dbc) {
@@ -741,6 +822,11 @@ function report_audit_results($output = true) {
 				 */
 
 				$indexes = db_fetch_assoc('SHOW INDEXES IN ' . $table_name);
+				if ($indexes === false) {
+					fwrite(STDERR, "ERROR: Unable to inspect indexes for $table_name. Audit stopped without repair proposals.\n");
+
+					return false;
+				}
 
 				$idx_added = array();
 				$idx_dropped = array();
@@ -752,6 +838,11 @@ function report_audit_results($output = true) {
 							WHERE idx_table_name = ?
 							AND idx_key_name = ?',
 							array($i['Table'], $i['Key_name']));
+						if ($key_exists === false) {
+							fwrite(STDERR, "ERROR: Unable to read canonical index metadata for $table_name. Audit stopped without repair proposals.\n");
+
+							return false;
+						}
 
 						$dbc = db_fetch_row_prepared('SELECT *
 							FROM table_indexes
@@ -761,20 +852,26 @@ function report_audit_results($output = true) {
 							AND idx_column_name = ?
 							ORDER BY idx_seq_in_index',
 							array($i['Table'], $i['Key_name'], $i['Seq_in_index'], $i['Column_name']));
+						if ($dbc === false) {
+							fwrite(STDERR, "ERROR: Unable to read canonical index columns for $table_name. Audit stopped without repair proposals.\n");
+
+							return false;
+						}
 
 						if (!cacti_sizeof($dbc)) {
 							if ($key_exists) {
 								// Ignore till Phase II
-							} elseif (array_search($i['Key_name'], $idx_dropped) === false) {
+							} elseif (array_search($i['Key_name'], $idx_added) === false) {
 								// Primary keys come in Phase II
 								if ($i['Key_name'] != 'PRIMARY') {
 									if ($output) {
-										print PHP_EOL . 'WARNING Index: \'' . $i['Key_name'] . '\', does not exist in default Cacti.  Dropping.';
+										print PHP_EOL . "WARNING Index: '" . $i['Key_name'] . "', does not exist in default Cacti.  Possible plugin or fork; preserved.";
 									}
 
-									$alter_cmds[]  = 'DROP INDEX ' . $i['Key_name'];
-									$idx_dropped[] = $i['Key_name'];
-									$errors++;
+									/* An index outside the canonical schema may belong to a plugin or fork.
+									 * Keep it and report it; a stale baseline must not delete it. */
+									$warnings++;
+									$idx_added[] = $i['Key_name'];
 								}
 							}
 						} else {
@@ -787,9 +884,18 @@ function report_audit_results($output = true) {
 												print PHP_EOL . 'ERROR Index: \'' . $i['Key_name'] . '\', Attribute \'' . $idx . '\' invalid. Should be: \'' . $dbc[$dbidx] . '\', Is: \'' . $i[$idx] . '\'';
 											}
 
-											$alter_cmds = array_merge($alter_cmds, make_index_alter($table_name, $i['Key_name']));
+											$index_alters = make_index_alter($table_name, $i['Key_name']);
+											if (cacti_sizeof($index_alters)) {
+												$alter_cmds = array_merge($alter_cmds, $index_alters);
+												$idx_dropped[] = $i['Key_name'];
+												$errors++;
+											} else {
+												$warnings++;
+												if ($output) {
+													print PHP_EOL . "WARNING Index: '" . $i['Key_name'] . "', cannot be rebuilt from the audit schema.";
+												}
+											}
 											$idx_added[] = $i['Key_name'];
-											$errors++;
 										}
 									}
 								}
@@ -804,18 +910,30 @@ function report_audit_results($output = true) {
 					FROM table_indexes
 					WHERE idx_table_name = ?',
 					array($table_name));
+				if ($db_indexes === false) {
+					fwrite(STDERR, "ERROR: Unable to read canonical audit indexes for $table_name. Audit stopped without repair proposals.\n");
+
+					return false;
+				}
 
 				if (cacti_sizeof($db_indexes)) {
 					foreach($db_indexes as $i) {
 						if (!db_index_exists($table_name, $i['idx_key_name'])) {
 							if (array_search($i['idx_key_name'], $idx_added) === false) {
-								if ($output) {
-									print PHP_EOL . 'ERROR Index: \'' . $i['idx_key_name'] . '\', is missing from \'' . $table_name . '\'';;
+								$index_alters = make_index_alter($table_name, $i['idx_key_name']);
+								if (cacti_sizeof($index_alters)) {
+									if ($output) {
+										print PHP_EOL . 'ERROR Index: \'' . $i['idx_key_name'] . '\', is missing from \'' . $table_name . '\'';
+									}
+									$alter_cmds = array_merge($alter_cmds, $index_alters);
+									$errors++;
+								} else {
+									$warnings++;
+									if ($output) {
+										print PHP_EOL . "WARNING Index: '" . $i['idx_key_name'] . "', cannot be rebuilt from the audit schema.";
+									}
 								}
-
-								$alter_cmds = array_merge($alter_cmds, make_index_alter($table_name, $i['idx_key_name']));
 								$idx_added[] = $i['idx_key_name'];
-								$errors++;
 							}
 						} else {
 							$prop_seq = db_fetch_cell_prepared('SELECT COUNT(*)
@@ -834,18 +952,26 @@ function report_audit_results($output = true) {
 								if (array_search($i['idx_key_name'], $idx_dropped) === false) {
 									if ($output) {
 										if ($curr_seq != $prop_seq) {
-											print PHP_EOL . 'WARNING Index: \'' . $i['idx_key_name'] . '\', has differing number of columns.  Dropping.';
+											print PHP_EOL . 'WARNING Index: \'' . $i['idx_key_name'] . '\', has a differing number of columns.';
 										}
 
 										if ($curr_column_seq != $i['idx_seq_in_index']) {
-											print PHP_EOL . 'WARNING Index: \'' . $i['idx_key_name'] . '\', has resequenced columns.  Dropping.';
+											print PHP_EOL . 'WARNING Index: \'' . $i['idx_key_name'] . '\', has resequenced columns.';
 										}
 									}
 
-									$alter_cmds = array_merge($alter_cmds, make_index_alter($table_name, $i['idx_key_name']));
+									$index_alters = make_index_alter($table_name, $i['idx_key_name']);
+									if (cacti_sizeof($index_alters)) {
+										$alter_cmds = array_merge($alter_cmds, $index_alters);
+										$errors++;
+									} else {
+										$warnings++;
+										if ($output) {
+											print PHP_EOL . "WARNING Index: '" . $i['idx_key_name'] . "', cannot be rebuilt from the audit schema.";
+										}
+									}
 									$idx_added[]   = $i['idx_key_name'];
 									$idx_dropped[] = $i['idx_key_name'];
-									$errors++;
 								}
 							}
 						}
@@ -863,15 +989,19 @@ function report_audit_results($output = true) {
 				if (cacti_sizeof($alter_cmds)) {
 					$alters[$table_name] = $alter_cmds;
 				}
+				$audit_warnings += $warnings;
 			}
 		}
 	}
+	$audit_warning_count = $audit_warnings;
 
 	if ($output) {
 		print '---------------------------------------------------------------------------------------------' . PHP_EOL;
 		if (cacti_sizeof($alters)) {
 			print 'ERRORS are fixable using the --repair option.  WARNINGS will not be repaired' . PHP_EOL;
 			print 'due to ambiguous use of the column.' . PHP_EOL;
+		} elseif ($audit_warnings) {
+			print 'Audit completed with warnings; no repairs were proposed.' . PHP_EOL;
 		} else {
 			print 'Audit was clean, no errors or warnings' . PHP_EOL;
 		}
@@ -881,8 +1011,54 @@ function report_audit_results($output = true) {
 	return $alters;
 }
 
+function audit_normalize_schema_attribute($value) {
+	if ($value === null) {
+		return "\x01NULL";
+	}
+
+	return str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', (string) $value);
+}
+
+function audit_schema_source_version($filename) {
+	if (!is_readable($filename)) {
+		return null;
+	}
+
+	$handle = fopen($filename, 'r');
+	if ($handle === false) {
+		return null;
+	}
+
+	for ($i = 0; $i < 10 && ($line = fgets($handle)) !== false; $i++) {
+		if (preg_match('/^-- Cacti Audit Schema Version: ([^\r\n]+)$/', trim($line), $matches)) {
+			fclose($handle);
+
+			return trim($matches[1]);
+		}
+	}
+
+	fclose($handle);
+
+	return null;
+}
+
+function audit_schema_stamp_version($filename, $version) {
+	$contents = file_get_contents($filename);
+	if ($contents === false) {
+		return false;
+	}
+
+	$contents = preg_replace('/^-- Cacti Audit Schema Version:.*\R/m', '', $contents);
+	$contents = '-- Cacti Audit Schema Version: ' . $version . PHP_EOL . $contents;
+
+	return file_put_contents($filename, $contents) !== false;
+}
+
 function make_column_props(&$dbc) {
 	$alter_cmd = '';
+	if (($dbc['table_default'] ?? null) === "\x01NULL") {
+		$dbc['table_default'] = null;
+	}
 
 	if (isset($dbc['table_default'])) {
 		$dbc['table_default'] = str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $dbc['table_default']);
@@ -1033,6 +1209,9 @@ function make_index_alter($table, $key) {
 
 		if ($using != '') {
 			$alter_cmd .= ') USING ' . $using;
+		} else {
+			// Never return the malformed "ADD INDEX (...column" form.
+			return array();
 		}
 
 		$alter_cmds[] = $alter_cmd;
@@ -1076,9 +1255,9 @@ function get_column_sequence_number($table, $index, $column) {
 
 function create_tables($load = true) {
 	global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
-	global $altersopt;
+	global $altersopt, $database_ssl;
 
-	db_execute("CREATE TABLE IF NOT EXISTS table_columns (
+	if (db_execute("CREATE TABLE IF NOT EXISTS table_columns (
 		table_name varchar(50) NOT NULL,
 		table_sequence int(10) unsigned NOT NULL,
 		table_field varchar(50) NOT NULL,
@@ -1089,16 +1268,21 @@ function create_tables($load = true) {
 		table_extra varchar(128) default NULL,
 		PRIMARY KEY (table_name, table_sequence, table_field))
 		ENGINE=InnoDB
-		COMMENT='Holds Default Cacti Table Definitions'");
+		COMMENT='Holds Default Cacti Table Definitions'") === false) {
+		fwrite(STDERR, "FATAL: Failed to create table_columns.\n");
+
+		return false;
+	}
 
 	$exists_columns = db_table_exists('table_columns');
 
 	if (!$exists_columns) {
-		print "Failed to create 'table_columns'";
-		exit;
+		fwrite(STDERR, "FATAL: Failed to create table_columns.\n");
+
+		return false;
 	}
 
-	db_execute("CREATE TABLE IF NOT EXISTS table_indexes (
+	if (db_execute("CREATE TABLE IF NOT EXISTS table_indexes (
 		idx_table_name varchar(50) NOT NULL,
 		idx_non_unique int(10) unsigned default NULL,
 		idx_key_name varchar(128) NOT NULL,
@@ -1113,18 +1297,26 @@ function create_tables($load = true) {
 		idx_comment varchar(128) default NULL,
 		PRIMARY KEY (idx_table_name, idx_key_name, idx_seq_in_index, idx_column_name))
 		ENGINE=InnoDB
-		COMMENT='Holds Default Cacti Index Definitions'");
+		COMMENT='Holds Default Cacti Index Definitions'") === false) {
+		fwrite(STDERR, "FATAL: Failed to create table_indexes.\n");
+
+		return false;
+	}
 
 	$exists_indexes = db_table_exists('table_indexes');
 
 	if (!$exists_indexes) {
-		print "Failed to create 'table_indexes'";
-		exit;
+		fwrite(STDERR, "FATAL: Failed to create table_indexes.\n");
+
+		return false;
 	}
 
 	if ($load) {
-		db_execute('TRUNCATE table_columns');
-		db_execute('TRUNCATE table_indexes');
+		if (db_execute('TRUNCATE table_columns') === false || db_execute('TRUNCATE table_indexes') === false) {
+			fwrite(STDERR, "FATAL: Failed to clear the audit schema baseline tables.\n");
+
+			return false;
+		}
 
 		$output = array();
 		$error  = 0;
@@ -1142,8 +1334,9 @@ function create_tables($load = true) {
 			$db_shell = trim((string) shell_exec('which mysql'));
 
 			if ($db_shell == '') {
-				print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
-				exit;
+				fwrite(STDERR, "FATAL: mysql or mariadb command not found.\n");
+
+				return false;
 			}
 		}
 
@@ -1154,12 +1347,29 @@ function create_tables($load = true) {
 			$defaults_file = audit_database_defaults_file($database_username, $database_password, $database_hostname, $database_port);
 
 			if ($defaults_file === false) {
-				print 'FATAL: Unable to create a private credentials file' . PHP_EOL;
-				exit(1);
+				fwrite(STDERR, "FATAL: Unable to create a private credentials file.\n");
+
+				return false;
+			}
+
+			$version_output = array();
+			$version_status = 0;
+			exec(cacti_escapeshellarg($db_shell) . ' --version', $version_output, $version_status);
+
+			$ssl_option = $version_status === 0
+				? audit_database_ssl_option($database_ssl, implode(' ', $version_output))
+				: false;
+
+			if ($ssl_option === false) {
+				unlink($defaults_file);
+				fwrite(STDERR, "FATAL: Unable to determine a safe TLS option for the database client.\n");
+
+				return false;
 			}
 
 			exec(cacti_escapeshellarg($db_shell) .
 				' --defaults-extra-file=' . cacti_escapeshellarg($defaults_file) .
+				$ssl_option .
 				' ' . cacti_escapeshellarg($database_default) .
 				' < ' . cacti_escapeshellarg($config['base_path'] . '/docs/audit_schema.sql'), $output, $error);
 
@@ -1168,13 +1378,19 @@ function create_tables($load = true) {
 			if ($error == 0) {
 				print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
 			} else {
-				print 'FATAL: Failed Load the Audit Schema' . PHP_EOL;
-				print 'ERROR: ' . implode(",\n   ", $output) . PHP_EOL;
+				fwrite(STDERR, 'FATAL: Failed to load the audit schema.' . PHP_EOL);
+				fwrite(STDERR, 'ERROR: ' . implode(",\n   ", $output) . PHP_EOL);
+
+				return false;
 			}
 		} else {
-			print 'FATAL: Failed to find Audit Schema' . PHP_EOL;
+			fwrite(STDERR, "FATAL: Failed to find docs/audit_schema.sql.\n");
+
+			return false;
 		}
 	}
+
+	return true;
 }
 
 function load_audit_database() {
@@ -1182,12 +1398,22 @@ function load_audit_database() {
 
 	$db_name = 'Tables_in_' . $database_default;
 
-	create_tables(false);
+	if (!create_tables(false)) {
+		return false;
+	}
 
-	db_execute('TRUNCATE table_columns');
-	db_execute('TRUNCATE table_indexes');
+	if (db_execute('TRUNCATE table_columns') === false || db_execute('TRUNCATE table_indexes') === false) {
+		fwrite(STDERR, "ERROR: Unable to clear the audit schema tables.\n");
+
+		return false;
+	}
 
 	$tables = db_fetch_assoc('SHOW TABLES');
+	if ($tables === false) {
+		fwrite(STDERR, "ERROR: Unable to list database tables for the audit baseline.\n");
+
+		return false;
+	}
 
 	if (cacti_sizeof($tables)) {
 		foreach($tables as $table) {
@@ -1195,13 +1421,18 @@ function load_audit_database() {
 
 			$columns = db_fetch_assoc('SHOW COLUMNS IN ' . $table_name);
 			$indexes = db_fetch_assoc('SHOW INDEXES IN ' . $table_name);
+			if ($columns === false || $indexes === false) {
+				fwrite(STDERR, "ERROR: Unable to inspect table $table_name for the audit baseline.\n");
+
+				return false;
+			}
 
 			print 'Importing Table: ' . $table_name;
 
 			$i = 1;
 			if (cacti_sizeof($columns)) {
 				foreach($columns as $c) {
-					db_execute_prepared('INSERT INTO table_columns
+					if (db_execute_prepared('INSERT INTO table_columns
 						(table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra)
 						VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
 						array(
@@ -1214,7 +1445,11 @@ function load_audit_database() {
 							$c['Default'],
 							$c['Extra']
 						)
-					);
+					) === false) {
+						fwrite(STDERR, "ERROR: Unable to save column $table_name.{$c['Field']} to the audit baseline.\n");
+
+						return false;
+					}
 
 					$i++;
 				}
@@ -1224,7 +1459,7 @@ function load_audit_database() {
 
 			if (cacti_sizeof($indexes)) {
 				foreach($indexes as $i) {
-					db_execute_prepared('INSERT INTO table_indexes
+					if (db_execute_prepared('INSERT INTO table_indexes
 						(idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name,
 						idx_collation, idx_cardinality, idx_sub_part, idx_packed, idx_null, idx_index_type, idx_comment)
 						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -1242,7 +1477,11 @@ function load_audit_database() {
 							$i['Index_type'],
 							$i['Comment']
 						)
-					);
+					) === false) {
+						fwrite(STDERR, "ERROR: Unable to save index {$i['Key_name']} on $table_name to the audit baseline.\n");
+
+						return false;
+					}
 				}
 			}
 		}
@@ -1252,15 +1491,19 @@ function load_audit_database() {
 		print PHP_EOL . 'Exporting Table Audit Table Creation Logic to ' . $config['base_path'] . '/docs/audit_schema.sql' . PHP_EOL;
 
 		$retval = db_dump_data($database_default, 'table_columns table_indexes', array(), $config['base_path'] . '/docs/audit_schema.sql');
-		if ($retval) {
+		if ($retval || !audit_schema_stamp_version($config['base_path'] . '/docs/audit_schema.sql', CACTI_VERSION)) {
 			print 'Finished Creating Audit Schema with ERROR' . PHP_EOL . PHP_EOL;
+			return false;
 		} else {
 			print 'Finished Creating Audit Schema' . PHP_EOL . PHP_EOL;
 		}
 
 	} else {
 		print PHP_EOL . 'FATAL: Docs directory does not exist!' . PHP_EOL . PHP_EOL;
+		return false;
 	}
+
+	return true;
 }
 
 /*  display_version - displays version information */
@@ -1280,6 +1523,8 @@ function display_help() {
 	print '    --repair  - Repair any issues found during the audit of the database' . PHP_EOL;
 	print '    --upgrade - Upgrade the Cacti database before running' . PHP_EOL;
 	print '    --missing-tables - Also report missing core tables, and create them with --repair' . PHP_EOL . PHP_EOL;
+	print '    --prune-plugins - During --upgrade, remove registrations for plugins whose INFO file is missing' . PHP_EOL . PHP_EOL;
+	print '    --allow-fork-repairs - Override an unknown/stale baseline or non-canonical schema warnings during --repair' . PHP_EOL . PHP_EOL;
 	print 'Developer Options:' . PHP_EOL;
 	print '    --create  - Initialize or Re-initialize the Audit Schema tables.' . PHP_EOL;
 	print '    --load    - Take a pristine Cacti install and create Audit Schema and file.' . PHP_EOL;

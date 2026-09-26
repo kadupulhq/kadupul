@@ -98,18 +98,20 @@ it('leaves a maximum already above the minimum untouched', function () {
 	expect(cacti_rrd_corrected_maximum('0', '100', 2))->toBe('100');
 });
 
-/** Run one creator's bound chain, as that file writes it, and report the max. */
-function chain_result(string $file, string $min, string $max, int $type) : string {
-	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
+/**
+ * Run the bound chain as the source writes it and report the maximum.
+ *
+ * There is one chain now: both creators call rrd_create_definition() in
+ * lib/rrd.php, so a case only has to be run once. What each creator does with
+ * the result is asserted separately below.
+ */
+function chain_result(string $min, string $max, int $type) : string {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php');
 
 	expect($source)->not->toBeFalse();
 
 	// The chain from the trim through the correction, lifted verbatim.
-	$start = strpos($source, "// Trim the data source maximum");
-
-	if ($start === false) {
-		$start = strpos($source, "\$data_source['rrd_maximum'] = trim((string) \$data_source['rrd_maximum']);");
-	}
+	$start = strpos($source, '// Trim the data source maximum');
 
 	expect($start)->not->toBeFalse();
 
@@ -143,23 +145,41 @@ function chain_result(string $file, string $min, string $max, int $type) : strin
 	return implode('', $out);
 }
 
-it('makes both creators agree on every bound pair', function () {
+it('answers every bound pair from the one chain', function () {
 	// A stored maximum of '0' is the case that diverged: empty('0') is true, so
-	// the Boost chain called it unbounded before the shared correction ran.
+	// the Boost copy called it unbounded before the shared correction ran. The
+	// expected values are what lib/rrd.php has always produced.
 	$cases = array(
-		array('0', '0', 3), array('0', '0', 1),
-		array('U', '-1', 3), array(' U ', '-1', 3),
-		array('0', '100', 2), array('10', '5', 3), array('10', '5', 1),
-		array('0', '', 3), array('0', 'U', 3),
+		array('0', '0', 3, 'U'), array('0', '0', 1, 'U'),
+		array('U', '-1', 3, '-1'), array(' U ', '-1', 3, '-1'),
+		array('0', '100', 2, '100'), array('10', '5', 3, '11'), array('10', '5', 1, 'U'),
+		array('0', '', 3, 'U'), array('0', 'U', 3, 'U'),
 	);
 
 	foreach ($cases as $case) {
-		list($min, $max, $type) = $case;
+		list($min, $max, $type, $expected) = $case;
 
-		$rrd   = chain_result('lib/rrd.php', $min, $max, $type);
-		$boost = chain_result('lib/boost.php', $min, $max, $type);
+		expect(chain_result($min, $max, $type))->toBe($expected);
+	}
+});
 
-		expect($boost)->toBe($rrd, "min=$min max=$max type=$type");
+it('keeps no second copy of the chain in the Boost creator', function () {
+	$boost = file_get_contents(dirname(__DIR__, 4) . '/lib/boost.php');
+
+	expect($boost)->not->toBeFalse();
+
+	// The copies drifted three ways before they were merged, and two of those
+	// cost data, so the check is that the copy is gone rather than that it
+	// agrees.
+	expect($boost)->not->toContain("\$data_source['rrd_maximum']");
+	expect($boost)->not->toContain('cacti_rrd_corrected_maximum(');
+	expect($boost)->not->toContain('RRA:');
+
+	foreach (array('lib/rrd.php', 'lib/boost.php') as $file) {
+		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
+
+		expect($source)->not->toBeFalse();
+		expect($source)->toContain('rrd_create_definition($local_data_id,');
 	}
 });
 
@@ -182,8 +202,7 @@ it('leaves a zero-zero pair unbounded for every data source type', function () {
 	// min+1 there caps the file at 1 and stores every larger rate as UNKNOWN.
 	foreach (array(1, 2, 3, 4) as $type) {
 		expect(cacti_rrd_corrected_maximum('0', '0', $type))->toBe('U');
-		expect(chain_result('lib/rrd.php', '0', '0', $type))->toBe('U');
-		expect(chain_result('lib/boost.php', '0', '0', $type))->toBe('U');
+		expect(chain_result('0', '0', $type))->toBe('U');
 	}
 });
 
@@ -200,6 +219,5 @@ it('writes unknown for a numeric string that parses to infinity', function () {
 
 it('treats only an empty value or the marker as unbounded', function () {
 	// '0' is a real ceiling and must survive into the correction.
-	expect(chain_result('lib/boost.php', '-5', '0', 3))->toBe('0');
-	expect(chain_result('lib/rrd.php', '-5', '0', 3))->toBe('0');
+	expect(chain_result('-5', '0', 3))->toBe('0');
 });

@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * add_device.php
+ *
+ * Creates a Cacti device using the supplied template and polling settings.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -335,7 +342,6 @@ if (cacti_sizeof($parms)) {
 
 	/* process host description */
 	if (isset($hosts[$description])) {
-		db_execute_prepared("UPDATE host SET hostname = ? WHERE deleted = '' AND id = ?", array($ip, $hosts[$description]));
 		print "This host already exists in the database ($description) device-id: (" . $hosts[$description] . ")\n";
 		exit(1);
 	}
@@ -350,15 +356,20 @@ if (cacti_sizeof($parms)) {
 		exit(1);
 	}
 
-	if ($snmp_ver > 3 || $snmp_ver < 0 || !is_numeric($snmp_ver)) {
+	if (!ctype_digit((string) $snmp_ver) || (int) $snmp_ver > 3) {
 		print "ERROR: The snmp version must be between 0 and 3.  If you did not specify one, goto Configuration > Settings > Device Defaults and resave your defaults.\n";
 		exit(1);
 	}
+	$snmp_ver = (int) $snmp_ver;
 
 	/* process ip */
 	if (isset($addresses[$ip])) {
 		$id    = $addresses[$ip];
-		$phost = db_fetch_row_prepared('SELECT * FROM host WHERE id = ?', array($id));
+		$phost = db_fetch_row_prepared('SELECT * FROM host WHERE id = ?', array((int) $id));
+		if (!is_array($phost)) {
+			fwrite(STDERR, "ERROR: Could not load existing host $id while checking duplicate IP addresses.\n");
+			exit(1);
+		}
 		$fail  = false;
 
 		if ($phost['snmp_version'] < '3' && $snmp_ver < '3') {
@@ -378,7 +389,7 @@ if (cacti_sizeof($parms)) {
 			// assuming a proxy
 		} elseif ($phost['snmp_version'] == '3' && $snmp_ver == '3') {
 			$changed = 0;
-			$changed += ($phost['snmp_username'] != $username ? 1:0);
+			$changed += ($phost['snmp_username'] != $snmp_username ? 1:0);
 			$changed += ($phost['snmp_context'] != $snmp_context ? 1:0);
 			$changed += ($phost['snmp_engine_id'] != $snmp_engine_id ? 1:0);
 			$changed += ($phost['snmp_auth_protocol'] != $snmp_auth_protocol ? 1:0);
@@ -399,36 +410,39 @@ if (cacti_sizeof($parms)) {
 		}
 
 		if ($fail) {
-			db_execute_prepared("UPDATE host SET description = ? WHERE deleted = '' AND id = ?", array($description, $addresses[$ip]));
 			print "ERROR: This IP already exists in the database ($ip) device-id: (" . $addresses[$ip] . ")\n";
 			exit(1);
 		}
 	}
 
-	if (!is_numeric($site_id) || $site_id < 0) {
+	if (!ctype_digit((string) $site_id)) {
 		print "ERROR: You have specified an invalid site id!\n";
 		exit(1);
 	}
+	$site_id = (int) $site_id;
 
-	if (!is_numeric($poller_id) || $poller_id < 0) {
+	if (!ctype_digit((string) $poller_id)) {
 		print "ERROR: You have specified an invalid poller id!\n";
 		exit(1);
 	}
+	$poller_id = (int) $poller_id;
 
 	/* process snmp information */
-	if ($snmp_ver < 0 || $snmp_ver > 3) {
+	if ($snmp_ver > 3) {
 		print "ERROR: Invalid snmp version ($snmp_ver)\n";
  		exit(1);
 	} elseif ($snmp_ver > 0) {
-		if ($snmp_port <= 1 || $snmp_port > 65534) {
+		if (!ctype_digit((string) $snmp_port) || (int) $snmp_port < 1 || (int) $snmp_port > 65534) {
 			print "ERROR: Invalid port.  Valid values are from 1-65534\n";
 			exit(1);
 		}
+		$snmp_port = (int) $snmp_port;
 
-		if ($snmp_timeout <= 0 || $snmp_timeout > 20000) {
+		if (!ctype_digit((string) $snmp_timeout) || (int) $snmp_timeout <= 0 || (int) $snmp_timeout > 20000) {
 			print "ERROR: Invalid timeout.  Valid values are from 1 to 20000\n";
 			exit(1);
 		}
+		$snmp_timeout = (int) $snmp_timeout;
 	}
 
 	/* community/user/password verification */
@@ -453,7 +467,7 @@ if (cacti_sizeof($parms)) {
 		$disable = "on";
 	}
 
-	print "Adding $description ($ip) as \"" . $host_templates[$template_id] . "\" using SNMP v$snmp_ver with community \"$community\"\n";
+	print "Adding $description ($ip) as \"" . $host_templates[$template_id] . "\" using SNMP v$snmp_ver\n";
 
 	$host_id = api_device_save('0', $template_id, $description, $ip,
 		$community, $snmp_ver, $snmp_username, $snmp_password,
@@ -463,7 +477,7 @@ if (cacti_sizeof($parms)) {
 		$snmp_priv_protocol, $snmp_context, $snmp_engine_id, $max_oids, $device_threads,
 		$poller_id, $site_id, $external_id, $location, $bulk_walk_size);
 
-	if (is_error_message()) {
+	if ($host_id === false || (int) $host_id <= 0 || is_error_message()) {
 		print "ERROR: Failed to add this device\n";
 		exit(1);
 	} else {

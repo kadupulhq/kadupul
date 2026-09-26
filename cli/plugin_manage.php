@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * plugin_manage.php
+ *
+ * Installs, enables, disables, or removes Cacti plugins.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

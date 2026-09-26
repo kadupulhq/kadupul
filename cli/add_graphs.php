@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * add_graphs.php
+ *
+ * Creates graphs from graph templates or data sources for selected devices.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -288,7 +295,13 @@ if (cacti_sizeof($parms)) {
 			}
 		}
 
-		displayGraphTemplates($graphTemplates, $quietMode);
+		if (!displayGraphTemplates($graphTemplates, $quietMode)) {
+
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+
+			exit(1);
+
+		}
 
 		exit(0);
 	}
@@ -307,7 +320,10 @@ if (cacti_sizeof($parms)) {
 	}
 
 	if ($listHosts) {
-		displayHosts($hosts, $quietMode);
+		if (!displayHosts($hosts, $quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 

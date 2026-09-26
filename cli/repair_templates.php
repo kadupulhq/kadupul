@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * repair_templates.php
+ *
+ * Repairs missing hashes on graph and data template records.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -38,6 +45,7 @@ $parms = $_SERVER['argv'];
 array_shift($parms);
 
 $execute = false;
+$repair_failures = 0;
 
 if (cacti_sizeof($parms)) {
 	foreach($parms as $parameter) {
@@ -83,20 +91,31 @@ if ($execute) {
 	print "NOTE: Performing Check of Data Templates\n";
 }
 
-$damaged_template_ids = db_fetch_assoc("SELECT DISTINCT data_template_id FROM data_template_rrd WHERE hash='' AND local_data_id=0");
+$damaged_template_ids = db_fetch_assoc_prepared('SELECT DISTINCT data_template_id FROM data_template_rrd WHERE hash = ? AND local_data_id = 0', array(''));
+if ($damaged_template_ids === false) {
+	fwrite(STDERR, "ERROR: Could not read damaged data template IDs.\n");
+	exit(1);
+}
 if (cacti_sizeof($damaged_template_ids)) {
 	foreach($damaged_template_ids as $id) {
-		$template_name = db_fetch_cell('SELECT name FROM data_template WHERE id=' . $id['data_template_id']);
+		$template_name = db_fetch_cell_prepared('SELECT name FROM data_template WHERE id = ?', array((int) $id['data_template_id']));
 		print "NOTE: Data Template '$template_name' is Damaged and can be repaired\n";
 	}
 
-	$damaged_templates = db_fetch_assoc("SELECT * FROM data_template_rrd WHERE hash='' AND local_data_id=0");
+	$damaged_templates = db_fetch_assoc_prepared('SELECT * FROM data_template_rrd WHERE hash = ? AND local_data_id = 0', array(''));
+	if ($damaged_templates === false) {
+		fwrite(STDERR, "ERROR: Could not read damaged data template items.\n");
+		exit(1);
+	}
 	if (cacti_sizeof($damaged_templates)) {
 		print "NOTE: -- Damaged Data Templates Objects Found is '" . cacti_sizeof($damaged_templates) . "'\n";
 		if ($execute) {
 			foreach($damaged_templates as $template) {
 				$hash = get_hash_data_template($template['local_data_template_rrd_id'], 'data_template_item');
-				db_execute("UPDATE data_template_rrd SET hash='$hash' WHERE id=" . $template['id']);
+				if (!db_execute_prepared('UPDATE data_template_rrd SET hash = ? WHERE id = ?', array($hash, (int) $template['id']))) {
+					fwrite(STDERR, "ERROR: Failed to repair data template item {$template['id']}.\n");
+					$repair_failures++;
+				}
 			}
 		}
 	}
@@ -114,25 +133,41 @@ if ($execute) {
 	print "NOTE: Performing Check of Graph Templates\n";
 }
 
-$damaged_template_ids = db_fetch_assoc("SELECT DISTINCT graph_template_id FROM graph_template_input WHERE hash=''");
+$damaged_template_ids = db_fetch_assoc_prepared('SELECT DISTINCT graph_template_id FROM graph_template_input WHERE hash = ?', array(''));
+if ($damaged_template_ids === false) {
+	fwrite(STDERR, "ERROR: Could not read damaged graph template IDs.\n");
+	exit(1);
+}
 if (cacti_sizeof($damaged_template_ids)) {
 	foreach($damaged_template_ids as $id) {
-		$template_name = db_fetch_cell('SELECT name FROM graph_templates WHERE id=' . $id['graph_template_id']);
+		$template_name = db_fetch_cell_prepared('SELECT name FROM graph_templates WHERE id = ?', array((int) $id['graph_template_id']));
 		print "NOTE: Graph Template '$template_name' is Damaged and can be repaired\n";
 	}
 
-	$damaged_templates = db_fetch_assoc("SELECT * FROM graph_template_input WHERE hash=''");
+	$damaged_templates = db_fetch_assoc_prepared('SELECT * FROM graph_template_input WHERE hash = ?', array(''));
+	if ($damaged_templates === false) {
+		fwrite(STDERR, "ERROR: Could not read damaged graph template inputs.\n");
+		exit(1);
+	}
 	if (cacti_sizeof($damaged_templates)) {
 		print "NOTE: -- Damaged Graph Templates Objects Found is '" . cacti_sizeof($damaged_templates) . "'\n";
 		if ($execute) {
 			foreach($damaged_templates as $template) {
 				$hash = get_hash_graph_template(0, 'graph_template_input');
-				db_execute("UPDATE graph_template_input SET hash='$hash' WHERE id=" . $template['id']);
+				if (!db_execute_prepared('UPDATE graph_template_input SET hash = ? WHERE id = ?', array($hash, (int) $template['id']))) {
+					fwrite(STDERR, "ERROR: Failed to repair graph template input {$template['id']}.\n");
+					$repair_failures++;
+				}
 			}
 		}
 	}
 } else {
 	print "NOTE: No Damaged Graph Templates Found\n";
+}
+
+if ($repair_failures > 0) {
+	fwrite(STDERR, "ERROR: Template repair completed with $repair_failures failed update(s).\n");
+	exit(1);
 }
 
 /*  display_version - displays version information */

@@ -234,6 +234,22 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				continue;
 			}
 
+			/**
+			 * file_exists() follows the link, so it reports false for a
+			 * dangling one and rrdtool then creates the file the link names.
+			 * This path asks rrdtool_function_create() for the source only and
+			 * substitutes its own target, so the refusal inside that function
+			 * does not cover this write.
+			 */
+			if (is_link($rt_graph_path)) {
+				cacti_log('ERROR: Realtime refusing to create an RRDfile through the symbolic link ' . $rt_graph_path . '.', false, 'POLLER');
+
+				/* as the other preparation failures do, so the caller reports it */
+				$skipped = true;
+
+				continue;
+			}
+
 			// create rt rrd
 			if (!file_exists($rt_graph_path)) {
 				/* get the syntax */

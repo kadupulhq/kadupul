@@ -232,15 +232,21 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 
 			if (!$forced_type) {
 				// See if the index is in the host cache
-				$current_index = db_fetch_cell_prepared('SELECT snmp_index
+				$current_index_row = db_fetch_row_prepared('SELECT snmp_index
 					FROM host_snmp_cache
 					WHERE host_id = ?
 					AND snmp_query_id = ?
 					AND field_name = ?
 					AND field_value = ?',
 					array($host_id, $snmp_query_id, $data_source['sort_field'], $data_source['query_index']));
+
+				if ($current_index_row === false) {
+					return false;
+				}
+
+				$current_index = $current_index_row['snmp_index'] ?? '';
 			} else {
-				$current_value = db_fetch_cell_prepared('SELECT value
+				$current_value_row = db_fetch_row_prepared('SELECT value
 					FROM data_input_data AS did
 					INNER JOIN data_input_fields AS dif
 					ON did.data_input_field_id=dif.id
@@ -253,24 +259,41 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 					AND data_name="index_value"',
 					array($data_source['local_data_id'], $snmp_query_id));
 
-				$current_index = db_fetch_cell_prepared('SELECT snmp_index
+				if ($current_value_row === false) {
+					return false;
+				}
+
+				$current_value = $current_value_row['value'] ?? '';
+				$current_index_row = db_fetch_row_prepared('SELECT snmp_index
 					FROM host_snmp_cache
 					WHERE host_id = ?
 					AND snmp_query_id = ?
 					AND field_name = ?
 					AND field_value = ?',
 					array($host_id, $snmp_query_id, $previous_sort_field, $current_value));
+
+				if ($current_index_row === false) {
+					return false;
+				}
+
+				$current_index = $current_index_row['snmp_index'] ?? '';
 			}
 
 			if ($remap) {
 				if ($new_sort_field != $previous_sort_field) {
-					$new_field_value = db_fetch_cell_prepared('SELECT field_value
+					$new_field_value_row = db_fetch_row_prepared('SELECT field_value
 						FROM host_snmp_cache
 						WHERE host_id = ?
 						AND snmp_query_id = ?
 						AND field_name = ?
 						AND snmp_index = ?',
 						array($host_id, $snmp_query_id, $new_sort_field, $current_index));
+
+					if ($new_field_value_row === false) {
+						return false;
+					}
+
+					$new_field_value = $new_field_value_row['field_value'] ?? '';
 
 					$did_map_data = db_fetch_row_prepared('SELECT value, data_input_field_id, data_template_data_id,
 						host_id, snmp_query_id
@@ -2291,12 +2314,14 @@ function update_data_query_sort_cache($host_id, $data_query_id) {
 
 	/* update the cache */
 	/* TODO: if both $sort field and $title_format are empty, this yields funny results */
-	db_execute_prepared('UPDATE host_snmp_query
+	if (db_execute_prepared('UPDATE host_snmp_query
 		SET sort_field = ?,
 		title_format = ?
 		WHERE host_id = ?
 		AND snmp_query_id = ?',
-		array($sort_field, $title_format, $host_id, $data_query_id));
+		array($sort_field, $title_format, $host_id, $data_query_id)) === false) {
+		return false;
+	}
 
 	return $sort_field;
 }
@@ -2469,8 +2494,13 @@ function update_snmp_index_order($local_data) {
 			WHERE data_input_fields.type_code IN('index_type', 'index_value', 'output_type')
 			AND snmp_query.id = ?",
 			array($local_data['snmp_query_id'])), 'type_code', 'id');
+		if (!isset($data_input_field['index_type'], $data_input_field['index_value'], $data_input_field['output_type'])) {
+			cacti_log('ERROR: Missing SNMP query index fields for query ' . $local_data['snmp_query_id'], false, 'SYSTEM');
 
-		$snmp_cache_value = db_fetch_cell_prepared('SELECT field_value
+			return false;
+		}
+
+		$snmp_cache_row = db_fetch_row_prepared('SELECT field_value
 			FROM host_snmp_cache
 			WHERE host_id = ?
 			AND snmp_query_id = ?
@@ -2478,9 +2508,15 @@ function update_snmp_index_order($local_data) {
 			AND snmp_index = ?',
 			array($local_data['host_id'], $local_data['snmp_query_id'], $local_data['snmp_index_on'], $local_data['snmp_index']));
 
+		if ($snmp_cache_row === false) {
+			return false;
+		}
+
+		$snmp_cache_value = $snmp_cache_row['field_value'] ?? '';
+
 		/* only update data source index if there actually *is* an index returned from host_snmp_cache */
 		if (!empty($snmp_cache_value)) {
-			db_execute_prepared('REPLACE INTO data_input_data
+			return db_execute_prepared('REPLACE INTO data_input_data
 				(data_input_field_id, data_template_data_id, t_value, value)
 				VALUES
 				(?, ?, "", ?),
@@ -2494,12 +2530,15 @@ function update_snmp_index_order($local_data) {
 					/* set the expected output type (ie. bytes, errors, packets) */
 					$data_input_field['output_type'], $local_data['data_template_data_id'], $local_data['snmp_query_graph_id']
 				)
-			);
+			) !== false;
 		}
 
 		/* now that we have put data into the 'data_input_data' table, update the snmp cache for ds's */
 		//update_data_source_data_query_cache($local_data['local_data_id']);
+		return true;
 	}
+
+	return false;
 }
 
 /**
@@ -2638,4 +2677,3 @@ function data_query_duplicate($_data_query_id, $data_query_name) {
 		return $data_query_id;
 	}
 }
-

@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * poller_output_empty.php
+ *
+ * Processes pending poller output and writes samples to RRD files.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

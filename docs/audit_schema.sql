@@ -1,3 +1,4 @@
+-- Cacti Audit Schema Version: unknown
 -- MariaDB dump 10.19  Distrib 10.5.18-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: cacti
