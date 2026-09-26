@@ -310,7 +310,7 @@ function change_data_template($local_data_id, $data_template_id, $profile = arra
 	}
 
 	/* determine if we are here for the first time, or coming back */
-	$exists = db_fetch_cell_prepared('SELECT local_data_template_data_id
+	$exists = db_fetch_cell_prepared('SELECT COUNT(*)
 		FROM data_template_data
 		WHERE local_data_id = ?',
 		array($local_data_id));
