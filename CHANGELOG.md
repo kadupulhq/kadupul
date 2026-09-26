@@ -73,7 +73,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
-- Use Symfony Clock, Filesystem, Lock, and Process components in RRD graph and maintenance operations while preserving procedural callers, shared/exclusive directory locks, and the long-lived RRDtool pipe.
+- Use Symfony Clock, Filesystem, and Process components in RRD graph and maintenance operations while preserving procedural callers, the existing shared/exclusive directory lease, and the long-lived RRDtool pipe.
 
 - Publish the command-line migration roadmap and the safety decisions for the database audit and repair commands in docs/migrations/cli-symfony-console-roadmap.md.
 

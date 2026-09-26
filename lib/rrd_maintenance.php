@@ -66,18 +66,13 @@ function rrd_maintenance_directory_is_trusted($path)
  * Shared locks outlive queued commands: release only after pclose has waited
  * for the child. Exclusive maintenance refuses active writers by default;
  * callers may explicitly wait when their operation permits it.
- */
-/** Acquire the shared RRA-directory lock through Symfony Lock.
  *
- * The custom store preserves the legacy directory-inode protocol so existing
- * pollers still coordinate with the current version during rolling upgrades.
+ * @param bool $exclusive Whether to acquire exclusive write access.
+ * @param bool $wait Whether to wait for a conflicting lock.
+ * @param float|null $timeout Maximum wait duration in seconds.
+ * @param bool|null $busy Set true when another process owns a conflicting lock.
  *
- * @param bool $exclusive Whether to block readers and writers.
- * @param bool $wait Whether to wait when timeout is null.
- * @param float|null $timeout Maximum wait in seconds; null means no wait unless $wait is true.
- * @param bool|null $busy Set true when another process owns the conflicting lock.
- *
- * @return \Symfony\Component\Lock\SharedLockInterface|resource|bool Lock, legacy platform result, or false.
+ * @return resource|bool Lock handle, Windows shared-lock sentinel, or false.
  */
 function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null, &$busy = null)
 {
@@ -95,76 +90,36 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
     }
 
     $expected = @stat($canonical);
-    if (!$expected) {
+    $handle = @fopen($canonical, 'r');
+    if (!is_resource($handle)) {
         return false;
     }
-
-    if (!class_exists(\Symfony\Component\Lock\LockFactory::class)) {
-        require_once __DIR__ . '/../include/vendor/autoload.php';
-    }
-
-    $store = new \Kadupul\Graphing\Infrastructure\Rrd\DirectoryFlockStore(
-        $path,
-        $canonical,
-        $expected['dev'],
-        $expected['ino']
-    );
-    $factory = new \Symfony\Component\Lock\LockFactory($store);
-    $lock = $factory->createLock('rrd-directory:' . hash('sha256', $canonical), null);
-    $acquire = static function (bool $blocking) use ($exclusive, $lock): bool {
-        return $exclusive ? $lock->acquire($blocking) : $lock->acquireRead($blocking);
-    };
 
     if (!$exclusive && $timeout === null) {
         $timeout = 5;
     }
-    if ($wait && $timeout === null) {
-        try {
-            return $acquire(true) ? $lock : false;
-        } catch (\Throwable $exception) {
-            return false;
-        }
-    }
-
+    $flags = ($exclusive ? LOCK_EX : LOCK_SH) | (($wait && $timeout === null) ? 0 : LOCK_NB);
     $deadline = hrtime(true) + max(0, (float) $timeout) * 1000000000;
-    do {
-        try {
-            if ($acquire(false)) {
-                return $lock;
-            }
-            $busy = true;
-        } catch (\Throwable $exception) {
-            return false;
-        }
-
+    $would_block = 0;
+    while (!@flock($handle, $flags, $would_block)) {
         if ($timeout === null || hrtime(true) >= $deadline) {
+            $busy = $would_block === 1;
+            fclose($handle);
             return false;
         }
         usleep(100000);
-    } while (true);
-}
-
-/** Release a Symfony lock, legacy resource, or a collection of either.
- *
- * @param mixed $handle Lock, resource, or collection returned by acquire helpers.
- *
- * @return void
- */
-function rrd_maintenance_release($handle)
-{
-    if (is_array($handle)) {
-        foreach (array_reverse($handle) as $lock) {
-            rrd_maintenance_release($lock);
-        }
-        return;
     }
 
-    if (is_resource($handle)) {
-        flock($handle, LOCK_UN);
+    clearstatcache(true, $path);
+    clearstatcache(true, $canonical);
+    $opened = fstat($handle);
+    $current = @stat($path);
+    if (!$expected || !$opened || !$current || ($expected['mode'] & 0170000) !== 0040000 || $opened['dev'] !== $expected['dev'] || $opened['ino'] !== $expected['ino'] || $opened['dev'] !== $current['dev'] || $opened['ino'] !== $current['ino']) {
         fclose($handle);
-    } elseif (is_object($handle) && method_exists($handle, 'release')) {
-        $handle->release();
+        return false;
     }
+
+    return $handle;
 }
 
 /** Lock configured storage and every possible trusted root for custom RRD paths.
@@ -280,6 +235,25 @@ function rrd_maintenance_filesystem(): \Symfony\Component\Filesystem\Filesystem
     static $filesystem = null;
 
     return $filesystem ??= new \Symfony\Component\Filesystem\Filesystem();
+}
+
+/** Release one native RRA lease or a collection of leases.
+ *
+ * @param resource|array<mixed>|bool $handle Lease returned by the acquisition helpers.
+ *
+ * @return void
+ */
+function rrd_maintenance_release($handle)
+{
+    if (is_array($handle)) {
+        foreach (array_reverse($handle) as $lock) {
+            rrd_maintenance_release($lock);
+        } return;
+    }
+    if (is_resource($handle)) {
+        flock($handle, LOCK_UN);
+        fclose($handle);
+    }
 }
 
 /** One registry owns child pipes, their leases, and their rewrite mode. */

@@ -61,7 +61,7 @@ cmd_exec	./lib/poller.php:50	 * @param  (resource) $proc_fd - the file descripto
 cmd_exec	./lib/poller.php:86	                $fp = popen($command, 'r');
 cmd_exec	./lib/poller.php:88	                $fp = popen($command, 'rb');
 cmd_exec	./lib/rrd.php:199	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
-cmd_exec	./lib/rrd_maintenance.php:310	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
+cmd_exec	./lib/rrd_maintenance.php:284	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
 cmd_exec	./lib/rrdcheck.php:836	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
@@ -575,7 +575,8 @@ fs_write	./lib/poller.php:1736	                            file_put_contents($my
 fs_write	./lib/reports.php:1698			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1755			$f = fopen($fn, 'wb');
 fs_write	./lib/rrd.php:3578	                file_put_contents('php://stderr', $buffer);
-fs_write	./lib/rrd_maintenance.php:373	            $handle = @fopen($probe, 'x+b');
+fs_write	./lib/rrd_maintenance.php:347	            $handle = @fopen($probe, 'x+b');
+fs_write	./lib/rrd_maintenance.php:93	    $handle = @fopen($canonical, 'r');
 fs_write	./lib/spikekill.php:1127				$handle    = @fopen($desired_path, 'xb');
 fs_write	./lib/spikekill.php:1145					$handle    = @fopen($candidate, 'xb');
 fs_write	./lib/spikekill.php:1166			$source_handle = fopen($source, 'rb');
@@ -590,7 +591,6 @@ fs_write	./scripts/ss_net_snmp_disk_bytes.php:209			file_put_contents("$tmpdir/$
 fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./snmpagent_mibcachechild.php:72		$lock = fopen($path_mibcache_lock, 'w');
 fs_write	./snmpagent_mibcachechild.php:76			file_put_contents($path_mibcache, '<?php $cache = ' . var_export($cache, true) . ';', LOCK_EX);
-fs_write	./src/Graphing/Infrastructure/Rrd/DirectoryFlockStore.php:142	            $handle = @fopen($this->canonicalPath, 'r');
 fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:29	            $handle = @fopen($path, is_file($path) ? 'c+b' : 'x+b');
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
