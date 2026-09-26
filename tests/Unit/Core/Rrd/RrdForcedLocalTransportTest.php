@@ -8,8 +8,8 @@ require_once dirname(__DIR__, 3) . '/Helpers/RrdCharacterization.php';
 /**
  * poller_realtime.php and graph_realtime.php set force_storage_location_local
  * on an installation that stores RRDs through the proxy. rrdtool_execute()
- * then uses the local pipe, but several callers still test storage_location
- * alone and send the proxy-only file_exists, is_dir and mkdir verbs to it.
+ * then uses local filesystem checks while preserving local create and update
+ * behavior across the legacy RRD entry points.
  */
 function rrd_forced_local_scenario(): array
 {
@@ -19,7 +19,7 @@ function rrd_forced_local_scenario(): array
     return array(
         'line_mode' => true,
         // The main RRD of data source 11 is on this host.
-        'files' => array('router_traffic_11.rrd'),
+        'files' => array('router_traffic_11.rrd', 'realtime_user_abc_11.rrd'),
         'options' => array('storage_location' => '1', 'extended_paths' => '', 'default_interface_speed' => '') + rrd_characterization_options(),
         'replies' => array('fetch' => " value\n\n1700000300: 1.0000000000e+00\n", 'info' => "filename = \"x\"\n"),
         'db' => array(
@@ -45,21 +45,18 @@ function rrd_forced_local_scenario(): array
             array('fn' => 'rrdtool_function_fetch', 'args' => array(0, 1700000000, 1700001000), 'config' => $forced),
             array('fn' => 'rrdtool_uses_proxy', 'args' => array()),
             // The file is on this host, and the answer is still false.
-            array('fn' => 'rrdtool_file_exists', 'args' => array('rra/router_traffic_11.rrd')),
-            // The existence check fails, so the existing RRD is created again;
-            // RRDtool create replaces a file that is already there.
+            array('fn' => 'rrdtool_file_exists', 'args' => array('<path_rra>/router_traffic_11.rrd')),
+            // Forced local storage sees the existing file and prevents create.
             array('fn' => 'rrdtool_function_create', 'args' => array(11, false)),
             array('fn' => 'boost_rrdtool_function_create', 'args' => array(11, false, false)),
-            // poller_realtime.php updates its cache file; the missing-file branch
-            // creates the data source's main RRD before the update.
-            array('fn' => 'rrdtool_function_update', 'args' => array(array('rra/realtime/user_abc_11.rrd' => array('local_data_id' => 11, 'data_template_id' => 0, 'times' => array(1700000600 => array('value' => '5')))))),
+            // A realtime cache RRD already on the local host is updated in place.
+            array('fn' => 'rrdtool_function_update', 'args' => array(array('<path_rra>/realtime_user_abc_11.rrd' => array('local_data_id' => 11, 'data_template_id' => 0, 'times' => array(1700000600 => array('value' => '5')))))),
             // Readers go through rrdtool_execute() alone and stay local and consistent.
             array('fn' => 'rrdtool_function_info', 'args' => array(11)),
             array('fn' => 'rrdtool_function_fetch', 'args' => array(11, 1700000000, 1700001000, 300)),
-            // A structured path sends is_dir and mkdir to the local pipe; RRDtool makes the directory.
+            // Structured paths are created on the local filesystem.
             array('fn' => 'rrdtool_function_create', 'args' => array(12, false), 'options' => array('extended_paths' => 'on')),
-            array('fn' => 'is_dir', 'args' => array('rra/3')),
-            // Resize is refused as if remote, though the pipe is local.
+            array('fn' => 'is_dir', 'args' => array('<path_rra>/3')),
             array('fn' => 'rrdtool_tune', 'args' => array('rra/router_traffic_11.rrd', array('resize' => array("'rra/router_traffic_11.rrd' 0 GROW 10")), false)),
             // Without storage_location the same create sees the file and stops.
             array('fn' => 'rrdtool_function_create', 'args' => array(11, false), 'options' => array('storage_location' => '0', 'extended_paths' => '')),
@@ -67,20 +64,30 @@ function rrd_forced_local_scenario(): array
     );
 }
 
-test('known inconsistency: forced local storage still runs proxy-only existence checks on the local pipe', function () {
+test('forced local storage consistently uses local filesystem checks and RRD operations', function () {
     $results = array_map('rrd_characterization_observed', rrd_characterization_run($this, rrd_forced_local_scenario())['results']);
     $observed = array_slice($results, 1);
 
     expect($observed[0]['returned'])->toBeFalse()
-        ->and($observed[1]['returned'])->toBeFalse()
-        ->and($observed[2]['commands'][1]['stdin'][0])->toStartWith('create ')
-        ->and($observed[3]['commands'][1]['stdin'][0])->toStartWith('create ')
+        ->and($observed[1]['returned'])->toBeTrue()
+        ->and($observed[1]['commands'])->toBe(array())
+        ->and($observed[2]['returned'])->toBe(-1)
+        ->and($observed[2]['commands'])->toBe(array())
+        ->and($observed[3]['returned'])->toBe(-1)
+        ->and($observed[3]['commands'])->toBe(array())
+        ->and($observed[4]['commands'])->toHaveCount(1)
+        ->and($observed[4]['commands'][0]['stdin'][0])->toStartWith('update ')
+        ->and($observed[7]['commands'])->toHaveCount(1)
+        ->and($observed[7]['commands'][0]['stdin'][0])->toStartWith('create ')
         ->and($observed[8]['returned'])->toBeTrue()
-        ->and($observed[9]['returned'])->toBeFalse()
-        ->and($observed[9]['commands'])->toBe(array())
-        ->and($observed[10]['returned'])->toBe(-1)
-        ->and($observed[10]['commands'])->toBe(array());
-    rrd_characterization_golden('forced-local-transport', $observed);
+        ->and($observed[8]['commands'])->toBe(array());
+
+    $commands = array_merge(...array_column($observed, 'commands'));
+    foreach ($commands as $command) {
+        foreach ($command['stdin'] as $line) {
+            expect($line)->not->toMatch('/^(file_exists|is_dir|mkdir) /');
+        }
+    }
 });
 
 test('RRDtool answers file_exists, is_dir and mkdir as the line-mode fake does', function () {

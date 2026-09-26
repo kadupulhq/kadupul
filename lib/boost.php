@@ -1250,7 +1250,7 @@ function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe)
         return time();
     }
 
-    if (read_config_option('storage_location')) {
+    if (rrdtool_uses_proxy()) {
         $file_exists = rrdtool_execute(array('file_exists', $rrd_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
     } else {
         $file_exists = file_exists($rrd_path);
@@ -1381,7 +1381,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
     /* ok, if that passes lets check to make sure an rra does not already
     exist, the last thing we want to do is overwrite data! */
     if ($show_source != true) {
-        if (read_config_option('storage_location')) {
+        if (rrdtool_uses_proxy()) {
             $file_exists = rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
         } else {
             $file_exists = file_exists($data_source_path);
@@ -1499,7 +1499,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 
     $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
 
-    $prepared = rrdtool_create_prepare($data_source_path, $show_source, read_config_option('storage_location') > 0, $rrdtool_pipe, $local_data_id, 'BOOST');
+    $prepared = rrdtool_create_prepare($data_source_path, $show_source, rrdtool_uses_proxy(), $rrdtool_pipe, $local_data_id, 'BOOST');
     if ($prepared === false) {
         return false;
     }
@@ -1558,7 +1558,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
     }
 
     /* create the rrd if one does not already exist */
-    if (read_config_option('storage_location')) {
+    if (rrdtool_uses_proxy()) {
         $file_exists = rrdtool_execute(array('file_exists', $rrd_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
     } else {
         $file_exists = file_exists($rrd_path);
