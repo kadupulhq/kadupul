@@ -36,15 +36,15 @@ explains the deprecation and libxml-dependent parser behavior.
 
 ## Test dependency debt
 
-The isolated `tests/composer.json` still uses Pest 1 / PHPUnit 9. Under PHP 8.4,
-Pest's implicit nullable declarations can stop bootstrap before tests run.
-The pre-existing CSV/spike-removal jobs already suppress runner deprecations;
-the database-contract and legacy coverage jobs now use the same temporary
-`error_reporting=24575` policy (E_ALL without E_DEPRECATED).
+The isolated `tests/composer.json` now uses Pest 4 / PHPUnit 12. Pest 4's
+default test directory is `tests`; CI runs from the isolated `tests/` Composer
+root, so those commands set `--test-directory=.` to use that root directly.
+The CSV/spike-removal, database-contract, and legacy coverage jobs still use the
+temporary `error_reporting=24575` policy (E_ALL without E_DEPRECATED).
 
 This also suppresses application E_DEPRECATED in that runner process: those
-jobs **do not prove deprecation-free application execution**. Upgrade the test
-runner and coverage tooling together, remove these masks, then run with strict
+jobs **do not prove deprecation-free application execution**. Remove these masks
+after addressing the application deprecation backlog, then run with strict
 deprecation reporting. Do not patch installed vendor files. The Symfony PHPUnit
 suite has no new suppression, and the isolated production CSV probes explicitly
 use E_ALL. Existing legacy coverage exclusions remain a separate test debt.

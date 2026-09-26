@@ -10,8 +10,8 @@
 
 list(, $root, $directory, $collect) = $argv;
 if ($collect === '1') {
-    // Pest 1 declares implicitly nullable parameters, which PHP 8.4 reports as
-    // deprecated. Only the application code below runs with every level on.
+    // Keep legacy bootstrap deprecations out of this child process; the
+    // application scenario below runs with every error level enabled.
     error_reporting(E_ALL & ~E_DEPRECATED);
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     require __DIR__ . '/rrd-process-coverage.php';

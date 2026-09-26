@@ -74,7 +74,18 @@ function _csp_start_server($mode, $alternates = '')
     $deadline = microtime(true) + 3.0;
     $ready = false;
     while (microtime(true) < $deadline) {
-        $probe = @stream_socket_client('tcp://127.0.0.1:' . (int) $port, $errno, $errstr, 0.2);
+        /* Connection refusal is expected until php -S binds the port. Pest 4
+         * reports this warning even when PHP's @ suppression is used, so handle
+         * only this startup probe warning explicitly. */
+        set_error_handler(function ($severity, $message) {
+            return $severity === E_WARNING && strpos($message, 'Unable to connect to tcp://127.0.0.1:') !== false;
+        });
+        try {
+            $probe = stream_socket_client('tcp://127.0.0.1:' . (int) $port, $errno, $errstr, 0.2);
+        } finally {
+            restore_error_handler();
+        }
+
         if ($probe !== false) {
             fclose($probe);
             $ready = true;

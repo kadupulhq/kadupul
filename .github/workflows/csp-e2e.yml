@@ -67,7 +67,7 @@ jobs:
         run: |
           set -euo pipefail
           for test in Unit/HeadersSecureTest.php Unit/CspReportEndpointTest.php Unit/HelpLocalDocumentationTest.php Unit/HelpSsrFTest.php; do
-            ./vendor/bin/pest --colors=never --bootstrap bootstrap-unit.php "$test" | tee "$RUNNER_TEMP/pest.log"
+            ./vendor/bin/pest --test-directory=. --colors=never --bootstrap bootstrap-unit.php "$test" | tee "$RUNNER_TEMP/pest.log"
             grep -Eq 'Tests: +[1-9][0-9]* passed' "$RUNNER_TEMP/pest.log"
           done
 
@@ -100,7 +100,7 @@ jobs:
         # integration files need the container stack and never ran here.
         run: |
           set -euo pipefail
-          ./vendor/bin/pest --colors=never --bootstrap bootstrap-unit.php integration/ContentSecurityPolicyTest.php | tee "$RUNNER_TEMP/pest.log"
+          ./vendor/bin/pest --test-directory=. --colors=never --bootstrap bootstrap-unit.php integration/ContentSecurityPolicyTest.php | tee "$RUNNER_TEMP/pest.log"
           grep -Eq 'Tests: +[1-9][0-9]* passed' "$RUNNER_TEMP/pest.log"
 
   e2e:
