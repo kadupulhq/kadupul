@@ -98,6 +98,11 @@
         </testsuite>
     </testsuites>
     <coverage>
+        <report>
+            <clover outputFile="coverage.xml"/>
+        </report>
+    </coverage>
+    <source>
         <include>
             <directory suffix=".php">..</directory>
         </include>
@@ -114,8 +119,5 @@
             <directory>../rra</directory>
             <directory>../var</directory>
         </exclude>
-        <report>
-            <clover outputFile="coverage.xml"/>
-        </report>
-    </coverage>
+    </source>
 </phpunit>
