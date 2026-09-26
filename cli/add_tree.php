@@ -191,12 +191,18 @@ if (cacti_sizeof($parms)) {
 	}
 
 	if ($displayHosts) {
-		displayHosts($hosts, $quietMode);
+		if (!displayHosts($hosts, $quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 
 	if ($displayTrees) {
-		displayTrees($quietMode);
+		if (!displayTrees($quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 
@@ -223,7 +229,13 @@ if (cacti_sizeof($parms)) {
 			exit(1);
 		}
 
-		displayHostGraphs($hostId, $quietMode);
+		if (!displayHostGraphs($hostId, $quietMode)) {
+
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+
+			exit(1);
+
+		}
 		exit(0);
 	}
 
@@ -257,7 +269,7 @@ if (cacti_sizeof($parms)) {
 		}
 
 		if ($existsAlready) {
-			print "ERROR: Not adding tree - it already exists - tree-id: ($existsAlready)\n";
+			print "ERROR: Not adding tree - it already exists.\n";
 			exit(1);
 		}
 

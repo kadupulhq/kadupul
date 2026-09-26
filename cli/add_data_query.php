@@ -144,7 +144,10 @@ if (cacti_sizeof($parms)) {
 	/* list options, recognizing $quietMode */
 	if ($displayHosts) {
 		$hosts = getHosts();
-		displayHosts($hosts, $quietMode);
+		if (!displayHosts($hosts, $quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit;
 	}
 	if ($displayDataQueries) {

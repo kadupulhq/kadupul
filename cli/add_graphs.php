@@ -295,7 +295,13 @@ if (cacti_sizeof($parms)) {
 			}
 		}
 
-		displayGraphTemplates($graphTemplates, $quietMode);
+		if (!displayGraphTemplates($graphTemplates, $quietMode)) {
+
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+
+			exit(1);
+
+		}
 
 		exit(0);
 	}
@@ -314,7 +320,10 @@ if (cacti_sizeof($parms)) {
 	}
 
 	if ($listHosts) {
-		displayHosts($hosts, $quietMode);
+		if (!displayHosts($hosts, $quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 

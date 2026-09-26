@@ -149,18 +149,27 @@ if (cacti_sizeof($parms) == 0) {
 	}
 
 	if ($displayUsers) {
-		displayUsers($quietMode);
+		if (!displayUsers($quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 
 	if ($displayTrees) {
-		displayTrees($quietMode);
+		if (!displayTrees($quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 
 	if ($displayHosts) {
 		$hosts = getHosts();
-		displayHosts($hosts, $quietMode);
+		if (!displayHosts($hosts, $quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 
@@ -171,14 +180,20 @@ if (cacti_sizeof($parms) == 0) {
 			display_help();
 			exit(1);
 		} else {
-			displayHostGraphs($hostId, $quietMode);
+			if (!displayHostGraphs($hostId, $quietMode)) {
+				fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+				exit(1);
+			}
 			exit(0);
 		}
 	}
 
 	if ($displayGraphTemplates) {
 		$graphTemplates = getGraphTemplates();
-		displayGraphTemplates($graphTemplates, $quietMode);
+		if (!displayGraphTemplates($graphTemplates, $quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 

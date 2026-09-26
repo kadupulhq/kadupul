@@ -387,7 +387,11 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
 
 		$running = pushout_processes_running();
 		if ($running === false) {
-			fwrite(STDERR, "ERROR: Unable to check poller cache child process status.\n");
+			if (!empty($GLOBALS['pushout_child_cleanup_failed'])) {
+				fwrite(STDERR, "ERROR: Unable to remove an exited poller cache child from the process registry.\n");
+			} else {
+				fwrite(STDERR, "ERROR: Unable to check poller cache child process status.\n");
+			}
 
 			return false;
 		}
@@ -494,7 +498,11 @@ function pushout_processes_running() {
 	foreach ($children as $child) {
 		if (!is_numeric($child['pid']) || !cacti_process_still_running((int) $child['pid'])) {
 			$GLOBALS['pushout_child_exit_unreported'] = true;
-			unregister_process('pushout', 'child', (int) $child['taskid'], (int) $child['pid']);
+			if (!pushout_unregister_child((int) $child['taskid'], (int) $child['pid'])) {
+				$GLOBALS['pushout_child_cleanup_failed'] = true;
+
+				return false;
+			}
 
 			continue;
 		}
@@ -503,6 +511,29 @@ function pushout_processes_running() {
 	}
 
 	return $running;
+}
+
+/**
+ * Remove a completed child from the process registry and verify the row is gone.
+ *
+ * @param int $task_id Child task identifier
+ * @param int $pid     Child process identifier
+ *
+ * @return bool Whether the child registry row was removed
+ */
+function pushout_unregister_child($task_id, $pid) {
+	$params = array('pushout', 'child', $task_id, $pid);
+	$deleted = db_execute_prepared('DELETE FROM processes
+		WHERE tasktype = ? AND taskname = ? AND taskid = ? AND pid = ?', $params);
+
+	if ($deleted === false) {
+		return false;
+	}
+
+	$remaining = db_fetch_cell_prepared('SELECT COUNT(*) FROM processes
+		WHERE tasktype = ? AND taskname = ? AND taskid = ? AND pid = ?', $params);
+
+	return is_numeric($remaining) && (int) $remaining === 0;
 }
 
 /**

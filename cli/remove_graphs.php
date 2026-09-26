@@ -289,7 +289,13 @@ if (cacti_sizeof($host_ids)) {
 if ($listHosts) {
 	$hosts = getHosts($host_template_ids);
 
-	displayHosts($hosts, $quietMode);
+	if (!displayHosts($hosts, $quietMode)) {
+
+		fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+
+		exit(1);
+
+	}
 
 	exit(0);
 } elseif ($listHostTemplates) {
@@ -301,7 +307,13 @@ if ($listHosts) {
 } elseif ($listGraphTemplates) {
 	$graphTemplates = getGraphTemplatesByHostTemplate($host_template_ids);
 
-	displayGraphTemplates($graphTemplates, $quietMode);
+	if (!displayGraphTemplates($graphTemplates, $quietMode)) {
+
+		fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+
+		exit(1);
+
+	}
 
 	exit(0);
 } else {

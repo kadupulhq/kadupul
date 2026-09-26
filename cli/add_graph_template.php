@@ -107,13 +107,19 @@ if (cacti_sizeof($parms)) {
 	/* list options, recognizing $quiteMode */
 	if ($displayHosts) {
 		$hosts = getHosts();
-		displayHosts($hosts, $quietMode);
+		if (!displayHosts($hosts, $quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 
 	if ($displayGraphTemplates) {
 		$graphTemplates = getGraphTemplates();
-		displayGraphTemplates($graphTemplates, $quietMode);
+		if (!displayGraphTemplates($graphTemplates, $quietMode)) {
+			fwrite(STDERR, "ERROR: Unable to list records because the database query failed.\n");
+			exit(1);
+		}
 		exit(0);
 	}
 
@@ -150,9 +156,13 @@ if (cacti_sizeof($parms)) {
 	}
 
 	/* check, if graph template was already associated */
-	$exists_already = db_fetch_cell_prepared('SELECT host_id FROM host_graph WHERE graph_template_id = ? AND host_id = ?', array((int) $graph_template_id, (int) $host_id));
-	if ((isset($exists_already)) &&
-		($exists_already > 0)) {
+	$exists_already = add_graph_template_association_exists((int) $host_id, (int) $graph_template_id);
+	if ($exists_already === null) {
+		fwrite(STDERR, "ERROR: Could not verify whether the graph template is already associated.\n");
+		exit(1);
+	}
+
+	if ($exists_already) {
 		print "ERROR: Graph Template is already associated for host: ($host_id: $host_name) - graph-template: ($graph_template_id: $graph_template_name)\n";
 		exit(1);
 	} else {
@@ -176,6 +186,16 @@ if (cacti_sizeof($parms)) {
 } else {
 	display_help();
 	exit(0);
+}
+
+function add_graph_template_association_exists($host_id, $graph_template_id) {
+	$count = db_fetch_cell_prepared('SELECT COUNT(*) FROM host_graph WHERE graph_template_id = ? AND host_id = ?', array($graph_template_id, $host_id));
+
+	if ($count === false || !is_numeric($count)) {
+		return null;
+	}
+
+	return (int) $count > 0;
 }
 
 /*  display_version - displays version information */

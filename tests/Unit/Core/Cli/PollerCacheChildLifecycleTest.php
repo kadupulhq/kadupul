@@ -21,6 +21,16 @@ function unregister_process($taskType, $taskName, $taskId, $pid) {
 	$GLOBALS['unregistered_children'][] = array($taskType, $taskName, $taskId, $pid);
 }
 
+function db_execute_prepared($sql, $params = array()) {
+	$GLOBALS['child_delete_params'] = $params;
+
+	return $GLOBALS['child_delete_result'];
+}
+
+function db_fetch_cell_prepared($sql, $params = array()) {
+	return $GLOBALS['child_remaining_count'];
+}
+
 function read_config_option($option) {
 	return '/usr/bin/php';
 }
@@ -43,6 +53,7 @@ if (!defined('POLLER_VERBOSITY_MEDIUM')) {
 	define('POLLER_VERBOSITY_MEDIUM', 1);
 }
 eval('namespace PollerCacheChildLifecycleTest; ' . test_php_function_source($source, 'pushout_processes_running'));
+eval('namespace PollerCacheChildLifecycleTest; ' . test_php_function_source($source, 'pushout_unregister_child'));
 eval('namespace PollerCacheChildLifecycleTest; ' . test_php_function_source($source, 'pushout_launch_child'));
 
 test('child monitoring distinguishes database errors and reaps an exited child with no result marker', function () {
@@ -54,9 +65,15 @@ test('child monitoring distinguishes database errors and reaps an exited child w
 
 	$GLOBALS['unregistered_children'] = array();
 	$GLOBALS['child_rows'] = array(array('taskid' => 2, 'pid' => 4321));
+	$GLOBALS['child_delete_result'] = true;
+	$GLOBALS['child_remaining_count'] = 0;
 	expect(pushout_processes_running())->toBe(0)
 		->and($GLOBALS['pushout_child_exit_unreported'])->toBeTrue()
-		->and($GLOBALS['unregistered_children'])->toBe(array(array('pushout', 'child', 2, 4321)));
+		->and($GLOBALS['child_delete_params'])->toBe(array('pushout', 'child', 2, 4321));
+
+	$GLOBALS['child_delete_result'] = false;
+	expect(pushout_processes_running())->toBeFalse()
+		->and($GLOBALS['pushout_child_cleanup_failed'])->toBeTrue();
 });
 
 test('child launch returns the process adapter result and preserves selected scope', function () {
