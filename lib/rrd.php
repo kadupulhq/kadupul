@@ -3504,7 +3504,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                 try {
                     rrdtool_filesystem()->dumpFile($graph_data_array['export_realtime'], (string) $output);
-                    rrdtool_filesystem()->chmod($graph_data_array['export_realtime'], 0644);
+                    rrdtool_filesystem()->chmod($graph_data_array['export_realtime'], 0600);
                 } catch (\Symfony\Component\Filesystem\Exception\IOExceptionInterface $exception) {
                     // Preserve the legacy return contract when realtime export storage fails.
                 }
