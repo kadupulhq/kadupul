@@ -9,6 +9,29 @@
 define('RRD_NL', " \\\n");
 define('MAX_FETCH_CACHE_SIZE', 5);
 
+/**
+ * Return the current instant through the application clock port.
+ *
+ * Legacy callers can omit the dependency and retain the system clock. Graph
+ * rendering passes an injected clock so all relative times share one instant.
+ *
+ * @param \Kadupul\Platform\Application\Port\Clock|null $clock
+ *
+ * @return \DateTimeImmutable
+ */
+function rrdtool_clock_now(?\Kadupul\Platform\Application\Port\Clock $clock = null): \DateTimeImmutable
+{
+    static $systemClock = null;
+
+    if ($clock !== null) {
+        return $clock->now();
+    }
+
+    $systemClock ??= new \Kadupul\Platform\Infrastructure\Symfony\SystemClock(new \Symfony\Component\Clock\NativeClock());
+
+    return $systemClock->now();
+}
+
 function escape_command($command)
 {
     return $command;		# we escape every single argument now, no need for 'special' escaping
@@ -1985,8 +2008,6 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
         return array();
     }
 
-    $time = time();
-
     /* initialize fetch array */
     $fetch_array = array();
 
@@ -2062,7 +2083,7 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
     return $fetch_array;
 }
 
-function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &$graph_data_array)
+function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &$graph_data_array, ?\DateTimeImmutable $now = null)
 {
     global $config, $image_types;
 
@@ -2292,7 +2313,7 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
     $graph_opts .= "$rigid" . trim("$scale$unit_value$unit_exponent_value$graph_legend", "\n\r " . RRD_NL) . RRD_NL;
 
     /* add a date to the graph legend */
-    $graph_opts .= rrdtool_function_format_graph_date($graph_data_array);
+    $graph_opts .= rrdtool_function_format_graph_date($graph_data_array, $now);
 
     /* process theme and font styling options */
     $graph_opts .= rrdtool_function_theme_font_options($graph_data_array);
@@ -2308,13 +2329,13 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
     return $graph_opts;
 }
 
-function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe = false, &$xport_meta = array(), $user = 0)
+function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe = false, &$xport_meta = array(), $user = 0, ?\Kadupul\Platform\Application\Port\Clock $clock = null)
 {
     // A value RRDtool cannot receive (a NUL in device or query data), or a DEF
     // path the RRDtool proxy cannot carry, refuses the command before anything
     // is sent; the caller gets the same answer as for a missing RRD file.
     try {
-        return __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe, $xport_meta, $user);
+        return __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe, $xport_meta, $user, $clock);
     } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
         cacti_log('ERROR: Graph ' . $local_graph_id . ' was not rendered. ' . $e->getMessage());
 
@@ -2354,11 +2375,13 @@ function rrdtool_cdef_magic_variables()
  * Add $def_name to every requested magic variable that uses counter $count,
  * converting unknowns to '0' first, then advance the counter.
  */
-function rrdtool_cdef_magic_append(&$magic_item, &$magic_count, $count, $def_name, $rra_seconds)
+function rrdtool_cdef_magic_append(&$magic_item, &$magic_count, $count, $def_name, $rra_seconds, ?\DateTimeImmutable $now = null)
 {
+    $now ??= rrdtool_clock_now();
+
     foreach (rrdtool_cdef_magic_variables() as $name => $variable) {
         if ($variable['count'] === $count && isset($magic_item[$name])) {
-            $magic_item[$name] .= ($magic_count[$count] == 0 ? '' : ',') . 'TIME,' . (time() - $rra_seconds) . ',GT,' . ($variable['total'] ? "$def_name,$def_name,UN,0,$def_name" : "1,$def_name,UN,0,1") . ',IF,IF';
+            $magic_item[$name] .= ($magic_count[$count] == 0 ? '' : ',') . 'TIME,' . ($now->getTimestamp() - $rra_seconds) . ',GT,' . ($variable['total'] ? "$def_name,$def_name,UN,0,$def_name" : "1,$def_name,UN,0,1") . ',IF,IF';
         }
     }
 
@@ -2378,7 +2401,7 @@ function rrdtool_cdef_step_replace($name, $cdef_string, $graph_item)
     return str_replace($name, read_config_option('poller_interval'), $cdef_string);
 }
 
-function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe, &$xport_meta, $user)
+function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe, &$xport_meta, $user, ?\Kadupul\Platform\Application\Port\Clock $clock = null)
 {
     global $config, $consolidation_functions, $graph_item_types, $encryption;
 
@@ -2406,6 +2429,8 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
         }
     }
 
+    $now = rrdtool_clock_now($clock);
+
     if (getenv('LANG') == '') {
         putenv('LANG=' . str_replace('-', '_', CACTI_LOCALE) . '.UTF-8');
     }
@@ -2422,7 +2447,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
     if (empty($graph_data_array['graph_end'])) {
         $main_last_run = read_config_option('poller_lastrun_1');
-        $now_time      = time();
+        $now_time      = $now->getTimestamp();
         $default_delta = (int) read_config_option('poller_interval') * -1;
 
         if (!empty($main_last_run)) {
@@ -2457,7 +2482,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
         'local_data_id'
     );
 
-    $ds_step = rrdtool_function_get_resstep($local_data_ids, $graph_data_array['graph_start'], $graph_data_array['graph_end'], 'step');
+    $ds_step = rrdtool_function_get_resstep($local_data_ids, $graph_data_array['graph_start'], $graph_data_array['graph_end'], 'step', $now);
 
     /* if no rra was specified, we need to figure out which one RRDtool will choose using
      * "best-fit" resolution fit algorithm */
@@ -2476,7 +2501,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                     $real_timespan = ($ds_step * $unchosen_rra['steps'] * $unchosen_rra['rows']);
 
                     /* make sure the current start/end times fit within each RRA's timespan */
-                    if ($graph_data_array['graph_end'] - $graph_data_array['graph_start'] <= $real_timespan && time() - $graph_data_array['graph_start'] <= $real_timespan) {
+                    if ($graph_data_array['graph_end'] - $graph_data_array['graph_start'] <= $real_timespan && $now->getTimestamp() - $graph_data_array['graph_start'] <= $real_timespan) {
                         /* is this RRA better than the already chosen one? */
                         if (isset($rra) && $unchosen_rra['steps'] < $rra['steps']) {
                             $rra = $unchosen_rra;
@@ -2587,7 +2612,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
     /* +++++++++++++++++++++++ GRAPH OPTIONS +++++++++++++++++++++++ */
 
     if (!isset($graph_data_array['export_csv'])) {
-        $graph_opts = rrd_function_process_graph_options($graph_start, $graph_end, $graph, $graph_data_array);
+        $graph_opts = rrd_function_process_graph_options($graph_start, $graph_end, $graph, $graph_data_array, $now);
     } else {
         /* basic export options */
         $graph_opts =
@@ -2603,7 +2628,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
     $cactiLastDate     = read_config_option('date');
 
     if (empty($cactiLastDate)) {
-        $cactiLastDate = date('Y-m-d H:i:s');
+        $cactiLastDate = $now->format('Y-m-d H:i:s');
     }
 
     $dateTime = date($dateTimeFormat, strtotime($cactiLastDate));
@@ -2969,21 +2994,21 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                             if (isset($cf_ds_cache[$gi_check['data_template_rrd_id']][$cf_id])) {
                                 $def_name = generate_graph_def_name(strval($cf_ds_cache[$gi_check['data_template_rrd_id']][$cf_id]));
 
-                                rrdtool_cdef_magic_append($magic_item, $magic_count, 'all_dups', $def_name, $rra_seconds);
+                                rrdtool_cdef_magic_append($magic_item, $magic_count, 'all_dups', $def_name, $rra_seconds, $now);
 
                                 /* check if this item also qualifies for NODUPS  */
                                 if (!isset($already_seen[$def_name])) {
-                                    rrdtool_cdef_magic_append($magic_item, $magic_count, 'all_nodups', $def_name, $rra_seconds);
+                                    rrdtool_cdef_magic_append($magic_item, $magic_count, 'all_nodups', $def_name, $rra_seconds, $now);
                                     $already_seen[$def_name] = true;
                                 }
 
                                 /* check for SIMILAR data sources */
                                 if ($graph_item['data_source_name'] == $gi_check['data_source_name']) {
-                                    rrdtool_cdef_magic_append($magic_item, $magic_count, 'similar_dups', $def_name, $rra_seconds);
+                                    rrdtool_cdef_magic_append($magic_item, $magic_count, 'similar_dups', $def_name, $rra_seconds, $now);
 
                                     /* check if this item also qualifies for NODUPS  */
                                     if (!isset($sources_seen[$gi_check['data_template_rrd_id']])) {
-                                        rrdtool_cdef_magic_append($magic_item, $magic_count, 'similar_nodups', $def_name, $rra_seconds);
+                                        rrdtool_cdef_magic_append($magic_item, $magic_count, 'similar_nodups', $def_name, $rra_seconds, $now);
                                         $sources_seen[$gi_check['data_template_rrd_id']] = true;
                                     }
                                 } # SIMILAR data sources
@@ -3340,9 +3365,9 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                             $value_array = explode(':', $graph_item['value']);
 
                             if ($value_array[0] < 0) {
-                                $value = date('U') - (-3600 * $value_array[0]) - 60 * $value_array[1];
+                                $value = $now->getTimestamp() - (-3600 * $value_array[0]) - 60 * $value_array[1];
                             } else {
-                                $value = date('U', mktime($value_array[0], $value_array[1], 0));
+                                $value = $now->setTime((int) $value_array[0], (int) $value_array[1])->getTimestamp();
                             }
 
                             $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $value . $graph_item_color_code . ':' . rrdtool_pipe_quote(rrdtool_escape_string(html_escape($graph_variables['text_format'][$graph_item_id])) . $hardreturn[$graph_item_id]) . $dash;
@@ -3384,7 +3409,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
     if (!isset($graph_data_array['export_csv']) || $graph_data_array['export_csv'] != true) {
         $graph_array = api_plugin_hook_function('rrd_graph_graph_options', array('graph_opts' => $graph_opts, 'graph_defs' => $graph_defs, 'txt_graph_items' => $txt_graph_items, 'graph_id' => $local_graph_id, 'start' => $graph_start, 'end' => $graph_end));
 
-        $graph_array = add_business_hours($graph_array);
+        $graph_array = add_business_hours($graph_array, $now);
 
         if (!empty($graph_array)) {
             $graph_defs = $graph_array['graph_defs'];
@@ -3535,13 +3560,14 @@ function rrdtool_escape_string($text, $ignore_percent = true)
     }
 }
 
-function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$xport_meta, $user = 0)
+function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$xport_meta, $user = 0, ?\Kadupul\Platform\Application\Port\Clock $clock = null)
 {
-    return rrdtool_function_graph($local_graph_id, $rra_id, $xport_data_array, null, $xport_meta, $user);
+    return rrdtool_function_graph($local_graph_id, $rra_id, $xport_data_array, null, $xport_meta, $user, $clock);
 }
 
-function rrdtool_function_format_graph_date(&$graph_data_array)
+function rrdtool_function_format_graph_date(&$graph_data_array, ?\DateTimeImmutable $now = null)
 {
+    $now ??= rrdtool_clock_now();
     global $datechar;
 
     $graph_legend = '';
@@ -3577,7 +3603,7 @@ function rrdtool_function_format_graph_date(&$graph_data_array)
     /* display the timespan for zoomed graphs */
     if ((isset($graph_data_array['graph_start'])) && (isset($graph_data_array['graph_end']))) {
         if (($graph_data_array['graph_start'] < 0) && ($graph_data_array['graph_end'] < 0)) {
-            $graph_legend = "COMMENT:\"From " . str_replace(':', '\:', date($graph_date, time() + $graph_data_array['graph_start'])) . ' To ' . str_replace(':', '\:', date($graph_date, time() + $graph_data_array['graph_end'])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+            $graph_legend = "COMMENT:\"From " . str_replace(':', '\:', date($graph_date, $now->getTimestamp() + $graph_data_array['graph_start'])) . ' To ' . str_replace(':', '\:', date($graph_date, $now->getTimestamp() + $graph_data_array['graph_end'])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
         } elseif (($graph_data_array['graph_start'] >= 0) && ($graph_data_array['graph_end'] >= 0)) {
             $graph_legend = "COMMENT:\"From " . str_replace(':', '\:', date($graph_date, $graph_data_array['graph_start'])) . ' To ' . str_replace(':', '\:', date($graph_date, $graph_data_array['graph_end'])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
         }
@@ -3739,13 +3765,13 @@ function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item)
     }
 }
 
-function rrdtool_function_get_resstep($local_data_ids, $graph_start, $graph_end, $type = 'res')
+function rrdtool_function_get_resstep($local_data_ids, $graph_start, $graph_end, $type = 'res', ?\DateTimeImmutable $now = null)
 {
     if (!is_array($local_data_ids)) {
         $local_data_ids = array($local_data_ids);
     }
 
-    $time = time();
+    $time = ($now ?? rrdtool_clock_now())->getTimestamp();
 
     if ($graph_start < 0) {
         $graph_start = $time + $graph_start;
@@ -5268,12 +5294,13 @@ function colourBrightness($hex, $percent)
  * @return (array) - the graph_array containing AREA definitions for the business hours
  *
  */
-function add_business_hours($data)
+function add_business_hours($data, ?\DateTimeImmutable $now = null)
 {
     if (read_config_option('business_hours_enable') == 'on') {
+        $now ??= rrdtool_clock_now();
         if ($data['start'] < 0) {
-            $bh_graph_start = time() + $data['start'];
-            $bh_graph_end   = time() + $data['end'];
+            $bh_graph_start = $now->getTimestamp() + $data['start'];
+            $bh_graph_end   = $now->getTimestamp() + $data['end'];
         } else {
             $bh_graph_start = $data['start'];
             $bh_graph_end   =  $data['end'];
