@@ -153,7 +153,7 @@ function form_save()
         foreach ($items as $item) {
             /* generate a new sequence if needed */
             if (empty($sequence)) {
-                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', 'local_graph_id=' . get_nfilter_request_var('local_graph_id'));
+                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', array('local_graph_id' => get_nfilter_request_var('local_graph_id')));
             }
             $save['id']                           = get_nfilter_request_var('graph_template_item_id');
             $save['graph_template_id']            = get_nfilter_request_var('graph_template_id');
@@ -243,7 +243,7 @@ function item_movedown()
     if ((!empty($next_id)) && (isset($arr[get_request_var('id')]))) {
         move_graph_group(get_request_var('id'), $arr, $next_id, 'next');
     } elseif (preg_match('/(GPRINT|VRULE|HRULE|COMMENT)/', $graph_item_types[db_fetch_cell_prepared('SELECT graph_type_id FROM graph_templates_item WHERE id = ?', array(get_request_var('id')))])) {
-        move_item_down('graph_templates_item', get_request_var('id'), 'local_graph_id=' . get_request_var('local_graph_id'));
+        move_item_down('graph_templates_item', get_request_var('id'), array('local_graph_id' => get_request_var('local_graph_id')));
     }
 }
 
@@ -262,7 +262,7 @@ function item_moveup()
     if ((!empty($previous_id)) && (isset($arr[get_request_var('id')]))) {
         move_graph_group(get_request_var('id'), $arr, $previous_id, 'previous');
     } elseif (preg_match('/(GPRINT|VRULE|HRULE|COMMENT)/', $graph_item_types[db_fetch_cell_prepared('SELECT graph_type_id FROM graph_templates_item WHERE id = ?', array(get_request_var('id')))])) {
-        move_item_up('graph_templates_item', get_request_var('id'), 'local_graph_id=' . get_request_var('local_graph_id'));
+        move_item_up('graph_templates_item', get_request_var('id'), array('local_graph_id' => get_request_var('local_graph_id')));
     }
 }
 

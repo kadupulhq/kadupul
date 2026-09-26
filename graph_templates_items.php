@@ -175,7 +175,7 @@ function form_save()
         foreach ($items as $item) {
             /* generate a new sequence if needed */
             if (empty($sequence)) {
-                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0');
+                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0));
             }
 
             $task_item_changed = true;
