@@ -20,3 +20,11 @@ test('RRD clock helper uses the supplied application clock', function () {
 
     expect(rrdtool_clock_now($clock))->toBe($instant);
 });
+
+test('RRD filesystem helper returns its shared filesystem adapter', function () {
+    $first = rrdtool_filesystem();
+    $second = rrdtool_filesystem();
+
+    expect($first)->toBeInstanceOf(\Symfony\Component\Filesystem\Filesystem::class)
+        ->and($second)->toBe($first);
+});
