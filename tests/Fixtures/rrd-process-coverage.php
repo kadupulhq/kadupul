@@ -6,6 +6,10 @@
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
 require_once $coverageRoot . '/tests/vendor/autoload.php';
+// The application later prepends its own Composer loader, which carries an
+// older php-code-coverage RawCodeCoverageData class. Load PHPUnit 12's class
+// first so child coverage collection cannot mix incompatible library versions.
+class_exists(SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class);
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('HOST_REINDEX_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/host.php');
