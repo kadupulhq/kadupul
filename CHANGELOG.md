@@ -15,6 +15,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Keep the recursive RRD tuning report printer local to each `rrdtool_tune()` call, so repeated calls in one process do not redeclare a global function. Fixes #445.
 
+- Keep graph-group lookups scoped to the local graph ID, preserve the configuration cache map when setting an option, keep invalid structured filters from becoming unrestricted, and scope user-setting existence cache entries to the user. Public helper signatures and valid filter behavior are unchanged. Fixes #479.
+
 - Accept only a number or `U` as a data source minimum, and only a number, `U` or an interface speed token as a maximum, refuse to create an RRD file whose stored minimum is anything else, and create realtime graph RRD files through the RRDtool pipe instead of a shell. A data source item that fails validation is no longer saved.
 
 - When running as root, change the owner and group of the RRD files and structured-path directories the poller and Boost create, and of the RRA directory made for a new device, only for plain paths inside the RRA directory, never through a symbolic link; RRDfile maintenance likewise skips an archive directory reached through a symbolic link.
