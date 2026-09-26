@@ -386,6 +386,12 @@ foreach ($data_sources as $info) {
 /* Enable the new layout only after all selected files and rows were migrated. */
 if (!$warn_count && !$database_failure) {
 	set_config_option('extended_paths', 'on');
+	$extended_paths = db_fetch_cell_prepared('SELECT value FROM settings WHERE name = ?', array('extended_paths'));
+
+	if ($extended_paths !== 'on') {
+		fwrite(STDERR, "ERROR: Unable to verify that extended paths were enabled.\n");
+		exit(1);
+	}
 } else {
 	print "WARNING: Extended paths were not enabled because one or more files or database rows were not migrated." . PHP_EOL;
 }
