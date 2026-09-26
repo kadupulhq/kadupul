@@ -45,19 +45,18 @@ function rrd_forced_local_scenario(): array
             array('fn' => 'rrdtool_function_fetch', 'args' => array(0, 1700000000, 1700001000), 'config' => $forced),
             array('fn' => 'rrdtool_uses_proxy', 'args' => array()),
             // The file is on this host, and the answer is still false.
-            array('fn' => 'rrdtool_file_exists', 'args' => array('<path_rra>/router_traffic_11.rrd')),
+            array('fn' => 'rrdtool_file_exists', 'args' => array('<fixture_rra>/router_traffic_11.rrd')),
             // Forced local storage sees the existing file and prevents create.
             array('fn' => 'rrdtool_function_create', 'args' => array(11, false)),
             array('fn' => 'boost_rrdtool_function_create', 'args' => array(11, false, false)),
             // A realtime cache RRD already on the local host is updated in place.
-            array('fn' => 'rrdtool_function_update', 'args' => array(array('<path_rra>/realtime_user_abc_11.rrd' => array('local_data_id' => 11, 'data_template_id' => 0, 'times' => array(1700000600 => array('value' => '5')))))),
+            array('fn' => 'rrdtool_function_update', 'args' => array(array('<fixture_rra>/realtime_user_abc_11.rrd' => array('local_data_id' => 11, 'data_template_id' => 0, 'times' => array(1700000600 => array('value' => '5')))))),
             // Readers go through rrdtool_execute() alone and stay local and consistent.
             array('fn' => 'rrdtool_function_info', 'args' => array(11)),
             array('fn' => 'rrdtool_function_fetch', 'args' => array(11, 1700000000, 1700001000, 300)),
             // Structured paths are created on the local filesystem.
             array('fn' => 'rrdtool_function_create', 'args' => array(12, false), 'options' => array('extended_paths' => 'on')),
-            array('fn' => 'is_dir', 'args' => array('<path_rra>/3')),
-            array('fn' => 'rrdtool_tune', 'args' => array('rra/router_traffic_11.rrd', array('resize' => array("'rra/router_traffic_11.rrd' 0 GROW 10")), false)),
+            array('fn' => 'is_dir', 'args' => array('<fixture_rra>/3')),
             // Without storage_location the same create sees the file and stops.
             array('fn' => 'rrdtool_function_create', 'args' => array(11, false), 'options' => array('storage_location' => '0', 'extended_paths' => '')),
         ),

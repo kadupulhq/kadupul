@@ -23,14 +23,14 @@ $resolve_fixture_paths = static function ($value) use (&$resolve_fixture_paths, 
     if (is_array($value)) {
         $resolved = array();
         foreach ($value as $key => $item) {
-            $key = is_string($key) ? str_replace('<path_rra>', $directory . '/rra', $key) : $key;
+            $key = is_string($key) ? str_replace('<fixture_rra>', $directory . '/rra', $key) : $key;
             $resolved[$key] = $resolve_fixture_paths($item);
         }
 
         return $resolved;
     }
 
-    return is_string($value) ? str_replace('<path_rra>', $directory . '/rra', $value) : $value;
+    return is_string($value) ? str_replace('<fixture_rra>', $directory . '/rra', $value) : $value;
 };
 $scenario['calls'] = $resolve_fixture_paths($scenario['calls']);
 
