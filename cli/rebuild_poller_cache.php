@@ -308,6 +308,8 @@ if ($type == 'child') {
 			array('child_failed', 'pushout', 'child', $thread_id, getmypid()));
 		if ($marked_failed === false) {
 			fwrite(STDERR, "ERROR: Unable to report child process failure to the master.\n");
+			// Keep the original child row so the master can detect the exited PID
+			// and fail instead of waiting forever or reporting success.
 		}
 	} else {
 		unregister_process('pushout', 'child', $thread_id);
@@ -361,11 +363,15 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
 	print "There are $rows hosts, $threads threads and $hosts_per_process hosts to process per thread" . PHP_EOL;
 
 	$h_done = 0;
+	$launch_failed = false;
 
 	for ($thread_id = 1; $h_done < $rows; $thread_id++) {
 		pushout_debug("Launching Process ID $thread_id");
 
-		pushout_launch_child($thread_id, $threads, $host_id);
+		if (!pushout_launch_child($thread_id, $threads, $host_id)) {
+			fwrite(STDERR, "ERROR: Unable to launch poller cache child $thread_id.\n");
+			$launch_failed = true;
+		}
 
 		$h_done += $hosts_per_process;
 	}
@@ -380,6 +386,11 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
 		}
 
 		$running = pushout_processes_running();
+		if ($running === false) {
+			fwrite(STDERR, "ERROR: Unable to check poller cache child process status.\n");
+
+			return false;
+		}
 
 		if ($running > 0) {
 			pushout_debug(sprintf('%s Processes Running, keeping for 2 seconds.', $running));
@@ -387,6 +398,16 @@ function pushout_master_handler($forcerun, $host_id, $host_template_id, $data_te
 		} else {
 			break;
 		}
+	}
+
+	if ($launch_failed) {
+		return false;
+	}
+
+	if (!empty($GLOBALS['pushout_child_exit_unreported'])) {
+		fwrite(STDERR, "ERROR: A poller cache child exited without reporting its result.\n");
+
+		return false;
 	}
 
 	$failed = db_fetch_cell('SELECT COUNT(*)
@@ -427,7 +448,30 @@ function pushout_launch_child($thread_id, $threads, $host_id = false) {
 
 	cacti_log(sprintf('NOTE: Launching Push out hosts Number %s for Type %s', $thread_id, 'child'), true, 'PUSHOUT', POLLER_VERBOSITY_MEDIUM);
 
-	exec_background($php_binary, $config['base_path'] . "/cli/push_out_hosts.php --type=child --threads=$threads --child=$thread_id " . ($debug ? " --debug":"") . ($host_id !== false ? " --host-id=$host_id":"") . ($host_template_id ? " --host-template-id=$host_template_id":"") . ($data_template_id ? " --data-template-id=$data_template_id":""));
+	$args = array(
+		$config['base_path'] . '/cli/push_out_hosts.php',
+		'--type=child',
+		"--threads=$threads",
+		"--child=$thread_id",
+	);
+
+	if ($debug) {
+		$args[] = '--debug';
+	}
+
+	if ($host_id !== false) {
+		$args[] = "--host-id=$host_id";
+	}
+
+	if ($host_template_id) {
+		$args[] = "--host-template-id=$host_template_id";
+	}
+
+	if ($data_template_id) {
+		$args[] = "--data-template-id=$data_template_id";
+	}
+
+	return exec_background_process($php_binary, $args);
 }
 
 /**
@@ -437,13 +481,25 @@ function pushout_launch_child($thread_id, $threads, $host_id = false) {
  * @return - (int) The number of running processes
  */
 function pushout_processes_running() {
-	$running = db_fetch_cell('SELECT COUNT(*)
+	$children = db_fetch_assoc('SELECT taskid, pid
 		FROM processes
 		WHERE tasktype = "pushout"
 		AND taskname = "child"');
 
-	if ($running == 0) {
-		return 0;
+	if ($children === false) {
+		return false;
+	}
+
+	$running = 0;
+	foreach ($children as $child) {
+		if (!is_numeric($child['pid']) || !cacti_process_still_running((int) $child['pid'])) {
+			$GLOBALS['pushout_child_exit_unreported'] = true;
+			unregister_process('pushout', 'child', (int) $child['taskid'], (int) $child['pid']);
+
+			continue;
+		}
+
+		$running++;
 	}
 
 	return $running;
