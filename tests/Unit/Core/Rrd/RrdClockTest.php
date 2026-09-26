@@ -7,7 +7,7 @@ require_once dirname(__DIR__, 4) . '/lib/rrd.php';
 
 test('RRD clock helper uses the supplied application clock', function () {
     $instant = new DateTimeImmutable('2026-09-25T12:34:56+00:00');
-    $clock = new class($instant) implements \Kadupul\Platform\Application\Port\Clock {
+    $clock = new class ($instant) implements \Kadupul\Platform\Application\Port\Clock {
         public function __construct(private DateTimeImmutable $instant) {}
 
         public function now(): DateTimeImmutable
