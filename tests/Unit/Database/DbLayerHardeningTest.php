@@ -7,6 +7,8 @@
 
 namespace Kadupul\Tests\ProductionFunctions;
 
+require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
+
 /** Capture database calls made by the production functions loaded below. */
 function db_calls(): array
 {
@@ -68,44 +70,8 @@ function cacti_sizeof($value): int
 function load_production_function(string $name): void
 {
     $source = file_get_contents(dirname(__DIR__, 3) . '/lib/functions.php');
-    $tokens = token_get_all($source);
-    $length = count($tokens);
-
-    for ($i = 0; $i < $length; $i++) {
-        if (!is_array($tokens[$i]) || $tokens[$i][0] !== T_FUNCTION) {
-            continue;
-        }
-
-        $functionName = '';
-        for ($j = $i + 1; $j < $length; $j++) {
-            if (is_array($tokens[$j]) && $tokens[$j][0] === T_STRING) {
-                $functionName = $tokens[$j][1];
-                break;
-            }
-        }
-
-        if ($functionName !== $name) {
-            continue;
-        }
-
-        $braceDepth = 0;
-        $started = false;
-        $functionSource = '';
-        for ($j = $i; $j < $length; $j++) {
-            $token = $tokens[$j];
-            $part = is_array($token) ? $token[1] : $token;
-            $functionSource .= $part;
-            if ($part === '{') {
-                $braceDepth++;
-                $started = true;
-            } elseif ($part === '}' && $started && --$braceDepth === 0) {
-                eval('namespace Kadupul\\Tests\\ProductionFunctions; ' . $functionSource);
-                return;
-            }
-        }
-    }
-
-    throw new \RuntimeException("Could not load production function $name");
+    $functionSource = test_php_function_source($source, $name);
+    eval('namespace Kadupul\\Tests\\ProductionFunctions; ' . $functionSource);
 }
 
 foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option'] as $function) {
@@ -146,7 +112,7 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
     expect($params)->toBe([7]);
 });
 
-\test('production configuration writes initialize and preserve the cache map', function () {
+\test('production configuration writes initialize and preserve web and CLI cache maps', function () {
     reset_db_calls();
     $basePath = sys_get_temp_dir() . '/kadupul-helper-test-' . uniqid();
     mkdir($basePath . '/lib', 0777, true);
@@ -157,6 +123,14 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
 
     expect($GLOBALS['config']['config_options_array'])->toBe(['existing' => 'kept', 'written' => 'value']);
     expect($GLOBALS['production_function_db_calls'])->toHaveCount(1);
+
+    $GLOBALS['config'] = ['base_path' => $basePath, 'is_web' => true];
+    $_SESSION['sess_config_array'] = ['existing' => 'kept'];
+    set_config_option('web_written', 'web value');
+
+    expect($_SESSION['sess_config_array'])->toBe(['existing' => 'kept', 'web_written' => 'web value']);
+    expect($GLOBALS['production_function_db_calls'])->toHaveCount(2);
+
     unlink($basePath . '/lib/poller.php');
     rmdir($basePath . '/lib');
     rmdir($basePath);
