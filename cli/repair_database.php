@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * repair_database.php
+ *
+ * Checks and repairs Cacti database tables and selected data inconsistencies.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -32,7 +39,7 @@ include_once(__DIR__ . '/../lib/data_query.php');
 $parms = $_SERVER['argv'];
 array_shift($parms);
 
-global $total_errors, $total_repairs, $repaired_hosts;
+global $total_errors, $total_repairs, $total_failures, $repaired_hosts;
 global $local, $debug, $force, $rtables, $form, $dynamic, $base_tables;
 
 $debug   = false;
@@ -44,6 +51,7 @@ $local   = false;
 
 $total_errors   = 0;
 $total_repairs  = 0;
+$total_failures = 0;
 $repaired_hosts = array();
 
 if (cacti_sizeof($parms)) {
@@ -131,8 +139,12 @@ if ($total_errors == 0 && $total_repairs == 0) {
 	printf('WARNING: Found %s and repaired %s Cacti database issues.' . PHP_EOL . PHP_EOL, $total_errors, $total_repairs);
 }
 
+if ($total_failures > 0) {
+	exit(1);
+}
+
 function table_structural_repair() {
-	global $config, $local, $total_errors, $total_repairs;
+	global $config, $local, $total_errors, $total_repairs, $total_failures;
 	global $debug, $force, $rtables, $form, $dynamic, $base_tables, $database_default;
 
 	print_separator();
@@ -153,13 +165,41 @@ function table_structural_repair() {
 		if (cacti_sizeof($base_tables)) {
 			foreach($base_tables AS $table) {
 				printf("Repairing table '%s'", $table);
-				$status = db_execute("REPAIR TABLE $table QUICK" . $form);
-				printf(($status == 0 ? ' Failed' : ' Successful') . PHP_EOL);
+				$table_data = db_fetch_row_prepared('SELECT ENGINE, CREATE_OPTIONS
+					FROM information_schema.TABLES
+					WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?',
+					array($database_default, $table));
 
-				if ($dynamic && stripos($table['CREATE_OPTIONS'], 'dynamic') === false && $table['ENGINE'] != 'MEMORY') {
+				if (!cacti_sizeof($table_data)) {
+					print ' Failed: unable to inspect table' . PHP_EOL;
+					$total_failures++;
+					continue;
+				}
+
+				$repairable_engines = array('myisam', 'aria', 'csv', 'archive');
+				if (in_array(strtolower($table_data['ENGINE']), $repairable_engines, true)) {
+					$status = db_execute("REPAIR TABLE `$table` QUICK" . $form);
+					if ($status === false) {
+						print ' Failed' . PHP_EOL;
+						$total_failures++;
+					} else {
+						print ' Successful' . PHP_EOL;
+					}
+				} else {
+					printf(' Skipped: REPAIR TABLE is not supported for %s' . PHP_EOL, $table_data['ENGINE']);
+				}
+
+				if ($dynamic && strtolower($table_data['ENGINE']) == 'innodb' && stripos((string) $table_data['CREATE_OPTIONS'], 'dynamic') === false) {
 					printf("Changing table row format to Dynamic '%s'", $table);
-					$status = db_execute("ALTER TABLE $table ROW_FORMAT=DYNAMIC");
-					print ($status == 0 ? ' Failed' : ' Successful') . PHP_EOL;
+					$status = db_execute("ALTER TABLE `$table` ROW_FORMAT=DYNAMIC");
+					if ($status === false) {
+						print ' Failed' . PHP_EOL;
+						$total_failures++;
+					} else {
+						print ' Successful' . PHP_EOL;
+					}
+				} elseif ($dynamic && strtolower($table_data['ENGINE']) != 'innodb') {
+					printf('Skipping Dynamic row format for %s table %s' . PHP_EOL, $table_data['ENGINE'], $table);
 				}
 			}
 		}
@@ -170,14 +210,14 @@ function table_structural_repair() {
 }
 
 function simple_checks() {
-	global $total_errors, $total_repairs;
+	global $force, $total_errors, $total_repairs, $total_failures;
 
 	print_separator(true);
-	printf('Simple Checks.  Automatically repair if Found' . PHP_EOL . PHP_EOL);
+	printf('Simple Checks.  Automatically repair safe issues; use --force for removals.' . PHP_EOL . PHP_EOL);
 
 	printf('NOTE: Repairing potential issues with Data Query ids and indexes.' . PHP_EOL);
 
-	db_execute('UPDATE graph_local AS gl
+	$update_status = db_execute('UPDATE graph_local AS gl
 		INNER JOIN graph_templates_item AS gti
 		ON gti.local_graph_id = gl.id
 		INNER JOIN data_template_rrd AS dtr
@@ -189,7 +229,8 @@ function simple_checks() {
 		AND (gl.snmp_query_id != dl.snmp_query_id OR gl.snmp_index != dl.snmp_index)
 		AND gl.snmp_query_id = 0');
 
-	$fixes = db_affected_rows();
+	$fixes = $update_status === false ? 0 : db_affected_rows();
+	$total_failures += $update_status === false ? 1 : 0;
 
 	$total_repairs += $fixes;
 	$total_errors  += $fixes;
@@ -202,7 +243,7 @@ function simple_checks() {
 
 	printf('NOTE: Repairing incorrectly set Data Query Graph ids - This can take a while.' . PHP_EOL);
 
-	db_execute("UPDATE graph_local AS gl
+	$update_status = db_execute("UPDATE graph_local AS gl
 		INNER JOIN (
 			SELECT DISTINCT local_graph_id, task_item_id
 			FROM graph_templates_item
@@ -229,7 +270,8 @@ function simple_checks() {
 		AND gl.graph_template_id IN (SELECT DISTINCT graph_template_id FROM snmp_query_graph)
 		AND gl.snmp_query_graph_id != CAST(did.value AS signed)");
 
-	$fixes = db_affected_rows();
+	$fixes = $update_status === false ? 0 : db_affected_rows();
+	$total_failures += $update_status === false ? 1 : 0;
 
 	$total_repairs += $fixes;
 	$total_errors  += $fixes;
@@ -284,23 +326,27 @@ function simple_checks() {
 								WHERE id = ?',
 								array($local_data['host_id']));
 
-							db_execute_prepared('UPDATE data_input_data
+							if (db_execute_prepared('UPDATE data_input_data
 								SET value = ?
 								WHERE data_input_field_id = ?
 								AND data_template_data_id = ?',
-								array($hostname, $e['data_input_field_id'], $e['data_template_data_id']));
-
-							$fixes++;
+								array($hostname, $e['data_input_field_id'], $e['data_template_data_id']))) {
+								$fixes++;
+							} else {
+								$total_failures++;
+							}
 
 							break;
 						case 'host_id':
-							db_execute_prepared('UPDATE data_input_data
+							if (db_execute_prepared('UPDATE data_input_data
 								SET value = ?
 								WHERE data_input_field_id = ?
 								AND data_template_data_id = ?',
-								array($local_data['host_id'], $e['data_input_field_id'], $e['data_template_data_id']));
-
-							$fixes++;
+								array($local_data['host_id'], $e['data_input_field_id'], $e['data_template_data_id']))) {
+								$fixes++;
+							} else {
+								$total_failures++;
+							}
 
 							break;
 					}
@@ -320,45 +366,83 @@ function simple_checks() {
 
 	printf('NOTE: Removing incomplete Data Sources.' . PHP_EOL);
 
-	db_execute('DELETE dl
+	$incomplete = db_fetch_cell('SELECT COUNT(*)
+		FROM data_local AS dl
+		LEFT JOIN data_template_data AS dtd
+		ON dl.id = dtd.local_data_id
+		WHERE dtd.local_data_id IS NULL');
+	if ($incomplete === false) {
+		fwrite(STDERR, "ERROR: Unable to count incomplete data sources; stopping database repair.\n");
+		$total_failures++;
+
+		return;
+	}
+
+	if ($force) {
+		$delete_status = db_execute('DELETE dl
 		FROM data_local AS dl
 		LEFT JOIN data_template_data AS dtd
 		ON dl.id = dtd.local_data_id
 		WHERE dtd.local_data_id IS NULL');
 
-	$fixes = db_affected_rows();
+		$fixes = $delete_status === false ? 0 : db_affected_rows();
+		$total_failures += $delete_status === false ? 1 : 0;
+	} else {
+		$fixes = 0;
+	}
 
 	$total_repairs += $fixes;
-	$total_errors  += $fixes;
+	$total_errors  += $force ? $fixes : $incomplete;
 
-	if ($fixes) {
+	if ($force && $fixes) {
 		printf('NOTE: Found and removed %s incomplete Data Sources.' . PHP_EOL, $fixes);
+	} elseif (!$force && $incomplete) {
+		printf('NOTE: Found %s incomplete Data Sources. Use --force to remove them.' . PHP_EOL, $incomplete);
 	} else {
 		printf('NOTE: Found 0 incomplete Data Sources.' . PHP_EOL);
 	}
 
 	printf('NOTE: Repairing orphaned Poller Items.' . PHP_EOL);
 
-	db_execute('DELETE pi
+	$orphaned = db_fetch_cell('SELECT COUNT(*)
+		FROM poller_item AS pi
+		LEFT JOIN data_local AS dl
+		ON pi.local_data_id = dl.id
+		WHERE dl.id IS NULL');
+	if ($orphaned === false) {
+		fwrite(STDERR, "ERROR: Unable to count orphaned poller items; stopping database repair.\n");
+		$total_failures++;
+
+		return;
+	}
+
+	if ($force) {
+		$delete_status = db_execute('DELETE pi
 		FROM poller_item AS pi
 		LEFT JOIN data_local AS dl
 		ON pi.local_data_id = dl.id
 		WHERE dl.id IS NULL');
 
-	$fixes = db_affected_rows();
+		$fixes = $delete_status === false ? 0 : db_affected_rows();
+		$total_failures += $delete_status === false ? 1 : 0;
+	} else {
+		$fixes = 0;
+	}
 
 	$total_repairs += $fixes;
-	$total_errors  += $fixes;
+	$total_errors  += $force ? $fixes : $orphaned;
 
-	if ($fixes) {
+	if ($force && $fixes) {
 		printf('NOTE: Found and removed %s orphaned Poller Items.' . PHP_EOL, $fixes);
+	} elseif (!$force && $orphaned) {
+		printf('NOTE: Found %s orphaned Poller Items. Use --force to remove them.' . PHP_EOL, $orphaned);
 	} else {
 		printf('NOTE: Found 0 problems with orphaned Poller Items.' . PHP_EOL);
 	}
 }
 
 function detailed_checks() {
-	global $force, $total_errors, $total_repairs;
+	global $force, $total_errors, $total_repairs, $total_failures;
 
 	print_separator(true);
 	if (!$force) {
@@ -380,17 +464,21 @@ function detailed_checks() {
 	$total_errors += $rows;
 
 	if ($rows > 0) {
+		$fixes = 0;
+		$delete_failed = false;
 		if ($force) {
-			db_execute('DELETE FROM graph_templates_item
+			$delete_status = db_execute('DELETE FROM graph_templates_item
 				WHERE gprint_id NOT IN (SELECT id FROM graph_templates_gprint)
 				AND gprint_id>0');
 
-			$fixes = db_affected_rows();
+			$delete_failed = $delete_status === false;
+			$fixes = $delete_failed ? 0 : db_affected_rows();
+			$total_failures += $delete_failed ? 1 : 0;
 
 			$total_repairs += $fixes;
 		}
 
-		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$rows invalid GPRINT Preset rows in Graph Templates." . PHP_EOL);
+		printf('NOTE: Found %s invalid GPRINT Preset rows in Graph Templates.%s' . PHP_EOL, $rows, $delete_failed ? ' Delete failed.' : ($force ? ' Repaired ' . $fixes . '.' : ''));
 	} else {
 		printf('NOTE: Found 0 invalid Cacti GPRINT Presets.' . PHP_EOL);
 	}
@@ -407,16 +495,20 @@ function detailed_checks() {
 	$total_errors += $rows;
 
 	if ($rows > 0) {
+		$fixes = 0;
+		$delete_failed = false;
 		if ($force) {
-			db_execute('DELETE FROM cdef_items
+			$delete_status = db_execute('DELETE FROM cdef_items
 				WHERE cdef_id NOT IN (SELECT id FROM cdef)');
 
-			$fixes = db_affected_rows();
+			$delete_failed = $delete_status === false;
+			$fixes = $delete_failed ? 0 : db_affected_rows();
+			$total_failures += $delete_failed ? 1 : 0;
 
 			$total_repairs += $fixes;
 		}
 
-		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$fixes of $rows invalid CDEFs in Graph Templates." . PHP_EOL);
+		printf('NOTE: Found %s invalid CDEFs in Graph Templates.%s' . PHP_EOL, $force ? $fixes . ' of ' . $rows : $rows, $delete_failed ? ' Delete failed.' : ($force ? ' Repaired.' : ''));
 	} else {
 		printf('NOTE: Found 0 invalid Cacti CDEFs.' . PHP_EOL);
 	}
@@ -433,16 +525,20 @@ function detailed_checks() {
 	$total_errors += $rows;
 
 	if ($rows > 0) {
+		$fixes = 0;
+		$delete_failed = false;
 		if ($force) {
-			db_execute('DELETE FROM data_template_data
+			$delete_status = db_execute('DELETE FROM data_template_data
 				WHERE data_input_id NOT IN (SELECT id FROM data_input)');
 
-			$fixes = db_affected_rows();
+			$delete_failed = $delete_status === false;
+			$fixes = $delete_failed ? 0 : db_affected_rows();
+			$total_failures += $delete_failed ? 1 : 0;
 
 			$total_repairs += $fixes;
 		}
 
-		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$fixes of $rows invalid Data Inputs in Data Templates." . PHP_EOL);
+		printf('NOTE: Found %s invalid Data Inputs in Data Templates.%s' . PHP_EOL, $force ? $fixes . ' of ' . $rows : $rows, $delete_failed ? ' Delete failed.' : ($force ? ' Repaired.' : ''));
 	} else {
 		printf('NOTE: Found 0 invalid Cacti Data Inputs.' . PHP_EOL);
 	}
@@ -473,7 +569,6 @@ function detailed_checks() {
 	$total_errors += cacti_sizeof($rows);
 
 	if (cacti_sizeof($rows)) {
-		$total_errors += cacti_sizeof($rows);
 		$total_graphs = 0;
 
 		if ($force) {
@@ -513,15 +608,21 @@ function detailed_checks() {
 
 	if ($rows > 0) {
 		if ($force) {
-			$total_repairs += $rows;
-
-			db_execute('DELETE FROM data_input_fields
+			$delete_status = db_execute('DELETE FROM data_input_fields
 				WHERE data_input_fields.data_input_id NOT IN (SELECT id FROM data_input)');
 
-			update_replication_crc(0, 'poller_replicate_data_input_fields_crc');
+			$fixes = $delete_status === false ? 0 : db_affected_rows();
+			$total_repairs += $fixes;
+
+			if ($delete_status === false) {
+				$total_failures++;
+				printf('ERROR: Could not remove invalid Data Input fields.' . PHP_EOL);
+			} else {
+				update_replication_crc(0, 'poller_replicate_data_input_fields_crc');
+			}
 		}
 
-		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$rows invalid Data Input fields in Data Templates." . PHP_EOL);
+		printf('NOTE: Found %s invalid Data Input fields in Data Templates.%s' . PHP_EOL, $force ? $fixes . ' of ' . $rows . ' repaired' : $rows, $force && $delete_status === false ? ' Delete failed.' : '');
 	} else {
 		printf('NOTE: Found 0 invalid Cacti Data Input fields.' . PHP_EOL);
 	}
@@ -539,13 +640,14 @@ function detailed_checks() {
 
 	if ($rows > 0) {
 		if ($force) {
-			$total_repairs += $rows;
-
-			db_execute('DELETE FROM data_input_data
+			$delete_status = db_execute('DELETE FROM data_input_data
 				WHERE data_input_data.data_template_data_id NOT IN (SELECT id FROM data_template_data)');
+			$fixes = $delete_status === false ? 0 : db_affected_rows();
+			$total_failures += $delete_status === false ? 1 : 0;
+			$total_repairs += $fixes;
 		}
 
-		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$rows invalid Data Input Data rows in Data Templates" . PHP_EOL);
+		printf('NOTE: Found %s invalid Data Input Data rows in Data Templates.%s' . PHP_EOL, $force ? $fixes . ' of ' . $rows . ' repaired' : $rows, $force && $delete_status === false ? ' Delete failed.' : '');
 	} else {
 		printf('NOTE: Found 0 invalid Cacti Data Input Data rows (Pass 1).' . PHP_EOL);
 	}
@@ -562,13 +664,14 @@ function detailed_checks() {
 
 	if ($rows > 0) {
 		if ($force) {
-			$total_repairs += $rows;
-
-			db_execute('DELETE FROM data_input_data
+			$delete_status = db_execute('DELETE FROM data_input_data
 				WHERE data_input_data.data_input_field_id NOT IN (SELECT id FROM data_input_fields)');
+			$fixes = $delete_status === false ? 0 : db_affected_rows();
+			$total_failures += $delete_status === false ? 1 : 0;
+			$total_repairs += $fixes;
 		}
 
-		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$rows invalid Data Input Data rows based upon field mappings in Data Templates." . PHP_EOL);
+		printf('NOTE: Found %s invalid Data Input Data rows based upon field mappings in Data Templates.%s' . PHP_EOL, $force ? $fixes . ' of ' . $rows . ' repaired' : $rows, $force && $delete_status === false ? ' Delete failed.' : '');
 	} else {
 		printf('NOTE: Found 0 invalid Cacti Data Input Data rows (Pass 2).' . PHP_EOL);
 	}
@@ -583,7 +686,7 @@ function detailed_checks() {
  * for now.
  */
 function snmp_repairs() {
-	global $force, $total_errors, $total_repairs, $repaired_hosts;
+	global $force, $total_errors, $total_repairs, $total_failures, $repaired_hosts;
 
 	print_separator(true);
 	if (!$force) {
@@ -618,6 +721,7 @@ function snmp_repairs() {
 
 	$errors      = array();
 	$snmp_errors = 0;
+	$snmp_repairs = 0;
 
 	if (cacti_sizeof($hosts)) {
 		foreach($hosts as $h) {
@@ -646,13 +750,16 @@ function snmp_repairs() {
 
 								if ($f['value'] != $h[$hcolumn]) {
 									if ($force) {
-										$total_repairs++;
-
-										db_execute_prepared('UPDATE data_input_data
+										if (db_execute_prepared('UPDATE data_input_data
 											SET value = ?
 											WHERE data_template_data_id = ?
 											AND data_input_field_id = ?',
-											array($h[$hcolumn], $f['data_template_data_id'], $f['data_input_field_id']));
+											array($h[$hcolumn], $f['data_template_data_id'], $f['data_input_field_id']))) {
+											$snmp_repairs++;
+											$repaired_hosts[$h['id']] = $h['id'];
+										} else {
+											$total_failures++;
+										}
 									}
 
 									$errors[$h['id']]++;
@@ -664,14 +771,13 @@ function snmp_repairs() {
 				}
 			}
 
-			if ($errors[$h['id']] > 0 && $force) {
-				$repaired_hosts[$h['id']] = $h['id'];
-			}
 		}
+		$total_errors += $snmp_errors;
+		$total_repairs += $snmp_repairs;
 
 		if (cacti_sizeof($errors)) {
 			if ($force) {
-				printf('NOTE: Found and repaired %s Device SNMP issues in %s Devices.' . PHP_EOL, $snmp_errors, cacti_sizeof($errors));
+				printf('NOTE: Found %s Device SNMP issues; repaired %s in %s Devices.' . PHP_EOL, $snmp_errors, $snmp_repairs, cacti_sizeof($errors));
 			} else {
 				printf('NOTE: Not repairing %s Device SNMP issues in %s Devices.' . PHP_EOL, $snmp_errors, cacti_sizeof($errors));
 			}
@@ -686,7 +792,7 @@ function print_separator($nl = false) {
 }
 
 function snmp_index_repairs() {
-	global $config, $force, $total_errors, $total_repairs, $repaired_hosts;
+	global $config, $force, $total_errors, $total_repairs, $total_failures, $repaired_hosts;
 
 	print_separator(true);
 	if (!$force) {
@@ -719,7 +825,7 @@ function snmp_index_repairs() {
 		AND value = ''");
 
 	if (cacti_sizeof($entries)) {
-		printf('NOTE: Found and repairing %s Data Sources with missing host information.' . PHP_EOL, cacti_sizeof($entries));
+		printf('NOTE: Found %s Data Sources with missing host information.' . PHP_EOL, cacti_sizeof($entries));
 
 		$fixes = 0;
 
@@ -743,27 +849,37 @@ function snmp_index_repairs() {
 								WHERE id = ?',
 								array($local_data['host_id']));
 
-							db_execute_prepared('UPDATE data_input_data
+							if ($force) {
+								if (db_execute_prepared('UPDATE data_input_data
 								SET value = ?
 								WHERE data_input_field_id = ?
 								AND data_template_data_id = ?',
-								array($hostname, $e['data_input_field_id'], $e['data_template_data_id']));
-
-							$fixes++;
-
-							$repaired_hosts[$local_data['host_id']] = $local_data['host_id'];
+								array($hostname, $e['data_input_field_id'], $e['data_template_data_id']))) {
+									$fixes++;
+									$repaired_hosts[$local_data['host_id']] = $local_data['host_id'];
+								} else {
+									$total_failures++;
+								}
+							} else {
+								$fixes++;
+							}
 
 							break;
 						case 'host_id':
-							db_execute_prepared('UPDATE data_input_data
+							if ($force) {
+								if (db_execute_prepared('UPDATE data_input_data
 								SET value = ?
 								WHERE data_input_field_id = ?
 								AND data_template_data_id = ?',
-								array($local_data['host_id'], $e['data_input_field_id'], $e['data_template_data_id']));
-
-							$fixes++;
-
-							$repaired_hosts[$local_data['host_id']] = $local_data['host_id'];
+								array($local_data['host_id'], $e['data_input_field_id'], $e['data_template_data_id']))) {
+									$fixes++;
+									$repaired_hosts[$local_data['host_id']] = $local_data['host_id'];
+								} else {
+									$total_failures++;
+								}
+							} else {
+								$fixes++;
+							}
 
 							break;
 					}
@@ -771,10 +887,14 @@ function snmp_index_repairs() {
 			}
 		}
 
-		printf('NOTE: Found and repaired %s of %s Data Sources entries with invalid Device information.' . PHP_EOL, $fixes, cacti_sizeof($entries));
+		if ($force) {
+			printf('NOTE: Repaired %s of %s Data Sources entries with invalid Device information.' . PHP_EOL, $fixes, cacti_sizeof($entries));
+		} else {
+			printf('NOTE: Found %s Data Sources entries with invalid Device information. Use --force to repair them.' . PHP_EOL, $fixes);
+		}
 
 		$total_errors  += $fixes;
-		$total_repairs += $fixes;
+		$total_repairs += $force ? $fixes : 0;
 	} else {
 		printf('NOTE: Found 0 Data Sources with invalid Device information.' . PHP_EOL);
 	}
@@ -782,7 +902,8 @@ function snmp_index_repairs() {
 	// Correct issues with non-checked data input columns that must be checked.
 	printf('NOTE: Searching for and repairing all Data Query required checked Data Input columns.' . PHP_EOL, cacti_sizeof($entries));
 
-	db_execute("UPDATE data_input_data
+	if ($force) {
+		$update_status = db_execute("UPDATE data_input_data
 		SET t_value = 'on'
 		WHERE data_input_field_id IN (
 			SELECT id
@@ -796,18 +917,39 @@ function snmp_index_repairs() {
 			WHERE data_template_id > 0
 		)");
 
-	$fixes = db_affected_rows();
+		$fixes = $update_status === false ? 0 : db_affected_rows();
+		$total_failures += $update_status === false ? 1 : 0;
+	} else {
+		$fixes = db_fetch_cell("SELECT COUNT(*)
+			FROM data_input_data
+			WHERE data_input_field_id IN (
+				SELECT id FROM data_input_fields WHERE type_code IN ('output_type', 'index_type', 'index_value')
+			)
+			AND t_value != 'on'
+			AND data_template_data_id IN (
+				SELECT id FROM data_template_data WHERE data_template_id > 0
+			)");
+		if ($fixes === false) {
+			fwrite(STDERR, "ERROR: Unable to count unchecked Data Query columns.\n");
+			$total_failures++;
+			$fixes = 0;
+		}
+	}
 
-	printf('NOTE: Found %s and repaired Data Query rows missing the required checked columns.' . PHP_EOL, $fixes);
+	printf($force
+		? 'NOTE: Found %s and repaired Data Query rows missing the required checked columns.' . PHP_EOL
+		: 'NOTE: Found %s Data Query rows missing required checked columns. Use --force to repair them.' . PHP_EOL,
+		$fixes);
 
 	$total_errors  += $fixes;
-	$total_repairs += $fixes;
+	$total_repairs += $force ? $fixes : 0;
 
 	// Correct missing host_id checkmark value in the data input data table
 	printf('NOTE: Searching for and repairing all Data Query rows with invalid host_id attributes.' . PHP_EOL);
 
 	// Host ID should not be checked, but should not be 'on' either
-	db_execute("UPDATE data_input_data
+	if ($force) {
+		$update_status = db_execute("UPDATE data_input_data
 		SET t_value = ''
 		WHERE data_input_field_id IN (
 			SELECT id
@@ -821,12 +963,32 @@ function snmp_index_repairs() {
 			WHERE data_template_id > 0
 		)");
 
-	$fixes = db_affected_rows();
+		$fixes = $update_status === false ? 0 : db_affected_rows();
+		$total_failures += $update_status === false ? 1 : 0;
+	} else {
+		$fixes = db_fetch_cell("SELECT COUNT(*)
+			FROM data_input_data
+			WHERE data_input_field_id IN (
+				SELECT id FROM data_input_fields WHERE type_code = 'host_id'
+			)
+			AND t_value != ''
+			AND data_template_data_id IN (
+				SELECT id FROM data_template_data WHERE data_template_id > 0
+			)");
+		if ($fixes === false) {
+			fwrite(STDERR, "ERROR: Unable to count invalid host_id attributes.\n");
+			$total_failures++;
+			$fixes = 0;
+		}
+	}
 
-	printf('NOTE: Found and repaired %s Data Query rows with invalid host_id attributes.' . PHP_EOL, $fixes);
+	printf($force
+		? 'NOTE: Found and repaired %s Data Query rows with invalid host_id attributes.' . PHP_EOL
+		: 'NOTE: Found %s Data Query rows with invalid host_id attributes. Use --force to repair them.' . PHP_EOL,
+		$fixes);
 
 	$total_errors  += $fixes;
-	$total_repairs += $fixes;
+	$total_repairs += $force ? $fixes : 0;
 
 	printf('NOTE: Searching for damaged Data Query indexes (Pass 1).' . PHP_EOL);
 
@@ -887,6 +1049,7 @@ function snmp_index_repairs() {
 						array($local_data_id));
 
 					if (cacti_sizeof($local_data)) {
+						$row_fixes = 0;
 						$local_graph_ids = db_fetch_assoc_prepared('SELECT DISTINCT local_graph_id
 							FROM data_template_rrd AS dtr
 							INNER JOIN graph_templates_item AS gti
@@ -906,25 +1069,32 @@ function snmp_index_repairs() {
 										$index_type = get_best_data_query_index_type($local_graph['host_id'], $local_graph['snmp_query_id']);
 
 										if ($index_type != '') {
-											db_execute_prepared('UPDATE data_input_data
+											if (db_execute_prepared('UPDATE data_input_data
 												SET value = ?
 												WHERE data_input_field_id = ?
 												AND data_template_data_id = ?',
-												array($index_type, $ds['data_input_field_id'], $ds['data_template_data_id']));
+												array($index_type, $ds['data_input_field_id'], $ds['data_template_data_id']))) {
+												$row_fixes++;
+												$repaired_hosts[$local_graph['host_id']] = $local_graph['host_id'];
+											} else {
+												$total_failures++;
+											}
 										}
 
 										break;
 									case 'index_value':
 										if ($local_graph['snmp_index'] != '') {
-											db_execute_prepared('UPDATE data_input_data
+											if (db_execute_prepared('UPDATE data_input_data
 												SET value = ?
 												WHERE data_input_field_id = ?
 												AND data_template_data_id = ?',
-												array($local_graph['snmp_index'], $ds['data_input_field_id'], $ds['data_template_data_id']));
+												array($local_graph['snmp_index'], $ds['data_input_field_id'], $ds['data_template_data_id']))) {
+												$row_fixes++;
 
-											$repaired_hosts[$local_graph['host_id']] = $local_graph['host_id'];
-
-											$fixes++;
+												$repaired_hosts[$local_graph['host_id']] = $local_graph['host_id'];
+											} else {
+												$total_failures++;
+											}
 										}
 
 										break;
@@ -938,15 +1108,23 @@ function snmp_index_repairs() {
 										}
 
 										if ($local_graph['snmp_query_graph_id'] > 0) {
-											db_execute_prepared('UPDATE data_input_data
+											if (db_execute_prepared('UPDATE data_input_data
 												SET value = ?
 												WHERE data_input_field_id = ?
 												AND data_template_data_id = ?',
-												array($local_graph['snmp_query_graph_id'], $ds['data_input_field_id'], $ds['data_template_data_id']));
+												array($local_graph['snmp_query_graph_id'], $ds['data_input_field_id'], $ds['data_template_data_id']))) {
+												$row_fixes++;
+												$repaired_hosts[$local_graph['host_id']] = $local_graph['host_id'];
+											} else {
+												$total_failures++;
+											}
 										}
 
 										break;
 								}
+							}
+							if ($row_fixes > 0) {
+								$fixes++;
 							}
 						}
 					}
@@ -982,6 +1160,7 @@ function snmp_index_repairs() {
 		if ($force) {
 			printf('NOTE: Attempting to repair Data Query indexes from Data Source titles.' . PHP_EOL);
 
+			$fixes = 0;
 			$match_cnt  = 0;
 			$misses_cnt = 0;
 			$check_cnt  = 0;
@@ -1029,16 +1208,23 @@ function snmp_index_repairs() {
 						$check_cnt++;
 
 						if ($total_matches == 1) {
-							$repaired_hosts[$h['host_id']] = $h['host_id'];
-
 							$match_cnt++;
 
-							db_execute_prepared('UPDATE data_local
+							$repair_ok = db_execute_prepared('UPDATE data_local
 								SET snmp_index = ?, orphan = 0
 								WHERE id = ?',
 								array($matches[0]['snmp_index'], $matches[0]['id']));
+							if (!$repair_ok) {
+								$total_failures++;
+							} else {
+								$repaired_hosts[$h['host_id']] = $h['host_id'];
+							}
 
-							db_execute('DELETE FROM user_auth_row_cache WHERE class IN ("graphs", "data_sources")');
+							if ($repair_ok) {
+								if (db_execute('DELETE FROM user_auth_row_cache WHERE class IN ("graphs", "data_sources")') === false) {
+									$total_failures++;
+									$repair_ok = false;
+								}
 
 							$graphs = db_fetch_assoc_prepared('SELECT DISTINCT gl.id
 								FROM graph_local AS gl
@@ -1051,22 +1237,31 @@ function snmp_index_repairs() {
 
 							if (cacti_sizeof($graphs)) {
 								foreach($graphs as $g) {
-									db_execute_prepared('UPDATE graph_local
+									if (db_execute_prepared('UPDATE graph_local
 										SET snmp_index = ?
 										WHERE id = ?',
-										array($matches[0]['snmp_index'], $g['id']));
+										array($matches[0]['snmp_index'], $g['id'])) === false) {
+										$total_failures++;
+										$repair_ok = false;
+									}
 								}
 							}
 
-							db_execute_prepared('UPDATE data_input_data AS did
+							if (db_execute_prepared('UPDATE data_input_data AS did
 								INNER JOIN data_input_fields AS dif
 								ON did.data_input_field_id = dif.id
 								SET value = ?
 								WHERE dif.type_code = "index_value"
 								AND did.data_template_data_id = ?',
-								array($matches[0]['snmp_index'], $matches[0]['data_template_data_id']));
+								array($matches[0]['snmp_index'], $matches[0]['data_template_data_id'])) === false) {
+								$total_failures++;
+								$repair_ok = false;
+							}
+							}
 
-							$fixes++;
+							if ($repair_ok) {
+								$fixes++;
+							}
 						} elseif ($total_matches > 1) {
 							$misses_cnt++;
 
@@ -1144,14 +1339,15 @@ function snmp_index_repairs() {
 					array($ldi['host_id'], $ldi['snmp_query_id'], $ldi['snmp_index']));
 
 				if ($found) {
-					$repaired_hosts[$ldi['host_id']] = $ldi['host_id'];
-
-					db_execute_prepared('UPDATE data_local
+					if (db_execute_prepared('UPDATE data_local
 						SET orphan = 0
 						WHERE id = ?',
-						array($ldi['id']));
-
-					$fixes++;
+						array($ldi['id']))) {
+						$repaired_hosts[$ldi['host_id']] = $ldi['host_id'];
+						$fixes++;
+					} else {
+						$total_failures++;
+					}
 				}
 			}
 
@@ -1200,6 +1396,6 @@ function display_help () {
 	print '    --form    - Force rebuilding the indexes from the database creation syntax.' . PHP_EOL;
 	print '    --tables  - Repair Tables as well as possible database corruptions.' . PHP_EOL;
 	print '    --local   - Perform the action on the Remote Data Collector if run from there' . PHP_EOL;
-	print '    --force   - Remove Invalid Template records from the database.' . PHP_EOL;
+	print '    --force   - Apply destructive repairs, including removal of invalid records.' . PHP_EOL;
 	print '    --debug   - Display verbose output during execution.' . PHP_EOL . PHP_EOL;
 }

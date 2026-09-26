@@ -281,15 +281,20 @@ function change_data_template($local_data_id, $data_template_id, $profile = arra
 	global $struct_data_source, $struct_data_source_item;
 
 	/* always update tables to new data template (or no data template) */
-	db_execute_prepared('UPDATE data_local
+	if (db_execute_prepared('UPDATE data_local
 		SET data_template_id = ? WHERE id = ?',
-		array($data_template_id, $local_data_id));
+		array($data_template_id, $local_data_id)) === false) {
+		return false;
+	}
 
 	/* get data about the template and the data source */
 	$data = db_fetch_row_prepared('SELECT *
 		FROM data_template_data
 		WHERE local_data_id = ?' ,
 		array($local_data_id));
+	if ($data === false) {
+		return false;
+	}
 
 	if ($data_template_id == 0) {
 		$template_data = $data;
@@ -300,12 +305,18 @@ function change_data_template($local_data_id, $data_template_id, $profile = arra
 			AND data_template_id = ?',
 			array($data_template_id));
 	}
+	if ($template_data === false || !is_array($template_data) || !isset($template_data['id'])) {
+		return false;
+	}
 
 	/* determine if we are here for the first time, or coming back */
-	$exists = db_fetch_cell_prepared('SELECT local_data_template_data_id
+	$exists = db_fetch_cell_prepared('SELECT COUNT(*)
 		FROM data_template_data
 		WHERE local_data_id = ?',
 		array($local_data_id));
+	if ($exists === false) {
+		return false;
+	}
 
 	if (empty($exists)) {
 		$new_save = true;
@@ -337,11 +348,17 @@ function change_data_template($local_data_id, $data_template_id, $profile = arra
 	$save['data_source_path'] = (isset($data['data_source_path']) ? $data['data_source_path']:'');;
 
 	$data_template_data_id = sql_save($save, 'data_template_data');
+	if ($data_template_data_id === false || (int) $data_template_data_id <= 0) {
+		return false;
+	}
 
 	$data_rrds_list = db_fetch_assoc_prepared('SELECT *
 		FROM data_template_rrd
 		WHERE local_data_id = ?',
 		array($local_data_id));
+	if ($data_rrds_list === false) {
+		return false;
+	}
 
 	if ($data_template_id == 0) {
 		$template_rrds_list = $data_rrds_list;
@@ -351,6 +368,9 @@ function change_data_template($local_data_id, $data_template_id, $profile = arra
 			WHERE local_data_id = 0
 			AND data_template_id = ?',
 			array($data_template_id));
+	}
+	if ($template_rrds_list === false) {
+		return false;
 	}
 
 	if (cacti_sizeof($data_rrds_list)) {
@@ -376,7 +396,9 @@ function change_data_template($local_data_id, $data_template_id, $profile = arra
 					}
 				}
 
-				sql_save($save, 'data_template_rrd');
+				if (sql_save($save, 'data_template_rrd') === false) {
+					return false;
+				}
 			}
 		}
 	}
@@ -386,6 +408,9 @@ function change_data_template($local_data_id, $data_template_id, $profile = arra
 		FROM data_input_data
 		WHERE data_template_data_id = ?',
 		array($template_data['id']));
+	if ($data_input_data === false) {
+		return false;
+	}
 
 	/* this section is before most everything else so we can determine if this is a new save, by checking
 	the status of the 'local_data_template_data_id' column */
@@ -396,13 +421,17 @@ function change_data_template($local_data_id, $data_template_id, $profile = arra
 			 * noting that always checked should not be propagated after the initial save.
 			 */
 			if ($new_save == true || (empty($item['t_value']) && !data_input_field_always_checked($item['data_input_field_id']))) {
-				db_execute_prepared('REPLACE INTO data_input_data
+				if (db_execute_prepared('REPLACE INTO data_input_data
 					(data_input_field_id, data_template_data_id, t_value, value)
 					VALUES (?, ?, ?, ?)',
-					array($item['data_input_field_id'], $data_template_data_id, $item['t_value'], $item['value']));
+					array($item['data_input_field_id'], $data_template_data_id, $item['t_value'], $item['value'])) === false) {
+					return false;
+				}
 			}
 		}
 	}
+
+	return true;
 }
 
 /**

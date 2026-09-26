@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * update_heartbeat.php
+ *
+ * Updates RRD heartbeat values and corresponding database metadata.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -41,6 +48,7 @@ $force            = false;
 $data_template_id = false;
 $prev_heartbeat   = false;
 $new_heartbeat    = false;
+$dry_run          = false;
 
 if (cacti_sizeof($parms)) {
 	foreach($parms as $parameter) {
@@ -125,6 +133,9 @@ if (cacti_sizeof($parms)) {
 				break;
 			case '--force':
 				$force = true;
+				break;
+			case '--dry-run':
+				$dry_run = true;
 				break;
 			case '--version':
 			case '-V':
@@ -241,6 +252,21 @@ if (!$force) {
 	printf('This is a forced run, impacted Data Source Profiles will have their Heartbeats updated as well' . PHP_EOL);
 }
 
+if ($dry_run) {
+	print 'DRY RUN: No RRD files or database rows will be changed.' . PHP_EOL;
+	printf('Would tune %s RRD files to heartbeat %s.' . PHP_EOL, cacti_sizeof($rrdfiles), $new_heartbeat);
+	foreach($rrdfiles as $rrdfile) {
+		printf('  %s [%s]' . PHP_EOL, $rrdfile['rrd'], $rrdfile['data_sources']);
+	}
+	printf('Would update heartbeat metadata for %s Data Source Profile(s).' . PHP_EOL, $force ? cacti_sizeof($profile_ids) : 0);
+	if ($force) {
+		foreach($profile_ids as $profile) {
+			printf('  %s (%s)' . PHP_EOL, $profile['name'], $profile['id']);
+		}
+	}
+	exit(0);
+}
+
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
 rrd_maintenance_cli_preflight();
 $rrd_writer_lock = rrd_maintenance_cli_lock(true, true);
@@ -248,6 +274,7 @@ register_shutdown_function(function () use ($rrd_writer_lock) { rrd_maintenance_
 
 $i = 0;
 $tune_failed = false;
+$metadata_failed = false;
 
 $rrdtool_bin = read_config_option('path_rrdtool');
 
@@ -280,10 +307,13 @@ if (cacti_sizeof($rrdfiles)) {
 				$tune_failed = true;
 				printf("Warning Error Occurred: " . implode(', ', $output) . PHP_EOL);
 			} else {
-				db_execute_prepared('UPDATE data_template_rrd
+				if (!db_execute_prepared('UPDATE data_template_rrd
 					SET rrd_heartbeat = ?
 					WHERE local_data_id = ?',
-					array($new_heartbeat, $f['local_data_id']));
+					array($new_heartbeat, $f['local_data_id']))) {
+					$metadata_failed = true;
+					fwrite(STDERR, "ERROR: Could not update heartbeat metadata for Data Source {$f['local_data_id']} after tuning its RRD.\n");
+				}
 			}
 		} else {
 			$tune_failed = true;
@@ -299,38 +329,41 @@ if (cacti_sizeof($rrdfiles)) {
 
 	printf("Processed a Total of %s RRDfiles" . PHP_EOL, $i);
 
-	if ($tune_failed) {
-		fwrite(STDERR, "ERROR: Heartbeat updates failed; aggregate metadata was retained for retry.\n");
+	if ($tune_failed || $metadata_failed) {
+		fwrite(STDERR, "ERROR: Heartbeat updates were incomplete; inspect per-file results before retrying.\n");
 		exit(1);
 	}
 
 	if ($data_template_id > 0) {
-		db_execute_prepared('UPDATE data_template_rrd
+		if (!db_execute_prepared('UPDATE data_template_rrd
 			SET rrd_heartbeat = ?
 			WHERE local_data_id = 0
 			AND data_template_id = ?',
-			array($new_heartbeat, $data_template_id));
+			array($new_heartbeat, $data_template_id))) {
+			fwrite(STDERR, "ERROR: Could not update template heartbeat metadata.\n");
+			exit(1);
+		}
 	}
 
 	if ($force) {
 		foreach($profile_ids as $pid) {
-			db_execute_prepared('UPDATE data_source_profiles
+			if (!db_execute_prepared('UPDATE data_source_profiles
 				SET heartbeat = ?
 				WHERE id = ?',
-				array($new_heartbeat, $pid['id']));
+				array($new_heartbeat, $pid['id']))) {
+				fwrite(STDERR, "ERROR: Could not update Data Source Profile {$pid['id']} heartbeat metadata.\n");
+				exit(1);
+			}
 		}
 
-		if ($data_template_id > 0) {
-			db_execute_prepared('UPDATE data_template_rrd
-				SET rrd_heartbeat = ?
-				WHERE local_data_id = 0
-				AND data_template_id = ?',
-				array($new_heartbeat, $data_template_id));
-		} else {
-			db_execute_prepared('UPDATE data_template_rrd
+		if ($data_template_id === false) {
+			if (!db_execute_prepared('UPDATE data_template_rrd
 				SET rrd_heartbeat = ?
 				WHERE local_data_id = 0',
-				array($new_heartbeat));
+				array($new_heartbeat))) {
+				fwrite(STDERR, "ERROR: Could not update template heartbeat metadata.\n");
+				exit(1);
+			}
 		}
 	}
 }
@@ -353,7 +386,7 @@ function display_version() {
 function display_help () {
 	display_version();
 
-	print "\nusage: update_heartbeat.php --new-heartbeat=N [--data-template-id=id] [--prev-heartbeat=N] [--force] [--debug|-d]\n\n";
+	print "\nusage: update_heartbeat.php --new-heartbeat=N [--data-template-id=id] [--prev-heartbeat=N] [--force] [--dry-run] [--debug|-d]\n\n";
 	print "A utility to update RRDfile heartbeats and the Cacti database to match.\n\n";
 	print "Required:\n";
 	print "    --new-heartbeat=N     - A Heartbeat in seconds.  It must align with available Heartbeats in Cacti\n";
@@ -364,6 +397,7 @@ function display_help () {
 	print "    --prev-heartbeat=N    - Only update Cacti Data Sources that currently have the Heartbeat specified.\n";
 	print "    --force               - If the heartbeat selected does not match the Data Source Profile, update the\n";
 	print "                            Data Source Profile to match the command.  Otherwise, the script will exit.\n";
+	print "    --dry-run             - Show the RRD and metadata changes without applying them.\n";
 	print "    --debug               - Display verbose output during execution\n\n";
 	print "List Options:\n";
 	print "    --list-data-templates - List all Data Templates\n";

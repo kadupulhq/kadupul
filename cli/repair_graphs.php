@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * repair_graphs.php
+ *
+ * Repairs graph item references to a selected data template.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -63,22 +70,22 @@ foreach($parms as $parameter) {
 			break;
 		case "--host-id":
 			$host_id = trim($value);
-			if (!is_numeric($host_id)) {
-				print "ERROR: You must supply a valid host-id to run this script!\n";
+			if (!ctype_digit($host_id) || (int) $host_id <= 0) {
+				print "ERROR: You must supply a positive integer host-id to run this script!\n";
 				exit(1);
 			}
 			break;
 		case "--graph-template-id":
 			$graph_template_id = $value;
-			if (!is_numeric($graph_template_id)) {
-				print "ERROR: You must supply a numeric graph-template-id!\n";
+			if (!ctype_digit($graph_template_id) || (int) $graph_template_id <= 0) {
+				print "ERROR: You must supply a positive integer graph-template-id!\n";
 				exit(1);
 			}
 			break;
 		case "--data-template-id":
 			$data_template_id = $value;
-			if (!is_numeric($data_template_id)) {
-				print "ERROR: You must supply a numeric data-template-id!\n";
+			if (!ctype_digit($data_template_id) || (int) $data_template_id <= 0) {
+				print "ERROR: You must supply a positive integer data-template-id!\n";
 				exit(1);
 			}
 			break;
@@ -121,9 +128,21 @@ if ($execute) {
 }
 
 // Get all graphs for supplied graph template
-$graph = db_fetch_assoc("SELECT *
-	FROM graph_local
-	WHERE " . (!isset($host_id) ? '' : "host_id=".$host_id." AND ") . " graph_template_id=" . $graph_template_id . "");
+$graph_sql = 'SELECT * FROM graph_local WHERE graph_template_id = ?';
+$graph_params = array((int) $graph_template_id);
+
+if (isset($host_id)) {
+	$graph_sql .= ' AND host_id = ?';
+	$graph_params[] = (int) $host_id;
+}
+
+$graph = db_fetch_assoc_prepared($graph_sql, $graph_params);
+$repair_failed = false;
+
+if ($graph === false) {
+	fwrite(STDERR, "ERROR: Unable to query graphs for repair.\n");
+	exit(1);
+}
 
 if (cacti_sizeof($graph)) {
 	if (!$show_sql) {
@@ -132,14 +151,24 @@ if (cacti_sizeof($graph)) {
 
 	foreach($graph as $g) {
 		// Get datasource for supplied data template for current host
-		$ds = db_fetch_assoc("SELECT * FROM data_local where host_id=" . $g["host_id"] . " and data_template_id=" . $data_template_id);
+		$ds = db_fetch_assoc_prepared('SELECT * FROM data_local WHERE host_id = ? AND data_template_id = ?', array((int) $g['host_id'], (int) $data_template_id));
+		if ($ds === false) {
+			fwrite(STDERR, "ERROR: Unable to query datasource for graph {$g['id']}.\n");
+			$repair_failed = true;
+			continue;
+		}
 		if (!cacti_sizeof($ds)) {
 			continue;
 		}
 		$ds = $ds[0];
 
 		// Get rrd for found datasource
-		$rrd_data = db_fetch_assoc("SELECT * FROM data_template_rrd where local_data_id=" . $ds["id"]);
+		$rrd_data = db_fetch_assoc_prepared('SELECT * FROM data_template_rrd WHERE local_data_id = ?', array((int) $ds['id']));
+		if ($rrd_data === false) {
+			fwrite(STDERR, "ERROR: Unable to query RRD data for datasource {$ds['id']}.\n");
+			$repair_failed = true;
+			continue;
+		}
 		if (!cacti_sizeof($rrd_data)) {
 			print "Could not get correct rrd id for datasource=" . $ds["id"] . "\n";
 			continue;
@@ -156,11 +185,28 @@ if (cacti_sizeof($graph)) {
 		// But I'm too lazy to write such a lot of code, so let's better make one long query below
 		*/
 
-		$graph_templates_items_wrong = db_fetch_assoc("select id, task_item_id from graph_templates_item WHERE task_item_id!=" . $rrd_data[0]["id"] . " and graph_template_id=" . $graph_template_id . " and local_graph_id=" . $g["id"] . " and local_graph_template_item_id in (select id from graph_templates_item where local_graph_template_item_id=0 and local_graph_id=0 and task_item_id=(select id from data_template_rrd where local_data_template_rrd_id=0 and local_data_id=0 and data_template_id=" . $data_template_id . "))");
+		$graph_templates_items_wrong = db_fetch_assoc_prepared('SELECT id, task_item_id FROM graph_templates_item
+			WHERE task_item_id != ? AND graph_template_id = ? AND local_graph_id = ?
+			AND local_graph_template_item_id IN (
+				SELECT id FROM graph_templates_item
+				WHERE local_graph_template_item_id = 0 AND local_graph_id = 0
+				AND task_item_id = (
+					SELECT id FROM data_template_rrd
+					WHERE local_data_template_rrd_id = 0 AND local_data_id = 0 AND data_template_id = ?
+				)
+			)', array((int) $rrd_data[0]['id'], (int) $graph_template_id, (int) $g['id'], (int) $data_template_id));
+		if ($graph_templates_items_wrong === false) {
+			fwrite(STDERR, "ERROR: Unable to query graph items for graph {$g['id']}.\n");
+			$repair_failed = true;
+			continue;
+		}
 		if (!cacti_sizeof($graph_templates_items_wrong)) {
 			// Everything correct here.
 			continue;
 		} else {
+		$graph_templates_item = array();
+		$task_item_id = array();
+
 			foreach($graph_templates_items_wrong as $graph_templates_item_wrong) {
 				// Here is a list of graph_templates_item ids to be fixed and their wrong task_item_id
 				$graph_templates_item[] = $graph_templates_item_wrong["id"];
@@ -170,17 +216,28 @@ if (cacti_sizeof($graph)) {
 
 		print "Host " . $g["host_id"] . ", graph " . $g["id"] . ", graph item " . implode(",",$graph_templates_item) . ", task_item_id " . implode(",",$task_item_id) . "->" . $rrd_data[0]["id"] . "\n";
 
-		$query = "UPDATE graph_templates_item SET task_item_id=" . $rrd_data[0]["id"] . " WHERE task_item_id!=" . $rrd_data[0]["id"] . " and graph_template_id=" . $graph_template_id . " and local_graph_id=" . $g["id"] . " and id in (" . implode(",",$graph_templates_item) . ")";
+		$id_placeholders = implode(',', array_fill(0, cacti_sizeof($graph_templates_item), '?'));
+		$query = 'UPDATE graph_templates_item SET task_item_id = ?
+			WHERE task_item_id != ? AND graph_template_id = ? AND local_graph_id = ?
+			AND id IN (' . $id_placeholders . ')';
+		$query_params = array_merge(array((int) $rrd_data[0]['id'], (int) $rrd_data[0]['id'], (int) $graph_template_id, (int) $g['id']), array_map('intval', $graph_templates_item));
 
 		if ($show_sql) {
 			print $query . ";\n";
 		}
 		if ($execute) {
-			db_execute($query);
+			if (db_execute_prepared($query, $query_params) === false) {
+				fwrite(STDERR, "ERROR: Failed to repair graph {$g['id']} on host {$g['host_id']}.\n");
+				$repair_failed = true;
+			}
 		}
 		unset($graph_templates_item);
 		unset($task_item_id);
 	}
+}
+
+if ($repair_failed) {
+	exit(1);
 }
 
 function display_version() {
@@ -199,4 +256,3 @@ function display_help() {
 	print "--data-template-id=id - The numerical ID of the data template to be fixed\n";
 	print "--graph-template-id=id - The numerical ID of the graph template to be fixed\n";
 }
-

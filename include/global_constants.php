@@ -40,6 +40,7 @@ define('TREE_ORDERING_NATURAL', 4);
 define('TREE_ITEM_TYPE_HEADER', 1);
 define('TREE_ITEM_TYPE_GRAPH', 2);
 define('TREE_ITEM_TYPE_HOST', 3);
+define('TREE_ITEM_TYPE_SITE', 4);
 
 define('RRDTOOL_OUTPUT_NULL', 0);
 define('RRDTOOL_OUTPUT_STDOUT', 1);

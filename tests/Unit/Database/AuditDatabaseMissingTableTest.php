@@ -22,6 +22,13 @@ test('legacy audit identifiers are safely quoted', function () {
 		->and(audit_quote_identifier('legacy`name'))->toBe('`legacy``name`');
 });
 
+test('audit schema import selects the TLS option supported by its database client', function () {
+	expect(audit_database_ssl_option(false, 'mysql  Ver 8.0.42 for Linux'))->toBe(' --ssl-mode=DISABLED')
+		->and(audit_database_ssl_option(false, 'mariadb  Ver 15.1 Distrib 10.11.8-MariaDB'))->toBe(' --skip-ssl')
+		->and(audit_database_ssl_option(true, 'mysql  Ver 8.0.42 for Linux'))->toBe('')
+		->and(audit_database_ssl_option(false, 'unknown database client'))->toBeFalse();
+});
+
 test('missing core tables are deduplicated and sorted', function () {
 	expect(audit_missing_core_tables(
 		array('version', 'user_auth_row_cache', 'host', 'host', null),
@@ -84,4 +91,18 @@ test('database audit query failures fail closed', function () {
 		->and(substr_count($source, "audit_quote_identifier(\$dbc['table_field'])"))->toBe(2)
 		->and($source)->toContain('audit_quote_identifier($after)')
 		->and($source)->toContain('$exit_code = report_audit_results() === false ? 1 : 0;');
+});
+
+test('canonical index metadata failures stop the audit before the missing-index pass', function () {
+	$source = file_get_contents(dirname(__DIR__, 3) . '/cli/audit_database.php');
+	expect($source)->not->toBeFalse();
+
+	$query = strpos($source, '$db_indexes = db_fetch_assoc_prepared(');
+	$guard = strpos($source, 'if ($db_indexes === false)', $query);
+	$loop  = strpos($source, 'if (cacti_sizeof($db_indexes))', $query);
+
+	expect($query)->not->toBeFalse()
+		->and($guard)->not->toBeFalse()
+		->and($loop)->not->toBeFalse()
+		->and($guard)->toBeLessThan($loop);
 });

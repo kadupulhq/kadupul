@@ -422,7 +422,11 @@ jobs:
         template=$(sudo php -q cli/add_device.php --list-host-templates | grep "Net-SNMP Device" | awk '{print $1}')
         sudo php cli/add_device.php --description=test_device --ip=127.0.0.1 --template=$template
         sudo php cli/rebuild_poller_cache.php --debug
-        sudo php cli/poller_reindex_hosts.php --id=all --debug
+        # Reindex the installed local device, whose SNMP data query is part of
+        # the test fixture. The added loopback device intentionally has no
+        # fixture data for all of its vendor queries and correctly returns a
+        # failure status under strict CLI error accounting.
+        sudo php cli/poller_reindex_hosts.php --id=1 --debug
 
     # cactid polls as www-data on every five minute boundary. When that run
     # overlaps the root poller below, a www-data plugin task cannot signal the

@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * structure_rra_paths.php
+ *
+ * Moves RRD files into the configured structured directory layout.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -42,6 +49,7 @@ define('PHP_DEOL', PHP_EOL . PHP_EOL);
 $host_id          = false;
 $host_template_id = false;
 $proceed          = false;
+$dry_run          = false;
 
 /* process calling arguments */
 $parms = $_SERVER['argv'];
@@ -59,6 +67,10 @@ if (cacti_sizeof($parms)) {
 		switch ($arg) {
 			case '--proceed':
 				$proceed = true;
+
+				break;
+			case '--dry-run':
+				$dry_run = true;
 
 				break;
 			case '--version':
@@ -93,19 +105,19 @@ if (read_config_option('boost_rrd_update_enable') !== 'on') {
 	exit(1);
 }
 
-if ($host_id !== false && ($host_id <= 0 || !is_numeric($host_id))) {
-	print PHP_EOL . 'FATAL: When specifying a Device ID, you must pick on greater or equal than zero.' . PHP_DEOL;
+if ($host_id !== false && (!ctype_digit((string) $host_id) || (int) $host_id <= 0)) {
+	print PHP_EOL . 'FATAL: When specifying a Device ID, you must pick a positive integer.' . PHP_DEOL;
 	display_help();
 	exit(1);
 }
 
-if ($host_template_id !== false && ($host_template_id <= 0 || !is_numeric($host_template_id))) {
-	print PHP_EOL . 'FATAL: When specifying a Device Template ID, you must pick on greater or equal than zero.' . PHP_DEOL;
+if ($host_template_id !== false && (!ctype_digit((string) $host_template_id) || (int) $host_template_id <= 0)) {
+	print PHP_EOL . 'FATAL: When specifying a Device Template ID, you must pick a positive integer.' . PHP_DEOL;
 	display_help();
 	exit(1);
 }
 
-if ($proceed == false) {
+if ($proceed == false && !$dry_run) {
 	print PHP_EOL . 'FATAL: You Must Explicitly Instruct This Script to Proceed with the \'--proceed\' Option' . PHP_DEOL;
 	display_help();
 	exit(1);
@@ -113,54 +125,69 @@ if ($proceed == false) {
 
 /* check ownership of the current base path */
 $base_rra_path = $config['rra_path'];
+$base_rra_sql  = db_qstr($base_rra_path);
 $owner_id      = fileowner($base_rra_path);
 $group_id      = filegroup($base_rra_path);
 
-/* turn on extended paths from in the database */
-set_config_option('extended_paths', 'on');
-
 $pattern = read_config_option('extended_paths_type');
 $maxdirs = read_config_option('extended_paths_hashes');
-if (empty($maxdirs) || $maxdirs < 0 || !is_numeric($maxdirs)) {
+if (!ctype_digit((string) $maxdirs) || (int) $maxdirs <= 0) {
 	$maxdirs = 100;
 }
+$maxdirs = (int) $maxdirs;
 
-if ($pattern == '' || $pattern == 'device') {
+if ($pattern == '') {
+	$pattern = 'device';
+}
+
+if (!in_array($pattern, array('device', 'device_dq', 'hash_device', 'hash_device_dq'), true)) {
+	print "FATAL: Unsupported extended path pattern '$pattern'." . PHP_EOL;
+	exit(1);
+}
+
+if ($pattern == 'device') {
 	$pattern1  = "CONCAT('<path_rra>/', host_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
-	$pattern2  = "REPLACE(CONCAT('<path_rra>/', '/', host_id, '/', local_data_id, '.rrd'), '<path_rra>', '$base_rra_path') AS new_rrd_path";
-	$sql_where = "WHERE dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id, '/', dtd.local_data_id, '.rrd')";
+	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id, '/', local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
 } elseif ($pattern == 'device_dq') {
 	$pattern1  = "CONCAT('<path_rra>/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
-	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd'), '<path_rra>', '$base_rra_path') AS new_rrd_path";
-	$sql_where = "WHERE dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id, '/', IF(dl.snmp_query_id > 0, CONCAT(dl.snmp_query_id, '/'), ''), dtd.local_data_id, '.rrd')";
+	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
 } elseif ($pattern == 'hash_device') {
 	$pattern1  = "CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
-	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', local_data_id, '.rrd'), '<path_rra>', '$base_rra_path') AS new_rrd_path";
-	$sql_where = "WHERE dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id % $maxdirs, '/', dl.host_id, '/', dtd.local_data_id, '.rrd')";
+	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
 } elseif ($pattern == 'hash_device_dq') {
 	$pattern1  = "CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
-	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd'), '<path_rra>', '$base_rra_path') AS new_rrd_path";
-	$sql_where = "WHERE dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id % $maxdirs, '/', dl.host_id, '/', IF(dl.snmp_query_id > 0, CONCAT(dl.snmp_query_id, '/'), ''), dtd.local_data_id, '.rrd')";
+	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id % $maxdirs, '/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd'), '<path_rra>', $base_rra_sql) AS new_rrd_path";
 }
 
-$sql_where  = '';
 $sql_params = array();
 
-if ($host_id > 0) {
-	$sql_where    = ' AND h.id = ?';
-	$sql_params[] = $host_id;
+if ($pattern == 'device') {
+	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id, '/', dtd.local_data_id, '.rrd')";
+} elseif ($pattern == 'device_dq') {
+	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id, '/', dl.snmp_query_id, '/', dtd.local_data_id, '.rrd')";
+} elseif ($pattern == 'hash_device') {
+	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id % $maxdirs, '/', dl.host_id, '/', dtd.local_data_id, '.rrd')";
+} else {
+	$path_where = "dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id % $maxdirs, '/', dl.host_id, '/', dl.snmp_query_id, '/', dtd.local_data_id, '.rrd')";
 }
 
-if ($host_template_id > 0) {
-	$sql_where    = ' AND h.host_template_id = ?';
-	$sql_params[] = $host_template_id;
+$sql_where = 'WHERE ' . $path_where;
+
+if ($host_id !== false) {
+	$sql_where .= ' AND h.id = ?';
+	$sql_params[] = (int) $host_id;
+}
+
+if ($host_template_id !== false) {
+	$sql_where .= ' AND h.host_template_id = ?';
+	$sql_params[] = (int) $host_template_id;
 }
 
 /* fetch all DS having wrong path */
 $data_sources = db_fetch_assoc_prepared("SELECT dtd.local_data_id, dl.host_id % $maxdirs AS hash_id,
 	dl.host_id, dtd.data_source_path, dl.snmp_query_id, h.description,
 	$pattern1
-	REPLACE(data_source_path, '<path_rra>', '$base_rra_path') AS rrd_path,
+	REPLACE(data_source_path, '<path_rra>', $base_rra_sql) AS rrd_path,
 	$pattern2
 	FROM data_template_data AS dtd
 	INNER JOIN data_local AS dl
@@ -170,14 +197,28 @@ $data_sources = db_fetch_assoc_prepared("SELECT dtd.local_data_id, dl.host_id % 
 	$sql_where",
 	$sql_params);
 
+if ($data_sources === false) {
+	fwrite(STDERR, "FATAL: Unable to query data sources for the RRD path migration.\n");
+	exit(1);
+}
+
 /* setup some counters */
 $total_count = cacti_sizeof($data_sources);
 $done_count = 0;
 $warn_count = 0;
 $skip_count = 0;
 $started    = false;
+$database_failure = false;
 
 printf('NOTE: Found:%s Data Sources.  Beginning Process' . PHP_EOL, number_format($total_count));
+
+if ($dry_run) {
+	print "DRY RUN: No files, database rows, or configuration settings will be changed." . PHP_EOL;
+	foreach ($data_sources as $info) {
+		printf("  %s => %s\n", $info['rrd_path'], $info['new_rrd_path']);
+	}
+	exit(0);
+}
 
 /* scan all data sources */
 foreach ($data_sources as $info) {
@@ -249,10 +290,10 @@ foreach ($data_sources as $info) {
 
 		$data_source_path1 = $base_rra_path . '/' . strtolower(clean_up_file_name($info['description'])) . '_' . $local_data_id . '.rrd';
 
-		if ($pattern == '' || $pattern == 'device') {
-			$data_source_path2 = $base_rra_path . '/' . $info['host_id'] . '/' . $info['snmp_query_id'] . '/' . $local_data_id . '.rrd';
+		if ($pattern == 'device') {
+            $data_source_path2 = $base_rra_path . '/' . $info['host_id'] . '/' . $local_data_id . '.rrd';
 		} elseif ($pattern == 'device_dq') {
-			$data_source_path2 = $base_rra_path . '/' . $info['host_id'] . '/' . $local_data_id . '.rrd';
+			$data_source_path2 = $base_rra_path . '/' . $info['host_id'] . '/' . $info['snmp_query_id'] . '/' . $local_data_id . '.rrd';
 		} elseif ($pattern == 'hash_device') {
 			$data_source_path2 = $base_rra_path . '/' . $info['hash_id'] . '/' . $info['host_id'] . '/' . $local_data_id . '.rrd';
 		} elseif ($pattern == 'hash_device_dq') {
@@ -271,7 +312,9 @@ foreach ($data_sources as $info) {
 			print "WARNING: Legacy RRA Path '$old_rrd_path' Does not exist, Skipping" . PHP_EOL;
 
 			/* alter database; there is no file whose move could be refused */
-			update_database($info);
+			if (!update_database($info)) {
+				$database_failure = true;
+			}
 		}
 	}
 
@@ -298,13 +341,33 @@ foreach ($data_sources as $info) {
 					if (sp_recursive_chown($new_rrd_path, $owner_id) && sp_recursive_chgrp($new_rrd_path, $group_id)) {
 						struct_debug("Permissions set for '$new_rrd_path'");
 					} else {
+						clearstatcache(true, $old_rrd_path);
+						if (structure_rra_is_safe_dest($old_rrd_path) && !file_exists($old_rrd_path) && !is_link($old_rrd_path) && rename($new_rrd_path, $old_rrd_path)) {
+							$done_count--;
+							struct_debug("Restored RRD File after permission failure: '$new_rrd_path' > '$old_rrd_path'");
+						} else {
+							fwrite(STDERR, "FATAL: Permission update failed and the RRD file could not be restored from '$new_rrd_path' to '$old_rrd_path'.\n");
+						}
+
 						print "FATAL: Could not Set Permissions for File '$new_rrd_path'" . PHP_EOL;
 						exit(6);
 					}
 				}
 
 				/* alter database */
-				update_database($info);
+				if (!update_database($info)) {
+					$warn_count++;
+					$database_failure = true;
+					$done_count--;
+
+					clearstatcache(true, $old_rrd_path);
+					if (structure_rra_is_safe_dest($old_rrd_path) && !file_exists($old_rrd_path) && !is_link($old_rrd_path) && rename($new_rrd_path, $old_rrd_path)) {
+						struct_debug("Restored RRD File after database update failure: '$new_rrd_path' > '$old_rrd_path'");
+					} else {
+						fwrite(STDERR, "FATAL: Database update failed and the RRD file could not be restored from '$new_rrd_path' to '$old_rrd_path'.\n");
+						exit(6);
+					}
+				}
 			} else {
 				print "FATAL: Could not Move RRD File '$old_rrd_path' to '$new_rrd_path'" . PHP_EOL;
 				exit(3);
@@ -317,12 +380,28 @@ foreach ($data_sources as $info) {
 			   file that gets moved updates the database after rename(), and
 			   one that is refused leaves it untouched */
 			if ($found_elsewhere) {
-				update_database($info);
+				if (!update_database($info)) {
+					$warn_count++;
+					$database_failure = true;
+				}
 			}
 		}
 	}
 
     db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
+}
+
+/* Enable the new layout only after all selected files and rows were migrated. */
+if (!$warn_count && !$database_failure) {
+	set_config_option('extended_paths', 'on');
+	$extended_paths = db_fetch_cell_prepared('SELECT value FROM settings WHERE name = ?', array('extended_paths'));
+
+	if ($extended_paths !== 'on') {
+		fwrite(STDERR, "ERROR: Unable to verify that extended paths were enabled.\n");
+		exit(1);
+	}
+} else {
+	print "WARNING: Extended paths were not enabled because one or more files or database rows were not migrated." . PHP_EOL;
 }
 
 $end = microtime(true);
@@ -332,6 +411,10 @@ $stats = sprintf('Time:%0.2f Renamed:%s Skipped:%s Warnings:%s', $end - $start, 
 cacti_log("RRDSTRUCT STATS: $stats", false, 'SYSTEM');
 
 print "NOTE: RRD Restructure Complete: $stats" . PHP_EOL;
+
+if ($database_failure) {
+	exit(1);
+}
 
 /**
  * struct_debug - Simple debug function for restructuring
@@ -357,19 +440,44 @@ function struct_debug($string) {
  * @return (void)
  */
 function update_database($info) {
+	if (!db_begin_transaction()) {
+		fwrite(STDERR, "ERROR: Could not start a transaction for the RRD path update.\n");
+
+		return false;
+	}
+
 	/* update table poller_item */
-	db_execute_prepared('UPDATE poller_item
+	if (db_execute_prepared('UPDATE poller_item
 		SET rrd_path = ?
 		WHERE local_data_id = ?',
-		array($info['new_rrd_path'], $info['local_data_id']));
+		array($info['new_rrd_path'], $info['local_data_id'])) === false) {
+		db_rollback_transaction();
+		fwrite(STDERR, "ERROR: Could not update the poller item path for local_data_id {$info['local_data_id']}.\n");
+
+		return false;
+	}
 
 	/* update table data_template_data */
-	db_execute_prepared('UPDATE data_template_data
+	if (db_execute_prepared('UPDATE data_template_data
 		SET data_source_path = ?
 		WHERE local_data_id = ?',
-		array($info['new_data_source_path'], $info['local_data_id']));
+		array($info['new_data_source_path'], $info['local_data_id'])) === false) {
+		db_rollback_transaction();
+		fwrite(STDERR, "ERROR: Could not update the data source path for local_data_id {$info['local_data_id']}.\n");
+
+		return false;
+	}
+
+	if (!db_commit_transaction()) {
+		db_rollback_transaction();
+		fwrite(STDERR, "ERROR: Could not commit the RRD path update for local_data_id {$info['local_data_id']}.\n");
+
+		return false;
+	}
 
 	struct_debug("Database Changes Complete for File '" . $info['new_rrd_path'] . "'");
+
+	return true;
 }
 
 /**
@@ -608,7 +716,7 @@ function display_version() {
 function display_help() {
 	display_version();
 
-	print PHP_EOL . 'usage: structure_rra_paths.php [--host-id=N] [--host-template-id=N] [--proceed]' . PHP_DEOL;
+	print PHP_EOL . 'usage: structure_rra_paths.php [--host-id=N] [--host-template-id=N] [--proceed] [--dry-run]' . PHP_DEOL;
 
 	print 'A simple interactive command line utility that converts a Cacti system from using' . PHP_EOL;
 	print 'legacy RRA paths to using structured RRA paths with the following' . PHP_EOL;
@@ -626,6 +734,7 @@ function display_help() {
 	print 'Optional:' . PHP_EOL;
 	print ' --host-id=N           Specify if you wish to switch on a single Device.' . PHP_EOL;
 	print ' --host-template-id=N  Specify if you wish to change for a class of Devices.' . PHP_DEOL;
+	print ' --dry-run             Preview the selected RRD moves without changing files, database rows, or settings.' . PHP_DEOL;
 
 	print 'This utility is designed for very large Cacti systems or file systems that have' . PHP_EOL;
 	print 'problems with very large directories.  It will run interactively, but it first' . PHP_EOL;

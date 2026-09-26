@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * upgrade_database.php
+ *
+ * Runs Cacti database upgrade steps.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

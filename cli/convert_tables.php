@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * convert_tables.php
+ *
+ * Converts database table engines, character sets, or row formats.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -43,6 +50,7 @@ $table_name  = '';
 $skip_tables = array();
 $installer   = false;
 $local       = false;
+$dry_run     = false;
 
 if (cacti_sizeof($parms)) {
 	foreach($parms as $parameter) {
@@ -67,6 +75,9 @@ if (cacti_sizeof($parms)) {
 				break;
 			case '--local':
 				$local = true;
+				break;
+			case '--dry-run':
+				$dry_run = true;
 				break;
 			case '-s':
 			case '--size':
@@ -98,7 +109,7 @@ if (cacti_sizeof($parms)) {
 				break;
 			case '--installer':
 				$installer = true;
-				require_once(__DIR__ . '../install/functions.php');
+				require_once(__DIR__ . '/../install/functions.php');
 				break;
 			case '--version':
 			case '-V':
@@ -121,13 +132,32 @@ if (cacti_sizeof($parms)) {
 if (cacti_sizeof($skip_tables) && $table_name != '') {
 	print_or_log($installer,  "ERROR: You can not specify a single table and skip tables at the same time.\n\n");
 	display_help();
-	exit;
+	exit(1);
 }
 
 if (!($innodb || $utf8 || $latin)) {
 	print_or_log($installer,  "ERROR: Must select either UTF8, LATIN1 or InnoDB conversion.\n\n");
 	display_help();
-	exit;
+	exit(1);
+}
+
+if ($utf8 && $latin) {
+	print_or_log($installer, "ERROR: You can not convert to UTF8 and LATIN1 in the same run.\n\n");
+	display_help();
+	exit(1);
+}
+
+if (!preg_match('/^\d+$/', (string) $size)) {
+	print_or_log($installer, "ERROR: The maximum row count must be a non-negative integer.\n\n");
+	display_help();
+	exit(1);
+}
+
+$size = (int) $size;
+
+if ($table_name !== '' && !preg_match('/^[A-Za-z0-9_]+$/', $table_name)) {
+	print_or_log($installer, "ERROR: Invalid table name. Use only letters, numbers, and underscores.\n\n");
+	exit(1);
 }
 
 if (!$local && $config['poller_id'] > 1) {
@@ -143,7 +173,7 @@ if (cacti_sizeof($skip_tables)) {
 		if (!db_table_exists($table)) {
 			print_or_log($installer,  "ERROR: Skip Table $table does not Exist.  Can not continue.\n\n");
 			display_help();
-			exit;
+			exit(1);
 		}
 	}
 }
@@ -161,7 +191,7 @@ if ($innodb) {
 	foreach($engines as $engine) {
 		if (strtolower($engine['Engine']) == 'innodb' && strtolower($engine['Support']) == 'off') {
 			print_or_log($installer,  "InnoDB Engine is not enabled\n");
-			exit;
+			exit(1);
 		}
 	}
 
@@ -169,23 +199,35 @@ if ($innodb) {
 
 	if (strtolower($file_per_table['Value']) != 'on') {
 		print_or_log($installer,  'innodb_file_per_table not enabled');
-		exit;
+		exit(1);
 	}
 }
 
 if (strlen($table_name)) {
+	if (!db_table_exists($table_name)) {
+		print_or_log($installer, "ERROR: Table '$table_name' does not exist in the selected database.\n");
+		exit(1);
+	}
+
 	$tables = array($table_name);
 } else {
 	$tables = get_cacti_base_tables();
 }
 
 if (cacti_sizeof($tables)) {
+	$conversion_failures = 0;
+
 	foreach($tables AS $table) {
 		$table_data = db_fetch_row_prepared('SELECT *
 			FROM information_schema.TABLES
 			WHERE TABLE_NAME = ?
 			AND TABLE_SCHEMA = ?',
 			array($table, $database_default));
+
+		if (!cacti_sizeof($table_data)) {
+			print_or_log($installer, "ERROR: Unable to inspect table '$table'; no conversion was attempted.\n");
+			exit(1);
+		}
 
 		$canConvert = $rebuild;
 		$canInnoDB  = false;
@@ -222,23 +264,40 @@ if (cacti_sizeof($tables)) {
 			if ($table_data['TABLE_ROWS'] < $size || $force) {
 				print_or_log($installer,  "Converting Table > '$table'");
 
-				$sql = '';
+				$clauses = array();
+
+				if ($dynamic) {
+					$clauses[] = 'ROW_FORMAT=Dynamic';
+				}
+
 				if ($utf8) {
-					$sql .= ' CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+					$clauses[] = 'CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
 				} elseif ($latin) {
-					$sql .= ' CONVERT TO CHARACTER SET latin1';
+					$clauses[] = 'CONVERT TO CHARACTER SET latin1';
 				}
 
 				if ($innodb && $canInnoDB) {
-					$sql .= (strlen($sql) ? ',' : '') . ' ENGINE=Innodb';
+					$clauses[] = 'ENGINE=InnoDB';
 				}
 
-				$status = db_execute("ALTER TABLE `$table`" . ($dynamic ? ' ROW_FORMAT=Dynamic, ':'') . $sql);
+				if (!cacti_sizeof($clauses)) {
+					print_or_log($installer, ' Skipping: no applicable conversion was selected' . PHP_EOL);
+					continue;
+				}
+
+				$sql = 'ALTER TABLE `' . $table . '` ' . implode(', ', $clauses);
+				if ($dry_run) {
+					print_or_log($installer, ' Would execute: ' . $sql . PHP_EOL);
+					continue;
+				}
+
+				$status = db_execute($sql);
 
 				if ($status === false) {
+					$conversion_failures++;
 					print_or_log($installer,  ' Failed' . PHP_EOL);
 
-					record_log($installer, "FATAL: Conversion of Table '$table' Failed.  Command: 'ALTER TABLE `$table` $sql'");
+					record_log($installer, "FATAL: Conversion of Table '$table' Failed.  Command: '$sql'");
 				} else {
 					print_or_log($installer,  ' Successful' . PHP_EOL);
 				}
@@ -248,6 +307,11 @@ if (cacti_sizeof($tables)) {
 		} else {
 			print_or_log($installer,  "Skipping Table > '$table'" . PHP_EOL);
 		}
+	}
+
+	if ($conversion_failures > 0) {
+		print_or_log($installer, sprintf("ERROR: %s table conversion(s) failed.\n", $conversion_failures));
+		exit(1);
 	}
 }
 
@@ -277,7 +341,7 @@ function display_version() {
 function display_help () {
 	display_version();
 
-	print "\nusage: convert_tables.php [--debug] [--innodb] [--utf8] [--latin1] [--table=N] [--size=N] [--rebuild] [--dynamic]\n\n";
+	print "\nusage: convert_tables.php [--debug] [--innodb] [--utf8] [--latin1] [--table=N] [--size=N] [--rebuild] [--dynamic] [--dry-run]\n\n";
 	print "A utility to convert a Cacti Database from MyISAM to the InnoDB table format.\n";
 	print "MEMORY tables are not converted to InnoDB in this process.\n\n";
 	print "Required (one or more):\n";
@@ -287,9 +351,10 @@ function display_help () {
 	print "Optional:\n";
 	print "-t | --table=S - The name of a single table to change\n";
 	print "-n | --skip-innodb=\"table1 table2 ...\" - Skip converting tables to InnoDB\n";
-	print "-s | --size=N  - The largest table size in records to convert.  Default is 1,000,000 rows.\n";
+	print "-s | --size=N  - Maximum estimated table rows to convert. Default is 1,000,000; use --force to bypass.\n";
 	print "-r | --rebuild - Will compress/optimize existing InnoDB tables if found\n";
 	print "     --dynamic - Convert a table to Dynamic row format if available\n";
+	print "     --dry-run - Print proposed ALTER statements without executing them\n";
 	print "     --local   - Perform the action on the Remote Data Collector if run from there\n";
 	print "-f | --force   - Proceed with conversion regardless of table size\n\n";
 	print "-d | --debug   - Display verbose output during execution\n\n";

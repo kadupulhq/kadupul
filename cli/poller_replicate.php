@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * poller_replicate.php
+ *
+ * Synchronizes selected configuration data to remote pollers.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -80,7 +87,7 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
-if (!preg_match('/(all|data|auth|settings)/', $class)) {
+if (!in_array($class, array('all', 'data', 'auth', 'settings'), true)) {
 	print 'FATAL: The class ' . $class . ' is NOT valid!' . PHP_EOL;
 	exit(1);
 }
@@ -88,10 +95,13 @@ if (!preg_match('/(all|data|auth|settings)/', $class)) {
 /* record the start time */
 $start = microtime(true);
 
-if ($poller_id < 0) {
-	print 'FATAL: The poller needs to be greater than 0!' . PHP_EOL;
+if (!ctype_digit((string) $poller_id)) {
+	print 'FATAL: The poller ID must be a non-negative integer.' . PHP_EOL;
 	exit(1);
-} elseif ($poller_id == 0) {
+}
+$poller_id = (int) $poller_id;
+
+if ($poller_id === 0) {
 	$pollers = db_fetch_assoc('SELECT id
 		FROM poller
 		WHERE id > 1
@@ -105,24 +115,42 @@ if ($poller_id < 0) {
 		array($poller_id));
 }
 
+if ($pollers === false) {
+	fwrite(STDERR, "ERROR: Could not load enabled pollers for replication.\n");
+	exit(1);
+}
+
 if (cacti_sizeof($pollers)) {
 	if (!register_process_start('psync', "POLLER:$poller_id", 0, 900)) {
 		cacti_log("WARNING: Another Sync Operations is already running", true, 'POLLER');
-		exit(0);
+		fwrite(STDERR, "FATAL: Another synchronization is already running for this target.\n");
+		exit(1);
 	}
+	register_shutdown_function('unregister_process', 'psync', "POLLER:$poller_id", 0);
 
+	$failed = false;
 	foreach ($pollers as $poller) {
-		replicate_out($poller['id'], $class);
+		if (!replicate_out($poller['id'], $class)) {
+			fwrite(STDERR, "ERROR: Synchronization failed for poller {$poller['id']}.\n");
+			$failed = true;
+			continue;
+		}
 
-		db_execute_prepared('UPDATE poller
+		if (!db_execute_prepared('UPDATE poller
 			SET last_sync = NOW(), requires_sync=""
 			WHERE id = ?',
-			array($poller['id']));
+			array($poller['id']))) {
+			fwrite(STDERR, "ERROR: Could not record synchronization completion for poller {$poller['id']}.\n");
+			$failed = true;
+			continue;
+		}
 
 		cacti_log('STATS: Poller ID ' . $poller['id'] . ' fully Replicated', false, 'POLLER');
 	}
 
-	unregister_process('psync', "POLLER:$poller_id", 0);
+	if ($failed) {
+		exit(1);
+	}
 } else {
 	print 'FATAL: The poller specified ' . $poller_id . ' is either disabled, or does not exist!' . PHP_EOL;
 	exit(1);

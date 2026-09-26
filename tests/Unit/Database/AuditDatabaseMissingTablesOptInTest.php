@@ -35,6 +35,7 @@ function cacti_sizeof($value) {
 }
 
 function create_tables($load = true) {
+	return true;
 }
 
 function db_fetch_assoc($sql) {
@@ -54,6 +55,12 @@ if ($source === false || preg_match('/^function report_audit_results\(.*?^}\R/ms
 }
 
 eval('namespace AuditDatabaseMissingTablesOptInTest;' . $matches[0]); // nosemgrep: php.lang.security.eval-use.eval-use
+
+if (preg_match('/^function audit_schema_source_version\(.*?^}\R/ms', $source, $version_match) !== 1) {
+	throw new \RuntimeException('Unable to extract audit_schema_source_version() from cli/audit_database.php');
+}
+
+eval('namespace AuditDatabaseMissingTablesOptInTest;' . $version_match[0]); // nosemgrep: php.lang.security.eval-use.eval-use
 
 beforeEach(function () {
 	$GLOBALS['config']['base_path']           = dirname(__DIR__, 3);

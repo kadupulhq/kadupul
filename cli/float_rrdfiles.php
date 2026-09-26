@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * float_rrdfiles.php
+ *
+ * Moves RRD data points across a selected time range.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

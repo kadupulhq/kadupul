@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * remove_device.php
+ *
+ * Removes selected devices and their related Cacti objects.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -104,6 +111,7 @@ if (cacti_sizeof($parms)) {
 			exit(0);
 		case '--quiet':
 			$quietMode = true;
+			$quiet = true;
 
 			break;
 		default:
@@ -125,6 +133,12 @@ if (cacti_sizeof($parms)) {
 			print "Searching hosts by description..." . PHP_EOL;
 		}
 
+		$error = cacti_remove_device_regex_error($description);
+		if ($error !== false) {
+			print "ERROR: Invalid description regular expression: $error" . PHP_EOL;
+			exit(1);
+		}
+
 		$ids_host = preg_array_key_match("/$description/", $hosts);
 		if (cacti_sizeof($ids_host) == 0) {
 			print "ERROR: Unable to find host in the database matching description ($description)" . PHP_EOL;
@@ -135,6 +149,12 @@ if (cacti_sizeof($parms)) {
 	if ($ip != '') {
 		if ($debug) {
 			print "Searching hosts by IP..." . PHP_EOL;
+		}
+
+		$error = cacti_remove_device_regex_error($ip);
+		if ($error !== false) {
+			print "ERROR: Invalid IP regular expression: $error" . PHP_EOL;
+			exit(1);
 		}
 
 		$ids_ip = preg_array_key_match("/$ip/", $addresses);
@@ -153,6 +173,13 @@ if (cacti_sizeof($parms)) {
 	$ids = array_unique($ids, SORT_NUMERIC);
 
 	if (cacti_sizeof($ids_id)) {
+		foreach ($ids_id as $id_value) {
+			if (!ctype_digit((string) $id_value) || (int) $id_value < 1) {
+				print "ERROR: Invalid device ID ($id_value)" . PHP_EOL;
+				exit(1);
+			}
+		}
+
 		$ids = array_merge($ids, $ids_id);
 		$ids = array_unique($ids, SORT_NUMERIC);
 	}
@@ -166,26 +193,35 @@ if (cacti_sizeof($parms)) {
 		FROM host
 		WHERE id IN ($ids_sql)
 		ORDER BY description");
+	if ($hosts === false) {
+		fwrite(STDERR, "ERROR: Could not look up the selected devices.\n");
+		exit(1);
+	}
 
-	$ids_found = array();
+	$ids_found = is_array($hosts) ? array_column($hosts, 'id') : array();
+
 	if (!$quiet) {
 		printf('%8.s | %30.s | %30.s' . PHP_EOL, 'id', 'host', 'description');
 
 		foreach ($hosts as $host) {
 			printf('%8.d | %30.s | %30.s' . PHP_EOL,$host['id'],$host['hostname'],$host['description']);
-			$ids_found[] = $host['id'];
 		}
 
 		print PHP_EOL;
 	}
 
 	if ($confirm) {
+		if (!cacti_sizeof($ids_found)) {
+			print "ERROR: No existing devices matched the supplied selectors." . PHP_EOL;
+			exit(1);
+		}
+
 		$ids_confirm = implode(', ', $ids_found);
 		if (!$quiet) {
 			print "Removing devices with ids: $ids_confirm" . PHP_EOL;
 		}
 
-		api_device_remove_multi($ids);
+		api_device_remove_multi($ids_found);
 
 		if (is_error_message()) {
 			print "ERROR: Failed to remove devices" . PHP_EOL;
@@ -264,4 +300,12 @@ function preg_array_key_match($needle, $haystack) {
 	}
 
 	return $matches;
+}
+
+function cacti_remove_device_regex_error($pattern) {
+	set_error_handler(function () {});
+	$result = preg_match("/$pattern/", '');
+	restore_error_handler();
+
+	return $result === false ? 'pattern could not be compiled' : false;
 }

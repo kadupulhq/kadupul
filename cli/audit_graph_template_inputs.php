@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * audit_graph_template_inputs.php
+ *
+ * Checks graph template inputs for inconsistent or missing associations.
+ *
+ * @package Cacti\CLI
+ */
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
