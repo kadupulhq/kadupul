@@ -344,18 +344,16 @@ if ($host['hostname'] == '') {
 }
 
 if (!$proxy) {
-	$duplicate_device_id = db_fetch_cell_prepared('SELECT id
+	$duplicate_device_count = db_fetch_cell_prepared('SELECT COUNT(*)
 		FROM host
-		WHERE hostname = ? AND id != ?
-		ORDER BY id
-		LIMIT 1', array($host['hostname'], (int) $device_id));
+		WHERE hostname = ? AND id != ?', array($host['hostname'], (int) $device_id));
 
-	if ($duplicate_device_id === false) {
+	if (!is_numeric($duplicate_device_count)) {
 		fwrite(STDERR, "ERROR: Unable to verify whether the requested IP is already assigned.\n");
 		exit(1);
 	}
 
-	if ($duplicate_device_id) {
+	if ((int) $duplicate_device_count > 0) {
 		fwrite(STDERR, "ERROR: The requested IP is already assigned to another device; specify --proxy to allow a shared address.\n");
 		exit(1);
 	}
