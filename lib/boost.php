@@ -1511,13 +1511,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
         $success = rrdtool_execute("create $quoted_path $create_ds$create_rra", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
 
         if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
-            if (!chown($data_source_path, (int) $owner_id)) {
-                cacti_log("WARNING: Unable to set owner for '" . $data_source_path . "'", false, 'BOOST');
-            }
-
-            if (!chgrp($data_source_path, (int) $group_id)) {
-                cacti_log("WARNING: Unable to set group for '" . $data_source_path . "'", false, 'BOOST');
-            }
+            rrdtool_set_rrd_ownership($data_source_path, $owner_id, $group_id, 'BOOST', array("WARNING: Unable to set owner for '%s'", "WARNING: Unable to set group for '%s'"));
         }
 
         return $success;
