@@ -20,10 +20,11 @@ final class GraphItemConsolidationResolver
      * @param array<string, mixed> $graph_item Graph item being processed, updated with cf_reference.
      * @param array<string, array<int|string, mixed>> $last_graph_cf Last CF by source and template item ID, updated by reference.
      * @param int $rra_seconds Selected archive resolution in seconds.
+     * @param mixed $rrdtool_pipe Existing RRDtool pipe or proxy session.
      *
      * @return mixed Consolidation function for this graph item.
      */
-    public function assignReference(array &$graph_item, array &$last_graph_cf, $rra_seconds)
+    public function assignReference(array &$graph_item, array &$last_graph_cf, $rra_seconds, $rrdtool_pipe = false)
     {
         /* mimic the old behavior: LINE[123], AREA and STACK items use the CF specified in the graph item */
         switch ($graph_item['graph_type_id']) {
@@ -34,7 +35,7 @@ final class GraphItemConsolidationResolver
             case GRAPH_ITEM_TYPE_TIC:
             case GRAPH_ITEM_TYPE_AREA:
             case GRAPH_ITEM_TYPE_STACK:
-                $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds);
+                $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds, $rrdtool_pipe);
 
                 /* remember the last CF for this data source for use with GPRINT
                  * if e.g. an AREA/AVERAGE and a LINE/MAX is used, depending on sequence */
@@ -47,7 +48,7 @@ final class GraphItemConsolidationResolver
                 if (isset($last_graph_cf[$graph_item['data_source_name']][$graph_item['local_data_template_rrd_id']])) {
                     $graph_cf = $last_graph_cf[$graph_item['data_source_name']][$graph_item['local_data_template_rrd_id']];
                 } else {
-                    $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds);
+                    $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds, $rrdtool_pipe);
                 }
 
                 break;
@@ -59,7 +60,7 @@ final class GraphItemConsolidationResolver
 
                 break;
             default:
-                $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds);
+                $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds, $rrdtool_pipe);
 
                 break;
         }

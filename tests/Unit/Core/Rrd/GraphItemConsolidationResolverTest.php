@@ -30,7 +30,7 @@ function cacti_sizeof($value)
     return count($value);
 }
 
-function generate_graph_best_cf($local_data_id, $consolidation_function_id, $rra_seconds)
+function generate_graph_best_cf($local_data_id, $consolidation_function_id, $rra_seconds, $rrdtool_pipe = false)
 {
     $GLOBALS['graph_cf_calls'][] = array($local_data_id, $consolidation_function_id, $rra_seconds);
 
