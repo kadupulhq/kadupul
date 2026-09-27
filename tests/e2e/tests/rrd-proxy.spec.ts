@@ -42,7 +42,7 @@ test('settings, RRD traffic, and template import/export work through the real pr
     expect(result).toMatchObject({
         ok: true,
         transport: 'rrdproxy',
-        commands: ['create', 'update', 'info', 'last'],
+        commands: ['create', 'update', 'info', 'last', 'xport'],
     });
 
     // Download a real template export, then upload that XML through Kadupul.

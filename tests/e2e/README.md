@@ -83,8 +83,8 @@ npx playwright install --with-deps chromium
 ./rrd-proxy/run.sh
 ```
 
-The browser changes storage from local to proxy, writes and reads an RRD
-through Kadupul's configured transport, exports a device template as a
+The browser changes storage from local to proxy, writes, reads, and exports
+RRD data through Kadupul's configured transport, exports a device template as a
 download, then uploads that XML through the import page. The PHP app container
 has no local RRDtool executable, so the RRD assertions require the real proxy
 to be reached. `KEEP_UP=1 ./rrd-proxy/run.sh` preserves the stack for

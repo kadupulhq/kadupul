@@ -23,6 +23,13 @@ $commands = array(
     array('update', $name, ($now - 180) . ':1', ($now - 120) . ':2', ($now - 60) . ':3', $now . ':4'),
     array('info', $name),
     array('last', $name),
+    array(
+        'xport',
+        '--start', (string) ($now - 240),
+        '--end', (string) $now,
+        'DEF:source=./' . $name . ':value:AVERAGE',
+        'XPORT:source:ProxyValue',
+    ),
 );
 
 foreach ($commands as $command) {
@@ -32,14 +39,16 @@ foreach ($commands as $command) {
         echo json_encode(array(
             'error' => 'RRDtool proxy command failed',
             'command' => $command[0],
-            'cacti_log' => file_exists($config['path_cactilog']) ? basename($config['path_cactilog']) : null,
+            'output' => is_string($result) ? substr($result, 0, 1000) : null,
         ));
         exit;
     }
     $results[$command[0]] = $result;
 }
 
-if (!str_contains((string) $results['info'], 'ds[value].type') || (int) $results['last'] !== $now) {
+if (!str_contains((string) $results['info'], 'ds[value].type')
+    || (int) $results['last'] !== $now
+    || !preg_match('/<row><v>[0-9.e+-]+<\/v><\/row>/', (string) $results['xport'])) {
     http_response_code(502);
     echo json_encode(array('error' => 'RRDtool proxy returned unexpected RRD data', 'results' => $results));
     exit;
