@@ -68,6 +68,8 @@ def main():
         'src/Inventory/Application/Command/SetDevicesEnabled.php',
         'src/Inventory/Application/Query/PrepareDeviceStateChange.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceStates.php',
+        'src/Inventory/Application/Command/ClearDeviceStatistics.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceStatisticsReset.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceStateType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceStateController.php',
         'src/Inventory/Domain/DeviceSnmpConfiguration.php',
@@ -162,6 +164,7 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
+    statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
@@ -169,6 +172,7 @@ def main():
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
         'missing-check': 'Incomplete Symfony integration',
+        'missing-statistics-check-0': 'Incomplete Symfony integration',
         'missing-removal-callback-check': 'Incomplete Symfony integration',
         'missing-removal-shared-check': 'Incomplete Symfony integration',
         'missing-removal-rollback-check': 'Incomplete Symfony integration',
@@ -218,6 +222,8 @@ def main():
         (scratch / 'raw').mkdir()
         raw = scratch / 'raw/coverage-probe.json'
         output = scratch / 'result.xml'
+        for index in range(len(statistics_checks)):
+            failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
         for case, expected in failures.items():
             data = copy.deepcopy(measured)
             evidence = copy.deepcopy(manifest)
@@ -278,6 +284,9 @@ def main():
             elif case in ['missing-removal-shared-check', 'missing-removal-rollback-check']:
                 omitted = 'remote removal rejects outside graph references before cleanup' if case == 'missing-removal-shared-check' else 'remote removal failure rolls back dependent cleanup'
                 evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
+            elif case.startswith('missing-statistics-check-'):
+                missing = statistics_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':
