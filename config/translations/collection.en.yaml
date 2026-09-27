@@ -1,0 +1,43 @@
+Automation Networks: Automation Networks
+This is a read-only view. Discovery scheduling and network changes remain in the legacy page.: This is a read-only view. Discovery scheduling and network changes remain in the legacy page.
+Network discovery schedules and current progress: Network discovery schedules and current progress
+Network Name: Network Name
+Data Collector: Data Collector
+Schedule: Schedule
+Total IPs: Total IPs
+Status: Status
+Progress: Progress
+Up/SNMP Hosts: Up/SNMP Hosts
+Threads: Threads
+Last Runtime: Last Runtime
+Next Start: Next Start
+Last Started: Last Started
+No Networks Found: No Networks Found
+Network pages: Network pages
+Previous: Previous
+Next: Next
+Page %page%: Page %page%
+Apply: Apply
+Search networks: Search networks
+Per page: Per page
+Sort by: Sort by
+Order: Order
+Ascending: Ascending
+Descending: Descending
+Network name: Network name
+Data collector: Data collector
+Last runtime: Last runtime
+Last started: Last started
+Manual: Manual
+Daily: Daily
+Weekly: Weekly
+Monthly: Monthly
+Monthly on Day: Monthly on Day
+Unknown: Unknown
+Disabled: Disabled
+Running: Running
+Idle: Idle
+N/A: N/A
+Never: Never
+Invalid network list filters.: Invalid network list filters.
+Access denied.: Access denied.

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Automation Networks'|trans({}, 'collection') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Automation Networks'|trans({}, 'collection') }}</h1>
+    <p>{{ 'This is a read-only view. Discovery scheduling and network changes remain in the legacy page.'|trans({}, 'collection') }}</p>
+    {{ form_start(form, {method: 'get', attr: {role: 'search'}}) }}
+        {{ form_row(form.q) }}
+        {{ form_row(form.size) }}
+        {{ form_row(form.sort) }}
+        {{ form_row(form.direction) }}
+        <button type="submit">{{ 'Apply'|trans({}, 'collection') }}</button>
+    {{ form_end(form) }}
+    <table>
+        <caption>{{ 'Network discovery schedules and current progress'|trans({}, 'collection') }}</caption>
+        <thead>
+        <tr>
+            <th scope="col">{{ 'Network Name'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Data Collector'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Schedule'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Total IPs'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Status'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Progress'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Up/SNMP Hosts'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Threads'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Last Runtime'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Next Start'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Last Started'|trans({}, 'collection') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for network in result.networks %}
+            <tr>
+                <td><a href="{{ legacyEditBase ~ network.id }}">{{ network.name }}</a></td>
+                <td>{{ network.collector }}</td>
+                <td>{{ network.schedule|trans({}, 'collection') }}</td>
+                <td>{{ network.totalIps|number_format(0, '.', ',') }}</td>
+                <td>{{ network.status|trans({}, 'collection') }}</td>
+                <td>{{ network.progress }}</td>
+                <td>{{ network.upHosts|number_format(0, '.', ',') }}/{{ network.snmpHosts|number_format(0, '.', ',') }}</td>
+                <td>{{ network.threads|number_format(0, '.', ',') }}</td>
+                <td>{{ network.lastRuntime|number_format(2, '.', ',') }}</td>
+                <td>{{ network.nextStart ?? 'N/A'|trans({}, 'collection') }}</td>
+                <td>{{ network.lastStarted ?? 'Never'|trans({}, 'collection') }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="11">{{ 'No Networks Found'|trans({}, 'collection') }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="{{ 'Network pages'|trans({}, 'collection') }}">
+        {% if criteria.page > 1 %}
+            <a rel="prev" href="{{ path('automation_networks', filters|merge({page: criteria.page - 1})) }}">{{ 'Previous'|trans({}, 'collection') }}</a>
+        {% endif %}
+        <span>{{ 'Page %page%'|trans({'%page%': criteria.page}, 'collection') }}</span>
+        {% if result.hasNext %}
+            <a rel="next" href="{{ path('automation_networks', filters|merge({page: criteria.page + 1})) }}">{{ 'Next'|trans({}, 'collection') }}</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}

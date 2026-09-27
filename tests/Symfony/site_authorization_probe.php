@@ -54,6 +54,10 @@ try {
             {
                 return $this->delegate->canManageDevices($actor);
             }
+            public function canManageAutomation(Actor $actor): bool
+            {
+                return $this->delegate->canManageAutomation($actor);
+            }
         };
         $editor = new LegacySiteEditor($database, $revoking, $audit);
         $site = $editor->find($siteId);
@@ -96,6 +100,10 @@ try {
                     $this->rival->rollBack();
                 }
                 return $allowed;
+            }
+            public function canManageAutomation(Actor $actor): bool
+            {
+                return $this->delegate->canManageAutomation($actor);
             }
         };
         $editor = new LegacySiteEditor($database, $guard, $audit);

@@ -22,7 +22,7 @@ changes a boundary.
 | IdentityAccess | Partial | Public actor, console-access, locale, contact, and audit contracts exist; legacy sessions remain behind adapters. | Migrate credential issuance, external providers, logout, and CSRF ownership before retiring native-session compatibility. |
 | Inventory | Partial | Device and site reads plus selected edit/create/lifecycle/assignment commands use domain/application/port boundaries. | Complete remaining advanced settings, plugin contributions, exports, and legacy route cutover. |
 | Alerting | Partial | Test mail and administrator notification paths have application ports and infrastructure adapters. | Move alert rules, evaluation, incidents, and notification intent behind the module boundary. |
-| Collection and Graphing | Planned | These capabilities remain in the procedural application; the architecture document defines ownership only. | Establish a first tested use case and port before adding module scaffolding. |
+| Collection and Graphing | Partial / planned | Collection has a read-only automation-network schedule/progress query behind a module port and DBAL adapter. It preserves Automation realm 23 authorization; discovery scheduling and stale-process cleanup remain legacy. Graphing remains procedural. | Add Collection commands only with explicit discovery ownership, stale-process policy and behavioral coverage; migrate graphing behind application services. |
 | Command-line tools | Foundation | cli/analyze_database.php forwards to kadupul:database:analyze through LegacyCli; parity scenarios compare it with the frozen original. | Migrate the device scripts after the open device stack merges. |
 
 ## Audit event policy

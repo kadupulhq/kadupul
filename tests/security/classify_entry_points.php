@@ -188,7 +188,7 @@ const INCLUDE_PREFIXES = ['base_path' => '', 'include_path' => 'include', 'libra
 const SUPERGLOBALS = ['GLOBALS', '_SERVER', '_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_REQUEST', '_ENV'];
 
 const ROUTE_ATTRIBUTES = ['Symfony\Component\Routing\Attribute\Route', 'Symfony\Component\Routing\Annotation\Route'];
-const ACCESS_CHECKS = ['consoleActor', 'canManageDevices'];
+const ACCESS_CHECKS = ['consoleActor', 'canManageDevices', 'canManageAutomation'];
 const SESSION_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession';
 // The IdentityAccess types whose check methods count as a gate. The adapter
 // is the only implementation, and the realms it checks label the route.
@@ -1539,14 +1539,14 @@ function is_null_check(Expr $expr, string $var): bool
         || is_call($expr, 'is_null', [fn(Expr $arg) => is_variable($arg, $var)]);
 }
 
-function is_device_denial(Expr $expr, string $var, Closure $type_of): bool
+function is_access_denial(Expr $expr, string $var, Closure $type_of, string $check): bool
 {
     if (!$expr instanceof Expr\BooleanNot || !$expr->expr instanceof Expr\CallLike) {
         return false;
     }
     $args = plain_args($expr->expr);
 
-    return is_access_call(call_target($expr->expr, $type_of), 'canManageDevices')
+    return is_access_call(call_target($expr->expr, $type_of), $check)
         && $args !== null && count($args) === 1 && is_variable($args[0], $var);
 }
 
@@ -1574,7 +1574,7 @@ function refusal_guard(string $root, ?Stmt $stmt, ?Closure $stops, Closure $type
  * Checks that guard everything the method does. consoleActor() counts when
  * its result is assigned at the method's top level, only literal assignments
  * come before it, and the next statement stops on a null actor; a negated
- * canManageDevices() of that variable counts in the same guard or the one
+ * access check of that variable counts in the same guard or the one
  * right after it. Only the action itself may stop with any return: a return
  * in a callee hands control back to the caller, so there only throw stops,
  * or a return the caller is known to refuse on (see refused_on()).
@@ -1596,7 +1596,7 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $
             return [];
         }
         // The null check comes first, so no other disjunct runs before it, and
-        // the rest may only check the device grant or compute.
+        // remaining terms may only check a known realm grant or compute.
         $guard = refusal_guard($root, $list[$i + 1] ?? null, $stops, $type_of);
         $terms = $guard === null ? [] : disjuncts($guard);
         if ($terms === [] || !is_null_check($terms[0], $var)) {
@@ -1605,20 +1605,25 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $
         $checks = ['consoleActor' => true];
         $next = refusal_guard($root, $list[$i + 2] ?? null, $stops, $type_of);
         foreach ([$terms, $next === null ? [] : disjuncts($next)] as $group) {
-            $denial = false;
+            $denials = [];
             foreach ($group as $expr) {
-                if (is_device_denial($expr, $var, $type_of)) {
-                    $denial = true;
-                } elseif (!is_null_check($expr, $var) && !pure($root, $expr, $type_of)) {
+                $matched = false;
+                foreach (['canManageDevices', 'canManageAutomation'] as $check) {
+                    if (is_access_denial($expr, $var, $type_of, $check)) {
+                        $denials[$check] = true;
+                        $matched = true;
+                    }
+                }
+                if (!$matched && !is_null_check($expr, $var) && !pure($root, $expr, $type_of)) {
                     if ($group === $terms) {
                         return [];
                     }
-                    $denial = false;
+                    $denials = [];
                     break;
                 }
             }
-            if ($denial) {
-                $checks['canManageDevices'] = true;
+            foreach ($denials as $check => $_) {
+                $checks[$check] = true;
             }
         }
         return $checks;
@@ -2125,6 +2130,9 @@ function symfony_routes(string $root, array $files): array
                             $grant = 'realm ' . $realms['consoleActor'];
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
+                            }
+                            if (isset($checks['canManageAutomation'])) {
+                                $grant .= ' + realm ' . $realms['canManageAutomation'];
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

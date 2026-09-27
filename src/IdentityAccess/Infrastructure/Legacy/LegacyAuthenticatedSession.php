@@ -46,6 +46,11 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
         return $actor->id > 0 && $this->hasRealm($actor->id, 3);
     }
 
+    public function canManageAutomation(Actor $actor): bool
+    {
+        return $actor->id > 0 && $this->hasRealm($actor->id, 23);
+    }
+
     private function hasRealm(int $id, int $realm): bool
     {
         // Each successful grant must remain locked until its caller commits.

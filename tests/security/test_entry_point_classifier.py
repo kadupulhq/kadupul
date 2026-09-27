@@ -165,6 +165,11 @@ final class LegacyAuthenticatedSession implements ConsoleAccess
     {
         return $this->hasRealm($actor->id, 3);
     }
+
+    public function canManageAutomation(Actor $actor): bool
+    {
+        return $this->hasRealm($actor->id, 23);
+    }
 }
 '''
 CONTROLLER = '''<?php
@@ -308,6 +313,19 @@ final class TwoActions
         $actor = $this->access->consoleActor();
         if ($actor === null || !$this->access->canManageDevices($actor)) {
             return new Response('', 403);
+        }
+        return new Response();
+    }
+
+    #[Route('/automation-networks', name: 'automation_networks')]
+    public function automationNetworks(): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            throw new \\RuntimeException();
+        }
+        if (!$this->access->canManageAutomation($actor)) {
+            throw new \\RuntimeException();
         }
         return new Response();
     }
@@ -846,6 +864,7 @@ ROUTES = {
     'app.php/late-guard': 'unknown',
     'app.php/logged-only': 'unknown',
     'app.php/devices': 'symfony:devices',
+    'app.php/automation-networks': 'symfony:automation_networks',
     'app.php/devices-split': 'symfony:devices_split',
     'app.php/devices-discarded': 'symfony:devices_discarded',
     'app.php/via-unchecked': 'unknown',
@@ -881,10 +900,11 @@ ROUTES = {
     'app.php/via-early-return': 'unknown',
     **{'app.php/' + route: expected for route, (_, expected) in HANDED.items()},
 }
-# canManageDevices() counts only in a guard on the checked actor.
+# Access realm methods count only in a guard on the checked actor.
 GRANTS = {
     'app.php/a': 'ConsoleAccess realm 8',
     'app.php/devices': 'ConsoleAccess realm 8 + realm 3',
+    'app.php/automation-networks': 'ConsoleAccess realm 8 + realm 23',
     'app.php/devices-split': 'ConsoleAccess realm 8 + realm 3',
     'app.php/devices-discarded': 'ConsoleAccess realm 8',
     'app.php/who-guarded': 'ConsoleAccess realm 8',

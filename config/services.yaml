@@ -91,6 +91,15 @@ services:
     Kadupul\CollectorAdministration\Application\Port\CollectorCatalog:
         alias: Kadupul\CollectorAdministration\Infrastructure\Persistence\DoctrineCollectorCatalog
 
+    Kadupul\Collection\Infrastructure\:
+        resource: '../src/Collection/Infrastructure/'
+    Kadupul\Collection\Application\Query\ListNetworks: ~
+    Kadupul\Collection\Infrastructure\Persistence\DoctrineNetworkCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\Collection\Application\Port\NetworkCatalog:
+        alias: Kadupul\Collection\Infrastructure\Persistence\DoctrineNetworkCatalog
+
     Kadupul\Inventory\Application\Query\ListDevices: ~
 
     Kadupul\Inventory\Application\Query\FindEditableDevice: ~

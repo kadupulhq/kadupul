@@ -20,13 +20,19 @@ not a claim that the procedural application has already been decomposed.
 Symfony owns the application lifecycle and composition root. Platform owns
 health, response security headers and installation configuration adapters.
 IdentityAccess owns the current-actor query and public Actor/ConsoleAccess/
-ConsoleOperator contracts, including the closed audit-event boundary used to attribute security
-decisions. Inventory owns device-list criteria, its ListDevices use case,
+ConsoleOperator contracts, including realm-specific device and automation grants and the closed
+audit-event boundary used to attribute security decisions. Inventory owns device-list criteria, its ListDevices use case,
 read models and DeviceCatalog port, plus the Device aggregate, EditDevice command
 and DeviceEditor port. Site administration reads use the ListSites query and
 SiteCatalog port; site device counts share Inventory’s device visibility adapter. Other
 features remain legacy code until migrated. New modules are introduced with a
 working use case, rather than empty entity/repository scaffolding.
+
+Collection begins with the read-only `ListNetworks` query and `NetworkCatalog`
+port for automation network schedules and discovery progress. IdentityAccess
+exposes a separate Automation realm check; device realm 3 does not authorize
+these routes. Scheduling, stale-process cleanup and network writes remain in
+the legacy application.
 
 ## Inside a module
 

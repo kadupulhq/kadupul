@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'network_list_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -43,6 +43,12 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
+        'Automation network list requires and accepts realm 23',
+        'Automation network page renders saved network and idle status',
+        'Automation network list is not cached',
+        'Automation network GET leaves stale process rows unchanged',
+        'Automation network list rejects invalid page input',
+        'Device realm 3 does not grant Automation realm 23 access',
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',
         'site counts exclude hidden and deleted devices', 'site persistence rechecks actor and revision and rolls back rejected saves',
         'site write serializes account, policy, direct and group grant revocations',
@@ -265,6 +271,18 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
+        'src/IdentityAccess/Contract/ConsoleAccess.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php',
+        'src/Collection/Domain/NetworkListCriteria.php',
+        'src/Collection/Application/ReadModel/NetworkSummary.php',
+        'src/Collection/Application/ReadModel/NetworkPage.php',
+        'src/Collection/Application/Port/NetworkCatalog.php',
+        'src/Collection/Application/Query/AutomationAccessDenied.php',
+        'src/Collection/Application/Query/ListNetworks.php',
+        'src/Collection/Infrastructure/Persistence/DoctrineNetworkCatalog.php',
+        'src/Collection/Infrastructure/Symfony/NetworkListParameters.php',
+        'src/Collection/Infrastructure/Symfony/Form/NetworkFilterType.php',
+        'src/Collection/Infrastructure/Symfony/Controller/NetworkListController.php',
         'script_server.php',
         'include/themes/midwinter/update_hash.php',
         'cli/analyze_database.php',

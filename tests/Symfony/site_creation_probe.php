@@ -29,6 +29,10 @@ $access = new class implements \Kadupul\IdentityAccess\Contract\ConsoleAccess {
     {
         return $this->allowed;
     }
+    public function canManageAutomation(\Kadupul\IdentityAccess\Contract\Actor $actor): bool
+    {
+        return $this->allowed;
+    }
 };
 final class SiteCreationFailureStatement extends \PDOStatement
 {

@@ -991,6 +991,7 @@ function get_networks(&$sql_where, $rows, $apply_limits = true) {
 
 function networks() {
 	global $network_actions, $networkss, $config, $item_rows;
+	print '<p><a href="' . html_escape($config['url_path'] . 'app.php/automation/networks') . '">' . __('Open the read-only Symfony view') . '</a></p>';
 
 	/* ================= input validation and session storage ================= */
 	$filters = array(

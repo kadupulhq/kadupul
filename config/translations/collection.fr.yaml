@@ -1,0 +1,43 @@
+Automation Networks: Réseaux d’automatisation
+This is a read-only view. Discovery scheduling and network changes remain in the legacy page.: Cette vue est en lecture seule. La planification de découverte et les modifications restent sur la page historique.
+Network discovery schedules and current progress: Planification et progression de la découverte réseau
+Network Name: Nom du réseau
+Data Collector: Collecteur de données
+Schedule: Planification
+Total IPs: Nombre total d’adresses IP
+Status: État
+Progress: Progression
+Up/SNMP Hosts: Hôtes actifs/SNMP
+Threads: Threads
+Last Runtime: Dernière durée
+Next Start: Prochain démarrage
+Last Started: Dernier démarrage
+No Networks Found: Aucun réseau trouvé
+Network pages: Pages des réseaux
+Previous: Précédent
+Next: Suivant
+Page %page%: Page %page%
+Apply: Appliquer
+Search networks: Rechercher des réseaux
+Per page: Par page
+Sort by: Trier par
+Order: Ordre
+Ascending: Croissant
+Descending: Décroissant
+Network name: Nom du réseau
+Data collector: Collecteur de données
+Last runtime: Dernière durée
+Last started: Dernier démarrage
+Manual: Manuel
+Daily: Quotidienne
+Weekly: Hebdomadaire
+Monthly: Mensuelle
+Monthly on Day: Mensuelle un jour précis
+Unknown: Inconnu
+Disabled: Désactivé
+Running: En cours
+Idle: Inactif
+N/A: S.O.
+Never: Jamais
+Invalid network list filters.: Filtres de liste réseau non valides.
+Access denied.: Accès refusé.

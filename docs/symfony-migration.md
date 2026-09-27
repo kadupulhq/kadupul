@@ -1146,3 +1146,29 @@ installation's configured row choices, and offers periodic refresh from 5 to
 default, 25/50/100 choices and no automatic refresh. Recommendation: restore
 the configured row-count and refresh preferences before this route replaces
 the legacy collector list; until then, treat it as an opt-in read view.
+
+## Automation network list slice
+
+`/app.php/automation/networks` renders a read-only view of `automation_networks`,
+`automation_processes`, `automation_ips` and collector names from `poller`.
+The `ListNetworks` query requires an authenticated Console Access actor and
+IdentityAccess's dedicated Automation realm 23 check, matching
+`automation_networks.php`; device realm 3 is not a substitute. The DBAL
+adapter returns only the columns needed for schedule, progress and status.
+Search matches network name with the legacy SQL `LIKE` wildcard behavior;
+sorting is allowlisted and pagination is bounded to 25, 50 or 100 rows.
+Network names link to their existing legacy editor; the new route does not edit.
+
+The legacy GET list deletes stale `automation_processes` rows when it finds no
+active discovery. This read-only Symfony route deliberately does not mutate
+process state during rendering. Stale-row cleanup remains an explicit Collection
+maintenance responsibility; the list does not schedule/cancel discovery,
+change networks, or migrate notification settings. The legacy page defaults its
+row count from `num_rows_table`, offers refresh from 10 to 300 seconds (default
+20), and supports `rows=-2` to show all matching networks. This route currently
+uses bounded 25/50/100-row pages and no automatic refresh. It formats counts
+and runtime with fixed English separators instead of the installation locale.
+Recommendation: keep bounded paging for predictable database work, then restore
+configured row-size and refresh preferences and locale-aware number formatting
+before replacing the legacy list; continue to defer unbounded display,
+stale-process cleanup, and write actions.

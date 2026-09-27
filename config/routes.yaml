@@ -21,3 +21,9 @@ collector_administration:
         path: '../src/CollectorAdministration/Infrastructure/Symfony/Controller/'
         namespace: Kadupul\CollectorAdministration\Infrastructure\Symfony\Controller
     type: attribute
+
+collection:
+    resource:
+        path: '../src/Collection/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\Collection\Infrastructure\Symfony\Controller
+    type: attribute

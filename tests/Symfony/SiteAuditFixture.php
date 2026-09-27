@@ -77,6 +77,11 @@ final class SiteAuditFixture
             {
                 return $this->fixture->allowed;
             }
+
+            public function canManageAutomation(Actor $actor): bool
+            {
+                return $this->fixture->allowed;
+            }
         };
     }
 
