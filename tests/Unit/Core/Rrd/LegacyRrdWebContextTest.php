@@ -11,7 +11,7 @@ test('legacy RRD web context releases sessions and applies only a web timezone',
     $program .= 'function cacti_time_zone_set($timezone) { $GLOBALS["events"][] = "timezone:" . $timezone; }';
     $program .= 'require ' . var_export($root . '/src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php', true) . ';';
     $program .= <<<'SOURCE'
-$context = new KadupulGraphingInfrastructureLegacyLegacyRrdWebContext();
+$context = new \Kadupul\Graphing\Infrastructure\Legacy\LegacyRrdWebContext();
 $_COOKIE['CactiTimeZone'] = '-07:00';
 $context->releaseSession();
 $context->prepareProcess(array('is_web' => true));
