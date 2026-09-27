@@ -458,9 +458,11 @@ function rrd_close()
 }
 
 /** Keep an owned writer pipe scoped to one operation, including early returns. */
-function rrd_with_pipe($operation)
+function rrd_with_pipe($operation, $output_to_term = true)
 {
-    $pipe = rrd_init(true, true, true);
+    // Proxy initialization uses the first argument as a log option; terminal
+    // output is a local-pipe setting only.
+    $pipe = rrd_init(rrdtool_uses_proxy() ? true : $output_to_term, true, true);
     if ($pipe === false) {
         return false;
     }
@@ -4671,7 +4673,7 @@ function rrd_xml_transform($file_array, $debug, $parse_error, $logged, $mutate)
         }
 
         return true;
-    });
+    }, false);
 }
 
 /**
