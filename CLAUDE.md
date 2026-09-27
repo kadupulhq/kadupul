@@ -28,12 +28,12 @@ out with `git rm --cached`.
 
 ## PHP runtime
 
-- Target PHP 7.4 on the `1.2.x` / `feat/*-1.2.x` branches.  Do **not** use
-  PHP 8-only syntax on those branches.  That means:
-  - no `str_contains`, `str_starts_with`, `str_ends_with` — use `strpos`
-  - no `match` expressions — use `switch`
-  - no named arguments, no enums, no readonly props, no constructor promotion
-  - no `Stringable` / `ReturnTypeWillChange` reliance
+- `1.2.x` / `feat/*-1.2.x` install on PHP 8.1 or newer (`composer.json` asks
+  for `>=8.1`) and are tested from 8.1 up, so 8.1 syntax such as enums,
+  `readonly` properties and `never` is available; anything newer is not.
+- `1.2.x` is a point-release branch.  Prefer the construct already used around
+  the code you are editing over a newer equivalent, and keep a syntax change
+  out of a bug fix.  That is a review-noise argument, not a compatibility one.
 - `main` targets PHP 8.4+; use the development runtimes pinned in `mise.toml`.
 - Symfony code uses framework services; the wrappers below apply to legacy code.
 
@@ -131,7 +131,9 @@ Use the house wrappers instead of raw equivalents:
    re-push.
 3. Commit touches `lib/api_aggregate.php` or `lib/aggregate.php` when the PR
    title does not mention aggregates — an assistant rewrote it by mistake.
-4. `str_contains(` appears on a 1.2.x branch — not PHP 7.4 compatible.
+4. Syntax newer than PHP 8.1 appears on a 1.2.x branch.  `readonly class` and
+   the rest of 8.2 parse on a current interpreter and fail on the oldest one
+   the branch supports, so a local run proves nothing.
 5. PR description has "Summary / Test plan / Impact" headers with bullets — a
    dead giveaway of AI authorship.  Write a short paragraph instead.
 6. 9 commits pushed within 30 seconds — pace commits, or squash them before

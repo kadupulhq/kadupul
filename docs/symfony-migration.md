@@ -91,8 +91,9 @@ installation database collation. Sorting is retained in page and CSV links;
 lookahead avoids stale permission counts.
 The `site` filter accepts an empty value for all sites, `0` for unassigned
 (site ID zero), or a positive site ID. Inventory's `ListDeviceSites` query obtains
-choices through the `DeviceSites` port; its legacy adapter uses the same device
-visibility policy as the list. Only sites with accessible, non-deleted devices
+choices through the `DeviceSites` port; its Doctrine DBAL adapter applies the
+same device visibility rules as the list, reading the policies on its own
+connection. Only sites with accessible, non-deleted devices
 are named. Hidden, empty and deleted-only sites are omitted. An unavailable
 selected site retains a generic label without revealing its name. Search, state,
 status and site intersect before pagination. Site selection survives CSV and
@@ -141,7 +142,8 @@ state, country and accessible-device counts. All positive-ID sites are listed,
 including empty sites and sites with no accessible devices. This is a site
 administration view; the device filter still names only sites with visible devices.
 
-Counts apply the existing device visibility policy, exclude deleted devices, and
+Counts apply the existing device visibility policy, read through the Inventory
+DBAL connection, exclude deleted devices, and
 count each device once even when it has multiple graphs. Count links open the
 permission-filtered device list for that site. Neither notes nor other site fields
 are selected. Legacy null address fields display as empty text.
@@ -193,8 +195,8 @@ there is no automatic retry. Controller responses are private/no-store. Other se
 
 Device names open `/app.php/inventory/devices/{id}` (GET/HEAD). Symfony invokes
 `FindDeviceDetails`, which authorizes through IdentityAccess and reads through
-Inventory's `DeviceDetailsReader` port. The legacy adapter applies the same
-visibility policy as the list and selects only the displayed fields. Twig shows
+Inventory's `DeviceDetailsReader` port. Its Doctrine DBAL adapter applies the
+same visibility rules as the list and selects only the displayed fields. Twig shows
 metadata, site, status and escaped plain-text notes; SNMP credentials are never
 selected. Missing/hidden/deleted devices return 404, anonymous requests 401, and
 revoked device-realm access 403. Responses produced by the details controller are
@@ -707,7 +709,8 @@ document instead of inserting it as an AJAX fragment, retaining unsaved-form pro
 
 `/inventory/devices/new` now uses a Symfony Form and Twig page backed by the
 Inventory `CreateDevice` use case. `PrepareDeviceCreation` reads non-secret
-installation defaults and current template, site and enabled-poller choices.
+installation defaults and current template, site and enabled-poller choices
+through a Doctrine DBAL adapter on the Inventory read connection.
 Domain validation rejects unknown fields, invalid references at the form boundary,
 unsupported protocols, out-of-range values and invalid SNMPv3 combinations.
 The isolated legacy adapter rechecks the actor, realms and selected references
@@ -762,8 +765,51 @@ still controls which devices they may edit. Its infrastructure adapter uses a
 module-owned Doctrine DBAL connection;
 the application query and returned site map remain unchanged. The connection
 retains the installation's TLS certificate verification, UTF-8 and native
-prepare settings. Other read adapters and all write transactions keep their
-existing persistence path until migrated and covered independently.
+prepare settings. The device-site filter, device details and site catalog reads
+share that connection. The device list, which is the remaining
+permission-filtered read, moves after its search rewrite; it and all write
+transactions keep their existing PDO path until migrated and covered
+independently.
+
+An operator can give that connection its own MySQL user with SELECT only, so
+the database itself rejects writes through it. Set both
+`$database_read_username` and `$database_read_password` in
+`include/config.php`. Setting only one of them stops the connection with
+`Incomplete read-only database credentials.` rather than guessing. With neither
+set, the connection keeps using `$database_username` and `$database_password`
+as before; that fallback grants nothing new, and the read-only protection
+starts only once the read user is configured. A remote collector ignores both
+settings and keeps the `$rdatabase_*` primary credentials on Sites routes.
+
+Grant the read user only the tables the DBAL adapters read, including the
+permission tables that device visibility reads. The list grows as more adapters
+move to DBAL:
+
+```sql
+CREATE USER 'kadupul_read'@'localhost' IDENTIFIED BY 'change-me';
+GRANT SELECT ON cacti.sites TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.settings TO 'kadupul_read'@'localhost';
+GRANT SELECT (id, description, hostname, disabled, status, location, external_id,
+    notes, site_id, deleted) ON cacti.host TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.host_template TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.poller TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.graph_local TO 'kadupul_read'@'localhost';
+GRANT SELECT (id, policy_graphs, policy_hosts, policy_graph_templates)
+    ON cacti.user_auth TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.user_auth_perms TO 'kadupul_read'@'localhost';
+GRANT SELECT (id, enabled, policy_graphs, policy_hosts, policy_graph_templates)
+    ON cacti.user_auth_group TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.user_auth_group_members TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.user_auth_group_perms TO 'kadupul_read'@'localhost';
+```
+
+Replace `cacti` with `$database_default` and the host with the web server's
+address.
+The column lists keep password hashes, account fields and per-device SNMP
+credentials away from the read user. `settings` cannot be limited by row and
+still holds the default SNMP credentials, so protect the read user's password
+as closely as the primary one. Extend a column list when an adapter selects a
+new column.
 The domain revision includes site ID,
 so an assignment changed in another editor invalidates stale forms. Missing or
 invalid submitted choices cannot silently unassign a device.
@@ -914,6 +960,147 @@ and plugin effects may survive rollback and failures return an explicit uncertai
 outcome. Primary local devices disappear; remote devices retain the legacy
 cleanup tombstone until maintenance purges it. This is not a restore facility.
 LTS is unchanged.
+
+
+## Command-line tools
+
+`php bin/console kadupul:database:analyze` recalculates index cardinality for
+every table. On a remote collector it analyzes the main database unless
+`--local` is given. It acts as the account named by `--as`, or the
+`admin_user` setting, which must be enabled, unlocked and hold the Console
+Access and Settings/Utilities realms. An empty `--as=` is rejected with exit
+2. `--json` prints one object with `status`, `database`, `binlog_enabled` and
+`tables`. The operator is checked against the database the command analyzes.
+Collectors hold a replicated copy of the accounts, so on a remote collector
+`--local` works without reaching the main database.
+
+`cli/analyze_database.php` still works with its old flags. It now
+forwards to the command and prints a deprecation note on stderr; set
+`KADUPUL_CLI_QUIET_DEPRECATION=1` to silence it in cron.
+
+Known differences from the original script:
+
+- It needs an operator: the `--as` account or `admin_user` (user 1 when that
+  setting is absent), with the Console Access and Settings/Utilities realms.
+  The original ran for anyone who could run it.
+- An invalid flag prints the error and help without the version line, because
+  the shim rejects the flag before it boots the kernel.
+- Any database fault prints the generic `ERROR: Database analysis failed`.
+  Only a missing main configuration is named.
+- Output is printed after all tables finish, not as each one completes.
+- With `include/cacti_version` missing, the original printed
+  `ERROR: failed to find cacti version file` and exited 0 on every path. The
+  command still analyzes; `--version` and `--help` print
+  `ERROR: Database analysis failed` and exit 1.
+- On a primary installation, the command opens a separate connection for the
+  main database, with the same credentials as the local one.
+
+`php bin/console kadupul:database:convert-tables` converts installation
+tables to InnoDB (`--innodb`), to `utf8mb4_unicode_ci` (`--utf8`) or to
+latin1 (`--latin1`), with the old `--table`, `--skip-innodb` (space
+separated), `--size`, `--rebuild`, `--dynamic`, `--force` and `--local`
+options. It needs the Console Access and Installation/Upgrades realms, the
+realm the install wizard's table conversion requires. `--dry-run` lists the
+statements without running them. `--json` prints `status`, `database`,
+`dry_run` and `tables`, each with `name`, `result` (`converted`, `failed`,
+`planned`, `skipped` or `too_large`), `rows` and, when one was built,
+`statement`. The installer converts the tables it queued in-process, with
+no operator, as the web install wizard's own step. Operators who run the
+command or `cli/convert_tables.php` from a shell still need realm 26.
+
+Known differences from `cli/convert_tables.php`:
+
+- It needs an operator with the Console Access and Installation/Upgrades
+  realms, checked on the database it converts. The original ran for anyone
+  who could run it. An admin who has not yet changed the initial password is
+  refused from a shell; the installer's in-process conversion needs no
+  operator.
+- While no user and no enabled group with members holds Installation/Upgrades,
+  an operator with a direct Settings/Utilities grant may run it, as
+  `include/auth.php` allows on the web. The web path then writes a realm 26
+  row for every such user; the command allows only the current run and
+  writes no row. It stays stricter than the web path: the operator still
+  needs Console Access and must not have a password change pending.
+- An invalid flag prints the error and help without the version line.
+- `--installer` is rejected as an invalid parameter. The original required a
+  path without its separator and died with a PHP fatal error, exit 255.
+- `--size` must be a whole number, and `--size=`, `--table=` and
+  `--skip-innodb=` with no value are invalid parameters.
+- `--size=abc`, or any size that is not a whole number, prints
+  `ERROR: Invalid Parameter` and the help and exits 1. The original accepted
+  it, exited 0, and compared row counts with the text, which in PHP 8 let
+  every table through.
+- A table name that does not exactly match (letter case included) a table the
+  server lists is reported as `Failed` and logged, without sending `ALTER TABLE`. The original sent the
+  statement, logged the server's error and printed PHP warnings.
+- Skip-table names must match a table exactly; the original matched them with
+  `LIKE`.
+- `--dynamic` on a table that needs only the row format change runs
+  `ROW_FORMAT=Dynamic`. The original built a statement with a trailing comma,
+  which failed.
+- With `--innodb`, the command stops with `InnoDB Engine is not enabled` when
+  the server reports InnoDB as `NO` or `DISABLED`, or does not list it. The
+  original compared against `off`, which no server reports.
+- On a remote collector the command reads the main database's own tables. The
+  original looked them up under the local database's name.
+- A failed statement is logged with the two `DBCALL` lines and no backtrace;
+  the statement text in them differs in quoting and spacing.
+- Output is printed after every table is done.
+- On a primary installation the main connection is a second connection with
+  the same credentials, as for `kadupul:database:analyze`.
+- On a remote collector the installer converts the collector's local
+  database, the one its queue describes. The original script converted main.
+
+`php bin/console kadupul:database:widen-id-columns` widens the id columns
+that `cli/fix_mediumint.php` widened to `int(10) unsigned`. It needs the
+Console Access and Installation/Upgrades realms, the realm of the 1.2.17
+upgrade step that runs the same change. `--local`, `--debug`, `--as`,
+`--dry-run` and `--json` behave as for the convert command; JSON has
+`status`, `database`, `dry_run`, `adjusted` and `tables`.
+
+Known differences from `cli/fix_mediumint.php`:
+
+- It needs an operator with the Console Access and Installation/Upgrades
+  realms, with the same fallback to direct Settings/Utilities holders while
+  nobody holds Installation/Upgrades.
+- Every table outside the named list gets its own statement, as in
+  `install/upgrades/1_2_17.php`. The original appended those columns to the
+  last named table's statement, which then failed, and counted them per
+  column; the command counts tables.
+  With `--debug` such a table prints one `Updating Table` line, where the
+  original printed one per column.
+- Only integer columns narrower than `int unsigned` are changed. The original
+  also rewrote `bigint` columns, which narrowed them, and non-integer columns.
+  MySQL 8's `int unsigned`, printed without a display width, counts as
+  already converted.
+- A nullable column with a default stays nullable. The original made it
+  `NOT NULL`.
+- Tables and columns match by exact name, letter case included, as the
+  server's `information_schema` lists them; the original used `LIKE` for
+  columns. Names are checked again just before each `ALTER TABLE`, and a name
+  the server no longer lists fails without a statement being sent.
+- Only base tables are read. The original also walked views, whose
+  `ALTER TABLE` failed. MariaDB system-versioned tables are not base tables
+  either, so this command and `kadupul:database:convert-tables` skip them,
+  where both originals included them.
+- Generated and invisible columns are skipped (`EXTRA` containing
+  `GENERATED` or `INVISIBLE`, which on MySQL 8 includes an expression default
+  marked `DEFAULT_GENERATED`); `--debug` reports each one. `MODIFY` cannot
+  give a generated column a plain type and would drop `INVISIBLE`. The
+  original rewrote both.
+- A column is widened only if it is still exactly as the command read it,
+  type, nullability, default and `EXTRA` included, just before its
+  `ALTER TABLE`; otherwise that table fails without a statement being sent.
+- As in the original, a signed column becomes unsigned, and strict SQL mode
+  refuses the statement when the column holds a negative value. `MODIFY`
+  also drops a column `COMMENT`, as the original's did. On MariaDB an
+  expression default is sent as a quoted literal, which the server refuses;
+  the table is reported as failed and audited.
+- JSON `adjusted` counts every table a statement was sent or planned for,
+  failed ones included, as the legacy `Column widths adjusted` line does.
+- On a remote collector the command reads the main database's own table list.
+- A failed statement is logged with the two `DBCALL` lines and no backtrace.
+- An invalid flag prints the error and help without the version line.
 
 
 ### Device statistics reset

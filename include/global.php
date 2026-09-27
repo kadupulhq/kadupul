@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -18,12 +19,12 @@ require_once __DIR__ . '/runtime.php';
 $cacti_version_file = dirname(__FILE__) . '/cacti_version';
 
 if (! file_exists($cacti_version_file)) {
-	die ('ERROR: failed to find cacti version file');
+    die('ERROR: failed to find cacti version file');
 }
 
 $cacti_version = file_get_contents($cacti_version_file, false);
 if ($cacti_version === false) {
-	die ('ERROR: failed to load cacti version file');
+    die('ERROR: failed to load cacti version file');
 }
 $cacti_version = trim($cacti_version);
 
@@ -34,7 +35,7 @@ define('CACTI_VERSION', $cacti_version);
 /* define if cacti is in CLI mode */
 define('CACTI_CLI', (php_sapi_name() == 'cli'));
 if (defined('CACTI_CLI_ONLY') && !CACTI_CLI) {
-	die('<br><strong>This script is only meant to run at the command line.</strong>');
+    die('<br><strong>This script is only meant to run at the command line.</strong>');
 }
 
 // define documentation table of contents
@@ -68,18 +69,18 @@ $config = array();
 
 /* Include configuration, or use the defaults */
 if (file_exists(dirname(__FILE__) . '/config.php')) {
-	if (!is_readable(dirname(__FILE__) . '/config.php')) {
-		die('Configuration file include/config.php is present, but unreadable.' . PHP_EOL);
-	}
-	include(dirname(__FILE__) . '/config.php');
+    if (!is_readable(dirname(__FILE__) . '/config.php')) {
+        die('Configuration file include/config.php is present, but unreadable.' . PHP_EOL);
+    }
+    include(dirname(__FILE__) . '/config.php');
 }
 
 // Existing installations retain secure defaults until their service accounts are configured.
 $config += array('rrd_maintenance_trusted_uids' => array(), 'rrd_maintenance_trusted_gids' => array());
 
 if (isset($config['cacti_version'])) {
-	die('Invalid include/config.php file detected.' . PHP_EOL);
-	exit;
+    die('Invalid include/config.php file detected.' . PHP_EOL);
+    exit;
 }
 
 /* Should we allow proxy ip headers? */
@@ -87,51 +88,51 @@ $config['proxy_headers'] = (isset($proxy_headers) ? $proxy_headers : []);
 
 /* Set the poller_id */
 if (isset($poller_id)) {
-	$config['poller_id'] = $poller_id;
+    $config['poller_id'] = $poller_id;
 } else {
-	$config['poller_id'] = 1;
+    $config['poller_id'] = 1;
 }
 
 $db_var_defaults = array(
-	'database_type'     => 'mysql',
-	'database_default'  => NULL,
-	'database_hostname' => NULL,
-	'database_username' => NULL,
-	'database_password' => NULL,
-	'database_port'     => '3306',
-	'database_retries'  => 2,
-	'database_ssl'      => false,
-	'database_ssl_key'  => '',
-	'database_ssl_cert' => '',
-	'database_ssl_ca'   => '',
+    'database_type'     => 'mysql',
+    'database_default'  => NULL,
+    'database_hostname' => NULL,
+    'database_username' => NULL,
+    'database_password' => NULL,
+    'database_port'     => '3306',
+    'database_retries'  => 2,
+    'database_ssl'      => false,
+    'database_ssl_key'  => '',
+    'database_ssl_cert' => '',
+    'database_ssl_ca'   => '',
 );
 
 $db_var_prefixes = array('');
 if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
-	$db_var_prefixes[] = 'r';
+    $db_var_prefixes[] = 'r';
 }
 
 $db_missing_vars = '';
 foreach ($db_var_prefixes as $db_var_prefix) {
-	foreach ($db_var_defaults as $db_var_name => $db_var_default) {
-		$db_var_full = $db_var_prefix . $db_var_name;
-		if (!isset($$db_var_full)) {
-			if ($db_var_default !== NULL) {
-				$$db_var_full = $db_var_default;
-			} else {
-				$db_missing_vars .= (($db_missing_vars == '') ? 'missing ' : ', ') . $db_var_full;
-			}
-		}
-	}
+    foreach ($db_var_defaults as $db_var_name => $db_var_default) {
+        $db_var_full = $db_var_prefix . $db_var_name;
+        if (!isset($$db_var_full)) {
+            if ($db_var_default !== NULL) {
+                $$db_var_full = $db_var_default;
+            } else {
+                $db_missing_vars .= (($db_missing_vars == '') ? 'missing ' : ', ') . $db_var_full;
+            }
+        }
+    }
 }
 
 if (!empty($db_missing_vars)) {
-	die("config.php is $db_missing_vars" . PHP_EOL);
+    die("config.php is $db_missing_vars" . PHP_EOL);
 }
 
 if (empty($url_path)) {
-	/* define default url path */
-	$url_path = '/';
+    /* define default url path */
+    $url_path = '/';
 }
 
 /* set the local for international users */
@@ -139,41 +140,41 @@ setlocale(LC_CTYPE, 'en_US.UTF-8');
 
 /* Files that do not need http header information - Command line scripts */
 $no_http_header_files = array(
-	'add_device.php',
-	'add_graphs.php',
-	'add_perms.php',
-	'add_tree.php',
-	'cmd.php',
-	'cmd_realtime.php',
-	'copy_user.php',
-	'host_update_template.php',
-	'poller_automation.php',
-	'poller_boost.php',
-	'poller_commands.php',
-	'poller_dsstats.php',
-	'poller_export.php',
-	'poller_graphs_reapply_names.php',
-	'poller_maintenance.php',
-	'poller_output_empty.php',
-	'poller.php',
-	'poller_realtime.php',
-	'poller_recovery.php',
-	'poller_reindex_hosts.php',
-	'poller_reports.php',
-	'poller_spikekill.php',
-	'query_host_cpu.php',
-	'query_host_partitions.php',
-	'rebuild_poller_cache.php',
-	'repair_database.php',
-	'script_server.php',
-	'snmpagent_mibcachechild.php',
-	'snmpagent_mibcache.php',
-	'snmpagent_persist.php',
-	'sql.php',
-	'ss_host_cpu.php',
-	'ss_host_disk.php',
-	'ss_sql.php',
-	'structure_rra_paths.php',
+    'add_device.php',
+    'add_graphs.php',
+    'add_perms.php',
+    'add_tree.php',
+    'cmd.php',
+    'cmd_realtime.php',
+    'copy_user.php',
+    'host_update_template.php',
+    'poller_automation.php',
+    'poller_boost.php',
+    'poller_commands.php',
+    'poller_dsstats.php',
+    'poller_export.php',
+    'poller_graphs_reapply_names.php',
+    'poller_maintenance.php',
+    'poller_output_empty.php',
+    'poller.php',
+    'poller_realtime.php',
+    'poller_recovery.php',
+    'poller_reindex_hosts.php',
+    'poller_reports.php',
+    'poller_spikekill.php',
+    'query_host_cpu.php',
+    'query_host_partitions.php',
+    'rebuild_poller_cache.php',
+    'repair_database.php',
+    'script_server.php',
+    'snmpagent_mibcachechild.php',
+    'snmpagent_mibcache.php',
+    'snmpagent_persist.php',
+    'sql.php',
+    'ss_host_cpu.php',
+    'ss_host_disk.php',
+    'ss_sql.php',
+    'structure_rra_paths.php',
 );
 
 $colors = array();
@@ -182,19 +183,19 @@ $colors = array();
 $config['cacti_server_os'] = (strstr(PHP_OS, 'WIN')) ? 'win32' : 'unix';
 
 if (!empty($path_csrf_secret)) {
-	$config['path_csrf_secret'] = $path_csrf_secret;
+    $config['path_csrf_secret'] = $path_csrf_secret;
 }
 
 /* built-in snmp support */
 if ((isset($php_snmp_support) && $php_snmp_support == false) || !function_exists('snmpget')) {
-	$config['php_snmp_support'] = false;
+    $config['php_snmp_support'] = false;
 } else {
-	$config['php_snmp_support'] = class_exists('SNMP');
+    $config['php_snmp_support'] = class_exists('SNMP');
 }
 
 /* PHP binary location */
 if (isset($php_path)) {
-	$config['php_path'] = $php_path;
+    $config['php_path'] = $php_path;
 }
 
 /* Set various debug fields */
@@ -206,23 +207,23 @@ $config['DEBUG_SQL_CONNECT']                = defined('DEBUG_SQL_CONNECT');
 
 /* check for an empty database port */
 if (empty($database_port)) {
-	$database_port = '3306';
+    $database_port = '3306';
 }
 
 /* set URL path */
 if (!isset($url_path)) {
-	$url_path = '';
+    $url_path = '';
 }
 $config['url_path'] = $url_path;
 define('URL_PATH', $url_path);
 
 /* used for includes */
 if ($config['cacti_server_os'] == 'win32') {
-	$config['base_path']    = str_replace("\\", "/", substr(dirname(__FILE__),0,-8));
-	$config['library_path'] = $config['base_path'] . '/lib';
+    $config['base_path']    = str_replace("\\", "/", substr(dirname(__FILE__), 0, -8));
+    $config['library_path'] = $config['base_path'] . '/lib';
 } else {
-	$config['base_path']    = preg_replace("/(.*)[\/]include/", "\\1", dirname(__FILE__));
-	$config['library_path'] = preg_replace("/(.*[\/])include/", "\\1lib", dirname(__FILE__));
+    $config['base_path']    = preg_replace("/(.*)[\/]include/", "\\1", dirname(__FILE__));
+    $config['library_path'] = preg_replace("/(.*[\/])include/", "\\1lib", dirname(__FILE__));
 }
 
 $config['include_path'] = dirname(__FILE__);
@@ -230,35 +231,35 @@ $config['rra_path'] = $config['base_path'] . '/rra';
 
 /* for multiple pollers, we need to know this location */
 if (!isset($scripts_path)) {
-	$config['scripts_path'] = $config['base_path'] . '/scripts';
+    $config['scripts_path'] = $config['base_path'] . '/scripts';
 } else {
-	$config['scripts_path'] = $scripts_path;
+    $config['scripts_path'] = $scripts_path;
 }
 
 if (!isset($resource_path)) {
-	$config['resource_path'] = $config['base_path'] . '/resource';
+    $config['resource_path'] = $config['base_path'] . '/resource';
 } else {
-	$config['resource_path'] = $resource_path;
+    $config['resource_path'] = $resource_path;
 }
 
 if (isset($input_whitelist)) {
-	$config['input_whitelist'] = $input_whitelist;
+    $config['input_whitelist'] = $input_whitelist;
 }
 
 if (isset($i18n_handler)) {
-	$config['i18n_language_handler'] = $i18n_handler;
+    $config['i18n_language_handler'] = $i18n_handler;
 }
 
 if (isset($i18n_force_language)) {
-	$config['i18n_force_language'] = $i18n_force_language;
+    $config['i18n_force_language'] = $i18n_force_language;
 }
 
 if (isset($i18n_log)) {
-	$config['i18n_log'] = $i18n_log;
+    $config['i18n_log'] = $i18n_log;
 }
 
 if (isset($i18n_text_log)) {
-	$config['i18n_text_log'] = $i18n_text_log;
+    $config['i18n_text_log'] = $i18n_text_log;
 }
 
 /* include base modules */
@@ -274,18 +275,18 @@ $filename = get_current_page();
 
 $config['is_web'] = !defined('CACTI_CLI_ONLY');
 if ((isset($no_http_headers) && $no_http_headers == true) || in_array($filename, $no_http_header_files, true)) {
-	$config['is_web'] = false;
+    $config['is_web'] = false;
 
-	if (isset($_REQUEST) && cacti_sizeof($_REQUEST) || !isset($_SERVER['argv'])) {
-		print 'FATAL: This file can only be called from the command line.' . PHP_EOL;
-		exit;
-	}
+    if (isset($_REQUEST) && cacti_sizeof($_REQUEST) || !isset($_SERVER['argv'])) {
+        print 'FATAL: This file can only be called from the command line.' . PHP_EOL;
+        exit;
+    }
 }
 
 $auto_start = ini_get('session.auto_start');
 if ($config['is_web'] && ($auto_start == 'On' || $auto_start == '1')) {
-	print 'FATAL: PHP settings session.auto_start NOT supported.  Disable in your php.ini file and then restart your Web Service' . PHP_EOL;
-	exit;
+    print 'FATAL: PHP settings session.auto_start NOT supported.  Disable in your php.ini file and then restart your Web Service' . PHP_EOL;
+    exit;
 }
 
 /* set poller mode */
@@ -294,232 +295,234 @@ global $local_db_cnn_id, $remote_db_cnn_id, $conn_mode;
 $config['connection'] = 'online';
 
 if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
-	$local_db_cnn_id = db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port, $database_retries, $database_ssl, $database_ssl_key, $database_ssl_cert, $database_ssl_ca);
+    $local_db_cnn_id = db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port, $database_retries, $database_ssl, $database_ssl_key, $database_ssl_cert, $database_ssl_ca);
 
-	if (!isset($rdatabase_retries))  $rdatabase_retries  = 2;
-	if (!isset($rdatabase_ssl))      $rdatabase_ssl      = false;
-	if (!isset($rdatabase_ssl_key))  $rdatabase_ssl_key  = false;
-	if (!isset($rdatabase_ssl_cert)) $rdatabase_ssl_cert = false;
-	if (!isset($rdatabase_ssl_ca))   $rdatabase_ssl_ca   = false;
+    if (!isset($rdatabase_retries))  $rdatabase_retries  = 2;
+    if (!isset($rdatabase_ssl))      $rdatabase_ssl      = false;
+    if (!isset($rdatabase_ssl_key))  $rdatabase_ssl_key  = false;
+    if (!isset($rdatabase_ssl_cert)) $rdatabase_ssl_cert = false;
+    if (!isset($rdatabase_ssl_ca))   $rdatabase_ssl_ca   = false;
 
-	// Check for recovery
-	if (is_object($local_db_cnn_id)) {
-		$boost_records = db_fetch_cell('SELECT COUNT(*)
+    // Check for recovery
+    if (is_object($local_db_cnn_id)) {
+        $boost_records = db_fetch_cell('SELECT COUNT(*)
 			FROM poller_output_boost', '', true, $local_db_cnn_id);
 
-		if ($boost_records > 0) {
-			$config['connection'] = 'recovery';
-		}
-	}
+        if ($boost_records > 0) {
+            $config['connection'] = 'recovery';
+        }
+    }
 
-	/* gather the existing cactidb version */
-	$config['cacti_db_version'] = db_fetch_cell('SELECT cacti FROM version LIMIT 1', false, $local_db_cnn_id);
+    /* gather the existing cactidb version */
+    $config['cacti_db_version'] = db_fetch_cell('SELECT cacti FROM version LIMIT 1', false, $local_db_cnn_id);
 
-	/**
-	 * If we have not been forced offline by the $conn_mode global and since we are
-	 * a remote poller, let's attempt to get back online.
-	 */
-	if ($conn_mode != 'offline') {
-		$remote_db_cnn_id = db_connect_real($rdatabase_hostname, $rdatabase_username, $rdatabase_password, $rdatabase_default, $rdatabase_type, $rdatabase_port, $database_retries, $rdatabase_ssl, $rdatabase_ssl_key, $rdatabase_ssl_cert, $rdatabase_ssl_ca);
-	}
+    /**
+     * If we have not been forced offline by the $conn_mode global and since we are
+     * a remote poller, let's attempt to get back online.
+     */
+    if ($conn_mode != 'offline') {
+        $remote_db_cnn_id = db_connect_real($rdatabase_hostname, $rdatabase_username, $rdatabase_password, $rdatabase_default, $rdatabase_type, $rdatabase_port, $rdatabase_retries, $rdatabase_ssl, $rdatabase_ssl_key, $rdatabase_ssl_cert, $rdatabase_ssl_ca);
+    }
 
-	if ($config['is_web'] && is_object($remote_db_cnn_id) && $config['connection'] != 'recovery' && $config['cacti_db_version'] != 'new_install' && !defined('IN_CACTI_INSTALL')) {
+    if ($config['is_web'] && is_object($remote_db_cnn_id) && $config['connection'] != 'recovery' && $config['cacti_db_version'] != 'new_install' && !defined('IN_CACTI_INSTALL')) {
 
-		// Connection worked, so now override the default settings so that it will always utilize the remote connection
-		$database_default   = $rdatabase_default;
-		$database_hostname  = $rdatabase_hostname;
-		$database_username  = $rdatabase_username;
-		$database_password  = $rdatabase_password;
-		$database_port      = $rdatabase_port;
-		$database_ssl       = $rdatabase_ssl;
-		$database_ssl_key   = $rdatabase_ssl_key;
-		$database_ssl_cert  = $rdatabase_ssl_cert;
-		$database_ssl_ca    = $rdatabase_ssl_ca;
-	} elseif (is_object($remote_db_cnn_id)) {
-		if ($config['connection'] != 'recovery') {
-			$config['connection'] = 'online';
-		}
-	} else {
-		$config['connection'] = 'offline';
-	}
+        // Connection worked, so now override the default settings so that it will always utilize the remote connection
+        $database_default   = $rdatabase_default;
+        $database_hostname  = $rdatabase_hostname;
+        $database_username  = $rdatabase_username;
+        $database_password  = $rdatabase_password;
+        $database_port      = $rdatabase_port;
+        $database_ssl       = $rdatabase_ssl;
+        $database_ssl_key   = $rdatabase_ssl_key;
+        $database_ssl_cert  = $rdatabase_ssl_cert;
+        $database_ssl_ca    = $rdatabase_ssl_ca;
+    } elseif (is_object($remote_db_cnn_id)) {
+        if ($config['connection'] != 'recovery') {
+            $config['connection'] = 'online';
+        }
+    } else {
+        $config['connection'] = 'offline';
+    }
 } else {
-	if (!isset($database_ssl))      $database_ssl      = false;
-	if (!isset($database_ssl_key))  $database_ssl_key  = false;
-	if (!isset($database_ssl_cert)) $database_ssl_cert = false;
-	if (!isset($database_ssl_ca))   $database_ssl_ca   = false;
+    if (!isset($database_ssl))      $database_ssl      = false;
+    if (!isset($database_ssl_key))  $database_ssl_key  = false;
+    if (!isset($database_ssl_cert)) $database_ssl_cert = false;
+    if (!isset($database_ssl_ca))   $database_ssl_ca   = false;
 
-	if (!db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port, $database_retries, $database_ssl, $database_ssl_key, $database_ssl_cert, $database_ssl_ca)) {
-		$ps = $config['is_web'] ? '<p>' : '';
-		$sp = $config['is_web'] ? '</p>' : PHP_EOL;
-		$ul = $config['is_web'] ? '<ul>' : PHP_EOL;
-		$li = $config['is_web'] ? '<li>' : PHP_EOL . '  - ';
-		$lu = $config['is_web'] ? '</ul>' : '';
-		$il = $config['is_web'] ? '</li>' : '';
-		print $ps . 'FATAL: Connection to Kadupul database failed. Please ensure: ' . $ul;
-		print $li . 'the PHP MySQL module is installed and enabled.' . $il;
-		print $li . 'the database is running.' . $il;
-		print $li . 'the credentials in config.php are valid.' . $il;
-		print $lu . $sp;
-		if (isset_request_var('display_db_errors') && !empty($config['DATABASE_ERROR'])) {
-			print $ps . 'The following database errors occurred: ' . $ul;
-			foreach ($config['DATABASE_ERROR'] as $e) {
-				print $li . $e['Code'] . ': ' . $e['Error'] . $il;
-			}
-			print $lu . $sp;
-		}
-		exit;
-	} else {
-		/* gather the existing cactidb version */
-		$config['cacti_db_version'] = db_fetch_cell('SELECT cacti FROM version LIMIT 1');
-	}
+    if (!db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port, $database_retries, $database_ssl, $database_ssl_key, $database_ssl_cert, $database_ssl_ca)) {
+        $ps = $config['is_web'] ? '<p>' : '';
+        $sp = $config['is_web'] ? '</p>' : PHP_EOL;
+        $ul = $config['is_web'] ? '<ul>' : PHP_EOL;
+        $li = $config['is_web'] ? '<li>' : PHP_EOL . '  - ';
+        $lu = $config['is_web'] ? '</ul>' : '';
+        $il = $config['is_web'] ? '</li>' : '';
+        print $ps . 'FATAL: Connection to Kadupul database failed. Please ensure: ' . $ul;
+        print $li . 'the PHP MySQL module is installed and enabled.' . $il;
+        print $li . 'the database is running.' . $il;
+        print $li . 'the credentials in config.php are valid.' . $il;
+        print $lu . $sp;
+        if (isset_request_var('display_db_errors') && !empty($config['DATABASE_ERROR'])) {
+            print $ps . 'The following database errors occurred: ' . $ul;
+            foreach ($config['DATABASE_ERROR'] as $e) {
+                print $li . $e['Code'] . ': ' . $e['Error'] . $il;
+            }
+            print $lu . $sp;
+        }
+        exit;
+    } else {
+        /* gather the existing cactidb version */
+        $config['cacti_db_version'] = db_fetch_cell('SELECT cacti FROM version LIMIT 1');
+    }
 }
 
 /* check cacti log is available */
 $log_filename = cacti_log_file();
 if (!is_resource_writable($log_filename)) {
-	die('System log file is not available for writing, please enable write access' . PHP_EOL . 'Log: ' . $log_filename . PHP_EOL);
+    die('System log file is not available for writing, please enable write access' . PHP_EOL . 'Log: ' . $log_filename . PHP_EOL);
 }
 
 /* prime the most popular config settings */
 prime_common_config_settings();
 
 if ($config['poller_id'] > 1) {
-	$timezone = db_fetch_cell_prepared('SELECT timezone
+    $timezone = db_fetch_cell_prepared(
+        'SELECT timezone
 		FROM poller
 		WHERE id = ?',
-		array($config['poller_id']));
+        array($config['poller_id'])
+    );
 
-	if ($timezone != '') {
-		db_execute_prepared('SET time_zone = ?', array($timezone));
-	}
+    if ($timezone != '') {
+        db_execute_prepared('SET time_zone = ?', array($timezone));
+    }
 }
 
 if (!defined('IN_CACTI_INSTALL')) {
-	set_error_handler('CactiErrorHandler');
-	register_shutdown_function('CactiShutdownHandler');
+    set_error_handler('CactiErrorHandler');
+    register_shutdown_function('CactiShutdownHandler');
 }
 
 /* verify the cacti database is initialized before moving past here */
 db_cacti_initialized($config['is_web']);
 
 if ($config['is_web']) {
-	if (read_config_option('force_https') == 'on') {
-		$is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && strtolower($_SERVER['HTTPS']) !== 'off');
+    if (read_config_option('force_https') == 'on') {
+        $is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && strtolower($_SERVER['HTTPS']) !== 'off');
 
-		if (!$is_https && isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
-			header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-			exit;
-		}
-	}
+        if (!$is_https && isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
+            header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+    }
 
-	/* set the maximum post size */
-	ini_set('post_max_size', '8M');
+    /* set the maximum post size */
+    ini_set('post_max_size', '8M');
 
-	/* add additional cookie directives */
-	ini_set('session.cookie_httponly', true);
-	ini_set('session.cookie_path', $config['url_path']);
-	ini_set('session.use_strict_mode', true);
-	ini_set('session.use_only_cookies', true);
+    /* add additional cookie directives */
+    ini_set('session.cookie_httponly', true);
+    ini_set('session.cookie_path', $config['url_path']);
+    ini_set('session.use_strict_mode', true);
+    ini_set('session.use_only_cookies', true);
 
-	$options = array(
-		'cookie_httponly' => true,
-		'cookie_path'     => $config['url_path'],
-		'use_strict_mode' => true
-	);
+    $options = array(
+        'cookie_httponly' => true,
+        'cookie_path'     => $config['url_path'],
+        'use_strict_mode' => true
+    );
 
-	if (isset($cacti_cookie_domain) && $cacti_cookie_domain != '') {
-		ini_set('session.cookie_domain', $cacti_cookie_domain);
-		$options['cookie_domain'] = $cacti_cookie_domain;
-	}
+    if (isset($cacti_cookie_domain) && $cacti_cookie_domain != '') {
+        ini_set('session.cookie_domain', $cacti_cookie_domain);
+        $options['cookie_domain'] = $cacti_cookie_domain;
+    }
 
-	// SameSite php7.3+ behavior
-	if (version_compare(PHP_VERSION, '7.3', '>=')) {
-		ini_set('session.cookie_samesite', 'Strict');
-		$options['cookie_samesite'] = 'Strict';
-	}
+    // SameSite php7.3+ behavior
+    if (version_compare(PHP_VERSION, '7.3', '>=')) {
+        ini_set('session.cookie_samesite', 'Strict');
+        $options['cookie_samesite'] = 'Strict';
+    }
 
-	if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
-		ini_set('session.cookie_secure', true);
-		$options['cookie_secure'] = true;
-	}
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+        ini_set('session.cookie_secure', true);
+        $options['cookie_secure'] = true;
+    }
 
-	$config['cookie_options']     = $options;
-	$config['cacti_session_name'] = $cacti_session_name;
+    $config['cookie_options']     = $options;
+    $config['cacti_session_name'] = $cacti_session_name;
 
-	if (isset($cacti_db_session) && $cacti_db_session && db_table_exists('sessions') && $config['connection'] == 'online') {
-		include(dirname(__FILE__) . '/session.php');
-	} else {
-		$cacti_db_session = false;
-	}
+    if (isset($cacti_db_session) && $cacti_db_session && db_table_exists('sessions') && $config['connection'] == 'online') {
+        include(dirname(__FILE__) . '/session.php');
+    } else {
+        $cacti_db_session = false;
+    }
 
-	/* we don't want these pages cached */
-	header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+    /* we don't want these pages cached */
+    header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-	/* All CSP / HSTS / X-Frame-Options / Referrer / Permissions headers
-	 * flow through one helper so the policy has a single authoritative
-	 * source. The prior layout also duplicated CSP as a <meta> tag,
-	 * which weakened the header policy. */
-	CactiSecureHeaders::emitHeaders();
+    /* All CSP / HSTS / X-Frame-Options / Referrer / Permissions headers
+     * flow through one helper so the policy has a single authoritative
+     * source. The prior layout also duplicated CSP as a <meta> tag,
+     * which weakened the header policy. */
+    CactiSecureHeaders::emitHeaders();
 
-	cacti_session_start();
+    cacti_session_start();
 
-	/* we never run with magic quotes on */
-	if (version_compare(PHP_VERSION, '5.4', '<=')) {
-		if (get_magic_quotes_gpc()) {
-			$process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
-			foreach ($process as $key => $val) {
-				foreach ($val as $k => $v) {
-					unset($process[$key][$k]);
-					if (is_array($v)) {
-						$process[$key][stripslashes($k)] = $v;
-						$process[] = &$process[$key][stripslashes($k)];
-					} else {
-						$process[$key][stripslashes($k)] = stripslashes($v);
-					}
-				}
-			}
-			unset($process);
-		}
-	}
+    /* we never run with magic quotes on */
+    if (version_compare(PHP_VERSION, '5.4', '<=')) {
+        if (get_magic_quotes_gpc()) {
+            $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
+            foreach ($process as $key => $val) {
+                foreach ($val as $k => $v) {
+                    unset($process[$key][$k]);
+                    if (is_array($v)) {
+                        $process[$key][stripslashes($k)] = $v;
+                        $process[] = &$process[$key][stripslashes($k)];
+                    } else {
+                        $process[$key][stripslashes($k)] = stripslashes($v);
+                    }
+                }
+            }
+            unset($process);
+        }
+    }
 
-	/* make sure to start only Kadupul session at a time */
-	if (!isset($_SESSION['cacti_cwd'])) {
-		$_SESSION['cacti_cwd'] = $config['base_path'];
-	} else {
-		if ($_SESSION['cacti_cwd'] != $config['base_path']) {
-			cacti_session_destroy();
-		}
-	}
+    /* make sure to start only Kadupul session at a time */
+    if (!isset($_SESSION['cacti_cwd'])) {
+        $_SESSION['cacti_cwd'] = $config['base_path'];
+    } else {
+        if ($_SESSION['cacti_cwd'] != $config['base_path']) {
+            cacti_session_destroy();
+        }
+    }
 
-	/* Sanitize the http referer */
-	if (isset($_SERVER['HTTP_REFERER'])) {
-		$_SERVER['HTTP_REFERER'] = sanitize_uri($_SERVER['HTTP_REFERER']);
-	}
+    /* Sanitize the http referer */
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        $_SERVER['HTTP_REFERER'] = sanitize_uri($_SERVER['HTTP_REFERER']);
+    }
 }
 
 /* emulate 'register_globals' = 'off' if turned on */
-if ((bool)ini_get('register_globals')) {
-	$not_unset = array('_GET', '_POST', '_COOKIE', '_SERVER', '_SESSION', '_ENV', '_FILES', 'database_type', 'database_default', 'database_hostname', 'database_username', 'database_password', 'config', 'colors');
+if ((bool) ini_get('register_globals')) {
+    $not_unset = array('_GET', '_POST', '_COOKIE', '_SERVER', '_SESSION', '_ENV', '_FILES', 'database_type', 'database_default', 'database_hostname', 'database_username', 'database_password', 'config', 'colors');
 
-	/* Not only will array_merge give a warning if a parameter is not an array, it will
-	* actually fail. So we check if HTTP_SESSION_VARS has been initialised. */
-	if (!isset($_SESSION)) {
-		$_SESSION = array();
-	}
+    /* Not only will array_merge give a warning if a parameter is not an array, it will
+    * actually fail. So we check if HTTP_SESSION_VARS has been initialised. */
+    if (!isset($_SESSION)) {
+        $_SESSION = array();
+    }
 
-	/* Merge all into one extremely huge array; unset this later */
-	$input = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_SESSION, $_ENV, $_FILES);
+    /* Merge all into one extremely huge array; unset this later */
+    $input = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_SESSION, $_ENV, $_FILES);
 
-	unset($input['input']);
-	unset($input['not_unset']);
+    unset($input['input']);
+    unset($input['not_unset']);
 
-	foreach ($input as $var => $val) {
-		if (!in_array($var, $not_unset)) {
-			unset($$var);
-		}
-	}
+    foreach ($input as $var => $val) {
+        if (!in_array($var, $not_unset)) {
+            unset($$var);
+        }
+    }
 
-	unset($input);
+    unset($input);
 }
 
 define('CACTI_DATE_TIME_FORMAT', date_time_format());
@@ -543,60 +546,60 @@ include_once($config['include_path'] . '/csrf.php');
 include_once($config['include_path'] . '/vendor/autoload.php');
 
 if ($config['is_web']) {
-	/* raise a message and perform a page refresh if we've changed modes */
-	if ($config['poller_id'] > 1) {
-		if (isset($_SESSION['connection_mode'])) {
-			$previous_mode = $_SESSION['connection_mode'];
-			$reload        = false;
+    /* raise a message and perform a page refresh if we've changed modes */
+    if ($config['poller_id'] > 1) {
+        if (isset($_SESSION['connection_mode'])) {
+            $previous_mode = $_SESSION['connection_mode'];
+            $reload        = false;
 
-			cacti_log('Connection: ' . $config['connection'] . ', Previous Mode: ' . $previous_mode . ', Page: ' . $_SERVER['SCRIPT_NAME'], false, 'WEBUI', POLLER_VERBOSITY_DEBUG);
+            cacti_log('Connection: ' . $config['connection'] . ', Previous Mode: ' . $previous_mode . ', Page: ' . $_SERVER['SCRIPT_NAME'], false, 'WEBUI', POLLER_VERBOSITY_DEBUG);
 
-			if ($config['connection'] == 'online' && ($config['connection'] != $previous_mode)) {
-				$reload  = true;
-				$message = __('The Main Data Collector has returned to an Online Status');
-				$level   = MESSAGE_LEVEL_INFO;
-			} else if ($config['connection'] != 'online' && $previous_mode == 'online') {
-				$reload  = true;
-				$message = __('The Main Data Collector has gone to an Offline or Recovering Status');
-				$level   = MESSAGE_LEVEL_ERROR;
-			}
+            if ($config['connection'] == 'online' && ($config['connection'] != $previous_mode)) {
+                $reload  = true;
+                $message = __('The Main Data Collector has returned to an Online Status');
+                $level   = MESSAGE_LEVEL_INFO;
+            } else if ($config['connection'] != 'online' && $previous_mode == 'online') {
+                $reload  = true;
+                $message = __('The Main Data Collector has gone to an Offline or Recovering Status');
+                $level   = MESSAGE_LEVEL_ERROR;
+            }
 
-			if ($reload) {
-				$_SESSION['connection_mode'] = $config['connection'];
+            if ($reload) {
+                $_SESSION['connection_mode'] = $config['connection'];
 
-				raise_message('connection_state', $message, $level);
+                raise_message('connection_state', $message, $level);
 
-				session_destroy();
+                session_destroy();
 
-				print '<div style="display:none">cactiRemoteState</div>';
+                print '<div style="display:none">cactiRemoteState</div>';
 
-				exit;
-			}
-		} else {
-			cacti_log('Connection: ' . $config['connection'] . ', Previous Mode: notset', false, 'WEBUI', POLLER_VERBOSITY_DEBUG);
+                exit;
+            }
+        } else {
+            cacti_log('Connection: ' . $config['connection'] . ', Previous Mode: notset', false, 'WEBUI', POLLER_VERBOSITY_DEBUG);
 
-			$previous_mode = $config['connection'];
+            $previous_mode = $config['connection'];
 
-			$_SESSION['connection_mode'] = $config['connection'];
-		}
-	}
+            $_SESSION['connection_mode'] = $config['connection'];
+        }
+    }
 
-	if (isset_request_var('newtheme')) {
-		unset($_SESSION['selected_theme']);
-	}
+    if (isset_request_var('newtheme')) {
+        unset($_SESSION['selected_theme']);
+    }
 
-	if (isset_request_var('csrf_timeout')) {
-		raise_message('csrf_ptimeout');
-	}
+    if (isset_request_var('csrf_timeout')) {
+        raise_message('csrf_ptimeout');
+    }
 
-	/* Validate the action before any controller can normalize or dispatch it. */
-	cacti_require_post_actions(array('save', 'update_data', 'changepassword'));
+    /* Validate the action before any controller can normalize or dispatch it. */
+    cacti_require_post_actions(array('save', 'update_data', 'changepassword'));
 
-	if (isset($_COOKIE['CactiTimeZone'])) {
-		$gmt_offset = $_COOKIE['CactiTimeZone'];
+    if (isset($_COOKIE['CactiTimeZone'])) {
+        $gmt_offset = $_COOKIE['CactiTimeZone'];
 
-		cacti_time_zone_set($gmt_offset);
-	}
+        cacti_time_zone_set($gmt_offset);
+    }
 }
 
 api_plugin_hook('config_insert');
