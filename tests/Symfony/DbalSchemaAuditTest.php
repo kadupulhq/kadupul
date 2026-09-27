@@ -87,9 +87,9 @@ final class DbalSchemaAuditTest extends TestCase
         return new DbalSchemaAudit($this->connections($db), new InstallationVersion($this->root, $db, new Filesystem(), new MockClock()));
     }
 
-    private function store(Connection $db, float $dumpTimeout = 300.0): DbalAuditBaselineStore
+    private function store(Connection $db, float $dumpTimeout = 300.0, ?string $dumpBinary = null): DbalAuditBaselineStore
     {
-        return new DbalAuditBaselineStore($this->root, new Filesystem(), $this->connections($db), new InstallationConfiguration($this->root), $dumpTimeout);
+        return new DbalAuditBaselineStore($this->root, new Filesystem(), $this->connections($db), new InstallationConfiguration($this->root), $dumpTimeout, $dumpBinary);
     }
 
     private function log(): string
@@ -652,7 +652,7 @@ final class DbalSchemaAuditTest extends TestCase
     public function testExportDumpsFromTheConfiguredServerWithThePasswordOnlyInItsEnvironment(): void
     {
         $bin = $this->fakeDump(0);
-        $store = $this->store(self::noSettings());
+        $store = $this->store(self::noSettings(), dumpBinary: $bin . '/mariadb-dump');
 
         $this->withPath($bin, static function () use ($store): void {
             self::assertTrue($store->export(DatabaseTarget::Local));
@@ -682,7 +682,7 @@ final class DbalSchemaAuditTest extends TestCase
     public function testExportPassesNoTlsFilesWhenTheConnectionDoesNotUseTls(): void
     {
         $bin = $this->fakeDump(0, false);
-        $store = $this->store(self::noSettings());
+        $store = $this->store(self::noSettings(), dumpBinary: $bin . '/mariadb-dump');
 
         $this->withPath($bin, static function () use ($store): void {
             self::assertTrue($store->export(DatabaseTarget::Local));
@@ -698,7 +698,7 @@ final class DbalSchemaAuditTest extends TestCase
     {
         $bin = $this->fakeDump(2);
         (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, "kept\n");
-        $store = $this->store(self::noSettings());
+        $store = $this->store(self::noSettings(), dumpBinary: $bin . '/mariadb-dump');
 
         $this->withPath($bin, static function () use ($store): void {
             self::assertFalse($store->export(DatabaseTarget::Local));
@@ -712,7 +712,7 @@ final class DbalSchemaAuditTest extends TestCase
     {
         $bin = $this->fakeDump(0, true, 30);
         (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, "kept\n");
-        $store = $this->store(self::noSettings(), 0.5);
+        $store = $this->store(self::noSettings(), 0.5, $bin . '/mariadb-dump');
 
         $this->withPath($bin, static function () use ($store): void {
             self::assertFalse($store->export(DatabaseTarget::Local));
@@ -729,7 +729,7 @@ final class DbalSchemaAuditTest extends TestCase
         $bin = $this->fakeDump(0);
         // A directory where the file should be makes the final rename fail.
         mkdir($this->root . DbalAuditBaselineStore::FILE);
-        $store = $this->store(self::noSettings());
+        $store = $this->store(self::noSettings(), dumpBinary: $bin . '/mariadb-dump');
 
         $this->withPath($bin, static function () use ($store): void {
             self::assertFalse($store->export(DatabaseTarget::Local));

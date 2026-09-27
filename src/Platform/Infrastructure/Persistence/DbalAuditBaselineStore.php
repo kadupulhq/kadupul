@@ -108,6 +108,7 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
         private MaintenanceConnections $connections,
         private InstallationConfiguration $configuration,
         private float $dumpTimeout = 300.0,
+        private ?string $dumpBinaryOverride = null,
     ) {}
 
     #[\Override]
@@ -233,6 +234,10 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
 
     private function dumpBinary(): string
     {
+        if ($this->dumpBinaryOverride !== null) {
+            return $this->dumpBinaryOverride;
+        }
+
         foreach (self::MARIADB_DUMP as $binary) {
             if (is_file($binary) && is_executable($binary)) {
                 return $binary;
