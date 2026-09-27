@@ -139,7 +139,12 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
                 throw new RuntimeException('Copied CLI changed while measuring coverage');
             }
             $childCoverage->getData(true)->renameFile(RRD_TEST_CLI_COVERAGE_COPY, RRD_TEST_CLI_COVERAGE_SOURCE);
-            $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
+            // PHPUnit 12's code-coverage filter is an allowlist and no longer
+            // exposes excludeFile(); the path remapping above removes the
+            // copied filename from collected coverage data.
+            if (method_exists($childCoverage->filter(), 'excludeFile')) {
+                $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
+            }
             $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
         }
         if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
