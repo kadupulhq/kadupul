@@ -91,8 +91,7 @@ function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = fa
     $lease_busy = false;
 
     $args = array_slice(func_get_args(), 0, 1);
-    $force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
-    $function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_init' : '__rrd_init';
+    $function = rrdtool_uses_proxy() ? '__rrd_proxy_init' : '__rrd_init';
     if ($function !== '__rrd_init') {
         return call_user_func_array($function, $args);
     }
@@ -447,8 +446,7 @@ function rrd_close()
 {
     global $config;
     $args = func_get_args();
-    $force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
-    $function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_close' : '__rrd_close';
+    $function = rrdtool_uses_proxy() ? '__rrd_proxy_close' : '__rrd_close';
     try {
         return call_user_func_array($function, $args);
     } finally {
@@ -592,8 +590,7 @@ function rrdtool_execute()
     $rejection = null;
 
     $args = func_get_args();
-    $force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
-    $function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_execute' : '__rrd_execute';
+    $function = rrdtool_uses_proxy() ? '__rrd_proxy_execute' : '__rrd_execute';
 
     if ($function !== '__rrd_execute') {
         return call_user_func_array($function, $args);
@@ -872,8 +869,8 @@ function rrdtool_create_prepare($data_source_path, $show_source, $use_proxy, $rr
 
 /**
  * Check for structured path configuration and, if in place, verify that the
- * RRD's directory exists and create it if not. $use_proxy is the caller's own
- * storage_location test; $logopt tags the proxy commands.
+ * RRD's directory exists and create it if not. $use_proxy is the shared
+ * proxy-selection decision; $logopt tags the proxy commands.
  *
  * Returns the owner and group of the RRA root, which the caller also gives the
  * new RRD; both are null on Windows, where they are not looked up.
@@ -1593,7 +1590,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     /* ok, if that passes lets check to make sure an rra does not already
     exist, the last thing we want to do is overright data! */
     if ($show_source != true) {
-        if (read_config_option('storage_location')) {
+        if (rrdtool_uses_proxy()) {
             if (rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
                 return -1;
             }
@@ -1722,7 +1719,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 
     $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
 
-    $prepared = rrdtool_create_prepare($data_source_path, $show_source, read_config_option('storage_location'), $rrdtool_pipe, $local_data_id, 'POLLER');
+    $prepared = rrdtool_create_prepare($data_source_path, $show_source, rrdtool_uses_proxy(), $rrdtool_pipe, $local_data_id, 'POLLER');
     if ($prepared === false) {
         return false;
     }
@@ -1776,7 +1773,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
             }
 
             /* create the rrd if one does not already exist */
-            if (read_config_option('storage_location') > 0) {
+            if (rrdtool_uses_proxy()) {
                 $file_exists = rrdtool_execute(array('file_exists', $rrd_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
             } else {
                 $file_exists = file_exists($rrd_path);
@@ -3911,7 +3908,7 @@ function rrdtool_function_get_resstep($local_data_ids, $graph_start, $graph_end,
  */
 function rrdtool_file_exists(string $data_source_path, mixed $rrdtool_pipe = null): bool
 {
-    if (read_config_option('storage_location')) {
+    if (rrdtool_uses_proxy()) {
         if (!rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
             return false;
         }
@@ -4497,7 +4494,7 @@ function rrdtool_info2html_table($columns, $info_array, $section, $row_prefix, $
  */
 function rrdtool_tune($rrd_file, $diff, $show_source = true)
 {
-    if (!$show_source && !empty($diff['resize']) && read_config_option('storage_location')) {
+    if (!$show_source && !empty($diff['resize']) && rrdtool_uses_proxy()) {
         cacti_log('ERROR: Remote RRD resize is unavailable without atomic proxy replacement.', false, 'UTIL');
         return false;
     }
