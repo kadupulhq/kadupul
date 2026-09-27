@@ -77,6 +77,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Isolate Cacti session release and timezone-cookie handling in the legacy web context adapter used before one-off local RRDtool processes.
+
 - Use Symfony Clock, Filesystem, and Process components in RRD graph and maintenance operations while preserving procedural callers, the existing shared/exclusive directory lease, and the long-lived RRDtool pipe.
 
 - Publish the command-line migration roadmap and the safety decisions for the database audit and repair commands in docs/migrations/cli-symfony-console-roadmap.md.

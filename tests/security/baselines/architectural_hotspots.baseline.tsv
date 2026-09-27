@@ -61,7 +61,7 @@ cmd_exec	./lib/poller.php:49	 * @param  (array)    $pipes - the array of r/w pip
 cmd_exec	./lib/poller.php:50	 * @param  (resource) $proc_fd - the file descriptor returned from proc_open()
 cmd_exec	./lib/poller.php:86	                $fp = popen($command, 'r');
 cmd_exec	./lib/poller.php:88	                $fp = popen($command, 'rb');
-cmd_exec	./lib/rrd.php:196	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
+cmd_exec	./lib/rrd.php:212	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
 cmd_exec	./lib/rrd_maintenance.php:287	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
 cmd_exec	./lib/rrdcheck.php:836	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
@@ -407,19 +407,19 @@ dynamic_include	./lib/reports.php:661		include_once($config['library_path'] . '/
 dynamic_include	./lib/reports.php:738		include_once($config['base_path'] . '/lib/time.php');
 dynamic_include	./lib/reports.php:998		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/reports.php:999		include_once($config['library_path'] . '/data_query.php');
-dynamic_include	./lib/rrd.php:1588	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:1928	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:2017	    include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:2113	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:2466	    include_once($config['library_path'] . '/cdef.php');
-dynamic_include	./lib/rrd.php:2467	    include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/rrd.php:2468	    include_once($config['library_path'] . '/graph_variables.php');
-dynamic_include	./lib/rrd.php:2469	    include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:2470	    include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/rrd.php:2471	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:3712	        include($rrdtheme);
-dynamic_include	./lib/rrd.php:4357	    include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:5097	        include($themefile);
+dynamic_include	./lib/rrd.php:1599	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1939	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:2028	    include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:2124	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:2477	    include_once($config['library_path'] . '/cdef.php');
+dynamic_include	./lib/rrd.php:2478	    include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/rrd.php:2479	    include_once($config['library_path'] . '/graph_variables.php');
+dynamic_include	./lib/rrd.php:2480	    include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:2481	    include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/rrd.php:2482	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:3723	        include($rrdtheme);
+dynamic_include	./lib/rrd.php:4368	    include_once($config['library_path'] . '/time.php');
+dynamic_include	./lib/rrd.php:5108	        include($themefile);
 dynamic_include	./lib/rrdcheck.php:752	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:783	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
