@@ -40,7 +40,8 @@ second implementation or a module boundary needs one.
 | `RrdCommand` and a pipe-mode encoder replacing shell escaping on the pipe | PR #410 |
 | Remaining `cacti_escapeshellarg()` calls on the pipe in `lib/rrd.php` moved to the encoder | PR #421 |
 | RRD file paths and the remaining pipe commands in `lib/rrd.php`, `lib/boost.php`, `lib/rrdcheck.php`, `lib/rrd_maintenance.php`, `lib/dsstats.php`, `lib/functions.php` and `poller_maintenance.php` quoted with the encoder | PR #426 |
-| RRDtool started without a shell: `tune` through `symfony/process`, the `rrdtool -` pipes through `proc_open()` argument arrays | This PR |
+| RRDtool started without a shell: `tune` through `symfony/process`, the `rrdtool -` pipes through `proc_open()` argument arrays | PR #441 |
+| Session release and timezone-cookie handling moved out of local RRDtool process execution | Issue #498 |
 | Long-lived pipe in `LocalRrdtool` | Pending |
 | Proxy client restored on phpseclib 4 and hardened without a wire format change | PR #436 |
 | Graph and export `DEF` paths sent to the proxy bare and relative to the RRA directory | PR #437 |

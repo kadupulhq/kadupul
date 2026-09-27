@@ -51,6 +51,22 @@ function rrdtool_filesystem(): \Symfony\Component\Filesystem\Filesystem
     return $filesystem ??= new \Symfony\Component\Filesystem\Filesystem();
 }
 
+/** Return the adapter for web request state used by local RRDtool processes.
+ *
+ * @return \Kadupul\Graphing\Infrastructure\Legacy\LegacyRrdWebContext
+ */
+function rrdtool_legacy_web_context(): \Kadupul\Graphing\Infrastructure\Legacy\LegacyRrdWebContext
+{
+    $class = \Kadupul\Graphing\Infrastructure\Legacy\LegacyRrdWebContext::class;
+    if (!class_exists($class)) {
+        require_once __DIR__ . '/../src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php';
+    }
+
+    static $context = null;
+
+    return $context ??= new $class();
+}
+
 function escape_command($command)
 {
     return $command;		# we escape every single argument now, no need for 'special' escaping
@@ -1204,7 +1220,8 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
             rrdtool_set_language();
         }
 
-        cacti_session_close();
+        $web_context = rrdtool_legacy_web_context();
+        $web_context->releaseSession();
 
         if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
             $descriptorspec = array(
@@ -1216,13 +1233,7 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
                 $descriptorspec[2] = array('redirect', 1);
             }
 
-            if ($config['is_web']) {
-                if (isset($_COOKIE['CactiTimeZone'])) {
-                    $gmt_offset = $_COOKIE['CactiTimeZone'];
-                    cacti_time_zone_set($gmt_offset);
-                }
-            }
-
+            $web_context->prepareProcess($config);
             $process = rrdtool_pipe_process($descriptorspec, $pipes);
 
             if (!is_resource($process)) {
