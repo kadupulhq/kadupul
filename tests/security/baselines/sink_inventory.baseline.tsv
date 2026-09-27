@@ -1,6 +1,6 @@
 category	location	match
 cmd_exec	./cactid.php:85		exec('pgrep -a php | grep cactid.php', $output);
-cmd_exec	./cli/audit_database.php:1026	            $db_shell = shell_exec('which mysql');
+cmd_exec	./cli/audit_database.php:1026	            $db_shell = trim((string) shell_exec('which mysql'));
 cmd_exec	./cli/audit_database.php:1038	            exec(cacti_escapeshellarg($db_shell) . ' --version', $version_output, $version_status);
 cmd_exec	./cli/audit_database.php:1050	            exec(cacti_escapeshellarg($db_shell) .
 cmd_exec	./cli/audit_database.php:139	    exec('php ' . $config['base_path'] . '/cli/upgrade_database.php --debug', $output, $return_var);
