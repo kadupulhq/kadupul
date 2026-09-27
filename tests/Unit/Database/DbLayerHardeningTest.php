@@ -78,6 +78,37 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
     load_production_function($function);
 }
 
+// These production-function tests share one PHP process. Restore the globals
+// each test touches so later tests do not depend on execution order.
+$productionFunctionGlobalKeys = [
+    'config',
+    '_SESSION',
+    'graph_item_types',
+    'production_function_db_calls',
+];
+$productionFunctionGlobalState = [];
+
+\beforeEach(function () use (&$productionFunctionGlobalState, $productionFunctionGlobalKeys): void {
+    $productionFunctionGlobalState = [];
+
+    foreach ($productionFunctionGlobalKeys as $key) {
+        $productionFunctionGlobalState[$key] = [
+            'exists' => array_key_exists($key, $GLOBALS),
+            'value' => $GLOBALS[$key] ?? null,
+        ];
+    }
+});
+
+\afterEach(function () use (&$productionFunctionGlobalState, $productionFunctionGlobalKeys): void {
+    foreach ($productionFunctionGlobalKeys as $key) {
+        if ($productionFunctionGlobalState[$key]['exists']) {
+            $GLOBALS[$key] = $productionFunctionGlobalState[$key]['value'];
+        } else {
+            unset($GLOBALS[$key]);
+        }
+    }
+});
+
 \test('production user-setting cache is isolated by user', function () {
     reset_db_calls();
     $setting = 'cache_scope_' . uniqid();
