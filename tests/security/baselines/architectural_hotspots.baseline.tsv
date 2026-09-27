@@ -417,9 +417,9 @@ dynamic_include	./lib/rrd.php:2221	    include_once($config['library_path'] . '/
 dynamic_include	./lib/rrd.php:2222	    include_once($config['library_path'] . '/boost.php');
 dynamic_include	./lib/rrd.php:2223	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/rrd.php:2224	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:3400	        include($rrdtheme);
-dynamic_include	./lib/rrd.php:4045	    include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:4785	        include($themefile);
+dynamic_include	./lib/rrd.php:3402	        include($rrdtheme);
+dynamic_include	./lib/rrd.php:4047	    include_once($config['library_path'] . '/time.php');
+dynamic_include	./lib/rrd.php:4787	        include($themefile);
 dynamic_include	./lib/rrdcheck.php:752	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:783	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');

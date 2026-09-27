@@ -2465,11 +2465,13 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
     $nth = 0;
     $sum = 0;
     require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/GraphItemConsolidationResolver.php';
-    $last_graph_cf = (new \Kadupul\Graphing\Infrastructure\Rrd\GraphItemConsolidationResolver())->assignReferences($graph_items, $rra_seconds);
+    $graph_cf_resolver = new \Kadupul\Graphing\Infrastructure\Rrd\GraphItemConsolidationResolver();
+    $last_graph_cf = array();
 
     if (cacti_sizeof($graph_items)) {
         foreach ($graph_items as $key => $graph_item) {
-            $graph_cf = $graph_item['cf_reference'];
+            $graph_cf = $graph_cf_resolver->assignReference($graph_item, $last_graph_cf, $rra_seconds);
+            $graph_items[$key]['cf_reference'] = $graph_cf;
 
             if (!empty($graph_item['local_data_id']) && !isset($cf_ds_cache[$graph_item['data_template_rrd_id']][$graph_cf])) {
                 /* use a user-specified ds path if one is entered */

@@ -58,7 +58,12 @@ require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/GraphItemCo
         array('graph_type_id' => GRAPH_ITEM_TYPE_COMMENT, 'local_data_id' => 19, 'consolidation_function_id' => 'MAX', 'data_source_name' => 'comment', 'local_data_template_rrd_id' => 909),
     );
 
-    $last = (new GraphItemConsolidationResolver())->assignReferences($items, 300);
+    $resolver = new GraphItemConsolidationResolver();
+    $last = array();
+    foreach ($items as &$item) {
+        $resolver->assignReference($item, $last, 300);
+    }
+    unset($item);
 
     expect(array_column($items, 'cf_reference'))->toBe(array('AVERAGE', 'AVERAGE', 'MAX', 'AVERAGE', 'LAST', 'MIN', 'LAST', 'MIN', 'AVERAGE', 'AVERAGE', 'AVERAGE', 'AVERAGE', 'AVERAGE', 'MAX'))
         ->and($last)->toBe(array(
@@ -79,7 +84,5 @@ require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/GraphItemCo
             array(19, 'MAX', 300),
         ));
 
-    $empty = array();
-    expect((new GraphItemConsolidationResolver())->assignReferences($empty, 300))->toBe(array());
     unset($GLOBALS['graph_cf_calls']);
 });
