@@ -67,6 +67,22 @@ function rrdtool_legacy_web_context(): \Kadupul\Graphing\Infrastructure\Legacy\L
     return $context ??= new $class();
 }
 
+/** Return the local RRDtool process owner used by persistent pipe callers.
+ *
+ * @return \Kadupul\Graphing\Infrastructure\Rrd\LocalRrdtool
+ */
+function rrdtool_local_processes(): \Kadupul\Graphing\Infrastructure\Rrd\LocalRrdtool
+{
+    $class = \Kadupul\Graphing\Infrastructure\Rrd\LocalRrdtool::class;
+    if (!class_exists($class)) {
+        require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/LocalRrdtool.php';
+    }
+
+    static $processes = null;
+
+    return $processes ??= new $class();
+}
+
 function escape_command($command)
 {
     return $command;		# we escape every single argument now, no need for 'special' escaping
@@ -161,18 +177,17 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
         // Registered before the maintenance lease's handler, so a pipe left
         // open has its child reaped before the lease is released.
         register_shutdown_function(function () {
-            foreach (array_merge(rrd_acknowledged_pipes(), rrd_writer_pipes()) as $state) {
-                rrd_close($state['write']);
-            }
+            rrdtool_local_processes()->closeAll();
         });
         $shutdown_registered = true;
     }
     if ($acknowledged) {
-        $process = rrdtool_pipe_process(
+        $pipe = rrdtool_local_processes()->open(
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)),
-            $streams
+            $streams,
+            true
         );
-        if (!is_resource($process)) {
+        if (!is_resource($pipe)) {
             rrdtool_reset_language();
             return false;
         }
@@ -180,7 +195,7 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
         stream_set_blocking($streams[1], false);
         $owned = & rrd_acknowledged_pipes();
         $owned[(int) $streams[0]] = array('write' => $streams[0], 'read' => $streams[1],
-            'process' => $process, 'echo' => $output_to_term && empty($config['is_web']), 'failed' => false);
+            'echo' => $output_to_term && empty($config['is_web']), 'failed' => false);
         return $streams[0];
     }
 
@@ -193,12 +208,10 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
             $descriptors[2] = array('null');
         }
     }
-    $process = rrdtool_pipe_process($descriptors, $streams);
-    if (!is_resource($process)) {
+    $pipe = rrdtool_local_processes()->open($descriptors, $streams);
+    if (!is_resource($pipe)) {
         return false;
     }
-    $owned = & rrd_writer_pipes();
-    $owned[(int) $streams[0]] = array('write' => $streams[0], 'process' => $process);
 
     return $streams[0];
 }
@@ -210,13 +223,6 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
 function rrdtool_pipe_process($descriptors, &$streams)
 {
     return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
-}
-
-/** Write-only pipes from rrd_init(), and the process each must be closed with. */
-function &rrd_writer_pipes()
-{
-    static $pipes = array();
-    return $pipes;
 }
 
 /** Native response pipes are owned by the same lifetime as their writer lease. */
@@ -296,7 +302,7 @@ function rrd_acknowledged_command($pipe, $command)
         }
     }
     $state['failed'] = true;
-    proc_terminate($state['process']);
+    rrdtool_local_processes()->terminate($pipe);
     cacti_log('ERROR: RRDtool response was unavailable or timed out; samples retained for retry.');
     return array(false, $output);
 }
@@ -493,39 +499,14 @@ function __rrd_close($rrdtool_pipe)
 {
     $owned = & rrd_acknowledged_pipes();
     if (isset($owned[(int) $rrdtool_pipe])) {
-        $state = $owned[(int) $rrdtool_pipe];
         unset($owned[(int) $rrdtool_pipe]);
-        if (is_resource($state['write'])) {
-            fclose($state['write']);
-        }
         // Commands have already been acknowledged. EOF asks the idle child to exit.
-        $deadline = hrtime(true) + 1000000000;
-        do {
-            $status = proc_get_status($state['process']);
-            if (!$status['running']) {
-                break;
-            }
-            usleep(10000);
-        } while (hrtime(true) < $deadline);
-        if ($status['running']) {
-            proc_terminate($state['process'], 9);
-        }
-        fclose($state['read']);
-        proc_close($state['process']);
+        rrdtool_local_processes()->close($rrdtool_pipe);
         rrdtool_reset_language();
         return;
     }
 
-    $writers = & rrd_writer_pipes();
-    if (isset($writers[(int) $rrdtool_pipe])) {
-        $process = $writers[(int) $rrdtool_pipe]['process'];
-        unset($writers[(int) $rrdtool_pipe]);
-        if (is_resource($rrdtool_pipe)) {
-            fclose($rrdtool_pipe);
-        }
-        // As pclose() did, wait for RRDtool to finish the queued commands.
-        proc_close($process);
-    } elseif (is_resource($rrdtool_pipe)) {
+    if (!rrdtool_local_processes()->close($rrdtool_pipe) && is_resource($rrdtool_pipe)) {
         /* close the rrdtool file descriptor */
         pclose($rrdtool_pipe);
     }
