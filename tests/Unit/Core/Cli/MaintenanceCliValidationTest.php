@@ -1,0 +1,92 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+test('maintenance CLI entrypoints validate arguments and return status for supported actions', function ($script, $arguments, $expectedExit, $message) {
+    $root = dirname(__DIR__, 4);
+    $dir = sys_get_temp_dir() . '/maintenance-cli-' . bin2hex(random_bytes(8));
+    foreach (array('', '/cli', '/include', '/lib', '/docs') as $suffix) {
+        mkdir($dir . $suffix, 0700);
+    }
+
+    copy($root . '/cli/' . $script, $dir . '/cli/' . $script);
+    foreach (array('utility.php', 'api_data_source.php', 'api_graph.php', 'api_automation_tools.php', 'poller.php', 'snmp.php', 'data_query.php', 'reapply_names.php') as $library) {
+        $libraryStub = '<?php ';
+        if ($library === 'api_automation_tools.php') {
+            $libraryStub .= 'function getHosts() { return array(); } function getGraphTemplates() { return array(); }'
+                . 'function displayUsers() { print "LIST_OK"; } function displayTrees() { print "LIST_OK"; }'
+                . 'function displayHosts($rows, $quiet = false) { print "LIST_OK"; }'
+                . 'function displayHostGraphs($host, $quiet = false) { print "LIST_OK"; }'
+                . 'function displayGraphTemplates($rows, $quiet = false) { print "LIST_OK"; }';
+        }
+        file_put_contents($dir . '/lib/' . $library, $libraryStub);
+    }
+    copy($root . '/lib/reapply_names.php', $dir . '/lib/reapply_names.php');
+
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $prelude = '';
+    if ($coverage !== null) {
+        $prelude = 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($dir, true) . ');'
+            . 'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($dir . '/cli/' . $script, true) . ');'
+            . 'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/cli/' . $script, true) . ');'
+            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+
+    file_put_contents($dir . '/include/cli_check.php', '<?php ' . $prelude
+        . '$config = array("base_path" => dirname(__DIR__), "poller_id" => 1);'
+        . 'define("CACTI_VERSION", "fixture"); define("COPYRIGHT_YEARS", "2026");'
+        . '$database_default = "fixture"; $database_username = "fixture"; $database_password = "fixture";'
+        . 'function cacti_sizeof($value) { return is_countable($value) ? count($value) : 0; }'
+        . 'function get_cacti_cli_version() { return "fixture"; }'
+        . 'function read_config_option($name) { return 5; }'
+        . 'function db_fetch_assoc($sql) { if (strpos($sql, "SHOW TABLES") === 0) return array(array("Tables_in_fixture" => "fixture_table")); if (strpos($sql, "SHOW COLUMNS") === 0) return array(array("Field" => "id", "Type" => "int", "Null" => "NO", "Key" => "PRI", "Default" => null, "Extra" => "")); if (strpos($sql, "SHOW INDEXES") === 0) return array(); throw new LogicException("Unexpected database access: " . $sql); }'
+        . 'function db_fetch_cell($sql) { return "fixture"; }'
+        . 'function db_table_exists($name) { return in_array("--load", $_SERVER["argv"], true); }'
+        . 'function db_execute($sql) { return true; } function db_execute_prepared($sql, $params) { return true; }'
+        . 'function db_dump_data(...$args) { return 0; }'
+        . 'function cacti_escapeshellarg($value) { return escapeshellarg($value); }');
+
+    try {
+        $process = proc_open(
+            array_merge(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $dir . '/cli/' . $script), $arguments),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes
+        );
+        $output = stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $exitCode = proc_close($process);
+        if ($exitCode !== $expectedExit) {
+            throw new RuntimeException('Exit ' . $exitCode . ': ' . $output);
+        }
+        expect($output)->toContain($message);
+
+        if ($coverage !== null) {
+            $reports = glob($dir . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
+    } finally {
+        foreach (array('/cli', '/include', '/lib', '/docs', '') as $suffix) {
+            foreach (glob($dir . $suffix . '/*') as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            rmdir($dir . $suffix);
+        }
+    }
+})->with(array(
+    'rebuild rejects zero host ID' => array('rebuild_poller_cache.php', array('--host-id=0'), 1, '--host-id must be a positive integer'),
+    'rebuild rejects fractional thread count' => array('rebuild_poller_cache.php', array('--threads=1.5'), 1, 'valid Number of Treads'),
+    'reorder rejects zero host ID' => array('reorder_data_query.php', array('--host-id=0', '--qid=all'), 1, '--host-id must be a positive integer'),
+    'reorder rejects missing query ID' => array('reorder_data_query.php', array('--host-id=all'), 1, '--qid must be a positive query ID'),
+    'data-source reapply rejects zero host ID' => array('poller_data_sources_reapply_names.php', array('--host-id=0'), 1, 'positive device IDs'),
+    'graph reapply rejects malformed host IDs' => array('poller_graphs_reapply_names.php', array('--host-id=1,nope'), 1, 'positive device IDs'),
+    'add permissions list mode exits successfully' => array('add_perms.php', array('--list-users'), 0, 'LIST_OK'),
+    'audit report returns failure when its baseline table is unavailable' => array('audit_database.php', array('--report'), 1, 'FATAL: Unable to load the audit schema baseline'),
+    'audit load exports the loaded baseline' => array('audit_database.php', array('--load'), 0, 'Finished Creating Audit Schema'),
+));
