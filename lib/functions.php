@@ -229,7 +229,7 @@ function user_setting_exists($config_name, $user_id)
 {
     static $user_setting_values = array();
 
-    if (!isset($user_setting_values[$config_name])) {
+    if (!isset($user_setting_values[$user_id]) || !array_key_exists($config_name, $user_setting_values[$user_id])) {
         $value = 0;
         if (db_table_exists('settings_user')) {
             $value = db_fetch_cell_prepared(
@@ -242,13 +242,13 @@ function user_setting_exists($config_name, $user_id)
         }
 
         if ($value !== false && $value > 0) {
-            $user_setting_values[$config_name] = true;
+            $user_setting_values[$user_id][$config_name] = true;
         } else {
-            $user_setting_values[$config_name] = false;
+            $user_setting_values[$user_id][$config_name] = false;
         }
     }
 
-    return $user_setting_values[$config_name];
+    return $user_setting_values[$user_id][$config_name];
 }
 
 /**
@@ -477,18 +477,18 @@ function set_config_option($config_name, $value, $remote = false)
         }
     }
 
-    $config_array = array();
     if ($config['is_web']) {
-        $sess = true;
-    } else {
-        $sess = false;
-    }
+        if (!isset($_SESSION['sess_config_array']) || !is_array($_SESSION['sess_config_array'])) {
+            $_SESSION['sess_config_array'] = array();
+        }
 
-    // Store the array back for later retrieval
-    if ($sess) {
-        $_SESSION['sess_config_array']  = $value;
+        $_SESSION['sess_config_array'][$config_name] = $value;
     } else {
-        $config['config_options_array'] = $value;
+        if (!isset($config['config_options_array']) || !is_array($config['config_options_array'])) {
+            $config['config_options_array'] = array();
+        }
+
+        $config['config_options_array'][$config_name] = $value;
     }
 
     if (!empty($config['DEBUG_SET_CONFIG_OPTION'])) {
@@ -897,6 +897,21 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
     }
 
     return $field_value;
+}
+
+/**
+ * The form_input_validate() pattern for a data source minimum or maximum: the
+ * whole value is a number or U, or one of $tokens, such as 'ifSpeed' for
+ * |query_ifSpeed|. The create command writes these values unquoted.
+ */
+function data_source_limit_pattern(array $tokens = array())
+{
+    $alternatives = array('-?(?:[0-9]+(?:\.[0-9]*)?|[0-9]*\.[0-9]+)(?:[eE][+\-]?[0-9]+)?', 'U');
+    foreach ($tokens as $token) {
+        $alternatives[] = preg_quote('|query_' . $token . '|', '/');
+    }
+
+    return '^(?:' . implode('|', $alternatives) . ')\z';
 }
 
 /**
@@ -3282,15 +3297,16 @@ function generate_data_source_path($local_data_id)
  *  @param $data_template_id
  *  @param $requested_cf
  *  @param $ds_step
+ *  @param mixed $rrdtool_pipe Existing RRDtool pipe or proxy session.
  *
  *  @return - the best cf to use
  */
-function generate_graph_best_cf($local_data_id, $requested_cf, $ds_step = 60)
+function generate_graph_best_cf($local_data_id, $requested_cf, $ds_step = 60, $rrdtool_pipe = false)
 {
     static $best_cf;
 
     if ($local_data_id > 0) {
-        $avail_cf_functions = get_rrd_cfs($local_data_id);
+        $avail_cf_functions = get_rrd_cfs($local_data_id, $rrdtool_pipe);
 
         if (cacti_sizeof($avail_cf_functions)) {
             /* workaround until we have RRA presets in 0.8.8 */
@@ -3316,10 +3332,11 @@ function generate_graph_best_cf($local_data_id, $requested_cf, $ds_step = 60)
  * get_rrd_cfs - reads the RRDfile and gets the RRAs stored in it.
  *
  * @param $local_data_id
+ * @param mixed $rrdtool_pipe Existing RRDtool pipe or proxy session.
  *
  * @return - array of the CF functions
  */
-function get_rrd_cfs($local_data_id)
+function get_rrd_cfs($local_data_id, $rrdtool_pipe = false)
 {
     global $consolidation_functions;
     static $rrd_cfs = array();
@@ -3332,7 +3349,7 @@ function get_rrd_cfs($local_data_id)
 
     $rrdfile = get_data_source_path($local_data_id, true);
 
-    $output = @rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT);
+    $output = @rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
 
     /* search for
      * 		rra[0].cf = 'LAST'
@@ -3580,7 +3597,7 @@ function get_graph_group($graph_template_item_id)
         $params[] = $graph_item['graph_template_id'];
         $sql_where = 'graph_template_id = ? AND local_graph_id = 0';
     } else {
-        $params[] = $graph_item['sequence'];
+        $params[] = $graph_item['local_graph_id'];
         $sql_where = 'local_graph_id = ?';
     }
 
@@ -3687,7 +3704,7 @@ function get_graph_parent($graph_template_item_id, $direction)
  * @param $filters - associative array of field => value pairs
  * @param $params  - (byref) array to append parameter values to
  *
- * @return - (string) the WHERE clause fragment, or '1=1' if filters is empty
+ * @return - (string) the WHERE clause fragment, '1=1' if filters is empty, or '1=0' if all supplied fields are invalid
  */
 function build_where_from_array($filters, &$params)
 {
@@ -3705,6 +3722,10 @@ function build_where_from_array($filters, &$params)
 
         $where[]  = "`$field` = ?";
         $params[] = $value;
+    }
+
+    if (empty($where)) {
+        return '1=0';
     }
 
     return implode(' AND ', $where);
@@ -3897,7 +3918,16 @@ function exec_into_array($command_line)
 {
     $out = array();
     $err = 0;
-    exec($command_line, $out, $err);
+
+    if (!class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyCommandOutput::class)) {
+        // Some installer entry points load this legacy file before the Composer
+        // autoloader. Preserve the original execution path in that bootstrap.
+        exec($command_line, $out, $err);
+
+        return array_values($out);
+    }
+
+    $out = (new \Kadupul\Platform\Infrastructure\Legacy\LegacyCommandOutput())->lines((string) $command_line);
 
     return array_values($out);
 }

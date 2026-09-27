@@ -89,7 +89,7 @@ if [ -z "$fixer" ]; then
 fi
 if [ -z "$fixer" ]; then
 	cat >&2 <<'EOF'
-php-cs-fixer 3.95.25 is required for staged PHP formatting checks.
+php-cs-fixer 3.95.27 is required for staged PHP formatting checks.
 Install that version or set PHP_CS_FIXER to its executable path.
 EOF
 	exit 1
@@ -97,9 +97,9 @@ fi
 
 fixer_version=$("${php_cmd[@]}" "$fixer" --version 2>/dev/null || true)
 case "$fixer_version" in
-	'PHP CS Fixer 3.95.25 '*) ;;
+	'PHP CS Fixer 3.95.27 '*) ;;
 	*)
-		echo 'php-cs-fixer 3.95.25 is required; found:' >&2
+		echo 'php-cs-fixer 3.95.27 is required; found:' >&2
 		printf '  %s\n' "${fixer_version:-unavailable}" >&2
 		exit 1
 		;;
@@ -184,7 +184,7 @@ for file in "${php_files[@]}"; do
 done
 
 if [ "$failed" -ne 0 ]; then
-	echo 'Format the reported staged PHP files with php-cs-fixer 3.95.25.' >&2
+	echo 'Format the reported staged PHP files with php-cs-fixer 3.95.27.' >&2
 	exit 1
 fi
 

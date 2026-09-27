@@ -401,7 +401,7 @@ test('a graph through the RRDtool proxy sends DEF paths bare and relative, and l
         $items,
         array(11 => '<path_rra>/router_traffic_11.rrd', 12 => '<path_rra>/errors/router_errors_12.rrd')
     );
-    $output = rrd_characterization_proxy_run($this, $scenario, 3);
+    $output = rrd_characterization_proxy_run($this, $scenario);
     rrd_characterization_golden('graph-proxy', rrd_characterization_proxy_observed($output));
 });
 
