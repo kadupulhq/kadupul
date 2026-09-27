@@ -13,6 +13,8 @@ use Kadupul\Inventory\Application\Command\CreateSite;
 use Kadupul\Inventory\Application\Port\SiteCreator;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\NewSite;
+use Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator;
+use Kadupul\Inventory\Infrastructure\Legacy\SiteWriteAudit;
 use Kadupul\Kernel;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -130,5 +132,46 @@ final class SiteCreateTest extends TestCase
         } finally {
             $kernel->shutdown();
         }
+    }
+
+    public static function auditedCreations(): iterable
+    {
+        yield 'authorized success' => ['success', 'allowed', 'succeeded'];
+        yield 'revoked at persistence' => ['revoked', 'denied', 'denied'];
+        yield 'operational error after authorization' => ['failure', 'allowed', 'failed'];
+    }
+
+    #[DataProvider('auditedCreations')]
+    public function testCreationAuditRecordsOnlyTheResolvedOutcome(string $mode, string $decision, string $outcome): void
+    {
+        $fixture = new SiteAuditFixture();
+        $fixture->allowed = $mode !== 'revoked';
+        if ($mode === 'failure') {
+            $fixture->failOn('INSERT', 'settings');
+        }
+        $creator = new LegacySiteCreator($fixture->connection, $fixture->access(), $fixture->audit());
+        $site = new NewSite(['name' => 'audit-name-marker', 'notes' => 'password=hunter2-audit-marker']);
+        try {
+            $id = $creator->create(42, $site);
+            self::assertSame('success', $mode);
+        } catch (InventoryAccessDenied) {
+            self::assertSame('revoked', $mode);
+        } catch (\PDOException $error) {
+            self::assertSame('failure', $mode);
+            self::assertStringContainsString('private-failure-marker', $error->getMessage());
+        }
+        $fixture->assertRecords('inventory.site.create', [$mode === 'success' ? (string) $id : 'new'], $decision, $outcome, ['audit-name-marker', 'hunter2-audit-marker']);
+        // The observer connection sees only committed rows at the moment of recording.
+        self::assertSame($mode === 'success' ? [['id' => $id, 'name' => 'audit-name-marker', 'city' => '']] : [], $fixture->records[0]['sites']);
+    }
+
+    public function testUnavailableAuditSinkCannotReplaceACommittedCreation(): void
+    {
+        $fixture = new SiteAuditFixture();
+        $trail = $this->createMock(\Kadupul\IdentityAccess\Contract\AuditTrail::class);
+        $trail->expects(self::once())->method('record')->willThrowException(new \RuntimeException('Audit sink is unavailable.'));
+        $creator = new LegacySiteCreator($fixture->connection, $fixture->access(), new SiteWriteAudit($trail));
+        self::assertSame(1, $creator->create(42, new NewSite(['name' => 'Committed'])));
+        self::assertSame('Committed', $fixture->observer->query('SELECT name FROM sites WHERE id = 1')->fetchColumn());
     }
 }

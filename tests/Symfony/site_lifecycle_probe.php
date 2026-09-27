@@ -29,7 +29,16 @@ $access = new class implements \Kadupul\IdentityAccess\Contract\ConsoleAccess {
     }
 };
 $pdo->exec("INSERT INTO sites (id,name) VALUES (1,'First'),(2,'Second'); INSERT INTO host (id,description,hostname,site_id) VALUES (1,'Device','localhost',1)");
-$adapter = new \Kadupul\Inventory\Infrastructure\Legacy\LegacySiteLifecycle($database, $access);
+$trail = new class ($pdo) implements \Kadupul\IdentityAccess\Contract\AuditTrail {
+    public array $records = [];
+    public function __construct(private \PDO $pdo) {}
+    public function record(\Kadupul\IdentityAccess\Contract\AuditEvent $event): void
+    {
+        // Capture transaction state and committed rows at the moment of recording.
+        $this->records[] = ['event' => json_decode($event->json(), true), 'json' => $event->json(), 'open' => $this->pdo->inTransaction(), 'sites' => (int) $this->pdo->query('SELECT COUNT(*) FROM sites')->fetchColumn()];
+    }
+};
+$adapter = new \Kadupul\Inventory\Infrastructure\Legacy\LegacySiteLifecycle($database, $access, new \Kadupul\Inventory\Infrastructure\Legacy\SiteWriteAudit($trail));
 $revisions = [];
 foreach ($adapter->find([1, 2]) as $site) {
     $revisions[$site->id] = $site->revision();
@@ -86,4 +95,13 @@ foreach (['delete', 'duplicate'] as $operation) {
             && (int) $pdo->query('SELECT COUNT(*) FROM settings')->fetchColumn() === 0;
     }
 }
+$outcomes = array_map(static fn(array $record): array => [$record['event']['action'], $record['event']['target']['id'], $record['event']['decision'], $record['event']['outcome'], $record['open'], $record['sites']], $trail->records);
+$expected = [];
+foreach ([['inventory.site.delete', 'denied', 'denied'], ['inventory.site.delete', 'allowed', 'failed'], ['inventory.site.delete', 'allowed', 'failed'], ['inventory.site.duplicate', 'allowed', 'failed']] as [$action, $decision, $outcome]) {
+    foreach (['1', '2'] as $target) {
+        $expected[] = [$action, $target, $decision, $outcome, false, 2];
+    }
+}
+$results['audit'] = $outcomes === $expected && !str_contains(implode("\n", array_column($trail->records, 'json')), 'Injected marker failure')
+    && count(array_unique(array_map(static fn(array $record): string => $record['event']['correlation_id'], $trail->records))) === 4;
 echo json_encode($results, JSON_THROW_ON_ERROR);

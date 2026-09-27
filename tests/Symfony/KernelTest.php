@@ -71,6 +71,19 @@ final class KernelTest extends TestCase
         }
     }
 
+    public function testConsoleOffersNoDoctrineSchemaOrSqlCommands(): void
+    {
+        foreach (['test', 'prod'] as $environment) {
+            $kernel = new Kernel($environment, false);
+            try {
+                $names = array_keys((new Application($kernel))->all());
+                self::assertSame([], array_values(array_filter($names, static fn(string $name): bool => str_starts_with($name, 'doctrine:') || str_starts_with($name, 'dbal:'))));
+            } finally {
+                $kernel->shutdown();
+            }
+        }
+    }
+
     public function testIdentityRejectsUntrustedCookiesWithoutLegacyBootstrap(): void
     {
         $kernel = new Kernel('test', false);

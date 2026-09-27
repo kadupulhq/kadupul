@@ -7,6 +7,7 @@
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
+use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Inventory\Application\Port\SiteCreator;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
@@ -15,17 +16,22 @@ use Kadupul\Platform\Contract\DatabaseConnection;
 
 final readonly class LegacySiteCreator implements SiteCreator
 {
-    public function __construct(private DatabaseConnection $database, private ConsoleAccess $access) {}
+    public function __construct(private DatabaseConnection $database, private ConsoleAccess $access, private SiteWriteAudit $audit) {}
 
     public function create(int $userId, NewSite $site): int
     {
         $db = $this->database->get();
-        $db->beginTransaction();
+        $decision = AuditEvent::DENIED;
+        $outcome = AuditEvent::DENIED;
+        $target = 'new';
         try {
+            $db->beginTransaction();
             $actor = $this->access->consoleActor();
             if ($actor === null || $actor->id !== $userId || !$this->access->canManageDevices($actor)) {
                 throw new InventoryAccessDenied($actor === null);
             }
+            $decision = AuditEvent::ALLOWED;
+            $outcome = AuditEvent::FAILED;
             $query = $db->prepare('INSERT INTO sites (name, address1, address2, city, state, postal_code, country, timezone, latitude, longitude, zoom, alternate_id, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
             $query->execute(array_values($site->fields));
             $id = (int) $db->lastInsertId();
@@ -41,6 +47,8 @@ final readonly class LegacySiteCreator implements SiteCreator
             if (!$db->commit()) {
                 throw new \RuntimeException('Site creation commit could not be confirmed.');
             }
+            $outcome = AuditEvent::SUCCEEDED;
+            $target = $id;
 
             return $id;
         } catch (\Throwable $error) {
@@ -48,6 +56,8 @@ final readonly class LegacySiteCreator implements SiteCreator
                 $db->rollBack();
             }
             throw $error;
+        } finally {
+            $this->audit->record($userId, 'inventory.site.create', [$target], $decision, $outcome);
         }
     }
 }

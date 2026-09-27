@@ -13,7 +13,15 @@ foreach (array('rrd_with_pipe', 'rrdtool_tune') as $name) {
 }
 function read_config_option($key)
 {
-    return $key === 'path_rrdtool' ? 'rrdtool' : ($GLOBALS['resize_remote'] ?? 0);
+    if ($key === 'path_rrdtool') {
+        return 'rrdtool';
+    }
+
+    return $key === 'storage_location' ? ($GLOBALS['resize_remote'] ?? 0) : 0;
+}
+function rrdtool_uses_proxy()
+{
+    return !($GLOBALS['resize_force_local'] ?? false) && (bool) read_config_option('storage_location');
 }
 function cacti_log(...$args) {}
 function cacti_sizeof($value)
@@ -61,7 +69,10 @@ test('resize holds the exclusive lease through replacement and stops after a fai
     file_put_contents($directory . '/live.rrd', 'original');
     $saved = $GLOBALS['config'] ?? null;
     $cwd = getcwd();
-    $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $directory);
+    $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $directory, 'force_storage_location_local' => true);
+    // A configured proxy must be ignored when the caller forces local storage.
+    $GLOBALS['resize_remote'] = 1;
+    $GLOBALS['resize_force_local'] = true;
     $GLOBALS['resize_commands'] = $GLOBALS['resize_renames'] = 0;
     chdir($directory);
     try {
@@ -76,7 +87,7 @@ test('resize holds the exclusive lease through replacement and stops after a fai
         $GLOBALS['config'] = $saved;
         unlink($directory . '/live.rrd');
         rmdir($directory);
-        unset($GLOBALS['resize_commands'], $GLOBALS['resize_renames']);
+        unset($GLOBALS['resize_remote'], $GLOBALS['resize_force_local'], $GLOBALS['resize_commands'], $GLOBALS['resize_renames']);
     }
 });
 

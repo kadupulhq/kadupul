@@ -1,0 +1,18 @@
+{
+    "returned": "ERROR: The Graph contains a value RRDtool cannot accept.",
+    "printed": "",
+    "diagnostics": [],
+    "commands": [],
+    "args": [
+        7,
+        0,
+        {
+            "graph_start": 1700000000,
+            "graph_end": 1700003600,
+            "print_source": true
+        },
+        false,
+        [],
+        0
+    ]
+}

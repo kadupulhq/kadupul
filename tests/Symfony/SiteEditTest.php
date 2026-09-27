@@ -16,6 +16,7 @@ use Kadupul\Inventory\Application\Query\FindEditableSite;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\Site;
 use Kadupul\Inventory\Domain\SiteEditConflict;
+use Kadupul\Inventory\Infrastructure\Legacy\LegacySiteEditor;
 use Kadupul\Inventory\Infrastructure\Symfony\SiteListParameters;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -133,5 +134,44 @@ final class SiteEditTest extends TestCase
         $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
         $access->method('canManageDevices')->willReturn(true);
         return $access;
+    }
+
+    public static function auditedEdits(): iterable
+    {
+        yield 'authorized success' => ['success', 'allowed', 'succeeded'];
+        yield 'revoked at persistence' => ['revoked', 'denied', 'denied'];
+        yield 'stale revision after authorization' => ['stale', 'allowed', 'failed'];
+        yield 'operational error after authorization' => ['failure', 'allowed', 'failed'];
+    }
+
+    #[DataProvider('auditedEdits')]
+    public function testEditAuditRecordsOnlyTheResolvedOutcome(string $mode, string $decision, string $outcome): void
+    {
+        $fixture = new SiteAuditFixture();
+        $fixture->writer->exec("INSERT INTO sites (id, name, city, notes, zoom) VALUES (7, 'Original', 'Paris', '', '12')");
+        $fixture->allowed = $mode !== 'revoked';
+        if ($mode === 'failure') {
+            $fixture->failOn('UPDATE', 'sites');
+        }
+        $editor = new LegacySiteEditor($fixture->connection, $fixture->access(), $fixture->audit());
+        $site = $editor->find(7);
+        $revision = $site->revision();
+        $site->revise('audit-name-marker', 'password=hunter2-audit-marker', $revision);
+        if ($mode === 'stale') {
+            $fixture->observer->exec("UPDATE sites SET city = 'Lyon' WHERE id = 7");
+        }
+        try {
+            $editor->save(42, $site, $revision);
+            self::assertSame('success', $mode);
+        } catch (InventoryAccessDenied) {
+            self::assertSame('revoked', $mode);
+        } catch (SiteEditConflict) {
+            self::assertSame('stale', $mode);
+        } catch (\PDOException $error) {
+            self::assertSame('failure', $mode);
+            self::assertStringContainsString('private-failure-marker', $error->getMessage());
+        }
+        $fixture->assertRecords('inventory.site.edit', ['7'], $decision, $outcome, ['audit-name-marker', 'hunter2-audit-marker']);
+        self::assertSame([['id' => 7, 'name' => $mode === 'success' ? 'audit-name-marker' : 'Original', 'city' => $mode === 'stale' ? 'Lyon' : 'Paris']], $fixture->records[0]['sites']);
     }
 }

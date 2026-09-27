@@ -205,13 +205,15 @@ final class DeviceCreateTest extends TestCase
     }
     public function testCatalogNeverLoadsSecretsAndFallsBackFromMissingReferences(): void
     {
-        $db = new \PDO('sqlite::memory:');
-        $db->exec("CREATE TABLE settings (name TEXT,value TEXT); CREATE TABLE host_template (id INTEGER,name TEXT); CREATE TABLE sites (id INTEGER,name TEXT); CREATE TABLE poller (id INTEGER,name TEXT,disabled TEXT);
-            INSERT INTO settings VALUES ('snmp_username','private-fixture'),('snmp_community','private-fixture'),('snmp_password','private-fixture'),('snmp_priv_passphrase','private-fixture'),('default_template','99'),('default_site','3'),('default_poller','9'),('snmp_version','1');
-            INSERT INTO sites VALUES (3,'Tokyo'); INSERT INTO poller VALUES (1,'Main',''),(9,'Disabled','on'); INSERT INTO host_template VALUES (2,'Template');");
-        $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
-        $database->method('get')->willReturn($db);
-        $choices = (new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog($database))->choices();
+        $db = \Doctrine\DBAL\DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        foreach (['CREATE TABLE settings (name TEXT,value TEXT)', 'CREATE TABLE host_template (id INTEGER,name TEXT)', 'CREATE TABLE sites (id INTEGER,name TEXT)', 'CREATE TABLE poller (id INTEGER,name TEXT,disabled TEXT)'] as $table) {
+            $db->executeStatement($table);
+        }
+        $db->executeStatement("INSERT INTO settings VALUES ('snmp_username','private-fixture'),('snmp_community','private-fixture'),('snmp_password','private-fixture'),('snmp_priv_passphrase','private-fixture'),('default_template','99'),('default_site','3'),('default_poller','9'),('snmp_version','1')");
+        $db->executeStatement("INSERT INTO sites VALUES (3,'Tokyo')");
+        $db->executeStatement("INSERT INTO poller VALUES (1,'Main',''),(9,'Disabled','on')");
+        $db->executeStatement("INSERT INTO host_template VALUES (2,'Template')");
+        $choices = (new \Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog($db))->choices();
         self::assertSame(0, $choices->defaults['host_template_id']);
         self::assertSame(3, $choices->defaults['site_id']);
         self::assertSame(1, $choices->defaults['poller_id']);
@@ -224,10 +226,11 @@ final class DeviceCreateTest extends TestCase
         self::assertSame('1', $choices->defaults['ping_retries']);
         self::assertStringNotContainsString('private-fixture', json_encode($choices));
         self::assertSame('', $choices->defaults['snmp_username']);
-        $db->exec("DELETE FROM settings WHERE name = 'default_site'; INSERT INTO sites VALUES (1,'Default');");
-        $catalog = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog($database);
+        $db->executeStatement("DELETE FROM settings WHERE name = 'default_site'");
+        $db->executeStatement("INSERT INTO sites VALUES (1,'Default')");
+        $catalog = new \Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog($db);
         self::assertSame(1, $catalog->choices()->defaults['site_id']);
-        $db->exec("INSERT INTO settings VALUES ('default_site','')");
+        $db->executeStatement("INSERT INTO settings VALUES ('default_site','')");
         self::assertSame(0, $catalog->choices()->defaults['site_id']);
     }
 
@@ -254,6 +257,35 @@ final class DeviceCreateTest extends TestCase
             $creator = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator($directory, $database);
             self::assertSame(7, $creator->create(42, new NewDevice(['description' => 'Test', 'hostname' => 'localhost'])));
         } finally {
+            unlink($directory . '/bin/legacy-device-create.php');
+            rmdir($directory . '/bin');
+            rmdir($directory);
+        }
+    }
+
+    public function testAdapterSendsAFreshTrustedCorrelationIdentifier(): void
+    {
+        $directory = sys_get_temp_dir() . '/kadupul-create-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/bin', 0700, true);
+        file_put_contents($directory . '/bin/legacy-device-create.php', '<?php file_put_contents(__DIR__ . "/commands", stream_get_contents(STDIN) . "\\n", FILE_APPEND); echo "KADUPUL_CREATE_RESULT=" . json_encode(["status" => "ok", "id" => 7]);');
+        try {
+            $db = new \PDO('sqlite::memory:');
+            $db->exec("CREATE TABLE settings (name TEXT,value TEXT); INSERT INTO settings VALUES ('path_php_binary', '')");
+            $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
+            $database->method('get')->willReturn($db);
+            $creator = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator($directory, $database);
+            foreach ([1, 2] as $attempt) {
+                $creator->create(42, new NewDevice(['description' => 'Test ' . $attempt, 'hostname' => 'localhost']));
+            }
+            $commands = array_map(static fn(string $line): array => json_decode($line, true, 16, JSON_THROW_ON_ERROR), file($directory . '/bin/commands', FILE_IGNORE_NEW_LINES));
+            self::assertCount(2, $commands);
+            foreach ($commands as $command) {
+                self::assertSame(['correlation_id', 'actor', 'fields'], array_keys($command));
+                self::assertMatchesRegularExpression('/^[a-f0-9]{32}$/D', $command['correlation_id']);
+            }
+            self::assertNotSame($commands[0]['correlation_id'], $commands[1]['correlation_id']);
+        } finally {
+            @unlink($directory . '/bin/commands');
             unlink($directory . '/bin/legacy-device-create.php');
             rmdir($directory . '/bin');
             rmdir($directory);

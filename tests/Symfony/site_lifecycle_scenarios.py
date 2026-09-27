@@ -28,6 +28,12 @@ def verify_site_lifecycle(harness, session, user_id, check):
         parser.feed(body)
         return parser.fields
 
+    def audit_text():
+        return harness.command('cat', '/var/www/html/log/kadupul-audit.jsonl', check=True)['stdout']
+
+    def audit_events(action_name):
+        return [event for event in map(json.loads, audit_text().splitlines()) if event.get('action') == action_name]
+
     def action(operation, ids):
         return '/app.php/inventory/sites/' + operation + '?' + urlencode([('ids[]', str(i)) for i in ids])
 
@@ -69,6 +75,10 @@ def verify_site_lifecycle(harness, session, user_id, check):
         check(request(target, fields | {'site_action[pattern]': 'x' * 101})[0] == 422 and harness.sql('SELECT COUNT(*) FROM sites').strip() == before, 'invalid copy batch cannot partially insert')
         harness.sql(f"UPDATE sites SET city='Concurrent' WHERE id={second}")
         check(request(target, fields)[0] == 409 and harness.sql('SELECT COUNT(*) FROM sites').strip() == before, 'stale bulk selection rejects all copies')
+        stale = audit_events('inventory.site.duplicate')[-2:]
+        check([event['target']['id'] for event in stale] == [str(first), str(second)] and len({event['correlation_id'] for event in stale}) == 1
+              and all((event['decision'], event['outcome']) == ('allowed', 'failed') for event in stale),
+              'stale bulk duplication records one correlated failure per site')
         fields = form(target)
         check(request(target, fields | {'site_action[pattern]': '<site> copied'})[0] == 200, 'bulk duplication succeeds through Symfony')
         copies = [int(v) for v in harness.sql("SELECT id FROM sites WHERE name IN ('lifecycle-A copied','lifecycle-B copied') ORDER BY id").splitlines()]
@@ -93,6 +103,11 @@ def verify_site_lifecycle(harness, session, user_id, check):
         check(request(target, fields, client=Session(harness.base))[0] == 401, 'anonymous site bulk writes are denied')
         harness.sql("REPLACE INTO settings (name,value) VALUES ('time_last_change_site','1'),('time_last_change_site_device','1')")
         check(request(target, fields)[0] == 200 and harness.sql(f'SELECT COUNT(*) FROM sites WHERE id IN ({first},{second})').strip() == '0', 'bulk site deletion succeeds atomically')
+        deleted = audit_events('inventory.site.delete')[-2:]
+        check([event['target']['id'] for event in deleted] == [str(first), str(second)] and len({event['correlation_id'] for event in deleted}) == 1
+              and all((event['decision'], event['outcome']) == ('allowed', 'succeeded') and event['actor'] == {'id': user_id} for event in deleted),
+              'bulk site deletion records one correlated success per site')
+        check('lifecycle-A' not in audit_text() and 'copied' not in audit_text(), 'structured site audit excludes site names and copy patterns')
         check(harness.sql(f'SELECT site_id FROM host WHERE id={hosts[0]}').strip() == '0' and harness.sql(f'SELECT site_id FROM host WHERE id={hosts[1]}').strip() == str(first), 'site deletion unassigns active devices and preserves deleted-device history')
         check(harness.sql("SELECT COUNT(*) FROM settings WHERE name IN ('time_last_change_site','time_last_change_site_device') AND value > 1").strip() == '2', 'site lifecycle commits both cache invalidations')
         probe = harness.php('-r', Path(__file__).with_name('site_lifecycle_probe.php').read_text().removeprefix('<?php'))
