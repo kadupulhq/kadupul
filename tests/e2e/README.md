@@ -67,6 +67,30 @@ HOST_PORT=8090 docker compose up -d
 E2E_BASE_URL=http://localhost:8090 npx playwright test tests/csp.spec.ts tests/csp-plugins.spec.ts
 ```
 
+## Real RRDtool proxy journey
+
+The proxy E2E stack adds a real `rrdproxy` container and exercises Kadupul's
+administrator settings page, RRDtool transport, and template import/export UI.
+It creates throwaway client and proxy RSA keys, uses a private Docker network,
+and removes the stack and keys when the run finishes.
+
+```bash
+composer install --no-dev --prefer-dist --no-interaction
+npm ci --ignore-scripts && npm run build
+cd tests/e2e
+npm ci --ignore-scripts
+npx playwright install --with-deps chromium
+./rrd-proxy/run.sh
+```
+
+The browser changes storage from local to proxy, writes and reads an RRD
+through Kadupul's configured transport, exports a device template as a
+download, then uploads that XML through the import page. The PHP app container
+has no local RRDtool executable, so the RRD assertions require the real proxy
+to be reached. `KEEP_UP=1 ./rrd-proxy/run.sh` preserves the stack for
+inspection; use the Compose files with project name
+`kadupul-rrd-proxy-e2e` to inspect logs.
+
 ## What the stack does at boot
 
 1. MariaDB seeds `/docker-entrypoint-initdb.d/01-schema.sql` (the repo's
