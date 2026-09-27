@@ -21,8 +21,9 @@ final class LocalRrdtool
      *
      * @return resource|false The process input stream, or false on launch failure.
      */
-    public function open(array $descriptors, array &$streams, bool $acknowledged = false)
+    public function open(array $descriptors, &$streams, bool $acknowledged = false)
     {
+        $streams = array();
         $process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
         if (!is_resource($process)) {
             return false;
