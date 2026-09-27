@@ -38,6 +38,22 @@ require_once __DIR__ . '/../lib/utility.php';
 $status = 'failed';
 $transactionStarted = false;
 $remotes = [];
+/* Commits the main database first, then each collector. A collector that
+   commits before the primary cannot be undone when the primary then fails; a
+   collector that fails after it keeps stale rows until an operator resyncs. */
+function device_removal_commit(array $remotes, array $ids)
+{
+    if (!db_commit_transaction()) {
+        throw new RuntimeException('Commit failed');
+    }
+
+    foreach ($remotes as $pollerId => $remote) {
+        if (!$remote->commit()) {
+            cacti_log('ERROR: Devices ' . implode(',', $ids) . ' were removed from the main database but collector ' . $pollerId . ' did not commit; resync that collector', false, 'AUDIT');
+        }
+    }
+}
+
 /* Parses one removal command. Bounded length and depth keep a hostile payload
    away from the lifecycle below. */
 function device_removal_command($input)
@@ -223,19 +239,9 @@ try {
             throw new RuntimeException('Collector transaction changed');
         }
     }
-    // The main database is authoritative, so it commits first. A collector that
-    // then fails to commit rolls back and keeps stale rows, which the cache
-    // markers written above make replication reconcile. Committing a collector
-    // before the primary cannot be undone if the primary then fails.
-    if (!db_commit_transaction()) {
-        throw new RuntimeException('Commit failed');
-    }
+    // A partial outcome is logged, not reported: the caller has no status for it.
+    device_removal_commit($remotes, $ids);
     $transactionStarted = false;
-    foreach ($remotes as $pollerId => $remote) {
-        if (!$remote->commit()) {
-            cacti_log('WARNING: Device removal committed locally but not on collector ' . $pollerId . '; replication will reconcile', false, 'AUDIT');
-        }
-    }
     $status = 'ok';
     cacti_log('INVENTORY: User ' . $command['actor'] . ' removed devices ' . implode(',', $ids) . ' using policy ' . $policy->value, false, 'AUDIT');
 } catch (DeviceEditConflict) {

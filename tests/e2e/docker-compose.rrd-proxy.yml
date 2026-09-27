@@ -1,0 +1,43 @@
+# Real RRDtool Proxy integration overlay for docker-compose.yml.
+# The proxy is internal-only; Kadupul reaches it at rrdproxy:40301.
+services:
+  php:
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      rrdproxy:
+        condition: service_healthy
+    volumes:
+      - ./rrd-proxy/probe.php:/var/www/html/cacti/rrd-proxy-e2e-probe.php:ro
+      - ${RRD_PROXY_E2E_STATE:?run tests/e2e/rrd-proxy/run.sh to create test keys}:/run/rrd-proxy-e2e:ro
+    networks:
+      cacti-e2e:
+        ipv4_address: 172.29.241.10
+
+  rrdproxy:
+    build:
+      context: .
+      dockerfile: rrd-proxy/Dockerfile
+      args:
+        RRDPROXY_REF: ${RRDPROXY_REF:-54aad579803f2b9cf1e9dd979881247656853230}
+    volumes:
+      - ${RRD_PROXY_E2E_STATE:?run tests/e2e/rrd-proxy/run.sh to create test keys}:/run/rrd-proxy-e2e:ro
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1',40301) ? 0 : 1);"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 10s
+    networks:
+      cacti-e2e:
+        ipv4_address: 172.29.241.20
+
+  nginx:
+    volumes:
+      - ./rrd-proxy/probe.php:/var/www/html/cacti/rrd-proxy-e2e-probe.php:ro
+
+networks:
+  cacti-e2e:
+    ipam:
+      config:
+        - subnet: 172.29.241.0/24

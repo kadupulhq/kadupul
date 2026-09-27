@@ -40,7 +40,7 @@ test('production on-demand Boost deletes only acknowledged sample tuples and pre
             expect($delete[0])->toBe("DELETE FROM $table WHERE $tuple OR $tuple");
             expect($delete[1])->toBe(array(42, 'value', 1699999800, '21', 42, 'value', 1699999860, '22'));
         }
-        expect($observed['updates'][0])->toContain('--template value')->toContain('1699999800:21');
+        expect($observed['updates'][0])->toStartWith("update '" . $directory . "/sample.rrd' ")->toContain('--template value')->toContain('1699999800:21');
         if ($mode !== 'first-ack') {
             expect($observed['updates'][0])->toContain('1699999860:22');
         }

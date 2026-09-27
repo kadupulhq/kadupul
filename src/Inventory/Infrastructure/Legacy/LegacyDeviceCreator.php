@@ -23,7 +23,7 @@ final readonly class LegacyDeviceCreator implements DeviceCreator
         $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-create.php'], $this->projectDir);
         $process->setTimeout(120);
-        $process->setInput(json_encode(['actor' => $userId, 'fields' => $device->fields], JSON_THROW_ON_ERROR));
+        $process->setInput(json_encode(['correlation_id' => bin2hex(random_bytes(16)), 'actor' => $userId, 'fields' => $device->fields], JSON_THROW_ON_ERROR));
         try {
             $process->run();
         } catch (\Throwable) {

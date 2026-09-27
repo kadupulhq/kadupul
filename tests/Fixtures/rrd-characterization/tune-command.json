@@ -1,0 +1,184 @@
+[
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "tune",
+                    "<DIR>/rra/router_traffic_21.rrd",
+                    "--heartbeat",
+                    "traffic_in:600",
+                    "--minimum",
+                    "traffic_in:U",
+                    "--maximum",
+                    "traffic_in:1e9",
+                    "--data-source-type",
+                    "traffic_in:DERIVE",
+                    "--data-source-rename",
+                    "traffic_in:in'bound \"x\""
+                ],
+                "stdin": [
+                    ""
+                ]
+            }
+        ],
+        "args": [
+            {
+                "data_source_id": 21,
+                "data-source-type": "3",
+                "heartbeat": "600",
+                "minimum": "U",
+                "maximum": "1e9",
+                "data-source-rename": "in'bound \"x\""
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "tune",
+                    "<DIR>/rra/router_traffic_21.rrd",
+                    "--minimum",
+                    "traffic_in:0"
+                ],
+                "stdin": [
+                    ""
+                ]
+            }
+        ],
+        "args": [
+            {
+                "heartbeat": "",
+                "minimum": "0",
+                "maximum": "",
+                "data-source-type": "",
+                "data-source-rename": "",
+                "data_source_id": 21
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            {
+                "heartbeat": "",
+                "minimum": "",
+                "maximum": "",
+                "data-source-type": "",
+                "data-source-rename": "",
+                "data_source_id": 21
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "tune",
+                    "<DIR>/rra/router_traffic_21.rrd",
+                    "--maximum",
+                    "traffic_in:5"
+                ],
+                "stdin": [
+                    ""
+                ]
+            }
+        ],
+        "args": [
+            {
+                "heartbeat": "",
+                "minimum": "",
+                "maximum": "5",
+                "data-source-type": "99",
+                "data-source-rename": "",
+                "data_source_id": 21
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            {
+                "data_source_id": 22,
+                "data-source-type": "3",
+                "heartbeat": "600",
+                "minimum": "U",
+                "maximum": "1e9",
+                "data-source-rename": "in'bound \"x\""
+            }
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            {
+                "data-source-rename": "in\u0000bound",
+                "data_source_id": 21,
+                "data-source-type": "3",
+                "heartbeat": "600",
+                "minimum": "U",
+                "maximum": "1e9"
+            }
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            [
+                "info",
+                "<path_rra>/router\u0000traffic_21.rrd"
+            ],
+            false,
+            1
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            [
+                "info",
+                "rra/router\ntraffic_21.rrd"
+            ],
+            false,
+            1
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            [
+                "info",
+                "rra/router\rtraffic_21.rrd"
+            ],
+            false,
+            1
+        ]
+    }
+]

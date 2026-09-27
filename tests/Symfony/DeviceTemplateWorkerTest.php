@@ -48,4 +48,33 @@ final class DeviceTemplateWorkerTest extends TestCase
             rmdir($directory);
         }
     }
+
+    public function testAdapterSendsAFreshTrustedCorrelationIdentifier(): void
+    {
+        $directory = sys_get_temp_dir() . '/kadupul-template-worker-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/bin', 0700, true);
+        file_put_contents($directory . '/bin/legacy-device-template.php', '<?php file_put_contents(__DIR__ . "/commands", stream_get_contents(STDIN) . "\\n", FILE_APPEND); echo "KADUPUL_TEMPLATE_RESULT=" . json_encode(["status" => "ok"]);');
+        try {
+            $pdo = new \PDO('sqlite::memory:');
+            $pdo->exec("CREATE TABLE settings (name TEXT, value TEXT); INSERT INTO settings VALUES ('path_php_binary', '')");
+            $database = $this->createMock(DatabaseConnection::class);
+            $database->method('get')->willReturn($pdo);
+            $adapter = new LegacyDeviceTemplateAssignments($database, new LegacyDeviceVisibility($database), $directory);
+            $assignment = new DeviceTemplateAssignment(3, 'Device', 0, 1);
+            $adapter->save(42, $assignment, $assignment->revision());
+            $adapter->save(42, $assignment, $assignment->revision());
+            $commands = array_map(static fn(string $line): array => json_decode($line, true, 8, JSON_THROW_ON_ERROR), file($directory . '/bin/commands', FILE_IGNORE_NEW_LINES));
+            self::assertCount(2, $commands);
+            foreach ($commands as $command) {
+                self::assertSame(['correlation_id', 'actor', 'id', 'template_id', 'revision'], array_keys($command));
+                self::assertMatchesRegularExpression('/^[a-f0-9]{32}$/D', $command['correlation_id']);
+            }
+            self::assertNotSame($commands[0]['correlation_id'], $commands[1]['correlation_id']);
+        } finally {
+            @unlink($directory . '/bin/commands');
+            unlink($directory . '/bin/legacy-device-template.php');
+            rmdir($directory . '/bin');
+            rmdir($directory);
+        }
+    }
 }
