@@ -19,6 +19,20 @@ if ($collect === '1') {
 }
 
 $scenario = json_decode(file_get_contents($directory . '/scenario.json'), true, 512, JSON_THROW_ON_ERROR);
+$resolve_fixture_paths = static function ($value) use (&$resolve_fixture_paths, $directory) {
+    if (is_array($value)) {
+        $resolved = array();
+        foreach ($value as $key => $item) {
+            $key = is_string($key) ? str_replace('<fixture_rra>', $directory . '/rra', $key) : $key;
+            $resolved[$key] = $resolve_fixture_paths($item);
+        }
+
+        return $resolved;
+    }
+
+    return is_string($value) ? str_replace('<fixture_rra>', $directory . '/rra', $value) : $value;
+};
+$scenario['calls'] = $resolve_fixture_paths($scenario['calls']);
 
 // Legends and business hours format dates in the process zone.
 date_default_timezone_set('UTC');
