@@ -40,11 +40,12 @@ second implementation or a module boundary needs one.
 | `RrdCommand` and a pipe-mode encoder replacing shell escaping on the pipe | PR #410 |
 | Remaining `cacti_escapeshellarg()` calls on the pipe in `lib/rrd.php` moved to the encoder | PR #421 |
 | RRD file paths and the remaining pipe commands in `lib/rrd.php`, `lib/boost.php`, `lib/rrdcheck.php`, `lib/rrd_maintenance.php`, `lib/dsstats.php`, `lib/functions.php` and `poller_maintenance.php` quoted with the encoder | PR #426 |
-| RRDtool started without a shell: `tune` through `symfony/process`, the `rrdtool -` pipes through `proc_open()` argument arrays | This PR |
-| Long-lived pipe in `LocalRrdtool` | Pending |
+| RRDtool started without a shell: `tune` through `symfony/process`, the `rrdtool -` pipes through `proc_open()` argument arrays | PR #441 |
+| Session release and timezone-cookie handling moved out of local RRDtool process execution | Issue #498 |
+| Long-lived local pipe process ownership in `LocalRrdtool` | Issue #500 |
 | Proxy client restored on phpseclib 4 and hardened without a wire format change | PR #436 |
 | Graph and export `DEF` paths sent to the proxy bare and relative to the RRA directory | PR #437 |
-| Graph command generation split by option, definition, item type and legend | Pending |
+| Graph options moved to `GraphOptionsGenerator` and ordered consolidation references moved to `GraphItemConsolidationResolver`; DEF/CDEF/VDEF creation, item rendering and legend generation remain in `lib/rrd.php` | Issue #502 |
 | Web-side graph reads through DBAL; collector writes stay on `db_*` | Pending |
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
 | Callers moved to Graphing services; wrappers marked `#[\Deprecated]` | Pending |
@@ -133,9 +134,9 @@ tune` runs once and exits, so it goes through `symfony/process`, which on
 Windows still starts `cmd.exe` but quotes each argument itself. The `rrdtool -` pipes
 stay on `proc_open()` with an argument array: callers write to the pipe across
 many calls and close it later, and the legacy writer leaves stderr on the
-terminal, neither of which `Process` offers. `rrd_writer_pipes()` records the
-process behind each legacy writer so `rrd_close()` can wait for it, as
-`pclose()` did. `path_rrdtool` is now the executable alone. A value with extra
+terminal, neither of which `Process` offers. `LocalRrdtool` owns each persistent
+process and its streams while the procedural wrappers preserve the pipe API and
+command behavior. `path_rrdtool` is now the executable alone. A value with extra
 words or shell syntax already failed the `is_file()` check before graph
 commands and tuning, and the acknowledged pipe already used an argument array;
 the legacy writer was the last place such a value worked.

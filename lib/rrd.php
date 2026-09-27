@@ -51,6 +51,38 @@ function rrdtool_filesystem(): \Symfony\Component\Filesystem\Filesystem
     return $filesystem ??= new \Symfony\Component\Filesystem\Filesystem();
 }
 
+/** Return the adapter for web request state used by local RRDtool processes.
+ *
+ * @return \Kadupul\Graphing\Infrastructure\Legacy\LegacyRrdWebContext
+ */
+function rrdtool_legacy_web_context(): \Kadupul\Graphing\Infrastructure\Legacy\LegacyRrdWebContext
+{
+    $class = \Kadupul\Graphing\Infrastructure\Legacy\LegacyRrdWebContext::class;
+    if (!class_exists($class)) {
+        require_once __DIR__ . '/../src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php';
+    }
+
+    static $context = null;
+
+    return $context ??= new $class();
+}
+
+/** Return the local RRDtool process owner used by persistent pipe callers.
+ *
+ * @return \Kadupul\Graphing\Infrastructure\Rrd\LocalRrdtool
+ */
+function rrdtool_local_processes(): \Kadupul\Graphing\Infrastructure\Rrd\LocalRrdtool
+{
+    $class = \Kadupul\Graphing\Infrastructure\Rrd\LocalRrdtool::class;
+    if (!class_exists($class)) {
+        require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/LocalRrdtool.php';
+    }
+
+    static $processes = null;
+
+    return $processes ??= new $class();
+}
+
 function escape_command($command)
 {
     return $command;		# we escape every single argument now, no need for 'special' escaping
@@ -91,8 +123,7 @@ function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = fa
     $lease_busy = false;
 
     $args = array_slice(func_get_args(), 0, 1);
-    $force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
-    $function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_init' : '__rrd_init';
+    $function = rrdtool_uses_proxy() ? '__rrd_proxy_init' : '__rrd_init';
     if ($function !== '__rrd_init') {
         return call_user_func_array($function, $args);
     }
@@ -146,18 +177,17 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
         // Registered before the maintenance lease's handler, so a pipe left
         // open has its child reaped before the lease is released.
         register_shutdown_function(function () {
-            foreach (array_merge(rrd_acknowledged_pipes(), rrd_writer_pipes()) as $state) {
-                rrd_close($state['write']);
-            }
+            rrdtool_local_processes()->closeAll();
         });
         $shutdown_registered = true;
     }
     if ($acknowledged) {
-        $process = rrdtool_pipe_process(
+        $pipe = rrdtool_local_processes()->open(
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)),
-            $streams
+            $streams,
+            true
         );
-        if (!is_resource($process)) {
+        if (!is_resource($pipe)) {
             rrdtool_reset_language();
             return false;
         }
@@ -165,7 +195,7 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
         stream_set_blocking($streams[1], false);
         $owned = & rrd_acknowledged_pipes();
         $owned[(int) $streams[0]] = array('write' => $streams[0], 'read' => $streams[1],
-            'process' => $process, 'echo' => $output_to_term && empty($config['is_web']), 'failed' => false);
+            'echo' => $output_to_term && empty($config['is_web']), 'failed' => false);
         return $streams[0];
     }
 
@@ -178,12 +208,10 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
             $descriptors[2] = array('null');
         }
     }
-    $process = rrdtool_pipe_process($descriptors, $streams);
-    if (!is_resource($process)) {
+    $pipe = rrdtool_local_processes()->open($descriptors, $streams);
+    if (!is_resource($pipe)) {
         return false;
     }
-    $owned = & rrd_writer_pipes();
-    $owned[(int) $streams[0]] = array('write' => $streams[0], 'process' => $process);
 
     return $streams[0];
 }
@@ -195,13 +223,6 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
 function rrdtool_pipe_process($descriptors, &$streams)
 {
     return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
-}
-
-/** Write-only pipes from rrd_init(), and the process each must be closed with. */
-function &rrd_writer_pipes()
-{
-    static $pipes = array();
-    return $pipes;
 }
 
 /** Native response pipes are owned by the same lifetime as their writer lease. */
@@ -281,7 +302,7 @@ function rrd_acknowledged_command($pipe, $command)
         }
     }
     $state['failed'] = true;
-    proc_terminate($state['process']);
+    rrdtool_local_processes()->terminate($pipe);
     cacti_log('ERROR: RRDtool response was unavailable or timed out; samples retained for retry.');
     return array(false, $output);
 }
@@ -447,8 +468,7 @@ function rrd_close()
 {
     global $config;
     $args = func_get_args();
-    $force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
-    $function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_close' : '__rrd_close';
+    $function = rrdtool_uses_proxy() ? '__rrd_proxy_close' : '__rrd_close';
     try {
         return call_user_func_array($function, $args);
     } finally {
@@ -460,9 +480,11 @@ function rrd_close()
 }
 
 /** Keep an owned writer pipe scoped to one operation, including early returns. */
-function rrd_with_pipe($operation)
+function rrd_with_pipe($operation, $output_to_term = true)
 {
-    $pipe = rrd_init(true, true, true);
+    // Proxy initialization uses the first argument as a log option; terminal
+    // output is a local-pipe setting only.
+    $pipe = rrd_init(rrdtool_uses_proxy() ? true : $output_to_term, true, true);
     if ($pipe === false) {
         return false;
     }
@@ -477,39 +499,14 @@ function __rrd_close($rrdtool_pipe)
 {
     $owned = & rrd_acknowledged_pipes();
     if (isset($owned[(int) $rrdtool_pipe])) {
-        $state = $owned[(int) $rrdtool_pipe];
         unset($owned[(int) $rrdtool_pipe]);
-        if (is_resource($state['write'])) {
-            fclose($state['write']);
-        }
         // Commands have already been acknowledged. EOF asks the idle child to exit.
-        $deadline = hrtime(true) + 1000000000;
-        do {
-            $status = proc_get_status($state['process']);
-            if (!$status['running']) {
-                break;
-            }
-            usleep(10000);
-        } while (hrtime(true) < $deadline);
-        if ($status['running']) {
-            proc_terminate($state['process'], 9);
-        }
-        fclose($state['read']);
-        proc_close($state['process']);
+        rrdtool_local_processes()->close($rrdtool_pipe);
         rrdtool_reset_language();
         return;
     }
 
-    $writers = & rrd_writer_pipes();
-    if (isset($writers[(int) $rrdtool_pipe])) {
-        $process = $writers[(int) $rrdtool_pipe]['process'];
-        unset($writers[(int) $rrdtool_pipe]);
-        if (is_resource($rrdtool_pipe)) {
-            fclose($rrdtool_pipe);
-        }
-        // As pclose() did, wait for RRDtool to finish the queued commands.
-        proc_close($process);
-    } elseif (is_resource($rrdtool_pipe)) {
+    if (!rrdtool_local_processes()->close($rrdtool_pipe) && is_resource($rrdtool_pipe)) {
         /* close the rrdtool file descriptor */
         pclose($rrdtool_pipe);
     }
@@ -592,8 +589,7 @@ function rrdtool_execute()
     $rejection = null;
 
     $args = func_get_args();
-    $force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
-    $function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_execute' : '__rrd_execute';
+    $function = rrdtool_uses_proxy() ? '__rrd_proxy_execute' : '__rrd_execute';
 
     if ($function !== '__rrd_execute') {
         return call_user_func_array($function, $args);
@@ -872,8 +868,8 @@ function rrdtool_create_prepare($data_source_path, $show_source, $use_proxy, $rr
 
 /**
  * Check for structured path configuration and, if in place, verify that the
- * RRD's directory exists and create it if not. $use_proxy is the caller's own
- * storage_location test; $logopt tags the proxy commands.
+ * RRD's directory exists and create it if not. $use_proxy is the shared
+ * proxy-selection decision; $logopt tags the proxy commands.
  *
  * Returns the owner and group of the RRA root, which the caller also gives the
  * new RRD; both are null on Windows, where they are not looked up.
@@ -1205,7 +1201,8 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
             rrdtool_set_language();
         }
 
-        cacti_session_close();
+        $web_context = rrdtool_legacy_web_context();
+        $web_context->releaseSession();
 
         if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
             $descriptorspec = array(
@@ -1217,13 +1214,7 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
                 $descriptorspec[2] = array('redirect', 1);
             }
 
-            if ($config['is_web']) {
-                if (isset($_COOKIE['CactiTimeZone'])) {
-                    $gmt_offset = $_COOKIE['CactiTimeZone'];
-                    cacti_time_zone_set($gmt_offset);
-                }
-            }
-
+            $web_context->prepareProcess($config);
             $process = rrdtool_pipe_process($descriptorspec, $pipes);
 
             if (!is_resource($process)) {
@@ -1593,7 +1584,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     /* ok, if that passes lets check to make sure an rra does not already
     exist, the last thing we want to do is overright data! */
     if ($show_source != true) {
-        if (read_config_option('storage_location')) {
+        if (rrdtool_uses_proxy()) {
             if (rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
                 return -1;
             }
@@ -1722,7 +1713,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 
     $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
 
-    $prepared = rrdtool_create_prepare($data_source_path, $show_source, read_config_option('storage_location'), $rrdtool_pipe, $local_data_id, 'POLLER');
+    $prepared = rrdtool_create_prepare($data_source_path, $show_source, rrdtool_uses_proxy(), $rrdtool_pipe, $local_data_id, 'POLLER');
     if ($prepared === false) {
         return false;
     }
@@ -1776,7 +1767,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
             }
 
             /* create the rrd if one does not already exist */
-            if (read_config_option('storage_location') > 0) {
+            if (rrdtool_uses_proxy()) {
                 $file_exists = rrdtool_execute(array('file_exists', $rrd_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
             } else {
                 $file_exists = file_exists($rrd_path);
@@ -2109,248 +2100,9 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
  */
 function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &$graph_data_array, ?\DateTimeImmutable $now = null)
 {
-    global $config, $image_types;
+    require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php';
 
-    include($config['include_path'] . '/global_arrays.php');
-
-    /* define some variables */
-    $scale               = '';
-    $rigid               = '';
-    $unit_value          = '';
-    $version             = get_rrdtool_version();
-    $unit_exponent_value = '';
-
-    if ($graph['auto_scale'] == 'on') {
-        switch ($graph['auto_scale_opts']) {
-            case '1': /* autoscale ignores lower, upper limit */
-                $scale = '--alt-autoscale' . RRD_NL;
-                break;
-            case '2': /* autoscale-max, accepts a given lower limit */
-                $scale = '--alt-autoscale-max' . RRD_NL;
-                if (is_numeric($graph['lower_limit'])) {
-                    $scale .= '--lower-limit=' . rrdtool_pipe_quote($graph['lower_limit']) . RRD_NL;
-                }
-                break;
-            case '3': /* autoscale-min, accepts a given upper limit */
-                $scale = '--alt-autoscale-min' . RRD_NL;
-                if (is_numeric($graph['upper_limit'])) {
-                    $scale .= '--upper-limit=' . rrdtool_pipe_quote($graph['upper_limit']) . RRD_NL;
-                }
-                break;
-            case '4': /* auto_scale with limits */
-                $scale = '--alt-autoscale' . RRD_NL;
-                if (is_numeric($graph['upper_limit'])) {
-                    $scale .= '--upper-limit=' . rrdtool_pipe_quote($graph['upper_limit']) . RRD_NL;
-                }
-                if (is_numeric($graph['lower_limit'])) {
-                    $scale .= '--lower-limit=' . rrdtool_pipe_quote($graph['lower_limit']) . RRD_NL;
-                }
-                break;
-        }
-    } else {
-        if ($graph['upper_limit'] != '') {
-            $scale =  '--upper-limit=' . rrdtool_pipe_quote_substituted($graph['upper_limit'], $graph) . RRD_NL;
-        }
-        if ($graph['lower_limit'] != '') {
-            $scale .= '--lower-limit=' . rrdtool_pipe_quote_substituted($graph['lower_limit'], $graph) . RRD_NL;
-        }
-    }
-
-    if ($graph['auto_scale_log'] == 'on') {
-        $scale .= '--logarithmic' . RRD_NL;
-    }
-
-    /* --units=si only defined for logarithmic y-axis scaling, even if it doesn't hurt on linear graphs */
-    if ($graph['scale_log_units'] == 'on' && $graph['auto_scale_log'] == 'on') {
-        $scale .= '--units=si' . RRD_NL;
-    }
-
-    if ($graph['auto_scale_rigid'] == 'on') {
-        $rigid = '--rigid' . RRD_NL;
-    }
-
-    if ($graph['unit_value'] != '') {
-        $unit_value = '--y-grid=' . rrdtool_pipe_quote_substituted($graph['unit_value'], $graph) . RRD_NL;
-    }
-
-    if (preg_match('/^[0-9]+$/', $graph['unit_exponent_value'])) {
-        $unit_exponent_value = '--units-exponent=' . rrdtool_pipe_quote($graph['unit_exponent_value']) . RRD_NL;
-    }
-
-    /*
-     * optionally you can specify and array that overrides some of the db's values, lets set
-     * that all up here
-     */
-
-    /* override: graph height (in pixels) */
-    if (isset($graph_data_array['graph_height'])) {
-        $graph_height = $graph_data_array['graph_height'];
-    } else {
-        $graph_height = $graph['height'];
-    }
-
-    /* override: graph width (in pixels) */
-    if (isset($graph_data_array['graph_width'])) {
-        $graph_width = $graph_data_array['graph_width'];
-    } else {
-        $graph_width = $graph['width'];
-    }
-
-    /* override: skip drawing the legend? */
-    if (isset($graph_data_array['graph_nolegend'])) {
-        $graph_legend = '--no-legend' . RRD_NL;
-    } else {
-        $graph_legend = '';
-    }
-
-    /* export options */
-    if (isset($graph_data_array['export'])) {
-        $graph_opts = $graph_data_array['export_filename'] . RRD_NL;
-    } else {
-        if (empty($graph_data_array['output_filename'])) {
-            $graph_opts = '-' . RRD_NL;
-        } else {
-            $graph_opts = $graph_data_array['output_filename'] . RRD_NL;
-        }
-    }
-
-    if (isset($graph_data_array['image_format']) && $graph_data_array['image_format'] == 'png') {
-        $graph['image_format_id'] = 1;
-    }
-
-    /* basic graph options */
-    $graph_opts .=
-        '--imgformat=' . $image_types[$graph['image_format_id']] . RRD_NL .
-        '--start=' . rrdtool_pipe_quote($graph_start) . RRD_NL .
-        '--end=' . rrdtool_pipe_quote($graph_end) . RRD_NL;
-
-    $graph_opts .= '--pango-markup ' . RRD_NL;
-
-    if (read_config_option('rrdtool_watermark') == 'on') {
-        $graph_opts .= '--disable-rrdtool-tag ' . RRD_NL;
-    }
-
-    $quoted_text = array();
-    foreach ($graph as $key => $value) {
-        switch ($key) {
-            case 'title_cache':
-                if (!empty($value)) {
-                    $graph_opts .= '--title=' . rrd_substituted_text_placeholder($quoted_text, '--title', $value, $graph) . RRD_NL;
-                }
-                break;
-            case 'alt_y_grid':
-                if ($value == CHECKED) {
-                    $graph_opts .= '--alt-y-grid' . RRD_NL;
-                }
-                break;
-            case 'height':
-                if (isset($graph_data_array['graph_height']) && preg_match('/^[0-9]+$/', $graph_data_array['graph_height'])) {
-                    $graph_opts .= '--height=' . $graph_data_array['graph_height'] . RRD_NL;
-                } else {
-                    $graph_opts .= '--height=' . $value . RRD_NL;
-                }
-                break;
-            case 'width':
-                if (isset($graph_data_array['graph_width']) && preg_match('/^[0-9]+$/', $graph_data_array['graph_width'])) {
-                    $graph_opts .= '--width=' . $graph_data_array['graph_width'] . RRD_NL;
-                } else {
-                    $graph_opts .= '--width=' . $value . RRD_NL;
-                }
-                break;
-            case 'graph_nolegend':
-                if (isset($graph_data_array['graph_nolegend'])) {
-                    $graph_opts .= '--no-legend' . RRD_NL;
-                } else {
-                    $graph_opts .= '';
-                }
-                break;
-            case 'base_value':
-                if ($value == 1000 || $value == 1024) {
-                    $graph_opts .= '--base=' . $value . RRD_NL;
-                }
-                break;
-            case 'vertical_label':
-                if (!empty($value)) {
-                    $graph_opts .= '--vertical-label=' . rrd_substituted_text_placeholder($quoted_text, '--vertical-label', $value, $graph) . RRD_NL;
-                }
-                break;
-            case 'slope_mode':
-                if ($value == CHECKED) {
-                    $graph_opts .= '--slope-mode' . RRD_NL;
-                }
-                break;
-            case 'right_axis':
-                if (!empty($value)) {
-                    $graph_opts .= '--right-axis ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                }
-                break;
-            case 'right_axis_label':
-                if (!empty($value)) {
-                    $graph_opts .= '--right-axis-label ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                }
-                break;
-            case 'right_axis_format':
-                if (!empty($value)) {
-                    $format = db_fetch_cell_prepared('SELECT gprint_text from graph_templates_gprint WHERE id = ?', array($value));
-                    $graph_opts .= '--right-axis-format ' . rrdtool_pipe_quote_substituted(trim(str_replace('%s', '', $format)), $graph) . RRD_NL;
-                }
-                break;
-            case 'no_gridfit':
-                if ($value == CHECKED) {
-                    $graph_opts .= '--no-gridfit' . RRD_NL;
-                }
-                break;
-            case 'unit_length':
-                if (!empty($value)) {
-                    $graph_opts .= '--units-length ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                }
-                break;
-            case 'tab_width':
-                if (!empty($value)) {
-                    $graph_opts .= '--tabwidth ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                }
-                break;
-            case 'dynamic_labels':
-                if ($value == CHECKED) {
-                    $graph_opts .= '--dynamic-labels' . RRD_NL;
-                }
-                break;
-            case 'force_rules_legend':
-                if ($value == CHECKED) {
-                    $graph_opts .= '--force-rules-legend' . RRD_NL;
-                }
-                break;
-            case 'legend_position':
-            case 'legend_direction':
-            case 'left_axis_formatter':
-            case 'right_axis_formatter':
-                // Each option's RRDtool flag is its column name with dashes.
-                if (cacti_version_compare($version, '1.4', '>=')) {
-                    if (!empty($value)) {
-                        $graph_opts .= '--' . str_replace('_', '-', $key) . ' ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                    }
-                }
-                break;
-        }
-    }
-
-    $graph_opts .= "$rigid" . trim("$scale$unit_value$unit_exponent_value$graph_legend", "\n\r " . RRD_NL) . RRD_NL;
-
-    /* add a date to the graph legend */
-    $graph_opts .= rrdtool_function_format_graph_date($graph_data_array, $now);
-
-    /* process theme and font styling options */
-    $graph_opts .= rrdtool_function_theme_font_options($graph_data_array);
-
-    $graph_opts = strtr($graph_opts, $quoted_text);
-
-    /* if the user desires a watermark set it */
-    $watermark = str_replace("'", '"', read_config_option('graph_watermark'));
-    if ($watermark != '') {
-        $graph_opts .= '--watermark ' . rrdtool_pipe_quote($watermark) . RRD_NL;
-    }
-
-    return $graph_opts;
+    return (new \Kadupul\Graphing\Infrastructure\Rrd\GraphOptionsGenerator())->build($graph_start, $graph_end, $graph, $graph_data_array, $now);
 }
 
 /** Render one graph using a single clock instant for all relative time calculations.
@@ -2712,77 +2464,14 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
     $j = 0;
     $nth = 0;
     $sum = 0;
+    require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/GraphItemConsolidationResolver.php';
+    $graph_cf_resolver = new \Kadupul\Graphing\Infrastructure\Rrd\GraphItemConsolidationResolver();
     $last_graph_cf = array();
+
     if (cacti_sizeof($graph_items)) {
-        /* we need to add a new column 'cf_reference', so unless PHP 5 is used, this foreach syntax is required */
         foreach ($graph_items as $key => $graph_item) {
-            /* mimic the old behavior: LINE[123], AREA and STACK items use the CF specified in the graph item */
-            switch ($graph_item['graph_type_id']) {
-                case GRAPH_ITEM_TYPE_LINE1:
-                case GRAPH_ITEM_TYPE_LINE2:
-                case GRAPH_ITEM_TYPE_LINE3:
-                case GRAPH_ITEM_TYPE_LINESTACK:
-                case GRAPH_ITEM_TYPE_TIC:
-                case GRAPH_ITEM_TYPE_AREA:
-                case GRAPH_ITEM_TYPE_STACK:
-                    $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds);
-
-                    /* remember the last CF for this data source for use with GPRINT
-                     * if e.g. an AREA/AVERAGE and a LINE/MAX is used
-                     * we will have AVERAGE first and then MAX, depending on GPRINT sequence */
-                    $last_graph_cf[$graph_item['data_source_name']][$graph_item['local_data_template_rrd_id']] = $graph_cf;
-
-                    /* remember this for second foreach loop */
-                    $graph_items[$key]['cf_reference'] = $graph_cf;
-
-                    break;
-                case GRAPH_ITEM_TYPE_GPRINT:
-                    /* ATTENTION!
-                     * the 'CF' given on graph_item edit screen for GPRINT is indeed NOT a real 'CF',
-                     * but an aggregation function
-                     * see 'man rrdgraph_data' for the correct VDEF based notation
-                     * so our task now is to 'guess' the very graph_item, this GPRINT is related to
-                     * and to use that graph_item's CF */
-                    if (isset($last_graph_cf[$graph_item['data_source_name']][$graph_item['local_data_template_rrd_id']])) {
-                        $graph_cf = $last_graph_cf[$graph_item['data_source_name']][$graph_item['local_data_template_rrd_id']];
-                        /* remember this for second foreach loop */
-                        $graph_items[$key]['cf_reference'] = $graph_cf;
-                    } else {
-                        $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds);
-                        /* remember this for second foreach loop */
-                        $graph_items[$key]['cf_reference'] = $graph_cf;
-                    }
-
-                    break;
-                case GRAPH_ITEM_TYPE_GPRINT_AVERAGE:
-                    $graph_cf = $graph_item['consolidation_function_id'];
-                    $graph_items[$key]['cf_reference'] = $graph_cf;
-
-                    break;
-                case GRAPH_ITEM_TYPE_GPRINT_LAST:
-                    $graph_cf = $graph_item['consolidation_function_id'];
-                    $graph_items[$key]['cf_reference'] = $graph_cf;
-
-                    break;
-                case GRAPH_ITEM_TYPE_GPRINT_MAX:
-                    $graph_cf = $graph_item['consolidation_function_id'];
-                    $graph_items[$key]['cf_reference'] = $graph_cf;
-
-                    break;
-                case GRAPH_ITEM_TYPE_GPRINT_MIN:
-                    $graph_cf = $graph_item['consolidation_function_id'];
-                    $graph_items[$key]['cf_reference'] = $graph_cf;
-
-                    break;
-                default:
-                    /* all other types are based on the best matching CF */
-                    $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds);
-
-                    /* remember this for second foreach loop */
-                    $graph_items[$key]['cf_reference'] = $graph_cf;
-
-                    break;
-            }
+            $graph_cf = $graph_cf_resolver->assignReference($graph_item, $last_graph_cf, $rra_seconds);
+            $graph_items[$key]['cf_reference'] = $graph_cf;
 
             if (!empty($graph_item['local_data_id']) && !isset($cf_ds_cache[$graph_item['data_template_rrd_id']][$graph_cf])) {
                 /* use a user-specified ds path if one is entered */
@@ -3911,7 +3600,7 @@ function rrdtool_function_get_resstep($local_data_ids, $graph_start, $graph_end,
  */
 function rrdtool_file_exists(string $data_source_path, mixed $rrdtool_pipe = null): bool
 {
-    if (read_config_option('storage_location')) {
+    if (rrdtool_uses_proxy()) {
         if (!rrdtool_execute(array('file_exists', $data_source_path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
             return false;
         }
@@ -4497,7 +4186,7 @@ function rrdtool_info2html_table($columns, $info_array, $section, $row_prefix, $
  */
 function rrdtool_tune($rrd_file, $diff, $show_source = true)
 {
-    if (!$show_source && !empty($diff['resize']) && read_config_option('storage_location')) {
+    if (!$show_source && !empty($diff['resize']) && rrdtool_uses_proxy()) {
         cacti_log('ERROR: Remote RRD resize is unavailable without atomic proxy replacement.', false, 'UTIL');
         return false;
     }
@@ -4674,7 +4363,7 @@ function rrd_xml_transform($file_array, $debug, $parse_error, $logged, $mutate)
         }
 
         return true;
-    });
+    }, false);
 }
 
 /**
