@@ -45,6 +45,7 @@ second implementation or a module boundary needs one.
 | Long-lived local pipe process ownership in `LocalRrdtool` | Issue #500 |
 | Proxy client restored on phpseclib 4 and hardened without a wire format change | PR #436 |
 | Graph and export `DEF` paths sent to the proxy bare and relative to the RRA directory | PR #437 |
+| Graph rendering owns one proxy session for consolidation-function lookups and the final graph/export command when the caller does not supply a session | Issue #502 |
 | Graph options moved to `GraphOptionsGenerator` and ordered consolidation references moved to `GraphItemConsolidationResolver`; DEF/CDEF/VDEF creation, item rendering and legend generation remain in `lib/rrd.php` | Issue #502 |
 | Web-side graph reads through DBAL; collector writes stay on `db_*` | Pending |
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
