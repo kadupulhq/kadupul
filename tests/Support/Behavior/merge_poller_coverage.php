@@ -78,8 +78,26 @@ foreach (array_keys($mapped) as $path) {
 $temporaryRoot = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 $sourceFiles = array_keys($coverage->getData()->lineCoverage());
 $temporaryCoverageSources = array();
+$sourceMapManifests = array();
+foreach (glob($temporaryRoot . 'kadupul-coverage-source-map-*.json') ?: array() as $manifest) {
+    $sourceMap = json_decode(file_get_contents($manifest), true, 512, JSON_THROW_ON_ERROR);
+    if (!is_array($sourceMap)
+        || !is_string($sourceMap['copy'] ?? null)
+        || !is_string($sourceMap['source'] ?? null)
+        || !str_starts_with($sourceMap['copy'], $temporaryRoot)
+        || !str_starts_with($sourceMap['source'], $root . DIRECTORY_SEPARATOR)
+        || !in_array($sourceMap['copy'], $coverage->filter()->files(), true)
+        || !in_array($sourceMap['source'], $sourceFiles, true)
+        || !is_file($sourceMap['source'])) {
+        continue;
+    }
+
+    $temporaryCoverageSources[$sourceMap['copy']] = $sourceMap['source'];
+    $sourceMapManifests[] = $manifest;
+}
+
 foreach ($coverage->filter()->files() as $path) {
-    if (!str_starts_with($path, $temporaryRoot)) {
+    if (!str_starts_with($path, $temporaryRoot) || isset($temporaryCoverageSources[$path])) {
         continue;
     }
 
@@ -99,7 +117,6 @@ foreach ($coverage->filter()->files() as $path) {
         continue;
     }
 
-    $temporaryCoverageSources[$path] = true;
     if (!is_file($path)) {
         $directory = dirname($path);
         if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) {
@@ -109,6 +126,8 @@ foreach ($coverage->filter()->files() as $path) {
             throw new RuntimeException('Unable to restore temporary coverage source');
         }
     }
+
+    $temporaryCoverageSources[$path] = $matches[0];
 }
 
 $rawCoverageClass = class_exists(\SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class)
@@ -130,7 +149,7 @@ try {
 
 // Remove retained or restored scratch sources after append() and Clover
 // analysis have completed. Remove only empty directories under the temp root.
-foreach (array_keys($temporaryCoverageSources) as $path) {
+foreach ($temporaryCoverageSources as $path => $source) {
     if (is_file($path)) {
         unlink($path);
     }
@@ -141,6 +160,9 @@ foreach (array_keys($temporaryCoverageSources) as $path) {
         && @rmdir($directory)) {
         $directory = dirname($directory);
     }
+}
+foreach ($sourceMapManifests as $manifest) {
+    unlink($manifest);
 }
 
 echo 'Combined unit and poller integration coverage written', PHP_EOL;
