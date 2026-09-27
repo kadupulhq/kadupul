@@ -59,17 +59,25 @@ if (defined('GRAPH_TEMPLATE_SECURITY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/graph_templates.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }
+if (defined('DATA_SOURCE_LIMIT_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/data_sources.php');
+    $coverageFilter->includeFile($coverageRoot . '/data_templates.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+}
 if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
 }
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd.php');
+$coverageFilter->includeFile($coverageRoot . '/src/Graphing/Infrastructure/Rrd/ProxyCipher.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/dsdebug.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd_maintenance.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/poller.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/boost.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/api_data_source.php');
+$coverageFilter->includeFile($coverageRoot . '/lib/rrdcheck.php');
+$coverageFilter->includeFile($coverageRoot . '/lib/dsstats.php');
 if (defined('RRD_TEST_INSTALLER_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/installer.php');
     $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_1_6.php');

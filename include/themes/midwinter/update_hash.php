@@ -1,8 +1,15 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
+
+/* a maintainer build step that rewrites the theme CSS; never over HTTP */
+if (php_sapi_name() !== 'cli') {
+	http_response_code(404);
+	exit;
+}
 
 function update_hash($file) {
 }

@@ -191,7 +191,7 @@ done < "$tmp/.merge-base-files" | sort -zu > "$tmp/.merge-base-dirs"
 base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
 
 for f in "${files[@]}"; do
-	if ! printf '%s\n' "$included" | grep -Fqx -- "$f"; then
+	if ! grep -Fqx -- "$f" <<<"$included"; then
 		continue
 	fi
 	base_path=$f
@@ -204,7 +204,7 @@ for f in "${files[@]}"; do
 	done
 	# A file outside the merge-base Finder (moved in, or under an exclusion this
 	# change removes) was never subject to the rules; check it in full as new.
-	if ! printf '%s\n' "$base_included" | grep -Fqx -- "$base_path"; then
+	if ! grep -Fqx -- "$base_path" <<<"$base_included"; then
 		checked+=("$f")
 		continue
 	fi

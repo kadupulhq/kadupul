@@ -52,6 +52,48 @@ jobs:
       - name: Verify no new architectural hotspots
         run: tests/security/verify_architectural_hotspots.sh
 
+  entry-point-inventory:
+    name: entry-point gate inventory
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # The classifier reads each page with nikic/php-parser, a locked dev
+      # dependency, so it needs the application's PHP and composer install.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4'
+          extensions: gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, xml
+          coverage: none
+          tools: composer
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --no-progress
+
+      # Recorded before mise activates, so the php pin in .mise.toml cannot
+      # put a different interpreter ahead of the one composer installed for.
+      - name: Record the PHP interpreter
+        run: echo "PHP=$(command -v php)" >> "$GITHUB_ENV"
+
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          install_args: python@3.12.12
+
+      # Fails on any added, removed or reclassified entry point, and on any
+      # entry point whose gate the generator cannot read from the code.
+      - name: Verify entry-point gate inventory
+        run: mise exec python@3.12.12 -- tests/security/verify_entry_point_inventory.sh
+
+      - name: Check the inventory classifier fails closed
+        run: mise exec python@3.12.12 -- python tests/security/test_entry_point_classifier.py
+
+      - name: Verify Apache verdicts depend on the .htaccess rules
+        run: mise exec python@3.12.12 -- python tests/security/test_entry_point_apache_denies.py
+
   branding-migration-guard:
     name: branding migration (utf8mb4 and latin1)
     runs-on: ubuntu-latest

@@ -5,6 +5,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+use Kadupul\IdentityAccess\Contract\AuditEvent;
+use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail;
+use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyWorkerAudit;
 use Kadupul\Inventory\Domain\DeviceTemplateAssignment;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
 
@@ -13,19 +16,23 @@ require __DIR__ . '/legacy-assignment-bootstrap.php';
 $status = 'failed';
 $transactionStarted = false;
 $writeStarted = false;
+$audit = new LegacyWorkerAudit(new LegacyAuditTrail(dirname(__DIR__)), 'inventory.device.assign-template', 'device', 'unknown');
 try {
     $input = stream_get_contents(STDIN, 4097);
     if (strlen($input) > 4096) {
         throw new InvalidArgumentException('Payload too large');
     }
     $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'template_id', 'revision']) !== []
+    if (!is_array($command) || array_diff(array_keys($command), ['correlation_id', 'actor', 'id', 'template_id', 'revision']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0
         || !is_int($command['id'] ?? null) || $command['id'] <= 0
         || !is_int($command['template_id'] ?? null) || $command['template_id'] < 0 || $command['template_id'] > 16777215
         || !is_string($command['revision'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
+    $audit->correlate($command['correlation_id'] ?? null);
+    $audit->actorId = $command['actor'];
+    $audit->targetId = (string) $command['id'];
     if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
     }
@@ -35,12 +42,16 @@ try {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
+    $audit->decision = AuditEvent::ALLOWED;
+    $audit->outcome = AuditEvent::FAILED;
     if ($command['template_id'] > 0 && !db_fetch_cell_prepared('SELECT id FROM host_template WHERE id = ? LOCK IN SHARE MODE', [$command['template_id']])) {
         throw new InvalidArgumentException('Invalid template');
     }
     $row = \Kadupul\Inventory\Infrastructure\Legacy\DeviceAssignmentLock::findVisible($connection, $command['actor'], $command['id']);
     if ($row === null) {
         $status = 'denied';
+        $audit->decision = AuditEvent::DENIED;
+        $audit->outcome = AuditEvent::DENIED;
         throw new RuntimeException('Access denied');
     }
     $assignment = new DeviceTemplateAssignment((int) $row['id'], $row['description'], (int) $row['host_template_id'], (int) $row['poller_id']);
@@ -102,6 +113,7 @@ try {
     }
     $transactionStarted = false;
     $status = 'ok';
+    $audit->outcome = AuditEvent::SUCCEEDED;
     cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed template ' . $assignment->templateId() . ' for device ' . $assignment->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = 'conflict';
@@ -110,9 +122,7 @@ try {
 } catch (Throwable) {
     // Side effects may already have reached a collector; report failure, never success.
 } finally {
-    if ($transactionStarted) {
-        db_rollback_transaction();
-    }
+    $audit->recordAfter($transactionStarted ? db_rollback_transaction(...) : null);
 }
 while (ob_get_level() > 0) {
     ob_end_clean();

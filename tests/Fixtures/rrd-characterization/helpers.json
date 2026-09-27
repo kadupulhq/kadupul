@@ -1,0 +1,957 @@
+[
+    {
+        "fn": "escape_command",
+        "options": [],
+        "returned": "graph \"x\" $(y) `z`",
+        "args_after": [
+            "graph \"x\" $(y) `z`"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_escape_string",
+        "options": [],
+        "returned": "say \\\"hi\\\"\\: 50% done",
+        "args_after": [
+            "say \"hi\": 50% done"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_escape_string",
+        "options": [],
+        "returned": "say \\\"hi\\\"\\: 50%% done",
+        "args_after": [
+            "say \"hi\": 50% done",
+            false
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_escape_string",
+        "options": [],
+        "returned": "\\\\\"already\\\\: escaped\\\\\"",
+        "args_after": [
+            "\\\"already\\: escaped\\\"",
+            false
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "gradient",
+        "options": [],
+        "returned": "CDEF:ac140minimum=a,a,-  \\\nCDEF:var34024=a,ac140minimum,-,4,/,4,*,ac140minimum,+  \\\nCDEF:var34023=a,ac140minimum,-,4,/,3,*,ac140minimum,+  \\\nCDEF:var34022=a,ac140minimum,-,4,/,2,*,ac140minimum,+  \\\nCDEF:var34021=a,ac140minimum,-,4,/,1,*,ac140minimum,+  \\\nAREA:var34024#F0F0F0ff:'Inbound \"x\"'  \\\nAREA:var34023#B4B4DCff  \\\nAREA:var34022#7878C8ff  \\\nAREA:var34021#3C3CB4ff  \\\nAREA:var34024#F0F0F000  \\\n",
+        "args_after": [
+            "a",
+            "#0000a0",
+            "#f0f0f0",
+            "Inbound \"x\"",
+            4
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "gradient",
+        "options": [],
+        "returned": "CDEF:cdefbc140minimum=cdefb,100,/,50,*  \\\nCDEF:var34023=cdefb,cdefbc140minimum,-,3,/,3,*,cdefbc140minimum,+  \\\nCDEF:var34022=cdefb,cdefbc140minimum,-,3,/,2,*,cdefbc140minimum,+  \\\nCDEF:var34021=cdefb,cdefbc140minimum,-,3,/,1,*,cdefbc140minimum,+  \\\nAREA:var34023#FFCC00ff  \\\nAREA:var34022#BBAA33ff  \\\nAREA:var34021#778866ff  \\\nAREA:var34023#FFCC0000  \\\n",
+        "args_after": [
+            "cdefb",
+            "336699",
+            "ffcc00",
+            "ab",
+            3,
+            "50%",
+            "80"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "gradient",
+        "options": [],
+        "returned": "CDEF:bc140minimum=b,10,-  \\\nCDEF:var34022=b,bc140minimum,-,2,/,2,*,bc140minimum,+  \\\nCDEF:var34021=b,bc140minimum,-,2,/,1,*,bc140minimum,+  \\\nAREA:var34022#405060ff  \\\nAREA:var34021#283848ff  \\\nAREA:var34022#40506000  \\\n",
+        "args_after": [
+            "b",
+            "#102030",
+            "#405060",
+            false,
+            2,
+            "10"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "gradient",
+        "options": [],
+        "returned": "CDEF:cc140minimum=c,c,-  \\\nCDEF:var34022=c,cc140minimum,-,2,/,2,*,cc140minimum,+  \\\nCDEF:var34021=c,cc140minimum,-,2,/,1,*,cc140minimum,+  \\\nAREA:var34022#FFFFFFff:\"it's\"  \\\nAREA:var34021#808080ff  \\\nAREA:var34022#FFFFFF00  \\\n",
+        "args_after": [
+            "c",
+            "#000000",
+            "#ffffff",
+            "it's",
+            2
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "colourBrightness",
+        "options": [],
+        "returned": "#a3aab1",
+        "args_after": [
+            "#1a2b3c",
+            0.4
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "colourBrightness",
+        "options": [],
+        "returned": "677b8f",
+        "args_after": [
+            "abcdef",
+            -40
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "colourBrightness",
+        "options": [],
+        "returned": "#ff8880",
+        "args_after": [
+            "#FFF",
+            0.5
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "colourBrightness",
+        "options": [],
+        "returned": "404040",
+        "args_after": [
+            "808080",
+            150
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "colourBrightness",
+        "options": [],
+        "returned": "fcfdfd",
+        "args_after": [
+            "336699",
+            1.5
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "add_business_hours",
+        "options": {
+            "business_hours_enable": ""
+        },
+        "returned": {
+            "graph_opts": "--start=x",
+            "graph_defs": "DEF:a=x:y:AVERAGE \\\n",
+            "txt_graph_items": "AREA:a",
+            "graph_id": 7,
+            "start": 1700179200,
+            "end": 1700438400
+        },
+        "args_after": [
+            {
+                "graph_opts": "--start=x",
+                "graph_defs": "DEF:a=x:y:AVERAGE \\\n",
+                "txt_graph_items": "AREA:a",
+                "graph_id": 7,
+                "start": 1700179200,
+                "end": 1700438400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "add_business_hours",
+        "options": {
+            "business_hours_enable": "on",
+            "business_hours_start": "09:15",
+            "business_hours_end": "17:00",
+            "business_hours_max_days": "7",
+            "business_hours_color": "00ff0040",
+            "business_hours_hideWeekends": ""
+        },
+        "returned": {
+            "graph_opts": "--start=x",
+            "graph_defs": "DEF:a=x:y:AVERAGE \\\nCDEF:officehours0=a,POP,TIME,1700212500,LT,1,0,IF,TIME,1700240400,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit0=INF,officehours0,* \\\nAREA:dslimit0#00ff0040 \\\nCDEF:officehours1=a,POP,TIME,1700298900,LT,1,0,IF,TIME,1700326800,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit1=INF,officehours1,* \\\nAREA:dslimit1#00ff0040 \\\nCDEF:officehours2=a,POP,TIME,1700385300,LT,1,0,IF,TIME,1700413200,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit2=INF,officehours2,* \\\nAREA:dslimit2#00ff0040 \\\nCDEF:officehours3=a,POP,TIME,1700471700,LT,1,0,IF,TIME,1700438400,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit3=INF,officehours3,* \\\nAREA:dslimit3#00ff0040 \\\n",
+            "txt_graph_items": "AREA:a",
+            "graph_id": 7,
+            "start": 1700179200,
+            "end": 1700438400
+        },
+        "args_after": [
+            {
+                "graph_opts": "--start=x",
+                "graph_defs": "DEF:a=x:y:AVERAGE \\\n",
+                "txt_graph_items": "AREA:a",
+                "graph_id": 7,
+                "start": 1700179200,
+                "end": 1700438400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "add_business_hours",
+        "options": {
+            "business_hours_hideWeekends": "on",
+            "business_hours_color": "red"
+        },
+        "returned": {
+            "graph_opts": "--start=x",
+            "graph_defs": "DEF:a=x:y:AVERAGE \\\nCDEF:officehours0=a,POP,TIME,1700212500,LT,1,0,IF,TIME,1700240400,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit0=INF,officehours0,* \\\nAREA:dslimit0#ccccccff \\\nCDEF:officehours1=a,POP,TIME,1700298900,LT,1,0,IF,TIME,1700326800,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit1=INF,officehours1,* \\\nCDEF:officehours2=a,POP,TIME,1700385300,LT,1,0,IF,TIME,1700413200,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit2=INF,officehours2,* \\\nCDEF:officehours3=a,POP,TIME,1700471700,LT,1,0,IF,TIME,1700438400,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit3=INF,officehours3,* \\\nAREA:dslimit3#ccccccff \\\n",
+            "txt_graph_items": "AREA:a",
+            "graph_id": 7,
+            "start": 1700179200,
+            "end": 1700438400
+        },
+        "args_after": [
+            {
+                "graph_opts": "--start=x",
+                "graph_defs": "DEF:a=x:y:AVERAGE \\\n",
+                "txt_graph_items": "AREA:a",
+                "graph_id": 7,
+                "start": 1700179200,
+                "end": 1700438400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "add_business_hours",
+        "options": {
+            "business_hours_max_days": "7"
+        },
+        "returned": {
+            "start": 1700000000,
+            "end": 1701000000,
+            "graph_opts": "--start=x",
+            "graph_defs": "DEF:a=x:y:AVERAGE \\\n",
+            "txt_graph_items": "AREA:a",
+            "graph_id": 7
+        },
+        "args_after": [
+            {
+                "start": 1700000000,
+                "end": 1701000000,
+                "graph_opts": "--start=x",
+                "graph_defs": "DEF:a=x:y:AVERAGE \\\n",
+                "txt_graph_items": "AREA:a",
+                "graph_id": 7
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "add_business_hours",
+        "options": {
+            "business_hours_end": "06:00"
+        },
+        "returned": {
+            "start": 1700020000,
+            "end": 1700030000,
+            "graph_opts": "--start=x",
+            "graph_defs": "DEF:a=x:y:AVERAGE \\\nCDEF:officehours0=a,POP,TIME,1700039700,LT,1,0,IF,TIME,1700028000,GT,1,0,IF,MAX,0,GT,0,1,IF \\\nCDEF:dslimit0=INF,officehours0,* \\\nAREA:dslimit0#ccccccff \\\n",
+            "txt_graph_items": "AREA:a",
+            "graph_id": 7
+        },
+        "args_after": [
+            {
+                "start": 1700020000,
+                "end": 1700030000,
+                "graph_opts": "--start=x",
+                "graph_defs": "DEF:a=x:y:AVERAGE \\\n",
+                "txt_graph_items": "AREA:a",
+                "graph_id": 7
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_parse_error",
+        "options": [],
+        "returned": "plain rrdtool failure",
+        "args_after": [
+            "plain rrdtool failure"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_parse_error",
+        "options": [],
+        "returned": "Failed to open data file, poller may not have run yet:\n\nmissing.rrd\n(RRA Folder: (Custom))",
+        "args_after": [
+            "ERROR: opening 'rra/missing.rrd': No such file or directory"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_parse_error",
+        "options": [],
+        "returned": "Failed to open data file, poller may not have run yet:\n\nmissing.rrd\n(RRA Folder: Root)",
+        "args_after": [
+            "ERROR: opening '<ROOT>/rra/missing.rrd': No such file or directory"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_parse_error",
+        "options": [],
+        "returned": "Failed to open data file, poller may not have run yet:\n\nmissing.rrd\n(RRA Folder: (Custom))",
+        "args_after": [
+            "ERROR: opening '<ROOT>/missing.rrd': No such file or directory"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_parse_error",
+        "options": [],
+        "returned": "Website does not have write access to folder, may be unable to create/update RRDs:\n\nrra/unwritable/",
+        "args_after": [
+            "ERROR: opening 'rra/unwritable/x.rrd': Permission denied"
+        ],
+        "diagnostics": [
+            "2: fopen(rra/unwritable/<probe>.tmp): Failed to open stream: No such file or directory"
+        ]
+    },
+    {
+        "fn": "rrdtool_parse_error",
+        "options": [],
+        "returned": "Website does not have write access to folder, may be unable to create/update RRDs:\n\n/nonexistent/dir/",
+        "args_after": [
+            "ERROR: opening '/nonexistent/dir/x.rrd': No such file or directory"
+        ],
+        "diagnostics": [
+            "2: fopen(/nonexistent/dir/<probe>.tmp): Failed to open stream: No such file or directory"
+        ]
+    },
+    {
+        "fn": "rrdtool_function_set_font",
+        "options": [],
+        "returned": "--font TITLE:14:'Title Font' \\\n",
+        "args_after": [
+            "title",
+            "",
+            {
+                "title": {
+                    "font": "Title Font",
+                    "size": "14"
+                },
+                "axis": {
+                    "font": "O'Brien",
+                    "size": "2"
+                },
+                "legend": {
+                    "font": "Mono",
+                    "size": "x"
+                }
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_set_font",
+        "options": [],
+        "returned": "--font TITLE:9.8:'Title Font' \\\n",
+        "args_after": [
+            "title",
+            "on",
+            {
+                "title": {
+                    "font": "Title Font",
+                    "size": "14"
+                },
+                "axis": {
+                    "font": "O'Brien",
+                    "size": "2"
+                },
+                "legend": {
+                    "font": "Mono",
+                    "size": "x"
+                }
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_set_font",
+        "options": [],
+        "returned": "--font AXIS:8:'O'\"'\"'Brien' \\\n",
+        "args_after": [
+            "axis",
+            "",
+            {
+                "title": {
+                    "font": "Title Font",
+                    "size": "14"
+                },
+                "axis": {
+                    "font": "O'Brien",
+                    "size": "2"
+                },
+                "legend": {
+                    "font": "Mono",
+                    "size": "x"
+                }
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_set_font",
+        "options": [],
+        "returned": "--font LEGEND:8:'Mono' \\\n",
+        "args_after": [
+            "legend",
+            "",
+            {
+                "title": {
+                    "font": "Title Font",
+                    "size": "14"
+                },
+                "axis": {
+                    "font": "O'Brien",
+                    "size": "2"
+                },
+                "legend": {
+                    "font": "Mono",
+                    "size": "x"
+                }
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_set_font",
+        "options": [],
+        "returned": null,
+        "args_after": [
+            "unit",
+            "",
+            {
+                "title": {
+                    "font": "Title Font",
+                    "size": "14"
+                },
+                "axis": {
+                    "font": "O'Brien",
+                    "size": "2"
+                },
+                "legend": {
+                    "font": "Mono",
+                    "size": "x"
+                }
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_set_font",
+        "options": {
+            "font_method": "0",
+            "title_font": "",
+            "title_size": "0"
+        },
+        "returned": "--font TITLE:12: \\\n",
+        "args_after": [
+            "title",
+            "",
+            []
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_set_font",
+        "options": {
+            "watermark_font": "Sans \"Bold\"",
+            "watermark_size": "4.5"
+        },
+        "returned": "--font WATERMARK:4.5:'Sans \"Bold\"' \\\n",
+        "args_after": [
+            "watermark",
+            "",
+            []
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrd_substitute_host_query_data",
+        "options": [],
+        "returned": "no variables here",
+        "args_after": [
+            "no variables here",
+            {
+                "host_id": "3",
+                "snmp_query_id": "1",
+                "snmp_index": "2"
+            },
+            []
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrd_substitute_host_query_data",
+        "options": [],
+        "returned": "router-1.example Core <router> & \"edge\" uplink public",
+        "args_after": [
+            "|host_hostname| |host_description| |query_ifAlias| |host_snmp_community|",
+            {
+                "host_id": "3",
+                "snmp_query_id": "1",
+                "snmp_index": "2"
+            },
+            []
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrd_substitute_host_query_data",
+        "options": [],
+        "returned": "router-1.example uplink",
+        "args_after": [
+            "|host_hostname| |query_ifAlias|",
+            {
+                "host_id": "0"
+            },
+            {
+                "local_data_id": "11",
+                "snmp_query_id": "1",
+                "snmp_index": "2"
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrd_substitute_host_query_data",
+        "options": [],
+        "returned": "1000000000 |input_missing|",
+        "args_after": [
+            "|query_ifSpeed| |input_missing|",
+            {
+                "host_id": "0",
+                "snmp_query_id": "1",
+                "snmp_index": "2"
+            },
+            []
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_interface_speed",
+        "options": [],
+        "returned": 10000000000,
+        "args_after": [
+            {
+                "host_id": "1",
+                "snmp_query_id": "1",
+                "snmp_index": "1"
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_interface_speed",
+        "options": [],
+        "returned": "100000000",
+        "args_after": [
+            {
+                "host_id": "2",
+                "snmp_query_id": "1",
+                "snmp_index": "1"
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_interface_speed",
+        "options": {
+            "default_interface_speed": "1000"
+        },
+        "returned": 1000000000,
+        "args_after": [
+            {
+                "host_id": "4",
+                "snmp_query_id": "1",
+                "snmp_index": "1"
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_interface_speed",
+        "options": {
+            "default_interface_speed": ""
+        },
+        "returned": "10000000000000",
+        "args_after": [
+            {
+                "host_id": "4",
+                "snmp_query_id": "1",
+                "snmp_index": "1"
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_trim_output",
+        "options": [],
+        "returned": null,
+        "args_after": [
+            "line one\nline two\n"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_trim_output",
+        "options": [],
+        "returned": null,
+        "args_after": [
+            "no status line\n"
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "0",
+            "default_datechar": "0"
+        },
+        "returned": "COMMENT:\"From 11-14-2023 22\\:13\\:20 To 11-15-2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "0",
+            "default_datechar": "1"
+        },
+        "returned": "COMMENT:\"From 11/14/2023 22\\:13\\:20 To 11/15/2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "0",
+            "default_datechar": "2"
+        },
+        "returned": "COMMENT:\"From 11.14.2023 22\\:13\\:20 To 11.15.2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "1",
+            "default_datechar": "0"
+        },
+        "returned": "COMMENT:\"From Nov-14-2023 22\\:13\\:20 To Nov-15-2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "1",
+            "default_datechar": "1"
+        },
+        "returned": "COMMENT:\"From Nov/14/2023 22\\:13\\:20 To Nov/15/2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "1",
+            "default_datechar": "2"
+        },
+        "returned": "COMMENT:\"From Nov.14.2023 22\\:13\\:20 To Nov.15.2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "2",
+            "default_datechar": "0"
+        },
+        "returned": "COMMENT:\"From 14-11-2023 22\\:13\\:20 To 15-11-2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "2",
+            "default_datechar": "1"
+        },
+        "returned": "COMMENT:\"From 14/11/2023 22\\:13\\:20 To 15/11/2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "2",
+            "default_datechar": "2"
+        },
+        "returned": "COMMENT:\"From 14.11.2023 22\\:13\\:20 To 15.11.2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "3",
+            "default_datechar": "0"
+        },
+        "returned": "COMMENT:\"From 14-Nov-2023 22\\:13\\:20 To 15-Nov-2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "3",
+            "default_datechar": "1"
+        },
+        "returned": "COMMENT:\"From 14/Nov/2023 22\\:13\\:20 To 15/Nov/2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "3",
+            "default_datechar": "2"
+        },
+        "returned": "COMMENT:\"From 14.Nov.2023 22\\:13\\:20 To 15.Nov.2023 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "4",
+            "default_datechar": "0"
+        },
+        "returned": "COMMENT:\"From 2023-11-14 22\\:13\\:20 To 2023-11-15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "4",
+            "default_datechar": "1"
+        },
+        "returned": "COMMENT:\"From 2023/11/14 22\\:13\\:20 To 2023/11/15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "4",
+            "default_datechar": "2"
+        },
+        "returned": "COMMENT:\"From 2023.11.14 22\\:13\\:20 To 2023.11.15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "5",
+            "default_datechar": "0"
+        },
+        "returned": "COMMENT:\"From 2023-Nov-14 22\\:13\\:20 To 2023-Nov-15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "5",
+            "default_datechar": "1"
+        },
+        "returned": "COMMENT:\"From 2023/Nov/14 22\\:13\\:20 To 2023/Nov/15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "5",
+            "default_datechar": "2"
+        },
+        "returned": "COMMENT:\"From 2023.Nov.14 22\\:13\\:20 To 2023.Nov.15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "9",
+            "default_datechar": "0"
+        },
+        "returned": "COMMENT:\"From 2023-11-14 22\\:13\\:20 To 2023-11-15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "9",
+            "default_datechar": "1"
+        },
+        "returned": "COMMENT:\"From 2023/11/14 22\\:13\\:20 To 2023/11/15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": {
+            "default_date_format": "9",
+            "default_datechar": "2"
+        },
+        "returned": "COMMENT:\"From 2023.11.14 22\\:13\\:20 To 2023.11.15 22\\:13\\:20\\c\" \\\nCOMMENT:\"  \\n\" \\\n",
+        "args_after": [
+            {
+                "graph_start": 1700000000,
+                "graph_end": 1700086400
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": [],
+        "returned": "",
+        "args_after": [
+            {
+                "graph_start": -3600,
+                "graph_end": 1700000000
+            }
+        ],
+        "diagnostics": []
+    },
+    {
+        "fn": "rrdtool_function_format_graph_date",
+        "options": [],
+        "returned": "",
+        "args_after": [
+            {
+                "graph_start": 1700000000
+            }
+        ],
+        "diagnostics": []
+    }
+]

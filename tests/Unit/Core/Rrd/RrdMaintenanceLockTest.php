@@ -1227,8 +1227,8 @@ test('proxy restores retain their existing remote protocol and propagate failure
         $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $bootstrap .= '$config=array();define("RRDTOOL_OUTPUT_BOOLEAN",4);function read_config_option($k){return 1;}' .
-        'function cacti_escapeshellarg($v){return escapeshellarg($v);}function rrdtool_execute($command,$echo,$flag,$pipe){' .
-        'if($pipe!==array("proxy")){throw new RuntimeException("Wrong proxy");}file_put_contents(__DIR__."/command",$command);return ' . var_export($acknowledged, true) . ';}' .
+        'function rrdtool_execute($command,$echo,$flag,$pipe){' .
+        'if($pipe!==array("proxy")){throw new RuntimeException("Wrong proxy");}file_put_contents(__DIR__."/command",json_encode($command));return ' . var_export($acknowledged, true) . ';}' .
         'require ' . var_export($root . '/lib/rrd_maintenance.php', true) . ';' .
         'echo json_encode(rrd_maintenance_restore("recovery.xml","remote.rrd",array("proxy")));';
     file_put_contents($this->dir . '/proxy.php', $bootstrap);
@@ -1238,7 +1238,7 @@ test('proxy restores retain their existing remote protocol and propagate failure
     fclose($pipes[1]);
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($out, true))->toBe($acknowledged)
-        ->and(file_get_contents($this->dir . '/command'))->toBe("restore -f 'recovery.xml' 'remote.rrd'");
+        ->and(json_decode(file_get_contents($this->dir . '/command'), true))->toBe(array('restore', '-f', 'recovery.xml', 'remote.rrd'));
 })->with(array(true,false));
 
 test('custom RRD paths coordinate with writers using an ancestor storage root', function () {

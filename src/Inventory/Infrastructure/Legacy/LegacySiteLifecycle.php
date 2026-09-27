@@ -7,6 +7,7 @@
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
+use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Inventory\Application\Command\SiteNotFound;
 use Kadupul\Inventory\Application\Port\SiteLifecycle;
@@ -19,7 +20,7 @@ use Kadupul\Platform\Contract\DatabaseConnection;
 
 final readonly class LegacySiteLifecycle implements SiteLifecycle
 {
-    public function __construct(private DatabaseConnection $database, private ConsoleAccess $access) {}
+    public function __construct(private DatabaseConnection $database, private ConsoleAccess $access, private SiteWriteAudit $audit) {}
 
     public function find(array $ids): array
     {
@@ -50,13 +51,17 @@ final readonly class LegacySiteLifecycle implements SiteLifecycle
     private function change(int $userId, SiteSelection $selection, ?string $pattern): array
     {
         $db = $this->database->get();
-        $db->beginTransaction();
+        $ids = array_keys($selection->revisions);
+        $decision = AuditEvent::DENIED;
+        $outcome = AuditEvent::DENIED;
         try {
+            $db->beginTransaction();
             $actor = $this->access->consoleActor();
             if ($actor === null || $actor->id !== $userId || !$this->access->canManageDevices($actor)) {
                 throw new InventoryAccessDenied($actor === null);
             }
-            $ids = array_keys($selection->revisions);
+            $decision = AuditEvent::ALLOWED;
+            $outcome = AuditEvent::FAILED;
             $sites = $this->load($ids, true);
             foreach ($sites as $site) {
                 if (!hash_equals($site->revision(), $selection->revisions[$site->id])) {
@@ -90,12 +95,16 @@ final readonly class LegacySiteLifecycle implements SiteLifecycle
             if (!$db->commit()) {
                 throw new \RuntimeException('Site operation commit could not be confirmed.');
             }
+            $outcome = AuditEvent::SUCCEEDED;
             return $created;
         } catch (\Throwable $error) {
             if ($db->inTransaction()) {
                 $db->rollBack();
             }
             throw $error;
+        } finally {
+            // Duplication is recorded against each source site, deletion against each removed site.
+            $this->audit->record($userId, $pattern === null ? 'inventory.site.delete' : 'inventory.site.duplicate', $ids, $decision, $outcome);
         }
     }
 }

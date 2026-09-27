@@ -28,6 +28,7 @@ final readonly class LegacyDeviceTemplateAssignments implements DeviceTemplateAs
     public function save(int $actorId, DeviceTemplateAssignment $assignment, string $revision): void
     {
         DeviceAssignmentProcess::run($this->database->get(), $this->projectDir, 'template', [
+            'correlation_id' => bin2hex(random_bytes(16)),
             'actor' => $actorId,
             'id' => $assignment->id,
             'template_id' => $assignment->templateId(),
