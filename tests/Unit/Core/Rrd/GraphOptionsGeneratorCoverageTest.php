@@ -6,10 +6,10 @@
 namespace Kadupul\Graphing\Infrastructure\Rrd;
 
 if (!defined('RRD_NL')) {
-    define('RRD_NL', " \\\n");
+    define(__NAMESPACE__ . '\\RRD_NL', " \\\n");
 }
 if (!defined('CHECKED')) {
-    define('CHECKED', 'on');
+    define(__NAMESPACE__ . '\\CHECKED', 'on');
 }
 
 function read_config_option($key)
