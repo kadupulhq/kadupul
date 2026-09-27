@@ -8,6 +8,7 @@
  */
 
 require(__DIR__ . '/../include/cli_check.php');
+require_once __DIR__ . '/../lib/reapply_names.php';
 require_once($config['base_path'] . '/lib/api_graph.php');
 
 ini_set('max_execution_time', '0');
@@ -24,22 +25,6 @@ array_shift($parms);
 $debug   = false;
 $host_id = '';
 $filter  = '';
-
-/** Validate device selectors before building the SQL filter. */
-function validate_graph_reapply_host_selector($host_id)
-{
-    if (strtolower($host_id) === 'all') {
-        return true;
-    }
-
-    foreach (explode(',', $host_id) as $host) {
-        if (!ctype_digit($host) || (int) $host < 1 || (int) $host > 4294967295) {
-            return false;
-        }
-    }
-
-    return true;
-}
 
 if (cacti_sizeof($parms)) {
     foreach ($parms as $parameter) {
@@ -86,7 +71,7 @@ if (cacti_sizeof($parms)) {
 }
 
 /* form the 'where' clause for our main sql query */
-if (!validate_graph_reapply_host_selector($host_id)) {
+if (!validate_reapply_host_selector($host_id)) {
     fwrite(STDERR, "ERROR: Specify --host-id=all or a comma-separated list of positive device IDs.\n");
     exit(1);
 }

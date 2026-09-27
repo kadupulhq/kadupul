@@ -8,6 +8,7 @@
  */
 
 require(__DIR__ . '/../include/cli_check.php');
+require_once __DIR__ . '/../lib/reapply_names.php';
 require_once($config['base_path'] . '/lib/api_data_source.php');
 require_once($config['base_path'] . '/lib/poller.php');
 require_once($config['base_path'] . '/lib/utility.php');
@@ -33,22 +34,6 @@ if (cacti_sizeof($parms) == 0) {
 $debug   = false;
 $host_id = '';
 $filter  = '';
-
-/** Validate device selectors before building the SQL filter. */
-function validate_reapply_host_selector($host_id)
-{
-    if (strtolower($host_id) === 'all') {
-        return true;
-    }
-
-    foreach (explode(',', $host_id) as $host) {
-        if (!ctype_digit($host) || (int) $host < 1 || (int) $host > 4294967295) {
-            return false;
-        }
-    }
-
-    return true;
-}
 
 if (cacti_sizeof($parms)) {
     foreach ($parms as $parameter) {
