@@ -70,6 +70,47 @@ if (!in_array(1, $mapped[$root . '/poller.php'] ?? [], true)) {
 foreach (array_keys($mapped) as $path) {
     $coverage->filter()->includeFile($path);
 }
+
+// PHPUnit 12 retains copied CLI files in the coverage filter even after the
+// child fixture remaps measured data to the checked-in source path. Native
+// tests remove their scratch directories before this merger runs, so restore
+// only missing copies whose suffix maps uniquely to a covered source file.
+$temporaryRoot = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+$sourceFiles = array_keys($coverage->getData()->lineCoverage());
+$temporaryCoverageSources = array();
+foreach ($coverage->filter()->files() as $path) {
+    if (!str_starts_with($path, $temporaryRoot)) {
+        continue;
+    }
+
+    $matches = array();
+    foreach ($sourceFiles as $source) {
+        if (!str_starts_with($source, $root . DIRECTORY_SEPARATOR) || !is_file($source)) {
+            continue;
+        }
+
+        $relative = substr($source, strlen($root) + 1);
+        if (str_ends_with($path, DIRECTORY_SEPARATOR . $relative)) {
+            $matches[] = $source;
+        }
+    }
+
+    if (count($matches) !== 1) {
+        continue;
+    }
+
+    $temporaryCoverageSources[$path] = true;
+    if (!is_file($path)) {
+        $directory = dirname($path);
+        if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) {
+            throw new RuntimeException('Unable to restore temporary coverage source directory');
+        }
+        if (!copy($matches[0], $path)) {
+            throw new RuntimeException('Unable to restore temporary coverage source');
+        }
+    }
+}
+
 $rawCoverageClass = class_exists(\SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class)
     ? \SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class
     : \SebastianBergmann\CodeCoverage\RawCodeCoverageData::class;
@@ -87,26 +128,18 @@ try {
     }
 }
 
-// PHPUnit 12 keeps copied source files in its coverage filter after their
-// coverage data has been remapped to the checked-in source. Keep these copies
-// until append() and Clover analysis have completed, then remove them.
-$temporarySourcePrefixes = array(
-    rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'boost-archive-',
-    rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'boost-worker-',
-);
-foreach ($coverage->filter()->files() as $path) {
-    $temporarySource = false;
-    foreach ($temporarySourcePrefixes as $prefix) {
-        $temporarySource = $temporarySource || str_starts_with($path, $prefix);
+// Remove retained or restored scratch sources after append() and Clover
+// analysis have completed. Remove only empty directories under the temp root.
+foreach (array_keys($temporaryCoverageSources) as $path) {
+    if (is_file($path)) {
+        unlink($path);
     }
-    if ($temporarySource && basename($path) === 'poller_boost.php') {
-        $directory = dirname($path);
-        foreach (glob($directory . '/*') as $file) {
-            if (is_file($file)) {
-                unlink($file);
-            }
-        }
-        rmdir($directory);
+
+    $directory = dirname($path);
+    while ($directory !== rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR)
+        && str_starts_with($directory, $temporaryRoot)
+        && @rmdir($directory)) {
+        $directory = dirname($directory);
     }
 }
 
