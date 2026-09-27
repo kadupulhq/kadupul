@@ -7,7 +7,13 @@
             "setcnn encryption off"
         ],
         [
+            "info ./router_traffic_11.rrd"
+        ],
+        [
             "file_exists ./router_traffic_11.rrd"
+        ],
+        [
+            "info ./errors/router_errors_12.rrd"
         ],
         [
             "file_exists ./errors/router_errors_12.rrd"

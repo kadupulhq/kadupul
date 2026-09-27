@@ -5,6 +5,9 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/include/vendor/autoload.php';
+}
 require_once $coverageRoot . '/tests/vendor/autoload.php';
 $testVendorPath = $coverageRoot . '/tests/vendor';
 $testLoader = Composer\Autoload\ClassLoader::getRegisteredLoaders()[$testVendorPath] ?? null;
@@ -16,6 +19,9 @@ if (!$testLoader instanceof Composer\Autoload\ClassLoader) {
 // first so child coverage collection cannot mix incompatible library versions.
 class_exists(SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class);
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
+}
 if (defined('HOST_REINDEX_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/host.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');

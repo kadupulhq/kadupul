@@ -1175,6 +1175,7 @@ function api_device_save(
     include_once($config['base_path'] . '/lib/utility.php');
     include_once($config['base_path'] . '/lib/variables.php');
     include_once($config['base_path'] . '/lib/data_query.php');
+    include_once($config['base_path'] . '/lib/rrd.php');
 
     if ($id > 0) {
         $previous_poller = db_fetch_cell_prepared(
@@ -1416,8 +1417,14 @@ function api_device_save(
                             $owner_id      = fileowner($config['rra_path']);
                             $group_id      = filegroup($config['rra_path']);
 
-                            if ((chown($host_dir, $owner_id)) &&
-                                (chgrp($host_dir, $group_id))) {
+                            // lchown() and lchgrp() get only a canonical path
+                            // inside the RRA root that no symbolic link leads to.
+                            $checked   = rrdtool_ownership_path($host_dir, $config['rra_path'], 'POLLER');
+                            $real_path = $checked === false ? false : realpath($checked);
+                            $rra_real  = rtrim((string) realpath($config['rra_path']), '/') . '/';
+
+                            if ($real_path !== false && str_starts_with($real_path, $rra_real)
+                                && lchown($real_path, $owner_id) && lchgrp($real_path, $group_id)) {
                                 /* permissions set ok */
                             } else {
                                 cacti_log("ERROR: Unable to set directory permissions for '" . $host_dir . "'", false);
