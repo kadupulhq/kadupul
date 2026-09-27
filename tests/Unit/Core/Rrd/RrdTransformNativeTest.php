@@ -113,11 +113,11 @@ SOURCE;
             'save-failed' => array(array('err_msg' => 'ERROR while writing XML file: <DIR>/live.rrd.xml'), array(), array('2: DOMDocument::save(<DIR>/live.rrd.xml): Failed to open stream: Is a directory')),
         )[$mode];
         expect(array($result['result'], $result['logged'], $result['warnings']))->toBe($expected);
-        // The dump reply reaches the output buffer; debug adds the modified XML.
+        // Dump output is captured for the transformation; debug prints only the modified XML.
         if ($mode === 'bad-dump') {
-            expect($result['printed'])->toBe("ERROR: injected dump failure\n");
+            expect($result['printed'])->toBe('');
         } else {
-            expect(substr_count($result['printed'], '<rrd>'))->toBe($mode === 'debug' ? 2 : 1);
+            expect(substr_count($result['printed'], '<rrd>'))->toBe($mode === 'debug' ? 1 : 0);
         }
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');

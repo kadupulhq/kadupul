@@ -37,6 +37,15 @@ function proc_terminate($process)
     $GLOBALS['response_terminated'] = true;
     return true;
 }
+function rrdtool_local_processes()
+{
+    return new class {
+        public function terminate($pipe)
+        {
+            return proc_terminate(null);
+        }
+    };
+}
 
 test('acknowledgement deadline honors longer configuration and bounds extreme values', function ($timeout, $elapsed, $expected) {
     $saved = $GLOBALS['config'] ?? null;
