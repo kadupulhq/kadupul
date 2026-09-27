@@ -808,7 +808,7 @@ function test_database_connection($poller = array()) {
 }
 
 function pollers() {
-	global $poller_actions, $poller_status, $item_rows;
+	global $config, $poller_actions, $poller_status, $item_rows;
 
 	/* ================= input validation and session storage ================= */
 	$filters = array(
@@ -850,6 +850,8 @@ function pollers() {
 	$refresh['logout']  = 'false';
 
 	set_page_refresh($refresh);
+
+	print '<p><a href="' . html_escape($config['url_path'] . 'app.php/collectors') . '">' . __('Open the read-only Symfony view') . '</a></p>';
 
 	if (get_request_var('rows') == '-1') {
 		$rows = read_config_option('num_rows_table');

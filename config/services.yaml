@@ -82,6 +82,15 @@ services:
     Kadupul\Inventory\Infrastructure\:
         resource: '../src/Inventory/Infrastructure/'
 
+    Kadupul\CollectorAdministration\Infrastructure\:
+        resource: '../src/CollectorAdministration/Infrastructure/'
+    Kadupul\CollectorAdministration\Application\Query\ListCollectors: ~
+    Kadupul\CollectorAdministration\Infrastructure\Persistence\DoctrineCollectorCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\CollectorAdministration\Application\Port\CollectorCatalog:
+        alias: Kadupul\CollectorAdministration\Infrastructure\Persistence\DoctrineCollectorCatalog
+
     Kadupul\Inventory\Application\Query\ListDevices: ~
 
     Kadupul\Inventory\Application\Query\FindEditableDevice: ~

@@ -1119,3 +1119,22 @@ but remote writes can survive a later failure. The UI reports an uncertain outco
 in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
+
+## Collector list slice
+
+`/app.php/collectors` renders the Data Collectors list with Symfony and Twig.
+The route accepts GET and HEAD only and requires the same Console Access and
+realm 3 authorization as `pollers.php`. Its Collector Administration query
+reads the local `poller` catalog through the DBAL web connection and returns
+only the fields shown on the page; remote database credentials are not selected.
+Search matches collector name and hostname as literal text. Page sizes are
+bounded to 25, 50 or 100 rows, and sort fields and directions are allowlisted.
+The process/thread display follows the `poller_type` setting, and timestamps
+retain the legacy month/day/time projection. Status labels preserve the legacy
+0–6 mapping plus disabled and heartbeat overrides.
+Responses are private/no-store, and text is escaped by Twig.
+
+The legacy `pollers.php` list links to this read-only view. `pollers.php` remains the owner of collector
+creation/editing, connection tests, replication, full sync, deletion, enabling,
+disabling and statistics reset. This slice does not change the legacy menu,
+bulk-action behavior or LTS.

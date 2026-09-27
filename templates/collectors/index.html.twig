@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Data Collectors'|trans({}, 'collectors') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Data Collectors'|trans({}, 'collectors') }}</h1>
+    {{ form_start(form, {method: 'get', attr: {role: 'search'}}) }}
+        {{ form_row(form.q) }}
+        {{ form_row(form.size) }}
+        {{ form_row(form.sort) }}
+        {{ form_row(form.direction) }}
+        <button type="submit">{{ 'Apply'|trans({}, 'collectors') }}</button>
+    {{ form_end(form) }}
+    <table>
+        <caption>{{ 'Data collectors and their current polling status'|trans({}, 'collectors') }}</caption>
+        <thead>
+        <tr>
+            <th scope="col">{{ 'Collector Name'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'ID'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Hostname'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Status'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Proc/Threads'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Polling Time'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Avg/Max'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Devices'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'SNMP Gets'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Scripts'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Servers'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Last Finished'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Last Update'|trans({}, 'collectors') }}</th>
+            <th scope="col">{{ 'Last Sync'|trans({}, 'collectors') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for collector in result.collectors %}
+            <tr>
+                <td>{{ collector.name }}</td>
+                <td>{{ collector.id }}</td>
+                <td>{{ collector.hostname }}</td>
+                <td>{{ collector.status|trans({}, 'collectors') }}</td>
+                <td>{{ collector.processes }}/{{ result.pollerType == 2 ? collector.threads : '-' }}</td>
+                <td>{{ collector.pollingTime|number_format(2, '.', ',') }}</td>
+                <td>{{ collector.averageTime|number_format(2, '.', ',') }}/{{ max(collector.maximumTime, 1)|number_format(2, '.', ',') }}</td>
+                <td>{{ collector.hosts }}</td>
+                <td>{{ collector.snmp }}</td>
+                <td>{{ collector.scripts }}</td>
+                <td>{{ collector.servers }}</td>
+                <td>{{ collector.lastUpdate }}</td>
+                <td>{{ collector.lastStatus }}</td>
+                <td>{{ collector.id == 1 or collector.lastSync is null ? 'N/A'|trans({}, 'collectors') : collector.lastSync }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="14">{{ 'No Data Collectors Found'|trans({}, 'collectors') }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="{{ 'Collector pages'|trans({}, 'collectors') }}">
+        {% if criteria.page > 1 %}
+            <a rel="prev" href="{{ path('collector_list', filters|merge({page: criteria.page - 1})) }}">{{ 'Previous'|trans({}, 'collectors') }}</a>
+        {% endif %}
+        <span>{{ 'Page %page%'|trans({'%page%': criteria.page}, 'collectors') }}</span>
+        {% if result.hasNext %}
+            <a rel="next" href="{{ path('collector_list', filters|merge({page: criteria.page + 1})) }}">{{ 'Next'|trans({}, 'collectors') }}</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}
