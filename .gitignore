@@ -70,7 +70,7 @@ include/themes/custom.css
 !include/themes/midwinter
 
 # Ignore any mac DS_Store files
-||||||| parent of e6aa69ae8 (ci: lint workflows and gate the changelog on pull requests)
+.DS_Store
 
 # ---------------------------------------------------------------------------
 # Kadupul additions. Everything above is inherited from Cacti and still
@@ -91,6 +91,7 @@ log/*
 !log/.gitkeep
 cache/*
 !cache/.gitkeep
+!cache/.htaccess
 rra/*.rrd
 rra/*.xml
 scripts/*.pid

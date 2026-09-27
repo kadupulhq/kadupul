@@ -43,8 +43,17 @@ final class SiteCreationFailureStatement extends \PDOStatement
         return parent::execute($params);
     }
 }
-$creator = new \Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator($database, $access);
-$site = new \Kadupul\Inventory\Domain\NewSite(['name' => 'rollback']);
+$trail = new class ($pdo) implements \Kadupul\IdentityAccess\Contract\AuditTrail {
+    public array $records = [];
+    public function __construct(private \PDO $pdo) {}
+    public function record(\Kadupul\IdentityAccess\Contract\AuditEvent $event): void
+    {
+        // Capture transaction state and committed rows at the moment of recording.
+        $this->records[] = ['event' => json_decode($event->json(), true), 'json' => $event->json(), 'open' => $this->pdo->inTransaction(), 'sites' => (int) $this->pdo->query('SELECT COUNT(*) FROM sites')->fetchColumn()];
+    }
+};
+$creator = new \Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator($database, $access, new \Kadupul\Inventory\Infrastructure\Legacy\SiteWriteAudit($trail));
+$site = new \Kadupul\Inventory\Domain\NewSite(['name' => 'rollback', 'notes' => 'password=audit-probe-secret']);
 $pdo->setAttribute(\PDO::ATTR_STATEMENT_CLASS, [SiteCreationFailureStatement::class]);
 try {
     $creator->create(42, $site);
@@ -63,4 +72,8 @@ try {
 } catch (\Kadupul\Inventory\Application\Query\InventoryAccessDenied) {
     $authorization = (int) $pdo->query('SELECT COUNT(*) FROM sites')->fetchColumn() === 0 && !$pdo->inTransaction();
 }
-echo json_encode(['rollback' => $rollback, 'authorization' => $authorization], JSON_THROW_ON_ERROR);
+$outcomes = array_map(static fn(array $record): array => [$record['event']['action'], $record['event']['target']['id'], $record['event']['decision'], $record['event']['outcome'], $record['open'], $record['sites']], $trail->records);
+$audit = $outcomes === [['inventory.site.create', 'new', 'allowed', 'failed', false, 0], ['inventory.site.create', 'new', 'denied', 'denied', false, 0]]
+    && !str_contains(implode("\n", array_column($trail->records, 'json')), 'Injected marker failure')
+    && !str_contains(implode("\n", array_column($trail->records, 'json')), 'audit-probe-secret');
+echo json_encode(['rollback' => $rollback, 'authorization' => $authorization, 'audit' => $audit], JSON_THROW_ON_ERROR);

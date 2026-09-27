@@ -1,0 +1,26 @@
+[
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            32,
+            false,
+            false
+        ]
+    },
+    {
+        "returned": "ERROR: Invalid RRD path",
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            32,
+            "rra/it\u0000s.rrd",
+            "value",
+            "1700000900:6",
+            false
+        ]
+    }
+]

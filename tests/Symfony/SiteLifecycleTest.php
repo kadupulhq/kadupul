@@ -18,6 +18,7 @@ use Kadupul\Inventory\Domain\Site;
 use Kadupul\Inventory\Domain\NewSite;
 use Kadupul\Inventory\Domain\SiteSelection;
 use Kadupul\Inventory\Domain\SiteEditConflict;
+use Kadupul\Inventory\Infrastructure\Legacy\LegacySiteLifecycle;
 use Kadupul\Kernel;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -185,6 +186,60 @@ final class SiteLifecycleTest extends TestCase
             self::assertSame(405, $kernel->handle(Request::create('/inventory/sites/legacy?action=save'))->getStatusCode());
         } finally {
             $kernel->shutdown();
+        }
+    }
+
+    public static function auditedOperations(): iterable
+    {
+        yield 'authorized deletion' => ['delete', 'success', 'allowed', 'succeeded'];
+        yield 'authorized duplication' => ['duplicate', 'success', 'allowed', 'succeeded'];
+        yield 'deletion revoked at persistence' => ['delete', 'revoked', 'denied', 'denied'];
+        yield 'duplication revoked at persistence' => ['duplicate', 'revoked', 'denied', 'denied'];
+        yield 'stale deletion after authorization' => ['delete', 'stale', 'allowed', 'failed'];
+        yield 'duplication error after authorization' => ['duplicate', 'failure', 'allowed', 'failed'];
+        yield 'deletion error after authorization' => ['delete', 'failure', 'allowed', 'failed'];
+    }
+
+    #[DataProvider('auditedOperations')]
+    public function testBulkAuditRecordsEachSiteOnlyAfterResolution(string $operation, string $mode, string $decision, string $outcome): void
+    {
+        $fixture = new SiteAuditFixture();
+        $fixture->writer->exec("INSERT INTO sites (id, name, city, zoom) VALUES (2, 'Second', 'Paris', '12'), (5, 'Fifth', 'Tokyo', '12'); INSERT INTO host (id, site_id) VALUES (1, 2)");
+        $fixture->allowed = $mode !== 'revoked';
+        $sites = new LegacySiteLifecycle($fixture->connection, $fixture->access(), $fixture->audit());
+        $revisions = [];
+        foreach ($sites->find([5, 2]) as $site) {
+            $revisions[$site->id] = $site->revision();
+        }
+        if ($mode === 'stale') {
+            $fixture->observer->exec("UPDATE sites SET city = 'Lyon' WHERE id = 5");
+        }
+        if ($mode === 'failure') {
+            $fixture->failOn('INSERT', 'settings');
+        }
+        $before = $fixture->observer->query('SELECT id, name, city FROM sites ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC);
+        try {
+            if ($operation === 'delete') {
+                $sites->delete(42, new SiteSelection($revisions));
+            } else {
+                self::assertSame([6, 7], $sites->duplicate(42, new SiteSelection($revisions), 'password=hunter2-audit-marker <site>'));
+            }
+            self::assertSame('success', $mode);
+        } catch (InventoryAccessDenied) {
+            self::assertSame('revoked', $mode);
+        } catch (SiteEditConflict) {
+            self::assertSame('stale', $mode);
+        } catch (\PDOException $error) {
+            self::assertSame('failure', $mode);
+            self::assertStringContainsString('private-failure-marker', $error->getMessage());
+        }
+        $fixture->assertRecords('inventory.site.' . $operation, ['2', '5'], $decision, $outcome, ['hunter2-audit-marker', 'Second', 'Fifth']);
+        $committed = $before;
+        if ($mode === 'success') {
+            $committed = $operation === 'delete' ? [] : [...$before, ['id' => 6, 'name' => 'password=hunter2-audit-marker Second', 'city' => 'Paris'], ['id' => 7, 'name' => 'password=hunter2-audit-marker Fifth', 'city' => 'Tokyo']];
+        }
+        foreach ($fixture->records as $record) {
+            self::assertSame($committed, $record['sites']);
         }
     }
 }

@@ -1,0 +1,27 @@
+{
+    "returned": "ERROR: RRD file does not exist: rra/router_traffic_11.rrd",
+    "printed": "",
+    "diagnostics": [],
+    "commands": [
+        {
+            "argv": [
+                "-"
+            ],
+            "stdin": [
+                "info 'rra/router_traffic_11.rrd'\r\nquit\r\n"
+            ]
+        }
+    ],
+    "args": [
+        7,
+        0,
+        {
+            "graph_start": 1700000000,
+            "graph_end": 1700003600,
+            "print_source": true
+        },
+        false,
+        [],
+        0
+    ]
+}
