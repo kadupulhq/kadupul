@@ -69,6 +69,7 @@ def main():
         'src/Inventory/Application/Query/PrepareDeviceStateChange.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceStates.php',
         'src/Inventory/Application/Command/ClearDeviceStatistics.php',
+        'src/Inventory/Application/Command/SynchronizeDeviceTemplates.php',
         'src/Inventory/Infrastructure/Legacy/DeviceStatisticsReset.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceStateType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceStateController.php',
@@ -165,6 +166,7 @@ def main():
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
+    synchronization_checks = ['template synchronization saves through Symfony', 'template synchronization failure rolls back primary associations', 'remote template synchronization preserves assigned template identity', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization retains existing graphs']
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
@@ -215,6 +217,8 @@ def main():
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
     }
+    for index in range(len(synchronization_checks)):
+        failures['missing-synchronization-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -279,14 +283,17 @@ def main():
                 evidence['checks'].remove('widen refuses an operator without the Installation/Upgrades realm')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
+            elif case.startswith('missing-statistics-check-'):
+                missing = statistics_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-synchronization-check-'):
+                missing = synchronization_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-removal-callback-check':
                 evidence['checks'] = [check for check in evidence['checks'] if check != 'rejected removal emits no bulk action callback']
             elif case in ['missing-removal-shared-check', 'missing-removal-rollback-check']:
                 omitted = 'remote removal rejects outside graph references before cleanup' if case == 'missing-removal-shared-check' else 'remote removal failure rolls back dependent cleanup'
                 evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
-            elif case.startswith('missing-statistics-check-'):
-                missing = statistics_checks[int(case.rsplit('-', 1)[1])]
-                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':

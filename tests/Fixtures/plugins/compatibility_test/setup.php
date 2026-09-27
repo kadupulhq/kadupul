@@ -86,3 +86,8 @@ function compatibility_statistics_action($value) {
     compatibility_test_record('statistics_action', [$value]);
     return $value;
 }
+
+function compatibility_template_sync($value) {
+    compatibility_test_record('template_sync', [$value]);
+    return $value;
+}
