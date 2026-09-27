@@ -14,7 +14,7 @@ app.php/inventory/devices/{id}	symfony:inventory_device_details	methods=GET|HEAD
 app.php/inventory/devices/{id}/collector	symfony:inventory_device_collector	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/edit	symfony:inventory_device_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/template	symfony:inventory_device_template	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
-app.php/inventory/devices/{operation}	symfony:inventory_device_state	methods=GET|HEAD|POST requirements=operation=enable|disable; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{operation}	symfony:inventory_device_state	methods=GET|HEAD|POST requirements=operation=enable|disable|clear-statistics; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites	symfony:inventory_sites	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites.json	symfony:inventory_sites_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/legacy	symfony:inventory_sites_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3

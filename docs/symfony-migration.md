@@ -1243,3 +1243,20 @@ Known differences from `cli/audit_database.php`:
   so an unknown or unauthorized name is refused with `ERROR: Unknown or
   unauthorized operator` and exit 1. The original ignored `--as` and printed
   the help.
+
+### Device statistics reset
+
+The Inventory list offers a Clear device statistics confirmation at
+`/inventory/devices/clear-statistics`. Its Symfony Form and Twig page dispatch
+`ClearDeviceStatistics` through the `DeviceStatistics` port. The legacy adapter
+reuses the isolated bulk worker's permission locks, bounded selection and stable
+configuration revisions. Live counter changes do not invalidate confirmation.
+
+The reset writes only response-time measurements, poll counts and availability,
+using the legacy defaults. It preserves graph/data ownership, historical samples,
+device identity and enabled state. Each write checks device and collector identity.
+Remote collectors must be online; the primary transaction rolls back on error,
+but remote writes can survive a later failure. The UI reports an uncertain outcome
+in that case. A poller may immediately record new statistics after a successful
+reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
+run once for the selection using action 5, followed by normal cache invalidation.
