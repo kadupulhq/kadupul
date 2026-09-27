@@ -3297,15 +3297,16 @@ function generate_data_source_path($local_data_id)
  *  @param $data_template_id
  *  @param $requested_cf
  *  @param $ds_step
+ *  @param mixed $rrdtool_pipe Existing RRDtool pipe or proxy session.
  *
  *  @return - the best cf to use
  */
-function generate_graph_best_cf($local_data_id, $requested_cf, $ds_step = 60)
+function generate_graph_best_cf($local_data_id, $requested_cf, $ds_step = 60, $rrdtool_pipe = false)
 {
     static $best_cf;
 
     if ($local_data_id > 0) {
-        $avail_cf_functions = get_rrd_cfs($local_data_id);
+        $avail_cf_functions = get_rrd_cfs($local_data_id, $rrdtool_pipe);
 
         if (cacti_sizeof($avail_cf_functions)) {
             /* workaround until we have RRA presets in 0.8.8 */
@@ -3331,10 +3332,11 @@ function generate_graph_best_cf($local_data_id, $requested_cf, $ds_step = 60)
  * get_rrd_cfs - reads the RRDfile and gets the RRAs stored in it.
  *
  * @param $local_data_id
+ * @param mixed $rrdtool_pipe Existing RRDtool pipe or proxy session.
  *
  * @return - array of the CF functions
  */
-function get_rrd_cfs($local_data_id)
+function get_rrd_cfs($local_data_id, $rrdtool_pipe = false)
 {
     global $consolidation_functions;
     static $rrd_cfs = array();
@@ -3347,7 +3349,7 @@ function get_rrd_cfs($local_data_id)
 
     $rrdfile = get_data_source_path($local_data_id, true);
 
-    $output = @rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT);
+    $output = @rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
 
     /* search for
      * 		rra[0].cf = 'LAST'

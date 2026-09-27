@@ -111,11 +111,11 @@ function rrd_characterization_run($test, array $scenario, bool $fatal = false): 
 
 /**
  * As rrd_characterization_run(), with storage_location on and the fake proxy
- * in place of rrdproxy. The one call gets a session from rrd_init() as
- * argument $rrdp_argument, and 'received' lists every command the proxy
- * decrypted, in order.
+ * in place of rrdproxy. When $rrdp_argument is null the call owns its proxy
+ * session; otherwise it receives a session from rrd_init() at that argument.
+ * 'received' lists every command the proxy decrypted, in order.
  */
-function rrd_characterization_proxy_run($test, array $scenario, int $rrdp_argument): array
+function rrd_characterization_proxy_run($test, array $scenario, ?int $rrdp_argument = null): array
 {
     require_once __DIR__ . '/RrdFakeProxy.php';
     $client = rrd_proxy_interop_key();
@@ -127,13 +127,16 @@ function rrd_characterization_proxy_run($test, array $scenario, int $rrdp_argume
         list($server, $stdout, $port) = rrd_fake_proxy_start($directory, array(
             'proxy_private_key' => $proxy['private'], 'proxy_public_key' => $proxy['public'],
             'client_fingerprint' => $client['fingerprint'],
+            'replies' => array('info' => array(rrd_characterization_proxy_info_reply($scenario['rrd_cfs'] ?? array('AVERAGE')))),
         ));
         $scenario['options'] = array(
             'storage_location' => '1', 'rrdp_server' => '127.0.0.1', 'rrdp_port' => $port,
             'rsa_public_key' => $client['public'], 'rsa_private_key' => $client['private'], 'rrdp_fingerprint' => $proxy['fingerprint'],
         ) + ($scenario['options'] ?? array());
         expect($scenario['calls'])->toHaveCount(1);
-        $scenario['calls'][0]['rrdp_argument'] = $rrdp_argument;
+        if ($rrdp_argument !== null) {
+            $scenario['calls'][0]['rrdp_argument'] = $rrdp_argument;
+        }
         $output = rrd_characterization_run($test, $scenario);
         $output['received'] = rrd_fake_proxy_finish($directory, $server, $stdout);
 
@@ -147,6 +150,17 @@ function rrd_characterization_proxy_run($test, array $scenario, int $rrdp_argume
         }
         rmdir($directory);
     }
+}
+
+/** Return the minimal proxy info reply used to resolve graph consolidation functions. */
+function rrd_characterization_proxy_info_reply(array $cfs): string
+{
+    $reply = '';
+    foreach ($cfs as $index => $cf) {
+        $reply .= 'rra[' . $index . '].cf = "' . $cf . "\"\n";
+    }
+
+    return $reply . 'OK u:0.00 s:0.00 r:0.00';
 }
 
 /**
