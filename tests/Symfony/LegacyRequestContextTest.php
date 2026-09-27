@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-namespace Kadupul\Tests {
+namespace Kadupul\Tests\LegacyRequestContext {
 
     use Kadupul\Platform\Infrastructure\Legacy\LegacyRequestContext;
     use PHPUnit\Framework\TestCase;
@@ -18,6 +18,13 @@ namespace Kadupul\Tests {
     {
         public static function setUpBeforeClass(): void
         {
+            if (!function_exists('sanitize_uri')) {
+                eval('function sanitize_uri(string $uri): string { return "sanitized:" . $uri; }');
+            }
+            if (!function_exists('cacti_log')) {
+                eval('function cacti_log(string $message): void { $GLOBALS["legacy_request_context_logs"][] = $message; }');
+            }
+
             $source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
             if (!is_string($source)) {
                 self::fail('Unable to read lib/functions.php.');
@@ -90,6 +97,42 @@ namespace Kadupul\Tests {
                 ],
                 json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR)
             );
+        }
+
+        public function testLegacyWrappersExecuteRequestContextBranchesInProcess(): void
+        {
+            $server = $_SERVER;
+            $hadLogs = array_key_exists('legacy_request_context_logs', $GLOBALS);
+            $logs = $GLOBALS['legacy_request_context_logs'] ?? null;
+
+            try {
+                $_SERVER = [
+                    'REQUEST_URI' => '/graphs.php?x=1&y=2',
+                    'SCRIPT_NAME' => '/admin/graphs.php',
+                    'QUERY_STRING' => 'ignored=1',
+                ];
+
+                self::assertSame('sanitized:/graphs.php?x=1&y=2', get_browser_query_string());
+                self::assertSame('graphs.php', get_current_page());
+
+                $_SERVER = ['SCRIPT_NAME' => '/index.php', 'QUERY_STRING' => 'x=1&y=2'];
+                self::assertSame('sanitized:index.php?x=1&y=2', get_browser_query_string());
+
+                $_SERVER = [];
+                self::assertFalse(get_current_page());
+                self::assertSame('sanitized:', get_browser_query_string());
+                self::assertSame(
+                    ['ERROR: unable to determine current_page', 'ERROR: unable to determine current_page'],
+                    $GLOBALS['legacy_request_context_logs']
+                );
+            } finally {
+                $_SERVER = $server;
+                if ($hadLogs) {
+                    $GLOBALS['legacy_request_context_logs'] = $logs;
+                } else {
+                    unset($GLOBALS['legacy_request_context_logs']);
+                }
+            }
         }
 
         public function testWrappersFallBackWhenSymfonyExistsWithoutKadupulAutoloading(): void
