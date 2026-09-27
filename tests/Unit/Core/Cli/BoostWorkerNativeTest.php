@@ -77,13 +77,32 @@ test('production Boost owns, supervises and reaps actual worker processes', func
             $parent->merge(unserialize(file_get_contents($reports[0])));
         }
     } finally {
-        foreach (array('/include','/lib','') as $suffix) {
-            foreach (glob($dir . $suffix . '/*') as $file) {
-                if (is_file($file)) {
+        if ($parent !== null) {
+            // PHPUnit 12 cannot remove the copied source from CodeCoverage's
+            // filter. Keep it until the integration coverage merger finishes.
+            foreach (array('/include','/lib') as $suffix) {
+                foreach (glob($dir . $suffix . '/*') as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
+                rmdir($dir . $suffix);
+            }
+
+            foreach (glob($dir . '/*') as $file) {
+                if ($file !== $dir . '/poller_boost.php' && is_file($file)) {
                     unlink($file);
                 }
             }
-            rmdir($dir . $suffix);
+        } else {
+            foreach (array('/include','/lib','') as $suffix) {
+                foreach (glob($dir . $suffix . '/*') as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
+                rmdir($dir . $suffix);
+            }
         }
     }
 })->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','output-next-count','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained','master-success-requeued'));

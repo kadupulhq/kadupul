@@ -86,4 +86,28 @@ try {
         unlink($temp);
     }
 }
+
+// PHPUnit 12 keeps copied source files in its coverage filter after their
+// coverage data has been remapped to the checked-in source. Keep these copies
+// until append() and Clover analysis have completed, then remove them.
+$temporarySourcePrefixes = array(
+    rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'boost-archive-',
+    rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'boost-worker-',
+);
+foreach ($coverage->filter()->files() as $path) {
+    $temporarySource = false;
+    foreach ($temporarySourcePrefixes as $prefix) {
+        $temporarySource = $temporarySource || str_starts_with($path, $prefix);
+    }
+    if ($temporarySource && basename($path) === 'poller_boost.php') {
+        $directory = dirname($path);
+        foreach (glob($directory . '/*') as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+        rmdir($directory);
+    }
+}
+
 echo 'Combined unit and poller integration coverage written', PHP_EOL;

@@ -45,13 +45,34 @@ function boost_archive_run($coverage, $mode)
         }
         return $result;
     } finally {
-        foreach (array('/include', '/lib', '') as $suffix) {
-            foreach (glob($dir . $suffix . '/*') as $file) {
-                if (is_file($file)) {
+        // PHPUnit 12's CodeCoverage filter has no API to remove a file from
+        // its allowlist. Keep the copied source alive until the integration
+        // coverage merge has finished analyzing that allowlist.
+        if ($coverage !== null) {
+            foreach (array('/include', '/lib') as $suffix) {
+                foreach (glob($dir . $suffix . '/*') as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
+                rmdir($dir . $suffix);
+            }
+
+            foreach (glob($dir . '/*') as $file) {
+                if ($file !== $dir . '/poller_boost.php' && is_file($file)) {
                     unlink($file);
                 }
             }
-            rmdir($dir . $suffix);
+
+        } else {
+            foreach (array('/include', '/lib', '') as $suffix) {
+                foreach (glob($dir . $suffix . '/*') as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
+                rmdir($dir . $suffix);
+            }
         }
     }
 }
