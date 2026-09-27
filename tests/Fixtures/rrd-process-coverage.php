@@ -115,7 +115,7 @@ $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
 );
 $childCoverage->start('native RRD child ' . getmypid());
 $childCoverageFile = RRD_TEST_COVERAGE_DIRECTORY . '/child-' . getmypid() . '.coverage';
-register_shutdown_function(function () use ($childCoverage, $childCoverageFile) {
+register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $testLoader) {
     // Append collection after application shutdown handlers so implicit pipe
     // close/drain is measured too, not just the main body of the child script.
     register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $testLoader) {
