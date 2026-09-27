@@ -96,13 +96,15 @@ require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/GraphOption
 
         $graph['auto_scale_opts'] = '4';
         $graph['lower_limit'] = '10';
-        $rendered = $generator->build(1700000000, 1700003600, $graph, array());
+        $emptyOptions = array();
+        $rendered = $generator->build(1700000000, 1700003600, $graph, $emptyOptions);
         expect($rendered)->toContain('--alt-autoscale')
             ->and($rendered)->toContain('--upper-limit="100"')
             ->and($rendered)->toContain('--lower-limit="10"');
 
         $graph['auto_scale_opts'] = '1';
-        $rendered = $generator->build(1700000000, 1700003600, $graph, array('export' => true, 'export_filename' => 'traffic.svg'));
+        $exportOptions = array('export' => true, 'export_filename' => 'traffic.svg');
+        $rendered = $generator->build(1700000000, 1700003600, $graph, $exportOptions);
         expect($rendered)->toContain('traffic.svg')
             ->and($rendered)->toContain('--alt-autoscale');
 
@@ -113,7 +115,8 @@ require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/GraphOption
         $graph['upper_limit'] = '100';
         $graph['lower_limit'] = '10';
         $graph['unit_exponent_value'] = '-3';
-        $rendered = $generator->build(1700000000, 1700003600, $graph, array('graph_width' => 'abc'));
+        $invalidWidthOptions = array('graph_width' => 'abc');
+        $rendered = $generator->build(1700000000, 1700003600, $graph, $invalidWidthOptions);
         expect($rendered)->toContain('--upper-limit="100"')
             ->and($rendered)->toContain('--lower-limit="10"')
             ->and($rendered)->not->toContain('--legend-position')
