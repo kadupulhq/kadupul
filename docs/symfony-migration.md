@@ -1127,8 +1127,9 @@ The route accepts GET and HEAD only and requires the same Console Access and
 realm 3 authorization as `pollers.php`. Its Collector Administration query
 reads the local `poller` catalog through the DBAL web connection and returns
 only the fields shown on the page; remote database credentials are not selected.
-Search matches collector name and hostname as literal text. Page sizes are
-bounded to 25, 50 or 100 rows, and sort fields and directions are allowlisted.
+Search matches collector name only and preserves the legacy SQL `LIKE`
+wildcard behavior for `%` and `_`. Page sizes are bounded to 25, 50 or 100
+rows, and sort fields and directions are allowlisted.
 The process/thread display follows the `poller_type` setting, and timestamps
 retain the legacy month/day/time projection. Status labels preserve the legacy
 0–6 mapping plus disabled and heartbeat overrides.
@@ -1138,3 +1139,10 @@ The legacy `pollers.php` list links to this read-only view. `pollers.php` remain
 creation/editing, connection tests, replication, full sync, deletion, enabling,
 disabling and statistics reset. This slice does not change the legacy menu,
 bulk-action behavior or LTS.
+
+The legacy page defaults its row count from `num_rows_table`, allows the
+installation's configured row choices, and offers periodic refresh from 5 to
+300 seconds (default 20). This read-only route currently uses a fixed 25-row
+default, 25/50/100 choices and no automatic refresh. Recommendation: restore
+the configured row-count and refresh preferences before this route replaces
+the legacy collector list; until then, treat it as an opt-in read view.

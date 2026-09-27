@@ -33,7 +33,7 @@ final class DoctrineCollectorCatalogTest extends TestCase
         $database->executeStatement("INSERT INTO poller VALUES (1, 'Primary % Collector', 'primary.example', '', 1, 2, 4, 9.5, 4.25, 8.5, 12, 3, 1, '2026-09-27 10:00:00', '2026-09-27 10:00:00', '', 'secret-not-selected'), (2, 'Other', 'other.example', '', 1, 1, 2, 1.0, 1.0, 1.0, 0, 0, 0, '2026-09-27 10:00:00', '2026-09-27 10:00:00', '2026-09-27 10:00:00', 'secret-not-selected')");
         $database->executeStatement('INSERT INTO host VALUES (7, 1), (8, 1), (9, 2)');
 
-        $page = (new DoctrineCollectorCatalog($database))->list(new CollectorListCriteria('%', 1, 25, 'name', 'asc'));
+        $page = (new DoctrineCollectorCatalog($database))->list(new CollectorListCriteria('Primary', 1, 25, 'name', 'asc'));
 
         self::assertFalse($page->hasNext);
         self::assertCount(1, $page->collectors);
@@ -42,6 +42,9 @@ final class DoctrineCollectorCatalogTest extends TestCase
         self::assertSame('Running', $page->collectors[0]->status);
         self::assertSame(4.25, $page->collectors[0]->averageTime);
         self::assertObjectNotHasProperty('dbpass', $page->collectors[0]);
+
+        $wildcardPage = (new DoctrineCollectorCatalog($database))->list(new CollectorListCriteria('%', 1, 25, 'name', 'asc'));
+        self::assertCount(2, $wildcardPage->collectors);
     }
 
     public function testHeartbeatAndDisabledOverridesApplyAfterSafeProjection(): void

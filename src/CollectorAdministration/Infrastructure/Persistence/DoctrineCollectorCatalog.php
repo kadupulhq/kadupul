@@ -25,9 +25,10 @@ final readonly class DoctrineCollectorCatalog implements CollectorCatalog
         $where = '';
         $parameters = [];
         if ($criteria->search !== '') {
-            $pattern = '%' . strtr($criteria->search, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
-            $where = " WHERE p.name LIKE ? ESCAPE '!' OR p.hostname LIKE ? ESCAPE '!'";
-            $parameters = [$pattern, $pattern];
+            // Match the legacy pollers.php filter: name-only LIKE semantics,
+            // including SQL wildcard characters entered by the operator.
+            $where = ' WHERE p.name LIKE ?';
+            $parameters = ['%' . $criteria->search . '%'];
         }
 
         $sort = [
