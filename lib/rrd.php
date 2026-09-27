@@ -2119,6 +2119,17 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
  */
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe = false, &$xport_meta = array(), $user = 0, ?\Kadupul\Platform\Application\Port\Clock $clock = null)
 {
+    $owns_proxy_pipe = false;
+    if (rrdtool_uses_proxy() && ($rrdtool_pipe === false || $rrdtool_pipe === null || $rrdtool_pipe === '')) {
+        // A graph render makes several proxy calls; keep them on one session
+        // so the key exchange is paid once and all commands share one channel.
+        $proxy_pipe = rrd_init('WEBLOG');
+        if ($proxy_pipe !== false) {
+            $rrdtool_pipe = $proxy_pipe;
+            $owns_proxy_pipe = true;
+        }
+    }
+
     // A value RRDtool cannot receive (a NUL in device or query data), or a DEF
     // path the RRDtool proxy cannot carry, refuses the command before anything
     // is sent; the caller gets the same answer as for a missing RRD file.
@@ -2136,6 +2147,10 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
         }
 
         return rrdtool_create_error_image(__('The Graph contains a value RRDtool cannot accept.'));
+    } finally {
+        if ($owns_proxy_pipe) {
+            rrd_close($rrdtool_pipe);
+        }
     }
 }
 
@@ -2470,7 +2485,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
     if (cacti_sizeof($graph_items)) {
         foreach ($graph_items as $key => $graph_item) {
-            $graph_cf = $graph_cf_resolver->assignReference($graph_item, $last_graph_cf, $rra_seconds);
+            $graph_cf = $graph_cf_resolver->assignReference($graph_item, $last_graph_cf, $rra_seconds, $rrdtool_pipe);
             $graph_items[$key]['cf_reference'] = $graph_cf;
 
             if (!empty($graph_item['local_data_id']) && !isset($cf_ds_cache[$graph_item['data_template_rrd_id']][$graph_cf])) {
@@ -2683,7 +2698,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
             // There are obvious logic flaws when I review ho the 'cf_reference' is calculated above.
 
             /* hack around RRDtool behavior in first RRA */
-            $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds);
+            $graph_cf = generate_graph_best_cf($graph_item['local_data_id'], $graph_item['consolidation_function_id'], $rra_seconds, $rrdtool_pipe);
 
             /* first we need to check if there is a DEF for the current data source/cf combination. if so,
             we will use that */
@@ -3182,7 +3197,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
             }
 
             if (isset($graph_data_array['get_error'])) {
-                return rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_STDERR);
+                return rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_STDERR, $rrdtool_pipe);
             } elseif (isset($graph_data_array['export'])) {
                 rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe);
 
