@@ -7,6 +7,9 @@
             "setcnn encryption off"
         ],
         [
+            "info ./router:traffic_11.rrd"
+        ],
+        [
             "file_exists ./router:traffic_11.rrd"
         ],
         [
