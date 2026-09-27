@@ -93,6 +93,22 @@ final class LocalRrdtool
         return true;
     }
 
+    /** Terminate an owned child after an acknowledged command times out.
+     *
+     * @param resource $write RRDtool process input stream.
+     *
+     * @return bool Whether the owned process was signalled.
+     */
+    public function terminate($write): bool
+    {
+        $key = (int) $write;
+        if (!isset($this->processes[$key])) {
+            return false;
+        }
+
+        return proc_terminate($this->processes[$key]['process']);
+    }
+
     /** Close every persistent child during process shutdown. */
     public function closeAll(): void
     {

@@ -302,7 +302,7 @@ function rrd_acknowledged_command($pipe, $command)
         }
     }
     $state['failed'] = true;
-    proc_terminate($state['process']);
+    rrdtool_local_processes()->terminate($pipe);
     cacti_log('ERROR: RRDtool response was unavailable or timed out; samples retained for retry.');
     return array(false, $output);
 }
