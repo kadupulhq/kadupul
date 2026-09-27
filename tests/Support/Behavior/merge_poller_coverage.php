@@ -6,7 +6,6 @@
  */
 
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\RawCodeCoverageData;
 use SebastianBergmann\CodeCoverage\Report\Clover;
 
 $root = dirname(__DIR__, 3);
@@ -71,7 +70,10 @@ if (!in_array(1, $mapped[$root . '/poller.php'] ?? [], true)) {
 foreach (array_keys($mapped) as $path) {
     $coverage->filter()->includeFile($path);
 }
-$coverage->append(RawCodeCoverageData::fromXdebugWithoutPathCoverage($mapped), 'poller integration');
+$rawCoverageClass = class_exists(\SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class)
+    ? \SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class
+    : \SebastianBergmann\CodeCoverage\RawCodeCoverageData::class;
+$coverage->append($rawCoverageClass::fromXdebugWithoutPathCoverage($mapped), 'poller integration');
 // Use PHPUnit's writer to recompute all metrics from measured line data.
 $temp = tempnam(dirname($argv[3]), 'poller-clover-');
 try {
