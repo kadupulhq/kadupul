@@ -1013,23 +1013,11 @@ function create_tables($load = true)
         $output = array();
         $error  = 0;
 
-        //Handle case to address Mariadb dropping the mysql command
-        if (file_exists('/usr/bin/mariadb')) {
-            $db_shell = '/usr/bin/mariadb';
-        } elseif (file_exists('/usr/bin/mysql')) {
-            $db_shell = '/usr/bin/mysql';
-        } elseif (file_exists('/usr/local/bin/mariadb')) {
-            $db_shell = '/usr/local/bin/mariadb';
-        } elseif (file_exists('/usr/local/bin/mysql')) {
-            $db_shell = '/usr/local/bin/mysql';
-        } else {
-            $db_shell = trim((string) shell_exec('which mysql'));
+        $db_shell = get_audit_database_client();
+        if ($db_shell === false) {
+            print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
 
-            if ($db_shell == '') {
-                print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
-
-                return false;
-            }
+            return false;
         }
 
         if (file_exists($config['base_path'] . '/docs/audit_schema.sql')) {
@@ -1072,6 +1060,37 @@ function create_tables($load = true)
     }
 
     return true;
+}
+
+/**
+ * Resolve the MySQL-compatible client used to load the audit baseline.
+ *
+ * The test-only constant lets the CLI integration fixture use a fake client
+ * even on hosts where a real client is installed. Normal callers always use
+ * the existing absolute-path and PATH discovery order.
+ *
+ * @return string|false
+ */
+function get_audit_database_client()
+{
+    if (defined('CACTI_TEST_DATABASE_CLIENT')) {
+        return CACTI_TEST_DATABASE_CLIENT;
+    }
+
+    // Handle case to address MariaDB dropping the mysql command.
+    if (file_exists('/usr/bin/mariadb')) {
+        return '/usr/bin/mariadb';
+    } elseif (file_exists('/usr/bin/mysql')) {
+        return '/usr/bin/mysql';
+    } elseif (file_exists('/usr/local/bin/mariadb')) {
+        return '/usr/local/bin/mariadb';
+    } elseif (file_exists('/usr/local/bin/mysql')) {
+        return '/usr/local/bin/mysql';
+    }
+
+    $db_shell = trim((string) shell_exec('which mysql'));
+
+    return $db_shell === '' ? false : $db_shell;
 }
 
 function load_audit_database()
