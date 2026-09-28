@@ -378,6 +378,17 @@ function form_actions()
     /* if we are to save this form, instead of display it */
     if (isset_request_var('selected_items')) {
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+        if (is_array($selected_items)) {
+            $selected_items = array_values(array_filter(
+                $selected_items,
+                function ($data_source_id) {
+                    return api_data_source_is_allowed((int) $data_source_id);
+                }
+            ));
+            if (cacti_sizeof($selected_items) === 0) {
+                $selected_items = false;
+            }
+        }
 
         if ($selected_items != false) {
             if (get_nfilter_request_var('drp_action') == '1') { /* delete */
@@ -1349,6 +1360,9 @@ function validate_data_source_vars()
 function ds()
 {
     global $ds_actions, $item_rows, $sampling_intervals;
+    if (get_request_var('host_id') > 0 && !is_device_allowed(get_filter_request_var('host_id'))) {
+        set_request_var('host_id', '-2');
+    }
 
     if (get_request_var('rows') == -1) {
         $rows = read_config_option('num_rows_table');
@@ -1568,15 +1582,33 @@ function ds()
         $sql_where1 = '';
     }
     $sql_where2 = '';
+    $allowed_device_rows = 0;
+    $allowed_devices = get_allowed_devices('', '', '', $allowed_device_rows);
+    $allowed_device_ids = array();
+    foreach ($allowed_devices as $allowed_device) {
+        $allowed_device_ids[] = (int) $allowed_device['id'];
+    }
 
     if (get_request_var('host_id') == '-1') {
-        /* Show all items */
+        if (cacti_sizeof($allowed_device_ids) > 0) {
+            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . 'dl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
+            $sql_where2 .= ' AND gl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
+        } else {
+            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . '1=0';
+            $sql_where2 .= ' AND 1=0';
+        }
     } elseif (isempty_request_var('host_id')) {
         $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' (dl.host_id=0 OR dl.host_id IS NULL)';
         $sql_where2 .= ' AND (gl.host_id=0 OR gl.host_id IS NULL)';
     } elseif (!isempty_request_var('host_id')) {
-        $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' dl.host_id=' . get_request_var('host_id');
-        $sql_where2 .= ' AND gl.host_id=' . get_request_var('host_id');
+        $host_id = get_filter_request_var('host_id');
+        if ($host_id > 0 && (!is_device_allowed($host_id) || !in_array($host_id, $allowed_device_ids, true))) {
+            $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' 1=0';
+            $sql_where2 .= ' AND 1=0';
+        } else {
+            $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' dl.host_id=' . (int) $host_id;
+            $sql_where2 .= ' AND gl.host_id=' . (int) $host_id;
+        }
     }
 
     if (get_request_var('site_id') == '-1') {

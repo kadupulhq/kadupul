@@ -585,6 +585,17 @@ function form_actions()
     /* if we are to save this form, instead of display it */
     if (isset_request_var('selected_items')) {
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+        if (is_array($selected_items)) {
+            $selected_items = array_values(array_filter(
+                $selected_items,
+                function ($graph_id) {
+                    return is_graph_allowed((int) $graph_id);
+                }
+            ));
+            if (cacti_sizeof($selected_items) === 0) {
+                $selected_items = false;
+            }
+        }
 
         if ($selected_items != false) {
             if (get_request_var('drp_action') == '1') { // delete
@@ -2010,6 +2021,9 @@ function validate_graph_request_vars()
 function graph_management()
 {
     global $graph_actions, $graph_sources, $item_rows, $config;
+    if (get_request_var('host_id') > 0 && !is_device_allowed(get_filter_request_var('host_id'))) {
+        set_request_var('host_id', '-2');
+    }
 
     if (get_request_var('rows') == -1) {
         $rows = read_config_option('num_rows_table');
@@ -2183,21 +2197,52 @@ function graph_management()
     /* form the 'where' clause for our main sql query */
     $sql_where  = '';
     $sql_where2 = '';
+    $allowed_device_rows = 0;
+    $allowed_devices = get_allowed_devices('', '', '', $allowed_device_rows);
+    $allowed_device_ids = array();
+    foreach ($allowed_devices as $allowed_device) {
+        $allowed_device_ids[] = (int) $allowed_device['id'];
+    }
+    if (get_request_var('local_graph_ids') != '') {
+        $requested_graph_ids = explode(',', get_request_var('local_graph_ids'));
+        $allowed_requested_graph_ids = array();
+        foreach ($requested_graph_ids as $requested_graph_id) {
+            $requested_graph_id = (int) $requested_graph_id;
+            if ($requested_graph_id > 0 && is_graph_allowed($requested_graph_id)) {
+                $allowed_requested_graph_ids[] = $requested_graph_id;
+            }
+        }
+        set_request_var('local_graph_ids', cacti_sizeof($allowed_requested_graph_ids) > 0 ? implode(',', $allowed_requested_graph_ids) : '0');
+    }
+
     if (get_request_var('rfilter') != '') {
-        $sql_where = " WHERE (gtg.title_cache " . db_qstr_rlike(get_request_var('rfilter')) .
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . "(gtg.title_cache " . db_qstr_rlike(get_request_var('rfilter')) .
             " OR gt.name " . db_qstr_rlike(get_request_var('rfilter')) .
             " OR gl.id = " . (int) get_request_var('rfilter') . ")";
-        $sql_where2 = " AND (gl.id = " . (int) get_request_var('rfilter') . ")";
+        $sql_where2 .= " AND (gl.id = " . (int) get_request_var('rfilter') . ")";
     }
 
     if (get_request_var('host_id') == '-1') {
-        /* Show all items */
+        if (get_request_var('local_graph_ids') != '') {
+            /* The custom graph IDs were checked individually above. */
+        } elseif (cacti_sizeof($allowed_device_ids) > 0) {
+            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
+            $sql_where2 .= ' AND gl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
+        } else {
+            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' 1=0';
+            $sql_where2 .= ' AND 1=0';
+        }
     } elseif (isempty_request_var('host_id')) {
         $sql_where  .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=0';
         $sql_where2 .= ' AND gl.host_id=0';
     } elseif (!isempty_request_var('host_id')) {
-        $sql_where  .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=' . get_request_var('host_id');
-        $sql_where2 .= ' AND gl.host_id=' . get_request_var('host_id');
+        $host_id = get_filter_request_var('host_id');
+        if (!is_device_allowed($host_id) || !in_array($host_id, $allowed_device_ids, true)) {
+            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . '1=0';
+        } else {
+            $sql_where .= ' AND gl.host_id=' . (int) $host_id;
+            $sql_where2 .= ' AND gl.host_id=' . (int) $host_id;
+        }
     }
 
     if (get_request_var('site_id') == '-1') {

@@ -181,6 +181,28 @@ function api_data_source_remove($local_data_id)
     api_data_source_cache_crc_update($poller_id);
 }
 
+/**
+ * Determine whether the current user can access a data source through its device.
+ *
+ * @param int $local_data_id Local data source ID
+ * @return bool
+ */
+function api_data_source_is_allowed($local_data_id)
+{
+    $data_source = db_fetch_row_prepared(
+        'SELECT host_id
+		FROM data_local
+		WHERE id = ?',
+        array((int) $local_data_id)
+    );
+
+    if (!cacti_sizeof($data_source)) {
+        return false;
+    }
+
+    return (int) $data_source['host_id'] <= 0 || is_device_allowed((int) $data_source['host_id']);
+}
+
 function api_data_source_remove_multi($local_data_ids, $propagate_remote = true, $verify_reviewed_scope = null)
 {
     // Shortcut out if no data
