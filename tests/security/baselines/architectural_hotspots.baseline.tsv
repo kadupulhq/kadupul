@@ -427,7 +427,7 @@ dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vend
 dynamic_include	./lib/snmp.php:34		include_once($config['include_path'] . '/vendor/phpsnmp/classSNMP.php');
 dynamic_include	./lib/snmpagent.php:316			include_once($config['base_path'] . '/plugins/maint/functions.php');
 dynamic_include	./lib/snmpagent.php:873				include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/template.php:1473		include_once($config['library_path'] . '/data_query.php');
+dynamic_include	./lib/template.php:1636	    include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/timespan_settings.php:14	include_once($config['base_path'] . '/lib/time.php');
 dynamic_include	./lib/utility.php:111		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:164		include_once($config['library_path'] . '/data_query.php');
