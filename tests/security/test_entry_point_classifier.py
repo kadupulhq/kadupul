@@ -938,8 +938,14 @@ def main():
 
     count += 1
     timeout = subprocess.TimeoutExpired(['php', str(inventory.CLASSIFIER)], inventory.CLASSIFIER_TIMEOUT_SECONDS)
+
+    def classifier_timeout(*args, **kwargs):
+        if kwargs.get('timeout') != inventory.CLASSIFIER_TIMEOUT_SECONDS:
+            raise AssertionError('classifier subprocess has no bounded timeout')
+        raise timeout
+
     try:
-        with patch.object(inventory.subprocess, 'run', side_effect=timeout):
+        with patch.object(inventory.subprocess, 'run', side_effect=classifier_timeout):
             inventory.classify(Path('/tmp'), [], [])
         failures.append('classifier timeout: expected the inventory build to stop')
     except SystemExit as error:
