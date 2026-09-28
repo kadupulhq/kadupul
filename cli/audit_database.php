@@ -1009,26 +1009,31 @@ function create_tables($load = true)
         $output = array();
         $error  = 0;
 
-        //Handle case to address Mariadb dropping the mysql command
-        if (file_exists('/usr/bin/mariadb')) {
-            $db_shell = '/usr/bin/mariadb';
-        } elseif (file_exists('/usr/bin/mysql')) {
-            $db_shell = '/usr/bin/mysql';
-        } elseif (file_exists('/usr/local/bin/mariadb')) {
-            $db_shell = '/usr/local/bin/mariadb';
-        } elseif (file_exists('/usr/local/bin/mysql')) {
-            $db_shell = '/usr/local/bin/mysql';
-        } else {
-            $db_shell = trim((string) shell_exec('which mysql'));
+        $db_shell = getenv('CACTI_MYSQL_CLIENT');
 
-            if ($db_shell == '') {
-                print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
-                return false;
+        // Allow installations and isolated checks to select a specific client.
+        if ($db_shell === false || $db_shell === '') {
+            // Handle systems where MariaDB does not provide the mysql command.
+            if (file_exists('/usr/bin/mariadb')) {
+                $db_shell = '/usr/bin/mariadb';
+            } elseif (file_exists('/usr/bin/mysql')) {
+                $db_shell = '/usr/bin/mysql';
+            } elseif (file_exists('/usr/local/bin/mariadb')) {
+                $db_shell = '/usr/local/bin/mariadb';
+            } elseif (file_exists('/usr/local/bin/mysql')) {
+                $db_shell = '/usr/local/bin/mysql';
+            } else {
+                $db_shell = trim((string) shell_exec('which mysql'));
+
+                if ($db_shell == '') {
+                    print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
+                    return false;
+                }
             }
         }
 
         if (is_file($schema_file) && is_readable($schema_file)) {
-            exec($db_shell .
+            exec(cacti_escapeshellarg($db_shell) .
                 ' -u' . cacti_escapeshellarg($database_username) .
                 ' -p' . cacti_escapeshellarg($database_password) .
                 ' -h' . cacti_escapeshellarg($database_hostname) .
