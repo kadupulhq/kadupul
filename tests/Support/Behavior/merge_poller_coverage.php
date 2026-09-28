@@ -107,6 +107,24 @@ foreach (glob($temporaryRoot . 'kadupul-coverage-source-map-*.json') ?: array() 
     $sourceMapManifests[] = $manifest;
 }
 
+// Restore manifest-backed paths before consulting the filter. The path is
+// already present in the filter, so the fallback loop below skips it; without
+// this eager restoration that skip leaves PHPUnit's analyser opening a file
+// that the native test fixture has already deleted.
+foreach ($temporaryCoverageSources as $path => $source) {
+    if (is_file($path)) {
+        continue;
+    }
+
+    $directory = dirname($path);
+    if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) {
+        throw new RuntimeException('Unable to restore temporary coverage source directory');
+    }
+    if (!copy($source, $path)) {
+        throw new RuntimeException('Unable to restore temporary coverage source');
+    }
+}
+
 foreach ($coverage->filter()->files() as $path) {
     if (!str_starts_with($path, $temporaryRoot) || isset($temporaryCoverageSources[$path])) {
         continue;
