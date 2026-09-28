@@ -16,6 +16,8 @@ test('repair reports success only for acknowledged empty stderr', function ($res
     $bootstrap .= '$result=' . var_export($result, true) . ';$logs=array();require ' . var_export($root . '/lib/dsdebug.php', true) . ';';
     $bootstrap .= <<<'PROBE'
 function db_fetch_row_prepared(...$args) { return array('info' => array('rrd_match_array' => array('tune' => array('fixture --minimum value:0')))); }
+function db_fetch_cell_prepared(...$args) { return 12; }
+function is_device_allowed($host_id) { return $host_id === 12; }
 function cacti_sizeof($value) { return count($value); }
 function cacti_unserialize($value) { return $value; }
 function get_data_source_path(...$args) { return __DIR__.'/source.rrd'; }
