@@ -68,6 +68,36 @@ final class AuditTrailTest extends TestCase
         }
     }
 
+    public function testCreatesPrivateFileWithoutChangingTheProcessUmask(): void
+    {
+        $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));
+        mkdir($root . '/log', 0700, true);
+        $path = $root . '/log/kadupul-audit.jsonl';
+        $mask = umask(0);
+        try {
+            (new LegacyAuditTrail($root))->record(new AuditEvent(
+                bin2hex(random_bytes(16)),
+                42,
+                'inventory.device.edit',
+                'device',
+                '7',
+                AuditEvent::ALLOWED,
+                'succeeded',
+                '2026-09-23T04:00:00Z',
+            ));
+
+            self::assertSame(0600, fileperms($path) & 0777);
+            self::assertSame(0, umask());
+            $source = file_get_contents((new \ReflectionClass(LegacyAuditTrail::class))->getFileName());
+            self::assertStringNotContainsString('umask(', $source);
+        } finally {
+            umask($mask);
+            @unlink($path);
+            @rmdir($root . '/log');
+            @rmdir($root);
+        }
+    }
+
     public function testRejectsSymlinkAuditPath(): void
     {
         $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));

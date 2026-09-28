@@ -24,14 +24,14 @@ final readonly class LegacyAuditTrail implements AuditTrail
         if (is_link($path)) {
             throw new \RuntimeException('Audit path is not a regular file.');
         }
-        $mask = umask(0177);
-        try {
-            $handle = @fopen($path, is_file($path) ? 'c+b' : 'x+b');
-        } finally {
-            umask($mask);
-        }
+        $creating = !is_file($path);
+        $handle = @fopen($path, $creating ? 'x+b' : 'c+b');
         if ($handle === false) {
             throw new \RuntimeException('Audit sink is unavailable.');
+        }
+        if ($creating && !chmod($path, 0600)) {
+            fclose($handle);
+            throw new \RuntimeException('Audit sink permissions could not be restricted.');
         }
         try {
             if (!flock($handle, LOCK_EX)) {
