@@ -227,4 +227,33 @@ final class AuditTrailTest extends TestCase
             @rmdir($root);
         }
     }
+
+    public function testReportsAuditFileOpenFailureWithItsCause(): void
+    {
+        $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));
+        mkdir($root . '/log', 0700, true);
+        $path = $root . '/log/kadupul-audit.jsonl';
+        mkdir($path, 0700);
+        try {
+            try {
+                (new LegacyAuditTrail($root))->record(new AuditEvent(
+                    bin2hex(random_bytes(16)),
+                    null,
+                    'inventory.device.edit',
+                    'device',
+                    'unknown',
+                    AuditEvent::DENIED,
+                    AuditEvent::DENIED,
+                ));
+                self::fail('Expected opening the audit path to fail.');
+            } catch (\RuntimeException $error) {
+                self::assertSame('Audit sink is unavailable.', $error->getMessage());
+                self::assertInstanceOf(\ErrorException::class, $error->getPrevious());
+            }
+        } finally {
+            @rmdir($path);
+            @rmdir($root . '/log');
+            @rmdir($root);
+        }
+    }
 }
