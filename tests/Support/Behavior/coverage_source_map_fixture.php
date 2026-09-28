@@ -28,7 +28,9 @@ if (!mkdir($directory, 0700, true) || !copy($source, $copy)) {
 }
 
 $coverage->filter()->includeFile($copy);
-if (file_put_contents($argv[2], serialize($coverage)) === false) {
+$serializedCoverage = base64_encode(serialize($coverage));
+$coverageArtifact = '<?php return unserialize(base64_decode(' . var_export($serializedCoverage, true) . '));';
+if (file_put_contents($argv[2], $coverageArtifact) === false) {
     throw new RuntimeException('Unable to write unit coverage fixture');
 }
 
