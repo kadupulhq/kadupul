@@ -99,7 +99,7 @@ def verify_protocol(harness, device, check):
                     f"Script file '{SCRIPTS}missing.php' could not be resolved. Rejected.",
                     "Refusing to dispatch PHP internal function 'system' from script server.",
                     "Function does not exist  INC: 'ss_hstats.php' FUNC: 'ss_no_such_function'",
-                    "Function 'behavior_install_error_handler' defined outside base path"):
+                    "Function 'behavior_install_error_handler' was not defined by script file"):
         check(message in log, 'script server logs refusal: ' + message)
     check(log.count('resolves outside scripts directory. Rejected.') == 2, 'script server refuses includes outside the scripts directory')
 
