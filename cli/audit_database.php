@@ -99,21 +99,22 @@ if (cacti_sizeof($parms)) {
         upgrade_database();
     }
 
+    $success = true;
     if ($repair) {
-        repair_database();
+        $success = repair_database();
     } elseif ($create) {
-        create_tables();
+        $success = create_tables();
     } elseif ($report) {
-        report_audit_results();
+        $success = report_audit_results() !== false;
     } elseif ($altersopt) {
-        repair_database(false);
+        $success = repair_database(false);
     } elseif ($loadopt) {
-        load_audit_database();
+        $success = load_audit_database();
     } else {
         display_help();
     }
 
-    exit(0);
+    exit($success ? 0 : 1);
 } else {
     display_help();
     exit(1);
@@ -304,6 +305,9 @@ function repair_database($run = true)
     global $altersopt, $database_default;
 
     $alters = report_audit_results(false);
+    if ($alters === false) {
+        return false;
+    }
 
     $good = 0;
     $bad = 0;
@@ -362,6 +366,8 @@ function repair_database($run = true)
     } else {
         print 'Repair Completed!  All ' . $good . ' Alters succeeded!' . PHP_EOL;
     }
+
+    return $bad === 0;
 }
 
 function report_audit_results($output = true)
@@ -370,7 +376,9 @@ function report_audit_results($output = true)
 
     $db_name = 'Tables_in_' . $database_default;
 
-    create_tables();
+    if (!create_tables()) {
+        return false;
+    }
 
     $tables = db_fetch_assoc('SHOW TABLES');
 
@@ -945,6 +953,14 @@ function create_tables($load = true)
     global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
     global $altersopt;
 
+    if ($load) {
+        $schema_file = $config['base_path'] . '/docs/audit_schema.sql';
+        if (!is_file($schema_file) || !is_readable($schema_file)) {
+            print 'FATAL: Failed to find or read Audit Schema' . PHP_EOL;
+            return false;
+        }
+    }
+
     db_execute("CREATE TABLE IF NOT EXISTS table_columns (
 		table_name varchar(50) NOT NULL,
 		table_sequence int(10) unsigned NOT NULL,
@@ -962,7 +978,7 @@ function create_tables($load = true)
 
     if (!$exists_columns) {
         print "Failed to create 'table_columns'";
-        exit;
+        return false;
     }
 
     db_execute("CREATE TABLE IF NOT EXISTS table_indexes (
@@ -986,13 +1002,10 @@ function create_tables($load = true)
 
     if (!$exists_indexes) {
         print "Failed to create 'table_indexes'";
-        exit;
+        return false;
     }
 
     if ($load) {
-        db_execute('TRUNCATE table_columns');
-        db_execute('TRUNCATE table_indexes');
-
         $output = array();
         $error  = 0;
 
@@ -1006,33 +1019,38 @@ function create_tables($load = true)
         } elseif (file_exists('/usr/local/bin/mysql')) {
             $db_shell = '/usr/local/bin/mysql';
         } else {
-            $db_shell = shell_exec('which mysql');
+            $db_shell = trim((string) shell_exec('which mysql'));
 
             if ($db_shell == '') {
                 print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
-                exit;
+                return false;
             }
         }
 
-        if (file_exists($config['base_path'] . '/docs/audit_schema.sql')) {
+        if (is_file($schema_file) && is_readable($schema_file)) {
             exec($db_shell .
                 ' -u' . cacti_escapeshellarg($database_username) .
                 ' -p' . cacti_escapeshellarg($database_password) .
                 ' -h' . cacti_escapeshellarg($database_hostname) .
                 ' -P' . cacti_escapeshellarg($database_port) .
                 ' ' . $database_default .
-                ' < ' . $config['base_path'] . '/docs/audit_schema.sql', $output, $error);
+                ' < ' . $schema_file, $output, $error);
 
             if ($error == 0) {
                 print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
+                return true;
             } else {
                 print 'FATAL: Failed Load the Audit Schema' . PHP_EOL;
                 print 'ERROR: ' . implode(",\n   ", $output) . PHP_EOL;
+                return false;
             }
         } else {
-            print 'FATAL: Failed to find Audit Schema' . PHP_EOL;
+            print 'FATAL: Failed to find or read Audit Schema' . PHP_EOL;
+            return false;
         }
     }
+
+    return true;
 }
 
 function load_audit_database()
@@ -1041,7 +1059,9 @@ function load_audit_database()
 
     $db_name = 'Tables_in_' . $database_default;
 
-    create_tables(false);
+    if (!create_tables(false)) {
+        return false;
+    }
 
     db_execute('TRUNCATE table_columns');
     db_execute('TRUNCATE table_indexes');
@@ -1121,7 +1141,10 @@ function load_audit_database()
 
     } else {
         print PHP_EOL . 'FATAL: Docs directory does not exist!' . PHP_EOL . PHP_EOL;
+        return false;
     }
+
+    return !$retval;
 }
 
 /*  display_version - displays version information */
