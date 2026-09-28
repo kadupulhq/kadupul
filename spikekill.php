@@ -33,13 +33,23 @@ if (isset_request_var('method')) {
 }
 
 if (is_realm_allowed(1043)) {
+    $local_graph_id = get_filter_request_var('local_graph_id');
+    if ($local_graph_id <= 0 || !is_graph_allowed($local_graph_id)) {
+        http_response_code(403);
+        print json_encode(array(
+            'local_graph_id' => $local_graph_id,
+            'results' => __('Graph access denied')
+        ));
+        exit;
+    }
+
     $local_data_ids = db_fetch_assoc_prepared(
         'SELECT DISTINCT data_template_rrd.local_data_id
 		FROM graph_templates_item
 		LEFT JOIN data_template_rrd
 		ON graph_templates_item.task_item_id=data_template_rrd.id
 		WHERE graph_templates_item.local_graph_id = ?',
-        array(get_filter_request_var('local_graph_id'))
+        array($local_graph_id)
     );
 
     $results = '';
@@ -104,7 +114,7 @@ if (is_realm_allowed(1043)) {
         }
     }
 
-    print json_encode(array('local_graph_id' => get_request_var('local_graph_id'), 'results' => $results));
+    print json_encode(array('local_graph_id' => $local_graph_id, 'results' => $results));
 } else {
     print __("FATAL: Spike Kill Not Allowed") . PHP_EOL;
 }
