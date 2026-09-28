@@ -1257,6 +1257,13 @@ function create_tables($load = true) {
 	global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
 	global $altersopt, $database_ssl;
 
+	$schema_file = $config['base_path'] . '/docs/audit_schema.sql';
+	if ($load && (!is_file($schema_file) || !is_readable($schema_file))) {
+		fwrite(STDERR, "FATAL: Failed to find or read docs/audit_schema.sql.\n");
+
+		return false;
+	}
+
 	if (db_execute("CREATE TABLE IF NOT EXISTS table_columns (
 		table_name varchar(50) NOT NULL,
 		table_sequence int(10) unsigned NOT NULL,
@@ -1312,12 +1319,6 @@ function create_tables($load = true) {
 	}
 
 	if ($load) {
-		if (db_execute('TRUNCATE table_columns') === false || db_execute('TRUNCATE table_indexes') === false) {
-			fwrite(STDERR, "FATAL: Failed to clear the audit schema baseline tables.\n");
-
-			return false;
-		}
-
 		$output = array();
 		$error  = 0;
 
@@ -1340,7 +1341,7 @@ function create_tables($load = true) {
 			}
 		}
 
-		if (file_exists($config['base_path'] . '/docs/audit_schema.sql')) {
+		if (is_file($schema_file) && is_readable($schema_file)) {
 			/* the credentials go in a private defaults file rather than on the
 			 * command line, where any local user could read them out of the
 			 * process list for as long as the import runs */
@@ -1367,11 +1368,11 @@ function create_tables($load = true) {
 				return false;
 			}
 
-			exec(cacti_escapeshellarg($db_shell) .
+				exec(cacti_escapeshellarg($db_shell) .
 				' --defaults-extra-file=' . cacti_escapeshellarg($defaults_file) .
 				$ssl_option .
 				' ' . cacti_escapeshellarg($database_default) .
-				' < ' . cacti_escapeshellarg($config['base_path'] . '/docs/audit_schema.sql'), $output, $error);
+				' < ' . cacti_escapeshellarg($schema_file), $output, $error);
 
 			unlink($defaults_file);
 

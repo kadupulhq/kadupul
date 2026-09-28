@@ -1,3 +1,4 @@
+-issue: Stop schema audits and repairs when docs/audit_schema.sql cannot be loaded, and preserve the existing audit baseline tables until a replacement loads successfully
 Cacti CHANGELOG
 
 1.2.32
