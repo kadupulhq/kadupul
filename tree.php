@@ -728,6 +728,11 @@ function form_actions()
             input_validate_input_number($matches[1]);
             /* ==================================================== */
 
+            /* Do not disclose names for trees the caller cannot mutate. */
+            if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $matches[1], 'graph_tree')) {
+                continue;
+            }
+
             $tree_list .= '<li>' . html_escape(db_fetch_cell_prepared('SELECT name FROM graph_tree WHERE id = ?', array($matches[1]))) . '</li>';
             $tree_array[$i] = $matches[1];
 
