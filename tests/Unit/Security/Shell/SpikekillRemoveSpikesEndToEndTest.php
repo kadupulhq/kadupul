@@ -637,6 +637,49 @@ test('a NaN window that is already unknown is reported as having no spikes and i
 		->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes');
 })->with(array('float', 'fill'));
 
+test('NaN replacements obey the per-RRA limit and are counted', function () {
+    $class = new ReflectionClass(spikekill::class);
+    $update = $class->getMethod('updateXML');
+    $update->setAccessible(true);
+    $totalKills = $class->getProperty('total_kills');
+    $totalKills->setAccessible(true);
+    $instance = new spikekill('', SPIKE_METHOD_STDDEV, 'nan', '1', '', '', '2', '500', '1');
+
+    $output = array(
+        "<row><timestamp>120</timestamp><v>1000</v><v>1000</v></row>\n",
+        "<row><timestamp>180</timestamp><v>1000</v><v>1000</v></row>\n",
+        "</rra>\n",
+        "<row><timestamp>240</timestamp><v>1000</v><v>1000</v></row>\n",
+        "</rra>\n",
+        "</database>\n",
+    );
+    $rra = array(
+        array(
+            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
+            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
+        ),
+        array(
+            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
+            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
+        ),
+    );
+
+    $output = $update->invokeArgs($instance, array(&$output, &$rra));
+    preg_match_all('/<row>(.*?)<\/row>/', implode('', $output), $rows);
+    $values = array_map(static function ($row) {
+        preg_match_all('/<v>\s*(.*?)<\/v>/', $row, $matches);
+
+        return $matches[1];
+    }, $rows[1]);
+
+    expect($values)->toBe(array(
+        array('NaN', '1000'),
+        array('1000', '1000'),
+        array('NaN', '1000'),
+    ))->and($totalKills->getValue($instance))->toBe(2);
+});
+
+
 test('missing sample arrays preserve unavailable window statistics', function ($html) {
     $instance = spikekill_e2e_instance($this->rrdfile);
     $instance->html = $html;
