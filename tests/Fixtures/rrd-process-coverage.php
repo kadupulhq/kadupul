@@ -5,8 +5,15 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-require_once $coverageRoot . '/tests/vendor/autoload.php';
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/include/vendor/autoload.php';
+} else {
+    require_once $coverageRoot . '/tests/vendor/autoload.php';
+}
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
+}
 if (defined('HOST_REINDEX_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/host.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
