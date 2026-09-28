@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Automation Tree Rules'|trans({}, 'collection') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Automation Tree Rules'|trans({}, 'collection') }}</h1>
+    <p>{{ 'This is a read-only view. Rule creation and editing remain in the legacy page.'|trans({}, 'collection') }}</p>
+    <p><a href="{{ legacyListUrl }}">{{ 'Open legacy tree rule editor'|trans({}, 'collection') }}</a></p>
+    {{ form_start(form, {method: 'get', attr: {role: 'search'}}) }}
+        {{ form_row(form.q) }}
+        {{ form_row(form.status) }}
+        {{ form_row(form.size) }}
+        {{ form_row(form.sort) }}
+        {{ form_row(form.direction) }}
+        <button type="submit">{{ 'Apply'|trans({}, 'collection') }}</button>
+    {{ form_end(form) }}
+    <table>
+        <caption>{{ 'Automation Tree Rules'|trans({}, 'collection') }}</caption>
+        <thead>
+        <tr>
+            <th scope="col">{{ 'Rule Name'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'ID'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Hook into Tree'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'At Subtree'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'This Type'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Using Grouping'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Enabled'|trans({}, 'collection') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rule in result.rules %}
+            <tr>
+                <td><a href="{{ legacyEditBase ~ rule.id }}">{{ rule.name }}</a></td>
+                <td>{{ rule.id }}</td>
+                <td>{{ rule.tree == '' ? 'Unknown Tree'|trans({}, 'collection') : rule.tree }}</td>
+                <td>{{ rule.subtree == '' ? 'ROOT'|trans({}, 'collection') : rule.subtree }}</td>
+                <td>{{ rule.leafType|trans({}, 'collection') }}</td>
+                <td>{{ rule.hostGrouping|trans({}, 'collection') }}</td>
+                <td>{{ (rule.enabled ? 'Enabled' : 'Disabled')|trans({}, 'collection') }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="7">{{ 'No Automation Tree Rules Found'|trans({}, 'collection') }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="{{ 'Automation tree rule pages'|trans({}, 'collection') }}">
+        {% if criteria.page > 1 %}
+            <a rel="prev" href="{{ path('automation_tree_rule_list', filters|merge({page: criteria.page - 1})) }}">{{ 'Previous'|trans({}, 'collection') }}</a>
+        {% endif %}
+        <span>{{ 'Page %page%'|trans({'%page%': criteria.page}, 'collection') }}</span>
+        {% if result.hasNext %}
+            <a rel="next" href="{{ path('automation_tree_rule_list', filters|merge({page: criteria.page + 1})) }}">{{ 'Next'|trans({}, 'collection') }}</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}

@@ -75,3 +75,26 @@ SNMP Desc: SNMP Desc
 SNMP getNext: SNMP getNext
 Unknown Template: Unknown Template
 Invalid automation template filters.: Invalid automation template filters.
+Automation Tree Rules: Automation Tree Rules
+This is a read-only view. Rule creation and editing remain in the legacy page.: This is a read-only view. Rule creation and editing remain in the legacy page.
+Open legacy tree rule editor: Open legacy tree rule editor
+Rule Name: Rule Name
+ID: ID
+Hook into Tree: Hook into Tree
+At Subtree: At Subtree
+This Type: This Type
+Using Grouping: Using Grouping
+Enabled: Enabled
+No Automation Tree Rules Found: No Automation Tree Rules Found
+Automation tree rule pages: Automation tree rule pages
+Search tree rules: Search tree rules
+Rule type: Rule type
+Host grouping: Host grouping
+Rule name: Rule name
+Graph: Graph
+Device: Device
+Graph Template: Graph Template
+Data Query Index: Data Query Index
+Unknown Tree: Unknown Tree
+ROOT: ROOT
+Invalid automation tree rule filters.: Invalid automation tree rule filters.

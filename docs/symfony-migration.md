@@ -1211,3 +1211,16 @@ explicit sequence controls. The Symfony page uses bounded fixed page sizes and
 does not reorder entries. Recommendation: keep template writes on the legacy
 workflow until their validation and ordering semantics are migrated; restore
 the configured row size before replacing that list.
+
+## Automation tree rules list slice
+
+`/app.php/automation/tree-rules` renders the Automation Tree Rules list through
+Symfony and Twig. It requires an authenticated actor with Automation realm 23,
+matching the legacy editor. The read model includes the rule name, selected tree,
+subtree, item type, grouping style and enabled state. Search, sorting and page
+sizes are bounded; writes remain on `automation_tree_rules.php`. The legacy row
+query joins the selected tree by `tree_id`, but its count query joins on rule ID,
+which can produce incorrect page totals. This route uses the selected tree key
+and requires subtree items to belong to that tree. Recommendation: retain the
+legacy editor for writes and verify existing cross-tree subtree references
+before any cleanup of stored rules.

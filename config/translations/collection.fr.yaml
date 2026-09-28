@@ -75,3 +75,26 @@ SNMP Desc: Description SNMP
 SNMP getNext: SNMP getNext
 Unknown Template: Modèle inconnu
 Invalid automation template filters.: Filtres des modèles d’automatisation non valides.
+Automation Tree Rules: Règles d’arborescence d’automatisation
+This is a read-only view. Rule creation and editing remain in the legacy page.: Cette vue est en lecture seule. La création et la modification des règles restent sur la page historique.
+Open legacy tree rule editor: Ouvrir l’éditeur historique des règles
+Rule Name: Nom de la règle
+ID: ID
+Hook into Tree: Ajouter à l’arborescence
+At Subtree: Au sous-arbre
+This Type: Type
+Using Grouping: Regroupement
+Enabled: Activé
+No Automation Tree Rules Found: Aucune règle d’arborescence trouvée
+Automation tree rule pages: Pages des règles d’arborescence
+Search tree rules: Rechercher des règles d’arborescence
+Rule type: Type de règle
+Host grouping: Regroupement des hôtes
+Rule name: Nom de la règle
+Graph: Graphique
+Device: Équipement
+Graph Template: Modèle de graphique
+Data Query Index: Index de requête de données
+Unknown Tree: Arborescence inconnue
+ROOT: RACINE
+Invalid automation tree rule filters.: Filtres des règles d’arborescence non valides.

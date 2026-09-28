@@ -15,6 +15,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
 - Add a read-only Symfony/Twig Data Collectors page with bounded search, sorting and pagination; legacy collector editing and actions remain on `pollers.php`.
 - Add a read-only Symfony/Twig Automation Templates page with bounded search, sorting and pagination; template editing and ordering remain on `automation_templates.php`.
+- Add a read-only Symfony/Twig Automation Tree Rules page with bounded search, sorting and pagination; rule editing remains on `automation_tree_rules.php`.
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
