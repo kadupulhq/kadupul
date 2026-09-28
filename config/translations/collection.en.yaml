@@ -51,3 +51,27 @@ N/A: N/A
 Never: Never
 Invalid network list filters.: Invalid network list filters.
 Access denied.: Access denied.
+Automation Templates: Automation Templates
+This is a read-only view. Template creation, editing and ordering remain in the legacy page.: This is a read-only view. Template creation, editing and ordering remain in the legacy page.
+Open legacy template editor: Open legacy template editor
+Host Template: Host Template
+Availability Method: Availability Method
+System Description Match: System Description Match
+System Name Match: System Name Match
+System Object ID Match: System Object ID Match
+Sequence: Sequence
+No Automation Templates Found: No Automation Templates Found
+Automation template pages: Automation template pages
+Search automation templates: Search automation templates
+System description: System description
+System name: System name
+System Object ID: System Object ID
+Ping and SNMP Uptime: Ping and SNMP Uptime
+None: None
+Ping: Ping
+SNMP Uptime: SNMP Uptime
+Ping or SNMP Uptime: Ping or SNMP Uptime
+SNMP Desc: SNMP Desc
+SNMP getNext: SNMP getNext
+Unknown Template: Unknown Template
+Invalid automation template filters.: Invalid automation template filters.

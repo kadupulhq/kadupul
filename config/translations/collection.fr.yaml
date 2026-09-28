@@ -51,3 +51,27 @@ N/A: S.O.
 Never: Jamais
 Invalid network list filters.: Filtres de liste réseau non valides.
 Access denied.: Accès refusé.
+Automation Templates: Modèles d’automatisation
+This is a read-only view. Template creation, editing and ordering remain in the legacy page.: Il s’agit d’une vue en lecture seule. La création, la modification et le classement des modèles restent dans la page historique.
+Open legacy template editor: Ouvrir l’éditeur historique des modèles
+Host Template: Modèle d’hôte
+Availability Method: Méthode de disponibilité
+System Description Match: Correspondance de description système
+System Name Match: Correspondance de nom système
+System Object ID Match: Correspondance d’identifiant d’objet système
+Sequence: Ordre
+No Automation Templates Found: Aucun modèle d’automatisation trouvé
+Automation template pages: Pages des modèles d’automatisation
+Search automation templates: Rechercher des modèles d’automatisation
+System description: Description système
+System name: Nom système
+System Object ID: Identifiant d’objet système
+Ping and SNMP Uptime: Ping et disponibilité SNMP
+None: Aucun
+Ping: Ping
+SNMP Uptime: Disponibilité SNMP
+Ping or SNMP Uptime: Ping ou disponibilité SNMP
+SNMP Desc: Description SNMP
+SNMP getNext: SNMP getNext
+Unknown Template: Modèle inconnu
+Invalid automation template filters.: Filtres des modèles d’automatisation non valides.

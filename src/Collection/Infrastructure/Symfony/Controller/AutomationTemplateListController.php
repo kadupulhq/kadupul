@@ -1,0 +1,66 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+namespace Kadupul\Collection\Infrastructure\Symfony\Controller;
+
+use Kadupul\Collection\Application\Query\AutomationAccessDenied;
+use Kadupul\Collection\Application\Query\ListAutomationTemplates;
+use Kadupul\Collection\Infrastructure\Symfony\AutomationTemplateListParameters;
+use Kadupul\Collection\Infrastructure\Symfony\Form\AutomationTemplateFilterType;
+use Kadupul\Platform\Contract\LegacyConfiguration;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
+
+final class AutomationTemplateListController
+{
+    #[Route('/automation/templates', name: 'automation_template_list', methods: ['GET', 'HEAD'])]
+    public function __invoke(
+        Request $request,
+        ListAutomationTemplates $list,
+        FormFactoryInterface $forms,
+        Environment $twig,
+        UrlGeneratorInterface $urls,
+        TranslatorInterface $translator,
+        LegacyConfiguration $configuration
+    ): Response {
+        $headers = ['Cache-Control' => 'private, no-store'];
+        try {
+            $formData = AutomationTemplateListParameters::formData($request->query->all());
+            $form = $forms->create(AutomationTemplateFilterType::class, [
+                'q' => $formData['q'] ?? '',
+                'size' => $formData['size'] ?? '25',
+                'sort' => $formData['sort'] ?? 'sequence',
+                'direction' => $formData['direction'] ?? 'asc',
+            ], ['method' => 'GET', 'action' => $urls->generate('automation_template_list')]);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && !$form->isValid()) {
+                return new Response($translator->trans('Invalid automation template filters.', [], 'collection'), 400, $headers);
+            }
+            $criteria = AutomationTemplateListParameters::parse($request->query->all(), $form->getData());
+            $result = $list($criteria);
+        } catch (AutomationAccessDenied $error) {
+            return new Response($translator->trans('Access denied.', [], 'collection'), $error->unauthenticated ? 401 : 403, $headers);
+        } catch (\InvalidArgumentException) {
+            return new Response($translator->trans('Invalid automation template filters.', [], 'collection'), 400, $headers);
+        }
+
+        $content = $twig->render('collection/automation_templates.html.twig', [
+            'result' => $result,
+            'criteria' => $criteria,
+            'form' => $form->createView(),
+            'filters' => ['automation_template_filter' => $form->getData()],
+            'legacyEditBase' => rtrim((string) ($configuration->values()['url_path'] ?? '/'), '/') . '/automation_templates.php?action=edit&id=',
+            'legacyListUrl' => rtrim((string) ($configuration->values()['url_path'] ?? '/'), '/') . '/automation_templates.php',
+        ]);
+        return new Response($request->isMethod('HEAD') ? '' : $content, 200, $headers);
+    }
+}

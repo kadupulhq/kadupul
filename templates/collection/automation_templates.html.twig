@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Automation Templates'|trans({}, 'collection') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Automation Templates'|trans({}, 'collection') }}</h1>
+    <p>{{ 'This is a read-only view. Template creation, editing and ordering remain in the legacy page.'|trans({}, 'collection') }}</p>
+    <p><a href="{{ legacyListUrl }}">{{ 'Open legacy template editor'|trans({}, 'collection') }}</a></p>
+    {{ form_start(form, {method: 'get', attr: {role: 'search'}}) }}
+        {{ form_row(form.q) }}
+        {{ form_row(form.size) }}
+        {{ form_row(form.sort) }}
+        {{ form_row(form.direction) }}
+        <button type="submit">{{ 'Apply'|trans({}, 'collection') }}</button>
+    {{ form_end(form) }}
+    <table>
+        <caption>{{ 'Automation Templates'|trans({}, 'collection') }}</caption>
+        <thead>
+        <tr>
+            <th scope="col">{{ 'Host Template'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Availability Method'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'System Description Match'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'System Name Match'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'System Object ID Match'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Sequence'|trans({}, 'collection') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for template in result.templates %}
+            <tr>
+                <td><a href="{{ legacyEditBase ~ template.id }}">{{ template.hostTemplate == '' ? 'Unknown Template'|trans({}, 'collection') : template.hostTemplate }}</a></td>
+                <td>{{ template.availabilityMethod|trans({}, 'collection') }}</td>
+                <td>{{ template.systemDescription }}</td>
+                <td>{{ template.systemName }}</td>
+                <td>{{ template.systemObjectId }}</td>
+                <td>{{ template.sequence }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">{{ 'No Automation Templates Found'|trans({}, 'collection') }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="{{ 'Automation template pages'|trans({}, 'collection') }}">
+        {% if criteria.page > 1 %}
+            <a rel="prev" href="{{ path('automation_template_list', filters|merge({page: criteria.page - 1})) }}">{{ 'Previous'|trans({}, 'collection') }}</a>
+        {% endif %}
+        <span>{{ 'Page %page%'|trans({'%page%': criteria.page}, 'collection') }}</span>
+        {% if result.hasNext %}
+            <a rel="next" href="{{ path('automation_template_list', filters|merge({page: criteria.page + 1})) }}">{{ 'Next'|trans({}, 'collection') }}</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}

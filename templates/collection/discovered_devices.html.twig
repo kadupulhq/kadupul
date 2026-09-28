@@ -6,6 +6,7 @@
 <main>
     <h1>{{ 'Discovered Devices'|trans({}, 'collection') }}</h1>
     <p>{{ 'This is a read-only view. Adding, deleting, purging, and exporting discovery results remain in the legacy page.'|trans({}, 'collection') }}</p>
+    <p><a href="{{ path('automation_template_list') }}">{{ 'Automation Templates'|trans({}, 'collection') }}</a></p>
     <p><a href="{{ legacyListUrl }}">{{ 'Open legacy discovery actions'|trans({}, 'collection') }}</a></p>
     {{ form_start(form, {method: 'get', attr: {role: 'search'}}) }}
         {{ form_row(form.q) }}

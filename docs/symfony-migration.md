@@ -1194,3 +1194,20 @@ filter correctly. Recommendation: keep secrets and mutating actions on the
 legacy workflow until their authorization and remote-discovery semantics are
 migrated, and match the configured row size and human-readable uptime before
 replacing the legacy list.
+
+## Automation template list slice
+
+`/app.php/automation/templates` renders the Automation Templates list through
+Symfony and Twig. It requires an authenticated actor with Automation realm 23,
+matching `automation_templates.php`. The DBAL projection selects only the host
+template name, availability method, match fields and sequence. Search covers
+host-template name and the `sysDescr`, `sysName` and `sysOid` match values, with
+the legacy SQL `LIKE` wildcard behavior. Sorting is allowlisted and pagination
+is bounded to 25, 50 or 100 rows. The route is GET/HEAD only and does not create,
+edit, delete or reorder templates. Row links open the existing legacy editor.
+
+The legacy page uses its configured row size and supports drag-and-drop or
+explicit sequence controls. The Symfony page uses bounded fixed page sizes and
+does not reorder entries. Recommendation: keep template writes on the legacy
+workflow until their validation and ordering semantics are migrated; restore
+the configured row size before replacing that list.
