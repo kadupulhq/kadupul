@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('realtime controller validates identifiers and uses shell-free poller arguments', function ($id, $step, $hash, $status, $expected, $action = 'init', $stepSource = 'setting') {
+test('realtime controller validates permissions and identifiers before using shell-free poller arguments', function ($id, $step, $hash, $status, $expected, $action = 'init', $stepSource = 'setting', $realmAllowed = true, $graphAllowed = true, $userId = 42) {
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/realtime-exec-' . bin2hex(random_bytes(8));
     mkdir($dir . '/include', 0700, true);
@@ -23,6 +23,8 @@ function read_config_option($name) {
 }
 function db_fetch_row_prepared(...$args) { return array(); }
 function db_fetch_cell_prepared(...$args) { return '1'; }
+function is_realm_allowed($realm) { return $realm === 25 && $GLOBALS['realmAllowed']; }
+function is_graph_allowed($id, $user) { return $id === 7 && $user === $GLOBALS['userId'] && $GLOBALS['graphAllowed']; }
 function cacti_log(...$args) {}
 function cacti_exec($binary, $args, &$output, $timeout) {
     if ($binary !== '/php path/php' || $timeout !== null || $args !== array(
@@ -38,7 +40,10 @@ function rrdtool_function_graph(...$args) { $GLOBALS['rendered'] = true; exit; }
 $config = array('base_path' => '/application path');
 $step = json_decode($argv[3], true);
 $status = (int) $argv[5];
-$_SESSION = array('sess_user_id' => 42, 'sess_realtime_hash' => json_decode($argv[4], true));
+$realmAllowed = json_decode($argv[8], true);
+$graphAllowed = json_decode($argv[9], true);
+$userId = (int) $argv[10];
+$_SESSION = array('sess_user_id' => $userId, 'sess_realtime_hash' => json_decode($argv[4], true));
 $_REQUEST = array('action' => $argv[6], 'local_graph_id' => json_decode($argv[2], true));
 if ($argv[7] === 'request') $_REQUEST['ds_step'] = $step;
 if ($argv[7] === 'session') $_SESSION['sess_realtime_ds_step'] = $step;
@@ -60,7 +65,8 @@ PHP;
         $process = proc_open(
             array(PHP_BINARY, '-d', 'pcov.directory=' . $root,
                 '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root,
-                json_encode($id), json_encode($step), json_encode($hash), (string) $status, $action, $stepSource),
+                json_encode($id), json_encode($step), json_encode($hash), (string) $status, $action, $stepSource,
+                json_encode($realmAllowed), json_encode($graphAllowed), (string) $userId),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -76,7 +82,10 @@ PHP;
             throw new RuntimeException($stderr . $stdout);
         }
         expect(json_decode($stdout, true, 512, JSON_THROW_ON_ERROR))->toBe(array(
-            'status' => $expected, 'called' => $expected !== 400 && $action !== 'view', 'rendered' => $expected === 200 && $action !== 'view'));
+            'status' => $expected,
+            'called' => in_array($expected, array(200, 503), true) && $action !== 'view',
+            'rendered' => $expected === 200 && $action !== 'view',
+        ));
         if ($coverage !== null) {
             foreach (glob($dir . '/*.coverage') as $file) {
                 $coverage->merge(unserialize(file_get_contents($file)));
@@ -103,6 +112,9 @@ PHP;
     array('7', '10', 'abc123', 0, 200, 'timespan'),
     array('7', '10', 'abc123', 0, 200, 'interval'),
     array('7', '10', 'abc123', 0, 200, 'countdown'),
+    array('7', '10', 'abc123', 0, 403, 'init', 'setting', true, false),
+    array('7', '10', 'abc123', 0, 403, 'init', 'setting', false, true, 2),
+    array('7', '10', 'abc123', 0, 403, 'view', 'setting', true, false),
     array('7', '10', 'abc123', 7, 503),
     array('7', '10', 'abc123', 255, 503),
     array('7', '10', 'abc123', 1, 503),

@@ -26,6 +26,11 @@ get_filter_request_var('top');
 get_filter_request_var('left');
 /* ==================================================== */
 
+if (!is_realm_allowed(25)) {
+    http_response_code(403);
+    exit;
+}
+
 if (!isset($_SESSION['sess_realtime_hash'])) {
     $_SESSION['sess_realtime_hash'] = generate_hash();
 }
@@ -43,6 +48,18 @@ switch (get_request_var('action')) {
     case 'timespan':
     case 'interval':
     case 'countdown':
+        $local_graph_id = get_filter_request_var('local_graph_id');
+        if (!is_int($local_graph_id) || $local_graph_id < 1) {
+            http_response_code(400);
+            exit;
+        }
+
+        $user_id = (int) ($_SESSION['sess_user_id'] ?? 0);
+        if ($user_id < 1 || !is_graph_allowed($local_graph_id, $user_id)) {
+            http_response_code(403);
+            exit;
+        }
+
         ob_start();
 
         $guest_account = true;
@@ -201,9 +218,8 @@ switch (get_request_var('action')) {
         $graph_data_array['image_format'] = $gtype;
 
         /* call poller */
-        $local_graph_id = get_filter_request_var('local_graph_id');
         $interval = filter_var($graph_data_array['ds_step'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
-        if (!is_int($local_graph_id) || $local_graph_id < 1 || $interval === false) {
+        if ($interval === false) {
             http_response_code(400);
             exit;
         }
@@ -302,6 +318,13 @@ switch (get_request_var('action')) {
             http_response_code(400);
             exit;
         }
+
+        $user_id = (int) ($_SESSION['sess_user_id'] ?? 0);
+        if ($user_id < 1 || !is_graph_allowed($local_graph_id, $user_id)) {
+            http_response_code(403);
+            exit;
+        }
+
         $graph_rrd = read_config_option('realtime_cache_path') . '/user_' . $hash . '_lgi_' . $local_graph_id . '.png';
 
         if (file_exists($graph_rrd)) {
