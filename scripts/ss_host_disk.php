@@ -171,14 +171,14 @@ function ss_host_disk($hostname = '', $host_id = 0, $snmp_auth = '', $cmd = 'ind
 
         if (is_array($value)) {
             if (($arg == 'total') || ($arg == 'used')) {
-                $sau = preg_replace('/[^0-9]/i', '', db_fetch_cell_prepared(
+                $sau = db_fetch_cell_prepared(
                     "SELECT field_value
 					FROM host_snmp_cache
 					WHERE host_id = ?
 					AND field_name = 'hrStorageAllocationUnits'
 					AND snmp_index = ?",
                     array($host_id, $index)
-                ));
+                );
 
                 $snmp_data = cacti_snmp_get(
                     $hostname,
@@ -197,15 +197,15 @@ function ss_host_disk($hostname = '', $host_id = 0, $snmp_auth = '', $cmd = 'ind
                     SNMP_POLLER
                 );
 
-                if ($snmp_data != '' && $snmp_data < 0) {
-                    return (abs($snmp_data) + 2147483647) * $sau;
-                } elseif (is_numeric($snmp_data) && is_numeric($sau)) {
-                    return $snmp_data * $sau;
-                } elseif (is_numeric($snmp_data) && !$sau) {
-                    return $snmp_data;
-                } else {
+                /* RFC 2790 defines these values as nonnegative. Treat invalid
+                 * samples or allocation units as unknown instead of guessing an
+                 * unsigned wrap or reporting raw allocation units as bytes. */
+                if (!is_numeric($snmp_data) || (float) $snmp_data < 0
+                    || !ctype_digit((string) $sau) || (int) $sau < 1) {
                     return 'U';
                 }
+
+                return $snmp_data * $sau;
             } else {
                 return cacti_snmp_get(
                     $hostname,
