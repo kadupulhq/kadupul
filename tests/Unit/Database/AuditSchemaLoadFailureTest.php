@@ -75,6 +75,7 @@ SH);
 
                 $environment = array_merge(getenv(), [
                     'PATH' => $directory . '/bin:' . (getenv('PATH') ?: ''),
+                    'CACTI_MYSQL_CLIENT' => $client,
                     'AUDIT_TEST_LOAD_FAIL' => $baseline === 'failed' ? '1' : '0',
                 ]);
                 $process = proc_open(
