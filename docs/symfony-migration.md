@@ -1224,3 +1224,13 @@ which can produce incorrect page totals. This route uses the selected tree key
 and requires subtree items to belong to that tree. Recommendation: retain the
 legacy editor for writes and verify existing cross-tree subtree references
 before any cleanup of stored rules.
+
+## Automation graph rules list slice
+
+`/app.php/automation/graph-rules` renders the Automation Graph Rules list through
+Symfony and Twig, requiring ConsoleAccess and Automation realm 23. It displays
+the rule, data query, graph type and enabled state. Search follows the legacy
+name/data-query/graph-type matching behavior. The optional data query filter
+accepts its numeric ID instead of loading the legacy dynamic selector; reads are
+bounded and writes remain in `automation_graph_rules.php`. Recommendation:
+replace the ID field with a query selector before retiring the legacy list.

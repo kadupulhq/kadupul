@@ -97,6 +97,7 @@ services:
     Kadupul\Collection\Application\Query\ListDiscoveredDevices: ~
     Kadupul\Collection\Application\Query\ListAutomationTemplates: ~
     Kadupul\Collection\Application\Query\ListAutomationTreeRules: ~
+    Kadupul\Collection\Application\Query\ListAutomationGraphRules: ~
     Kadupul\Collection\Infrastructure\Persistence\DoctrineNetworkCatalog:
         arguments:
             $database: '@doctrine.dbal.web_connection'
@@ -109,6 +110,9 @@ services:
     Kadupul\Collection\Infrastructure\Persistence\DoctrineAutomationTreeRuleCatalog:
         arguments:
             $database: '@doctrine.dbal.web_connection'
+    Kadupul\Collection\Infrastructure\Persistence\DoctrineAutomationGraphRuleCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
     Kadupul\Collection\Application\Port\NetworkCatalog:
         alias: Kadupul\Collection\Infrastructure\Persistence\DoctrineNetworkCatalog
     Kadupul\Collection\Application\Port\DiscoveredDeviceCatalog:
@@ -117,6 +121,8 @@ services:
         alias: Kadupul\Collection\Infrastructure\Persistence\DoctrineAutomationTemplateCatalog
     Kadupul\Collection\Application\Port\AutomationTreeRuleCatalog:
         alias: Kadupul\Collection\Infrastructure\Persistence\DoctrineAutomationTreeRuleCatalog
+    Kadupul\Collection\Application\Port\AutomationGraphRuleCatalog:
+        alias: Kadupul\Collection\Infrastructure\Persistence\DoctrineAutomationGraphRuleCatalog
 
     Kadupul\Inventory\Application\Query\ListDevices: ~
 
