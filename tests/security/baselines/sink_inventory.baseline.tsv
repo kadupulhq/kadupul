@@ -250,11 +250,11 @@ dynamic_include	./cli/repair_templates.php:11	require_once($config['base_path'] 
 dynamic_include	./cli/repair_templates.php:12	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/replay_rejected_samples.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/sqltable_to_php.php:70		include_once($config['library_path'] . '/database.php');
-dynamic_include	./cli/upgrade_database.php:10	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./cli/upgrade_database.php:11	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/upgrade_database.php:12	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/upgrade_database.php:13	require_once($config['base_path'] . '/install/functions.php');
-dynamic_include	./cli/upgrade_database.php:192			include($upgrade_file);
+dynamic_include	./cli/upgrade_database.php:11	require_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./cli/upgrade_database.php:12	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/upgrade_database.php:13	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/upgrade_database.php:14	require_once($config['base_path'] . '/install/functions.php');
+dynamic_include	./cli/upgrade_database.php:197	        include($upgrade_file);
 dynamic_include	./cmd.php:101	require_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./cmd.php:102	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cmd.php:103	require_once($config['base_path'] . '/lib/rrd.php');
