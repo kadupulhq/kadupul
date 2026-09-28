@@ -125,18 +125,23 @@ switch (get_request_var('action')) {
         break;
     case 'ping_host':
         $host_id = get_filter_request_var('id');
+        host_require_device_access($host_id);
         api_device_ping_device($host_id);
 
         break;
     case 'enable_debug':
-        enable_device_debug(get_filter_request_var('host_id'));
+        $host_id = get_filter_request_var('host_id');
+        host_require_device_access($host_id);
+        enable_device_debug($host_id);
         raise_message('enable_debug', __('Device Debugging Enabled for Device.'), MESSAGE_LEVEL_INFO);
 
         header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 
         break;
     case 'disable_debug':
-        disable_device_debug(get_filter_request_var('host_id'));
+        $host_id = get_filter_request_var('host_id');
+        host_require_device_access($host_id);
+        disable_device_debug($host_id);
         raise_message('disable_debug', __('Device Debugging Disabled for Device.'), MESSAGE_LEVEL_INFO);
 
         header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
@@ -144,6 +149,7 @@ switch (get_request_var('action')) {
         break;
     case 'repopulate':
         if (get_filter_request_var('host_id') > 0) {
+            host_require_device_access(get_request_var('host_id'));
             push_out_host(get_request_var('host_id'));
             raise_message('repopulate_message', __('Poller Cache for Device Refreshed.'), MESSAGE_LEVEL_INFO);
         } else {
@@ -171,6 +177,22 @@ switch (get_request_var('action')) {
     Global Form Functions
    -------------------------- */
 
+/**
+ * Stop a device operation unless the current user may access the device.
+ *
+ * @param int $host_id Device identifier.
+ *
+ * @return never
+ */
+function host_require_device_access($host_id)
+{
+    if ($host_id <= 0 || !is_device_allowed($host_id)) {
+        cacti_log('User attempted to access an unauthorized device', false, 'AUTH');
+        header('Location: permission_denied.php');
+        exit;
+    }
+}
+
 function host_reindex()
 {
     global $config;
@@ -181,6 +203,7 @@ function host_reindex()
     if (!is_int($host_id) || $host_id <= 0) {
         die_html_input_error('host_id', $host_id);
     }
+    host_require_device_access($host_id);
 
     $output = array();
     $status = cacti_exec(read_config_option('path_php_binary'), array(
@@ -282,6 +305,10 @@ function form_save()
         } else {
             get_filter_request_var('id');
             get_filter_request_var('host_template_id');
+
+            if (get_request_var('id') > 0) {
+                host_require_device_access(get_request_var('id'));
+            }
 
             $host_id = api_device_save(
                 get_nfilter_request_var('id'),
@@ -663,6 +690,7 @@ function host_add_query()
     get_filter_request_var('snmp_query_id');
     get_filter_request_var('reindex_method');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     api_device_dq_add(get_request_var('host_id'), get_request_var('snmp_query_id'), get_request_var('reindex_method'));
 }
@@ -673,6 +701,7 @@ function host_reload_query()
     get_filter_request_var('id');
     get_filter_request_var('host_id');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     run_data_query(get_request_var('host_id'), get_request_var('id'));
 }
@@ -683,6 +712,7 @@ function host_remove_query()
     get_filter_request_var('id');
     get_filter_request_var('host_id');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     api_device_dq_remove(get_request_var('host_id'), get_request_var('id'));
 }
@@ -694,6 +724,7 @@ function host_change_query()
     get_filter_request_var('host_id');
     get_filter_request_var('reindex_method');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     api_device_dq_change(get_request_var('host_id'), get_request_var('data_query_id'), get_request_var('reindex_method'));
 }
@@ -704,6 +735,7 @@ function host_add_gt()
     get_filter_request_var('host_id');
     get_filter_request_var('graph_template_id');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     db_execute_prepared(
         'REPLACE INTO host_graph
@@ -723,6 +755,7 @@ function host_remove_gt()
     get_filter_request_var('id');
     get_filter_request_var('host_id');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     api_device_gt_remove(get_request_var('host_id'), get_request_var('id'));
 }
@@ -738,6 +771,9 @@ function host_edit()
     /* ================= input validation ================= */
     get_filter_request_var('id');
     /* ==================================================== */
+    if (!isempty_request_var('id')) {
+        host_require_device_access(get_request_var('id'));
+    }
 
     api_plugin_hook('host_edit_top');
 
