@@ -8478,7 +8478,7 @@ msgid "Auto Scale"
 msgstr ""
 
 #: include/global_form.php:751
-msgid "Auto scale the y-axis instead of defining an upper and lower limit. Note: if this is check both the Upper and Lower limit will be ignored."
+msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: mode 1 ignores both limits, mode 2 keeps the lower limit, mode 3 keeps the upper limit, and mode 4 keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
 msgstr ""
 
 #: include/global_form.php:755
@@ -9799,7 +9799,7 @@ msgid "Graph Permission Method"
 msgstr ""
 
 #: include/global_settings.php:411
-msgid "There are four methods for determining a User's Graph Permissions.  The first is 'Permissive'.  Under the 'Permissive' setting, a User only needs access to either the Graph, Device or Graph Template to gain access to the Graphs that apply to them.  Under 'Restrictive', the User must have access to the Graph, the Device, and the Graph Template to gain access to the Graph.  These first two methods have scalability problems for very large installs.  So, two additional options are available.  They are 'Device Based', which means if you have access to the Device, you get access to it's Graphs.  And lastly 'Graph Template Based', which means if you have access to the 'Graph Template' you get access to all Device Graphs of that Template."
+msgid "Graph access is granted directly by a graph permission in every mode. Permissive also grants access when the user has permission for the graph's device or template. Restrictive requires permission for both the device and template when there is no direct graph permission. Device Based requires device permission, and Graph Template Based requires template permission. User and group policies are evaluated separately and their allowed results are combined. These modes trade query performance against fine-grained permissions on large installations."
 msgstr ""
 
 #: include/global_settings.php:415
@@ -9919,7 +9919,7 @@ msgid "Content-Security Script Policy"
 msgstr ""
 
 #: include/global_settings.php:499
-msgid "Controls the script-src CSP policy.  In Nonce Modes, Kadupul Plugins that use inline JavaScript must include the nonce attribute from Kadupul's builtin function 'CactiSecureHeaders::getNonceAttribute()'. Otherwise, those scripts will be blocked by the browser.  Currently, Kadupul only allows reporting on Kadupul Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces."
+msgid "Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts."
 msgstr ""
 
 #: include/global_settings.php:502
