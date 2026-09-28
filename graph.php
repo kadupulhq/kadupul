@@ -509,8 +509,10 @@ case 'view':
 
 	break;
 case 'zoom':
+	$graph_no_data_message = __('This Graph has no stored data to zoom into.');
+
 	if (!cacti_sizeof($rras)) {
-		raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
+		raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
 		cacti_header('graph_view.php');
 		exit;
 	}
@@ -534,7 +536,7 @@ case 'zoom':
 			WHERE dspr.id = ?', array(get_request_var('rra_id')));
 
 		if (!cacti_sizeof($rra)) {
-			raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
+			raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
 			cacti_header('graph_view.php');
 			exit;
 		}
@@ -548,7 +550,7 @@ case 'zoom':
 			WHERE dspr.id = ?', array($rras[0]['id']));
 
 		if (!cacti_sizeof($rra)) {
-			raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
+			raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
 			cacti_header('graph_view.php');
 			exit;
 		}
