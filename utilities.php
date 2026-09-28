@@ -1686,6 +1686,10 @@ function utilities_view_snmp_cache()
 
     validate_store_request_vars($filters, 'sess_usnmp');
     /* ================= input validation ================= */
+    if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+        utilities_device_access_denied();
+    }
+    $allowed_host_sql = utilities_allowed_host_sql('h.id');
 
     if (get_request_var('rows') == '-1') {
         $rows = read_config_option('num_rows_table');
@@ -1838,7 +1842,7 @@ function utilities_view_snmp_cache()
 
     html_end_box();
 
-    $sql_where = '';
+    $sql_where = ' AND ' . $allowed_host_sql;
 
     /* filter by host */
     if (get_request_var('host_id') == '-1') {
@@ -1993,6 +1997,10 @@ function utilities_view_poller_cache()
 
     validate_store_request_vars($filters, 'sess_poller');
     /* ================= input validation ================= */
+    if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+        utilities_device_access_denied();
+    }
+    $allowed_host_sql = utilities_allowed_host_sql('h.id');
 
     if (get_request_var('rows') == '-1') {
         $rows = read_config_option('num_rows_table');
@@ -2151,7 +2159,7 @@ function utilities_view_poller_cache()
 
     /* form the 'where' clause for our main sql query */
     $params = array();
-    $sql_where = '';
+    $sql_where = 'WHERE ' . $allowed_host_sql;
 
     if (get_request_var('poller_action') != '-1') {
         $sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE') . " pi.action = ?";
@@ -2314,6 +2322,42 @@ function utilities_view_poller_cache()
     if (cacti_sizeof($poller_cache)) {
         print $nav;
     }
+}
+
+/**
+ * Build a cache query predicate limited to the current user's devices.
+ *
+ * @param string $column Qualified host ID column.
+ *
+ * @return string
+ */
+function utilities_allowed_host_sql($column)
+{
+    $total_rows = 0;
+    $devices = get_allowed_devices('', '', -1, $total_rows);
+    $device_ids = array();
+
+    foreach ($devices as $device) {
+        $device_ids[] = (int) $device['id'];
+    }
+
+    if (empty($device_ids)) {
+        return '1=0';
+    }
+
+    return $column . ' IN (' . implode(', ', $device_ids) . ')';
+}
+
+/**
+ * Deny cache requests for devices outside the current user's scope.
+ *
+ * @return never
+ */
+function utilities_device_access_denied()
+{
+    cacti_log('User attempted to view an unauthorized device cache', false, 'AUTH');
+    header('Location: permission_denied.php');
+    exit;
 }
 
 function utilities()

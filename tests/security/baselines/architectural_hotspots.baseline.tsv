@@ -90,9 +90,9 @@ cmd_exec	./snmpagent_persist.php:66		exec('ps -ef | grep -v grep | grep -v "sh -
 cmd_exec	./snmpagent_persist.php:68			exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./src/Graphing/Infrastructure/Rrd/LocalRrdtool.php:27	        $process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
 cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:36	            exec($commandLine, $lines, $status);
-cmd_exec	./utilities.php:202					exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
-cmd_exec	./utilities.php:220				$snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
-cmd_exec	./utilities.php:240				exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
+cmd_exec	./utilities.php:207	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
+cmd_exec	./utilities.php:225	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
+cmd_exec	./utilities.php:245	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
 dynamic_include	./automation_snmp.php:398		#include_once($config['base_path'].'/plugins/mactrack/lib/automation_functions.php');
 dynamic_include	./automation_tree_rules.php:522		include_once($config['base_path'].'/lib/html_tree.php');
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
