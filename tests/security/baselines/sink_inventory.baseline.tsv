@@ -708,10 +708,11 @@ header_redirect	./color_templates_items.php:30			header('Location: color_templat
 header_redirect	./color_templates_items.php:37			header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('color_template_id'));
 header_redirect	./color_templates_items.php:44			header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('color_template_id'));
 header_redirect	./contrib/index.php:7	header("Location:../index.php");
-header_redirect	./data_debug.php:221					header('Location: data_debug.php?header=false&debug=-1');
-header_redirect	./data_debug.php:224					header('Location: data_debug.php?header=false&debug=1');
-header_redirect	./data_debug.php:38				header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
-header_redirect	./data_debug.php:61				header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
+header_redirect	./data_debug.php:241	                header('Location: data_debug.php?header=false&debug=-1');
+header_redirect	./data_debug.php:244	                header('Location: data_debug.php?header=false&debug=1');
+header_redirect	./data_debug.php:38	            header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
+header_redirect	./data_debug.php:61	            header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
+header_redirect	./data_debug.php:72	            header('Location: data_debug.php?header=false');
 header_redirect	./data_input.php:106					header('Location: data_input.php?action=edit&id=' . (empty($save['id']) ? '' : $save['id']));
 header_redirect	./data_input.php:138			header('Location: data_input.php?header=false&action=edit&id=' . (empty($data_input_id) ? get_nfilter_request_var('id') : $data_input_id));
 header_redirect	./data_input.php:176				header('Location: data_input.php?header=false&action=field_edit&data_input_id=' . get_request_var('data_input_id') . '&id=' . (empty($data_input_field_id) ? get_request_var('id') : $data_input_field_id) . (!isempty_request_var('input_output') ? '&type=' . get_request_var('input_output') : ''));
