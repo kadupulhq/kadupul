@@ -8,8 +8,10 @@ unknown row that stops CI. The cases run through classify_entry_points.php
 the way the generator calls it, one fixture tree per case.
 """
 import sys
+import subprocess
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import build_entry_point_inventory as inventory  # noqa: E402
@@ -933,6 +935,16 @@ def main():
         failures.append('REVIEWED_GLOBALS explanation is not attached to its constant')
     if '// Fragment requires that end a direct request, traced by hand: the path is\n// built from $config, which only the bootstrap defines, so without it the\n// require names a file under / and PHP stops. Nothing after it runs.\nconst HALTING_REQUIRES' not in classifier_source:
         failures.append('HALTING_REQUIRES explanation is not attached to its constant')
+
+    count += 1
+    timeout = subprocess.TimeoutExpired(['php', str(inventory.CLASSIFIER)], inventory.CLASSIFIER_TIMEOUT_SECONDS)
+    try:
+        with patch.object(inventory.subprocess, 'run', side_effect=timeout):
+            inventory.classify(Path('/tmp'), [], [])
+        failures.append('classifier timeout: expected the inventory build to stop')
+    except SystemExit as error:
+        if 'classify_entry_points.php timed out after 120 seconds' not in str(error):
+            failures.append('classifier timeout: expected a bounded-time diagnostic, got %s' % error)
 
     with tempfile.TemporaryDirectory(prefix='entry-classifier-') as directory:
         root = tree(directory)
