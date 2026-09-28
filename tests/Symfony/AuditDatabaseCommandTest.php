@@ -591,6 +591,12 @@ final class AuditDatabaseCommandTest extends TestCase
         self::assertSame(1, $json->execute(['--load' => true, '--json' => true]));
         self::assertSame(['partial', false], array_values(array_intersect_key(json_decode($json->getDisplay(), true, 8, JSON_THROW_ON_ERROR), ['status' => 0, 'exported' => 0])));
         self::assertSame(['database.audit', 'database-maintenance local:audit-schema-export', 'failed'], $this->events()[array_key_last($this->events)]);
+
+        $this->presentation = new CliPresentation();
+        $human = $this->tester(null, $this->store(null, false));
+        self::assertSame(1, $human->execute(['--load' => true]));
+        self::assertStringContainsString('Imported 2 tables, but exporting the audit schema to', preg_replace('/\s+/', ' ', $human->getDisplay()));
+        self::assertStringNotContainsString('exported them to', $human->getDisplay());
     }
 
     public function testAnErrorFailsTheRunWithoutItsText(): void

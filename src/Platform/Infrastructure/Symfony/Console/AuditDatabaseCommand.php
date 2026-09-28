@@ -170,6 +170,7 @@ final readonly class AuditDatabaseCommand
                 $report->baseline === BaselineOutcome::LoadFailed => 'Importing ' . count($report->imported) . ' tables into the audit tables failed',
                 $report->dumpPath === null => sprintf($report->dryRun ? 'Would import %d tables; docs/ does not exist, so nothing would be exported' : 'Imported %d tables; docs/ does not exist, so nothing was exported', count($report->imported)),
                 $report->dryRun => sprintf('Would import %d tables and export them to %s', count($report->imported), $report->dumpPath),
+                $report->exported === false => sprintf('Imported %d tables, but exporting the audit schema to %s failed', count($report->imported), $report->dumpPath),
                 default => sprintf('Imported %d tables and exported them to %s', count($report->imported), $report->dumpPath),
             },
             default => sprintf('Audited %d tables, %d with problems', count($report->tables), $flagged),
