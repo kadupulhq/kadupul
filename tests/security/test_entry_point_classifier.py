@@ -7,8 +7,10 @@ A regression here would let the baseline record a wrong gate without the
 unknown row that stops CI. The cases run through classify_entry_points.php
 the way the generator calls it, one fixture tree per case.
 """
-import sys
+import json
+import os
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from unittest.mock import patch
@@ -926,6 +928,12 @@ def gate(root, name, source):
     return run(root, [name])[name]
 
 
+def raw_classifier(request):
+    return subprocess.run([os.environ.get('PHP', 'php'), str(inventory.CLASSIFIER)],
+                          input=request if isinstance(request, str) else json.dumps(request),
+                          capture_output=True, text=True)
+
+
 def main():
     failures = []
     count = 0
@@ -951,6 +959,24 @@ def main():
     except SystemExit as error:
         if 'classify_entry_points.php timed out after 120 seconds' not in str(error):
             failures.append('classifier timeout: expected a bounded-time diagnostic, got %s' % error)
+    invalid_requests = [
+        ('missing root', {'files': [], 'served': [], 'plugin_realms': []}, 'root'),
+        ('mistyped files', {'root': '/tmp', 'files': 'page.php', 'served': [], 'plugin_realms': {}}, 'files'),
+        ('mistyped served entry', {'root': '/tmp', 'files': [], 'served': [7], 'plugin_realms': {}}, 'served[0]'),
+        ('mistyped plugin realm', {'root': '/tmp', 'files': [], 'served': [], 'plugin_realms': {'page.php': '3'}}, 'plugin_realms'),
+    ]
+    for case, request, key in invalid_requests:
+        count += 1
+        result = raw_classifier(request)
+        if result.returncode != 2 or key not in result.stderr:
+            failures.append('%s: expected exit 2 and an error naming %s, got %d: %s' % (
+                case, key, result.returncode, result.stderr.strip()))
+
+    count += 1
+    result = raw_classifier('{')
+    if result.returncode != 2 or 'invalid JSON request' not in result.stderr:
+        failures.append('invalid JSON: expected a clear exit 2 diagnostic, got %d: %s' % (
+            result.returncode, result.stderr.strip()))
 
     with tempfile.TemporaryDirectory(prefix='entry-classifier-') as directory:
         root = tree(directory)
