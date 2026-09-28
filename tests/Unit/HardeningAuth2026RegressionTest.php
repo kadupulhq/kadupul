@@ -6,6 +6,16 @@
  */
 
 $authSource = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
+$authFunctionBody = static function ($functionName) use ($authSource) {
+    $start = strpos($authSource, 'function ' . $functionName . '(');
+    if ($start === false) {
+        return '';
+    }
+
+    $end = strpos($authSource, "\nfunction ", $start + 1);
+
+    return $end === false ? substr($authSource, $start) : substr($authSource, $start, $end - $start);
+};
 
 // --- GHSA-9ffc-rr2g-c8hh: Remote-User header gate ---
 
@@ -81,22 +91,16 @@ test('GHSA-3jj2-v5ch-wmq5: realm boundary comment cites the advisory', function 
 
 // --- GHSA-2px8-gvmq-85f3: LDAP lockout call-site ---
 
-test('GHSA-2px8-gvmq-85f3: lockout condition uses error_num not error_text', function () use ($authSource) {
+test('GHSA-2px8-gvmq-85f3: lockout condition uses error_num not error_text', function () use ($authFunctionBody) {
     // error_text is a human-readable string; using it in a numeric comparison
     // always evaluates to zero (false), silently skipping the lockout call.
     // The condition sits ~4865 chars into the function; use 5200 to be safe.
-    $start = strpos($authSource, 'function domains_login_process(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 5200);
+    $body = $authFunctionBody('domains_login_process');
     expect($body)->toContain('$ldap_auth_response[\'error_num\'] == 1');
 });
 
-test('GHSA-2px8-gvmq-85f3: error_num == 1 appears adjacent to auth_process_lockout', function () use ($authSource) {
-    $start = strpos($authSource, 'function domains_login_process(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 5200);
+test('GHSA-2px8-gvmq-85f3: error_num == 1 appears adjacent to auth_process_lockout', function () use ($authFunctionBody) {
+    $body = $authFunctionBody('domains_login_process');
 
     $errorNumPos = strpos($body, "'error_num'] == 1");
     $lockoutPos  = strpos($body, 'auth_process_lockout(');
@@ -107,11 +111,8 @@ test('GHSA-2px8-gvmq-85f3: error_num == 1 appears adjacent to auth_process_locko
     expect($lockoutPos - $errorNumPos)->toBeLessThan(150);
 });
 
-test('GHSA-2px8-gvmq-85f3: error_text is not used in a numeric comparison inside domains_login_process', function () use ($authSource) {
-    $start = strpos($authSource, 'function domains_login_process(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 5200);
+test('GHSA-2px8-gvmq-85f3: error_text is not used in a numeric comparison inside domains_login_process', function () use ($authFunctionBody) {
+    $body = $authFunctionBody('domains_login_process');
     // The pre-fix bug was 'error_text' == 1; that pattern must not exist.
     expect($body)->not->toContain("'error_text'] == 1");
 });
