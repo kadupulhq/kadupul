@@ -7,17 +7,23 @@
 $coverageRoot = dirname(__DIR__, 2);
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
+    // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
+    // 10 stack. Child reports are serialized into that parent process, so they
+    // must use the same class versions instead of tests/' PHPUnit 12 stack.
+    $testVendorPath = $coverageRoot . '/include/vendor';
+} else {
+    require_once $coverageRoot . '/tests/vendor/autoload.php';
+    $testVendorPath = $coverageRoot . '/tests/vendor';
 }
-require_once $coverageRoot . '/tests/vendor/autoload.php';
-$testVendorPath = $coverageRoot . '/tests/vendor';
 $testLoader = Composer\Autoload\ClassLoader::getRegisteredLoaders()[$testVendorPath] ?? null;
 if (!$testLoader instanceof Composer\Autoload\ClassLoader) {
-    throw new RuntimeException('Unable to locate the test dependency autoloader');
+    throw new RuntimeException('Unable to locate the coverage dependency autoloader');
 }
-// The application later prepends its own Composer loader, which carries an
-// older php-code-coverage RawCodeCoverageData class. Load PHPUnit 12's class
-// first so child coverage collection cannot mix incompatible library versions.
-class_exists(SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class);
+// Load the selected stack's RawCodeCoverageData class before application
+// bootstrap code changes Composer loader priority.
+if (!class_exists(SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class)) {
+    class_exists(SebastianBergmann\CodeCoverage\RawCodeCoverageData::class);
+}
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');

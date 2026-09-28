@@ -165,6 +165,8 @@ final class LegacyCommandOutputTest extends TestCase
                 throw new \RuntimeException('The child command coverage report is invalid.');
             }
 
+            self::assertSame($coverage::class, $childCoverage::class, 'Child coverage must match the parent PHPUnit dependency version.');
+
             $coverage->merge($childCoverage);
         }
     }
