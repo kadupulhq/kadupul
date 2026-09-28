@@ -4458,15 +4458,19 @@ msgstr ""
 msgid "Viewing Graph"
 msgstr ""
 
-#: graph.php:98
+#: graph.php:103
 msgid "The Graph you requested does not exist."
 msgstr ""
 
-#: graph.php:129 lib/html.php:503
+#: graph.php:278
+msgid "This Graph has no stored data to zoom into."
+msgstr ""
+
+#: graph.php:134 lib/html.php:503
 msgid "Graph Details, Zooming and Debugging Utilities"
 msgstr ""
 
-#: graph.php:130
+#: graph.php:135
 msgid "CSV Export"
 msgstr ""
 

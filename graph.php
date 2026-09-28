@@ -275,6 +275,14 @@ switch (get_request_var('action')) {
 
         break;
     case 'zoom':
+        $graph_no_data_message = __('This Graph has no stored data to zoom into.');
+
+        if (!cacti_sizeof($rras)) {
+            raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
+            cacti_header('graph_view.php');
+            exit;
+        }
+
         /* find the maximum time span a graph can show */
         $max_timespan = 1;
         if (cacti_sizeof($rras)) {
@@ -293,6 +301,12 @@ switch (get_request_var('action')) {
 			ON dsp.id=dspr.data_source_profile_id
 			WHERE dspr.id = ?', array(get_request_var('rra_id')));
 
+            if (!cacti_sizeof($rra)) {
+                raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
+                cacti_header('graph_view.php');
+                exit;
+            }
+
             $rra['timespan'] = $rra['steps'] * $rra['step'] * $rra['rows'];
         } else {
             $rra = db_fetch_row_prepared('SELECT dspr.id, step, steps, dspr.name, `rows`
@@ -300,6 +314,12 @@ switch (get_request_var('action')) {
 			INNER JOIN data_source_profiles AS dsp
 			ON dsp.id=dspr.data_source_profile_id
 			WHERE dspr.id = ?', array($rras[0]['id']));
+
+            if (!cacti_sizeof($rra)) {
+                raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
+                cacti_header('graph_view.php');
+                exit;
+            }
 
             $rra['timespan'] = $rra['steps'] * $rra['step'] * $rra['rows'];
         }
