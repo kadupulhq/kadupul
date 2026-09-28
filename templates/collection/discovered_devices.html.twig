@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Discovered Devices'|trans({}, 'collection') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Discovered Devices'|trans({}, 'collection') }}</h1>
+    <p>{{ 'This is a read-only view. Adding, deleting, purging, and exporting discovery results remain in the legacy page.'|trans({}, 'collection') }}</p>
+    <p><a href="{{ legacyListUrl }}">{{ 'Open legacy discovery actions'|trans({}, 'collection') }}</a></p>
+    {{ form_start(form, {method: 'get', attr: {role: 'search'}}) }}
+        {{ form_row(form.q) }}
+        {{ form_row(form.network) }}
+        {{ form_row(form.status) }}
+        {{ form_row(form.snmp) }}
+        {{ form_row(form.os) }}
+        {{ form_row(form.size) }}
+        {{ form_row(form.sort) }}
+        {{ form_row(form.direction) }}
+        <button type="submit">{{ 'Apply'|trans({}, 'collection') }}</button>
+    {{ form_end(form) }}
+    <table>
+        <caption>{{ 'Discovered devices and current reachability'|trans({}, 'collection') }}</caption>
+        <thead>
+        <tr>
+            <th scope="col">{{ 'Device Name'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'IP'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'SNMP Name'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Location'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Contact'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Description'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'OS'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Uptime'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'SNMP'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Status'|trans({}, 'collection') }}</th>
+            <th scope="col">{{ 'Last Check'|trans({}, 'collection') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for device in result.devices %}
+            <tr>
+                <td>{{ device.hostname == '' ? 'Not Detected'|trans({}, 'collection') : device.hostname }}</td>
+                <td>{{ device.ip }}</td>
+                <td>{{ device.systemName == '' ? 'N/A'|trans({}, 'collection') : device.systemName|replace({':': ' '}) }}</td>
+                <td>{{ device.location == '' ? 'N/A'|trans({}, 'collection') : device.location|replace({':': ' '}) }}</td>
+                <td>{{ device.contact == '' ? 'N/A'|trans({}, 'collection') : device.contact|replace({':': ' '}) }}</td>
+                <td>{{ device.description == '' ? 'N/A'|trans({}, 'collection') : device.description|replace({':': ' '}) }}</td>
+                <td>{{ device.operatingSystem == '' ? 'N/A'|trans({}, 'collection') : device.operatingSystem|replace({':': ' '}) }}</td>
+                <td>{{ device.uptimeSeconds == 0 ? 'N/A'|trans({}, 'collection') : device.uptimeSeconds|number_format(0, '.', ',') ~ ' ' ~ 'seconds'|trans({}, 'collection') }}</td>
+                <td>{{ (device.snmpUp ? 'Up' : 'Down')|trans({}, 'collection') }}</td>
+                <td>{{ (device.up ? 'Up' : 'Down')|trans({}, 'collection') }}</td>
+                <td>{{ device.lastCheck }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="11">{{ 'No Devices Found'|trans({}, 'collection') }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="{{ 'Discovered device pages'|trans({}, 'collection') }}">
+        {% if criteria.page > 1 %}
+            <a rel="prev" href="{{ path('automation_device_list', filters|merge({page: criteria.page - 1})) }}">{{ 'Previous'|trans({}, 'collection') }}</a>
+        {% endif %}
+        <span>{{ 'Page %page%'|trans({'%page%': criteria.page}, 'collection') }}</span>
+        {% if result.hasNext %}
+            <a rel="next" href="{{ path('automation_device_list', filters|merge({page: criteria.page + 1})) }}">{{ 'Next'|trans({}, 'collection') }}</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}

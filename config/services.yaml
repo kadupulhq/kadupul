@@ -94,11 +94,17 @@ services:
     Kadupul\Collection\Infrastructure\:
         resource: '../src/Collection/Infrastructure/'
     Kadupul\Collection\Application\Query\ListNetworks: ~
+    Kadupul\Collection\Application\Query\ListDiscoveredDevices: ~
     Kadupul\Collection\Infrastructure\Persistence\DoctrineNetworkCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\Collection\Infrastructure\Persistence\DoctrineDiscoveredDeviceCatalog:
         arguments:
             $database: '@doctrine.dbal.web_connection'
     Kadupul\Collection\Application\Port\NetworkCatalog:
         alias: Kadupul\Collection\Infrastructure\Persistence\DoctrineNetworkCatalog
+    Kadupul\Collection\Application\Port\DiscoveredDeviceCatalog:
+        alias: Kadupul\Collection\Infrastructure\Persistence\DoctrineDiscoveredDeviceCatalog
 
     Kadupul\Inventory\Application\Query\ListDevices: ~
 

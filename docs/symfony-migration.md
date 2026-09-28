@@ -1172,3 +1172,25 @@ Recommendation: keep bounded paging for predictable database work, then restore
 configured row-size and refresh preferences and locale-aware number formatting
 before replacing the legacy list; continue to defer unbounded display,
 stale-process cleanup, and write actions.
+
+## Automation discovered-device list slice
+
+`/app.php/automation/devices` renders a read-only view of discovered devices
+through Collection's `ListDiscoveredDevices` query and DBAL catalog. It requires
+an authenticated actor with Automation realm 23, matching
+`automation_devices.php`. Its projection includes only list display fields and
+never selects SNMP community strings, usernames, or passwords. Search covers
+hostname, IP, SNMP name/description/location/contact and preserves SQL `LIKE`
+wildcards. Network, reachability, SNMP and OS filters are supported; sort
+columns are allowlisted and pages are bounded to 25/50/100 rows. A legacy link
+continues to own add/delete/purge/export and other discovery actions. The
+Symfony GET route does not perform writes or stale-row cleanup.
+
+The legacy list defaults to `num_rows_table` and includes action and export
+columns. This view has fixed bounded page sizes and shows uptime as seconds
+rather than the legacy localized duration. The legacy OS-filter SQL currently
+uses a mismatched parameter variable; the new route applies the selected OS
+filter correctly. Recommendation: keep secrets and mutating actions on the
+legacy workflow until their authorization and remote-discovery semantics are
+migrated, and match the configured row size and human-readable uptime before
+replacing the legacy list.

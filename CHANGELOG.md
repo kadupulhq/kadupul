@@ -307,6 +307,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- Add a read-only Symfony/Twig discovered-device list with Automation realm 23 authorization, bounded filtering and a credential-free database projection; retain discovery actions and export on the legacy page.
+
 - Add tests that pin the graph, export, create, tune and fetch commands `lib/rrd.php` sends to RRDtool, so moving that file into the Graphing module can be checked against current output.
 
 - Add a generated inventory of HTTP entry points and their gates, verified in CI, and a real-install sweep that requires anonymous, revoked-realm and console-only callers to be refused.

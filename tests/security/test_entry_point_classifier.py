@@ -330,6 +330,19 @@ final class TwoActions
         return new Response();
     }
 
+    #[Route('/automation-devices', name: 'automation_device_list')]
+    public function automationDevices(): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            throw new \\RuntimeException();
+        }
+        if (!$this->access->canManageAutomation($actor)) {
+            throw new \\RuntimeException();
+        }
+        return new Response();
+    }
+
     #[Route('/devices-split', name: 'devices_split')]
     public function devicesSplit(): Response
     {
@@ -865,6 +878,7 @@ ROUTES = {
     'app.php/logged-only': 'unknown',
     'app.php/devices': 'symfony:devices',
     'app.php/automation-networks': 'symfony:automation_networks',
+    'app.php/automation-devices': 'symfony:automation_device_list',
     'app.php/devices-split': 'symfony:devices_split',
     'app.php/devices-discarded': 'symfony:devices_discarded',
     'app.php/via-unchecked': 'unknown',

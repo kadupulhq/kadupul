@@ -1,4 +1,14 @@
 Automation Networks: Réseaux d’automatisation
+Discovered Devices: Appareils découverts
+This is a read-only view. Adding, deleting, purging, and exporting discovery results remain in the legacy page.: Cette vue est en lecture seule. L’ajout, la suppression, la purge et l’export des résultats de découverte restent sur la page historique.
+Open legacy discovery actions: Ouvrir les actions historiques de découverte
+Discovered devices and current reachability: Appareils découverts et disponibilité actuelle
+Search discovered devices: Rechercher des appareils découverts
+No Devices Found: Aucun appareil trouvé
+Discovered device pages: Pages des appareils découverts
+Not Detected: Non détecté
+seconds: secondes
+Invalid automation device filters.: Filtres d’appareils d’automatisation non valides.
 This is a read-only view. Discovery scheduling and network changes remain in the legacy page.: Cette vue est en lecture seule. La planification de découverte et les modifications restent sur la page historique.
 Network discovery schedules and current progress: Planification et progression de la découverte réseau
 Network Name: Nom du réseau
