@@ -2172,6 +2172,12 @@ function main(): int
         }
     }
 
+    if (trim($request['root']) === '') {
+        fwrite(STDERR, 'ERROR: request key "root" must not be empty' . PHP_EOL);
+
+        return 2;
+    }
+
     foreach (['files', 'served'] as $key) {
         foreach ($request[$key] as $index => $path) {
             if (!is_string($path)) {

@@ -961,6 +961,7 @@ def main():
             failures.append('classifier timeout: expected a bounded-time diagnostic, got %s' % error)
     invalid_requests = [
         ('missing root', {'files': [], 'served': [], 'plugin_realms': []}, 'root'),
+        ('empty root', {'root': '  ', 'files': [], 'served': [], 'plugin_realms': {}}, 'root'),
         ('mistyped files', {'root': '/tmp', 'files': 'page.php', 'served': [], 'plugin_realms': {}}, 'files'),
         ('mistyped served entry', {'root': '/tmp', 'files': [], 'served': [7], 'plugin_realms': {}}, 'served[0]'),
         ('mistyped plugin realm', {'root': '/tmp', 'files': [], 'served': [], 'plugin_realms': {'page.php': '3'}}, 'plugin_realms'),
