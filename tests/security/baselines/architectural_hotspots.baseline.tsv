@@ -26,9 +26,9 @@ cmd_exec	./lib/functions.php:7309	            $shell = shell_exec(cacti_escapesh
 cmd_exec	./lib/functions.php:7311	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v 2>&1');
 cmd_exec	./lib/functions.php:7522	            exec('id -nu', $o, $r);
 cmd_exec	./lib/functions.php:7532	            exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
-cmd_exec	./lib/functions.php:7835	 * shell_exec() callers that already assemble the command string.
-cmd_exec	./lib/functions.php:7877	    $process = proc_open($argv, $descriptors, $pipes);
-cmd_exec	./lib/functions.php:7946	 * shell_exec() and expect a string return value.
+cmd_exec	./lib/functions.php:7844	 * shell_exec() callers that already assemble the command string.
+cmd_exec	./lib/functions.php:7886	    $process = proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/functions.php:7955	 * shell_exec() and expect a string return value.
 cmd_exec	./lib/installer.php:3530	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3566	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:845	            $process = @proc_open(
@@ -272,30 +272,30 @@ dynamic_include	./include/auth.php:120					require_once($config['base_path'] . '
 dynamic_include	./include/auth.php:180				require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:15	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/csrf.php:46	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
-dynamic_include	./include/global.php:266	include_once($config['library_path'] . '/database.php');
-dynamic_include	./include/global.php:267	include_once($config['library_path'] . '/functions.php');
-dynamic_include	./include/global.php:268	include_once($config['library_path'] . '/headers_secure.php');
-dynamic_include	./include/global.php:269	include_once($config['include_path'] . '/global_constants.php');
-dynamic_include	./include/global.php:270	include_once($config['library_path'] . '/html.php');
-dynamic_include	./include/global.php:271	include_once($config['library_path'] . '/html_utility.php');
-dynamic_include	./include/global.php:272	include_once($config['library_path'] . '/html_validate.php');
-dynamic_include	./include/global.php:530	include_once($config['include_path'] . '/global_languages.php');
-dynamic_include	./include/global.php:531	include_once($config['library_path'] . '/auth.php');
-dynamic_include	./include/global.php:532	include_once($config['library_path'] . '/plugins.php');
-dynamic_include	./include/global.php:533	include_once($config['include_path'] . '/plugins.php');
-dynamic_include	./include/global.php:534	include_once($config['include_path'] . '/global_arrays.php');
-dynamic_include	./include/global.php:535	include_once($config['include_path'] . '/global_settings.php');
-dynamic_include	./include/global.php:536	include_once($config['include_path'] . '/global_form.php');
-dynamic_include	./include/global.php:537	include_once($config['library_path'] . '/html_form.php');
-dynamic_include	./include/global.php:538	include_once($config['library_path'] . '/html_filter.php');
-dynamic_include	./include/global.php:539	include_once($config['library_path'] . '/variables.php');
-dynamic_include	./include/global.php:540	include_once($config['library_path'] . '/mib_cache.php');
-dynamic_include	./include/global.php:541	include_once($config['library_path'] . '/poller.php');
-dynamic_include	./include/global.php:542	include_once($config['library_path'] . '/snmpagent.php');
-dynamic_include	./include/global.php:543	include_once($config['library_path'] . '/aggregate.php');
-dynamic_include	./include/global.php:544	include_once($config['library_path'] . '/api_automation.php');
-dynamic_include	./include/global.php:545	include_once($config['include_path'] . '/csrf.php');
-dynamic_include	./include/global.php:546	include_once($config['include_path'] . '/vendor/autoload.php');
+dynamic_include	./include/global.php:267	include_once($config['library_path'] . '/database.php');
+dynamic_include	./include/global.php:268	include_once($config['library_path'] . '/functions.php');
+dynamic_include	./include/global.php:269	include_once($config['library_path'] . '/headers_secure.php');
+dynamic_include	./include/global.php:270	include_once($config['include_path'] . '/global_constants.php');
+dynamic_include	./include/global.php:271	include_once($config['library_path'] . '/html.php');
+dynamic_include	./include/global.php:272	include_once($config['library_path'] . '/html_utility.php');
+dynamic_include	./include/global.php:273	include_once($config['library_path'] . '/html_validate.php');
+dynamic_include	./include/global.php:531	include_once($config['include_path'] . '/global_languages.php');
+dynamic_include	./include/global.php:532	include_once($config['library_path'] . '/auth.php');
+dynamic_include	./include/global.php:533	include_once($config['library_path'] . '/plugins.php');
+dynamic_include	./include/global.php:534	include_once($config['include_path'] . '/plugins.php');
+dynamic_include	./include/global.php:535	include_once($config['include_path'] . '/global_arrays.php');
+dynamic_include	./include/global.php:536	include_once($config['include_path'] . '/global_settings.php');
+dynamic_include	./include/global.php:537	include_once($config['include_path'] . '/global_form.php');
+dynamic_include	./include/global.php:538	include_once($config['library_path'] . '/html_form.php');
+dynamic_include	./include/global.php:539	include_once($config['library_path'] . '/html_filter.php');
+dynamic_include	./include/global.php:540	include_once($config['library_path'] . '/variables.php');
+dynamic_include	./include/global.php:541	include_once($config['library_path'] . '/mib_cache.php');
+dynamic_include	./include/global.php:542	include_once($config['library_path'] . '/poller.php');
+dynamic_include	./include/global.php:543	include_once($config['library_path'] . '/snmpagent.php');
+dynamic_include	./include/global.php:544	include_once($config['library_path'] . '/aggregate.php');
+dynamic_include	./include/global.php:545	include_once($config['library_path'] . '/api_automation.php');
+dynamic_include	./include/global.php:546	include_once($config['include_path'] . '/csrf.php');
+dynamic_include	./include/global.php:547	include_once($config['include_path'] . '/vendor/autoload.php');
 dynamic_include	./include/global_languages.php:156				require_once($providerFull);
 dynamic_include	./install/background.php:11	include_once($config['base_path'] . '/install/functions.php');
 dynamic_include	./install/background.php:12	include_once($config['base_path'] . '/lib/api_data_source.php');
@@ -530,8 +530,8 @@ dynamic_include	./spikekill.php:16	include_once($config['base_path'] . '/lib/spi
 dynamic_include	./src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php:27	        include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.php:124	        require $path;
 dynamic_include	./tools/verify-offline.php:17	$kernel = require $root . '/config/bootstrap.php';
-host_header	./include/global.php:412	        if (!$is_https && isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
-host_header	./include/global.php:413	            header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+host_header	./include/global.php:413	        if (!$is_https && isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
+host_header	./include/global.php:414	            header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 host_header	./lib/html_utility.php:1084		} elseif (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '') {
 host_header	./lib/html_utility.php:1085			$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
 sort_order_input	./automation_snmp.php:517				ORDER BY sequence', array(get_request_var('id')));
