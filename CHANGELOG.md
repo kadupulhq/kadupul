@@ -101,6 +101,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Migrate device template synchronization to a Symfony confirmation and Inventory use case with current template locks and verified collector associations.
 
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
+
+- Run legacy `exec_into_array()` commands through Symfony Process while preserving its public signature, stdout line array, exit-status handling, and unlimited wait behavior. Retain the native `exec()` path if Process cannot start because `proc_open()` is unavailable. Tracks #482.
 - Isolate Cacti session release and timezone-cookie handling in the legacy web context adapter used before one-off local RRDtool processes.
 
 - Use Symfony Clock, Filesystem, and Process components in RRD graph and maintenance operations while preserving procedural callers, the existing shared/exclusive directory lease, and the long-lived RRDtool pipe.
