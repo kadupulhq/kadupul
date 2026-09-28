@@ -202,6 +202,16 @@ final class AnalyzeDatabaseTest extends TestCase
         self::assertTrue($this->adapter($db)->analyze(DatabaseTarget::Local, 'we`ird', true));
     }
 
+    public function testAnalyzeOmitsBinlogModifierWhenItIsNotNeeded(): void
+    {
+        $db = $this->mariaDb();
+        $db->expects(self::once())->method('executeQuery')->with('ANALYZE TABLE `table_name`')->willReturn($this->rows([
+            ['Table' => 'table_name', 'Op' => 'analyze', 'Msg_type' => 'status', 'Msg_text' => 'OK'],
+        ]));
+
+        self::assertTrue($this->adapter($db)->analyze(DatabaseTarget::Local, 'table_name', false));
+    }
+
     public function testAnalyzeReturnsFalseWhenAnyRowReportsAnError(): void
     {
         $db = $this->mariaDb();
