@@ -196,7 +196,19 @@ function form_save()
             $save['consolidation_function_id'] = form_input_validate((isset($item['consolidation_function_id']) ? $item['consolidation_function_id'] : get_nfilter_request_var('consolidation_function_id')), 'consolidation_function_id', '^[0-9]+$', true, 3);
             $save['textalign']      = form_input_validate((isset_request_var('textalign') ? get_nfilter_request_var('textalign') : ''), 'textalign', '^[a-z]+$', true, 3);
             $save['text_format']    = form_input_validate((isset($item['text_format']) ? $item['text_format'] : get_nfilter_request_var('text_format')), 'text_format', '', true, 3);
-            $save['value']          = form_input_validate(get_nfilter_request_var('value'), 'value', '', true, 3);
+            $value_pattern = '';
+            if (in_array((int) $save['graph_type_id'], array(
+                GRAPH_ITEM_TYPE_LINE1,
+                GRAPH_ITEM_TYPE_LINE2,
+                GRAPH_ITEM_TYPE_LINE3,
+                GRAPH_ITEM_TYPE_LINESTACK,
+                GRAPH_ITEM_TYPE_AREA,
+                GRAPH_ITEM_TYPE_STACK,
+                GRAPH_ITEM_TYPE_TIC,
+            ), true)) {
+                $value_pattern = '^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|[0-9]*\\.[0-9]+)(?:[eE][+-]?[0-9]+)?\\z';
+            }
+            $save['value']          = form_input_validate(get_nfilter_request_var('value'), 'value', $value_pattern, true, 3);
             $save['hard_return']    = form_input_validate(((isset($item['hard_return']) ? $item['hard_return'] : (isset_request_var('hard_return') ? get_nfilter_request_var('hard_return') : ''))), 'hard_return', '', true, 3);
             $save['gprint_id']      = form_input_validate(get_nfilter_request_var('gprint_id'), 'gprint_id', '^[0-9]+$', true, 3);
             $save['sequence']       = $sequence;

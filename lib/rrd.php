@@ -2557,6 +2557,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
             /* note the current item_id for easy access */
             $graph_item_id = $graph_item['graph_templates_item_id'];
+            $safe_graph_item_value = rrdtool_graph_item_numeric_value($graph_item['value']);
 
             /* loop through each field that we want to substitute values for:
             currently: text format and value */
@@ -3063,9 +3064,9 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                             $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . ' ';
                         }
 
-                        if ($graph_item['shift'] == CHECKED && abs($graph_item['value']) > 0) {
+                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && abs((float) $safe_graph_item_value) > 0) {
                             /* create a SHIFT statement */
-                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
+                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($safe_graph_item_value);
                         }
 
                         break;
@@ -3074,8 +3075,8 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                         $txt_graph_items .= 'AREA:' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . ':STACK';
 
-                        if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      # create a SHIFT statement
-                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
+                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && $safe_graph_item_value !== '' && (float) $safe_graph_item_value > 0) {      # create a SHIFT statement
+                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($safe_graph_item_value);
                         }
 
                         break;
@@ -3086,8 +3087,8 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                         $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . $dash;
 
-                        if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      # create a SHIFT statement
-                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
+                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && $safe_graph_item_value !== '' && (float) $safe_graph_item_value > 0) {      # create a SHIFT statement
+                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($safe_graph_item_value);
                         }
 
                         break;
@@ -3096,15 +3097,17 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                         $txt_graph_items .= 'LINE' . $graph_item['line_width'] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . ':STACK' . $dash;
 
-                        if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      # create a SHIFT statement
-                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
+                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && $safe_graph_item_value !== '' && (float) $safe_graph_item_value > 0) {      # create a SHIFT statement
+                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($safe_graph_item_value);
                         }
 
                         break;
                     case GRAPH_ITEM_TYPE_TIC:
-                        $_fraction = (empty($graph_item['graph_type_id']) ? '' : (':' . $graph_item['value']));
-                        $_legend   = ':' . rrdtool_pipe_quote(rrdtool_escape_string(html_escape($graph_variables['text_format'][$graph_item_id])) . $hardreturn[$graph_item_id]);
-                        $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . $_fraction . $_legend;
+                        if ($safe_graph_item_value !== null) {
+                            $_fraction = ':' . rrdtool_pipe_quote($safe_graph_item_value);
+                            $_legend   = ':' . rrdtool_pipe_quote(rrdtool_escape_string(html_escape($graph_variables['text_format'][$graph_item_id])) . $hardreturn[$graph_item_id]);
+                            $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . $_fraction . $_legend;
+                        }
 
                         break;
                     case GRAPH_ITEM_TYPE_HRULE:
@@ -3244,6 +3247,25 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
         return $xport_array;
     }
+}
+
+/**
+ * Return a graph-item value only when it is a single numeric RRDtool token.
+ * Empty values are retained for TICK's optional fraction field.
+ *
+ * @param mixed $value Stored graph-item value.
+ *
+ * @return string|null Safe numeric value, empty optional value, or null when invalid.
+ */
+function rrdtool_graph_item_numeric_value($value)
+{
+    $value = (string) $value;
+
+    if ($value === '') {
+        return '';
+    }
+
+    return preg_match('/^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|[0-9]*\\.[0-9]+)(?:[eE][+-]?[0-9]+)?\\z/', $value) ? $value : null;
 }
 
 /**
