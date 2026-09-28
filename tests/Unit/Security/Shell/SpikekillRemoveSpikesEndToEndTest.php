@@ -563,6 +563,31 @@ test('atomic restore preserves RRD ownership and permissions', function () {
         ->and(file_get_contents($this->rrdfile))->toBe('restored-rrd-bytes');
 });
 
+test('float and fill window modes replace selected values with NaN', function () {
+    $class = new ReflectionClass(spikekill::class);
+    $update = $class->getMethod('updateXML');
+    $update->setAccessible(true);
+    $totalKills = $class->getProperty('total_kills');
+    $totalKills->setAccessible(true);
+
+    $cases = array(
+        array(SPIKE_METHOD_FLOAT, '<row><timestamp>120</timestamp><v>10</v><v>20</v></row>', array('NaN', 'NaN'), 2),
+        array(SPIKE_METHOD_FILL, '<row><timestamp>120</timestamp><v>10</v><v>0</v><v>NaN</v></row>', array('10', 'NaN', 'NaN'), 1),
+    );
+
+    foreach ($cases as $case) {
+        list($method, $row, $expectedValues, $expectedKills) = $case;
+        $instance = new spikekill('', $method, 'nan', '1', '100', '200', '2', '500', '1');
+        $output = array($row . "\n", "</rra>\n", "</database>\n");
+        $rra = array(array(array(), array(), array()));
+        $output = $update->invokeArgs($instance, array(&$output, &$rra));
+
+        preg_match_all('/<v>\s*(.*?)<\/v>/', $output[0], $matches);
+        expect($matches[1])->toBe($expectedValues)
+            ->and($totalKills->getValue($instance))->toBe($expectedKills);
+    }
+});
+
 
 test('missing sample arrays preserve unavailable window statistics', function ($html) {
     $instance = spikekill_e2e_instance($this->rrdfile);

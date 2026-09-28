@@ -1877,6 +1877,17 @@ class spikekill
                                         $dsvalue = $rra[$rra_num][$ds_num]['last'];
                                         $kills++;
                                         $this->total_kills++;
+                                    } elseif ($this->avgnan == 'nan' && strcasecmp($dsvalue, 'nan') !== 0) {
+                                        $message = sprintf('Replacing dsvalue %s with NaN', $dsvalue);
+
+                                        if ($this->debug) {
+                                            cacti_log("DEBUG: $message", false, 'SPIKEKILL');
+                                        }
+
+                                        $this->debug($message);
+                                        $dsvalue = 'NaN';
+                                        $kills++;
+                                        $this->total_kills++;
                                     }
                                 } elseif ($this->debug) {
                                     cacti_log("DEBUG: ignoring dsvalue {$dsvalue} as we are outside of the time range!", false, 'SPIKEKILL');
@@ -1885,34 +1896,33 @@ class spikekill
                                 break;
                             case SPIKE_METHOD_FILL:
                                 if ($timestamp >= $this->out_start && $timestamp <= $this->out_end) {
-                                    if ($this->avgnan == 'avg') {
-                                        if (!is_numeric($dsvalue) || $dsvalue == 0) {
-                                            $message = sprintf('Replacing dsvalue %s with average %s', $dsvalue, $rra[$rra_num][$ds_num]['variance_avg']);
-
-                                            if ($this->debug) {
-                                                cacti_log("DEBUG: $message", false, 'SPIKEKILL');
-                                            }
-
-                                            $this->debug($message);
-
-                                            $dsvalue = sprintf('%1.10e', $rra[$rra_num][$ds_num]['variance_avg']);
-                                            $kills++;
-                                            $this->total_kills++;
+                                    if ($this->avgnan == 'avg' && (!is_numeric($dsvalue) || $dsvalue == 0)) {
+                                        $message = sprintf('Replacing dsvalue %s with average %s', $dsvalue, $rra[$rra_num][$ds_num]['variance_avg']);
+                                        if ($this->debug) {
+                                            cacti_log("DEBUG: $message", false, 'SPIKEKILL');
                                         }
-                                    } elseif ($this->avgnan == 'last' && isset($rra[$rra_num][$ds_num]['last'])) {
-                                        if (!is_numeric($dsvalue) || $dsvalue == 0) {
-                                            $message = sprintf('Replacing dsvalue %s with last value %s', $dsvalue, $rra[$rra_num][$ds_num]['last']);
-
-                                            if ($this->debug) {
-                                                cacti_log("DEBUG: $message", false, 'SPIKEKILL');
-                                            }
-
-                                            $this->debug($message);
-
-                                            $dsvalue = $rra[$rra_num][$ds_num]['last'];
-                                            $kills++;
-                                            $this->total_kills++;
+                                        $this->debug($message);
+                                        $dsvalue = sprintf('%1.10e', $rra[$rra_num][$ds_num]['variance_avg']);
+                                        $kills++;
+                                        $this->total_kills++;
+                                    } elseif ($this->avgnan == 'last' && isset($rra[$rra_num][$ds_num]['last']) && (!is_numeric($dsvalue) || $dsvalue == 0)) {
+                                        $message = sprintf('Replacing dsvalue %s with last value %s', $dsvalue, $rra[$rra_num][$ds_num]['last']);
+                                        if ($this->debug) {
+                                            cacti_log("DEBUG: $message", false, 'SPIKEKILL');
                                         }
+                                        $this->debug($message);
+                                        $dsvalue = $rra[$rra_num][$ds_num]['last'];
+                                        $kills++;
+                                        $this->total_kills++;
+                                    } elseif ($this->avgnan == 'nan' && (!is_numeric($dsvalue) || $dsvalue == 0) && strcasecmp($dsvalue, 'nan') !== 0) {
+                                        $message = sprintf('Replacing dsvalue %s with NaN', $dsvalue);
+                                        if ($this->debug) {
+                                            cacti_log("DEBUG: $message", false, 'SPIKEKILL');
+                                        }
+                                        $this->debug($message);
+                                        $dsvalue = 'NaN';
+                                        $kills++;
+                                        $this->total_kills++;
                                     }
                                 } elseif ($this->debug) {
                                     cacti_log("DEBUG: ignoring dsvalue {$dsvalue} as we are outside of the time range!", false, 'SPIKEKILL');
