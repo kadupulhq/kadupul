@@ -23,6 +23,7 @@ function read_config_option($name) {
 }
 function db_fetch_row_prepared(...$args) { return array(); }
 function db_fetch_cell_prepared(...$args) { return '1'; }
+function get_guest_account() { return 0; }
 function is_realm_allowed($realm) { return $realm === 25 && $GLOBALS['realmAllowed']; }
 function is_graph_allowed($id, $user) { return $id === 7 && $user === $GLOBALS['userId'] && $GLOBALS['graphAllowed']; }
 function cacti_log(...$args) {}

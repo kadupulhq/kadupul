@@ -16,7 +16,7 @@ final class RealtimeGraphAuthorizationTest extends TestCase
         $source = file_get_contents(__DIR__ . '/../../../graph_realtime.php');
         self::assertIsString($source);
 
-        $realmCheck = strpos($source, 'if (!is_realm_allowed(25))');
+        $realmCheck = strpos($source, 'if (!$is_guest && !is_realm_allowed(25))');
         $pollerCall = strpos($source, 'cacti_exec(read_config_option(\'path_php_binary\')');
         self::assertNotFalse($realmCheck);
         self::assertNotFalse($pollerCall);
