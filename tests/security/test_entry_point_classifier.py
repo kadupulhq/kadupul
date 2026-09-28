@@ -927,6 +927,13 @@ def gate(root, name, source):
 def main():
     failures = []
     count = 0
+    count += 1
+    classifier_source = (Path(__file__).resolve().parent / 'classify_entry_points.php').read_text()
+    if '// Globals a file writes at its top level, traced by hand, each with why the\n// write cannot change what an includer trusts.\nconst REVIEWED_GLOBALS' not in classifier_source:
+        failures.append('REVIEWED_GLOBALS explanation is not attached to its constant')
+    if '// Fragment requires that end a direct request, traced by hand: the path is\n// built from $config, which only the bootstrap defines, so without it the\n// require names a file under / and PHP stops. Nothing after it runs.\nconst HALTING_REQUIRES' not in classifier_source:
+        failures.append('HALTING_REQUIRES explanation is not attached to its constant')
+
     with tempfile.TemporaryDirectory(prefix='entry-classifier-') as directory:
         root = tree(directory)
         for case, (source, expected) in {**CASES, **NEW_CASES}.items():
