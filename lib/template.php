@@ -2300,6 +2300,11 @@ function create_graph_custom_data_compatible($suggested_vals, $previous_data_sou
 
 function create_save_graph($host_id, $form_type, $form_id1, $form_array2, $values)
 {
+    if ((int) $host_id <= 0 || !is_device_allowed((int) $host_id)) {
+        cacti_log('WARNING: Graph creation rejected for a device the current user cannot access.', false, 'AUTH');
+        return false;
+    }
+
     /* ================= input validation ================= */
     input_validate_input_number($form_id1);
     /* ==================================================== */
