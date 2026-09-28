@@ -7575,41 +7575,50 @@ function get_client_addr()
 {
     global $config, $allowed_proxy_headers;
 
-    $proxy_headers = (isset($config['proxy_headers']) ? $config['proxy_headers'] : []);
-
-    if ($proxy_headers === true) {
-        $proxy_headers = $allowed_proxy_headers;
-    } elseif (is_array($proxy_headers) && is_array($allowed_proxy_headers)) {
-        $proxy_headers = array_intersect($proxy_headers, $allowed_proxy_headers);
+    $peer = $_SERVER['REMOTE_ADDR'] ?? '';
+    if (!is_string($peer) || !filter_var($peer, FILTER_VALIDATE_IP)) {
+        return false;
     }
 
-    if (!is_array($proxy_headers)) {
-        $proxy_headers = [];
+    $headers = $config['proxy_headers'] ?? [];
+    $trustedProxies = $config['proxy_trusted_addresses'] ?? [];
+    // `true` previously trusted every header from every peer. Fail closed to
+    // the TCP peer; proxy use now requires one allowlisted header and an
+    // explicitly trusted REMOTE_ADDR.
+    if (!is_array($trustedProxies)) {
+        return $peer;
     }
-
-    if (!in_array('REMOTE_ADDR', $proxy_headers)) {
-        $proxy_headers[] = 'REMOTE_ADDR';
-    }
-
-    $client_addr = false;
-    foreach ($proxy_headers as $header) {
-        if (!empty($_SERVER[$header])) {
-            $header_ips = explode(',', $_SERVER[$header]);
-            foreach ($header_ips as $header_ip) {
-                if (!empty($header_ip)) {
-                    if (!filter_var($header_ip, FILTER_VALIDATE_IP)) {
-                        cacti_log('ERROR: Invalid remote client IP Address found in header (' . $header . ').', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-                    } else {
-                        $client_addr = $header_ip;
-                        cacti_log('DEBUG: Using remote client IP Address found in header (' . $header . '): ' . $client_addr . ' (' . $_SERVER[$header] . ')', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-                        break 2;
-                    }
-                }
-            }
+    $peerBinary = inet_pton($peer);
+    $trusted = false;
+    foreach ($trustedProxies as $trustedProxy) {
+        if (!is_string($trustedProxy) || !filter_var($trustedProxy, FILTER_VALIDATE_IP)) {
+            continue;
+        }
+        $trustedBinary = inet_pton($trustedProxy);
+        if ($peerBinary !== false && $trustedBinary !== false && hash_equals($peerBinary, $trustedBinary)) {
+            $trusted = true;
+            break;
         }
     }
+    if (!$trusted) {
+        return $peer;
+    }
 
-    return $client_addr;
+    if (!is_array($headers) || count($headers) !== 1) {
+        return false;
+    }
+    $headers = array_values(array_intersect($headers, $allowed_proxy_headers));
+    $header = $headers[0] ?? null;
+    if (!is_string($header) || $header === 'REMOTE_ADDR' || !isset($_SERVER[$header])) {
+        return false;
+    }
+
+    $client = $_SERVER[$header];
+    if (!is_string($client) || str_contains($client, ',') || !filter_var(trim($client), FILTER_VALIDATE_IP)) {
+        return false;
+    }
+
+    return trim($client);
 }
 
 /**
