@@ -154,6 +154,7 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
             $sourceMap = json_encode(array(
                 'copy' => RRD_TEST_CLI_COVERAGE_COPY,
                 'source' => RRD_TEST_CLI_COVERAGE_SOURCE,
+                'sha256' => $sourceHash,
             ), JSON_THROW_ON_ERROR);
             if (file_put_contents($sourceMapFile, $sourceMap, LOCK_EX) === false) {
                 throw new RuntimeException('Unable to preserve child coverage source mapping');

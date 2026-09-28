@@ -84,11 +84,22 @@ foreach (glob($temporaryRoot . 'kadupul-coverage-source-map-*.json') ?: array() 
     if (!is_array($sourceMap)
         || !is_string($sourceMap['copy'] ?? null)
         || !is_string($sourceMap['source'] ?? null)
+        || !is_string($sourceMap['sha256'] ?? null)
         || !str_starts_with($sourceMap['copy'], $temporaryRoot)
         || !str_starts_with($sourceMap['source'], $root . DIRECTORY_SEPARATOR)
-        || !in_array($sourceMap['copy'], $coverage->filter()->files(), true)
-        || !in_array($sourceMap['source'], $sourceFiles, true)
+        || realpath($sourceMap['source']) !== $sourceMap['source']
         || !is_file($sourceMap['source'])) {
+        continue;
+    }
+
+    $relativeSource = substr($sourceMap['source'], strlen($root) + 1);
+    $relativeCopy = substr($sourceMap['copy'], strlen($temporaryRoot));
+    $sourceHash = hash_file('sha256', $sourceMap['source']);
+    $copySegments = explode(DIRECTORY_SEPARATOR, $relativeCopy);
+    if (!str_ends_with($sourceMap['copy'], DIRECTORY_SEPARATOR . $relativeSource)
+        || in_array('..', $copySegments, true)
+        || !is_string($sourceHash)
+        || !hash_equals($sourceMap['sha256'], $sourceHash)) {
         continue;
     }
 
