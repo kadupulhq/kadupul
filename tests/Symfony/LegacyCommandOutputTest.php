@@ -155,6 +155,14 @@ final class LegacyCommandOutputTest extends TestCase
         }
 
         foreach ($reports as $report) {
+            $serializedVersion = file_get_contents($report . '.version');
+            self::assertIsString($serializedVersion, 'Child coverage version evidence is required.');
+            self::assertSame(
+                \Composer\InstalledVersions::getVersion('phpunit/php-code-coverage'),
+                trim($serializedVersion),
+                'Child coverage must use the parent PHPUnit code-coverage version.',
+            );
+
             $serializedCoverage = file_get_contents($report);
             if (!is_string($serializedCoverage)) {
                 throw new \RuntimeException('Unable to read child command coverage.');

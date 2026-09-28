@@ -24,6 +24,10 @@ if (!$testLoader instanceof Composer\Autoload\ClassLoader) {
 if (!class_exists(SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class)) {
     class_exists(SebastianBergmann\CodeCoverage\RawCodeCoverageData::class);
 }
+$coveragePackageVersion = Composer\InstalledVersions::getVersion('phpunit/php-code-coverage');
+if (!is_string($coveragePackageVersion)) {
+    throw new RuntimeException('Unable to determine the active code-coverage version');
+}
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
@@ -127,10 +131,10 @@ $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
 );
 $childCoverage->start('native RRD child ' . getmypid());
 $childCoverageFile = RRD_TEST_COVERAGE_DIRECTORY . '/child-' . getmypid() . '.coverage';
-register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $testLoader) {
+register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader) {
     // Append collection after application shutdown handlers so implicit pipe
     // close/drain is measured too, not just the main body of the child script.
-    register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $testLoader) {
+    register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader) {
         // Application bootstrap prepends its Composer loader. Restore the test
         // loader as first choice before PHPUnit 12 lazily creates its analyser.
         $testLoader->unregister();
@@ -168,6 +172,10 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
         }
         if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
             throw new RuntimeException('Unable to preserve child process coverage');
+        }
+        if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')
+            && file_put_contents($childCoverageFile . '.version', $coveragePackageVersion . PHP_EOL) === false) {
+            throw new RuntimeException('Unable to preserve child coverage version');
         }
     });
 });
