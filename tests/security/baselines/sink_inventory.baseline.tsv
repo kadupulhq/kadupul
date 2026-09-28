@@ -50,7 +50,7 @@ cmd_exec	./lib/poller.php:148	            exec($filename . ' ' . $args . ' > /de
 cmd_exec	./lib/poller.php:150	            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
 cmd_exec	./lib/poller.php:154	            exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
 cmd_exec	./lib/poller.php:156	            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
-cmd_exec	./lib/poller.php:1701	                                    $output = system($php_path . ' -l ' . $tmpfile, $exit);
+cmd_exec	./lib/poller.php:1729	                                        $process = proc_open(array($php_path, '-l', $tmpfile), $descriptors, $pipes);
 cmd_exec	./lib/poller.php:185	    $process = proc_open($cmd, $descriptors, $pipes);
 cmd_exec	./lib/poller.php:22	            $fp = popen($command, 'r');
 cmd_exec	./lib/poller.php:24	            $fp = popen($command, 'rb');
@@ -571,9 +571,9 @@ fs_write	./lib/functions.php:7499	            file_put_contents($tmp_file, 'cact
 fs_write	./lib/import.php:410		$f   = fopen($filename, 'r');
 fs_write	./lib/import.php:625							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:3057	            $file = fopen($cacheFile, "r");
-fs_write	./lib/poller.php:1700	                                if (file_put_contents($tmpfile, $contents) !== false) {
-fs_write	./lib/poller.php:1707	                                            file_put_contents($mypath, $contents);
-fs_write	./lib/poller.php:1736	                            file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1720	                                if (file_put_contents($tmpfile, $contents) !== false) {
+fs_write	./lib/poller.php:1746	                                            file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1775	                            file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1698			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1755			$f = fopen($fn, 'wb');
 fs_write	./lib/rrd.php:3273	                file_put_contents('php://stderr', $buffer);

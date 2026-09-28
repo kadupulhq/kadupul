@@ -51,7 +51,7 @@ cmd_exec	./lib/poller.php:148	            exec($filename . ' ' . $args . ' > /de
 cmd_exec	./lib/poller.php:150	            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
 cmd_exec	./lib/poller.php:154	            exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
 cmd_exec	./lib/poller.php:156	            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
-cmd_exec	./lib/poller.php:1701	                                    $output = system($php_path . ' -l ' . $tmpfile, $exit);
+cmd_exec	./lib/poller.php:1729	                                        $process = proc_open(array($php_path, '-l', $tmpfile), $descriptors, $pipes);
 cmd_exec	./lib/poller.php:185	    $process = proc_open($cmd, $descriptors, $pipes);
 cmd_exec	./lib/poller.php:22	            $fp = popen($command, 'r');
 cmd_exec	./lib/poller.php:24	            $fp = popen($command, 'rb');
