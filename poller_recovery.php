@@ -68,6 +68,102 @@ function debug($string)
     }
 }
 
+/**
+ * Deliver one recovery batch and remove only rows that were acknowledged remotely.
+ *
+ * @param array $rows Buffered samples selected for this batch.
+ * @param int $max_allowed_packet Remote database packet limit.
+ * @param mixed $remote_db_cnn_id Remote database connection.
+ * @param mixed $local_db_cnn_id Local database connection.
+ * @param int $records_inserted Number of rows in successful insert packets.
+ *
+ * @return bool Whether every packet was delivered and its matching local row removed.
+ */
+function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $remote_db_cnn_id, $local_db_cnn_id, int &$records_inserted): bool
+{
+    if ($max_allowed_packet < 1) {
+        $max_allowed_packet = 1000000;
+    }
+
+    $packet_size = 0;
+    $sql_array   = array();
+
+    foreach ($rows as $row) {
+        $sql = '(' . (int) $row['local_data_id'] . ',' . db_qstr($row['rrd_name'], $remote_db_cnn_id) . ',' . db_qstr($row['time'], $remote_db_cnn_id) . ',' . db_qstr($row['output'], $remote_db_cnn_id) . ')';
+        $sql_size = strlen($sql);
+
+        if ($sql_size >= $max_allowed_packet) {
+            cacti_log('RECOVERY: A buffered sample exceeds max_allowed_packet; local samples were retained.', false, 'POLLER');
+
+            return false;
+        }
+
+        if (cacti_sizeof($sql_array) > 0 && ($packet_size + $sql_size) >= $max_allowed_packet) {
+            $record_count = cacti_sizeof($sql_array);
+
+            cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (partial).', false, 'POLLER');
+
+            if (db_execute('INSERT IGNORE INTO poller_output_boost
+				(local_data_id, rrd_name, time, output)
+				VALUES ' . implode(',', $sql_array), true, $remote_db_cnn_id) === false) {
+                cacti_log('RECOVERY: Partial packet delivery failed; local samples were retained.', false, 'POLLER');
+
+                return false;
+            }
+
+            $records_inserted += $record_count;
+            $sql_array = array();
+            $packet_size = 0;
+        }
+
+        $sql_array[] = $sql;
+        $packet_size += $sql_size;
+    }
+
+    if (cacti_sizeof($sql_array) > 0) {
+        $record_count = cacti_sizeof($sql_array);
+
+        cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (last slice).', false, 'POLLER');
+
+        if (db_execute('INSERT IGNORE INTO poller_output_boost
+			(local_data_id, rrd_name, time, output)
+			VALUES ' . implode(',', $sql_array), true, $remote_db_cnn_id) === false) {
+            cacti_log('RECOVERY: Final packet delivery failed; local samples were retained.', false, 'POLLER');
+
+            return false;
+        }
+
+        $records_inserted += $record_count;
+    }
+
+    if (!is_object($local_db_cnn_id)) {
+        cacti_log('RECOVERY: Local database connection is unavailable; samples were retained.', false, 'POLLER');
+
+        return false;
+    }
+
+    foreach (array_chunk($rows, 250) as $delete_rows) {
+        $conditions = array();
+        $params     = array();
+
+        foreach ($delete_rows as $row) {
+            $conditions[] = '(local_data_id = ? AND rrd_name = ? AND time = ? AND output = ?)';
+            $params[] = $row['local_data_id'];
+            $params[] = $row['rrd_name'];
+            $params[] = $row['time'];
+            $params[] = $row['output'];
+        }
+
+        if (db_execute_prepared('DELETE FROM poller_output_boost WHERE ' . implode(' OR ', $conditions), $params, true, $local_db_cnn_id) === false) {
+            cacti_log('RECOVERY: Local acknowledgement cleanup failed; remaining samples were retained for retry.', false, 'POLLER');
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
 global $local_db_cnn_id, $remote_db_cnn_id;
 
 $recovery_pid = db_fetch_cell("SELECT value FROM settings WHERE name='recovery_pid'", '', true, $local_db_cnn_id);
@@ -148,6 +244,7 @@ $sleep_time   = 1;
 
 /* global counter variables */
 $records_inserted = 0;
+$recovery_failed  = false;
 
 debug('About to start recovery processing');
 
@@ -218,59 +315,22 @@ if ($run) {
             );
 
             if (cacti_sizeof($rows)) {
-                $packet_size = 0;
-                $sql_array   = array();
+                if (!poller_recovery_transfer_rows($rows, $max_allowed_packet, $remote_db_cnn_id, $local_db_cnn_id, $records_inserted)) {
+                    $recovery_failed = true;
 
-                foreach ($rows as $r) {
-                    $sql = '(' . $r['local_data_id'] . ',' . db_qstr($r['rrd_name']) . ',' . db_qstr($r['time']) . ',' . db_qstr($r['output']) . ')';
-                    $sql_size = strlen($sql);
-
-                    /* if adding a new row would exceed max_allowed_packet, send the current frame to the main poller and start a new frame */
-                    if (($packet_size + $sql_size) >= $max_allowed_packet) {
-                        $record_count = cacti_sizeof($sql_array);
-
-                        cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (partial).', false, 'POLLER');
-
-                        db_execute('INSERT IGNORE INTO poller_output_boost
-							(local_data_id, rrd_name, time, output)
-							VALUES ' . implode(',', $sql_array), true, $remote_db_cnn_id);
-
-                        $records_inserted += $record_count;
-                        $sql_array = array();
-                        $packet_size = 0;
-                    }
-
-                    $sql_array[] = $sql;
-                    $packet_size += $sql_size;
-                }
-
-                /* if there is data in the last frame, send it to main poller as well and finalize */
-                if ($packet_size > 0) {
-                    $record_count = cacti_sizeof($sql_array);
-
-                    cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (last slice).', false, 'POLLER');
-
-                    db_execute("INSERT IGNORE INTO poller_output_boost
-						(local_data_id, rrd_name, time, output)
-						VALUES " . implode(',', $sql_array), true, $remote_db_cnn_id);
-
-                    $records_inserted += $record_count;
-                }
-
-                /* remove the recovery records */
-                if (is_object($local_db_cnn_id)) {
-                    db_execute_prepared(
-                        'DELETE FROM poller_output_boost
-						WHERE time <= ?',
-                        array($max_time),
-                        true,
-                        $local_db_cnn_id
-                    );
+                    break;
                 }
             }
 
             sleep($sleep_time);
         }
+    }
+
+    if ($recovery_failed) {
+        cacti_log('RECOVERY: Delivery stopped after an error. Local recovery samples remain available for retry.', false, 'POLLER');
+        cacti_log('RECOVERY STATS: Records:' . $records_inserted, false, 'SYSTEM');
+
+        exit(1);
     }
 
     /* let the console know you are in online mode */
