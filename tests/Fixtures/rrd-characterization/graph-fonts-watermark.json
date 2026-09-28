@@ -53,7 +53,7 @@
                 "--font WATERMARK:5:'Sans'",
                 "--watermark 'Kadupul\"s \"graph\" & <co>'",
                 "DEF:a='rra/router_traffic_11.rrd':'traffic_in':AVERAGE",
-                "AREA:a#3366CC99:'Inbound\\: 50%' \r\nquit\r\n"
+                "AREA:a#3366CC'99':'Inbound\\: 50%' \r\nquit\r\n"
             ]
         }
     ],

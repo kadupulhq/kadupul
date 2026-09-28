@@ -2934,25 +2934,28 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
             /* initialize color support */
             $graph_item_color_code = '';
+            $graph_item_alpha = preg_match('/^[a-fA-F0-9]{2}$/D', (string) $graph_item['alpha']) === 1 ? rrdtool_pipe_quote($graph_item['alpha']) : '';
             if (!empty($graph_item['hex'])) {
                 $graph_item_color_code = '#' . $graph_item['hex'];
-                $graph_item_color_code .= $graph_item['alpha'];
+                $graph_item_color_code .= $graph_item_alpha;
             }
 
             /* initialize dash support */
             $dash = '';
+            $graph_item_dashes = preg_match('/^[0-9]+[,0-9]*$/D', (string) $graph_item['dashes']) === 1 ? rrdtool_pipe_quote($graph_item['dashes']) : '';
+            $graph_item_dash_offset = preg_match('/^[0-9]+$/D', (string) $graph_item['dash_offset']) === 1 ? rrdtool_pipe_quote($graph_item['dash_offset']) : '';
             if ($graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE1 ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE2 ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE3 ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINESTACK ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_HRULE ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_VRULE) {
-                if (!empty($graph_item['dashes'])) {
-                    $dash .= ':dashes=' . $graph_item['dashes'];
+                if ($graph_item_dashes !== '') {
+                    $dash .= ':dashes=' . $graph_item_dashes;
                 }
 
-                if (!empty($graph_item['dash_offset'])) {
-                    $dash .= ':dash-offset=' . $graph_item['dash_offset'];
+                if ($graph_item_dash_offset !== '') {
+                    $dash .= ':dash-offset=' . $graph_item_dash_offset;
                 }
             }
 
@@ -3058,7 +3061,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                         if (read_config_option('enable_rrdtool_gradient_support') == 'on') {
                             /* End color is a 40% (0.4) darkened (negative number) version of the original color */
                             $end_color        = colourBrightness('#' . $graph_item['hex'], -0.4);
-                            $txt_graph_items .= gradient($data_source_name, $graph_item_color_code, $end_color . $graph_item['alpha'], $text_format, 20, false, $graph_item['alpha']);
+                            $txt_graph_items .= gradient($data_source_name, $graph_item_color_code, $end_color . $graph_item_alpha, $text_format, 20, false, $graph_item_alpha);
                         } else {
                             $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . ' ';
                         }
