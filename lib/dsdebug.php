@@ -320,8 +320,33 @@ function dsdebug_poller_bottom()
     restore_error_handler();
 }
 
+/**
+ * Return whether the current user may inspect or modify a data source.
+ *
+ * Data source visibility follows the visibility of its assigned device.
+ *
+ * @param int $id Local data source ID
+ * @return bool
+ */
+function dsdebug_is_data_source_allowed($id)
+{
+    $host_id = db_fetch_cell_prepared(
+        'SELECT host_id
+		FROM data_local
+		WHERE id = ?',
+        array((int) $id)
+    );
+
+    return $host_id !== false && $host_id !== null && (int) $host_id > 0 && is_device_allowed((int) $host_id);
+}
+
 function dsdebug_run_repair($id)
 {
+    if (!dsdebug_is_data_source_allowed($id)) {
+        cacti_log("ERROR: RRDfile Repair denied for Data Source [$id] because the current user cannot access its device.", false, 'DSDEBUG');
+        return false;
+    }
+
     $check = db_fetch_row_prepared(
         'SELECT *
 		FROM data_debug

@@ -30,7 +30,7 @@ switch (get_request_var('action')) {
     case 'run_debug':
         $id = get_filter_request_var('id');
 
-        if ($id > 0) {
+        if ($id > 0 && dsdebug_is_data_source_allowed($id)) {
             $selected_items = array($id);
             debug_delete($selected_items);
             debug_rerun($selected_items);
@@ -44,7 +44,7 @@ switch (get_request_var('action')) {
     case 'run_repair':
         $id = get_filter_request_var('id');
 
-        if ($id > 0) {
+        if ($id > 0 && dsdebug_is_data_source_allowed($id)) {
             if (dsdebug_run_repair($id)) {
                 raise_message('repair', __('All RRDfile repairs succeeded.'), MESSAGE_LEVEL_INFO);
             } else {
@@ -66,6 +66,12 @@ switch (get_request_var('action')) {
         break;
     case 'view':
         $id = get_filter_request_var('id');
+
+        if ($id <= 0 || !dsdebug_is_data_source_allowed($id)) {
+            raise_message('debug_access_denied', __('The requested Data Source is not available.'), MESSAGE_LEVEL_ERROR);
+            header('Location: data_debug.php?header=false');
+            break;
+        }
 
         $debug_status = debug_process_status($id);
 
@@ -221,6 +227,13 @@ function form_actions()
             }
         }
 
+        $selected_items = array_values(array_filter(
+            $selected_items,
+            function ($id) {
+                return dsdebug_is_data_source_allowed((int) $id);
+            }
+        ));
+
         /* if we are to save this form, instead of display it */
         if (isset_request_var('save_list')) {
             if (get_request_var('drp_action') == '2') { /* delete */
@@ -257,6 +270,10 @@ function debug_rerun($selected_items)
 
     if (!empty($selected_items)) {
         foreach ($selected_items as $id) {
+            if (!dsdebug_is_data_source_allowed((int) $id)) {
+                continue;
+            }
+
             $exists = db_fetch_cell_prepared(
                 'SELECT id
 				FROM data_debug
@@ -385,12 +402,26 @@ function debug_get_filter(&$sql_where, &$dd_join)
         $sql_where = '';
     }
 
-    if (get_request_var('host_id') == '-1') {
-        /* Show all items */
+    $device_rows = 0;
+    $allowed_devices = get_allowed_devices('', '', '', $device_rows);
+    $allowed_device_ids = array();
+    foreach ($allowed_devices as $device) {
+        $allowed_device_ids[] = (int) $device['id'];
+    }
+
+    if (cacti_sizeof($allowed_device_ids) === 0) {
+        $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' 1=0';
+    } elseif (get_request_var('host_id') == '-1') {
+        $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' dl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
     } elseif (isempty_request_var('host_id')) {
         $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' (dl.host_id=0 OR dl.host_id IS NULL)';
     } elseif (!isempty_request_var('host_id')) {
-        $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' dl.host_id=' . get_request_var('host_id');
+        $host_id = get_request_var('host_id');
+        if (!is_device_allowed((int) $host_id) || !in_array((int) $host_id, $allowed_device_ids, true)) {
+            $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' 1=0';
+        } else {
+            $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' dl.host_id=' . (int) $host_id;
+        }
     }
 
     if (get_request_var('site_id') == '-1') {
@@ -667,6 +698,9 @@ function debug_view()
     $refresh = 60;
 
     $id = get_filter_request_var('id');
+    if (!dsdebug_is_data_source_allowed($id)) {
+        return;
+    }
 
     $check = db_fetch_row_prepared(
         'SELECT *
