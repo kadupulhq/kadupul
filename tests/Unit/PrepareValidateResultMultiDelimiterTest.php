@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-require_once dirname(__DIR__, 2) . '/include/global_constants.php';
+if (!defined('POLLER_VERBOSITY_LOW')) {
+	require_once dirname(__DIR__, 2) . '/include/global_constants.php';
+}
 
 if (!function_exists('read_config_option')) {
 	function read_config_option($name) {
