@@ -107,6 +107,9 @@ if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('RESOURCE_CACHE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/poller.php');
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
