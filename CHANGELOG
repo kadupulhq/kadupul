@@ -1,3 +1,4 @@
+-issue: Treat missing or invalid Host Resources allocation units and negative disk samples as unknown instead of reporting raw units, raising a type error, or guessing an unsigned wrap
 Cacti CHANGELOG
 
 1.2.32
