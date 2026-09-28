@@ -105,6 +105,23 @@ switch (get_request_var('action')) {
 
 function form_save()
 {
+    if (isset_request_var('save_component_data_source_new') || isset_request_var('save_component_data_source')) {
+        $local_data_id = get_filter_request_var('local_data_id');
+        $host_id       = get_filter_request_var('host_id');
+
+        if (!empty($local_data_id) && !data_source_device_is_allowed($local_data_id)) {
+            data_source_access_denied();
+        }
+
+        if (!data_source_device_id_is_allowed($host_id)) {
+            data_source_access_denied();
+        }
+    }
+
+    if (isset_request_var('save_component_data') && !data_source_data_form_is_allowed()) {
+        data_source_access_denied();
+    }
+
     if ((isset_request_var('save_component_data_source_new')) && (!isempty_request_var('data_template_id'))) {
         $save['id']               = get_filter_request_var('local_data_id');
         $save['host_id']          = get_filter_request_var('host_id');
@@ -218,6 +235,9 @@ function form_save()
         $save2['data_input_id']               = form_input_validate(get_request_var('data_input_id'), 'data_input_id', '^[0-9]+$', true, 3);
         $save2['name']                        = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
         $save2['data_source_path']            = form_input_validate(get_nfilter_request_var('data_source_path'), 'data_source_path', '', true, 3);
+        if (!is_error_message() && !data_source_path_is_allowed($save2['data_source_path'])) {
+            raise_message(2);
+        }
         $save2['active']                      = form_input_validate((isset_request_var('active') ? get_nfilter_request_var('active') : ''), 'active', '', true, 3);
         $save2['data_source_profile_id']      = form_input_validate(get_request_var('data_source_profile_id'), 'data_source_profile_id', '^[0-9]+$', false, 3);
         $save2['rrd_step']                    = form_input_validate(get_request_var('rrd_step'), 'rrd_step', '^[0-9]+$', false, 3);
@@ -743,6 +763,10 @@ function ds_rrd_remove()
     get_filter_request_var('id');
     /* ==================================================== */
 
+    if (!data_source_rrd_item_is_allowed(get_request_var('id'))) {
+        data_source_access_denied();
+    }
+
     db_execute_prepared(
         'DELETE FROM data_template_rrd
 		WHERE id = ?',
@@ -765,6 +789,10 @@ function ds_rrd_add()
     get_filter_request_var('id');
     /* ==================================================== */
 
+    if (!data_source_device_is_allowed(get_request_var('id'))) {
+        data_source_access_denied();
+    }
+
     db_execute_prepared(
         "INSERT INTO data_template_rrd
 		(local_data_id, rrd_maximum, rrd_minimum, rrd_heartbeat, data_source_type_id, data_source_name)
@@ -783,6 +811,10 @@ function ds_disable()
     get_filter_request_var('id');
     /* ==================================================== */
 
+    if (!data_source_device_is_allowed(get_request_var('id'))) {
+        data_source_access_denied();
+    }
+
     api_data_source_disable(get_request_var('id'));
     header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
 }
@@ -792,6 +824,10 @@ function ds_enable()
     /* ================= input validation ================= */
     get_filter_request_var('id');
     /* ==================================================== */
+
+    if (!data_source_device_is_allowed(get_request_var('id'))) {
+        data_source_access_denied();
+    }
 
     api_data_source_enable(get_request_var('id'));
     header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
@@ -818,6 +854,10 @@ function ds_edit()
 			WHERE id = ?',
             array(get_request_var('id'))
         );
+
+        if (empty($data_local) || !is_device_allowed($data_local['host_id'])) {
+            data_source_access_denied();
+        }
 
         $data = db_fetch_row_prepared(
             'SELECT *
@@ -853,6 +893,10 @@ function ds_edit()
             $use_data_template = false;
         }
     } else {
+        if (!data_source_device_id_is_allowed(get_request_var('host_id'))) {
+            data_source_access_denied();
+        }
+
         $header_label = __('Data Template Selection [new]');
 
         $use_data_template = false;
@@ -1265,6 +1309,131 @@ function ds_edit()
     api_plugin_hook('data_source_edit_bottom');
 
     bottom_footer();
+}
+
+/**
+ * Check whether a data source belongs to a device visible to the current user.
+ *
+ * @param int $local_data_id Data source identifier.
+ *
+ * @return bool
+ */
+function data_source_device_is_allowed($local_data_id)
+{
+    $host_id = db_fetch_cell_prepared('SELECT host_id FROM data_local WHERE id = ?', array($local_data_id));
+
+    return $host_id !== false && $host_id !== null && is_device_allowed($host_id);
+}
+
+/**
+ * Check an explicitly selected device, including verifying that it exists.
+ *
+ * @param int $host_id Device identifier.
+ *
+ * @return bool
+ */
+function data_source_device_id_is_allowed($host_id)
+{
+    $found_host_id = db_fetch_cell_prepared('SELECT id FROM host WHERE id = ?', array($host_id));
+
+    return !empty($host_id) && $found_host_id !== false && $found_host_id !== null && is_device_allowed($host_id);
+}
+
+/**
+ * Check access to the data source referenced by a data-template form row.
+ *
+ * @return bool
+ */
+function data_source_data_form_is_allowed()
+{
+    $local_data_id = get_filter_request_var('local_data_id');
+    $data_id       = get_filter_request_var('data_template_data_id');
+    $row           = db_fetch_row_prepared('SELECT local_data_id FROM data_template_data WHERE id = ?', array($data_id));
+
+    return !empty($local_data_id) && !empty($row) && (int) $row['local_data_id'] === (int) $local_data_id && data_source_device_is_allowed($local_data_id);
+}
+
+/**
+ * Check access to the data source that owns an RRD item.
+ *
+ * @param int $rrd_id Data-source RRD item identifier.
+ *
+ * @return bool
+ */
+function data_source_rrd_item_is_allowed($rrd_id)
+{
+    $local_data_id = db_fetch_cell_prepared('SELECT local_data_id FROM data_template_rrd WHERE id = ?', array($rrd_id));
+
+    return $local_data_id !== false && $local_data_id !== null && data_source_device_is_allowed($local_data_id);
+}
+
+/**
+ * Check that an RRD path resolves inside the configured RRA directory.
+ *
+ * @param string $path Stored path, optionally using the <path_rra> prefix.
+ *
+ * @return bool
+ */
+function data_source_path_is_allowed($path)
+{
+    global $config;
+
+    if ($path === '') {
+        return true;
+    }
+
+    $base = realpath($config['rra_path']);
+    if ($base === false || str_contains($path, "\0") || str_contains($path, '\\')) {
+        return false;
+    }
+
+    if (str_starts_with($path, '<path_rra>/')) {
+        $relative = substr($path, strlen('<path_rra>/'));
+        $candidate = $base . '/' . $relative;
+    } elseif (str_contains($path, '<path_rra>')) {
+        return false;
+    } elseif (!str_contains($path, '/')) {
+        $candidate = $base . '/' . $path;
+    } elseif (str_starts_with($path, $base . '/')) {
+        $candidate = $path;
+    } else {
+        return false;
+    }
+
+    $relative = substr($candidate, strlen($base) + 1);
+    if ($relative === '' || preg_match('#(^|/)\.\.?(/|$)#', $relative)) {
+        return false;
+    }
+
+    $resolved = realpath($candidate);
+    if ($resolved !== false) {
+        return cacti_path_is_within($resolved, $base);
+    }
+
+    if (is_link($candidate)) {
+        return false;
+    }
+
+    $parent = dirname($candidate);
+    while (!file_exists($parent) && !is_link($parent) && $parent !== dirname($parent)) {
+        $parent = dirname($parent);
+    }
+
+    $resolved_parent = realpath($parent);
+
+    return $resolved_parent !== false && cacti_path_is_within($resolved_parent, $base);
+}
+
+/**
+ * Stop a data-source operation when its device is outside the user's scope.
+ *
+ * @return never
+ */
+function data_source_access_denied()
+{
+    cacti_log('User attempted to access an unauthorized data source', false, 'AUTH');
+    header('Location: data_sources.php');
+    exit;
 }
 
 function get_poller_interval($seconds, $data_source_profile_id)
