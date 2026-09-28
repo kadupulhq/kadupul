@@ -87,10 +87,11 @@ function recovery_delete_acknowledged_rows($rows, $conn) {
 		$params  = array();
 
 		foreach ($chunk as $row) {
-			$clauses[] = '(local_data_id = ? AND rrd_name = ? AND time = ?)';
+			$clauses[] = '(local_data_id = ? AND rrd_name = ? AND time = ? AND output = ?)';
 			$params[]  = (int) $row['local_data_id'];
 			$params[]  = $row['rrd_name'];
 			$params[]  = $row['time'];
+			$params[]  = $row['output'];
 		}
 
 		if (db_execute_prepared('DELETE FROM poller_output_boost WHERE ' . implode(' OR ', $clauses), $params, true, $conn) === false) {
