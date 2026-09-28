@@ -218,7 +218,8 @@ class MibCache
 						`max-access`=VALUES(`max-access`), `value`=VALUES(`value`)',
                         array($column_params['oid'], $column_params['name'], $column_params['mib'],
                             $column_params['type'], $column_params['otype'], 'Column Data',
-                            $column_params['max-access'], trim($column_params['value']))
+                            $column_params['max-access'], str_replace(array("\r", "\n"), ' ', trim((string) $column_params['value']))
+                        )
                     );
                 }
                 return true;

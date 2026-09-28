@@ -74,6 +74,18 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 /* activate circular reference collector */
 gc_enable();
 
+/**
+ * Keep a cached value on one pass_persist protocol line.
+ *
+ * @param string $value Cached SNMP value.
+ *
+ * @return string
+ */
+function snmpagent_persist_safe_value($value)
+{
+    return str_replace(array("\r", "\n"), ' ', (string) $value);
+}
+
 
 while (1) {
 
@@ -88,7 +100,7 @@ while (1) {
         case 'get':
             $oid = trim(fgets(STDIN));
             if ($data = cache_read($oid)) {
-                fwrite(STDOUT, $oid . $eol . (isset($smi_base_datatypes[$data['type']]) ? $smi_base_datatypes[$data['type']] : 'INTEGER') . $eol . $data['value'] . $eol);
+                fwrite(STDOUT, $oid . $eol . (isset($smi_base_datatypes[$data['type']]) ? $smi_base_datatypes[$data['type']] : 'INTEGER') . $eol . snmpagent_persist_safe_value($data['value']) . $eol);
             } else {
                 fwrite(STDOUT, 'NONE' . $eol);
             }
@@ -97,7 +109,7 @@ while (1) {
             $oid = trim(fgets(STDIN));
             if ($next_oid = cache_get_next($oid)) {
                 if ($data = cache_read($next_oid)) {
-                    fwrite(STDOUT, $next_oid . $eol . (isset($smi_base_datatypes[$data['type']]) ? $smi_base_datatypes[$data['type']] : 'INTEGER') . $eol . $data['value'] . $eol);
+                    fwrite(STDOUT, $next_oid . $eol . (isset($smi_base_datatypes[$data['type']]) ? $smi_base_datatypes[$data['type']] : 'INTEGER') . $eol . snmpagent_persist_safe_value($data['value']) . $eol);
                 } else {
                     fwrite(STDOUT, 'NONE' . $eol);
                 }
