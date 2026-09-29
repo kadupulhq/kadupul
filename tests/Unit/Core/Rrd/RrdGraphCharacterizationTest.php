@@ -361,6 +361,77 @@ test('a generated graph command renders in RRDtool', function () {
     expect($stdout)->toMatch('/^\d+x\d+$/m');
 });
 
+test('VDEF-backed drawing lines render but do not become XPORT columns', function () {
+    $binary = getenv('RRDTOOL_TEST_BINARY');
+    if (!$binary || !is_executable($binary)) {
+        $this->markTestSkipped('RRDTOOL_TEST_BINARY is required');
+    }
+
+    $window = array('graph_start' => 1700000000, 'graph_end' => 1700003600);
+    $items = array(
+        rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '3366CC', 'text_format' => 'Inbound')),
+        rrd_characterization_item(2, 'LINE1', rrd_characterization_ds('traffic_in') + array('hex' => 'FF0000', 'text_format' => 'Peak', 'vdef_id' => '1')),
+        rrd_characterization_item(3, 'LINE1', rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'text_format' => 'Outbound')),
+    );
+    $scenario = rrd_characterization_graph_scenario(
+        $window + array('output_filename' => '/dev/null'),
+        array('font_method' => '0'),
+        array('title_cache' => 'Traffic', 'vertical_label' => 'bits'),
+        $items,
+        array('replies' => array('xport' => '<?xml version="1.0"?><xport><meta><start>1700000000</start><step>300</step><end>1700003600</end><rows>12</rows><columns>2</columns><legend><entry>Inbound</entry><entry>Outbound</entry></legend></meta><data></data></xport>'))
+    );
+    $scenario['calls'] = array(
+        array('fn' => 'rrdtool_function_graph', 'args' => array(7, 0, $window + array('output_filename' => '/dev/null'), false, array(), 0)),
+        array('fn' => 'rrdtool_function_xport', 'args' => array(7, 0, $window + array('export_csv' => true), array(), 0)),
+    );
+    $output = rrd_characterization_run($this, $scenario);
+    $sent = array_merge(...array_column($output['results'], 'sent'));
+    $graph_commands = array_values(array_filter($sent, static function ($command) {
+        return strncmp($command['stdin'], 'graph ', 6) === 0;
+    }));
+    $xport_commands = array_values(array_filter($sent, static function ($command) {
+        return strncmp($command['stdin'], 'xport ', 6) === 0;
+    }));
+
+    expect($graph_commands)->toHaveCount(1);
+    expect($graph_commands[0]['stdin'])->toContain('LINE1:vdef');
+    expect($xport_commands)->toHaveCount(1);
+    expect($xport_commands[0]['stdin'])->not->toContain("XPORT:'vdef");
+    expect(substr_count($xport_commands[0]['stdin'], 'XPORT:'))->toBe(2);
+
+    $directory = sys_get_temp_dir() . '/rrd-vdef-xport-' . bin2hex(random_bytes(8));
+    mkdir($directory . '/rra', 0700, true);
+    try {
+        $create_traffic = 'create rra/router_traffic_11.rrd --start 1699990000 --step 300 DS:traffic_in:GAUGE:600:U:U DS:traffic_out:GAUGE:600:U:U RRA:AVERAGE:0.5:1:100';
+        $create_errors = 'create rra/router_errors_12.rrd --start 1699990000 --step 300 DS:errors:GAUGE:600:U:U RRA:AVERAGE:0.5:1:100';
+        $updates = array(
+            'update rra/router_traffic_11.rrd 1700000100:1:2 1700000400:2:4 1700000700:3:6',
+            'update rra/router_errors_12.rrd 1700000100:0 1700000400:1 1700000700:2',
+        );
+        $input = implode("\n", array_merge(array($create_traffic, $create_errors), $updates, array($graph_commands[0]['stdin'], $xport_commands[0]['stdin'], 'quit'))) . "\n";
+        $environment = array('PATH' => getenv('PATH'), 'LANG' => 'C', 'LC_ALL' => 'C', 'HOME' => $directory, 'XDG_CACHE_HOME' => $directory . '/cache');
+        $process = proc_open(array($binary, '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
+        fwrite($pipes[0], $input);
+        fclose($pipes[0]);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        proc_close($process);
+    } finally {
+        $entries = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($entries as $entry) {
+            $entry->isDir() ? rmdir($entry->getPathname()) : unlink($entry->getPathname());
+        }
+        rmdir($directory);
+    }
+
+    expect($stderr)->toBe('');
+    expect($stdout)->not->toContain('ERROR');
+    expect($stdout)->toContain('795x300');
+    expect(preg_match_all('/^OK u:/m', $stdout))->toBe(5);
+});
+
 /**
  * A graph scenario whose RRD paths are the ones in $paths, by local data id,
  * written as get_data_source_path() stores them.
