@@ -1053,10 +1053,10 @@ def main():
     try:
         harness.setup()
         if args.target == 'ci-smoke':
-            from audit_schema_scenarios import assert_clean_schema_audit
-            assert_clean_schema_audit(harness, 'Fresh install')
             from audit_schema_scenarios import assert_baseline_reproducible
             assert_baseline_reproducible(harness)
+            from audit_schema_scenarios import assert_clean_schema_audit
+            assert_clean_schema_audit(harness, 'Fresh install')
         harness.scenarios()
         harness.poller_scenarios()
         harness.fault_scenarios()

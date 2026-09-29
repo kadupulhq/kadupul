@@ -6,14 +6,7 @@ import json
 
 def assert_clean_schema_audit(harness, label):
     """Run the production Symfony audit and fail on any reported drift."""
-    from harness import CONTROLLER_ROOT
-
-    baseline = CONTROLLER_ROOT / 'docs/audit_schema.sql'
-    if not baseline.is_file():
-        raise RuntimeError('Checked-in audit schema is missing: ' + str(baseline))
-    harness.command('mkdir', '-p', '/var/www/html/docs')
-    harness.compose('cp', str(baseline), 'web:/tmp/kadupul-audit-schema.sql')
-    harness.command('cp', '/tmp/kadupul-audit-schema.sql', '/var/www/html/docs/audit_schema.sql')
+    _stage_audit_baseline(harness)
 
     result = harness.php('bin/console', 'kadupul:database:audit', '--report', '--json', '--as=admin')
     if result['exit'] != 0:
@@ -41,8 +34,21 @@ def assert_clean_schema_audit(harness, label):
     return summary
 
 
+def _stage_audit_baseline(harness):
+    """Place the repository's baseline in the image, which intentionally omits docs/."""
+    from harness import CONTROLLER_ROOT
+
+    baseline = CONTROLLER_ROOT / 'docs/audit_schema.sql'
+    if not baseline.is_file():
+        raise RuntimeError('Checked-in audit schema is missing: ' + str(baseline))
+    harness.command('mkdir', '-p', '/var/www/html/docs')
+    harness.compose('cp', str(baseline), 'web:/tmp/kadupul-audit-schema.sql')
+    harness.command('cp', '/tmp/kadupul-audit-schema.sql', '/var/www/html/docs/audit_schema.sql')
+
+
 def assert_baseline_reproducible(harness):
     """Regenerate baseline rows from the fresh cacti.sql install and compare them."""
+    _stage_audit_baseline(harness)
     result = harness.php('bin/console', 'kadupul:database:audit', '--load', '--json', '--as=admin')
     if result['exit'] != 0:
         raise RuntimeError('Fresh install baseline generation failed: ' + _diagnostic(result))
@@ -55,8 +61,11 @@ def assert_baseline_reproducible(harness):
 
     parse = r'''require 'include/vendor/autoload.php';
 $baseline = Kadupul\Platform\Domain\Schema\AuditSchemaDump::parse(file_get_contents($argv[1]));
+$columns = array_map(static fn ($row) => $row->row(), $baseline->columnRows);
+usort($columns, static fn ($a, $b) => [$a['table_name'], $a['table_sequence'], $a['table_field']] <=> [$b['table_name'], $b['table_sequence'], $b['table_field']]);
 $indexes = array_map(static function ($row) { $values = $row->row(); unset($values['idx_cardinality']); return $values; }, $baseline->indexRows);
-echo json_encode(['columns' => array_map(static fn ($row) => $row->row(), $baseline->columnRows), 'indexes' => $indexes], JSON_THROW_ON_ERROR);'''
+usort($indexes, static fn ($a, $b) => [strtolower($a['idx_table_name']), strtolower($a['idx_key_name']), $a['idx_seq_in_index'], strtolower($a['idx_column_name'])] <=> [strtolower($b['idx_table_name']), strtolower($b['idx_key_name']), $b['idx_seq_in_index'], strtolower($b['idx_column_name'])]);
+echo json_encode(['columns' => $columns, 'indexes' => $indexes], JSON_THROW_ON_ERROR);'''
     parsed = harness.php('-r', parse, '/tmp/kadupul-audit-schema.sql')
     if parsed['exit'] != 0:
         raise RuntimeError('Committed audit baseline could not be parsed: ' + json.dumps(parsed))
