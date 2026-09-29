@@ -357,7 +357,7 @@ function import_package_get_details($xmlfile)
     }
 
     libxml_use_internal_errors(true);
-    $xmlget = simplexml_load_string($data);
+    $xmlget = simplexml_load_string($data, null, LIBXML_NONET);
     libxml_use_internal_errors(false);
 
     if (LIBXML_VERSION < 20900) {
@@ -484,7 +484,7 @@ function import_read_package_data($xmlfile, &$public_key)
     }
 
     libxml_use_internal_errors(true);
-    $xmlget = simplexml_load_string($xml);
+    $xmlget = simplexml_load_string($xml, null, LIBXML_NONET);
     libxml_use_internal_errors(false);
 
     if (LIBXML_VERSION < 20900) {
