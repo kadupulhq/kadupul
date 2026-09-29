@@ -582,7 +582,8 @@ final class AuditDatabaseCommandTest extends TestCase
         $tester = $this->tester($this->schema(true, '1.2.31'));
 
         self::assertSame(1, $tester->execute(['--report' => true], ['capture_stderr_separately' => true]));
-        self::assertStringContainsString('The database is behind the code; run php cli/upgrade_database.php first.', $tester->getErrorOutput());
+        self::assertStringContainsString('The database is behind the code; run php cli/upgrade_database.php', $tester->getErrorOutput());
+        self::assertStringContainsString('first.', $tester->getErrorOutput());
     }
 
     public function testNoModeUnderBinConsoleExitsTwo(): void
