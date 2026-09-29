@@ -21,6 +21,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
+
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.
