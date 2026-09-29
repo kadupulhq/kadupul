@@ -722,6 +722,22 @@ strURL = <?php
 		case '4': // LINE1
 		case '5': // LINE2
 		case '6': // LINE3
+			$('#row_task_item_id').show();
+			$('#row_color_id').show();
+			$('#row_line_width').hide();
+			$('#row_dashes').show();
+			$('#row_dash_offset').show();
+			$('#row_textalign').hide();
+			$('#row_shift').show();
+			$('#row_alpha').show();
+			$('#row_consolidation_function_id').show();
+			$('#row_cdef_id').show();
+			$('#row_vdef_id').hide();
+			$('#row_value').hide();
+			$('#row_gprint_id').hide();
+			$('#row_text_format').show();
+			$('#row_hard_return').show();
+			break;
 		case '20': // LINE:STACK
 			$('#row_task_item_id').show();
 			$('#row_color_id').show();
