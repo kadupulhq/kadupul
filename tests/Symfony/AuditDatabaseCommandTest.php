@@ -380,8 +380,9 @@ final class AuditDatabaseCommandTest extends TestCase
         $this->presentation = new CliPresentation();
         $this->presentation->forLegacy(LegacyRequest::Run);
         $none = $this->tester();
-        self::assertSame(0, $none->execute(['--upgrade' => true]));
+        self::assertSame(0, $none->execute(['--upgrade' => true], ['capture_stderr_separately' => true]));
         self::assertSame(implode("\n", $this->help()) . "\n", $none->getDisplay());
+        self::assertStringContainsString('DEPRECATION:', $none->getErrorOutput());
     }
 
     public function testLegacyVersion(): void
@@ -398,7 +399,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $tester = $this->tester($this->schema(true, '1.2.31'));
 
         self::assertSame(1, $tester->execute(['--report' => true]));
-        self::assertSame("WARNING: Kadupul must be upgraded first.  Use the --upgrade option to perform that upgrade\n", $tester->getDisplay());
+        self::assertSame("WARNING: Kadupul must be upgraded first.  Run php cli/upgrade_database.php before auditing\n", $tester->getDisplay());
     }
 
     public function testLegacyUpgradeOutputComesFirstAndItsErrorsGoToStderr(): void
@@ -410,7 +411,7 @@ final class AuditDatabaseCommandTest extends TestCase
 
         self::assertSame(0, $tester->execute(['--upgrade' => true, '--create' => true], ['capture_stderr_separately' => true]));
         self::assertSame("01/02/2031 03:04:05 - UPGRADE NOTE: Upgrading Kadupul, this will take a few minutes.\nSUCCESS: Loaded the Audit Schema\n", $tester->getDisplay());
-        self::assertSame("PHP Warning: x\n", $tester->getErrorOutput());
+        self::assertSame("DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.\nPHP Warning: x\n", $tester->getErrorOutput());
         self::assertSame(['database.audit', 'database-maintenance local:upgrade', 'succeeded'], $this->events()[0]);
     }
 
@@ -441,7 +442,7 @@ final class AuditDatabaseCommandTest extends TestCase
 
         self::assertSame(1, $tester->execute(['--upgrade' => true, '--repair' => true], ['capture_stderr_separately' => true]));
         self::assertSame("01/02/2031 03:04:05 - UPGRADE WARNING: Kadupul Upgrade Encountered Errors.\nFATAL: Kadupul Upgrade Failed.  The audit was not run.\n", $tester->getDisplay());
-        self::assertSame("PHP Warning: x\n", $tester->getErrorOutput());
+        self::assertSame("DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.\nPHP Warning: x\n", $tester->getErrorOutput());
         self::assertSame([['database.audit', 'database-maintenance local:upgrade', 'failed']], $this->events());
     }
 
@@ -449,9 +450,10 @@ final class AuditDatabaseCommandTest extends TestCase
     {
         $tester = $this->tester($this->unaltered(), null, false, $this->failedUpgrade());
 
-        self::assertSame(1, $tester->execute(['--upgrade' => true, '--repair' => true, '--force' => true, '--json' => true]));
+        self::assertSame(1, $tester->execute(['--upgrade' => true, '--repair' => true, '--force' => true, '--json' => true], ['capture_stderr_separately' => true]));
         $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
         self::assertSame(['status' => 'failed', 'database' => 'local', 'dry_run' => false, 'mode' => 'repair', 'upgrade' => 'failed', 'error' => 'upgrade failed'], $json);
+        self::assertStringContainsString('DEPRECATION:', $tester->getErrorOutput());
     }
 
     public function testHumanFailedUpgradeGoesToStderr(): void
@@ -468,9 +470,10 @@ final class AuditDatabaseCommandTest extends TestCase
         $upgrade->method('run')->willReturn(new UpgradeOutput('', '', true));
         $tester = $this->tester($this->schema(true, '1.2.31'), null, false, $upgrade);
 
-        self::assertSame(0, $tester->execute(['--upgrade' => true, '--repair' => true, '--force' => true, '--json' => true]));
+        self::assertSame(0, $tester->execute(['--upgrade' => true, '--repair' => true, '--force' => true, '--json' => true], ['capture_stderr_separately' => true]));
         $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
         self::assertSame(['ok', 'upgraded', 'altered'], [$json['status'], $json['upgrade'], $json['alters'][0]['result']]);
+        self::assertSame("DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.\n", $tester->getErrorOutput());
     }
 
     public function testJsonReportsAltersAndExitsOneOnAFailure(): void
@@ -490,9 +493,10 @@ final class AuditDatabaseCommandTest extends TestCase
         $upgrade->expects(self::never())->method('run');
         $tester = $this->tester($this->schema(true, '1.2.31'), null, false, $upgrade);
 
-        self::assertSame(0, $tester->execute(['--repair' => true, '--upgrade' => true, '--dry-run' => true, '--json' => true]));
+        self::assertSame(0, $tester->execute(['--repair' => true, '--upgrade' => true, '--dry-run' => true, '--json' => true], ['capture_stderr_separately' => true]));
         $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
         self::assertSame(['ok', true, 'planned', 'planned', 'planned'], [$json['status'], $json['dry_run'], $json['upgrade'], $json['baseline'], $json['alters'][0]['result']]);
+        self::assertStringContainsString('DEPRECATION:', $tester->getErrorOutput());
         self::assertSame([], $this->events);
     }
 
@@ -578,7 +582,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $tester = $this->tester($this->schema(true, '1.2.31'));
 
         self::assertSame(1, $tester->execute(['--report' => true], ['capture_stderr_separately' => true]));
-        self::assertStringContainsString('The database is behind the code; add --upgrade.', $tester->getErrorOutput());
+        self::assertStringContainsString('The database is behind the code; run php cli/upgrade_database.php first.', $tester->getErrorOutput());
     }
 
     public function testNoModeUnderBinConsoleExitsTwo(): void

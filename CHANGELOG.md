@@ -19,6 +19,10 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
+### Deprecated
+
+- Deprecate `cli/audit_database.php --upgrade` and direct operators to run `php cli/upgrade_database.php` separately. Retain the flag for compatibility and print a warning to stderr. Part of #457.
+
 ### Fixed
 
 - Stop the schema audit before comparison or repair when its canonical baseline is missing, unparsable, or cannot be loaded, and return a failing CLI status. Fixes #242.

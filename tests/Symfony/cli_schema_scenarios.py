@@ -94,7 +94,7 @@ def without_version(text, utility):
 
 
 def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot, utility,
-            stdout=normalise, stderr_filter=None, log_filter=None, subject='schema'):
+            stdout=normalise, stderr_filter=None, shim_stderr_filter=None, log_filter=None, subject='schema'):
     """Run the original, then the shim, from equal starting states.
 
     reset() puts the state back to its start and snapshot() reads what the
@@ -118,17 +118,18 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     shim_log = log_lines(harness)[marks:]
     expected, actual = stdout(original['stdout']), stdout(shim['stdout'])
     expected_err = original['stderr'] if stderr_filter is None else stderr_filter(original['stderr'])
+    actual_err = shim['stderr'] if shim_stderr_filter is None else shim_stderr_filter(shim['stderr'])
     if allowed == 'version line before the error':
         # The original prints its version line inside the help that follows
         # the error; the shim reaches the error before it boots the kernel.
         expected, actual = without_version(expected, utility), '\n'.join(actual.splitlines())
     # The caller compares a snapshot it allows to differ.
     same = allowed == SECOND_LOOP_ALLOWED or after_shim == after_original
-    if actual != expected or shim['stderr'] != expected_err or not same:
+    if actual != expected or actual_err != expected_err or not same:
         print(f'{label}: original {original!r}\n{label}: shim {shim!r}', flush=True)
     check(shim['exit'] == original['exit'], f'{label}: shim exit code matches the original')
     check(actual == expected, f'{label}: shim stdout matches the original')
-    check(shim['stderr'] == expected_err, f'{label}: shim stderr matches the original')
+    check(actual_err == expected_err, f'{label}: shim stderr matches the original')
     if allowed != SECOND_LOOP_ALLOWED:
         # "rows" is plural, "schema" and "state" are not.
         check(after_shim == after_original, f'{label}: shim {subject} {"match" if subject == "rows" else "matches"} the original')

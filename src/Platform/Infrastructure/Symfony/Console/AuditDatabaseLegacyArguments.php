@@ -112,7 +112,7 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
             'Options:',
             '    --report  - Report on any issues found in the audit of the database',
             '    --repair  - Repair any issues found during the audit of the database',
-            '    --upgrade - Upgrade the Kadupul database before running', '',
+            '    --upgrade - Deprecated; run php cli/upgrade_database.php separately', '',
             'Developer Options:',
             '    --create  - Initialize or Re-initialize the Audit Schema tables.',
             '    --load    - Take a pristine Kadupul install and create Audit Schema and file.',
@@ -126,7 +126,7 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
     public function report(AuditReport $report, bool $alters, string $versionLine): array
     {
         if ($report->outcome === AuditOutcome::UpgradeRequired) {
-            return ['WARNING: Kadupul must be upgraded first.  Use the --upgrade option to perform that upgrade'];
+            return ['WARNING: Kadupul must be upgraded first.  Run php cli/upgrade_database.php before auditing'];
         }
         $lines = self::split($report->upgrade?->stdout ?? '');
         if ($report->outcome === AuditOutcome::UpgradeFailed) {

@@ -27,6 +27,8 @@ PRISTINE = '/tmp/kadupul-parity-audit-schema.sql'
 # original turned into an ADD INDEX without its closing parenthesis.
 UNTYPED = '/tmp/kadupul-parity-untyped-schema.sql'
 UNTYPED_ROWS = re.compile(r"^(INSERT INTO `table_indexes` VALUES \('poller_command',1,'poller_id_last_updated',.*),'BTREE',''\);$", re.M)
+UPGRADE_DEPRECATION = 'DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.\n'
+UPGRADE_WARNING = re.compile(re.escape(UPGRADE_DEPRECATION))
 DOCS_ASIDE = '/tmp/kadupul-parity-docs'
 # The image's MariaDB 11.8 client insists on TLS, which the harness server
 # does not offer, and the original gave its client no host, relying on the
@@ -239,6 +241,14 @@ def masked(text):
     return SECONDS.sub('in N seconds', STAMP.sub(r'\1 HH:MM:SS - ', normalise(text)))
 
 
+def masked_audit(text):
+    text = masked(text)
+    text = text.replace('    --upgrade - Upgrade the Kadupul database before running',
+                        '    --upgrade - Deprecated; run php cli/upgrade_database.php separately')
+    return text.replace('Use the --upgrade option to perform that upgrade',
+                        'Run php cli/upgrade_database.php before auditing')
+
+
 def log_masked(lines):
     return [SECONDS.sub('in N seconds', line) for line in clock_free(lines, '') if BACKTRACE not in line and SYNTAX_ERROR not in line]
 
@@ -310,14 +320,26 @@ def verify_audit_cases(harness, check, tables, version):
             continue
 
         unparsed = label == UNPARSED
-        stdout = (lambda text: LOAD_ERROR.sub('ERROR: <load error>', masked(text), count=1)) if unparsed else masked
+        stdout = (lambda text: LOAD_ERROR.sub('ERROR: <load error>', masked_audit(text), count=1)) if unparsed else masked_audit
         stderr_filter = (lambda text: CLIENT_ERROR.sub('', text)) if unparsed else None
+        shim_stderr_filter = stderr_filter
+        if '--upgrade' in arguments:
+            previous_filter = shim_stderr_filter
+            shim_stderr_filter = lambda text, previous_filter=previous_filter: UPGRADE_WARNING.sub(
+                '', previous_filter(text) if previous_filter is not None else text)
         # The original truncated the file before its dump failed, so a failed
         # export compares the file on its own below.
         snapshot = (lambda h: schema(h, with_dump=label != EXPORT_FAILS, imported=True)) if '--load' in arguments else schema
         ran = compare(harness, check, label, (AUDIT_ORIGINAL, AUDIT_SHIM), arguments, None, starting, snapshot, AUDIT_UTILITY,
-                      stdout=stdout, stderr_filter=stderr_filter, log_filter=log_masked)
+                      stdout=stdout, stderr_filter=stderr_filter, shim_stderr_filter=shim_stderr_filter,
+                      log_filter=log_masked)
         original, shim = ran['original'], ran['shim']
+        if '--upgrade' in arguments:
+            check(UPGRADE_DEPRECATION in shim['stderr'],
+                  f'{label}: deprecated upgrade flag explains the separate upgrade command')
+        if label == 'audit upgrade required':
+            check('php cli/upgrade_database.php' in shim['stdout'],
+                  'audit upgrade required: points to the standalone upgrade command')
         if label == UNPARSED:
             check('\nERROR: \n' in original['stdout'] and CLIENT_ERROR.search(original['stderr']) is not None
                   and 'FATAL: Failed Load the Audit Schema\nERROR: docs/audit_schema.sql line 1 does not parse\n' in shim['stdout']

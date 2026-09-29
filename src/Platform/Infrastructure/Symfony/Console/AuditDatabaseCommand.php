@@ -39,6 +39,10 @@ final readonly class AuditDatabaseCommand
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] AuditDatabaseInput $input): int
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
+        if ($input->upgrade) {
+            $warning = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
+            $warning->writeln('DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.');
+        }
         $legacy = new AuditDatabaseLegacyArguments();
         // The shim repairs at once, as the script did. Under bin/console a
         // repair changes the schema only with --force or after the operator
@@ -117,7 +121,7 @@ final readonly class AuditDatabaseCommand
     private function report(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, AuditReport $report): int
     {
         if ($report->outcome === AuditOutcome::UpgradeRequired) {
-            return $this->renderer->failure($io, $output, $mode, 'The database is behind the code; add --upgrade.', new CommandResult(['status' => 'failed', 'error' => 'upgrade required'], [], Command::FAILURE));
+            return $this->renderer->failure($io, $output, $mode, 'The database is behind the code; run php cli/upgrade_database.php first.', new CommandResult(['status' => 'failed', 'error' => 'upgrade required'], [], Command::FAILURE));
         }
         if ($report->outcome === AuditOutcome::UpgradeFailed) {
             return $this->renderer->failure($io, $output, $mode, 'The upgrade failed, so the audit did not run.', new CommandResult(
