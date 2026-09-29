@@ -342,7 +342,12 @@ while (1) {
                 $fn_real = str_replace('\\', '/', $fn_real);
             }
 
-            if ($fn_real === false || $path_cmp($fn_real, $include_file) !== 0) {
+            $include_cmp = str_replace('\\', '/', $include_file);
+            $path_matches = ($fn_real !== false) && ((DIRECTORY_SEPARATOR === '\\')
+                ? strcasecmp($fn_real, $include_cmp) === 0
+                : $fn_real === $include_cmp);
+
+            if (!$path_matches) {
                 cacti_log("WARNING: Function '$function' was not defined by script file '$include_file'. Rejected.", false, 'PHPSVR');
                 fputs(STDOUT, "U\n");
                 fflush(STDOUT);

@@ -77,6 +77,9 @@ def verify_protocol(harness, device, check):
         (f'{SCRIPTS}missing.php ss_missing', 'U'),
         (f'{hstats} system id', 'U'),
         (f'{hstats} ss_no_such_function 1', 'U'),
+        # Functions from a different file under scripts/ must not be callable
+        # through the selected file merely because both files are trusted roots.
+        (f'{hstats} ss_thold_time', 'U'),
         # errors.php is the harness prepend, loaded from outside base_path.
         (f'{hstats} behavior_install_error_handler', 'U'),
         (f"{hstats} ss_hstats 'unterminated", f"ERROR: Parse error attempting to parse string ''unterminated'\nU"),
