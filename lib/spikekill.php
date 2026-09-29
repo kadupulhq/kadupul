@@ -1933,30 +1933,15 @@ class spikekill
                                 if ($this->out_start == 0 || ($timestamp >= $this->out_start && $timestamp <= $this->out_end)) {
                                     if ($dsvalue > (1 + $this->percent) * (float) $rra[$rra_num][$ds_num]['variance_avg']) {
                                         if ($kills < $this->numspike) {
-                                            if ($this->avgnan == 'avg') {
-                                                if ($this->debug) {
-                                                    cacti_log("DEBUG: replacing dsvalue {$dsvalue} with average {$rra[$rra_num][$ds_num]['variance_avg']}", false, 'SPIKEKILL');
-                                                }
-
-                                                $dsvalue = sprintf('%1.10e', $rra[$rra_num][$ds_num]['variance_avg']);
-                                                $this->total_kills++;
-                                                $kills++;
-                                            } elseif ($this->avgnan == 'last' && isset($last_num[$ds_num])) {
-                                                if ($this->debug) {
-                                                    cacti_log("DEBUG: replacing dsvalue {$dsvalue} with last value {$last_num[$ds_num]}", false, 'SPIKEKILL');
-                                                }
-
-                                                $dsvalue = $last_num[$ds_num];
-                                                $this->total_kills++;
-                                                $kills++;
-                                            } elseif ($this->avgnan == 'nan') {
-                                                if ($this->debug) {
-                                                    cacti_log("DEBUG: replacing dsvalue {$dsvalue} with NaN", false, 'SPIKEKILL');
-                                                }
-
-                                                $dsvalue = 'NaN';
-                                                $this->total_kills++;
-                                                $kills++;
+                                            $replacement = $this->replaceWindowSpike(
+                                                $dsvalue,
+                                                $rra[$rra_num][$ds_num]['variance_avg'],
+                                                $last_num,
+                                                $ds_num,
+                                                $kills
+                                            );
+                                            if ($replacement !== null) {
+                                                $dsvalue = $replacement;
                                             }
                                         }
                                     }
@@ -2034,6 +2019,31 @@ class spikekill
         }
 
         return $new_array;
+    }
+
+    private function replaceWindowSpike($dsvalue, $average, $last_num, $ds_num, &$kills)
+    {
+        if ($this->avgnan == 'avg') {
+            $replacement = sprintf('%1.10e', $average);
+            $description = 'average ' . $average;
+        } elseif ($this->avgnan == 'last' && isset($last_num[$ds_num])) {
+            $replacement = $last_num[$ds_num];
+            $description = 'last value ' . $replacement;
+        } elseif ($this->avgnan == 'nan') {
+            $replacement = 'NaN';
+            $description = 'NaN';
+        } else {
+            return null;
+        }
+
+        if ($this->debug) {
+            cacti_log("DEBUG: replacing dsvalue {$dsvalue} with {$description}", false, 'SPIKEKILL');
+        }
+
+        $this->total_kills++;
+        $kills++;
+
+        return $replacement;
     }
 
     private function removeComments(&$output)
