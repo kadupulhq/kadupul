@@ -15,6 +15,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Escape dynamic form ids and actions for their HTML attribute and JavaScript string contexts. Fixes #582.
 - Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
 - Remove the inert Poller Refresh Output Table setting; the queue is required to use InnoDB. Fixes #282.
+- Build forced HTTPS redirects from the configured server name, not the client-supplied Host header, and reject an unusable canonical authority instead of serving the HTTP request. Fixes #584.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
