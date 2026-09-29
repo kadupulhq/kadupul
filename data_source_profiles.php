@@ -255,9 +255,32 @@ function form_actions()
 
         if ($selected_items != false) {
             if (get_request_var('drp_action') == '1') { // delete
-                db_execute('DELETE FROM data_source_profiles WHERE ' . array_to_sql_or($selected_items, 'id'));
-                db_execute('DELETE FROM data_source_profiles_rra WHERE ' . array_to_sql_or($selected_items, 'data_source_profile_id'));
-                db_execute('DELETE FROM data_source_profiles_cf WHERE ' . array_to_sql_or($selected_items, 'data_source_profile_id'));
+                if (!db_begin_transaction()) {
+                    cacti_log('ERROR: Unable to start transaction while deleting Data Source Profiles.', false, 'WEBUI');
+                    raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+                } else {
+                    try {
+                        $unused_profiles = profiles_not_in_use($selected_items);
+
+                        if ($unused_profiles !== false && cacti_sizeof($unused_profiles)) {
+                            $deleted = db_execute('DELETE FROM data_source_profiles WHERE ' . array_to_sql_or($unused_profiles, 'id'));
+                            $deleted = $deleted && db_execute('DELETE FROM data_source_profiles_rra WHERE ' . array_to_sql_or($unused_profiles, 'data_source_profile_id'));
+                            $deleted = $deleted && db_execute('DELETE FROM data_source_profiles_cf WHERE ' . array_to_sql_or($unused_profiles, 'data_source_profile_id'));
+
+                            if (!$deleted) {
+                                throw new \RuntimeException('Unable to delete all Data Source Profile definitions.');
+                            }
+                        }
+
+                        if (!db_commit_transaction()) {
+                            throw new \RuntimeException('Unable to commit Data Source Profile deletion.');
+                        }
+                    } catch (\Throwable $e) {
+                        db_rollback_transaction();
+                        cacti_log('ERROR: Data Source Profile deletion was rolled back: ' . $e->getMessage(), false, 'WEBUI');
+                        raise_message('profile_delete_failed', __('Unable to safely delete the selected Data Source Profiles. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+                    }
+                }
             } elseif (get_request_var('drp_action') == '2') { // duplicate
                 duplicate_data_source_profile($selected_items, get_nfilter_request_var('title_format'));
             }
@@ -334,6 +357,51 @@ function form_actions()
     form_end();
 
     bottom_footer();
+}
+
+/**
+ * Return selected profiles that are not referenced by templates or data sources.
+ *
+ * A failed usage lookup returns false so the caller can fail closed.
+ *
+ * @param array $selected_items
+ * @return array|false
+ */
+function profiles_not_in_use($selected_items)
+{
+    $unused_profiles = array();
+
+    foreach ($selected_items as $profile_id) {
+        try {
+            $in_use = db_fetch_cell_prepared(
+                'SELECT COUNT(*)
+				FROM data_template_data
+				WHERE data_source_profile_id = ?',
+                array($profile_id)
+            );
+        } catch (\Throwable $e) {
+            cacti_log('ERROR: Unable to check usage of Data Source Profile ' . (int) $profile_id . ': ' . $e->getMessage(), false, 'WEBUI');
+            raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+
+            return false;
+        }
+
+        if ($in_use === false || !is_numeric($in_use)) {
+            cacti_log('ERROR: Unable to check usage of Data Source Profile ' . (int) $profile_id . '.', false, 'WEBUI');
+            raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+
+            return false;
+        }
+
+        if ((int) $in_use > 0) {
+            cacti_log('WARNING: Refused to delete Data Source Profile ' . (int) $profile_id . ' in use by Data Templates or Data Sources for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+            raise_message('profile_in_use', __('Data Source Profiles in use by Data Templates or Data Sources can not be deleted.'), MESSAGE_LEVEL_ERROR);
+        } else {
+            $unused_profiles[] = $profile_id;
+        }
+    }
+
+    return $unused_profiles;
 }
 
 /* --------------------------

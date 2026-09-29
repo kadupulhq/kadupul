@@ -103,6 +103,8 @@ def main():
               'Symfony public entry owns authentication for the same session')
         from inventory_scenarios import verify_inventory
         verify_inventory(harness, session, user_id, check)
+        from data_source_profile_scenarios import verify_data_source_profile_deletion
+        verify_data_source_profile_deletion(harness, session, check)
         from site_edit_scenarios import verify_site_edit
         verify_site_edit(harness, session, user_id, check)
         from site_create_scenarios import verify_site_create
