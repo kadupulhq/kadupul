@@ -740,11 +740,11 @@ header_redirect	./data_queries.php:54			header('Location: data_queries.php?heade
 header_redirect	./data_queries.php:59			header('Location: data_queries.php?header=false&action=item_edit&id=' . get_filter_request_var('snmp_query_graph_id') . '&snmp_query_id=' . get_filter_request_var('snmp_query_id'));
 header_redirect	./data_queries.php:68			header('Location: data_queries.php?header=false&action=edit&id=' . get_filter_request_var('snmp_query_id'));
 header_redirect	./data_queries.php:80			header ('Location: data_queries.php');
-header_redirect	./data_source_profiles.php:182			header('Location: data_source_profiles.php?header=false&action=edit&id=' . (empty($profile_id) ? get_request_var('id') : $profile_id));
-header_redirect	./data_source_profiles.php:222				header('Location: data_source_profiles.php?header=false&action=item_edit&profile_id=' . get_request_var('profile_id') . '&id=' . (empty($profile_rra_id) ? get_request_var('id') : $profile_rra_id));
-header_redirect	./data_source_profiles.php:224				header('Location: data_source_profiles.php?header=false&action=edit&id=' . get_request_var('profile_id'));
-header_redirect	./data_source_profiles.php:254			header('Location: data_source_profiles.php?header=false');
-header_redirect	./data_source_profiles.php:304			header('Location: data_source_profiles.php?header=false');
+header_redirect	./data_source_profiles.php:191	        header('Location: data_source_profiles.php?header=false&action=edit&id=' . (empty($profile_id) ? get_request_var('id') : $profile_id));
+header_redirect	./data_source_profiles.php:233	            header('Location: data_source_profiles.php?header=false&action=item_edit&profile_id=' . get_request_var('profile_id') . '&id=' . (empty($profile_rra_id) ? get_request_var('id') : $profile_rra_id));
+header_redirect	./data_source_profiles.php:235	            header('Location: data_source_profiles.php?header=false&action=edit&id=' . get_request_var('profile_id'));
+header_redirect	./data_source_profiles.php:289	        header('Location: data_source_profiles.php?header=false');
+header_redirect	./data_source_profiles.php:342	        header('Location: data_source_profiles.php?header=false');
 header_redirect	./data_sources.php:301	                                header('Location: data_sources.php?header=false&action=ds_edit&id=' . (empty($local_data_id) ? get_filter_request_var('local_data_id') : $local_data_id) . '&host_id=' . get_request_var('host_id') . '&view_rrd=' . (isset_request_var('current_rrd') ? get_nfilter_request_var('current_rrd') : '0'));
 header_redirect	./data_sources.php:358	        header('Location: data_sources.php?header=false&action=ds_edit&host_id=' . get_request_var('host_id') . '&new=1');
 header_redirect	./data_sources.php:360	        header('Location: data_sources.php?header=false&action=ds_edit&id=' . (empty($local_data_id) ? get_filter_request_var('local_data_id') : $local_data_id) . '&host_id=' . get_request_var('host_id') . '&view_rrd=' . (isset_request_var('current_rrd') ? get_nfilter_request_var('current_rrd') : '0'));
