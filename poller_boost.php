@@ -608,13 +608,15 @@ function boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_t
             set_config_option('boost_rrd_update_system_enable', 'on');
         }
 
-        $seconds_offset = read_config_option('boost_rrd_update_interval') * 60;
+        $interval_minutes = read_config_option('boost_rrd_update_interval');
 
-        /* Initialize seconds offset, if not set to 2 hours */
-        if (empty($seconds_offset)) {
-            $seconds_offset = 120;
+        /* Initialize the interval to 2 hours if it is unset or invalid. */
+        if (!is_numeric($interval_minutes) || (int) $interval_minutes <= 0) {
+            $interval_minutes = 120;
             set_config_option('boost_rrd_update_interval', 120);
         }
+
+        $seconds_offset = (int) $interval_minutes * 60;
 
         boost_debug("Last Runtime was " . date('Y-m-d H:i:s', $last_run_time) . " ($last_run_time).");
         boost_debug("Next Runtime is " . date('Y-m-d H:i:s', $next_run_time) . " ($next_run_time).");
@@ -652,9 +654,11 @@ function boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_t
             set_config_option('boost_next_run_time', $next_run_time);
         }
     } else {
-        $pollers = db_fetch_cell('SELECT COUNT(*) FROM pollers WHERE disabled = ""');
+        $pollers = db_fetch_cell('SELECT COUNT(*) FROM poller WHERE disabled = ""');
 
-        if ($pollers > 1) {
+        if ($pollers === false || $pollers === null) {
+            boost_debug('Unable to determine the number of active Data Collectors; preserving the Boost system setting.');
+        } elseif ((int) $pollers > 1) {
             boost_debug('Someone attempted to disable boost through there are multiple Data Collectors Defined!');
 
             set_config_option('boost_rrd_update_system_enable', 'on');
