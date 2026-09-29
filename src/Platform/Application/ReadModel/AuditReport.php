@@ -8,6 +8,7 @@
 namespace Kadupul\Platform\Application\ReadModel;
 
 use Kadupul\Platform\Domain\Schema\AuditMode;
+use Kadupul\Platform\Domain\Schema\AuditTableStatus;
 use Kadupul\Platform\Domain\Schema\TableAudit;
 
 final readonly class AuditReport
@@ -44,6 +45,8 @@ final readonly class AuditReport
         $alters = count(array_filter($this->alters, static fn(array $alter): bool => $alter['result'] === AlterResult::Failed));
         $baseline = in_array($this->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed, BaselineOutcome::CreateFailed], true) ? 1 : 0;
 
-        return $alters + $baseline + ($this->exported === false ? 1 : 0) + ($this->upgrade?->completed === false ? 1 : 0);
+        $missing = count(array_filter($this->tables, static fn(TableAudit $table): bool => $table->status === AuditTableStatus::Missing));
+
+        return $alters + $baseline + $missing + ($this->exported === false ? 1 : 0) + ($this->upgrade?->completed === false ? 1 : 0);
     }
 }

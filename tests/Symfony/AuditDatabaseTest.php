@@ -28,11 +28,13 @@ use Kadupul\Platform\Application\ReadModel\BaselineOutcome;
 use Kadupul\Platform\Application\ReadModel\UpgradeOutput;
 use Kadupul\Platform\Domain\Schema\AuditBaseline;
 use Kadupul\Platform\Domain\Schema\AuditMode;
+use Kadupul\Platform\Domain\Schema\AuditTableStatus;
 use Kadupul\Platform\Domain\Schema\BaselineColumn;
 use Kadupul\Platform\Domain\Schema\BaselineIndex;
 use Kadupul\Platform\Domain\Schema\InvalidAuditSchema;
 use Kadupul\Platform\Domain\Schema\LiveTable;
 use Kadupul\Platform\Domain\Schema\PluginSchemaChanges;
+use Kadupul\Platform\Domain\Schema\TableAudit;
 use Kadupul\Platform\Domain\Schema\TableStatus;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -122,7 +124,7 @@ final class AuditDatabaseTest extends TestCase
 
         self::assertSame([AuditOutcome::Completed, BaselineOutcome::Loaded], [$report->outcome, $report->baseline]);
         self::assertSame(['poller_command', 'thold_data'], array_map(static fn($table): string => $table->table, $report->tables));
-        self::assertSame(["ERROR Col: 'poller_id', Attribute 'Default' invalid. Should be: '7', Is: '1'", "WARNING Index: 'stray', does not exist in default Kadupul.  Dropping."], $report->tables[0]->findings);
+        self::assertSame(["ERROR Col: 'poller_id', Attribute 'Default' invalid. Should be: '7', Is: NULL", "WARNING Index: 'stray', does not exist in default Kadupul.  Dropping."], $report->tables[0]->findings);
         self::assertSame([], $report->alters);
         self::assertSame([
             ['database.audit', 'database-maintenance local:audit-schema-reset', 'succeeded'],
@@ -143,6 +145,26 @@ final class AuditDatabaseTest extends TestCase
         self::assertSame([['table' => 'poller_command', 'legacy' => "ALTER TABLE `poller_command`\n   MODIFY COLUMN `poller_id` int(10) unsigned NOT NULL DEFAULT '7',\n   DROP INDEX stray,\n   ROW_FORMAT=Dynamic CHARSET=utf8mb4;",
             'result' => AlterResult::Failed, 'statement' => 'ALTER TABLE `poller_command` typed']], $report->alters);
         self::assertSame(['database.audit', 'database-table local:poller_command', 'failed'], $this->events()[3]);
+        self::assertSame(1, $report->failed());
+    }
+
+    public function testADeletedBaselineTableIsReportedAndNeverRecreatedByRepair(): void
+    {
+        $baseline = new AuditBaseline([
+            new BaselineColumn('poller_command', 1, 'poller_id', 'int(10) unsigned', 'NO', '', '7', ''),
+            new BaselineColumn('data_debug', 1, 'id', 'int(10) unsigned', 'NO', 'PRI', null, 'auto_increment'),
+        ], []);
+        $store = $this->store($baseline);
+        $store->method('replace')->willReturn(true);
+        $schema = $this->schema();
+        $schema->method('alter')->willReturn(true);
+
+        $report = $this->audit($schema, $store)(AuditMode::Repair, false, null, true);
+
+        $missing = array_find($report->tables, static fn(TableAudit $table): bool => $table->table === 'data_debug');
+        self::assertNotNull($missing);
+        self::assertSame([AuditTableStatus::Missing, 1, []], [$missing->status, $missing->errors, $missing->clauses]);
+        self::assertSame(['poller_command'], array_column($report->alters, 'table'));
         self::assertSame(1, $report->failed());
     }
 

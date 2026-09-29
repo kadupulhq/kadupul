@@ -16,7 +16,7 @@ namespace Kadupul\Platform\Domain\Schema;
 final readonly class LiveTable
 {
     /**
-     * @param list<array{Field: string, Type: string, Null: string, Key: string, Default: ?string, Extra: string}> $columns
+     * @param list<array{Field: string, Type: string, Null: string, Key: string, Default: ?string, Extra: string, Collation?: ?string}> $columns
      * @param list<array{Table: string, Non_unique: string, Key_name: string, Seq_in_index: string, Column_name: string, Collation: ?string, Cardinality: ?string, Sub_part: ?string, Packed: ?string, Null: string, Index_type: string, Comment: string}> $indexes
      */
     public function __construct(public string $name, public TableStatus $status, public array $columns, public array $indexes) {}
@@ -35,18 +35,16 @@ final readonly class LiveTable
         return $shape($this) === $shape($other);
     }
 
-    /** What report_audit_results() called $collation: only these two collations counted as utf8. */
+    /** Whether the table uses a utf8 collation (including modern server defaults such as utf8mb4_general_ci). */
     public function latin(): bool
     {
-        return !in_array($this->status->collation, ['utf8mb4_unicode_ci', 'utf8_general_ci'], true);
+        return $this->status->collation === null || !str_starts_with(strtolower($this->status->collation), 'utf8');
     }
 
-    /** db_column_exists(): SHOW COLUMNS ... LIKE, so without letter case and with _ and % as wildcards. */
-    public function hasColumnLike(string $pattern): bool
+    /** Column names are compared without letter case, but LIKE wildcards are not treated as name characters. */
+    public function hasColumn(string $name): bool
     {
-        $regex = '/^' . strtr(preg_quote($pattern, '/'), ['%' => '.*', '_' => '.']) . '$/iDs';
-
-        return array_any($this->columns, static fn(array $column): bool => preg_match($regex, $column['Field']) === 1);
+        return array_any($this->columns, static fn(array $column): bool => strcasecmp($column['Field'], $name) === 0);
     }
 
     /** db_index_exists(): in_array() over the Key_name values, loosely but with letter case. */

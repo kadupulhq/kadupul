@@ -44,6 +44,7 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
         table_key varchar(4) default NULL,
         table_default varchar(50) default NULL,
         table_extra varchar(128) default NULL,
+        table_collation varchar(64) default NULL,
         PRIMARY KEY (table_name, table_sequence, table_field))
         ENGINE=InnoDB
         COMMENT='Holds Default Kadupul Table Definitions'";
@@ -74,6 +75,7 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
   `table_key` varchar(4) DEFAULT NULL,
   `table_default` varchar(50) DEFAULT NULL,
   `table_extra` varchar(128) DEFAULT NULL,
+  `table_collation` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`table_name`,`table_sequence`,`table_field`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Holds Default Cacti Table Definitions'";
     public const string DUMP_INDEXES = "CREATE TABLE `table_indexes` (
@@ -92,8 +94,8 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
   PRIMARY KEY (`idx_table_name`,`idx_key_name`,`idx_seq_in_index`,`idx_column_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Holds Default Cacti Index Definitions'";
     private const array REPLACE = ['DROP TABLE IF EXISTS `table_columns`', self::DUMP_COLUMNS, 'DROP TABLE IF EXISTS `table_indexes`', self::DUMP_INDEXES];
-    private const string INSERT_COLUMN = 'INSERT INTO table_columns (table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    private const string INSERT_COLUMN = 'INSERT INTO table_columns (table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra, table_collation)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
     private const string INSERT_INDEX = 'INSERT INTO table_indexes (idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name,
         idx_collation, idx_cardinality, idx_sub_part, idx_packed, idx_null, idx_index_type, idx_comment)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -134,6 +136,14 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
                 return self::TABLES[$index];
             }
         }
+        // Existing installations created the audit table before column
+        // collations were recorded. Upgrade this tool-owned metadata table
+        // before --load inserts its expanded rows.
+        if ($this->connections->for($target)->fetchOne("SHOW COLUMNS FROM table_columns LIKE 'table_collation'") === false) {
+            if (!$this->connections->execute($target, 'ALTER TABLE table_columns ADD COLUMN table_collation varchar(64) DEFAULT NULL')) {
+                return 'table_columns';
+            }
+        }
         foreach (self::RESET as $truncate) {
             $this->connections->execute($target, $truncate);
         }
@@ -165,7 +175,7 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
         $rows = [];
         foreach ($catalog->tables() as $table) {
             foreach (array_values($table->columns) as $sequence => $column) {
-                $rows[] = [self::INSERT_COLUMN, [$table->name, $sequence + 1, $column['Field'], $column['Type'], $column['Null'], $column['Key'], $column['Default'], $column['Extra']]];
+                $rows[] = [self::INSERT_COLUMN, [$table->name, $sequence + 1, $column['Field'], $column['Type'], $column['Null'], $column['Key'], $column['Default'], $column['Extra'], $column['Collation'] ?? null]];
             }
             foreach ($table->indexes as $index) {
                 $rows[] = [self::INSERT_INDEX, array_values($index)];

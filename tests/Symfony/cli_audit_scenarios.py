@@ -59,6 +59,7 @@ MISSING_COLUMN = f'ALTER TABLE {FAILING} DROP COLUMN attributes'
 # Rows the upgrade and the prune step change; restored before every run.
 ROW_TABLES = ['settings', 'plugin_config', 'plugin_hooks', 'plugin_realms', 'plugin_db_changes']
 AUDIT_TABLES = ['table_columns', 'table_indexes']
+MISSING_TABLE = 'data_debug'
 PREVIOUS = '1.2.30'
 # The fixture plugin is behind its INFO version and lacks an upgrade function;
 # the second row names a directory that does not exist, so the prune step
@@ -200,7 +201,11 @@ def reset(harness, state, tables, version):
 def dump_file(harness):
     """docs/ as a listing, and the dump without the line that dates it."""
     listing = harness.command('sh', '-c', f'ls -a {DOCS} 2>/dev/null || true')['stdout']
-    return listing, harness.command('sh', '-c', f'grep -v "^-- Dump completed" {DUMP} 2>/dev/null || true')['stdout']
+    dump = harness.command('sh', '-c', f'grep -v "^-- Dump completed" {DUMP} 2>/dev/null || true')['stdout']
+    if '`table_collation` varchar(64)' in dump:
+        dump = dump.replace('  `table_collation` varchar(64) DEFAULT NULL,\n', '')
+        dump = re.sub(r"^(INSERT INTO `table_columns` VALUES .+),(?:NULL|'[a-zA-Z0-9_]+')\);$", r'\1);', dump, flags=re.M)
+    return listing, dump
 
 
 def schema(harness, with_dump=True, imported=False):
@@ -219,7 +224,10 @@ def schema(harness, with_dump=True, imported=False):
                           + base.format('TABLES') + ' ORDER BY 1')
     present = set(harness.sql("SELECT TABLE_NAME " + base.format('TABLES')
                               + " AND TABLE_NAME IN ('table_columns', 'table_indexes')").split())
-    rows = ''.join(harness.sql(f'SELECT * FROM {table} ORDER BY 1, 2, 3, 4') for table in AUDIT_TABLES if table in present)
+    column_rows = ('SELECT table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra '
+                   'FROM table_columns ORDER BY 1, 2, 3, 4')
+    rows = ''.join(harness.sql(column_rows if table == 'table_columns' else f'SELECT * FROM {table} ORDER BY 1, 2, 3, 4')
+                   for table in AUDIT_TABLES if table in present)
     state = UPDATED.sub('install_updated\tTIME', harness.sql(
         'SELECT cacti FROM version; SELECT name, value FROM settings ORDER BY name; '
         'SELECT directory, status, version FROM plugin_config ORDER BY directory; '
@@ -260,7 +268,7 @@ def verify_audit(harness, check, admin):
     as_root(harness, f'rm -rf {DOCS_ASIDE}; if [ -e {DOCS} ]; then mv {DOCS} {DOCS_ASIDE}; fi; '
                      f"printf '[client]\\nhost=db\\nskip-ssl\\n' > {CLIENT_CONFIG}")
     # The tables the cases change, and the rows, are saved before any case runs.
-    tables = [DRIFTED, FAILING]
+    tables = [DRIFTED, FAILING, 'host', MISSING_TABLE]
     harness.sql(f'DROP DATABASE IF EXISTS {BACKUP}')
     backup(harness, tables + ROW_TABLES)
     try:
@@ -372,6 +380,42 @@ def verify_audit_shim_only(harness, check, admin, tables, version):
     check(report.get('dry_run') is True and alters.get(DRIFTED, {}).get('result') == 'planned' and schema(harness) == start,
           'audit --repair through bin/console without --force plans the repair and changes nothing')
     verify_remote_collector(harness, check, start)
+    verify_audit_new_rules(harness, check, tables, version)
+
+
+def verify_audit_new_rules(harness, check, tables, version):
+    """Intentional #454 changes that are not expected to match the old script."""
+    reset(harness, 'clean', tables, version)
+    loaded = run(harness, AUDIT_SHIM, ['--load'])
+    collation = harness.sql("SELECT table_collation FROM table_columns WHERE table_name='host' AND table_field='hostname'").strip()
+    check(loaded['exit'] == 0 and collation == 'utf8mb4_unicode_ci',
+          'audit --load persists the actual SHOW FULL COLUMNS collation')
+
+    reset(harness, 'clean', tables, version)
+    harness.sql('ALTER TABLE host ALTER COLUMN poller_id SET DEFAULT 0')
+    default_report = run(harness, AUDIT_SHIM, ['--report'])
+    check("Attribute 'Default' invalid. Should be: '1', Is: '0'" in default_report['stdout'],
+          'audit reports zero as distinct from the baseline default one')
+
+    reset(harness, 'clean', tables, version)
+    harness.sql('ALTER TABLE host DROP INDEX hostname, ADD INDEX hostname (hostname(10))')
+    prefix_report = run(harness, AUDIT_SHIM, ['--report'])
+    check("Attribute 'Sub_part'" in prefix_report['stdout'], 'audit reports a prefix-index length change')
+
+    reset(harness, 'clean', tables, version)
+    harness.sql('ALTER TABLE host MODIFY hostname varchar(100) COLLATE utf8mb4_bin DEFAULT NULL')
+    planned = run(harness, 'bin/console', ['kadupul:database:audit', '--repair', '--dry-run', '--json'])
+    report = json.loads(planned['stdout']) if planned['exit'] == 0 else {}
+    host_alter = next((alter for alter in report.get('alters', []) if alter['table'] == 'host'), {})
+    check(host_alter.get('result') == 'planned' and host_alter.get('statement') is None,
+          'audit detects column-collation drift but does not plan a generic modify')
+
+    reset(harness, 'clean', tables, version)
+    harness.sql(f'DROP TABLE {MISSING_TABLE}')
+    missing_report = run(harness, AUDIT_SHIM, ['--report'])
+    check(f"Table: '{MISSING_TABLE}' exists in the audit schema but is missing from the database" in missing_report['stdout'],
+          'audit reports a baseline table removed from the live schema')
+    reset(harness, 'clean', tables, version)
 
 
 def verify_remote_collector(harness, check, start):

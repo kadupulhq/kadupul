@@ -29,7 +29,7 @@ final readonly class DbalSchemaAudit implements SchemaAudit
     private const string PLUGIN_TABLE = 'plugin_db_changes';
     private const string PLUGIN_CHANGES = 'SELECT `table`, `column`, method FROM plugin_db_changes WHERE method IN (?, ?)';
     /** The SHOW COLUMNS and SHOW INDEXES fields the audit compares, prints or imports. */
-    private const array COLUMN_FIELDS = ['Field', 'Type', 'Null', 'Key', 'Default', 'Extra'];
+    private const array COLUMN_FIELDS = ['Field', 'Type', 'Collation', 'Null', 'Key', 'Default', 'Extra'];
     private const array INDEX_FIELDS = ['Table', 'Non_unique', 'Key_name', 'Seq_in_index', 'Column_name', 'Collation', 'Cardinality', 'Sub_part', 'Packed', 'Null', 'Index_type', 'Comment'];
 
     public function __construct(private MaintenanceConnections $connections, private InstallationVersion $version) {}
@@ -111,7 +111,7 @@ final readonly class DbalSchemaAudit implements SchemaAudit
         return new LiveTable(
             $name,
             $status,
-            array_map(static fn(array $row): array => self::fields($row, self::COLUMN_FIELDS), $db->fetchAllAssociative('SHOW COLUMNS FROM ' . $quoted)),
+            array_map(static fn(array $row): array => self::fields($row, self::COLUMN_FIELDS), $db->fetchAllAssociative('SHOW FULL COLUMNS FROM ' . $quoted)),
             array_map(static fn(array $row): array => self::fields($row, self::INDEX_FIELDS), $db->fetchAllAssociative('SHOW INDEXES FROM ' . $quoted)),
         );
     }

@@ -14,4 +14,6 @@ enum AuditTableStatus: string
     case Unknown = 'unknown';
     case Plugin = 'plugin';
     case Audited = 'audited';
+    /** In the checked-in baseline but absent from the live catalog; never recreated by repair. */
+    case Missing = 'missing';
 }
