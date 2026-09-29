@@ -787,7 +787,7 @@ INSERT INTO `table_columns` VALUES ('processes',3,'tasktype','varchar(20)','NO',
 INSERT INTO `table_columns` VALUES ('processes',4,'taskname','varchar(40)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('processes',5,'taskid','int(10) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('processes',6,'timeout','int(10) unsigned','YES','','300','',NULL);
-INSERT INTO `table_columns` VALUES ('processes',7,'started','timestamp','NO','','current_timestamp()','1',NULL);
+INSERT INTO `table_columns` VALUES ('processes',7,'started','timestamp','NO','','current_timestamp()','',NULL);
 INSERT INTO `table_columns` VALUES ('processes',8,'last_update','timestamp','NO','','0000-00-00 00:00:00','',NULL);
 INSERT INTO `table_columns` VALUES ('reports',1,'id','mediumint(8) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('reports',2,'user_id','mediumint(8) unsigned','NO','','0','',NULL);
@@ -839,7 +839,7 @@ INSERT INTO `table_columns` VALUES ('sessions',3,'access','int(10) unsigned','YE
 INSERT INTO `table_columns` VALUES ('sessions',4,'data','mediumblob','YES','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('sessions',5,'user_id','int(10) unsigned','NO','','0','',NULL);
 INSERT INTO `table_columns` VALUES ('sessions',6,'user_agent','varchar(128)','NO','','','','utf8mb4_unicode_ci');
-INSERT INTO `table_columns` VALUES ('sessions',7,'start_time','timestamp','NO','','current_timestamp()','1',NULL);
+INSERT INTO `table_columns` VALUES ('sessions',7,'start_time','timestamp','NO','','current_timestamp()','',NULL);
 INSERT INTO `table_columns` VALUES ('sessions',8,'transactions','int(10) unsigned','NO','','1','',NULL);
 INSERT INTO `table_columns` VALUES ('settings',1,'name','varchar(255)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('settings',2,'value','varchar(4096)','NO','','','','utf8mb4_unicode_ci');
@@ -949,6 +949,7 @@ INSERT INTO `table_columns` VALUES ('table_columns',5,'table_null','varchar(10)'
 INSERT INTO `table_columns` VALUES ('table_columns',6,'table_key','varchar(4)','YES','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('table_columns',7,'table_default','varchar(50)','YES','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('table_columns',8,'table_extra','varchar(128)','YES','',NULL,'','utf8mb4_unicode_ci');
+INSERT INTO `table_columns` VALUES ('table_columns',9,'table_collation','varchar(64)','YES','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('table_indexes',1,'idx_table_name','varchar(50)','NO','PRI',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('table_indexes',2,'idx_non_unique','int(10) unsigned','YES','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('table_indexes',3,'idx_key_name','varchar(128)','NO','PRI',NULL,'','utf8mb4_unicode_ci');
@@ -989,7 +990,7 @@ INSERT INTO `table_columns` VALUES ('user_auth',25,'reset_perms','int(10) unsign
 INSERT INTO `table_columns` VALUES ('user_auth_cache',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_cache',2,'user_id','int(10) unsigned','NO','MUL','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_cache',3,'hostname','varchar(100)','NO','MUL','','','utf8mb4_unicode_ci');
-INSERT INTO `table_columns` VALUES ('user_auth_cache',4,'last_update','timestamp','NO','MUL','current_timestamp()','1',NULL);
+INSERT INTO `table_columns` VALUES ('user_auth_cache',4,'last_update','timestamp','NO','MUL','current_timestamp()','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_cache',5,'token','varchar(191)','NO','UNI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_group',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group',2,'name','varchar(20)','NO','',NULL,'','utf8mb4_unicode_ci');
@@ -1020,7 +1021,7 @@ INSERT INTO `table_columns` VALUES ('user_auth_row_cache',1,'user_id','mediumint
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',2,'class','varchar(20)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',3,'hash','varchar(32)','NO','PRI','0','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',4,'total_rows','int(10) unsigned','NO','','0','',NULL);
-INSERT INTO `table_columns` VALUES ('user_auth_row_cache',5,'time','timestamp','NO','','current_timestamp()','1',NULL);
+INSERT INTO `table_columns` VALUES ('user_auth_row_cache',5,'time','timestamp','NO','','current_timestamp()','',NULL);
 INSERT INTO `table_columns` VALUES ('user_domains',1,'domain_id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('user_domains',2,'domain_name','varchar(20)','NO','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_domains',3,'type','int(10) unsigned','NO','','0','',NULL);
@@ -1253,7 +1254,7 @@ INSERT INTO `table_indexes` VALUES ('host',1,'hostname',1,'hostname','A',1,NULL,
 INSERT INTO `table_indexes` VALUES ('host',1,'poller_id_disabled',1,'poller_id','A',1,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host',1,'poller_id_disabled',2,'disabled','A',1,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host',1,'poller_id_last_updated',1,'poller_id','A',1,NULL,NULL,'','BTREE','');
-INSERT INTO `table_indexes` VALUES ('host',1,'poller_id_last_updated',2,'last_updated','A',1,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('host',1,'poller_id_last_updated',2,'last_updated','A',1,NULL,NULL,'YES','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host',0,'PRIMARY',1,'id','A',1,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host',1,'site_id_location',1,'site_id','A',1,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host',1,'site_id_location',2,'location','A',1,NULL,NULL,'YES','BTREE','');
@@ -1264,7 +1265,7 @@ INSERT INTO `table_indexes` VALUES ('host_snmp_cache',1,'field_name',1,'field_na
 INSERT INTO `table_indexes` VALUES ('host_snmp_cache',1,'field_value',1,'field_value','A',6,NULL,NULL,'YES','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host_snmp_cache',1,'host_id',1,'host_id','A',2,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host_snmp_cache',1,'host_id',2,'field_name','A',6,NULL,NULL,'','BTREE','');
-INSERT INTO `table_indexes` VALUES ('host_snmp_cache',1,'last_updated',1,'last_updated','A',2,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('host_snmp_cache',1,'last_updated',1,'last_updated','A',2,NULL,NULL,'YES','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host_snmp_cache',1,'present',1,'present','A',2,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host_snmp_cache',0,'PRIMARY',1,'host_id','A',2,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host_snmp_cache',0,'PRIMARY',2,'snmp_query_id','A',2,NULL,NULL,'','BTREE','');
@@ -1295,7 +1296,7 @@ INSERT INTO `table_indexes` VALUES ('poller',1,'disabled',1,'disabled','A',1,NUL
 INSERT INTO `table_indexes` VALUES ('poller',1,'name',1,'name','A',1,NULL,NULL,'YES','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller',0,'PRIMARY',1,'id','A',1,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_command',1,'poller_id_last_updated',1,'poller_id','A',0,NULL,NULL,'','BTREE','');
-INSERT INTO `table_indexes` VALUES ('poller_command',1,'poller_id_last_updated',2,'last_updated','A',0,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('poller_command',1,'poller_id_last_updated',2,'last_updated','A',0,NULL,NULL,'YES','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_command',0,'PRIMARY',1,'poller_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_command',0,'PRIMARY',2,'action','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_command',0,'PRIMARY',3,'command','A',0,NULL,NULL,'','BTREE','');
@@ -1309,7 +1310,7 @@ INSERT INTO `table_indexes` VALUES ('poller_item',1,'poller_id_action',2,'action
 INSERT INTO `table_indexes` VALUES ('poller_item',1,'poller_id_host_id',1,'poller_id','A',2,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_item',1,'poller_id_host_id',2,'host_id','A',2,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_item',1,'poller_id_last_updated',1,'poller_id','A',2,NULL,NULL,'','BTREE','');
-INSERT INTO `table_indexes` VALUES ('poller_item',1,'poller_id_last_updated',2,'last_updated','A',2,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('poller_item',1,'poller_id_last_updated',2,'last_updated','A',2,NULL,NULL,'YES','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_item',1,'poller_id_rrd_next_step',1,'poller_id','A',2,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_item',1,'poller_id_rrd_next_step',2,'rrd_next_step','A',2,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_item',1,'present',1,'present','A',2,NULL,NULL,'','BTREE','');
