@@ -693,6 +693,12 @@ function api_plugin_can_install($plugin, &$message)
     $dependencies = api_plugin_get_dependencies($plugin);
     $message = '';
     $proceed = true;
+    $compatibility = plugin_is_compatible($plugin);
+
+    if (!$compatibility['compat']) {
+        $message .= $compatibility['requires'] . ' ';
+        $proceed = false;
+    }
 
     if (is_array($dependencies) && cacti_sizeof($dependencies)) {
         foreach ($dependencies as $dependency => $version) {
@@ -714,24 +720,25 @@ function api_plugin_can_install($plugin, &$message)
 function api_plugin_install($plugin)
 {
     global $config;
-
-    if (!defined('IN_CACTI_INSTALL')) {
-        define('IN_CACTI_INSTALL', 1);
-        define('IN_PLUGIN_INSTALL', 1);
-    }
-
-    $dependencies = api_plugin_get_dependencies($plugin);
-
     $proceed = api_plugin_can_install($plugin, $message);
 
     if (!$proceed) {
         $message .= '<br><br>' . __('Plugin cannot be installed.');
+
+        if (PHP_SAPI === 'cli') {
+            return false;
+        }
 
         raise_message('dependency_check', $message, MESSAGE_LEVEL_ERROR);
 
         header('Location: plugins.php?header=false');
 
         exit;
+    }
+
+    if (!defined('IN_CACTI_INSTALL')) {
+        define('IN_CACTI_INSTALL', 1);
+        define('IN_PLUGIN_INSTALL', 1);
     }
 
     if ($plugin !== 'internal') {
@@ -1451,16 +1458,17 @@ function plugin_is_compatible($plugin)
     global $config;
 
     $info = plugin_load_info_file($config['base_path'] . '/plugins/' . $plugin . '/INFO');
+    $compatibility = is_array($info) && isset($info['compat']) && is_string($info['compat']) ? trim($info['compat']) : '';
 
-    if ($info !== false) {
-        if (!isset($info['compat']) || cacti_version_compare(CACTI_VERSION, $info['compat'], '<')) {
-            return array('compat' => false, 'requires' => __('Requires: Kadupul >= %s', $info['compat']));
-        }
-    } else {
-        return array('compat' => false, 'requires' => __('Legacy Plugin'));
+    if ($compatibility === '' || preg_match('/\\A[0-9]+(?:\\.[0-9]+){0,2}\\z/', $compatibility) !== 1) {
+        return array('compat' => false, 'requires' => __('Plugin INFO must declare a valid compat version'));
     }
 
-    return array('compat' => true, 'requires' => __('Requires: Kadupul >= %s', $info['compat']));
+    if (version_compare(CACTI_VERSION, $compatibility, '<')) {
+        return array('compat' => false, 'requires' => __('Requires: Kadupul >= %s', $compatibility));
+    }
+
+    return array('compat' => true, 'requires' => __('Requires: Kadupul >= %s', $compatibility));
 }
 
 function plugin_load_info_defaults($file, $info, $defaults = array())
