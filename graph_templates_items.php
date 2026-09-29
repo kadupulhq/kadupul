@@ -721,7 +721,7 @@ function item_edit()
 			$('#row_data_template_id').show();
 			$('#row_task_item_id').show();
 			$('#row_color_id').show();
-			$('#row_line_width').show();
+			$('#row_line_width').hide();
 			$('#row_dashes').show();
 			$('#row_dash_offset').show();
 			$('#row_textalign').hide();
