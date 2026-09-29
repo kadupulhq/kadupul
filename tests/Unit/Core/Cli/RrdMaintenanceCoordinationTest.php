@@ -596,7 +596,15 @@ test('database upgrade reports rejected versions and completed migrations accura
                 . 'function db_fetch_cell_prepared(...$args) { return "InnoDB"; }'
                 . 'function db_execute_prepared(...$args) { if ($GLOBALS["fail_version_write"]) { return false; } touch(dirname(__DIR__) . "/schema-write"); return true; }';
             file_put_contents($dir . '/include/cli_check.php', $fixture);
-            $process = proc_open(array(PHP_BINARY, $dir . '/cli/upgrade_database.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+            $process = proc_open(
+                array_merge(
+                    array(PHP_BINARY),
+                    rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php'),
+                    array($dir . '/cli/upgrade_database.php')
+                ),
+                array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+                $pipes
+            );
             $output = stream_get_contents($pipes[1]);
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[1]);
@@ -610,6 +618,7 @@ test('database upgrade reports rejected versions and completed migrations accura
                 ->and($output)->toContain($expectedOutput)
                 ->and($error)->toBe('')
                 ->and(file_exists($dir . '/schema-write'))->toBe($expectSchemaWrite);
+            rrd_cli_merge_coverage($this, $dir);
         } finally {
             rrd_cli_fixture_remove($dir);
         }
