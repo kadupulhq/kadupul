@@ -32,7 +32,7 @@ namespace DataSourceProfileMutationPostTest;
  * @param array<string, string> $request Other request variables.
  * @param array<string, string> $server  Request headers as $_SERVER keys.
  * @param array<int, string>    $real    Page functions to run as written.
- * @param array<string, array>  $usage   Profile id => Data Template and Data Source counts.
+ * @param array<string, array|false|string> $usage Profile id => usage counts, false, or exception sentinel.
  * @param array<string, int>    $rras    RRA id => the profile that owns it.
  *
  * @return string What the handlers printed, then the response code.
@@ -93,6 +93,13 @@ function run_profiles($method, $action, array $request = array(), array $server 
 			}
 
 			$u = isset($GLOBALS["usage"][$p[0]]) ? $GLOBALS["usage"][$p[0]] : array(0, 0);
+			if ($u === false) {
+				return false;
+			}
+
+			if ($u === "exception") {
+				throw new \\RuntimeException("usage lookup failed");
+			}
 
 			return strpos($s, "local_data_id > 0") !== false ? $u[1] : $u[0] + $u[1];
 		}
@@ -185,6 +192,17 @@ test('deleting profiles skips every profile a Data Template or a Data Source use
 
 	expect($output)->toContain('HANDLER:duplicate')
 		->and($output)->not->toContain('Refused');
+});
+
+test('profile deletion fails closed when a usage lookup fails', function () {
+	foreach (array(false, 'exception') as $failure) {
+		$output = run_profiles('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1'), array(), array('form_actions', 'profiles_not_in_use'), array('3' => $failure));
+
+		expect($output)->toContain('MESSAGE:profile_delete_failed')
+			->and($output)->not->toContain('EXEC:DELETE FROM data_source_profiles')
+			->and($output)->not->toContain('EXEC:DELETE FROM data_source_profiles_rra')
+			->and($output)->not->toContain('EXEC:DELETE FROM data_source_profiles_cf');
+	}
 });
 
 test('RRA removal refuses any GET, an RRA of another profile and a read only profile', function () {
