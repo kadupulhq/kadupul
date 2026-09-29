@@ -18,6 +18,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Audit both fresh installs and release-upgraded databases against the checked-in schema in CI. Fixes #452.
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed

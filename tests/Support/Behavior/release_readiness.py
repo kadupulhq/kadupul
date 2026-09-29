@@ -257,6 +257,8 @@ def main():
             actual_version = h.sql('SELECT cacti FROM version').strip()
             evidence['steps']['upgrade_attempt'] = {'command': upgrade, 'database_version': actual_version, 'source_version': checked(h.php('-r', 'echo file_get_contents("include/cacti_version");'), 'Source version')['stdout'].strip()}
             require(actual_version == (ROOT / 'include/cacti_version').read_text().strip(), 'Upgrade version mismatch: ' + actual_version)
+            from audit_schema_scenarios import assert_clean_schema_audit
+            evidence['steps']['upgrade_schema_audit'] = assert_clean_schema_audit(h, 'Upgraded database')
             require(rrd_manifest(h) == before_rrd, 'Upgrade modified RRD bytes')
             require(domain_state(h) == before_domain, 'Upgrade changed device, source, graph or plugin identities')
             require(h.sql("SELECT value FROM settings WHERE name='graph_watermark'").strip() == 'Operations custom watermark', 'Upgrade changed custom watermark')
