@@ -123,6 +123,7 @@ if (cacti_sizeof($parms)) {
 }
 
 print 'NOTE: ' . cacti_sizeof($plugins) . ' Plugins to be acted on.' . PHP_EOL;
+$exit_code = 0;
 
 if (cacti_sizeof($plugins)) {
 	foreach($plugins as $plugin) {
@@ -150,10 +151,13 @@ if (cacti_sizeof($plugins)) {
 
 								print "NOTE: Plugin $plugin enabled." . PHP_EOL;
 							}
-
+						} else {
+							print "ERROR: Plugin '$plugin' installation failed." . PHP_EOL;
+							$exit_code = 1;
 						}
 					} else {
-						print "WARNING: Plugin '$plugin' can not install.  Message is: $message" . PHP_EOL;
+						print "ERROR: Plugin '$plugin' can not install.  Message is: $message" . PHP_EOL;
+						$exit_code = 1;
 					}
 				} else {
 					$installed = true;
@@ -162,6 +166,7 @@ if (cacti_sizeof($plugins)) {
 				}
 			} else {
 				print "WARNING: Plugin '$plugin' missing plugin directory.  Plugin not installed" . PHP_EOL;
+				$exit_code = 1;
 			}
 
 			if ($installed && $allperms) {
@@ -185,6 +190,8 @@ if (cacti_sizeof($plugins)) {
 		}
 	}
 }
+
+exit($exit_code);
 
 function plugin_manage_install_allrealms($plugin) {
 	print "NOTE: Enabling Plugin '$plugin' permissions for administrative accounts" . PHP_EOL;
