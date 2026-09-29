@@ -236,6 +236,21 @@ test('a usage lookup that returns no number fails closed, and numeric strings ke
 		->and($used)->not->toContain('EXEC:DELETE');
 });
 
+test('profile heartbeat propagation joins on both local data and template identity', function () {
+	$output = run_profiles(
+		'POST',
+		'save',
+		array('save_component_profile' => '1', 'id' => '3', 'name' => 'p', 'heartbeat' => '900'),
+		array(),
+		array('form_save', 'profile_is_read_only', 'profile_refuse_read_only'),
+		array('3' => array(0, 1))
+	);
+
+	expect($output)->toContain('EXEC:UPDATE data_template_rrd AS dtr')
+		->and($output)->toContain('ON dtd.local_data_id = dtr.local_data_id AND dtd.data_template_id = dtr.data_template_id')
+		->and($output)->not->toContain('ON dtd.local_data_id = dtr.local_data_id SET');
+});
+
 test('RRA removal refuses any GET, an RRA of another profile and a read only profile', function () {
 	expect_refused('item_remove', array('id' => '7', 'profile_id' => '3'));
 
