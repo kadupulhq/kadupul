@@ -597,20 +597,21 @@ switch (get_nfilter_request_var('action')) {
         }
 
         $graph_list = array();
+        $graph_list_changed = isset_request_var('graph_list') || isset_request_var('graph_add') || isset_request_var('graph_remove');
 
         /* save selected graphs into url */
         if (!isempty_request_var('graph_list')) {
             foreach (explode(',', get_request_var('graph_list')) as $item) {
-                if (is_numeric($item)) {
-                    $graph_list[$item] = 1;
+                if (ctype_digit($item)) {
+                    $graph_list[(int) $item] = 1;
                 }
             }
         }
 
         if (!isempty_request_var('graph_add')) {
             foreach (explode(',', get_request_var('graph_add')) as $item) {
-                if (is_numeric($item)) {
-                    $graph_list[$item] = 1;
+                if (ctype_digit($item)) {
+                    $graph_list[(int) $item] = 1;
                 }
             }
         }
@@ -622,11 +623,23 @@ switch (get_nfilter_request_var('action')) {
             }
         }
 
-        /* update the revised graph list session variable */
-        if (cacti_sizeof($graph_list)) {
+        /* Keep invalid request data out of the request and session state. */
+        if ($graph_list_changed) {
             set_request_var('graph_list', implode(',', array_keys($graph_list)));
         }
         load_current_session_value('graph_list', 'sess_gl_graph_list', '');
+
+        /* Older sessions may contain graph_list values from before validation. */
+        $graph_list = array();
+        foreach (explode(',', (string) get_request_var('graph_list')) as $item) {
+            if (ctype_digit($item)) {
+                $graph_list[(int) $item] = 1;
+            }
+        }
+
+        $normalized_graph_list = implode(',', array_keys($graph_list));
+        set_request_var('graph_list', $normalized_graph_list);
+        $_SESSION['sess_gl_graph_list'] = $normalized_graph_list;
 
         $reports = db_fetch_assoc_prepared(
             'SELECT *
@@ -743,7 +756,7 @@ switch (get_nfilter_request_var('action')) {
 			<input type='hidden' id='action' value='list'>
 			<input type='hidden' id='graph_add' value=''>
 			<input type='hidden' id='graph_remove' value=''>
-			<input type='hidden' id='graph_list' value='<?php print get_request_var('graph_list');?>'>
+			<input type='hidden' id='graph_list' value='<?php print html_escape(get_request_var('graph_list'));?>'>
 		</td>
 	</tr>
 	<?php
@@ -995,7 +1008,8 @@ switch (get_nfilter_request_var('action')) {
 				}
 			});
 
-			strURL = '&demon=1&graph_list=<?php print get_request_var('graph_list');?>&graph_add=' + strAdd + '&graph_remove=' + strDel;
+			var graphList = <?php print json_encode(get_request_var('graph_list'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+			strURL = '&demon=1&graph_list=' + encodeURIComponent(graphList) + '&graph_add=' + strAdd + '&graph_remove=' + strDel;
 
 			return strNavURL + strURL;
 		} else {
