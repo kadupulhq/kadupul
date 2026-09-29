@@ -410,10 +410,14 @@ if ($config['is_web']) {
         $is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && strtolower($_SERVER['HTTPS']) !== 'off');
 
         if (!$is_https) {
-            $https_redirect = cacti_force_https_redirect_url();
+            $https_redirect = cacti_build_https_redirect_url(
+                $_SERVER['SERVER_NAME'] ?? '',
+                $_SERVER['REQUEST_URI'] ?? '',
+                $config['url_path']
+            );
 
-            if ($https_redirect === null) {
-                header('HTTP/1.1 400 Bad Request');
+            if ($https_redirect === '') {
+                http_response_code(400);
                 exit;
             }
 

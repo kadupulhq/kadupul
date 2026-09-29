@@ -6,46 +6,35 @@
  */
 
 $root = dirname(__DIR__, 2);
+$globalSource = file_get_contents($root . '/include/global.php');
 require_once $root . '/lib/functions.php';
 require_once $root . '/lib/html_utility.php';
 
 test('forced HTTPS redirect uses the configured server name instead of the Host header', function () {
-    $originalServer = $_SERVER;
+    expect(cacti_build_https_redirect_url('kadupul.example', '/cacti/host.php?id=12'))
+        ->toBe('https://kadupul.example/cacti/host.php?id=12');
+});
 
-    try {
-        $_SERVER['SERVER_NAME'] = 'kadupul.example';
-        $_SERVER['HTTP_HOST'] = 'attacker.example';
-        $_SERVER['REQUEST_URI'] = '/cacti/host.php?id=12';
+test('forced HTTPS redirect passes SERVER_NAME, not HTTP_HOST, to its URL builder', function () use ($globalSource) {
+    $start = strpos($globalSource, 'cacti_build_https_redirect_url(');
+    expect($start)->not->toBeFalse();
 
-        expect(cacti_force_https_redirect_url())->toBe('https://kadupul.example/cacti/host.php?id=12');
-    } finally {
-        $_SERVER = $originalServer;
-    }
+    $fragment = substr($globalSource, $start, 200);
+    expect($fragment)->toContain("\$_SERVER['SERVER_NAME']");
+    expect($fragment)->not->toContain("\$_SERVER['HTTP_HOST']");
 });
 
 test('forced HTTPS redirect rejects an invalid configured authority', function () {
-    $originalServer = $_SERVER;
-
-    try {
-        $_SERVER['SERVER_NAME'] = "kadupul.example\r\nLocation: https://attacker.example";
-        $_SERVER['REQUEST_URI'] = '/cacti/';
-
-        expect(cacti_force_https_redirect_url())->toBeNull();
-    } finally {
-        $_SERVER = $originalServer;
-    }
+    expect(cacti_build_https_redirect_url("kadupul.example\r\nLocation: https://attacker.example", '/cacti/'))
+        ->toBe('');
 });
 
 test('forced HTTPS redirect keeps request targets local', function () {
-    $originalServer = $_SERVER;
+    expect(cacti_build_https_redirect_url('kadupul.example', '//attacker.example/path', '/cacti/'))
+        ->toBe('https://kadupul.example/cacti/');
+});
 
-    try {
-        $_SERVER['SERVER_NAME'] = 'kadupul.example';
-        $_SERVER['HTTP_HOST'] = 'attacker.example';
-        $_SERVER['REQUEST_URI'] = '//attacker.example/path';
-
-        expect(cacti_force_https_redirect_url())->toBe('https://kadupul.example/');
-    } finally {
-        $_SERVER = $originalServer;
-    }
+test('forced HTTPS redirect brackets IPv6 server names', function () {
+    expect(cacti_build_https_redirect_url('2001:db8::1', '/cacti/'))
+        ->toBe('https://[2001:db8::1]/cacti/');
 });

@@ -1155,30 +1155,32 @@ function validate_redirect_url($url = '', $default = 'index.php')
 /**
  * Build the HTTPS redirect from the server-configured name and a local URI.
  *
- * @return string|null The HTTPS URL, or null if the server name is unusable
+ * @param string $server_name  The web server's configured name
+ * @param string $request_uri  The requested local path and query string
+ * @param string $default_path The local fallback when the request URI is invalid
+ *
+ * @psalm-taint-escape header
+ *
+ * @return string The HTTPS URL, or an empty string if the server name is unusable
  */
-function cacti_force_https_redirect_url()
+function cacti_build_https_redirect_url(string $server_name, string $request_uri, string $default_path = '/'): string
 {
-    $server_name = $_SERVER['SERVER_NAME'] ?? '';
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $server_name = trim($server_name);
+    $host        = trim($server_name, '[]');
 
-    if (!is_string($server_name) || $server_name === '' || trim($server_name) !== $server_name || preg_match('/[\x00-\x20\x7f\\\\\/?#@]/', $server_name)) {
-        return null;
+    if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+        $host = '[' . $host . ']';
+    } elseif (
+        filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false &&
+        filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false
+    ) {
+        return '';
     }
 
-    $authority = parse_url('https://' . $server_name);
+    $path = validate_redirect_url($request_uri, $default_path);
+    $path = '/' . ltrim($path, '/');
 
-    if ($authority === false || !isset($authority['host']) || isset($authority['user']) || isset($authority['pass']) || isset($authority['path']) || isset($authority['query']) || isset($authority['fragment'])) {
-        return null;
-    }
-
-    $local_uri = validate_redirect_url(is_string($request_uri) ? $request_uri : '', '/');
-
-    if ($local_uri === '' || $local_uri[0] !== '/') {
-        return null;
-    }
-
-    return 'https://' . $server_name . $local_uri;
+    return 'https://' . $host . $path;
 }
 
 /**
