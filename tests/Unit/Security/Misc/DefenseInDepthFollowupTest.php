@@ -68,7 +68,10 @@ test('index.php uses cacti_path_is_within for include path validation', function
 // --- script_server.php uses cacti_path_is_within ---
 
 test('script_server.php validates includes against its allowed roots', function () use ($ssSource) {
-	expect($ssSource)->toContain('script_server_path_is_allowed($real_include, $allowed_roots)');
+	expect($ssSource)->toContain('$config[\'base_path\'] . DIRECTORY_SEPARATOR . \'scripts\'')
+		->and($ssSource)->toContain('script_server_path_is_allowed($real_include, $allowed_roots)')
+		->and($ssSource)->toContain('$fn_real === $include_cmp')
+		->and($ssSource)->toContain('if (!is_file($include_file))');
 });
 
 // --- link.php uses cacti_path_is_within ---
