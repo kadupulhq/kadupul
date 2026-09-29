@@ -115,8 +115,12 @@ AUDIT_CASES = [
     (EXPORT_FAILS, ['--load'], 'dump denied'),
     ('audit load without a docs directory', ['--load'], 'no docs'),
     ('audit report with the audit schema missing', ['--report'], 'no dump'),
+    ('audit alters with the audit schema missing', ['--alters'], 'no dump'),
+    ('audit repair with the audit schema missing', ['--repair'], 'no dump'),
     ('audit create with the audit schema missing', ['--create'], 'no dump'),
     (UNPARSED, ['--report'], 'unparsable'),
+    ('audit alters with an unparsable audit schema', ['--alters'], 'unparsable'),
+    ('audit repair with an unparsable audit schema', ['--repair'], 'unparsable'),
     ('audit report when table_columns cannot be created', ['--report'], 'create denied'),
     ('audit upgrade required', ['--report'], 'behind'),
     ('audit upgrade from the previous version', ['--upgrade', '--create'], 'behind'),
@@ -286,6 +290,24 @@ def verify_audit_cases(harness, check, tables, version):
             # What the previous run left in docs/, before it is put back.
             dumps.append(dump_file(h))
             reset(h, state, tables, version)
+
+        if state in ('no dump', 'unparsable') and arguments[0] in ('--report', '--alters', '--repair', '--create'):
+            # These are intentionally no longer parity cases: a missing or
+            # invalid canonical baseline must fail closed instead of reporting
+            # unknown tables as a clean audit or entering repair.
+            starting(harness)
+            before = schema(harness)
+            shim = run(harness, AUDIT_SHIM, arguments)
+            expected_exit = 0 if arguments[0] == '--create' else 1
+            check(shim['exit'] == expected_exit and 'FATAL:' in shim['stdout']
+                  and 'Audit stopped because the canonical schema could not be loaded.' in shim['stdout']
+                  and 'Checking Table:' not in shim['stdout']
+                  and 'Scanning Table:' not in shim['stdout']
+                  and 'Audit was clean' not in shim['stdout']
+                  and 'Executing Alter for Table :' not in shim['stdout'],
+                  f'{label}: invalid canonical baseline stops the command with a failure')
+            check(schema(harness) == before, f'{label}: invalid canonical baseline changes no database state')
+            continue
 
         unparsed = label == UNPARSED
         stdout = (lambda text: LOAD_ERROR.sub('ERROR: <load error>', masked(text), count=1)) if unparsed else masked

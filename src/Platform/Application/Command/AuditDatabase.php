@@ -89,7 +89,7 @@ final readonly class AuditDatabase
     private function audit(AuditRun $run, AuditMode $mode): AuditReport
     {
         [$outcome, $baseline, $line, $uncreated] = $this->loadBaseline($run);
-        if ($mode === AuditMode::Create || $outcome === BaselineOutcome::CreateFailed) {
+        if ($mode === AuditMode::Create || in_array($outcome, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed, BaselineOutcome::CreateFailed], true)) {
             return $run->report($mode, $outcome, $line, uncreated: $uncreated);
         }
         $catalog = $this->schema->catalog($run->scope->target);
@@ -149,13 +149,13 @@ final readonly class AuditDatabase
             !$run->apply => BaselineOutcome::Planned,
             default => null,
         };
-        if ($run->apply) {
+        if ($run->apply && $outcome === null) {
             $uncreated = $this->reset($run);
             if ($uncreated !== null) {
                 $outcome = BaselineOutcome::CreateFailed;
-            } elseif ($outcome === null) {
+            } else {
                 // Only a file that parsed reloads the two tables; a missing or
-                // unparsable one leaves them as the reset did, and says so.
+                // unparsable one must not reset the existing baseline tables.
                 $loaded = $this->baseline->replace($run->scope->target, $baseline);
                 $this->auditBaseline($run, $loaded);
                 $outcome = $loaded ? BaselineOutcome::Loaded : BaselineOutcome::LoadFailed;

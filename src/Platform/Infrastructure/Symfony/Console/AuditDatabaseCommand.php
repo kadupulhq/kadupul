@@ -103,8 +103,13 @@ final readonly class AuditDatabaseCommand
             ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->write($stderr, false, OutputInterface::OUTPUT_RAW);
         }
         $lines = $legacy->report($report, $alters, $report->outcome === AuditOutcome::NoMode ? $this->version->line(self::UTILITY) : '');
-        // Exit 1 only for a missing or failed upgrade; "Failed to create" ended without a newline.
-        $exit = in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) ? Command::FAILURE : Command::SUCCESS;
+        // Baseline and export failures must not look like a successful audit.
+        // Preserve the old no-newline output for "Failed to create".
+        $baselineFailed = in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)
+            && $report->mode !== AuditMode::Create;
+        $exit = in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) || $baselineFailed
+            ? Command::FAILURE
+            : Command::SUCCESS;
 
         return $this->renderer->render(new CommandResult([], $lines, $exit, $report->baseline !== BaselineOutcome::CreateFailed), OutputMode::Legacy, $output);
     }
@@ -156,6 +161,9 @@ final readonly class AuditDatabaseCommand
     {
         if ($report->baseline === BaselineOutcome::CreateFailed) {
             return 'Could not create the ' . $report->uncreated . ' table';
+        }
+        if (in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)) {
+            return 'Audit stopped because the canonical schema could not be loaded';
         }
 
         return match ($report->mode) {

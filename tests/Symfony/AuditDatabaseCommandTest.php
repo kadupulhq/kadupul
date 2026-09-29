@@ -160,6 +160,48 @@ final class AuditDatabaseCommandTest extends TestCase
         ]) . "\n", $tester->getDisplay());
     }
 
+    public function testLegacyAuditStopsWhenTheCanonicalBaselineCannotBeLoaded(): void
+    {
+        foreach (['missing', 'unparsable', 'reload'] as $failure) {
+            foreach ([['--report' => true], ['--repair' => true], ['--alters' => true]] as $arguments) {
+                $this->presentation->forLegacy(LegacyRequest::Run);
+                $tester = $this->tester(null, $this->failedBaselineStore($failure));
+
+                self::assertSame(1, $tester->execute($arguments), $failure . ' baseline should fail the legacy command');
+                self::assertStringContainsString('FATAL:', $tester->getDisplay());
+                self::assertStringContainsString('Audit stopped because the canonical schema could not be loaded.', $tester->getDisplay());
+                self::assertStringNotContainsString('Checking Table:', $tester->getDisplay());
+                self::assertStringNotContainsString('Audit was clean', $tester->getDisplay());
+            }
+        }
+    }
+
+    private function failedBaselineStore(string $failure): AuditBaselineStore
+    {
+        $store = $this->createMock(AuditBaselineStore::class);
+        $store->expects(self::once())->method('read')->willReturnCallback(static function () use ($failure): ?AuditBaseline {
+            if ($failure === 'missing') {
+                return null;
+            }
+            if ($failure === 'unparsable') {
+                throw new \Kadupul\Platform\Domain\Schema\InvalidAuditSchema(8);
+            }
+
+            return new AuditBaseline([
+                new BaselineColumn('host', 1, 'ping', 'int(10) unsigned', 'NO', '', '400', ''),
+                new BaselineColumn('settings', 1, 'name', 'varchar(75)', 'NO', 'PRI', '', ''),
+            ], []);
+        });
+        $store->method('reset')->willReturn(null);
+        if ($failure === 'reload') {
+            $store->expects(self::once())->method('replace')->willReturn(false);
+        } else {
+            $store->expects(self::never())->method('replace');
+        }
+
+        return $store;
+    }
+
     public function testLegacyRepairPrintsAFailureWithTheOriginalText(): void
     {
         $this->presentation->forLegacy(LegacyRequest::Run);

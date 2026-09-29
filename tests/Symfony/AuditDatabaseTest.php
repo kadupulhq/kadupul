@@ -176,37 +176,40 @@ final class AuditDatabaseTest extends TestCase
         self::assertSame([], $this->events);
     }
 
-    public function testAMissingFileAuditsAgainstAnEmptyBaseline(): void
+    public function testAMissingFileStopsBeforeTheSchemaIsAudited(): void
     {
         $store = $this->createMock(AuditBaselineStore::class);
         $store->method('read')->willReturn(null);
-        $store->expects(self::once())->method('reset')->willReturn(null);
+        $store->expects(self::never())->method('reset');
         $store->expects(self::never())->method('replace');
+        $schema = $this->schema();
 
-        $report = $this->audit($this->schema(), $store)(AuditMode::Report, false, null, true);
+        $report = $this->audit($schema, $store)(AuditMode::Report, false, null, true);
 
         self::assertSame(BaselineOutcome::FileMissing, $report->baseline);
-        self::assertSame(['unknown', 'unknown'], array_map(static fn($table): string => $table->status->value, $report->tables));
+        self::assertSame([], $report->tables);
+        self::assertSame(1, $report->failed());
+        self::assertSame([], $this->events());
     }
 
-    /** The reset ran and is recorded; the reload did not, so no table event claims it did. */
-    public function testAMissingOrUnparsableFileRecordsOnlyTheReset(): void
+    /** Invalid source baselines leave existing audit metadata untouched. */
+    public function testAMissingOrUnparsableFileDoesNotResetTheAuditTables(): void
     {
         foreach ([null, new InvalidAuditSchema(3)] as $problem) {
             $this->events = [];
             $store = $this->createMock(AuditBaselineStore::class);
             $problem === null ? $store->method('read')->willReturn(null) : $store->method('read')->willThrowException($problem);
-            $store->method('reset')->willReturn(null);
+            $store->expects(self::never())->method('reset');
             $store->expects(self::never())->method('replace');
 
             $report = $this->audit($this->schema(), $store)(AuditMode::Repair, false, null, true);
 
-            self::assertSame([['database.audit', 'database-maintenance local:audit-schema-reset', 'succeeded']], $this->events());
+            self::assertSame([], $this->events());
             self::assertSame(1, $report->failed());
         }
     }
 
-    public function testAFailedReloadAuditsAgainstAnEmptyBaselineAndFails(): void
+    public function testAFailedReloadStopsBeforeTheSchemaIsAudited(): void
     {
         $store = $this->store();
         $store->method('reset')->willReturn(null);
@@ -217,8 +220,7 @@ final class AuditDatabaseTest extends TestCase
         $report = $this->audit($schema, $store)(AuditMode::Report, false, null, true);
 
         self::assertSame(BaselineOutcome::LoadFailed, $report->baseline);
-        // An empty table_columns lists no table, as the script's failed load left it.
-        self::assertSame(['unknown', 'unknown'], array_map(static fn($table): string => $table->status->value, $report->tables));
+        self::assertSame([], $report->tables);
         self::assertSame(1, $report->failed());
         self::assertSame([
             ['database.audit', 'database-maintenance local:audit-schema-reset', 'succeeded'],
