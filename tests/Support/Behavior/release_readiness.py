@@ -48,7 +48,7 @@ ksort($r); echo json_encode($r);'''
 def domain_state(h):
     return {table: h.sql('SELECT * FROM ' + table + ' ORDER BY ' + key)
             for table, key in [('host', 'id'), ('data_local', 'id'), ('graph_local', 'id'),
-                               ('plugin_config', 'id'), ('plugin_hooks', 'id')]}
+                               ('aggregate_graphs', 'id'), ('plugin_config', 'id'), ('plugin_hooks', 'id')]}
 
 
 def authenticate(h):
@@ -220,6 +220,7 @@ def main():
             h.sql("REPLACE INTO settings(name,value) VALUES ('graph_watermark','Operations custom watermark');")
             # Include a real nested RRD so the rehearsal exercises structured paths.
             checked(h.php('-r', '$files=glob("rra/*.rrd"); if (!$files || !mkdir("rra/structured") || !copy($files[0], "rra/structured/fixture.rrd")) {exit(1);}'), 'Structured RRD fixture')
+            h.sql("INSERT INTO aggregate_graphs(aggregate_template_id,template_propogation,local_graph_id,title_format,graph_template_id,gprint_prefix,gprint_format,graph_type,total,total_type,total_prefix,order_type,created,user_id) VALUES (1,'',1,'migration-fixture',1,'','',0,0,0,'',0,'2001-01-01 00:00:00',1)")
             before_rrd = rrd_manifest(h)
             require(len(before_rrd) == 6 and 'structured/fixture.rrd' in before_rrd, 'Expected six RRD snapshot members including the structured fixture')
             before_domain = domain_state(h)

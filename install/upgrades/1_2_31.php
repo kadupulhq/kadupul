@@ -30,6 +30,13 @@ function upgrade_to_1_2_31()
         db_install_execute('ALTER TABLE user_auth_row_cache ADD INDEX class_time (class, time)');
     }
 
+    if (!db_index_exists('data_input_data', 'data_input_field_id')) {
+        db_install_execute('ALTER TABLE data_input_data ADD INDEX data_input_field_id (data_input_field_id)');
+    }
+
+    // Older MySQL and MariaDB schemas may have implicitly enabled ON UPDATE for this TIMESTAMP.
+    db_install_execute('ALTER TABLE aggregate_graphs MODIFY COLUMN created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+
     /* Samples RRDtool keeps refusing are moved here instead of growing the queue. */
     db_install_execute('CREATE TABLE IF NOT EXISTS poller_output_rejected (
 		local_data_id int(10) unsigned NOT NULL default "0",
