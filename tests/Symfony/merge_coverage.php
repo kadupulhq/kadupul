@@ -100,7 +100,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'remote collector preserves four-byte Unicode notes',
         'SHA384 is preserved without mapping to an invalid protocol',
         'script server answers valid calls and refuses invalid ones with U',
-        'script server refuses includes outside the base path',
+        'script server refuses includes outside the scripts directory',
         'script server never dispatches PHP internals',
         'script server answers 404 over HTTP',
         'theme hash builder leaves CSS unchanged over HTTP',
