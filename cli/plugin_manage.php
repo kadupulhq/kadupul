@@ -123,6 +123,7 @@ if (cacti_sizeof($parms)) {
 }
 
 print 'NOTE: ' . cacti_sizeof($plugins) . ' Plugins to be acted on.' . PHP_EOL;
+$exit_code = 0;
 
 if (cacti_sizeof($plugins)) {
 	foreach($plugins as $plugin) {
@@ -165,7 +166,9 @@ if (cacti_sizeof($plugins)) {
 			}
 
 			if ($installed && $allperms) {
-				plugin_manage_install_allrealms($plugin);
+				if (!plugin_manage_install_allrealms($plugin)) {
+					$exit_code = 1;
+				}
 			}
 		} elseif ($uninstall || $disable || $enable) {
 			if ($disable) {
@@ -186,17 +189,66 @@ if (cacti_sizeof($plugins)) {
 	}
 }
 
+exit($exit_code);
+
 function plugin_manage_install_allrealms($plugin) {
-	print "NOTE: Enabling Plugin '$plugin' permissions for administrative accounts" . PHP_EOL;
+	$admin_user = read_config_option('admin_user');
+
+	if (!is_numeric($admin_user) || (int) $admin_user < 1) {
+		print "ERROR: Could not grant Plugin '$plugin' permissions: configured administrator is invalid." . PHP_EOL;
+
+		return false;
+	}
+
+	$admin = db_fetch_row_prepared('SELECT id
+		FROM user_auth
+		WHERE id = ?',
+		array((int) $admin_user));
+
+	if (empty($admin['id'])) {
+		print "ERROR: Could not grant Plugin '$plugin' permissions: configured administrator was not found." . PHP_EOL;
+
+		return false;
+	}
 
 	$realms = db_fetch_assoc_prepared('SELECT *
 		FROM plugin_realms
 		WHERE plugin = ?',
 		array($plugin));
 
+	$success = true;
+
 	foreach($realms as $realm) {
-		api_plugin_register_realm($plugin, $realm['file'], $realm['display'], 1);
+		$realm_id = (int) $realm['id'] + 100;
+		$granted = db_execute_prepared('REPLACE INTO user_auth_realm
+			(user_id, realm_id)
+			VALUES (?, ?)',
+			array((int) $admin_user, $realm_id));
+
+		if (!$granted) {
+			print "ERROR: Could not grant Plugin '$plugin' permission for realm {$realm['id']}." . PHP_EOL;
+			$success = false;
+
+			continue;
+		}
+
+		$verified = db_fetch_cell_prepared('SELECT 1
+			FROM user_auth_realm
+			WHERE user_id = ?
+			AND realm_id = ?',
+			array((int) $admin_user, $realm_id));
+
+		if (!$verified) {
+			print "ERROR: Could not verify Plugin '$plugin' permission for realm {$realm['id']}." . PHP_EOL;
+			$success = false;
+		}
 	}
+
+	if ($success) {
+		print "NOTE: Enabled Plugin '$plugin' permissions for the configured administrator." . PHP_EOL;
+	}
+
+	return $success;
 }
 
 /**
