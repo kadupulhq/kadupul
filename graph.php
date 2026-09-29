@@ -8,6 +8,7 @@
 $guest_account = true;
 include('./include/auth.php');
 include_once('./lib/rrd.php');
+include_once('./lib/graph_zoom.php');
 
 /* set default action */
 set_default_action('view');
@@ -277,12 +278,6 @@ switch (get_request_var('action')) {
     case 'zoom':
         $graph_no_data_message = __('This Graph has no stored data to zoom into.');
 
-        if (!cacti_sizeof($rras)) {
-            raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
-            cacti_header('graph_view.php');
-            exit;
-        }
-
         /* find the maximum time span a graph can show */
         $max_timespan = 1;
         if (cacti_sizeof($rras)) {
@@ -293,36 +288,24 @@ switch (get_request_var('action')) {
             }
         }
 
+
         /* fetch information for the current RRA */
-        if (isset_request_var('rra_id') && get_request_var('rra_id') > 0) {
-            $rra = db_fetch_row_prepared('SELECT dspr.id, step, steps, dspr.name, `rows`
+        $rra = graph_zoom_resolve_rra(
+            $rras,
+            get_request_var('rra_id'),
+            static function ($selected_rra_id) {
+                return db_fetch_row_prepared('SELECT dspr.id, step, steps, dspr.name, `rows`
 			FROM data_source_profiles_rra AS dspr
 			INNER JOIN data_source_profiles AS dsp
 			ON dsp.id=dspr.data_source_profile_id
-			WHERE dspr.id = ?', array(get_request_var('rra_id')));
-
-            if (!cacti_sizeof($rra)) {
+			WHERE dspr.id = ?', array($selected_rra_id));
+            },
+            static function () use ($graph_no_data_message) {
                 raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
                 cacti_header('graph_view.php');
                 exit;
             }
-
-            $rra['timespan'] = $rra['steps'] * $rra['step'] * $rra['rows'];
-        } else {
-            $rra = db_fetch_row_prepared('SELECT dspr.id, step, steps, dspr.name, `rows`
-			FROM data_source_profiles_rra AS dspr
-			INNER JOIN data_source_profiles AS dsp
-			ON dsp.id=dspr.data_source_profile_id
-			WHERE dspr.id = ?', array($rras[0]['id']));
-
-            if (!cacti_sizeof($rra)) {
-                raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
-                cacti_header('graph_view.php');
-                exit;
-            }
-
-            $rra['timespan'] = $rra['steps'] * $rra['step'] * $rra['rows'];
-        }
+        );
 
         /* define the time span, which decides which rra to use */
         $timespan = -($rra['timespan']);
