@@ -1515,8 +1515,10 @@ function form_start($action, $id = '', $multipart = false)
     }
 
     $form_action = $action;
+    $form_id_attribute = cacti_html_context_escape($form_id, CACTI_ESC_ATTR);
+    $form_action_attribute = cacti_html_context_escape($form_action, CACTI_ESC_ATTR);
 
-    print "<form class='cactiFormStart' id='$form_id' name='$form_id' action='$form_action' autocomplete='off' method='post'" . ($multipart ? " enctype='multipart/form-data'" : '') . ">";
+    print "<form class='cactiFormStart' id='$form_id_attribute' name='$form_id_attribute' action='$form_action_attribute' autocomplete='off' method='post'" . ($multipart ? " enctype='multipart/form-data'" : '') . ">";
 }
 
 /**
@@ -1529,6 +1531,8 @@ function form_start($action, $id = '', $multipart = false)
 function form_end($ajax = true)
 {
     global $form_id, $form_action;
+    $form_id_js = cacti_html_context_escape($form_id, CACTI_ESC_JS_STRING);
+    $form_action_js = cacti_html_context_escape($form_action, CACTI_ESC_JS_STRING);
 
     print '</form>' . PHP_EOL;
 
@@ -1593,16 +1597,21 @@ function form_end($ajax = true)
 		}
 
 		$(function() {
-			formArray['<?php print $form_id;?>'] = $('#<?php print $form_id;?>').serializeForm();
+			var formElement = document.getElementById('<?php print $form_id_js;?>');
+			if (!formElement) {
+				return;
+			}
+
+			formArray['<?php print $form_id_js;?>'] = $(formElement).serializeForm();
 			changed = false;
 
-			$('#<?php print $form_id;?>').on('submit', function(event) {
+			$(formElement).on('submit', function(event) {
 				event.preventDefault();
 
 				// Enable the form if it's disabled
 				$(this).find('input, textarea, select').prop('disabled', false);
 
-				strURL  = '<?php print $form_action;?>';
+				strURL  = '<?php print $form_action_js;?>';
 				strURL += (strURL.indexOf('?') >= 0 ? '&':'?') + 'header=false';
 
 				json =  $(this).serializeObject();
