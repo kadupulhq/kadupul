@@ -2045,9 +2045,51 @@ function array_minus($big_array, $small_array)
     return $big_array;
 }
 
+/**
+ * Apply a case-insensitive tree automation replacement with bounded PCRE work.
+ *
+ * @param string $search  The saved regular expression
+ * @param string $replace The replacement text
+ * @param string $target  The device or template field value to process
+ *
+ * @return array The replacement split on escaped newlines, or an empty array
+ *               when the expression is invalid or exceeds its match budget
+ */
 function automation_string_replace($search, $replace, $target)
 {
-    $repl = preg_replace('/' . $search . '/i', $replace, $target);
+    $search = (string) $search;
+    $replace = (string) $replace;
+    $target = (string) $target;
+    $delimiter = null;
+
+    foreach (array('~', '#', '%', '!', '@', ';', '`', '=', '_', '/') as $candidate) {
+        if (strpos($search, $candidate) === false) {
+            $delimiter = $candidate;
+
+            break;
+        }
+    }
+
+    if ($delimiter === null) {
+        return array();
+    }
+
+    /*
+     * A short nested-quantifier pattern can take exponential time on a
+     * near-match. Keep each tree header replacement within a fixed PCRE budget;
+     * PCRE2 permits this directive to lower, but not raise, the runtime limit.
+     */
+    $pattern = $delimiter . '(*LIMIT_MATCH=10000)' . $search . $delimiter . 'i';
+    $repl = @preg_replace($pattern, $replace, $target);
+
+    if ($repl === null || preg_last_error() !== PREG_NO_ERROR) {
+        if (function_exists('cacti_log')) {
+            cacti_log('WARNING: Tree automation regex failed or exceeded its match limit.', false, 'AUTOM8');
+        }
+
+        return array();
+    }
+
     return preg_split('/\\\\n/', $repl, -1, PREG_SPLIT_NO_EMPTY);
 }
 
