@@ -1139,9 +1139,9 @@ function reportNetworkStatus($network_id, $old_devices)
 
             foreach ($new_devices as $device) {
                 $id = $device['ip'];
-                $html_line = '<tr><td>' . $device['hostname'] .
-                    '</td><td>' . $device['ip'] .
-                    '</td><td>' . (empty($device['sysName']) ? '<i><u>None</u></i>' : $device['sysName']) .
+                $html_line = '<tr><td>' . html_escape($device['hostname']) .
+                    '</td><td>' . html_escape($device['ip']) .
+                    '</td><td>' . (empty($device['sysName']) ? '<i><u>None</u></i>' : html_escape($device['sysName'])) .
                     '</td><td>' . ($device['snmp'] ? $font_up : $font_down) .
                     '</td><td>' . ($device['up'] ? $font_up : $font_down) .
                     '</td></tr>';
@@ -1184,10 +1184,10 @@ function reportNetworkStatus($network_id, $old_devices)
             }
 
             $subject = 'Discovery of ' . $network['name'] . ' (' . $network['subnet_range'] . ') - ' . $status;
-            $output = '<h1>Discovery of ' . $network['name'] . '</h1><hr><br>' .
+            $output = '<h1>Discovery of ' . html_escape($network['name']) . '</h1><hr><br>' .
                 '<h2>Summary</h2><table>' .
-                '<tr><td>Network:</td><td>' . $network['subnet_range'] . '</td></tr>' .
-                '<tr><td>Started:</td><td>' . $network['last_started'] . '</td></tr>' .
+                '<tr><td>Network:</td><td>' . html_escape($network['subnet_range']) . '</td></tr>' .
+                '<tr><td>Started:</td><td>' . html_escape($network['last_started']) . '</td></tr>' .
                 '<tr><td>Duration:</td><td>' . intval($network['last_runtime']) . '</td></tr>' .
                 '<tr><td>Existing:</td><td>' . $count_exist . ' devices</td></tr>' .
                 '<tr><td>New:</td><td>' . $count_new . ' devices</td></tr>' .
