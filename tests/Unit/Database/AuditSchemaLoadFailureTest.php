@@ -75,7 +75,11 @@ SH);
                     'AUDIT_TEST_LOAD_FAIL' => $baseline === 'failed' ? '1' : '0',
                 ]);
                 $process = proc_open(
-                    [PHP_BINARY, $directory . '/cli/audit_database.php', $option],
+                    array_merge(
+                        [PHP_BINARY],
+                        $this->coverageArguments($root, $directory),
+                        [$directory . '/cli/audit_database.php', $option],
+                    ),
                     [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
                     $pipes,
                     $directory,
@@ -87,6 +91,7 @@ SH);
                 fclose($pipes[1]);
                 fclose($pipes[2]);
                 $status = proc_close($process);
+                $this->mergeChildCoverage($directory);
 
                 self::assertSame($expectedStatus, $status, $name . ': ' . $output . $error);
                 if ($expectedStatus !== 0) {
@@ -105,6 +110,39 @@ SH);
                 $this->removeTree($directory);
             }
         }
+    }
+
+    /** Collect coverage from the copied CLI when the parent run enables PCOV. */
+    private function coverageArguments(string $root, string $directory): array
+    {
+        if ($this->getTestResultObject()->getCodeCoverage() === null) {
+            return [];
+        }
+
+        $cliCopy = $directory . '/cli/audit_database.php';
+        $bootstrap = '<?php define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__);'
+            . 'define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($cliCopy, true) . ');'
+            . 'define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export($root . '/cli/audit_database.php', true) . ');'
+            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+        file_put_contents($directory . '/coverage.php', $bootstrap);
+
+        return ['-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'auto_prepend_file=' . $directory . '/coverage.php'];
+    }
+
+    /** Merge coverage for one CLI invocation into PHPUnit's active report. */
+    private function mergeChildCoverage(string $directory): void
+    {
+        $parent = $this->getTestResultObject()->getCodeCoverage();
+        if ($parent === null || !is_file($directory . '/coverage.php')) {
+            return;
+        }
+
+        $reports = glob($directory . '/*.coverage');
+        self::assertCount(1, $reports);
+        // Only the child process can write inside this private temporary directory.
+        $child = unserialize((string) file_get_contents($reports[0]));
+        self::assertInstanceOf(\SebastianBergmann\CodeCoverage\CodeCoverage::class, $child);
+        $parent->merge($child);
     }
 
     private function removeTree(string $path): void
