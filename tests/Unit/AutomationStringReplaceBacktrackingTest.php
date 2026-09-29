@@ -17,6 +17,11 @@ test('tree automation supports a delimiter present in the expression', function 
         ->toBe(array('disk'));
 });
 
+test('tree automation can select a delimiter when common delimiters are present', function () {
+    expect(automation_string_replace('^[~#%!@;`=/_]+$', 'matched', '~#%!@;`=/_'))
+        ->toBe(array('matched'));
+});
+
 test('tree automation stops catastrophic near-match backtracking', function () {
     $started = microtime(true);
     $result = automation_string_replace('^(a+)+$', 'matched', str_repeat('a', 255) . '!');

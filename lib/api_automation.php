@@ -2071,7 +2071,11 @@ function automation_string_replace($search, $replace, $target)
     }
 
     if ($delimiter === null) {
-        return array();
+        $delimiter = chr(127);
+
+        if (strpos($search, $delimiter) !== false) {
+            return array();
+        }
     }
 
     /*
