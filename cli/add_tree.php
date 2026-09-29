@@ -27,12 +27,12 @@ if (cacti_sizeof($parms)) {
     $sortMethod = 'alpha'; # manual, alpha, natural, numeric
     $parentNode = 0;   # When creating a node, the parent node of this node (or zero for root-node)
     $treeId     = 0;   # When creating a node, it has to go in a tree
-    $nodeType   = '';  # Should be 'header', 'graph' or 'host' when creating a node
+    $nodeType   = '';  # Should be 'header', 'graph', 'host' or 'site' when creating a node
     $graphId    = 0;   # The ID of the graph to add (gets added to parentNode)
     $siteId     = 0;   # The ID of the site to add
 
     $sortMethods = array('manual' => 1, 'alpha' => 2, 'natural' => 4, 'numeric' => 3);
-    $nodeTypes   = array('header' => 1, 'graph' => 2, 'host' => 3);
+    $nodeTypes   = array('header' => 1, 'graph' => 2, 'host' => 3, 'site' => 4);
 
     $hostId         = 0;
     $hostGroupStyle = 1; # 1 = Graph Template,  2 = Data Query Index
@@ -87,6 +87,10 @@ if (cacti_sizeof($parms)) {
                 break;
             case '--host-id':
                 $hostId = $value;
+
+                break;
+            case '--site-id':
+                $siteId = $value;
 
                 break;
             case '--quiet':
@@ -291,15 +295,16 @@ if (cacti_sizeof($parms)) {
                 exit(1);
             }
         } else if ($nodeType == 'site') {
-            # Blank out graphId, name fields
+            # Blank out graphId, hostId fields and use the site name as the visible title
             $graphId        = 0;
             $hostId         = 0;
-            $name           = '';
 
             if (!isset($sites[$siteId])) {
                 print "ERROR: No such site-id ($siteId) exists. Try --list-sites\n";
                 exit(1);
             }
+
+            $name = $sites[$siteId]['name'];
         } else if ($nodeType == 'host') {
             # Blank out graphId, name fields
             $graphId        = 0;

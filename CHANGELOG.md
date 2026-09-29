@@ -21,6 +21,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Make the documented `add_tree.php --node-type=site --site-id=ID` workflow create a site tree item, persist its `site_id`, and render its current site devices. Reject unknown site IDs before inserting a row. Fixes #235.
+
 - Reject tree CLI nodes with a missing tree, a missing or foreign parent, or a non-header parent; report failed node creation with a nonzero exit status. Fixes #236.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
