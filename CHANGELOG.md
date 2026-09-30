@@ -68,6 +68,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Escape color-dropdown values and enclosing form row IDs in their HTML contexts; render color option identifiers as integers. Fixes #576.
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
 
+- Show a keyboard focus ring in every theme. Links and buttons clicked with the mouse show no ring; text fields now show it on click as well, as browsers apply :focus-visible there. Keep switch checkboxes and radios reachable by Tab, let keyboard users reach the dark theme's graph utility icons, and raise status, link and control text that fell below WCAG AA contrast. The themes also style `h1.loginHeading` like the login legend, ready for the login markup change.
+
 - Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
