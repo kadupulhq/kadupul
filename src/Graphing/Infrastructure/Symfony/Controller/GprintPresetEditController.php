@@ -7,6 +7,7 @@
 
 namespace Kadupul\Graphing\Infrastructure\Symfony\Controller;
 
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Graphing\Application\Command\SaveGprintPreset;
 use Kadupul\Graphing\Application\Port\GprintPresetAccess;
 use Kadupul\Graphing\Application\Port\GprintPresetStore;
@@ -28,8 +29,12 @@ use Twig\Environment;
 final class GprintPresetEditController
 {
     #[Route('/graphing/gprint-presets/new', name: 'gprint_preset_create', methods: ['GET', 'HEAD', 'POST'])]
-    public function create(Request $request, GprintPresetAccess $access, GprintPresetStore $store, SaveGprintPreset $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function create(Request $request, ConsoleAccess $console, GprintPresetAccess $access, GprintPresetStore $store, SaveGprintPreset $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'gprint'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         try {
             $access->authorize();
         } catch (GprintPresetAccessDenied $error) {
@@ -41,8 +46,12 @@ final class GprintPresetEditController
     }
 
     #[Route('/graphing/gprint-presets/{id}/edit', name: 'gprint_preset_edit', requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function update(int $id, Request $request, FindGprintPreset $find, GprintPresetStore $store, SaveGprintPreset $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function update(int $id, Request $request, ConsoleAccess $console, FindGprintPreset $find, GprintPresetStore $store, SaveGprintPreset $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'gprint'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         try {
             $preset = $find($id);
         } catch (GprintPresetAccessDenied $error) {

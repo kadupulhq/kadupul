@@ -4,6 +4,11 @@ about.php	authenticated	include/auth.php realm -1
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/graphing/gprint-presets	symfony:gprint_preset_list	methods=GET|HEAD; ConsoleAccess realm 8
+app.php/graphing/gprint-presets/actions/delete	symfony:gprint_preset_delete	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/graphing/gprint-presets/legacy	symfony:gprint_preset_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/graphing/gprint-presets/new	symfony:gprint_preset_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/graphing/gprint-presets/{id}/edit	symfony:gprint_preset_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3

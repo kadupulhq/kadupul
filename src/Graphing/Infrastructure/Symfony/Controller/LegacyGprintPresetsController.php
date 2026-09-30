@@ -7,6 +7,7 @@
 
 namespace Kadupul\Graphing\Infrastructure\Symfony\Controller;
 
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Graphing\Application\Port\GprintPresetStore;
 use Kadupul\Graphing\Application\Port\GprintPresetAccess;
 use Kadupul\Graphing\Application\Query\GprintPresetAccessDenied;
@@ -22,9 +23,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class LegacyGprintPresetsController
 {
     #[Route('/graphing/gprint-presets/legacy', name: 'gprint_preset_legacy', methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(Request $request, GprintPresetAccess $access, GprintPresetStore $store, ListGprintPresets $list, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ConsoleAccess $console, GprintPresetAccess $access, GprintPresetStore $store, ListGprintPresets $list, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'gprint'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         try {
             $access->authorize();
             if ($request->isMethod('POST')) {

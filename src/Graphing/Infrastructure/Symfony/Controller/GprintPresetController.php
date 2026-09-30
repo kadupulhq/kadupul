@@ -7,6 +7,7 @@
 
 namespace Kadupul\Graphing\Infrastructure\Symfony\Controller;
 
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Graphing\Application\Port\GprintPresetStore;
 use Kadupul\Graphing\Application\Port\GprintPresetPreferences;
 use Kadupul\Graphing\Application\Port\GprintPresetAccess;
@@ -22,9 +23,13 @@ use Twig\Environment;
 final class GprintPresetController
 {
     #[Route('/graphing/gprint-presets', name: 'gprint_preset_list', methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, GprintPresetAccess $access, GprintPresetStore $store, GprintPresetPreferences $preferences, ListGprintPresets $list, Environment $twig, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ConsoleAccess $console, GprintPresetAccess $access, GprintPresetStore $store, GprintPresetPreferences $preferences, ListGprintPresets $list, Environment $twig, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'gprint'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         try {
             $access->authorize();
             $query = $request->query->all();
