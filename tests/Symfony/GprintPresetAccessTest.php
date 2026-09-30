@@ -121,6 +121,12 @@ final class GprintPresetAccessTest extends TestCase
         }
         $db->exec("UPDATE user_auth SET enabled='on' WHERE id=9");
         $db->exec("UPDATE user_auth SET must_change_password='on' WHERE id=9");
+        try {
+            $access->authorize();
+            self::fail('A stale actor read presets after a forced password change.');
+        } catch (GprintPresetAccessDenied $error) {
+            self::assertFalse($error->unauthenticated);
+        }
         $db->beginTransaction();
         try {
             $access->assertCurrent(9);

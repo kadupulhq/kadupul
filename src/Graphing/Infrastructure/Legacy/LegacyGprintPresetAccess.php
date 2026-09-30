@@ -25,7 +25,7 @@ final readonly class LegacyGprintPresetAccess implements GprintPresetAccess
         if ($actor === null) {
             throw new GprintPresetAccessDenied(true);
         }
-        if (!$this->hasRealm($actor->id, self::REALM_ID, false)) {
+        if (!$this->accountAllows($actor->id) || !$this->hasRealm($actor->id, self::REALM_ID, false)) {
             throw new GprintPresetAccessDenied(false);
         }
         return $actor;
@@ -47,7 +47,7 @@ final readonly class LegacyGprintPresetAccess implements GprintPresetAccess
     private function accountAllows(int $actorId): bool
     {
         $db = $this->database->get();
-        $suffix = $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+        $suffix = $db->inTransaction() && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
         $query = $db->prepare('SELECT id, username, enabled, locked, must_change_password FROM user_auth WHERE id = ?' . $suffix);
         $query->execute([$actorId]);
         $user = $query->fetch(\PDO::FETCH_ASSOC);
