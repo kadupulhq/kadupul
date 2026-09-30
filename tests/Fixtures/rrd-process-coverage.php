@@ -138,7 +138,9 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
             if ($copyHash === false || $sourceHash === false || !hash_equals($sourceHash, $copyHash)) {
                 throw new RuntimeException('Copied CLI changed while measuring coverage');
             }
-            $childCoverage->getData(true)->renameFile(RRD_TEST_CLI_COVERAGE_COPY, RRD_TEST_CLI_COVERAGE_SOURCE);
+            // Coverage records canonical paths; macOS temporary directories may
+            // use /var aliases for /private/var. Map the actual measured names.
+            $childCoverage->getData(true)->renameFile(realpath(RRD_TEST_CLI_COVERAGE_COPY), realpath(RRD_TEST_CLI_COVERAGE_SOURCE));
             $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
             $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
         }
