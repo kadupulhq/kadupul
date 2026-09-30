@@ -60,7 +60,6 @@ FAIL = [
 MISSING_COLUMN = f'ALTER TABLE {FAILING} DROP COLUMN attributes'
 # Rows the upgrade and the prune step change; restored before every run.
 ROW_TABLES = ['settings', 'plugin_config', 'plugin_hooks', 'plugin_realms', 'plugin_db_changes']
-AUDIT_TABLES = ['table_columns', 'table_indexes']
 PREVIOUS = '1.2.30'
 # The fixture plugin is behind its INFO version and lacks an upgrade function;
 # the second row names a directory that does not exist, so the prune step
@@ -88,15 +87,7 @@ CLIENT_ERROR = re.compile(r'^-{14}\n.*?\n-{14}\n\nERROR \d+ \([0-9A-Z]+\) at lin
 LOAD_ERROR = re.compile(r'^ERROR: .*$', re.M)
 # The upgrade stamps settings.install_updated with the time it finished.
 UPDATED = re.compile(r'^install_updated\t.*$', re.M)
-# --load reads every table before it imports any, so the shim records the two
-# audit tables' own indexes with the cardinality of empty tables; the original
-# read each table after importing the ones before it.
-IMPORTED_CARDINALITY = [
-    re.compile(r"^(table_(?:columns|indexes)\t\d+\t[^\t]+\t\d+\t[^\t]+\t[^\t]*\t)\d+", re.M),
-    re.compile(r"^(INSERT INTO `table_indexes` VALUES \('table_(?:columns|indexes)',\d+,'[^']*',\d+,'[^']*','[^']*',)\d+", re.M),
-]
 UNPARSED = 'audit report with an unparsable audit schema'
-EXPORT_FAILS = 'audit load with a failing export'
 
 # (label, arguments, starting state). Only argument sets the original accepts
 # belong here; shim-only behaviour is checked in its own functions.
@@ -110,22 +101,14 @@ AUDIT_CASES = [
     ('audit repair with a failing alter', ['--repair'], 'failing'),
     ('audit repair with a missing column', ['--repair'], 'missing column'),
     ('audit repair with an untyped baseline index', ['--repair'], 'untyped index'),
-    ('audit create', ['--create'], 'drifted'),
-    ('audit create with alters', ['--create', '--alters'], 'drifted'),
-    ('audit load', ['--load'], 'drifted'),
-    ('audit load with alters', ['--load', '--alters'], 'drifted'),
-    (EXPORT_FAILS, ['--load'], 'dump denied'),
-    ('audit load without a docs directory', ['--load'], 'no docs'),
     ('audit report with the audit schema missing', ['--report'], 'no dump'),
     ('audit alters with the audit schema missing', ['--alters'], 'no dump'),
     ('audit repair with the audit schema missing', ['--repair'], 'no dump'),
-    ('audit create with the audit schema missing', ['--create'], 'no dump'),
     (UNPARSED, ['--report'], 'unparsable'),
     ('audit alters with an unparsable audit schema', ['--alters'], 'unparsable'),
     ('audit repair with an unparsable audit schema', ['--repair'], 'unparsable'),
-    ('audit report when table_columns cannot be created', ['--report'], 'create denied'),
     ('audit upgrade required', ['--report'], 'behind'),
-    ('audit upgrade from the previous version', ['--upgrade', '--create'], 'behind'),
+    ('audit upgrade from the previous version', ['--upgrade', '--report'], 'behind'),
     ('audit upgrade then report', ['--upgrade', '--report'], 'behind'),
     ('audit upgrade without a mode', ['--upgrade'], 'behind'),
     ('audit no mode', ['--bogus'], 'drifted'),
@@ -173,7 +156,7 @@ def grant(harness):
 def reset(harness, state, tables, version):
     restore(harness, tables)
     user = grant(harness)
-    statements = [f'DROP TABLE IF EXISTS {table}' for table in AUDIT_TABLES]
+    statements = []
     if state in ('drifted', 'failing', 'untyped index'):
         statements += DRIFT
     if state == 'failing':
@@ -182,18 +165,13 @@ def reset(harness, state, tables, version):
         statements.append(MISSING_COLUMN)
     if state == 'behind':
         statements.append(BEHIND_PLUGINS)
-    if state == 'create denied':
-        statements.append(f'REVOKE CREATE ON cacti.* FROM {user}')
-    if state == 'dump denied':
-        # mysqldump locks the tables it reads, so both dumps fail the same way.
-        statements.append(f'REVOKE LOCK TABLES ON cacti.* FROM {user}')
     statements.append(f"UPDATE version SET cacti = '{PREVIOUS if state == 'behind' else version}'")
     harness.sql(';'.join(statements) + ';')
     docs = f'rm -rf {DOCS} && mkdir {DOCS} && '
     if state == 'no docs':
         docs = f'rm -rf {DOCS}'
     elif state == 'no dump':
-        docs += f'chown www-data:www-data {DOCS}'
+        docs += f'chown -R www-data:www-data {DOCS}'
     elif state == 'unparsable':
         docs += f"{{ echo '{UNPARSABLE}'; cat {PRISTINE}; }} > {DUMP} && chown -R www-data:www-data {DOCS}"
     elif state == 'untyped index':
@@ -209,32 +187,24 @@ def dump_file(harness):
     return listing, harness.command('sh', '-c', f'grep -v "^-- Dump completed" {DUMP} 2>/dev/null || true')['stdout']
 
 
-def schema(harness, with_dump=True, imported=False):
-    """Every base table's columns, indexes and options, the audit tables' rows,
-    the rows the upgrade changes, and docs/audit_schema.sql.
-
-    imported masks the cardinality --load records for the audit tables' own
-    indexes, in the rows and in the dump.
+def schema(harness, with_dump=True):
+    """Every base table's columns, indexes and options, upgrade rows, and docs/
+    audit_schema.sql. The obsolete audit staging tables are not part of this
+    state snapshot because the new audit command never creates them.
     """
-    base = "FROM information_schema.{} WHERE TABLE_SCHEMA = DATABASE()"
+    base = "FROM information_schema.{} WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME NOT IN ('table_columns', 'table_indexes')"
     columns = harness.sql("SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_TYPE, IS_NULLABLE, COALESCE(COLUMN_DEFAULT, 'NULL'), EXTRA "
                           + base.format('COLUMNS') + ' ORDER BY 1, 3')
     indexes = harness.sql('SELECT TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX, COLUMN_NAME, NON_UNIQUE, INDEX_TYPE '
                           + base.format('STATISTICS') + ' ORDER BY 1, 2, 3')
     options = harness.sql('SELECT TABLE_NAME, TABLE_TYPE, ENGINE, TABLE_COLLATION, ROW_FORMAT, TABLE_COMMENT '
                           + base.format('TABLES') + ' ORDER BY 1')
-    present = set(harness.sql("SELECT TABLE_NAME " + base.format('TABLES')
-                              + " AND TABLE_NAME IN ('table_columns', 'table_indexes')").split())
-    rows = ''.join(harness.sql(f'SELECT * FROM {table} ORDER BY 1, 2, 3, 4') for table in AUDIT_TABLES if table in present)
     state = UPDATED.sub('install_updated\tTIME', harness.sql(
         'SELECT cacti FROM version; SELECT name, value FROM settings ORDER BY name; '
         'SELECT directory, status, version FROM plugin_config ORDER BY directory; '
         'SELECT name, hook FROM plugin_hooks ORDER BY id; SELECT plugin, file FROM plugin_realms ORDER BY id'))
     listing, dump = dump_file(harness) if with_dump else ('', '')
-    if imported:
-        rows = IMPORTED_CARDINALITY[0].sub(r'\1N', rows)
-        dump = IMPORTED_CARDINALITY[1].sub(r'\1N', dump)
-    return columns, indexes, options, rows, state, listing, dump
+    return columns, indexes, options, state, listing, dump
 
 
 def masked(text):
@@ -245,8 +215,20 @@ def masked_audit(text):
     text = masked(text)
     text = text.replace('    --upgrade - Upgrade the Kadupul database before running',
                         '    --upgrade - Deprecated; run php cli/upgrade_database.php separately')
-    return text.replace('Use the --upgrade option to perform that upgrade',
+    text = text.replace('Use the --upgrade option to perform that upgrade',
                         'Run php cli/upgrade_database.php before auditing')
+    # The compatibility help intentionally describes --create and --load
+    # differently now, and --output is new; compare the remaining legacy text.
+    for line in [
+        '    --create  - Initialize or Re-initialize the Audit Schema tables.',
+        '    --create  - Validate the canonical audit schema file; creates no tables.',
+        '    --load    - Take a pristine Kadupul install and create Audit Schema and file.',
+        '    --load    - Write the current schema dump to stdout (or --output=PATH).',
+        '    --output  - Write --load SQL to PATH; cannot overwrite docs/audit_schema.sql.',
+    ]:
+        text = text.replace(line + '\n', '')
+
+    return text
 
 
 def log_masked(lines):
@@ -286,8 +268,7 @@ def verify_audit(harness, check, admin):
     finally:
         restore(harness, tables)
         grant(harness)
-        harness.sql(''.join(f'DROP TABLE IF EXISTS {table};' for table in AUDIT_TABLES)
-                    + f"UPDATE version SET cacti = '{version}'; DROP DATABASE IF EXISTS {BACKUP}")
+        harness.sql(f"DROP TABLE IF EXISTS table_columns, table_indexes; UPDATE version SET cacti = '{version}'; DROP DATABASE IF EXISTS {BACKUP}")
         as_root(harness, f'rm -rf {DOCS} {PRISTINE} {UNTYPED} {CLIENT_CONFIG}; if [ -e {DOCS_ASIDE} ]; then mv {DOCS_ASIDE} {DOCS}; fi')
     check(found(harness) == before, 'audit scenarios leave the schema, settings, grants and docs/ as they found them')
 
@@ -308,7 +289,7 @@ def verify_audit_cases(harness, check, tables, version):
             starting(harness)
             before = schema(harness)
             shim = run(harness, AUDIT_SHIM, arguments)
-            expected_exit = 0 if arguments[0] == '--create' else 1
+            expected_exit = 1
             check(shim['exit'] == expected_exit and 'FATAL:' in shim['stdout']
                   and 'Audit stopped because the canonical schema could not be loaded.' in shim['stdout']
                   and 'Checking Table:' not in shim['stdout']
@@ -327,9 +308,7 @@ def verify_audit_cases(harness, check, tables, version):
             previous_filter = shim_stderr_filter
             shim_stderr_filter = lambda text, previous_filter=previous_filter: UPGRADE_WARNING.sub(
                 '', previous_filter(text) if previous_filter is not None else text)
-        # The original truncated the file before its dump failed, so a failed
-        # export compares the file on its own below.
-        snapshot = (lambda h: schema(h, with_dump=label != EXPORT_FAILS, imported=True)) if '--load' in arguments else schema
+        snapshot = schema
         ran = compare(harness, check, label, (AUDIT_ORIGINAL, AUDIT_SHIM), arguments, None, starting, snapshot, AUDIT_UTILITY,
                       stdout=stdout, stderr_filter=stderr_filter, shim_stderr_filter=shim_stderr_filter,
                       log_filter=log_masked)
@@ -345,10 +324,6 @@ def verify_audit_cases(harness, check, tables, version):
                   and 'FATAL: Failed Load the Audit Schema\nERROR: docs/audit_schema.sql line 1 does not parse\n' in shim['stdout']
                   and shim['stderr'] == '',
                   f'{label}: shim names the line that does not parse instead of the client error')
-        if label == EXPORT_FAILS:
-            check(dumps[1] != dumps[0] and dump_file(harness) == dumps[0]
-                  and shim['stdout'].endswith('Finished Creating Audit Schema with ERROR\n\n'),
-                  f'{label}: shim leaves the previous audit schema file where the original truncated it')
         if label == 'audit repair on a drifted table':
             # Matching output is only evidence if the shim changed the drifted table.
             indexes = harness.sql('SELECT INDEX_NAME FROM information_schema.STATISTICS '
@@ -370,9 +345,6 @@ def verify_audit_cases(harness, check, tables, version):
                   and len([line for line in ran['original_log'] if SYNTAX_ERROR in line]) == 1
                   and not any(' - DBCALL ' in line for line in ran['shim_log']),
                   f'{label}: shim sends no statement for an alter with no typed form')
-        if label == 'audit report when table_columns cannot be created':
-            check(shim['stdout'] == "Failed to create 'table_columns'" and shim['exit'] == 0,
-                  f'{label}: shim stops without a trailing newline')
         if label == 'audit upgrade from the previous version':
             check(harness.sql('SELECT cacti FROM version').strip() == version
                   and 'UPGRADE WARNING: Plugin compatibility_test lacks an upgrade function.\n' in shim['stdout']
@@ -400,7 +372,7 @@ def verify_audit_shim_only(harness, check, admin, tables, version):
     (without, before), (allowed, _), written = realm_fallback(harness, admin, lambda: (run(harness, AUDIT_SHIM, ['--create']), schema(harness)))
     check(without['exit'] == 1 and without['stdout'] == REFUSED and before == start,
           'audit fallback still needs a direct Settings/Utilities grant')
-    check(allowed['exit'] == 0 and allowed['stdout'] == 'SUCCESS: Loaded the Audit Schema\n' and written == '0',
+    check(allowed['exit'] == 0 and 'Validated docs/audit_schema.sql' in allowed['stdout'] and written == '0',
           'audit falls back to Settings/Utilities while nobody holds Installation/Upgrades')
     reset(harness, 'drifted', tables, version)
     planned = run(harness, 'bin/console', ['kadupul:database:audit', '--repair', '--dry-run', '--json'])
@@ -415,7 +387,36 @@ def verify_audit_shim_only(harness, check, admin, tables, version):
     alters = {alter['table']: alter for alter in report.get('alters', [])}
     check(report.get('dry_run') is True and alters.get(DRIFTED, {}).get('result') == 'planned' and schema(harness) == start,
           'audit --repair through bin/console without --force plans the repair and changes nothing')
+    verify_load_behavior(harness, check, tables, version)
     verify_remote_collector(harness, check, start)
+
+
+def verify_load_behavior(harness, check, tables, version):
+    """The new load contract is intentionally not compared with the frozen script."""
+    reset(harness, 'drifted', tables, version)
+    harness.sql('DROP TABLE IF EXISTS table_columns, table_indexes')
+    before = schema(harness)
+    baseline = harness.command('cat', DUMP)['stdout']
+    stdout = run(harness, AUDIT_SHIM, ['--load'])
+    check(stdout['exit'] == 0 and stdout['stdout'].startswith('CREATE TABLE `table_columns`')
+          and 'INSERT INTO `table_columns` VALUES' in stdout['stdout']
+          and 'Wrote the audit schema SQL to stdout.' in stdout['stderr'],
+          '--load writes generated SQL to stdout by default')
+    staging_tables = harness.sql("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN ('table_columns','table_indexes')").strip()
+    check(schema(harness) == before and staging_tables == '0' and harness.command('cat', DUMP)['stdout'] == baseline,
+          '--load does not mutate database tables or overwrite the shipped baseline')
+    destination = '/tmp/kadupul-audit-generated.sql'
+    written = run(harness, AUDIT_SHIM, ['--load', f'--output={destination}'])
+    generated = harness.command('cat', destination)['stdout']
+    check(written['exit'] == 0 and generated.startswith('CREATE TABLE `table_columns`')
+          and 'INSERT INTO `table_indexes` VALUES' in generated,
+          '--load writes a complete SQL dump to an operator-selected path')
+    refused = run(harness, AUDIT_SHIM, ['--load', f'--output={DUMP}'])
+    check(refused['exit'] != 0 and 'could not write the audit schema dump' in (refused['stdout'] + refused['stderr']).lower()
+          and harness.command('cat', DUMP)['stdout'] == baseline,
+          '--load refuses to overwrite the checked-in baseline')
+    harness.command('rm', '-f', destination)
+    check(schema(harness) == before, '--load output options leave the target schema unchanged')
 
 
 def verify_remote_collector(harness, check, start):

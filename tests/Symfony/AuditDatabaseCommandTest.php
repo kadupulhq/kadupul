@@ -82,7 +82,7 @@ final class AuditDatabaseCommandTest extends TestCase
         // A year that is not the current one proves the version line reads the clock.
         $version = new InstallationVersion($this->root, $this->db, new Filesystem(), new MockClock('2031-06-01 00:00:00'));
 
-        return new CommandTester(new Command(null, new AuditDatabaseCommand($audit, $version, $this->presentation, new ResultRenderer())));
+        return new CommandTester(new Command(null, new AuditDatabaseCommand($audit, $version, $this->presentation, new ResultRenderer(), new Filesystem(), $this->root)));
     }
 
     /** host lost a default; settings is clean. */
@@ -101,22 +101,14 @@ final class AuditDatabaseCommandTest extends TestCase
         return $schema;
     }
 
-    private function store(?string $uncreated = null, bool|\Throwable $export = true): AuditBaselineStore
+    private function store(): AuditBaselineStore
     {
         $store = $this->createStub(AuditBaselineStore::class);
         $store->method('read')->willReturn(new AuditBaseline([
             new BaselineColumn('host', 1, 'ping', 'int(10) unsigned', 'NO', '', '400', ''),
             new BaselineColumn('settings', 1, 'name', 'varchar(75)', 'NO', 'PRI', '', ''),
         ], []));
-        $store->method('reset')->willReturn($uncreated);
-        $store->method('replace')->willReturn(true);
-        $store->method('import')->willReturn(true);
-        $store->method('dumpPath')->willReturn($this->root . '/docs/audit_schema.sql');
-        if ($export instanceof \Throwable) {
-            $store->method('export')->willThrowException($export);
-        } else {
-            $store->method('export')->willReturn($export);
-        }
+        $store->method('export')->willReturn("-- generated schema dump\n");
 
         return $store;
     }
@@ -162,7 +154,7 @@ final class AuditDatabaseCommandTest extends TestCase
 
     public function testLegacyAuditStopsWhenTheCanonicalBaselineCannotBeLoaded(): void
     {
-        foreach (['missing', 'unparsable', 'reload'] as $failure) {
+        foreach (['missing', 'unparsable'] as $failure) {
             foreach ([['--report' => true], ['--repair' => true], ['--alters' => true]] as $arguments) {
                 $this->presentation->forLegacy(LegacyRequest::Run);
                 $tester = $this->tester(null, $this->failedBaselineStore($failure));
@@ -192,12 +184,6 @@ final class AuditDatabaseCommandTest extends TestCase
                 new BaselineColumn('settings', 1, 'name', 'varchar(75)', 'NO', 'PRI', '', ''),
             ], []);
         });
-        $store->method('reset')->willReturn(null);
-        if ($failure === 'reload') {
-            $store->expects(self::once())->method('replace')->willReturn(false);
-        } else {
-            $store->expects(self::never())->method('replace');
-        }
 
         return $store;
     }
@@ -220,13 +206,7 @@ final class AuditDatabaseCommandTest extends TestCase
             self::SEPARATOR,
             'Repair Completed!  0 Alters succeeded and 1 failed!',
         ]) . "\n", $tester->getDisplay());
-        // The reset, the two reloaded audit tables, then the one alter.
-        self::assertSame([
-            ['database.audit', 'database-maintenance local:audit-schema-reset', 'succeeded'],
-            ['database.audit', 'database-table local:table_columns', 'succeeded'],
-            ['database.audit', 'database-table local:table_indexes', 'succeeded'],
-            ['database.audit', 'database-table local:host', 'failed'],
-        ], $this->events());
+        self::assertSame([['database.audit', 'database-table local:host', 'failed']], $this->events());
     }
 
     public function testLegacyRepairThatSucceedsSaysSo(): void
@@ -246,7 +226,7 @@ final class AuditDatabaseCommandTest extends TestCase
             new BaselineColumn('host', 1, 'ping', 'mediumint(8) unsigned', 'NO', '', '400', ''),
             new BaselineColumn('settings', 1, 'name', 'varchar(75)', 'NO', 'PRI', '', ''),
         ], []));
-        $store->method('replace')->willReturn(true);
+
 
         return $store;
     }
@@ -315,29 +295,14 @@ final class AuditDatabaseCommandTest extends TestCase
         (new AuditDatabaseLegacyArguments())->report($report, false, '');
     }
 
-    public function testLegacyCreateFailureEndsWithoutANewline(): void
-    {
-        $this->presentation->forLegacy(LegacyRequest::Run);
-        $tester = $this->tester(null, $this->store('table_columns'));
 
-        self::assertSame(0, $tester->execute(['--create' => true]));
-        self::assertSame("Failed to create 'table_columns'", $tester->getDisplay());
-    }
-
-    public function testLegacyLoadListsTheImportAndTheExport(): void
+    public function testLegacyLoadWritesOnlySqlToStdout(): void
     {
         $this->presentation->forLegacy(LegacyRequest::Run);
         $tester = $this->tester();
-
-        self::assertSame(0, $tester->execute(['--load' => true]));
-        self::assertSame(implode("\n", [
-            'Importing Table: host - Done',
-            'Importing Table: settings - Done',
-            '',
-            'Exporting Table Audit Table Creation Logic to ' . $this->root . '/docs/audit_schema.sql',
-            'Finished Creating Audit Schema',
-            '',
-        ]) . "\n", $tester->getDisplay());
+        self::assertSame(0, $tester->execute(['--load' => true], ['capture_stderr_separately' => true]));
+        self::assertSame("-- generated schema dump\n", $tester->getDisplay());
+        self::assertStringContainsString('Wrote the audit schema SQL to stdout.', $tester->getErrorOutput());
     }
 
     public function testLegacyCollectorIsRefusedEvenForHelp(): void
@@ -410,7 +375,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $tester = $this->tester($this->schema(true, '1.2.31'), null, false, $upgrade);
 
         self::assertSame(0, $tester->execute(['--upgrade' => true, '--create' => true], ['capture_stderr_separately' => true]));
-        self::assertSame("01/02/2031 03:04:05 - UPGRADE NOTE: Upgrading Kadupul, this will take a few minutes.\nSUCCESS: Loaded the Audit Schema\n", $tester->getDisplay());
+        self::assertSame("01/02/2031 03:04:05 - UPGRADE NOTE: Upgrading Kadupul, this will take a few minutes.\nSUCCESS: Validated docs/audit_schema.sql; no database tables were created\n", $tester->getDisplay());
         self::assertSame("DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.\nPHP Warning: x\n", $tester->getErrorOutput());
         self::assertSame(['database.audit', 'database-maintenance local:upgrade', 'succeeded'], $this->events()[0]);
     }
@@ -482,7 +447,7 @@ final class AuditDatabaseCommandTest extends TestCase
 
         self::assertSame(1, $tester->execute(['--repair' => true, '--force' => true, '--json' => true]));
         $json = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
-        self::assertSame(['status', 'database', 'dry_run', 'mode', 'upgrade', 'baseline', 'tables', 'alters', 'imported', 'exported'], array_keys($json));
+        self::assertSame(['status', 'database', 'dry_run', 'mode', 'upgrade', 'baseline', 'tables', 'alters', 'generated_tables', 'exported'], array_keys($json));
         self::assertSame(['partial', 'local', false, 'repair', 'loaded', 'none'], [$json['status'], $json['database'], $json['dry_run'], $json['mode'], $json['baseline'], $json['upgrade']]);
         self::assertSame([['table' => 'host', 'result' => 'failed', 'statement' => 'ALTER TABLE `host` MODIFY COLUMN `ping` int(10) unsigned NOT NULL DEFAULT \'400\', ENGINE=InnoDB ROW_FORMAT=Dynamic CHARSET=latin1']], $json['alters']);
     }
@@ -615,7 +580,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $this->db->insert('user_auth_realm', ['user_id' => 2, 'realm_id' => 26]);
         $store = $this->createMock(AuditBaselineStore::class);
         $store->expects(self::never())->method('read');
-        $store->expects(self::never())->method('reset');
+
         $this->presentation->forLegacy(LegacyRequest::Run);
 
         $tester = $this->tester(null, $store);
@@ -625,58 +590,34 @@ final class AuditDatabaseCommandTest extends TestCase
         self::assertSame([['database.audit', 'database local', 'denied']], $this->events());
     }
 
-    public function testAFailedExportEndsWithTheOriginalErrorLine(): void
-    {
-        // DbalAuditBaselineStore returns false for a failed, timed-out or unwritable dump.
-        $this->presentation->forLegacy(LegacyRequest::Run);
-        $legacy = $this->tester(null, $this->store(null, false));
-        self::assertSame(0, $legacy->execute(['--load' => true]));
-        self::assertStringEndsWith("\nFinished Creating Audit Schema with ERROR\n\n", $legacy->getDisplay());
 
-        $this->presentation = new CliPresentation();
-        $json = $this->tester(null, $this->store(null, false));
-        self::assertSame(1, $json->execute(['--load' => true, '--json' => true]));
-        self::assertSame(['partial', false], array_values(array_intersect_key(json_decode($json->getDisplay(), true, 8, JSON_THROW_ON_ERROR), ['status' => 0, 'exported' => 0])));
-        self::assertSame(['database.audit', 'database-maintenance local:audit-schema-export', 'failed'], $this->events()[array_key_last($this->events)]);
 
-        $this->presentation = new CliPresentation();
-        $human = $this->tester(null, $this->store(null, false));
-        self::assertSame(1, $human->execute(['--load' => true]));
-        self::assertStringContainsString('Imported 2 tables, but exporting the audit schema to', preg_replace('/\s+/', ' ', $human->getDisplay()));
-        self::assertStringNotContainsString('exported them to', $human->getDisplay());
-    }
-
-    public function testAnErrorFailsTheRunWithoutItsText(): void
-    {
-        $error = new ProcessTimedOutException(new Process(['mariadb-dump', '--host=db.internal', 'cacti']), ProcessTimedOutException::TYPE_GENERAL);
-        foreach ([[LegacyRequest::Run, [], "ERROR: Database audit failed\n"], [null, ['--json' => true], '{"status":"failed","error":"Database audit failed"}' . "\n"]] as [$legacy, $flags, $expected]) {
-            $this->presentation = new CliPresentation();
-            if ($legacy !== null) {
-                $this->presentation->forLegacy($legacy);
-            }
-            $tester = $this->tester(null, $this->store(null, $error));
-
-            self::assertSame(1, $tester->execute(['--load' => true] + $flags));
-            self::assertSame($expected, $tester->getDisplay());
-        }
-    }
-
-    public function testHumanCreateAndLoadSayWhatHappenedToTheAuditTables(): void
+    public function testCreateOnlyValidatesTheFileAndLoadUsesAnExplicitOutputPath(): void
     {
         foreach ([
-            [['--create' => true], 'Reloaded the audit tables from docs/audit_schema.sql.'],
-            [['--create' => true, '--dry-run' => true], 'Read docs/audit_schema.sql; the audit tables were not reloaded.'],
-            // SymfonyStyle wraps the temporary path, so only the start is compared.
-            [['--load' => true], 'Imported 2 tables and exported them to /'],
+            [['--create' => true], 'Validated docs/audit_schema.sql; no database tables were created.'],
+            [['--create' => true, '--dry-run' => true], 'Read docs/audit_schema.sql; no database tables were created.'],
         ] as [$flags, $expected]) {
             $tester = $this->tester();
             self::assertSame(0, $tester->execute($flags));
             self::assertStringContainsString($expected, preg_replace('/\s+/', ' ', $tester->getDisplay()));
-            self::assertStringNotContainsString('Audited', $tester->getDisplay());
         }
-        $failed = $this->tester(null, $this->store('table_columns'));
-        self::assertSame(1, $failed->execute(['--create' => true]));
-        self::assertStringContainsString('Could not create the table_columns table; 1 failed.', preg_replace('/\s+/', ' ', $failed->getDisplay()));
+        $tester = $this->tester();
+        self::assertSame(0, $tester->execute(['--load' => true, '--output' => $this->root . '/schema.sql']));
+        self::assertSame("-- generated schema dump\n", file_get_contents($this->root . '/schema.sql'));
+        self::assertStringContainsString('Wrote a schema dump to', $tester->getDisplay());
+    }
+
+    public function testLoadCannotOverwriteTheCheckedInBaseline(): void
+    {
+        $path = $this->root . '/docs/audit_schema.sql';
+        (new Filesystem())->mkdir($this->root . '/docs');
+        (new Filesystem())->dumpFile($path, 'keep this baseline');
+        $tester = $this->tester();
+
+        self::assertSame(1, $tester->execute(['--load' => true, '--output' => $path]));
+        self::assertSame('keep this baseline', file_get_contents($path));
+        self::assertStringContainsString('Could not write the audit schema dump', $tester->getDisplay());
     }
 
     /**
@@ -731,7 +672,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $process = new Process([PHP_BINARY, 'bin/console', 'help', 'kadupul:database:audit'], dirname(__DIR__, 2), ['APP_ENV' => 'test', 'APP_DEBUG' => '1']);
         $process->mustRun();
         $help = $process->getOutput();
-        foreach (['--report', '--repair', '--force', '--alters', '--upgrade', '--create', '--load', '--dry-run', '--as=AS', '--json'] as $expected) {
+        foreach (['--report', '--repair', '--force', '--alters', '--upgrade', '--create', '--load', '--output=OUTPUT', '--dry-run', '--as=AS', '--json'] as $expected) {
             self::assertStringContainsString($expected, $help);
         }
         self::assertStringNotContainsString('legacy', $help);

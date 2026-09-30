@@ -28,11 +28,14 @@ final class AuditDatabaseInput
     #[Option(description: 'Deprecated: run php cli/upgrade_database.php separately before auditing.')]
     public bool $upgrade = false;
 
-    #[Option(description: 'Reload the audit schema tables from docs/audit_schema.sql.')]
+    #[Option(description: 'Validate the parsed audit schema file (compatibility alias; no database tables are created).')]
     public bool $create = false;
 
-    #[Option(description: 'Rewrite docs/audit_schema.sql from this database (for developers).')]
+    #[Option(description: 'Write the current database schema dump to stdout (or --output=PATH).')]
     public bool $load = false;
+
+    #[Option(description: 'Write --load output to PATH instead of stdout; it cannot replace docs/audit_schema.sql.')]
+    public string $output = '-';
 
     #[Option(description: 'Operator account to act as (default: the admin_user setting).')]
     public ?string $as = null;
