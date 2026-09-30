@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Paper-plane shows its scroll-to-top icon again; it used a Font Awesome 4 name that the shipped Font Awesome 5 does not define
 -issue: Classic no longer removes every window event handler on each page load, which stopped open user and ellipsis menus from closing on a click elsewhere
 -issue: The Midwinter ESC shortcut no longer throws an error outside fullscreen, and c+F1 no longer opens an alert reading [object KeyboardEvent]
 -issue: Midwinter no longer adds another set of shortcut, double-click, menu and colour-scheme listeners on every page load, so one shortcut press loads its page once and a system colour change no longer overrides a colour chosen by hand

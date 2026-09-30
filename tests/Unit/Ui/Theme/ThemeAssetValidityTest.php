@@ -89,3 +89,40 @@ test('the stylesheet check accepts valid colours and commented declarations', fu
 
 	expect(theme_css_defects($css))->toBe(array());
 });
+
+test('every icon a theme script inserts exists in the shipped Font Awesome', function () {
+	$root    = theme_asset_root();
+	$css     = file_get_contents($root . '/include/fa/css/all.css');
+	$regular = file_get_contents($root . '/include/fa/webfonts/fa-regular-400.svg');
+	$scripts = glob($root . '/include/themes/*/main.js');
+
+	/* sunrise/main.css hides the login and logout logos that hold this icon */
+	$hidden = array('sunrise' => array('fa-sun-o'));
+
+	expect(file_get_contents($root . '/include/themes/sunrise/main.css'))->toMatch('/\.cactiLoginLogo, \.cactiLogoutLogo \{\s*display: none;/');
+
+	expect($scripts)->not->toBe(array());
+
+	foreach ($scripts as $script) {
+		$theme = basename(dirname($script));
+
+		preg_match_all('/<i class=[\'"]([^\'"]+)[\'"]/', file_get_contents($script), $markup);
+
+		foreach ($markup[1] as $classes) {
+			$classes = preg_split('/\s+/', trim($classes));
+
+			foreach ($classes as $class) {
+				if (!preg_match('/^fa-[a-z0-9-]+$/', $class) || in_array($class, $hidden[$theme] ?? array(), true)) {
+					continue;
+				}
+
+				expect(strpos($css, ".$class:before") !== false)->toBeTrue("$theme uses $class");
+
+				/* The regular weight is a subset in the free set */
+				if (in_array('far', $classes, true) && !array_intersect(array('fa', 'fas'), $classes)) {
+					expect(strpos($regular, 'glyph-name="' . substr($class, 3) . '"') !== false)->toBeTrue("$theme uses far $class");
+				}
+			}
+		}
+	}
+});
