@@ -449,8 +449,11 @@ if (!isset($_SESSION['sess_realtime_graph_start'])) {
 	set_request_var('graph_start', $_SESSION['sess_realtime_graph_start']);
 }
 
+/* the pop-out page and the preferences it saves need the Realtime realm too */
+$realtime_allowed = is_realm_allowed(25);
+
 /* save user preferences */
-if (graph_realtime_is_post()) {
+if (graph_realtime_is_post() && $realtime_allowed) {
 	set_user_setting('realtime_interval', get_request_var('ds_step'));
 	set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
 	set_user_setting('realtime_size', get_request_var('size'));
@@ -460,6 +463,8 @@ if (graph_realtime_is_post()) {
 $realtime_error = '';
 if (read_config_option('realtime_enabled') == '') {
 	$realtime_error = __('Real-time has been disabled by your administrator.');
+} elseif (!$realtime_allowed) {
+	$realtime_error = __('Permission Denied');
 } elseif (!is_dir(read_config_option('realtime_cache_path'))) {
 	$realtime_error = __(
 		'The Image Cache Directory does not exist.  Please first create it and set permissions ' .

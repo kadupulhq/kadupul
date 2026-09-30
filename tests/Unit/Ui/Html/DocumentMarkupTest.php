@@ -75,7 +75,7 @@ test('Midwinter invalidates its imported core stylesheet cache after heading cha
 	expect($css)->toContain('core.css?' . md5_file($theme . 'css/media/core.css'));
 });
 
-test('realtime error branches emit localized complete documents without changing messages', function ($enabled, $dir, $write, $message) {
+test('realtime error branches emit localized complete documents without changing messages', function ($enabled, $dir, $write, $message, $allowed = true) {
 	RealtimeState::$enabled = $enabled;
 	RealtimeState::$directory = $dir;
 	RealtimeState::$writable = $write;
@@ -86,6 +86,7 @@ test('realtime error branches emit localized complete documents without changing
 	expect(substr_count($block, 'exit;'))->toBe(1);
 	// Only replace process termination so the emitted error document can be inspected in this test.
 	$block = str_replace('exit;', 'return;', $block);
+	$realtime_allowed = $allowed;
 	ob_start();
 	try {
 		eval('namespace DocumentMarkupTest; ' . $block);
@@ -108,7 +109,8 @@ test('realtime error branches emit localized complete documents without changing
 	array('', true, true, 'Real-time has been disabled by your administrator.'),
 	array('on', false, true, 'The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph.'),
 	array('on', true, false, 'The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph.'),
-	array('on', true, true, '')
+	array('on', true, true, ''),
+	array('on', true, true, 'Permission Denied', false)
 ));
 
 test('realtime accessible names reuse existing gettext catalog messages', function () {
