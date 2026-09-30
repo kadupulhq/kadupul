@@ -503,13 +503,14 @@ test.describe('theme text contrast', () => {
 
   test('midwinter login, logout and dark panel text reaches 4.5:1 in both colour modes', async ({ page }) => {
     // These backgrounds stay dark in light mode, so the darker light-mode link
-    // colour must not reach them.
+    // colour must not reach them. The spike kill menu takes the page fill.
     const markup = '<div class="loginBody"><div class="loginArea"><fieldset><legend id="loginLegend">User Login</legend></fieldset>'
       + '<h1 class="loginHeading" id="loginHeading">User Login</h1></div></div>'
       + '<div class="logoutBody"><div class="logoutArea"><a id="logoutLink" href="#">Login Again</a></div></div>'
       + '<div class="cactiTableTitleRow"><a id="titleRowLink" href="#">Title</a></div>'
       + '<div class="messageBox"><a id="messageLink" href="#">Message</a></div>'
-      + '<ul class="spikekillMenu"><li><a id="spikeLink" href="#">Spike</a></li></ul>'
+      // jQuery UI's menu() adds the widget classes, which give the menu the page fill.
+      + '<ul class="spikekillMenu ui-menu ui-widget ui-widget-content"><li><a id="spikeLink" href="#">Spike</a></li></ul>'
       + '<table class="cactiTable"><tr class="selectable selected"><td><a id="selectedLink" class="linkEditMain" href="#">Row</a></td></tr></table>'
       + '<div class="cactiInstallArea"><p class="cactiInstallSection"><a id="installLink" href="#">Upgrade</a></p></div>'
       + '<div class="cactiContent"><fieldset><legend id="contentLegend">Options</legend></fieldset><a id="contentLink" href="#">link</a></div>';
