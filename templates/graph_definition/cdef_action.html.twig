@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ operation|capitalize|trans({}, 'graph_definition') }}{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ operation == 'delete' ? 'Delete CDEFs'|trans({}, 'graph_definition') : 'Duplicate CDEFs'|trans({}, 'graph_definition') }}</h1>
+    <ul>{% for cdef in rows %}<li>{{ cdef.name }}{% if operation == 'delete' and cdef.inUse %} — {{ 'In use by %graphs% graphs, %templates% templates, and %references% CDEFs; deletion will be rejected.'|trans({'%graphs%': cdef.graphs, '%templates%': cdef.templates, '%references%': cdef.referencingCdefs}, 'graph_definition') }}{% endif %}</li>{% endfor %}</ul>
+    {{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.selection) }}
+    {% if operation == 'duplicate' %}{{ form_row(form.title_format) }}{% endif %}
+    <button type="submit">{{ 'Confirm'|trans({}, 'graph_definition') }}</button>{{ form_end(form) }}
+    <p><a href="{{ path('graph_cdefs') }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
+</main>
+{% endblock %}

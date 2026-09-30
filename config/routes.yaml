@@ -15,3 +15,9 @@ inventory:
         path: '../src/Inventory/Infrastructure/Symfony/Controller/'
         namespace: Kadupul\Inventory\Infrastructure\Symfony\Controller
     type: attribute
+
+graph_definitions:
+    resource:
+        path: '../src/GraphDefinition/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\GraphDefinition\Infrastructure\Symfony\Controller
+    type: attribute

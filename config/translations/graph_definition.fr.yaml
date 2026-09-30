@@ -1,0 +1,66 @@
+Access denied.: Accès refusé.
+Add item: Ajouter un élément
+Actions: Actions
+Apply filters: Appliquer les filtres
+Back to CDEFs: Retour aux CDEF
+CDEF action failed. Check the CDEF list before retrying.: L’action CDEF a échoué. Vérifiez la liste des CDEF avant de réessayer.
+CDEF item: Élément CDEF
+CDEF item not found.: Élément CDEF introuvable.
+CDEF item removal failed. Check the CDEF before retrying.: La suppression de l’élément CDEF a échoué. Vérifiez la CDEF avant de réessayer.
+CDEF item reorder failed. Check the CDEF before retrying.: Le réordonnancement des éléments CDEF a échoué. Vérifiez la CDEF avant de réessayer.
+CDEF item save failed. Check the CDEF before retrying.: L’enregistrement de l’élément CDEF a échoué. Vérifiez la CDEF avant de réessayer.
+CDEF items: Éléments CDEF
+CDEF list is unavailable.: La liste des CDEF est indisponible.
+CDEF name: Nom de la CDEF
+CDEF not found.: CDEF introuvable.
+CDEF preview: Aperçu de la CDEF
+CDEF save failed. Check the CDEF list before retrying.: L’enregistrement de la CDEF a échoué. Vérifiez la liste des CDEF avant de réessayer.
+CDEFs: CDEF
+Cancel: Annuler
+Choose type: Choisir le type
+Confirm: Confirmer
+Confirm delete: Confirmer la suppression
+Create CDEF: Créer une CDEF
+Delete: Supprimer
+Delete CDEF item: Supprimer l’élément CDEF
+Delete CDEFs: Supprimer les CDEF
+Delete selected: Supprimer la sélection
+Delete this item from %name%?: Supprimer cet élément de %name% ?
+Deletable: Suppression possible
+Duplicate CDEFs: Dupliquer les CDEF
+Duplicate selected: Dupliquer la sélection
+Edit: Modifier
+Edit CDEF: Modifier la CDEF
+Enter a valid CDEF name.: Saisissez un nom de CDEF valide.
+Graphs using: Graphiques utilisant
+Has graphs: Utilisé par des graphiques
+In use by %graphs% graphs, %templates% templates, and %references% CDEFs; deletion will be rejected.: Utilisée par %graphs% graphiques, %templates% modèles et %references% CDEF ; la suppression sera refusée.
+Invalid CDEF item order.: Ordre des éléments CDEF invalide.
+Invalid CDEF list filters.: Filtres de liste CDEF invalides.
+Item type: Type d’élément
+Move down: Descendre
+Move up: Monter
+No: Non
+No CDEFs: Aucune CDEF
+No items: Aucun élément
+Order: Ordre
+Pagination: Pagination
+Preview: Aperçu
+Referenced by CDEFs: Référencée par les CDEF
+Rows: Lignes
+Save CDEF: Enregistrer la CDEF
+Save item: Enregistrer l’élément
+Search: Rechercher
+Select: Sélectionner
+Select %name%: Sélectionner %name%
+Sequence: Séquence
+Templates using: Modèles utilisant
+The CDEF item selection changed. Reload the form.: La sélection des éléments CDEF a changé. Rechargez le formulaire.
+Unexpected fields were submitted.: Des champs inattendus ont été envoyés.
+Value: Valeur
+Yes: Oui
+type.1: Fonction
+type.2: Opérateur
+type.4: Source de données spéciale
+type.5: Autre CDEF
+type.6: Chaîne personnalisée

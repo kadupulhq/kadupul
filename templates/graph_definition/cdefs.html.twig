@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'CDEFs'|trans({}, 'graph_definition') }}{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'CDEFs'|trans({}, 'graph_definition') }}</h1>
+    <form method="get" action="{{ path('graph_cdefs') }}">
+        <label>{{ 'Search'|trans({}, 'graph_definition') }} <input name="filter" maxlength="255" value="{{ criteria.search }}"></label>
+        <label>{{ 'Rows'|trans({}, 'graph_definition') }} <select name="rows">
+            {% for size in [10, 30, 50, 100] %}<option value="{{ size }}"{% if criteria.pageSize == size %} selected{% endif %}>{{ size }}</option>{% endfor %}
+        </select></label>
+        <label><input type="checkbox" name="has_graphs" value="true"{% if criteria.hasGraphs %} checked{% endif %}> {{ 'Has graphs'|trans({}, 'graph_definition') }}</label>
+        <button type="submit">{{ 'Apply filters'|trans({}, 'graph_definition') }}</button>
+    </form>
+    <p><a href="{{ path('graph_cdef_create') }}">{{ 'Create CDEF'|trans({}, 'graph_definition') }}</a></p>
+    <form method="get" action="{{ path('graph_cdef_action', {operation: 'delete'}) }}" data-cdef-actions>
+        <table>
+            <thead><tr>
+                <th>{{ 'Select'|trans({}, 'graph_definition') }}</th>
+                <th><a href="{{ path('graph_cdefs', criteria.query({sort: 'name', direction: criteria.sort == 'name' and criteria.direction == 'asc' ? 'desc' : 'asc'})) }}">{{ 'CDEF name'|trans({}, 'graph_definition') }}</a></th>
+                <th>{{ 'Deletable'|trans({}, 'graph_definition') }}</th>
+                <th><a href="{{ path('graph_cdefs', criteria.query({sort: 'graphs', direction: criteria.sort == 'graphs' and criteria.direction == 'asc' ? 'desc' : 'asc'})) }}">{{ 'Graphs using'|trans({}, 'graph_definition') }}</a></th>
+                <th><a href="{{ path('graph_cdefs', criteria.query({sort: 'templates', direction: criteria.sort == 'templates' and criteria.direction == 'asc' ? 'desc' : 'asc'})) }}">{{ 'Templates using'|trans({}, 'graph_definition') }}</a></th>
+                <th>{{ 'Referenced by CDEFs'|trans({}, 'graph_definition') }}</th>
+            </tr></thead>
+            <tbody>
+            {% for cdef in rows %}
+                <tr>
+                    <td><input type="checkbox" name="ids[]" value="{{ cdef.id }}" aria-label="{{ 'Select %name%'|trans({'%name%': cdef.name}, 'graph_definition') }}"></td>
+                    <td><a href="{{ path('graph_cdef_edit', {id: cdef.id}) }}">{{ cdef.name }}</a></td>
+                    <td>{{ cdef.inUse ? 'No'|trans({}, 'graph_definition') : 'Yes'|trans({}, 'graph_definition') }}</td>
+                    <td>{{ cdef.graphs }}</td><td>{{ cdef.templates }}</td><td>{{ cdef.referencingCdefs }}</td>
+                </tr>
+            {% else %}<tr><td colspan="6"><em>{{ 'No CDEFs'|trans({}, 'graph_definition') }}</em></td></tr>{% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" formaction="{{ path('graph_cdef_action', {operation: 'delete'}) }}">{{ 'Delete selected'|trans({}, 'graph_definition') }}</button>
+        <button type="submit" formaction="{{ path('graph_cdef_action', {operation: 'duplicate'}) }}">{{ 'Duplicate selected'|trans({}, 'graph_definition') }}</button>
+    </form>
+    {% if pages > 1 %}<nav aria-label="{{ 'Pagination'|trans({}, 'graph_definition') }}">
+        {% for number in 1..pages %}<a href="{{ path('graph_cdefs', criteria.query({page: number})) }}"{% if number == criteria.page %} aria-current="page"{% endif %}>{{ number }}</a>{% endfor %}
+    </nav>{% endif %}
+</main>
+{% endblock %}

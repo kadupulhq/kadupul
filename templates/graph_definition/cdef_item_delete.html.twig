@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Delete CDEF item'|trans({}, 'graph_definition') }}{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Delete CDEF item'|trans({}, 'graph_definition') }}</h1>
+    <p>{{ 'Delete this item from %name%?'|trans({'%name%': cdef.name}, 'graph_definition') }}</p>
+    <p>{{ ('type.' ~ item.type)|trans({}, 'graph_definition') }}: <strong>{{ item.label }}</strong></p>
+    {{ form_start(form) }}{{ form_errors(form) }}<button type="submit">{{ 'Confirm delete'|trans({}, 'graph_definition') }}</button>{{ form_end(form) }}
+    <p><a href="{{ path('graph_cdef_edit', {id: cdef.id}) }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
+</main>
+{% endblock %}

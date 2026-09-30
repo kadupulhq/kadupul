@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Move CDEF definitions, ordered items, preview, duplication and deletion to Symfony forms, Twig and transactional application services; keep legacy URLs as compatibility routes. CDEF edits recheck the actor and both console and graph-definition realms inside the write transaction, prevent recursive references, and reject stale item reorders.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.

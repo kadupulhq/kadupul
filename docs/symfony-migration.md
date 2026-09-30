@@ -1119,3 +1119,22 @@ but remote writes can survive a later failure. The UI reports an uncertain outco
 in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
+
+### CDEF definition administration
+
+The CDEF page and its editor are served by Symfony at `/graph-definitions/cdefs`.
+The compatibility URL `cdef.php` forwards read requests to that route and rejects
+legacy writes so callers must submit Symfony Forms with CSRF tokens. The catalog
+keeps system definitions out of the editable list, reports graph/template use and
+nested CDEF references, and expands nested RPN preview values with cycle/depth
+protection. Item editing validates function/operator/data-source choices against
+the installed RRDtool version. Create, edit, item save/delete/reorder, duplicate
+and bulk delete operations run in a transaction after rechecking the enabled,
+unlocked actor, guest/authentication policy, Console Access realm and graph
+definition realm. Reorders carry the full ordered item-ID snapshot, and deletion
+rechecks graph and nested-CDEF references while holding definition locks.
+
+Run `tests/Symfony/CdefAdministrationTest.php` for catalog, item and authorization
+coverage. `tests/Symfony/cdef_review_http.py` builds a fresh isolated MariaDB
+stack and exercises the authenticated HTTP flows, CSRF, stale reorder, duplicate,
+dependency-safe delete, actor revocation and database-triggered rollback.

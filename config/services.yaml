@@ -82,6 +82,25 @@ services:
     Kadupul\Inventory\Infrastructure\:
         resource: '../src/Inventory/Infrastructure/'
 
+    Kadupul\GraphDefinition\:
+        resource: '../src/GraphDefinition/'
+
+    Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\GraphDefinition\Application\Port\CdefCatalog:
+        alias: Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog
+    Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefRealmAccess:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\GraphDefinition\Application\Port\CdefRealmAccess:
+        alias: Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefRealmAccess
+    Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\GraphDefinition\Application\Port\CdefEditor:
+        alias: Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor
+
     Kadupul\Inventory\Application\Query\ListDevices: ~
 
     Kadupul\Inventory\Application\Query\FindEditableDevice: ~

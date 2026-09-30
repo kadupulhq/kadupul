@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'CDEF item'|trans({}, 'graph_definition') }}{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'CDEF item'|trans({}, 'graph_definition') }}: {{ cdef.name }}</h1>
+    <h2>{{ 'Preview'|trans({}, 'graph_definition') }}</h2><pre>cdef={{ preview }}</pre>
+    <form method="get" action="{{ path('graph_cdef_item_edit', {cdefId: cdef.id, itemId: item.id}) }}">
+        <label>{{ 'Item type'|trans({}, 'graph_definition') }} <select name="type">
+            {% for type, label in types %}<option value="{{ type }}"{% if type == itemType %} selected{% endif %}>{{ label|trans({}, 'graph_definition') }}</option>{% endfor %}
+        </select></label><button type="submit">{{ 'Choose type'|trans({}, 'graph_definition') }}</button>
+    </form>
+    {{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.id) }}{{ form_row(form.cdef_id) }}{{ form_row(form.type) }}{{ form_row(form.value) }}
+    <button type="submit">{{ 'Save item'|trans({}, 'graph_definition') }}</button>{{ form_end(form) }}
+    <p><a href="{{ path('graph_cdef_edit', {id: cdef.id}) }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
+</main>
+{% endblock %}
