@@ -37,29 +37,15 @@ table {
 	outline-style: none;
 }
 
-/* Component rules strip outlines; !important keeps the keyboard ring from losing to them on specificity. */
+/*
+ * Component rules strip outlines; !important keeps the keyboard ring from
+ * losing to them on specificity. The black halo lets one light ring serve the
+ * dark pages and the light dialogs, menus, panels and selected rows alike.
+ */
 :focus-visible {
 	outline: 2px solid #93CEFF !important;
 	outline-offset: 1px;
-}
-
-/*
- * Dialogs, menus, message boxes, selected rows, the device header, graph item
- * rows and the install wizard are light, where the light blue ring measures
- * under 2:1.
- */
-.ui-widget-content :focus-visible, .menuoptions :focus-visible, .submenuoptions :focus-visible,
-.messageBox :focus-visible, .spikekillMenu :focus-visible, tr.selected :focus-visible,
-.hostInfoHeader :focus-visible, .tableRowGraph :focus-visible, .cactiInstallArea :focus-visible,
-.ui-widget-content :focus-visible + .checkboxSlider, .ui-widget-content :focus-visible + .radioSlider,
-.cactiInstallArea :focus-visible + .checkboxSlider, .cactiInstallArea :focus-visible + .radioSlider {
-	outline-color: #0D47A1 !important;
-}
-
-/* Table rows in the install wizard keep the dark fill they have everywhere else. */
-.cactiInstallArea :is(.odd, .even, .even-alternate):not(.selected) :focus-visible,
-.cactiInstallArea :is(.odd, .even, .even-alternate):not(.selected) :focus-visible + :is(.checkboxSlider, .radioSlider) {
-	outline-color: #93CEFF !important;
+	box-shadow: 0 0 0 5px #000000 !important;
 }
 
 td, th {
@@ -128,7 +114,7 @@ a, a:active, a:visited {
 
 a:hover {
 	text-decoration: none;
-	color: #8e8e8e;
+	color: #333333;
 }
 
 /* The install wizard text sits on #E5E5E5, where the light link colour measures 2.64:1. */
@@ -306,7 +292,7 @@ label {
 }
 
 .success {
-	color: green;
+	color: #00cd00;
 }
 
 .failed {
@@ -369,27 +355,27 @@ label {
 }
 
 .deviceUp {
-	color: rgba(148, 179, 107, 0.8) !important;
+	color: #a4b78c !important;
 }
 
 .deviceDown {
-	color: #ff4a4a !important;
+	color: #ff9191 !important;
 }
 
 .deviceUnknown {
-	color: #8080ff !important;
+	color: #a8a8ff !important;
 }
 
 .deviceDisabled {
-	color: #a1a1a1 !important;
+	color: #b1b1b1 !important;
 }
 
 .deviceRecovering {
-	color: #ff8f1e !important;
+	color: #ff972d !important;
 }
 
 .deviceError {
-	color: #de4dea !important;
+	color: #ea8ff2 !important;
 }
 
 .deviceDownMuted {
@@ -405,11 +391,11 @@ label {
 }
 
 .deviceWarning {
-	color: #bb8408 !important;
+	color: #e8a40a !important;
 }
 
 .deviceAlert {
-	color: #ff7043 !important;
+	color: #ff9472 !important;
 }
 
 /*
@@ -439,6 +425,33 @@ tr.selected .deviceWarning, .spikekillMenu .deviceWarning,
 tr.selected .deviceAlert, .spikekillMenu .deviceAlert,
 .ui-dialog-content .deviceAlert:not(:is(.odd, .even, .even-alternate) *) {
 	color: #6e2200 !important;
+}
+
+tr.selected .deviceUp, .spikekillMenu .deviceUp,
+.ui-dialog-content .deviceUp:not(:is(.odd, .even, .even-alternate) *) {
+	color: #2c3a1e !important;
+}
+
+tr.selected .deviceRecovering, .spikekillMenu .deviceRecovering,
+.ui-dialog-content .deviceRecovering:not(:is(.odd, .even, .even-alternate) *) {
+	color: #573000 !important;
+}
+
+tr.selected .deviceDisabled, tr.selected .notBeingGraphed {
+	color: #3b3b3b !important;
+}
+
+tr.selected .beingGraphed {
+	color: #004b00;
+}
+
+tr.selected .deletequery {
+	color: #205c8d !important;
+}
+
+/* The active spike kill item is dark; its status-coloured icons are not meant for that. */
+.spikekillMenu .ui-state-active i {
+	color: #ffffff !important;
 }
 
 .deviceUpBg {
@@ -519,7 +532,7 @@ tr.selected .deviceAlert, .spikekillMenu .deviceAlert,
 }
 
 .beingGraphed {
-	color: green;
+	color: #00cd00;
 }
 
 .notBeingGraphed {
@@ -583,7 +596,7 @@ tr.selected .deviceAlert, .spikekillMenu .deviceAlert,
 .menuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #5CB85C;
+	background: #3b863b;
 }
 
 .import_label {
@@ -638,14 +651,14 @@ tr.selected .deviceAlert, .spikekillMenu .deviceAlert,
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: #2975b2 !important;
+	color: #4595d4 !important;
 	font-weight: bold;
 	font-size: 14px;
 	padding-right: 10px;
 }
 
 .deletequery:hover {
-	color: #2975b2 !important;
+	color: #4595d4 !important;
 	text-decoration: none;
 	padding: 1px;
 	vertical-align: middle;
@@ -721,7 +734,7 @@ tr.selected .deviceAlert, .spikekillMenu .deviceAlert,
 }
 
 .linkMarker {
-	color: #c16921;
+	color: #ac5d1d;
 }
 
 .filteredValue {
@@ -1458,7 +1471,7 @@ tr>td.textInfo.right {
 	display: table-column;
 	width: 45%;
 	text-align: left;
-	color: #000;
+	color: #ccc;
 }
 
 .formColumnRight {
@@ -1466,7 +1479,7 @@ tr>td.textInfo.right {
 	display: table-column;
 	width: 45%;
 	text-align: left;
-	color: #000;
+	color: #ccc;
 }
 
 .formData {
@@ -1476,7 +1489,7 @@ tr>td.textInfo.right {
 
 .formFieldName {
 	display: inline-block;
-	color: #000;
+	color: #ccc;
 	float: left;
 	text-align: left;
 	padding-left: 3px;
@@ -1546,8 +1559,7 @@ tr>td.textInfo.right {
 	}
 
 	.formFieldName {
-		color: snow;
-		color: #000000;
+		color: #ccc;
 		float: left;
 		text-align: left;
 		white-space: nowrap;
@@ -2192,7 +2204,7 @@ th:last-child {
 	border-right: none !important;
 }
 
-tr.selected {
+tr.selected, tr.selected.tableRow {
 	background: #AAAAAA !important;
 	color: #000000;
 }
@@ -2215,7 +2227,11 @@ tr.selectable {
 }
 
 tr.selectable a.linkEditMain:hover {
-	color: blue;
+	color: #a8a8ff;
+}
+
+tr.selected a.linkEditMain:hover {
+	color: #0000d9;
 }
 
 tr.selectable:hover:not(.selected) {
@@ -2580,6 +2596,7 @@ input:disabled + .checkboxSlider {
 input:focus-visible + .checkboxSlider {
 	outline: 2px solid #93CEFF;
 	outline-offset: 2px;
+	box-shadow: 0 0 0 6px #000000;
 }
 
 input:checked + .checkboxSlider:before {
@@ -2668,6 +2685,7 @@ input:disabled + .radioSlider {
 input:focus-visible + .radioSlider {
 	outline: 2px solid #93CEFF;
 	outline-offset: 2px;
+	box-shadow: 0 0 0 6px #000000;
 }
 
 input:checked + .radioSlider:before {
@@ -2899,9 +2917,38 @@ circle {
      border: 2px solid rgba(0,0,0,0);
 }
 
-.ui-state-default, .ui-selectmenu-button, .ui-button {
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-selectmenu-button, .ui-button {
 	border: 1px solid #d3d3d3;
 	background: #111 !important;
 	font-weight: normal;
 	color: #8e8e8e;
+}
+
+/* The fill stays #111 on hover and focus, where the #212121 jQuery UI text measures 1.2:1. */
+.ui-state-default:is(.ui-state-hover, .ui-state-focus), .ui-selectmenu-button:is(:hover, :focus, .ui-state-hover, .ui-state-focus),
+.ui-button:is(:hover, :focus) {
+	color: #cccccc;
+}
+
+.checkboxSlider, .radioSlider {
+	box-shadow: inset 0 0 0 1px #6d6f70;
+}
+
+/* The graph cell whitens its spans for the dark title, which the light spike kill menu does not have. */
+.tableRowGraph .spikekillMenu span {
+	color: #222222;
+}
+
+.tableRowGraph .spikekillMenu .ui-state-active {
+	color: #ffffff;
+}
+
+/* a:hover keeps #333333 for the light panels; these links sit on dark fills. */
+.logoutArea a:hover, .textAreaNotes a:hover, .cactiInstallArea :is(.odd, .even, .even-alternate) a:hover {
+	color: #8e8e8e;
+}
+
+/* Install wizard form rows are light. */
+.cactiInstallArea :is(.formColumnLeft, .formColumnRight, .formFieldName) {
+	color: #000;
 }
