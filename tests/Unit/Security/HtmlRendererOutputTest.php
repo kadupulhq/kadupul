@@ -41,7 +41,8 @@ function render(string $call, array $arguments, ?object $coverage): string
         function is_realm_allowed($realm) { return true; }
         function get_current_graph_start() { return -86400; }
         function get_current_graph_end() { return 0; }
-        function get_current_page($basename = true) { return 'graphs.php'; }
+        function get_current_page($basename = true) { return $GLOBALS['a']['page'] ?? 'graphs.php'; }
+        function api_plugin_hook_function($name, $value = null) { return $value; }
         function aggregate_build_children_url($id) { return ''; }
         function db_fetch_cell_prepared($sql, $args) { return $GLOBALS['a']['cell'] ?? 0; }
         function api_plugin_hook($name, $args = array()) {}
@@ -170,3 +171,89 @@ test('graph areas keep graph values inside their attributes and text', function 
         expect($xpath->query('//td[contains(@class, "graphSubHeaderColumn")]')->item(0)->textContent)->toBe(decoded('Data Query: Query' . $payload));
     }
 })->with(array('html_graph_area', 'html_graph_thumbnail_area'))->with(PAYLOADS);
+
+test('start boxes keep caller values inside their attributes', function ($payload) {
+    $html = render(
+        'html_start_box("Title", "100%" . $a["p"], false, "3" . $a["p"], "center" . $a["p"], array('
+        . 'array("id" => "add" . $a["p"], "class" => "fa fa-plus" . $a["p"], "href" => "x.php?a=1" . $a["p"], "title" => "Add" . $a["p"])));'
+        . 'html_end_box(false);',
+        array('p' => $payload, 'page' => 'page' . $payload . '.php'),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+
+    expectNoInjection($xpath);
+    $value = fn(string $query) => $xpath->query($query)->item(0)?->nodeValue;
+    expect($value('//div[contains(@class, "cactiTable")]/@id'))->toBe(decoded(basename('page' . $payload . '.php', '.php') . '1'));
+    expect($value('//div[contains(@class, "cactiTable")]/@style'))->toBe(decoded('width:100%' . $payload . ';text-align:center' . $payload . ';'));
+    expect($value('//table[contains(@class, "cactiTable")]/@style'))->toBe(decoded('padding:3' . $payload . 'px;'));
+    expect($value('//span[@class="cactiFilterAdd"]/a/@id'))->toBe(decoded('add' . $payload));
+    expect($value('//span[@class="cactiFilterAdd"]/a/@href'))->toBe(decoded('x.php?a=1' . $payload));
+    expect($value('//span[@class="cactiFilterAdd"]//i/@class'))->toBe(decoded('fa fa-plus' . $payload));
+})->with(PAYLOADS);
+
+test('table headers keep caller values inside their attributes', function ($payload) {
+    $html = render(
+        'print "<table>";'
+        . 'html_header_sort(array("nosort" => array("display" => "Other", "align" => "right" . $a["p"]),'
+        . ' "name" . $a["p"] => array("display" => "Name", "align" => "left" . $a["p"], "sort" => "ASC" . $a["p"])), "", "", "2" . $a["p"], "sort.php?x=1" . $a["p"], "main" . $a["p"]);'
+        . 'html_header_sort_checkbox(array("host" . $a["p"] => array("display" => "Host", "align" => "center" . $a["p"])), "", "", true, "form.php" . $a["p"], "", "chk" . $a["p"]);'
+        . 'html_header(array(array("display" => "Head", "align" => "left" . $a["p"]), "Tail"), "3" . $a["p"]);'
+        . 'html_section_header(array("display" => "Section", "align" => "left" . $a["p"]), "4" . $a["p"]);'
+        . 'html_header_checkbox(array(array("display" => "Box", "align" => "right" . $a["p"])), true, "check.php" . $a["p"], true, "pre" . $a["p"]);'
+        . 'print "</table>";',
+        array('p' => $payload),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+
+    expectNoInjection($xpath);
+    $value = fn(string $query) => $xpath->query($query)->item(0)?->nodeValue;
+    $sort = $xpath->query('//div[@class="sortinfo"]')->item(0);
+    expect($sort->getAttribute('sort-return'))->toBe(decoded('main' . $payload));
+    expect($sort->getAttribute('sort-page'))->toBe(decoded('sort.php?x=1' . $payload));
+    expect($sort->getAttribute('sort-column'))->toBe(decoded('name' . $payload));
+    expect($sort->getAttribute('sort-direction'))->toBe(decoded('ASC' . $payload));
+    expect($value('//th[contains(@class, "sortable")]/@class'))->toContain(decoded('left' . $payload));
+    expect($value('//th[text()="Other"]/@colspan'))->toBe(decoded('2' . $payload));
+
+    $checkboxSort = $xpath->query('//div[@class="sortinfo"]')->item(1);
+    expect($checkboxSort->getAttribute('sort-page'))->toBe(decoded('form.php' . $payload));
+    expect($checkboxSort->getAttribute('sort-column'))->toBe(decoded('host' . $payload));
+    expect($value('(//th[.//div[@sort-column]])[2]/@class'))->toContain(decoded('center' . $payload));
+
+    expect($value('//th[text()="Head"]/@class'))->toBe(decoded(' left' . $payload));
+    expect($value('//th[text()="Tail"]/@colspan'))->toBe(decoded('3' . $payload));
+    expect($value('//th[text()="Section"]/@style'))->toBe(decoded('text-align:left' . $payload . ';'));
+    expect($value('//th[text()="Section"]/@colspan'))->toBe(decoded('4' . $payload));
+    expect($value('//th[text()="Box"]/@class'))->toBe(decoded('right' . $payload . ' '));
+
+    $forms = $xpath->query('//form');
+    expect($forms->length)->toBe(2);
+    expect($forms->item(0)->getAttribute('id'))->toBe(decoded('chk' . $payload));
+    expect($forms->item(0)->getAttribute('action'))->toBe(decoded('form.php' . $payload));
+    expect($forms->item(1)->getAttribute('name'))->toBe(decoded('pre' . $payload));
+    expect($forms->item(1)->getAttribute('action'))->toBe(decoded('check.php' . $payload));
+    $prefixes = array();
+    foreach ($xpath->query('//input[@id="selectall"]') as $input) {
+        $prefixes[] = $input->getAttribute('data-prefix');
+    }
+    expect($prefixes)->toBe(array(decoded('chk' . $payload), decoded('pre' . $payload)));
+})->with(PAYLOADS);
+
+test('spike removal menu items keep caller values inside their attributes', function ($payload) {
+    $html = render(
+        'print html_spikekill_menu_item("Remove", "fa fa-check" . $a["p"], "rstddev" . $a["p"], "method" . $a["p"], "12" . $a["p"]);',
+        array('p' => $payload),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+
+    expectNoInjection($xpath);
+    $item = $xpath->query('//li')->item(0);
+    expect($item->getAttribute('id'))->toBe(decoded('method' . $payload));
+    expect($item->getAttribute('data-graph'))->toBe(decoded('12' . $payload));
+    expect($item->getAttribute('class'))->toBe(decoded(' rstddev' . $payload));
+    expect($xpath->query('//li//i')->item(0)->getAttribute('class'))->toBe(decoded('fa fa-check' . $payload));
+    expect($xpath->query('//span[@class="spikeKillMenuItem"]')->item(0)->textContent)->toBe('Remove');
+})->with(PAYLOADS);

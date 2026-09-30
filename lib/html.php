@@ -81,7 +81,10 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
     } elseif (!isempty_request_var('tab')) {
         $table_prefix .= '_' . clean_up_name(get_nfilter_request_var('tab'));
     }
-    $table_id = $table_prefix . $table_suffix;
+    $table_id     = html_escape($table_prefix . $table_suffix);
+    $width        = html_escape($width);
+    $align        = html_escape($align);
+    $cell_padding = html_escape($cell_padding);
 
     if ($title != '') {
         print "<div id='$table_id' class='cactiTable' style='width:$width;text-align:$align;'>";
@@ -141,7 +144,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                             $title = $add_label;
                         }
 
-                        print "<span class='cactiFilterAdd' title='" . html_escape($title) . "'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'" : '') . " class='$classo' href='$href' aria-label='" . html_escape($title) . "'><i class='$classi' aria-hidden='true'></i></a></span>";
+                        print "<span class='cactiFilterAdd' title='" . html_escape($title) . "'><a" . (isset($icon['id']) ? " id='" . html_escape($icon['id']) . "'" : '') . " class='$classo' href='$href' aria-label='" . html_escape($title) . "'><i class='" . html_escape($classi) . "' aria-hidden='true'></i></a></span>";
                     }
                 }
             } else {
@@ -830,11 +833,13 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
             $icon = 'fa fa-sort';
         }
 
+        $align = html_escape($align);
+
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . $display_text . '</th>';
+            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='" . html_escape($last_item_colspan) . "' " : '') . '>' . $display_text . '</th>';
         } else {
             print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='sortable $align $nohide $isSort'>";
-            print "<div class='sortinfo' sort-return='" . ($return_to == '' ? 'main' : $return_to) . "' sort-page='" . ($url == '' ? html_escape(get_current_page(false)) : $url) . "' sort-column='$db_column' sort-direction='$direction'><div class='textSubHeaderDark'>" . $display_text . "<i class='$icon'></i></div></div></th>";
+            print "<div class='sortinfo' sort-return='" . html_escape($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($url == '' ? get_current_page(false) : $url) . "' sort-column='" . html_escape($db_column) . "' sort-direction='" . html_escape($direction) . "'><div class='textSubHeaderDark'>" . $display_text . "<i class='$icon'></i></div></div></th>";
         }
 
         $i++;
@@ -1016,13 +1021,18 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
             $icon = 'fa fa-sort';
         }
 
+        $align = html_escape($align);
+
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
             print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$align $nohide'>" . $display_text . '</th>';
         } else {
             print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='sortable $align $nohide $isSort'>";
-            print "<div class='sortinfo' sort-return='" . ($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($form_action) . "' sort-column='$db_column' sort-direction='$direction'><div class='textSubHeaderDark'>" . $display_text . "<i class='$icon'></i></div></div></th>";
+            print "<div class='sortinfo' sort-return='" . html_escape($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($form_action) . "' sort-column='" . html_escape($db_column) . "' sort-direction='" . html_escape($direction) . "'><div class='textSubHeaderDark'>" . $display_text . "<i class='$icon'></i></div></div></th>";
         }
     }
+
+    $prefix      = html_escape($prefix);
+    $form_action = html_escape($form_action);
 
     print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='" . __esc('Select All Rows') . "' data-prefix='$prefix'><label class='formCheckboxLabel' title='" . __esc('Select All Rows') . "' for='selectall'></label></th>" . ($include_form ? "<th style='display:none;'><form id='$prefix' name='$prefix' method='post' action='$form_action'></th>" : '');
     print '</tr>';
@@ -1037,6 +1047,8 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 function html_header($header_items, $last_item_colspan = 1)
 {
     print "<tr class='tableHeader " . (!$last_item_colspan > 1 ? 'tableFixed' : '') . "'>";
+
+    $colspan = html_escape($last_item_colspan);
 
     $i = 0;
     foreach ($header_items as $item) {
@@ -1059,9 +1071,9 @@ function html_header($header_items, $last_item_colspan = 1)
                 $tip = '';
             }
 
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "' " : '') . "class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . html_escape($item['display']) . '</th>';
+            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "' " : '') . "class='$nohide " . html_escape($align) . "' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='$colspan' " : '') . '>' . html_escape($item['display']) . '</th>';
         } else {
-            print '<th ' . ((($i + 1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . html_escape($item) . '</th>';
+            print '<th ' . ((($i + 1) == cacti_count($header_items)) ? "colspan='$colspan' " : '') . '>' . html_escape($item) . '</th>';
         }
 
         $i++;
@@ -1079,10 +1091,12 @@ function html_section_header($header_item, $last_item_colspan = 1)
 {
     print "<tr class='tableHeader " . (!$last_item_colspan > 1 ? 'tableFixed' : '') . "'>";
 
+    $colspan = html_escape($last_item_colspan);
+
     if (is_array($header_item) && isset($header_item['display'])) {
-        print "<th " . (isset($header_item['align']) ? "style='text-align:" . $header_item['align'] . ";'" : "") . " colspan='$last_item_colspan'>" . $header_item['display'] . '</th>';
+        print "<th " . (isset($header_item['align']) ? "style='text-align:" . html_escape($header_item['align']) . ";'" : "") . " colspan='$colspan'>" . $header_item['display'] . '</th>';
     } else {
-        print "<th colspan='$last_item_colspan'>" . $header_item . '</th>';
+        print "<th colspan='$colspan'>" . $header_item . '</th>';
     }
 
     print '</tr>';
@@ -1122,11 +1136,14 @@ function html_header_checkbox($header_items, $include_form = true, $form_action 
                 $tip = '';
             }
 
-            print '<th ' . ($tip != '' ? " title='" . html_escape($tip) . "' " : '') . "class='$align $nohide'>" . html_escape($item['display']) . '</th>';
+            print '<th ' . ($tip != '' ? " title='" . html_escape($tip) . "' " : '') . "class='" . html_escape($align) . " $nohide'>" . html_escape($item['display']) . '</th>';
         } else {
             print "<th class='left'>" . html_escape($item) . '</th>';
         }
     }
+
+    $prefix      = html_escape($prefix);
+    $form_action = html_escape($form_action);
 
     print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='" . __esc('Select All Rows') . "' data-prefix='$prefix'><label class='formCheckboxLabel' title='" . __esc('Select All') . "' for='selectall'></label></th>" . ($include_form ? "<th style='display:none;'><form id='$prefix' name='$prefix' method='post' action='$form_action'></th>" : '');
     print '</tr>';
@@ -2421,17 +2438,17 @@ function html_spikekill_menu_item($text, $icon = '', $class = '', $id = '', $dat
     $output = '<li ';
 
     if (!empty($id)) {
-        $output .= "id='$id' ";
+        $output .= "id='" . html_escape($id) . "' ";
     }
 
     if (!empty($data_graph)) {
-        $output .= "data-graph='$data_graph' ";
+        $output .= "data-graph='" . html_escape($data_graph) . "' ";
     }
 
-    $output .= 'class=\'' . (empty($class) ? '' : " $class") . '\'>';
+    $output .= 'class=\'' . (empty($class) ? '' : ' ' . html_escape($class)) . '\'>';
     $output .= '<span class=\'spikeKillMenuItem\'>';
     if (!empty($icon)) {
-        $output .= "<i class='$icon'></i>";
+        $output .= "<i class='" . html_escape($icon) . "'></i>";
     }
 
     $output .= "$text</span>";
