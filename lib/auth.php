@@ -4983,7 +4983,7 @@ function auth_login_create_user_from_template($username, $realm) {
 
 		cacti_log("LOGIN FAILED: Template user id '" . read_config_option('user_template') . "' does not exist.", false, 'AUTH');
 
-		if ($auth_method == 2) {
+		if (read_config_option('auth_method') == 2) {
 			auth_display_custom_error_message($error_msg);
 			exit;
 		}
