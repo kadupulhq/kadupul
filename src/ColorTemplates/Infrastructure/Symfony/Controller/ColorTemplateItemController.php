@@ -17,6 +17,7 @@ use Kadupul\ColorTemplates\Domain\ColorTemplateFilters;
 use Kadupul\ColorTemplates\Infrastructure\Symfony\Form\ColorTemplateDeleteType;
 use Kadupul\ColorTemplates\Infrastructure\Symfony\Form\ColorTemplateItemType;
 use Kadupul\ColorTemplates\Infrastructure\Symfony\Form\ColorTemplateOrderType;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,14 +31,22 @@ use Twig\Environment;
 final class ColorTemplateItemController
 {
     #[Route('/graphing/color-templates/{id}/items/new', name: 'color_template_item_create', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function create(int $id, Request $request, ColorTemplateAccess $access, ColorTemplateStore $store, SaveColorTemplateItem $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function create(int $id, Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, SaveColorTemplateItem $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         return $this->edit($id, null, $request, $access, $store, $save, $forms, $twig, $urls, $translator);
     }
 
     #[Route('/graphing/color-templates/{id}/items/{itemId}/edit', name: 'color_template_item_edit', requirements: ['id' => '[1-9][0-9]{0,7}', 'itemId' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function update(int $id, int $itemId, Request $request, ColorTemplateAccess $access, ColorTemplateStore $store, SaveColorTemplateItem $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function update(int $id, int $itemId, Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, SaveColorTemplateItem $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         return $this->edit($id, $itemId, $request, $access, $store, $save, $forms, $twig, $urls, $translator);
     }
 
@@ -90,9 +99,13 @@ final class ColorTemplateItemController
     }
 
     #[Route('/graphing/color-templates/{id}/items/{itemId}/delete', name: 'color_template_item_delete', requirements: ['id' => '[1-9][0-9]{0,7}', 'itemId' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function delete(int $id, int $itemId, Request $request, ColorTemplateAccess $access, ColorTemplateStore $store, RemoveColorTemplateItem $remove, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function delete(int $id, int $itemId, Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, RemoveColorTemplateItem $remove, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, $headers);
+        }
         try {
             $access->authorize();
             $template = $store->find($id);
@@ -118,9 +131,13 @@ final class ColorTemplateItemController
     }
 
     #[Route('/graphing/color-templates/{id}/items/order', name: 'color_template_item_order', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['POST'])]
-    public function reorder(int $id, Request $request, ColorTemplateAccess $access, ReorderColorTemplateItems $reorder, FormFactoryInterface $forms, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function reorder(int $id, Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ReorderColorTemplateItems $reorder, FormFactoryInterface $forms, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, $headers);
+        }
         try {
             $access->authorize();
             $submittedForms = array_values(array_filter($request->request->keys(), static fn(string $name): bool => preg_match('/\Acolor_template_order_[1-9][0-9]{0,7}_[1-9][0-9]{0,9}_(?:up|down)\z/D', $name) === 1));

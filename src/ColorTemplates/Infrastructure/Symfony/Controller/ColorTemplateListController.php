@@ -12,6 +12,7 @@ use Kadupul\ColorTemplates\Application\Port\ColorTemplatePreferences;
 use Kadupul\ColorTemplates\Application\Port\ColorTemplateStore;
 use Kadupul\ColorTemplates\Application\Query\ColorTemplateAccessDenied;
 use Kadupul\ColorTemplates\Application\Query\ListColorTemplates;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\ColorTemplates\Domain\ColorTemplateFilters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,9 +23,13 @@ use Twig\Environment;
 final class ColorTemplateListController
 {
     #[Route('/graphing/color-templates', name: 'color_template_list', methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, ColorTemplateAccess $access, ColorTemplateStore $store, ColorTemplatePreferences $preferences, ListColorTemplates $list, Environment $twig, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, ColorTemplatePreferences $preferences, ListColorTemplates $list, Environment $twig, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, $headers);
+        }
         try {
             $access->authorize();
             $query = $request->query->all();

@@ -15,6 +15,7 @@ use Kadupul\ColorTemplates\Domain\ColorTemplate;
 use Kadupul\ColorTemplates\Domain\ColorTemplateFilters;
 use Kadupul\ColorTemplates\Infrastructure\Symfony\Form\ColorTemplateType;
 use Kadupul\ColorTemplates\Infrastructure\Symfony\Form\ColorTemplateOrderType;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,8 +29,12 @@ use Twig\Environment;
 final class ColorTemplateEditController
 {
     #[Route('/graphing/color-templates/new', name: 'color_template_create', methods: ['GET', 'HEAD', 'POST'])]
-    public function create(Request $request, ColorTemplateAccess $access, ColorTemplateStore $store, SaveColorTemplate $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function create(Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, SaveColorTemplate $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         try {
             $access->authorize();
         } catch (ColorTemplateAccessDenied $error) {
@@ -41,8 +46,12 @@ final class ColorTemplateEditController
     }
 
     #[Route('/graphing/color-templates/{id}/edit', name: 'color_template_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function update(int $id, Request $request, ColorTemplateAccess $access, ColorTemplateStore $store, SaveColorTemplate $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function update(int $id, Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, SaveColorTemplate $save, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         try {
             $access->authorize();
             $template = $store->find($id);

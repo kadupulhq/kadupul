@@ -15,6 +15,7 @@ use Kadupul\ColorTemplates\Application\Port\ColorTemplateStore;
 use Kadupul\ColorTemplates\Application\Query\ColorTemplateAccessDenied;
 use Kadupul\ColorTemplates\Domain\ColorTemplateFilters;
 use Kadupul\ColorTemplates\Infrastructure\Symfony\Form\ColorTemplateActionType;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,9 +31,13 @@ final class ColorTemplateActionController
     private const array ACTIONS = ['delete', 'duplicate', 'sync'];
 
     #[Route('/graphing/color-templates/actions', name: 'color_template_actions', methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(Request $request, ColorTemplateAccess $access, ColorTemplateStore $store, DeleteColorTemplates $delete, DuplicateColorTemplates $duplicate, SyncColorTemplate $sync, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, DeleteColorTemplates $delete, DuplicateColorTemplates $duplicate, SyncColorTemplate $sync, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, $headers);
+        }
         try {
             $access->authorize();
             $query = $request->query->all();

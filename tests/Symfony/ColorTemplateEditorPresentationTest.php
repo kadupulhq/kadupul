@@ -14,6 +14,7 @@ use Kadupul\ColorTemplates\Domain\ColorTemplate;
 use Kadupul\ColorTemplates\Domain\ColorTemplateItem;
 use Kadupul\Kernel;
 use Kadupul\IdentityAccess\Contract\Actor;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,6 +30,9 @@ final class ColorTemplateEditorPresentationTest extends TestCase
             $access = $this->createMock(ColorTemplateAccess::class);
             $access->method('authorize')->willReturn(new Actor(42, 'operator'));
 
+            $console = $this->createMock(ConsoleAccess::class);
+            $console->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+
             $store = $this->createMock(ColorTemplateStore::class);
             $store->method('defaultRows')->willReturn(25);
             $store->method('defaultHasGraphs')->willReturn(false);
@@ -39,6 +43,7 @@ final class ColorTemplateEditorPresentationTest extends TestCase
             ]);
 
             $container->set(ColorTemplateAccess::class, $access);
+            $container->set(ConsoleAccess::class, $console);
             $container->set(ColorTemplateStore::class, $store);
             $container->set(SaveColorTemplate::class, new SaveColorTemplate($access, $store));
 

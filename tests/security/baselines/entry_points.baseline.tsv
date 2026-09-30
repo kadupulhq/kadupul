@@ -4,6 +4,16 @@ about.php	authenticated	include/auth.php realm -1
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/graphing/color-template-items/legacy	symfony:color_template_items_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/graphing/color-templates	symfony:color_template_list	methods=GET|HEAD; ConsoleAccess realm 8
+app.php/graphing/color-templates/actions	symfony:color_template_actions	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/graphing/color-templates/legacy	symfony:color_template_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/graphing/color-templates/new	symfony:color_template_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/graphing/color-templates/{id}/edit	symfony:color_template_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
+app.php/graphing/color-templates/{id}/items/new	symfony:color_template_item_create	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
+app.php/graphing/color-templates/{id}/items/order	symfony:color_template_item_order	methods=POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
+app.php/graphing/color-templates/{id}/items/{itemId}/delete	symfony:color_template_item_delete	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},itemId=[1-9][0-9]{0,9}; ConsoleAccess realm 8
+app.php/graphing/color-templates/{id}/items/{itemId}/edit	symfony:color_template_item_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},itemId=[1-9][0-9]{0,9}; ConsoleAccess realm 8
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3

@@ -9,6 +9,7 @@ namespace Kadupul\ColorTemplates\Infrastructure\Symfony\Controller;
 
 use Kadupul\ColorTemplates\Application\Port\ColorTemplateAccess;
 use Kadupul\ColorTemplates\Application\Query\ColorTemplateAccessDenied;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,9 +20,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class LegacyColorTemplateController
 {
     #[Route('/graphing/color-templates/legacy', name: 'color_template_legacy', methods: ['GET', 'HEAD', 'POST'])]
-    public function templates(Request $request, ColorTemplateAccess $access, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function templates(Request $request, ConsoleAccess $console, ColorTemplateAccess $access, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, $headers);
+        }
         try {
             $access->authorize();
         } catch (ColorTemplateAccessDenied $error) {
@@ -67,9 +72,13 @@ final class LegacyColorTemplateController
     }
 
     #[Route('/graphing/color-template-items/legacy', name: 'color_template_items_legacy', methods: ['GET', 'HEAD', 'POST'])]
-    public function items(Request $request, ColorTemplateAccess $access, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function items(Request $request, ConsoleAccess $console, ColorTemplateAccess $access, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'color_templates'), 401, $headers);
+        }
         try {
             $access->authorize();
         } catch (ColorTemplateAccessDenied $error) {
