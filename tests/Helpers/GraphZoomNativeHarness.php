@@ -28,7 +28,7 @@ final class GraphZoomNativeHarness
             $address = stream_socket_get_name($socket, false);
             fclose($socket);
             $environment = array_merge(getenv(), array('GRAPH_ZOOM_NATIVE_ROOT' => $root, 'GRAPH_ZOOM_NATIVE_DIRECTORY' => $directory, 'GRAPH_ZOOM_NATIVE_SCENARIO' => json_encode($scenario, JSON_THROW_ON_ERROR), 'GRAPH_ZOOM_NATIVE_COVERAGE' => $coverage === null ? '0' : '1'));
-            $command = array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'auto_prepend_file=', '-d', 'output_buffering=0', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'session.save_path=' . $directory, '-S', $address, '-t', $directory);
+            $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'error_reporting=24575', '-d', 'auto_prepend_file=', '-d', 'output_buffering=0', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'session.save_path=' . $directory, '-S', $address, '-t', $directory);
             $process = proc_open($command, array(0 => array('pipe', 'r'), 1 => array('file', $directory . '/stdout.log', 'w'), 2 => array('file', $directory . '/stderr.log', 'w')), $pipes, $directory, $environment);
             if (!is_resource($process)) {
                 throw new RuntimeException('Could not start the native PHP HTTP server');
