@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Import Colors'|trans({}, 'palette') }} · Kadupul{% endblock %}
+{% block body %}<main><h1>{{ 'Import Colors'|trans({}, 'palette') }}</h1>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+<p><a href="{{ path('palette_color_list') }}">{{ 'Back to Colors'|trans({}, 'palette') }}</a></p>
+<p>{{ 'CSV requires exactly the name and hex header columns.'|trans({}, 'palette') }} {{ 'Named colors are read only.'|trans({}, 'palette') }}</p>
+{% if counts %}<output>{{ 'Imported: %inserted% new, %updated% updated, %skipped% skipped.'|trans({'%inserted%': counts.inserted, '%updated%': counts.updated, '%skipped%': counts.skipped}, 'palette') }}</output>{% endif %}
+{{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.file) }}{{ form_row(form.allow_update) }}{{ form_widget(form.revision) }}<button type="submit">{{ 'Import Colors'|trans({}, 'palette') }}</button>{{ form_end(form) }}
+</main>{% endblock %}

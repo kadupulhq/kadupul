@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ (preset ? 'Edit Color' : 'Add Color')|trans({}, 'palette') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('palette_color_list', filters) }}">{{ 'Back to Colors'|trans({}, 'palette') }}</a></p>
+    <h1>{{ (preset ? 'Edit Color' : 'Add Color')|trans({}, 'palette') }}</h1>
+    {% if saved %}<output>{{ 'Color saved.'|trans({}, 'palette') }}</output>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.hex) }}
+        {{ form_widget(form.revision) }}
+        {% if not preset or not preset.readOnly %}<button type="submit">{{ 'Save Color'|trans({}, 'palette') }}</button>{% else %}<p>{{ 'Named colors are read only.'|trans({}, 'palette') }}</p>{% endif %}
+    {{ form_end(form) }}
+</main>
+{% endblock %}

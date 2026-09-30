@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Delete Colors'|trans({}, 'palette') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Delete Colors'|trans({}, 'palette') }}</h1>
+    <p>{{ 'Click Continue to delete the following Colors.'|trans({}, 'palette') }}</p>
+    <ul>
+        {% for preset in presets %}<li>{{ preset.name }}</li>{% endfor %}
+    </ul>
+    {% if used %}<p role="alert">{{ 'Colors in use by a graph or graph template cannot be deleted.'|trans({}, 'palette') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.selection) }}
+        {{ form_widget(form.revisions) }}
+        {% if not used %}<button type="submit">{{ 'Continue'|trans({}, 'palette') }}</button>{% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <a href="{{ path('palette_color_list') }}">{{ 'Cancel'|trans({}, 'palette') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
