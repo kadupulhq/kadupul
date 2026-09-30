@@ -74,6 +74,17 @@ final class FormColorDropdownOutputTest extends TestCase
                 $row = $xpath->query('//div[contains(@class, "formRow")]')->item(0);
                 self::assertSame('row_' . $scenario['name'], $row->getAttribute('id'));
             }
+            if (!empty($scenario['controls'])) {
+                foreach (array('font', 'dirpath', 'filepath') as $id) {
+                    $input = $xpath->query('//input[@id="' . $id . '"]')->item(0);
+                    $value = $scenario['session']['sess_field_values'][$id] ?? (!empty($scenario['controls_empty']) ? 'default' : 'saved');
+                    self::assertSame($value, $input->getAttribute('value'));
+                    self::assertSame('64', $input->getAttribute('maxlength'));
+                    self::assertSame(!empty($scenario['session']['sess_error_fields'][$id]), str_contains($input->getAttribute('class'), 'txtErrorTextBox'));
+                }
+                self::assertTrue($xpath->query('//input[@id="enabled"]')->item(0)->hasAttribute('checked'));
+                self::assertSame('.xml', $xpath->query('//input[@id="file"]')->item(0)->getAttribute('accept'));
+            }
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
@@ -90,6 +101,6 @@ final class FormColorDropdownOutputTest extends TestCase
     {
         $plain = array('name' => 'colour', 'previous' => '5', 'default' => '', 'none' => 'None', 'class' => '', 'colors' => array(array('5', 'FFFFFF', 'White')));
         $hostile = array_replace($plain, array('name' => "n'><x", 'class' => "c' onfocus='alert(1)", 'none' => 'None<i>', 'colors' => array(array('5', "A'\"><x", 'Name<i>'))));
-        return array(array($hostile), array(array_replace($plain, array('previous' => '', 'default' => '5', 'none' => ''))), array(array_replace($plain, array('previous' => 'missing', 'colors' => array()))), array(array_replace($plain, array('colors' => array(array('7junk', '123456', 'Prefix'), array('junk', 'ABCDEF', ''))))), array(array_replace($hostile, array('handoff' => true))));
+        return array(array($hostile), array(array_replace($plain, array('previous' => '', 'default' => '5', 'none' => ''))), array(array_replace($plain, array('previous' => 'missing', 'colors' => array()))), array(array_replace($plain, array('colors' => array(array('7junk', '123456', 'Prefix'), array('junk', 'ABCDEF', ''))))), array(array_replace($hostile, array('handoff' => true))), array(array_replace($plain, array('handoff' => true, 'controls' => true, 'controls_empty' => true))), array(array_replace($plain, array('handoff' => true, 'controls' => true, 'session' => array('sess_error_fields' => array('font' => true, 'dirpath' => true), 'sess_field_values' => array('font' => 'submitted', 'dirpath' => 'submitted'))))));
     }
 }

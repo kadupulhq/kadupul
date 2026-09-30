@@ -39,11 +39,18 @@ function db_fetch_assoc($sql)
 {
     return $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 }
-$_SESSION = array();
+$_SESSION = $scenario['session'] ?? array();
 $config = array('is_web' => false, 'config_options_array' => array('hide_form_description' => 'off'));
 ob_start();
 if (!empty($scenario['handoff'])) {
-    draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => array($scenario['name'] => array('method' => 'drop_color', 'friendly_name' => 'Colour', 'value' => $scenario['previous'], 'default' => $scenario['default'], 'class' => $scenario['class'], 'on_change' => 'setColour()'))));
+    $fields = array($scenario['name'] => array('method' => 'drop_color', 'friendly_name' => 'Colour', 'value' => $scenario['previous'], 'default' => $scenario['default'], 'class' => $scenario['class'], 'on_change' => 'setColour()'));
+    if (!empty($scenario['controls'])) {
+        foreach (array('filepath', 'font', 'dirpath', 'file') as $method) {
+            $fields[$method] = array('method' => $method, 'friendly_name' => ucfirst($method), 'value' => !empty($scenario['controls_empty']) ? '' : 'saved', 'default' => 'default', 'form_id' => empty($scenario['controls_empty']) ? 1 : 0, 'max_length' => 64, 'accept' => '.xml');
+        }
+        $fields['font']['sub_checkbox'] = array('name' => 'enabled', 'value' => 'on');
+    }
+    draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => $fields));
 } else {
     form_color_dropdown($scenario['name'], $scenario['previous'], $scenario['none'], $scenario['default'], $scenario['class'], 'setColour()');
 }
