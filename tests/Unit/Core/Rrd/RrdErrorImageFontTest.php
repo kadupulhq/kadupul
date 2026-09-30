@@ -134,3 +134,37 @@ test('the error image renders with only the bundled fonts', function () {
 
     expect($image)->toBeString()->toContain('PNG')->toContain('IEND');
 });
+
+// The old GD path passed the point size (8) as a font id, which GD treats as its
+// largest 9x15 font, and wrapped for a narrower one, so text ran over the frame.
+test('rendered error text leaves the right margin and the frame untouched', function ($dejavu_paths) {
+    $calls = array(array(
+        'fn' => 'rrdtool_create_error_image',
+        'args' => array('ERROR: ' . str_repeat('0123456789abcdef', 30)),
+        'globals' => array('dejavu_paths' => $dejavu_paths),
+        'base64' => true,
+    ));
+
+    $image = imagecreatefromstring(base64_decode(rrd_error_image_run($this, $calls)[0], true));
+
+    expect($image)->not->toBeFalse();
+    // Columns 441-447 are canvas and 448-449 the frame; each must be one colour between the borders.
+    for ($x = 441; $x <= 449; $x++) {
+        $colors = array();
+        for ($y = 2; $y <= 197; $y++) {
+            $colors[imagecolorat($image, $x, $y)] = true;
+        }
+        expect($colors)->toHaveCount(1, "column $x");
+    }
+    // Rows 0-1 and 198-199 are the frame above and below the text.
+    foreach (array(0, 1, 198, 199) as $y) {
+        $colors = array();
+        for ($x = 125; $x <= 447; $x++) {
+            $colors[imagecolorat($image, $x, $y)] = true;
+        }
+        expect($colors)->toHaveCount(1, "row $y");
+    }
+})->with(array(
+    'built-in GD font' => array(array('/nonexistent/dejavu/')),
+    'bundled TrueType font' => array(array(dirname(__DIR__, 4) . '/include/fonts')),
+));

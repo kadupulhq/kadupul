@@ -240,6 +240,10 @@ foreach ($scenario['calls'] as $call) {
         $returned = array('thrown' => get_class($thrown), 'message' => $thrown->getMessage());
     }
     $printed = ob_get_clean();
+    // The results travel as JSON, which would mangle binary output such as a PNG.
+    if (!empty($call['base64']) && is_string($returned)) {
+        $returned = base64_encode($returned);
+    }
     if (isset($call['rrdp_argument'])) {
         rrd_close($args[$call['rrdp_argument']]);
         $args[$call['rrdp_argument']] = '<rrdp>';
