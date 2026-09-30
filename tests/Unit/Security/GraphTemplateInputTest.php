@@ -58,6 +58,9 @@ $config = array('url_path' => '/');
 session_id('graph-input-test-session');
 $_SESSION = array('sess_user_id' => 42);
 function read_config_option($key) { return '0'; }
+function is_graph_allowed($id) { return (int) $id === 1; }
+function is_device_allowed($id) { return (int) $id === 1; }
+function cacti_log(...$args) {}
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function is_error_message() { return false; }
 function get_hash_graph_template(...$args) { return 'hash'; }
@@ -195,13 +198,16 @@ test('graph save rejects stored identifiers before persistence and binds approve
 require $argv[1] . '/include/global_constants.php';
 require $argv[1] . '/lib/html_utility.php';
 function read_config_option($key) { return '0'; }
+function is_graph_allowed($id) { return (int) $id === 1; }
+function is_device_allowed($id) { return (int) $id === 1; }
+function cacti_log(...$args) {}
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function __($text, ...$args) { return $text; }
 function api_plugin_hook_function($name, $value) { return $value; }
 function form_input_validate($value, ...$args) { return $value; }
 function is_error_message() { return false; }
 function sql_save(...$args) { throw new Exception('Persistence before input validation'); }
-function db_fetch_cell_prepared(...$args) { return 2; }
+function db_fetch_cell_prepared($sql, ...$args) { return strpos($sql, 'SELECT host_id FROM graph_local') !== false ? 1 : 2; }
 function db_fetch_assoc_prepared($sql, $params) {
     return strpos($sql, 'SELECT id, column_name') !== false ? array(array('id' => 7, 'column_name' => $GLOBALS['argv'][2])) : array(array('id' => 88));
 }
