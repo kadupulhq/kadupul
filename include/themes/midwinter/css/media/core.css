@@ -185,12 +185,12 @@ input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name
 
 .cactiPageHead, .cactiConsoleNavigationArea, .cactiConsoleNavigationBox,
 .cactiConsoleNavigationUserBox, #compact_user_menu, .loginBody, .logoutBody,
-.cactiTableTitleRow, .messageBox, .spikekillMenu, tr.selected {
+.cactiTableTitleRow, .messageBox, .spikekillMenu, tr.selected, .cactiInstallArea {
     --focus-ring: var(--focus-ring-on-dark);
 }
 
 /* These surfaces stay dark in light mode, where the light link colour measures under 4.5:1. */
-.loginBody, .logoutBody, .cactiTableTitleRow, .messageBox, .spikekillMenu {
+.loginBody, .logoutBody, .cactiTableTitleRow, .messageBox, .spikekillMenu, .cactiInstallArea {
     --text-color-highlight-a: var(--text-color-highlight-a-on-dark);
 }
 
