@@ -42,6 +42,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Replace Font Awesome 4 icon names that render blank: the paper-plane scroll-to-top button and the sunrise logo now show their icons, and paper-plane and paw no longer turn delete icons into an undefined class. The paw theme also shows its logo on the logout page.
 
+- Center the About link logo in the classic, dark and modern themes, where it was clipped on the right. Add the missing semicolons that dropped the page-load progress bar glow in classic, paper-plane and paw and the graph zoom tooltip padding and border in midwinter, and give the midwinter `.moveArrowNone` padding its missing `px` unit. Remove theme declarations browsers already discarded, including stray comment terminators in the paper-plane and sunrise headers, and refresh the midwinter stylesheet cache hashes so browsers load the current CSS.
+
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.
