@@ -619,7 +619,7 @@ header_redirect	./aggregate_templates.php:89			header('Location: aggregate_templ
 header_redirect	./auth_changepassword.php:233	            header('Location: logout.php');
 header_redirect	./auth_changepassword.php:326	        header('Location:index.php');
 header_redirect	./auth_changepassword.php:95	    header('Location: graph_view.php');
-header_redirect	./auth_login.php:222	                header('Location: auth_login.php');
+header_redirect	./auth_login.php:229	                header('Location: auth_login.php');
 header_redirect	./automation_devices.php:129			header('Location: automation_devices.php?header=false');
 header_redirect	./automation_devices.php:221			header('Location: automation_devices.php?header=false');
 header_redirect	./automation_devices.php:667		header('Location: automation_devices.php?header=false');

@@ -4,13 +4,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // Runs the real LDAP Domains login code against an in-memory directory and
-// SQLite tables. "process" drives domains_login_process() from lib/auth.php.
+// SQLite tables. "process" drives domains_login_process() from lib/auth.php;
+// "login" drives auth_login.php with a stubbed login process so the template
+// and guest fallbacks can be observed without sessions or a browser.
 $root = $argv[1];
 $mode = $argv[2];
 $scenario = json_decode($argv[3], true, 512, JSON_THROW_ON_ERROR);
 
 define('POLLER_VERBOSITY_LOW', 2);
 define('POLLER_VERBOSITY_DEBUG', 5);
+define('OPER_MODE_NATIVE', 0);
+define('OPER_MODE_RESKIN', 1);
+define('MESSAGE_LEVEL_WARN', 2);
 define('FILTER_VALIDATE_IS_REGEX', 99999);
 define('FILTER_VALIDATE_IS_NUMERIC_ARRAY', 100000);
 define('FILTER_VALIDATE_IS_NUMERIC_LIST', 100001);
@@ -184,4 +189,76 @@ if ($mode === 'process') {
     $error = false;
     $error_msg = '';
     $result = domains_login_process($scenario['username']);
+} else {
+    // auth_login.php runs at file scope; these stand in for the rest of the application.
+    function set_default_action() {}
+    function cacti_require_post_actions(array $actions) {}
+    function get_cacti_version()
+    {
+        return 'test';
+    }
+    function get_nfilter_request_var($name, $default = '')
+    {
+        return $_REQUEST[$name] ?? $default;
+    }
+    function auth_get_username()
+    {
+        return $GLOBALS['scenario']['username'];
+    }
+    function stub_login_process()
+    {
+        global $error, $error_msg;
+
+        $GLOBALS['events'][] = 'PROCESS';
+        if ($GLOBALS['scenario']['process_error']) {
+            $error = true;
+            $error_msg = 'Access Denied!  Login Failed.';
+        }
+
+        return array();
+    }
+    function domains_login_process($username)
+    {
+        return stub_login_process();
+    }
+    function ldap_login_process($username)
+    {
+        return stub_login_process();
+    }
+    function local_auth_login_process($username)
+    {
+        return stub_login_process();
+    }
+    function get_template_account($username = '')
+    {
+        return $GLOBALS['scenario']['template'];
+    }
+    function get_guest_account()
+    {
+        return $GLOBALS['scenario']['guest'];
+    }
+    function auth_login_create_user_from_template($username, $realm)
+    {
+        $GLOBALS['events'][] = 'TEMPLATE';
+        exit;
+    }
+    function db_fetch_row_prepared($sql, $params = array())
+    {
+        $GLOBALS['events'][] = 'GUEST';
+        exit;
+    }
+    function db_fetch_cell_prepared($sql, $params = array())
+    {
+        return 0;
+    }
+    function db_execute_prepared($sql, $params = array())
+    {
+        return true;
+    }
+    function api_plugin_hook_function($hook, ...$args)
+    {
+        return $hook === 'custom_login' ? OPER_MODE_RESKIN : OPER_MODE_NATIVE;
+    }
+
+    require $root . '/auth_login.php';
 }

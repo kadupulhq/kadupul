@@ -106,6 +106,13 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
             break;
     }
 
+    // A domain login creates its account from the domain's own template, so an
+    // empty result without an error must not reach the global template or guest.
+    if ($auth_method == 4 && !$error && !cacti_sizeof($user)) {
+        $error     = true;
+        $error_msg = __('Access Denied!  Login Failed.');
+    }
+
     /* Create user from template if available */
     if (!$error && !cacti_sizeof($user) && get_template_account($username) > 0 && $username != '') {
         $user = auth_login_create_user_from_template($username, $realm);

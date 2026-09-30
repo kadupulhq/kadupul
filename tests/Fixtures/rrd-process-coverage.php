@@ -119,6 +119,7 @@ if (defined('DATA_SOURCE_LIMIT_TEST_COVERAGE')) {
 }
 if (defined('DOMAINS_LOGIN_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
 }
 if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/auth.php');

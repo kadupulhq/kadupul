@@ -98,3 +98,24 @@ test('domains login only binds for an enabled domain realm', function ($override
     'new account when the directory has no name attributes' => array(array('users' => array(array('id' => 5, 'username' => 'template', 'realm' => 0)), 'domains' => array(array('id' => 1, 'enabled' => 'on', 'template' => 5, 'cn_full_name' => 'displayName'))), array('SEARCH', 'BIND', 'CN', 'COPY'), false, null, 101),
     'domain template user that no longer exists' => array(array('users' => array(), 'domains' => array(array('id' => 1, 'enabled' => 'on', 'template' => 44))), array('SEARCH', 'BIND', 'LOG_FAILED'), true, 'Access Denied!  Template user id 44 does not exist.  Please contact your Administrator.', null),
 ));
+
+test('auth_login.php keeps domain logins out of the template and guest fallbacks', function ($overrides, $events, $error) {
+    $result = domains_login_realm_run($this, 'login', $overrides + array(
+        'username' => 'alice',
+        'request' => array('action' => 'login', 'realm' => '1001', 'login_password' => 'secret'),
+        'config' => array('auth_method' => '4'),
+        'process_error' => false,
+        'template' => 5,
+        'guest' => 0,
+    ));
+
+    expect($result['events'])->toBe($events)
+        ->and($result['error'])->toBe($error);
+})->with(array(
+    'domain process returned no account and no error' => array(array(), array('PROCESS', 'LOG_FAILED'), true),
+    'domain process returned no account with guest configured' => array(array('template' => 0, 'guest' => 6), array('PROCESS', 'LOG_FAILED'), true),
+    'domain process error is kept' => array(array('process_error' => true), array('PROCESS', 'LOG_FAILED'), true),
+    'LDAP login still creates from the template' => array(array('config' => array('auth_method' => '3'), 'request' => array('action' => 'login', 'realm' => '2', 'login_password' => 'secret')), array('PROCESS', 'TEMPLATE'), false),
+    'LDAP login still falls back to guest' => array(array('config' => array('auth_method' => '3'), 'request' => array('action' => 'login', 'realm' => '2', 'login_password' => 'secret'), 'template' => 0, 'guest' => 6), array('PROCESS', 'GUEST'), false),
+    'Local realm in domains mode still uses the local path' => array(array('request' => array('action' => 'login', 'realm' => '0', 'login_password' => 'secret')), array('PROCESS', 'TEMPLATE'), false),
+));
