@@ -182,34 +182,15 @@ function get_graph_data()
 
     $graph_data_array = array();
 
-    /* override: graph start time (unix time) */
-    if (!isempty_request_var('graph_start') && get_request_var('graph_start') < FILTER_VALIDATE_MAX_DATE_AS_INT) {
-        $graph_data_array['graph_start'] = get_request_var('graph_start');
+    foreach (array('graph_start' => FILTER_VALIDATE_MAX_DATE_AS_INT, 'graph_end' => FILTER_VALIDATE_MAX_DATE_AS_INT, 'graph_height' => 3000, 'graph_width' => 3000) as $field => $maximum) {
+        if (!isempty_request_var($field) && get_request_var($field) < $maximum) {
+            $graph_data_array[$field] = get_request_var($field);
+        }
     }
-
-    /* override: graph end time (unix time) */
-    if (!isempty_request_var('graph_end') && get_request_var('graph_end') < FILTER_VALIDATE_MAX_DATE_AS_INT) {
-        $graph_data_array['graph_end'] = get_request_var('graph_end');
-    }
-
-    /* override: graph height (in pixels) */
-    if (!isempty_request_var('graph_height') && get_request_var('graph_height') < 3000) {
-        $graph_data_array['graph_height'] = get_request_var('graph_height');
-    }
-
-    /* override: graph width (in pixels) */
-    if (!isempty_request_var('graph_width') && get_request_var('graph_width') < 3000) {
-        $graph_data_array['graph_width'] = get_request_var('graph_width');
-    }
-
-    /* override: skip drawing the legend? */
-    if (!isempty_request_var('graph_nolegend')) {
-        $graph_data_array['graph_nolegend'] = get_request_var('graph_nolegend');
-    }
-
-    /* print RRDtool graph source? */
-    if (!isempty_request_var('show_source')) {
-        $graph_data_array['print_source'] = get_request_var('show_source');
+    foreach (array('graph_nolegend' => 'graph_nolegend', 'show_source' => 'print_source') as $field => $option) {
+        if (!isempty_request_var($field)) {
+            $graph_data_array[$option] = get_request_var($field);
+        }
     }
 
     /* disable cache check */
@@ -238,6 +219,27 @@ function get_graph_data()
     return true;
 }
 
+/** Keep the registered device's SNMP settings identical across request types. */
+function remote_agent_snmp_session(array $host)
+{
+    return cacti_snmp_session(
+        $host['hostname'],
+        $host['snmp_community'],
+        $host['snmp_version'],
+        $host['snmp_username'],
+        $host['snmp_password'],
+        $host['snmp_auth_protocol'],
+        $host['snmp_priv_passphrase'],
+        $host['snmp_priv_protocol'],
+        $host['snmp_context'],
+        $host['snmp_engine_id'],
+        $host['snmp_port'],
+        $host['snmp_timeout'],
+        $host['ping_retries'],
+        $host['max_oids']
+    );
+}
+
 function get_snmp_data()
 {
     $host_id = get_filter_request_var('host_id');
@@ -264,22 +266,7 @@ function get_snmp_data()
             return;
         }
 
-        $session = cacti_snmp_session(
-            $host['hostname'],
-            $host['snmp_community'],
-            $host['snmp_version'],
-            $host['snmp_username'],
-            $host['snmp_password'],
-            $host['snmp_auth_protocol'],
-            $host['snmp_priv_passphrase'],
-            $host['snmp_priv_protocol'],
-            $host['snmp_context'],
-            $host['snmp_engine_id'],
-            $host['snmp_port'],
-            $host['snmp_timeout'],
-            $host['ping_retries'],
-            $host['max_oids']
-        );
+        $session = remote_agent_snmp_session($host);
 
         if ($session === false) {
             $output = 'U';
@@ -318,22 +305,7 @@ function get_snmp_data_walk()
             return;
         }
 
-        $session = cacti_snmp_session(
-            $host['hostname'],
-            $host['snmp_community'],
-            $host['snmp_version'],
-            $host['snmp_username'],
-            $host['snmp_password'],
-            $host['snmp_auth_protocol'],
-            $host['snmp_priv_passphrase'],
-            $host['snmp_priv_protocol'],
-            $host['snmp_context'],
-            $host['snmp_engine_id'],
-            $host['snmp_port'],
-            $host['snmp_timeout'],
-            $host['ping_retries'],
-            $host['max_oids']
-        );
+        $session = remote_agent_snmp_session($host);
 
         if ($session === false) {
             $output = 'U';
@@ -414,22 +386,7 @@ function poll_for_data()
                                 $output = 'U';
                             } else {
                                 $host = db_fetch_row_prepared('SELECT ping_retries, max_oids FROM host WHERE hostname = ?', array($item['hostname']));
-                                $session = cacti_snmp_session(
-                                    $item['hostname'],
-                                    $item['snmp_community'],
-                                    $item['snmp_version'],
-                                    $item['snmp_username'],
-                                    $item['snmp_password'],
-                                    $item['snmp_auth_protocol'],
-                                    $item['snmp_priv_passphrase'],
-                                    $item['snmp_priv_protocol'],
-                                    $item['snmp_context'],
-                                    $item['snmp_engine_id'],
-                                    $item['snmp_port'],
-                                    $item['snmp_timeout'],
-                                    $host['ping_retries'],
-                                    $host['max_oids']
-                                );
+                                $session = remote_agent_snmp_session(array_replace($item, $host));
 
                                 if ($session === false) {
                                     $output = 'U';

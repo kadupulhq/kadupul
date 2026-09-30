@@ -23,6 +23,22 @@ $db->exec('CREATE TABLE host (id INTEGER, poller_id INTEGER);
     INSERT INTO user_auth VALUES (7,"on",""),(8,"","");
     CREATE TABLE automation_networks (id INTEGER,poller_id INTEGER);
     INSERT INTO automation_networks VALUES (50,1),(51,2);');
+$snmp = array('hostname' => 'fixture-host', 'snmp_community' => 'public', 'snmp_version' => 2,
+    'snmp_username' => '', 'snmp_password' => '', 'snmp_auth_protocol' => '',
+    'snmp_priv_passphrase' => '', 'snmp_priv_protocol' => '', 'snmp_context' => '',
+    'snmp_engine_id' => '', 'snmp_port' => 161, 'snmp_timeout' => 500, 'ping_retries' => 2, 'max_oids' => 10);
+foreach ($snmp as $column => $value) {
+    $db->exec('ALTER TABLE host ADD COLUMN ' . $column . (is_int($value) ? ' INTEGER' : ' TEXT'));
+    $stmt = $db->prepare('UPDATE host SET ' . $column . '=?');
+    $stmt->execute(array($value));
+}
+$columns = array_merge($snmp, array('host_id' => 11, 'local_data_id' => 40, 'action' => 0, 'arg1' => '1.3.6.1', 'rrd_name' => 'traffic'));
+$db->exec('CREATE TABLE poller_item (' . implode(',', array_map(static fn($key) => $key . (is_int($columns[$key]) ? ' INTEGER' : ' TEXT'), array_keys($columns))) . ')');
+$stmt = $db->prepare('INSERT INTO poller_item VALUES (' . implode(',', array_fill(0, count($columns), '?')) . ')');
+$stmt->execute(array_values($columns));
+define('POLLER_ACTION_SNMP', 0);
+define('POLLER_ACTION_SCRIPT', 1);
+define('POLLER_ACTION_SCRIPT_PHP', 2);
 if ($mode === 'graph-mixed') {
     $db->exec('INSERT INTO data_template_rrd VALUES (31,41); INSERT INTO data_local VALUES (41,12); INSERT INTO graph_templates_item VALUES (20,31)');
 }
@@ -45,6 +61,14 @@ if ($mode === 'graph-image-collector') {
 if (getenv('REMOTE_AGENT_TEST_REQUEST')) {
     $request = json_decode(getenv('REMOTE_AGENT_TEST_REQUEST'), true, 512, JSON_THROW_ON_ERROR);
 }
+if ($mode === 'graph-bounds') {
+    foreach (array('graph_start', 'graph_end') as $field) {
+        $request[$field] = FILTER_VALIDATE_MAX_DATE_AS_INT;
+    }
+    $request['graph_height'] = 3000;
+    $request['graph_width'] = 3000;
+    unset($request['graph_nolegend'], $request['show_source']);
+}
 if ($mode === 'graph-denied') {
     $request['effective_user'] = 9;
 }
@@ -66,6 +90,9 @@ if (isset($actions[$prefix])) {
     $request['action'] = $actions[$prefix];
     $request['host_id'] = str_contains($mode, 'denied') ? 12 : ($config['poller_id'] === 2 ? 10 : 11);
     $request['data_query_id'] = 5;
+    $request['oid'] = str_contains($mode, 'invalid') ? 'invalid;oid' : '1.3.6.1';
+    $request['poller_id'] = 'fixture1';
+    $request['local_data_ids'] = array(40);
 }
 $calls = array();
 if (str_starts_with($mode, 'discover-')) {
@@ -144,6 +171,7 @@ function cacti_validate_theme($theme)
 function rrdtool_function_graph($graph, $rra, $options, $unused, &$xport, $user)
 {
     $GLOBALS['calls'][] = array('render', $graph, $user);
+    $GLOBALS['graph_options'] = $options;
     return (getenv('REMOTE_AGENT_TEST_RAW_IMAGE') ? "image = PNG\n" : '') . 'GRAPH IMAGE';
 }
 function api_device_ping_device($host, $remote)
@@ -153,6 +181,39 @@ function api_device_ping_device($host, $remote)
 function run_data_query($host, $query)
 {
     $GLOBALS['calls'][] = array('query', $host, $query);
+}
+function input_validate_input_number($value)
+{
+    if (!is_numeric($value)) {
+        throw new RuntimeException('Invalid numeric input');
+    }
+}
+function prepare_validate_result($value)
+{
+    return is_numeric($value);
+}
+function cacti_snmp_session(...$args)
+{
+    $GLOBALS['calls'][] = array('session', $args);
+    if (str_contains($GLOBALS['mode'], 'failed')) {
+        return false;
+    }
+    return new class {
+        public function close()
+        {
+            $GLOBALS['calls'][] = array('close');
+        }
+    };
+}
+function cacti_snmp_session_get($session, $oid)
+{
+    $GLOBALS['calls'][] = array('get', $oid);
+    return '42';
+}
+function cacti_snmp_session_walk($session, $oid)
+{
+    $GLOBALS['calls'][] = array('walk', $oid);
+    return array(array('oid' => $oid, 'value' => '42'));
 }
 function read_config_option($key)
 {
@@ -200,5 +261,5 @@ function call_remote_data_collector($poller, $url)
     return $body;
 }
 register_shutdown_function(function () {
-    echo "\nRESULT:" . json_encode(array('calls' => $GLOBALS['calls'], 'identity' => $GLOBALS['remote_agent_authorized_poller_id'] ?? 0), JSON_THROW_ON_ERROR);
+    echo "\nRESULT:" . json_encode(array('calls' => $GLOBALS['calls'], 'identity' => $GLOBALS['remote_agent_authorized_poller_id'] ?? 0, 'graph_options' => $GLOBALS['graph_options'] ?? array()), JSON_THROW_ON_ERROR);
 });

@@ -53,6 +53,13 @@ test('production remote agent preserves authorized handoffs and rejects other co
                 return $call[0] !== 'permission';
             }))->toBe(array());
         }
+        if (in_array($mode, array('graph-allowed', 'graph-bounds'), true)) {
+            $options = array('disable_cache' => true, 'graph_theme' => 'modern', 'graphv' => true);
+            if ($mode === 'graph-allowed') {
+                $options = array_merge(array('graph_start' => 1700000000, 'graph_end' => 1700003600, 'graph_height' => 120, 'graph_width' => 240, 'graph_nolegend' => 'true', 'print_source' => '1'), $options);
+            }
+            expect($result['graph_options'])->toBe($options);
+        }
         if (in_array($mode, array('ping-main', 'ping-collector'), true)) {
             expect($result['calls'])->toBe(array(array('ping', $mode === 'ping-main' ? 11 : 10)));
         }
@@ -63,6 +70,15 @@ test('production remote agent preserves authorized handoffs and rejects other co
             expect($result['calls'])->toHaveCount(1)
                 ->and($result['calls'][0][0])->toBe('discover')
                 ->and($result['calls'][0][2])->toContain("--poller='" . (str_contains($mode, 'collector') ? 2 : 1) . "'");
+        }
+        if (in_array($mode, array('snmp-main', 'walk-main', 'poll-main', 'snmp-failed', 'walk-failed'), true)) {
+            expect($result['calls'][0])->toBe(array('session', array('fixture-host', 'public', 2, '', '', '', '', '', '', '', 161, 500, 2, 10)));
+            if (str_contains($mode, 'failed')) {
+                expect($result['calls'])->toHaveCount(1);
+            } else {
+                expect($result['calls'][1])->toBe(array($mode === 'walk-main' ? 'walk' : 'get', '1.3.6.1'))
+                    ->and($result['calls'][2])->toBe(array('close'));
+            }
         }
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
@@ -83,7 +99,7 @@ test('production remote agent preserves authorized handoffs and rejects other co
     }
 })->with(array(
     array('graph-image-collector', 'GRAPH IMAGE'),
-    array('graph-allowed', 'GRAPH IMAGE'), array('graph-collector', 'GRAPH IMAGE'),
+    array('graph-allowed', 'GRAPH IMAGE'), array('graph-bounds', 'GRAPH IMAGE'), array('graph-collector', 'GRAPH IMAGE'),
     array('graph-empty', 'GRAPH IMAGE'), array('graph-hostless', 'GRAPH IMAGE'),
     array('graph-hostless-data', 'GRAPH IMAGE'), array('graph-mixed', 'GRAPH ACCESS DENIED'),
     array('graph-orphan', 'GRAPH ACCESS DENIED'), array('graph-missing', 'GRAPH ACCESS DENIED'),
@@ -93,6 +109,9 @@ test('production remote agent preserves authorized handoffs and rejects other co
     array('query-main', ''), array('query-collector', ''), array('ping-denied', 'U'),
     array('query-denied', ''), array('snmp-denied', 'U'), array('poll-denied', '[]'),
     array('walk-denied', 'U'),
+    array('snmp-main', '42'), array('snmp-failed', 'U'), array('snmp-invalid', 'U'),
+    array('walk-main', '[{"oid":"1.3.6.1","value":"42"}]'), array('walk-failed', 'U'), array('walk-invalid', 'U'),
+    array('poll-main', '[{"value":"42","rrd_name":"traffic","local_data_id":40}]'),
     array('discover-main', ''), array('discover-collector', ''), array('discover-denied', ''),
     array('discover-main-broker-all-collector', ''), array('discover-all-denied', ''),
     array('unauthorized', 'FATAL: Client authorization failed.  You are not authorized to use this service')
