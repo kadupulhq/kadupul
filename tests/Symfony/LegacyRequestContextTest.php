@@ -169,13 +169,19 @@ namespace Kadupul\Tests\LegacyRequestContext {
                 . '$_SERVER = ["REQUEST_URI" => "/early.php?a=1", "SCRIPT_NAME" => "/early.php"];'
                 . '$uri = get_browser_query_string();'
                 . '$page = get_current_page();'
-                . 'echo json_encode([$uri, $page, $GLOBALS["logs"] ?? []], JSON_THROW_ON_ERROR);';
+                . '$_SERVER = ["SCRIPT_NAME" => "", "SCRIPT_FILENAME" => "/srv/fallback.php", "QUERY_STRING" => "x=1"];'
+                . '$fallbackUri = get_browser_query_string();'
+                . '$fullPath = get_current_page(false);'
+                . '$_SERVER = [];'
+                . '$missingPage = get_current_page();'
+                . '$missingUri = get_browser_query_string();'
+                . 'echo json_encode([$uri, $page, $fallbackUri, $fullPath, $missingPage, $missingUri, $GLOBALS["logs"] ?? []], JSON_THROW_ON_ERROR);';
             $process = new Process([PHP_BINARY, '-r', $script]);
             $process->run();
 
             self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
             self::assertSame(
-                ['sanitized:/early.php?a=1', 'early.php', []],
+                ['sanitized:/early.php?a=1', 'early.php', 'sanitized:fallback.php?x=1', '/srv/fallback.php', false, 'sanitized:', ['ERROR: unable to determine current_page', 'ERROR: unable to determine current_page']],
                 json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR)
             );
         }
