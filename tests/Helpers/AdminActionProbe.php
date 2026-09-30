@@ -8,8 +8,8 @@
  * request, database and message helpers stubbed. The scenario names the page,
  * the functions to copy from it and from lib/auth.php, the request, the
  * session, the settings, canned query answers and the call to make. The
- * result lists the SQL writes, permission resets, messages and headers, and
- * is printed even when the code under test exits.
+ * result lists the SQL reads and writes, permission resets, messages and
+ * headers, and is printed even when the code under test exits.
  *
  * Each entry in 'answers' is array(helper, pattern, value[, params]): the
  * first entry whose helper and pattern match the query, and whose params
@@ -40,6 +40,7 @@ $GLOBALS['request'] = $scenario['request'] ?? array();
 $GLOBALS['config_options'] = $scenario['config'] ?? array();
 $GLOBALS['answers'] = $scenario['answers'] ?? array();
 $GLOBALS['executed'] = array();
+$GLOBALS['reads'] = array();
 $GLOBALS['resets'] = array();
 $GLOBALS['messages'] = array();
 $GLOBALS['logged'] = array();
@@ -55,6 +56,7 @@ register_shutdown_function(function () {
     fwrite(STDOUT, json_encode(array(
         'returned' => $GLOBALS['probe_returned'] ?? null,
         'executed' => $GLOBALS['executed'],
+        'reads' => $GLOBALS['reads'],
         'resets' => $GLOBALS['resets'],
         'messages' => $GLOBALS['messages'],
         'logged' => $GLOBALS['logged'],
@@ -65,6 +67,7 @@ register_shutdown_function(function () {
 });
 function probe_normalize($sql) { return trim(preg_replace('/\s+/', ' ', $sql)); }
 function probe_answer($helper, $sql, $params, $empty) {
+    $GLOBALS['reads'][] = array('helper' => $helper, 'sql' => probe_normalize($sql), 'params' => array_values($params));
     foreach ($GLOBALS['answers'] as $answer) {
         if ($answer[0] !== $helper || !preg_match($answer[1], probe_normalize($sql))) {
             continue;

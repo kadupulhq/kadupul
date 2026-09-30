@@ -2178,10 +2178,9 @@ function user()
             'default' => ''
         ),
         'group' => array(
-            'filter' => FILTER_CALLBACK,
+            'filter' => FILTER_VALIDATE_INT,
             'default' => '-1',
-            'pageset' => true,
-            'options' => array('options' => 'sanitize_search_string')
+            'pageset' => true
         ),
         'sort_column' => array(
             'filter' => FILTER_CALLBACK,
@@ -2359,8 +2358,11 @@ function user()
         }
     }
 
+    $sql_params = array();
+
     if (get_request_var('group') > 0) {
-        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' ug.group_id = ' . get_request_var('group');
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' ug.group_id = ?';
+        $sql_params[] = get_request_var('group');
     }
 
     if (get_request_var('login') > 0) {
@@ -2379,7 +2381,7 @@ function user()
         }
     }
 
-    $total_rows = db_fetch_cell("SELECT
+    $total_rows = db_fetch_cell_prepared("SELECT
 		COUNT(DISTINCT ua.id)
 		FROM user_auth AS ua
 		LEFT JOIN (
@@ -2390,12 +2392,12 @@ function user()
 		ON ua.id = ul.user_id
 		LEFT JOIN user_auth_group_members AS ug
 		ON ua.id = ug.user_id
-		$sql_where");
+		$sql_where", $sql_params);
 
     $sql_order = get_order_string();
     $sql_limit = ' LIMIT ' . ($rows * (get_request_var('page') - 1)) . ',' . $rows;
 
-    $user_list = db_fetch_assoc("SELECT ua.id, ua.username, ua.full_name,
+    $user_list = db_fetch_assoc_prepared("SELECT ua.id, ua.username, ua.full_name,
 		ua.realm, ua.enabled, ua.policy_graphs, ua.policy_hosts, ua.policy_graph_templates,
 		time, MAX(UNIX_TIMESTAMP(time)) as dtime
 		FROM user_auth AS ua
@@ -2410,7 +2412,7 @@ function user()
 		$sql_where
 		GROUP BY ua.id
 		$sql_order
-		$sql_limit");
+		$sql_limit", $sql_params);
 
     $nav = html_nav_bar('user_admin.php?filter=' . get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 9, __('Users'), 'page', 'main');
 
