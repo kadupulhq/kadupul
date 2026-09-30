@@ -14,6 +14,15 @@ test('fixed graph line types do not present an editable width control', function
         $fixedTypes = substr($fixedTypes, 0, strpos($fixedTypes, 'break;'));
         expect($fixedTypes)->toContain("$('#row_line_width').hide();")
             ->and($fixedTypes)->not->toContain("$('#row_line_width').show();");
+
+        $stack = substr($source, strpos($source, "case '20': // LINE:STACK"));
+        $stack = substr($stack, 0, strpos($stack, 'break;'));
+        preg_match_all('/\$\(\x27#row_[a-z_]+\x27\)\.(?:show|hide)\(\);/', $fixedTypes, $fixedRows);
+        preg_match_all('/\$\(\x27#row_[a-z_]+\x27\)\.(?:show|hide)\(\);/', $stack, $stackRows);
+        expect(substr_count($fixedTypes, "$('#row_line_width')"))->toBe(1)
+            ->and(substr_count($stack, "$('#row_line_width')"))->toBe(1)
+            ->and(array_values(array_diff($fixedRows[0], array("$('#row_line_width').hide();"))))
+            ->toBe(array_values(array_diff($stackRows[0], array("$('#row_line_width').show();"))));
     }
 
     $stackType = substr($graphItems, strpos($graphItems, "case '20': // LINE:STACK"));
