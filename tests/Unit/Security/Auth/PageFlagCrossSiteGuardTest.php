@@ -154,6 +154,12 @@ test('viewing the notification log without a purge is unchanged', function () {
         ->toBe('DISPATCHED:editSTATUS:200');
 });
 
+test('the notification log Purge button posts the token', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/managers.php');
+
+    expect($source)->toMatch("/\\$\\('#purge'\\)\\.on\\('click', function\\(\\) \\{\\s*loadPageUsingPost\\('managers\\.php', \\{\\s*action: 'edit',\\s*tab: 'logs',\\s*id: \\$\\('#id'\\)\\.val\\(\\),\\s*purge: 1,\\s*header: 'false',\\s*__csrf_magic: csrfMagicToken\\s*\\}\\)/");
+});
+
 test('a cross-site GET cannot purge the Data Debug checks', function (array $headers) {
     expect(page_flag_guard_run('data_debug.php', 'GET', 'purge=1&debug=-1&header=false', $headers))->toBe('STATUS:405');
 })->with(array(

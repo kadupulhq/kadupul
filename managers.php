@@ -738,6 +738,17 @@ function manager_logs($id, $header_label)
 		$('#form_snmpagent_manager_logs').on('submit', function() {
 			applyFilter();
 		});
+
+		$('#purge').on('click', function() {
+			loadPageUsingPost('managers.php', {
+				action: 'edit',
+				tab: 'logs',
+				id: $('#id').val(),
+				purge: 1,
+				header: 'false',
+				__csrf_magic: csrfMagicToken
+			});
+		});
 	});
 
 	</script>
