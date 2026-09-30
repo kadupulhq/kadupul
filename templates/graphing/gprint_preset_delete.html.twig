@@ -12,7 +12,8 @@
         {{ form_errors(form) }}
         {{ form_widget(form.selection) }}
         {% if not used %}<button type="submit">{{ 'Continue'|trans({}, 'gprint') }}</button>{% endif %}
-        <a href="{{ listUrl }}">{{ 'Cancel'|trans({}, 'gprint') }}</a>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <a href="{{ path('gprint_preset_list', filters) }}">{{ 'Cancel'|trans({}, 'gprint') }}</a>
     {{ form_end(form) }}
 </main>
 {% endblock %}

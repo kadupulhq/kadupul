@@ -88,7 +88,7 @@ final class GprintPresetDeleteController
             'presets' => $presets,
             'used' => $used,
             'form' => $form->createView(),
-            'listUrl' => $urls->generate('gprint_preset_list', $filters),
+            'filters' => $filters,
         ]), $status, $headers);
     }
 

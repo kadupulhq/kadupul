@@ -4,6 +4,7 @@
 <main>
     <h1>{{ 'GPRINT Presets'|trans({}, 'gprint') }}</h1>
     {% if deleted %}<output>{{ 'GPRINT Presets deleted.'|trans({}, 'gprint') }}</output>{% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('gprint_preset_create', filters) }}">{{ 'Add GPRINT Preset'|trans({}, 'gprint') }}</a></p>
     <form method="get" action="{{ path('gprint_preset_list') }}">
         <label for="gprint-filter">{{ 'Search'|trans({}, 'gprint') }}</label>
@@ -19,6 +20,7 @@
         <input type="hidden" name="has_graphs" value="false">
         <label><input type="checkbox" name="has_graphs" value="true"{% if filters.has_graphs == 'true' %} checked{% endif %}> {{ 'Has Graphs'|trans({}, 'gprint') }}</label>
         <button type="submit">{{ 'Go'|trans({}, 'gprint') }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         <a href="{{ path('gprint_preset_list', {reset: 1}) }}">{{ 'Clear'|trans({}, 'gprint') }}</a>
     </form>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
@@ -27,16 +29,21 @@
             <caption>{{ 'GPRINT Presets'|trans({}, 'gprint') }}</caption>
             <thead><tr>
                 <th scope="col">{{ 'Select'|trans({}, 'gprint') }}</th>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                 <th scope="col"><a href="{{ path('gprint_preset_list', filters|merge({sort_column: 'name', sort_direction: filters.sort_column == 'name' and filters.sort_direction == 'ASC' ? 'DESC' : 'ASC'})) }}">{{ 'GPRINT Preset Name'|trans({}, 'gprint') }}</a></th>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                 <th scope="col"><a href="{{ path('gprint_preset_list', filters|merge({sort_column: 'gprint_text', sort_direction: filters.sort_column == 'gprint_text' and filters.sort_direction == 'ASC' ? 'DESC' : 'ASC'})) }}">{{ 'Format'|trans({}, 'gprint') }}</a></th>
                 <th scope="col">{{ 'Deletable'|trans({}, 'gprint') }}</th>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                 <th scope="col"><a href="{{ path('gprint_preset_list', filters|merge({sort_column: 'graphs', sort_direction: filters.sort_column == 'graphs' and filters.sort_direction == 'ASC' ? 'DESC' : 'ASC'})) }}">{{ 'Graphs Using'|trans({}, 'gprint') }}</a></th>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                 <th scope="col"><a href="{{ path('gprint_preset_list', filters|merge({sort_column: 'templates', sort_direction: filters.sort_column == 'templates' and filters.sort_direction == 'ASC' ? 'DESC' : 'ASC'})) }}">{{ 'Templates Using'|trans({}, 'gprint') }}</a></th>
             </tr></thead>
             <tbody>
             {% for preset in page.presets %}
                 <tr>
                     <td><input type="checkbox" name="ids[]" value="{{ preset.id }}"{% if not preset.deletable %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': preset.name}, 'gprint') }}"></td>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                     <td><a href="{{ path('gprint_preset_edit', filters|merge({id: preset.id})) }}">{{ preset.name }}</a></td>
                     <td>{{ preset.gprintText }}</td>
                     <td>{{ (preset.deletable ? 'Yes' : 'No')|trans({}, 'gprint') }}</td>
@@ -51,8 +58,10 @@
         <button type="submit">{{ 'Delete selected'|trans({}, 'gprint') }}</button>
     </form>
     <nav aria-label="{{ 'GPRINT Preset pages'|trans({}, 'gprint') }}">
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         {% if page.hasPrevious %}<a rel="prev" href="{{ path('gprint_preset_list', filters|merge({page: filters.page - 1})) }}">{{ 'Previous'|trans({}, 'gprint') }}</a>{% endif %}
         <span>{{ 'Page %page%'|trans({'%page%': filters.page}, 'gprint') }}</span>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         {% if page.hasNext %}<a rel="next" href="{{ path('gprint_preset_list', filters|merge({page: filters.page + 1})) }}">{{ 'Next'|trans({}, 'gprint') }}</a>{% endif %}
     </nav>
 </main>
