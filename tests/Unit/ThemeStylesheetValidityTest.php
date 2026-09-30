@@ -30,6 +30,7 @@ function theme_css_invalid_declarations(string $css): array
         '/^(?:border-color|box-shadow)\s*:[^:]*gradient\(/i' => 'gradient in border-color or box-shadow',
         '/^float\s*:\s*middle\b/i'                   => 'float: middle',
         '/^!important$/i'                            => 'detached !important',
+        '/\n\s*-?[a-z][a-z-]*\s*:(?!:)/i'            => 'missing semicolon',
     ];
 
     preg_match_all('/\{([^{}]*)\}/', $css, $blocks);
@@ -43,17 +44,46 @@ function theme_css_invalid_declarations(string $css): array
                     $problems[] = $label . ': ' . $declaration;
                 }
             }
+
+            if (theme_css_has_unitless_length($declaration)) {
+                $problems[] = 'unitless length: ' . $declaration;
+            }
         }
     }
 
     return $problems;
 }
 
-function theme_css_authored_files(): array
+/**
+ * The pages are served with <!DOCTYPE html>, so a bare nonzero number where a
+ * length belongs is dropped rather than read as pixels the way quirks mode did.
+ */
+function theme_css_has_unitless_length(string $declaration): bool
+{
+    $lengths = '(?:padding|margin)(?:-(?:top|right|bottom|left))?|(?:min-|max-)?(?:width|height)'
+        . '|top|right|bottom|left|font-size|text-indent|letter-spacing|border-radius'
+        . '|border(?:-(?:top|right|bottom|left))?-width|outline-width|gap';
+
+    if (!preg_match('/^(?:' . $lengths . ')\s*:(.*)$/is', $declaration, $match)) {
+        return false;
+    }
+
+    $value = preg_replace('/!\s*important\s*$/i', '', $match[1]);
+
+    foreach (preg_split('/\s+/', trim($value)) as $token) {
+        if (preg_match('/^[-+]?(?:\d*\.)?\d+$/', $token) && (float) $token !== 0.0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function theme_css_files(): array
 {
     $themes = dirname(__DIR__, 2) . '/include/themes';
-    $files = glob($themes . '/*/main.css');
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($themes . '/midwinter/css'));
+    $files = [];
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($themes));
 
     foreach ($iterator as $file) {
         if ($file->getExtension() === 'css') {
@@ -88,15 +118,21 @@ function midwinter_stale_imports(string $css, string $directory): array
 }
 
 it('ships theme stylesheets without declarations browsers discard', function (): void {
-    $files = theme_css_authored_files();
+    $files = theme_css_files();
 
     expect($files)->not->toBeEmpty();
+
+    $problems = [];
 
     foreach ($files as $file) {
         $relative = substr($file, strlen(dirname(__DIR__, 2)) + 1);
 
-        expect(theme_css_invalid_declarations(file_get_contents($file)))->toBe([], $relative);
+        foreach (theme_css_invalid_declarations(file_get_contents($file)) as $problem) {
+            $problems[] = $relative . ': ' . $problem;
+        }
     }
+
+    expect($problems)->toBe([]);
 });
 
 it('flags each discarded declaration pattern', function (string $css, string $label): void {
@@ -105,7 +141,7 @@ it('flags each discarded declaration pattern', function (string $css, string $la
     expect($problems)->toHaveCount(1)
         ->and($problems[0])->toStartWith($label);
 })->with([
-    'stray comment end'   => [".a {\n\tborder-color: #222;\n\t*/\n\tbox-shadow: none;\n}", 'stray */'],
+    'stray comment end'   => [".a {\n\tborder-color: #222;\n\t*/\n}", 'stray */'],
     'hash property'       => ['.a { #z-index: 2; }', 'hash-prefixed property'],
     'color show'          => ['.a:hover { color: show; }', 'color: show'],
     'align-self left'     => ['.a { align-self: left; }', 'align-self: left'],
@@ -119,6 +155,11 @@ it('flags each discarded declaration pattern', function (string $css, string $la
     'gradient border'     => ['.a { border-color: linear-gradient(to bottom, #252426 0%, #0c0d0d 100%); }', 'gradient in border-color'],
     'gradient shadow'     => ['.a { box-shadow: -moz-linear-gradient(top, #45484d 100%, #000 100%); }', 'gradient in border-color'],
     'float middle'        => ['.a { float: middle; }', 'float: middle'],
+    'missing semicolon'   => [".a {\n\tbox-shadow: 0 0 18px #00438C, 0 0 5px #00438C\n\topacity: 1.0;\n}", 'missing semicolon'],
+    'missing before var'  => [".a {\n    padding: 6px\n\tborder: 1px solid var(--border-color);\n}", 'missing semicolon'],
+    'unitless padding'    => ['.moveArrowNone { padding-left: 8.75; }', 'unitless length'],
+    'unitless shorthand'  => ['.a { margin: 0 4 0 0 !important; }', 'unitless length'],
+    'unitless width'      => ['.a { width: 12; }', 'unitless length'],
 ]);
 
 it('accepts valid declarations that look like the invalid ones', function (): void {
@@ -132,6 +173,15 @@ it('accepts valid declarations that look like the invalid ones', function (): vo
         .e { background-image: -webkit-linear-gradient(left, #fff, #000); background-image: radial-gradient(ellipse at 85% 145%, #fff, #000); }
         .f { box-shadow: 0 0 1px #2196f3; float: left; }
         @media screen { .d { color: white; } }
+        .g { padding-left: 8.75px; margin: 0 auto; top: 0; width: 0.0; line-height: 1.5; z-index: 2; opacity: 1.0; }
+        .h {
+            background: -webkit-gradient(linear, left top, left bottom,
+                color-stop(0%, #fff), color-stop(100%, #000));
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#000000');
+            src: url('a.woff2') format('woff2'),
+                url('data:font/woff;base64,AA==') format('woff');
+        }
+        .i { box-shadow: 0 0 18px #00438C, 0 0 5px #00438C }
         CSS;
 
     expect(theme_css_invalid_declarations($css))->toBe([]);
