@@ -792,10 +792,19 @@ function get_selected_theme()
 {
     global $config, $themes;
 
+    // Only names from the installed theme list may reach a filesystem path.
+    $installed = is_array($themes) ? $themes : array();
+
     // shortcut if theme is set in session
     if (isset($_SESSION['selected_theme'])) {
-        if (file_exists($config['base_path'] . '/include/themes/' . $_SESSION['selected_theme'] . '/main.css')) {
-            return $_SESSION['selected_theme'];
+        $session_theme = $_SESSION['selected_theme'];
+
+        if (is_scalar($session_theme)) {
+            $session_theme = (string) $session_theme;
+
+            if (isset($installed[$session_theme]) && file_exists($config['base_path'] . '/include/themes/' . $session_theme . '/main.css')) {
+                return $session_theme;
+            }
         }
     }
 
@@ -821,29 +830,39 @@ function get_selected_theme()
         );
 
         // user has a theme
-        if (!empty($user_theme)) {
-            $theme = $user_theme;
-            ;
+        if (!empty($user_theme) && is_scalar($user_theme)) {
+            $theme = (string) $user_theme;
         }
     }
 
-    if (!file_exists($config['base_path'] . '/include/themes/' . $theme . '/main.css')) {
-        foreach ($themes as $t => $name) {
-            if ($t != 'classic') {
-                if (file_exists($config['base_path'] . '/include/themes/' . $t . '/main.css')) {
-                    $theme = $t;
+    if (!is_scalar($theme) || !isset($installed[(string) $theme]) || !file_exists($config['base_path'] . '/include/themes/' . (string) $theme . '/main.css')) {
+        $fallback_theme = null;
 
-                    db_execute_prepared(
-                        'UPDATE settings_user
-						SET value = ?
-						WHERE user_id = ?
-						AND name = "selected_theme"',
-                        array($theme, $_SESSION['sess_user_id'])
-                    );
+        foreach ($installed as $t => $name) {
+            $candidate = (string) $t;
 
-                    break;
-                }
+            if (file_exists($config['base_path'] . '/include/themes/' . $candidate . '/main.css')) {
+                $fallback_theme = $candidate;
+
+                break;
             }
+        }
+
+        if ($fallback_theme === null) {
+            $fallback_theme = isset($installed['classic']) ? 'classic' : (string) (array_key_first($installed) ?? 'modern');
+        }
+
+        $theme = $fallback_theme;
+
+        // Without a logged in user there is no row to repair.
+        if (isset($_SESSION['sess_user_id'])) {
+            db_execute_prepared(
+                'UPDATE settings_user
+				SET value = ?
+				WHERE user_id = ?
+				AND name = "selected_theme"',
+                array($theme, $_SESSION['sess_user_id'])
+            );
         }
     }
 
@@ -8706,6 +8725,18 @@ function cacti_validate_theme($requested)
     }
 
     $requested = basename((string) $requested);
+    $default   = basename((string) $default);
+
+    // The configured default is stored data, not a trusted constant.
+    if (!isset($valid_themes[$default])) {
+        if (isset($valid_themes['modern'])) {
+            $default = 'modern';
+        } elseif (count($valid_themes) > 0) {
+            $default = (string) array_key_first($valid_themes);
+        } else {
+            $default = 'modern';
+        }
+    }
 
     return isset($valid_themes[$requested]) ? $requested : $default;
 }
