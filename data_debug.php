@@ -546,7 +546,16 @@ function debug_wizard()
     );
 
     if (isset_request_var('purge')) {
-        db_execute('TRUNCATE TABLE data_debug');
+        $device_rows = 0;
+        $allowed_device_ids = array_map('intval', array_column(get_allowed_devices('', '', '', $device_rows), 'id'));
+
+        if (cacti_sizeof($allowed_device_ids)) {
+            db_execute('DELETE dd
+				FROM data_debug AS dd
+				INNER JOIN data_local AS dl
+				ON dd.datasource = dl.id
+				WHERE dl.host_id IN (' . implode(',', $allowed_device_ids) . ')');
+        }
     }
 
     /* fill in the current date for printing in the log */
