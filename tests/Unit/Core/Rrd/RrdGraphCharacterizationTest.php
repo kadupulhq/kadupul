@@ -291,7 +291,7 @@ test('graph options match their golden for each scale and axis setting', functio
         'logarithmic with si units' => array(array('auto_scale_log' => 'on', 'scale_log_units' => 'on', 'auto_scale_rigid' => ''), $window),
         'si units need logarithmic' => array(array('scale_log_units' => 'on'), $window),
         'units and grid' => array(array('unit_value' => '1:5', 'unit_exponent_value' => '3', 'alt_y_grid' => 'on', 'base_value' => '1024'), $window),
-        'non-numeric exponent' => array(array('unit_exponent_value' => '-3', 'base_value' => '1001'), $window),
+        'negative exponent' => array(array('unit_exponent_value' => '-3', 'base_value' => '1001'), $window),
         'right axis and formatters' => array(array(
             'right_axis' => '2:0', 'right_axis_label' => 'bytes "out"', 'right_axis_format' => '4', 'no_gridfit' => 'on',
             'unit_length' => '10', 'tab_width' => '30', 'dynamic_labels' => 'on', 'force_rules_legend' => 'on',
@@ -300,7 +300,16 @@ test('graph options match their golden for each scale and axis setting', functio
         'empty title and label' => array(array('title_cache' => '', 'vertical_label' => '', 'slope_mode' => ''), $window),
         'overrides and output file' => array(array(), array('graph_height' => '150', 'graph_width' => 'abc', 'output_filename' => 'out.png', 'image_format' => 'png')),
         'no legend and export' => array(array(), array('graph_nolegend' => true, 'graph_height' => '150', 'graph_width' => '300', 'export' => true, 'export_filename' => 'x.svg')),
+        'non-numeric exponent' => array(array('unit_exponent_value' => '3x'), $window),
     );
+    // Exercise the form-to-renderer contract with the real RRDtool quoting path.
+    foreach (array('graphs.php', 'graph_templates.php') as $form) {
+        $source = file_get_contents(dirname(__DIR__, 4) . '/' . $form);
+        expect($source)->toContain("'unit_exponent_value', '^-?[0-9]+$', true, 3");
+    }
+    foreach (range(-18, 18) as $exponent) {
+        $cases['form exponent ' . $exponent] = array(array('unit_exponent_value' => (string) $exponent), $window);
+    }
     $calls = array();
     foreach ($cases as $case) {
         $calls[] = array('fn' => 'rrd_function_process_graph_options', 'args' => array(1700000000, 1700003600, rrd_characterization_graph($case[0]), $case[1]));
@@ -310,6 +319,10 @@ test('graph options match their golden for each scale and axis setting', functio
     $observed = array();
     foreach (array_keys($cases) as $index => $name) {
         $observed[$name] = explode(" \\\n", $output['results'][$index]['returned']);
+        if (strncmp($name, 'form exponent ', 14) === 0) {
+            expect($output['results'][$index]['returned'])->toContain("--units-exponent='" . substr($name, 14) . "'");
+            unset($observed[$name]);
+        }
     }
     rrd_characterization_golden('graph-options', $observed);
 
