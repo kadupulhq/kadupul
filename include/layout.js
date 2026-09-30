@@ -3219,7 +3219,8 @@ function setupEllipsis() {
 }
 
 function keepWindowSize() {
-	$(window).on('resize', function (event) {
+	// applySkin() and several themes call this on every page load
+	$(window).off('resize.keepWindowSize').on('resize.keepWindowSize', function (event) {
 		waitForFinalEvent(function() {
 			$('.cactiGraphContentArea').show();
 
