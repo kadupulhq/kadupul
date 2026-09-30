@@ -9,8 +9,6 @@ namespace Kadupul\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
-
 /*
  * Runs the real get_selected_theme() and cacti_validate_theme() from
  * lib/functions.php in a child process. Other test files load or stub
@@ -209,7 +207,7 @@ final class ThemeSelectionAllowlistTest extends TestCase
             . 'function db_table_exists($table) { return true; }'
             . 'function db_fetch_cell_prepared($query, $params) { $GLOBALS["lookups"]++; return ' . var_export($userTheme, true) . '; }'
             . 'function db_execute_prepared($query, $params) { $GLOBALS["updates"][] = $params; return true; }'
-            . $this->functionSource('get_selected_theme')
+            . $this->loadFunctions()
             . '$GLOBALS["themes"] = ' . var_export($themes, true) . ';'
             . '$GLOBALS["updates"] = array();'
             . '$GLOBALS["lookups"] = 0;'
@@ -223,7 +221,7 @@ final class ThemeSelectionAllowlistTest extends TestCase
     private function validateTheme(string $requested, string $configured): string
     {
         $script = $this->stubs($configured)
-            . $this->functionSource('cacti_validate_theme')
+            . $this->loadFunctions()
             . 'echo cacti_validate_theme(' . var_export($requested, true) . ');';
 
         return $this->runPhp($script);
@@ -231,23 +229,27 @@ final class ThemeSelectionAllowlistTest extends TestCase
 
     private function stubs(string $configured): string
     {
-        return '$GLOBALS["config"] = array("base_path" => ' . var_export($this->root, true) . ');'
-            . 'function read_config_option($name) { return ' . var_export($configured, true) . '; }';
+        return '$GLOBALS["config"] = array("base_path" => ' . var_export($this->root, true)
+            . ', "is_web" => false, "config_options_array" => array("selected_theme" => '
+            . var_export($configured, true) . ', "default_graph_theme" => ' . var_export($configured, true) . '));';
     }
 
-    private function functionSource(string $name): string
+    private function loadFunctions(): string
     {
-        $source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
-        self::assertIsString($source);
-
-        return test_php_function_source($source, $name);
+        return 'require_once ' . var_export(dirname(__DIR__, 2) . '/lib/functions.php', true) . ';';
     }
 
     private function runPhp(string $script): string
     {
+        $coverage = $this->getTestResultObject()->getCodeCoverage();
+        if ($coverage !== null) {
+            $script = 'define("THEME_SELECTION_TEST_COVERAGE", true); define("RRD_TEST_COVERAGE_DIRECTORY", '
+                . var_export($this->root, true) . '); $vendorErrorLevel = error_reporting(); error_reporting($vendorErrorLevel & ~E_DEPRECATED); require '
+                . var_export(dirname(__DIR__) . '/Fixtures/rrd-process-coverage.php', true) . '; error_reporting($vendorErrorLevel);' . $script;
+        }
         $pipes = [];
         $process = proc_open(
-            [PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', '-r', $script],
+            [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', '-r', $script],
             [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes
         );
@@ -263,6 +265,14 @@ final class ThemeSelectionAllowlistTest extends TestCase
         self::assertSame('', $error);
         self::assertIsString($output);
 
+        if ($coverage !== null) {
+            $reports = glob($this->root . '/*.coverage');
+            self::assertCount(1, $reports);
+            foreach ($reports as $report) {
+                $coverage->merge(unserialize(file_get_contents($report)));
+                unlink($report);
+            }
+        }
         return $output;
     }
 
