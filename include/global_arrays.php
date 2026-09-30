@@ -2931,7 +2931,8 @@ if ($config['cacti_server_os'] == 'unix') {
 	);
 } else {
 	$dejavu_paths = array(
-		'C:/Windows/Fonts/' //Windows
+		'C:/Windows/Fonts/', //Windows
+		__DIR__ . '/fonts'  //Built-in
 	);
 }
 
