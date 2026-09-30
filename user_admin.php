@@ -648,6 +648,11 @@ function form_save() {
 			$user_id = sql_save($save, 'user_auth');
 
 			if ($user_id) {
+				/* an administrator who changes their own password keeps this session */
+				if ($user_id == $_SESSION['sess_user_id']) {
+					auth_session_bind_credentials($user_id);
+				}
+
 				/* revoke tokens and sessions the same way the bulk Disable action does;
 				 * template accounts are always saved disabled, so saving one must not log out guests */
 				if ($save['enabled'] != 'on' && !is_template_account($user_id)) {

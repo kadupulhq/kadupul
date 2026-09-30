@@ -64,6 +64,15 @@ if ($auth_method != 0) {
 	/* handle alternate authentication realms */
 	api_plugin_hook_function('auth_alternate_realms');
 
+	/* a password change or reset ends every session the account opened before it */
+	if (!empty($_SESSION['sess_user_id']) && !auth_session_credentials_valid($_SESSION['sess_user_id'])) {
+		cacti_log('NOTE: Session for user id ' . $_SESSION['sess_user_id'] . ' ended because the password changed', false, 'AUTH');
+
+		kill_session_var('sess_user_id');
+		cacti_session_destroy();
+		cacti_session_start(true);
+	}
+
 	/**
 	 * handle change password dialog and auth cookie if not using basic auth
 	 */

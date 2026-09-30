@@ -5140,9 +5140,80 @@ function cacti_auth_transition($user_id, $reason = 'login') {
 	kill_session_var('sess_user_config_array');
 	kill_session_var('sess_config_array');
 
+	auth_session_bind_credentials($user_id);
+
 	cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
 
 	return true;
+}
+
+/**
+ * auth_session_credential_key - digest of the account's stored password hash.
+ *
+ * A session keeps this digest from its login, so changing or resetting the
+ * password ends every session opened before it. Deleting rows from the
+ * sessions table only does that for database sessions, and the default
+ * storage is PHP's file handler.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (string|false) The digest, or false when the account can not be read
+ */
+function auth_session_credential_key($user_id) {
+	$password = db_fetch_cell_prepared('SELECT password
+		FROM user_auth
+		WHERE id = ?',
+		array($user_id));
+
+	if ($password === false || $password === null) {
+		return false;
+	}
+
+	return hash('sha256', (string) $password);
+}
+
+/**
+ * auth_session_bind_credentials - tie the current session to the account's
+ *   current password. Call it after login and after the session's own user
+ *   changes the password, so that session is the one that stays open.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (void)
+ */
+function auth_session_bind_credentials($user_id) {
+	$key = auth_session_credential_key($user_id);
+
+	if ($key !== false) {
+		$_SESSION['sess_user_credential'] = $key;
+	}
+}
+
+/**
+ * auth_session_credentials_valid - check that the account's password has not
+ *   changed since this session was bound to it.
+ *
+ * An account that can not be read is left to the existing checks, as before.
+ * A session opened before this check existed is bound on its first request.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (bool) false when the password changed after the session was bound
+ */
+function auth_session_credentials_valid($user_id) {
+	$key = auth_session_credential_key($user_id);
+
+	if ($key === false) {
+		return true;
+	}
+
+	if (!isset($_SESSION['sess_user_credential']) || !is_string($_SESSION['sess_user_credential'])) {
+		$_SESSION['sess_user_credential'] = $key;
+
+		return true;
+	}
+
+	return hash_equals($_SESSION['sess_user_credential'], $key);
 }
 
 /**
