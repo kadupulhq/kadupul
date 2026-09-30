@@ -50,9 +50,9 @@ test('native plugin CLI processes later plugins after a failure', function () {
         ->and($result['grants'])->toBe(array(array('user_id' => 7, 'realm_id' => 112), array('user_id' => 7, 'realm_id' => 115), array('user_id' => 8, 'realm_id' => 114)));
 });
 
-test('native plugin CLI preserves missing directory success without grant attempts', function () {
+test('native plugin CLI reports missing directory without grant attempts', function () {
     $result = PluginManageNativeHarness::run(array('plugins' => array('missing')), $this->getTestResultObject()->getCodeCoverage());
-    expect($result['status'])->toBe(0)
+    expect($result['status'])->toBe(1)
         ->and($result['stdout'])->toContain('missing plugin directory')
         ->and($result['calls'])->toBe(array());
 });
