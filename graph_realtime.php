@@ -76,14 +76,18 @@ $hash = $_SESSION['sess_realtime_hash'];
 set_default_action();
 
 /* poller_realtime.php polls every device behind the graph and view returns the
- * image that poll cached, so refuse both when real-time is off or the graph
- * render would deny this user. is_graph_allowed() filters on the graph only
- * for a positive id, so a zero or negative id is refused like a missing one */
+ * image that poll cached, so refuse both when real-time is off, the user lacks
+ * the Realtime realm, or the graph render would deny this user. The page is a
+ * guest page, so include/auth.php never checks its realm. is_graph_allowed()
+ * filters on the graph only for a positive id, so a zero or negative id is
+ * refused like a missing one */
 if (in_array(get_request_var('action'), array('init', 'timespan', 'interval', 'countdown', 'view'), true)) {
 	$local_graph_id = get_filter_request_var('local_graph_id');
 
 	if (read_config_option('realtime_enabled') == '') {
 		$denied = __('Real-time has been disabled by your administrator.');
+	} elseif (!is_realm_allowed(25)) {
+		$denied = __('Permission Denied');
 	} elseif (empty($local_graph_id) || $local_graph_id < 1 || ($_SESSION['sess_user_id'] > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id']))) {
 		$denied = __('Permission Denied');
 	}
