@@ -9,12 +9,19 @@ import { createContext, runInContext } from 'node:vm';
 const root = new URL('../../', import.meta.url);
 const read = path => readFileSync(new URL(path, root), 'utf8');
 const layout = read('include/layout.js');
+const icons = JSON.parse(read('config/icons.json'));
+
+// The map html_common_header() prints for a theme.
+function iconMap(theme) {
+  return { ...icons.icons, ...(icons.themes[theme] || {}) };
+}
+
+const iconHelpers = ['iconClass', 'iconSelector', 'iconMarkup'];
 
 function layoutFunction(name) {
   const start = layout.indexOf(`function ${name}(`);
   assert.ok(start >= 0, `${name}() must exist`);
-  const end = layout.indexOf('\nfunction ', start + 10);
-  return layout.slice(start, end < 0 ? undefined : end);
+  return layout.slice(start, layout.indexOf('\n}\n', start) + 2);
 }
 
 // A small jQuery stand-in. It models the parts of jQuery the theme scripts
@@ -52,7 +59,7 @@ function fakeJquery(nodes = {}) {
         const found = list.map(node => node.next).filter(sibling => sibling && (!filter || sibling.matches === filter));
         return wrap(found, `${selector} + ${filter}`);
       },
-      after(html) { list.forEach(node => { node.inserted = (node.inserted || 0) + 1; node.next = { html, matches: /fa-search/.test(html) ? 'i.fa-search' : '' }; }); return proxy; },
+      after(html) { list.forEach(node => { node.inserted = (node.inserted || 0) + 1; node.next = { html, matches: /fa-search/.test(html) ? 'i.fa.fa-search' : '' }; }); return proxy; },
       prop(name) { return list[0]?.props?.[name]; },
       val(value) { if (value === undefined) return list[0]?.value; list.forEach(node => { node.value = value; }); return proxy; },
       html(value) { list.forEach(node => { node.html = value; }); return proxy; },
@@ -119,9 +126,10 @@ function loadTheme(theme, nodes = {}, extra = {}) {
     setTimeout: () => 0,
     clearTimeout: () => {},
     ...Object.fromEntries(pageGlobals.map(name => [name, name])),
+    kadupulIcons: iconMap(theme),
     ...extra,
   });
-  runInContext(['setupThemeSearchIcons', 'setupThemeSelectmenus', 'setupThemeLogos', 'setupThemeFormControls'].map(layoutFunction).join('\n'), context);
+  runInContext([...iconHelpers, 'setupThemeSearchIcons', 'setupThemeSelectmenus', 'setupThemeLogos', 'setupThemeFormControls'].map(layoutFunction).join('\n'), context);
   runInContext(read(`include/themes/${theme}/main.js`), context, { filename: new URL(`include/themes/${theme}/main.js`, root).href });
   return { context, ...jq };
 }
@@ -177,7 +185,7 @@ for (const theme of jqueryThemes) {
   test(`${theme} adds each filter search icon once across repeated page loads`, () => {
     const filter = { attrs: { id: 'filter' } };
     const rfilter = { attrs: { id: 'rfilter' } };
-    const filterd = { attrs: { id: 'filterd' }, next: { matches: 'i.fa-search' } };
+    const filterd = { attrs: { id: 'filterd' }, next: { matches: 'i.fa.fa-search' } };
     const { context } = loadTheme(theme, {
       'input[id="filter"]': [filter],
       'input[id="rfilter"]': [rfilter],
@@ -298,8 +306,8 @@ test('multiselect link icons in layout.js exist in the shipped Font Awesome', ()
   }
   assert.ok(css, 'build the browser assets (npm ci && npm run build) before this test');
 
-  const context = createContext({});
-  runInContext(layout.match(/^var faIcons = \{[\s\S]*?^\};/m)[0], context);
+  const context = createContext({ kadupulIcons: iconMap('modern') });
+  runInContext(iconHelpers.map(layoutFunction).join('\n') + '\n' + layout.match(/^var faIcons = \{[\s\S]*?^\};/m)[0], context);
   const icons = runInContext('faIcons', context);
   assert.ok(icons.collapseAll && icons.expandAll, 'jquery.multiselect reads collapseAll and expandAll');
 
