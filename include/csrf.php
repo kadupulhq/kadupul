@@ -299,7 +299,21 @@ function csrf_refuse_cross_site_actions()
         return;
     }
 
-    if ($method === 'GET' && !csrf_request_is_cross_site()) {
+    csrf_refuse_cross_site_get();
+}
+
+/**
+ * Refuse this request unless it is a POST or a GET the browser does not mark
+ * as coming from another site.
+ *
+ * For pages that change data because of a request variable other than
+ * 'action', which the central action list can not see.
+ */
+function csrf_refuse_cross_site_get()
+{
+    $method = $_SERVER['REQUEST_METHOD'] ?? '';
+
+    if ($method === 'POST' || ($method === 'GET' && !csrf_request_is_cross_site())) {
         return;
     }
 
