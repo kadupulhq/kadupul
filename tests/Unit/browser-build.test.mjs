@@ -47,7 +47,7 @@ test('locked npm packages produce the legacy browser assets and compatibility al
   assert.equal(flags.name, 'flag-icons');
   assert.match(await readFile(new URL('include/vendor/flag-icons/flags/4x3/us.svg', root), 'utf8'), /<svg/);
   const iconCss = await readFile(new URL('include/fa/css/all.css', root), 'utf8');
-  assert.match(iconCss, /\.fa\.fa-circle-thin \{\s*--fa: "\\f111";\s*\}/);
+  assert.match(iconCss, /\.fa\.fa-circle-thin \{\s*--fa: "\\f111";\s*--fa-style: 400;\s*\}/, 'the legacy alias draws the regular outline');
   assert.equal(iconCss.split('.fa.fa-circle-thin {').length, 2, 'install the legacy alias exactly once');
   assert.match(iconCss, /\.fa-circle-notch \{\s*--fa: "\\f1ce";\s*\}/);
   assert.match(iconCss, /\.fa\)::before \{\s*content: var\(--fa\)/);
@@ -91,7 +91,7 @@ test('versions quoted and unquoted font URLs and drops unreferenced package file
   assert.match(installed, /url\("\.\.\/webfonts\/fa-solid-900\.woff2\?v=7\.3\.1"\) format\("woff2"\)/);
   assert.match(installed, /url\(\.\.\/webfonts\/fa-brands-400\.woff2\?v=7\.3\.1\)/);
   assert.match(installed, /url\('\.\.\/webfonts\/fa-solid-900\.woff2\?v=7\.3\.1'\)/);
-  assert.match(installed, /\.fa\.fa-circle-thin \{\s*--fa: "\\f111";\s*\}/);
+  assert.match(installed, /\.fa\.fa-circle-thin \{\s*--fa: "\\f111";\s*--fa-style: 400;\s*\}/);
 });
 
 test('rejects a stylesheet whose fonts are missing or cannot be versioned, leaving the old tree intact', async () => {
