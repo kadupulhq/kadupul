@@ -101,7 +101,6 @@ fieldset {
 }
 
 #main > *:not(iframe) {
-    #margin: 1rem 0.5rem 1rem 1rem;
 }
 
 /* icons fontawesome */
@@ -172,10 +171,6 @@ input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name
 }
 
 input[type="checkbox"]:focus + label:before {
-    #outline: -webkit-focus-ring-color auto 1px !important;
-    #outline-color: -webkit-focus-ring-color;
-    #outline-style: auto;
-    #outline-width: 1px;
 }
 
 input[type="checkbox"] + label:before {
@@ -425,7 +420,6 @@ label.ui-state-hover > span {
 
 .graphDrillDown {
     vertical-align: top;
-    align-self: left;
     z-index: 4;
     padding: 3px;
     height: 100%;
@@ -708,14 +702,10 @@ label.ui-state-hover > span {
 }
 
 .even-alternate {
-    #background: none repeat scroll 0 0 #E7E9F2;
-    #background-color: #E7E9F2;
-    #box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .even-alternate.tableRow {
     color: var(--text-color-light);
-    #background: none repeat scroll 0 0 #FFFFFF;
 }
 
 .tableRow {
@@ -917,7 +907,6 @@ ul#breadcrumbs {
     float: left;
     display: none;
     color: #7e818f;
-    #color: var(--text-color-light);
 }
 
 .cactiTreeNavigationArea a {
@@ -1095,7 +1084,6 @@ legend {
 }
 
 .spikekillData, .spikekillData td {
-    #border: 1px solid #999;
 }
 
 .spikekillNote {
@@ -1314,7 +1302,6 @@ legend {
 
 .textHeaderDark {
     font-weight: var(--fw-semibold);
-    #color: var(--text-color-lighter);
 }
 
 .templateHeader {
@@ -1732,7 +1719,6 @@ table.cactiTable {
 }
 
 .popupBox {
-    #z-index: 2;
     position: absolute;
     padding: 0;
     display: none;
@@ -2046,7 +2032,6 @@ div.submenu span {
 }
 
 #nav li a.active:not(.selected), .nav li a.active:not(.selected) {
-    #color: var(--text-color-navigation)!important;
 }
 
 #nav li a.active, #nav li a.active:hover, .nav li a.active, .nav li a.active:hover {
@@ -2081,19 +2066,15 @@ tr.selectable td {
 }
 
 tr.selectable:first-child {
-    #border-left: 1px solid #3d3d3d;
 }
 
 tr.selectable td:first-child {
-    #border-left: 1px solid #3d3d3d;
 }
 
 tr.selectable td:last-child {
-    #border-right: 1px solid #3d3d3d;
 }
 
 tr.selectable:last-child td {
-    #border-bottom: 1px solid #3d3d3d;
 }
 
 tr.selectable:hover:not(.selected) {

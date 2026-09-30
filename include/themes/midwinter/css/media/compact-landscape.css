@@ -211,7 +211,6 @@ html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menu_parent {
 }
 
 html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menu_parent:not(.active) {
-    #color: #3d3d3d;
 }
 
 html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menuitem {
@@ -240,21 +239,11 @@ html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menuitem:hover ul {
 }
 
 html[data-theme-mode='compact'] .cactiTreeNavigationArea {
-    #overflow-y: visible !important;
     width: 15rem !important;
-    #position: relative;
-    #height: calc(100vh - 5rem) !important;
-    #background-color: var(--background-content);
-    #border-right: 2px solid var(--background-navigation);
 }
 
 html[data-theme-mode='compact'] .cactiTreeNavigationArea.hide {
-    #overflow-y: visible !important;
     width: 0 !important;
-    #position: relative;
-    #height: calc(100vh - 5rem) !important;
-    #background-color: var(--background-content);
-    #border-right: 2px solid var(--background-navigation);
 }
 
 html[data-theme-mode='compact'] .cactiConsoleContentArea {

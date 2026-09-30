@@ -32,7 +32,6 @@ body {
 	background-image: -moz-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -o-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -ms-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
-	background-image: radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
 table {
@@ -382,7 +381,6 @@ label.ui-state-hover > span {
 
 .graphDrillDown {
 	vertical-align: top;
-	align-self: left;
 	z-index: 4;
 	padding: 3px;
 	height: 100%;
@@ -686,7 +684,6 @@ label.ui-state-hover > span {
 
 .odd.tableRow {
 	color: #9d9d9d;
-	#background: none repeat scroll 0 0 #fbfdff;
 }
 
 .even {
@@ -695,18 +692,13 @@ label.ui-state-hover > span {
 
 .even.tableRow {
 	color: #9d9d9d;
-	#background: none repeat scroll 0 0 #FFFFFF;
 }
 
 .even-alternate {
-	#background: none repeat scroll 0 0 #E7E9F2;
-	#background-color: #E7E9F2;
-	#box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .even-alternate.tableRow {
 	color: #9d9d9d;
-	#background: none repeat scroll 0 0 #FFFFFF;
 }
 
 .tableRow {
@@ -1035,7 +1027,6 @@ legend {
 }
 
 .spikekillData, .spikekillData td {
-	#border: 1px solid #999;
 }
 
 .spikekillNote {
@@ -1736,7 +1727,6 @@ table.cactiTable {
 	white-space: nowrap;
 	display: block;
 	width: 10%;
-	#padding: 2px 0px;
 	height: 20px;
 	vertical-align: middle;
 	border-top: 1px solid rgba(25,255,255,0.1);
@@ -1773,7 +1763,6 @@ table.cactiTable {
 }
 
 .popupBox {
-	#z-index: 2;
 	position: absolute;
 	padding: 0px;
 	display: none;
@@ -2588,7 +2577,6 @@ tr#realtime td:first-child {
 	background-image: -moz-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -o-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -ms-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
-	background-image: radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
 /* New Checkbox Stuff */
@@ -2617,7 +2605,6 @@ tr#realtime td:first-child {
 	background-image: -moz-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	background-image: -o-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	background-image: -ms-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
-	background-image: linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	-webkit-transition: .4s;
 	transition: .4s;
 	border: 1px solid #7F83A2;
@@ -2641,7 +2628,6 @@ tr#realtime td:first-child {
 
 input:checked + .checkboxSlider {
 	background-color: rgba(255, 170, 0, 0.5) !important;
-	background-image: -webkit-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
 	background-image: -moz-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
 	background-image: -o-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
 	background-image: -ms-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
@@ -2706,7 +2692,6 @@ input:checked + .checkboxSlider:before {
 	background-image: -moz-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -o-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -ms-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
-	background-image: radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
 .radioSlider:before {
@@ -2731,7 +2716,6 @@ input:checked + .radioSlider {
 	background-image: -moz-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -o-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -ms-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
-	background-image: radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
 input:focus + .radioSlider {
