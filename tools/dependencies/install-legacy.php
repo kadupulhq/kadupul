@@ -17,6 +17,13 @@ $manifest = json_decode(file_get_contents(__DIR__ . '/legacy-files.json'), true,
 if (!preg_match('/\A[0-9a-f]{40}\z/', $manifest['revision'])) {
     throw new RuntimeException('Invalid legacy dependency revision');
 }
+$patches = $manifest['patches'] ?? [];
+foreach ($patches as $path => $patch) {
+    if (!isset($manifest['files'][$path]) || !preg_match('/\A[0-9a-f]{64}\z/', $patch['source_sha256'] ?? '')
+        || !is_array($patch['replacements'] ?? null) || $patch['replacements'] === []) {
+        throw new RuntimeException('Invalid legacy dependency patch: ' . $path);
+    }
+}
 $missing = [];
 foreach ($manifest['files'] as $path => $digest) {
     if (!preg_match('~\Ainclude/vendor/[a-zA-Z0-9_./-]+\z~', $path) || str_contains($path, '..')) {
@@ -72,6 +79,19 @@ try {
             throw new RuntimeException('Invalid legacy archive entry: ' . $path);
         }
         $bytes = $entry->getContent();
+        // A patched file is checked twice: the archive bytes against the reviewed
+        // source, then the result against the digest recorded for installation.
+        if (hash('sha256', $bytes) !== ($patches[$path]['source_sha256'] ?? $digest)) {
+            throw new RuntimeException('Legacy dependency checksum mismatch: ' . $path);
+        }
+        foreach ($patches[$path]['replacements'] ?? [] as $replacement) {
+            $before = $replacement['before'] ?? '';
+            if (!is_string($before) || $before === '' || !is_string($replacement['after'] ?? null)
+                || substr_count($bytes, $before) !== 1) {
+                throw new RuntimeException('Legacy dependency patch no longer applies: ' . $path);
+            }
+            $bytes = str_replace($before, $replacement['after'], $bytes);
+        }
         if (hash('sha256', $bytes) !== $digest) {
             throw new RuntimeException('Legacy dependency checksum mismatch: ' . $path);
         }

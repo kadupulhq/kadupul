@@ -597,9 +597,9 @@ fs_write	./snmpagent_mibcachechild.php:79	        file_put_contents($path_mibcac
 fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:49	        $handle = @fopen($path, 'r+b');
 fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:69	                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
-fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
-fs_write	./tools/dependencies/install-legacy.php:53	    $destination = fopen($archivePath, 'wb');
-fs_write	./tools/dependencies/install-legacy.php:86	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
+fs_write	./tools/dependencies/install-legacy.php:106	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
+fs_write	./tools/dependencies/install-legacy.php:56	    $source = fopen($url, 'rb', false, $context);
+fs_write	./tools/dependencies/install-legacy.php:60	    $destination = fopen($archivePath, 'wb');
 fs_write	./utilities.php:1602				$log_fh = fopen($logfile, 'w');
 header_redirect	./aggregate_graphs.php:108	        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_graphs.php:241	    header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);

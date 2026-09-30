@@ -28,7 +28,7 @@
     "include/vendor/csrf/NEWS.md": "e68a289e2cf84b20aa0401cde06921f42ef0187c20104200e01706a7f8312690",
     "include/vendor/csrf/README.md": "5f79ce32b88ad174563d80c7bfd0c89865fc26cdc8f0fb11d52a98d178f30f15",
     "include/vendor/csrf/csrf-conf.php": "61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514",
-    "include/vendor/csrf/csrf-magic.js": "b6fd1064b372c10480e03e180dd7317cfea437c4395a8f4d4fcd4599cc195017",
+    "include/vendor/csrf/csrf-magic.js": "f57408a88fb4ce93146976c18bf3fea5c61afc010414548c11b71de6c8e8d8c0",
     "include/vendor/csrf/csrf-magic.php": "e20d79113aa0dc532248ee55fe4e87f689299be20ec658f8cab1120daadd71c2",
     "include/vendor/csrf/index.php": "ab4a930fc908f8b59d7c6638572534c23d7899b77a092c3b5b7012a053753f4c",
     "include/vendor/flag-icons/country.json": "f5e99aee5051868b391b9f42e110cb104b7fcd6269807b2dc5e2c80b1e6c9436",
@@ -409,6 +409,25 @@
     "include/vendor/phpsnmp/extension.php": "0af0a6cab8f11ee0e8eaacb502fefdfcccc8710d3e98a16d0886fbc56e448cdd",
     "include/vendor/phpsnmp/index.php": "ab4a930fc908f8b59d7c6638572534c23d7899b77a092c3b5b7012a053753f4c",
     "include/vendor/phpsnmp/mib_parser.php": "10388295e200c954c5a0c74e93f8a0eb9d9a9cfc04b9d6f8ca7b2c80f299cfe6"
+  },
+  "patches": {
+    "include/vendor/csrf/csrf-magic.js": {
+      "source_sha256": "b6fd1064b372c10480e03e180dd7317cfea437c4395a8f4d4fcd4599cc195017",
+      "replacements": [
+        {
+          "before": "\t\tif (method == 'POST') this.csrf_isPost = true;\n",
+          "after": "\t\tvar isLocalPost = false;\n\t\ttry {\n\t\t\tisLocalPost = method == 'POST' &&\n\t\t\t\tnew URL(url, window.location.href).origin === window.location.origin;\n\t\t} catch (error) {\n\t\t\tisLocalPost = false;\n\t\t}\n\t\tif (isLocalPost) {\n\t\t\tthis.csrf_isPost = true;\n\t\t} else {\n\t\t\tdelete this.csrf_isPost;\n\t\t}\n"
+        },
+        {
+          "before": "\t\tif (form.method.toUpperCase() !== 'POST') continue;\n",
+          "after": "\t\tif (form.method.toUpperCase() !== 'POST') continue;\n\t\ttry {\n\t\t\tif (new URL(form.action, window.location.href).origin !== window.location.origin) continue;\n\t\t} catch (error) {\n\t\t\tcontinue;\n\t\t}\n"
+        },
+        {
+          "before": "\t\t\tif (s.type && s.type.toUpperCase() == 'POST') {\n",
+          "after": "\t\t\tvar isLocalPost = false;\n\t\t\ttry {\n\t\t\t\tisLocalPost = s.type && s.type.toUpperCase() == 'POST' &&\n\t\t\t\t\tnew URL(s.url, window.location.href).origin === window.location.origin;\n\t\t\t} catch (error) {\n\t\t\t\tisLocalPost = false;\n\t\t\t}\n\t\t\tif (isLocalPost) {\n"
+        }
+      ]
+    }
   },
   "archive_sha256": "61dfc1f7cf348b8c05783fbfb0f0acbc220ee04e06cbec0b5c89c7d5d103a05f"
 }

@@ -9,6 +9,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 
+- Add the CSRF token only to same-origin XMLHttpRequest, jQuery and form posts in the installed CSRF Magic browser script, matching the 1.2 LTS branch. The legacy dependency installer now applies checksum-verified patches recorded in `legacy-files.json`.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.

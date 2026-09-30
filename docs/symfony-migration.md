@@ -371,6 +371,8 @@ the same name across upgrades and rely on the `?md5` query.
 of the remaining legacy compatibility files. Composer's post-install/update
 step retrieves only those files from a pinned Kadupul source archive and checks
 every selected file before writing. Existing matching files need no download.
+A file listed under `patches` is checked against its archived source digest,
+receives its recorded replacements, and is then checked against its installed digest.
 PHPMailer, CSRF Magic and some old translation/SNMP/diff helpers contain local
 behavior or security fixes; this preserves those fixes without tracking their
 entire distributions. These snapshots are **not** independently updated or
