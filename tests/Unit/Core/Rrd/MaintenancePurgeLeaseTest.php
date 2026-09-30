@@ -7,8 +7,6 @@ namespace MaintenancePurgeLeaseTest;
 
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 require_once dirname(__DIR__, 4) . '/lib/rrd.php';
-require_once dirname(__DIR__, 4) . '/lib/path_helpers.php';
-eval('namespace { function cacti_path_is_within($candidate, $base) { $path = realpath($candidate); $root = realpath($base); return $path !== false && $root !== false && ($path === $root || strpos($path, rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0); } }');
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 $source = file_get_contents(dirname(__DIR__, 4) . '/poller_maintenance.php');
 foreach (array('rrdfile_purge', 'remove_files', 'rrdclean_create_path', 'rrdcleaner_is_safe_relative_path', 'rrdcleaner_resolve_contained_path') as $name) {
@@ -67,6 +65,32 @@ function rename($source, $target)
 {
     return !empty($GLOBALS['purge_fixture_failure']) && basename($source) === 'sample.rrd' ? false : \rename($source, $target);
 }
+
+test('cleanup resolver rejects paths outside the real RRA directory', function () {
+    $root = sys_get_temp_dir() . '/purge-contained-' . bin2hex(random_bytes(8));
+    mkdir($root, 0700);
+    $inside = $root . '/inside.rrd';
+    $outside = $root . '-outside.rrd';
+    file_put_contents($inside, 'inside');
+    file_put_contents($outside, 'outside');
+
+    try {
+        expect(rrdcleaner_resolve_contained_path($inside, $root))->toBe(realpath($inside))
+            ->and(rrdcleaner_resolve_contained_path($outside, $root))->toBeFalse()
+            ->and(rrdcleaner_resolve_contained_path($root . '/missing.rrd', $root))->toBeFalse();
+
+        if (symlink($outside, $root . '/link.rrd')) {
+            expect(rrdcleaner_resolve_contained_path($root . '/link.rrd', $root))->toBeFalse();
+        }
+    } finally {
+        if (is_link($root . '/link.rrd')) {
+            unlink($root . '/link.rrd');
+        }
+        unlink($inside);
+        unlink($outside);
+        rmdir($root);
+    }
+});
 
 test('purge and archive defer once under a writer lease then complete on retry', function ($action, $filesystemFailure) {
     $saved = $GLOBALS['config'] ?? null;

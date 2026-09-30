@@ -610,13 +610,35 @@ function rrdcleaner_is_safe_relative_path($name)
  */
 function rrdcleaner_resolve_contained_path($path, $base)
 {
-    if (!function_exists('cacti_path_is_within') || !cacti_path_is_within($path, $base)) {
+    $resolved      = realpath($path);
+    $resolved_base = realpath($base);
+
+    if ($resolved === false || $resolved_base === false) {
         return false;
     }
 
-    $resolved = realpath($path);
+    if (function_exists('cacti_path_is_within')) {
+        if (!cacti_path_is_within($resolved, $resolved_base)) {
+            return false;
+        }
+    } else {
+        $compare_path = $resolved;
+        $compare_base = $resolved_base;
+        $separator    = DIRECTORY_SEPARATOR;
 
-    return $resolved === false ? false : $resolved;
+        if ($separator === '\\') {
+            $compare_path = strtolower(str_replace('\\', '/', $compare_path));
+            $compare_base = strtolower(str_replace('\\', '/', $compare_base));
+            $separator    = '/';
+        }
+
+        $base_prefix = rtrim($compare_base, $separator) . $separator;
+        if ($compare_path !== $compare_base && strpos($compare_path, $base_prefix) !== 0) {
+            return false;
+        }
+    }
+
+    return $resolved;
 }
 
 function remove_files($file_array, &$retained = 0)
