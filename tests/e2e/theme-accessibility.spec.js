@@ -128,6 +128,42 @@ test.describe('theme keyboard focus', () => {
     });
   }
 
+  // The content area plus panels that keep their own background whatever the
+  // page colour: dark title rows and message boxes in midwinter light, white
+  // dialogs and menus in paper-plane.
+  const link = '<a id="ringTarget" href="#">x</a>';
+  const surfaces = {
+    'content area': `<div class="cactiContent">${link}</div>`,
+    'selected row': `<table class="cactiTable"><tr class="selectable selected"><td>${link}</td></tr></table>`,
+    'table title row': `<div class="cactiTableTitleRow">${link}</div>`,
+    'message box': `<div class="messageBox">${link}</div>`,
+    'spike kill menu': `<ul class="spikekillMenu"><li>${link}</li></ul>`,
+    'menu options': '<ul class="menuoptions" style="display:block;position:static"><li><a id="ringTarget" href="#">x</a></li></ul>',
+    'dialog': `<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-content ui-widget-content">${link}</div></div>`,
+    'dialog button': '<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-buttonpane ui-widget-content"><button id="ringTarget" class="ui-button ui-corner-all ui-widget">Continue</button></div></div>',
+    'dialog title': `<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-titlebar ui-widget-header">${link}</div></div>`,
+    'multiselect header': `<div class="ui-multiselect-menu ui-widget ui-widget-content" style="position:static"><div class="ui-widget-header ui-multiselect-header"><ul><li>${link}</li></ul></div></div>`,
+    'login page': `<div class="loginBody"><div class="loginArea">${link}</div></div>`,
+  };
+  const panelPasses = ringThemes.map((theme) => ({ theme, color: null }))
+    .concat([{ theme: 'midwinter', color: 'light' }]);
+
+  for (const { theme, color } of panelPasses) {
+    const name = color ? `${theme} ${color}` : theme;
+
+    test(`${name} focus ring reaches 3:1 on light and dark panels`, async ({ page }) => {
+      await openTheme(page, theme, color);
+
+      for (const [surface, markup] of Object.entries(surfaces)) {
+        await page.evaluate((html) => { document.getElementById('contrastArea').innerHTML = html; }, markup);
+        await page.evaluate(() => document.getElementById('saveButton').focus());
+        await tabTo(page, 'ringTarget');
+        const ratio = await contrastAgainstBackground(page, '#ringTarget', 'outlineColor');
+        expect(ratio, `${name} ring in ${surface}`).toBeGreaterThanOrEqual(3);
+      }
+    });
+  }
+
   test('midwinter draws the ring on the replacement checkbox and radio label', async ({ page }) => {
     for (const color of [null, 'light']) {
       await openTheme(page, 'midwinter', color);

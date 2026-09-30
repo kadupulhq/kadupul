@@ -184,8 +184,9 @@ input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name
 }
 
 .cactiPageHead, .cactiConsoleNavigationArea, .cactiConsoleNavigationBox,
-.cactiConsoleNavigationUserBox, #compact_user_menu, .loginBody, .logoutBody {
-    --focus-ring: var(--focus-ring-navigation);
+.cactiConsoleNavigationUserBox, #compact_user_menu, .loginBody, .logoutBody,
+.cactiTableTitleRow, .messageBox, .spikekillMenu, tr.selected {
+    --focus-ring: var(--focus-ring-on-dark);
 }
 
 /* These surfaces stay dark in light mode, where the light link colour measures under 4.5:1. */

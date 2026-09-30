@@ -43,6 +43,12 @@ table {
 	outline-offset: 1px;
 }
 
+/* Dialogs, menus, message boxes and selected rows are light, where the light blue ring measures under 2:1. */
+.ui-widget-content :focus-visible, .menuoptions :focus-visible, .messageBox :focus-visible,
+.spikekillMenu :focus-visible, tr.selected :focus-visible {
+	outline-color: #0D47A1 !important;
+}
+
 td, th {
 	padding: 2px 2px;
 	margin: 0px;

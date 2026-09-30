@@ -19,8 +19,8 @@ html {
     --text-color-highlight: hsl(var(--accent-hue), 4%, 95%);
     --text-color-highlight-a-on-dark: hsl(var(--accent2-hue), 64%, 60%);
     --text-color-highlight-a: var(--text-color-highlight-a-on-dark);
-    --focus-ring: var(--text-color-highlight-a);
-    --focus-ring-navigation: var(--text-color-highlight-a);
+    --focus-ring: hsl(var(--accent2-hue), 64%, 60%);
+    --focus-ring-on-dark: var(--focus-ring);
     --text-color-navigation: hsl(var(--hue), 7%, 60%);
     --text-color-navigation-highlight: hsl(var(--hue), 7%, 85%);
     --background: hsl(var(--hue), 19%, 17%);
@@ -54,8 +54,9 @@ html[data-theme-color='light'] {
     --text-color-highlight-a: hsl(var(--accent2-hue), 64%, 38%);
     --text-color-navigation: hsl(var(--hue), 7%, 93%);
     --text-color-navigation-highlight: hsl(var(--hue), 7%, 100%);
-    /* The content ring is too dark to show on the blue header and menus. */
-    --focus-ring-navigation: var(--text-color-navigation-highlight);
+    --focus-ring: hsl(var(--accent2-hue), 64%, 38%);
+    /* The content ring is too dark to show on the blue header, login page and dark panels. */
+    --focus-ring-on-dark: var(--text-color-navigation-highlight);
     --background: hsl(var(--hue), 27.3%, 97.1%);
     --background-content: hsl(var(--hue), 100%, 100%);
     --background-filter: hsl(var(--hue), 17%, 18%);
