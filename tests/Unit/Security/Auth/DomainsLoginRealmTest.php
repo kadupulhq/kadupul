@@ -17,7 +17,7 @@ function domains_login_realm_run(PHPUnit\Framework\TestCase $test, string $mode,
     }
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . 'require ' . var_export($root . '/tests/Fixtures/domains-login-realm.php', true) . ';', $root, $mode, json_encode($scenario)),
+            array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . 'require ' . var_export($root . '/tests/Fixtures/domains-login-realm.php', true) . ';', $root, $mode, json_encode($scenario)),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
