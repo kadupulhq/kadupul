@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 $scenario = json_decode(getenv('PLUGIN_COMPAT_SCENARIO'), true, 512, JSON_THROW_ON_ERROR);
-$config = array('base_path' => getenv('PLUGIN_COMPAT_DIRECTORY'), 'url_path' => '/', 'poller_id' => 1);
+$config = array('base_path' => getenv('PLUGIN_COMPAT_DIRECTORY'), 'library_path' => getenv('PLUGIN_COMPAT_DIRECTORY') . '/lib', 'url_path' => '/', 'poller_id' => 1);
 define('CACTI_VERSION', '1.3.0');
 define('MESSAGE_LEVEL_ERROR', 2);
 $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -36,6 +36,12 @@ function cacti_version_compare($left, $right, $operator = '>')
 }
 function plugin_compat_query($sql, $params)
 {
+    // SQLite's equivalent of MySQL's UPDATE IGNORE preserves conflict semantics.
+    $sql = str_replace('UPDATE IGNORE ', 'UPDATE OR IGNORE ', $sql);
+    if (preg_match('/DELETE (ph|pd)\s+FROM (plugin_hooks|plugin_db_changes) AS (ph|pd)/', $sql, $match)) {
+        $column = $match[2] === 'plugin_hooks' ? 'name' : 'plugin';
+        $sql = 'DELETE FROM ' . $match[2] . ' WHERE ' . $column . ' NOT IN (SELECT directory FROM plugin_config) AND ' . $column . ' != ?';
+    }
     $stmt = $GLOBALS['db']->prepare($sql);
     $stmt->execute($params);
     return $stmt;
@@ -56,9 +62,29 @@ function db_fetch_assoc_prepared($sql, $params = array(), ...$args)
 {
     return plugin_compat_query($sql, $params)->fetchAll(PDO::FETCH_ASSOC);
 }
-function db_fetch_assoc(...$args)
+function db_fetch_assoc($sql, ...$args)
 {
-    return array();
+    if ($sql === 'SHOW TABLES') {
+        return $GLOBALS['db']->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_ASSOC);
+    }
+    if (preg_match('/SHOW COLUMNS FROM `([^`]+)`/', $sql, $match)) {
+        return array_map(fn($row) => array('Field' => $row['name']), $GLOBALS['db']->query('PRAGMA table_info(`' . $match[1] . '`)')->fetchAll(PDO::FETCH_ASSOC));
+    }
+    return str_contains($sql, 'FROM poller') ? array() : plugin_compat_query($sql, array())->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_execute($sql, ...$args)
+{
+    $GLOBALS['writes'][] = array($sql, array());
+    $sql = preg_replace('/\) ENGINE = \w+$/', ')', $sql);
+    return $GLOBALS['db']->exec($sql) !== false;
+}
+function db_fetch_cell($sql)
+{
+    return plugin_compat_query($sql, array())->fetchColumn();
+}
+function cacti_count($value)
+{
+    return cacti_sizeof($value);
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
@@ -68,9 +94,9 @@ function array_rekey($rows, ...$args)
 {
     return $rows;
 }
-function read_config_option(...$args)
+function read_config_option($key, ...$args)
 {
-    return 300;
+    return $key === 'admin_user' ? 1 : 300;
 }
 function raise_message($key, $message, ...$args)
 {
@@ -116,5 +142,10 @@ register_shutdown_function(function () {
 });
 if (($scenario['mode'] ?? '') === 'render') {
     echo plugin_actions(array('status' => 0, 'directory' => 'fixture', 'infoname' => 'Fixture'), 'plugin_config');
+    exit;
+}
+
+if (($scenario['mode'] ?? '') === 'api') {
+    require getenv('PLUGIN_COMPAT_ROOT') . '/tests/Fixtures/plugin-api-native.php';
     exit;
 }

@@ -15,6 +15,7 @@ final class PluginCompatibilityNativeHarness
         copy($root . '/cli/plugin_manage.php', $dir . '/cli/plugin_manage.php');
         copy($root . '/plugins.php', $dir . '/plugins.php');
         file_put_contents($dir . '/lib/poller.php', '<?php');
+        file_put_contents($dir . '/lib/database.php', '<?php');
         if (empty($scenario['missing_info'])) {
             file_put_contents($dir . '/plugins/fixture/INFO', "[info]\nname = fixture\n" . ($scenario['metadata'] ?? 'compat = 1.3.0') . "\n");
         }
@@ -24,7 +25,7 @@ final class PluginCompatibilityNativeHarness
         if ($coverage !== null) {
             $bootstrap .= 'define("PLUGIN_COMPAT_TEST_COVERAGE", true);';
             $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", ' . var_export($dir, true) . ');';
-            if ($mode !== 'check') {
+            if (in_array($mode, array('cli', 'render', 'web'), true)) {
                 $script = $mode === 'cli' ? '/cli/plugin_manage.php' : '/plugins.php';
                 $bootstrap .= 'define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($dir . $script, true) . ');';
                 $bootstrap .= 'define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export($root . $script, true) . ');';
@@ -39,7 +40,7 @@ final class PluginCompatibilityNativeHarness
         $environment = array_merge(getenv(), array('PLUGIN_COMPAT_SCENARIO' => json_encode($scenario, JSON_THROW_ON_ERROR), 'PLUGIN_COMPAT_DIRECTORY' => $dir, 'PLUGIN_COMPAT_ROOT' => $root));
         $process = null;
         try {
-            $prefix = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~');
+            $prefix = array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~');
             $headers = array();
             if ($mode === 'web') {
                 $socket = stream_socket_server('tcp://127.0.0.1:0', $errno, $error);
