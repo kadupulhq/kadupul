@@ -79,22 +79,129 @@ test('a request reopened for another origin drops the pending token', () => {
   assert.equal(request.sent, 'action=save');
 });
 
-test('the load-time form pass adds the token to same-origin POST forms only', () => {
-  const forms = [...sameOrigin, ...crossOrigin].map(action => ({
-    method: 'post', action: new URL(action, page).href, elements: {}, added: [],
-    appendChild(input) { this.added.push(input.attributes); },
-  }));
-  forms.push({ method: 'get', action: page, elements: {}, added: [], appendChild(input) { this.added.push(input.attributes); } });
-  const window = load({
-    document: {
-      getElementsByTagName: () => forms,
-      createElement: () => ({ attributes: {}, setAttribute(name, value) { this.attributes[name] = value; } }),
+// A small DOM with the parts the form pass uses. Getters mirror the reflected
+// properties that older csrf-magic builds read directly.
+function pageDom({ submitter = true } = {}) {
+  const nodes = [];
+  const listeners = [];
+  const attribute = (node, name) => Element.prototype.getAttribute.call(node, name);
+  class Element {
+    constructor(tagName, attributes = {}, form = null) {
+      Object.assign(this, { tagName, attributes: { ...attributes }, form });
+      nodes.push(this);
+    }
+    getAttribute(name) { return Object.hasOwn(this.attributes, name) ? this.attributes[name] : null; }
+    setAttribute(name, value) { this.attributes[name] = String(value); }
+    appendChild(child) { child.form = this; return child; }
+    get method() { return (attribute(this, 'method') || 'get').toLowerCase(); }
+    get action() { return new URL(attribute(this, 'action') || page, page).href; }
+    get elements() {
+      return Object.fromEntries(nodes.filter(node => node.form === this).map(node => [attribute(node, 'name'), node]));
+    }
+  }
+  const document = {
+    baseURI: page,
+    getElementsByTagName: tag => nodes.filter(node => node.tagName === tag),
+    getElementsByName: name => nodes.filter(node => attribute(node, 'name') === name),
+    querySelectorAll(selector) {
+      assert.equal(selector, '[formaction]');
+      return nodes.filter(node => attribute(node, 'formaction') !== null);
     },
-  });
-  window.CsrfMagic.end();
-  const tokenInput = [{ name: field, value: token, type: 'hidden' }];
-  forms.slice(0, sameOrigin.length).forEach(form => assert.deepEqual(form.added, tokenInput, form.action));
-  forms.slice(sameOrigin.length).forEach(form => assert.deepEqual(form.added, [], form.action));
+    createElement: tag => new Element(tag),
+    addEventListener: (type, listener) => listeners.push([type, listener]),
+  };
+  const scope = { document, Element };
+  if (submitter) {
+    scope.SubmitEvent = class { get submitter() { return null; } };
+  }
+  return {
+    Element,
+    load: () => load(scope),
+    form: (attributes, controls = []) => {
+      const form = new Element('form', { method: 'post', ...attributes });
+      for (const control of controls) {
+        new Element(control.tag || 'input', control, form);
+      }
+      return form;
+    },
+    // What a submission would carry: associated, enabled token fields.
+    submit(form, button = null) {
+      for (const [type, listener] of listeners) {
+        if (type === 'submit') listener({ target: form, submitter: button });
+      }
+      return nodes.some(node => node.form === form && attribute(node, 'name') === field && !node.disabled);
+    },
+    button: (form, attributes) => new Element('button', { type: 'submit', ...attributes }, form),
+  };
+}
+
+test('the load-time form pass adds the token to same-origin POST forms only', () => {
+  const dom = pageDom();
+  const local = [...sameOrigin, null, ''].map(action => dom.form(action === null ? {} : { action }));
+  const foreign = crossOrigin.map(action => dom.form({ action }));
+  const get = dom.form({ method: 'get', action: 'graphs.php' });
+  dom.load().CsrfMagic.end();
+  local.forEach(form => assert.equal(dom.submit(form), true, form.getAttribute('action')));
+  [...foreign, get].forEach(form => assert.equal(dom.submit(form), false, form.getAttribute('action')));
+});
+
+test('a control named action does not hide a cross-origin form action', () => {
+  const dom = pageDom();
+  const foreign = dom.form({ action: 'https://evil.example/collect' }, [{ name: 'action', value: 'save' }]);
+  const local = dom.form({ action: 'graphs.php' }, [{ name: 'action', value: 'save' }]);
+  // The browser returns the control, whose string form is a relative path.
+  for (const form of [foreign, local]) {
+    Object.defineProperty(form, 'action', { value: { toString: () => '[object HTMLInputElement]' } });
+  }
+  // A control named getAttribute shadows the method as well.
+  Object.defineProperty(local, 'getAttribute', { value: {} });
+  dom.load().CsrfMagic.end();
+  assert.equal(dom.submit(foreign), false);
+  assert.equal(dom.submit(local), true);
+});
+
+test('a cross-origin formaction submitter does not carry the token', () => {
+  const dom = pageDom();
+  const form = dom.form({ action: 'graphs.php' });
+  const foreign = dom.button(form, { formaction: 'https://evil.example/collect' });
+  const local = dom.button(form, { formaction: '/kadupul/graphs.php' });
+  const plain = dom.button(form, {});
+  dom.load().CsrfMagic.end();
+  assert.equal(dom.submit(form, foreign), false);
+  assert.equal(dom.submit(form, local), true);
+  assert.equal(dom.submit(form, plain), true);
+  assert.equal(dom.submit(form), true);
+});
+
+test('without SubmitEvent.submitter a form with a cross-origin formaction gets no token', () => {
+  const dom = pageDom({ submitter: false });
+  const form = dom.form({ action: 'graphs.php' });
+  dom.button(form, { formaction: 'https://evil.example/collect' });
+  const other = dom.form({ action: 'graphs.php' });
+  dom.button(other, { formaction: 'graphs.php' });
+  dom.load().CsrfMagic.end();
+  assert.equal(dom.submit(form), false);
+  assert.equal(dom.submit(other), true);
+});
+
+test('a server-rendered token is withheld from a cross-origin submission', () => {
+  const dom = pageDom();
+  const form = dom.form({ action: 'https://evil.example/collect' }, [{ name: field, value: token, type: 'hidden' }]);
+  dom.load().CsrfMagic.end();
+  assert.equal(dom.submit(form), false);
+});
+
+test('relative XHR URLs resolve against the document base', () => {
+  class Request {
+    open() {}
+    send(data) { this.sent = data; }
+    setRequestHeader() {}
+  }
+  load({ XMLHttpRequest: Request, document: { baseURI: 'https://evil.example/' } });
+  const request = new Request();
+  request.open('POST', 'graphs.php', true);
+  request.send('action=save');
+  assert.equal(request.sent, 'action=save');
 });
 
 test('the jQuery fallback adds the token to same-origin posts only', () => {
