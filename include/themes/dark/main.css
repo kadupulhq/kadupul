@@ -2414,7 +2414,12 @@ tr#realtime td:first-child {
 }
 
 .checkboxSwitch input {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
 }
 
 .checkboxSlider {
@@ -2456,11 +2461,9 @@ input:checked + .checkboxSlider {
 	background: #31442b url("images/ui-bg_highlight-hard_20_31442b_1x100.png") repeat-x scroll 50% 50%;
 }
 
-input:focus + .checkboxSlider {
-	box-shadow: -moz-linear-gradient(top,  #45484d 100%, #000000 100%);
-	box-shadow: -webkit-linear-gradient(top,  #45484d 100%,#000000 100%);
-	box-shadow: -o-linear-gradient(top,  #45484d 100%,#000000 100%);
-	box-shadow: -ms-linear-gradient(top,  #45484d 100%,#000000 100%);
+input:focus-visible + .checkboxSlider {
+	outline: 2px solid #8ab4f8;
+	outline-offset: 2px;
 }
 
 input:checked + .checkboxSlider:before {
@@ -2500,7 +2503,12 @@ input:checked + .checkboxSlider:before {
 }
 
 .radioSwitch input {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
 }
 
 .radioSlider {
@@ -2545,11 +2553,9 @@ input:checked + .radioSlider {
 	background: #31442b url("images/ui-bg_highlight-hard_20_31442b_1x100.png") repeat-x scroll 50% 50%;
 }
 
-input:focus + .radioSlider {
-	box-shadow: -moz-linear-gradient(top,  #45484d 100%, #000000 100%);
-	box-shadow: -webkit-linear-gradient(top,  #45484d 100%,#000000 100%);
-	box-shadow: -o-linear-gradient(top,  #45484d 100%,#000000 100%);
-	box-shadow: -ms-linear-gradient(top,  #45484d 100%,#000000 100%);
+input:focus-visible + .radioSlider {
+	outline: 2px solid #8ab4f8;
+	outline-offset: 2px;
 }
 
 input:checked + .radioSlider:before {

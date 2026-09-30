@@ -2261,7 +2261,12 @@ tr#realtime td:first-child {
 }
 
 .checkboxSwitch input {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
 }
 
 .checkboxSlider {
@@ -2300,8 +2305,9 @@ input:disabled + .checkboxSlider {
 	cursor: not-allowed;
 }
 
-input:focus + .checkboxSlider {
-	box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .checkboxSlider {
+	outline: 2px solid #0d47a1;
+	outline-offset: 2px;
 }
 
 input:checked + .checkboxSlider:before {
@@ -2340,7 +2346,12 @@ input:checked + .checkboxSlider:before {
 }
 
 .radioSwitch input {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
 }
 
 .radioSlider {
@@ -2382,8 +2393,9 @@ input:disabled + .radioSlider {
 	cursor: not-allowed;
 }
 
-input:focus + .radioSlider {
-	box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .radioSlider {
+	outline: 2px solid #0d47a1;
+	outline-offset: 2px;
 }
 
 input:checked + .radioSlider:before {

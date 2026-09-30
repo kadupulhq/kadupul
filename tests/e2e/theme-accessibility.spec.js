@@ -129,3 +129,62 @@ test.describe('theme keyboard focus', () => {
     }
   });
 });
+
+test.describe('theme switch controls', () => {
+  // classic leaves the native checkbox and radio visible.
+  const switchThemes = allThemes.filter((theme) => theme !== 'classic');
+
+  for (const theme of allThemes) {
+    test(`${theme} switch checkbox and radio work from the keyboard`, async ({ page }) => {
+      await openTheme(page, theme);
+
+      await tabTo(page, 'switchBox');
+      await page.keyboard.press('Space');
+      expect(await page.isChecked('#switchBox')).toBe(true);
+      await page.keyboard.press('Space');
+      expect(await page.isChecked('#switchBox')).toBe(false);
+
+      await tabTo(page, 'switchRadio_1');
+      await page.keyboard.press('ArrowDown');
+      expect(await page.isChecked('#switchRadio_2')).toBe(true);
+
+      if (switchThemes.includes(theme)) {
+        const ring = await outline(page, 'label.radioSwitch:has(#switchRadio_2) .radioSlider');
+        expect(ring.style, `${theme} radio slider ring`).toBe('solid');
+        expect(ring.width).toBeGreaterThanOrEqual(2);
+      }
+    });
+  }
+
+  for (const theme of switchThemes) {
+    test(`${theme} switch looks and clicks the same for mouse users`, async ({ page }) => {
+      await openTheme(page, theme);
+
+      await tabTo(page, 'switchBox');
+      const ring = await outline(page, '#switchBox + .checkboxSlider');
+      expect(ring.style, `${theme} checkbox slider ring`).toBe('solid');
+      expect(ring.width).toBeGreaterThanOrEqual(2);
+
+      const box = await page.locator('#switchBox').boundingBox();
+      expect(box.width).toBeLessThanOrEqual(1);
+      expect(box.height).toBeLessThanOrEqual(1);
+      expect(await page.locator('#switchBox').evaluate((el) => getComputedStyle(el).opacity)).toBe('0');
+
+      await page.click('#switchBox + .checkboxSlider');
+      expect(await page.isChecked('#switchBox')).toBe(true);
+      expect((await outline(page, '#switchBox + .checkboxSlider')).style).toBe('none');
+    });
+  }
+
+  test('sunrise keeps plain checkboxes reachable and rings the drawn box', async ({ page }) => {
+    await openTheme(page, 'sunrise');
+
+    await tabTo(page, 'rowCheck');
+    const ring = await outline(page, 'label[for="rowCheck"]', '::before');
+    expect(ring.style).toBe('solid');
+    expect(ring.width).toBeGreaterThanOrEqual(2);
+
+    await page.keyboard.press('Space');
+    expect(await page.isChecked('#rowCheck')).toBe(true);
+  });
+});

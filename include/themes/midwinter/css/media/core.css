@@ -220,7 +220,12 @@ input[type="checkbox"]:checked + label, input[type="radio"]:not([name^="reindex"
 }
 
 .checkboxSwitch input {
-    display: none;
+    /* Hidden without display:none, which would take the control out of the tab order. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
 }
 
 #navigation_right {
@@ -2369,8 +2374,9 @@ input:checked + .checkboxSlider {
     background: rgb(50,116,217);
 }
 
-input:focus + .checkboxSlider {
-    box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .checkboxSlider {
+    outline: 2px solid var(--text-color-highlight-a);
+    outline-offset: 2px;
 }
 
 input:disabled + .checkboxSlider {
@@ -2405,7 +2411,12 @@ input:checked + .checkboxSlider:before {
 }
 
 .radioSwitch input {
-    display: none;
+    /* Hidden without display:none, which would take the control out of the tab order. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
 }
 
 .radioSlider {
@@ -2441,8 +2452,9 @@ input:checked + .radioSlider {
     background: rgb(50,116,217);
 }
 
-input:focus + .radioSlider {
-    box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .radioSlider {
+    outline: 2px solid var(--text-color-highlight-a);
+    outline-offset: 2px;
 }
 
 input:disabled + .radioSlider {
