@@ -1,0 +1,41 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+$root = dirname(__DIR__, 2);
+$scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if (isset($argv[2])) {
+    define('FORM_RENDERER_TEST_COVERAGE', true);
+    define('RRD_TEST_COVERAGE_DIRECTORY', $argv[2]);
+    require __DIR__ . '/rrd-process-coverage.php';
+}
+require $root . '/include/global_constants.php';
+require $root . '/lib/functions.php';
+require $root . '/lib/headers_secure.php';
+function html_escape($message)
+{
+    return cacti_html_context_escape($message, CACTI_ESC_ATTR);
+}
+function __($message)
+{
+    return $message;
+}
+function __esc($message)
+{
+    return cacti_html_context_escape($message, CACTI_ESC_ELEMENT);
+}
+require $root . '/lib/html_form.php';
+$_SESSION = $scenario['session'] ?? array();
+ob_start();
+if (isset($scenario['input'])) {
+    $function = $scenario['input'] === 'directory' ? 'form_dirpath_box' : 'form_font_box';
+    $function('fixture', $scenario['value'] ?? '', 'default', 64, 30, 'text', $scenario['current_id'] ?? 0);
+} else {
+    if (empty($scenario['orphan'])) {
+        form_start($scenario['action'], $scenario['id'], $scenario['multipart'] ?? false);
+        print '<input name="fixture" value="original">';
+    }
+    form_end($scenario['ajax'] ?? true);
+}
+$html = ob_get_clean();
+echo json_encode(array('html' => $html, 'session' => $_SESSION), JSON_THROW_ON_ERROR);

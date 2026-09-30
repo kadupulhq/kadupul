@@ -1,78 +1,113 @@
 <?php
 
-/*
- * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 namespace Kadupul\Tests;
 
 use DOMDocument;
-use DOMElement;
 use DOMXPath;
 use PHPUnit\Framework\TestCase;
 
 final class FormRendererOutputContextTest extends TestCase
 {
-    public function testFormActionAndIdStayInTheirHtmlAndJavaScriptContexts(): void
+    /** @dataProvider forms */
+    public function testNativeFormEncodingRoundTrips(array $scenario, string $expectedId): void
     {
-        $root = dirname(__DIR__, 2);
-        $script = 'require ' . var_export($root . '/include/global_constants.php', true) . ';'
-            . 'require ' . var_export($root . '/lib/functions.php', true) . ';'
-            . 'require ' . var_export($root . '/lib/headers_secure.php', true) . ';'
-            . 'function __($message) { return $message; }'
-            . 'function __esc($message) { return cacti_html_context_escape($message, CACTI_ESC_ELEMENT); }'
-            . 'require ' . var_export($root . '/lib/html_form.php', true) . ';'
-            . '$action = "save.php\' autofocus onfocus=\'alert(1)</script><script>";'
-            . '$id = "form\' onfocus=\'alert(1)</script><script>";'
-            . 'ob_start(); form_start($action, $id); form_end();'
-            . 'echo json_encode(ob_get_clean(), JSON_THROW_ON_ERROR);';
-
-        $html = $this->runPhp($script);
+        $html = $this->render($scenario)['html'];
         $document = new DOMDocument();
-        $previousLibxmlErrorMode = libxml_use_internal_errors(true);
+        $previous = libxml_use_internal_errors(true);
         try {
             self::assertTrue($document->loadHTML($html, LIBXML_NONET));
         } finally {
             libxml_clear_errors();
-            libxml_use_internal_errors($previousLibxmlErrorMode);
+            libxml_use_internal_errors($previous);
         }
-
         $xpath = new DOMXPath($document);
-        $forms = $xpath->query('//form');
-        self::assertNotFalse($forms);
-        self::assertCount(1, $forms);
-        self::assertInstanceOf(DOMElement::class, $forms->item(0));
-        self::assertSame("save.php' autofocus onfocus='alert(1)</script><script>", $forms->item(0)->getAttribute('action'));
-        self::assertSame("form' onfocus='alert(1)</script><script>", $forms->item(0)->getAttribute('id'));
-        self::assertFalse($forms->item(0)->hasAttribute('onfocus'));
-
+        self::assertCount(1, $xpath->query('//form'));
+        $form = $xpath->query('//form')->item(0);
+        self::assertSame($scenario['action'], $form->getAttribute('action'));
+        self::assertSame($expectedId, $form->getAttribute('id'));
+        self::assertSame($expectedId, $form->getAttribute('name'));
+        self::assertFalse($form->hasAttribute('onfocus'));
+        self::assertSame(!empty($scenario['multipart']) ? 'multipart/form-data' : '', $form->getAttribute('enctype'));
         $scripts = $xpath->query('//script');
-        self::assertNotFalse($scripts);
         self::assertCount(1, $scripts);
-        self::assertStringContainsString('\\u0027', $scripts->item(0)->textContent);
-        self::assertStringNotContainsString("strURL  = 'save.php'", $scripts->item(0)->textContent);
+        $script = $scripts->item(0)->textContent;
+        foreach (array("/getElementById\\('([^']*)'\\)/" => $expectedId, "/formArray\\['([^']*)'\\]/" => $expectedId, "/strURL\\s*=\\s*'([^']*)'/" => $scenario['action']) as $pattern => $expected) {
+            self::assertSame(1, preg_match($pattern, $script, $match));
+            self::assertSame($expected, json_decode('"' . $match[1] . '"', true, 512, JSON_THROW_ON_ERROR));
+        }
     }
 
-    private function runPhp(string $script): string
+    public function forms(): array
     {
-        $pipes = [];
-        $process = proc_open(
-            [PHP_BINARY, '-r', $script],
-            [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
-            $pipes
+        return array(
+            array(array('action' => "save.php' autofocus onfocus='alert(1)</script><script>", 'id' => "form' onfocus='alert(1)</script><script>"), "form' onfocus='alert(1)</script><script>"),
+            array(array('action' => 'user_admin.php?tab=permsg&id=5', 'id' => ''), 'form1'),
+            array(array('action' => 'save.php?value=%26%23%20&array[]=1', 'id' => '  a.b  ', 'multipart' => true), 'a.b')
         );
+    }
 
-        self::assertIsResource($process);
+    public function testOrphanAndNonAjaxFormsAreWarningFree(): void
+    {
+        $orphan = $this->render(array('orphan' => true))['html'];
+        self::assertStringContainsString("getElementById('')", $orphan);
+        self::assertStringContainsString("strURL  = ''", $orphan);
+        $plain = $this->render(array('action' => 'save.php', 'id' => 'plain', 'ajax' => false))['html'];
+        self::assertStringNotContainsString('<script', $plain);
+        self::assertStringContainsString('</form>', $plain);
+    }
 
-        $output = stream_get_contents($pipes[1]);
-        $error = stream_get_contents($pipes[2]);
-        fclose($pipes[1]);
-        fclose($pipes[2]);
+    /** @dataProvider inputs */
+    public function testSharedNativeInputStatePreservesDefaultsAndErrors(array $scenario, string $value, bool $error): void
+    {
+        $result = $this->render($scenario);
+        self::assertStringContainsString("value='" . htmlspecialchars($value, ENT_QUOTES) . "'", $result['html']);
+        self::assertSame($error, str_contains($result['html'], 'txtErrorTextBox'));
+        self::assertArrayNotHasKey('fixture', $result['session']['sess_error_fields'] ?? array());
+    }
 
-        self::assertSame(0, proc_close($process), $error);
-        self::assertIsString($output);
+    public function inputs(): array
+    {
+        $cases = array();
+        foreach (array('directory', 'font') as $input) {
+            $cases[] = array(array('input' => $input), 'default', false);
+            $cases[] = array(array('input' => $input, 'value' => 'saved', 'current_id' => 1, 'session' => array('sess_error_fields' => array('fixture' => true), 'sess_field_values' => array('fixture' => "submitted'&"))), "submitted'&", true);
+            $cases[] = array(array('input' => $input, 'value' => '', 'current_id' => 1, 'session' => array('sess_error_fields' => array())), '', false);
+        }
+        return $cases;
+    }
 
-        return json_decode($output, true, flags: JSON_THROW_ON_ERROR);
+    private function render(array $scenario): array
+    {
+        $coverage = $this->getTestResultObject()->getCodeCoverage();
+        $directory = sys_get_temp_dir() . '/form-renderer-' . bin2hex(random_bytes(8));
+        mkdir($directory, 0700);
+        try {
+            $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', __DIR__ . '/../Fixtures/form-renderer-native.php', json_encode($scenario, JSON_THROW_ON_ERROR));
+            if ($coverage !== null) {
+                $command[] = $directory;
+            }
+            $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+            self::assertIsResource($process);
+            $output = stream_get_contents($pipes[1]);
+            $error = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            self::assertSame(0, proc_close($process), $error);
+            self::assertSame('', $error);
+            if ($coverage !== null) {
+                $reports = glob($directory . '/*.coverage');
+                self::assertCount(1, $reports);
+                $coverage->merge(unserialize(file_get_contents($reports[0])));
+            }
+            return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+        } finally {
+            foreach (glob($directory . '/*') as $file) {
+                unlink($file);
+            }
+            rmdir($directory);
+        }
     }
 }

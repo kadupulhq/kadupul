@@ -176,7 +176,6 @@ function draw_edit_form($array)
             kill_session_var('sess_error_fields');
         }
     }
-
 }
 
 /**
@@ -684,24 +683,8 @@ function form_filepath_box($form_name, $form_previous_value, $form_default_value
     print " id='$form_name' placeholder='" . __esc('Enter a valid file path') . "' name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : '') . " value='" . html_escape($form_previous_value) . "'>" . $extra_data;
 }
 
-/**
- * form_dirpath_box - draws a standard html textbox and provides status of a directories existence
- *
- * @param string $form_name - the name of this form element
- * @param mixed  $form_previous_value - the current value of this form element
- * @param string $form_default_value - the value of this form element to use if there is
- *   no current value available
- * @param int    $form_max_length - the maximum number of characters that can be entered
- *   into this textbox
- * @param int    $form_size - the size (width) of the textbox
- * @param string $type - the type of textbox, either 'text' or 'password'
- * @param mixed  $current_id - used to determine if a current value for this form element
- *   exists or not. An empty $current_id indicates that no current value exists,
- *   a non-zero value indicates that a current value does exist
- *
- * @return void
- */
-function form_dirpath_box($form_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = 'text', $current_id = 0)
+/** Start a text input and restore its submitted value and validation state. */
+function form_input_box_start($form_name, &$form_previous_value, $form_default_value, $current_id, $type)
 {
     if (empty($current_id) && empty($form_previous_value)) {
         $form_previous_value = $form_default_value;
@@ -723,6 +706,29 @@ function form_dirpath_box($form_name, $form_previous_value, $form_default_value,
             $form_previous_value = $_SESSION['sess_field_values'][$form_name];
         }
     }
+
+}
+
+/**
+ * form_dirpath_box - draws a standard html textbox and provides status of a directories existence
+ *
+ * @param string $form_name - the name of this form element
+ * @param mixed  $form_previous_value - the current value of this form element
+ * @param string $form_default_value - the value of this form element to use if there is
+ *   no current value available
+ * @param int    $form_max_length - the maximum number of characters that can be entered
+ *   into this textbox
+ * @param int    $form_size - the size (width) of the textbox
+ * @param string $type - the type of textbox, either 'text' or 'password'
+ * @param mixed  $current_id - used to determine if a current value for this form element
+ *   exists or not. An empty $current_id indicates that no current value exists,
+ *   a non-zero value indicates that a current value does exist
+ *
+ * @return void
+ */
+function form_dirpath_box($form_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = 'text', $current_id = 0)
+{
+    form_input_box_start($form_name, $form_previous_value, $form_default_value, $current_id, $type);
 
     if (is_dir($form_previous_value)) {
         $extra_data = "<span class='cactiTooltipHint fa fa-check-circle' style='padding:5px;font-size:16px;color:green' title='" . __esc('Directory Found') . "'></span>";
@@ -1326,26 +1332,7 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
 {
     global $config;
 
-    if (empty($current_id) && empty($form_previous_value)) {
-        $form_previous_value = $form_default_value;
-    }
-
-    print "<input type='$type'";
-
-    if (isset($_SESSION['sess_error_fields'])) {
-        if (!empty($_SESSION['sess_error_fields'][$form_name])) {
-            print " class='ui-state-default ui-corner-all txtErrorTextBox'";
-            unset($_SESSION['sess_error_fields'][$form_name]);
-        } else {
-            print " class='ui-state-default ui-corner-all'";
-        }
-    }
-
-    if (isset($_SESSION['sess_field_values'])) {
-        if (!empty($_SESSION['sess_field_values'][$form_name])) {
-            $form_previous_value = $_SESSION['sess_field_values'][$form_name];
-        }
-    }
+    form_input_box_start($form_name, $form_previous_value, $form_default_value, $current_id, $type);
 
     if ($form_previous_value == '') { # no data: defaults are used; everything is fine
         $extra_data = '';
