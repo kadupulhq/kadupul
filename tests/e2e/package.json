@@ -2,10 +2,12 @@
   "name": "cacti-e2e",
   "private": true,
   "scripts": {
-    "test:themes": "node ./node_modules/@playwright/test/cli.js test theme-css.spec.js"
+    "test:themes": "node ./node_modules/@playwright/test/cli.js test theme-css.spec.js midwinter-listeners.spec.js theme-icons.spec.js selectmenu-scroll.spec.js"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
-    "playwright": "1.63.0"
+    "istanbul-lib-coverage": "3.2.2",
+    "playwright": "1.63.0",
+    "v8-to-istanbul": "9.3.0"
   }
 }

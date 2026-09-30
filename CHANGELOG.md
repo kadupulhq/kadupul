@@ -8,6 +8,9 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Migrate aggregate template lists, editing and deletion to Symfony forms and Twig; propagate changes to dependent graphs within a verified primary database transaction.
 
+- Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
+- Scope remote-agent host operations to the requesting main poller and the receiver's assigned devices; require an authenticated session user for remote graph rendering.
+- Make `plugin_manage.php --allperms` grant existing plugin realms to the configured administrator and report failed grants. Fixes #224.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
@@ -24,6 +27,23 @@ Targeting `v1.3.0`, the first planned application release. See
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
+
+- Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
+- Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.
+
+- Stop the Midwinter ESC shortcut throwing a script error outside fullscreen, and drop the unused `c+F1` shortcut that opened an `[object KeyboardEvent]` alert. SHIFT+k now leaves fullscreen as well as entering it.
+
+- Keep a manual Midwinter colour mode when the operating system switches between light and dark. After turning off the preferred colour theme in the same session, a system change still overrode the choice and reloaded the graphs.
+
+- Stop the Midwinter theme adding another copy of its keyboard shortcuts, menu search highlighting and menu click handlers on every page change, so one shortcut press no longer loads a page once per earlier navigation. A double-click anywhere no longer toggles fullscreen; use SHIFT+k.
+
+- Mark the Midwinter `CactiColorMode` cookie `Secure` only over HTTPS. Over plain HTTP the browser dropped it, so graphs ignored the dark or light colour set and reloaded on every page change.
+- Close an open select menu when its page or panel scrolls, so the detached list no longer floats over other fields. Forward-ported from lts/1.2 (issue #7506).
+
+- Fix theme script defects on page reloads: window resize handlers no longer pile up, the classic theme no longer removes the handler that closes open menus on an outside click, and filter search icons are added once. Select menus are sized through the widget, so a plugin field id with `.` or `:` no longer stops the theme setup.
+
+- Replace Font Awesome 4 icon names that render blank: the paper-plane scroll-to-top button and the sunrise logo now show their icons, and paper-plane and paw no longer turn delete icons into an undefined class. The paw theme also shows its logo on the logout page.
+- Disable network access while parsing imported package XML. Fixes #578.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
