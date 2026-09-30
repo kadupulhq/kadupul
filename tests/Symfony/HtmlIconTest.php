@@ -96,7 +96,43 @@ final class HtmlIconTest extends TestCase
         self::assertSame('fa fa-plus', $map['add']);
     }
 
-    private function call(string $expression, string $theme = 'modern'): string
+    public function testMenuGlyphsTakeRegistryNamesAndPluginClasses(): void
+    {
+        $menu = <<<'PHP'
+            (function () {
+                global $menu_glyphs, $user_auth_realm_filenames;
+                $user_auth_realm_filenames = array('graphs.php' => 8);
+                $menu_glyphs = array('Create' => 'menu-create', 'Plugin' => 'fa fa-cube', 'Odd' => "x' onmouseover='y");
+                ob_start();
+                draw_menu(array(
+                    'Create' => array('graphs.php' => 'New Graphs'),
+                    'Plugin' => array('graphs.php' => 'Plugin Page'),
+                    'Other' => array('graphs.php' => 'Other Page'),
+                    'Odd' => array('graphs.php' => 'Odd Page'),
+                ));
+                preg_match_all('/<i class="menu_glyph ([^"]*)"><\/i>/', ob_get_clean(), $glyphs);
+                return implode('|', $glyphs[1]);
+            })()
+            PHP;
+        $stubs = 'function is_realm_allowed($realm) { return true; }'
+            . 'function api_user_realm_auth($file) { return true; }'
+            . 'function clean_up_name($name) { return $name; }'
+            . 'function get_current_page() { return "index.php"; }'
+            . 'function is_menu_pick_active($url) { return false; }';
+
+        self::assertSame(
+            'fa fa-chart-area|fa fa-cube|fa fa-folder|x&apos; onmouseover=&apos;y',
+            $this->call($menu, 'modern', $stubs, array('draw_menu'))
+        );
+        self::assertSame(
+            'fa fa-plus|fa fa-cube|far fa-folder|x&apos; onmouseover=&apos;y',
+            $this->call($menu, 'midwinter', $stubs, array('draw_menu')),
+            'midwinter redraws core menu glyphs but leaves plugin classes alone'
+        );
+    }
+
+    /** @param list<string> $functions further lib/html.php functions the expression needs */
+    private function call(string $expression, string $theme = 'modern', string $stubs = '', array $functions = array()): string
     {
         $root = dirname(__DIR__, 2);
         $source = file_get_contents($root . '/lib/html.php');
@@ -104,8 +140,9 @@ final class HtmlIconTest extends TestCase
 
         $script = 'require ' . var_export($root . '/include/vendor/autoload.php', true) . ';'
             . '$config = array("base_path" => ' . var_export($root, true) . ');'
-            . 'function get_selected_theme() { return ' . var_export($theme, true) . '; }';
-        foreach (array('html_escape', 'html_icon_registry', 'html_icon_class', 'html_icon') as $function) {
+            . 'function get_selected_theme() { return ' . var_export($theme, true) . '; }'
+            . $stubs;
+        foreach (array_merge(array('html_escape', 'html_icon_registry', 'html_icon_class', 'html_icon'), $functions) as $function) {
             $script .= "\n" . test_php_function_source($source, $function);
         }
 
