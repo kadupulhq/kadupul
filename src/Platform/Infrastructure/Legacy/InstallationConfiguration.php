@@ -45,7 +45,7 @@ final class InstallationConfiguration implements LegacyConfiguration
         if ($values['collector_id'] !== 1) {
             $this->requireSiteRoute();
             if (($settings['rdatabase_type'] ?? 'mysql') !== 'mysql' || empty($settings['rdatabase_hostname']) || empty($settings['rdatabase_default']) || !isset($settings['rdatabase_username'], $settings['rdatabase_password']) || ($settings['conn_mode'] ?? '') === 'offline') {
-                throw new \RuntimeException('Online primary configuration is required for collector Sites administration.');
+                throw new \RuntimeException('Online primary configuration is required for collector administration.');
             }
             $primary = array_replace($values, [
                 'host' => $settings['rdatabase_hostname'], 'database' => $settings['rdatabase_default'],
@@ -133,8 +133,11 @@ final class InstallationConfiguration implements LegacyConfiguration
     private function requireSiteRoute(): void
     {
         $route = $this->requests?->getCurrentRequest()?->attributes->get('_route');
-        if (!in_array($route, ['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action'], true)) {
-            throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside online collector Sites routes.');
+        if (!in_array($route, [
+            'inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action',
+            'graph_vdefs', 'graph_vdef_create', 'graph_vdef_edit', 'graph_vdef_item_edit', 'graph_vdef_item_delete', 'graph_vdef_item_reorder', 'graph_vdef_action', 'graph_vdef_legacy',
+        ], true)) {
+            throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside supported online collector administration routes.');
         }
     }
 }

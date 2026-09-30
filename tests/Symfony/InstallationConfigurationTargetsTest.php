@@ -100,7 +100,7 @@ final class InstallationConfigurationTargetsTest extends TestCase
         $request->attributes->set('_route', 'inventory_sites');
         $requests = new RequestStack();
         $requests->push($request);
-        $this->expectExceptionMessage('Online primary configuration is required for collector Sites administration.');
+        $this->expectExceptionMessage('Online primary configuration is required for collector administration.');
         (new InstallationConfiguration($this->root, $requests))->values();
     }
 

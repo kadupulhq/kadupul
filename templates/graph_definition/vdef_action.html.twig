@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ operation == 'delete' ? 'Delete VDEFs'|trans({}, 'graph_definition') : 'Duplicate VDEFs'|trans({}, 'graph_definition') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ operation == 'delete' ? 'Delete VDEFs'|trans({}, 'graph_definition') : 'Duplicate VDEFs'|trans({}, 'graph_definition') }}</h1>
+    <p>{{ operation == 'delete' ? 'Confirm deletion of these definitions.'|trans({}, 'graph_definition') : 'Confirm duplication. You can change the title format.'|trans({}, 'graph_definition') }}</p>
+    <ul>{% for vdef in rows %}<li>{{ vdef.name }}</li>{% endfor %}</ul>
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_row(form.selection) }}
+    {% if operation == 'duplicate' %}{{ form_row(form.title_format) }}{% else %}{{ form_widget(form.title_format, {attr: {hidden: true}}) }}{% endif %}
+    <button type="submit">{{ 'Continue'|trans({}, 'graph_definition') }}</button>
+    {{ form_end(form) }}
+    <p><a href="{{ path('graph_vdefs') }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
+</main>
+{% endblock %}

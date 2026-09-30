@@ -251,4 +251,4 @@ user_domains.php	realm:1	include/auth.php
 user_group_admin.php	realm:1	include/auth.php
 utilities.php	realm:15	include/auth.php
 var/	web-server-denied	nginx; apache .htaccess
-vdef.php	realm:14	include/auth.php
+vdef.php	symfony:forward	forwards to app.php/graph-definitions/vdefs/legacy

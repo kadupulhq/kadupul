@@ -1119,3 +1119,16 @@ but remote writes can survive a later failure. The UI reports an uncertain outco
 in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
+
+### VDEF administration
+
+VDEF listing, create/edit, item create/edit/delete/reorder, and bulk duplicate/delete
+now use Symfony routes, Forms and Twig. The catalog preserves graph/template usage
+counts and nested VDEF references; the editor preserves item type/value/sequence
+and previews nested VDEF expressions. Mutations require console access and the
+VDEF realm, recheck account/policy/console and VDEF realm grants inside the write
+transaction, and use CSRF tokens plus revision checks to reject stale forms.
+Deletion refuses definitions referenced by graphs, graph templates or other VDEFs.
+The old `vdef.php` URL redirects safe GET navigation to the Symfony routes and
+rejects posted actions; legacy procedural VDEF functions remain available to
+graph rendering.
