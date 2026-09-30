@@ -164,6 +164,36 @@ test.describe('theme keyboard focus', () => {
     });
   }
 
+  // The switch ring sits on the slider, not the focused input, so a panel rule
+  // aimed at :focus-visible alone never reaches it.
+  const switches = '<label class="checkboxSwitch"><input class="formCheckbox" type="checkbox" id="panelBox"><span class="checkboxSlider checkboxRound"></span></label>'
+    + '<label class="radioSwitch"><input class="formCheckbox" type="radio" id="panelRadio" name="panelRadio"><span class="radioSlider radioRound"></span></label>';
+  const switchSurfaces = {
+    'content area': `<div class="cactiContent">${switches}</div>`,
+    'dialog': `<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-content ui-widget-content">${switches}</div></div>`,
+  };
+
+  // paw keeps the browser ring elsewhere but draws its own on the sliders.
+  for (const { theme, color } of panelPasses.concat([{ theme: 'paw', color: null }])) {
+    const name = color ? `${theme} ${color}` : theme;
+
+    test(`${name} switch ring reaches 3:1 in content and dialogs`, async ({ page }) => {
+      await openTheme(page, theme, color);
+      // Slider transitions animate outline-color; measure the settled colour.
+      await page.addStyleTag({ content: '*, *::before { transition: none !important; }' });
+
+      for (const [surface, markup] of Object.entries(switchSurfaces)) {
+        await page.evaluate((html) => { document.getElementById('contrastArea').innerHTML = html; }, markup);
+        await page.evaluate(() => document.getElementById('saveButton').focus());
+        for (const [input, slider] of [['panelBox', '.checkboxSlider'], ['panelRadio', '.radioSlider']]) {
+          await tabTo(page, input);
+          const ratio = await contrastAgainstBackground(page, `#${input} + ${slider}`, 'outlineColor');
+          expect(ratio, `${name} ${slider} ring in ${surface}`).toBeGreaterThanOrEqual(3);
+        }
+      }
+    });
+  }
+
   test('midwinter draws the ring on the replacement checkbox and radio label', async ({ page }) => {
     for (const color of [null, 'light']) {
       await openTheme(page, 'midwinter', color);

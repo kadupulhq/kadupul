@@ -45,7 +45,8 @@ table {
 
 /* Dialogs, menus, message boxes and selected rows are light, where the light blue ring measures under 2:1. */
 .ui-widget-content :focus-visible, .menuoptions :focus-visible, .messageBox :focus-visible,
-.spikekillMenu :focus-visible, tr.selected :focus-visible {
+.spikekillMenu :focus-visible, tr.selected :focus-visible,
+.ui-widget-content :focus-visible + .checkboxSlider, .ui-widget-content :focus-visible + .radioSlider {
 	outline-color: #0D47A1 !important;
 }
 
