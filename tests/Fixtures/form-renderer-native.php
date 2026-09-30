@@ -38,4 +38,23 @@ if (isset($scenario['input'])) {
     form_end($scenario['ajax'] ?? true);
 }
 $html = ob_get_clean();
-echo json_encode(array('html' => $html, 'session' => $_SESSION), JSON_THROW_ON_ERROR);
+$result = array('html' => $html, 'session' => $_SESSION);
+if (!empty($scenario['browser'])) {
+    $document = new DOMDocument();
+    $previous = libxml_use_internal_errors(true);
+    try {
+        $document->loadHTML($html, LIBXML_NONET);
+    } finally {
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+    }
+    $scripts = $document->getElementsByTagName('script');
+    if ($scripts->length !== 1) {
+        throw new RuntimeException('Expected one generated form script');
+    }
+    $script = $scripts->item(0);
+    $result['script'] = $script->textContent;
+    $script->parentNode->removeChild($script);
+    $result['markup'] = $document->saveHTML();
+}
+echo json_encode($result, JSON_THROW_ON_ERROR);

@@ -6,15 +6,15 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '../..');
 
 function render(scenario) {
-  return JSON.parse(execFileSync(process.env.FORM_TEST_PHP || 'php', [path.join(root, 'tests/Fixtures/form-renderer-native.php'), JSON.stringify(scenario)], { encoding: 'utf8' })).html;
+  return JSON.parse(execFileSync(process.env.FORM_TEST_PHP || 'php', [path.join(root, 'tests/Fixtures/form-renderer-native.php'), JSON.stringify({ ...scenario, browser: true })], { encoding: 'utf8' }));
 }
 
 async function load(page, scenario) {
-  const html = render(scenario);
+  const { markup, script } = render(scenario);
   await page.route('**/tests/e2e/theme-smoke.html', route => route.fulfill({ contentType: 'text/html', body: '<html><body></body></html>' }));
   await page.goto('/tests/e2e/theme-smoke.html', { waitUntil: 'commit' });
   await page.route('**/include/**', route => route.abort());
-  await page.setContent(html.replace(/<script[\s\S]*?<\/script>/g, ''));
+  await page.setContent(markup);
   for (const file of ['include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js', 'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js']) {
     await page.addScriptTag({ path: path.join(root, file) });
   }
@@ -29,7 +29,7 @@ async function load(page, scenario) {
     window.sessionMessageContinue = 'Continue';
   });
   await page.addScriptTag({ path: path.join(root, 'include/layout.js') });
-  await page.addScriptTag({ content: html.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1] });
+  await page.addScriptTag({ content: script });
   await page.waitForFunction(() => document.readyState === 'complete');
   // Flush jQuery's ready queue without depending on a timer delay.
   await page.evaluate(() => new Promise(resolve => $(resolve)));
