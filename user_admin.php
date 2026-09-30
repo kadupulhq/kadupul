@@ -176,6 +176,20 @@ function form_actions()
         header('Location: user_admin.php?action=user_edit&header=false&tab=permste&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_groups')) {
+        // A membership in a missing group would pass to a group created later
+        // with that id, so every named group must exist before any row is written.
+        if (get_nfilter_request_var('drp_action') == '1') {
+            foreach ($_POST as $var => $val) {
+                if (preg_match('/^chk_([0-9]+)$/', $var, $matches)
+                    && db_fetch_cell_prepared('SELECT COUNT(*) FROM user_auth_group WHERE id = ?', array($matches[1])) == 0) {
+                    cacti_log('WARNING: Refused a change to missing User Group ID ' . $matches[1] . ' from IP ' . get_client_addr(), false, 'AUTH');
+                    raise_message('permission_denied');
+                    header('Location: user_admin.php?action=user_edit&header=false&tab=permsgr&id=' . get_filter_request_var('id'));
+                    exit;
+                }
+            }
+        }
+
         foreach ($_POST as $var => $val) {
             if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
                 /* ================= input validation ================= */
@@ -183,10 +197,14 @@ function form_actions()
                 /* ==================================================== */
 
                 if (get_nfilter_request_var('drp_action') == '1') {
+                    // Selecting the parent writes nothing once the group is
+                    // gone, so a delete racing the check above adds no row.
                     db_execute_prepared(
                         'REPLACE INTO user_auth_group_members
 						(user_id, group_id)
-						VALUES (?, ?)',
+						SELECT ?, id
+						FROM user_auth_group
+						WHERE id = ?',
                         array(get_nfilter_request_var('id'), $matches[1])
                     );
                 } else {
