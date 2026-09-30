@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ (template ? 'Edit Color Template' : 'Add Color Template')|trans({}, 'color_templates') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <p><a href="{{ path('color_template_list', filters) }}">{{ 'Back to Color Templates'|trans({}, 'color_templates') }}</a></p>
+    <h1>{{ (template ? 'Edit Color Template' : 'Add Color Template')|trans({}, 'color_templates') }}</h1>
+    {% if saved %}<output>{{ 'Color template saved.'|trans({}, 'color_templates') }}</output>{% endif %}
+    {{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.name) }}{{ form_widget(form.revision) }}{{ form_widget(form.save) }}{{ form_end(form) }}
+    {% if template %}
+        <section>
+            <h2>{{ 'Color Items'|trans({}, 'color_templates') }}</h2>
+            <p><a href="{{ path('color_template_item_create', {id: template.id}) }}">{{ 'Add Color Item'|trans({}, 'color_templates') }}</a></p>
+            <table>
+                <thead><tr><th>{{ 'Position'|trans({}, 'color_templates') }}</th><th>{{ 'Color'|trans({}, 'color_templates') }}</th><th>{{ 'Hex'|trans({}, 'color_templates') }}</th><th>{{ 'Actions'|trans({}, 'color_templates') }}</th></tr></thead>
+                <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td><a href="{{ path('color_template_item_edit', {id: template.id, itemId: item.id}) }}">{{ loop.index }}</a></td>
+                        <td><span style="display:inline-block;width:1.5rem;height:1.5rem;background-color:#{{ item.hex }}" aria-hidden="true"></span> {{ item.colorId }}</td>
+                        <td>{{ item.hex }}</td>
+                        <td>
+                            {% for direction, orderForm in orderForms[item.id]|default([]) %}
+                                {{ form_start(orderForm) }}{{ form_widget(orderForm.order) }}{{ form_widget(orderForm.save) }}{{ form_end(orderForm) }}
+                            {% endfor %}
+                            <a href="{{ path('color_template_item_delete', {id: template.id, itemId: item.id}) }}">{{ 'Delete'|trans({}, 'color_templates') }}</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4"><em>{{ 'No Items'|trans({}, 'color_templates') }}</em></td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

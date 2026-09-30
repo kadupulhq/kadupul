@@ -1119,3 +1119,16 @@ but remote writes can survive a later failure. The UI reports an uncertain outco
 in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
+
+### Color templates
+
+Color template management is served by Symfony at `/app.php/graphing/color-templates`.
+The list, template editor, color-item editor, item ordering, duplicate/delete
+confirmation, and aggregate synchronization use Symfony forms and Twig. Writes
+recheck the current account, forced-password policy, console and color-template
+realms inside their transaction. Aggregate synchronization runs the legacy graph
+propagation routine in an isolated CLI worker with database failures configured
+to throw, so a failed graph-item rewrite rolls back the entire propagation
+transaction. Existing `color_templates.php` and `color_templates_items.php` URLs
+forward safe GET navigation; legacy POSTs expire without replay. English and
+French translations follow the authenticated locale preference.

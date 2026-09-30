@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Color Templates'|trans({}, 'color_templates') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Color Templates'|trans({}, 'color_templates') }}</h1>
+    {% if saved %}<output>{{ 'Color template saved.'|trans({}, 'color_templates') }}</output>{% endif %}
+    {% if deleted %}<output>{{ 'Color templates deleted.'|trans({}, 'color_templates') }}</output>{% endif %}
+    {% if duplicated %}<output>{{ 'Color templates duplicated.'|trans({}, 'color_templates') }}</output>{% endif %}
+    {% if synced %}<output>{{ 'Aggregate graphs synchronized.'|trans({}, 'color_templates') }}</output>{% endif %}
+    <p><a href="{{ path('color_template_create', filters) }}">{{ 'Add Color Template'|trans({}, 'color_templates') }}</a></p>
+    <form method="get" action="{{ path('color_template_list') }}">
+        <label for="color-filter">{{ 'Search'|trans({}, 'color_templates') }}</label>
+        <input id="color-filter" name="filter" type="search" maxlength="200" value="{{ filters.filter }}">
+        <label for="color-rows">{{ 'Color Templates per page'|trans({}, 'color_templates') }}</label>
+        <select id="color-rows" name="rows">
+            {% for value in ['-1', '10', '15', '20', '25', '30', '40', '50', '100', '250', '500', '1000', '2000', '3000', '4000', '5000'] %}
+                <option value="{{ value }}"{% if filters.rows == value %} selected{% endif %}>{{ value == '-1' ? 'Default (%count%)'|trans({'%count%': defaultRows}, 'color_templates') : value }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="sort_column" value="{{ filters.sort_column }}">
+        <input type="hidden" name="sort_direction" value="{{ filters.sort_direction }}">
+        <input type="hidden" name="has_graphs" value="false">
+        <label><input type="checkbox" name="has_graphs" value="true"{% if filters.has_graphs == 'true' %} checked{% endif %}> {{ 'Has Graphs'|trans({}, 'color_templates') }}</label>
+        <button type="submit">{{ 'Go'|trans({}, 'color_templates') }}</button>
+        <a href="{{ path('color_template_list', {reset: 1}) }}">{{ 'Clear'|trans({}, 'color_templates') }}</a>
+    </form>
+    <form method="get" action="{{ path('color_template_actions') }}">
+        <table>
+            <caption>{{ 'Color Templates'|trans({}, 'color_templates') }}</caption>
+            <thead><tr>
+                <th>{{ 'Select'|trans({}, 'color_templates') }}</th>
+                <th><a href="{{ path('color_template_list', filters|merge({sort_column: 'name', sort_direction: filters.sort_column == 'name' and filters.sort_direction == 'ASC' ? 'DESC' : 'ASC'})) }}">{{ 'Template Title'|trans({}, 'color_templates') }}</a></th>
+                <th>{{ 'Deletable'|trans({}, 'color_templates') }}</th>
+                <th><a href="{{ path('color_template_list', filters|merge({sort_column: 'graphs', sort_direction: filters.sort_column == 'graphs' and filters.sort_direction == 'ASC' ? 'DESC' : 'ASC'})) }}">{{ 'Graphs'|trans({}, 'color_templates') }}</a></th>
+                <th><a href="{{ path('color_template_list', filters|merge({sort_column: 'templates', sort_direction: filters.sort_column == 'templates' and filters.sort_direction == 'ASC' ? 'DESC' : 'ASC'})) }}">{{ 'Templates'|trans({}, 'color_templates') }}</a></th>
+                <th>{{ 'Colors'|trans({}, 'color_templates') }}</th>
+            </tr></thead>
+            <tbody>
+            {% for template in page.templates %}
+                <tr>
+                    <td><input type="checkbox" name="ids[]" value="{{ template.id }}"{% if not template.deletable %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': template.name}, 'color_templates') }}"></td>
+                    <td><a href="{{ path('color_template_edit', filters|merge({id: template.id})) }}">{{ template.name }}</a></td>
+                    <td>{{ (template.deletable ? 'Yes' : 'No')|trans({}, 'color_templates') }}</td>
+                    <td>{{ template.graphs }}</td><td>{{ template.templates }}</td><td>{{ template.items }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6"><em>{{ 'No Color Templates Found'|trans({}, 'color_templates') }}</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <label for="color-action">{{ 'Action'|trans({}, 'color_templates') }}</label>
+        <select id="color-action" name="action" required>
+            <option value="">{{ 'Choose an action'|trans({}, 'color_templates') }}</option>
+            <option value="delete">{{ 'Delete'|trans({}, 'color_templates') }}</option>
+            <option value="duplicate">{{ 'Duplicate'|trans({}, 'color_templates') }}</option>
+            <option value="sync">{{ 'Sync Aggregates'|trans({}, 'color_templates') }}</option>
+        </select>
+        <button type="submit">{{ 'Go'|trans({}, 'color_templates') }}</button>
+    </form>
+    <nav aria-label="{{ 'Color Template pages'|trans({}, 'color_templates') }}">
+        {% if page.hasPrevious %}<a rel="prev" href="{{ path('color_template_list', filters|merge({page: filters.page - 1})) }}">{{ 'Previous'|trans({}, 'color_templates') }}</a>{% endif %}
+        <span>{{ 'Page %page%'|trans({'%page%': filters.page}, 'color_templates') }}</span>
+        {% if page.hasNext %}<a rel="next" href="{{ path('color_template_list', filters|merge({page: filters.page + 1})) }}">{{ 'Next'|trans({}, 'color_templates') }}</a>{% endif %}
+    </nav>
+</main>
+{% endblock %}

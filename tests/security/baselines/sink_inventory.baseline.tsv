@@ -263,10 +263,6 @@ dynamic_include	./cmd_realtime.php:10	require_once($config['base_path'] . '/lib/
 dynamic_include	./cmd_realtime.php:11	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./cmd_realtime.php:12	require_once($config['base_path'] . '/lib/ping.php');
 dynamic_include	./cmd_realtime.php:9	require_once($config['base_path'] . '/lib/snmp.php');
-dynamic_include	./color_templates.php:163		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./color_templates.php:363		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./color_templates.php:413		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./color_templates.php:469		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./graph_realtime.php:384	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:120					require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:180				require_once($config['base_path'] . '/auth_login.php');
@@ -698,15 +694,6 @@ header_redirect	./color.php:181			header('Location: color.php?header=false');
 header_redirect	./color.php:31			header ('Location: color.php');
 header_redirect	./color.php:91				header('Location: color.php?header=false&action=edit&id=' . (empty($color_id) ? get_nfilter_request_var('id') : $color_id));
 header_redirect	./color.php:93				header('Location: color.php?header=false');
-header_redirect	./color_templates.php:152		header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . (empty($color_template_id) ? get_nfilter_request_var('color_template_id') : $color_template_id));
-header_redirect	./color_templates.php:188			header('Location: color_templates.php?header=false');
-header_redirect	./color_templates.php:252			header('Location: color_templates.php?header=false');
-header_redirect	./color_templates_items.php:100				header('Location: color_templates_items.php?header=false&action=item_edit&color_template_item_id=' . (empty($color_template_item_id) ? get_nfilter_request_var('color_template_item_id') : $color_template_item_id) . '&color_template_id=' . get_nfilter_request_var('color_template_id'));
-header_redirect	./color_templates_items.php:103				header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_nfilter_request_var('color_template_id'));
-header_redirect	./color_templates_items.php:137	    header('Location: color_templates.php?action=template_edit&header=false&color_template_id=' . get_request_var('id'));
-header_redirect	./color_templates_items.php:30			header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('id'));
-header_redirect	./color_templates_items.php:37			header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('color_template_id'));
-header_redirect	./color_templates_items.php:44			header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('color_template_id'));
 header_redirect	./contrib/index.php:7	header("Location:../index.php");
 header_redirect	./data_debug.php:221					header('Location: data_debug.php?header=false&debug=-1');
 header_redirect	./data_debug.php:224					header('Location: data_debug.php?header=false&debug=1');

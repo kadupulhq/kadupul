@@ -109,6 +109,8 @@ def main():
         verify_site_create(harness, session, user_id, check)
         from site_lifecycle_scenarios import verify_site_lifecycle
         verify_site_lifecycle(harness, session, user_id, check)
+        from color_templates_scenarios import verify_color_templates
+        verify_color_templates(harness, session, user_id, check)
         from device_create_scenarios import verify_device_create
         verify_device_create(harness, session, user_id, check)
         response = session.opener.open(harness.base + '/app.php/session')

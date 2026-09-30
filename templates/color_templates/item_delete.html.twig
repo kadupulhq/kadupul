@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Delete Color Item'|trans({}, 'color_templates') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Delete Color Item'|trans({}, 'color_templates') }}</h1>
+    <p>{{ 'Remove color %hex% from %name%?'|trans({'%hex%': item.hex, '%name%': template.name}, 'color_templates') }}</p>
+    {{ form_start(form) }}{{ form_errors(form) }}{{ form_widget(form.revision) }}{{ form_widget(form.continue) }}{{ form_end(form) }}
+    <p><a href="{{ path('color_template_edit', {id: template.id}) }}">{{ 'Cancel'|trans({}, 'color_templates') }}</a></p>
+</main>
+{% endblock %}

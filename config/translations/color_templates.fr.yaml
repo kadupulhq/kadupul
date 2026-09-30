@@ -1,0 +1,102 @@
+Access denied.: Accès refusé.
+Action: Action
+Actions: Actions
+Add Color Item: Ajouter une couleur
+Add Color Template: Ajouter un modèle de couleurs
+Aggregate graphs synchronized.: Graphiques agrégés synchronisés.
+Back to Color Template: Retour au modèle de couleurs
+Back to Color Templates: Retour aux modèles de couleurs
+Cancel: Annuler
+Choose an action: Choisir une action
+Clear: Effacer
+Color: Couleur
+Color Items: Couleurs du modèle
+Color Item: Couleur
+Color Template: Modèle de couleurs
+Color Template item not found.: Couleur du modèle introuvable.
+Color Template not found.: Modèle de couleurs introuvable.
+Color Template pages: Pages des modèles de couleurs
+Color template changed since you opened the form. Reload before saving.: Le modèle a changé depuis l’ouverture du formulaire. Rechargez avant l’enregistrement.
+Color template item changed. Reload before saving.: La couleur du modèle a changé. Rechargez avant l’enregistrement.
+Color template item changed. Reload before removing it.: La couleur du modèle a changé. Rechargez avant de la supprimer.
+Color template item not found.: Couleur du modèle introuvable.
+Color template name must contain 1 to 255 valid characters.: Le nom du modèle doit contenir de 1 à 255 caractères valides.
+Color template not found.: Modèle de couleurs introuvable.
+Color template saved.: Modèle de couleurs enregistré.
+Color template items changed. Reload before reordering.: Les couleurs du modèle ont changé. Rechargez avant de modifier l’ordre.
+Color template order: Ordre des couleurs du modèle
+Color templates: Modèles de couleurs
+Color templates duplicated.: Modèles de couleurs dupliqués.
+Color templates deleted.: Modèles de couleurs supprimés.
+Color templates referenced by aggregate templates cannot be deleted.: Les modèles utilisés par des modèles agrégés ne peuvent pas être supprimés.
+Color Templates: Modèles de couleurs
+Color Templates per page: Modèles par page
+Colors: Couleurs
+Continue: Continuer
+Continue to delete these color templates. Templates referenced by aggregate templates cannot be deleted.: Confirmez la suppression de ces modèles. Ceux utilisés par des modèles agrégés ne peuvent pas être supprimés.
+Continue to duplicate these color templates.: Confirmez la duplication de ces modèles de couleurs.
+Delete: Supprimer
+Delete Color Item: Supprimer la couleur
+Delete Color Template: Supprimer le modèle de couleurs
+Delete Color Templates: Supprimer les modèles de couleurs
+Deletable: Suppression possible
+Duplicate: Dupliquer
+Duplicate Color Template: Dupliquer le modèle de couleurs
+Duplicate Color Templates: Dupliquer les modèles de couleurs
+Edit Color Item: Modifier la couleur
+Edit Color Template: Modifier le modèle de couleurs
+Enter a valid title format.: Saisissez un format de titre valide.
+Go: Appliquer
+Graphs: Graphiques
+Has Graphs: Avec graphiques
+Hex: Hexadécimal
+In use by aggregate templates: Utilisé par des modèles agrégés
+Invalid color template filters.: Filtres de modèles de couleurs invalides.
+Invalid color template order.: Ordre de couleurs invalide.
+Invalid color template request.: Requête de modèle de couleurs invalide.
+Invalid color template selection.: Sélection de modèles de couleurs invalide.
+Name: Nom
+No Color Templates Found: Aucun modèle de couleurs trouvé
+No colors are available.: Aucune couleur disponible.
+No Items: Aucun élément
+One or more color templates no longer exist.: Un ou plusieurs modèles n’existent plus.
+Open Color Templates and submit a new form.: Ouvrez les modèles de couleurs et envoyez un nouveau formulaire.
+Open Color Templates and use its current forms.: Ouvrez les modèles de couleurs et utilisez les formulaires actuels.
+Page %page%: Page %page%
+Position: Position
+Previous: Précédent
+Remove color %hex% from %name%?: Retirer la couleur %hex% de %name% ?
+Save Color Item: Enregistrer la couleur
+Save Color Template: Enregistrer le modèle
+Save item order: Enregistrer l’ordre
+Save outcome is uncertain. Reload before retrying.: Le résultat de l’enregistrement est incertain. Rechargez avant de réessayer.
+Search: Rechercher
+Select: Sélectionner
+Select between 1 and 100 color templates.: Sélectionnez de 1 à 100 modèles de couleurs.
+Select templates from the Color Templates list to start an action.: Sélectionnez des modèles dans la liste pour lancer une action.
+Select a valid color template and color.: Sélectionnez un modèle et une couleur valides.
+Selected color is unavailable.: La couleur sélectionnée n’est pas disponible.
+Selected color template changed. Reload before continuing.: La sélection a changé. Rechargez avant de continuer.
+Sync: Synchroniser
+Sync Aggregates: Synchroniser les agrégats
+Synchronize aggregate graphs using these color templates.: Synchroniser les graphiques agrégés avec ces modèles de couleurs.
+Template Title: Titre du modèle
+Templates: Modèles
+This legacy form has expired. Open Color Templates and submit a new form.: Ce formulaire ancien a expiré. Ouvrez les modèles de couleurs et envoyez un nouveau formulaire.
+Unexpected fields were submitted.: Des champs inattendus ont été envoyés.
+Unable to load color item form.: Impossible de charger le formulaire de couleur.
+Unable to load color template form.: Impossible de charger le formulaire du modèle.
+Unable to load color templates.: Impossible de charger les modèles de couleurs.
+Unable to process color template request.: Impossible de traiter la demande de modèle de couleur.
+Unable to prepare color item removal.: Impossible de préparer la suppression de la couleur.
+Unable to prepare color template action.: Impossible de préparer l’action du modèle.
+Unable to reorder color items.: Impossible de réordonner les couleurs.
+Yes: Oui
+No: Non
+Move up: Monter
+Move down: Descendre
+The selected color templates changed. Reload before continuing.: La sélection de modèles a changé. Rechargez avant de continuer.
+Action outcome is uncertain. Reload the color template list before retrying.: Le résultat de l’action est incertain. Rechargez la liste des modèles avant de réessayer.
+Default (%count%): Par défaut (%count%)
+Select %name%: Sélectionner %name%
+Next: Suivant

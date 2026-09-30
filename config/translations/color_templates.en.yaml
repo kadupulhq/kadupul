@@ -1,0 +1,104 @@
+Access denied.: Access denied.
+Action: Action
+Actions: Actions
+Add Color Item: Add Color Item
+Add Color Template: Add Color Template
+Add Color Template Item: Add Color Template Item
+Aggregate graphs synchronized.: Aggregate graphs synchronized.
+Back to Color Template: Back to Color Template
+Back to Color Templates: Back to Color Templates
+Cancel: Cancel
+Choose an action: Choose an action
+Clear: Clear
+Color: Color
+Color Items: Color Items
+Color Item: Color Item
+Color Template: Color Template
+Color Template item not found.: Color Template item not found.
+Color Template not found.: Color Template not found.
+Color Template pages: Color Template pages
+Color template changed since you opened the form. Reload before saving.: Color template changed since you opened the form. Reload before saving.
+Color template item changed. Reload before saving.: Color template item changed. Reload before saving.
+Color template item changed. Reload before removing it.: Color template item changed. Reload before removing it.
+Color template item not found.: Color template item not found.
+Color template name must contain 1 to 255 valid characters.: Color template name must contain 1 to 255 valid characters.
+Color template not found.: Color template not found.
+Color template saved.: Color template saved.
+Color template items changed. Reload before reordering.: Color template items changed. Reload before reordering.
+Color template order: Color template order
+Color templates: Color templates
+Color templates duplicated.: Color templates duplicated.
+Color templates deleted.: Color templates deleted.
+Color templates referenced by aggregate templates cannot be deleted.: Color templates referenced by aggregate templates cannot be deleted.
+Color Templates: Color Templates
+Color Templates per page: Color Templates per page
+Color template or item not found.: Color template or item not found.
+Colors: Colors
+Continue: Continue
+Continue to delete these color templates. Templates referenced by aggregate templates cannot be deleted.: Continue to delete these color templates. Templates referenced by aggregate templates cannot be deleted.
+Continue to duplicate these color templates.: Continue to duplicate these color templates.
+Delete: Delete
+Delete Color Item: Delete Color Item
+Delete Color Template: Delete Color Template
+Delete Color Templates: Delete Color Templates
+Deletable: Deletable
+Duplicate: Duplicate
+Duplicate Color Template: Duplicate Color Template
+Duplicate Color Templates: Duplicate Color Templates
+Edit Color Item: Edit Color Item
+Edit Color Template: Edit Color Template
+Enter a valid title format.: Enter a valid title format.
+Go: Go
+Graphs: Graphs
+Has Graphs: Has Graphs
+Hex: Hex
+In use by aggregate templates: In use by aggregate templates
+Invalid color template filters.: Invalid color template filters.
+Invalid color template order.: Invalid color template order.
+Invalid color template request.: Invalid color template request.
+Invalid color template selection.: Invalid color template selection.
+Name: Name
+No Color Templates Found: No Color Templates Found
+No colors are available.: No colors are available.
+No Items: No Items
+One or more color templates no longer exist.: One or more color templates no longer exist.
+Open Color Templates and submit a new form.: Open Color Templates and submit a new form.
+Open Color Templates and use its current forms.: Open Color Templates and use its current forms.
+Page %page%: Page %page%
+Position: Position
+Previous: Previous
+Remove color %hex% from %name%?: Remove color %hex% from %name%?
+Save Color Item: Save Color Item
+Save Color Template: Save Color Template
+Save item order: Save item order
+Save outcome is uncertain. Reload before retrying.: Save outcome is uncertain. Reload before retrying.
+Search: Search
+Select: Select
+Select between 1 and 100 color templates.: Select between 1 and 100 color templates.
+Select templates from the Color Templates list to start an action.: Select templates from the Color Templates list to start an action.
+Select a valid color template and color.: Select a valid color template and color.
+Selected color is unavailable.: Selected color is unavailable.
+Selected color template changed. Reload before continuing.: Selected color template changed. Reload before continuing.
+Sync: Sync
+Sync Aggregates: Sync Aggregates
+Synchronize aggregate graphs using these color templates.: Synchronize aggregate graphs using these color templates.
+Template Title: Template Title
+Templates: Templates
+This legacy form has expired. Open Color Templates and submit a new form.: This legacy form has expired. Open Color Templates and submit a new form.
+Unexpected fields were submitted.: Unexpected fields were submitted.
+Unable to load color item form.: Unable to load color item form.
+Unable to load color template form.: Unable to load color template form.
+Unable to load color templates.: Unable to load color templates.
+Unable to process color template request.: Unable to process color template request.
+Unable to prepare color item removal.: Unable to prepare color item removal.
+Unable to prepare color template action.: Unable to prepare color template action.
+Unable to reorder color items.: Unable to reorder color items.
+Yes: Yes
+No: No
+Move up: Move up
+Move down: Move down
+The selected color templates changed. Reload before continuing.: The selected color templates changed. Reload before continuing.
+Action outcome is uncertain. Reload the color template list before retrying.: Action outcome is uncertain. Reload the color template list before retrying.
+Default (%count%): Default (%count%)
+Select %name%: Select %name%
+Next: Next

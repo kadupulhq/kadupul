@@ -82,6 +82,25 @@ services:
     Kadupul\Inventory\Infrastructure\:
         resource: '../src/Inventory/Infrastructure/'
 
+    Kadupul\ColorTemplates\Infrastructure\:
+        resource: '../src/ColorTemplates/Infrastructure/'
+    Kadupul\ColorTemplates\Application\Port\ColorTemplateAccess:
+        alias: Kadupul\ColorTemplates\Infrastructure\Legacy\LegacyColorTemplateAccess
+    Kadupul\ColorTemplates\Application\Port\ColorTemplateStore:
+        alias: Kadupul\ColorTemplates\Infrastructure\Legacy\LegacyColorTemplateStore
+    Kadupul\ColorTemplates\Application\Port\ColorTemplatePreferences:
+        alias: Kadupul\ColorTemplates\Infrastructure\Legacy\LegacyColorTemplatePreferences
+    Kadupul\ColorTemplates\Application\Port\ColorTemplateSynchronizer:
+        alias: Kadupul\ColorTemplates\Infrastructure\Legacy\LegacyColorTemplateSynchronizer
+    Kadupul\ColorTemplates\Application\Query\ListColorTemplates: ~
+    Kadupul\ColorTemplates\Application\Command\SaveColorTemplate: ~
+    Kadupul\ColorTemplates\Application\Command\SaveColorTemplateItem: ~
+    Kadupul\ColorTemplates\Application\Command\RemoveColorTemplateItem: ~
+    Kadupul\ColorTemplates\Application\Command\ReorderColorTemplateItems: ~
+    Kadupul\ColorTemplates\Application\Command\DeleteColorTemplates: ~
+    Kadupul\ColorTemplates\Application\Command\DuplicateColorTemplates: ~
+    Kadupul\ColorTemplates\Application\Command\SyncColorTemplate: ~
+
     Kadupul\Inventory\Application\Query\ListDevices: ~
 
     Kadupul\Inventory\Application\Query\FindEditableDevice: ~

@@ -41,8 +41,8 @@ clog_user.php	guest-or-realm:19	include/auth.php; guest_account
 cmd.php	cli-only	guard: include/cli_check.php
 cmd_realtime.php	cli-only	guard: include/cli_check.php
 color.php	realm:5	include/auth.php
-color_templates.php	realm:5	include/auth.php
-color_templates_items.php	realm:5	include/auth.php
+color_templates.php	symfony:forward	forwards to app.php/graphing/color-templates/legacy
+color_templates_items.php	symfony:forward	forwards to app.php/graphing/color-template-items/legacy
 config/	web-server-denied	nginx; apache .htaccess
 contrib/	web-server-denied	nginx; apache .htaccess
 csp_report.php	anonymous-allowed	CSP violation report sink; browsers post reports without credentials; reviewed at efe610420705

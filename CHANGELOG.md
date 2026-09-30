@@ -17,6 +17,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve negative integer `--units-exponent` values accepted by graph forms. Fixes #228.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
 - Refresh the Midwinter theme's bundled hotkeys-js to 3.13.15 and ua-parser-js to 1.0.41, matching the 1.2 LTS branch.
+- Move color-template list, editing, item ordering, duplicate/delete actions and aggregate graph synchronization to Symfony forms and Twig, preserving legacy URLs through compatibility routes.
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
