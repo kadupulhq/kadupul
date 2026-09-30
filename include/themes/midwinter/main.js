@@ -964,7 +964,7 @@ function setHotKeys() {
 
 	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/hotkeys/hotkeys.js').done(function (script, textStatus) {
 		if (textStatus === 'success') {
-			hotkeys('SHIFT+c,c+t,c+l,c+p,c+F1,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
+			hotkeys('SHIFT+c,c+t,c+l,c+p,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
 				event.preventDefault();
 				switch (handler.key) {
 					case 'SHIFT+c':
@@ -996,9 +996,10 @@ function setHotKeys() {
 						toggleFullscreen('navigation_right');
 						break;
 					case 'ESC':
-						toggleFullscreen('');
+						if (getFullscreenElement()) {
+							document.exitFullscreen().catch(console.log);
+						}
 						break;
-					default: alert(event);
                 }
 
 				return false;

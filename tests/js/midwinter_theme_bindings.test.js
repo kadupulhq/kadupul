@@ -253,6 +253,36 @@ test('a failed hotkeys load is retried on the next page load', () => {
 	assert.equal(harness.documentListeners.count('keydown'), 0);
 });
 
+test('ESC outside fullscreen neither throws nor requests fullscreen', () => {
+	const harness = loadMidwinter();
+
+	harness.context.setHotKeys();
+
+	assert.doesNotThrow(() => press(harness, 27));
+	assert.equal(harness.calls.requested, 0);
+	assert.equal(harness.calls.exited, 0);
+});
+
+test('ESC in fullscreen leaves fullscreen', () => {
+	const harness = loadMidwinter();
+
+	harness.context.setHotKeys();
+	harness.setFullscreen({});
+	press(harness, 27);
+
+	assert.equal(harness.calls.exited, 1);
+	assert.equal(harness.calls.requested, 0);
+});
+
+test('c+F1 no longer opens an alert', () => {
+	const harness = loadMidwinter();
+
+	harness.context.setHotKeys();
+	press(harness, 67, 112);
+
+	assert.deepEqual(harness.calls.alerts, []);
+});
+
 test('repeated themeReady calls add one fullscreen dblclick listener', () => {
 	const harness = loadMidwinter();
 	const noop = () => undefined;
