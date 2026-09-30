@@ -192,4 +192,17 @@ for (const theme of jqueryThemes) {
     assert.equal(filterd.inserted, undefined, 'an icon already rendered next to the input is kept');
   });
 
+  test(`${theme} sizes select menus without building a selector from the id`, () => {
+    const dotted = { attrs: { id: 'plugin.form:field[1]' }, props: {} };
+    const anonymous = { attrs: {}, props: {} };
+    const multiple = { attrs: { id: 'multi' }, props: { multiple: true } };
+    const { context, selectors } = loadTheme(theme, { select: [dotted, anonymous, multiple] });
+
+    assert.doesNotThrow(() => context.themeReady());
+
+    assert.equal(dotted.menu?.style?.['max-height'], '250px');
+    assert.equal(anonymous.menu?.style?.['max-height'], '250px');
+    assert.equal(multiple.selectmenu, undefined, 'multi-selects stay native');
+    assert.deepEqual(selectors.filter(s => s.endsWith('-menu')), []);
+  });
 }

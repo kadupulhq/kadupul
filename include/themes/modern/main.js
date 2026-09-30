@@ -60,8 +60,6 @@ function themeReady() {
 	$('select').not('.colordropdown').each(function() {
 		if ($(this).prop('multiple') != true) {
 			$(this).each(function() {
-				id = $(this).attr('id');
-
 				$(this).selectmenu({
 					open: function(event, ui) {
 						var instance = $(this).selectmenu('instance');
@@ -78,7 +76,7 @@ function themeReady() {
 					width: 'auto'
 				});
 
-				$('#'+id+'-menu').css('max-height', '250px');
+				$(this).selectmenu('menuWidget').css('max-height', '250px');
 			});
 		} else {
 			$(this).addClass('ui-state-default ui-corner-all');
