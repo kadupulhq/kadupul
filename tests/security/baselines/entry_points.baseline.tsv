@@ -5,6 +5,12 @@ aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
+app.php/inventory/device-templates	symfony:inventory_device_templates	methods=GET|HEAD; ConsoleAccess realm 8
+app.php/inventory/device-templates/action/{operation}	symfony:inventory_device_template_definition_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate|sync; ConsoleAccess realm 8
+app.php/inventory/device-templates/legacy	symfony:inventory_device_template_definitions_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/inventory/device-templates/new	symfony:inventory_device_template_definition_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/inventory/device-templates/{id}/association/{kind}/{operation}	symfony:inventory_device_template_definition_association	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},kind=graph|query,operation=add|remove; ConsoleAccess realm 8
+app.php/inventory/device-templates/{id}/edit	symfony:inventory_device_template_definition_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -69,7 +75,7 @@ graphs_items.php	realm:5	include/auth.php
 graphs_new.php	realm:5	include/auth.php
 help.php	guest-or-authenticated	include/auth.php realm -1; guest_account
 host.php	realm:3	include/auth.php
-host_templates.php	realm:12	include/auth.php
+host_templates.php	symfony:forward	forwards to app.php/inventory/device-templates/legacy
 images/index.php	anonymous-allowed	redirect-only
 include/admin_notifications.php	anonymous-allowed	inert: declarations and literal assignments only
 include/auth.php	realm:0	include/auth.php; unmapped page, denied to every account

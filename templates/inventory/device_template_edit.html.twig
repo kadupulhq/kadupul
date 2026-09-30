@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}{% trans_default_domain 'inventory' %}
+{% block title %}{{ 'Device Template'|trans }} · Kadupul{% endblock %}
+{% block body %}<main><h1>{{ 'Device Template'|trans }}</h1>{{ hooks.device_template_top|default('') }}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed local Symfony routes encode validated IDs and filters; device URL uses the local application mount and fixed host.php path. #}
+<p><a href="{{ path('inventory_device_templates') }}">{{ 'Device Templates'|trans }}</a></p>
+{{ form_start(form) }}{{ form_widget(form) }}{{ hooks.device_template_edit|default('') }}<button>{{ 'Save'|trans }}</button>{{ form_end(form) }}
+{% if row.id > 0 %}
+<h2>{{ 'Graph templates'|trans }}</h2><ul>{% for id in row.graphs %}<li>{{ choices.graphs[id]|default(id) }}</li>{% endfor %}</ul>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed local Symfony routes encode validated IDs and filters; device URL uses the local application mount and fixed host.php path. #}
+<p><a href="{{ path('inventory_device_template_definition_association',{id:row.id,kind:'graph',operation:'add'}) }}">{{ 'Add graph template'|trans }}</a> <a href="{{ path('inventory_device_template_definition_association',{id:row.id,kind:'graph',operation:'remove'}) }}">{{ 'Remove graph template'|trans }}</a></p>
+<h2>{{ 'Data queries'|trans }}</h2><ul>{% for id in row.queries %}<li>{{ choices.queries[id]|default(id) }}</li>{% endfor %}</ul>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed local Symfony routes encode validated IDs and filters; device URL uses the local application mount and fixed host.php path. #}
+<p><a href="{{ path('inventory_device_template_definition_association',{id:row.id,kind:'query',operation:'add'}) }}">{{ 'Add data query'|trans }}</a> <a href="{{ path('inventory_device_template_definition_association',{id:row.id,kind:'query',operation:'remove'}) }}">{{ 'Remove data query'|trans }}</a></p>
+{% endif %}</main>{% endblock %}

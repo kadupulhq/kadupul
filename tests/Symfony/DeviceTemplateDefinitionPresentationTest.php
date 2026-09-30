@@ -1,0 +1,99 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
+namespace Kadupul\Tests;
+
+use Kadupul\Kernel;
+use Kadupul\IdentityAccess\Contract\Actor;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Inventory\Application\Port\DeviceTemplateDefinitions;
+use Kadupul\Inventory\Domain\DeviceTemplateDefinition;
+use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+
+final class DeviceTemplateDefinitionPresentationTest extends TestCase
+{
+    public function testAnonymousRequestsCannotReachFeatureAccessOrParseMalformedFields(): void
+    {
+        foreach (['/inventory/device-templates?q[x]=1', '/inventory/device-templates/new', '/inventory/device-templates/7/edit', '/inventory/device-templates/action/delete?ids[x]=bad', '/inventory/device-templates/7/association/graph/add', '/inventory/device-templates/legacy?action[x]=1'] as $path) {
+            $kernel = new Kernel('test', true);
+            try {
+                $kernel->boot();
+                $container = $kernel->getContainer()->get('test.service_container');
+                $access = $this->createMock(ConsoleAccess::class);
+                $access->method('consoleActor')->willReturn(null);
+                $container->set(ConsoleAccess::class, $access);
+                $port = $this->createMock(DeviceTemplateDefinitions::class);
+                $port->expects(self::never())->method('authorize');
+                $port->expects(self::never())->method('find');
+                $container->set(DeviceTemplateDefinitions::class, $port);
+                self::assertSame(401, $kernel->handle(Request::create($path))->getStatusCode());
+            } finally {
+                $kernel->shutdown();
+            }
+        }
+    }
+    public function testFrenchEditorEscapesStoredNamesAndPreservesTrustedInstalledHookMarkup(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+            $container->set(LegacyConfiguration::class, $configuration);
+            $pdo = new \PDO('sqlite::memory:');
+            $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+            $database = $this->createMock(DatabaseConnection::class);
+            $database->method('get')->willReturn($pdo);
+            $container->set(DatabaseConnection::class, $database);
+            $access = $this->createMock(ConsoleAccess::class);
+            $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+            $container->set(ConsoleAccess::class, $access);
+            $row = new DeviceTemplateDefinition(7, '<script>stored</script>', 'router', [2,3], [4]);
+            $port = $this->createMock(DeviceTemplateDefinitions::class);
+            $port->method('find')->willReturn($row);
+            $port->method('choices')->willReturn(['graphs' => [2 => '<same>', 3 => '<same>'], 'queries' => [4 => '<query>']]);
+            $port->method('hooks')->willReturn(['device_template_top' => '<aside id="plugin-top">Installed plugin</aside>', 'device_template_edit' => '<label for="plugin-control">Plugin field</label><input id="plugin-control" name="plugin_field">']);
+            $port->expects(self::once())->method('execute')->with(42, 'save', ['id' => 7, 'revision' => $row->revision(), 'data' => ['name' => 'changed', 'class' => 'router']])->willReturn(['ids' => [7], 'status' => 'ok']);
+            $container->set(DeviceTemplateDefinitions::class, $port);
+            $path = '/inventory/device-templates/7/edit';
+            $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $response->getStatusCode());
+            $body = $response->getContent();
+            self::assertStringContainsString('Modèle d’appareil', $body);
+            self::assertStringContainsString('&lt;script&gt;stored&lt;/script&gt;', $body);
+            self::assertStringNotContainsString('<script>stored</script>', $body);
+            self::assertStringContainsString('<aside id="plugin-top">', $body);
+            self::assertStringContainsString('<input id="plugin-control"', $body);
+            $document = new \DOMDocument();
+            @$document->loadHTML($body);
+            $xpath = new \DOMXPath($document);
+            $token = $xpath->evaluate('string(//input[@name="device_template_definition[_token]"]/@value)');
+            $fields = ['name' => 'changed', 'class' => 'router', 'revision' => $row->revision(), '_token' => $token];
+            foreach (['http://evil.invalid', null] as $origin) {
+                $request = Request::create($path, 'POST', ['device_template_definition' => $fields]);
+                if ($origin !== null) {
+                    $request->headers->set('Origin', $origin);
+                }
+                self::assertSame(422, $kernel->handle($request)->getStatusCode());
+            }
+            $request = Request::create($path, 'POST', ['device_template_definition' => $fields]);
+            $request->headers->set('Origin', 'http://localhost');
+            self::assertSame(303, $kernel->handle($request)->getStatusCode());
+            $association = $kernel->handle(Request::create('/inventory/device-templates/7/association/graph/remove'));
+            self::assertSame(200, $association->getStatusCode());
+            self::assertStringContainsString('value="2">&lt;same&gt;', $association->getContent());
+            self::assertStringContainsString('value="3">&lt;same&gt;', $association->getContent());
+            self::assertSame(409, $kernel->handle(Request::create('/inventory/device-templates/legacy', 'POST', ['action' => 'actions']))->getStatusCode());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+}

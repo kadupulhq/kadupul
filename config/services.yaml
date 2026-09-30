@@ -79,6 +79,10 @@ services:
     Kadupul\IdentityAccess\Contract\AuditTrail:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail
 
+
+    Kadupul\Inventory\Application\Port\DeviceTemplateDefinitions:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions
+
     Kadupul\Inventory\Infrastructure\:
         resource: '../src/Inventory/Infrastructure/'
 

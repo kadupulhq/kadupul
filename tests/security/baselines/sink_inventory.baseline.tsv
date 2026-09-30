@@ -818,13 +818,6 @@ header_redirect	./host.php:75			header('Location: host.php?header=false&action=e
 header_redirect	./host.php:83			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 header_redirect	./host.php:91			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 header_redirect	./host.php:99			header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host_templates.php:110			header('Location: host_templates.php?header=false&action=edit&id=' . (empty($host_template_id) ? get_nfilter_request_var('id') : $host_template_id));
-header_redirect	./host_templates.php:176			header('Location: host_templates.php?header=false');
-header_redirect	./host_templates.php:241			header('Location: host_templates.php?header=false');
-header_redirect	./host_templates.php:41			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
-header_redirect	./host_templates.php:50			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
-header_redirect	./host_templates.php:55			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
-header_redirect	./host_templates.php:64			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
 header_redirect	./images/index.php:7	header("Location:../index.php");
 header_redirect	./include/auth.php:33		header ('Location: ' . $config['url_path'] . 'install/');
 header_redirect	./include/auth.php:69				header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
