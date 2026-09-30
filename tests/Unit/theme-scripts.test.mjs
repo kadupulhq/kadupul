@@ -276,3 +276,12 @@ test('theme scripts only use icon classes the shipped Font Awesome defines', () 
   assert.deepEqual(missing, []);
   assert.doesNotMatch(css, /\.fa-arrow-circle-o-up(?![a-z0-9-])/, 'the Font Awesome 4 names stay undefined');
 });
+
+test('midwinter draws its filter icon from a face that has the glyph', () => {
+  const classes = read('include/themes/midwinter/main.js')
+    .match(/<div class="cactiTableFilter"><span><i class="([^"]+)">/)[1].split(' ');
+
+  // The free regular font has no sliders glyph, so .far draws a missing-glyph box.
+  assert.ok(!classes.includes('far') && !classes.includes('fa-regular'), classes.join(' '));
+  assert.ok(classes.includes('fa-sliders'), classes.join(' '));
+});
