@@ -41,6 +41,19 @@
       <file>./Unit/Security/Auth/BulkMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/SpikeMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/LoginMutationCsrfTest.php</file>
+      <file>./Unit/Security/Auth/NoAuthenticationRecoveryTest.php</file>
+      <file>./Unit/Security/Auth/GuestProfileAccessTest.php</file>
+      <file>./Unit/Security/Auth/LdapLoginErrorDisclosureTest.php</file>
+      <file>./Unit/Security/Auth/LocalLoginTimingTest.php</file>
+      <file>./Unit/Security/Auth/RememberMePasswordChangeTest.php</file>
+      <file>./Unit/Security/Auth/LogoutTokenRevocationTest.php</file>
+      <file>./Unit/Security/Auth/PermissionDeniedPageTest.php</file>
+      <file>./Unit/Security/Auth/TemplateUserFailureTest.php</file>
+      <file>./Unit/Security/Auth/LoginPageRefreshTest.php</file>
+      <file>./Unit/Security/Auth/CrossSiteGetGuardTest.php</file>
+      <file>./Unit/Security/Auth/CsrfTokenFormatTest.php</file>
+      <file>./Unit/Security/Auth/CsrfSecretSourceTest.php</file>
+      <file>./Unit/Security/Auth/CsrfIpTokenTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>
