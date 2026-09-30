@@ -72,6 +72,7 @@ final class AggregateGraphConfirmationXssTest extends TestCase
         $result = $this->runController(array('action' => 'save', 'save_component_graph' => '1', 'local_graph_id' => '42', 'graph_template_id' => '3', 'aggregate_template_id' => '2', 'title_format' => 'Updated aggregate', 'template_propogation' => 'on'));
         self::assertSame('', $result['html']);
         self::assertSame('Updated aggregate', $result['title']);
+        self::assertSame('Unchanged aggregate', $result['other_title']);
         self::assertSame(array('42', '3', 'Updated aggregate', '2', array()), $result['save']);
     }
 
