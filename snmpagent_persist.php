@@ -131,7 +131,7 @@ while (1) {
 function cache_read($oid)
 {
     global $cache;
-    return (isset($cache[$oid]) && $cache[$oid]) ? $cache[$oid] : false;
+    return (isset($cache[$oid]['type']) && array_key_exists('value', $cache[$oid])) ? $cache[$oid] : false;
 }
 
 function cache_get_next($oid)

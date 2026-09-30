@@ -56,7 +56,7 @@ if ($mibcache_changed !== null || file_exists($path_mibcache) === false) {
 
                 if (cacti_sizeof($next_accessible_object_required) > 0) {
                     foreach ($next_accessible_object_required as $next_accessible_object_required_oid) {
-                        $cache[$next_accessible_object_required_oid]['next'] = $oid;
+                        $cache[$next_accessible_object_required_oid] = array('next' => $oid);
                     }
 
                     $next_accessible_object_required = array();
