@@ -23,10 +23,16 @@ function prime_default_settings()
                         );
 
                         if ($current == '' || $current == null) {
+                            $default = $attributes['default'];
+
+                            if ($setting == 'ldap_tls_certificate') {
+                                $default = prime_ldap_tls_default($default);
+                            }
+
                             db_execute_prepared(
                                 'INSERT IGNORE INTO settings
 								(name, value) VALUES (?, ?)',
-                                array($setting, $attributes['default'])
+                                array($setting, $default)
                             );
                         }
                     } elseif (isset($attributes['items'])) {
@@ -56,6 +62,40 @@ function prime_default_settings()
     }
 
     $_SESSION['settings_primed'] = true;
+}
+
+/**
+ * prime_ldap_tls_default - the certificate requirement to store when a
+ *   database has none saved.
+ *
+ * The web installer primes settings before upgrade_to_1_2_31() runs, so
+ * without this the upgrade would find Demand already stored and an existing
+ * install that uses LDAPS or StartTLS would stop logging in. That install gets
+ * Never, the level it has always run at. A new install, or one without LDAP
+ * encryption, gets the Demand default.
+ *
+ * @param (int) the default from the setting definition
+ *
+ * @return (int) the requirement to store
+ */
+function prime_ldap_tls_default($default)
+{
+    global $config;
+
+    $version = $config['cacti_db_version'] ?? '';
+
+    if ($version == '' || $version == 'new_install') {
+        return $default;
+    }
+
+    $global  = db_fetch_cell_prepared('SELECT value FROM settings WHERE name = ?', array('ldap_encryption'));
+    $domains = db_fetch_cell('SELECT COUNT(*) FROM user_domains_ldap WHERE encryption > 0');
+
+    if ((int) $global > 0 || (int) $domains > 0) {
+        return LDAP_OPT_X_TLS_NEVER;
+    }
+
+    return $default;
 }
 
 function install_create_csrf_secret($file)

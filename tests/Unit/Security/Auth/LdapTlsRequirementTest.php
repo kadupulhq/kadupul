@@ -90,6 +90,32 @@ PHP;
     return ldap_tls_child($program, array('settings' => $settings, 'domains' => $encrypted_domains));
 }
 
+function ldap_tls_prime(string $version, array $stored, int $encrypted_domains): array
+{
+    $root = dirname(__DIR__, 4);
+
+    $program = '$root = ' . var_export($root, true) . ';' . <<<'PHP'
+$scenario = json_decode($argv[1], true);
+$GLOBALS['scenario'] = $scenario;
+$GLOBALS['writes'] = array();
+$GLOBALS['config'] = array('cacti_db_version' => $scenario['version']);
+$GLOBALS['settings'] = array('authentication' => array(
+    'ldap_encryption' => array('default' => 0),
+    'ldap_tls_certificate' => array('default' => 2),
+));
+require $root . '/include/global_constants.php';
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function db_fetch_cell_prepared($sql, $params = array()) { return $GLOBALS['scenario']['stored'][$params[0]] ?? false; }
+function db_fetch_cell($sql) { return (string) $GLOBALS['scenario']['domains']; }
+function db_execute_prepared($sql, $params = array()) { $GLOBALS['writes'][$params[0]] = $params[1]; return true; }
+require $root . '/install/functions.php';
+prime_default_settings();
+print json_encode($GLOBALS['writes']);
+PHP;
+
+    return ldap_tls_child($program, array('version' => $version, 'stored' => $stored, 'domains' => $encrypted_domains));
+}
+
 test('an install that never saved the requirement checks the certificate', function (string $encryption) {
     $result = ldap_tls_connect(array(), $encryption);
 
@@ -152,4 +178,28 @@ test('the upgrade leaves a saved requirement alone', function (string $saved) {
 test('the upgrade gives installs without LDAP encryption the new default', function () {
     expect(ldap_tls_upgrade(array(), 0))->toBe(array())
         ->and(ldap_tls_upgrade(array('ldap_encryption' => '0'), 0))->toBe(array());
+});
+
+test('the web installer primes Never for an existing install that uses LDAP encryption', function (array $stored, int $domains) {
+    $writes = ldap_tls_prime('1.2.31', $stored, $domains);
+
+    expect($writes['ldap_tls_certificate'])->toBe(0);
+})->with(array(
+    'LDAPS' => array(array('ldap_encryption' => '1'), 0),
+    'a domain' => array(array('ldap_encryption' => '0'), 1),
+));
+
+test('the web installer primes Demand for a new install or one without LDAP encryption', function (string $version, array $stored) {
+    $writes = ldap_tls_prime($version, $stored, 0);
+
+    expect($writes['ldap_tls_certificate'])->toBe(2);
+})->with(array(
+    'new install' => array('new_install', array('ldap_encryption' => '1')),
+    'no encryption' => array('1.2.31', array('ldap_encryption' => '0')),
+));
+
+test('the web installer leaves a stored requirement alone', function () {
+    $writes = ldap_tls_prime('1.2.31', array('ldap_encryption' => '1', 'ldap_tls_certificate' => '2'), 0);
+
+    expect($writes)->not->toHaveKey('ldap_tls_certificate');
 });

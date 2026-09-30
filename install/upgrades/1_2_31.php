@@ -58,6 +58,9 @@ function upgrade_to_1_2_31()
  * they can raise in the settings. Installs that saved a value keep it, and
  * installs without LDAP encryption get the new default.
  *
+ * The web installer stores the same value earlier, through
+ * prime_ldap_tls_default(); this step covers cli/upgrade_database.php.
+ *
  * @return (void)
  */
 function upgrade_ldap_tls_requirement()
