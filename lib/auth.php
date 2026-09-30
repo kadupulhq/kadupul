@@ -4340,12 +4340,19 @@ function secpass_login_process($username) {
 		$error_msg = __('Access Denied!  Login Failed.');
 
 		cacti_log(sprintf('LOGIN FAILED: Invalid user %s specified.', $username), false, 'AUTH');
+
+		/* an unknown username must fail exactly as a wrong password does */
+		return array();
 	}
 
 	/**
 	 * Check if old password doesn't meet specifications and must be changed
 	 * This only applies to local logins where we store the actual hashed
 	 * password.
+	 *
+	 * The login completes and auth_login.php sends the new session to the
+	 * forced change; redirecting before a session exists sent the user back
+	 * to the login page on every attempt.
 	 */
 	if (read_config_option('secpass_forceold') == 'on') {
 		$message = secpass_check_pass($password);
@@ -4353,16 +4360,14 @@ function secpass_login_process($username) {
 		if ($message != 'ok') {
 			db_execute_prepared("UPDATE user_auth
 				SET must_change_password = 'on'
-				WHERE username = ?
+				WHERE id = ?
 				AND realm = 0
 				AND enabled = 'on'",
-				array($username));
+				array($user['id']));
 
-			$error_msg = __('Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now.');
+			$user['must_change_password'] = 'on';
 
-			raise_message('forced_password', $error_msg, MESSAGE_LEVEL_INFO);
-			header('Location: auth_changepassword.php?header=false');
-			exit;
+			raise_message('forced_password', __('Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now.'), MESSAGE_LEVEL_INFO);
 		}
 	}
 
