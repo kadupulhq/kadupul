@@ -8,6 +8,7 @@
     {{ form_start(form) }}{{ form_errors(form) }}{{ form_widget(form.revisions) }}
         <button type="submit">{{ 'Delete aggregate templates'|trans({}, 'aggregate_template') }}</button>
         {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed list route. #}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         <a href="{{ path('aggregate_template_list') }}">{{ 'Cancel'|trans({}, 'aggregate_template') }}</a>
     {{ form_end(form) }}
 </main>

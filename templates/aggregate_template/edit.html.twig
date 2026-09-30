@@ -3,6 +3,7 @@
 {% block body %}
 <main>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed list route. #}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('aggregate_template_list') }}">{{ 'Back to aggregate templates'|trans({}, 'aggregate_template') }}</a></p>
     <h1>{{ (template.id > 0 ? 'Edit aggregate template' : 'Create aggregate template')|trans({}, 'aggregate_template') }}</h1>
     {% if saved %}<output>{{ 'Aggregate template saved.'|trans({}, 'aggregate_template') }}</output>{% endif %}

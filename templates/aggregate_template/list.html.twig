@@ -5,6 +5,7 @@
     <h1>{{ 'Aggregate graph templates'|trans({}, 'aggregate_template') }}</h1>
     {% if app.request.query.get('deleted') == '1' %}<output>{{ 'Aggregate templates deleted.'|trans({}, 'aggregate_template') }}</output>{% endif %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route; page number is a validated integer. #}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('aggregate_template_edit', {id: 0}) }}">{{ 'Create aggregate template'|trans({}, 'aggregate_template') }}</a></p>
     <form method="get" action="{{ path('aggregate_template_list') }}">
         <label>{{ 'Search'|trans({}, 'aggregate_template') }} <input type="search" name="filter" value="{{ criteria.search }}"></label>
@@ -16,9 +17,12 @@
         <table>
             <thead><tr>
                 <th>{{ 'Select'|trans({}, 'aggregate_template') }}</th>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                 <th><a href="{{ path('aggregate_template_list', {filter: criteria.search, has_graphs: criteria.hasGraphs ? 'on' : '', rows: criteria.pageSize, sort: 'name', direction: criteria.sort == 'name' and criteria.direction == 'asc' ? 'desc' : 'asc'}) }}">{{ 'Template title'|trans({}, 'aggregate_template') }}</a></th>
                 <th>{{ 'Deletable'|trans({}, 'aggregate_template') }}</th>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                 <th><a href="{{ path('aggregate_template_list', {filter: criteria.search, has_graphs: criteria.hasGraphs ? 'on' : '', rows: criteria.pageSize, sort: 'graphs', direction: criteria.sort == 'graphs' and criteria.direction == 'asc' ? 'desc' : 'asc'}) }}">{{ 'Child graphs'|trans({}, 'aggregate_template') }}</a></th>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                 <th><a href="{{ path('aggregate_template_list', {filter: criteria.search, has_graphs: criteria.hasGraphs ? 'on' : '', rows: criteria.pageSize, sort: 'source', direction: criteria.sort == 'source' and criteria.direction == 'asc' ? 'desc' : 'asc'}) }}">{{ 'Source graph template'|trans({}, 'aggregate_template') }}</a></th>
             </tr></thead>
             <tbody>
@@ -27,6 +31,7 @@
                     <td>{% if row.deletable %}<input type="checkbox" name="ids[]" value="{{ row.id }}" aria-label="{{ 'Select %name%'|trans({'%name%': row.name}, 'aggregate_template') }}">{% endif %}</td>
                     <td>
                         {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route with a database integer primary key. #}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                         <a href="{{ path('aggregate_template_edit', {id: row.id}) }}">{{ row.name }}</a>
                     </td>
                     <td>{{ row.deletable ? 'Yes'|trans({}, 'aggregate_template') : 'No'|trans({}, 'aggregate_template') }}</td>
@@ -38,8 +43,10 @@
         <button type="submit">{{ 'Delete selected'|trans({}, 'aggregate_template') }}</button>
     </form>
     <nav aria-label="{{ 'Pagination'|trans({}, 'aggregate_template') }}">
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         {% if criteria.page > 1 %}<a href="{{ path('aggregate_template_list', {filter: criteria.search, sort: criteria.sort, direction: criteria.direction, page: criteria.page - 1, rows: criteria.pageSize, has_graphs: criteria.hasGraphs ? 'on' : ''}) }}">{{ 'Previous'|trans({}, 'aggregate_template') }}</a>{% endif %}
         <span>{{ 'Page %page% of %pages%'|trans({'%page%': criteria.page, '%pages%': pages}, 'aggregate_template') }}</span>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         {% if criteria.page < pages %}<a href="{{ path('aggregate_template_list', {filter: criteria.search, sort: criteria.sort, direction: criteria.direction, page: criteria.page + 1, rows: criteria.pageSize, has_graphs: criteria.hasGraphs ? 'on' : ''}) }}">{{ 'Next'|trans({}, 'aggregate_template') }}</a>{% endif %}
     </nav>
 </main>
