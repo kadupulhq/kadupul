@@ -606,6 +606,28 @@
 			}
 			if (now.outlineStyle !== 'none' && now.outlineWidth > 0 && parseColor(now.outlineColor).a > 0) {
 				const color = parseColor(now.outlineColor);
+				// A hard shadow reaching past the ring is a halo: the ring has to
+				// stand out from the halo, and one of the two from the page.
+				let halo = null;
+				for (const shadow of splitTop(now.boxShadow === 'none' ? '' : now.boxShadow)) {
+					const m = /^(rgba?\([^)]+\))\s+0px\s+0px\s+0px\s+([\d.]+)px$/.exec(shadow);
+					if (m && parseFloat(m[2]) > now.outlineOffset + now.outlineWidth && (!halo || parseFloat(m[2]) > halo.spread)) {
+						halo = { color: over(parseColor(m[1]), WHITE), spread: parseFloat(m[2]) };
+					}
+				}
+				if (halo && now.outlineOffset >= 0) {
+					const page = outerBackground(owner, rect, halo.spread + 1);
+					const ring = ratio(over(color, halo.color), halo.color);
+					let low = { ratio: Infinity, bg: page[0] };
+					for (const bg of page) {
+						const r = Math.max(ratio(over(color, bg), bg), ratio(halo.color, bg));
+						if (r < low.ratio) {
+							low = { ratio: r, bg };
+						}
+					}
+					const r = Math.min(ring, low.ratio);
+					return { ...result, via: 'outline and halo' + (pseudo || ''), fg: hex(color) + '/' + hex(halo.color), bg: hex(low.bg), ratio: Math.round(r * 100) / 100, width: now.outlineWidth };
+				}
 				const inside = now.outlineOffset + now.outlineWidth <= 0;
 				const bgs = inside
 					? backgroundsAt(rect.left + rect.width / 2, rect.top + 1 - now.outlineOffset, owner, false).list
