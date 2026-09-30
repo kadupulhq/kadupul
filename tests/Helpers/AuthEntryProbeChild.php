@@ -420,7 +420,7 @@ if ($call['type'] === 'include_auth') {
     require $root . '/include/auth.php';
 
     $GLOBALS['probe']['page_continued'] = true;
-} elseif (in_array($call['type'], array('check_auth_cookie', 'clear_auth_cookie', 'local_auth_login_process', 'auth_login_create_user_from_template'), true)) {
+} elseif (in_array($call['type'], array('check_auth_cookie', 'clear_auth_cookie', 'local_auth_login_process', 'auth_login_create_user_from_template', 'cacti_auth_transition'), true)) {
     $GLOBALS['probe']['return'] = call_user_func_array($call['type'], $call['args'] ?? array());
 } else {
     fwrite(STDERR, 'AuthEntryProbe: unknown call type ' . $call['type']);

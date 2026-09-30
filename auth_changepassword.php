@@ -63,6 +63,16 @@ $user = db_fetch_row_prepared(
     array($_SESSION['sess_user_id'])
 );
 
+/* A session opened before the last password change or reset is not logged in. */
+if (cacti_sizeof($user) && !auth_session_credentials_valid($user['password'])) {
+    kill_session_var('sess_change_password');
+    kill_session_var('sess_user_id');
+
+    cacti_header('index.php');
+
+    exit;
+}
+
 $version = get_cacti_version();
 
 if (!cacti_sizeof($user) || $user['realm'] != 0) {

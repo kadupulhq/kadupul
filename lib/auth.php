@@ -5324,9 +5324,76 @@ function cacti_auth_transition($user_id, $reason = 'login')
     kill_session_var('sess_user_config_array');
     kill_session_var('sess_config_array');
 
+    auth_session_bind_credentials($user_id);
+
     cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
 
     return true;
+}
+
+/**
+ * auth_session_credential_key - digest of an account's stored password hash.
+ *
+ * A session keeps the digest from its login, so a password change or reset
+ * ends every session opened before it. Deleting rows from the sessions table
+ * only does that for database sessions, and the default storage is PHP's
+ * file handler. The digest keeps the hash itself out of session storage.
+ *
+ * @param  (string|null) $password The account's stored password hash
+ *
+ * @return (string) The digest
+ */
+function auth_session_credential_key($password)
+{
+    return hash('sha256', (string) $password);
+}
+
+/**
+ * auth_session_bind_credentials - tie the current session to the account's
+ *   current password. Login calls it through cacti_auth_transition(), and a
+ *   user who changes their own password elsewhere calls it to keep the
+ *   session they made the change from.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (void)
+ */
+function auth_session_bind_credentials($user_id)
+{
+    $password = db_fetch_cell_prepared(
+        'SELECT password
+		FROM user_auth
+		WHERE id = ?',
+        array($user_id)
+    );
+
+    if ($password !== false) {
+        $_SESSION['sess_user_credential'] = auth_session_credential_key($password);
+    }
+}
+
+/**
+ * auth_session_credentials_valid - check that the account's password has not
+ *   changed since the session was bound to it.
+ *
+ * A session opened before this check existed has no binding and is bound on
+ * its first request, so the upgrade logs nobody out.
+ *
+ * @param  (string|null) $password The account's stored password hash
+ *
+ * @return (bool) false when the password changed after the session was bound
+ */
+function auth_session_credentials_valid($password)
+{
+    $key = auth_session_credential_key($password);
+
+    if (!array_key_exists('sess_user_credential', $_SESSION)) {
+        $_SESSION['sess_user_credential'] = $key;
+
+        return true;
+    }
+
+    return is_string($_SESSION['sess_user_credential']) && hash_equals($_SESSION['sess_user_credential'], $key);
 }
 
 /**

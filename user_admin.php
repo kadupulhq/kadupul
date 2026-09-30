@@ -617,6 +617,11 @@ function form_save()
             $user_id = sql_save($save, 'user_auth');
 
             if ($user_id) {
+                /* An administrator who changes their own password keeps the session they used. */
+                if ($save['password'] !== $old_password && isset($_SESSION['sess_user_id']) && $user_id == $_SESSION['sess_user_id']) {
+                    auth_session_bind_credentials($user_id);
+                }
+
                 /* Revoke only after the validated, plugin-finalized save succeeds. */
                 if (($save['enabled'] ?? '') !== 'on' || ($save['must_change_password'] ?? '') === 'on') {
                     cacti_auth_revoke_user_credentials($user_id);

@@ -37,6 +37,7 @@ function secpass_check_pass($value) { return 'ok'; }
 function secpass_check_history(...$args) { return true; }
 function compat_password_verify(...$args) { return false; }
 function get_client_addr() { return '127.0.0.1'; }
+function auth_session_credentials_valid(...$args) { return true; }
 $config = array('url_path' => '/');
 session_id('profile-csrf-test-session');
 $_SESSION = array('sess_user_id' => 42);
