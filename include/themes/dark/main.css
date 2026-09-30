@@ -160,6 +160,19 @@ select {
 	font-size: 12px;
 }
 
+/*
+ * Rows run from #0f0f0f to #262626 and section headers start at #45484d, where
+ * the #444444 control border measures 1.1:1 to 2:1.
+ */
+:is(input, textarea).ui-state-default, .ui-widget-content :is(input, textarea).ui-state-default,
+.ui-selectmenu-button.ui-button, button.ui-multiselect {
+	border-color: #949494;
+}
+
+.checkboxSlider, .radioSlider {
+	box-shadow: inset 0 0 0 1px #949494;
+}
+
 :focus:not(:focus-visible) {
 	outline: none;
 }
@@ -256,13 +269,13 @@ label {
 
 .goodpassword {
 	padding: 4px;
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 	font-size: 1.5em !important;
 	vertical-align: bottom;
 }
 
 .associated {
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 }
 
 .notAssociated {
@@ -278,7 +291,7 @@ label {
 }
 
 .idle {
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 }
 
 .running {
@@ -306,7 +319,7 @@ label {
 }
 
 .success {
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 }
 
 .failed {
@@ -314,11 +327,11 @@ label {
 }
 
 .accessGranted {
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 }
 
 .accessGrantedItem {
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 }
 
 .accessRestricted {
@@ -399,27 +412,27 @@ label {
 }
 
 .deviceUp {
-	color: rgba(148, 179, 107, 0.8) !important;
+	color: #a6bf83 !important;
 }
 
 .deviceDown {
-	color: #ff4a4a !important;
+	color: #ff9b9b !important;
 }
 
 .deviceUnknown {
-	color: #8080ff !important;
+	color: #afafff !important;
 }
 
 .deviceDisabled {
-	color: #a1a1a1 !important;
+	color: #b7b7b7 !important;
 }
 
 .deviceRecovering {
-	color: #ff8f1e !important;
+	color: #ffa141 !important;
 }
 
 .deviceError {
-	color: #de4dea !important;
+	color: #ec99f3 !important;
 }
 
 .deviceDownMuted {
@@ -435,11 +448,11 @@ label {
 }
 
 .deviceWarning {
-	color: #bb8408 !important;
+	color: #f0aa0a !important;
 }
 
 .deviceAlert {
-	color: #ff7043 !important;
+	color: #ff9e7f !important;
 }
 
 /* The colours above are for dark rows; selected rows are light green. */
@@ -461,6 +474,34 @@ tr.selected .deviceWarning {
 
 tr.selected .deviceAlert {
 	color: #6e2200 !important;
+}
+
+tr.selected .deviceUp, tr.selected .success, tr.selected .beingGraphed, tr.selected .reloadquery {
+	color: #354323 !important;
+}
+
+tr.selected .deviceRecovering {
+	color: #623100 !important;
+}
+
+tr.selected .deviceDisabled, tr.selected .notBeingGraphed {
+	color: #3e3e3e !important;
+}
+
+tr.selected .deviceDownMuted {
+	color: #483e00 !important;
+}
+
+tr.selected .deviceThreshold {
+	color: #5d3500 !important;
+}
+
+tr.selected .deviceUnmonitored {
+	color: #3f4101 !important;
+}
+
+tr.selected .deletequery {
+	color: #b50000;
 }
 
 .deviceUpBg {
@@ -541,7 +582,7 @@ tr.selected .deviceAlert {
 }
 
 .beingGraphed {
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 }
 
 .notBeingGraphed {
@@ -605,7 +646,7 @@ tr.selected .deviceAlert {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 	font-size: 14px;
 	margin-right: 10px;
 }
@@ -623,13 +664,13 @@ tr.selected .deviceAlert {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: red;
+	color: #ff4848;
 	font-size: 14px;
 	margin-right: 10px;
 }
 
 .deletequery:hover {
-	color: red;
+	color: #ff4848;
 	text-decoration: none;
 	padding: 1px;
 	vertical-align: middle;
@@ -1165,7 +1206,7 @@ legend, .loginHeading {
 }
 
 .hyperLink, .hyperLink:hover, .hyperLink:visited {
-	color: rgba(148, 179, 107, 0.8) !important;
+	color: #a6bf83 !important;
 	cursor: pointer;
 	text-decoration: none;
 }
@@ -1190,7 +1231,7 @@ legend, .loginHeading {
 }
 
 .linkEditMain, .linkEditMain:visited, .linkEditMain:active {
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 	text-decoration: none;
 	font-size: 12px;
 	font-weight: normal;
@@ -2137,13 +2178,13 @@ tr.selected {
 }
 
 tr.selectable:hover:not(.selected) {
-	background: rgba(167,217,134,0.4);
-	background: -moz-linear-gradient(top, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
-	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(167,217,134,0.4)), color-stop(100%, rgba(148,179,107,0.2)));
-	background: -webkit-linear-gradient(top, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
-	background: -o-linear-gradient(top, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
-	background: -ms-linear-gradient(top, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
-	background: linear-gradient(to bottom, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
+	background: rgba(167,217,134,0.2);
+	background: -moz-linear-gradient(top, rgba(167,217,134,0.2) 0%, rgba(148,179,107,0.2) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(167,217,134,0.2)), color-stop(100%, rgba(148,179,107,0.2)));
+	background: -webkit-linear-gradient(top, rgba(167,217,134,0.2) 0%, rgba(148,179,107,0.2) 100%);
+	background: -o-linear-gradient(top, rgba(167,217,134,0.2) 0%, rgba(148,179,107,0.2) 100%);
+	background: -ms-linear-gradient(top, rgba(167,217,134,0.2) 0%, rgba(148,179,107,0.2) 100%);
+	background: linear-gradient(to bottom, rgba(167,217,134,0.2) 0%, rgba(148,179,107,0.2) 100%);
 }
 
 tr.selectable:hover:not(.selected) a {
@@ -2429,7 +2470,7 @@ tr#realtime td:first-child {
 }
 
 .ui-tooltip-content div.header {
-	color: rgba(148, 179, 107, 0.8);
+	color: #a6bf83;
 }
 
 .ui-tooltip-content div.content {
