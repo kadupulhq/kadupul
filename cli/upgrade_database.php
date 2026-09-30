@@ -239,10 +239,6 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code)  {
 		}
 
 		$prev_cacti_version = $cacti_upgrade_version;
-	} else {
-		print 'Error: upgrade file (' . $upgrade_file . ') not found' . PHP_EOL;
-		$upgrade_failed = true;
-		break;
 	}
 
 	if (db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version)) === false) {
