@@ -3624,14 +3624,13 @@ function rrdtool_function_set_font($type, $no_legend, $themefonts) {
 		$font = rrdtool_quote_argument($font);
 	}
 
-	if ($type == 'title') {
-		if (!empty($no_legend)) {
-			$size = $size * .70;
-		} elseif (($size <= 4) || !is_numeric($size)) {
-			$size = 12;
-		}
-	} elseif (($size <= 4) || !is_numeric($size)) {
-		$size = 8;
+	/* sizes are free text in the settings, and rrdtool fails the whole graph on INF or a huge size */
+	if (!is_numeric($size) || !is_finite((float) $size) || $size <= 4 || $size > 100) {
+		$size = ($type == 'title') ? 12 : 8;
+	}
+
+	if ($type == 'title' && !empty($no_legend)) {
+		$size = $size * .70;
 	}
 
 	return '--font ' . strtoupper($type) . ':' . floatval($size) . ':' . $font . RRD_NL;
