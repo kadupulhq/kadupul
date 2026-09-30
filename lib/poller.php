@@ -2858,13 +2858,15 @@ function poller_resource_cache_destination($path, $installPath, $configPath)
         return false;
     }
 
-    if ($configPath === false && $candidate === $fallbackConfigPath) {
+    // Compare without case: on a case-insensitive filesystem include/CONFIG.php
+    // is config.php, and realpath() keeps the case it was given.
+    if (strcasecmp($candidate, $fallbackConfigPath) === 0) {
         return false;
     }
 
     $resolved = realpath($candidate);
     if ($resolved !== false) {
-        if (!cacti_path_is_within($resolved, $installPath) || ($configPath !== false && $resolved === $configPath)) {
+        if (!cacti_path_is_within($resolved, $installPath) || ($configPath !== false && strcasecmp($resolved, $configPath) === 0)) {
             return false;
         }
 

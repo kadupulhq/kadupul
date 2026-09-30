@@ -75,6 +75,8 @@ $destinations = array(
     poller_resource_cache_destination('linked.rrd', $installPath, $configPath),
     poller_resource_cache_destination('include/config.php', $installPath, $configPath),
     poller_resource_cache_destination('include/config.php', $installPath, false),
+    poller_resource_cache_destination('include/CONFIG.php', $installPath, $configPath),
+    poller_resource_cache_destination('include/Config.php', $installPath, false),
 );
 
 update_db_from_path($outside . '/outside.rrd', 'test', false);
@@ -149,7 +151,7 @@ test('resource-cache replication confines writes and keeps PHP validation argume
     $result = runResourceCacheReplicationProbe($this->getTestResultObject()->getCodeCoverage());
 
     expect($result['destinations'][0])->toBeString();
-    expect(array_slice($result['destinations'], 1))->toBe(array(false, false, false, false));
+    expect(array_slice($result['destinations'], 1))->toBe(array(false, false, false, false, false, false));
     expect($result['saved_paths'])->toContain('source.txt');
     expect($result['safe_contents'])->toBe('<?php echo "valid";');
     expect($result['config_contents'])->toBe('local database secret');
