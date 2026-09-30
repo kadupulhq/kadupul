@@ -563,8 +563,8 @@ function ImageString($image, $font, $x, $y, $string, $color) {}
 function imagejpeg($image) { echo 'jpeg'; }
 function imagegif($image) { echo 'gif'; }
 $source = file_get_contents(getcwd() . '/lib/reports.php');
-preg_match('/^function png2jpeg .*?^}\n/ms', $source, $jpeg);
-preg_match('/^function png2gif .*?^}\n/ms', $source, $gif);
+preg_match('/^function png2jpeg\s*\(.*?^}\n/ms', $source, $jpeg);
+preg_match('/^function png2gif\s*\(.*?^}\n/ms', $source, $gif);
 if (empty($jpeg) || empty($gif)) { exit(2); }
 eval('namespace ReportPngRuntime; ' . $jpeg[0] . $gif[0]);
 $GLOBALS['decode_ok'] = true;
