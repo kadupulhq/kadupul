@@ -1726,6 +1726,45 @@ div#tabs {
 	width: 70%;
 }
 
+/*
+ * Text versions of the 88x37 tab images this theme used to draw with GD.
+ * The box sits 7px below the top of the old image, where the drawn tab began,
+ * so plugin image tabs printed beside these still line up.
+ */
+#tabs a.classicTab {
+	display: inline-block;
+	box-sizing: border-box;
+	min-width: 86px;
+	height: 30px;
+	margin: 7px 1px 0px 1px;
+	padding: 11px 8px 0px 8px;
+	vertical-align: bottom;
+	border-radius: 24px 36px 0px 0px / 10px 12px 0px 0px;
+	background-color: #183C8F;
+	background-image: linear-gradient(to bottom, #5879C6 0%, #3D60B0 45%, #183C8F 75%);
+	box-shadow: inset -2px 2px 1px -1px rgba(255, 255, 255, 0.6);
+	color: #FFFFFF;
+	font-family: 'DejaVu Sans', Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 14px;
+	letter-spacing: 0.5px;
+	text-align: center;
+	text-decoration: none;
+	text-transform: lowercase;
+	white-space: nowrap;
+}
+
+#tabs a.classicTab.selected {
+	background-color: #A42D2D;
+	background-image: linear-gradient(to bottom, #DC8282 0%, #C45E5E 45%, #A42D2D 75%);
+}
+
+#tabs a.classicTab:focus-visible {
+	outline: 2px solid #FFFFFF;
+	outline-offset: -4px;
+}
+
 td#tabs {
 	padding-bottom: 0px;
 	float: left;
