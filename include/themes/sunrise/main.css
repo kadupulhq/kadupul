@@ -1031,7 +1031,6 @@ legend {
 	color: #93CEFF;
 	background: #100000;
 	border: 1px solid #3a3b3c;
-	;
 	margin: 0px;
 	padding: 10px 0px 10px 0px !important;
 	line-height: 1.5em;
@@ -2329,7 +2328,6 @@ tr#realtime td:first-child {
 
 .darkblue {
 	background: #2d4ca8;
- /* Old browsers */;
 }
 
 .ui-corner-all {
