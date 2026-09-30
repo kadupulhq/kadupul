@@ -89,9 +89,9 @@ cmd_exec	./snmpagent_persist.php:68	    exec('ps -ef | grep -v grep | grep -v "s
 cmd_exec	./snmpagent_persist.php:70	        exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./src/Graphing/Infrastructure/Rrd/LocalRrdtool.php:27	        $process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
 cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:36	            exec($commandLine, $lines, $status);
-cmd_exec	./utilities.php:207	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
-cmd_exec	./utilities.php:225	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
-cmd_exec	./utilities.php:245	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
+cmd_exec	./utilities.php:212	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
+cmd_exec	./utilities.php:230	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
+cmd_exec	./utilities.php:250	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
 deserialize	./lib/functions.php:5041	            $items = unserialize($unstripped, array('allowed_classes' => false));
 deserialize	./lib/functions.php:8474	    return @unserialize($strobj, array('allowed_classes' => false));
 dynamic_include	./automation_tree_rules.php:522		include_once($config['base_path'].'/lib/html_tree.php');
@@ -598,7 +598,7 @@ fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_na
 fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
 fs_write	./tools/dependencies/install-legacy.php:53	    $destination = fopen($archivePath, 'wb');
 fs_write	./tools/dependencies/install-legacy.php:86	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
-fs_write	./utilities.php:1633	            $log_fh = fopen($logfile, 'w');
+fs_write	./utilities.php:1638	            $log_fh = fopen($logfile, 'w');
 header_redirect	./aggregate_graphs.php:105			header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_graphs.php:232		header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_graphs.php:277					header('Location: aggregate_graphs.php?header=false');
@@ -708,10 +708,10 @@ header_redirect	./color_templates_items.php:30			header('Location: color_templat
 header_redirect	./color_templates_items.php:37			header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('color_template_id'));
 header_redirect	./color_templates_items.php:44			header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('color_template_id'));
 header_redirect	./contrib/index.php:7	header("Location:../index.php");
-header_redirect	./data_debug.php:228	                header('Location: data_debug.php?header=false&debug=-1');
-header_redirect	./data_debug.php:231	                header('Location: data_debug.php?header=false&debug=1');
-header_redirect	./data_debug.php:38	            header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
-header_redirect	./data_debug.php:61	            header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
+header_redirect	./data_debug.php:234	                header('Location: data_debug.php?header=false&debug=-1');
+header_redirect	./data_debug.php:237	                header('Location: data_debug.php?header=false&debug=1');
+header_redirect	./data_debug.php:44	            header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
+header_redirect	./data_debug.php:67	            header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
 header_redirect	./data_input.php:106					header('Location: data_input.php?action=edit&id=' . (empty($save['id']) ? '' : $save['id']));
 header_redirect	./data_input.php:138			header('Location: data_input.php?header=false&action=edit&id=' . (empty($data_input_id) ? get_nfilter_request_var('id') : $data_input_id));
 header_redirect	./data_input.php:176				header('Location: data_input.php?header=false&action=field_edit&data_input_id=' . get_request_var('data_input_id') . '&id=' . (empty($data_input_field_id) ? get_request_var('id') : $data_input_field_id) . (!isempty_request_var('input_output') ? '&type=' . get_request_var('input_output') : ''));
@@ -979,7 +979,7 @@ header_redirect	./user_group_admin.php:596	        header('Location: user_group_
 header_redirect	./user_group_admin.php:617	        header('Location: user_group_admin.php?action=edit&header=false&tab=settings&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:624	    header('Location: user_group_admin.php?action=edit&header=false&tab=general&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:648	    header('Location: user_group_admin.php?action=edit&header=false&tab=gperms&id=' . get_request_var('group_id'));
-header_redirect	./utilities.php:1292	        header('Location: utilities.php?action=view_logfile&filename=' . $logbase);
+header_redirect	./utilities.php:1297	        header('Location: utilities.php?action=view_logfile&filename=' . $logbase);
 header_redirect	./utilities.php:26	        header('Location: utilities.php?action=view_poller_cache');
 header_redirect	./utilities.php:31	        header('Location: utilities.php?header=false');
 header_redirect	./utilities.php:80	        header('Location: utilities.php');
