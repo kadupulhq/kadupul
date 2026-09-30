@@ -17,10 +17,15 @@ function implementation(name) {
 
 function harness() {
   const windowObject = {};
+  const documentObject = {};
   const state = { menuOpen: true, scans: 0, bound: [], containers: undefined, added: undefined };
   const selects = [{ initialized: true, closes: 0 }, { initialized: false, closes: 0 }];
 
   function $(selector) {
+    if (selector === documentObject) {
+      const documentChain = { off: () => documentChain, on: () => documentChain };
+      return documentChain;
+    }
     if (typeof selector === 'string' && selector.startsWith('.cactiConsoleContentArea')) {
       state.containers = selector;
       const chain = {
@@ -48,7 +53,7 @@ function harness() {
     };
   }
 
-  const scope = { $, window: windowObject };
+  const scope = { $, window: windowObject, document: documentObject };
   runInNewContext(implementation('setupSelectmenuScrollClose'), scope);
   return { scope, state, selects, windowObject };
 }
