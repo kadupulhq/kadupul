@@ -47,12 +47,16 @@ final class ColorTemplateEditorPresentationTest extends TestCase
             $container->set(ColorTemplateStore::class, $store);
             $container->set(SaveColorTemplate::class, new SaveColorTemplate($access, $store));
 
-            $response = $kernel->handle(Request::create('/graphing/color-templates/12/edit'));
+            $response = $kernel->handle(Request::create('/graphing/color-templates/12/edit', 'GET', ['filter' => 'javascript:alert(1)\" onclick=\"alert(2)']));
 
             self::assertSame(200, $response->getStatusCode(), $response->getContent());
             $document = new \DOMDocument();
             self::assertTrue(@$document->loadHTML($response->getContent()));
             $xpath = new \DOMXPath($document);
+            foreach ($xpath->query('//main//a[@href]') as $link) {
+                self::assertStringStartsWith('/graphing/color-templates', $link->getAttribute('href'));
+                self::assertFalse($link->hasAttribute('onclick'));
+            }
             $forms = $xpath->query('//form[contains(@action, "/graphing/color-templates/12/items/order")]');
             self::assertNotFalse($forms);
             self::assertCount(2, $forms);

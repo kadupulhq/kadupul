@@ -2,6 +2,7 @@
 {% block title %}{{ (template ? 'Edit Color Template' : 'Add Color Template')|trans({}, 'color_templates') }} · Kadupul{% endblock %}
 {% block body %}
 <main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('color_template_list', filters) }}">{{ 'Back to Color Templates'|trans({}, 'color_templates') }}</a></p>
     <h1>{{ (template ? 'Edit Color Template' : 'Add Color Template')|trans({}, 'color_templates') }}</h1>
     {% if saved %}<output>{{ 'Color template saved.'|trans({}, 'color_templates') }}</output>{% endif %}
@@ -9,12 +10,14 @@
     {% if template %}
         <section>
             <h2>{{ 'Color Items'|trans({}, 'color_templates') }}</h2>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
             <p><a href="{{ path('color_template_item_create', {id: template.id}) }}">{{ 'Add Color Item'|trans({}, 'color_templates') }}</a></p>
             <table>
                 <thead><tr><th>{{ 'Position'|trans({}, 'color_templates') }}</th><th>{{ 'Color'|trans({}, 'color_templates') }}</th><th>{{ 'Hex'|trans({}, 'color_templates') }}</th><th>{{ 'Actions'|trans({}, 'color_templates') }}</th></tr></thead>
                 <tbody>
                 {% for item in items %}
                     <tr>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                         <td><a href="{{ path('color_template_item_edit', {id: template.id, itemId: item.id}) }}">{{ loop.index }}</a></td>
                         <td><span style="display:inline-block;width:1.5rem;height:1.5rem;background-color:#{{ item.hex }}" aria-hidden="true"></span> {{ item.colorId }}</td>
                         <td>{{ item.hex }}</td>
@@ -22,6 +25,7 @@
                             {% for direction, orderForm in orderForms[item.id]|default([]) %}
                                 {{ form_start(orderForm) }}{{ form_widget(orderForm.order) }}{{ form_widget(orderForm.save) }}{{ form_end(orderForm) }}
                             {% endfor %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                             <a href="{{ path('color_template_item_delete', {id: template.id, itemId: item.id}) }}">{{ 'Delete'|trans({}, 'color_templates') }}</a>
                         </td>
                     </tr>

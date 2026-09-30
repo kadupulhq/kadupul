@@ -2,6 +2,7 @@
 {% block title %}{{ (item ? 'Edit Color Item' : 'Add Color Item')|trans({}, 'color_templates') }} · Kadupul{% endblock %}
 {% block body %}
 <main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('color_template_edit', {id: template.id}) }}">{{ 'Back to Color Template'|trans({}, 'color_templates') }}</a></p>
     <h1>{{ (item ? 'Edit Color Item' : 'Add Color Item')|trans({}, 'color_templates') }}: {{ template.name }}</h1>
     {{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.color_id) }}{{ form_widget(form.revision) }}{{ form_widget(form.save) }}{{ form_end(form) }}

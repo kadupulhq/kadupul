@@ -101,7 +101,7 @@ final class ColorTemplateActionController
             }
             return new Response($twig->render('color_templates/action.html.twig', [
                 'actionName' => $action, 'templates' => $templates, 'form' => $form->createView(), 'filters' => $filters,
-                'status' => $status, 'listUrl' => $urls->generate('color_template_list', $filters),
+                'status' => $status,
             ]), $status, $headers);
         } catch (ColorTemplateAccessDenied $error) {
             return $this->denied($error, $translator);

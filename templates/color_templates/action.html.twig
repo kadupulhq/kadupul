@@ -10,6 +10,7 @@
     {{ form_start(form) }}{{ form_errors(form) }}
     {% if actionName == 'duplicate' %}{{ form_row(form.title_format) }}{% else %}{{ form_widget(form.title_format, {attr: {hidden: 'hidden'}}) }}{% endif %}
     {{ form_widget(form.selection) }}{{ form_widget(form.continue) }}{{ form_end(form) }}
-    <p><a href="{{ listUrl }}">{{ 'Cancel'|trans({}, 'color_templates') }}</a></p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('color_template_list', filters) }}">{{ 'Cancel'|trans({}, 'color_templates') }}</a></p>
 </main>
 {% endblock %}
