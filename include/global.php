@@ -606,6 +606,7 @@ if ($config['is_web']) {
 
     /* Validate the action before any controller can normalize or dispatch it. */
     cacti_require_post_actions(array('save', 'update_data', 'changepassword'));
+    csrf_refuse_cross_site_actions();
 
     if (isset($_COOKIE['CactiTimeZone'])) {
         $gmt_offset = $_COOKIE['CactiTimeZone'];
