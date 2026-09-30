@@ -6,11 +6,11 @@
 /*
  * Some pages change data because of a request variable other than 'action',
  * which the central guard in include/global.php can not see: the RRD Cleaner
- * rescan, the SNMP notification receiver log purge, the Data Debug check purge
- * and the SNMP Agent notification log purge.
+ * rescan, the SNMP notification receiver log purge, the Data Debug check purge,
+ * the SNMP Agent notification log purge and the Kadupul log purge.
  */
 
-function page_flag_guard_run(string $page, string $method, string $query, array $headers = array(), string $token = 'missing'): string
+function page_flag_guard_run(string $page, string $method, string $query, array $headers = array(), string $token = 'missing', array $real = array()): string
 {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/page-flag-guard-' . bin2hex(random_bytes(8));
@@ -18,10 +18,15 @@ function page_flag_guard_run(string $page, string $method, string $query, array 
     mkdir($dir . '/lib', 0700);
     // Empty libraries the pages include by relative path, so the stubs below
     // stand in for the application and nothing reaches a database.
-    $libraries = array('functions', 'rrd', 'dsdebug', 'api_data_source', 'boost', 'clog_webapi', 'poller', 'utility');
+    $libraries = array_diff(array('functions', 'rrd', 'dsdebug', 'api_data_source', 'boost', 'clog_webapi', 'poller', 'utility'), $real);
     foreach ($libraries as $library) {
         file_put_contents($dir . '/lib/' . $library . '.php', '<?php');
     }
+    foreach ($real as $library) {
+        file_put_contents($dir . '/lib/' . $library . '.php', '<?php require getenv(\'PAGE_FLAG_ROOT\') . \'/lib/' . $library . '.php\';');
+    }
+    // A log file the log viewer may purge, so a test can see whether it did.
+    file_put_contents($dir . '/cacti.log', 'ORIGINAL');
 
     $auth = <<<'PHP'
 <?php
@@ -38,15 +43,21 @@ csrf_conf('secret', 'isolated-page-flag-test-secret');
 function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
 function __x($context, $text, ...$args) { return __($text, ...$args); }
 function raise_message(...$args) {}
-function read_config_option($name) { return ''; }
+function read_config_option($name) { return $name === 'path_cactilog' ? getcwd() . '/cacti.log' : ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function sanitize_search_string($value) { return $value; }
 function check_changed($request, $session) {}
 function get_current_page() { return 'page.php'; }
 function sanitize_sql_column($column) { return $column; }
 function set_page_refresh($refresh) {}
+function clog_admin() { return true; }
+function clog_authorized() { return true; }
+function kill_session_var($name) {}
+function cacti_log(...$args) {}
+function get_username($id) { return 'admin'; }
+function general_header() { echo 'DISPATCHED:clog'; exit; }
 function top_header() { echo 'DISPATCHED:' . get_request_var('action'); exit; }
-$config += array('library_path' => getcwd() . '/lib', 'rra_path' => getcwd(), 'base_path' => getcwd());
+$config += array('library_path' => getcwd() . '/lib', 'rra_path' => getcwd(), 'base_path' => getcwd(), 'url_path' => '/');
 session_id('page-flag-guard-test');
 $_SESSION = array('sess_user_id' => 1);
 $_SERVER['REQUEST_METHOD'] = getenv('PAGE_FLAG_METHOD');
@@ -89,12 +100,13 @@ PHP;
             throw new RuntimeException($stderr . $stdout);
         }
 
-        return $stdout;
+        return $stdout . (file_get_contents($dir . '/cacti.log') === 'ORIGINAL' ? '' : 'LOG:CHANGED');
     } finally {
         unlink($dir . '/include/auth.php');
-        foreach ($libraries as $library) {
+        foreach (array_merge($libraries, $real) as $library) {
             unlink($dir . '/lib/' . $library . '.php');
         }
+        unlink($dir . '/cacti.log');
         rmdir($dir . '/include');
         rmdir($dir . '/lib');
         rmdir($dir);
@@ -191,4 +203,28 @@ test('the SNMP Agent notification log Purge button posts the token', function ()
 
     expect($source)->not->toContain('view_snmpagent_events&purge=1')
         ->and($source)->toMatch("/loadPageUsingPost\\('utilities\\.php', \\{\\s*action: 'view_snmpagent_events',\\s*purge: 1,\\s*header: 'false',\\s*__csrf_magic: csrfMagicToken\\s*\\}\\)/");
+});
+
+test('the log file purge needs a POST with a valid token', function (string $page, string $method, string $token, array $headers, string $expected) {
+    expect(page_flag_guard_run($page, $method, 'purge_continue=1&header=false&filename=cacti.log', $headers, $token, array('clog_webapi')))
+        ->toBe($expected);
+})->with(array('clog.php', 'clog_user.php'))->with(array(
+    'cross-site GET' => array('GET', 'missing', array('HTTP_SEC_FETCH_SITE' => 'cross-site'), 'STATUS:405'),
+    'same-origin GET' => array('GET', 'missing', array('HTTP_SEC_FETCH_SITE' => 'same-origin'), 'STATUS:405'),
+    'GET without headers' => array('GET', 'missing', array(), 'STATUS:405'),
+    'PUT' => array('PUT', 'missing', array(), 'STATUS:405'),
+    'POST without a token' => array('POST', 'missing', array(), 'STATUS:403'),
+    'POST with a valid token' => array('POST', 'valid', array(), 'DISPATCHED:clogSTATUS:200LOG:CHANGED'),
+));
+
+test('viewing the log file and its purge prompt is unchanged', function (string $query) {
+    expect(page_flag_guard_run('clog.php', 'GET', $query, array('HTTP_SEC_FETCH_SITE' => 'cross-site'), 'missing', array('clog_webapi')))
+        ->toBe('DISPATCHED:clogSTATUS:200');
+})->with(array('filename=cacti.log', 'purge=1&filename=cacti.log'));
+
+test('the log file Continue button posts the token', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/lib/clog_webapi.php');
+
+    expect($source)->not->toContain('?purge_continue=1')
+        ->and($source)->toMatch("/loadPageUsingPost\\(location\\.pathname, \\{\\s*purge_continue: 1,\\s*header: 'false',/");
 });
