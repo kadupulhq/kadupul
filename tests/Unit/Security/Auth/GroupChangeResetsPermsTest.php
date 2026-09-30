@@ -16,11 +16,11 @@ function group_reset_run(string $page, string $function, array $request, array $
 {
     return admin_action_probe_run(array(
         'page' => $page,
-        'functions' => array($function),
+        'functions' => $page == 'user_group_admin.php' ? array($function, 'user_group_exists', 'user_group_refuse') : array($function),
         'request' => $request,
         'session' => array('sess_user_id' => 1),
         'answers' => array_merge(
-            // A group that exists, so the existence guard (when present) passes.
+            // A group that exists, so the existence guard passes.
             array(array('cell', '/FROM user_auth_group WHERE id = \?/', 1)),
             $answers
         ),

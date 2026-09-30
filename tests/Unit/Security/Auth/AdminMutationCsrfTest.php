@@ -144,6 +144,7 @@ function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function db_execute_prepared(...$args) { echo 'WRITE'; exit; }
 function sanitize_unserialize_selected_items($value) { echo 'WRITE'; exit; }
 function db_fetch_assoc($sql) { return array(array('directory' => '2')); }
+function db_fetch_cell_prepared(...$args) { return 1; }
 function sanitize_search_string($value) { return $value; }
 function api_plugin_install($id) { echo 'WRITE'; exit; }
 function api_plugin_uninstall($id) { echo 'WRITE'; exit; }
