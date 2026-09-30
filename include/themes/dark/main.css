@@ -899,7 +899,7 @@ ul#breadcrumbs {
 }
 
 .cactiLogo {
-	background: #161616 url('./images/kadupul-logo.png') no-repeat 30px;
+	background: #161616 url('./images/kadupul-logo.png') no-repeat center;
 	display: block;
 	cursor: pointer;
 	padding-bottom: 178px;
