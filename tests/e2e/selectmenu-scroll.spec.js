@@ -66,3 +66,19 @@ test('shared theme controls preserve filter icons, select widget sizing and both
     expect(await logo.evaluate(node => getComputedStyle(node, '::before').content)).not.toMatch(/^(none|normal|"")$/);
   }
 });
+
+
+test('shared form controls retain import labels and theme widths', async ({ page }) => {
+  await loadLayout(page);
+  await page.setContent('<input id="filter"><input type="password"><textarea></textarea><div class="checkboxgroup"><br><input type="checkbox" id="check"><label for="check">Check</label></div><button class="import_label">Import</button><input class="import_button"><span class="import_text"></span><select><option>One</option></select>');
+  await page.evaluate(() => { window.searchFilter = 'Search'; window.searchRFilter = 'Filter'; window.noFileSelected = 'No file'; setupThemeFormControls(480); });
+  await expect(page.locator('.import_text')).toHaveText('No file');
+  await expect(page.locator('.checkboxgroup br')).toHaveCount(0);
+  await page.locator('.import_button').fill('fixture.xml');
+  await page.locator('.import_button').dispatchEvent('change');
+  await expect(page.locator('.import_text')).toHaveText('fixture.xml');
+  expect(await page.evaluate(() => maxWidth)).toBe(480);
+  await page.evaluate(() => setupThemeFormControls(300));
+  expect(await page.evaluate(() => maxWidth)).toBe(300);
+  await expect(page.locator('input#filter + i.fa-search')).toHaveCount(1);
+});

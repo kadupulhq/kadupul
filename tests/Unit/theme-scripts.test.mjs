@@ -121,7 +121,7 @@ function loadTheme(theme, nodes = {}, extra = {}) {
     ...Object.fromEntries(pageGlobals.map(name => [name, name])),
     ...extra,
   });
-  runInContext(['setupThemeSearchIcons', 'setupThemeSelectmenus', 'setupThemeLogos'].map(layoutFunction).join('\n'), context);
+  runInContext(['setupThemeSearchIcons', 'setupThemeSelectmenus', 'setupThemeLogos', 'setupThemeFormControls'].map(layoutFunction).join('\n'), context);
   runInContext(read(`include/themes/${theme}/main.js`), context, { filename: new URL(`include/themes/${theme}/main.js`, root).href });
   return { context, ...jq };
 }

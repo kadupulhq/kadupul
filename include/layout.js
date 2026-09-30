@@ -834,6 +834,34 @@ function setupThemeSelectmenus() {
 	});
 }
 
+function setupThemeFormControls(width) {
+	setupThemeSearchIcons();
+
+	$('input#filter, input#rfilter').addClass('ui-state-default ui-corner-all');
+
+	$('input[type="text"], input[type="password"], input[type="checkbox"], textarea').not('image').addClass('ui-state-default ui-corner-all');
+
+	$('.checkboxgroup').children('br').remove();
+	$('.checkboxgroup').buttonset();
+
+	// Turn file buttons into jQueryUI buttons
+	$('.import_label').button();
+	$('.import_button').change(function() {
+		text=this.value;
+		setImportFile(text);
+	});
+	setImportFile(noFileSelected);
+
+	function setImportFile(fileText) {
+		$('.import_text').text(fileText);
+	}
+
+	maxWidth = width;
+
+	setupThemeSelectmenus();
+
+}
+
 function setupThemeLogos(icon) {
 	const markup = "<i class='fa " + icon + "'/>";
 	$('.cactiLoginLogo').html(markup);
