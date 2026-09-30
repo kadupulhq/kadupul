@@ -1,6 +1,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -810,12 +811,6 @@ label.ui-state-hover > span {
 	width: 100%;
 	padding: 0px;
 	border-color: rgba(255,255,255,0.2);
-	*/
-	box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
-	*/
-	background-color: #000000;
-	*/
-	background-image: -webkit-gradient(linear, left 0%, left 100%, from(#3a3b3c), to(#000000));
 	background-image: -webkit-linear-gradient(top, #3a3b3c 0%, #000000 100%);
 	background-image: -moz-linear-gradient(top, #3a3b3c 0%, #000000 100%);
 	background-image: linear-gradient(to bottom, #3a3b3c 0%, #000000 100%);
@@ -1683,7 +1678,6 @@ table.cactiTable {
 }
 
 .graphSubHeaderColumn {
-	color: #white;
 	font-size: 12px;
 	vertical-align: middle;
 	text-align: left;
