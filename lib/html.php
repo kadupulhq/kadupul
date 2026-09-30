@@ -1236,6 +1236,79 @@ function html_safe_href($url)
     return $url;
 }
 
+/* html_icon_registry - the icon names config/icons.json defines, read once per request
+   @returns - the registry */
+function html_icon_registry(): \Kadupul\Platform\Contract\IconRegistry
+{
+    global $config;
+
+    static $registry = null;
+
+    if ($registry === null) {
+        $json = file_get_contents($config['base_path'] . '/config/icons.json');
+
+        $registry = \Kadupul\Platform\Contract\IconRegistry::fromJson($json === false ? '' : $json);
+    }
+
+    return $registry;
+}
+
+/* html_icon_class - the Font Awesome classes that draw an icon in the current theme
+   @arg $name - an icon name from config/icons.json
+   @returns - the space separated class list */
+function html_icon_class(string $name): string
+{
+    return html_icon_registry()->classes($name, get_selected_theme());
+}
+
+/* html_icon - renders an icon from config/icons.json as an <i> element
+   @arg $name - an icon name from config/icons.json
+   @arg $label - what a screen reader announces for the icon.  Pass '' only for
+        a decorative icon, together with 'aria-hidden' => 'true' in $attrs.
+   @arg $attrs - further attributes; 'class' is added to the icon classes
+   @returns - the markup */
+function html_icon(string $name, string $label, array $attrs = array()): string
+{
+    $hidden = ($attrs['aria-hidden'] ?? '') === 'true';
+
+    // An unlabelled glyph is announced as an empty string under Font Awesome 7.
+    if ($label === '' && !$hidden) {
+        throw new InvalidArgumentException("Icon $name needs a label, or aria-hidden='true' if it is decorative");
+    }
+
+    if ($label !== '' && $hidden) {
+        throw new InvalidArgumentException("Icon $name cannot be both labelled and hidden");
+    }
+
+    if (isset($attrs['role']) || isset($attrs['aria-label'])) {
+        throw new InvalidArgumentException("Icon $name takes its role and aria-label from the label argument");
+    }
+
+    $class = html_icon_class($name);
+
+    if (isset($attrs['class']) && $attrs['class'] !== '') {
+        $class .= ' ' . $attrs['class'];
+    }
+
+    unset($attrs['class']);
+
+    $markup = "<i class='" . html_escape($class) . "'";
+
+    if ($label !== '') {
+        $markup .= " role='img' aria-label='" . html_escape($label) . "'";
+    }
+
+    foreach ($attrs as $attr => $value) {
+        if (!is_string($attr) || !preg_match('/^[a-z][a-z0-9-]*$/', $attr)) {
+            throw new InvalidArgumentException("Icon $name has an invalid attribute name");
+        }
+
+        $markup .= ' ' . $attr . "='" . html_escape((string) $value) . "'";
+    }
+
+    return $markup . '></i>';
+}
+
 /* html_split_string - takes a string and breaks it into a number of <br> separated segments
    @arg $string - string to be modified and returned
    @arg $length - the maximal string length to split to
@@ -2626,6 +2699,7 @@ function html_common_header($title, $selectedTheme = '')
 	<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 		var theme='<?php print $selectedTheme;?>';
+		var kadupulIcons=<?php print json_encode(html_icon_registry()->forTheme($selectedTheme), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);?>;
 		var hScroll=<?php print read_user_setting('enable_hscroll', '') == 'on' ? 'true' : 'false';?>;
 		var userSettings=<?php print is_view_allowed('graph_settings') ? 'true' : 'false';?>;
 		var tableConstraints='<?php print __esc('Allow or limit the table columns to extend beyond the current windows limits.');?>';

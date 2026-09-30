@@ -46,6 +46,29 @@ var isHover = false;
 var hoverTimer = false;
 var previousMainWidth = null;
 var previousColumns   = null;
+
+// html_common_header() sets kadupulIcons from config/icons.json, already
+// resolved for the current theme, so PHP and JavaScript draw the same glyphs.
+function iconClass(name) {
+	if (typeof kadupulIcons === 'object' && kadupulIcons !== null && Object.prototype.hasOwnProperty.call(kadupulIcons, name)) {
+		return kadupulIcons[name];
+	}
+
+	return '';
+}
+
+function iconSelector(name) {
+	const classes = iconClass(name).split(' ').filter(Boolean);
+
+	// An unknown name must not turn 'i' + iconSelector(name) into every <i>.
+	return classes.length ? '.' + classes.join('.') : ':not(*)';
+}
+
+// Decorative only; the control around the icon carries the accessible name.
+function iconMarkup(name) {
+	return '<i class="' + iconClass(name) + '" aria-hidden="true"></i>';
+}
+
 var faIcons = {
 	open: {
 		icon: '<i class="fas fa-caret-down" aria-hidden="true"></i>'
