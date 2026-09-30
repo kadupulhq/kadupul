@@ -20,7 +20,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
-function password_rehash_run(string $password, bool $needs_rehash = true) : array {
+function password_rehash_run(string $password, bool $needs_rehash = true, bool $locked = false) : array {
 	$auth = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 
 	$source = <<<'PHP'
@@ -91,6 +91,15 @@ function auth_checkclear_lockout($username, $realm) {
 }
 
 function auth_process_lockout_check($username, $realm) {
+	global $error, $error_msg;
+
+	if ($GLOBALS['scenario']['locked']) {
+		$error     = true;
+		$error_msg = 'locked';
+
+		return true;
+	}
+
 	return false;
 }
 
@@ -145,7 +154,7 @@ PHP;
 	$source .= "\$user = local_auth_login_process('alice');\n";
 	$source .= "print json_encode(array('user' => \$user, 'error' => \$error, 'passwords' => array_column(\$GLOBALS['users'], 'password', 'id')));\n";
 
-	return cacti_test_run_php_source($source, array('password' => $password, 'needs_rehash' => $needs_rehash));
+	return cacti_test_run_php_source($source, array('password' => $password, 'needs_rehash' => $needs_rehash, 'locked' => $locked));
 }
 
 test('a rehash on local login rewrites only the local account', function () {
@@ -167,5 +176,12 @@ test('a current hash is left as it is', function () {
 	$result = password_rehash_run('right', false);
 
 	expect($result['user']['id'] ?? null)->toBe(42)
+		->and($result['passwords'])->toBe(array(42 => 'legacy-hash', 43 => '', 44 => 'bob-hash'));
+});
+
+test('a locked account that knows its password is not rehashed', function () {
+	$result = password_rehash_run('right', true, true);
+
+	expect($result['error'])->toBeTrue()
 		->and($result['passwords'])->toBe(array(42 => 'legacy-hash', 43 => '', 44 => 'bob-hash'));
 });

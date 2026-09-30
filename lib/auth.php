@@ -3754,6 +3754,9 @@ function local_auth_login_process($username) {
 	if (!api_plugin_hook_function('login_process', false)) {
 		$user = secpass_login_process($username);
 
+		/* a locked or disabled account that still knows its password was not authenticated */
+		$authenticated = cacti_sizeof($user) > 0;
+
 		/**
 		 * If the password needs to be rehashed for security purposes,
 		 * do that now.
@@ -3779,7 +3782,7 @@ function local_auth_login_process($username) {
 					array($username));
 
 				/* the same username may exist in other realms; only this local row was verified */
-				if (cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+				if ($authenticated && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
 					$password = compat_password_hash($password, PASSWORD_DEFAULT);
 					db_check_password_length();
 					db_execute_prepared('UPDATE user_auth
