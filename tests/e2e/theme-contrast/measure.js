@@ -531,7 +531,7 @@
 		const owners = [{ el, pseudo: null }];
 		const next = el.nextElementSibling;
 		if (next) {
-			owners.push({ el: next, pseudo: null });
+			owners.push({ el: next, pseudo: null }, { el: next, pseudo: '::before' });
 		}
 		if (el.id) {
 			for (const label of document.querySelectorAll(`label[for="${CSS.escape(el.id)}"]`)) {
