@@ -107,12 +107,12 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
         }
 
         if ($help_file !== false && $help_count == 0 && is_realm_allowed(28)) {
-            print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'><a class='linkOverDark helpPage' data-page='" . html_escape(basename($help_file)) . "' href='#'><i class='far fa-question-circle'></i></a></span>";
+            print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'><a class='linkOverDark helpPage' data-page='" . html_escape(basename($help_file)) . "' href='#' aria-label='" . __esc('Get Page Help') . "'><i class='far fa-question-circle' aria-hidden='true'></i></a></span>";
             $help_count++;
         }
 
         if ($add_text != '' && !is_array($add_text)) {
-            print "<span class='cactiFilterAdd' title='$add_label'><a class='linkOverDark' href='" . html_escape($add_text) . "'><i class='fa fa-plus'></i></a></span>";
+            print "<span class='cactiFilterAdd' title='" . html_escape($add_label) . "'><a class='linkOverDark' href='" . html_escape($add_text) . "' aria-label='" . html_escape($add_label) . "'><i class='fa fa-plus' aria-hidden='true'></i></a></span>";
         } else {
             if (is_array($add_text)) {
                 if (cacti_sizeof($add_text)) {
@@ -141,7 +141,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                             $title = $add_label;
                         }
 
-                        print "<span class='cactiFilterAdd' title='$title'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'" : '') . " class='$classo' href='$href'><i class='$classi'></i></a></span>";
+                        print "<span class='cactiFilterAdd' title='" . html_escape($title) . "'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'" : '') . " class='$classo' href='$href' aria-label='" . html_escape($title) . "'><i class='$classi' aria-hidden='true'></i></a></span>";
                     }
                 }
             } else {
@@ -2069,10 +2069,10 @@ function html_show_tabs_left()
                 $i++;
             }
 
-            print "<li><a id='$id' role='tab' class='lefttab" . (isset($tab['selected']) ? " selected' aria-selected='true'" : "' aria-selected='false'") . " href='" . html_escape($tab['url']) . "'><span class='fa glyph_$id'></span><span class='text_$id'>" . html_escape($tab['title']) . "</span></a><a id='menu-$id' class='maintabs-submenu' href='#'><i class='fa fa-angle-down'></i></a></li>";
+            print "<li><a id='$id' role='tab' class='lefttab" . (isset($tab['selected']) ? " selected' aria-selected='true'" : "' aria-selected='false'") . " href='" . html_escape($tab['url']) . "' aria-label='" . html_escape($tab['title']) . "'><span class='fa glyph_$id' aria-hidden='true'></span><span class='text_$id'>" . html_escape($tab['title']) . "</span></a><a id='menu-$id' class='maintabs-submenu' href='#' aria-label='" . html_escape($tab['title']) . "' aria-haspopup='true'><i class='fa fa-angle-down' aria-hidden='true'></i></a></li>";
         }
 
-        print "<li class='ellipsis maintabs-submenu-ellipsis'><a id='menu-ellipsis' role='tab' aria-selected='false' class='submenu-ellipsis' href='#'><i class='fa fa-angle-down'></i></a></li>";
+        print "<li class='ellipsis maintabs-submenu-ellipsis'><a id='menu-ellipsis' role='tab' aria-selected='false' class='submenu-ellipsis' href='#' aria-label='" . __esc('Show All') . "' aria-haspopup='true'><i class='fa fa-angle-down' aria-hidden='true'></i></a></li>";
 
         print '</ul></nav></div>';
     }
