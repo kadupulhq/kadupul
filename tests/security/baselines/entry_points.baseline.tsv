@@ -219,7 +219,7 @@ poller_rrdcheck.php	cli-only	guard: include/cli_check.php
 poller_spikekill.php	cli-only	guard: include/cli_check.php
 pollers.php	realm:3	include/auth.php
 public/index.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
-remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at 5d7a425129b8
+remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at a623320051ce
 reports_admin.php	realm:21	include/auth.php
 reports_user.php	realm:22	include/auth.php
 resource/index.php	anonymous-allowed	redirect-only
