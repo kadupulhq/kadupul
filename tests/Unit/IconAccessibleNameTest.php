@@ -18,7 +18,7 @@ require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
  * Icon-only controls need a name that does not come from the glyph. Under
  * Font Awesome 7 the ::before content is announced as "", and the theme CSS
  * hides the Console tab's text, so without an aria-label these read as
- * unnamed links.
+ * unnamed links and empty table cells.
  */
 final class IconAccessibleNameTest extends TestCase
 {
@@ -27,6 +27,7 @@ final class IconAccessibleNameTest extends TestCase
         $tabs_left = array();
         $help_file = 'graphs.html';
         $realms = array(8 => true, 28 => true);
+        define('POLLER_VERBOSITY_MEDIUM', 3);
         function __($text) { $args = func_get_args(); array_shift($args); return $args ? vsprintf($text, $args) : $text; }
         function __esc() { return htmlspecialchars(call_user_func_array('__', func_get_args()), ENT_QUOTES); }
         function get_current_page() { return 'graph_templates.php'; }
@@ -41,6 +42,7 @@ final class IconAccessibleNameTest extends TestCase
         function is_console_page($page) { return true; }
         function api_plugin_hook($name) {}
         function db_fetch_assoc($sql) { return array(); }
+        function dsv_log($function, $message, $level) {}
         PHP;
 
     public function testAddAndHelpLinksAreNamedAndHideTheirGlyph(): void
@@ -107,6 +109,41 @@ final class IconAccessibleNameTest extends TestCase
         self::assertSame('Console', $tab->getAttribute('aria-label'), 'themes hide .text_tab-console');
     }
 
+    public function testTroubleshooterStatusIconsCarryTheirMeaning(): void
+    {
+        $output = $this->render(
+            array('is_hexadecimal', 'strip_alpha', 'prepare_validate_result', 'debug_icon_valid_result', 'debug_icon'),
+            'print json_encode(array('
+            . 'debug_icon(1), debug_icon("on"), debug_icon(0), debug_icon("off"),'
+            . 'debug_icon(""), debug_icon(false), debug_icon("-"), debug_icon("blah"),'
+            . 'debug_icon_valid_result("42"), debug_icon_valid_result("abc"),'
+            . 'debug_icon_valid_result(array("in" => "1", "out" => "2")),'
+            . 'debug_icon_valid_result(array("in" => "1", "out" => "x")),'
+            . 'debug_icon_valid_result(""), debug_icon_valid_result("-")'
+            . '));'
+        );
+
+        $labels = array();
+        foreach (json_decode($output, true, flags: JSON_THROW_ON_ERROR) as $icon) {
+            $element = $this->document($icon)->getElementsByTagName('i')->item(0);
+            self::assertInstanceOf(DOMElement::class, $element);
+            self::assertSame('img', $element->getAttribute('role'), $icon);
+            $labels[] = $element->getAttribute('aria-label');
+        }
+
+        self::assertSame(
+            array(
+                'Passed', 'Passed', 'Failed', 'Failed',
+                'Running', 'Running', 'Not Applicable', 'Warning',
+                'Passed', 'Failed',
+                'Passed',
+                'Failed',
+                'Running', 'Not Applicable',
+            ),
+            $labels
+        );
+    }
+
     /** @param list<string> $functions */
     private function render(array $functions, string $call): string
     {
@@ -115,6 +152,11 @@ final class IconAccessibleNameTest extends TestCase
             'html_escape' => 'lib/html.php',
             'html_start_box' => 'lib/html.php',
             'html_show_tabs_left' => 'lib/html.php',
+            'is_hexadecimal' => 'lib/functions.php',
+            'strip_alpha' => 'lib/functions.php',
+            'prepare_validate_result' => 'lib/functions.php',
+            'debug_icon_valid_result' => 'data_debug.php',
+            'debug_icon' => 'data_debug.php',
         );
 
         $script = self::STUBS;
