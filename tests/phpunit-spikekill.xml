@@ -69,6 +69,7 @@
       <file>./Unit/Security/Auth/ChangePasswordLockoutTest.php</file>
       <file>./Unit/Security/Auth/GraphViewSettingOutputTest.php</file>
       <file>./Unit/Security/Auth/ProfileSettingValidationTest.php</file>
+      <file>./Unit/Security/Misc/HelpPageErrorNotificationTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>
