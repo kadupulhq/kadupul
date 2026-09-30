@@ -277,12 +277,16 @@ function form_actions() {
 			$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
 			if ($selected_items != false) {
+				$admin_user = read_config_option('admin_user');
+
 				if (get_nfilter_request_var('drp_action') == '1') { // delete
 					for ($i=0;($i<cacti_count($selected_items));$i++) {
-						if ($_SESSION['sess_user_id'] != $selected_items[$i]) {
-							user_remove($selected_items[$i]);
-						} else {
+						if ($_SESSION['sess_user_id'] == $selected_items[$i]) {
 							raise_message('attempt current', __('You are not allowed to delete the current login account'), MESSAGE_LEVEL_ERROR);
+						} elseif ($admin_user == $selected_items[$i]) {
+							raise_message('attempt admin', __('You are not allowed to delete the primary administrator account'), MESSAGE_LEVEL_ERROR);
+						} else {
+							user_remove($selected_items[$i]);
 						}
 					}
 				} elseif (get_nfilter_request_var('drp_action') == '3') { // enable
@@ -291,10 +295,12 @@ function form_actions() {
 					}
 				} elseif (get_nfilter_request_var('drp_action') == '4') { // disable
 					for ($i=0;($i<cacti_count($selected_items));$i++) {
-						if ($_SESSION['sess_user_id'] != $selected_items[$i]) {
-							user_disable($selected_items[$i]);
-						} else {
+						if ($_SESSION['sess_user_id'] == $selected_items[$i]) {
 							raise_message('attempt current', __('You are not allowed to disable the current login account'), MESSAGE_LEVEL_ERROR);
+						} elseif ($admin_user == $selected_items[$i]) {
+							raise_message('attempt admin', __('You are not allowed to disable the primary administrator account'), MESSAGE_LEVEL_ERROR);
+						} else {
+							user_disable($selected_items[$i]);
 						}
 					}
 				} elseif (get_nfilter_request_var('drp_action') == '5') { // batch copy
@@ -315,6 +321,13 @@ function form_actions() {
 					}
 					$copy_users = array();
 					foreach ($selected_items as $selected_id) {
+						/* a template overwrites realms, so it must not reach the operator or the primary admin */
+						if ($_SESSION['sess_user_id'] == $selected_id || $admin_user == $selected_id) {
+							raise_message('attempt protected', __('You are not allowed to overwrite the current login account or the primary administrator account'), MESSAGE_LEVEL_ERROR);
+							header('Location: user_admin.php?header=false');
+							exit;
+						}
+
 						$user = db_fetch_row_prepared('SELECT username, realm
 							FROM user_auth
 							WHERE id = ?', array($selected_id));
