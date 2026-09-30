@@ -547,10 +547,7 @@ class Ldap
         }
 
         if ($this->encryption >= 1) {
-            $cert = read_config_option('ldap_tls_certificate');
-            if ($cert == '') {
-                $cert = LDAP_OPT_X_TLS_NEVER;
-            }
+            $cert = cacti_ldap_tls_require_cert();
 
             // For good measure, we will use both the php function and set the environment
             switch ($cert) {
@@ -1031,6 +1028,34 @@ class Ldap
             return false;
         }
     }
+}
+
+/**
+ * cacti_ldap_tls_require_cert - the TLS certificate requirement for LDAPS and
+ *   StartTLS connections.
+ *
+ * An unset or unknown value means Demand, so the directory's certificate is
+ * checked unless an administrator chose a weaker level in the settings.
+ *
+ * @return (int) one of the LDAP_OPT_X_TLS_* requirement levels
+ */
+function cacti_ldap_tls_require_cert()
+{
+    $cert = read_config_option('ldap_tls_certificate');
+
+    $levels = array(
+        LDAP_OPT_X_TLS_NEVER,
+        LDAP_OPT_X_TLS_HARD,
+        LDAP_OPT_X_TLS_DEMAND,
+        LDAP_OPT_X_TLS_ALLOW,
+        LDAP_OPT_X_TLS_TRY
+    );
+
+    if (is_numeric($cert) && in_array((int) $cert, $levels, true)) {
+        return (int) $cert;
+    }
+
+    return LDAP_OPT_X_TLS_DEMAND;
 }
 
 /**

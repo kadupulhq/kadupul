@@ -55,6 +55,7 @@ function cacti_version_compare($a,$b,$op){return version_compare($a,$b,$op);}
 function cacti_sizeof($value){return is_array($value)?count($value):0;}
 function db_install_execute($sql){$GLOBALS['statements'][]=$sql;}
 function db_install_add_key(...$args){}
+function db_install_fetch_cell(...$args){return array('status'=>1,'data'=>false);}
 function db_index_exists(...$args){return true;}
 function db_execute(...$args){}
 function db_fetch_cell_prepared(...$args){if($GLOBALS['collector']==='recovery'){throw new RuntimeException('Recovery collector must use Boost backlog');}if(($args[4]??false)!==($GLOBALS['collector']==='online'?'primary-connection':false)){throw new RuntimeException('Queue checked on wrong collector database');}return $GLOBALS['engine'];}
