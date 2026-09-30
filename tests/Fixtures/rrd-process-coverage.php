@@ -18,6 +18,10 @@ if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
 if (defined('FORM_RENDERER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
+if (defined('GRAPH_ZOOM_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_zoom.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+}
 if (defined('PACKAGE_XML_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
 }

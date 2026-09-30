@@ -80,3 +80,19 @@ test('graph zoom returns the selected RRA with its timespan', function () {
     expect($missing)->toBeFalse();
     expect($result)->toBe(['id' => 7, 'step' => 300, 'steps' => 2, 'rows' => 100, 'timespan' => 60000]);
 });
+
+test('graph zoom resolves boundary IDs to the stored default or explicit numeric ID', function ($requested) {
+    $fetched = null;
+    $result = graph_zoom_resolve_rra(
+        [['id' => 7]],
+        $requested,
+        function ($id) use (&$fetched) {
+            $fetched = $id;
+            return ['id' => $id, 'step' => 300, 'steps' => 2, 'rows' => 100];
+        },
+        function () {
+            throw new RuntimeException('Stored RRA must resolve.');
+        }
+    );
+    expect($fetched)->toBe(7)->and($result['timespan'])->toBe(60000);
+})->with(['0', '', 'all', '7']);

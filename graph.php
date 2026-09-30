@@ -29,8 +29,6 @@ api_plugin_hook_function('graph');
 
 include_once('./lib/html_tree.php');
 
-top_graph_header();
-
 if (!isset_request_var('rra_id')) {
     set_request_var('rra_id', 'all');
 }
@@ -50,6 +48,7 @@ $exists = db_fetch_cell_prepared(
 
 /* make sure the graph requested exists (sanity) */
 if (!$exists) {
+    top_graph_header();
     print '<strong><font class="txtErrorTextBox">' . __('GRAPH DOES NOT EXIST') . '</font></strong>';
     bottom_footer();
     exit;
@@ -61,13 +60,58 @@ if (!is_graph_allowed(get_request_var('local_graph_id'))) {
     exit;
 }
 
+$rras = get_associated_rras(get_request_var('local_graph_id'), $sql_where);
+
+if (get_request_var('action') === 'zoom') {
+    $graph_no_data_message = __('This Graph has no stored data to zoom into.');
+
+    /* fetch information for the current RRA */
+    $rra = graph_zoom_resolve_rra(
+        $rras,
+        get_request_var('rra_id'),
+        static function ($selected_rra_id) {
+            return db_fetch_row_prepared('SELECT dspr.id, step, steps, dspr.name, `rows`
+			FROM data_source_profiles_rra AS dspr
+			INNER JOIN data_source_profiles AS dsp
+			ON dsp.id=dspr.data_source_profile_id
+			WHERE dspr.id = ?', array($selected_rra_id));
+        },
+        static function () use ($graph_no_data_message) {
+            raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
+            cacti_header('graph_view.php');
+            exit;
+        }
+    );
+}
+
+if (in_array(get_request_var('action'), array('view', 'zoom'), true)) {
+    $graph = db_fetch_row_prepared(
+        'SELECT gtg.local_graph_id, width, height, title_cache, gtg.graph_template_id, h.id AS host_id, h.disabled
+		FROM graph_templates_graph AS gtg
+		INNER JOIN graph_local AS gl
+		ON gtg.local_graph_id = gl.id
+		LEFT JOIN host AS h
+		ON gl.host_id = h.id
+		WHERE gtg.local_graph_id = ?',
+        array(get_request_var('local_graph_id'))
+    );
+
+    if (!cacti_sizeof($graph)) {
+        raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
+
+        cacti_header('graph_view.php');
+
+        exit;
+    }
+}
+
+top_graph_header();
+
 $graph_title = get_graph_title(get_request_var('local_graph_id'));
 
 if (get_request_var('action') != 'properties') {
     print "<table width='100%' class='cactiTable'>";
 }
-
-$rras = get_associated_rras(get_request_var('local_graph_id'), $sql_where);
 
 switch (get_request_var('action')) {
     case 'view':
@@ -88,25 +132,6 @@ switch (get_request_var('action')) {
 		</td>
 	</tr>
 	<?php
-
-        $graph = db_fetch_row_prepared(
-            'SELECT gtg.local_graph_id, width, height, title_cache, gtg.graph_template_id, h.id AS host_id, h.disabled
-		FROM graph_templates_graph AS gtg
-		INNER JOIN graph_local AS gl
-		ON gtg.local_graph_id = gl.id
-		LEFT JOIN host AS h
-		ON gl.host_id = h.id
-		WHERE gtg.local_graph_id = ?',
-            array(get_request_var('local_graph_id'))
-        );
-
-        if (!cacti_sizeof($graph)) {
-            raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
-
-            cacti_header('graph_view.php');
-
-            exit;
-        }
 
         $graph_template_id = $graph['graph_template_id'];
 
@@ -276,36 +301,16 @@ switch (get_request_var('action')) {
 
         break;
     case 'zoom':
-        $graph_no_data_message = __('This Graph has no stored data to zoom into.');
-
         /* find the maximum time span a graph can show */
         $max_timespan = 1;
         if (cacti_sizeof($rras)) {
-            foreach ($rras as $rra) {
-                if ($rra['steps'] * $rra['rows'] * $rra['rrd_step'] > $max_timespan) {
-                    $max_timespan = $rra['steps'] * $rra['rows'] * $rra['rrd_step'];
+            foreach ($rras as $associated_rra) {
+                if ($associated_rra['steps'] * $associated_rra['rows'] * $associated_rra['rrd_step'] > $max_timespan) {
+                    $max_timespan = $associated_rra['steps'] * $associated_rra['rows'] * $associated_rra['rrd_step'];
                 }
             }
         }
 
-
-        /* fetch information for the current RRA */
-        $rra = graph_zoom_resolve_rra(
-            $rras,
-            get_request_var('rra_id'),
-            static function ($selected_rra_id) {
-                return db_fetch_row_prepared('SELECT dspr.id, step, steps, dspr.name, `rows`
-			FROM data_source_profiles_rra AS dspr
-			INNER JOIN data_source_profiles AS dsp
-			ON dsp.id=dspr.data_source_profile_id
-			WHERE dspr.id = ?', array($selected_rra_id));
-            },
-            static function () use ($graph_no_data_message) {
-                raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
-                cacti_header('graph_view.php');
-                exit;
-            }
-        );
 
         /* define the time span, which decides which rra to use */
         $timespan = -($rra['timespan']);
@@ -343,17 +348,6 @@ switch (get_request_var('action')) {
         if ($graph_start == $graph_end) {
             $graph_start--;
         }
-
-        $graph = db_fetch_row_prepared(
-            'SELECT gtg.local_graph_id, width, height, title_cache, gtg.graph_template_id, h.id AS host_id, h.disabled
-		FROM graph_templates_graph AS gtg
-		INNER JOIN graph_local AS gl
-		ON gtg.local_graph_id = gl.id
-		LEFT JOIN host AS h
-		ON gl.host_id = h.id
-		WHERE gtg.local_graph_id = ?',
-            array(get_request_var('local_graph_id'))
-        );
 
         $graph_height      = $graph['height'];
         $graph_width       = $graph['width'];
