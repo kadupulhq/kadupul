@@ -27,6 +27,12 @@ themeLoader('on');
 let themeInitialized = false;
 let themeUserMenu
 
+/* applySkin() runs themeReady() after every AJAX load, while document and
+ * window keep their listeners until a full reload, so bind those only once. */
+let themeFullscreenBound = false;
+let themeHotkeysBound = false;
+let themeColorSchemeBound = false;
+
 function themeReady() {
 	/* load default values */
 	initStorageItem('midWinter_GUI_Mode', 'compact');
@@ -46,9 +52,13 @@ function themeReady() {
 	searchToHighlight();
 	updateNavigation();
 	themeLoader('off');
-	document.addEventListener("dblclick", () => {
-		toggleFullscreen();
-	})
+
+	if (themeFullscreenBound === false) {
+		themeFullscreenBound = true;
+		document.addEventListener("dblclick", () => {
+			toggleFullscreen();
+		})
+	}
 }
 
 function checkConsoleMenu() {
@@ -73,7 +83,7 @@ function midwinterInitialized() {
 }
 
 function extendAnchorActions() {
-	$('a[role="menuitem"]').on('click', function() {
+	$('a[role="menuitem"]').off('click.midwinter').on('click.midwinter', function() {
 		/* update MidWinter's BreadCrumb Navigation */
 		midWinterNavigation( $(this) );
 		/* close the Navigation Menu Box afterwards */
@@ -420,7 +430,7 @@ function setupTheme() {
 		return false;
 	});
 
-	$('.submenuoptions, .menuoptions').on('click', function() {
+	$('.submenuoptions, .menuoptions').off('click.midwinter').on('click.midwinter', function() {
 		if ($(window).width() < 640) {
 			$(this).stop().delay(100).slideUp(0);
 		} else {
@@ -438,7 +448,7 @@ function setupTheme() {
 	$('.toggleColorModeAuto').off().on('click', toggleColorModeAuto);
 	$('.toggleGuiFontSize').off().on('click',toggleGuiFontSize);
 
-	$('.cactiConsoleContentArea, .cactiGraphContentArea').on('mouseenter', toggleCactiNavigationBox);
+	$('.cactiConsoleContentArea, .cactiGraphContentArea').off('mouseenter.midwinter').on('mouseenter.midwinter', toggleCactiNavigationBox);
 }
 
 function redesignConsoleMenu(menu) {
@@ -818,20 +828,27 @@ function setThemeColor() {
 function detectSystemColorSetup() {
 	const systemColorMode = window.matchMedia("(prefers-color-scheme: dark)");
 
-	try {
-		systemColorMode.addEventListener('change', (e) => {
-			checkThemeColorSetup((e.matches) ? 'dark' : 'light')
-		});
-    } catch (e1) {
+	if (themeColorSchemeBound === false) {
+		themeColorSchemeBound = true;
+
 		try {
-			systemColorMode.addListener((e) => {
-				checkThemeColorSetup((e.matches) ? 'dark' : 'light')
-			});
-		} catch (e2) {
-			console.error(e2);
+			systemColorMode.addEventListener('change', systemColorModeChanged);
+		} catch (e1) {
+			try {
+				systemColorMode.addListener(systemColorModeChanged);
+			} catch (e2) {
+				console.error(e2);
+			}
 		}
 	}
 	checkThemeColorSetup(systemColorMode.matches === true ? 'dark' : 'light');
+}
+
+function systemColorModeChanged(e) {
+	/* The listener outlives a switch to manual mode within the same page */
+	if (Storages.localStorage.get('midWinter_Color_Mode_Auto') === 'on') {
+		checkThemeColorSetup((e.matches) ? 'dark' : 'light');
+	}
 }
 
 function checkThemeColorSetup(color_mode) {
@@ -913,7 +930,7 @@ function setMenuVisibility() {
 function searchToHighlight() {
 	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/mark/jquery.mark.js').done(function (script, textStatus) {
 		if (textStatus === 'success') {
-			$("input[name='keyword']").on("input", highlight);
+			$("input[name='keyword']").off('input.midwinter').on('input.midwinter', highlight);
 		}
 	});
 }
@@ -938,6 +955,13 @@ function highlight() {
 
 
 function setHotKeys() {
+	/* Each run of hotkeys.js adds its own document keydown listener */
+	if (themeHotkeysBound === true) {
+		return;
+	}
+
+	themeHotkeysBound = true;
+
 	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/hotkeys/hotkeys.js').done(function (script, textStatus) {
 		if (textStatus === 'success') {
 			hotkeys('SHIFT+c,c+t,c+l,c+p,c+F1,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
@@ -979,7 +1003,11 @@ function setHotKeys() {
 
 				return false;
 			});
+		} else {
+			themeHotkeysBound = false;
 		}
+	}).fail(function() {
+		themeHotkeysBound = false;
 	});
 }
 
