@@ -121,6 +121,7 @@ function set_auth_cookie($user)
 function check_auth_cookie()
 {
     if (isset($_COOKIE['cacti_remembers']) &&
+        is_string($_COOKIE['cacti_remembers']) &&
         read_config_option('auth_cache_enabled') == 'on' &&
         db_table_exists('user_auth_cache')) {
 
@@ -130,10 +131,12 @@ function check_auth_cookie()
             $user_id  = $parts[0];
             $realm_id = -1;
             $token    = $parts[1];
-        } else {
+        } elseif (cacti_sizeof($parts) == 3) {
             $user_id  = $parts[0];
             $realm_id = $parts[1];
             $token    = $parts[2];
+        } else {
+            return false;
         }
 
         // Legacy support which leaked usernames

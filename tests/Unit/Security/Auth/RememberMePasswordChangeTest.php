@@ -59,3 +59,18 @@ test('an unknown remember-me token still restores nothing', function () {
     expect($result['session'])->toBe(array())
         ->and($result['events'])->toContain('login_page');
 });
+
+test('a malformed remember-me cookie sends the visitor to the login page without an error', function ($cookie) {
+    $scenario = remember_me_scenario(array('id' => 42, 'realm' => 0, 'must_change_password' => '', 'password_change' => 'on'));
+    $scenario['cookie'] = $cookie;
+
+    $result = auth_entry_probe_run($scenario);
+
+    expect($result['stderr'])->toBe('')
+        ->and($result['session'])->toBe(array())
+        ->and($result['events'])->toContain('login_page');
+})->with(array(
+    'array' => array(array('42', '0', 'remember-me-token')),
+    'one part' => '42',
+    'four parts' => '42,0,remember-me-token,extra',
+));
