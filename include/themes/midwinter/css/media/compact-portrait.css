@@ -210,9 +210,6 @@ html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menu_parent {
     pointer-events: none;
 }
 
-html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menu_parent:not(.active) {
-}
-
 html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menuitem {
     position: relative;
     width: 16rem;

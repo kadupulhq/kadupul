@@ -694,9 +694,6 @@ label.ui-state-hover > span {
 	color: #9d9d9d;
 }
 
-.even-alternate {
-}
-
 .even-alternate.tableRow {
 	color: #9d9d9d;
 }
@@ -1024,9 +1021,6 @@ legend {
 
 .spikekillParent {
 	padding: 0px !important;
-}
-
-.spikekillData, .spikekillData td {
 }
 
 .spikekillNote {
@@ -1461,12 +1455,6 @@ table.cactiTable {
 	color: white;
 }
 
-.formHeader.collapsible {
-}
-
-.formHeader.collapsed {
-}
-
 .formHeaderAnchor {
 	float: right;
 	padding-right: 12px;
@@ -1622,9 +1610,6 @@ table.cactiTable {
 
 .tableSubHeaderColumnRight {
 	text-align: right;
-}
-
-.tablesorter-headerRow {
 }
 
 .tablesorter-headerRow th {
@@ -2759,14 +2744,8 @@ td.center > table {
 	color: #FFFFFF !important;
 }
 
-.bb-chart {
-}
-
 .bb-chart-arc path {
 	fill: #A8A8A8;
-}
-
-.bb-tooltip {
 }
 
 .bb-legend-item {

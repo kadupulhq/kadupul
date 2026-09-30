@@ -100,9 +100,6 @@ fieldset {
     overflow-y: hidden !important;
 }
 
-#main > *:not(iframe) {
-}
-
 /* icons fontawesome */
 .fa, .fas, .far, .fal, .fad, .fab {
     color: var(--text-color-highlight);
@@ -168,9 +165,6 @@ input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name
     opacity: 0;
     top: -50px;
     position: fixed;
-}
-
-input[type="checkbox"]:focus + label:before {
 }
 
 input[type="checkbox"] + label:before {
@@ -701,9 +695,6 @@ label.ui-state-hover > span {
     color: var(--text-color-light);
 }
 
-.even-alternate {
-}
-
 .even-alternate.tableRow {
     color: var(--text-color-light);
 }
@@ -1081,9 +1072,6 @@ legend {
 
 .spikekillParent {
     padding: 0 !important;
-}
-
-.spikekillData, .spikekillData td {
 }
 
 .spikekillNote {
@@ -2031,9 +2019,6 @@ div.submenu span {
 
 }
 
-#nav li a.active:not(.selected), .nav li a.active:not(.selected) {
-}
-
 #nav li a.active, #nav li a.active:hover, .nav li a.active, .nav li a.active:hover {
     color: var(--text-color-navigation-highlight) !important;
 }
@@ -2063,18 +2048,6 @@ tr.selectable {
 
 tr.selectable td {
     border-bottom: 1px solid var(--border-color-lowlight);
-}
-
-tr.selectable:first-child {
-}
-
-tr.selectable td:first-child {
-}
-
-tr.selectable td:last-child {
-}
-
-tr.selectable:last-child td {
 }
 
 tr.selectable:hover:not(.selected) {
