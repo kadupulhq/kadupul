@@ -184,6 +184,11 @@ function api_auth_update_user_setting($name, $value)
 
     $user = $_SESSION['sess_user_id'];
 
+    // The page saves on every keystroke, so a value the setting refuses is left unsaved.
+    if (!settings_value_passes_filter($name, $value, true)) {
+        return;
+    }
+
     if (!empty($user)) {
         if ($name == 'full_name' || $name == 'email_address') {
             db_execute_prepared(

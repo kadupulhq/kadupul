@@ -1,0 +1,69 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+require_once dirname(__DIR__, 3) . '/Helpers/RrdCharacterization.php';
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
+test('every graph font size setting refuses sizes RRDtool cannot draw', function () {
+    $names = array('title_size', 'legend_size', 'axis_size', 'unit_size');
+    $values = array('', 'abc', '4', '4.5', '12', '72', '72.5', '1e400', '-8');
+    $calls = array();
+    foreach (array(false, true) as $user_setting) {
+        foreach ($names as $name) {
+            foreach ($values as $value) {
+                $calls[] = array('fn' => 'settings_value_passes_filter', 'args' => array($name, $value, $user_setting));
+            }
+        }
+    }
+
+    $results = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => $calls))['results'];
+
+    $expected = array(false, false, false, true, true, true, false, false, false);
+    foreach (array_chunk(array_column($results, 'returned'), count($values)) as $returned) {
+        expect($returned)->toBe($expected);
+    }
+    expect(array_merge(...array_column($results, 'diagnostics')))->toBe(array());
+});
+
+test('settings without a filter accept any value', function () {
+    $calls = array(
+        array('fn' => 'settings_value_passes_filter', 'args' => array('title_font', '', false)),
+        array('fn' => 'settings_value_passes_filter', 'args' => array('title_font', 'DejaVu Sans Bold', true)),
+        array('fn' => 'settings_value_passes_filter', 'args' => array('no_such_setting', 'anything', true)),
+    );
+
+    $results = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => $calls))['results'];
+
+    expect(array_column($results, 'returned'))->toBe(array(true, true, true));
+});
+
+test('the profile page leaves a font size it refuses unsaved', function () {
+    $root = dirname(__DIR__, 4);
+    $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/auth_profile.php'), 'api_auth_update_user_setting'), true) . ');'
+        . <<<'PHP'
+        $writes = array();
+        function db_execute_prepared($sql, $params) { $GLOBALS['writes'][] = $params; }
+        function kill_session_var($name) {}
+        $settings = array();
+        $settings_user = array('fonts' => array('title_size' => array('method' => 'textbox', 'default' => '12', 'filter' => FILTER_CALLBACK, 'options' => array('options' => 'graph_font_size_filter'))));
+        $_SESSION['sess_user_id'] = 5;
+        foreach (array('', '1', '1e400', '9') as $value) {
+            api_auth_update_user_setting('title_size', $value);
+        }
+        echo json_encode($writes);
+        PHP;
+
+    $pipes = array();
+    $process = proc_open(array(PHP_BINARY, '-r', $script), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    expect(proc_close($process))->toBe(0, $error)
+        ->and(json_decode($output, true))->toBe(array(array('title_size', '9', 5)));
+});

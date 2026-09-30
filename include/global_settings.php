@@ -1074,7 +1074,9 @@ $settings = array(
             'method' => 'textbox',
             'default' => '10',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'title_font' => array(
             'friendly_name' => __('Title Font Setting'),
@@ -1089,7 +1091,9 @@ $settings = array(
             'method' => 'textbox',
             'default' => '8',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'legend_font' => array(
             'friendly_name' => __('Legend Font Setting'),
@@ -1104,7 +1108,9 @@ $settings = array(
             'method' => 'textbox',
             'default' => '7',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'axis_font' => array(
             'friendly_name' => __('Axis Font Setting'),
@@ -1119,7 +1125,9 @@ $settings = array(
             'method' => 'textbox',
             'default' => '7',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'unit_font' => array(
             'friendly_name' => __('Unit Font Setting'),
@@ -2823,7 +2831,9 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Titles'),
             'method' => 'textbox',
             'default' => '12',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'title_font' => array(
             'friendly_name' => __('Title Font File'),
@@ -2836,7 +2846,9 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Legend items'),
             'method' => 'textbox',
             'default' => '10',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'legend_font' => array(
             'friendly_name' => __('Legend Font File'),
@@ -2849,7 +2861,9 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Axis'),
             'method' => 'textbox',
             'default' => '8',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'axis_font' => array(
             'friendly_name' => __('Axis Font File'),
@@ -2862,7 +2876,9 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Units'),
             'method' => 'textbox',
             'default' => '8',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'unit_font' => array(
             'friendly_name' => __('Unit Font File'),
