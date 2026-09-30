@@ -17,6 +17,7 @@ import * as path from 'path';
  * theme-contrast/compare.js.
  *
  *   THEME_CONTRAST_THEMES   comma list, default every shipped theme
+ *   THEME_CONTRAST_PAGES    comma list of scenario names, default all
  *   THEME_CONTRAST_ROOT     serve include/themes from this checkout instead,
  *                           to measure another revision's CSS on this stack
  *   THEME_CONTRAST_LABEL    report name, default "current"
@@ -31,6 +32,7 @@ const shipped = fs.readdirSync(themeRoot, { withFileTypes: true })
 const wanted = process.env.THEME_CONTRAST_THEMES ? process.env.THEME_CONTRAST_THEMES.split(',') : shipped;
 const altRoot = process.env.THEME_CONTRAST_ROOT ? path.resolve(process.env.THEME_CONTRAST_ROOT) : null;
 const label = process.env.THEME_CONTRAST_LABEL || 'current';
+const onlyPages = process.env.THEME_CONTRAST_PAGES ? process.env.THEME_CONTRAST_PAGES.split(',') : null;
 const measureScript = path.join(__dirname, '../theme-contrast/measure.js');
 // Outside test-results, which Playwright empties at the start of every run.
 const reportDir = path.join(__dirname, '../theme-contrast-results');
@@ -69,7 +71,7 @@ async function openDialog(page: Page): Promise<void> {
 	await page.evaluate(() => {
 		const $ = (window as any).jQuery;
 		$('<div id="contrastDialog"><p>Delete the selected devices? <a href="#">Details</a></p>'
-			+ '<input type="text" value="Device 1"> <input type="checkbox" id="contrastDialogBox"><label for="contrastDialogBox">Keep graphs</label></div>')
+			+ '<input type="text" class="ui-state-default ui-corner-all" value="Device 1"> <input type="checkbox" id="contrastDialogBox"><label for="contrastDialogBox">Keep graphs</label></div>')
 			.dialog({ title: 'Confirm', modal: true, width: 500, buttons: { Continue: () => {}, Cancel: () => {} } });
 	});
 }
@@ -432,6 +434,9 @@ for (const { theme, color } of variants) {
 
 		const findings: Finding[] = [];
 		for (const scenario of scenarios) {
+			if (onlyPages && !onlyPages.includes(scenario.name)) {
+				continue;
+			}
 			if (scenario.loggedOut) {
 				await logout(page);
 			} else {

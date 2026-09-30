@@ -531,15 +531,21 @@
 		return owners;
 	}
 
-	function outerBackground(target, rect, distance) {
+	// Colours just outside `target`. With `container`, only points that still
+	// fall inside that element count, so a control touching the next row is
+	// judged against the row it sits in.
+	function outerBackground(target, rect, distance, container) {
 		const points = [
 			[rect.left - distance, rect.top + rect.height / 2],
 			[rect.right + distance, rect.top + rect.height / 2],
 			[rect.left + rect.width / 2, rect.top - distance],
 			[rect.left + rect.width / 2, rect.bottom + distance],
 		].filter(([x, y]) => x >= 0 && y >= 0 && x < innerWidth && y < innerHeight);
+		const inside = container
+			? points.filter(([x, y]) => document.elementsFromPoint(x, y).some((el) => el === container || container.contains(el)))
+			: points;
 		const list = [];
-		for (const [x, y] of points) {
+		for (const [x, y] of (inside.length ? inside : points)) {
 			list.push(...backgroundsAt(x, y, target, true).list);
 		}
 		return list.length ? list : canvasColors(0, 0);
@@ -629,7 +635,20 @@
 	}
 
 	function measureBoundary(el) {
-		const style = getComputedStyle(el);
+		let style = getComputedStyle(el);
+		// An input with no border or fill of its own is part of a composite
+		// control, such as the location autocomplete, whose wrapper draws the
+		// edge.
+		const bare = (s) => parseFloat(s.borderTopWidth) === 0 && parseColor(s.backgroundColor).a === 0 && s.backgroundImage === 'none';
+		if (/^(INPUT|TEXTAREA)$/.test(el.tagName) && !/^(checkbox|radio)$/.test(el.type) && bare(style)) {
+			for (let n = el.parentElement, i = 0; n && i < 3; n = n.parentElement, i++) {
+				if (!bare(getComputedStyle(n))) {
+					el = n;
+					style = getComputedStyle(n);
+					break;
+				}
+			}
+		}
 		const rect = el.getBoundingClientRect();
 		if (rect.right < 0 || rect.bottom < 0 || rect.left >= innerWidth || rect.top >= innerHeight) {
 			return null;
@@ -639,7 +658,15 @@
 		if (/^(checkbox|radio)$/.test(el.type) && style.appearance !== 'none') {
 			return null;
 		}
-		const outside = outerBackground(el, rect, 1.5);
+		let surface = el.parentElement;
+		while (surface && surface !== document.body) {
+			const ss = getComputedStyle(surface);
+			if (parseColor(ss.backgroundColor).a > 0 || ss.backgroundImage !== 'none') {
+				break;
+			}
+			surface = surface.parentElement;
+		}
+		const outside = outerBackground(el, rect, 1, surface);
 		const fill = backgroundsAt(rect.left + rect.width / 2, rect.top + rect.height / 2, el, false).list;
 		const candidates = [];
 		const bw = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
@@ -647,6 +674,13 @@
 			const border = parseColor(style.borderTopColor);
 			const w = worst(border, outside);
 			candidates.push({ via: 'border', ...w });
+		}
+		// A hard-edged box shadow draws the same edge a border would.
+		for (const shadow of splitTop(style.boxShadow === 'none' ? '' : style.boxShadow)) {
+			const m = /^(rgba?\([^)]+\))\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+([\d.]+)px\s+(-?[\d.]+)px/.exec(shadow);
+			if (m && parseFloat(m[4]) === 0 && parseFloat(m[5]) >= 1) {
+				candidates.push({ via: 'box-shadow', ...worst(parseColor(m[1]), outside) });
+			}
 		}
 		let fillWorst = null;
 		for (const f of fill) {
