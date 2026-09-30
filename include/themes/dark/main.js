@@ -37,15 +37,6 @@ function themeReady() {
 
 	$('input[type="text"], input[type="password"], input[type="checkbox"], textarea').not('image').addClass('ui-state-default ui-corner-all');
 
-	$('.colordropdown').change(function() {
-		id=$(this).attr('id');
-		color=$('#'+id+' option:selected').attr('data-color');
-		$('<span>', {
-			style: 'background-color:#'+color+',width:16px;height:16px;',
-			'class': 'color-icon'
-		}).appendTo($('#'+id+'-button'));
-	});
-
 	$('.checkboxgroup').children('br').remove();
 	$('.checkboxgroup').buttonset();
 

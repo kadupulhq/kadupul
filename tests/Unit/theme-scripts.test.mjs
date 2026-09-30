@@ -206,3 +206,14 @@ for (const theme of jqueryThemes) {
     assert.deepEqual(selectors.filter(s => s.endsWith('-menu')), []);
   });
 }
+
+test('dark no longer binds a change handler to colour dropdowns', () => {
+  const colour = { attrs: { id: 'color_id' } };
+  const { context, calls } = loadTheme('dark', { '.colordropdown': [colour], 'select.colordropdown': [colour] });
+
+  context.themeReady();
+
+  assert.deepEqual(colour.events, undefined);
+  assert.deepEqual(calls.filter(c => c.selector === '.colordropdown'), []);
+  assert.doesNotMatch(read('include/themes/dark/main.js'), /background-color:#'\+color\+',/);
+});
