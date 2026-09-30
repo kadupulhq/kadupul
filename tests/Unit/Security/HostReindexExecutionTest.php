@@ -28,6 +28,7 @@ require $argv[1] . '/lib/html_utility.php';
 function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
 function api_plugin_hook_function($name, $value) { return $value; }
 function api_plugin_hook($name) {}
+function is_device_allowed($hostId) { return (int) $hostId === 7; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function die_html_input_error(...$args) { http_response_code(400); exit; }
 function read_config_option($name) { return '/configured php/bin/php'; }
