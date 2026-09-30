@@ -1,0 +1,172 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+namespace Kadupul\Tests\Security\HtmlRendererOutput;
+
+use DOMDocument;
+use DOMXPath;
+use RuntimeException;
+
+const PAYLOADS = array(
+    'quote-breakout' => '\'" onmouseover="alert(1)" x=\'',
+    'element-breakout' => '\'><img src=x onerror=alert(1)><script>alert(2)</script>',
+    'grave-accent' => "a`b",
+    'entities' => '&#39;&quot;&amp;',
+);
+
+/*
+ * Render with the real lib/html.php in a child process, so the stubs below
+ * never collide with functions other test files declare in the parent.
+ */
+function render(string $call, array $arguments, ?object $coverage): string
+{
+    $root = dirname(__DIR__, 3);
+    $directory = sys_get_temp_dir() . '/html-renderer-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    $program = <<<'PHP'
+        $a = json_decode($argv[2], true, 512, JSON_THROW_ON_ERROR);
+        $GLOBALS['config'] = array('url_path' => $a['url_path'] ?? '/', 'poller_id' => 1);
+        $GLOBALS['settings'] = array('spikes' => array(
+            'spikekill_deviations' => array('array' => array()),
+            'spikekill_number' => array('array' => array()),
+        ));
+        function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+        function __esc($text, ...$args) { return html_escape(__($text, ...$args)); }
+        function cacti_sizeof($value) { return is_countable($value) ? count($value) : 0; }
+        function cacti_count($value) { return cacti_sizeof($value); }
+        function read_user_setting($name, $default = false, $force = false) { return $GLOBALS['a']['user'][$name] ?? $default; }
+        function read_config_option($name) { return $GLOBALS['a']['option'][$name] ?? ''; }
+        function is_realm_allowed($realm) { return true; }
+        function get_current_graph_start() { return -86400; }
+        function get_current_graph_end() { return 0; }
+        function get_current_page($basename = true) { return 'graphs.php'; }
+        function aggregate_build_children_url($id) { return ''; }
+        function db_fetch_cell_prepared($sql, $args) { return $GLOBALS['a']['cell'] ?? 0; }
+        function api_plugin_hook($name, $args = array()) {}
+        function isset_request_var($name) { return false; }
+        function isempty_request_var($name) { return true; }
+        function get_nfilter_request_var($name) { return ''; }
+        function get_request_var($name) { return ''; }
+        function clean_up_name($name) { return $name; }
+        class CactiSecureHeaders { public static function getNonceAttribute() { return 'nonce="fixture"'; } }
+        $_SERVER['SCRIPT_NAME'] = '/graphs.php';
+        require $argv[1] . '/lib/html.php';
+        PHP;
+    $program .= "\n" . $call;
+    if ($coverage !== null) {
+        $program = 'define("HTML_RENDERER_TEST_COVERAGE",true);'
+            . 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($directory, true) . ');'
+            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';' . $program;
+    }
+
+    try {
+        $process = proc_open(
+            array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, json_encode($arguments, JSON_THROW_ON_ERROR)),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            $directory
+        );
+        $html = stream_get_contents($pipes[1]);
+        $errors = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        if (proc_close($process) !== 0 || $errors !== '') {
+            throw new RuntimeException($errors . $html);
+        }
+        if ($coverage !== null) {
+            foreach (glob($directory . '/*.coverage') as $report) {
+                $coverage->merge(unserialize(file_get_contents($report)));
+            }
+        }
+    } finally {
+        foreach (glob($directory . '/*.coverage') as $report) {
+            unlink($report);
+        }
+        rmdir($directory);
+    }
+
+    return $html;
+}
+
+function document(string $html): DOMXPath
+{
+    $document = new DOMDocument();
+    $previous = libxml_use_internal_errors(true);
+    try {
+        $document->loadHTML('<!doctype html><html><head><meta charset="UTF-8"></head><body>' . $html . '</body></html>');
+    } finally {
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+    }
+
+    return new DOMXPath($document);
+}
+
+/* html_escape() leaves existing entities alone, so a pre-escaped value is not encoded twice. */
+function decoded(string $value): string
+{
+    return html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
+/* The payload must stay inside the value it was written to: no new element, no event handler. */
+function expectNoInjection(DOMXPath $xpath, int $handlers = 0): void
+{
+    expect($xpath->query('//script[contains(., "alert")]|//img[@src="x"]')->length)->toBe(0);
+    expect($xpath->query('//@*[starts-with(name(), "on")]')->length)->toBe($handlers);
+    expect($xpath->query('//@x')->length)->toBe(0);
+}
+
+test('graph drill-down icons keep identifiers numeric and the realtime popup inside its JavaScript strings', function ($payload) {
+    $html = render(
+        'graph_drilldown_icons($a["id"], "graph_buttons", 3, 4);',
+        array('id' => '7' . $payload, 'url_path' => '/k' . $payload . '/', 'cell' => '5' . $payload,
+            'option' => array('realtime_enabled' => 'on'), 'user' => array('realtime_mode' => '2')),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+
+    expectNoInjection($xpath, 1);
+    expect($xpath->query('//a[@class="iconLink utils"]')->item(0)->getAttribute('id'))->toBe('graph_7_util');
+    expect($xpath->query('//span[@class="iconLink spikekill"]')->item(0)->getAttribute('data-graph'))->toBe('7');
+    expect($xpath->query('//img[@id="de5_0"]')->length)->toBe(1);
+    foreach ($xpath->query('//img[@class="drillDown"]') as $image) {
+        expect($image->getAttribute('src'))->toStartWith(decoded('/k' . $payload . '/images/'));
+    }
+
+    $handler = $xpath->query('//@onclick')->item(0)->value;
+    expect(preg_match('/^window\.open\(("(?:\\\\.|[^"\\\\])*"), ("(?:\\\\.|[^"\\\\])*"), \'[a-z=,0-9]+\'\);return false$/', $handler, $arguments))->toBe(1);
+    expect(json_decode($arguments[1], true, 512, JSON_THROW_ON_ERROR))->toBe('/k' . $payload . '/graph_realtime.php?top=0&left=0&local_graph_id=7');
+    expect(json_decode($arguments[2], true, 512, JSON_THROW_ON_ERROR))->toBe('popup_7');
+    expect($arguments[1] . $arguments[2])->not->toContain('<', '>', '&', "'");
+})->with(PAYLOADS);
+
+test('graph areas keep graph values inside their attributes and text', function ($renderer, $payload) {
+    $graph = array('local_graph_id' => '9' . $payload, 'host_id' => 1, 'disabled' => '', 'width' => '500' . $payload,
+        'height' => '120' . $payload, 'title_cache' => 'Title' . $payload, 'data_query_name' => 'Query' . $payload);
+    $html = render(
+        '$graphs = array($a["graph"]); ' . $renderer . '($graphs, "", "", "", $a["columns"]);',
+        array('graph' => $graph, 'columns' => 1, 'user' => array(
+            'show_graph_title' => 'on', 'custom_fonts' => 'on', 'title_size' => '10' . $payload,
+            'default_width' => '300' . $payload, 'default_height' => '90' . $payload, 'page_refresh' => 300,
+        )),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+
+    expectNoInjection($xpath);
+    $wrapper = $xpath->query('//div[contains(@class, "graphWrapper")]')->item(0);
+    expect($wrapper->getAttribute('id'))->toBe(decoded('wrapper_9' . $payload));
+    expect($xpath->query('//td[contains(@class, "graphDrillDown")]')->item(0)->getAttribute('id'))->toBe(decoded('dd9' . $payload));
+    expect($xpath->query('//span[@class="center"]')->item(0)->textContent)->toBe(decoded('Title' . $payload));
+    if ($renderer === 'html_graph_area') {
+        expect($wrapper->getAttribute('graph_width'))->toBe(decoded('500' . $payload));
+        expect($wrapper->getAttribute('graph_height'))->toBe(decoded('120' . $payload));
+        expect($wrapper->getAttribute('title_font_size'))->toBe(decoded('10' . $payload));
+    } else {
+        expect($wrapper->getAttribute('graph_width'))->toBe(decoded('300' . $payload));
+        expect($wrapper->getAttribute('graph_height'))->toBe(decoded('90' . $payload));
+        expect($xpath->query('//td[contains(@class, "graphSubHeaderColumn")]')->item(0)->textContent)->toBe(decoded('Data Query: Query' . $payload));
+    }
+})->with(array('html_graph_area', 'html_graph_thumbnail_area'))->with(PAYLOADS);

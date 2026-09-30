@@ -323,10 +323,10 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 				<table style='text-align:center;margin:auto;'>
 					<tr>
 						<td>
-							<div class='graphWrapper' style='width:100%;' id='wrapper_<?php print $graph['local_graph_id']?>' graph_width='<?php print $graph['width'];?>' graph_height='<?php print $graph['height'];?>' title_font_size='<?php print((read_user_setting('custom_fonts') == 'on') ? read_user_setting('title_size') : read_config_option('title_size'));?>'></div>
+							<div class='graphWrapper' style='width:100%;' id='wrapper_<?php print html_escape($graph['local_graph_id']);?>' graph_width='<?php print html_escape($graph['width']);?>' graph_height='<?php print html_escape($graph['height']);?>' title_font_size='<?php print html_escape((read_user_setting('custom_fonts') == 'on') ? read_user_setting('title_size') : read_config_option('title_size'));?>'></div>
 							<?php print(read_user_setting('show_graph_title') == 'on' ? "<span class='center'>" . html_escape($graph['title_cache']) . '</span>' : '');?>
 						</td>
-						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print $graph['local_graph_id'];?>' class='noprint graphDrillDown'>
+						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print html_escape($graph['local_graph_id']);?>' class='noprint graphDrillDown'>
 							<?php graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons', $tree_id, $branch_id);?>
 						</td><?php } ?>
 					</tr>
@@ -446,7 +446,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
                     }
 
                     print "<tr class='tableHeader'>
-							<td class='graphSubHeaderColumn textHeaderDark' colspan='$columns'>" . __('Data Query:') . ' ' . $graph['data_query_name'] . '</td>
+							<td class='graphSubHeaderColumn textHeaderDark' colspan='" . html_escape($columns) . "'>" . __('Data Query:') . ' ' . html_escape($graph['data_query_name']) . '</td>
 						</tr>';
                     $i = 0;
                 }
@@ -463,10 +463,10 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 				<table style='text-align:center;margin:auto;'>
 					<tr>
 						<td>
-							<div class='graphWrapper' id='wrapper_<?php print $graph['local_graph_id']?>' graph_width='<?php print read_user_setting('default_width');?>' graph_height='<?php print read_user_setting('default_height');?>'></div>
+							<div class='graphWrapper' id='wrapper_<?php print html_escape($graph['local_graph_id']);?>' graph_width='<?php print html_escape(read_user_setting('default_width'));?>' graph_height='<?php print html_escape(read_user_setting('default_height'));?>'></div>
 							<?php print(read_user_setting('show_graph_title') == 'on' ? "<span class='center'>" . html_escape($graph['title_cache']) . '</span>' : '');?>
 						</td>
-						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print $graph['local_graph_id'];?>' class='noprint graphDrillDown'>
+						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print html_escape($graph['local_graph_id']);?>' class='noprint graphDrillDown'>
 							<?php print graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons_thumbnails', $tree_id, $branch_id);?>
 						</td><?php } ?>
 					</tr>
@@ -507,6 +507,9 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 
     static $rand = 0;
 
+    $local_graph_id = (int) $local_graph_id;
+    $url_path       = html_escape($config['url_path']);
+
     $aggregate_url = aggregate_build_children_url($local_graph_id);
 
     $graph_template_id = db_fetch_cell_prepared(
@@ -517,12 +520,12 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
     );
 
     print "<div class='iconWrapper'>";
-    print "<a class='iconLink utils' href='#' role='link' id='graph_" . $local_graph_id . "_util'><img class='drillDown' src='" . $config['url_path'] . "images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') . "'></a><br>";
-    print "<a class='iconLink csvexport' href='#' role='link' id='graph_" . $local_graph_id . "_csv'><img class='drillDown' src='" . $config['url_path'] . "images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data') . "'></a><br>";
-    print "<a class='iconLink mrtg' href='#' role='link' id='graph_" . $local_graph_id . "_mrtg'><img class='drillDown' src='" . $config['url_path'] . "images/timeview.png' alt='' title='" . __esc('Time Graph View') . "'></a><br>";
+    print "<a class='iconLink utils' href='#' role='link' id='graph_" . $local_graph_id . "_util'><img class='drillDown' src='" . $url_path . "images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') . "'></a><br>";
+    print "<a class='iconLink csvexport' href='#' role='link' id='graph_" . $local_graph_id . "_csv'><img class='drillDown' src='" . $url_path . "images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data') . "'></a><br>";
+    print "<a class='iconLink mrtg' href='#' role='link' id='graph_" . $local_graph_id . "_mrtg'><img class='drillDown' src='" . $url_path . "images/timeview.png' alt='' title='" . __esc('Time Graph View') . "'></a><br>";
 
     if (is_realm_allowed(3)) {
-        $host_id = db_fetch_cell_prepared(
+        $host_id = (int) db_fetch_cell_prepared(
             'SELECT host_id
 			FROM graph_local
 			WHERE id = ?',
@@ -530,7 +533,7 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
         );
 
         if ($host_id > 0) {
-            print "<a class='iconLink' href='" . html_escape($config['url_path'] . "host.php?action=edit&id=$host_id") . "' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_de'><img id='de" . $host_id . '_' . $rand . "' class='drillDown' src='" . $config['url_path'] . "images/server_edit.png' title='" . __esc('Edit Device') . "'></a>";
+            print "<a class='iconLink' href='" . html_escape($config['url_path'] . "host.php?action=edit&id=$host_id") . "' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_de'><img id='de" . $host_id . '_' . $rand . "' class='drillDown' src='" . $url_path . "images/server_edit.png' title='" . __esc('Edit Device') . "'></a>";
             print '<br/>';
             $rand++;
         }
@@ -543,14 +546,21 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 
     if (read_config_option('realtime_enabled') == 'on' && is_realm_allowed(25)) {
         if (read_user_setting('realtime_mode') == '' || read_user_setting('realtime_mode') == '1') {
-            print "<a class='iconLink realtime' href='#' role='link' id='graph_" . $local_graph_id . "_realtime'><img class='drillDown' src='" . $config['url_path'] . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
+            print "<a class='iconLink realtime' href='#' role='link' id='graph_" . $local_graph_id . "_realtime'><img class='drillDown' src='" . $url_path . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
         } else {
-            print "<a class='iconLink' href='#' onclick=\"window.open('" . $config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id=' . $local_graph_id . "', 'popup_" . $local_graph_id . "', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=650,height=300');return false\"><img src='" . $config['url_path'] . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
+            // Encode for JavaScript first, then for the attribute that carries it.
+            $json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+            $popup      = 'window.open('
+                . json_encode($config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id=' . $local_graph_id, $json_flags) . ', '
+                . json_encode('popup_' . $local_graph_id, $json_flags) . ', '
+                . "'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=650,height=300');return false";
+
+            print "<a class='iconLink' href='#' onclick='" . html_escape($popup) . "'><img src='" . $url_path . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
         }
     }
 
     if (is_realm_allowed(1043)) {
-        print "<span class='iconLink spikekill' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_sk'><img id='sk" . $local_graph_id . "' class='drillDown' src='" . $config['url_path'] . "images/spikekill.gif' title='" . __esc('Kill Spikes in Graphs') . "'></span>";
+        print "<span class='iconLink spikekill' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_sk'><img id='sk" . $local_graph_id . "' class='drillDown' src='" . $url_path . "images/spikekill.gif' title='" . __esc('Kill Spikes in Graphs') . "'></span>";
         print '<br/>';
     }
 
