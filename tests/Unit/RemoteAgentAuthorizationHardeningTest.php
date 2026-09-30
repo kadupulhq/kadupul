@@ -12,7 +12,8 @@ test('remote agent authorization checks direct poller IP before DNS', function (
 });
 
 test('remote agent authorization requires hostname allowlist membership', function () use ($remoteAgentSource) {
-    expect($remoteAgentSource)->toContain('if (!in_array($normalized_client_name, $allowed_hostnames, true))');
+    expect($remoteAgentSource)->toContain('!in_array($normalized_client_name, $allowed_hostnames, true)')
+        ->and($remoteAgentSource)->toContain('count($pollers_by_hostname[$normalized_client_name] ?? array()) !== 1');
 });
 
 test('remote agent authorization no longer suppresses dns_get_record errors', function () use ($remoteAgentSource) {

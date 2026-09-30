@@ -19,12 +19,14 @@ $source = file_get_contents(__DIR__ . '/../../remote_agent.php');
 
 function _ra_function_body(string $source, string $needle): string
 {
-    $start = strpos($source, $needle);
-    expect($start)->not->toBeFalse();
+    // Accept either brace layout; formatting must not change this contract.
+    $name = substr($needle, 0, strpos($needle, '('));
+    expect(preg_match('/^' . preg_quote($name, '/') . '\\(\\)\\s*\\{/m', $source, $match, PREG_OFFSET_CAPTURE))->toBe(1);
+    $start = $match[0][1];
 
     /* Search for the next top-level function definition that follows
      * this one. Two-newline + "function " is the canonical separator. */
-    $end = strpos($source, "\nfunction ", $start + strlen($needle));
+    $end = strpos($source, "\nfunction ", $start + strlen($match[0][0]));
     return substr($source, $start, $end !== false ? $end - $start : 4000);
 }
 
