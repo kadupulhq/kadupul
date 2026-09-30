@@ -12,6 +12,7 @@ use Kadupul\GraphDefinition\Application\Port\VdefEditor;
 use Kadupul\GraphDefinition\Application\Query\VdefAccessDenied;
 use Kadupul\GraphDefinition\Application\Query\VdefAuthorization;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\VdefEditType;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,9 +27,13 @@ final class VdefEditController
 {
     #[Route('/graph-definitions/vdefs/new', name: 'graph_vdef_create', methods: ['GET', 'HEAD', 'POST'])]
     #[Route('/graph-definitions/vdefs/{id<\d+>}/edit', name: 'graph_vdef_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(?int $id, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(?int $id, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $record = $id === null ? ['id' => 0, 'name' => '', 'revision' => '', 'items' => []] : $catalog->find($id);

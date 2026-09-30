@@ -111,6 +111,10 @@ def seed_graph_dependency(vdef_id: int) -> None:
 
 def main() -> None:
     scenario = Scenario()
+    status, _, body = scenario.request('/graph-definitions/vdefs?page[]=invalid')
+    check(status == 401 and 'Access denied' in body,
+          'unauthenticated VDEF HTTP request is rejected before malformed query parsing')
+
     status, _, html = scenario.request("/")
     check(status == 200 and "login_username" in html, "login page did not load")
     login = scenario.form(html, lambda form: "login_username" in form["fields"])

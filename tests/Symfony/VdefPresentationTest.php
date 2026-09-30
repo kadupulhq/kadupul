@@ -9,6 +9,7 @@ namespace Kadupul\Tests;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Kadupul\GraphDefinition\Application\Port\VdefCatalog;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Kernel;
@@ -31,6 +32,27 @@ final class VdefPresentationTest extends TestCase
         self::assertSame(409, http_response_code());
         self::assertStringContainsString('submitted through the Symfony forms', (string) $body);
         http_response_code(200);
+    }
+
+    public function testUnauthenticatedListRejectsMalformedQueryBeforeCatalogAccess(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $access = $this->createMock(ConsoleAccess::class);
+            $access->expects(self::once())->method('consoleActor')->willReturn(null);
+            $container->set(ConsoleAccess::class, $access);
+            $catalog = $this->createMock(VdefCatalog::class);
+            $catalog->expects(self::never())->method('list');
+            $catalog->expects(self::never())->method('count');
+            $container->set(VdefCatalog::class, $catalog);
+
+            $response = $kernel->handle(Request::create('/graph-definitions/vdefs?page[]=invalid'));
+            self::assertSame(401, $response->getStatusCode());
+        } finally {
+            $kernel->shutdown();
+        }
     }
 
     public function testVdefRoutesEnforceRealmEscapeNamesAndUseStatelessCsrf(): void

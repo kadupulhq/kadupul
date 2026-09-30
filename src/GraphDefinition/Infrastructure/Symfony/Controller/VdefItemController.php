@@ -14,6 +14,7 @@ use Kadupul\GraphDefinition\Application\Query\VdefAuthorization;
 use Kadupul\GraphDefinition\Domain\VdefFunctions;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\VdefItemType as VdefItemForm;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\VdefReorderType;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,9 +28,13 @@ use Twig\Environment;
 final class VdefItemController
 {
     #[Route('/graph-definitions/vdefs/{vdefId<\d+>}/items/{itemId<\d+>}', name: 'graph_vdef_item_edit', requirements: ['vdefId' => '[1-9][0-9]{0,7}', 'itemId' => '0|[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function edit(int $vdefId, int $itemId, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function edit(int $vdefId, int $itemId, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $vdef = $catalog->find($vdefId);
@@ -110,9 +115,13 @@ final class VdefItemController
     }
 
     #[Route('/graph-definitions/vdefs/{vdefId<\d+>}/items/{itemId<\d+>}/delete', name: 'graph_vdef_item_delete', requirements: ['vdefId' => '[1-9][0-9]{0,7}', 'itemId' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function delete(int $vdefId, int $itemId, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function delete(int $vdefId, int $itemId, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $vdef = $catalog->find($vdefId);
@@ -145,9 +154,13 @@ final class VdefItemController
     }
 
     #[Route('/graph-definitions/vdefs/{vdefId<\d+>}/items/reorder', name: 'graph_vdef_item_reorder', requirements: ['vdefId' => '[1-9][0-9]{0,7}'], methods: ['POST'])]
-    public function reorder(int $vdefId, Request $request, VdefAuthorization $authorization, VdefEditor $editor, FormFactoryInterface $forms, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function reorder(int $vdefId, Request $request, VdefAuthorization $authorization, VdefEditor $editor, FormFactoryInterface $forms, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $form = $forms->createNamed('order', VdefReorderType::class, ['items' => '', 'revision' => ''], [

@@ -9,6 +9,7 @@ namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Controller;
 
 use Kadupul\GraphDefinition\Application\Query\VdefAccessDenied;
 use Kadupul\GraphDefinition\Application\Query\VdefAuthorization;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +20,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class LegacyVdefController
 {
     #[Route('/graph-definitions/vdefs/legacy', name: 'graph_vdef_legacy', methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, VdefAuthorization $authorization, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, VdefAuthorization $authorization, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, ['Cache-Control' => 'private, no-store']);
+        }
         try {
             $authorization->actor();
             $query = $request->query->all();
