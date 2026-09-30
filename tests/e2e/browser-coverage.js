@@ -19,7 +19,7 @@ function collectThemeCoverage(test) {
     for (const entry of await page.coverage.stopJSCoverage()) {
       if (!/^https?:\/\//.test(entry.url)) continue;
       const pathname = new URL(entry.url).pathname;
-      if (!/^\/include\/themes\/[a-z0-9_-]+\/main\.js$/.test(pathname)) continue;
+      if (pathname !== '/include/layout.js' && !/^\/include\/themes\/[a-z0-9_-]+\/main\.js$/.test(pathname)) continue;
       const sourceFile = path.join(root, pathname);
       if (entry.source !== fs.readFileSync(sourceFile, 'utf8')) {
         throw new Error(`Browser coverage source differs from checkout: ${pathname}`);
@@ -29,7 +29,7 @@ function collectThemeCoverage(test) {
       converter.applyCoverage(entry.functions);
       map.merge(converter.toIstanbul());
     }
-    if (map.files().length === 0) throw new Error('No production theme script was measured');
+    if (map.files().length === 0) throw new Error('No production layout or theme script was measured');
     fs.mkdirSync(directory, { recursive: true });
     fs.writeFileSync(path.join(directory, `${crypto.randomUUID()}.json`), JSON.stringify(map.toJSON()));
   });
