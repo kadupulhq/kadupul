@@ -62,6 +62,21 @@ final class TranslationTest extends TestCase
         self::assertSame($expected, $request->attributes->get('_locale'));
     }
 
+    public function testGprintRoutesUseTheAuthenticatedLocale(): void
+    {
+        $preference = $this->createMock(LocalePreference::class);
+        $preference->method('preferredLocale')->willReturn('fr');
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn([]);
+        $subscriber = new InventoryLocaleSubscriber($preference, $this->database([]), $configuration);
+        foreach (['gprint_preset_list', 'gprint_preset_create', 'gprint_preset_edit', 'gprint_preset_delete', 'gprint_preset_legacy'] as $route) {
+            $request = Request::create('/', 'GET', [], ['Cacti' => 'fixture']);
+            $request->attributes->set('_route', $route);
+            $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+            self::assertSame('fr', $request->attributes->get('_locale'), $route);
+        }
+    }
+
     public static function preferences(): iterable
     {
         yield 'disabled wins' => [['i18n_language_support' => '0'], 'fr-FR', 'fr', 'fr', 'en'];

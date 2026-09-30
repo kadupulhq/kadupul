@@ -766,10 +766,6 @@ header_redirect	./data_templates.php:564	    header('Location: data_templates.ph
 header_redirect	./data_templates.php:624	    header('Location: data_templates.php?action=template_edit&id=' . get_request_var('id') . "&view_rrd=$data_template_rrd_id");
 header_redirect	./docs/index.php:17		header("Location: https://kadupul.org/");
 header_redirect	./formats/index.php:7	header("Location:../index.php");
-header_redirect	./gprint_presets.php:100			header('Location: gprint_presets.php?header=false');
-header_redirect	./gprint_presets.php:141			header('Location: gprint_presets.php?header=false');
-header_redirect	./gprint_presets.php:69				header('Location: gprint_presets.php?header=false&action=edit&id=' . (empty($gprint_preset_id) ? get_nfilter_request_var('id') : $gprint_preset_id));
-header_redirect	./gprint_presets.php:72				header('Location: gprint_presets.php?header=false');
 header_redirect	./graph.php:57		header('Location: permission_denied.php');
 header_redirect	./graph_templates.php:195		header('Location: graph_templates.php?header=false&action=template_edit&id=' . (empty($graph_template_id) ? get_nfilter_request_var('graph_template_id') : $graph_template_id));
 header_redirect	./graph_templates.php:325			header('Location: graph_templates.php?header=false');

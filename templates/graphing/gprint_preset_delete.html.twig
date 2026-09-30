@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Delete GPRINT Presets'|trans({}, 'gprint') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Delete GPRINT Presets'|trans({}, 'gprint') }}</h1>
+    <p>{{ 'Click Continue to delete the following GPRINT Presets.'|trans({}, 'gprint') }}</p>
+    <ul>
+        {% for preset in presets %}<li>{{ preset.name }}</li>{% endfor %}
+    </ul>
+    {% if used %}<p role="alert">{{ 'GPRINT Presets in use by a graph or graph template cannot be deleted.'|trans({}, 'gprint') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.selection) }}
+        {% if not used %}<button type="submit">{{ 'Continue'|trans({}, 'gprint') }}</button>{% endif %}
+        <a href="{{ listUrl }}">{{ 'Cancel'|trans({}, 'gprint') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

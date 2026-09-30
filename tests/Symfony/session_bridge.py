@@ -109,6 +109,8 @@ def main():
         verify_site_create(harness, session, user_id, check)
         from site_lifecycle_scenarios import verify_site_lifecycle
         verify_site_lifecycle(harness, session, user_id, check)
+        from gprint_preset_scenarios import verify_gprint_presets
+        verify_gprint_presets(harness, session, user_id, check)
         from device_create_scenarios import verify_device_create
         verify_device_create(harness, session, user_id, check)
         response = session.opener.open(harness.base + '/app.php/session')

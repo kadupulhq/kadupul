@@ -82,6 +82,21 @@ services:
     Kadupul\Inventory\Infrastructure\:
         resource: '../src/Inventory/Infrastructure/'
 
+    Kadupul\Graphing\Infrastructure\:
+        resource: '../src/Graphing/Infrastructure/'
+
+    Kadupul\Graphing\Application\Port\GprintPresetAccess:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGprintPresetAccess
+    Kadupul\Graphing\Application\Port\GprintPresetStore:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGprintPresetStore
+    Kadupul\Graphing\Application\Port\GprintPresetPreferences:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGprintPresetPreferences
+    Kadupul\Graphing\Application\Query\ListGprintPresets: ~
+    Kadupul\Graphing\Application\Query\FindGprintPreset: ~
+    Kadupul\Graphing\Application\Query\FindGprintPresets: ~
+    Kadupul\Graphing\Application\Command\SaveGprintPreset: ~
+    Kadupul\Graphing\Application\Command\DeleteGprintPresets: ~
+
     Kadupul\Inventory\Application\Query\ListDevices: ~
 
     Kadupul\Inventory\Application\Query\FindEditableDevice: ~

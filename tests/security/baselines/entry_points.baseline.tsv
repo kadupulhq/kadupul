@@ -54,7 +54,7 @@ data_sources.php	realm:3	include/auth.php
 data_templates.php	realm:11	include/auth.php
 docs/	web-server-denied	nginx; apache .htaccess
 formats/index.php	anonymous-allowed	redirect-only
-gprint_presets.php	realm:5	include/auth.php
+gprint_presets.php	symfony:forward	forwards to app.php/graphing/gprint-presets/legacy
 graph.php	guest-or-realm:7	include/auth.php; guest_account
 graph_image.php	guest-or-realm:7	include/auth.php; guest_account, auth_text
 graph_json.php	guest-or-realm:7	include/auth.php; guest_account, auth_json

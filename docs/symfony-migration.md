@@ -1119,3 +1119,16 @@ but remote writes can survive a later failure. The UI reports an uncertain outco
 in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
+
+## GPRINT presets
+
+`gprint_presets.php` forwards to Symfony routes under `/graphing/gprint-presets`.
+The Graphing module owns the preset list, filters, editor, and deletion confirmation.
+Templates escape preset values; raw GPRINT format text is stored without rewriting it.
+Writes recheck current account policy and console/preset realm grants inside the transaction.
+In-use presets cannot be deleted; stale edit revisions return a conflict.
+Legacy POST forms expire and require a fresh Symfony form. Filter preferences are
+stored per authenticated user in `settings_user` because the shared session is read-only.
+
+Verification includes the Symfony suite and `tests/Symfony/gprint_preset_http.py`,
+which runs real HTTP/MariaDB scenarios in an isolated Docker project.
