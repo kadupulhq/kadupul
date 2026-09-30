@@ -11,6 +11,12 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
+- Check graph permission on a remote data collector before it asks the main poller for a graph image.
+- Keep cached graph and tree permission answers separate for each user, so an emailed report only includes graphs and trees its owner may view.
+- Check that real-time graphs are enabled, that the user has the Real-time realm and that the user may view the graph before a real-time request polls any device or returns a cached image.
+- Save real-time graph preferences only from a token-checked POST; polling by GET no longer changes them.
+- Show the graph page's Real-time button only when real-time graphs are enabled and the user has the Real-time realm.
+- Show a report device item according to the owner's device permission rather than the permission of an unrelated tree.
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
 - Scope remote-agent host operations to the requesting main poller and the receiver's assigned devices; require an authenticated session user for remote graph rendering.
 - Make `plugin_manage.php --allperms` grant existing plugin realms to the configured administrator and report failed grants. Fixes #224.
