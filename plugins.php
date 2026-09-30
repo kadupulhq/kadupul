@@ -59,7 +59,9 @@ if (isset_request_var('mode') && in_array($requested_mode, $modes, true) && isse
                 api_plugin_install($id);
             }
 
-            define('IN_PLUGIN_INSTALL', 1);
+            if (!defined('IN_PLUGIN_INSTALL')) {
+                define('IN_PLUGIN_INSTALL', 1);
+            }
 
             if ($_SESSION['sess_plugins_state'] >= 0) {
                 header('Location: plugins.php?state=5' . ($option != '' ? '&' . $option : ''));
@@ -844,7 +846,7 @@ function plugin_required_for_others($plugin, $table)
 function plugin_required_installed($plugin, $table)
 {
     $not_installed = '';
-    api_plugin_can_install($plugin['infoname'], $not_installed);
+    api_plugin_can_install($plugin['directory'], $not_installed);
     return $not_installed;
 }
 

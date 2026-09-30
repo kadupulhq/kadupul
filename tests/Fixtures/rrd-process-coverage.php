@@ -11,8 +11,11 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
-if (defined('PACKAGE_XML_TEST_COVERAGE')) {
+defined('PACKAGE_XML_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
+||||||| parent of b75f4955f (fix(plugin): align compatibility status and cover native install paths)
+if (defined('PLUGIN_COMPAT_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/plugins.php');
 }
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');

@@ -1458,6 +1458,13 @@ function plugin_is_compatible($plugin)
     global $config;
 
     $info = plugin_load_info_file($config['base_path'] . '/plugins/' . $plugin . '/INFO');
+
+    return plugin_info_compatibility($info);
+}
+
+/** Apply one compatibility verdict to both listing and installation. */
+function plugin_info_compatibility($info)
+{
     $compatibility = is_array($info) && isset($info['compat']) && is_string($info['compat']) ? trim($info['compat']) : '';
 
     if ($compatibility === '' || preg_match('/\\A[0-9]+(?:\\.[0-9]+){0,2}\\z/', $compatibility) !== 1) {
@@ -1507,7 +1514,7 @@ function plugin_load_info_defaults($file, $info, $defaults = array())
         $result['status'] = -3;
     } elseif (strtolower($dir) != strtolower($result['name'])) {
         $result['status'] = -2;
-    } elseif (!isset($result['compat']) || cacti_version_compare(CACTI_VERSION, $result['compat'], '<')) {
+    } elseif (!plugin_info_compatibility($result)['compat']) {
         $result['status'] = -1;
     }
 

@@ -3,89 +3,50 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('plugin install rejects incompatible or invalid core metadata before setup and database writes', function () {
-    $application = dirname(__DIR__, 2);
-    $temporary = sys_get_temp_dir() . '/plugin-compatibility-' . bin2hex(random_bytes(8));
-    $pluginRoot = $temporary . '/plugins';
-    mkdir($pluginRoot, 0700, true);
+require_once __DIR__ . '/../Helpers/PluginCompatibilityNativeHarness.php';
 
-    $bootstrap = $temporary . '/bootstrap.php';
-    $bootstrapSource = <<<'PHP'
-<?php
-define('CACTI_VERSION', '1.3.0');
-function __($message, ...$arguments) { return $arguments ? vsprintf($message, $arguments) : $message; }
-function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
-function cacti_log(...$arguments) {}
-function cacti_version_compare($left, $right, $operator = '>') { return version_compare($left, $right, $operator); }
-function db_fetch_row_prepared(...$arguments) { return false; }
-function db_execute_prepared(...$arguments) { file_put_contents(getenv('PLUGIN_TEST_WRITES'), "write\n", FILE_APPEND); return true; }
-$config = ['base_path' => getenv('PLUGIN_TEST_ROOT')];
-require getenv('PLUGIN_TEST_APPLICATION') . '/lib/plugins.php';
-PHP;
-    file_put_contents($bootstrap, $bootstrapSource);
+test('production plugin compatibility and list status agree at all boundaries', function ($scenario, $expected) {
+    $result = PluginCompatibilityNativeHarness::run($scenario, $this->getTestResultObject()->getCodeCoverage());
+    $check = json_decode($result['stdout'], true, 512, JSON_THROW_ON_ERROR);
+    expect($check['compat']['compat'])->toBe($expected)
+        ->and($check['status'])->toBe($expected ? 0 : (!empty($scenario['missing_info']) ? -4 : -1))
+        ->and($result['setup'])->toBeFalse()->and($result['writes'])->toBe(array());
+})->with(array(
+    array(array('metadata' => 'compat = 1.3.0'), true), array(array('metadata' => 'compat = 1.3.1'), false),
+    array(array('metadata' => 'compat = " 1.2 "'), true), array(array('metadata' => 'compat = 1.2.0.1'), false),
+    array(array('metadata' => 'compat = 1.2.x'), false), array(array('metadata' => 'compat = 1.3.0-dev'), false),
+    array(array('metadata' => ''), false), array(array('metadata' => 'compat[] = 1.2'), false), array(array('missing_info' => true), false)
+));
 
-    $cliSource = file_get_contents($application . '/cli/plugin_manage.php');
-    $originalRequire = "require(__DIR__ . '/../include/cli_check.php');";
-    expect($cliSource)->toContain($originalRequire);
-    $cliSource = str_replace($originalRequire, "require getenv('PLUGIN_TEST_BOOTSTRAP');", $cliSource);
-    $cli = $temporary . '/plugin_manage.php';
-    file_put_contents($cli, $cliSource);
+test('production plugin action links use the lowercase directory and explain failures', function ($metadata, $needle) {
+    $result = PluginCompatibilityNativeHarness::run(array('mode' => 'render', 'metadata' => $metadata), $this->getTestResultObject()->getCodeCoverage());
+    expect($result['stdout'])->toContain($needle);
+})->with(array(array('compat = 1.3.0', 'piinstall'), array('compat = 1.3.1', 'Unable to Install Plugin: Requires: Kadupul &gt;= 1.3.1'), array("compat = 1.3.0\nrequires = absent:99", 'Absent Version 99')));
 
-    $processEnvironment = array_merge($_ENV, [
-        'PLUGIN_TEST_APPLICATION' => $application,
-        'PLUGIN_TEST_BOOTSTRAP' => $bootstrap,
-        'PLUGIN_TEST_ROOT' => $temporary,
-        'PLUGIN_TEST_WRITES' => $temporary . '/database-writes.log',
-    ]);
-
-    $run = static function (array $command) use ($processEnvironment): array {
-        $process = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $processEnvironment);
-        if (!is_resource($process)) {
-            throw new RuntimeException('Could not start isolated plugin process');
-        }
-        fclose($pipes[0]);
-        $stdout = stream_get_contents($pipes[1]);
-        fclose($pipes[1]);
-        $stderr = stream_get_contents($pipes[2]);
-        fclose($pipes[2]);
-        return ['status' => proc_close($process), 'stdout' => $stdout, 'stderr' => $stderr];
-    };
-
-    try {
-        foreach ([
-            'core_too_new_fixture' => "[info]\nname = core_too_new_fixture\ncompat = 99.0.0\n",
-            'core_missing_fixture' => "[info]\nname = core_missing_fixture\n",
-            'core_malformed_fixture' => "[info]\nname = core_malformed_fixture\ncompat = 1.bad\n",
-        ] as $plugin => $metadata) {
-            $directory = $pluginRoot . '/' . $plugin;
-            mkdir($directory, 0700);
-            file_put_contents($directory . '/INFO', $metadata);
-            file_put_contents($directory . '/setup.php', "<?php file_put_contents(" . var_export($temporary . '/' . $plugin . '-setup-ran', true) . ", 'ran');\n");
-
-            $result = $run([PHP_BINARY, $cli, '--plugin=' . $plugin, '--install']);
-            expect($result['status'])->toBe(1, json_encode($result));
-            expect($result['stdout'])->toContain('can not install');
-            expect($result['stderr'])->toBe('');
-            expect(file_exists($temporary . '/' . $plugin . '-setup-ran'))->toBeFalse();
-        }
-
-        expect(file_exists($temporary . '/database-writes.log'))->toBeFalse();
-
-        $compatible = $pluginRoot . '/core_compatible_fixture';
-        mkdir($compatible, 0700);
-        file_put_contents($compatible . '/INFO', "[info]\nname = core_compatible_fixture\ncompat = 1.2\n");
-        $result = $run([PHP_BINARY, '-r', "require getenv('PLUGIN_TEST_BOOTSTRAP'); \$message = ''; exit(api_plugin_can_install('core_compatible_fixture', \$message) ? 0 : 1);"]);
-        expect($result['status'])->toBe(0);
-        expect($result['stderr'])->toBe('');
-
-        $result = $run([PHP_BINARY, '-r', "require getenv('PLUGIN_TEST_BOOTSTRAP'); exit(api_plugin_install('core_too_new_fixture') === false ? 0 : 1);"]);
-        expect($result['status'])->toBe(0);
-        expect(file_exists($temporary . '/core_too_new_fixture-setup-ran'))->toBeFalse();
-        expect(file_exists($temporary . '/database-writes.log'))->toBeFalse();
-    } finally {
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($temporary, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
-            $entry->isDir() ? rmdir($entry->getPathname()) : unlink($entry->getPathname());
-        }
-        rmdir($temporary);
+test('production plugin CLI reports each install outcome accurately', function ($scenario, $expectedStatus, $message, $setup) {
+    $result = PluginCompatibilityNativeHarness::run(array_merge(array('mode' => 'cli'), $scenario), $this->getTestResultObject()->getCodeCoverage());
+    expect($result['status'])->toBe($expectedStatus)->and($result['stdout'])->toContain($message)->and($result['setup'])->toBe($setup);
+    if (!$setup) {
+        expect($result['writes'])->toBe(array());
     }
-});
+})->with(array(
+    array(array('metadata' => 'compat = 99.0.0'), 1, 'can not install', false),
+    array(array('metadata' => ''), 1, 'can not install', false),
+    array(array('plugin' => 'missing'), 1, 'missing plugin directory', false),
+    array(array('persist_fail' => true), 1, 'installation failed', true),
+    array(array(), 0, 'installed successfully', true)
+));
+
+test('production web plugin install rejects incompatibility before setup and accepts compatible metadata', function ($metadata, $compatible) {
+    $result = PluginCompatibilityNativeHarness::run(array('mode' => 'web', 'metadata' => $metadata), $this->getTestResultObject()->getCodeCoverage());
+    expect($result['headers'][0])->toContain('302')->and($result['setup'])->toBe($compatible)->and($result['install_defined'])->toBe($compatible);
+    if (!$compatible) {
+        expect($result['headers'])->toContain('Location: plugins.php?header=false')
+            ->and($result['messages']['dependency_check'])->toContain('Requires: Kadupul >= 99.0.0')
+            ->and($result['writes'])->toBe(array())
+            ->and($result['installed'])->toBe(array());
+    } else {
+        expect($result['writes'])->not->toBeEmpty()
+            ->and($result['installed'])->toBe(array(array('directory' => 'fixture', 'status' => 4)));
+    }
+})->with(array(array('compat = 99.0.0', false), array('compat = 1.3.0', true)));
