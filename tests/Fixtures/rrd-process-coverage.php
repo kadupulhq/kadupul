@@ -76,6 +76,9 @@ if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
 }
+if (defined('CLIENT_ADDR_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+}
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd.php');
 $coverageFilter->includeFile($coverageRoot . '/src/Graphing/Infrastructure/Rrd/ProxyCipher.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/dsdebug.php');
