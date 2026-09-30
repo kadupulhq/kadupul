@@ -35,7 +35,7 @@ final class ForceHttpsNativeBootstrapTest extends TestCase
             $address = stream_socket_get_name($socket, false);
             fclose($socket);
             $environment = array_merge(getenv(), array('HTTPS_NATIVE_ROOT' => $root, 'HTTPS_NATIVE_DIRECTORY' => $directory, 'HTTPS_NATIVE_SCENARIO' => json_encode($scenario, JSON_THROW_ON_ERROR), 'HTTPS_NATIVE_COVERAGE' => $coverage === null ? '0' : '1'));
-            $command = array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'session.save_path=' . $directory, '-S', $address, $root . '/tests/Fixtures/force-https-native-router.php');
+            $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'error_reporting=24575', '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'session.save_path=' . $directory, '-S', $address, $root . '/tests/Fixtures/force-https-native-router.php');
             $process = proc_open($command, array(0 => array('pipe', 'r'), 1 => array('file', $directory . '/stdout.log', 'w'), 2 => array('file', $directory . '/stderr.log', 'w')), $pipes, $directory, $environment);
             self::assertIsResource($process);
             fclose($pipes[0]);
