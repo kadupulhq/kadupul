@@ -173,14 +173,19 @@ input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name
 
 /* Component rules strip outlines; !important keeps the keyboard ring from losing to them on specificity. */
 :focus-visible {
-    outline: 2px solid var(--text-color-highlight-a) !important;
+    outline: 2px solid var(--focus-ring) !important;
     outline-offset: 1px;
+}
+
+.cactiPageHead, .cactiConsoleNavigationArea, .cactiConsoleNavigationBox,
+.cactiConsoleNavigationUserBox, #compact_user_menu, .loginBody, .logoutBody {
+    --focus-ring: var(--focus-ring-navigation);
 }
 
 /* The native box is transparent, so the ring goes on the drawn replacement. */
 input[type="checkbox"]:focus-visible + label:before,
 input[type="radio"]:not([name^="reindex"]):focus-visible + label {
-    outline: 2px solid var(--text-color-highlight-a);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 1px;
 }
 
@@ -2381,7 +2386,7 @@ input:checked + .checkboxSlider {
 }
 
 input:focus-visible + .checkboxSlider {
-    outline: 2px solid var(--text-color-highlight-a);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
 }
 
@@ -2459,7 +2464,7 @@ input:checked + .radioSlider {
 }
 
 input:focus-visible + .radioSlider {
-    outline: 2px solid var(--text-color-highlight-a);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
 }
 

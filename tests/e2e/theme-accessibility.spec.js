@@ -86,28 +86,39 @@ async function contrastAgainstBackground(page, selector, colorOf, against = null
 test.describe('theme keyboard focus', () => {
   const targets = ['plainLink', 'textInput', 'mainTab', 'navLink', 'pageTab', 'saveButton', 'bottomLink'];
 
-  for (const theme of allThemes) {
-    test(`${theme} shows a focus ring for keyboard users`, async ({ page }) => {
-      await openTheme(page, theme);
+  // midwinter's light mode puts the header and navigation on a mid blue, so it
+  // gets its own pass.
+  const passes = allThemes.map((theme) => ({ theme, color: null }))
+    .concat([{ theme: 'midwinter', color: 'light' }]);
+
+  for (const { theme, color } of passes) {
+    const name = color ? `${theme} ${color}` : theme;
+
+    test(`${name} shows a focus ring for keyboard users`, async ({ page }) => {
+      await openTheme(page, theme, color);
 
       for (const id of targets) {
-        // midwinter hides the page footer altogether.
         if (await page.evaluate((target) => document.getElementById(target).getClientRects().length === 0, id)) {
+          // midwinter hides the page footer altogether; any other hidden
+          // target means the fixture no longer exercises it.
+          expect(theme === 'midwinter' && id === 'bottomLink', `${name} #${id} is hidden`).toBe(true);
           continue;
         }
         await tabTo(page, id);
         const ring = await outline(page, `#${id}`);
-        expect(ring.style, `${theme} #${id} outline`).not.toBe('none');
-        expect(ring.width, `${theme} #${id} outline width`).toBeGreaterThan(0);
+        expect(ring.style, `${name} #${id} outline`).not.toBe('none');
+        expect(ring.width, `${name} #${id} outline width`).toBeGreaterThan(0);
 
         if (ringThemes.includes(theme)) {
-          expect(ring.width, `${theme} #${id} outline width`).toBeGreaterThanOrEqual(2);
+          expect(ring.width, `${name} #${id} outline width`).toBeGreaterThanOrEqual(2);
           const ratio = await contrastAgainstBackground(page, `#${id}`, 'outlineColor');
-          expect(ratio, `${theme} #${id} ring contrast`).toBeGreaterThanOrEqual(3);
+          expect(ratio, `${name} #${id} ring contrast`).toBeGreaterThanOrEqual(3);
         }
       }
     });
+  }
 
+  for (const theme of allThemes) {
     test(`${theme} shows no focus ring after a mouse click`, async ({ page }) => {
       await openTheme(page, theme);
 

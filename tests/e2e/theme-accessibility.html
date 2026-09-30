@@ -15,12 +15,13 @@ SPDX-License-Identifier: GPL-3.0-or-later
 			<nav><ul><li><a id="mainTab" class="lefttab" href="#">Console</a></li></ul></nav>
 		</div>
 	</div>
-	<div id="navigation">
-		<ul id="nav">
-			<li class="menuitem"><a class="menu_parent" href="#">Management</a>
-				<ul><li><a id="navLink" href="#">Devices</a></li></ul>
+	<!-- Matches lib/html.php draw_menu() for the open section. -->
+	<div id="navigation" class="cactiConsoleNavigationArea">
+		<div id="menu"><ul id="nav" role="menu">
+			<li class="menuitem" role="menuitem" aria-haspopup="true" id="menu_management"><a class="menu_parent active" href="#">Management</a>
+				<ul role="menu" id="menu_management_div" style="display:block;"><li><a id="navLink" href="#">Devices</a></li></ul>
 			</li>
-		</ul>
+		</ul></div>
 	</div>
 	<div class="tabs">
 		<nav><ul><li><a id="pageTab" href="#">General</a></li></ul></nav>
