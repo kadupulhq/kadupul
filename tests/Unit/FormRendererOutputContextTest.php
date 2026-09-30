@@ -63,7 +63,15 @@ final class FormRendererOutputContextTest extends TestCase
     public function testSharedNativeInputStatePreservesDefaultsAndErrors(array $scenario, string $value, bool $error): void
     {
         $result = $this->render($scenario);
-        self::assertStringContainsString("value='" . htmlspecialchars($value, ENT_QUOTES) . "'", $result['html']);
+        $document = new DOMDocument();
+        $previous = libxml_use_internal_errors(true);
+        try {
+            self::assertTrue($document->loadHTML($result['html'], LIBXML_NONET));
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+        self::assertSame($value, $document->getElementsByTagName('input')->item(0)->getAttribute('value'));
         self::assertSame($error, str_contains($result['html'], 'txtErrorTextBox'));
         self::assertArrayNotHasKey('fixture', $result['session']['sess_error_fields'] ?? array());
     }
@@ -77,6 +85,33 @@ final class FormRendererOutputContextTest extends TestCase
             $cases[] = array(array('input' => $input, 'value' => '', 'current_id' => 1, 'session' => array('sess_error_fields' => array())), '', false);
         }
         return $cases;
+    }
+
+    public function testNativeEditFormHandsOffCheckboxFileFontAndColourControls(): void
+    {
+        $result = $this->render(array('controls' => true));
+        $document = new DOMDocument();
+        $previous = libxml_use_internal_errors(true);
+        try {
+            self::assertTrue($document->loadHTML($result['html'], LIBXML_NONET));
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+        $xpath = new DOMXPath($document);
+        foreach (array('filepath', 'font') as $id) {
+            $input = $xpath->query('//input[@id="' . $id . '"]')->item(0);
+            self::assertSame($id, $input->getAttribute('name'));
+            self::assertSame('saved', $input->getAttribute('value'));
+            self::assertSame('64', $input->getAttribute('maxlength'));
+        }
+        self::assertTrue($xpath->query('//input[@id="enabled"]')->item(0)->hasAttribute('checked'));
+        $file = $xpath->query('//input[@id="file"]')->item(0);
+        self::assertSame('file', $file->getAttribute('type'));
+        self::assertSame('.xml', $file->getAttribute('accept'));
+        $colour = $xpath->query('//select[@id="drop_color"]')->item(0);
+        self::assertSame('background-color: #FFFFFF;', $colour->getAttribute('style'));
+        self::assertTrue($xpath->query('//select[@id="drop_color"]/option[@value="5"]')->item(0)->hasAttribute('selected'));
     }
 
     private function render(array $scenario): array

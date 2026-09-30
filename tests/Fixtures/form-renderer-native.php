@@ -12,22 +12,41 @@ if (isset($argv[2])) {
 require $root . '/include/global_constants.php';
 require $root . '/lib/functions.php';
 require $root . '/lib/headers_secure.php';
-function html_escape($message)
+require $root . '/lib/html.php';
+require $root . '/lib/html_utility.php';
+function __($message, ...$arguments)
 {
-    return cacti_html_context_escape($message, CACTI_ESC_ATTR);
-}
-function __($message)
-{
-    return $message;
+    return $arguments ? vsprintf($message, $arguments) : $message;
 }
 function __esc($message)
 {
     return cacti_html_context_escape($message, CACTI_ESC_ELEMENT);
 }
 require $root . '/lib/html_form.php';
+function db_fetch_cell_prepared($sql, $params)
+{
+    $statement = $GLOBALS['db']->prepare($sql);
+    $statement->execute($params);
+    return $statement->fetchColumn();
+}
+function db_fetch_assoc($sql)
+{
+    return $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+
 $_SESSION = $scenario['session'] ?? array();
 ob_start();
-if (isset($scenario['input'])) {
+if (!empty($scenario['controls'])) {
+    $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    $db->exec("CREATE TABLE colors(id INTEGER PRIMARY KEY, hex TEXT, name TEXT); INSERT INTO colors VALUES(5,'FFFFFF','White')");
+    $config = array('is_web' => false, 'config_options_array' => array('hide_form_description' => 'off'));
+    $fields = array();
+    foreach (array('filepath', 'font', 'file', 'drop_color') as $method) {
+        $fields[$method] = array('method' => $method, 'friendly_name' => ucfirst($method), 'value' => $method === 'drop_color' ? '5' : 'saved', 'default' => '', 'form_id' => 1, 'max_length' => 64, 'accept' => '.xml');
+    }
+    $fields['font']['sub_checkbox'] = array('name' => 'enabled', 'value' => 'on');
+    draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => $fields));
+} elseif (isset($scenario['input'])) {
     $function = $scenario['input'] === 'directory' ? 'form_dirpath_box' : 'form_font_box';
     $function('fixture', $scenario['value'] ?? '', 'default', 64, 30, 'text', $scenario['current_id'] ?? 0);
 } else {
