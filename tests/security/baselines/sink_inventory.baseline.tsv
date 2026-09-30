@@ -268,10 +268,10 @@ dynamic_include	./color_templates.php:363		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:413		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:469		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./graph_realtime.php:388	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
-dynamic_include	./include/auth.php:125	                require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/auth.php:187	            require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/csrf.php:16	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
-dynamic_include	./include/csrf.php:49	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
+dynamic_include	./include/auth.php:140	                require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/auth.php:207	            require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/csrf.php:375	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
+dynamic_include	./include/csrf.php:44	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/global.php:266	include_once($config['library_path'] . '/database.php');
 dynamic_include	./include/global.php:267	include_once($config['library_path'] . '/functions.php');
 dynamic_include	./include/global.php:268	include_once($config['library_path'] . '/headers_secure.php');
@@ -535,7 +535,7 @@ fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosem
 fs_write	./cli/import_template.php:105				$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/input_whitelist.php:171			file_put_contents($config['input_whitelist'], json_encode($input));
 fs_write	./cli/md5sum.php:163		if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-fs_write	./cli/refresh_csrf.php:68	    $fh = fopen($path_csrf_secret, 'w');
+fs_write	./cli/refresh_csrf.php:90	    $fh = fopen($path_csrf_secret, 'w');
 fs_write	./cli/splice_rrd.php:268		$handle = fopen($xmlfile, 'x');
 fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:339	file_put_contents($newxmlfile, $new_xml);
@@ -828,8 +828,9 @@ header_redirect	./host_templates.php:64			header('Location: host_templates.php?h
 header_redirect	./images/index.php:7	header("Location:../index.php");
 header_redirect	./include/auth.php:34	    header('Location: ' . $config['url_path'] . 'install/');
 header_redirect	./include/auth.php:70	            header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+header_redirect	./include/auth.php:94	                        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
-header_redirect	./include/csrf.php:44	    header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
+header_redirect	./include/csrf.php:248	    header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
 header_redirect	./include/global.php:425	            header('Location: ' . $https_redirect);
 header_redirect	./include/index.php:7	header("Location:../index.php");
 header_redirect	./include/js/LC_MESSAGES/index.php:7	header("Location:../index.php");
@@ -857,14 +858,14 @@ header_redirect	./include/themes/sunrise/default/index.php:7	header("Location:..
 header_redirect	./include/themes/sunrise/images/index.php:7	header("Location:../index.php");
 header_redirect	./include/themes/sunrise/index.php:7	header("Location:../index.php");
 header_redirect	./install/upgrades/index.php:7	header("Location:../../index.php");
-header_redirect	./lib/auth.php:4516	            header('Location: auth_changepassword.php?header=false');
-header_redirect	./lib/auth.php:5009	                header('Location: ' . $referer);
-header_redirect	./lib/auth.php:5013	                header('Location: graph_view.php');
-header_redirect	./lib/auth.php:5017	                header('Location: index.php');
-header_redirect	./lib/auth.php:5023	                header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
-header_redirect	./lib/auth.php:5025	                header('Location: ' . $config['url_path'] . 'index.php' . ($newtheme ? '?newtheme=1' : ''));
-header_redirect	./lib/auth.php:5030	            header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
-header_redirect	./lib/auth.php:5236	        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
+header_redirect	./lib/auth.php:4538	            header('Location: auth_changepassword.php?header=false');
+header_redirect	./lib/auth.php:5049	                header('Location: ' . $referer);
+header_redirect	./lib/auth.php:5053	                header('Location: graph_view.php');
+header_redirect	./lib/auth.php:5057	                header('Location: index.php');
+header_redirect	./lib/auth.php:5063	                header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
+header_redirect	./lib/auth.php:5065	                header('Location: ' . $config['url_path'] . 'index.php' . ($newtheme ? '?newtheme=1' : ''));
+header_redirect	./lib/auth.php:5070	            header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
+header_redirect	./lib/auth.php:5280	        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
 header_redirect	./lib/clog_webapi.php:88	        header('Location: ' . get_current_page());
 header_redirect	./lib/functions.php:8583	    header('Location: ' . $save_url);
 header_redirect	./lib/functions.php:8607	    header('Location: ' . $safe_url, true, $status);
