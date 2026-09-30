@@ -1,10 +1,12 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
+cacti_require_post_actions(array('item_remove', 'item_moveup', 'item_movedown'));
 require_once(__DIR__ . '/lib/graph_item_editor.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/template.php');

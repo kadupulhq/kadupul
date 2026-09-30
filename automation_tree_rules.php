@@ -1,12 +1,13 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'item_moveup', 'item_movedown', 'item_remove'));
 include_once('./lib/data_query.php');
 
 $automation_tree_rules_actions = array(

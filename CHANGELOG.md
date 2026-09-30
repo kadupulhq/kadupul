@@ -134,6 +134,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
 - Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
+- Require a POST with a CSRF token to move, delete or add items on the CDEF, VDEF, color template, graph, graph template, data source, data template, data query, data source profile, device template, automation, tree and external link pages. Their move and delete links now post from the page and load the result in place; a GET for these actions gets 405.
 
 ### Changed
 

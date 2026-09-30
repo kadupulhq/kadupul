@@ -50,6 +50,8 @@ function set_request_var($name, $value)
     $GLOBALS['request'][$name] = $value;
 }
 function set_default_action() {}
+// ItemActionMutationCsrfTest covers the POST requirement; this fixture drives the handlers.
+function cacti_require_post_actions(array $actions) {}
 function cacti_sizeof($value)
 {
     return is_array($value) ? count($value) : 0;

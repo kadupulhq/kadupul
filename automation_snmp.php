@@ -1,12 +1,13 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'item_moveup', 'item_movedown', 'item_remove'));
 include_once('./lib/snmp.php');
 
 $automation_snmp_actions = array(
@@ -576,13 +577,13 @@ function automation_snmp_edit()
 
                 if (read_config_option('drag_and_drop') == '') {
                     if ($i < $total_items && $total_items > 1) {
-                        $form_data .= '<a class="pic fa fa-caret-down moveArrow" href="' . html_escape('automation_snmp.php?action=item_movedown&item_id=' . $item['id'] . '&id=' . $item['snmp_id']) . '" title="' . __esc('Move Down') . '"></a>';
+                        $form_data .= '<a class="pic fa fa-caret-down moveArrow cactiPostAction" href="#" data-url="' . html_escape('automation_snmp.php?action=item_movedown&item_id=' . $item['id'] . '&id=' . $item['snmp_id']) . '" title="' . __esc('Move Down') . '"></a>';
                     } else {
                         $form_data .= '<span class="moveArrowNone"></span>';
                     }
 
                     if ($i > 1 && $i <= $total_items) {
-                        $form_data .= '<a class="pic fa fa-caret-up moveArrow" href="' . html_escape('automation_snmp.php?action=item_moveup&item_id=' . $item['id'] . '&id=' . $item['snmp_id']) . '" title="' . __esc('Move Up') . '"></a>';
+                        $form_data .= '<a class="pic fa fa-caret-up moveArrow cactiPostAction" href="#" data-url="' . html_escape('automation_snmp.php?action=item_moveup&item_id=' . $item['id'] . '&id=' . $item['snmp_id']) . '" title="' . __esc('Move Up') . '"></a>';
                     } else {
                         $form_data .= '<span class="moveArrowNone"></span>';
                     }

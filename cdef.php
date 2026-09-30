@@ -1,12 +1,13 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'item_remove', 'item_moveup', 'item_movedown'));
 include_once('./lib/cdef.php');
 
 $cdef_actions = array(
@@ -618,13 +619,13 @@ function cdef_edit()
 						<?php
                         if (read_config_option('drag_and_drop') == '') {
                             if ($i < $total_items && $total_items > 0) {
-                                echo '<a class="pic fa fa-caret-down moveArrow" href="' . html_escape('cdef.php?action=item_movedown&id=' . $cdef_item['id'] . '&cdef_id=' . $cdef_item['cdef_id']) . '" title="' . __esc('Move Down') . '"></a>';
+                                echo '<a class="pic fa fa-caret-down moveArrow cactiPostAction" href="#" data-url="' . html_escape('cdef.php?action=item_movedown&id=' . $cdef_item['id'] . '&cdef_id=' . $cdef_item['cdef_id']) . '" title="' . __esc('Move Down') . '"></a>';
                             } else {
                                 echo '<span class="moveArrowNone"></span>';
                             }
 
                             if ($i > 1 && $i <= $total_items) {
-                                echo '<a class="pic fa fa-caret-up moveArrow" href="' . html_escape('cdef.php?action=item_moveup&id=' . $cdef_item['id'] . '&cdef_id=' . $cdef_item['cdef_id']) . '" title="' . __esc('Move Up') . '"></a>';
+                                echo '<a class="pic fa fa-caret-up moveArrow cactiPostAction" href="#" data-url="' . html_escape('cdef.php?action=item_moveup&id=' . $cdef_item['id'] . '&cdef_id=' . $cdef_item['cdef_id']) . '" title="' . __esc('Move Up') . '"></a>';
                             } else {
                                 echo '<span class="moveArrowNone"></span>';
                             }
