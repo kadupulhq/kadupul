@@ -7,7 +7,7 @@
  * A local login for an unknown username must do the same password hashing
  * work as one for a known username, or response time shows which usernames
  * exist. The shipped login functions run in a child process against a
- * counting password verifier.
+ * counting password verifier and hasher.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
@@ -41,6 +41,10 @@ function compat_password_verify($password, $hash) {
     return $hash === 'known-hash' && $password === 'right';
 }
 function compat_password_needs_rehash($password, $algo, $options = array()) { return false; }
+function compat_password_hash($password, $algo, $options = array()) {
+    $GLOBALS['hashes'][] = 'hash:' . $algo;
+    return 'new-hash';
+}
 $GLOBALS['scenario'] = $scenario;
 PHP;
 
@@ -81,16 +85,10 @@ test('an unknown username runs as many password verifications as a known one', f
         ->and(count($unknown['hashes']))->toBe(count($known['hashes']));
 })->with(array('wrong password' => 'guess', 'blank password' => ''));
 
-test('the stand-in hash costs what PHP uses for new password hashes', function () {
+test('the stand-in work hashes at the PASSWORD_DEFAULT cost', function () {
     $unknown = local_login_timing_run('nobody', 'guess');
-    $current = password_get_info(password_hash('probe', PASSWORD_DEFAULT));
 
-    expect($unknown['hashes'])->toHaveCount(2);
-
-    foreach ($unknown['hashes'] as $hash) {
-        expect(password_get_info($hash)['algoName'])->toBe($current['algoName'])
-            ->and(password_get_info($hash)['options']['cost'])->toBe($current['options']['cost']);
-    }
+    expect($unknown['hashes'])->toBe(array('hash:' . PASSWORD_DEFAULT, 'hash:' . PASSWORD_DEFAULT));
 });
 
 test('a correct password still returns the account', function () {

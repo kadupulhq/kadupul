@@ -4749,9 +4749,10 @@ function is_user_perms_valid($user_id)
  *   for an account that has no stored password as a stored hash would cost,
  *   and discard the result.
  *
- * The fixed hash belongs to no account. Its cost is 12, the PASSWORD_DEFAULT
- * cost from PHP 8.4, the lowest version main supports, which is also the cost
- * local logins rehash stored passwords to.
+ * Hashing with PASSWORD_DEFAULT runs one bcrypt pass at the cost local logins
+ * rehash stored passwords to, which is the work verifying such a hash takes.
+ * Hashing rather than verifying against a fixed hash keeps the cost in step
+ * with PASSWORD_DEFAULT and keeps a hash literal out of the source.
  *
  * @param  (string) $password - the password the client sent
  *
@@ -4759,7 +4760,7 @@ function is_user_perms_valid($user_id)
  */
 function auth_unknown_user_password_verify($password)
 {
-    compat_password_verify((string) $password, '$2y$12$wmB0d6QbaauWtucY8b5uRO0Ft7FfFB7LFmZXdJWUPz2MFO0HzsW26');
+    compat_password_hash((string) $password, PASSWORD_DEFAULT);
 }
 
 /**
