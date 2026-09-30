@@ -783,8 +783,8 @@ header_redirect	./graph_templates_items.php:281	            header('Location: gr
 header_redirect	./graph_templates_items.php:62	        header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:69	        header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:76	        header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
-header_redirect	./graph_view.php:169		header('Location: graph_view.php?action=list&header=false');
-header_redirect	./graph_view.php:370				header('Location: permission_denied.php');
+header_redirect	./graph_view.php:174	        header('Location: graph_view.php?action=list&header=false');
+header_redirect	./graph_view.php:381	                header('Location: permission_denied.php');
 header_redirect	./graphs.php:1299			header('Location: graphs.php?header=false');
 header_redirect	./graphs.php:1474				header('Location: graphs.php');
 header_redirect	./graphs.php:273				header('Location: graphs.php?action=graph_edit&header=false&id=' . $local_graph_id);

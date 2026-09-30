@@ -48,6 +48,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Replace Font Awesome 4 icon names that render blank: the paper-plane scroll-to-top button and the sunrise logo now show their icons, and paper-plane and paw no longer turn delete icons into an undefined class. The paw theme also shows its logo on the logout page.
 - Disable network access while parsing imported package XML. Fixes #578.
 - Keep SNMP agent cache values on one `pass_persist` protocol line by removing embedded carriage returns and line feeds before storage and output.
+- Normalize Graph View graph-list values before storing them in the session, escape them in HTML, and encode them for JavaScript. Removing the last selected graph now clears the stored selection, while paging preserves it. Fixes #574.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
