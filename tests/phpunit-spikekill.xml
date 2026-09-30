@@ -63,6 +63,7 @@
       <file>./Unit/Security/Auth/GroupChangeResetsPermsTest.php</file>
       <file>./Unit/Security/Auth/GroupCopyTest.php</file>
       <file>./Unit/Security/Auth/GroupMissingIdTest.php</file>
+      <file>./Unit/Security/Auth/AdminPasswordPolicyTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>

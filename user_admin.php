@@ -45,13 +45,8 @@ if (isset_request_var('update_policy')) {
 
             break;
         case 'checkpass':
-            $error = secpass_check_pass(get_nfilter_request_var('password'));
-
-            if ($error == '') {
-                print $error;
-            } else {
-                print 'ok';
-            }
+            // 'ok' or the rule the password breaks, which the form shows.
+            print secpass_check_pass(get_nfilter_request_var('password'));
 
             break;
         default:
@@ -587,6 +582,31 @@ function form_save()
         /* check to make sure the passwords match; if not error */
         if (get_nfilter_request_var('password') != get_nfilter_request_var('password_confirm')) {
             raise_message(4);
+
+            $_SESSION['sess_error_fields']['password_confirm'] = 'password_confirm';
+        } elseif (get_nfilter_request_var('password') != '' && get_nfilter_request_var('realm', 0) == 0) {
+            // A local password set here obeys the rules a user's own change does.
+            $policy = secpass_check_pass(get_nfilter_request_var('password'));
+
+            if ($policy != 'ok') {
+                raise_message('password_policy', $policy, MESSAGE_LEVEL_ERROR);
+
+                $_SESSION['sess_error_fields']['password'] = 'password';
+            } elseif (!secpass_check_history(get_nfilter_request_var('id'), get_nfilter_request_var('password'))) {
+                raise_message('password_history', __('You cannot use a previously entered password!'), MESSAGE_LEVEL_ERROR);
+
+                $_SESSION['sess_error_fields']['password'] = 'password';
+            } elseif ($old_password != '' && intval(read_config_option('secpass_history')) > 0) {
+                $keep   = intval(read_config_option('secpass_history'));
+                $hashes = $history == '' ? array() : explode('|', $history);
+
+                while (cacti_count($hashes) > $keep - 1) {
+                    array_shift($hashes);
+                }
+
+                $hashes[] = $old_password;
+                $history  = implode('|', $hashes);
+            }
         }
 
         if (get_nfilter_request_var('must_change_password') == 'on' && get_nfilter_request_var('password_change') != 'on') {

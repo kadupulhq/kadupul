@@ -26,6 +26,7 @@ if (!function_exists('user_admin_save_probe_run')) {
 
         $program = <<<'PHP'
 $scenario = json_decode(stream_get_contents(STDIN), true);
+define('MESSAGE_LEVEL_ERROR', 3);
 $_SESSION = $scenario['session'] ?? array();
 $_POST = array();
 $GLOBALS['request'] = $scenario['request'];
@@ -35,7 +36,6 @@ foreach ($scenario['users'] as $row) {
 }
 $GLOBALS['config_options'] = $scenario['config'] ?? array();
 $GLOBALS['messages'] = array();
-$GLOBALS['field_errors'] = array();
 $GLOBALS['executed'] = array();
 $GLOBALS['saved'] = null;
 function isset_request_var($name) { return isset($GLOBALS['request'][$name]); }
@@ -68,7 +68,7 @@ function sql_save($save, $table) {
 }
 function read_config_option($name, $force = false) { return $GLOBALS['config_options'][$name] ?? ''; }
 function is_template_account($user_id) { return false; }
-function is_error_message() { return cacti_sizeof($GLOBALS['field_errors']) > 0 || in_array(4, $GLOBALS['messages'], true); }
+function is_error_message() { return isset($_SESSION['sess_error_fields']) && cacti_sizeof($_SESSION['sess_error_fields']) > 0; }
 function api_plugin_hook_function($name, $parm = null) { return $parm; }
 function raise_message($id, $message = '', $level = 0) { $GLOBALS['messages'][] = $id; }
 function raise_message_javascript($title, $header, $message) { $GLOBALS['messages'][] = $message; }
@@ -89,7 +89,6 @@ print json_encode(array(
     'session' => $_SESSION,
     'saved' => $GLOBALS['saved'],
     'messages' => $GLOBALS['messages'],
-    'field_errors' => $GLOBALS['field_errors'],
     'executed' => $GLOBALS['executed'],
     'users' => $GLOBALS['users'],
 ));

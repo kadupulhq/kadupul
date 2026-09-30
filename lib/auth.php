@@ -4631,6 +4631,11 @@ function secpass_check_history($id, $password)
             array($id)
         );
 
+        // A new or disabled account has no history to repeat.
+        if (!cacti_sizeof($user)) {
+            return true;
+        }
+
         if (compat_password_verify($password, $user['password'])) {
             return false;
         }
