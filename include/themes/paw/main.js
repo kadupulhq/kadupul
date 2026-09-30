@@ -14,7 +14,7 @@ function themeReady() {
 	var hostOpen = false;
 
 	if ($('#cactiPageBottom').length == 0) {
-		$('<div id="cactiPageBottom" class="cactiPageBottom"></a></div>').insertAfter('#cactiContent');
+		$('<div id="cactiPageBottom" class="cactiPageBottom"></div>').insertAfter('#cactiContent');
 	}
 
 	// Setup the navigation menu
@@ -40,14 +40,15 @@ function themeReady() {
 	/* Start clean up */
 
 	//login page
-	$('.cactiLoginLogo').html("<i class='fa fa-paw'/>").css('font-size: 20px');
+	$('.cactiLoginLogo').html("<i class='fa fa-paw'/>");
+	$('.cactiLogoutLogo').html("<i class='fa fa-paw'/>");
 
 	/* clean up the navigation menu */
 	$('.cactiConsoleNavigationArea').find('#menu').appendTo($('.cactiConsoleNavigationArea').find('#navigation'));
 	$('.cactiConsoleNavigationArea').find('#navigation > table').remove();
 
 	$('.maintabs nav ul li a.lefttab').each( function() {
-		id = $(this).attr('id');
+		var id = $(this).attr('id');
 
 		if (id == 'tab-graphs' && $(this).parent().hasClass('maintabs-has-submenu') == 0 ) {
 			$(this).parent().addClass('maintabs-has-submenu');
@@ -154,7 +155,7 @@ function themeReady() {
 		minLength: 0,
 		select: function(event,ui) {
 			$('#host_id').val(ui.item.id);
-			callBack = $('#call_back').val();
+			var callBack = $('#call_back').val();
 			if (callBack != 'undefined') {
 				if (callBack.indexOf('applyFilter') >= 0) {
 					applyFilter();
@@ -222,7 +223,7 @@ function themeReady() {
 }
 
 function setMenuVisibility() {
-	storage=Storages.localStorage;
+	var storage = Storages.localStorage;
 
 	// Initialize the navigation settings
 	// This will setup the initial visibility of the menu
@@ -259,7 +260,7 @@ function setMenuVisibility() {
 	$('#nav li:has(ul) a.active').unbind().click(function(event) {
 		event.preventDefault();
 
-		id = $(this).closest('.menuitem').attr('id');
+		var id = $(this).closest('.menuitem').attr('id');
 
 		if ($(this).next().is(':visible')) {
 			$(this).next('ul').attr('aria-hidden', 'true').attr('aria-expanded', 'false');
@@ -276,9 +277,6 @@ function setMenuVisibility() {
 		}
 
 		$('li.menuitem').not('#'+id).each(function() {
-			text = $(this).attr('id');
-			id   = $(this).attr('id');
-
 			$(this).find('ul').attr('aria-hidden', 'true').attr('aria-expanded', 'false');
 			$(this).find('ul').slideUp( { duration: 200, easing: 'swing' } );
 			storage.set($(this).attr('id'), 'collapsed');

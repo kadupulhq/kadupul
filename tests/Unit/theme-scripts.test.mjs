@@ -217,3 +217,36 @@ test('dark no longer binds a change handler to colour dropdowns', () => {
   assert.deepEqual(calls.filter(c => c.selector === '.colordropdown'), []);
   assert.doesNotMatch(read('include/themes/dark/main.js'), /background-color:#'\+color\+',/);
 });
+
+test('paw keeps its helpers local, sets both logos and inserts balanced footer markup', () => {
+  const host = { attrs: { id: 'host' } };
+  const callBack = { value: 'applyFilter()' };
+  const menuLink = { closest: { attrs: { id: 'menu_console' } }, next: undefined };
+  const otherItem = { attrs: { id: 'menu_graphs' } };
+  const loginLogo = {};
+  const logoutLogo = {};
+  const { context, calls } = loadTheme('paw', {
+    '#host': [host],
+    '#call_back': [callBack],
+    '#nav li:has(ul) a.active': [menuLink],
+    'li.menuitem': [otherItem],
+    '.cactiLoginLogo': [loginLogo],
+    '.cactiLogoutLogo': [logoutLogo],
+  });
+  const before = new Set(Object.keys(context));
+
+  context.themeReady();
+  host.autocomplete.select.call(host, {}, { item: { id: 7 } });
+  menuLink.events.find(e => e.type === 'click').fn.call(menuLink, { preventDefault() {} });
+
+  const leaked = Object.keys(context).filter(key => !before.has(key) && key !== 'filtered');
+  assert.deepEqual(leaked, []);
+  assert.equal(context.filtered, 1, 'the host call back still runs');
+  assert.match(loginLogo.html, /fa-paw/);
+  assert.match(logoutLogo.html, /fa-paw/);
+  assert.deepEqual(calls.filter(c => c.method === 'css' && c.args[1] === undefined && typeof c.args[0] === 'string'), [],
+    'no css() getter is called for its side effect');
+
+  const markup = read('include/themes/paw/main.js').match(/\$\('(<div id="cactiPageBottom"[^']*)'\)/)[1];
+  assert.equal((markup.match(/<a\b/g) || []).length, (markup.match(/<\/a>/g) || []).length);
+});
