@@ -38,6 +38,7 @@ $GLOBALS['config_options'] = $scenario['config'] ?? array();
 $GLOBALS['messages'] = array();
 $GLOBALS['executed'] = array();
 $GLOBALS['saved'] = null;
+$GLOBALS['scenario_templates'] = array_map('strval', $scenario['template_accounts'] ?? array());
 function isset_request_var($name) { return isset($GLOBALS['request'][$name]); }
 function get_filter_request_var($name, $filter = FILTER_VALIDATE_INT, $options = array()) { return $GLOBALS['request'][$name] ?? ''; }
 function get_nfilter_request_var($name, $default = '') { return $GLOBALS['request'][$name] ?? $default; }
@@ -67,7 +68,7 @@ function sql_save($save, $table) {
     return $save['id'];
 }
 function read_config_option($name, $force = false) { return $GLOBALS['config_options'][$name] ?? ''; }
-function is_template_account($user_id) { return false; }
+function is_template_account($user_id) { return in_array((string) $user_id, $GLOBALS['scenario_templates'], true); }
 function is_error_message() { return isset($_SESSION['sess_error_fields']) && cacti_sizeof($_SESSION['sess_error_fields']) > 0; }
 function api_plugin_hook_function($name, $parm = null) { return $parm; }
 function raise_message($id, $message = '', $level = 0) { $GLOBALS['messages'][] = $id; }

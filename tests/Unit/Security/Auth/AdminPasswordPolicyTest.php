@@ -116,6 +116,72 @@ test('an account outside the local realm is not held to the local rules', functi
         ->and($result['messages'])->not->toContain('password_policy');
 });
 
+function admin_realm_save(array $request, array $alice, array $templates = array()): array
+{
+    return user_admin_save_probe_run(array(
+        'session' => array('sess_user_id' => 1),
+        'request' => $request + array('save_component_user' => 1, 'id' => 42, 'username' => 'alice', 'enabled' => 'on', 'password' => '', 'password_confirm' => ''),
+        'users' => array(
+            array('id' => 1, 'username' => 'admin', 'realm' => 0, 'password' => 'hash:admin', 'password_history' => '', 'enabled' => 'on'),
+            $alice + array('id' => 42, 'username' => 'alice', 'password_history' => '', 'enabled' => 'on'),
+        ),
+        'template_accounts' => $templates,
+        'config' => array('secpass_minlen' => 8, 'secpass_reqnum' => 'on', 'secpass_reqmixcase' => 'on'),
+        'auth_functions' => array('auth_session_credential_key', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
+    ));
+}
+
+test('a weak password set in another realm cannot be carried into the local realm', function () {
+    $step1 = admin_realm_save(array('realm' => 3, 'password' => 'short', 'password_confirm' => 'short'), array('realm' => 0, 'password' => 'hash:Old-pass1'));
+
+    expect($step1['saved']['password'] ?? null)->toBe('hash:short');
+
+    $step2 = admin_realm_save(array('realm' => 0), $step1['users']['42']);
+
+    expect($step2['saved'])->toBeNull()
+        ->and($step2['messages'])->toContain('password_policy')
+        ->and($step2['session']['sess_error_fields'] ?? array())->toBe(array('password' => 'password'))
+        ->and($step2['users']['42']['realm'])->toBe(3);
+});
+
+test('moving an account to the local realm with a password that meets the rules is saved', function () {
+    $result = admin_realm_save(array('realm' => 0, 'password' => 'Str0ngpass', 'password_confirm' => 'Str0ngpass'), array('realm' => 3, 'password' => 'hash:short'));
+
+    expect($result['saved']['realm'] ?? null)->toBe(0)
+        ->and($result['saved']['password'] ?? null)->toBe('hash:Str0ngpass');
+});
+
+test('moving an account to the local realm with a weak password is refused', function () {
+    $result = admin_realm_save(array('realm' => 0, 'password' => 'short', 'password_confirm' => 'short'), array('realm' => 3, 'password' => 'hash:short'));
+
+    expect($result['saved'])->toBeNull()
+        ->and($result['messages'])->toContain('password_policy');
+});
+
+test('a local account saved without a realm field keeps its realm and the local rules', function () {
+    $weak = admin_realm_save(array('password' => 'short', 'password_confirm' => 'short'), array('realm' => 0, 'password' => 'hash:Old-pass1'));
+    $blank = admin_realm_save(array(), array('realm' => 0, 'password' => 'hash:Old-pass1'));
+
+    expect($weak['saved'])->toBeNull()
+        ->and($weak['messages'])->toContain('password_policy')
+        ->and($blank['saved']['realm'] ?? null)->toBe(0)
+        ->and($blank['saved']['password'] ?? null)->toBe('hash:Old-pass1');
+});
+
+test('an account outside the local realm saved without a realm field stays there', function () {
+    $result = admin_realm_save(array(), array('realm' => 3, 'password' => 'hash:short'));
+
+    expect($result['saved']['realm'] ?? null)->toBe(3)
+        ->and($result['messages'])->not->toContain('password_policy');
+});
+
+test('a template account is held to the local rules whatever realm is posted', function () {
+    $result = admin_realm_save(array('realm' => 3, 'password' => 'short', 'password_confirm' => 'short'), array('realm' => 0, 'password' => 'hash:Old-pass1'), array('42'));
+
+    expect($result['saved'])->toBeNull()
+        ->and($result['messages'])->toContain('password_policy');
+});
+
 test('the live check reports the rule a password breaks', function () {
     expect(admin_password_checkpass('Str0ngpass'))->toBe('ok')
         ->and(admin_password_checkpass('abc'))->toBe('Password must be at least 8 characters!')

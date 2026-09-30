@@ -604,6 +604,18 @@ function form_save()
             array(get_nfilter_request_var('id'))
         );
 
+        $old_realm = db_fetch_cell_prepared('SELECT realm FROM user_auth WHERE id = ?', array(get_nfilter_request_var('id')));
+
+        // The local rules follow the realm this save stores. A template account
+        // is always local, whatever realm the request names.
+        if (is_template_account(get_nfilter_request_var('id'))) {
+            $realm = 0;
+        } elseif (get_nfilter_request_var('realm') != '') {
+            $realm = get_nfilter_request_var('realm');
+        } else {
+            $realm = (int) $old_realm;
+        }
+
         if ((get_nfilter_request_var('password') == '') && (get_nfilter_request_var('password_confirm') == '')) {
             $password = $old_password;
         } else {
@@ -624,7 +636,7 @@ function form_save()
             raise_message(4);
 
             $_SESSION['sess_error_fields']['password_confirm'] = 'password_confirm';
-        } elseif (get_nfilter_request_var('password') != '' && get_nfilter_request_var('realm', 0) == 0) {
+        } elseif (get_nfilter_request_var('password') != '' && $realm == 0) {
             // A local password set here obeys the rules a user's own change does.
             $policy = secpass_check_pass(get_nfilter_request_var('password'));
 
@@ -647,6 +659,11 @@ function form_save()
                 $hashes[] = $old_password;
                 $history  = implode('|', $hashes);
             }
+        } elseif ($realm == 0 && (int) $old_realm != 0) {
+            // The stored hash was set in another realm and never met the local rules.
+            raise_message('password_policy', __('Set a new password to move this account to the Local realm.'), MESSAGE_LEVEL_ERROR);
+
+            $_SESSION['sess_error_fields']['password'] = 'password';
         }
 
         if (get_nfilter_request_var('must_change_password') == 'on' && get_nfilter_request_var('password_change') != 'on') {
@@ -669,13 +686,13 @@ function form_save()
         /* force enable/disable on template accounts */
         if (read_config_option('admin_user') == get_nfilter_request_var('id')) {
             $save['enabled'] = 'on';
-            $save['realm']   = get_nfilter_request_var('realm', 0);
+            $save['realm']   = $realm;
         } elseif (is_template_account(get_nfilter_request_var('id'))) {
             $save['enabled'] = '';
             $save['realm']   = 0;
         } else {
             $save['enabled'] = form_input_validate(get_nfilter_request_var('enabled', ''), 'enabled', '', true, 3);
-            $save['realm']   = get_nfilter_request_var('realm', 0);
+            $save['realm']   = $realm;
         }
 
         $save['email_address']        = form_input_validate(get_nfilter_request_var('email_address', ''), 'email_address', '', true, 3);
