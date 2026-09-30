@@ -282,10 +282,12 @@ function form_actions()
                     }
                 } elseif (get_nfilter_request_var('drp_action') == '4') { // disable
                     for ($i = 0;($i < cacti_count($selected_items));$i++) {
-                        if ($_SESSION['sess_user_id'] != $selected_items[$i]) {
-                            user_disable($selected_items[$i]);
-                        } else {
+                        if ($_SESSION['sess_user_id'] == $selected_items[$i]) {
                             raise_message('attempt current', __('You are not allowed to disable the current login account'), MESSAGE_LEVEL_ERROR);
+                        } elseif (read_config_option('admin_user') == $selected_items[$i]) {
+                            raise_message('attempt admin', __('You are not allowed to disable the primary administrator account'), MESSAGE_LEVEL_ERROR);
+                        } else {
+                            user_disable($selected_items[$i]);
                         }
                     }
                 } elseif (get_nfilter_request_var('drp_action') == '5') { // batch copy
@@ -294,14 +296,34 @@ function form_actions()
                     /* ==================================================== */
 
                     $copy_error = false;
+
+                    /* the form offers only local accounts as the template */
                     $template = db_fetch_row_prepared(
                         'SELECT username, realm
 						FROM user_auth
-						WHERE id = ?',
+						WHERE id = ?
+						AND realm = 0',
                         array(get_nfilter_request_var('template_user'))
                     );
 
+                    if (!cacti_sizeof($template)) {
+                        $copy_error = true;
+                        $selected_items = array();
+                    }
+
                     for ($i = 0;($i < cacti_count($selected_items));$i++) {
+                        // Batch Copy replaces realms and permissions, so it
+                        // could strip the operator or the primary administrator.
+                        if ($_SESSION['sess_user_id'] == $selected_items[$i]) {
+                            raise_message('attempt current', __('You are not allowed to overwrite the current login account'), MESSAGE_LEVEL_ERROR);
+
+                            continue;
+                        } elseif (read_config_option('admin_user') == $selected_items[$i]) {
+                            raise_message('attempt admin', __('You are not allowed to overwrite the primary administrator account'), MESSAGE_LEVEL_ERROR);
+
+                            continue;
+                        }
+
                         $user = db_fetch_row_prepared(
                             'SELECT username, realm
 							FROM user_auth
@@ -309,7 +331,7 @@ function form_actions()
                             array($selected_items[$i])
                         );
 
-                        if ((isset($user)) && (isset($template))) {
+                        if (cacti_sizeof($user)) {
                             if (user_copy($template['username'], $user['username'], $template['realm'], $user['realm'], true) === false) {
                                 $copy_error = true;
                             }

@@ -526,24 +526,11 @@ function user_remove($user_id)
     input_validate_input_number($user_id);
     /* ==================================================== */
 
-    /* check for guest or template user */
-    $username = db_fetch_cell_prepared(
-        'SELECT username
-		FROM user_auth
-		WHERE id = ?',
-        array($user_id)
-    );
+    /* the primary administrator, guest and template accounts stay */
+    if (is_template_account($user_id) || $user_id == get_guest_account()) {
+        raise_message(21);
 
-    if ($username != get_nfilter_request_var('username')) {
-        if (is_template_account($user_id)) {
-            raise_message(21);
-            return;
-        }
-
-        if ($user_id === get_guest_account()) {
-            raise_message(21);
-            return;
-        }
+        return;
     }
 
     db_execute_prepared('DELETE FROM user_auth WHERE id = ?', array($user_id));

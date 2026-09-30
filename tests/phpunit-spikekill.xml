@@ -65,6 +65,7 @@
       <file>./Unit/Security/Auth/GroupMissingIdTest.php</file>
       <file>./Unit/Security/Auth/AdminPasswordPolicyTest.php</file>
       <file>./Unit/Security/Auth/UserListGroupFilterTest.php</file>
+      <file>./Unit/Security/Auth/BulkUserActionGuardTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>
