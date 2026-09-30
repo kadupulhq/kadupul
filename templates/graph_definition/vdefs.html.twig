@@ -5,6 +5,7 @@
 {% block body %}
 <main>
     <h1>{{ 'VDEFs'|trans({}, 'graph_definition') }}</h1>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('graph_vdef_create') }}">{{ 'Create VDEF'|trans({}, 'graph_definition') }}</a></p>
     <form method="get" action="{{ path('graph_vdefs') }}" role="search">
         <label for="vdef-filter">{{ 'Search VDEFs'|trans({}, 'graph_definition') }}</label>
@@ -33,6 +34,7 @@
             {% for vdef in rows %}
                 <tr>
                     <td><input type="checkbox" name="ids[]" value="{{ vdef.id }}" aria-label="{{ 'Select %name%'|trans({'%name%': vdef.name}, 'graph_definition') }}"{% if vdef.inUse %} disabled{% endif %}></td>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                     <td><a href="{{ path('graph_vdef_edit', {id: vdef.id}) }}">{{ vdef.name }}</a></td>
                     <td>{{ vdef.inUse ? 'No'|trans({}, 'graph_definition') : 'Yes'|trans({}, 'graph_definition') }}</td>
                     <td>{{ vdef.graphs }}</td><td>{{ vdef.templates }}</td><td>{{ vdef.referencingVdefs }}</td>
@@ -44,8 +46,10 @@
         <button type="submit" formaction="{{ path('graph_vdef_action', {operation: 'duplicate'}) }}">{{ 'Duplicate selected VDEFs'|trans({}, 'graph_definition') }}</button>
     </form>
     <nav aria-label="{{ 'VDEF pages'|trans({}, 'graph_definition') }}">
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         {% if page > 1 %}<a rel="prev" href="{{ path('graph_vdefs', {filter: criteria.search, sort: criteria.sort, direction: criteria.direction, rows: criteria.pageSize, has_graphs: criteria.hasGraphs ? 'true' : 'false', page: page - 1}) }}">{{ 'Previous'|trans({}, 'graph_definition') }}</a>{% endif %}
         <span>{{ 'Page %page% of %pages%'|trans({'%page%': page, '%pages%': pages}, 'graph_definition') }}</span>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         {% if page < pages %}<a rel="next" href="{{ path('graph_vdefs', {filter: criteria.search, sort: criteria.sort, direction: criteria.direction, rows: criteria.pageSize, has_graphs: criteria.hasGraphs ? 'true' : 'false', page: page + 1}) }}">{{ 'Next'|trans({}, 'graph_definition') }}</a>{% endif %}
     </nav>
 </main>

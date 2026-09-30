@@ -13,6 +13,7 @@
     {% if operation == 'duplicate' %}{{ form_row(form.title_format) }}{% else %}{{ form_widget(form.title_format, {attr: {hidden: true}}) }}{% endif %}
     <button type="submit">{{ 'Continue'|trans({}, 'graph_definition') }}</button>
     {{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('graph_vdefs') }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
 </main>
 {% endblock %}
