@@ -361,20 +361,31 @@ test.describe('theme text contrast', () => {
     + '<tr class="even"><td>' + cells + '</td></tr></table>';
   const spans = (classes) => classes.map((name) => `<span class="${name}">${name}</span>`).join(' ');
   const statusFamily = ['deviceDown', 'deviceUnknown', 'deviceError', 'deviceWarning', 'deviceAlert'];
+  // get_colored_device_status() cells in host.php, user_admin.php and
+  // api_automation.php land in selected rows, which are light in dark and
+  // paper-plane.
+  const selectedRow = (cells) => '<table class="cactiTable"><tr class="selectable selected"><td>' + cells + '</td></tr></table>';
+  const dialog = (cells) => '<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-content ui-widget-content">' + cells + '</div></div>';
+  // lib/html.php html_spikekill_menu_item() colours its icons with the status classes.
+  const spikeMenu = '<ul class="spikekillMenu">'
+    + '<li><span class="spikeKillMenuItem"><i class="deviceUnknown fa fa-life-ring"></i>Gap Fill Range</span></li>'
+    + '<li><span class="spikeKillMenuItem"><i class="deviceDown fa fa-life-ring"></i>Float Range</span></li></ul>';
 
   // Each case lists classes whose text must reach 4.5:1 (or 3:1 for icons) on
   // every row they render in.
   const cases = [
     { theme: 'classic', markup: rows(spans(['disabled', 'running', 'errored', 'failed', 'badpassword', 'notAssociated', 'loginErrors'])) + '<table><tr class="disabled_row"><td><span class="disabledRowText">row</span></td></tr></table>' },
     { theme: 'modern', markup: rows(spans(['deviceUp', 'deviceDown', 'deviceDisabled', 'deviceRecovering', 'deviceDownMuted', 'deviceThreshold', 'deviceUnmonitored', 'deviceWarning', 'deviceAlert', 'loginErrors'])) },
-    { theme: 'dark', markup: rows(spans(statusFamily)) },
+    { theme: 'dark', markup: rows(spans(statusFamily)) + selectedRow(spans(statusFamily)) },
+    { theme: 'dark', surface: 'the spike kill menu', min: 3, markup: spikeMenu },
     { theme: 'paper-plane', markup: rows(spans(statusFamily.concat(['notBeingGraphed'])) + ' <a class="plain" href="#">link</a> <span class="ui-selectmenu-button ui-button">All</span>') },
-    { theme: 'paper-plane', min: 3, markup: rows('<i class="deletequery fa fa-times">x</i> <span class="moveArrow">&uarr;</span>') },
+    { theme: 'paper-plane', surface: 'selected rows and dialogs', markup: selectedRow(spans(statusFamily)) + dialog(spans(statusFamily) + rows(spans(statusFamily))) },
+    { theme: 'paper-plane', surface: 'rows and the spike kill menu', min: 3, markup: rows('<i class="deletequery fa fa-times">x</i> <span class="moveArrow">&uarr;</span>') + spikeMenu },
     { theme: 'paw', markup: rows(spans(['disabled'])) + '<table><tr class="disabled_row"><td><span class="disabledRowText">row</span></td></tr></table>' },
   ];
 
-  for (const { theme, markup, min = 4.5 } of cases) {
-    test(`${theme} status and link text reaches ${min}:1`, async ({ page }) => {
+  for (const { theme, surface = 'rows', markup, min = 4.5 } of cases) {
+    test(`${theme} status and link text reaches ${min}:1 on ${surface}`, async ({ page }) => {
       await openTheme(page, theme);
       await page.evaluate((html) => { document.getElementById('contrastArea').innerHTML = html; }, markup);
 
@@ -382,7 +393,7 @@ test.describe('theme text contrast', () => {
       for (let i = 0; i < count; i++) {
         const target = `#contrastArea :is(span, a, i, input) >> nth=${i}`;
         const handle = page.locator(target);
-        const label = await handle.evaluate((el) => el.className + ' in ' + (el.closest('tr') ? el.closest('tr').className : 'page'));
+        const label = await handle.evaluate((el) => el.className + ' in ' + (el.closest('tr, .ui-dialog-content, .spikekillMenu') ? el.closest('tr, .ui-dialog-content, .spikekillMenu').className : 'page'));
         await handle.evaluate((el) => { el.id = 'contrastTarget'; });
         const ratio = await contrastAgainstBackground(page, '#contrastTarget', 'color');
         expect(ratio, `${theme} ${label}`).toBeGreaterThanOrEqual(min);

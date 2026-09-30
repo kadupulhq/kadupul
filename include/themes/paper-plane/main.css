@@ -412,6 +412,35 @@ label {
 	color: #ff7043 !important;
 }
 
+/*
+ * The colours above are for dark rows. Selected rows, the spike kill menu and
+ * dialog text outside table rows are light.
+ */
+tr.selected .deviceDown, .spikekillMenu .deviceDown,
+.ui-dialog-content .deviceDown:not(:is(.odd, .even, .even-alternate) *) {
+	color: #7a0000 !important;
+}
+
+tr.selected .deviceUnknown, .spikekillMenu .deviceUnknown,
+.ui-dialog-content .deviceUnknown:not(:is(.odd, .even, .even-alternate) *) {
+	color: #0000c0 !important;
+}
+
+tr.selected .deviceError, .spikekillMenu .deviceError,
+.ui-dialog-content .deviceError:not(:is(.odd, .even, .even-alternate) *) {
+	color: #650b6c !important;
+}
+
+tr.selected .deviceWarning, .spikekillMenu .deviceWarning,
+.ui-dialog-content .deviceWarning:not(:is(.odd, .even, .even-alternate) *) {
+	color: #4d3500 !important;
+}
+
+tr.selected .deviceAlert, .spikekillMenu .deviceAlert,
+.ui-dialog-content .deviceAlert:not(:is(.odd, .even, .even-alternate) *) {
+	color: #6e2200 !important;
+}
+
 .deviceUpBg {
 	color: rgba(22,22,22,0.8);
 	font-size: 10pt;

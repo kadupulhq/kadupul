@@ -442,6 +442,27 @@ label {
 	color: #ff7043 !important;
 }
 
+/* The colours above are for dark rows; selected rows are light green. */
+tr.selected .deviceDown {
+	color: #7a0000 !important;
+}
+
+tr.selected .deviceUnknown {
+	color: #0000c0 !important;
+}
+
+tr.selected .deviceError {
+	color: #650b6c !important;
+}
+
+tr.selected .deviceWarning {
+	color: #4d3500 !important;
+}
+
+tr.selected .deviceAlert {
+	color: #6e2200 !important;
+}
+
 .deviceUpBg {
 	color: rgba(22,22,22,0.8);
 	font-size: 10pt;
