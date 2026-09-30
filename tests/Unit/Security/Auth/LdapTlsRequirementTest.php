@@ -11,12 +11,13 @@
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 
 function ldap_tls_child(string $program, array $scenario): array
 {
     $pipes = array();
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode($scenario)),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode($scenario)), $coverage_dir),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -25,6 +26,7 @@ function ldap_tls_child(string $program, array $scenario): array
     fclose($pipes[1]);
     fclose($pipes[2]);
     proc_close($process);
+    child_coverage_collect($coverage_dir);
 
     expect($stderr)->toBe('');
 

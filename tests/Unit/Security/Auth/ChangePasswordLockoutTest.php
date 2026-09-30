@@ -12,6 +12,7 @@
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 
 function change_password_lockout_run(array $scenario): array
 {
@@ -81,12 +82,11 @@ PHP;
     }
 
     file_put_contents($work . '/include/global.php', $global);
-    copy($root . '/auth_changepassword.php', $work . '/auth_changepassword.php');
 
     try {
         $pipes = array();
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'display_errors=stderr', $work . '/auth_changepassword.php'),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require ' . var_export($root . '/auth_changepassword.php', true) . ';'), $coverage_dir),
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $work
@@ -104,9 +104,9 @@ PHP;
         fclose($pipes[1]);
         fclose($pipes[2]);
         proc_close($process);
+        child_coverage_collect($coverage_dir);
     } finally {
         unlink($work . '/include/global.php');
-        unlink($work . '/auth_changepassword.php');
         rmdir($work . '/include');
         rmdir($work);
     }
