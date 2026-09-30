@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -103,6 +104,6 @@ test('auth_login_redirect validates referer starts with slash', function () use 
 });
 
 test('auth_login performs auth transition hardening on successful login', function () use ($authLoginSource) {
-    expect(str_contains($authLoginSource, "cacti_auth_transition((int)\$user['id'], 'login')"))
+    expect(str_contains($authLoginSource, "cacti_auth_transition((int) \$user['id'], 'login')"))
         ->toBeTrue();
 });
