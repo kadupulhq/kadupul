@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -520,8 +521,8 @@ function form_actions()
             grow_dropdown_tree($matches[1], '0', 'tree_item_id', '0');
             print "</p>
 				</td>
-			</tr>
-			<input type='hidden' name='tree_id' value='" . html_escape($matches[1]) . "'>";
+			</tr>";
+            form_hidden_box('tree_id', $matches[1], '0');
 
             $save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __esc('Place Graph(s) on Tree') . "'>";
         }
