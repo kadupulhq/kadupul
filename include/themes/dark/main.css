@@ -68,6 +68,7 @@ th {
 	-ms-user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
+	border-right: 1px groove #eee !important;
 }
 
 img {
@@ -629,10 +630,6 @@ label {
 
 .graphItemGr1Alt2 {
 	background-color: #EEEEEE;
-}
-
-.graphItemGr1Cust {
-	background-color: #D5D5D5;
 }
 
 .graphItemGr2Alt1 {
@@ -2032,10 +2029,6 @@ div#gtabs {
 	background-image: linear-gradient(to top, #060606, #363636);
 }
 
-th {
-	border-right: 1px groove #eee !important;
-}
-
 th:last-child {
 	border-right: none !important;
 }
@@ -2437,10 +2430,6 @@ input:checked + .checkboxSlider:before {
 	vertical-align: middle;
 }
 
-.right {
-	text-align: right;
-}
-
 .radioSwitch {
 	position: relative;
 	display: inline-block;
@@ -2526,12 +2515,9 @@ td.center > table {
 	white-space: nowrap;
 }
 
-.bb-chart-arc path {
-	fill: #A8A8A8;
-}
-
 .bb-legend-item {
 	fill: #A8A8A8;
+	font-size: 12px;
 }
 
 .bb-grid {
@@ -2693,10 +2679,6 @@ td.center > table {
 
 /*-- Select - Drag --*/
 /*-- Legend --*/
-.bb-legend-item {
-  font-size: 12px;
-}
-
 .bb-legend-item-hidden {
   opacity: 0.15;
 }

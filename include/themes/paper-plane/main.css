@@ -46,6 +46,8 @@ th {
 	-ms-user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
+	border-right: 1px groove #9d9d9d;
+	height: 18px;
 }
 
 .tableRowGraph td span {
@@ -584,6 +586,7 @@ label {
 .tableRow {
 	color: white;
 	line-height: 20px;
+	padding: 4px 5px !important;
 }
 
 .odd {
@@ -619,10 +622,6 @@ label {
 .even-alternate.tableRow {
 	color: #ccc;
 	background: none repeat scroll 0 0 #222;
-}
-
-.tableRow {
-	padding: 4px 5px !important;
 }
 
 .saveRow {
@@ -664,10 +663,6 @@ label {
 
 .graphItemGr1Alt2 {
 	background-color: #EEEEEE;
-}
-
-.graphItemGr1Cust {
-	background-color: #D5D5D5;
 }
 
 .graphItemGr2Alt1 {
@@ -1431,6 +1426,7 @@ tr>td.textInfo.right {
 
 .hostInfoHeader {
 	width: 100%;
+	background: none repeat scroll 0 0 #fbfdff;
 }
 
 @media screen and (max-width: 640px) {
@@ -1906,10 +1902,6 @@ div#gtabs {
 	border-bottom: 3px solid transparent;
 }
 
-.usertabs {
-	float: right !important;
-}
-
 .usertabs nav ul {
 	float: right;
 	padding-right: 5px;
@@ -2093,11 +2085,6 @@ tr th:last-child .checkbox {
 
 #nav li a.active:hover {
 	color: white;
-}
-
-th {
-	border-right: 1px groove #9d9d9d;
-	height: 18px;
 }
 
 th:last-child {
@@ -2366,10 +2353,6 @@ tr#realtime td:first-child {
 	font-family: Verdana,Arial,sans-serif;
 }
 
-.hostInfoHeader {
-	background: none repeat scroll 0 0 #fbfdff;
-}
-
 .ui-autocomplete {
 	height: 300px;
 	overflow-y: scroll;
@@ -2505,10 +2488,6 @@ input:checked + .checkboxSlider:before {
 	margin-right: 10px;
 }
 
-.right {
-	text-align: right;
-}
-
 .radioSwitch {
 	position: relative;
 	display: inline-block;
@@ -2599,12 +2578,9 @@ td.center > table {
 	color: #FFFFFF !important;
 }
 
-.bb-chart-arc path {
-	fill: #A8A8A8;
-}
-
 .bb-legend-item {
 	fill: #A8A8A8;
+	font-size: 12px;
 }
 
 .bb-grid {
@@ -2720,10 +2696,6 @@ td.center > table {
 
 /*-- Select - Drag --*/
 /*-- Legend --*/
-.bb-legend-item {
-  font-size: 12px;
-}
-
 .bb-legend-item-hidden {
   opacity: 0.15;
 }
