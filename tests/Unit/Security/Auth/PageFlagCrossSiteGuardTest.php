@@ -5,7 +5,8 @@
 
 /*
  * Some pages change data because of a request variable other than 'action',
- * which the central guard in include/global.php can not see.
+ * which the central guard in include/global.php can not see: the RRD Cleaner
+ * rescan and the SNMP notification receiver log purge.
  */
 
 function page_flag_guard_run(string $page, string $method, string $query, array $headers = array(), string $token = 'missing'): string
@@ -113,4 +114,20 @@ test('the RRD Cleaner page still rescans from its own button', function (string 
 test('a cross-site RRD Cleaner listing without a rescan still renders', function () {
     expect(page_flag_guard_run('rrdcleaner.php', 'GET', '', array('HTTP_SEC_FETCH_SITE' => 'cross-site')))
         ->toBe('DISPATCHED:STATUS:200');
+});
+
+test('the notification log purge needs a POST with a valid token', function (string $method, string $token, array $headers, string $expected) {
+    expect(page_flag_guard_run('managers.php', $method, 'action=edit&tab=logs&id=3&purge=1', $headers, $token))
+        ->toBe($expected);
+})->with(array(
+    'cross-site GET' => array('GET', 'missing', array('HTTP_SEC_FETCH_SITE' => 'cross-site'), 'STATUS:405'),
+    'same-origin GET' => array('GET', 'missing', array('HTTP_SEC_FETCH_SITE' => 'same-origin'), 'STATUS:405'),
+    'GET without headers' => array('GET', 'missing', array(), 'STATUS:405'),
+    'POST without a token' => array('POST', 'missing', array(), 'STATUS:403'),
+    'POST with a valid token' => array('POST', 'valid', array(), 'DISPATCHED:editSTATUS:200'),
+));
+
+test('viewing the notification log without a purge is unchanged', function () {
+    expect(page_flag_guard_run('managers.php', 'GET', 'action=edit&tab=logs&id=3', array('HTTP_SEC_FETCH_SITE' => 'cross-site')))
+        ->toBe('DISPATCHED:editSTATUS:200');
 });
