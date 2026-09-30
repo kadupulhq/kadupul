@@ -241,6 +241,12 @@ dataset('rrd graph scenarios', function () {
         )),
         'quotes in a substituted title' => array('graph-substituted-quotes', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $quoting_db))),
         'CR and LF in a substituted title and vertical label' => array('graph-substituted-newlines', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $newline_db))),
+        'CR and LF in stored graph item fields' => array('graph-item-newlines', rrd_characterization_graph_scenario($window + array('print_source' => true), array(), array(), array(
+            rrd_characterization_item(1, 'LINE1', rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'alpha' => "80\nnext", 'dashes' => "5\nnext", 'dash_offset' => "2\nnext")),
+            rrd_characterization_item(2, 'STACK', rrd_characterization_ds('errors') + array('hex' => '00FF00', 'shift' => 'on', 'value' => "60\nnext")),
+            rrd_characterization_item(3, 'TIC', rrd_characterization_ds('errors') + array('hex' => 'FF00FF', 'value' => "0.5\nnext")),
+            rrd_characterization_item(4, 'LINE2', rrd_characterization_ds('traffic_in') + array('hex' => 'FF0000', 'dash_offset' => '0')),
+        ))),
         'different quoted values in the title and vertical label' => array('graph-substituted-pair', rrd_characterization_graph_scenario($window, array(), $pair, $area, array('db' => $pair_db))),
         'export to file' => array('graph-export', rrd_characterization_graph_scenario($window + array('export' => true, 'export_filename' => 'rra/graph_7.png', 'graphv' => true), array(), array('image_format_id' => '3'), $area)),
         'missing rrd file' => array('graph-missing-rrd', rrd_characterization_graph_scenario($window + array('print_source' => true), array(), array(), $area, array('files' => array()))),

@@ -71,12 +71,12 @@
                 "GPRINT:vdefg:'%8.2lf %s' ",
                 "GPRINT:d:LAST:'%8.2lf %s' ",
                 "LINE2:e#FF0000'FF':''",
-                "SHIFT:e:3600",
+                "SHIFT:e:'3600'",
                 "LINE3:cdefj#0000FF'FF':''",
                 "AREA:a#00FF00'4D':'':STACK",
-                "SHIFT:a:60",
+                "SHIFT:a:'60'",
                 "LINE1.50:d#123456'FF':'':STACK:dashes='4'",
-                "TICK:e#FF00FF'FF':0.5:''",
+                "TICK:e#FF00FF'FF':'0.5':''",
                 "HRULE:95#FF9900'FF':'':dashes='2':dash-offset='1'",
                 "VRULE:1700001800#000000'FF':''        \r\nquit\r\n"
             ]

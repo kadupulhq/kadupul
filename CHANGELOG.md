@@ -21,7 +21,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
-- Validate graph-item dashes, dash offsets and alpha values before saving, and quote those RRDtool fields when rendering graphs.
+- Validate graph-item dashes, dash offsets and alpha values before saving, and quote those fields and the SHIFT and TICK values when rendering graphs.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 

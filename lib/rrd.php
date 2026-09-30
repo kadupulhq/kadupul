@@ -2942,8 +2942,8 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
             /* initialize dash support */
             $dash = '';
-            $graph_item_dashes = preg_match('/^[0-9]+[,0-9]*$/D', (string) $graph_item['dashes']) === 1 ? rrdtool_pipe_quote($graph_item['dashes']) : '';
-            $graph_item_dash_offset = preg_match('/^[0-9]+$/D', (string) $graph_item['dash_offset']) === 1 ? rrdtool_pipe_quote($graph_item['dash_offset']) : '';
+            $graph_item_dashes = !empty($graph_item['dashes']) && preg_match('/^[0-9]+[,0-9]*$/D', (string) $graph_item['dashes']) === 1 ? rrdtool_pipe_quote($graph_item['dashes']) : '';
+            $graph_item_dash_offset = !empty($graph_item['dash_offset']) && preg_match('/^[0-9]+$/D', (string) $graph_item['dash_offset']) === 1 ? rrdtool_pipe_quote($graph_item['dash_offset']) : '';
             if ($graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE1 ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE2 ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE3 ||
@@ -3068,7 +3068,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                         if ($graph_item['shift'] == CHECKED && abs($graph_item['value']) > 0) {
                             /* create a SHIFT statement */
-                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
+                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($graph_item['value']);
                         }
 
                         break;
@@ -3078,7 +3078,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                         $txt_graph_items .= 'AREA:' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . ':STACK';
 
                         if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      # create a SHIFT statement
-                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
+                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($graph_item['value']);
                         }
 
                         break;
@@ -3090,7 +3090,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                         $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . $dash;
 
                         if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      # create a SHIFT statement
-                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
+                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($graph_item['value']);
                         }
 
                         break;
@@ -3100,12 +3100,12 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                         $txt_graph_items .= 'LINE' . $graph_item['line_width'] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . ':STACK' . $dash;
 
                         if ($graph_item['shift'] == CHECKED && $graph_item['value'] > 0) {      # create a SHIFT statement
-                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . $graph_item['value'];
+                            $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($graph_item['value']);
                         }
 
                         break;
                     case GRAPH_ITEM_TYPE_TIC:
-                        $_fraction = (empty($graph_item['graph_type_id']) ? '' : (':' . $graph_item['value']));
+                        $_fraction = (empty($graph_item['graph_type_id']) ? '' : (':' . rrdtool_pipe_quote($graph_item['value'])));
                         $_legend   = ':' . rrdtool_pipe_quote(rrdtool_escape_string(html_escape($graph_variables['text_format'][$graph_item_id])) . $hardreturn[$graph_item_id]);
                         $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . $_fraction . $_legend;
 
