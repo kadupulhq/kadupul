@@ -24,6 +24,7 @@ function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
 function read_config_option($name) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function is_realm_allowed($realm) { return true; }
+function is_graph_allowed($id) { return (int) $id === 2; }
 function db_fetch_assoc_prepared(...$args) { return array(array('local_data_id' => 2)); }
 function get_data_source_path(...$args) { return '/isolated/fixture.rrd'; }
 class spikekill {
