@@ -5,7 +5,7 @@ html {
     --special-hue: 233;
     --special2-hue: 218;
     --progress-hue: 208;
-    --text-color-normal: hsl(var(--hue), 7%, 50%);
+    --text-color-normal: hsl(var(--hue), 7%, 58%);
     --text-color-medium: hsl(var(--hue), 7%, 60%);
     --text-color-light: hsl(var(--hue), 7%, 75%);
     --text-color-lighter: hsl(var(--hue), 7%, 85%);
@@ -42,7 +42,8 @@ html[data-theme-color='light'] {
     --text-color-medium: hsl(var(--hue), 7%, 50%);
     --text-color-light: hsl(var(--hue), 7%, 25%);
     --text-color-lighter: hsl(var(--hue), 7%, 5%);
-    --text-color-navigation: hsl(var(--hue), 7%, 75%);
+    --text-color-highlight-a: hsl(var(--accent2-hue), 64%, 38%);
+    --text-color-navigation: hsl(var(--hue), 7%, 93%);
     --text-color-navigation-highlight: hsl(var(--hue), 7%, 100%);
     --background: hsl(var(--hue), 27.3%, 97.1%);
     --background-content: hsl(var(--hue), 100%, 100%);

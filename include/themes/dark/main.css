@@ -398,11 +398,11 @@ label {
 }
 
 .deviceDown {
-	color: #ff0000 !important;
+	color: #ff4a4a !important;
 }
 
 .deviceUnknown {
-	color: #0000ff !important;
+	color: #8080ff !important;
 }
 
 .deviceDisabled {
@@ -414,7 +414,7 @@ label {
 }
 
 .deviceError {
-	color: #750F7D !important;
+	color: #de4dea !important;
 }
 
 .deviceDownMuted {
@@ -430,11 +430,11 @@ label {
 }
 
 .deviceWarning {
-	color: #aa7807 !important;
+	color: #bb8408 !important;
 }
 
 .deviceAlert {
-	color: #660000 !important;
+	color: #ff7043 !important;
 }
 
 .deviceUpBg {

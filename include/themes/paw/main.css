@@ -220,11 +220,11 @@ label {
 }
 
 .disabled_row span, .disabled_row td, .disabled_row a {
-	color: grey;
+	color: #656565;
 }
 
 .disabled {
-	color: grey;
+	color: #656565;
 	font-weight: bold;
 }
 
@@ -1008,7 +1008,7 @@ legend {
 }
 
 .linkEditMain:hover {
-	color: yellow;
+	color: #1d326e;
 	white-space: nowrap;
 	text-decoration: none;
 }
@@ -1931,7 +1931,7 @@ tr:not(.selectable) a.linkEditMain:hover {
 }
 
 tr.selectable a.linkEditMain:hover {
-	color: yellow;
+	color: #1d326e;
 }
 
 tr.selectable:hover:not(.selected) {
@@ -1943,6 +1943,11 @@ tr.selectable td {
 }
 
 tr.selected a {
+	color: yellow;
+}
+
+/* Selected rows are black, so their links keep yellow on hover as well. */
+tr.selected a.linkEditMain:hover {
 	color: yellow;
 }
 

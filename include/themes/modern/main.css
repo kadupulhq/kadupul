@@ -378,11 +378,11 @@ label {
 }
 
 .deviceUp {
-	color: rgba(40, 180, 40, 1.0) !important;
+	color: #1a751a !important;
 }
 
 .deviceDown {
-	color: #ff0000 !important;
+	color: #cc0000 !important;
 }
 
 .deviceUnknown {
@@ -390,11 +390,11 @@ label {
 }
 
 .deviceDisabled {
-	color: #a1a1a1 !important;
+	color: #656565 !important;
 }
 
 .deviceRecovering {
-	color: #ff8f1e !important;
+	color: #9e4f00 !important;
 }
 
 .deviceError {
@@ -402,23 +402,23 @@ label {
 }
 
 .deviceDownMuted {
-	color: #ffe333 !important;
+	color: #756500 !important;
 }
 
 .deviceThreshold {
-	color: #ffa833 !important;
+	color: #945500 !important;
 }
 
 .deviceUnmonitored {
-	color: rgba(250, 253, 158, 0.8) !important;
+	color: #666902 !important;
 }
 
 .deviceWarning {
-	color: #ea9827 !important;
+	color: #90590e !important;
 }
 
 .deviceAlert {
-	color: #ea5f27 !important;
+	color: #b13f11 !important;
 }
 
 .deviceUpBg {
@@ -975,7 +975,7 @@ ul#breadcrumbs {
 }
 
 .loginErrors, .logoutErrors {
-	color: red;
+	color: #cc0000;
 	min-height: 15px;
 }
 

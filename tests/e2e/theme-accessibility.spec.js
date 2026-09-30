@@ -44,8 +44,8 @@ function outline(page, selector, pseudo = null) {
 // WCAG 2.x contrast of a computed colour against the first opaque background
 // behind it. An outline is drawn outside the box, so it is measured against the
 // parent's background rather than the element's own.
-async function contrastAgainstBackground(page, selector, colorOf) {
-  return page.evaluate(([sel, prop]) => {
+async function contrastAgainstBackground(page, selector, colorOf, against = null) {
+  return page.evaluate(([sel, prop, fixed]) => {
     const parse = (value) => {
       const m = value.match(/rgba?\(([^)]+)\)/);
       const parts = m[1].split(/[ ,/]+/).filter(Boolean).map(Number);
@@ -74,11 +74,13 @@ async function contrastAgainstBackground(page, selector, colorOf) {
       return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
     };
     const element = document.querySelector(sel);
-    const bg = background(prop === 'outlineColor' ? element.parentElement : element);
+    // A gradient or image behind the text is not a background-color, so a
+    // caller names the worst-case colour it has to clear instead.
+    const bg = fixed ? parse(fixed) : background(prop === 'outlineColor' ? element.parentElement : element);
     const fg = over(parse(getComputedStyle(element)[prop]), bg);
     const [hi, lo] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
     return (hi + 0.05) / (lo + 0.05);
-  }, [selector, colorOf]);
+  }, [selector, colorOf, against]);
 }
 
 test.describe('theme keyboard focus', () => {
@@ -237,5 +239,111 @@ test.describe('dark graph utility icons', () => {
 
     await page.locator('#dd1').evaluate((el) => el.classList.remove('iconsShown'));
     expect((await wrapperSize(page)).width).toBeLessThanOrEqual(1);
+  });
+});
+
+test.describe('theme text contrast', () => {
+  const rows = (cells) => '<table class="cactiTable"><tr class="odd"><td>' + cells + '</td></tr>'
+    + '<tr class="even"><td>' + cells + '</td></tr></table>';
+  const spans = (classes) => classes.map((name) => `<span class="${name}">${name}</span>`).join(' ');
+  const statusFamily = ['deviceDown', 'deviceUnknown', 'deviceError', 'deviceWarning', 'deviceAlert'];
+
+  // Each case lists classes whose text must reach 4.5:1 (or 3:1 for icons) on
+  // every row they render in.
+  const cases = [
+    { theme: 'classic', markup: rows(spans(['disabled', 'running', 'errored', 'failed', 'badpassword', 'notAssociated', 'loginErrors'])) + '<table><tr class="disabled_row"><td><span class="disabledRowText">row</span></td></tr></table>' },
+    { theme: 'modern', markup: rows(spans(['deviceUp', 'deviceDown', 'deviceDisabled', 'deviceRecovering', 'deviceDownMuted', 'deviceThreshold', 'deviceUnmonitored', 'deviceWarning', 'deviceAlert', 'loginErrors'])) },
+    { theme: 'dark', markup: rows(spans(statusFamily)) },
+    { theme: 'paper-plane', markup: rows(spans(statusFamily.concat(['notBeingGraphed'])) + ' <a class="plain" href="#">link</a> <span class="ui-selectmenu-button ui-button">All</span>') },
+    { theme: 'paper-plane', min: 3, markup: rows('<i class="deletequery fa fa-times">x</i> <span class="moveArrow">&uarr;</span>') },
+    { theme: 'paw', markup: rows(spans(['disabled'])) + '<table><tr class="disabled_row"><td><span class="disabledRowText">row</span></td></tr></table>' },
+  ];
+
+  for (const { theme, markup, min = 4.5 } of cases) {
+    test(`${theme} status and link text reaches ${min}:1`, async ({ page }) => {
+      await openTheme(page, theme);
+      await page.evaluate((html) => { document.getElementById('contrastArea').innerHTML = html; }, markup);
+
+      const count = await page.locator('#contrastArea span, #contrastArea a, #contrastArea i, #contrastArea input').count();
+      for (let i = 0; i < count; i++) {
+        const target = `#contrastArea :is(span, a, i, input) >> nth=${i}`;
+        const handle = page.locator(target);
+        const label = await handle.evaluate((el) => el.className + ' in ' + (el.closest('tr') ? el.closest('tr').className : 'page'));
+        await handle.evaluate((el) => { el.id = 'contrastTarget'; });
+        const ratio = await contrastAgainstBackground(page, '#contrastTarget', 'color');
+        expect(ratio, `${theme} ${label}`).toBeGreaterThanOrEqual(min);
+        await handle.evaluate((el) => { el.removeAttribute('id'); });
+      }
+    });
+  }
+
+  test('classic table header text reaches 4.5:1', async ({ page }) => {
+    await openTheme(page, 'classic');
+    await page.evaluate(() => {
+      document.getElementById('contrastArea').innerHTML = '<table><tr class="tableHeader"><th id="hdr">Name</th></tr></table>'
+        + '<div class="formHeader" id="formHdr">Form</div>';
+    });
+    expect(await contrastAgainstBackground(page, '#hdr', 'color')).toBeGreaterThanOrEqual(4.5);
+    expect(await contrastAgainstBackground(page, '#formHdr', 'color')).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test('paw keeps link hover readable on hovered and selected rows', async ({ page }) => {
+    await openTheme(page, 'paw');
+    await page.evaluate(() => {
+      document.getElementById('contrastArea').innerHTML = '<table>'
+        + '<tr class="selectable odd"><td><a id="hoverLink" class="linkEditMain" href="#">Device</a></td></tr>'
+        + '<tr class="selectable selected"><td><a id="selectedLink" class="linkEditMain" href="#">Device</a></td></tr>'
+        + '</table><p><a id="bareLink" class="linkEditMain" href="#">Bare</a></p>';
+    });
+
+    await page.hover('#hoverLink');
+    expect(await contrastAgainstBackground(page, '#hoverLink', 'color')).toBeGreaterThanOrEqual(4.5);
+    await page.hover('#selectedLink');
+    expect(await page.locator('#selectedLink').evaluate((el) => getComputedStyle(el).color)).toBe('rgb(255, 255, 0)');
+    await page.hover('#bareLink');
+    expect(await contrastAgainstBackground(page, '#bareLink', 'color')).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test('sunrise selectmenu text and version clear the gradient\'s lightest stop', async ({ page }) => {
+    await openTheme(page, 'sunrise');
+    await page.evaluate(() => {
+      document.getElementById('contrastArea').innerHTML = '<span id="goButton" class="ui-selectmenu-button ui-button">All</span>'
+        + '<div class="cactiVersion" id="version">1.3.0</div><div class="versionInfo" id="versionInfo">1.3.0</div>';
+    });
+    for (const id of ['goButton', 'version', 'versionInfo']) {
+      for (const against of ['rgb(0, 0, 0)', 'rgb(4, 51, 91)']) {
+        const ratio = await contrastAgainstBackground(page, `#${id}`, 'color', against);
+        expect(ratio, `sunrise #${id} on ${against}`).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
+
+  test('midwinter body text, links and navigation reach 4.5:1 in both colour modes', async ({ page }) => {
+    for (const color of [null, 'light']) {
+      await openTheme(page, 'midwinter', color);
+      await page.evaluate(() => {
+        document.getElementById('contrastArea').innerHTML = '<span id="bodyText">text</span> <a id="bodyLink" href="#">link</a>';
+      });
+      const vars = await page.evaluate(() => {
+        const root = getComputedStyle(document.documentElement);
+        const probe = document.createElement('span');
+        document.body.appendChild(probe);
+        const resolve = (name) => { probe.style.color = `var(${name})`; return getComputedStyle(probe).color; };
+        const out = {
+          background: resolve('--background'),
+          content: resolve('--background-content'),
+          navigation: resolve('--background-navigation'),
+          navText: resolve('--text-color-navigation'),
+        };
+        probe.remove();
+        return out;
+      });
+      for (const bg of [vars.background, vars.content]) {
+        expect(await contrastAgainstBackground(page, '#bodyText', 'color', bg), `midwinter ${color} text on ${bg}`).toBeGreaterThanOrEqual(4.5);
+        expect(await contrastAgainstBackground(page, '#bodyLink', 'color', bg), `midwinter ${color} link on ${bg}`).toBeGreaterThanOrEqual(4.5);
+      }
+      await page.evaluate((c) => { document.getElementById('bodyText').style.color = c; }, vars.navText);
+      expect(await contrastAgainstBackground(page, '#bodyText', 'color', vars.navigation), `midwinter ${color} navigation`).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });

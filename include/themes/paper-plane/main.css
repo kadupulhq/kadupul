@@ -102,14 +102,14 @@ hr.menu {
 /* links */
 
 a, a:active, a:visited {
-	color: #2d4ca8;
+	color: #6f8ad8;
 	text-decoration: none;
 	font-size: 12px;
 }
 
 a:hover {
 	text-decoration: none;
-	color: #333333;
+	color: #8e8e8e;
 }
 
 th .fa {
@@ -345,11 +345,11 @@ label {
 }
 
 .deviceDown {
-	color: #ff0000 !important;
+	color: #ff4a4a !important;
 }
 
 .deviceUnknown {
-	color: #0000ff !important;
+	color: #8080ff !important;
 }
 
 .deviceDisabled {
@@ -361,7 +361,7 @@ label {
 }
 
 .deviceError {
-	color: #750F7D !important;
+	color: #de4dea !important;
 }
 
 .deviceDownMuted {
@@ -377,11 +377,11 @@ label {
 }
 
 .deviceWarning {
-	color: #aa7807 !important;
+	color: #bb8408 !important;
 }
 
 .deviceAlert {
-	color: #660000 !important;
+	color: #ff7043 !important;
 }
 
 .deviceUpBg {
@@ -466,7 +466,7 @@ label {
 }
 
 .notBeingGraphed {
-	color: #484848;
+	color: #8d8d8d;
 }
 
 .submenuoptions {
@@ -581,14 +581,14 @@ label {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: #174163 !important;
+	color: #2975b2 !important;
 	font-weight: bold;
 	font-size: 14px;
 	padding-right: 10px;
 }
 
 .deletequery:hover {
-	color: #174163 !important;
+	color: #2975b2 !important;
 	text-decoration: none;
 	padding: 1px;
 	vertical-align: middle;
@@ -1849,7 +1849,7 @@ tr>td.textInfo.right {
 }
 
 .moveArrow {
-	color: #00438C !important;
+	color: #006ce3 !important;
 	height: 14px !important;
 	display: inline-block;
 	width: 11.75px;
@@ -2840,5 +2840,5 @@ circle {
 	border: 1px solid #d3d3d3;
 	background: #111 !important;
 	font-weight: normal;
-	color: #555555;
+	color: #8e8e8e;
 }

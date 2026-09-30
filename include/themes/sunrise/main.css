@@ -945,7 +945,7 @@ label.ui-state-hover > span {
 
 .cactiVersion {
 	padding-left: 10px;
-	color: rgba(255,255,255,0.2);
+	color: rgba(255,255,255,0.55);
 	float: left;
 }
 
@@ -1009,7 +1009,7 @@ legend {
 	position: fixed;
 	left: 5px;
 	bottom: 5px;
-	color: rgba(255,255,255,0.2);
+	color: rgba(255,255,255,0.55);
 }
 
 .actionsDropdown {
@@ -2503,7 +2503,7 @@ tr#realtime td:first-child {
 	border: 1px solid rgba(255,255,255,0.2);
 	background: transparent;
 	font-weight: normal;
-	color: #555555;
+	color: #969BA3;
 }
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus {

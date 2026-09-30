@@ -212,14 +212,14 @@ label {
 
 .badpassword_message {
 	padding: 2px;
-	color: red;
+	color: #cc0000;
 	font-size: 1.0em !important;
 	vertical-align: bottom;
 }
 
 .badpassword {
 	padding: 4px;
-	color: red;
+	color: #cc0000;
 	font-size: 1.5em !important;
 	vertical-align: bottom;
 }
@@ -237,16 +237,16 @@ label {
 }
 
 .notAssociated {
-	color: red;
+	color: #cc0000;
 	font-weight: bold;
 }
 
 .disabled_row span, .disabled_row td, .disabled_row a {
-	color: grey;
+	color: #656565;
 }
 
 .disabled {
-	color: grey;
+	color: #656565;
 	font-weight: bold;
 }
 
@@ -256,11 +256,11 @@ label {
 }
 
 .running {
-	color: orange;
+	color: #8c5b00;
 }
 
 .errored {
-	color: red;
+	color: #cc0000;
 	font-weight: bold;
 }
 
@@ -285,7 +285,7 @@ label {
 }
 
 .failed {
-	color: red;
+	color: #cc0000;
 }
 
 .accessGranted {
@@ -895,7 +895,7 @@ ul#breadcrumbs {
 }
 
 .loginErrors, .logoutErrors {
-	color: red;
+	color: #cc0000;
 	min-height: 0px;
 }
 
@@ -1359,7 +1359,7 @@ legend {
 	text-align: left;
 	border-right: 1px groove #EFEFEF;
 	font-size: 11px;
-	background-color: #6D88AD !important;
+	background-color: #59779F !important;
 }
 
 .formHeaderText {
@@ -1458,7 +1458,7 @@ legend {
 
 .tableHeader {
 	display: table-row;
-	background-color: #6D88AD !important;
+	background-color: #59779F !important;
 	line-height: 18px;
 }
 
@@ -1475,7 +1475,7 @@ legend {
 	border-right: 1px groove #EFEFEF;
 	font-size: 11px;
 	line-height: 18px;
-	background-color: #6D88AD !important;
+	background-color: #59779F !important;
 	padding: 2px;
 }
 
