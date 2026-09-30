@@ -171,11 +171,17 @@ input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name
     position: fixed;
 }
 
-input[type="checkbox"]:focus + label:before {
-    #outline: -webkit-focus-ring-color auto 1px !important;
-    #outline-color: -webkit-focus-ring-color;
-    #outline-style: auto;
-    #outline-width: 1px;
+/* Component rules strip outlines; !important keeps the keyboard ring from losing to them on specificity. */
+:focus-visible {
+    outline: 2px solid var(--text-color-highlight-a) !important;
+    outline-offset: 1px;
+}
+
+/* The native box is transparent, so the ring goes on the drawn replacement. */
+input[type="checkbox"]:focus-visible + label:before,
+input[type="radio"]:not([name^="reindex"]):focus-visible + label {
+    outline: 2px solid var(--text-color-highlight-a);
+    outline-offset: 1px;
 }
 
 input[type="checkbox"] + label:before {
