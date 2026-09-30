@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""Concrete route samples must preserve parent-child bindings and fail closed."""
+import unittest
+from entry_point_authorization import sample, route_fixtures
+
+
+class RouteSamples(unittest.TestCase):
+    def test_parent_child_and_enum_parameters(self):
+        fixtures = {'graphing/color-templates': {'id': 12, 'itemId': 31},
+                    'graph-definitions/vdefs': {'vdefId': 4, 'itemId': 5},
+                    'inventory/devices': 8}
+        cases = [
+            ('app.php/graphing/color-templates/{id}/items/{itemId}/delete', 'methods=GET|POST requirements=id=[1-9][0-9]{0,9} itemId=[1-9][0-9]{0,9}', 'app.php/graphing/color-templates/12/items/31/delete'),
+            ('app.php/graph-definitions/vdefs/{vdefId<\\d+>}/items/{itemId<\\d+>}', 'methods=GET requirements=vdefId=[1-9][0-9]+ itemId=[0-9]+', 'app.php/graph-definitions/vdefs/4/items/5'),
+            ('app.php/inventory/devices/{id}/{operation}', 'methods=GET requirements=operation=delete|disable', 'app.php/inventory/devices/8/delete'),
+        ]
+        for entry, detail, expected in cases:
+            with self.subTest(entry=entry):
+                self.assertEqual(expected, sample(entry, detail, fixtures))
+
+    def test_missing_fixture_refuses_instead_of_using_arbitrary_id(self):
+        with self.assertRaisesRegex(ValueError, 'Missing concrete route fixture'):
+            sample('app.php/new-module/{id}', 'methods=GET', {})
+
+    def test_existing_inventory_fixtures_keep_full_route_prefixes(self):
+        class Rig:
+            def sql(self, sql):
+                raise AssertionError('No unrelated fixtures should be inserted: ' + sql)
+        ids = {'devices': 7, 'sites': 9}
+        route_fixtures(Rig(), [('app.php/inventory/devices/{id}', 'symfony:device', '')], ids)
+        self.assertEqual('app.php/inventory/devices/7', sample('app.php/inventory/devices/{id}', '', ids))
+        self.assertEqual('app.php/inventory/sites/9', sample('app.php/inventory/sites/{id}', '', ids))
+
+
+if __name__ == '__main__':
+    unittest.main()
