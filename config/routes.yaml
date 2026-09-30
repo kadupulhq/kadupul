@@ -15,3 +15,9 @@ inventory:
         path: '../src/Inventory/Infrastructure/Symfony/Controller/'
         namespace: Kadupul\Inventory\Infrastructure\Symfony\Controller
     type: attribute
+
+aggregate_template:
+    resource:
+        path: '../src/AggregateTemplate/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\AggregateTemplate\Infrastructure\Symfony\Controller
+    type: attribute

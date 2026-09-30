@@ -2,8 +2,12 @@ entry	gate	detail
 .php-cs-fixer.php	web-server-denied	nginx; apache: opt-in via .htaccess.dist
 about.php	authenticated	include/auth.php realm -1
 aggregate_graphs.php	realm:5	include/auth.php
-aggregate_templates.php	realm:5	include/auth.php
+aggregate_templates.php	symfony:forward	forwards to app.php/aggregate-templates/legacy
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/aggregate-templates	symfony:aggregate_template_list	methods=GET|HEAD; ConsoleAccess realm 8
+app.php/aggregate-templates/actions/delete	symfony:aggregate_template_delete	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/aggregate-templates/legacy	symfony:aggregate_template_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/aggregate-templates/{id}/edit	symfony:aggregate_template_edit	methods=GET|HEAD|POST requirements=id=0|[1-9][0-9]{0,9}; ConsoleAccess realm 8
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3

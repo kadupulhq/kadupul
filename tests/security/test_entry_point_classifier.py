@@ -167,6 +167,39 @@ final class LegacyAuthenticatedSession implements ConsoleAccess
     }
 }
 '''
+CURRENT_ACTOR_CONTRACT = '''<?php
+namespace Kadupul\\IdentityAccess\\Contract;
+interface CurrentActor { public function __invoke(): ?Actor; }
+'''
+CURRENT_ACTOR_SERVICE = '''<?php
+namespace Kadupul\\IdentityAccess\\Application\\Query;
+use Kadupul\\IdentityAccess\\Contract\\Actor;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Kadupul\\IdentityAccess\\Contract\\CurrentActor as CurrentActorContract;
+final class CurrentActor implements CurrentActorContract
+{
+    public function __construct(private ConsoleAccess $session) {}
+    public function __invoke(): ?Actor { return $this->session->consoleActor(); }
+}
+'''
+UNGUARDED_CURRENT_ACTOR_SERVICE = CURRENT_ACTOR_SERVICE.replace(
+    'return $this->session->consoleActor();', 'return new Actor();')
+CURRENT_ACTOR_CONTROLLER = '''<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\CurrentActor;
+use Symfony\\Component\\HttpFoundation\\Response;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+final class ActorActions
+{
+    #[Route('/actor-guarded', name: 'actor_guarded')]
+    public function guarded(CurrentActor $currentActor): Response
+    {
+        $actor = $currentActor();
+        if ($actor === null) { return new Response('', 401); }
+        return new Response();
+    }
+}
+'''
 CONTROLLER = '''<?php
 namespace Kadupul\\Fixture;
 use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
@@ -875,6 +908,7 @@ ROUTES = {
     'app.php/who-guarded': 'symfony:who_guarded',
     'app.php/who-discarded': 'unknown',
     'app.php/session': 'unknown',
+    'app.php/actor-guarded': 'symfony:actor_guarded',
     'app.php/json-refusal': 'symfony:json_refusal',
     'app.php/streamed-refusal': 'unknown',
     'app.php/file-refusal': 'unknown',
@@ -1019,11 +1053,14 @@ def main():
     with tempfile.TemporaryDirectory(prefix='entry-classifier-routes-') as directory:
         root = tree(directory)
         for path, text in (('src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', SESSION),
+                           ('src/IdentityAccess/Contract/CurrentActor.php', CURRENT_ACTOR_CONTRACT),
+                           ('src/IdentityAccess/Application/Query/CurrentActor.php', CURRENT_ACTOR_SERVICE),
                            ('src/Fixture/TwoActions.php', CONTROLLER), ('src/Fixture/Sites.php', SERVICE),
                            ('src/Fixture/ServiceActions.php', SERVICE_CONTROLLER), ('src/Fixture/Who.php', WHO),
                            ('src/Fixture/WhoActions.php', WHO_CONTROLLER),
                            ('src/Fixture/CheckedQuery.php', CHECKED_QUERY), ('src/Fixture/Selection.php', SELECTION),
-                           ('src/Fixture/HandedActions.php', HANDED_CONTROLLER)):
+                           ('src/Fixture/HandedActions.php', HANDED_CONTROLLER),
+                           ('src/Fixture/ActorActions.php', CURRENT_ACTOR_CONTROLLER)):
             (root / path).parent.mkdir(parents=True, exist_ok=True)
             (root / path).write_text(text)
         # A check in one action, or in one method of a used class, must not
@@ -1038,6 +1075,11 @@ def main():
             count += 1
             if not rows.get(entry, ('', ''))[1].endswith('; ' + grant):
                 failures.append('route %s: expected %s read from the session adapter, got %s' % (entry, grant, rows.get(entry)))
+        count += 1
+        (root / 'src/IdentityAccess/Application/Query/CurrentActor.php').write_text(UNGUARDED_CURRENT_ACTOR_SERVICE)
+        rows = run(root, [])
+        if rows.get('app.php/actor-guarded', ('missing',))[0] != 'unknown':
+            failures.append('CurrentActor contract whose implementation skips consoleActor must remain unknown')
         # A route under an alias is not missed.
         count += 1
         (root / 'src/Fixture/Aliased.php').write_text(ALIASED_CONTROLLER)

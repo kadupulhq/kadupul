@@ -1119,3 +1119,21 @@ but remote writes can survive a later failure. The UI reports an uncertain outco
 in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
+
+## Aggregate templates
+
+`aggregate_templates.php` forwards to the Symfony legacy bridge. Current routes
+under `/aggregate-templates` own listing, source selection, graph options, item
+colors, save and delete confirmation. Old POST forms expire without replaying writes.
+
+The isolated CLI worker owns both template persistence and legacy
+`push_out_aggregates()` propagation in one verified primary database transaction.
+It rechecks account policy, console and template realms, locks the template and
+checks the form revision. All tables in its write set must use InnoDB; SQL errors
+throw and roll back the template and dependent graph changes. Delete detaches
+child aggregate graphs instead of deleting their history. Source templates are
+fixed after creation. The form ID must match the route ID.
+
+Verification: `AggregateTemplateAdministrationTest` and the real HTTP/MariaDB
+runner `tests/Symfony/aggregate_template_http.py` cover data handoff, stale forms,
+CSRF, no-op saves, graph propagation failure rollback, and child unlinking.

@@ -608,12 +608,6 @@ header_redirect	./aggregate_graphs.php:300			header('Location: aggregate_graphs.
 header_redirect	./aggregate_graphs.php:514			header('Location: aggregate_graphs.php?header=false');
 header_redirect	./aggregate_graphs.php:75			header('Location: aggregate_graphs.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
 header_redirect	./aggregate_graphs.php:86			header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
-header_redirect	./aggregate_templates.php:142			header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
-header_redirect	./aggregate_templates.php:239		header('Location: aggregate_templates.php?header=false&action=edit&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
-header_redirect	./aggregate_templates.php:274			header('Location: aggregate_templates.php?header=false');
-header_redirect	./aggregate_templates.php:311			header('Location: aggregate_templates.php?header=false');
-header_redirect	./aggregate_templates.php:54			header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
-header_redirect	./aggregate_templates.php:89			header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
 header_redirect	./auth_changepassword.php:217			header('Location: logout.php');
 header_redirect	./auth_changepassword.php:310			header('Location:index.php');
 header_redirect	./auth_changepassword.php:93		header('Location: graph_view.php');

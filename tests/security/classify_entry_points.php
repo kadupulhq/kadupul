@@ -190,6 +190,8 @@ const SUPERGLOBALS = ['GLOBALS', '_SERVER', '_GET', '_POST', '_FILES', '_COOKIE'
 const ROUTE_ATTRIBUTES = ['Symfony\Component\Routing\Attribute\Route', 'Symfony\Component\Routing\Annotation\Route'];
 const ACCESS_CHECKS = ['consoleActor', 'canManageDevices'];
 const SESSION_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession';
+const CURRENT_ACTOR_CONTRACT = 'Kadupul\IdentityAccess\Contract\CurrentActor';
+const CURRENT_ACTOR_SERVICE = 'Kadupul\IdentityAccess\Application\Query\CurrentActor';
 // The IdentityAccess types whose check methods count as a gate. The adapter
 // is the only implementation, and the realms it checks label the route.
 const ACCESS_TYPES = [
@@ -1496,6 +1498,9 @@ function yields_actor(string $root, Expr $expr, Closure $type_of, int $depth): b
     $target = call_target($expr, $type_of);
     if (is_access_call($target, 'consoleActor')) {
         return true;
+    }
+    if ($target === [CURRENT_ACTOR_CONTRACT, '__invoke']) {
+        $target = [CURRENT_ACTOR_SERVICE, '__invoke'];
     }
     if ($target === null || $depth >= CALL_DEPTH) {
         return false;

@@ -67,6 +67,8 @@ services:
             $database: '@kadupul.session_database'
 
     Kadupul\IdentityAccess\Application\Query\CurrentActor: ~
+    Kadupul\IdentityAccess\Contract\CurrentActor:
+        alias: Kadupul\IdentityAccess\Application\Query\CurrentActor
 
     Kadupul\IdentityAccess\Application\Port\AuthenticatedSession:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
@@ -238,6 +240,23 @@ services:
     Kadupul\Inventory\Application\Port\DeviceStatistics:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Command\ClearDeviceStatistics: ~
+
+    Kadupul\AggregateTemplate\Infrastructure\:
+        resource: '../src/AggregateTemplate/Infrastructure/'
+
+    Kadupul\AggregateTemplate\Infrastructure\Persistence\DoctrineAggregateTemplateCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\AggregateTemplate\Application\Port\AggregateTemplateCatalog:
+        alias: Kadupul\AggregateTemplate\Infrastructure\Persistence\DoctrineAggregateTemplateCatalog
+    Kadupul\AggregateTemplate\Infrastructure\Persistence\DoctrineAggregateTemplateAccess:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\AggregateTemplate\Application\Port\AggregateTemplatePermissions:
+        alias: Kadupul\AggregateTemplate\Infrastructure\Persistence\DoctrineAggregateTemplateAccess
+    Kadupul\AggregateTemplate\Infrastructure\Legacy\LegacyAggregateTemplateEditor: ~
+    Kadupul\AggregateTemplate\Application\Port\AggregateTemplateEditor:
+        alias: Kadupul\AggregateTemplate\Infrastructure\Legacy\LegacyAggregateTemplateEditor
 
 when@test:
     services:

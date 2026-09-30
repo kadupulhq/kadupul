@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Confirm aggregate template deletion'|trans({}, 'aggregate_template') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Confirm aggregate template deletion'|trans({}, 'aggregate_template') }}</h1>
+    <p>{{ 'Child aggregate graphs will be unlinked and preserved.'|trans({}, 'aggregate_template') }}</p>
+    <ul>{% for row in rows %}<li>{{ row.name }}</li>{% endfor %}</ul>
+    {{ form_start(form) }}{{ form_errors(form) }}{{ form_widget(form.revisions) }}
+        <button type="submit">{{ 'Delete aggregate templates'|trans({}, 'aggregate_template') }}</button>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed list route. #}
+        <a href="{{ path('aggregate_template_list') }}">{{ 'Cancel'|trans({}, 'aggregate_template') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

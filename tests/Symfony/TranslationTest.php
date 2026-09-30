@@ -9,7 +9,10 @@ namespace Kadupul\Tests;
 
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\IdentityAccess\Application\Port\AuthenticatedSession;
 use Kadupul\IdentityAccess\Contract\LocalePreference;
+use Kadupul\AggregateTemplate\Application\Port\AggregateTemplateCatalog;
+use Kadupul\AggregateTemplate\Application\Port\AggregateTemplatePermissions;
 use Kadupul\Inventory\Application\Port\SiteEditor;
 use Kadupul\Inventory\Application\Port\DeviceEditor;
 use Kadupul\Inventory\Application\Port\DeviceDetailsReader;
@@ -55,6 +58,13 @@ final class TranslationTest extends TestCase
         $request->headers->set('Accept-Language', $browser);
         $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
         self::assertSame($expected, $request->attributes->get('_locale'));
+        foreach (['aggregate_template_list', 'aggregate_template_edit', 'aggregate_template_delete', 'aggregate_template_legacy'] as $route) {
+            $request = Request::create('/aggregate-templates', 'GET', [], ['Cacti' => 'fixture']);
+            $request->attributes->set('_route', $route);
+            $request->headers->set('Accept-Language', $browser);
+            $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+            self::assertSame($expected, $request->attributes->get('_locale'), $route);
+        }
         $request = Request::create('/inventory/sites/new', 'GET', ['language' => 'fr', '_locale' => 'fr'], ['Cacti' => 'fixture']);
         $request->attributes->set('_route', 'inventory_site_create');
         $request->headers->set('Accept-Language', $browser);
@@ -148,6 +158,38 @@ final class TranslationTest extends TestCase
             $kernel->shutdown();
         }
     }
+
+    public function testFrenchAggregateTemplateValidationErrorIsTranslated(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+            $container->set(LegacyConfiguration::class, $configuration);
+            $container->set(DatabaseConnection::class, $this->database([]));
+            $session = $this->createMock(AuthenticatedSession::class);
+            $session->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+            $container->set(AuthenticatedSession::class, $session);
+            $permissions = $this->createMock(AggregateTemplatePermissions::class);
+            $permissions->method('canManage')->willReturn(true);
+            $container->set(AggregateTemplatePermissions::class, $permissions);
+            $catalog = $this->createMock(AggregateTemplateCatalog::class);
+            $catalog->expects(self::never())->method('list');
+            $container->set(AggregateTemplateCatalog::class, $catalog);
+
+            $request = Request::create('/aggregate-templates?page[]=1', 'GET', [], ['Cacti' => 'fixture']);
+            $response = $kernel->handle($request);
+            self::assertSame(400, $response->getStatusCode());
+            self::assertSame('fr', $request->attributes->get('_locale'));
+            self::assertStringContainsString('Filtres de modèles agrégés invalides.', $response->getContent());
+            self::assertStringNotContainsString('Invalid aggregate template list filters.', $response->getContent());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     public function testFrenchDevicePresentationPreservesDataAndCommandValues(): void
     {
         $kernel = new Kernel('test', true);

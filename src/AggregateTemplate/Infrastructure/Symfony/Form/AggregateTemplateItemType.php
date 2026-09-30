@@ -1,0 +1,34 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
+namespace Kadupul\AggregateTemplate\Infrastructure\Symfony\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+final class AggregateTemplateItemType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder->add('id', HiddenType::class)
+            ->add('sequence', HiddenType::class)
+            ->add('forceSkip', HiddenType::class)
+            ->add('colorTemplate', ChoiceType::class, ['label' => false, 'choices' => $options['color_templates'], 'choice_translation_domain' => false])
+            ->add('skip', CheckboxType::class, ['label' => 'Skip', 'required' => false])
+            ->add('total', CheckboxType::class, ['label' => 'Total', 'required' => false]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(['translation_domain' => 'aggregate_template', 'color_templates' => []]);
+        $resolver->setAllowedTypes('color_templates', 'array');
+    }
+}

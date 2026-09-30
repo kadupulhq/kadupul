@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ (template.id > 0 ? 'Edit aggregate template' : 'Create aggregate template')|trans({}, 'aggregate_template') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed list route. #}
+    <p><a href="{{ path('aggregate_template_list') }}">{{ 'Back to aggregate templates'|trans({}, 'aggregate_template') }}</a></p>
+    <h1>{{ (template.id > 0 ? 'Edit aggregate template' : 'Create aggregate template')|trans({}, 'aggregate_template') }}</h1>
+    {% if saved %}<output>{{ 'Aggregate template saved.'|trans({}, 'aggregate_template') }}</output>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.graph_template_id) }}
+        <fieldset>
+            <legend>{{ 'Aggregate options'|trans({}, 'aggregate_template') }}</legend>
+            {{ form_row(form.gprint_prefix) }}{{ form_row(form.gprint_format) }}
+            {{ form_row(form.graph_type) }}{{ form_row(form.total) }}{{ form_row(form.total_type) }}
+            {{ form_row(form.total_prefix) }}{{ form_row(form.order_type) }}
+        </fieldset>
+        {% if data.source %}
+            <h2>{{ 'Template items'|trans({}, 'aggregate_template') }}</h2>
+            <table>
+                <thead><tr><th>{{ 'Item'|trans({}, 'aggregate_template') }}</th><th>{{ 'Color template'|trans({}, 'aggregate_template') }}</th><th>{{ 'Skip'|trans({}, 'aggregate_template') }}</th><th>{{ 'Total'|trans({}, 'aggregate_template') }}</th></tr></thead>
+                <tbody>{% for item in form.items %}
+                    <tr><td>{{ data.items[loop.index0].title }} ({{ data.items[loop.index0].graphType }})</td><td>{{ form_widget(item.colorTemplate) }}</td><td>{{ form_widget(item.skip) }}</td><td>{{ form_widget(item.total) }}</td>{{ form_widget(item.id) }}{{ form_widget(item.sequence) }}{{ form_widget(item.forceSkip) }}</tr>
+                {% endfor %}</tbody>
+            </table>
+            <h2>{{ 'Graph configuration overrides'|trans({}, 'aggregate_template') }}</h2>
+            <table><thead><tr><th>{{ 'Setting'|trans({}, 'aggregate_template') }}</th><th>{{ 'Value'|trans({}, 'aggregate_template') }}</th><th>{{ 'Override'|trans({}, 'aggregate_template') }}</th></tr></thead><tbody>
+                {% for field in data.graphSettings|keys %}
+                    {% set fieldForm = attribute(form, 'graphSettings_' ~ field) %}
+                    <tr><th scope="row">{{ field }}</th><td>{{ form_widget(fieldForm.value) }}</td><td>{{ form_widget(fieldForm.override) }}</td></tr>
+                {% endfor %}
+            </tbody></table>
+        {% endif %}
+        {{ form_widget(form.id) }}{{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save aggregate template'|trans({}, 'aggregate_template') }}</button>
+    {{ form_end(form) }}
+</main>
+{% if template.id == 0 %}
+<script>
+    document.getElementById('aggregate_template_graph_template_id')?.addEventListener('change', function () {
+        window.location.assign('{{ path('aggregate_template_edit', {id: 0}) }}?source=' + this.value);
+    });
+</script>
+{% endif %}
+{% endblock %}

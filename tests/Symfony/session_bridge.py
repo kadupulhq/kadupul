@@ -111,6 +111,11 @@ def main():
         verify_site_lifecycle(harness, session, user_id, check)
         from device_create_scenarios import verify_device_create
         verify_device_create(harness, session, user_id, check)
+        if args.coverage_output and not database_sessions:
+            import aggregate_template_http
+            aggregate_template_http.BASE_URL = harness.base
+            aggregate_template_http.sql = lambda statement: harness.sql(statement).strip()
+            aggregate_template_http.main(authenticated_session=session)
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()

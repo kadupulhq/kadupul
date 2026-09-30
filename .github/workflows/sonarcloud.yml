@@ -115,6 +115,11 @@ jobs:
         with:
           install_args: python@3.12.12
 
+      - name: Aggregate template HTTP and MariaDB integration
+        env:
+          PHP_VERSION: '8.4'
+        run: mise exec python@3.12.12 -- python tests/Symfony/aggregate_template_review_http.py
+
       - name: Poller integration coverage
         env:
           PHP_VERSION: '8.4'

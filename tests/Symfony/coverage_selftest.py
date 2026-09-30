@@ -21,7 +21,7 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
-        'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'bin/legacy-device-edit.php', 'bin/legacy-aggregate-template.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
@@ -168,6 +168,7 @@ def main():
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'aggregate-test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -181,6 +182,7 @@ def main():
         'invalid-hit': 'Invalid PCOV',
         'invalid-line': 'Invalid PCOV',
         'unmeasured-worker': 'Missing measured execution',
+        'unmeasured-aggregate-worker': 'Missing measured execution: bin/legacy-aggregate-template.php',
         'unmeasured-site-editor': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
         'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'missing-site-creation-check': 'Incomplete Symfony integration',
@@ -232,6 +234,8 @@ def main():
                 worker['sha256'] = '0' * 64
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
+            elif case == 'aggregate-test-hash':
+                evidence['source_sha256']['tests/Symfony/aggregate_template_http.py'] = '0' * 64
             elif case == 'details-test-hash':
                 evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'sites-test-hash':
