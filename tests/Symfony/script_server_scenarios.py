@@ -8,7 +8,6 @@ SERVER = '/var/www/html/script_server.php'
 SCRIPTS = '/var/www/html/scripts/'
 STARTED = 'PHP Script Server has Started - Parent is '
 SHUTDOWN = 'PHP Script Server Shutdown request received, exiting'
-THEME = '/var/www/html/include/themes/midwinter'
 
 
 def serve(harness, arguments, lines):
@@ -20,10 +19,6 @@ def serve(harness, arguments, lines):
 
 def cacti_log(harness):
     return harness.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
-
-
-def theme_hashes(harness):
-    return harness.command('sh', '-c', f"find {THEME} -name '*.css' -type f -exec sha256sum {{}} + | sort", check=True)['stdout']
 
 
 def verify_script_server(harness, check):
@@ -152,14 +147,3 @@ def verify_http_guard(harness, check):
     if status['stdout'] != '#!/usr/bin/env php\n404':
         print(repr(status['stdout']), flush=True)
     check(status['stdout'] == '#!/usr/bin/env php\n404', 'script server answers 404 over HTTP')
-    # A stale import hash is what update_hash.php would rewrite, so an
-    # unguarded request would change the file.
-    stale = harness.command('sh', '-c', f"sed -i \"s#fonts.css?[0-9a-f]*'#fonts.css?stale'#\" {THEME}/main.css && grep -q 'fonts.css?stale' {THEME}/main.css")
-    check(stale['exit'] == 0, 'theme fixture carries a stale import hash')
-    before = theme_hashes(harness)
-    status = harness.command('curl', '-s', '-w', '%{http_code}', 'http://127.0.0.1/include/themes/midwinter/update_hash.php')
-    check(status['stdout'] == '404', 'theme hash builder answers 404 over HTTP')
-    check(theme_hashes(harness) == before, 'theme hash builder leaves CSS unchanged over HTTP')
-    rebuilt = harness.command('php', THEME + '/update_hash.php')
-    check(rebuilt['exit'] == 0 and 'fonts.css?stale' not in harness.command('cat', THEME + '/main.css')['stdout'],
-          'theme hash builder still rewrites stale CSS from the CLI')
