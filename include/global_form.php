@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once dirname(__DIR__) . '/lib/graph_item_editor.php';
+
 if (!defined('VALID_HOST_FIELDS')) {
     $string = api_plugin_hook_function('valid_host_fields', '(hostname|host_id|location|snmp_community|snmp_username|snmp_password|snmp_auth_protocol|snmp_priv_passphrase|snmp_priv_protocol|snmp_context|snmp_engine_id|snmp_version|snmp_port|snmp_timeout|external_id)');
     define('VALID_HOST_FIELDS', $string);
@@ -1049,14 +1051,7 @@ $struct_graph_item = array(
         'default' => '',
         'description' => __('Forces the legend to the next line after this item.')
     ),
-    'line_width' => array(
-        'friendly_name' => __('Line Width'),
-        'method' => 'textbox',
-        'max_length' => '5',
-        'default' => '1.00',
-        'size' => '5',
-        'description' => __('LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported.'),
-    ),
+    'line_width' => graph_item_editor_line_width_field(),
     'dashes' => array(
         'friendly_name' => __('Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])'),
         'method' => 'textbox',

@@ -5,6 +5,7 @@
  */
 
 include('./include/auth.php');
+require_once(__DIR__ . '/lib/graph_item_editor.php');
 include_once('./lib/poller.php');
 include_once('./lib/utility.php');
 
@@ -86,67 +87,7 @@ function form_save()
         get_filter_request_var('local_graph_template_item_id');
         /* ==================================================== */
 
-        $items[0] = array();
-
-        if ($graph_item_types[get_nfilter_request_var('graph_type_id')] == 'LEGEND') {
-            /* this can be a major time saver when creating lots of graphs with the typical
-            GPRINT LAST/AVERAGE/MAX legends */
-            $items = array(
-                0 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '4',
-                    'text_format' => 'Cur:',
-                    'hard_return' => ''
-                ),
-                1 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '1',
-                    'text_format' => 'Avg:',
-                    'hard_return' => ''
-                ),
-                2 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '3',
-                    'text_format' => 'Max:',
-                    'hard_return' => 'on'
-                ));
-        } elseif ($graph_item_types[get_nfilter_request_var('graph_type_id')] == 'LEGEND_CAMM') {
-            /* this can be a major time saver when creating lots of graphs with the typical
-               GPRINT LAST/AVERAGE/MAX legends */
-            $items = array(
-                0 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '4',
-                    'text_format' => __('Cur:'),
-                    'hard_return' => ''
-                ),
-                1 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '1',
-                    'text_format' => __('Avg:'),
-                    'hard_return' => ''
-                ),
-                2 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '2',
-                    'text_format' => __('Min:'),
-                    'hard_return' => ''
-                ),
-                3 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '3',
-                    'text_format' => __('Max:'),
-                    'hard_return' => 'on'
-                )
-            );
-        }
+        $items = graph_item_editor_legend_items($graph_item_types[get_nfilter_request_var('graph_type_id')], $graph_item_types[get_nfilter_request_var('graph_type_id')] !== 'LEGEND');
 
         $sequence = get_nfilter_request_var('sequence');
 
