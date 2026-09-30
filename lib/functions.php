@@ -122,6 +122,55 @@ function read_graph_config_option($config_name, $force = false)
 }
 
 /**
+ * graph_font_size_filter - FILTER_CALLBACK for the font size settings
+ *
+ * RRDtool refuses INF and Cairo fails on very large sizes. Sizes of 4 and below
+ * were always replaced by a default, so they are refused as well.
+ *
+ * @param $size - the submitted size
+ *
+ * @return - $size when RRDtool can draw it, otherwise false
+ */
+function graph_font_size_filter($size)
+{
+    if (!is_numeric($size)) {
+        return false;
+    }
+
+    $points = (float) $size;
+
+    if (!is_finite($points) || $points <= 4 || $points > 72) {
+        return false;
+    }
+
+    return $size;
+}
+
+/**
+ * graph_font_size - the point size to hand RRDtool for a stored font size
+ *
+ * Values saved before graph_font_size_filter() existed can be anything, so
+ * sizes it refuses fall back to $default, except that large ones are capped.
+ *
+ * @param $size    - the stored size
+ * @param $default - the size to use when $size is not usable
+ *
+ * @return - a size RRDtool can draw
+ */
+function graph_font_size($size, $default)
+{
+    if (is_numeric($size) && is_finite((float) $size) && (float) $size > 72) {
+        return 72;
+    }
+
+    if (graph_font_size_filter($size) === false) {
+        return $default;
+    }
+
+    return (float) $size;
+}
+
+/**
  * save_user_setting - sets/updates aLL user settings
  *
  * @param $config_name - the name of the configuration setting as specified $settings array

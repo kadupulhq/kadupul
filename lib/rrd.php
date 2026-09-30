@@ -3492,13 +3492,13 @@ function rrdtool_function_set_font($type, $no_legend, $themefonts)
     }
 
     if ($type == 'title') {
+        $size = graph_font_size($size, 12);
+
         if (!empty($no_legend)) {
             $size = $size * .70;
-        } elseif (($size <= 4) || !is_numeric($size)) {
-            $size = 12;
         }
-    } elseif (($size <= 4) || !is_numeric($size)) {
-        $size = 8;
+    } else {
+        $size = graph_font_size($size, 8);
     }
 
     return '--font ' . strtoupper($type) . ':' . floatval($size) . ':' . $font . RRD_NL;

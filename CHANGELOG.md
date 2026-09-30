@@ -42,6 +42,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
 - Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
+- Replace graph font sizes that are empty, non-numeric, infinite or 4 points and below with the default, and cap larger ones at 72 points. A thumbnail with an empty title size threw a `TypeError`, and a size such as `1e400` made RRDtool reject every graph.
 - Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
 - Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
 - Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.
