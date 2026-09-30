@@ -250,3 +250,28 @@ test('paw keeps its helpers local, sets both logos and inserts balanced footer m
   const markup = read('include/themes/paw/main.js').match(/\$\('(<div id="cactiPageBottom"[^']*)'\)/)[1];
   assert.equal((markup.match(/<a\b/g) || []).length, (markup.match(/<\/a>/g) || []).length);
 });
+
+test('theme scripts only use icon classes the shipped Font Awesome defines', () => {
+  let css;
+  for (const path of ['include/fa/css/all.css', 'node_modules/@fortawesome/fontawesome-free/css/all.css']) {
+    try {
+      css = read(path);
+      break;
+    } catch {
+      // try the next location
+    }
+  }
+  assert.ok(css, 'build the browser assets (npm ci && npm run build) before this test');
+
+  const missing = [];
+  for (const theme of ['classic', 'modern', 'dark', 'paper-plane', 'paw', 'sunrise']) {
+    const names = new Set(read(`include/themes/${theme}/main.js`).match(/\bfa-[a-z0-9-]+/g) || []);
+    for (const name of names) {
+      if (!new RegExp(`\\.${name}(?![a-z0-9-])`).test(css)) {
+        missing.push(`${theme}: ${name}`);
+      }
+    }
+  }
+  assert.deepEqual(missing, []);
+  assert.doesNotMatch(css, /\.fa-arrow-circle-o-up(?![a-z0-9-])/, 'the Font Awesome 4 names stay undefined');
+});

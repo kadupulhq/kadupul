@@ -44,7 +44,7 @@ function themeReady() {
 	$('.cactiConsoleNavigationArea').find('#navigation > table').remove();
 
 	if ($('#cactiPageBottom').length == 0) {
-		$('<div id="cactiPageBottom" class="cactiPageBottom"><a class="bottom_scroll_up action-icon-user" href="#"><i class="fa fa-arrow-circle-o-up"></i></a></div>').insertAfter('#cactiContent');
+		$('<div id="cactiPageBottom" class="cactiPageBottom"><a class="bottom_scroll_up action-icon-user" href="#"><i class="fa fa-circle-arrow-up"></i></a></div>').insertAfter('#cactiContent');
 	}
 
 	$('.maintabs nav ul li a.lefttab').each( function() {
@@ -238,7 +238,6 @@ function themeReady() {
 	/* Replace icons */
 	$('.fa-arrow-down').addClass('fa-chevron-down').removeClass('fa-arrow-down');
 	$('.fa-arrow-up').addClass('fa-chevron-up').removeClass('fa-arrow-up');
-	$('.fa-remove').addClass('fa-trash-o').removeClass('fa-remove');
 
 	setNavigationScroll();
 }
