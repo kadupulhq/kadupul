@@ -23,6 +23,8 @@ services:
 
     Kadupul\Platform\Contract\DatabaseConnection:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
+    Kadupul\Platform\Contract\DatabaseTlsOptions:
+        alias: Kadupul\Platform\Infrastructure\StrictDatabaseTlsOptions
 
     Kadupul\Platform\Infrastructure\Legacy\InstallationVersion: ~
 
@@ -85,6 +87,25 @@ services:
     Kadupul\CollectorAdministration\Infrastructure\:
         resource: '../src/CollectorAdministration/Infrastructure/'
     Kadupul\CollectorAdministration\Application\Query\ListCollectors: ~
+    Kadupul\CollectorAdministration\Application\Command\PrepareCollectorBulkAction: ~
+    Kadupul\CollectorAdministration\Application\Command\ExecuteCollectorBulkAction: ~
+    Kadupul\CollectorAdministration\Application\Port\CollectorBulkOperations:
+        alias: Kadupul\CollectorAdministration\Infrastructure\Persistence\LegacyCollectorBulkOperations
+    Kadupul\CollectorAdministration\Application\Command\SaveCollector: ~
+    Kadupul\CollectorAdministration\Application\Command\TestCollectorConnection: ~
+    Kadupul\CollectorAdministration\Application\Query\FindCollector: ~
+    Kadupul\CollectorAdministration\Application\Query\SearchCollectorTimezones: ~
+    Kadupul\CollectorAdministration\Application\Port\CollectorEditor:
+        alias: Kadupul\CollectorAdministration\Infrastructure\Legacy\LegacyCollectorEditor
+    Kadupul\CollectorAdministration\Application\Port\CollectorTimezones:
+        alias: Kadupul\CollectorAdministration\Infrastructure\Persistence\DoctrineCollectorTimezones
+    Kadupul\CollectorAdministration\Infrastructure\Persistence\DoctrineCollectorTimezones:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\CollectorAdministration\Application\Port\RemoteDatabaseConnector:
+        alias: Kadupul\CollectorAdministration\Infrastructure\Legacy\PdoRemoteDatabaseConnector
+    Kadupul\CollectorAdministration\Application\Port\RemoteDatabaseProbe:
+        alias: Kadupul\CollectorAdministration\Infrastructure\Legacy\PdoRemoteDatabaseProbe
     Kadupul\CollectorAdministration\Infrastructure\Persistence\DoctrineCollectorCatalog:
         arguments:
             $database: '@doctrine.dbal.web_connection'

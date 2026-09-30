@@ -4,6 +4,14 @@ about.php	authenticated	include/auth.php realm -1
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/collector-editor.js	symfony:collector_editor_asset	methods=GET|HEAD; anonymous-allowed: fixed collector editor JavaScript asset; no installation or user data
+app.php/collectors	symfony:collector_list	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
+app.php/collectors/actions/{action}	symfony:collector_action	methods=GET|POST requirements=action=delete|disable|enable|full-sync|clear-statistics; ConsoleAccess realm 8 + realm 3
+app.php/collectors/connection-test	symfony:collector_connection_test	methods=POST; ConsoleAccess realm 8 + realm 3
+app.php/collectors/legacy	symfony:collector_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/collectors/new	symfony:collector_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/collectors/timezones	symfony:collector_timezones	methods=GET; ConsoleAccess realm 8 + realm 3
+app.php/collectors/{id}/edit	symfony:collector_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,4}; ConsoleAccess realm 8 + realm 3
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -217,7 +225,7 @@ poller_recovery.php	cli-only	guard: include/cli_check.php
 poller_reports.php	cli-only	guard: include/cli_check.php
 poller_rrdcheck.php	cli-only	guard: include/cli_check.php
 poller_spikekill.php	cli-only	guard: include/cli_check.php
-pollers.php	realm:3	include/auth.php
+pollers.php	symfony:forward	forwards to app.php/collectors/legacy
 public/index.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
 remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at 5d7a425129b8
 reports_admin.php	realm:21	include/auth.php

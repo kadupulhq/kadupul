@@ -95,6 +95,7 @@ const UNGATED = [];
 // Symfony routes that deliberately answer without an actor.
 const ANONYMOUS_ROUTES = [
     'health' => 'liveness probe; returns a fixed status document',
+    'collector_editor_asset' => 'fixed collector editor JavaScript asset; no installation or user data',
 ];
 // Actions that read the actor without the guard shape, traced by hand. The
 // detail pins the action body, so an edit to it shows as drift.

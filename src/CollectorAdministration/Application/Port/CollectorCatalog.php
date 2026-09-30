@@ -12,5 +12,7 @@ use Kadupul\CollectorAdministration\Domain\CollectorListCriteria;
 
 interface CollectorCatalog
 {
+    public function defaultPageSize(): int;
+
     public function list(CollectorListCriteria $criteria): CollectorPage;
 }

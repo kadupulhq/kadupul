@@ -5,17 +5,21 @@
 {% block body %}
 <main>
     <h1>{{ 'Data Collectors'|trans({}, 'collectors') }}</h1>
+    <p><a href="{{ path('collector_create') }}">{{ 'New Data Collector'|trans({}, 'collectors') }}</a></p>
     {{ form_start(form, {method: 'get', attr: {role: 'search'}}) }}
         {{ form_row(form.q) }}
         {{ form_row(form.size) }}
         {{ form_row(form.sort) }}
         {{ form_row(form.direction) }}
+        {{ form_row(form.refresh) }}
         <button type="submit">{{ 'Apply'|trans({}, 'collectors') }}</button>
     {{ form_end(form) }}
+    <form method="get" action="{{ path('collector_action', {action: 'disable'}) }}">
     <table>
         <caption>{{ 'Data collectors and their current polling status'|trans({}, 'collectors') }}</caption>
         <thead>
         <tr>
+            <th scope="col">{{ 'Select'|trans({}, 'collectors') }}</th>
             <th scope="col">{{ 'Collector Name'|trans({}, 'collectors') }}</th>
             <th scope="col">{{ 'ID'|trans({}, 'collectors') }}</th>
             <th scope="col">{{ 'Hostname'|trans({}, 'collectors') }}</th>
@@ -35,7 +39,8 @@
         <tbody>
         {% for collector in result.collectors %}
             <tr>
-                <td>{{ collector.name }}</td>
+                <td>{% if collector.id != 1 %}<input type="checkbox" name="ids[]" value="{{ collector.id }}" aria-label="{{ 'Select %name%'|trans({'%name%': collector.name}, 'collectors') }}">{% endif %}</td>
+                <td><a href="{{ path('collector_edit', {id: collector.id}) }}">{{ collector.name }}</a></td>
                 <td>{{ collector.id }}</td>
                 <td>{{ collector.hostname }}</td>
                 <td>{{ collector.status|trans({}, 'collectors') }}</td>
@@ -51,10 +56,16 @@
                 <td>{{ collector.id == 1 or collector.lastSync is null ? 'N/A'|trans({}, 'collectors') : collector.lastSync }}</td>
             </tr>
         {% else %}
-            <tr><td colspan="14">{{ 'No Data Collectors Found'|trans({}, 'collectors') }}</td></tr>
+            <tr><td colspan="15">{{ 'No Data Collectors Found'|trans({}, 'collectors') }}</td></tr>
         {% endfor %}
         </tbody>
     </table>
+    <div>
+        {% for action, label in {'disable': 'Disable', 'enable': 'Enable', 'clear-statistics': 'Clear Statistics', 'full-sync': 'Full Sync', 'delete': 'Delete'} %}
+            <button type="submit" formaction="{{ path('collector_action', {action: action}) }}">{{ label|trans({}, 'collectors') }}</button>
+        {% endfor %}
+    </div>
+    </form>
     <nav aria-label="{{ 'Collector pages'|trans({}, 'collectors') }}">
         {% if criteria.page > 1 %}
             <a rel="prev" href="{{ path('collector_list', filters|merge({page: criteria.page - 1})) }}">{{ 'Previous'|trans({}, 'collectors') }}</a>

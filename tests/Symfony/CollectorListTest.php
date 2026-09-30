@@ -74,7 +74,7 @@ final class CollectorListTest extends TestCase
     public static function invalidCriteria(): iterable
     {
         yield [['', 0]];
-        yield [['', 1, 26]];
+        yield [['', 1, 28]];
         yield [['', 1, 25, 'unknown']];
         yield [['', 1, 25, 'name', 'sideways']];
         yield [[str_repeat('x', 201)]];
@@ -106,6 +106,10 @@ final class CollectorListTest extends TestCase
             [['page' => '-1'], []],
             [['page' => '1000000'], []],
             [[], ['size' => ['100']]],
+            [[], ['q' => null]],
+            [[], ['refresh' => '1']],
+            [[], ['refresh' => ['20']]],
+            [[], ['unknown' => 'value']],
         ] as [$query, $formData]) {
             try {
                 if (array_diff(array_keys($query), ['collector_filter', 'page']) !== []) {
@@ -115,6 +119,17 @@ final class CollectorListTest extends TestCase
                 self::fail('Expected malformed filters to be rejected.');
             } catch (\InvalidArgumentException) {
                 self::assertTrue(true);
+            }
+        }
+    }
+
+    public function testLegacyCounterSortsAndRefreshChoicesRemainAvailable(): void
+    {
+        foreach (['snmp', 'script', 'server'] as $sort) {
+            foreach ([0, 5, 10, 20, 30, 45, 60, 120, 300] as $refresh) {
+                $criteria = CollectorListParameters::parse([], ['sort' => $sort, 'refresh' => (string) $refresh]);
+                self::assertSame($sort, $criteria->sort);
+                self::assertSame($refresh, $criteria->refresh);
             }
         }
     }

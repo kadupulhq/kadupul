@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ action.confirmation|trans({}, 'collectors') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ action.confirmation|trans({}, 'collectors') }}</h1>
+    <p>{{ action.explanation|trans({}, 'collectors') }}</p>
+    {% if error %}<p role="alert">{{ error }}</p>{% endif %}
+    <ul>
+        {% for collector in collectors %}
+            <li>{{ collector.name }} ({{ collector.id }})</li>
+        {% endfor %}
+    </ul>
+    {% if result %}
+        <p>{{ 'Successful collector IDs'|trans({}, 'collectors') }}: {{ result.successful|join(', ') }}</p>
+        <p>{{ 'Failed collector IDs'|trans({}, 'collectors') }}: {{ result.failed|join(', ') }}</p>
+    {% else %}
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">{{ 'Continue'|trans({}, 'collectors') }}</button>
+        <a href="{{ path('collector_list') }}">{{ 'Cancel'|trans({}, 'collectors') }}</a>
+        {{ form_end(form) }}
+    {% endif %}
+</main>
+{% endblock %}

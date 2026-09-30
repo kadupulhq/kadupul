@@ -12,7 +12,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Resolve ordered graph-item consolidation references in a Graphing collaborator while preserving GPRINT association behavior. Part of #502.
 - Reuse one RRDtool proxy session for the commands in a graph render, including consolidation-function lookups. Part of #502.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
-- Add a read-only Symfony/Twig Data Collectors page with bounded search, sorting and pagination; legacy collector editing and actions remain on `pollers.php`.
+- Move Data Collectors listing, editing, creation, connection testing and confirmed bulk actions into Symfony/Twig; preserve legacy URLs through a forwarding entry point and reject expired procedural forms.
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 

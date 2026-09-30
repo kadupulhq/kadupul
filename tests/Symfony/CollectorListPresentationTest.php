@@ -30,14 +30,16 @@ final class CollectorListPresentationTest extends TestCase
             $access->method('canManageDevices')->willReturn(true);
             $container->set(ConsoleAccess::class, $access);
             $catalog = $this->createMock(CollectorCatalog::class);
-            $catalog->expects(self::exactly(2))->method('list')->with(new CollectorListCriteria('router'))->willReturn(new CollectorPage([
+            $catalog->expects(self::exactly(2))->method('list')->with(new CollectorListCriteria('router', pageSize: 30))->willReturn(new CollectorPage([
                 new CollectorSummary(7, '<router>', '<router.example>', 'Running', 2, 4, 8.5, 2.25, 4.0, 3, 8, 2, 1, '2026-09-27 10:00:00', '2026-09-27 10:00:01', null),
             ], true, 2));
             $container->set(CollectorCatalog::class, $catalog);
 
             $response = $kernel->handle(Request::create('/collectors?collector_filter%5Bq%5D=router'));
             self::assertSame(200, $response->getStatusCode());
-            self::assertSame('private, no-store', $response->headers->get('Cache-Control'));
+            self::assertTrue($response->headers->hasCacheControlDirective('private'));
+            self::assertTrue($response->headers->hasCacheControlDirective('no-store'));
+            self::assertSame('20', $response->headers->get('Refresh'));
             self::assertStringContainsString('&lt;router&gt;', $response->getContent());
             self::assertStringContainsString('&lt;router.example&gt;', $response->getContent());
             self::assertStringNotContainsString('<router>', $response->getContent());
