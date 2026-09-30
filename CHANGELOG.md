@@ -6,9 +6,12 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
+
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
 - Scope remote-agent host operations to the requesting main poller and the receiver's assigned devices; require an authenticated session user for remote graph rendering.
 - Make `plugin_manage.php --allperms` grant existing plugin realms to the configured administrator and report failed grants. Fixes #224.
+- Reject plugin installs whose `INFO` compatibility floor is missing, malformed, or newer than the running core. Enforce the gate before install callbacks and return failure from the CLI. Related to #223.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
@@ -42,6 +45,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Fix theme script defects on page reloads: window resize handlers no longer pile up, the classic theme no longer removes the handler that closes open menus on an outside click, and filter search icons are added once. Select menus are sized through the widget, so a plugin field id with `.` or `:` no longer stops the theme setup.
 
 - Replace Font Awesome 4 icon names that render blank: the paper-plane scroll-to-top button and the sunrise logo now show their icons, and paper-plane and paw no longer turn delete icons into an undefined class. The paw theme also shows its logo on the logout page.
+- Disable network access while parsing imported package XML. Fixes #578.
+- Keep SNMP agent cache values on one `pass_persist` protocol line by removing embedded carriage returns and line feeds before storage and output.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 

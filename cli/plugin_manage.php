@@ -128,10 +128,13 @@ if (cacti_sizeof($plugins)) {
 
                                 print "NOTE: Plugin $plugin enabled." . PHP_EOL;
                             }
-
+                        } else {
+                            print "ERROR: Plugin '$plugin' installation failed." . PHP_EOL;
+                            $exit_code = 1;
                         }
                     } else {
-                        print "WARNING: Plugin '$plugin' can not install.  Message is: $message" . PHP_EOL;
+                        print "ERROR: Plugin '$plugin' can not install.  Message is: $message" . PHP_EOL;
+                        $exit_code = 1;
                     }
                 } else {
                     $installed = true;
@@ -140,6 +143,7 @@ if (cacti_sizeof($plugins)) {
                 }
             } else {
                 print "WARNING: Plugin '$plugin' missing plugin directory.  Plugin not installed" . PHP_EOL;
+                $exit_code = 1;
             }
 
             if ($installed && $allperms) {
