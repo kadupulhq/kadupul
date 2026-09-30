@@ -71,8 +71,8 @@ PHP;
     }
 }
 
-// sites.php is now a Symfony bridge; SiteLifecycleTest and the HTTP lifecycle
-// scenarios exercise POST/CSRF rejection through the actual framework.
+// sites.php and vdef.php are Symfony bridges; their presentation tests and HTTP
+// lifecycle scenarios exercise expired POST/CSRF rejection through Symfony.
 test('bulk controllers reject unprotected confirmation requests before dispatch', function ($controller, $method, $token, $action, $status) {
     expect(runBulkMutationRequest($this, $controller, $method, $token, $action))->toBe('STATUS:' . $status);
 })->with(array(
@@ -82,7 +82,7 @@ test('bulk controllers reject unprotected confirmation requests before dispatch'
     'color_templates.php', 'data_debug.php', 'data_input.php', 'data_queries.php',
     'data_source_profiles.php', 'data_sources.php', 'data_templates.php', 'gprint_presets.php',
     'graphs.php', 'host.php', 'host_templates.php', 'links.php', 'managers.php',
-    'pollers.php', 'tree.php', 'user_domains.php', 'vdef.php',
+    'pollers.php', 'tree.php', 'user_domains.php',
 ))->with(array(
     array('GET', 'missing', 'actions', 405),
     array('GET', 'valid', 'actions', 405),
