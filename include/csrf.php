@@ -51,16 +51,188 @@ function csrf_startup()
     if ($config['is_web']) {
         /* If you need to debug CSRF, uncomment the following line */
         //csrf_conf('log_file', dirname(read_config_option('path_cactilog')) . '/csrf.log');
-        if (!empty($config['path_csrf_secret'])) {
-            csrf_conf('path_secret', $config['path_csrf_secret']);
+
+        // Handing csrf-magic the secret keeps it from generating one and
+        // writing it to include/vendor/csrf/csrf-secret.php, under the
+        // document root, where a server without the include/ deny serves it.
+        $secret = cacti_csrf_load_secret();
+
+        if (!cacti_csrf_secret_is_valid($secret)) {
+            http_response_code(500);
+            die('ERROR: The configured external Kadupul CSRF secret is unavailable or invalid.');
         }
 
+        csrf_conf('secret', $secret);
         csrf_conf('rewrite-js', $config['url_path'] . 'include/vendor/csrf/csrf-magic.js');
         csrf_conf('callback', 'csrf_error_callback');
         csrf_conf('expires', 7200);
     } else {
         csrf_conf('disable', true);
     }
+}
+
+/**
+ * Return the CSRF secret: the packager-managed file named by
+ * $path_csrf_secret when it is usable, otherwise the one stored in the
+ * database, created on first use.
+ *
+ * During an install or upgrade the database may not hold settings yet, so a
+ * per-session secret bridges the installer's own pages.
+ */
+function cacti_csrf_load_secret()
+{
+    global $config;
+
+    $secret = '';
+    $external = !empty($config['path_csrf_secret']);
+
+    if ($external) {
+        $secret = cacti_csrf_read_external_secret($config['path_csrf_secret']);
+    }
+
+    if (!cacti_csrf_secret_is_valid($secret) && !cacti_csrf_install_pending()) {
+        $secret = read_config_option('csrf_secret', true);
+
+        // An anonymous visitor has no stored session, so a per-session secret
+        // would differ between the login form and its POST. Store one instead.
+        if (!cacti_csrf_secret_is_valid($secret)) {
+            set_config_option('csrf_secret', bin2hex(random_bytes(32)));
+            $secret = read_config_option('csrf_secret', true);
+        }
+
+        // The session flag is lost the same way, so a settings marker also
+        // limits the warning to one an hour.
+        if ($external && empty($_SESSION['cacti_csrf_external_secret_warned']) && (int) read_config_option('csrf_external_secret_warned', true) < time() - 3600) {
+            cacti_log('WARNING: The configured external CSRF secret is unavailable, invalid or under the document root, using ' . (cacti_csrf_secret_is_valid($secret) ? 'the database secret' : 'the session bootstrap secret') . ' instead', false, 'SYSTEM');
+            $_SESSION['cacti_csrf_external_secret_warned'] = true;
+            set_config_option('csrf_external_secret_warned', time());
+        }
+    }
+
+    if (!cacti_csrf_secret_is_valid($secret)) {
+        if (empty($_SESSION['cacti_bootstrap_csrf_secret'])) {
+            $_SESSION['cacti_bootstrap_csrf_secret'] = bin2hex(random_bytes(32));
+        }
+
+        $secret = $_SESSION['cacti_bootstrap_csrf_secret'];
+    }
+
+    return $secret;
+}
+
+function cacti_csrf_install_pending()
+{
+    global $config;
+
+    return defined('IN_CACTI_INSTALL')
+        || (defined('CACTI_VERSION') && isset($config['cacti_db_version']) && $config['cacti_db_version'] !== CACTI_VERSION);
+}
+
+function cacti_csrf_secret_is_valid($secret)
+{
+    return is_string($secret) && strlen($secret) >= 32 && strlen($secret) <= 4096;
+}
+
+/**
+ * Read a packager-managed CSRF secret from outside the document root.
+ */
+function cacti_csrf_read_external_secret($path)
+{
+    $path = cacti_csrf_external_secret_path($path);
+
+    if (!cacti_csrf_external_path_is_safe($path) || !is_file($path)) {
+        return '';
+    }
+
+    $secret = @file_get_contents($path, false, null, 0, 4097);
+
+    if (!is_string($secret)) {
+        return '';
+    }
+
+    $secret = cacti_csrf_parse_secret_contents($secret);
+
+    return cacti_csrf_secret_is_valid($secret) ? $secret : '';
+}
+
+/**
+ * Accept a raw secret, as the installer writes it, and the PHP wrapper older
+ * refresh_csrf.php versions wrote.
+ */
+function cacti_csrf_parse_secret_contents($secret)
+{
+    $secret = trim($secret);
+
+    if (preg_match('/^<\?php\s+\$secret\s*=\s*[\'"]([a-f0-9]{32,})[\'"]\s*;?\s*$/i', $secret, $matches)) {
+        return $matches[1];
+    }
+
+    // Never use an unparsable PHP wrapper as the secret itself.
+    if (strpos($secret, '<?') === 0) {
+        return '';
+    }
+
+    return $secret;
+}
+
+/**
+ * Resolve $path_csrf_secret, which may name a directory as the installer
+ * has always allowed.
+ */
+function cacti_csrf_external_secret_path($path)
+{
+    if (!is_string($path) || $path === '') {
+        return $path;
+    }
+
+    if (is_dir($path)) {
+        $directory = realpath($path);
+        $filename = 'csrf-secret.php';
+    } else {
+        $directory = realpath(dirname($path));
+        $filename = basename($path);
+    }
+
+    return $directory === false ? $path : $directory . DIRECTORY_SEPARATOR . $filename;
+}
+
+/**
+ * Whether an external secret resolves to an existing directory outside the
+ * document root.
+ */
+function cacti_csrf_external_path_is_safe($path)
+{
+    global $config;
+
+    $path = cacti_csrf_external_secret_path($path);
+
+    if (!is_string($path) || $path === '') {
+        return false;
+    }
+
+    $base_path = realpath($config['base_path']);
+    $secret_dir = realpath(dirname($path));
+
+    if ($base_path === false || $secret_dir === false) {
+        return false;
+    }
+
+    $base_prefix = rtrim(str_replace('\\', '/', $base_path), '/') . '/';
+    $secret_prefix = rtrim(str_replace('\\', '/', $secret_dir), '/') . '/';
+
+    if (stripos($secret_prefix, $base_prefix) === 0) {
+        return false;
+    }
+
+    if (file_exists($path)) {
+        $secret_path = realpath($path);
+
+        if ($secret_path === false || stripos(str_replace('\\', '/', $secret_path), $base_prefix) === 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function csrf_error_callback()

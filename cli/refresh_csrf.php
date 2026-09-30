@@ -46,10 +46,33 @@ if (cacti_sizeof($parms)) {
 /* issue warnings and start message if applicable */
 print "NOTE: Updating csrf_secret file with new information" . PHP_EOL;
 
-if (isset($config['path_csrf_secret'])) {
-    $path_csrf_secret = $config['path_csrf_secret'];
-} else {
-    $path_csrf_secret = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
+$legacy_path = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
+$new_secret = bin2hex(random_bytes(32));
+
+// Web requests read the secret from $path_csrf_secret when it is set, and
+// otherwise from the database; they no longer read the file under include/.
+if (empty($config['path_csrf_secret'])) {
+    set_config_option('csrf_secret', $new_secret);
+
+    if (read_config_option('csrf_secret', true) !== $new_secret) {
+        print "FATAL: Unable to store the new CSRF secret in the database." . PHP_EOL;
+        exit(1);
+    }
+
+    if (file_exists($legacy_path)) {
+        print "NOTE: Removing old csrf_secret.php file." . PHP_EOL;
+        @unlink($legacy_path);
+    }
+
+    print "NOTE: New CSRF secret stored in the database." . PHP_EOL;
+    exit(0);
+}
+
+$path_csrf_secret = cacti_csrf_external_secret_path($config['path_csrf_secret']);
+
+if (!cacti_csrf_external_path_is_safe($path_csrf_secret)) {
+    print "FATAL: The configured CSRF secret must be outside the Kadupul document root." . PHP_EOL;
+    exit(1);
 }
 
 if (!file_exists($path_csrf_secret)) {
@@ -62,7 +85,6 @@ if (!file_exists($path_csrf_secret)) {
     unlink($path_csrf_secret);
 }
 
-$new_secret = csrf_generate_secret();
 if (csrf_writable($path_csrf_secret)) {
     umask(0027);
     $fh = fopen($path_csrf_secret, 'w');
