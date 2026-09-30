@@ -943,7 +943,7 @@ function setHotKeys() {
 		hotkeysLoaded = false;
 	}).done(function (script, textStatus) {
 		if (textStatus === 'success') {
-			hotkeys('SHIFT+c,c+t,c+l,c+p,c+F1,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
+			hotkeys('SHIFT+c,c+t,c+l,c+p,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
 				event.preventDefault();
 				switch (handler.key) {
 					case 'SHIFT+c':
@@ -975,9 +975,10 @@ function setHotKeys() {
 						toggleFullscreen('navigation_right');
 						break;
 					case 'ESC':
-						toggleFullscreen('');
+						if (getFullscreenElement()) {
+							toggleFullscreen();
+						}
 						break;
-					default: alert(event);
                 }
 
 				return false;
@@ -1016,11 +1017,7 @@ function getFullscreenElement() {
 
 function toggleFullscreen(element = false){
 	if(getFullscreenElement()){
-		if(element === false) {
-			document.exitFullscreen();
-		}else {
-			document.documentElement.requestFullscreen().catch(console.log);
-		}
+		document.exitFullscreen().catch(console.log);
 	}else {
 		if(element === false) {
 			document.documentElement.requestFullscreen().catch(console.log);

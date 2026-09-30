@@ -152,3 +152,33 @@ test('a system scheme change leaves a manual colour mode alone', async ({ page }
   expect(await page.evaluate(() => window.graphRefreshes)).toBe(before);
   expect(await page.evaluate(() => $.cookie('CactiColorMode'))).toBe('light');
 });
+
+test('ESC outside fullscreen and the retired c+F1 shortcut raise no error or alert', async ({ page }) => {
+  const errors = [];
+  const dialogs = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('dialog', dialog => { dialogs.push(dialog.message()); dialog.dismiss(); });
+  await loadTheme(page);
+  await navigate(page, 1);
+
+  await page.keyboard.press('Escape');
+  await page.keyboard.down('c');
+  await page.keyboard.press('F1');
+  await page.keyboard.up('c');
+  await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 50)));
+  expect(dialogs).toEqual([]);
+  expect(errors).toEqual([]);
+  expect(await page.evaluate(() => window.loads)).toEqual([]);
+});
+
+test('SHIFT+k enters fullscreen on the content area and leaves it again', async ({ page }) => {
+  await loadTheme(page);
+  await navigate(page, 1);
+
+  await page.keyboard.press('Shift+K');
+  await page.waitForFunction(() => document.fullscreenElement !== null);
+  expect(await page.evaluate(() => document.fullscreenElement.id)).toBe('navigation_right');
+
+  await page.keyboard.press('Shift+K');
+  await page.waitForFunction(() => document.fullscreenElement === null);
+});
