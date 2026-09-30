@@ -89,7 +89,7 @@ include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at 80bc6
 include/global.php	web-server-denied	nginx; apache .htaccess
 include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 68f2974f3548; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
-include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 9fdc825797b5; included by include/global.php
+include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at aadb66a8a7cc; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 0db939a69dc9; included by auth_changepassword.php, auth_login.php, graph_realtime.php
 include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 0e36496c6cea; included by include/global.php
@@ -227,7 +227,7 @@ poller_rrdcheck.php	cli-only	guard: include/cli_check.php
 poller_spikekill.php	cli-only	guard: include/cli_check.php
 pollers.php	realm:3	include/auth.php
 public/index.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
-remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at 5d7a425129b8
+remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at a623320051ce
 reports_admin.php	realm:21	include/auth.php
 reports_user.php	realm:22	include/auth.php
 resource/index.php	anonymous-allowed	redirect-only
