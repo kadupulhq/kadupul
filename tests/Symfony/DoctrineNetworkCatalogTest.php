@@ -37,15 +37,19 @@ final class DoctrineNetworkCatalogTest extends TestCase
 
         $page = (new DoctrineNetworkCatalog($database))->list(new NetworkListCriteria());
         self::assertCount(3, $page->networks);
-        self::assertSame('Running', $page->networks[0]->status);
-        self::assertSame('1/1/1', $page->networks[0]->progress);
-        self::assertSame(2, $page->networks[0]->upHosts);
-        self::assertSame('2026-09-28 08:00', $page->networks[0]->nextStart);
-        self::assertSame('Idle', $page->networks[1]->status);
-        self::assertSame('7/4', $page->networks[1]->upHosts . '/' . $page->networks[1]->snmpHosts);
-        self::assertNull($page->networks[1]->nextStart);
-        self::assertSame('Disabled', $page->networks[2]->status);
-        self::assertSame('0/0/0', $page->networks[2]->progress);
+        $byName = [];
+        foreach ($page->networks as $network) {
+            $byName[$network->name] = $network;
+        }
+        self::assertSame('Running', $byName['Active subnet']->status);
+        self::assertSame('1/1/1', $byName['Active subnet']->progress);
+        self::assertSame(2, $byName['Active subnet']->upHosts);
+        self::assertSame('2026-09-28 08:00', $byName['Active subnet']->nextStart);
+        self::assertSame('Idle', $byName['Idle subnet']->status);
+        self::assertSame('7/4', $byName['Idle subnet']->upHosts . '/' . $byName['Idle subnet']->snmpHosts);
+        self::assertNull($byName['Idle subnet']->nextStart);
+        self::assertSame('Disabled', $byName['Disabled subnet']->status);
+        self::assertSame('0/0/0', $byName['Disabled subnet']->progress);
         self::assertSame(2, (int) $database->fetchOne('SELECT COUNT(*) FROM automation_processes'));
     }
 }
