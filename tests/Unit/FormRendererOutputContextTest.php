@@ -85,7 +85,7 @@ final class FormRendererOutputContextTest extends TestCase
         $directory = sys_get_temp_dir() . '/form-renderer-' . bin2hex(random_bytes(8));
         mkdir($directory, 0700);
         try {
-            $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', __DIR__ . '/../Fixtures/form-renderer-native.php', json_encode($scenario, JSON_THROW_ON_ERROR));
+            $command = array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', __DIR__ . '/../Fixtures/form-renderer-native.php', json_encode($scenario, JSON_THROW_ON_ERROR));
             if ($coverage !== null) {
                 $command[] = $directory;
             }
