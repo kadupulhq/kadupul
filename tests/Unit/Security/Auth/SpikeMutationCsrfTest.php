@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('spike removal requires explicit POST intent before RRD access', function ($method, $token, $spikeMethod, $expected, $dryrun = false) {
+test('spike removal requires explicit POST intent before RRD access', function ($method, $token, $spikeMethod, $expected, $dryrun = false, $graph = '2') {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/spike-csrf-' . bin2hex(random_bytes(8));
     mkdir($dir . '/include', 0700, true);
@@ -37,7 +37,7 @@ $config = array('base_path' => getcwd());
 session_id('spike-csrf-test');
 $_SESSION = array('sess_user_id' => 42);
 $_SERVER['REQUEST_METHOD'] = $argv[2];
-$_REQUEST = array('local_graph_id' => '2');
+$_REQUEST = array('local_graph_id' => $argv[6]);
 if ($argv[5] === 'true') $_REQUEST['dryrun'] = 'true';
 $spikeMethod = json_decode($argv[4], true);
 if ($spikeMethod !== null) $_REQUEST['method'] = $spikeMethod;
@@ -56,7 +56,7 @@ PHP;
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';' . $program;
     }
     try {
-        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $method, $token, json_encode($spikeMethod), json_encode($dryrun)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $dir);
+        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $method, $token, json_encode($spikeMethod), json_encode($dryrun), $graph), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $dir);
         if (!is_resource($process)) {
             throw new RuntimeException('Unable to start the isolated spike-removal request process.');
         }
@@ -67,7 +67,10 @@ PHP;
         if (proc_close($process) !== 0 || $stderr !== '') {
             throw new RuntimeException($stderr . $stdout);
         }
-        expect($stdout)->toBe(($expected === 200 ? ($dryrun ? 'DRYRUN' : 'MUTATION') : '') . 'STATUS:' . $expected);
+        $denied = $graph !== '2' && $token === 'valid' && $method === 'POST'
+            ? json_encode(array('local_graph_id' => $graph === '0' ? '0' : (int) $graph, 'results' => 'Graph access denied'))
+            : '';
+        expect($stdout)->toBe(($expected === 200 ? ($dryrun ? 'DRYRUN' : 'MUTATION') : $denied) . 'STATUS:' . $expected);
         if ($coverage !== null) {
             foreach (glob($dir . '/*.coverage') as $file) {
                 $coverage->merge(unserialize(file_get_contents($file)));
@@ -103,4 +106,7 @@ PHP;
     array('GET', 'missing', 'stddev', 405, true),
     array('POST', 'missing', 'stddev', 403, true),
     array('POST', 'valid', 'stddev', 200, true),
+    array('POST', 'valid', 'stddev', 403, false, '3'),
+    array('POST', 'valid', 'stddev', 403, true, '3'),
+    array('POST', 'valid', 'stddev', 403, false, '0'),
 ));
