@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -243,8 +244,8 @@ case 'tree':
 
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	minTreeWidth = <?php print read_user_setting('min_tree_width');?>;
-	maxTreeWidth = <?php print read_user_setting('max_tree_width');?>;
+	minTreeWidth = <?php print (int) read_user_setting('min_tree_width');?>;
+	maxTreeWidth = <?php print (int) read_user_setting('max_tree_width');?>;
 	</script>
 	<?php
 
@@ -341,7 +342,7 @@ case 'tree_content':
 		/* these are all global variables */
 		refreshIsLogout = false;
 		refreshPage     = <?php print json_encode(str_replace('tree_content', 'tree', validate_redirect_url($_SERVER['REQUEST_URI'] ?? '')), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
-		refreshMSeconds = <?php print read_user_setting('page_refresh')*1000;?>;
+		refreshMSeconds = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 		pageAction      = 'tree';
 		navHeight       = $('.cactiTreeNavigationArea').height();
 		windowHeight    = $(window).height();
