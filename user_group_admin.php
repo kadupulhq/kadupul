@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -603,7 +604,14 @@ function form_save()
                         db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_filter_request_var('id'), $sub_field_name, get_nfilter_request_var($sub_field_name, '')));
                     }
                 } else {
-                    db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, get_nfilter_request_var($field_name)));
+                    $value = get_nfilter_request_var($field_name);
+
+                    // Same rule as save_user_settings(): a numeric setting that fails its filter keeps its default.
+                    if (isset($field_array['default']) && is_numeric($field_array['default']) && !settings_value_passes_filter($field_name, $value, true)) {
+                        $value = $field_array['default'];
+                    }
+
+                    db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, $value));
                 }
             }
         }

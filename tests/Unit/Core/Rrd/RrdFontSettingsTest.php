@@ -88,3 +88,46 @@ test('font setting labels keep their translations', function () {
         expect($po)->toContain('msgid "' . $label . '"');
     }
 });
+
+test('group graph settings store the default for a font size they refuse', function ($submitted, $stored) {
+    $root = dirname(__DIR__, 4);
+    $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/user_group_admin.php'), 'form_save'), true) . ');'
+        . <<<'PHP'
+        $writes = array();
+        function isset_request_var($name) { return isset($_REQUEST[$name]); }
+        function get_request_var($name) { return $_REQUEST[$name]; }
+        function get_filter_request_var($name) { return $_REQUEST[$name]; }
+        function get_nfilter_request_var($name, $default = '') { return $_REQUEST[$name] ?? $default; }
+        function db_execute_prepared($sql, $params) { $GLOBALS['writes'][] = $params; }
+        function kill_session_var($name) {}
+        function reset_group_perms($id) {}
+        function raise_message($id) {}
+        $settings = array();
+        $settings_user = array('fonts' => array(
+            'title_size' => array('method' => 'textbox', 'default' => '12', 'filter' => FILTER_CALLBACK, 'options' => array('options' => 'graph_font_size_filter')),
+            'title_font' => array('method' => 'font'),
+        ));
+        $_REQUEST = array('save_component_graph_settings' => '1', 'id' => '3', 'title_size' => $argv[1], 'title_font' => 'DejaVu Sans');
+        register_shutdown_function(function () { echo json_encode($GLOBALS['writes']); });
+        form_save();
+        PHP;
+
+    $pipes = array();
+    $process = proc_open(array(PHP_BINARY, '-r', $script, '--', $submitted), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    expect(proc_close($process))->toBe(0, $error)
+        ->and(json_decode($output, true))->toBe(array(array('3', 'title_size', $stored), array('3', 'title_font', 'DejaVu Sans')));
+})->with(array(
+    'empty' => array('', '12'),
+    'at the lower bound' => array('4', '12'),
+    'just above the lower bound' => array('4.5', '4.5'),
+    'at the upper bound' => array('72', '72'),
+    'above the upper bound' => array('72.5', '12'),
+    'infinite' => array('1e400', '12'),
+));
