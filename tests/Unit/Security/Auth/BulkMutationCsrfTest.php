@@ -71,12 +71,12 @@ PHP;
     }
 }
 
-// sites.php is now a Symfony bridge; SiteLifecycleTest and the HTTP lifecycle
-// scenarios exercise POST/CSRF rejection through the actual framework.
+// Migrated entries are covered by their authenticated Symfony HTTP scenarios;
+// retain only legacy controllers that still execute through this stub harness.
 test('bulk controllers reject unprotected confirmation requests before dispatch', function ($controller, $method, $token, $action, $status) {
     expect(runBulkMutationRequest($this, $controller, $method, $token, $action))->toBe('STATUS:' . $status);
 })->with(array(
-    'aggregate_graphs.php', 'aggregate_templates.php', 'automation_devices.php',
+    'aggregate_graphs.php', 'automation_devices.php',
     'automation_graph_rules.php', 'automation_networks.php', 'automation_snmp.php',
     'automation_templates.php', 'automation_tree_rules.php', 'cdef.php', 'color.php',
     'color_templates.php', 'data_debug.php', 'data_input.php', 'data_queries.php',

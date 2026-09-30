@@ -136,6 +136,9 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
         status, _, page = scenario.submit(login, {"login_username": "admin", "login_password": "admin"})
         check(status == 200 and "login_username" not in page, "admin login did not complete")
 
+    status, _, page = scenario.request("/aggregate_templates.php", {"action": "edit", "id": "1"})
+    check(status == 409 and "form has expired" in page.lower(), "legacy POST was replayed instead of rejected")
+
     status, _, page = scenario.request("/aggregate-templates")
     check(status == 200 and "Aggregate graph templates" in page, "aggregate list did not render")
     status, _, page = scenario.request(f"/aggregate-templates/0/edit?source={source_id}")

@@ -98,6 +98,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'device creation serializes direct authorization revocations',
         'device creation serializes group authorization revocations',
         'aggregate-template HTTP/MariaDB scenario id=1: save and dependent graph propagation, stale edit, CSRF, child unlink delete',
+        'legacy POST was replayed instead of rejected',
         'remote collector preserves four-byte Unicode notes',
         'SHA384 is preserved without mapping to an invalid protocol',
         'script server answers valid calls and refuses invalid ones with U',
