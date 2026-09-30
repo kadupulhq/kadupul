@@ -50,6 +50,10 @@ switch (get_request_var('action')) {
 
         break;
     case 'data_edit':
+        if (!isempty_request_var('id') && !data_source_device_is_allowed(get_filter_request_var('id'))) {
+            data_source_access_denied();
+        }
+
         top_header();
 
         data_edit();
@@ -114,6 +118,10 @@ function form_save()
         }
 
         if (!data_source_device_id_is_allowed($host_id)) {
+            data_source_access_denied();
+        }
+
+        if (isset_request_var('save_component_data_source') && !data_source_save_rows_are_owned()) {
             data_source_access_denied();
         }
     }
@@ -400,6 +408,12 @@ function form_actions()
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
         if ($selected_items != false) {
+            foreach ($selected_items as $selected_item) {
+                if (!data_source_device_is_allowed($selected_item)) {
+                    data_source_access_denied();
+                }
+            }
+
             if (get_nfilter_request_var('drp_action') == '1') { /* delete */
                 if (!isset_request_var('delete_type')) {
                     set_request_var('delete_type', 1);
@@ -461,6 +475,10 @@ function form_actions()
             } elseif (get_nfilter_request_var('drp_action') == '3') { // change host
                 get_filter_request_var('host_id');
 
+                if (!data_source_device_id_is_allowed(get_request_var('host_id'))) {
+                    data_source_access_denied();
+                }
+
                 api_data_source_change_host($selected_items, get_request_var('host_id'));
             } elseif (get_nfilter_request_var('drp_action') == '6') { // data source enable
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
@@ -499,6 +517,10 @@ function form_actions()
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
+
+            if (!data_source_device_is_allowed($matches[1])) {
+                data_source_access_denied();
+            }
 
             $ds_list .= '<li>' . html_escape(get_data_source_title($matches[1])) . '</li>';
             $ds_array[$i] = $matches[1];
@@ -1334,6 +1356,12 @@ function data_source_device_is_allowed($local_data_id)
  */
 function data_source_device_id_is_allowed($host_id)
 {
+    // Device "None" (0), or the "Any" filter value (-1) carried into a new
+    // data source, names no device to protect.
+    if ((int) $host_id <= 0) {
+        return true;
+    }
+
     $found_host_id = db_fetch_cell_prepared('SELECT id FROM host WHERE id = ?', array($host_id));
 
     return !empty($host_id) && $found_host_id !== false && $found_host_id !== null && is_device_allowed($host_id);
@@ -1348,9 +1376,45 @@ function data_source_data_form_is_allowed()
 {
     $local_data_id = get_filter_request_var('local_data_id');
     $data_id       = get_filter_request_var('data_template_data_id');
+
+    // A new data source posts no data row yet, and form_save() writes nothing for it.
+    if (empty($data_id)) {
+        return true;
+    }
+
     $row           = db_fetch_row_prepared('SELECT local_data_id FROM data_template_data WHERE id = ?', array($data_id));
 
     return !empty($local_data_id) && !empty($row) && (int) $row['local_data_id'] === (int) $local_data_id && data_source_device_is_allowed($local_data_id);
+}
+
+/**
+ * Check that the data and item rows a data source save names belong to that
+ * data source, so a save cannot rewrite another data source's rows.
+ *
+ * @return bool
+ */
+function data_source_save_rows_are_owned()
+{
+    $local_data_id = (int) get_filter_request_var('local_data_id');
+    $data_id       = get_filter_request_var('data_template_data_id');
+
+    if (!empty($data_id)) {
+        $owner = db_fetch_cell_prepared('SELECT local_data_id FROM data_template_data WHERE id = ?', array($data_id));
+
+        if ($local_data_id === 0 || $owner === false || $owner === null || (int) $owner !== $local_data_id) {
+            return false;
+        }
+    }
+
+    if (isset_request_var('save_component_data_source') && isempty_request_var('_data_template_id') && !isempty_request_var('current_rrd')) {
+        $owner = db_fetch_cell_prepared('SELECT local_data_id FROM data_template_rrd WHERE id = ?', array(get_filter_request_var('current_rrd')));
+
+        if ($local_data_id === 0 || $owner === false || $owner === null || (int) $owner !== $local_data_id) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
