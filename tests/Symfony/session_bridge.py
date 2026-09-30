@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import argparse
 import json
 import sys
+import subprocess
 from urllib.error import HTTPError
 from urllib.request import Request
 
@@ -27,6 +28,7 @@ def main():
     parser.add_argument('--database-sessions', action='store_true')
     parser.add_argument('--coverage-output', type=Path)
     args = parser.parse_args()
+    subprocess.run(['mise', 'exec', 'node@22.22.2', '--', 'node', str(Path(__file__).with_name('collector_editor_client_test.cjs'))], check=True)
     database_sessions = args.database_sessions
     harness = Harness(SimpleNamespace(project='kadupul-symfony-auth', target='symfony-auth'))
     if args.coverage_output:
@@ -105,6 +107,14 @@ def main():
         verify_inventory(harness, session, user_id, check)
         from network_list_scenarios import verify_network_list
         verify_network_list(harness, session, user_id, check)
+        from automation_list_scenarios import verify_automation_lists
+        verify_automation_lists(harness, session, user_id, check)
+        from collector_list_scenarios import verify_collector_list
+        verify_collector_list(harness, session, user_id, check)
+        from collector_bulk_scenarios import verify_collector_bulk
+        verify_collector_bulk(harness, session, user_id, check)
+        from collector_edit_scenarios import verify_collector_edit
+        verify_collector_edit(harness, session, user_id, check)
         from site_edit_scenarios import verify_site_edit
         verify_site_edit(harness, session, user_id, check)
         from site_create_scenarios import verify_site_create

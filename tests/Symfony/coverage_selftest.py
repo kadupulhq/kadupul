@@ -21,7 +21,19 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
-        'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'src/IdentityAccess/Contract/ConsoleAccess.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php',
+        'src/Collection/Domain/NetworkListCriteria.php',
+        'src/Collection/Application/ReadModel/NetworkSummary.php',
+        'src/Collection/Application/ReadModel/NetworkPage.php',
+        'src/Collection/Application/Port/NetworkCatalog.php',
+        'src/Collection/Application/Query/AutomationAccessDenied.php',
+        'src/Collection/Application/Query/ListNetworks.php',
+        'src/Collection/Infrastructure/Persistence/DoctrineNetworkCatalog.php',
+        'src/Collection/Infrastructure/Symfony/NetworkListParameters.php',
+        'src/Collection/Infrastructure/Symfony/Form/NetworkFilterType.php',
+        'src/Collection/Infrastructure/Symfony/Controller/NetworkListController.php',
+        'pollers.php', 'bin/legacy-collector-bulk-action.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',

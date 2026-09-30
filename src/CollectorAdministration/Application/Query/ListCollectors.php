@@ -25,7 +25,24 @@ final readonly class ListCollectors
         if (!$this->access->canManageDevices($actor)) {
             throw new CollectorAccessDenied(false);
         }
-
         return $this->collectors->list($criteria);
+    }
+
+    public function defaultPageSize(): int
+    {
+        $this->authorize();
+        $size = $this->collectors->defaultPageSize();
+        return in_array($size, CollectorListCriteria::PAGE_SIZES, true) ? $size : 30;
+    }
+
+    private function authorize(): void
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            throw new CollectorAccessDenied(true);
+        }
+        if (!$this->access->canManageDevices($actor)) {
+            throw new CollectorAccessDenied(false);
+        }
     }
 }

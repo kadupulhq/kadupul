@@ -1120,32 +1120,48 @@ in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
 
-## Collector list slice
+## Collector administration
 
-`/app.php/collectors` renders the Data Collectors list with Symfony and Twig.
-The route accepts GET and HEAD only and requires the same Console Access and
-realm 3 authorization as `pollers.php`. Its Collector Administration query
-reads the local `poller` catalog through the DBAL web connection and returns
-only the fields shown on the page; remote database credentials are not selected.
-Search matches collector name only and preserves the legacy SQL `LIKE`
-wildcard behavior for `%` and `_`. Page sizes are bounded to 25, 50 or 100
-rows, and sort fields and directions are allowlisted.
-The process/thread display follows the `poller_type` setting, and timestamps
-retain the legacy month/day/time projection. Status labels preserve the legacy
-0–6 mapping plus disabled and heartbeat overrides.
-Responses are private/no-store, and text is escaped by Twig.
+`/app.php/collectors` renders Data Collectors through Symfony and Twig.
+Console access and the device-management realm are checked before reading
+collector data. The DBAL web connection uses the verified primary database
+for online collector administration. Read models omit remote credentials.
+Search retains legacy name `LIKE` wildcard semantics; page sizes use the
+installation's validated row setting and legacy choices. Sorting is allowlisted,
+including SNMP/script/server counters. Refresh defaults to 20 seconds and can
+be disabled. Responses prohibit storage; Twig escapes displayed values.
 
-The legacy `pollers.php` list links to this read-only view. `pollers.php` remains the owner of collector
-creation/editing, connection tests, replication, full sync, deletion, enabling,
-disabling and statistics reset. This slice does not change the legacy menu,
-bulk-action behavior or LTS.
+Creation and editing use Symfony Forms with CSRF protection. An opaque HMAC
+revision covers editable fields and the stored password so stale forms cannot
+overwrite concurrent updates. The key derives from the installation's existing
+CSRF secret. Stored passwords are never rendered; a blank password preserves
+its exact value. Connection tests retain credentials server-side and redact
+failures. Timezone lookup is a protected Symfony endpoint and requires the existing
+MySQL `time_zone_name` SELECT privilege; unavailable access returns 502.
 
-The legacy page defaults its row count from `num_rows_table`, allows the
-installation's configured row choices, and offers periodic refresh from 5 to
-300 seconds (default 20). This read-only route currently uses a fixed 25-row
-default, 25/50/100 choices and no automatic refresh. Recommendation: restore
-the configured row-count and refresh preferences before this route replaces
-the legacy collector list; until then, treat it as an opt-in read view.
+Bulk actions require an explicit confirmation and an unchanged canonical
+selection. Primary collector 1 is protected. Delete, enable, disable and
+statistics reset recheck locked current authorization and selected rows in one
+transaction. Deletion transfers retained device ownership to collector 1. It refuses
+before writing if the nontransactional active-process table still references
+a selected collector; stop active discovery before retrying.
+Full sync runs only from the primary collector through an isolated legacy
+replication worker, rechecks authorization for each target and advances
+`last_sync` only after successful replication. Remote replication may have
+partial effects; failures are reported without claiming distributed rollback.
+Audit events record the actor, action, target and outcome without credentials.
+
+`pollers.php` now forwards into Symfony. Listing/edit bookmarks are translated;
+old POST forms return 409 and must be reopened rather than replayed. The
+procedural page implementation is removed. Shared replication helpers remain
+behind the adapter until all callers migrate. LTS is unchanged.
+
+Review coverage includes kernel, SQLite adapter, authorization and real-worker
+subprocess tests. The real HTTP/MariaDB scenarios cover pagination, escaping,
+realm grants/revocation, CSRF, stale forms, password retention, transaction
+rollback and deletion ownership handoff. An unavailable remote sync is tested;
+successful replication against a deployed remote collector requires separate
+parity evidence.
 
 ## Automation network list slice
 

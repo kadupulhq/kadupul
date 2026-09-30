@@ -496,7 +496,6 @@ dynamic_include	./poller_reports.php:20	require_once($config['base_path'] . '/li
 dynamic_include	./poller_rrdcheck.php:19	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller_rrdcheck.php:20	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./poller_rrdcheck.php:21	require_once($config['base_path'] . '/lib/rrdcheck.php');
-dynamic_include	./pollers.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./remote_agent.php:10	include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./remote_agent.php:11	require_once($config['base_path'] . '/lib/api_graph.php');
 dynamic_include	./remote_agent.php:12	require_once($config['base_path'] . '/lib/api_tree.php');
@@ -525,7 +524,7 @@ dynamic_include	./scripts/ss_netsnmp_lmsensors.php:26		include($config['base_pat
 dynamic_include	./snmpagent_persist.php:147				include( $path_mibcache );
 dynamic_include	./spikekill.php:16	include_once($config['base_path'] . '/lib/spikekill.php');
 dynamic_include	./src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php:27	        include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.php:124	        require $path;
+dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.php:125	        require $path;
 dynamic_include	./tools/verify-offline.php:17	$kernel = require $root . '/config/bootstrap.php';
 fs_write	./cactid.php:82		$STDERR = fopen('/dev/null', 'wb');
 fs_write	./cactid.php:93		$STDERR = fopen('null', 'wb');
@@ -593,6 +592,7 @@ fs_write	./scripts/ss_net_snmp_disk_bytes.php:209			file_put_contents("$tmpdir/$
 fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./snmpagent_mibcachechild.php:72		$lock = fopen($path_mibcache_lock, 'w');
 fs_write	./snmpagent_mibcachechild.php:76			file_put_contents($path_mibcache, '<?php $cache = ' . var_export($cache, true) . ';', LOCK_EX);
+fs_write	./src/CollectorAdministration/Infrastructure/Legacy/CollectorRevisionKey.php:34	        $handle = @fopen($path, 'rb');
 fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:29	            $handle = @fopen($path, is_file($path) ? 'c+b' : 'x+b');
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
@@ -909,9 +909,6 @@ header_redirect	./plugins.php:65					header('Location: plugins.php?state=5' . ($
 header_redirect	./plugins.php:67					header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:81				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:92				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
-header_redirect	./pollers.php:323			header('Location: pollers.php?header=false&action=edit&id=' . (empty($poller_id) ? get_nfilter_request_var('id') : $poller_id));
-header_redirect	./pollers.php:513			header('Location: pollers.php?header=false');
-header_redirect	./pollers.php:589			header('Location: pollers.php?header=false');
 header_redirect	./reports_admin.php:122			header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 header_redirect	./reports_admin.php:129			header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 header_redirect	./reports_admin.php:136			header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');

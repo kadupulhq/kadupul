@@ -13,6 +13,7 @@ use Kadupul\Collection\Infrastructure\Symfony\AutomationGraphRuleListParameters;
 use Kadupul\Collection\Infrastructure\Symfony\Form\AutomationGraphRuleFilterType;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\Form\FormFactoryInterface;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,9 +31,14 @@ final class AutomationGraphRuleListController
         Environment $twig,
         UrlGeneratorInterface $urls,
         TranslatorInterface $translator,
-        LegacyConfiguration $configuration
+        LegacyConfiguration $configuration,
+        ConsoleAccess $access
     ): Response {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $access->consoleActor();
+        if ($actor === null || !$access->canManageAutomation($actor)) {
+            return new Response($translator->trans('Access denied.', [], 'collection'), $actor === null ? 401 : 403, $headers);
+        }
         try {
             $formData = AutomationGraphRuleListParameters::formData($request->query->all());
             $form = $forms->create(AutomationGraphRuleFilterType::class, [
@@ -43,7 +49,9 @@ final class AutomationGraphRuleListController
                 'sort' => $formData['sort'] ?? 'name',
                 'direction' => $formData['direction'] ?? 'asc',
             ], ['method' => 'GET', 'action' => $urls->generate('automation_graph_rule_list')]);
-            $form->handleRequest($request);
+            if ($request->query->has($form->getName())) {
+                $form->submit($formData, false);
+            }
             if ($form->isSubmitted() && !$form->isValid()) {
                 return new Response($translator->trans('Invalid automation graph rule filters.', [], 'collection'), 400, $headers);
             }

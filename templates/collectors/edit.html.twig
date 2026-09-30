@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ (collector ? 'Edit collector' : 'Add collector')|trans({}, 'collectors') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route name. #}
+    <p><a href="{{ path('collector_list') }}">{{ 'Back to collectors'|trans({}, 'collectors') }}</a></p>
+    <h1>{{ (collector ? 'Edit collector' : 'Add collector')|trans({}, 'collectors') }}</h1>
+    {% if saved %}<output>{{ 'Collector saved.'|trans({}, 'collectors') }}</output>{% endif %}
+    {% if collector and collector.passwordConfigured and remote %}<p>{{ 'A remote database password is configured. Leave the password blank to keep it.'|trans({}, 'collectors') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.hostname) }}
+        {{ form_row(form.timezone) }}
+        <datalist id="collector-timezones"></datalist>
+        {{ form_row(form.notes) }}
+        {{ form_row(form.processes) }}
+        {{ form_row(form.threads) }}
+        {% if remote %}
+            {{ form_row(form.sync_interval) }}
+            <fieldset>
+                <legend>{{ 'Remote database connection'|trans({}, 'collectors') }}</legend>
+                {{ form_row(form.dbhost) }}
+                {{ form_row(form.dbdefault) }}
+                {{ form_row(form.dbuser) }}
+                {{ form_row(form.dbpass) }}
+                {{ form_row(form.dbport) }}
+                {{ form_row(form.dbretries) }}
+                {{ form_row(form.dbssl) }}
+                {{ form_row(form.dbsslkey) }}
+                {{ form_row(form.dbsslcert) }}
+                {{ form_row(form.dbsslca) }}
+                <input type="hidden" name="connection_token" value="{{ connectionToken }}">
+                <button type="button" data-collector-connection-test>{{ 'Test connection'|trans({}, 'collectors') }}</button>
+                <output aria-live="polite" data-collector-connection-result></output>
+            </fieldset>
+        {% endif %}
+        <button type="submit">{{ 'Save collector'|trans({}, 'collectors') }}</button>
+    {{ form_end(form) }}
+    <script src="{{ path('collector_editor_asset') }}" defer></script>
+</main>
+{% endblock %}

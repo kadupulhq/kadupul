@@ -13,6 +13,7 @@ use Kadupul\Collection\Infrastructure\Symfony\AutomationTemplateListParameters;
 use Kadupul\Collection\Infrastructure\Symfony\Form\AutomationTemplateFilterType;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\Form\FormFactoryInterface;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,9 +31,14 @@ final class AutomationTemplateListController
         Environment $twig,
         UrlGeneratorInterface $urls,
         TranslatorInterface $translator,
-        LegacyConfiguration $configuration
+        LegacyConfiguration $configuration,
+        ConsoleAccess $access
     ): Response {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $access->consoleActor();
+        if ($actor === null || !$access->canManageAutomation($actor)) {
+            return new Response($translator->trans('Access denied.', [], 'collection'), $actor === null ? 401 : 403, $headers);
+        }
         try {
             $formData = AutomationTemplateListParameters::formData($request->query->all());
             $form = $forms->create(AutomationTemplateFilterType::class, [
@@ -41,7 +47,9 @@ final class AutomationTemplateListController
                 'sort' => $formData['sort'] ?? 'sequence',
                 'direction' => $formData['direction'] ?? 'asc',
             ], ['method' => 'GET', 'action' => $urls->generate('automation_template_list')]);
-            $form->handleRequest($request);
+            if ($request->query->has($form->getName())) {
+                $form->submit($formData, false);
+            }
             if ($form->isSubmitted() && !$form->isValid()) {
                 return new Response($translator->trans('Invalid automation template filters.', [], 'collection'), 400, $headers);
             }

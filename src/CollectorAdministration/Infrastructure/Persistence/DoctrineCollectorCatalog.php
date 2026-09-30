@@ -18,6 +18,13 @@ final readonly class DoctrineCollectorCatalog implements CollectorCatalog
 {
     public function __construct(private Connection $database) {}
 
+    public function defaultPageSize(): int
+    {
+        $configured = $this->database->fetchOne('SELECT value FROM settings WHERE name = ?', ['num_rows_table']);
+        $size = filter_var($configured, FILTER_VALIDATE_INT);
+        return in_array($size, CollectorListCriteria::PAGE_SIZES, true) ? $size : 30;
+    }
+
     public function list(CollectorListCriteria $criteria): CollectorPage
     {
         $pollerType = $this->database->fetchOne('SELECT value FROM settings WHERE name = ?', ['poller_type']);
@@ -38,6 +45,9 @@ final readonly class DoctrineCollectorCatalog implements CollectorCatalog
             'status' => 'p.status',
             'hosts' => 'hosts',
             'polling_time' => 'p.total_time',
+            'snmp' => 'p.snmp',
+            'script' => 'p.`script`',
+            'server' => 'p.`server`',
             'last_update' => 'p.last_update',
             'last_status' => 'p.last_status',
             'last_sync' => 'p.last_sync',
@@ -47,11 +57,9 @@ final readonly class DoctrineCollectorCatalog implements CollectorCatalog
                 p.processes, p.threads, p.total_time, p.avg_time, p.max_time,
                 p.snmp, p.`script`, p.`server`, p.last_update, p.last_status, p.last_sync,
                 UNIX_TIMESTAMP() - UNIX_TIMESTAMP(p.last_status) AS heartbeat,
-                COUNT(h.id) AS hosts
+                (SELECT COUNT(*) FROM host h WHERE h.poller_id = p.id) AS hosts
             FROM poller p
-            LEFT JOIN host h ON h.poller_id = p.id
             $where
-            GROUP BY p.id
             ORDER BY $sort $direction, p.id $direction
             LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1), $parameters);
 

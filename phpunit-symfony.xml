@@ -22,6 +22,8 @@
             <file>bin/legacy-assignment-bootstrap.php</file>
             <file>include/admin_notifications.php</file>
             <file>sites.php</file>
+            <file>pollers.php</file>
+            <file>bin/legacy-collector-bulk-action.php</file>
             <file>lib/database.php</file>
         </include>
     </source>

@@ -93,6 +93,16 @@ final class CollectionListPresentationTest extends TestCase
                 self::assertCacheIsPrivateAndNotStored($response->headers->get('Cache-Control'), $path);
                 self::assertStringContainsString('&lt;review-probe&gt;', $response->getContent(), $path);
                 self::assertStringNotContainsString('<review-probe>', $response->getContent(), $path);
+                $formNames = [
+                    '/automation/networks' => 'network_filter',
+                    '/automation/devices' => 'discovery_filter',
+                    '/automation/templates' => 'automation_template_filter',
+                    '/automation/tree-rules' => 'automation_tree_rule_filter',
+                    '/automation/graph-rules' => 'automation_graph_rule_filter',
+                ];
+                $partial = $kernel->handle(Request::create($path, 'GET', [$formNames[$path] => ['q' => 'review']]));
+                self::assertSame(200, $partial->getStatusCode(), $path . ' retains defaults for omitted GET form fields');
+                self::assertStringContainsString('&lt;review-probe&gt;', $partial->getContent());
             } finally {
                 $kernel->shutdown();
             }

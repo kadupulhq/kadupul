@@ -37,6 +37,7 @@ final class InstallationConfiguration implements LegacyConfiguration
             'ssl' => $settings['database_ssl'] ?? false, 'ssl_key' => $settings['database_ssl_key'] ?? '',
             'ssl_cert' => $settings['database_ssl_cert'] ?? '', 'ssl_ca' => $settings['database_ssl_ca'] ?? '',
             'session_name' => $settings['cacti_session_name'] ?? 'Cacti', 'database_sessions' => $settings['cacti_db_session'] ?? false,
+            'csrf_secret_path' => $settings['path_csrf_secret'] ?? $this->projectDir . '/include/vendor/csrf/csrf-secret.php',
             'cookie_domain' => $settings['cacti_cookie_domain'] ?? '', 'url_path' => $settings['url_path'] ?? '/',
         ];
         if ($values['collector_id'] < 1) {
@@ -133,7 +134,7 @@ final class InstallationConfiguration implements LegacyConfiguration
     private function requireSiteRoute(): void
     {
         $route = $this->requests?->getCurrentRequest()?->attributes->get('_route');
-        if (!in_array($route, ['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action'], true)) {
+        if (!in_array($route, ['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action', 'collector_list', 'collector_legacy', 'collector_edit', 'collector_create', 'collector_timezones', 'collector_connection_test', 'collector_action'], true)) {
             throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside online collector Sites routes.');
         }
     }

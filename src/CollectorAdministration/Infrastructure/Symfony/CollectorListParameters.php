@@ -17,14 +17,21 @@ final class CollectorListParameters
         if (!is_string($page) || !ctype_digit($page) || strlen($page) > 6) {
             throw new \InvalidArgumentException('Invalid collector list filters.');
         }
-        foreach (['q', 'size', 'sort', 'direction'] as $key) {
-            if (isset($formData[$key]) && !is_string($formData[$key])) {
+        if (array_diff(array_keys($formData), ['q', 'size', 'sort', 'direction', 'refresh']) !== []) {
+            throw new \InvalidArgumentException('Invalid collector list filters.');
+        }
+        foreach (['q', 'size', 'sort', 'direction', 'refresh'] as $key) {
+            if (array_key_exists($key, $formData) && !is_string($formData[$key])) {
                 throw new \InvalidArgumentException('Invalid collector list filters.');
             }
         }
 
         $size = $formData['size'] ?? '25';
-        if (!ctype_digit($size) || strlen($size) > 3) {
+        if (!ctype_digit($size) || strlen($size) > 4) {
+            throw new \InvalidArgumentException('Invalid collector list filters.');
+        }
+        $refresh = $formData['refresh'] ?? '20';
+        if (!ctype_digit($refresh) || strlen($refresh) > 3) {
             throw new \InvalidArgumentException('Invalid collector list filters.');
         }
 
@@ -33,7 +40,8 @@ final class CollectorListParameters
             (int) $page,
             (int) $size,
             $formData['sort'] ?? 'name',
-            $formData['direction'] ?? 'asc'
+            $formData['direction'] ?? 'asc',
+            (int) $refresh
         );
     }
 
@@ -44,6 +52,10 @@ final class CollectorListParameters
         }
         $data = $query['collector_filter'] ?? [];
         if (!is_array($data)) {
+            throw new \InvalidArgumentException('Invalid collector list filters.');
+        }
+        if (array_diff(array_keys($data), ['q', 'size', 'sort', 'direction', 'refresh']) !== []
+            || array_filter($data, static fn(mixed $value): bool => !is_string($value)) !== []) {
             throw new \InvalidArgumentException('Invalid collector list filters.');
         }
 

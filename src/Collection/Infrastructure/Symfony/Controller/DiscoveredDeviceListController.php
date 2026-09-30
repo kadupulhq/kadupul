@@ -13,6 +13,7 @@ use Kadupul\Collection\Infrastructure\Symfony\DiscoveredDeviceListParameters;
 use Kadupul\Collection\Infrastructure\Symfony\Form\DiscoveredDeviceFilterType;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\Form\FormFactoryInterface;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,9 +31,14 @@ final class DiscoveredDeviceListController
         Environment $twig,
         UrlGeneratorInterface $urls,
         TranslatorInterface $translator,
-        LegacyConfiguration $configuration
+        LegacyConfiguration $configuration,
+        ConsoleAccess $access
     ): Response {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $access->consoleActor();
+        if ($actor === null || !$access->canManageAutomation($actor)) {
+            return new Response($translator->trans('Access denied.', [], 'collection'), $actor === null ? 401 : 403, $headers);
+        }
         try {
             $formData = DiscoveredDeviceListParameters::formData($request->query->all());
             $criteria = DiscoveredDeviceListParameters::parse($request->query->all(), $formData);
@@ -52,7 +58,9 @@ final class DiscoveredDeviceListController
                 'networks' => $result->networks,
                 'operating_systems' => $result->operatingSystems,
             ]);
-            $form->handleRequest($request);
+            if ($request->query->has($form->getName())) {
+                $form->submit($formData, false);
+            }
             if ($form->isSubmitted() && !$form->isValid()) {
                 return new Response($translator->trans('Invalid automation device filters.', [], 'collection'), 400, $headers);
             }
