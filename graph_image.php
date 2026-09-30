@@ -34,6 +34,10 @@ api_plugin_hook_function('graph_image');
 
 $graph_data_array = array();
 
+if (isset($_SESSION['sess_user_id'])) {
+    $graph_data_array['effective_user'] = (int) $_SESSION['sess_user_id'];
+}
+
 // Determine the graph type of the output
 if (!isset_request_var('image_format')) {
     $type   = db_fetch_cell_prepared(
