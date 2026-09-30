@@ -255,7 +255,7 @@ label {
 }
 
 .success {
-	color: green;
+	color: #006900;
 }
 
 .failed {
@@ -318,11 +318,11 @@ label {
 }
 
 .deviceUp {
-	color: rgba(40, 180, 40, 1.0) !important;
+	color: #176717 !important;
 }
 
 .deviceDown {
-	color: #ff0000 !important;
+	color: #b70000 !important;
 }
 
 .deviceUnknown {
@@ -330,11 +330,11 @@ label {
 }
 
 .deviceDisabled {
-	color: #a1a1a1 !important;
+	color: #595959 !important;
 }
 
 .deviceRecovering {
-	color: #ff8f1e !important;
+	color: #8c4600 !important;
 }
 
 .deviceError {
@@ -439,7 +439,7 @@ label {
 }
 
 .beingGraphed {
-	color: rgba(148, 179, 107, 0.8);
+	color: #4e5f36;
 }
 
 .notBeingGraphed {
@@ -533,7 +533,7 @@ label {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: lime;
+	color: #008800;
 	font-weight: bold;
 	font-size: 14px;
 	margin-right: 10px;
@@ -543,7 +543,7 @@ label {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: rgba(255, 204, 0, 0.8);
+	color: #8e7100;
 	font-size: 14px;
 	margin-right: 10px;
 }
@@ -552,7 +552,7 @@ label {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: red !important;
+	color: #eb0000 !important;
 	font-weight: bold;
 	font-size: 14px;
 	margin-right: 10px;
@@ -600,7 +600,7 @@ label {
 }
 
 .linkMarker {
-	color: #c16921;
+	color: #874917;
 }
 
 .filteredValue {
@@ -1769,7 +1769,7 @@ div#gtabs {
 }
 
 .maintabs a:hover {
-	background-color: rgba(255,255,255,0.3);
+	background-color: rgba(255,255,255,0.2);
 }
 
 .maintabs a.selected {
@@ -1851,8 +1851,8 @@ div.submenu span {
 
 .tabs nav a.selected {
 	color: white;
-	border-bottom: 1px solid rgba(63,117,162,0.8);
-	background: rgba(63,117,162,0.8);
+	border-bottom: 1px solid rgba(63,117,162,1);
+	background: rgba(63,117,162,1);
 }
 
 .tabs li {
@@ -1941,7 +1941,7 @@ tr.selectable a.linkEditMain:hover {
 }
 
 tr.selectable:hover:not(.selected) {
-	background: rgba(0,0,0,0.3);
+	background: rgba(0,0,0,0.15);
 }
 
 tr.selectable td {
@@ -1955,6 +1955,78 @@ tr.selected a {
 /* Selected rows are black, so their links keep yellow on hover as well. */
 tr.selected a.linkEditMain:hover {
 	color: yellow;
+}
+
+/* The status colours are for light rows; selected rows are black. */
+tr.selected .deviceUp {
+	color: #28b428 !important;
+}
+
+tr.selected .deviceDown {
+	color: #ff0000 !important;
+}
+
+tr.selected .deviceRecovering {
+	color: #ff8f1e !important;
+}
+
+tr.selected .deviceDisabled {
+	color: #a1a1a1 !important;
+}
+
+tr.selected .deviceUnknown {
+	color: #5e5eff !important;
+}
+
+tr.selected .deviceError {
+	color: #c719d4 !important;
+}
+
+tr.selected .success {
+	color: #008800;
+}
+
+tr.selected .beingGraphed {
+	color: #94b36b;
+}
+
+tr.selected .reloadquery {
+	color: lime;
+}
+
+tr.selected .verbosequery {
+	color: #ffcc00;
+}
+
+/* The selected tree node is mid blue. */
+.jstree-clicked:is(.deviceUp, .deviceDown, .deviceRecovering, .deviceDisabled, .deviceUnknown, .deviceError) {
+	color: #ffffff !important;
+}
+
+/* jstree drops the outline on its anchors. */
+.jstree-anchor:focus-visible {
+	outline: auto;
+}
+
+/* The selected navigation item fills with the icons' own blue. */
+#nav li a.selected i {
+	color: #ffffff;
+}
+
+/* Status-coloured menu icons are for the light menu, not its dark active item. */
+.ui-menu .ui-state-active i {
+	color: #ffffff !important;
+}
+
+/* The #d3d3d3 control border measures 1.2:1 to 1.5:1 on the light rows. */
+:is(input, textarea).ui-state-default, .ui-widget-content :is(input, textarea).ui-state-default,
+.ui-selectmenu-button.ui-button, button.ui-multiselect {
+	border-color: #838383;
+}
+
+/* The login panel is light grey. */
+.loginCenter .versionInfo, .logoutCenter .versionInfo {
+	color: #555555;
 }
 
 tr td:last-child .checkbox {
@@ -2319,6 +2391,7 @@ input:disabled + .checkboxSlider {
 input:focus-visible + .checkboxSlider {
 	outline: 2px solid #0d47a1;
 	outline-offset: 2px;
+	box-shadow: 0 0 0 6px #ffffff;
 }
 
 input:checked + .checkboxSlider:before {
@@ -2407,6 +2480,7 @@ input:disabled + .radioSlider {
 input:focus-visible + .radioSlider {
 	outline: 2px solid #0d47a1;
 	outline-offset: 2px;
+	box-shadow: 0 0 0 6px #ffffff;
 }
 
 input:checked + .radioSlider:before {
