@@ -7,9 +7,10 @@ namespace MaintenancePurgeLeaseTest;
 
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 require_once dirname(__DIR__, 4) . '/lib/rrd.php';
+require_once dirname(__DIR__, 4) . '/lib/functions.php';
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 $source = file_get_contents(dirname(__DIR__, 4) . '/poller_maintenance.php');
-foreach (array('rrdfile_purge', 'remove_files', 'rrdclean_create_path') as $name) {
+foreach (array('rrdfile_purge', 'remove_files', 'rrdclean_create_path', 'rrdcleaner_is_safe_relative_path', 'rrdcleaner_resolve_contained_path') as $name) {
     eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $name));
 }
 function read_config_option($key, $force = false)
@@ -125,7 +126,9 @@ test('a file that cannot be removed does not stop later pages of the queue', fun
     // The failing request sorts first and fills the first page with 999 others.
     $GLOBALS['purge_fixture_queue'] = array(array('id' => 1, 'name' => 'sample.rrd', 'local_data_id' => 0, 'action' => $action));
     for ($i = 0; $i < 1000; $i++) {
-        $GLOBALS['purge_fixture_queue'][] = array('id' => $i + 2, 'name' => sprintf('z%04d.rrd', $i), 'local_data_id' => 0, 'action' => $action);
+        $name = sprintf('z%04d.rrd', $i);
+        file_put_contents($directory . '/' . $name, 'queued file');
+        $GLOBALS['purge_fixture_queue'][] = array('id' => $i + 2, 'name' => $name, 'local_data_id' => 0, 'action' => $action);
     }
     $GLOBALS['purge_fixture_reads'] = 0;
     $GLOBALS['purge_fixture_max_reads'] = 2;
