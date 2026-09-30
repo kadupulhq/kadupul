@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('device reindex validates intent and executes an isolated argv worker', function ($method, $token, $id, $action, $failure, $expected) {
+test('device reindex validates intent and executes an isolated argv worker', function ($method, $token, $id, $action, $failure, $expected, $extra = array()) {
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/host-reindex-test-' . bin2hex(random_bytes(8));
     mkdir($dir . '/include', 0700, true);
@@ -29,6 +29,11 @@ function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
 function api_plugin_hook_function($name, $value) { return $value; }
 function api_plugin_hook($name) {}
 function is_device_allowed($hostId) { return (int) $hostId === 7; }
+function cacti_log(...$args) { $GLOBALS['events'][] = 'denied'; }
+function input_validate_input_number($value) {}
+function sanitize_unserialize_selected_items($items) { return unserialize($items); }
+function api_device_enable_devices($items) { $GLOBALS['events'][] = 'enable'; }
+function snmpagent_device_action_bottom($args) {}
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function die_html_input_error(...$args) { http_response_code(400); exit; }
 function read_config_option($name) { return '/configured php/bin/php'; }
@@ -53,7 +58,7 @@ $config = array('base_path' => '/configured path');
 session_id('host-reindex-test');
 $_SESSION = array('sess_user_id' => 42);
 $_SERVER['REQUEST_METHOD'] = $argv[2];
-$_REQUEST = array('action' => json_decode($argv[5], true), 'host_id' => json_decode($argv[4], true));
+$_REQUEST = array('action' => json_decode($argv[5], true), 'host_id' => json_decode($argv[4], true)) + json_decode($argv[7], true);
 $_POST = $argv[2] === 'POST' ? $_REQUEST : array();
 if ($argv[3] === 'valid') $_POST['__csrf_magic'] = csrf_get_tokens();
 if ($argv[3] === 'query') $_GET['__csrf_magic'] = $_REQUEST['__csrf_magic'] = csrf_get_tokens();
@@ -74,7 +79,7 @@ PHP;
         $process = proc_open(
             array(PHP_BINARY, '-d', 'pcov.directory=' . $root,
                 '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root,
-                $method, $token, json_encode($id), json_encode($action), (string) $failure),
+                $method, $token, json_encode($id), json_encode($action), (string) $failure, json_encode((object) $extra)),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -123,4 +128,8 @@ PHP;
     'shell input' => array('POST', 'valid', '7;id', 'reindex', 0, array(400, array())),
     'success' => array('POST', 'valid', '7', 'reindex', 0, array(302, array('exec', 'count', 'success'))),
     'failure' => array('POST', 'valid', '7', 'reindex', 7, array(302, array('exec', 'error'))),
+    'foreign device' => array('POST', 'valid', '8', 'reindex', 0, array(302, array('denied'))),
+    'bulk action on a foreign device' => array('POST', 'valid', '7', 'actions', 0, array(302, array('denied')), array('drp_action' => '2', 'selected_items' => serialize(array(7, 8)))),
+    'bulk action on allowed devices' => array('POST', 'valid', '7', 'actions', 0, array(302, array('enable')), array('drp_action' => '2', 'selected_items' => serialize(array(7)))),
+    'bulk confirmation for a foreign device' => array('POST', 'valid', '7', 'actions', 0, array(302, array('denied')), array('drp_action' => '2', 'chk_8' => 'on')),
 ));

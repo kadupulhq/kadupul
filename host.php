@@ -116,6 +116,10 @@ switch (get_request_var('action')) {
         header('Location: host.php?header=' . (isset_request_var('header') && get_nfilter_request_var('header') == 'true' ? 'true' : 'false') . '&action=edit&id=' . get_request_var('host_id') . '&display_dq_details=true');
         break;
     case 'edit':
+        if (!isempty_request_var('id')) {
+            host_require_device_access(get_filter_request_var('id'));
+        }
+
         top_header();
 
         host_edit();
@@ -368,6 +372,10 @@ function form_actions()
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
         if ($selected_items != false) {
+            foreach ($selected_items as $selected_item) {
+                host_require_device_access($selected_item);
+            }
+
             if (get_request_var('drp_action') == '2') { // Enable Selected Devices
                 api_device_enable_devices($selected_items);
             } elseif (get_request_var('drp_action') == '3') { // Disable Selected Devices
@@ -435,6 +443,8 @@ function form_actions()
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
+
+            host_require_device_access($matches[1]);
 
             $host_list .= '<li>' . html_escape(db_fetch_cell_prepared('SELECT description FROM host WHERE id = ?', array($matches[1]))) . '</li>';
             $host_array[] = $matches[1];

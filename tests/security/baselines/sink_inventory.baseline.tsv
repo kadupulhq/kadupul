@@ -541,7 +541,7 @@ fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:339	file_put_contents($newxmlfile, $new_xml);
 fs_write	./cli/splice_rrd.php:39			if (($f = @fopen($path, 'w'))) {
 fs_write	./cli/splice_rrd.php:875		return file_put_contents($xmlfile, $output);
-fs_write	./host.php:652	    $stdout = fopen('php://output', 'w');
+fs_write	./host.php:662	    $stdout = fopen('php://output', 'w');
 fs_write	./include/global_languages.php:939			file_put_contents($config['i18n_log'], $text . $eol, $mode);
 fs_write	./include/global_languages.php:947			file_put_contents($config['i18n_text_log'], $text . $eol, $mode);
 fs_write	./include/themes/midwinter/update_hash.php:50			file_put_contents($cssFile, $fileUpdated);
@@ -806,14 +806,14 @@ header_redirect	./graphs_new.php:156			header('Location: graphs_new.php?host_id=
 header_redirect	./graphs_new.php:30			header('Location: graphs_new.php?host_id=' . get_request_var('host_id') . '&header=false');
 header_redirect	./host.php:108	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 header_redirect	./host.php:116	        header('Location: host.php?header=' . (isset_request_var('header') && get_nfilter_request_var('header') == 'true' ? 'true' : 'false') . '&action=edit&id=' . get_request_var('host_id') . '&display_dq_details=true');
-header_redirect	./host.php:138	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:147	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:159	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:191	        header('Location: permission_denied.php');
-header_redirect	./host.php:350	        header('Location: host.php?header=false&action=edit&id=' . (empty($host_id) ? get_nfilter_request_var('id') : $host_id));
-header_redirect	./host.php:424	        header('Location: host.php?header=false');
+header_redirect	./host.php:142	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+header_redirect	./host.php:151	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+header_redirect	./host.php:163	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+header_redirect	./host.php:195	        header('Location: permission_denied.php');
+header_redirect	./host.php:354	        header('Location: host.php?header=false&action=edit&id=' . (empty($host_id) ? get_nfilter_request_var('id') : $host_id));
+header_redirect	./host.php:432	        header('Location: host.php?header=false');
 header_redirect	./host.php:55	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
-header_redirect	./host.php:622	        header('Location: host.php?header=false');
+header_redirect	./host.php:632	        header('Location: host.php?header=false');
 header_redirect	./host.php:67	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 header_redirect	./host.php:75	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 header_redirect	./host.php:83	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
