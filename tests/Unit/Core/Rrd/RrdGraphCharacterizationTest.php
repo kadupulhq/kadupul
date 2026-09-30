@@ -291,7 +291,7 @@ test('graph options match their golden for each scale and axis setting', functio
         'logarithmic with si units' => array(array('auto_scale_log' => 'on', 'scale_log_units' => 'on', 'auto_scale_rigid' => ''), $window),
         'si units need logarithmic' => array(array('scale_log_units' => 'on'), $window),
         'units and grid' => array(array('unit_value' => '1:5', 'unit_exponent_value' => '3', 'alt_y_grid' => 'on', 'base_value' => '1024'), $window),
-        'non-numeric exponent' => array(array('unit_exponent_value' => '-3', 'base_value' => '1001'), $window),
+        'negative exponent' => array(array('unit_exponent_value' => '-3', 'base_value' => '1001'), $window),
         'right axis and formatters' => array(array(
             'right_axis' => '2:0', 'right_axis_label' => 'bytes "out"', 'right_axis_format' => '4', 'no_gridfit' => 'on',
             'unit_length' => '10', 'tab_width' => '30', 'dynamic_labels' => 'on', 'force_rules_legend' => 'on',

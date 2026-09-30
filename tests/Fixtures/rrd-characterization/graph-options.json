@@ -344,7 +344,7 @@
         "--font WATERMARK:6:'Arial'",
         ""
     ],
-    "non-numeric exponent": [
+    "negative exponent": [
         "-",
         "--imgformat=PNG",
         "--start='1700000000'",
@@ -360,6 +360,7 @@
         "--alt-autoscale",
         "--upper-limit='100'",
         "--lower-limit='0'",
+        "--units-exponent='-3'",
         "COMMENT:\"From 2023/11/14 22\\:13\\:20 To 2023/11/14 23\\:13\\:20\\c\"",
         "COMMENT:\"  \\n\"",
         "--color BACK#F3F3F3",
