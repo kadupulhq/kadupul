@@ -11,6 +11,9 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('PACKAGE_XML_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
+}
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
 }
@@ -101,8 +104,14 @@ if (defined('PROFILE_SECURITY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }
+if (defined('GRAPH_ITEM_EDITOR_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_editor.php');
+}
 if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
     $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
+}
+if (defined('THEME_SELECTION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
