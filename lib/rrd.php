@@ -311,7 +311,7 @@ function __rrd_proxy_init($logopt = 'WEBLOG') {
 		$rrdproxy = array($rrdp_socket, $rrdp_public_key);
 		/* set the rrdtool default font */
 		if (read_config_option('path_rrdtool_default_font')) {
-			rrdtool_execute("setenv RRD_DEFAULT_FONT '" . read_config_option('path_rrdtool_default_font') . "'", false, RRDTOOL_OUTPUT_NULL, $rrdproxy, $logopt = 'WEBLOG');
+			rrdtool_execute('setenv RRD_DEFAULT_FONT ' . rrdtool_quote_argument(read_config_option('path_rrdtool_default_font')), false, RRDTOOL_OUTPUT_NULL, $rrdproxy, $logopt = 'WEBLOG');
 		}
 
 		/* keep message encryption on: the proxy honours a request to turn it off
