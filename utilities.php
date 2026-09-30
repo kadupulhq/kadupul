@@ -2159,7 +2159,8 @@ function utilities_view_poller_cache()
 
     /* form the 'where' clause for our main sql query */
     $params = array();
-    $sql_where = 'WHERE ' . $allowed_host_sql;
+    // Poller items without a device belong to no device scope and stay visible.
+    $sql_where = 'WHERE (pi.host_id = 0 OR ' . $allowed_host_sql . ')';
 
     if (get_request_var('poller_action') != '-1') {
         $sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE') . " pi.action = ?";
