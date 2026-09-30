@@ -118,6 +118,111 @@ PHP;
     return ldap_tls_child($program, array('version' => $version, 'stored' => $stored, 'domains' => $encrypted_domains));
 }
 
+/*
+ * Replays login attempts against an in-memory settings table. Each step is
+ * 'login', which runs the login page's settle step and then an LDAP connect,
+ * or array(name, value), which an administrator saves. A domain login sets
+ * the domain's encryption on the connection, as domains_ldap_auth() does.
+ */
+function ldap_tls_logins(array $settings, int $encrypted_domains, array $steps, string $domain_encryption = ''): array
+{
+    $root = dirname(__DIR__, 4);
+
+    $program = '$root = ' . var_export($root, true) . ';' . <<<'PHP'
+$scenario = json_decode($argv[1], true);
+$GLOBALS['settings'] = $scenario['settings'];
+$GLOBALS['writes'] = array();
+$GLOBALS['options'] = array();
+define('LDAP_OPT_X_TLS_REQUIRE_CERT', 0x6006);
+define('LDAP_OPT_PROTOCOL_VERSION', 17);
+require $root . '/include/global_constants.php';
+function read_config_option($name, $force = false) { return $GLOBALS['settings'][$name] ?? ''; }
+function db_fetch_cell_prepared($sql, $params = array()) { return $GLOBALS['settings'][$params[0]] ?? false; }
+function db_fetch_cell($sql) { return (string) $GLOBALS['scenario_domains']; }
+function db_execute_prepared($sql, $params = array()) {
+    $GLOBALS['writes'][] = $params;
+    // INSERT ... ON DUPLICATE KEY UPDATE value = IF(value = '', new, value)
+    if (($GLOBALS['settings'][$params[0]] ?? '') === '') {
+        $GLOBALS['settings'][$params[0]] = $params[1];
+    }
+    return true;
+}
+function get_selective_log_level() { return 0; }
+function cacti_log(...$args) {}
+function cacti_debug_backtrace(...$args) { return ''; }
+function __($text, ...$args) { return vsprintf($text, $args); }
+function ldap_set_option($conn, $option, $value) { $GLOBALS['options'][] = array($option, $value); return true; }
+function ldap_connect(...$args) { return false; }
+function ldap_error($conn) { return ''; }
+$GLOBALS['scenario_domains'] = $scenario['domains'];
+require $root . '/lib/ldap.php';
+$required = array();
+foreach ($scenario['steps'] as $step) {
+    if (is_array($step)) {
+        $GLOBALS['settings'][$step[0]] = $step[1];
+        continue;
+    }
+    cacti_ldap_tls_settle_requirement();
+    $GLOBALS['options'] = array();
+    $ldap = new Ldap();
+    $ldap->username = 'alice';
+    if ($scenario['domain_encryption'] !== '') {
+        $ldap->encryption = $scenario['domain_encryption'];
+    }
+    $ldap->Connect();
+    $level = null;
+    foreach ($GLOBALS['options'] as $option) {
+        if ($option[0] === LDAP_OPT_X_TLS_REQUIRE_CERT) {
+            $level = $option[1];
+        }
+    }
+    $required[] = $level;
+}
+print json_encode(array('required' => $required, 'writes' => $GLOBALS['writes'], 'stored' => $GLOBALS['settings']['ldap_tls_certificate'] ?? null));
+PHP;
+
+    return ldap_tls_child($program, array('settings' => $settings, 'domains' => $encrypted_domains, 'steps' => $steps, 'domain_encryption' => $domain_encryption));
+}
+
+test('an install already at 1.2.31 that uses LDAP encryption keeps Never after its first login', function (array $settings, int $domains, string $domain_encryption = '') {
+    $result = ldap_tls_logins($settings, $domains, array('login', 'login'), $domain_encryption);
+
+    expect($result['stored'])->toBe('0')
+        ->and($result['required'])->toBe(array(0, 0))
+        ->and($result['writes'])->toBe(array(array('ldap_tls_certificate', '0')));
+})->with(array(
+    'LDAPS' => array(array('ldap_encryption' => '1'), 0),
+    'StartTLS' => array(array('ldap_encryption' => '2'), 0),
+    'an empty saved row' => array(array('ldap_encryption' => '1', 'ldap_tls_certificate' => ''), 0),
+    'a domain' => array(array('ldap_encryption' => '0'), 1, '1'),
+));
+
+test('a login never replaces a saved requirement', function (string $saved, int $level) {
+    $result = ldap_tls_logins(array('ldap_encryption' => '1', 'ldap_tls_certificate' => $saved), 1, array('login'));
+
+    expect($result['stored'])->toBe($saved)
+        ->and($result['required'])->toBe(array($level))
+        ->and($result['writes'])->toBe(array());
+})->with(array('demand' => array('2', 2), 'hard' => array('1', 1), 'never' => array('0', 0)));
+
+test('a fresh install gets Demand and keeps it when LDAP encryption is turned on later', function () {
+    $result = ldap_tls_logins(array('ldap_encryption' => '0'), 0, array('login', array('ldap_encryption', '1'), 'login'));
+
+    expect($result['stored'])->toBe('2')
+        ->and($result['required'])->toBe(array(null, 2))
+        ->and($result['writes'])->toBe(array(array('ldap_tls_certificate', '2')));
+});
+
+test('the login page settles the requirement before any directory login', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/auth_login.php');
+    $block = strpos($source, "if (get_nfilter_request_var('action') == 'login' || \$auth_method == 2) {");
+    $settle = strpos($source, 'cacti_ldap_tls_settle_requirement();');
+
+    expect($block)->not->toBeFalse()
+        ->and($settle)->toBeGreaterThan($block)
+        ->and($settle)->toBeLessThan(strpos($source, "switch (\$auth_method) {", $block));
+});
+
 test('an install that never saved the requirement checks the certificate', function (string $encryption) {
     $result = ldap_tls_connect(array(), $encryption);
 
