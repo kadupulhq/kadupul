@@ -373,7 +373,7 @@ label.ui-state-hover > span {
 }
 
 .success {
-	color: green;
+	color: #00c900;
 }
 
 .failed {
@@ -458,7 +458,7 @@ label.ui-state-hover > span {
 }
 
 .deviceUnknown {
-	color: #0000ff !important;
+	color: #a5a5ff !important;
 }
 
 .deviceDisabled {
@@ -571,7 +571,7 @@ label.ui-state-hover > span {
 }
 
 .beingGraphed {
-	color: green;
+	color: #00c900;
 }
 
 .notBeingGraphed {
@@ -603,7 +603,7 @@ label.ui-state-hover > span {
 .submenuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #3C8A3C;
+	background: #3a863a;
 }
 
 .menuoptions {
@@ -635,7 +635,7 @@ label.ui-state-hover > span {
 .menuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #3C8A3C;
+	background: #3a863a;
 }
 
 .import_label {
@@ -686,7 +686,7 @@ label.ui-state-hover > span {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: red !important;
+	color: #ff8989 !important;
 	font-size: 14px;
 	padding-right: 15px;
 }
@@ -703,7 +703,7 @@ label.ui-state-hover > span {
 }
 
 .odd.tableRow {
-	color: #9d9d9d;
+	color: #d2d2d2;
 	#background: none repeat scroll 0 0 #fbfdff;
 }
 
@@ -712,7 +712,7 @@ label.ui-state-hover > span {
 }
 
 .even.tableRow {
-	color: #9d9d9d;
+	color: #d2d2d2;
 	#background: none repeat scroll 0 0 #FFFFFF;
 }
 
@@ -723,7 +723,7 @@ label.ui-state-hover > span {
 }
 
 .even-alternate.tableRow {
-	color: #9d9d9d;
+	color: #d2d2d2;
 	#background: none repeat scroll 0 0 #FFFFFF;
 }
 
@@ -853,7 +853,7 @@ label.ui-state-hover > span {
 }
 
 .cactiPageBottom a {
-	color: #9d9d9d;
+	color: #d2d2d2;
 	padding: 0px 8px;
 	text-decoration: none;
 	font-size: 16px;
@@ -969,7 +969,7 @@ label.ui-state-hover > span {
 }
 
 .loginArea, .logoutArea {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .cactiLoginTable td {
@@ -1127,7 +1127,7 @@ legend, .loginHeading {
 }
 
 .cactiGraphContentArea span[align="center"] {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .cactiGraphContentArea .tableHeader > td {
@@ -1149,7 +1149,7 @@ legend, .loginHeading {
 }
 
 .cactiGraphContentAreaPreview span[align="center"] {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .cactiGraphContentAreaPreview .cactitable {
@@ -1250,7 +1250,7 @@ legend, .loginHeading {
 
 .textInfo {
 	font-size: 14px;
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .textInfo.left {
@@ -1325,7 +1325,7 @@ legend, .loginHeading {
 }
 
 .cactiTable {
-	color: #9d9d9d;
+	color: #d2d2d2;
 	width: 100%;
 	margin-left: auto;
 	margin-right: auto;
@@ -1611,7 +1611,7 @@ table.cactiTable {
 
 .tableHeader {
 	display: table-row;
-	color: #9d9d9d;
+	color: #d2d2d2;
 	font-weight: 700;
 }
 
@@ -1622,7 +1622,7 @@ table.cactiTable {
 
 .tableHeader th {
 	border-color: #333;
-	color: #9d9d9d;
+	color: #d2d2d2;
 	font-weight: 600;
 	vertical-align: middle;
 	text-align: left;
@@ -1681,7 +1681,7 @@ table.cactiTable {
 }
 
 .tablesorter-headerUnSorted  div.textSubHeaderDark {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .graphSubHeaderColumn {
@@ -1713,7 +1713,7 @@ table.cactiTable {
 }
 
 .navBarNavigation {
-	color: #9D9D9D;
+	color: #d2d2d2;
 	width: 100%;
 	text-align: center;
 	line-height: 20px;
@@ -1723,7 +1723,7 @@ table.cactiTable {
 }
 
 .navBarNavigation a {
-	color: #9D9D9D;
+	color: #d2d2d2;
 }
 
 .navBarNavigation a:hover {
@@ -1898,7 +1898,7 @@ table.cactiTable {
 }
 
 .deleteMarkerDisabled {
-	color: #9d9d9d !important;
+	color: #d2d2d2 !important;
 	padding-right: 7px !important;
 }
 
@@ -2161,7 +2161,7 @@ tr th:last-child .formCheckboxLabel {
 }
 
 th {
-	border-right: 1px groove #9d9d9d;
+	border-right: 1px groove #d2d2d2;
 }
 
 th:last-child {
@@ -2273,7 +2273,7 @@ ul#nav {
 
 .ui-tooltip-content div.content {
 	font-size: 10px;
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .ui-tooltip-content {
@@ -2299,7 +2299,7 @@ ul.pagination li {
 }
 
 ul.pagination li a {
-	color: #9D9D9D;
+	color: #d2d2d2;
 	float: left;
 	padding: 0px 2px 2px 2px;
 	text-decoration: none;
@@ -2519,7 +2519,7 @@ tr#realtime td:first-child {
 	color: #93CEFF;
 }
 
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, .ui-button.ui-state-active:hover {
 	background: transparent;
 	color: #93CEFF;
 	border: 1px solid rgba(255,255,255,0.2);
@@ -2576,8 +2576,35 @@ tr#realtime td:first-child {
 }
 
 .ui-menu .ui-state-focus, .ui-menu .ui-state-active {
-	background: #3C8A3C;
+	background: #3a863a;
 	margin: -1px;
+	color: #ffffff;
+}
+
+/* Status-coloured menu icons are for the dark menu, not its green active item. */
+.ui-menu .ui-state-active i {
+	color: #ffffff !important;
+}
+
+/* Dialog text links take jQuery UI's #222222, which measures 1.3:1 on the black dialog. */
+.ui-widget-content a {
+	color: #93CEFF;
+}
+
+/* The 20% white control border measures 1.7:1 on the page glow. */
+:is(input, textarea).ui-state-default, .ui-widget-content :is(input, textarea).ui-state-default,
+.ui-selectmenu-button.ui-button, button.ui-multiselect {
+	border-color: rgba(255,255,255,0.55);
+}
+
+/* The path check is coloured inline for light themes. */
+.formData .cactiTooltipHint.fa-check-circle {
+	color: #00c400 !important;
+}
+
+/* The actions menu sits in the bottom right corner, over the brightest glow. */
+.actionsDropdown .ui-selectmenu-button:is(:hover, :focus, .ui-state-hover, .ui-state-focus) {
+	color: #a6d7ff;
 }
 
 .ui-menu .ui-menu-item {
