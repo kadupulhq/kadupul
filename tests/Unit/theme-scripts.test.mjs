@@ -125,6 +125,8 @@ function loadTheme(theme, nodes = {}, extra = {}) {
   return { context, ...jq };
 }
 
+const jqueryThemes = ['modern', 'dark', 'paper-plane', 'paw', 'sunrise'];
+
 test('keepWindowSize keeps one resize handler however often applySkin runs', () => {
   const win = { events: [] };
   const { $ } = fakeJquery();
@@ -169,3 +171,25 @@ test('classic themeReady leaves the window handlers layout.js binds in place', (
   $(win).trigger('resize');
   assert.equal(waits.length - queued, 1, 'one resize queues the debounced layout pass once');
 });
+
+for (const theme of jqueryThemes) {
+  test(`${theme} adds each filter search icon once across repeated page loads`, () => {
+    const filter = { attrs: { id: 'filter' } };
+    const rfilter = { attrs: { id: 'rfilter' } };
+    const filterd = { attrs: { id: 'filterd' }, next: { matches: 'i.fa-search' } };
+    const { context } = loadTheme(theme, {
+      'input[id="filter"]': [filter],
+      'input[id="rfilter"]': [rfilter],
+      'input[id="filterd"]': [filterd],
+    });
+
+    context.themeReady();
+    context.themeReady();
+    context.themeReady();
+
+    assert.equal(filter.inserted, 1);
+    assert.equal(rfilter.inserted, 1);
+    assert.equal(filterd.inserted, undefined, 'an icon already rendered next to the input is kept');
+  });
+
+}
