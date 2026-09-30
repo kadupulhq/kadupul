@@ -168,3 +168,27 @@ test('a cross-site Data Debug listing without a purge still renders', function (
     expect(page_flag_guard_run('data_debug.php', 'GET', 'debug=-1', array('HTTP_SEC_FETCH_SITE' => 'cross-site')))
         ->toBe('DISPATCHED:STATUS:200');
 });
+
+test('the SNMP Agent notification log purge needs a POST with a valid token', function (string $method, string $token, array $headers, string $expected) {
+    expect(page_flag_guard_run('utilities.php', $method, 'action=view_snmpagent_events&purge=1&header=false', $headers, $token))
+        ->toBe($expected);
+})->with(array(
+    'cross-site GET' => array('GET', 'missing', array('HTTP_SEC_FETCH_SITE' => 'cross-site'), 'STATUS:405'),
+    'same-origin GET' => array('GET', 'missing', array('HTTP_SEC_FETCH_SITE' => 'same-origin'), 'STATUS:405'),
+    'GET without headers' => array('GET', 'missing', array(), 'STATUS:405'),
+    'DELETE' => array('DELETE', 'missing', array(), 'STATUS:405'),
+    'POST without a token' => array('POST', 'missing', array(), 'STATUS:403'),
+    'POST with a valid token' => array('POST', 'valid', array(), 'DISPATCHED:view_snmpagent_eventsSTATUS:200'),
+));
+
+test('viewing the SNMP Agent notification log without a purge is unchanged', function () {
+    expect(page_flag_guard_run('utilities.php', 'GET', 'action=view_snmpagent_events', array('HTTP_SEC_FETCH_SITE' => 'cross-site')))
+        ->toBe('DISPATCHED:view_snmpagent_eventsSTATUS:200');
+});
+
+test('the SNMP Agent notification log Purge button posts the token', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/utilities.php');
+
+    expect($source)->not->toContain('view_snmpagent_events&purge=1')
+        ->and($source)->toMatch("/loadPageUsingPost\\('utilities\\.php', \\{\\s*action: 'view_snmpagent_events',\\s*purge: 1,\\s*header: 'false',\\s*__csrf_magic: csrfMagicToken\\s*\\}\\)/");
+});
