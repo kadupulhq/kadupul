@@ -5149,29 +5149,31 @@ function auth_login_create_user_from_template($username, $realm)
  *
  * @param  (int)  $auth_method - The current auth method
  *
- * @return (bool) Returns false on failure to set user account, otherwise redirects
+ * @return (void) Redirects to the login flow when authentication was not set
  */
 function check_reset_no_authentication($auth_method)
 {
     global $config, $error, $error_msg;
 
     if ($auth_method == 0) {
-        $admin_id = db_execute_prepared(
-            'SELECT id
+        $admin_id = db_fetch_cell_prepared(
+            "SELECT id
 			FROM user_auth
-			WHERE id = ?',
+			WHERE id = ?
+			AND enabled = 'on'",
             array(read_config_option('admin_user'))
         );
 
         cacti_log('Admin User (' . read_config_option('admin_user') . ' vs ' . $admin_id . ')', true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
 
         if (!$admin_id) {
-            $admin_sql_query = 'SELECT TOP 1 id FROM (
+            $admin_sql_query = 'SELECT id FROM (
 				SELECT ua.id
 				FROM user_auth AS ua
 				INNER JOIN user_auth_realm AS uar
 				ON uar.user_id = ua.id
-				WHERE uar.realm_id = ?';
+				WHERE ua.enabled="on"
+				AND uar.realm_id = ?';
 
             $admin_sql_params = array(15);
 
@@ -5185,7 +5187,7 @@ function check_reset_no_authentication($auth_method)
 				INNER JOIN user_auth_group AS uag
 				ON uag.id = uagm.group_id
 				INNER JOIN user_auth_group_realm AS uagr
-				ON uagr.group_id=uag.group_id
+				ON uagr.group_id = uag.id
 				WHERE uag.enabled="on" AND ua.enabled="on"
 				AND uagr.realm_id = ?';
 
@@ -5193,7 +5195,9 @@ function check_reset_no_authentication($auth_method)
             }
 
             $admin_sql_query .= '
-				) AS id';
+				) AS id
+				ORDER BY id
+				LIMIT 1';
 
             cacti_log('SQL query ' . $admin_sql_query, true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
             cacti_log('SQL param ' . implode(',', $admin_sql_params), true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
@@ -5213,26 +5217,26 @@ function check_reset_no_authentication($auth_method)
             $error     = true;
             $error_msg = __('Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found.');
 
-            return false;
+            cacti_log('ERROR: ' . $error_msg, false, 'AUTH');
+        } else {
+            // Keep the stored password so the administrator can still sign in,
+            // and require a new one at that login.
+            db_execute_prepared(
+                "UPDATE user_auth SET
+				must_change_password = 'on',
+				password_change = 'on'
+				WHERE id = ?",
+                array($admin_id)
+            );
         }
 
-        // Authentication method is currently set to none
-        // lets switch this to basic and allow setting of
-        // a password.
-        db_execute_prepared(
-            "UPDATE user_auth SET
-			password = '',
-			must_change_password = 'on',
-			password_change = 'on'
-			WHERE id = ?",
-            array($admin_id)
-        );
-
+        // Nothing about this request identifies the administrator, so switch
+        // to local authentication without starting a session. Staying on no
+        // authentication would leave every page open. Without a session,
+        // auth_changepassword.php sends the browser on to the login page.
         $auth_method = 1;
         set_config_option('auth_method', $auth_method, true);
 
-        $_SESSION['sess_user_id'] = $admin_id;
-        $_SESSION['sess_change_password'] = true;
         header('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
         exit;
     }
