@@ -43,11 +43,23 @@ table {
 	outline-offset: 1px;
 }
 
-/* Dialogs, menus, message boxes and selected rows are light, where the light blue ring measures under 2:1. */
-.ui-widget-content :focus-visible, .menuoptions :focus-visible, .messageBox :focus-visible,
-.spikekillMenu :focus-visible, tr.selected :focus-visible,
-.ui-widget-content :focus-visible + .checkboxSlider, .ui-widget-content :focus-visible + .radioSlider {
+/*
+ * Dialogs, menus, message boxes, selected rows, the device header, graph item
+ * rows and the install wizard are light, where the light blue ring measures
+ * under 2:1.
+ */
+.ui-widget-content :focus-visible, .menuoptions :focus-visible, .submenuoptions :focus-visible,
+.messageBox :focus-visible, .spikekillMenu :focus-visible, tr.selected :focus-visible,
+.hostInfoHeader :focus-visible, .tableRowGraph :focus-visible, .cactiInstallArea :focus-visible,
+.ui-widget-content :focus-visible + .checkboxSlider, .ui-widget-content :focus-visible + .radioSlider,
+.cactiInstallArea :focus-visible + .checkboxSlider, .cactiInstallArea :focus-visible + .radioSlider {
 	outline-color: #0D47A1 !important;
+}
+
+/* Table rows in the install wizard keep the dark fill they have everywhere else. */
+.cactiInstallArea :is(.odd, .even, .even-alternate):not(.selected) :focus-visible,
+.cactiInstallArea :is(.odd, .even, .even-alternate):not(.selected) :focus-visible + :is(.checkboxSlider, .radioSlider) {
+	outline-color: #93CEFF !important;
 }
 
 td, th {

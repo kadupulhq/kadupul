@@ -144,6 +144,13 @@ test.describe('theme keyboard focus', () => {
     'dialog title': `<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-titlebar ui-widget-header">${link}</div></div>`,
     'multiselect header': `<div class="ui-multiselect-menu ui-widget ui-widget-content" style="position:static"><div class="ui-widget-header ui-multiselect-header"><ul><li>${link}</li></ul></div></div>`,
     'login page': `<div class="loginBody"><div class="loginArea">${link}</div></div>`,
+    // include/layout.js setupEllipsis(), host.php and lib/html.php draw_graph_items_list().
+    'overflow menu': `<div class="dropdownMenu"><ul class="submenuoptions" style="display:block;position:static"><li>${link}</li></ul></div>`,
+    'device header': `<table class="hostInfoHeader"><tr><td class="textInfo right">${link}</td></tr></table>`,
+    'graph item row': `<table class="cactiTable"><tr class="tableRowGraph"><td>${link}</td></tr></table>`,
+    'install wizard': `<div class="cactiInstallArea cactiBorderWall"><div class="cactiInstallAreaContent"><p class="cactiInstallSection cactiInstallSectionNormal">${link}</p></div></div>`,
+    'install wizard form row': `<div class="cactiInstallArea"><div class="cactiInstallAreaContent"><table class="cactiTable"><tr><td><div class="formRow"><div class="formData">${link}</div></div></td></tr></table></div></div>`,
+    'install wizard table row': `<div class="cactiInstallArea"><div class="cactiInstallAreaContent"><table class="cactiTable"><tr class="odd"><td>${link}</td></tr></table></div></div>`,
   };
   const panelPasses = ringThemes.map((theme) => ({ theme, color: null }))
     .concat([{ theme: 'midwinter', color: 'light' }]);
@@ -171,6 +178,8 @@ test.describe('theme keyboard focus', () => {
   const switchSurfaces = {
     'content area': `<div class="cactiContent">${switches}</div>`,
     'dialog': `<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-content ui-widget-content">${switches}</div></div>`,
+    'install wizard': `<div class="cactiInstallArea"><div class="cactiInstallAreaContent"><table class="cactiTable"><tr><td><div class="formRow"><div class="formData">${switches}</div></div></td></tr></table></div></div>`,
+    'install wizard dark row': `<div class="cactiInstallArea"><div class="cactiInstallAreaContent"><table class="cactiTable"><tr><td><div class="formRow even-alternate"><div class="formData">${switches}</div></div></td></tr></table></div></div>`,
   };
 
   // paw keeps the browser ring elsewhere but draws its own on the sliders.
