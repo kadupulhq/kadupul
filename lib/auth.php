@@ -3921,6 +3921,9 @@ function local_auth_login_process($username)
                     );
                 }
             }
+        } else {
+            // A known account verifies here a second time; keep unknown usernames level.
+            auth_unknown_user_password_verify(get_nfilter_request_var('login_password'));
         }
     }
 
@@ -4485,6 +4488,12 @@ function secpass_login_process($username)
             return array();
         }
     } else {
+        // A known account verifies a non-blank password here, so an unknown
+        // username must cost the same or response time reveals which exist.
+        if (trim($password) != '') {
+            auth_unknown_user_password_verify($password);
+        }
+
         /* error */
         $error     = true;
         $error_msg = __('Access Denied!  Login Failed.');
@@ -4720,6 +4729,24 @@ function is_user_perms_valid($user_id)
     $_SESSION['sess_user_perms_key'] = $key;
 
     return $valid;
+}
+
+/**
+ * auth_unknown_user_password_verify - spend the same bcrypt work on a login
+ *   for an account that has no stored password as a stored hash would cost,
+ *   and discard the result.
+ *
+ * The fixed hash belongs to no account. Its cost is 12, the PASSWORD_DEFAULT
+ * cost from PHP 8.4, the lowest version main supports, which is also the cost
+ * local logins rehash stored passwords to.
+ *
+ * @param  (string) $password - the password the client sent
+ *
+ * @return (void)
+ */
+function auth_unknown_user_password_verify($password)
+{
+    compat_password_verify((string) $password, '$2y$12$wmB0d6QbaauWtucY8b5uRO0Ft7FfFB7LFmZXdJWUPz2MFO0HzsW26');
 }
 
 /**
