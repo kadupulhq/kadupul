@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -10,10 +11,10 @@ global $current_user;
 require_once('global.php');
 
 if (!isset($config['cacti_db_version'])) {
-	$version = get_cacti_version();
-	$config['cacti_db_version'] = $version;
+    $version = get_cacti_version();
+    $config['cacti_db_version'] = $version;
 } else {
-	$version = $config['cacti_db_version'];
+    $version = $config['cacti_db_version'];
 }
 
 $auth_method = read_config_option('auth_method');
@@ -30,181 +31,187 @@ check_reset_no_authentication($auth_method);
  * process if found to be different.
  */
 if ($version != CACTI_VERSION && !defined('IN_CACTI_INSTALL')) {
-	header ('Location: ' . $config['url_path'] . 'install/');
-	exit;
+    header('Location: ' . $config['url_path'] . 'install/');
+    exit;
 }
 
 /* Logout owns credential teardown and must remain accessible to suspended users. */
 if (get_current_page() == 'logout.php') {
-	return true;
+    return true;
 }
 
 /* Recheck persisted session eligibility before any protected-page shortcut. */
 if ($auth_method != 0 && isset($_SESSION['sess_user_id'])) {
-	$session_user = db_fetch_row_prepared('SELECT enabled, locked FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
-	if (!$session_user || $session_user['locked'] === 'on' || ($session_user['enabled'] !== 'on' && (int)$_SESSION['sess_user_id'] !== (int)get_guest_account())) {
-		cacti_cookie_logout();
-		cacti_session_destroy();
-		http_response_code(403);
-		exit;
-	}
+    $session_user = db_fetch_row_prepared('SELECT enabled, locked FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
+    if (!$session_user || $session_user['locked'] === 'on' || ($session_user['enabled'] !== 'on' && (int) $_SESSION['sess_user_id'] !== (int) get_guest_account())) {
+        cacti_cookie_logout();
+        cacti_session_destroy();
+        http_response_code(403);
+        exit;
+    }
 }
 
 /**
  * Eligible users may reach the password-change flow without a realm check.
  */
 if (get_current_page() == 'auth_changepassword.php') {
-	return true;
+    return true;
 }
 
 if ($auth_method != 0) {
-	/* handle alternate authentication realms */
-	api_plugin_hook_function('auth_alternate_realms');
+    /* handle alternate authentication realms */
+    api_plugin_hook_function('auth_alternate_realms');
 
-	/**
-	 * handle change password dialog and auth cookie if not using basic auth
-	 */
-	if ($auth_method != 2) {
-		if (isset($_SESSION['sess_change_password'])) {
-			header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
-			exit;
-		}
+    /**
+     * handle change password dialog and auth cookie if not using basic auth
+     */
+    if ($auth_method != 2) {
+        if (isset($_SESSION['sess_change_password'])) {
+            header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+            exit;
+        }
 
-		/* check for remember me functionality */
-		if (!isset($_SESSION['sess_user_id'])) {
-			$cookie_user = check_auth_cookie();
-			if ($cookie_user > 0) {
-				/* GHSA-273r-qr93-wgcp: regenerate session id on auth transition */
+        /* check for remember me functionality */
+        if (!isset($_SESSION['sess_user_id'])) {
+            $cookie_user = check_auth_cookie();
+            if ($cookie_user > 0) {
+                /* GHSA-273r-qr93-wgcp: regenerate session id on auth transition */
 
-				if (cacti_auth_transition((int)$cookie_user, 'cookie_restore')) {
-					$_SESSION['sess_user_id'] = $cookie_user;
-				}
-			}
-		}
-	}
+                if (cacti_auth_transition((int) $cookie_user, 'cookie_restore')) {
+                    $_SESSION['sess_user_id'] = $cookie_user;
+                }
+            }
+        }
+    }
 
-	/**
-	 * Check for basic auth, and if the user has been logged in via the server
-	 * but their user_id is not set, include the auth_login.php script to
-	 * process their log in.
-	 */
-	if ($auth_method == 2 && !isset($_SESSION['sess_user_id'])) {
-		$username = get_basic_auth_username();
-		if ($username !== false) {
-			$current_user = db_fetch_row_prepared('SELECT *
+    /**
+     * Check for basic auth, and if the user has been logged in via the server
+     * but their user_id is not set, include the auth_login.php script to
+     * process their log in.
+     */
+    if ($auth_method == 2 && !isset($_SESSION['sess_user_id'])) {
+        $username = get_basic_auth_username();
+        if ($username !== false) {
+            $current_user = db_fetch_row_prepared(
+                'SELECT *
 				FROM user_auth
 				WHERE realm = 2
 				AND username = ?',
-				array($username));
+                array($username)
+            );
 
-			if (cacti_sizeof($current_user)) {
-				/* GHSA-273r-qr93-wgcp: regenerate session id on auth transition */
-				if (!cacti_auth_transition((int)$current_user['id'], 'basic_auth')) {
-					http_response_code(403);
-					exit;
-				}
+            if (cacti_sizeof($current_user)) {
+                /* GHSA-273r-qr93-wgcp: regenerate session id on auth transition */
+                if (!cacti_auth_transition((int) $current_user['id'], 'basic_auth')) {
+                    http_response_code(403);
+                    exit;
+                }
 
-				$_SESSION['sess_user_id'] = $current_user['id'];
+                $_SESSION['sess_user_id'] = $current_user['id'];
 
-				$client_addr = get_client_addr();
+                $client_addr = get_client_addr();
 
-				cacti_log("LOGIN: User '" . $current_user['username'] . "' authenticated via Basic Authentication from IP Address '" . $client_addr . "'", false, 'AUTH');
+                cacti_log("LOGIN: User '" . $current_user['username'] . "' authenticated via Basic Authentication from IP Address '" . $client_addr . "'", false, 'AUTH');
 
-				db_execute_prepared('INSERT IGNORE INTO user_log
+                db_execute_prepared(
+                    'INSERT IGNORE INTO user_log
 					(username, user_id, result, ip, time)
 					VALUES (?, ?, 1, ?, NOW())',
-					array($username, $current_user['id'], $client_addr));
+                    array($username, $current_user['id'], $client_addr)
+                );
 
-				/* Continue through the requested page's realm authorization below. */
-			} else {
-				require_once($config['base_path'] . '/auth_login.php');
-			}
-		}
-	}
+                /* Continue through the requested page's realm authorization below. */
+            } else {
+                require_once($config['base_path'] . '/auth_login.php');
+            }
+        }
+    }
 
-	/**
-	 * If the special boolean $guest_account is set for a page, then the guest
-	 * account can be used.  Where this may not be the case is with basic auth
-	 * where to enter the Kadupul website, you must first have a valid account.
-	 * if that is the case, then use that valid accounts permissions and not
-	 * the guest account.
-	 */
-	if (isset($guest_account)) {
-		$guest_user_id = get_guest_account();
+    /**
+     * If the special boolean $guest_account is set for a page, then the guest
+     * account can be used.  Where this may not be the case is with basic auth
+     * where to enter the Kadupul website, you must first have a valid account.
+     * if that is the case, then use that valid accounts permissions and not
+     * the guest account.
+     */
+    if (isset($guest_account)) {
+        $guest_user_id = get_guest_account();
 
-		/* find guest user */
-		if (!empty($guest_user_id)) {
-			if (empty($_SESSION['sess_user_id'])) {
-				if (!cacti_auth_transition((int)$guest_user_id, 'guest')) {
-					http_response_code(403);
-					exit;
-				}
+        /* find guest user */
+        if (!empty($guest_user_id)) {
+            if (empty($_SESSION['sess_user_id'])) {
+                if (!cacti_auth_transition((int) $guest_user_id, 'guest')) {
+                    http_response_code(403);
+                    exit;
+                }
 
-				$_SESSION['sess_user_id'] = $guest_user_id;
-			}
+                $_SESSION['sess_user_id'] = $guest_user_id;
+            }
 
-			$current_user = db_fetch_row_prepared('SELECT *
+            $current_user = db_fetch_row_prepared(
+                'SELECT *
 				FROM user_auth
 				WHERE id = ?',
-				array($_SESSION['sess_user_id']));
+                array($_SESSION['sess_user_id'])
+            );
 
-			return true;
-		}
-	}
+            return true;
+        }
+    }
 
-	/**
-	 * If we are a guest user in a non-guest area, wipe credentials
-	 * user will be redirected back to the login page.
-	 */
-	if (!isset($guest_account) && isset($_SESSION['sess_user_id'])) {
-		if (get_guest_account() === $_SESSION['sess_user_id']) {
-			kill_session_var('sess_user_id');
-			cacti_session_destroy();
-			cacti_session_start(true);
-		}
-	}
+    /**
+     * If we are a guest user in a non-guest area, wipe credentials
+     * user will be redirected back to the login page.
+     */
+    if (!isset($guest_account) && isset($_SESSION['sess_user_id'])) {
+        if (get_guest_account() === $_SESSION['sess_user_id']) {
+            kill_session_var('sess_user_id');
+            cacti_session_destroy();
+            cacti_session_start(true);
+        }
+    }
 
-	if (empty($_SESSION['sess_user_id'])) {
-		if (isset($auth_json) && $auth_json == true) {
-			print json_encode(
-				array(
-					'status' => '500',
-					'statusText' => __('Not Logged In'),
-					'responseText' => __('You must be logged in to access this area of Kadupul.')
-				)
-			);
-		} elseif (isset($auth_text) && $auth_text == true) {
-			/* handle graph_image.php to respond with text. */
-			print __('FATAL: You must be logged in to access this area of Kadupul.');
-		} else {
-			require_once($config['base_path'] . '/auth_login.php');
-		}
+    if (empty($_SESSION['sess_user_id'])) {
+        if (isset($auth_json) && $auth_json == true) {
+            print json_encode(
+                array(
+                    'status' => '500',
+                    'statusText' => __('Not Logged In'),
+                    'responseText' => __('You must be logged in to access this area of Kadupul.')
+                )
+            );
+        } elseif (isset($auth_text) && $auth_text == true) {
+            /* handle graph_image.php to respond with text. */
+            print __('FATAL: You must be logged in to access this area of Kadupul.');
+        } else {
+            require_once($config['base_path'] . '/auth_login.php');
+        }
 
-		exit;
-	} else {
-		$realm_id = 0;
+        exit;
+    } else {
+        $realm_id = 0;
 
-		if (isset($user_auth_realm_filenames[get_current_page()])) {
-			$realm_id = $user_auth_realm_filenames[get_current_page()];
-		}
+        if (isset($user_auth_realm_filenames[get_current_page()])) {
+            $realm_id = $user_auth_realm_filenames[get_current_page()];
+        }
 
-		/* Are we upgrading from a version before 1.2 which has the Install/Upgrade realm 26 */
-		if ($realm_id == 26) {
-			/* See if we can find any users that are allowed to upgrade */
-			$install_sql_query = '
+        /* Are we upgrading from a version before 1.2 which has the Install/Upgrade realm 26 */
+        if ($realm_id == 26) {
+            /* See if we can find any users that are allowed to upgrade */
+            $install_sql_query = '
 				SELECT COUNT(*)
 				FROM (
 					SELECT realm_id
 					FROM user_auth_realm AS uar
 					WHERE uar.realm_id = ?';
 
-			$install_sql_params = array($realm_id);
+            $install_sql_params = array($realm_id);
 
-			/* See if the group realms exist and if so, check if permission exists there too */
-			if (db_table_exists('user_auth_group_realm') &&
-				db_table_exists('user_auth_group') &&
-				db_table_exists('user_auth_group_members')) {
-				$install_sql_query .= '
+            /* See if the group realms exist and if so, check if permission exists there too */
+            if (db_table_exists('user_auth_group_realm') &&
+                db_table_exists('user_auth_group') &&
+                db_table_exists('user_auth_group_members')) {
+                $install_sql_query .= '
 					UNION
 					SELECT realm_id
 					FROM user_auth_group_realm AS uagr
@@ -215,18 +222,18 @@ if ($auth_method != 0) {
 					WHERE uag.enabled="on"
 					AND uagr.realm_id = ?';
 
-				$install_sql_params = array_merge($install_sql_params, array($realm_id));
-			}
+                $install_sql_params = array_merge($install_sql_params, array($realm_id));
+            }
 
-			$install_sql_query .= '
+            $install_sql_query .= '
 				) AS authorized';
 
-			$has_install_user = db_fetch_cell_prepared($install_sql_query, $install_sql_params);
+            $has_install_user = db_fetch_cell_prepared($install_sql_query, $install_sql_params);
 
-			if (!$has_install_user) {
-				/* We did not find any existing users who can upgrade/install so add any admin *
-				 * who has access to the system settings (realm 15) by default                 */
-				db_execute('INSERT INTO `user_auth_realm` (realm_id, user_id)
+            if (!$has_install_user) {
+                /* We did not find any existing users who can upgrade/install so add any admin *
+                 * who has access to the system settings (realm 15) by default                 */
+                db_execute('INSERT INTO `user_auth_realm` (realm_id, user_id)
 					SELECT 26 as realm_id, ua.id
 					FROM user_auth ua
 					INNER JOIN user_auth_realm uar
@@ -236,11 +243,11 @@ if ($auth_method != 0) {
 					AND uar2.realm_id=26
 					WHERE uar.realm_id=15
 					AND uar2.user_id IS NULL');
-			}
-		}
+            }
+        }
 
-		if ($realm_id > 0) {
-			$auth_sql_query = '
+        if ($realm_id > 0) {
+            $auth_sql_query = '
 				SELECT COUNT(*)
 				FROM (
 					SELECT realm_id
@@ -248,14 +255,14 @@ if ($auth_method != 0) {
 					WHERE uar.user_id = ?
 					AND uar.realm_id = ?';
 
-			$auth_sql_params = array($_SESSION['sess_user_id'], $realm_id);
+            $auth_sql_params = array($_SESSION['sess_user_id'], $realm_id);
 
-			/* Because we now expect installation to be done by authorized users, check the group_realm *
-			 * exists before using it as this may not be present if upgrading from pre-1.x              */
-			if (db_table_exists('user_auth_group_realm') &&
-				db_table_exists('user_auth_group') &&
-				db_table_exists('user_auth_group_members')) {
-				$auth_sql_query .= '
+            /* Because we now expect installation to be done by authorized users, check the group_realm *
+             * exists before using it as this may not be present if upgrading from pre-1.x              */
+            if (db_table_exists('user_auth_group_realm') &&
+                db_table_exists('user_auth_group') &&
+                db_table_exists('user_auth_group_members')) {
+                $auth_sql_query .= '
 					UNION
 					SELECT realm_id
 					FROM user_auth_group_realm AS uagr
@@ -267,43 +274,43 @@ if ($auth_method != 0) {
 					AND uagm.user_id = ?
 					AND uagr.realm_id = ?';
 
-				$auth_sql_params = array_merge($auth_sql_params, array($_SESSION['sess_user_id'], $realm_id));
-			}
+                $auth_sql_params = array_merge($auth_sql_params, array($_SESSION['sess_user_id'], $realm_id));
+            }
 
-			$auth_sql_query .= '
+            $auth_sql_query .= '
 				) AS authorized';
 
-			$authorized = db_fetch_cell_prepared($auth_sql_query, $auth_sql_params);
-		} else {
-			$authorized = false;
-		}
+            $authorized = db_fetch_cell_prepared($auth_sql_query, $auth_sql_params);
+        } else {
+            $authorized = false;
+        }
 
-		if ($realm_id != -1 && !$authorized) {
-			if (api_plugin_hook_function('custom_denied', OPER_MODE_NATIVE) == OPER_MODE_RESKIN) {
-				exit;
-			}
+        if ($realm_id != -1 && !$authorized) {
+            if (api_plugin_hook_function('custom_denied', OPER_MODE_NATIVE) == OPER_MODE_RESKIN) {
+                exit;
+            }
 
-			if (isset($_SERVER['HTTP_REFERER'])) {
-				$goBack = "<td colspan='2' class='center'>[<a href='" . validate_redirect_url($_SERVER['HTTP_REFERER'], $_SERVER['SCRIPT_NAME']) . "'>" . __('Return') . "</a> | <a href='" . $config['url_path'] . "logout.php'>" . __('Login Again') . "</a>]</td>";
-			} elseif ($auth_method != 2 && $auth_method > 0) {
-				$goBack = "<td colspan='2' class='center'>[<a href='" . $config['url_path'] . "logout.php'>" . __('Login Again') . "</a>]</td>";
-			}
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                $goBack = "<td colspan='2' class='center'>[<a href='" . validate_redirect_url($_SERVER['HTTP_REFERER'], $_SERVER['SCRIPT_NAME']) . "'>" . __('Return') . "</a> | <a href='" . $config['url_path'] . "logout.php'>" . __('Login Again') . "</a>]</td>";
+            } elseif ($auth_method != 2 && $auth_method > 0) {
+                $goBack = "<td colspan='2' class='center'>[<a href='" . $config['url_path'] . "logout.php'>" . __('Login Again') . "</a>]</td>";
+            }
 
-			raise_ajax_permission_denied();
+            raise_ajax_permission_denied();
 
-			$title_header = __('Permission Denied');
-			$title_body = '<p>' . __('You are not permitted to access this section of Kadupul.') . '</p><p>' . __('If you feel that this is an error. Please contact your Kadupul Administrator.');
+            $title_header = __('Permission Denied');
+            $title_body = '<p>' . __('You are not permitted to access this section of Kadupul.') . '</p><p>' . __('If you feel that this is an error. Please contact your Kadupul Administrator.');
 
-			if ($realm_id == 26) {
-				$title_header = __('Installation In Progress');
-				$title_body = '<p>' . __('There is an Installation or Upgrade in progress.') . '</p><p>' . __('Only Kadupul Administrators with Install/Upgrade privilege may login at this time') . '</p>';
-			}
-			print "<!DOCTYPE html>\n";
-			print "<html>\n";
-			print "<head>\n";
-			html_common_header($title_header);
-			print "</head>\n";
-			print "<body class='logoutBody'>
+            if ($realm_id == 26) {
+                $title_header = __('Installation In Progress');
+                $title_body = '<p>' . __('There is an Installation or Upgrade in progress.') . '</p><p>' . __('Only Kadupul Administrators with Install/Upgrade privilege may login at this time') . '</p>';
+            }
+            print "<!DOCTYPE html>\n";
+            print "<html>\n";
+            print "<head>\n";
+            html_common_header($title_header);
+            print "</head>\n";
+            print "<body class='logoutBody'>
 			<div class='logoutLeft'></div>
 			<div class='logoutCenter'>
 				<div class='logoutArea'>
@@ -325,15 +332,17 @@ if ($auth_method != 0) {
 				$('.loginRight').css('width',parseInt($(window).width()*0.33)+'px');
 			});
 			</script>\n";
-			include_once('global_session.php');
-			print "</body>
+            include_once('global_session.php');
+            print "</body>
 			</html>\n";
-			exit;
-		}
+            exit;
+        }
 
-		$current_user = db_fetch_row_prepared('SELECT *
+        $current_user = db_fetch_row_prepared(
+            'SELECT *
 			FROM user_auth
 			WHERE id = ?',
-			array($_SESSION['sess_user_id']));
-	}
+            array($_SESSION['sess_user_id'])
+        );
+    }
 }
