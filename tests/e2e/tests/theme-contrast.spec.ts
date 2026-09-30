@@ -275,26 +275,40 @@ async function settle(page: Page): Promise<void> {
 	await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 }
 
-// Measures text across the whole page by scrolling a viewport at a time,
-// since only painted points can be sampled.
+// Measures text across the whole page a viewport at a time, since only
+// painted points can be sampled. Kadupul pages scroll an inner container
+// rather than the window, so the pass scrolls whichever element scrolls most.
 async function measureTextPass(page: Page, scope: string | null): Promise<Finding[]> {
 	const found: Finding[] = [];
-	const height = await page.evaluate(() => Math.min(document.documentElement.scrollHeight, 6000));
-	const step = page.viewportSize()!.height - 100;
-	for (let y = 0; y < height; y += step) {
+	const steps = scope ? 1 : await page.evaluate(() => {
+		let best: Element = document.scrollingElement || document.documentElement;
+		let extra = best.scrollHeight - best.clientHeight;
+		for (const el of document.querySelectorAll('*')) {
+			const reach = el.scrollHeight - el.clientHeight;
+			if (reach > extra && /(auto|scroll)/.test(getComputedStyle(el).overflowY)) {
+				best = el;
+				extra = reach;
+			}
+		}
+		(window as any).__scroller = best;
+		return 1 + Math.ceil(Math.min(extra, 6000) / Math.max(best.clientHeight - 100, 100));
+	});
+	for (let i = 0; i < steps; i++) {
 		if (!scope) {
-			await page.evaluate((top) => window.scrollTo(0, top), y);
+			await page.evaluate((index) => {
+				const el = (window as any).__scroller as Element;
+				el.scrollTop = index * Math.max(el.clientHeight - 100, 100);
+			}, i);
 		}
 		found.push(...await page.evaluate((sel) => {
 			const c = (window as any).__contrast;
 			const roots = sel ? [...document.querySelectorAll(sel)] : [document.body];
 			return roots.flatMap((root) => c.measureText(root));
 		}, scope));
-		if (scope) {
-			break;
-		}
 	}
-	await page.evaluate(() => window.scrollTo(0, 0));
+	if (!scope) {
+		await page.evaluate(() => { ((window as any).__scroller as Element).scrollTop = 0; });
+	}
 	return found as Finding[];
 }
 
