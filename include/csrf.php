@@ -63,6 +63,10 @@ function csrf_startup()
         }
 
         csrf_conf('secret', $secret);
+
+        // An ip: token is tied to no session, so another client behind the
+        // same address could replay it; every page carries a sid: token.
+        csrf_conf('allow-ip', false);
         csrf_conf('rewrite-js', $config['url_path'] . 'include/vendor/csrf/csrf-magic.js');
         csrf_conf('callback', 'csrf_error_callback');
         csrf_conf('expires', 7200);
