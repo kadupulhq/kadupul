@@ -592,6 +592,8 @@ function form_actions()
                     return is_graph_allowed((int) $graph_id);
                 }
             ));
+            /* plugin action hooks read the request, so they must see the filtered list too */
+            set_request_var('selected_items', serialize($selected_items));
             if (cacti_sizeof($selected_items) === 0) {
                 $selected_items = false;
             }
@@ -629,6 +631,10 @@ function form_actions()
             } elseif (get_request_var('drp_action') == '5') { // change host
                 get_filter_request_var('host_id');
                 $failures = false;
+                if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+                    $selected_items = array();
+                    raise_message('device_access_denied', __('The selected Device is not available.'), MESSAGE_LEVEL_ERROR);
+                }
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
                     if (!api_graph_change_device($selected_items[$i], get_request_var('host_id'))) {
                         $failures = true;
@@ -850,6 +856,10 @@ function form_actions()
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
+
+            if (!is_graph_allowed($matches[1])) {
+                continue;
+            }
 
             $graph_list .= '<li>' . html_escape(get_graph_title($matches[1])) . '</li>';
             $graph_array[$i] = $matches[1];
@@ -2226,11 +2236,11 @@ function graph_management()
         if (get_request_var('local_graph_ids') != '') {
             /* The custom graph IDs were checked individually above. */
         } elseif (cacti_sizeof($allowed_device_ids) > 0) {
-            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
-            $sql_where2 .= ' AND gl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
+            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' (gl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR gl.host_id=0)';
+            $sql_where2 .= ' AND (gl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR gl.host_id=0)';
         } else {
-            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' 1=0';
-            $sql_where2 .= ' AND 1=0';
+            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=0';
+            $sql_where2 .= ' AND gl.host_id=0';
         }
     } elseif (isempty_request_var('host_id')) {
         $sql_where  .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=0';
@@ -2240,7 +2250,7 @@ function graph_management()
         if (!is_device_allowed($host_id) || !in_array($host_id, $allowed_device_ids, true)) {
             $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . '1=0';
         } else {
-            $sql_where .= ' AND gl.host_id=' . (int) $host_id;
+            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . 'gl.host_id=' . (int) $host_id;
             $sql_where2 .= ' AND gl.host_id=' . (int) $host_id;
         }
     }

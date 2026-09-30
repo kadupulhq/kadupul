@@ -385,6 +385,8 @@ function form_actions()
                     return api_data_source_is_allowed((int) $data_source_id);
                 }
             ));
+            /* plugin action hooks read the request, so they must see the filtered list too */
+            set_request_var('selected_items', serialize($selected_items));
             if (cacti_sizeof($selected_items) === 0) {
                 $selected_items = false;
             }
@@ -452,7 +454,11 @@ function form_actions()
             } elseif (get_nfilter_request_var('drp_action') == '3') { // change host
                 get_filter_request_var('host_id');
 
-                api_data_source_change_host($selected_items, get_request_var('host_id'));
+                if (get_request_var('host_id') <= 0 || is_device_allowed(get_request_var('host_id'))) {
+                    api_data_source_change_host($selected_items, get_request_var('host_id'));
+                } else {
+                    raise_message('device_access_denied', __('The selected Device is not available.'), MESSAGE_LEVEL_ERROR);
+                }
             } elseif (get_nfilter_request_var('drp_action') == '6') { // data source enable
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
                     api_data_source_enable($selected_items[$i]);
@@ -490,6 +496,10 @@ function form_actions()
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
+
+            if (!api_data_source_is_allowed($matches[1])) {
+                continue;
+            }
 
             $ds_list .= '<li>' . html_escape(get_data_source_title($matches[1])) . '</li>';
             $ds_array[$i] = $matches[1];
@@ -1591,11 +1601,11 @@ function ds()
 
     if (get_request_var('host_id') == '-1') {
         if (cacti_sizeof($allowed_device_ids) > 0) {
-            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . 'dl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
-            $sql_where2 .= ' AND gl.host_id IN (' . implode(',', $allowed_device_ids) . ')';
+            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . '(dl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR dl.host_id=0 OR dl.host_id IS NULL)';
+            $sql_where2 .= ' AND (gl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR gl.host_id=0 OR gl.host_id IS NULL)';
         } else {
-            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . '1=0';
-            $sql_where2 .= ' AND 1=0';
+            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . '(dl.host_id=0 OR dl.host_id IS NULL)';
+            $sql_where2 .= ' AND (gl.host_id=0 OR gl.host_id IS NULL)';
         }
     } elseif (isempty_request_var('host_id')) {
         $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' (dl.host_id=0 OR dl.host_id IS NULL)';
