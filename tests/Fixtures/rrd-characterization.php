@@ -40,7 +40,8 @@ putenv('TZ=UTC');
 putenv('LANG=en_US.UTF-8');
 putenv('RRDCACHED_ADDRESS');
 $config = array(
-    'cacti_server_os' => 'unix',
+    // include/global_arrays.php picks OS-specific paths when it is loaded.
+    'cacti_server_os' => $scenario['server_os'] ?? 'unix',
     'is_web' => false,
     'poller_id' => 1,
     'base_path' => $root,
