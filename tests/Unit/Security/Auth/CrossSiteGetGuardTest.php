@@ -60,6 +60,9 @@ test('a cross-site GET cannot run a state-changing action', function (string $qu
     'foreign Origin' => array('action=lock&id=1', array('HTTP_ORIGIN' => 'https://attacker.example.net')),
     'foreign Referer' => array('action=query_reload&id=1', array('HTTP_REFERER' => 'https://attacker.example.net/page')),
     'confirmed bulk action' => array('action=actions&selected_items=a%3A0%3A%7B%7D', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
+    'table purge' => array('action=purge', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
+    'table purge, foreign Origin' => array('action=purge', array('HTTP_ORIGIN' => 'https://attacker.example.net')),
+    'rule quick edit' => array('action=qedit&id=1&name=x', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
 ));
 
 test('a state-changing action by a method other than GET or POST is refused', function (string $method) {
@@ -77,6 +80,8 @@ test('same-site and header-less GET requests still reach the page', function (st
     'script without headers' => array('action=query_reload&id=1', array()),
     'own Referer with port' => array('action=unlock&id=1', array('HTTP_REFERER' => 'https://kadupul.example.com:8443/tree.php')),
     'own Origin' => array('action=item_remove&id=1', array('HTTP_ORIGIN' => 'https://KADUPUL.example.com')),
+    'same-origin table purge' => array('action=purge', array('HTTP_SEC_FETCH_SITE' => 'same-origin')),
+    'own Referer rule quick edit' => array('action=qedit&id=1', array('HTTP_REFERER' => 'https://kadupul.example.com/automation_graph_rules.php')),
     'read-only action cross-site' => array('action=edit&id=1', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
     'bulk confirmation page cross-site' => array('action=actions', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
 ));

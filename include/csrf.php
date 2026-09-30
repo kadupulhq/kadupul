@@ -283,6 +283,7 @@ function csrf_refuse_cross_site_actions()
         'clear_poller_cache', 'rebuild_resource_cache', 'clear_logfile', 'purge_logfile', 'clear_user_log',
         'field_remove', 'ds_remove', 'template_remove', 'input_remove', 'send',
         'purge_data_source_statistics', 'rebuild_snmpagent_cache',
+        'purge', 'qedit',
     );
 
     $method = $_SERVER['REQUEST_METHOD'] ?? '';
