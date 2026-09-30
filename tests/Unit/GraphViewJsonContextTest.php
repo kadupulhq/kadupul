@@ -58,7 +58,7 @@ test('graph_view normalizes graph list values before saving request and session 
 });
 
 test('graph_view encodes graph list values in HTML and JavaScript contexts', function () use ($src) {
-    expect($src)->toContain("html_escape(get_request_var('graph_list'))");
+    expect($src)->toContain('html_escape($normalized_graph_list)');
     expect($src)->toContain('JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP');
     expect($src)->toContain("encodeURIComponent(graphList)");
 });

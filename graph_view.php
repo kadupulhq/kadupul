@@ -756,7 +756,7 @@ switch (get_nfilter_request_var('action')) {
 			<input type='hidden' id='action' value='list'>
 			<input type='hidden' id='graph_add' value=''>
 			<input type='hidden' id='graph_remove' value=''>
-			<input type='hidden' id='graph_list' value='<?php print html_escape(get_request_var('graph_list'));?>'>
+			<input type='hidden' id='graph_list' value='<?php print html_escape($normalized_graph_list);?>'>
 		</td>
 	</tr>
 	<?php
