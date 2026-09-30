@@ -377,8 +377,8 @@ dynamic_include	./lib/html_tree.php:76		include_once($config['library_path'] . '
 dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
-dynamic_include	./lib/import.php:14		include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/import.php:2031		include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/import.php:2132	    include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3676	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:137							include_once($plugin_include);
@@ -568,8 +568,8 @@ fs_write	./lib/functions.php:738	                file_put_contents(sys_get_temp_
 fs_write	./lib/functions.php:7430	        if (($f = @fopen($path, 'a'))) {
 fs_write	./lib/functions.php:7439	    if (($f = @fopen($path, 'w'))) {
 fs_write	./lib/functions.php:7518	            file_put_contents($tmp_file, 'cacti');
-fs_write	./lib/import.php:410		$f   = fopen($filename, 'r');
-fs_write	./lib/import.php:625							$file = fopen($filename, 'wb');
+fs_write	./lib/import.php:420	    $f   = fopen($filename, 'r');
+fs_write	./lib/import.php:645	                        $file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:3057	            $file = fopen($cacheFile, "r");
 fs_write	./lib/poller.php:1700	                                if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1707	                                            file_put_contents($mypath, $contents);
@@ -992,5 +992,5 @@ header_redirect	./vdef.php:41			header('Location: vdef.php?header=false&action=e
 header_redirect	./vdef.php:48			header('Location: vdef.php?header=false&action=edit&id=' . get_request_var('vdef_id'));
 header_redirect	./vdef.php:537		header('Location: vdef.php?action=edit&header=false&id=' . get_request_var('id'));
 xml_parse	./install/functions.php:497				$xmlget = simplexml_load_string($xml);
-xml_parse	./lib/import.php:351		$xmlget = simplexml_load_string($data);
-xml_parse	./lib/import.php:477		$xmlget = simplexml_load_string($xml);
+xml_parse	./lib/import.php:360	    $xmlget = simplexml_load_string($data, null, LIBXML_NONET);
+xml_parse	./lib/import.php:487	    $xmlget = simplexml_load_string($xml, null, LIBXML_NONET);
