@@ -41,9 +41,13 @@ function outline(page, selector, pseudo = null) {
   }, [selector, pseudo]);
 }
 
-// WCAG 2.x contrast of a computed colour against the first opaque background
-// behind it. An outline is drawn outside the box, so it is measured against the
-// parent's background rather than the element's own.
+// WCAG 2.x contrast of a computed colour against the backgrounds behind it,
+// taking the worst case. An outline is drawn outside the box, so it is measured
+// against the parent's background rather than the element's own. Linear
+// gradient stops count as backgrounds: the background shorthand leaves
+// background-color transparent, so reading the colour alone skips a gradient
+// row and measures the page behind it. Radial gradients are left out; sunrise's
+// page glow centres below the viewport, so its stops do not bound what shows.
 async function contrastAgainstBackground(page, selector, colorOf, against = null) {
   return page.evaluate(([sel, prop, fixed]) => {
     const parse = (value) => {
@@ -57,14 +61,31 @@ async function contrastAgainstBackground(page, selector, colorOf, against = null
       b: top.b * top.a + bottom.b * (1 - top.a),
       a: 1,
     });
-    const background = (element) => {
+    // Each layer is the set of colours one paint step can put behind the text,
+    // listed top first.
+    const backgrounds = (element) => {
       const layers = [];
       for (let node = element; node; node = node.parentElement) {
-        const bg = parse(getComputedStyle(node).backgroundColor);
-        if (bg.a > 0) layers.push(bg);
-        if (bg.a === 1) break;
+        const style = getComputedStyle(node);
+        const stops = /^(-webkit-)?(repeating-)?linear-gradient|^-webkit-gradient\(linear/.test(style.backgroundImage)
+          ? style.backgroundImage.match(/rgba?\([^)]+\)/g).map(parse)
+          : [];
+        const fill = parse(style.backgroundColor);
+        const opaque = [];
+        if (stops.length) {
+          layers.push(stops);
+          opaque.push(stops.every((stop) => stop.a === 1));
+        }
+        if (fill.a > 0) {
+          layers.push([fill]);
+          opaque.push(fill.a === 1);
+        }
+        if (opaque.includes(true)) break;
       }
-      return layers.reverse().reduce((acc, layer) => over(layer, acc), { r: 255, g: 255, b: 255, a: 1 });
+      return layers.reverse().reduce(
+        (below, layer) => layer.flatMap((top) => below.map((bottom) => over(top, bottom))),
+        [{ r: 255, g: 255, b: 255, a: 1 }],
+      );
     };
     const luminance = ({ r, g, b }) => {
       const channel = (v) => {
@@ -74,12 +95,14 @@ async function contrastAgainstBackground(page, selector, colorOf, against = null
       return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
     };
     const element = document.querySelector(sel);
-    // A gradient or image behind the text is not a background-color, so a
-    // caller names the worst-case colour it has to clear instead.
-    const bg = fixed ? parse(fixed) : background(prop === 'outlineColor' ? element.parentElement : element);
-    const fg = over(parse(getComputedStyle(element)[prop]), bg);
-    const [hi, lo] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
-    return (hi + 0.05) / (lo + 0.05);
+    // An image behind the text is not a colour, so a caller names the
+    // worst-case colour it has to clear instead.
+    const candidates = fixed ? [parse(fixed)] : backgrounds(prop === 'outlineColor' ? element.parentElement : element);
+    const color = parse(getComputedStyle(element)[prop]);
+    return Math.min(...candidates.map((bg) => {
+      const [hi, lo] = [luminance(over(color, bg)), luminance(bg)].sort((a, b) => b - a);
+      return (hi + 0.05) / (lo + 0.05);
+    }));
   }, [selector, colorOf, against]);
 }
 
@@ -136,6 +159,10 @@ test.describe('theme keyboard focus', () => {
     'content area': `<div class="cactiContent">${link}</div>`,
     'selected row': `<table class="cactiTable"><tr class="selectable selected"><td>${link}</td></tr></table>`,
     'table title row': `<div class="cactiTableTitleRow">${link}</div>`,
+    // lib/html.php html_start_box() puts the Add and help links here.
+    'table title button': '<div class="cactiTable"><div><div class="cactiTableTitle"><span>Devices</span></div>'
+      + '<div class="cactiTableButton"><span class="cactiHelp"><a id="ringTarget" class="linkOverDark" href="#">?</a></span></div></div></div>',
+    'table header': `<table class="cactiTable"><tr class="tableHeader"><th>${link}</th></tr></table>`,
     'message box': `<div class="messageBox">${link}</div>`,
     'spike kill menu': `<ul class="spikekillMenu"><li>${link}</li></ul>`,
     'menu options': '<ul class="menuoptions" style="display:block;position:static"><li><a id="ringTarget" href="#">x</a></li></ul>',
@@ -143,7 +170,8 @@ test.describe('theme keyboard focus', () => {
     'dialog button': '<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-buttonpane ui-widget-content"><button id="ringTarget" class="ui-button ui-corner-all ui-widget">Continue</button></div></div>',
     'dialog title': `<div class="ui-dialog ui-widget ui-widget-content"><div class="ui-dialog-titlebar ui-widget-header">${link}</div></div>`,
     'multiselect header': `<div class="ui-multiselect-menu ui-widget ui-widget-content" style="position:static"><div class="ui-widget-header ui-multiselect-header"><ul><li>${link}</li></ul></div></div>`,
-    'login page': `<div class="loginBody"><div class="loginArea">${link}</div></div>`,
+    // auth_login.php nests the form in loginCenter, which modern fills light.
+    'login page': `<div class="loginBody"><div class="loginCenter"><div class="loginArea">${link}</div></div></div>`,
     // include/layout.js setupEllipsis(), host.php and lib/html.php draw_graph_items_list().
     'overflow menu': `<div class="dropdownMenu"><ul class="submenuoptions" style="display:block;position:static"><li>${link}</li></ul></div>`,
     'device header': `<table class="hostInfoHeader"><tr><td class="textInfo right">${link}</td></tr></table>`,

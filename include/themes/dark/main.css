@@ -170,6 +170,11 @@ select {
 	outline-offset: 1px;
 }
 
+/* Selected rows are light green, where the light blue ring measures 1.1:1. */
+tr.selected :focus-visible {
+	outline-color: #0d47a1 !important;
+}
+
 label {
 	white-space: nowrap;
 }

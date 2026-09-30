@@ -173,6 +173,19 @@ select {
 	outline-offset: 1px;
 }
 
+/*
+ * Title rows and their Add and help buttons sit on a dark green gradient, where
+ * the dark blue ring measures under 1.5:1. Table header rows run from light to
+ * mid green, which white cannot clear at the top or dark blue at the bottom.
+ */
+.cactiTableTitleRow :focus-visible, .cactiTableButton :focus-visible {
+	outline-color: #ffffff !important;
+}
+
+.tableHeader :focus-visible {
+	outline-color: #000000 !important;
+}
+
 label {
 	white-space: nowrap;
 }
