@@ -3,6 +3,11 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
@@ -126,7 +131,7 @@ function db_fetch_row_prepared($sql, $params)
 }
 ob_start();
 register_shutdown_function(function () {
-    echo json_encode(array('html' => ob_get_clean(), 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR);
+    fwrite(STDOUT, json_encode(array('html' => ob_get_clean(), 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
 });
 chdir($directory);
 require $controller;
