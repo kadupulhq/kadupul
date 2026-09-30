@@ -38,11 +38,53 @@ if (!is_string($hash) || !preg_match('/\A[a-zA-Z0-9_-]{1,64}\z/', $hash)) {
 
 set_default_action();
 
+/*
+ * poller_realtime.php polls every device behind the graph and view returns the
+ * image that poll cached, so refuse both before any work when real-time is off,
+ * the user lacks the Real-time realm or the render would deny the graph.
+ * include/auth.php returns before its realm check on a guest page. A graph id
+ * that is not positive still gets the 400 below.
+ */
+if (in_array(get_request_var('action'), array('init', 'timespan', 'interval', 'countdown', 'view'), true)) {
+    $local_graph_id = get_filter_request_var('local_graph_id');
+
+    if (read_config_option('realtime_enabled') == '') {
+        $denied = __('Real-time has been disabled by your administrator.');
+    } elseif (!is_realm_allowed(25)) {
+        $denied = __('Permission Denied');
+    } elseif (is_int($local_graph_id) && $local_graph_id > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id'])) {
+        $denied = __('Permission Denied');
+    }
+}
+
 switch (get_request_var('action')) {
     case 'init':
     case 'timespan':
     case 'interval':
     case 'countdown':
+        if (isset($denied)) {
+            $graph_contents = rrdtool_create_error_image($denied);
+
+            if ($graph_contents === false) {
+                $graph_contents = file_get_contents(__DIR__ . '/images/kadupul-error.png');
+            }
+
+            /* realtime.js resets its controls from every reply, so a refusal carries the same keys */
+            print json_encode(array(
+                'local_graph_id' => $local_graph_id,
+                'top'            => get_request_var('top'),
+                'left'           => get_request_var('left'),
+                'ds_step'        => html_escape($_SESSION['sess_realtime_ds_step'] ?? read_user_setting('realtime_interval', 10)),
+                'graph_start'    => html_escape($_SESSION['sess_realtime_graph_start'] ?? -read_user_setting('realtime_gwindow', 60)),
+                'size'           => html_escape($_SESSION['sess_realtime_size'] ?? read_user_setting('realtime_size', 100)),
+                'thumbnails'     => html_escape($_SESSION['sess_realtime_nolegend'] ?? 'false'),
+                'data'           => base64_encode($graph_contents),
+                'image_format'   => 'png'
+            ));
+
+            exit;
+        }
+
         ob_start();
 
         $guest_account = true;
@@ -297,6 +339,11 @@ switch (get_request_var('action')) {
         exit;
         break;
     case 'view':
+        if (isset($denied)) {
+            http_response_code(403);
+            exit;
+        }
+
         $local_graph_id = get_filter_request_var('local_graph_id');
         if (!is_int($local_graph_id) || $local_graph_id < 1) {
             http_response_code(400);
@@ -350,6 +397,13 @@ if (read_config_option('realtime_enabled') == '') {
     print "<html>\n";
     print "<body>\n";
     print "	<p><strong>" . __('Real-time has been disabled by your administrator.') . "</strong></p>\n";
+    print "</body>\n";
+    print "</html>\n";
+    exit;
+} elseif (!is_realm_allowed(25)) {
+    print "<html>\n";
+    print "<body>\n";
+    print "	<p><strong>" . __('Permission Denied') . "</strong></p>\n";
     print "</body>\n";
     print "</html>\n";
     exit;
