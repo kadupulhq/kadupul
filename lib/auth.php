@@ -3916,7 +3916,7 @@ function local_auth_login_process($username)
 
             cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
-            if ($valid) {
+            if ($valid && !$error) {
                 $user = db_fetch_row_prepared(
                     'SELECT *
 					FROM user_auth
@@ -4549,7 +4549,14 @@ function secpass_login_process($username)
 
                 raise_message('forced_password', __('Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now.'), MESSAGE_LEVEL_INFO);
             } else {
-                cacti_log(sprintf('NOTE: User %s has a password that fails the complexity rules but may not change it.', $username), false, 'AUTH');
+                // The account could never reach a compliant password, so the
+                // rule is enforced by refusing it with the ordinary failure.
+                $error     = true;
+                $error_msg = __('Access Denied!  Login Failed.');
+
+                cacti_log(sprintf('LOGIN FAILED: User %s has a password that fails the complexity rules and may not change it.', $username), false, 'AUTH');
+
+                return array();
             }
         }
     }

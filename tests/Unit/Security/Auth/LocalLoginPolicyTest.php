@@ -59,13 +59,17 @@ test('the rules are not checked when the option is off', function () {
         ->and(local_login_policy_writes($result, '/must_change_password/'))->toBe(array());
 });
 
-test('an account that may not change its password is logged in without a forced change', function () {
+test('an account that may not change its password is refused like a wrong password', function () {
     $scenario = local_login_policy_scenario('alice', 'weak');
     $scenario['users'][0]['password_change'] = '';
 
-    $result = local_login_policy_run($scenario);
+    $refused = local_login_policy_run($scenario);
+    $wrong = local_login_policy_run(local_login_policy_scenario('alice', 'wrong'));
 
-    expect($result['headers'])->toBe(array())
-        ->and($result['error'])->toBeFalse()
-        ->and(local_login_policy_writes($result, '/must_change_password/'))->toBe(array());
+    expect($refused['headers'])->toBe(array())
+        ->and($refused['error'])->toBeTrue()
+        ->and($refused['user'])->toBe(array())
+        ->and($refused['error_msg'] ?? null)->toBe($wrong['error_msg'] ?? null)
+        ->and($refused['messages'])->toBe($wrong['messages'])
+        ->and(local_login_policy_writes($refused, '/must_change_password/'))->toBe(array());
 });

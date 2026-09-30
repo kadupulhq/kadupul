@@ -30,6 +30,7 @@ register_shutdown_function(function () {
     print json_encode(array(
         'user' => $GLOBALS['returned'] ?? null,
         'error' => $GLOBALS['error'],
+        'error_msg' => $GLOBALS['error_msg'],
         'executed' => $GLOBALS['executed'],
         'messages' => $GLOBALS['messages'],
         'headers' => $GLOBALS['sent_headers'] ?? array(),
