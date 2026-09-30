@@ -4450,7 +4450,7 @@ function secpass_login_process($username)
 
     if (db_column_exists('user_auth', 'lastfail')) {
         $user = db_fetch_row_prepared(
-            "SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password
+            "SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
@@ -4458,7 +4458,7 @@ function secpass_login_process($username)
         );
     } else {
         $user = db_fetch_row_prepared(
-            "SELECT id, username, password, enabled
+            "SELECT id, username, password, enabled, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
@@ -4512,31 +4512,40 @@ function secpass_login_process($username)
         $error_msg = __('Access Denied!  Login Failed.');
 
         cacti_log(sprintf('LOGIN FAILED: Invalid user %s specified.', $username), false, 'AUTH');
+
+        // Stop here: the complexity check below would answer differently
+        // for an unknown username than a wrong password does for a real one.
+        return array();
     }
 
     /**
      * Check if old password doesn't meet specifications and must be changed
      * This only applies to local logins where we store the actual hashed
      * password.
+     *
+     * The password is verified by now. The login completes and auth_login.php
+     * sends the user to the change page through must_change_password; leaving
+     * from here, before the session exists, sent them back to the login page
+     * every time.
      */
     if (read_config_option('secpass_forceold') == 'on') {
         $message = secpass_check_pass($password);
 
         if ($message != 'ok') {
-            db_execute_prepared(
-                "UPDATE user_auth
-				SET must_change_password = 'on'
-				WHERE username = ?
-				AND realm = 0
-				AND enabled = 'on'",
-                array($username)
-            );
+            if (($user['password_change'] ?? '') == 'on') {
+                db_execute_prepared(
+                    "UPDATE user_auth
+					SET must_change_password = 'on'
+					WHERE id = ?
+					AND realm = 0
+					AND enabled = 'on'",
+                    array($user['id'])
+                );
 
-            $error_msg = __('Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now.');
-
-            raise_message('forced_password', $error_msg, MESSAGE_LEVEL_INFO);
-            header('Location: auth_changepassword.php?header=false');
-            exit;
+                raise_message('forced_password', __('Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now.'), MESSAGE_LEVEL_INFO);
+            } else {
+                cacti_log(sprintf('NOTE: User %s has a password that fails the complexity rules but may not change it.', $username), false, 'AUTH');
+            }
         }
     }
 
