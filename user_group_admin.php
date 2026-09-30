@@ -221,9 +221,10 @@ function user_group_copy($id, $prefix = 'New Group')
 		policy_graphs, policy_trees, policy_hosts, policy_graph_templates, enabled
 		FROM user_auth_group WHERE id = ?', array($id));
 
-    $id = db_fetch_insert_id();
+    // The source id is still needed below to read its permissions and realms.
+    $group_id = db_fetch_insert_id();
 
-    if (!empty($id)) {
+    if (!empty($group_id)) {
         $perms = db_fetch_assoc_prepared(
             'SELECT *
 			FROM user_auth_group_perms
@@ -237,7 +238,7 @@ function user_group_copy($id, $prefix = 'New Group')
                     'INSERT INTO user_auth_group_perms
 					(group_id, item_id, type)
 					VALUES (?, ?, ?)',
-                    array($id, $p['item_id'], $p['type'])
+                    array($group_id, $p['item_id'], $p['type'])
                 );
             }
         }
@@ -255,7 +256,7 @@ function user_group_copy($id, $prefix = 'New Group')
                     'INSERT INTO user_auth_group_realm
 					(group_id, realm_id)
 					VALUES (?, ?)',
-                    array($id, $r['realm_id'])
+                    array($group_id, $r['realm_id'])
                 );
             }
         }
