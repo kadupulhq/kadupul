@@ -699,9 +699,11 @@
 		// control, such as the location autocomplete, whose wrapper draws the
 		// edge.
 		const bare = (s) => parseFloat(s.borderTopWidth) === 0 && parseColor(s.backgroundColor).a === 0 && s.backgroundImage === 'none';
-		if (/^(INPUT|TEXTAREA)$/.test(el.tagName) && !/^(checkbox|radio)$/.test(el.type) && bare(style)) {
+		const borderless = parseFloat(style.borderTopWidth) === 0;
+		if (/^(INPUT|TEXTAREA)$/.test(el.tagName) && !/^(checkbox|radio)$/.test(el.type) && borderless) {
 			for (let n = el.parentElement, i = 0; n && i < 3; n = n.parentElement, i++) {
-				if (!bare(getComputedStyle(n))) {
+				const ns = getComputedStyle(n);
+				if (bare(style) ? !bare(ns) : parseFloat(ns.borderTopWidth) > 0) {
 					el = n;
 					style = getComputedStyle(n);
 					break;
