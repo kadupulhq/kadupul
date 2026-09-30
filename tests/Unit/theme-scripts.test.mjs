@@ -285,3 +285,31 @@ test('midwinter draws its filter icon from a face that has the glyph', () => {
   assert.ok(!classes.includes('far') && !classes.includes('fa-regular'), classes.join(' '));
   assert.ok(classes.includes('fa-sliders'), classes.join(' '));
 });
+
+test('multiselect link icons in layout.js exist in the shipped Font Awesome', () => {
+  let css;
+  for (const path of ['include/fa/css/all.css', 'node_modules/@fortawesome/fontawesome-free/css/all.css']) {
+    try {
+      css = read(path);
+      break;
+    } catch {
+      // try the next location
+    }
+  }
+  assert.ok(css, 'build the browser assets (npm ci && npm run build) before this test');
+
+  const context = createContext({});
+  runInContext(layout.match(/^var faIcons = \{[\s\S]*?^\};/m)[0], context);
+  const icons = runInContext('faIcons', context);
+  assert.ok(icons.collapseAll && icons.expandAll, 'jquery.multiselect reads collapseAll and expandAll');
+
+  const missing = [];
+  for (const [link, { icon }] of Object.entries(icons)) {
+    for (const name of icon.match(/\bfa-[a-z0-9-]+/g) || []) {
+      if (!new RegExp(`\\.${name}(?![a-z0-9-])`).test(css)) {
+        missing.push(`${link}: ${name}`);
+      }
+    }
+  }
+  assert.deepEqual(missing, []);
+});
