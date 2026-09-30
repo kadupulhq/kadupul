@@ -18,7 +18,7 @@
 /**
  * @param array<string, mixed> $options
  *
- * @return array{status: int, polled: bool, rendered: bool, saved: list<string>, graph_checks: list<array{0: int, 1: int}>, output: string}
+ * @return array{status: int, polled: bool, rendered: bool, saved: array<string, mixed>, graph_checks: list<array{0: int, 1: int}>, output: string}
  */
 function realtime_gate_run(array $options): array
 {
@@ -28,6 +28,8 @@ function realtime_gate_run(array $options): array
         'enabled' => 'on',
         'realm'   => true,
         'graph_allowed' => true,
+        'method'  => 'GET',
+        'request' => array(),
     );
 
     $root = dirname(__DIR__, 4);
@@ -47,7 +49,7 @@ $options = json_decode($argv[2], true);
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function die_html_input_error(...$args) { http_response_code(400); exit; }
 function read_user_setting($name, $default = null) { return $default; }
-function set_user_setting($name, $value) { $GLOBALS['trace']['saved'][] = $name; }
+function set_user_setting($name, $value) { $GLOBALS['trace']['saved'][$name] = $value; }
 function read_config_option($name) {
     if ($name === 'realtime_enabled') return $GLOBALS['options']['enabled'];
     if ($name === 'path_php_binary') return '/usr/bin/php';
@@ -70,7 +72,8 @@ function get_selected_theme() { return 'modern'; }
 $config = array('base_path' => '/application');
 $trace = array('polled' => false, 'rendered' => false, 'saved' => array(), 'graph_checks' => array());
 $_SESSION = array('sess_user_id' => 42, 'sess_realtime_hash' => 'abc123');
-$_REQUEST = array('action' => $options['action'], 'local_graph_id' => $options['graph']);
+$_REQUEST = array('action' => $options['action'], 'local_graph_id' => $options['graph']) + $options['request'];
+$_SERVER['REQUEST_METHOD'] = $options['method'];
 register_shutdown_function(function () {
     $output = '';
     while (ob_get_level()) {
@@ -180,3 +183,36 @@ test('the real-time page tells a user without the realm that permission is denie
     expect($run['output'])->toContain('Permission Denied')
         ->and($run['polled'])->toBeFalse();
 });
+
+/*
+ * The four real-time preferences were saved on every request, and
+ * include/realtime.js sent them all by GET. csrf-magic checks the token only
+ * on POST, so another site could rewrite a user's saved preferences. Polling
+ * a graph stays a GET; only a POST, which has passed csrf-magic, saves.
+ */
+dataset('preference request', array(
+    array(array('ds_step' => '30', 'graph_start' => '-300', 'size' => '50', 'graph_nolegend' => 'true')),
+));
+
+test('a real-time GET polls the graph without saving preferences', function ($action, $request) {
+    $run = realtime_gate_run(array('action' => $action, 'method' => 'GET', 'request' => $request));
+
+    expect($run['polled'])->toBeTrue()
+        ->and($run['saved'])->toBe(array());
+})->with('polling actions')->with('preference request');
+
+test('a real-time POST saves the preferences', function ($action, $request) {
+    $run = realtime_gate_run(array('action' => $action, 'method' => 'POST', 'request' => $request));
+
+    expect($run['polled'])->toBeTrue()
+        ->and($run['saved'])->toBe(array('realtime_interval' => 30, 'realtime_gwindow' => 300, 'realtime_size' => 50, 'realtime_nolegend' => 'true'));
+})->with('polling actions')->with('preference request');
+
+test('opening the real-time page saves preferences only from a POST', function ($request) {
+    $get  = realtime_gate_run(array('action' => '', 'enabled' => '', 'method' => 'GET', 'request' => $request));
+    $post = realtime_gate_run(array('action' => '', 'enabled' => '', 'method' => 'POST', 'request' => $request));
+
+    expect($get['output'])->toContain('Real-time has been disabled')
+        ->and($get['saved'])->toBe(array())
+        ->and($post['saved'])->toBe(array('realtime_interval' => 30, 'realtime_gwindow' => 300, 'realtime_size' => 50, 'realtime_nolegend' => 'true'));
+})->with('preference request');
