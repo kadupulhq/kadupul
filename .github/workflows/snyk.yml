@@ -41,11 +41,11 @@ jobs:
           if [ "$IS_FORK" = "true" ]; then
             echo '::warning::Snyk scans are skipped for fork pull requests because GitHub does not provide repository secrets to them.'
           else
-            echo '::warning::Snyk scans are skipped. Configure the SNYK_TOKEN Actions secret to enable Composer dependency scans.'
+            echo '::warning::Snyk scans are skipped. Configure the SNYK_TOKEN Actions secret to enable Composer and npm dependency scans.'
           fi
 
   dependencies:
-    name: Composer dependencies
+    name: Composer and npm dependencies
     needs: token
     if: ${{ needs.token.outputs.configured == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
     runs-on: ubuntu-latest
@@ -61,7 +61,7 @@ jobs:
         uses: snyk/actions/setup@12140f4059e244892ae643824a95459a102120dd
         with:
           snyk-version: v1.1307.4
-      - name: Test Composer dependencies
+      - name: Test Composer and npm dependencies
         run: snyk test --all-projects --dev --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
