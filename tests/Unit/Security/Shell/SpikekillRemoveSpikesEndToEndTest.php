@@ -588,6 +588,26 @@ test('float and fill window modes replace selected values with NaN', function ()
     }
 });
 
+test('window spike replacement handles an unavailable last sample without counting it', function () {
+    $instance = new spikekill('', SPIKE_METHOD_STDDEV, 'last', '1', '', '', '2', '500', '1');
+    $class = new ReflectionClass(spikekill::class);
+    $replace = $class->getMethod('replaceWindowSpike');
+    $replace->setAccessible(true);
+    $totalKills = $class->getProperty('total_kills');
+    $totalKills->setAccessible(true);
+    $kills = 0;
+
+    $arguments = array('10', 12, array(0 => '8'), 0, &$kills);
+    expect($replace->invokeArgs($instance, $arguments))->toBe('8')
+        ->and($kills)->toBe(1)
+        ->and($totalKills->getValue($instance))->toBe(1);
+
+    $arguments = array('10', 12, array(), 0, &$kills);
+    expect($replace->invokeArgs($instance, $arguments))->toBeNull()
+        ->and($kills)->toBe(1)
+        ->and($totalKills->getValue($instance))->toBe(1);
+});
+
 test('NaN replacements obey the per-RRA limit and are counted', function () {
     $class = new ReflectionClass(spikekill::class);
     $update = $class->getMethod('updateXML');
