@@ -7,7 +7,8 @@ namespace MaintenancePurgeLeaseTest;
 
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 require_once dirname(__DIR__, 4) . '/lib/rrd.php';
-require_once dirname(__DIR__, 4) . '/lib/functions.php';
+require_once dirname(__DIR__, 4) . '/lib/path_helpers.php';
+eval('namespace { function cacti_path_is_within($candidate, $base) { $path = realpath($candidate); $root = realpath($base); return $path !== false && $root !== false && ($path === $root || strpos($path, rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0); } }');
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 $source = file_get_contents(dirname(__DIR__, 4) . '/poller_maintenance.php');
 foreach (array('rrdfile_purge', 'remove_files', 'rrdclean_create_path', 'rrdcleaner_is_safe_relative_path', 'rrdcleaner_resolve_contained_path') as $name) {
