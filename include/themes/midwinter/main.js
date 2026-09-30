@@ -131,8 +131,8 @@ function setupTheme() {
 
 		let user_tab_content =
 			'<ul>'
-			+ '<li><a id="menu-user-help" class="usertabs-submenu" href="#"><i class="far fa-comment-alt"></i></a></li>'
-			+ '<li class="action-icon-user"><a class="pic" href="#"><i class="far fa-user"></i></a></li>'
+			+ '<li><a id="menu-user-help" class="usertabs-submenu" href="#"><i class="'+iconClass('user-help')+'"></i></a></li>'
+			+ '<li class="action-icon-user"><a class="pic" href="#"><i class="'+iconClass('user')+'"></i></a></li>'
 			+ '</ul>';
 
 		$('<div class="maintabs usertabs">' + user_tab_content + '</div>').insertAfter('.maintabs');
@@ -177,7 +177,7 @@ function setupTheme() {
 		compact_tab_menu_content +=
 			'<li class="menuitem" id="menu_home">'
 			+    '<a class="menu_parent active" href="#">'
-			+        '<i class="menu_glyph ignore fas fa-home"></i>'
+			+        '<i class="menu_glyph ignore '+iconClass('nav-home')+'"></i>'
 			+        '<span>'+cactiHome+'</span>'
 			+    '</a>'
 			+    '<ul>'
@@ -190,7 +190,7 @@ function setupTheme() {
 		compact_tab_menu_content +=
 			'<li class="menuitem" id="menu_tab_dashboard">'
 			+    '<a class="menu_parent active" href="#">'
-			+        '<i class="menu_glyph ignore fas fa-chart-area"></i>'
+			+        '<i class="menu_glyph ignore '+iconClass('nav-charts')+'"></i>'
 			+        '<span>'+cactiCharts+'</span>'
 			+    '</a>'
 			+    '<ul>'
@@ -214,7 +214,7 @@ function setupTheme() {
 		compact_tab_menu_content +=
 			'<li class="menuitem" id="menu_tab_miscellaneous">'
 			+   '<a class="menu_parent active" href="#">'
-			+       '<i class="menu_glyph ignore fas fa-puzzle-piece"></i>'
+			+       '<i class="menu_glyph ignore '+iconClass('nav-misc')+'"></i>'
 			+       '<span>'+cactiMisc+'</span>'
 			+   '</a>'
 			+'<ul>';
@@ -262,7 +262,7 @@ function setupTheme() {
 			// -- duplicate the console tab items and add them to the console navigation area for compact mode
 			if ($.trim($('compact_tab_menu').html()) === '') {
 				$('<div class="compact_nav_icon" data-helper="dashboards">'+
-						'<i class="fas fa-th-large"></i>'+
+						'<i class="'+iconClass('nav-dashboards')+'"></i>'+
 						'<span>'+cactiDashboards+'</span>'+
 					'</div>').appendTo('#compact_tab_menu');
 			}
@@ -270,7 +270,7 @@ function setupTheme() {
 			if (cactiConsoleAllowed) {
 				if ($.trim($('compact_tab_menu').html()) === '') {
 					$('<div class="compact_nav_icon" data-helper="settings">'+
-							'<i class="fas fa-cogs"></i>'+
+							'<i class="'+iconClass('nav-settings')+'"></i>'+
 							'<span>'+zoom_i18n_settings+'</span>'+
 						'</div>'
 					).appendTo('#compact_tab_menu');
@@ -281,14 +281,14 @@ function setupTheme() {
 
 			// -- compact mode --
 			$('<div class="compact_nav_icon" data-helper="help">'+
-					'<i class="far fa-comment-alt"></i>'+
+					'<i class="'+iconClass('user-help')+'"></i>'+
 					'<span>'+help+'</span>'+
 				'</div>'+
 				'<div class="compact_nav_icon" data-helper="user">'+
-					'<i class="far fa-user"></i>'+
+					'<i class="'+iconClass('user')+'"></i>'+
 					'<span>'+cactiUser+'</span>'+
 				'</div>'+
-				'<div class="compact_nav_icon mdw_logout"><i class="fas fa-sign-out-alt"></i></div>'
+				'<div class="compact_nav_icon mdw_logout"><i class="'+iconClass('logout')+'"></i></div>'
 			).appendTo('#compact_user_menu');
 
 			let compact_user_menu_content =
@@ -297,7 +297,7 @@ function setupTheme() {
 				+   '<ul class="nav">'
 				+   '<li class="menuitem" id="menu_user_help">'
 				+       '<a class="menu_parent active" href="#">'
-				+           '<i class="menu_glyph fas fa-medkit"></i>'
+				+           '<i class="menu_glyph '+iconClass('nav-about')+'"></i>'
 				+           '<span>'+cactiGeneral+'</span>'
 				+       '</a>'
 				+       '<ul>'
@@ -309,7 +309,7 @@ function setupTheme() {
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_issues">'
 				+       '<a class="menu_parent active" href="#">'
-				+           '<i class="menu_glyph fas fa-bug"></i>'
+				+           '<i class="menu_glyph '+iconClass('nav-bug')+'"></i>'
 				+           '<span>'+reportABug+'</span>'
 				+       '</a>'
 				+       '<ul>'
@@ -319,7 +319,7 @@ function setupTheme() {
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_shortcuts">'
 				+       '<a class="menu_parent active" href="#">'
-				+           '<i class="menu_glyph far fa-keyboard"></i>'
+				+           '<i class="menu_glyph '+iconClass('nav-keyboard')+'"></i>'
 				+           '<span>'+cactiKeyboard+'</span>'
 				+       '</a>'
 				+       '<ul>'
@@ -328,7 +328,7 @@ function setupTheme() {
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_help">'
 				+       '<a class="menu_parent active" href="#">'
-				+           '<i class="menu_glyph fas fa-hands-helping"></i>'
+				+           '<i class="menu_glyph '+iconClass('nav-contribute')+'"></i>'
 				+           '<span>'+cactiContributeTo+'</span>'
 				+       '</a>'
 				+       '<ul>'
@@ -345,7 +345,7 @@ function setupTheme() {
 				+   '<ul class="nav">'
 				+   '<li class="menuitem" id="menu_user_action">'
 				+       '<a class="menu_parent active" href="#">'
-				+           '<i class="menu_glyph fas fa-user-edit"></i>'
+				+           '<i class="menu_glyph '+iconClass('nav-profile')+'"></i>'
 				+           '<span>'+cactiProfile+'</span>'
 				+       '</a>'
 				+       '<ul>'
@@ -355,7 +355,7 @@ function setupTheme() {
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_action">'
 				+       '<a class="menu_parent active" href="#">'
-				+           '<i class="menu_glyph fas fa-palette"></i>'
+				+           '<i class="menu_glyph '+iconClass('nav-theme')+'"></i>'
 				+           '<span>'+cactiTheme+'</span>'
 				+       '</a>'
 				+       '<ul>'
@@ -367,7 +367,7 @@ function setupTheme() {
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_client">'
 				+       '<a class="menu_parent active" href="#">'
-				+           '<i class="menu_glyph fas fa-desktop"></i>'
+				+           '<i class="menu_glyph '+iconClass('nav-client')+'"></i>'
 				+           '<span>'+cactiClient+'</span>'
 				+       '</a>'
 				+       '<ul>'
@@ -433,15 +433,6 @@ function redesignConsoleMenu(menu) {
 
 		// Clean up: kick out Main Console
 		$('#menu_main_console').remove();
-
-		/* replace default icons */
-		$('i.menu_glyph:not(.ignore).fa-home').removeClass('fa fa-home').addClass('fa fa-tools');
-		$('i.menu_glyph.fa-folder').removeClass('fa').addClass('far');
-		$('i.menu_glyph.fa-clone').removeClass('fa').addClass('far');
-		$('i.menu_glyph.fa-database').removeClass('fa fa-database').addClass('far fa-hdd');
-		$('i.menu_glyph:not(.ignore).fa-chart-area').removeClass('fa fa-chart-area').addClass('fa fa-plus');
-		$('i.menu_glyph.fa-cogs').removeClass('fa fa-cogs').addClass('fa fa-toolbox');
-		$('i.menu_glyph.fa-superpowers').removeClass('fab fa-superpowers').addClass('fas fa-network-wired');
 	}
 }
 
@@ -501,30 +492,30 @@ function setupDefaultElements() {
 		$(".break:first").detach().appendTo('#filterTableOnTop');
 		$(".navBarNavigation:first").detach().appendTo('#filterTableOnTop');
 		$( "#filterTableOnTop").addClass('sticky');
-		$('<div class="cactiTableFilter"><span><i class="fas fa-sliders"></i></span></div>').prependTo('#filterTableOnTop .cactiTableTitle');
+		$('<div class="cactiTableFilter"><span><i class="'+iconClass('filter')+'"></i></span></div>').prependTo('#filterTableOnTop .cactiTableTitle');
 	}
 
 	// Add nice search filter to filters
-	if ($('input[id="filter"]').length > 0 && $('input[id="filter"] > i[class="fa fa-search filter"]').length < 1) {
-		$('input[id="filter"]').after("<i class='fa fa-search filter'/>").attr('autocomplete', 'off').attr('placeholder', searchFilter).parent('td').css('white-space', 'nowrap');
+	if ($('input[id="filter"]').length > 0 && $('input[id="filter"] > i' + iconSelector('search') + '.filter').length < 1) {
+		$('input[id="filter"]').after("<i class='" + iconClass('search') + " filter'/>").attr('autocomplete', 'off').attr('placeholder', searchFilter).parent('td').css('white-space', 'nowrap');
 	}
 
-	if ($('input[id="filterd"]').length > 0 && $('input[id="filterd"] > i[class="fa fa-search filter"]').length < 1) {
-		$('input[id="filterd"]').after("<i class='fa fa-search filter'/>").attr('autocomplete', 'off').attr('placeholder', searchFilter).parent('td').css('white-space', 'nowrap');
+	if ($('input[id="filterd"]').length > 0 && $('input[id="filterd"] > i' + iconSelector('search') + '.filter').length < 1) {
+		$('input[id="filterd"]').after("<i class='" + iconClass('search') + " filter'/>").attr('autocomplete', 'off').attr('placeholder', searchFilter).parent('td').css('white-space', 'nowrap');
 	}
 
-	if ($('input[id="rfilter"]').length > 0 && $('input[id="rfilter"] > i[class="fa fa-search filter"]').length < 1) {
-		$('input[id="rfilter"]').after("<i class='fa fa-search filter'/>").attr('autocomplete', 'off').attr('placeholder', searchRFilter).parent('td').css('white-space', 'nowrap');
+	if ($('input[id="rfilter"]').length > 0 && $('input[id="rfilter"] > i' + iconSelector('search') + '.filter').length < 1) {
+		$('input[id="rfilter"]').after("<i class='" + iconClass('search') + " filter'/>").attr('autocomplete', 'off').attr('placeholder', searchRFilter).parent('td').css('white-space', 'nowrap');
 	}
 
 	$('input#filter, input#rfilter').addClass('ui-state-default ui-corner-all');
 	$('input[type="text"], input[type="password"], input[type="checkbox"], textarea').not('image').addClass('ui-state-default ui-corner-all');
 
 	/* Highlight sortable table columns */
-	$('.tableHeader th').has('i.fa-sort').removeClass('tableHeaderColumnHover tableHeaderColumnSelected');
-	$('.tableHeader th').has('i.fa-sort-up').addClass('tableHeaderColumnSelected');
-	$('.tableHeader th').has('i.fa-sort-down').addClass('tableHeaderColumnSelected');
-	$('.tableHeader th').has('i.fa-sort').hover(
+	$('.tableHeader th').has('i' + iconSelector('sort')).removeClass('tableHeaderColumnHover tableHeaderColumnSelected');
+	$('.tableHeader th').has('i' + iconSelector('sort-asc')).addClass('tableHeaderColumnSelected');
+	$('.tableHeader th').has('i' + iconSelector('sort-desc')).addClass('tableHeaderColumnSelected');
+	$('.tableHeader th').has('i' + iconSelector('sort')).hover(
 		function() {
 			$(this).addClass("tableHeaderColumnHover");
 		}, function() {
@@ -1042,44 +1033,44 @@ function dialog_client(event) {
 				case 'Chrome WebView':
 				case 'Chrome':
 				case 'Chromium':
-					env.browser.icon = 'fab fa-chrome';
+					env.browser.icon = iconClass('brand-chrome');
 					break;
 				case 'IE':
 				case 'IEMobile':
-					env.browser.icon = 'fab fa-internet-explorer';
+					env.browser.icon = iconClass('brand-internet-explorer');
 					break;
 				case 'Edge':
-					env.browser.icon = 'fab fa-edge';
+					env.browser.icon = iconClass('brand-edge');
 					break;
 				case 'Firefox':
-					env.browser.icon = 'fab fa-firefox-browser';
+					env.browser.icon = iconClass('brand-firefox');
 					break;
 				case 'Opera':
 				case 'Opera Mini':
 				case 'Opera Mobi':
 				case 'Opera Tablet':
-					env.browser.icon = 'fab fa-opera';
+					env.browser.icon = iconClass('brand-opera');
 					break;
 				case 'Safari':
 				case 'Mobile Safari':
-					env.browser.icon = 'fab fa-safari';
+					env.browser.icon = iconClass('brand-safari');
 					break;
 				default:
-					env.browser.icon = 'far fa-square';
+					env.browser.icon = iconClass('unknown');
 			}
 
 			switch(env.os.name) {
 				case 'Windows':
 				case 'Windows Phone':
 				case 'Windows Mobile':
-					env.os.icon = 'fab fa-windows';
+					env.os.icon = iconClass('brand-windows');
 					break;
 				case 'Chromium OS':
-					env.os.icon = 'fab fa-chrome';
+					env.os.icon = iconClass('brand-chrome');
 					break;
 				case 'Mac OS':
 				case 'iOS':
-					env.os.icon = 'fab fa-apple';
+					env.os.icon = iconClass('brand-apple');
 					break;
 				case 'Android':
 				case 'CentOS':
@@ -1088,13 +1079,13 @@ function dialog_client(event) {
 				case 'RedHat':
 				case 'SUSE':
 				case 'Ubuntu':
-					env.os.icon = 'fab fa-' + env.os.name.toLowerCase();
+					env.os.icon = iconClass('brand-' + env.os.name.toLowerCase());
 					break;
 				case 'Raspbian':
-					env.os.icon = 'fab fa-raspberry-pi';
+					env.os.icon = iconClass('brand-raspberry-pi');
 					break;
 				case 'BlackBerry':
-					env.os.icon = 'fab fa-blackberry';
+					env.os.icon = iconClass('brand-blackberry');
 					break;
 				case 'Arch':
 				case 'Debian':
@@ -1113,30 +1104,30 @@ function dialog_client(event) {
 				case 'UNIX':
 				case 'VectorLinux':
 				case 'Linux':
-					env.os.icon = 'fab fa-linux';
+					env.os.icon = iconClass('brand-linux');
 					break;
 				default:
-					env.os.icon = 'far fa-square';
+					env.os.icon = iconClass('unknown');
 			}
 
 			switch (env.device.type) {
 				case 'console':
-					env.device.icon = 'fas fa-gamepad';
+					env.device.icon = iconClass('device-console');
 					break;
 				case 'mobile':
-					env.device.icon = 'fas fa-mobile-alt';
+					env.device.icon = iconClass('device-mobile');
 					break;
 				case 'tablet':
-					env.device.icon = 'fas fa-tablet-alt';
+					env.device.icon = iconClass('device-tablet');
 					break;
 				case 'smarttv':
-					env.device.icon = 'fas fa-tv';
+					env.device.icon = iconClass('device-tv');
 					break;
 				case 'embedded':
-					env.device.icon = 'fas fa-cubes';
+					env.device.icon = iconClass('device-embedded');
 					break;
 				default:
-					env.device.icon = 'fas fa-desktop';
+					env.device.icon = iconClass('device-desktop');
 			}
 
 			let content = '<div class="cactiFlexBoxContainer">';
@@ -1161,7 +1152,7 @@ function dialog_client(event) {
 
 			content += '<div class="cactiFlexBoxContentBox">'
 				+             '<div class="header"><span>Network</span></div>'
-				+             '<div class="content"><i class="fas fa-network-wired"></i></div>'
+				+             '<div class="content"><i class="'+iconClass('network')+'"></i></div>'
 				+             '<div class="footer"><span>'+ ((env.device.type == undefined) ? '-' : env.device.type) +'</span></div>'
 				+ '</div>';
 

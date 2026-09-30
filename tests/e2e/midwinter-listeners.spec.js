@@ -9,6 +9,15 @@ const root = path.resolve(__dirname, '../..');
 // The page header defines these labels from lib/html.php.
 const labels = [...fs.readFileSync(path.join(root, 'lib/html.php'), 'utf8').matchAll(/var (\w+)='<\?php print __esc/g)]
   .map(match => match[1]).concat(['cactiVersion', 'zoom_i18n_settings']);
+// layout.js loads before the theme and supplies the icon helpers, and the page
+// header prints the registry map they read.
+const layout = fs.readFileSync(path.join(root, 'include/layout.js'), 'utf8');
+const iconHelpers = ['iconClass', 'iconSelector', 'iconMarkup'].map(name => {
+  const start = layout.indexOf(`function ${name}(`);
+  return layout.slice(start, layout.indexOf('\n}\n', start) + 2);
+}).join('\n');
+const registry = JSON.parse(fs.readFileSync(path.join(root, 'config/icons.json'), 'utf8'));
+const icons = { ...registry.icons, ...registry.themes.midwinter };
 const markup = `
   <div id="menu"><input type="text" name="keyword">
     <ul role="menu"><li><a role="menuitem" href="#">Devices</a></li><li><a role="menuitem" href="#">Graphs</a></li></ul>
@@ -23,7 +32,9 @@ async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true } = 
   for (const file of ['include/js/jquery.js', 'include/js/js.storage.js', 'include/js/jquery.cookie.js', 'include/js/purify.js']) {
     await page.addScriptTag({ path: path.join(root, file) });
   }
-  await page.evaluate(({ auto, names }) => {
+  await page.addScriptTag({ content: iconHelpers });
+  await page.evaluate(({ auto, names, icons }) => {
+    window.kadupulIcons = icons;
     for (const name of names) {
       window[name] = name;
     }
@@ -40,7 +51,7 @@ async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true } = 
       if (type === 'change') window.colourListeners++;
       return add.call(this, type, ...rest);
     };
-  }, { auto: autoColorMode, names: labels });
+  }, { auto: autoColorMode, names: labels, icons });
   await page.addScriptTag({ url: '/include/themes/midwinter/main.js' });
   await page.evaluate(stub => {
     const steps = ['setupTree', 'setupDefaultElements', 'setMenuVisibility', 'updateNavigation', 'checkConsoleMenu'];

@@ -885,8 +885,8 @@ function setupThemeFormControls(width) {
 
 }
 
-function setupThemeLogos(icon) {
-	const markup = "<i class='fa " + icon + "'/>";
+function setupThemeLogos(name) {
+	const markup = "<i class='" + iconClass(name) + "'/>";
 	$('.cactiLoginLogo').html(markup);
 	$('.cactiLogoutLogo').html(markup);
 }
