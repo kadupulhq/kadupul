@@ -9,6 +9,7 @@
       <file>./Unit/Security/ImportPreviewOutputTest.php</file>
       <file>./Unit/Security/Auth/AdminMutationCsrfTest.php</file>
       <file>./Unit/Security/GraphTemplateInputTest.php</file>
+      <file>./Unit/Security/NewGraphDeviceAccessTest.php</file>
       <file>./Unit/Installer/InstallerEndpointCsrfTest.php</file>
       <file>./Unit/Security/Auth/GraphTemplateBulkCsrfTest.php</file>
       <file>./Unit/BundledDependencyCompatibilityTest.php</file>
