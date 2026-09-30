@@ -75,3 +75,33 @@ test('a valid stored value prints what it printed before', function () {
 		expect(user_setting_render($sinks[$sink], '300'))->toBe('300000', $sink);
 	}
 });
+
+/*
+ * include/global_session.php prints the same page refresh, or the user's auto
+ * logout time, through $myrefresh['seconds'] into its own nonce script block.
+ */
+function global_session_refresh_render(mixed $seconds) : string {
+	$root = dirname(__DIR__, 4);
+
+	preg_match_all("/var refreshMSeconds=<\?php print ((?:(?!\?>).)*);\?>/", file_get_contents($root . '/include/global_session.php'), $matches);
+
+	expect($matches[1])->toHaveCount(1);
+
+	$myrefresh = array('seconds' => $seconds);
+
+	return (string) eval('return ' . $matches[1][0] . ';');
+}
+
+test('the session refresh block prints a number for any stored refresh time', function () {
+	foreach (array('1;alert(document.domain)//', "1</script><script>alert(1)</script>", '0x10') as $stored) {
+		expect(global_session_refresh_render($stored))->toMatch('/^-?[0-9]+$/');
+	}
+
+	foreach (array('abc', '') as $stored) {
+		expect(global_session_refresh_render($stored))->toBe('0');
+	}
+
+	expect(global_session_refresh_render('300'))->toBe('300000')
+		->and(global_session_refresh_render(99999999))->toBe('99999999000')
+		->and(global_session_refresh_render('1440'))->toBe('1440000');
+});
