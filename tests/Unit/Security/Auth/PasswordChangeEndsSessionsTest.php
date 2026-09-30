@@ -139,7 +139,7 @@ function raise_message($id, $message = '', $level = 0) {}
 function get_cacti_version() { return '1.2.31'; }
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
 function db_fetch_row_prepared($sql, $params = array()) {
-    return array('id' => 42, 'username' => 'alice', 'realm' => $GLOBALS['scenario']['realm'], 'password' => 'new-hash', 'password_change' => 'on');
+    return array('id' => 42, 'username' => 'alice', 'realm' => $GLOBALS['scenario']['realm'], 'password' => 'new-hash', 'password_change' => 'on', 'locked' => '');
 }
 PHP;
 
