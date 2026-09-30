@@ -131,6 +131,15 @@ a:hover {
 	color: #8e8e8e;
 }
 
+/* The install wizard text sits on #E5E5E5, where the light link colour measures 2.64:1. */
+.cactiInstallArea p a, .cactiInstallArea p a:active, .cactiInstallArea p a:visited {
+	color: #2d4ca8;
+}
+
+.cactiInstallArea p a:hover {
+	color: #333333;
+}
+
 th .fa {
 	margin-top: -5px;
 	position: absolute;

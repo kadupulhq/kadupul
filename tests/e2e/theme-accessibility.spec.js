@@ -390,6 +390,23 @@ test.describe('theme text contrast', () => {
     expect(await contrastAgainstBackground(page, '#bareLink', 'color')).toBeGreaterThanOrEqual(4.5);
   });
 
+  test('paper-plane install wizard links reach 4.5:1 on the light panel and dark rows', async ({ page }) => {
+    // lib/installer.php prints doc links in the section text and plugin
+    // homepages in dark table rows.
+    await openTheme(page, 'paper-plane');
+    await page.evaluate(() => {
+      document.getElementById('contrastArea').innerHTML = '<div class="cactiInstallArea cactiBorderWall"><div class="cactiInstallAreaContent">'
+        + '<p class="cactiInstallSection cactiInstallSectionNormal">Read the <a id="installLink" href="#">Upgrade</a> file.</p>'
+        + '<table class="cactiTable"><tr class="odd"><td><a id="installRowLink" href="#">homepage</a></td></tr></table>'
+        + '</div></div>';
+    });
+    for (const id of ['installLink', 'installRowLink']) {
+      expect(await contrastAgainstBackground(page, `#${id}`, 'color'), `paper-plane #${id}`).toBeGreaterThanOrEqual(4.5);
+      await page.hover(`#${id}`);
+      expect(await contrastAgainstBackground(page, `#${id}`, 'color'), `paper-plane #${id}:hover`).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
   test('sunrise selectmenu text and version clear the gradient\'s lightest stop', async ({ page }) => {
     await openTheme(page, 'sunrise');
     await page.evaluate(() => {
