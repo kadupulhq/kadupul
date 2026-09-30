@@ -2335,7 +2335,7 @@ tr#realtime td:first-child {
 
 .ui-tooltip {
 	max-width: 500px;
-	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .ui-tooltip-content div.header {
