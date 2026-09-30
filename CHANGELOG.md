@@ -42,6 +42,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
 - Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
+- Ask for a Pango font description in the graph font settings instead of a TrueType font file. RRDtool 1.3 and later pass the value to Pango, which ignores a file path and draws its fallback font.
 - Draw Midwinter graph legends in DejaVu Sans Mono. Its `Roboto Mono` setting fell back to the proportional DejaVu Sans on hosts without Roboto, including the container image, and misaligned legend columns.
 - Draw the graph error image with the bundled DejaVu font when no system DejaVu Sans is installed, and wrap its text by measured width and whole characters. The GD fallback used the point size as a built-in font id, so lines overlapped and ran past the frame, and translated messages were cut inside UTF-8 characters.
 - Search the bundled `include/fonts` directory on Windows as well. Classic theme external-link tabs lost their labels there because Windows ships no DejaVu font.

@@ -67,3 +67,24 @@ test('the profile page leaves a font size it refuses unsaved', function () {
     expect(proc_close($process))->toBe(0, $error)
         ->and(json_decode($output, true))->toBe(array(array('title_size', '9', 5)));
 });
+
+// RRDtool 1.3 and later hand the value to Pango, which ignores a file path and
+// silently draws its fallback font.
+test('font settings ask for a Pango font description, not a font file', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/include/global_settings.php');
+
+    expect($source)->not->toMatch('/True Type Font file|Font File|The font file|Pangon/')
+        ->and(substr_count($source, 'Enter a Pango font description'))->toBe(4);
+});
+
+// The per-user labels reuse the System labels so existing translations still apply.
+test('font setting labels keep their translations', function () {
+    $root = dirname(__DIR__, 4);
+    preg_match_all("/'friendly_name' => __\('([^']*Font[^']*)'\)/", file_get_contents($root . '/include/global_settings.php'), $labels);
+    $po = file_get_contents($root . '/locales/po/de-DE.po');
+
+    expect($labels[1])->toHaveCount(19);
+    foreach (array_unique($labels[1]) as $label) {
+        expect($po)->toContain('msgid "' . $label . '"');
+    }
+});
