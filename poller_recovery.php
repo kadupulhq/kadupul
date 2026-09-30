@@ -81,6 +81,13 @@ function debug($string)
  */
 function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $remote_db_cnn_id, $local_db_cnn_id, int &$records_inserted): bool
 {
+    // A non-object handle would silently select the default (local) database.
+    if (!is_object($remote_db_cnn_id) || !is_object($local_db_cnn_id)) {
+        cacti_log('RECOVERY: A database connection is unavailable; samples were retained.', false, 'POLLER');
+
+        return false;
+    }
+
     if ($max_allowed_packet < 1) {
         $max_allowed_packet = 1000000;
     }
@@ -136,11 +143,7 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
         $records_inserted += $record_count;
     }
 
-    if (!is_object($local_db_cnn_id)) {
-        cacti_log('RECOVERY: Local database connection is unavailable; samples were retained.', false, 'POLLER');
-
-        return false;
-    }
+    $records_deleted = 0;
 
     foreach (array_chunk($rows, 250) as $delete_rows) {
         $conditions = array();
@@ -159,6 +162,14 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
 
             return false;
         }
+
+        $records_deleted += (int) db_affected_rows($local_db_cnn_id);
+    }
+
+    if ($records_deleted < count($rows)) {
+        cacti_log('RECOVERY: Acknowledged samples changed before cleanup; remaining samples were retained for retry.', false, 'POLLER');
+
+        return false;
     }
 
     return true;
