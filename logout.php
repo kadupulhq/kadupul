@@ -15,6 +15,9 @@ set_default_action();
 
 api_plugin_hook('logout_pre_session_destroy');
 
+// Revoke the server-side remember-me token on every logout path, before the browser cookies go.
+clear_auth_cookie();
+
 /* Note: logout is reachable via GET without CSRF token. Impact is limited
  * to forced-logout (annoyance, no privilege escalation). SameSite=Strict
  * on the session cookie prevents cross-site exploitation on modern browsers.
@@ -80,8 +83,5 @@ if (get_request_var('action') == 'timeout' || get_request_var('action') == 'disa
     print "</body>
 	</html>";
 } else {
-    /* Default action */
-    clear_auth_cookie();
-
     header('Location: index.php');
 }

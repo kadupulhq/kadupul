@@ -18,16 +18,26 @@ function clear_auth_cookie()
     global $config;
 
     if (isset($_COOKIE['cacti_remembers']) && read_config_option('auth_cache_enabled') == 'on') {
+        if (!is_string($_COOKIE['cacti_remembers'])) {
+            cacti_cookie_session_logout();
+
+            return;
+        }
+
         $parts = explode(',', $_COOKIE['cacti_remembers']);
 
         if (cacti_sizeof($parts) == 2) {
             $user_id  = $parts[0];
             $realm_id = -1;
             $token    = $parts[1];
-        } else {
+        } elseif (cacti_sizeof($parts) == 3) {
             $user_id  = $parts[0];
             $realm_id = $parts[1];
             $token    = $parts[2];
+        } else {
+            cacti_cookie_session_logout();
+
+            return;
         }
 
         // Legacy support which leaked usernames
