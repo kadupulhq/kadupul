@@ -24,6 +24,8 @@ on:
       - tests/Unit/HelpLocalDocumentationTest.php
       - tests/Unit/HelpSsrFTest.php
       - help.php
+      - lib/html.php
+      - include/themes/classic/**
       - tests/bootstrap-unit.php
       - tests/composer.json
 
@@ -205,6 +207,10 @@ jobs:
         # monitor sources baked into the image at build time; the
         # docker compose up --build above runs the clone.
         run: ./node_modules/.bin/playwright test tests/csp-plugins.spec.ts
+
+      - name: Run Playwright suite (classic theme tabs)
+        working-directory: tests/e2e
+        run: ./node_modules/.bin/playwright test tests/classic-tabs.spec.ts
 
       - name: Upload Playwright report
         if: failure()
