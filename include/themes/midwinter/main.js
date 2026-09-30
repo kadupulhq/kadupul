@@ -11,6 +11,7 @@ let themeUserMenu
 // themeReady() runs again after every AJAX page load, but this script and the
 // document it listens on persist, so vendor scripts and shortcuts load once.
 let hotkeysLoaded = false;
+let systemColorMode = null;
 
 function themeReady() {
 	/* load default values */
@@ -795,22 +796,28 @@ function setThemeColor() {
 }
 
 function detectSystemColorSetup() {
-	const systemColorMode = window.matchMedia("(prefers-color-scheme: dark)");
+	if (systemColorMode === null) {
+		systemColorMode = window.matchMedia("(prefers-color-scheme: dark)");
 
-	try {
-		systemColorMode.addEventListener('change', (e) => {
-			checkThemeColorSetup((e.matches) ? 'dark' : 'light')
-		});
-    } catch (e1) {
 		try {
-			systemColorMode.addListener((e) => {
-				checkThemeColorSetup((e.matches) ? 'dark' : 'light')
-			});
-		} catch (e2) {
-			console.error(e2);
+			systemColorMode.addEventListener('change', followSystemColorMode);
+		} catch (e1) {
+			try {
+				systemColorMode.addListener(followSystemColorMode);
+			} catch (e2) {
+				console.error(e2);
+			}
 		}
 	}
+
 	checkThemeColorSetup(systemColorMode.matches === true ? 'dark' : 'light');
+}
+
+function followSystemColorMode(e) {
+	// The listener outlives a switch to a manual colour mode.
+	if (Storages.localStorage.get('midWinter_Color_Mode_Auto') === 'on') {
+		checkThemeColorSetup((e.matches) ? 'dark' : 'light');
+	}
 }
 
 function checkThemeColorSetup(color_mode) {
