@@ -43,7 +43,7 @@ if (get_request_var('action') == 'timeout' || get_request_var('action') == 'disa
         $message = __('You have been logged out of Kadupul due to a session timeout.');
     } elseif (get_request_var('action') == 'disabled') {
         $message = __('You have been logged out of Kadupul due to an account suspension.');
-    } elseif (get_request_var('action') == 'remove') {
+    } elseif (get_request_var('action') == 'remote') {
         $message = __('You have been logged out of Kadupul due to a Remote Data Collector state change');
     } else {
         $message = '';

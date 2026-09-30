@@ -118,3 +118,14 @@ test('a malformed remember-me cookie is dropped without an error', function ($co
     'one part' => '42',
     'four parts' => '42,0,token,extra',
 ));
+
+test('each automatic logout explains why the user was logged out', function (string $action, string $reason) {
+    $result = logout_run($action, null);
+
+    expect($result['stderr'])->toBe('')
+        ->and($result['output'])->toContain('<p>' . $reason . '</p>');
+})->with(array(
+    'timeout' => array('timeout', 'You have been logged out of Kadupul due to a session timeout.'),
+    'disabled' => array('disabled', 'You have been logged out of Kadupul due to an account suspension.'),
+    'remote' => array('remote', 'You have been logged out of Kadupul due to a Remote Data Collector state change'),
+));
