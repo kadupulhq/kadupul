@@ -132,6 +132,27 @@ case 'changepassword':
 	// Get current password as entered
 	$current_password = get_nfilter_request_var('current_password');
 
+	/**
+	 * Check the current password first, counting failures toward the login
+	 * lockout. The history and same-as-old checks below also test a guess
+	 * against the stored hash, so they may only run once it is known.
+	 */
+	auth_checkclear_lockout($user['username'], 0);
+
+	if (auth_process_lockout_check($user['username'], 0)) {
+		$bad_password = true;
+		$errorMessage = "<span class='badpassword_message'>" . __('Your account has been locked.  Please contact your Administrator.') . "</span>";
+		break;
+	}
+
+	if ((!empty($user['password']) || !empty($current_password)) && !compat_password_verify($current_password, $user['password'])) {
+		auth_process_lockout($user['username'], 0);
+
+		$bad_password = true;
+		$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
+		break;
+	}
+
 	// Secpass checking
 	$error = secpass_check_pass($password);
 
@@ -153,13 +174,6 @@ case 'changepassword':
 	if ($password !== $password_confirm) {
 		$bad_password = true;
 		$errorMessage = "<span class='badpassword_message'>" . __('Your new passwords do not match, please retype.') . "</span>";
-		break;
-	}
-
-	// Compare current password with stored password
-	if ((!empty($user['password']) || !empty($current_password)) && !compat_password_verify($current_password, $user['password'])) {
-		$bad_password = true;
-		$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
 		break;
 	}
 
