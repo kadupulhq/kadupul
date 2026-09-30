@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
+
 - Move device-template management to Symfony forms and Twig, retaining template APIs, associations, installed plugin hooks, stale-edit protection and explicit collector synchronization outcomes.
 
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
