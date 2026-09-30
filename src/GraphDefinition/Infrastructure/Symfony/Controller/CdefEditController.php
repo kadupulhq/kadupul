@@ -12,6 +12,7 @@ use Kadupul\GraphDefinition\Application\Port\CdefEditor;
 use Kadupul\GraphDefinition\Application\Query\CdefAccessDenied;
 use Kadupul\GraphDefinition\Application\Query\CdefAuthorization;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\CdefEditType;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,9 +27,13 @@ final class CdefEditController
 {
     #[Route('/graph-definitions/cdefs/new', name: 'graph_cdef_create', methods: ['GET', 'HEAD', 'POST'])]
     #[Route('/graph-definitions/cdefs/{id<\d+>}/edit', name: 'graph_cdef_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(?int $id, Request $request, CdefAuthorization $authorization, CdefCatalog $catalog, CdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(?int $id, Request $request, CdefAuthorization $authorization, CdefCatalog $catalog, CdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $record = $id === null ? ['id' => 0, 'name' => '', 'items' => []] : $catalog->find($id);

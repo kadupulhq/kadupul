@@ -13,6 +13,7 @@ use Kadupul\GraphDefinition\Application\Query\CdefAccessDenied;
 use Kadupul\GraphDefinition\Application\Query\CdefAuthorization;
 use Kadupul\GraphDefinition\Domain\CdefSummary;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\CdefActionType;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,9 +27,13 @@ use Twig\Environment;
 final class CdefActionController
 {
     #[Route('/graph-definitions/cdefs/actions/{operation}', name: 'graph_cdef_action', requirements: ['operation' => 'delete|duplicate'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(string $operation, Request $request, CdefAuthorization $authorization, CdefCatalog $catalog, CdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(string $operation, Request $request, CdefAuthorization $authorization, CdefCatalog $catalog, CdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $ids = self::ids($request->query->all()['ids'] ?? null);

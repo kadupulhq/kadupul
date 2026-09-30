@@ -130,9 +130,10 @@ final class CdefHttpTest extends TestCase
             $this->authorize($container, false);
             $catalog = $this->createMock(CdefCatalog::class);
             $catalog->expects(self::never())->method('list');
+            $catalog->expects(self::never())->method('count');
             $container->set(CdefCatalog::class, $catalog);
 
-            $response = $kernel->handle(Request::create('/graph-definitions/cdefs', 'GET', [], ['Cacti' => 'fixture']));
+            $response = $kernel->handle(Request::create('/graph-definitions/cdefs?page[]=invalid', 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(401, $response->getStatusCode());
             self::assertTrue($response->headers->hasCacheControlDirective('no-store'));
         } finally {

@@ -15,10 +15,6 @@ def main():
     harness = Harness(SimpleNamespace(project='kadupul-cdef-review', target='cdef-review'))
     try:
         harness.setup()
-        session = Session(harness.base)
-        login = session.login('behavior-admin')
-        if login['login_form']:
-            raise AssertionError('The isolated behavior administrator could not authenticate')
         checks = []
 
         def check(condition, message):
@@ -26,6 +22,16 @@ def main():
                 raise AssertionError(message)
             checks.append(message)
             print('PASS ' + message, flush=True)
+
+        unauthenticated = Session(harness.base)
+        response = unauthenticated.request('/app.php/graph-definitions/cdefs?page[]=invalid')
+        check(response['status'] == 401,
+              'unauthenticated CDEF HTTP request is rejected before malformed query parsing')
+
+        session = Session(harness.base)
+        login = session.login('behavior-admin')
+        if login['login_form']:
+            raise AssertionError('The isolated behavior administrator could not authenticate')
 
         verify_cdefs(harness, session, check)
         print(f'CDEF HTTP/MariaDB integration passed: {len(checks)} assertions.', flush=True)

@@ -10,6 +10,7 @@ namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Controller;
 use Kadupul\GraphDefinition\Application\Query\CdefAccessDenied;
 use Kadupul\GraphDefinition\Application\Query\ListCdefs;
 use Kadupul\GraphDefinition\Domain\CdefListCriteria;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,9 +20,13 @@ use Twig\Environment;
 final class CdefListController
 {
     #[Route('/graph-definitions/cdefs', name: 'graph_cdefs', methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, ListCdefs $list, Environment $twig, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ListCdefs $list, Environment $twig, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $query = $request->query->all();
             $search = $query['filter'] ?? '';

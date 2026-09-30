@@ -14,6 +14,7 @@ use Kadupul\GraphDefinition\Application\Query\CdefAuthorization;
 use Kadupul\GraphDefinition\Domain\CdefFunctions;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\CdefItemType as CdefItemForm;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\CdefReorderType;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,9 +28,13 @@ use Twig\Environment;
 final class CdefItemController
 {
     #[Route('/graph-definitions/cdefs/{cdefId<\d+>}/items/{itemId<\d+>}', name: 'graph_cdef_item_edit', requirements: ['cdefId' => '[1-9][0-9]{0,7}', 'itemId' => '0|[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function edit(int $cdefId, int $itemId, Request $request, CdefAuthorization $authorization, CdefCatalog $catalog, CdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function edit(int $cdefId, int $itemId, Request $request, CdefAuthorization $authorization, CdefCatalog $catalog, CdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $cdef = $catalog->find($cdefId);
@@ -100,9 +105,13 @@ final class CdefItemController
     }
 
     #[Route('/graph-definitions/cdefs/{cdefId<\d+>}/items/{itemId<\d+>}/delete', name: 'graph_cdef_item_delete', requirements: ['cdefId' => '[1-9][0-9]{0,7}', 'itemId' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function delete(int $cdefId, int $itemId, Request $request, CdefAuthorization $authorization, CdefCatalog $catalog, CdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function delete(int $cdefId, int $itemId, Request $request, CdefAuthorization $authorization, CdefCatalog $catalog, CdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $cdef = $catalog->find($cdefId);
@@ -132,9 +141,13 @@ final class CdefItemController
     }
 
     #[Route('/graph-definitions/cdefs/{cdefId<\d+>}/items/reorder', name: 'graph_cdef_item_reorder', requirements: ['cdefId' => '[1-9][0-9]{0,7}'], methods: ['POST'])]
-    public function reorder(int $cdefId, Request $request, CdefAuthorization $authorization, CdefEditor $editor, FormFactoryInterface $forms, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function reorder(int $cdefId, Request $request, CdefAuthorization $authorization, CdefEditor $editor, FormFactoryInterface $forms, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $consoleAccess->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
+        }
         try {
             $actor = $authorization->actor();
             $form = $forms->createNamed('order', CdefReorderType::class, ['items' => ''], [
