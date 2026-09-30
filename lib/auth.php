@@ -3778,13 +3778,15 @@ function local_auth_login_process($username) {
 					AND realm = 0',
 					array($username));
 
-				if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+				/* the same username may exist in other realms; only this local row was verified */
+				if (cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
 					$password = compat_password_hash($password, PASSWORD_DEFAULT);
 					db_check_password_length();
 					db_execute_prepared('UPDATE user_auth
 						SET password = ?
-						WHERE username = ?',
-						array($password, $username));
+						WHERE id = ?
+						AND realm = 0',
+						array($password, $user['id']));
 				}
 			}
 		} else {
