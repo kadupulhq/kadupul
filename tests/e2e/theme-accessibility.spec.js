@@ -99,10 +99,22 @@ async function contrastAgainstBackground(page, selector, colorOf, against = null
     // worst-case colour it has to clear instead.
     const candidates = fixed ? [parse(fixed)] : backgrounds(prop === 'outlineColor' ? element.parentElement : element);
     const color = parse(getComputedStyle(element)[prop]);
-    return Math.min(...candidates.map((bg) => {
-      const [hi, lo] = [luminance(over(color, bg)), luminance(bg)].sort((a, b) => b - a);
+    const contrast = (a, b) => {
+      const [hi, lo] = [luminance(over(a, b)), luminance(b)].sort((x, y) => y - x);
       return (hi + 0.05) / (lo + 0.05);
-    }));
+    };
+    // A hard box shadow reaching past the ring is a halo: the ring has to
+    // stand out from the halo, and one of the two from the panel.
+    const style = getComputedStyle(element);
+    const reach = parseFloat(style.outlineOffset) + parseFloat(style.outlineWidth);
+    const halo = prop === 'outlineColor' && style.boxShadow !== 'none'
+      ? style.boxShadow.split(/,(?![^(]*\))/).map((shadow) => /^\s*(rgba?\([^)]+\))\s+0px\s+0px\s+0px\s+([\d.]+)px\s*$/.exec(shadow))
+        .filter((m) => m && parseFloat(m[2]) > reach).map((m) => over(parse(m[1]), { r: 255, g: 255, b: 255, a: 1 }))[0]
+      : null;
+    if (halo) {
+      return Math.min(contrast(color, halo), ...candidates.map((bg) => Math.max(contrast(color, bg), contrast(halo, bg))));
+    }
+    return Math.min(...candidates.map((bg) => contrast(color, bg)));
   }, [selector, colorOf, against]);
 }
 
