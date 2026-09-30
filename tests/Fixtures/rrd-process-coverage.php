@@ -11,6 +11,9 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('PACKAGE_XML_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
+}
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
 }

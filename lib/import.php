@@ -1937,50 +1937,19 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache, &$host_template_
 
         $hash_cache['host_template'][$hash] = $host_template_id;
 
-        /* import into: host_template_graph */
-        $hash_items = explode('|', $xml_array['graph_templates']);
-
-        if (!empty($hash_items[0])) {
-            for ($i = 0; $i < cacti_count($hash_items); $i++) {
-                /* parse information from the hash */
-                $parsed_hash = parse_xml_hash($hash_items[$i]);
-
-                /* invalid/wrong hash */
-                if ($parsed_hash == false) {
-                    return false;
-                }
-
-                if (isset($hash_cache['graph_template'][$parsed_hash['hash']])) {
-                    db_execute_prepared(
-                        'REPLACE INTO host_template_graph
-						(host_template_id, graph_template_id)
-						VALUES (?, ?)',
-                        array($host_template_id, $hash_cache['graph_template'][$parsed_hash['hash']])
-                    );
-                }
-            }
-        }
-
-        /* import into: host_template_snmp_query */
-        $hash_items = explode('|', $xml_array['data_queries']);
-
-        if (!empty($hash_items[0])) {
-            for ($i = 0; $i < cacti_count($hash_items); $i++) {
-                /* parse information from the hash */
-                $parsed_hash = parse_xml_hash($hash_items[$i]);
-
-                /* invalid/wrong hash */
-                if ($parsed_hash == false) {
-                    return false;
-                }
-
-                if (isset($hash_cache['data_query'][$parsed_hash['hash']])) {
-                    db_execute_prepared(
-                        'REPLACE INTO host_template_snmp_query
-						(host_template_id, snmp_query_id)
-						VALUES (?, ?)',
-                        array($host_template_id, $hash_cache['data_query'][$parsed_hash['hash']])
-                    );
+        // Both association types use the same validation and cached-ID contract.
+        foreach (array('graph_templates' => array('graph_template', 'host_template_graph', 'graph_template_id'), 'data_queries' => array('data_query', 'host_template_snmp_query', 'snmp_query_id')) as $field => $association) {
+            list($type, $table, $column) = $association;
+            $hash_items = explode('|', $xml_array[$field]);
+            if (!empty($hash_items[0])) {
+                foreach ($hash_items as $item_hash) {
+                    $parsed_hash = parse_xml_hash($item_hash);
+                    if ($parsed_hash == false) {
+                        return false;
+                    }
+                    if (isset($hash_cache[$type][$parsed_hash['hash']])) {
+                        db_execute_prepared("REPLACE INTO $table (host_template_id, $column) VALUES (?, ?)", array($host_template_id, $hash_cache[$type][$parsed_hash['hash']]));
+                    }
                 }
             }
         }
@@ -2579,84 +2548,26 @@ function hash_to_friendly_name($hash, $display_type_name)
         $prepend = '';
     }
 
+    $lookups = array(
+        'graph_template' => array('graph_templates', 'name'),
+        'data_template' => array('data_template', 'name'),
+        'data_template_item' => array('data_template_rrd', 'data_source_name'),
+        'host_template' => array('host_template', 'name'),
+        'data_input_method' => array('data_input', 'name'),
+        'data_input_field' => array('data_input_fields', 'name'),
+        'data_query' => array('snmp_query', 'name'),
+        'gprint_preset' => array('graph_templates_gprint', 'name'),
+        'cdef' => array('cdef', 'name'),
+        'vdef' => array('vdef', 'name'),
+        'data_source_profile' => array('data_source_profile', 'name'),
+    );
+    if (isset($lookups[$parsed_hash['type']])) {
+        list($table, $column) = $lookups[$parsed_hash['type']];
+
+        return $prepend . html_escape(db_fetch_cell_prepared("SELECT $column FROM $table WHERE hash = ?", array($parsed_hash['hash'])));
+    }
+
     switch ($parsed_hash['type']) {
-        case 'graph_template':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM graph_templates
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'data_template':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM data_template
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'data_template_item':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT data_source_name
-			FROM data_template_rrd
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'host_template':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM host_template
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'data_input_method':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM data_input
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'data_input_field':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM data_input_fields
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'data_query':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM snmp_query
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'gprint_preset':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM graph_templates_gprint
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'cdef':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM cdef
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'vdef':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM vdef
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
-        case 'data_source_profile':
-            return $prepend . html_escape(db_fetch_cell_prepared(
-                'SELECT name
-			FROM data_source_profile
-			WHERE hash = ?',
-                array($parsed_hash['hash'])
-            ));
         case 'round_robin_archive':
             return $prepend;
         default:
