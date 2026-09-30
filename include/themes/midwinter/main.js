@@ -8,6 +8,9 @@
 themeLoader('on');
 let themeInitialized = false;
 let themeUserMenu
+// themeReady() runs again after every AJAX page load, but this script and the
+// document it listens on persist, so vendor scripts and shortcuts load once.
+let hotkeysLoaded = false;
 
 function themeReady() {
 	/* load default values */
@@ -28,9 +31,6 @@ function themeReady() {
 	searchToHighlight();
 	updateNavigation();
 	themeLoader('off');
-	document.addEventListener("dblclick", () => {
-		toggleFullscreen();
-	})
 }
 
 function checkConsoleMenu() {
@@ -55,7 +55,7 @@ function midwinterInitialized() {
 }
 
 function extendAnchorActions() {
-	$('a[role="menuitem"]').on('click', function() {
+	$('a[role="menuitem"]').off('click.midwinter').on('click.midwinter', function() {
 		/* update MidWinter's BreadCrumb Navigation */
 		midWinterNavigation( $(this) );
 		/* close the Navigation Menu Box afterwards */
@@ -399,7 +399,7 @@ function setupTheme() {
 		return false;
 	});
 
-	$('.submenuoptions, .menuoptions').on('click', function() {
+	$('.submenuoptions, .menuoptions').off('click.midwinter').on('click.midwinter', function() {
 		if ($(window).width() < 640) {
 			$(this).stop().delay(100).slideUp(0);
 		} else {
@@ -417,7 +417,7 @@ function setupTheme() {
 	$('.toggleColorModeAuto').off().on('click', toggleColorModeAuto);
 	$('.toggleGuiFontSize').off().on('click',toggleGuiFontSize);
 
-	$('.cactiConsoleContentArea, .cactiGraphContentArea').on('mouseenter', toggleCactiNavigationBox);
+	$('.cactiConsoleContentArea, .cactiGraphContentArea').off('mouseenter.midwinter').on('mouseenter.midwinter', toggleCactiNavigationBox);
 }
 
 function redesignConsoleMenu(menu) {
@@ -890,11 +890,20 @@ function setMenuVisibility() {
 }
 
 function searchToHighlight() {
+	if (typeof $.fn.markRegExp === 'function') {
+		bindKeywordHighlight();
+		return;
+	}
+
 	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/mark/jquery.mark.js').done(function (script, textStatus) {
 		if (textStatus === 'success') {
-			$("input[name='keyword']").on("input", highlight);
+			bindKeywordHighlight();
 		}
 	});
+}
+
+function bindKeywordHighlight() {
+	$("input[name='keyword']").off('input.midwinter').on('input.midwinter', highlight);
 }
 
 function highlight() {
@@ -917,7 +926,15 @@ function highlight() {
 
 
 function setHotKeys() {
-	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/hotkeys/hotkeys.js').done(function (script, textStatus) {
+	if (hotkeysLoaded) {
+		return;
+	}
+
+	hotkeysLoaded = true;
+
+	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/hotkeys/hotkeys.js').fail(function () {
+		hotkeysLoaded = false;
+	}).done(function (script, textStatus) {
 		if (textStatus === 'success') {
 			hotkeys('SHIFT+c,c+t,c+l,c+p,c+F1,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
 				event.preventDefault();
