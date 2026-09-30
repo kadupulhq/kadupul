@@ -50,7 +50,10 @@ if (!empty($scenario['handoff'])) {
         }
         $fields['font']['sub_checkbox'] = array('name' => 'enabled', 'value' => 'on');
     }
-    draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => $fields));
+    if (!empty($scenario['spacer'])) {
+        $fields['header\' onfocus=\'bad'] = array('method' => 'spacer', 'friendly_name' => 'Header <x>untrusted</x>', 'collapsible' => 'true');
+    }
+    draw_edit_form(array('config' => array('no_form_tag' => true) + (!empty($scenario['spacer']) ? array('force_row_color' => true) : array()), 'fields' => $fields));
 } else {
     form_color_dropdown($scenario['name'], $scenario['previous'], $scenario['none'], $scenario['default'], $scenario['class'], 'setColour()');
 }

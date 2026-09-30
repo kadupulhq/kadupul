@@ -75,7 +75,7 @@ function draw_edit_form($array)
             } elseif ($field_array['method'] == 'spacer') {
                 $collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
 
-                print "<div class='spacer formHeader" . ($collapsible ? ' collapsible' : '') . "' id='row_$field_id_attribute'><div class='formHeaderText'>" . html_escape($field_array['friendly_name']);
+                print "<div class='spacer formHeader" . ($collapsible ? ' collapsible' : '') . "' id='row_$field_id_attribute'><div class='formHeaderText'>" . cacti_html_context_escape($field_array['friendly_name'], CACTI_ESC_ELEMENT);
                 print '<div class="formTooltip">' . (isset($field_array['description']) ? display_tooltip(html_purify($field_array['description'])) : '') . '</div>';
                 print ($collapsible ? "<div class='formHeaderAnchor'><i class='fa fa-angle-double-up'></i></div>" : '') . '</div></div>';
             } else {
@@ -121,7 +121,7 @@ function draw_edit_form($array)
                     );
                 }
 
-                print html_escape($field_array['friendly_name']);
+                print cacti_html_context_escape($field_array['friendly_name'], CACTI_ESC_ELEMENT);
 
                 if (read_config_option('hide_form_description') == 'on') {
                     print '<br><span class="formFieldDescription">' . ((isset($field_array['description'])) ? html_purify($field_array['description']) : '') . '</span>';

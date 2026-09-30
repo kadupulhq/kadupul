@@ -70,6 +70,12 @@ final class FormColorDropdownOutputTest extends TestCase
             }
             self::assertSame('this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;setColour()', $result['session']['form_change_actions'][$scenario['name']]);
             self::assertCount(0, $xpath->query('//x|//script'));
+            if (!empty($scenario['handoff']) && !empty($scenario['spacer'])) {
+                $spacer = $xpath->query('//div[contains(@class, "formHeaderText")]');
+                self::assertCount(1, $spacer);
+                self::assertSame('Header <x>untrusted</x>', $spacer->item(0)->textContent);
+                self::assertCount(0, $xpath->query('//*[@onfocus]'));
+            }
             if (!empty($scenario['handoff'])) {
                 $row = $xpath->query('//div[contains(@class, "formRow")]')->item(0);
                 self::assertSame('row_' . $scenario['name'], $row->getAttribute('id'));
@@ -101,6 +107,7 @@ final class FormColorDropdownOutputTest extends TestCase
     {
         $plain = array('name' => 'colour', 'previous' => '5', 'default' => '', 'none' => 'None', 'class' => '', 'colors' => array(array('5', 'FFFFFF', 'White')));
         $hostile = array_replace($plain, array('name' => "n'><x", 'class' => "c' onfocus='alert(1)", 'none' => 'None<i>', 'colors' => array(array('5', "A'\"><x", 'Name<i>'))));
+        $plain['spacer'] = true;
         return array(array($hostile), array(array_replace($plain, array('previous' => '', 'default' => '5', 'none' => ''))), array(array_replace($plain, array('previous' => 'missing', 'colors' => array()))), array(array_replace($plain, array('colors' => array(array('7junk', '123456', 'Prefix'), array('junk', 'ABCDEF', ''))))), array(array_replace($hostile, array('handoff' => true))), array(array_replace($plain, array('handoff' => true, 'controls' => true, 'controls_empty' => true))), array(array_replace($plain, array('handoff' => true, 'controls' => true, 'session' => array('sess_error_fields' => array('font' => true, 'dirpath' => true), 'sess_field_values' => array('font' => 'submitted', 'dirpath' => 'submitted'))))));
     }
 }
