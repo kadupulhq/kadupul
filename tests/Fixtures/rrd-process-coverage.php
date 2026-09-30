@@ -18,6 +18,9 @@ if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
 if (defined('FORM_RENDERER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
+if (defined('FORCE_HTTPS_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('PACKAGE_XML_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
 }

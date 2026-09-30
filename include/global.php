@@ -413,7 +413,8 @@ if ($config['is_web']) {
             $https_redirect = cacti_build_https_redirect_url(
                 $_SERVER['SERVER_NAME'] ?? '',
                 $_SERVER['REQUEST_URI'] ?? '',
-                $config['url_path']
+                $config['url_path'],
+                (string) read_config_option('base_url')
             );
 
             if ($https_redirect === '') {

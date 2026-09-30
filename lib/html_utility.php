@@ -1163,10 +1163,34 @@ function validate_redirect_url($url = '', $default = 'index.php')
  *
  * @return string The HTTPS URL, or an empty string if the server name is unusable
  */
-function cacti_build_https_redirect_url(string $server_name, string $request_uri, string $default_path = '/'): string
+function cacti_build_https_redirect_url(string $server_name, string $request_uri, string $default_path = '/', string $canonical_url = ''): string
 {
-    $server_name = trim($server_name);
-    $host        = trim($server_name, '[]');
+    // A catch-all vhost may have no usable SERVER_NAME. Only the existing
+    // administrator-configured Base URL may supply an alternative authority.
+    if ($server_name === '' || $server_name === '_') {
+        $authority = parse_url($canonical_url);
+        if ($authority === false || !isset($authority['host'], $authority['scheme']) ||
+            !in_array(strtolower($authority['scheme']), array('http', 'https'), true) ||
+            isset($authority['user']) || isset($authority['pass'])) {
+            return '';
+        }
+        $server_name = $authority['host'];
+    }
+
+    // Discard an HTTP listener port; the HTTPS destination uses its default.
+    if (preg_match('/^(\[[0-9a-fA-F:.]+\]|[^:\[\]]+):([0-9]+)$/D', $server_name, $parts)) {
+        if ((int) $parts[2] < 1 || (int) $parts[2] > 65535) {
+            return '';
+        }
+        $server_name = $parts[1];
+    }
+    $host = trim($server_name, '[]');
+
+    if (str_contains($server_name, '[') || str_contains($server_name, ']')) {
+        if ($server_name !== '[' . $host . ']' || filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
+            return '';
+        }
+    }
 
     if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
         $host = '[' . $host . ']';
@@ -1177,8 +1201,17 @@ function cacti_build_https_redirect_url(string $server_name, string $request_uri
         return '';
     }
 
-    $path = validate_redirect_url($request_uri, $default_path);
-    $path = '/' . ltrim($path, '/');
+    // Preserve the raw request target: decoding changes encoded query values,
+    // and page redirect validation also appends unrelated action parameters.
+    $path = $request_uri;
+    if ($path === '' || $path[0] !== '/' || str_starts_with($path, '//') ||
+        preg_match('/[\x00-\x20\x7f\\\\]/', $path)) {
+        $path = $default_path;
+    }
+    if ($path === '' || $path[0] !== '/' || str_starts_with($path, '//') ||
+        preg_match('/[\x00-\x20\x7f\\\\]/', $path)) {
+        $path = '/';
+    }
 
     return 'https://' . $host . $path;
 }
