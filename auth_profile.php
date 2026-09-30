@@ -303,6 +303,25 @@ function form_save() {
 
 	// Save the users graph settings if they have permission
 	if (is_view_allowed('graph_settings') == true && isset_request_var('tab') && get_nfilter_request_var('tab') == 'general') {
+		/**
+		 * A drop-down value the form did not offer is left out of the save, as
+		 * update_data leaves it out. Clearing the request variable instead would
+		 * let save_user_settings() store the default of a numeric field.
+		 */
+		foreach ($settings_user as $tab_short_name => $tab_fields) {
+			foreach ($tab_fields as $field_name => $field_array) {
+				if (isset($field_array['method'])
+					&& in_array($field_array['method'], array('drop_array', 'drop_sql', 'drop_language'), true)
+					&& isset_request_var($field_name)
+					&& !api_auth_user_setting_valid($field_name, $field_array, get_nfilter_request_var($field_name))) {
+					unset($settings_user[$tab_short_name][$field_name]);
+
+					$_SESSION['sess_error_fields'][$field_name] = $field_name;
+					$errors[3] = 3;
+				}
+			}
+		}
+
 		save_user_settings($_SESSION['sess_user_id']);
 	} elseif (isset_request_var('tab')) {
 		api_plugin_hook('auth_profile_save');
