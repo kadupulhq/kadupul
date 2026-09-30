@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -46,10 +47,13 @@ test('GHSA-8w9r-xmpr-5q3v: weak key rejection returns false', function () use ($
     // bits-check block and confirm `return false` follows it.
     $bitsCheckOffset = strpos($body, '< 2048');
     $returnOffset    = strpos($body, 'return false', $bitsCheckOffset);
+    $blockEndOffset  = strpos($body, '}', $bitsCheckOffset);
 
     expect($bitsCheckOffset)->not->toBeFalse();
-    // return false must appear within 200 bytes of the bits check
-    expect($returnOffset - $bitsCheckOffset)->toBeLessThan(200);
+    // A byte distance breaks whenever indentation changes; the return must
+    // sit inside the rejection block itself.
+    expect($returnOffset)->not->toBeFalse();
+    expect($returnOffset)->toBeLessThan($blockEndOffset);
 });
 
 test('GHSA-8w9r-xmpr-5q3v: key strength check logs a SECURITY message', function () use ($body) {
