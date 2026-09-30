@@ -59,12 +59,27 @@ final class AggregateGraphConfirmationXssTest extends TestCase
         self::assertStringNotContainsString('Fatal error:', $result['html']);
         self::assertStringContainsString($expected, $result['html']);
         self::assertStringNotContainsString('<x>', $result['html']);
+        if (($scenario['action'] ?? '') === '') {
+            $document = new DOMDocument();
+            $previous = libxml_use_internal_errors(true);
+            try {
+                self::assertTrue($document->loadHTML($result['html'], LIBXML_NONET));
+            } finally {
+                libxml_clear_errors();
+                libxml_use_internal_errors($previous);
+            }
+            $xpath = new DOMXPath($document);
+            self::assertCount(1, $xpath->query('//select[@id="rows"]'));
+            self::assertSame('Default', $xpath->query('//select[@id="rows"]/option[@value="-1"]')->item(0)->textContent);
+            self::assertSame((string) $scenario['rows'], $xpath->query('//select[@id="rows"]/option[@selected]')->item(0)->getAttribute('value'));
+        }
     }
 
     public function pages(): array
     {
         return array(
             'list' => array(array('action' => '', 'rows' => 10), 'Graph title'),
+            'default rows' => array(array('action' => '', 'rows' => -1), 'Graph title'),
             'items' => array(array('action' => 'edit', 'tab' => 'items', 'id' => 42, 'rows' => 10), 'Matching Graphs'),
             'preview' => array(array('action' => 'edit', 'tab' => 'preview', 'id' => 42), 'graph_image.php?action=edit'),
         );
