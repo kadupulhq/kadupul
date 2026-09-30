@@ -174,3 +174,35 @@ test('a file that cannot be removed does not stop later pages of the queue', fun
         unset($GLOBALS['purge_fixture_queue'], $GLOBALS['purge_fixture_reads'], $GLOBALS['purge_fixture_max_reads']);
     }
 })->with(array('1', '3'));
+
+test('queued files that are already gone leave the queue while unsafe names stay', function ($action) {
+    $saved = $GLOBALS['config'] ?? null;
+    $directory = sys_get_temp_dir() . '/purge-missing-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    file_put_contents($directory . '-outside.rrd', 'outside');
+    $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $directory, 'base_path' => $directory);
+    $GLOBALS['purged'] = $GLOBALS['archived'] = 0;
+    $GLOBALS['poller_start'] = microtime(true);
+    $GLOBALS['purge_fixture_queue'] = array(
+        array('id' => 1, 'name' => 'never_polled.rrd', 'local_data_id' => 0, 'action' => $action),
+        array('id' => 2, 'name' => '../' . basename($directory) . '-outside.rrd', 'local_data_id' => 0, 'action' => $action),
+    );
+    $GLOBALS['purge_fixture_reads'] = 0;
+    $GLOBALS['purge_fixture_max_reads'] = 1;
+    try {
+        $retained = 0;
+        remove_files($GLOBALS['purge_fixture_queue'], $retained);
+        expect(array_column($GLOBALS['purge_fixture_queue'], 'id'))->toBe(array(2))
+            ->and($retained)->toBe(1)
+            ->and(file_get_contents($directory . '-outside.rrd'))->toBe('outside');
+    } finally {
+        $GLOBALS['config'] = $saved;
+        unlink($directory . '-outside.rrd');
+        $paths = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($paths as $path) {
+            $path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+        }
+        rmdir($directory);
+        unset($GLOBALS['purge_fixture_queue'], $GLOBALS['purge_fixture_reads'], $GLOBALS['purge_fixture_max_reads']);
+    }
+})->with(array('1', '3'));

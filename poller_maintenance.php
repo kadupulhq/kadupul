@@ -705,9 +705,19 @@ function remove_files($file_array, &$retained = 0)
                 $source_relative = str_replace(array('<path_rra>', '<path_cacti>'), '', $file['name']);
                 $source_relative = ltrim($source_relative, '/');
                 $resolved_source = false;
+                $source_missing  = false;
 
                 if (rrdcleaner_is_safe_relative_path($source_relative)) {
                     $resolved_source = rrdcleaner_resolve_contained_path($real_file, $rra_path);
+
+                    // realpath() fails for a file that is already gone, such as
+                    // one never polled. Skip the file operations for it, so a
+                    // file created later through an unresolved path is never
+                    // touched, and let the queue entry clear as before.
+                    if ($resolved_source === false && !file_exists($real_file) && !is_link($real_file)) {
+                        $resolved_source = $real_file;
+                        $source_missing  = true;
+                    }
                 }
 
                 if ($resolved_source === false || !rrdcleaner_is_safe_relative_path($relative_name)) {
@@ -725,7 +735,7 @@ function remove_files($file_array, &$retained = 0)
                 try {
                     switch ($file['action']) {
                         case '1':
-                            if (file_exists($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
+                            if (!$source_missing && file_exists($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
                                 if (unlink($real_file)) {
                                     maint_debug('Deleted: ' . $real_file);
                                     $purged++;
@@ -765,7 +775,7 @@ function remove_files($file_array, &$retained = 0)
                                 continue 2;
                             }
 
-                            if (file_exists($real_file)) {
+                            if (!$source_missing && file_exists($real_file)) {
                                 if (rename($real_file, $target_file)) {
                                     maint_debug("Moved: $real_file to: $target_file");
                                     $archived++;
