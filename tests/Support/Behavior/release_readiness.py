@@ -95,6 +95,8 @@ def assert_failed_writer_retains_queue(h):
     require(len(row) == 2 and row[0].isdigit() and row[1].replace('_', '').isalnum(), 'No safe queue fixture key')
     predicate = "local_data_id=" + row[0] + " AND rrd_name='" + row[1] + "' AND time='2001-01-01 00:00:00'"
     h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (" + row[0] + ",'" + row[1] + "','2001-01-01 00:00:00','8675309')")
+    # An upgraded database can retain this inert setting; it must not revive the old queue swap.
+    h.sql("REPLACE INTO settings(name,value) VALUES ('poller_refresh_output_table','on')")
     # Hostless data sources are valid. Deleted-host and deleted-source rows are not.
     fixture_ids = '16000000,16000001,16000002'
     require(h.sql("SELECT COUNT(*) FROM data_local WHERE id IN (" + fixture_ids + ")").strip() == '0', 'Queue fixture IDs already exist')
