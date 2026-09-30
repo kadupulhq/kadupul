@@ -6,7 +6,8 @@
 /*
  * Some pages change data because of a request variable other than 'action',
  * which the central guard in include/global.php can not see: the RRD Cleaner
- * rescan and the SNMP notification receiver log purge.
+ * rescan, the SNMP notification receiver log purge, the Data Debug check purge
+ * and the SNMP Agent notification log purge.
  */
 
 function page_flag_guard_run(string $page, string $method, string $query, array $headers = array(), string $token = 'missing'): string
@@ -15,8 +16,12 @@ function page_flag_guard_run(string $page, string $method, string $query, array 
     $dir = sys_get_temp_dir() . '/page-flag-guard-' . bin2hex(random_bytes(8));
     mkdir($dir . '/include', 0700, true);
     mkdir($dir . '/lib', 0700);
-    file_put_contents($dir . '/lib/functions.php', '<?php');
-    file_put_contents($dir . '/lib/rrd.php', '<?php');
+    // Empty libraries the pages include by relative path, so the stubs below
+    // stand in for the application and nothing reaches a database.
+    $libraries = array('functions', 'rrd', 'dsdebug', 'api_data_source', 'boost', 'clog_webapi', 'poller', 'utility');
+    foreach ($libraries as $library) {
+        file_put_contents($dir . '/lib/' . $library . '.php', '<?php');
+    }
 
     $auth = <<<'PHP'
 <?php
@@ -36,6 +41,10 @@ function raise_message(...$args) {}
 function read_config_option($name) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function sanitize_search_string($value) { return $value; }
+function check_changed($request, $session) {}
+function get_current_page() { return 'page.php'; }
+function sanitize_sql_column($column) { return $column; }
+function set_page_refresh($refresh) {}
 function top_header() { echo 'DISPATCHED:' . get_request_var('action'); exit; }
 $config += array('library_path' => getcwd() . '/lib', 'rra_path' => getcwd(), 'base_path' => getcwd());
 session_id('page-flag-guard-test');
@@ -83,8 +92,9 @@ PHP;
         return $stdout;
     } finally {
         unlink($dir . '/include/auth.php');
-        unlink($dir . '/lib/functions.php');
-        unlink($dir . '/lib/rrd.php');
+        foreach ($libraries as $library) {
+            unlink($dir . '/lib/' . $library . '.php');
+        }
         rmdir($dir . '/include');
         rmdir($dir . '/lib');
         rmdir($dir);
@@ -130,4 +140,31 @@ test('the notification log purge needs a POST with a valid token', function (str
 test('viewing the notification log without a purge is unchanged', function () {
     expect(page_flag_guard_run('managers.php', 'GET', 'action=edit&tab=logs&id=3', array('HTTP_SEC_FETCH_SITE' => 'cross-site')))
         ->toBe('DISPATCHED:editSTATUS:200');
+});
+
+test('a cross-site GET cannot purge the Data Debug checks', function (array $headers) {
+    expect(page_flag_guard_run('data_debug.php', 'GET', 'purge=1&debug=-1&header=false', $headers))->toBe('STATUS:405');
+})->with(array(
+    'Sec-Fetch-Site cross-site' => array(array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
+    'foreign Origin' => array(array('HTTP_ORIGIN' => 'https://attacker.example.net')),
+    'foreign Referer' => array(array('HTTP_REFERER' => 'https://attacker.example.net/page')),
+    'lookalike Referer host' => array(array('HTTP_REFERER' => 'https://kadupul.example.com.attacker.example.net/')),
+));
+
+test('a Data Debug purge by a method other than GET or POST is refused', function (string $method) {
+    expect(page_flag_guard_run('data_debug.php', $method, 'purge=1'))->toBe('STATUS:405');
+})->with(array('HEAD', 'PUT', 'DELETE'));
+
+test('the Data Debug Purge button still purges', function (string $method, array $headers) {
+    expect(page_flag_guard_run('data_debug.php', $method, 'purge=1&debug=-1&header=false', $headers))
+        ->toBe('DISPATCHED:STATUS:200');
+})->with(array(
+    'same-origin XHR' => array('GET', array('HTTP_SEC_FETCH_SITE' => 'same-origin')),
+    'script without headers' => array('GET', array()),
+    'POST' => array('POST', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
+));
+
+test('a cross-site Data Debug listing without a purge still renders', function () {
+    expect(page_flag_guard_run('data_debug.php', 'GET', 'debug=-1', array('HTTP_SEC_FETCH_SITE' => 'cross-site')))
+        ->toBe('DISPATCHED:STATUS:200');
 });

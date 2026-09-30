@@ -20,6 +20,12 @@ ini_set('memory_limit', '-1');
 
 set_default_action();
 
+if (isset_request_var('purge')) {
+    // Purge truncates every check and carries no action name for the global
+    // guard to match; the Purge button still sends it as a same-site GET.
+    csrf_refuse_cross_site_get();
+}
+
 validate_request_vars();
 
 switch (get_request_var('action')) {
