@@ -1585,6 +1585,19 @@ function refusal_guard(string $root, ?Stmt $stmt, ?Closure $stops, Closure $type
  */
 function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $stops): array
 {
+    // Authenticated-only pages have no realm. Recognize this specific contract
+    // only when the action immediately refuses its null actor before any effect.
+    $first = isset($stmts[0]) ? expression_of($stmts[0]) : null;
+    if ($first instanceof Expr\Assign && is_variable($first->var)) {
+        $target = call_target($first->expr, $type_of);
+        if ($target === ['Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess', 'authenticatedActor']) {
+            $guard = refusal_guard($root, $stmts[1] ?? null, $stops, $type_of);
+            if ($guard !== null && is_null_check($guard, $first->var->name)) {
+                return ['authenticatedActor' => true];
+            }
+        }
+    }
+
     $list = array_values($stmts);
     foreach ($list as $i => $stmt) {
         $var = actor_assignment($root, $stmt, $type_of);
@@ -1972,7 +1985,7 @@ function session_realms(string $root, array $files): array
         foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
             if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== SESSION_ADAPTER) {
                 foreach ($node->implements as $interface) {
-                    if (in_array($interface->toString(), ACCESS_TYPES, true)) {
+                    if (in_array($interface->toString(), [...ACCESS_TYPES, 'Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess'], true)) {
                         fail($path . ' also implements ' . $interface->toString());
                     }
                 }
@@ -2120,7 +2133,16 @@ function symfony_routes(string $root, array $files): array
                                 }
                             }
                         }
-                        if (isset($checks['consoleActor'])) {
+                        if (isset($checks['authenticatedActor'])) {
+                            $adapter = load_class($root, SESSION_ADAPTER);
+                            $contracts = array_map(static fn(Name $name): string => $name->toString(), $adapter?->implements ?? []);
+                            if (!in_array('Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess', $contracts, true) || find_method($adapter, 'authenticatedActor') === null) {
+                                fail('AuthenticatedAccess adapter binding is missing');
+                            }
+                            // Validate sole implementation just as for console contracts.
+                            $realms ??= session_realms($root, $sources);
+                            $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; AuthenticatedAccess signed-in account; no realm required'];
+                        } elseif (isset($checks['consoleActor'])) {
                             $realms ??= session_realms($root, $sources);
                             $grant = 'realm ' . $realms['consoleActor'];
                             if (isset($checks['canManageDevices'])) {

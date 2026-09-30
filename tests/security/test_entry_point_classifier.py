@@ -153,8 +153,11 @@ SELF_GATED_SHAPES = {
 SESSION = '''<?php
 namespace Kadupul\\IdentityAccess\\Infrastructure\\Legacy;
 use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
-final class LegacyAuthenticatedSession implements ConsoleAccess
+use Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess;
+final class LegacyAuthenticatedSession implements ConsoleAccess, AuthenticatedAccess
 {
+    public function authenticatedActor(): ?Actor { return new Actor(); }
+
     public function consoleActor(): ?Actor
     {
         $id = 1;
@@ -1038,6 +1041,52 @@ def main():
             count += 1
             if not rows.get(entry, ('', ''))[1].endswith('; ' + grant):
                 failures.append('route %s: expected %s read from the session adapter, got %s' % (entry, grant, rows.get(entry)))
+
+        authenticated = """<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+use Symfony\\Component\\HttpFoundation\\Response;
+final class AuthenticatedOnly {
+    #[Route('/authenticated', name: 'authenticated')]
+    public function guarded(AuthenticatedAccess $access): Response {
+        $actor = $access->authenticatedActor();
+        if ($actor === null) { return new Response('', 401); }
+        return new Response();
+    }
+    #[Route('/authenticated-unguarded', name: 'authenticated_unguarded')]
+    public function unguarded(AuthenticatedAccess $access): Response {
+        $actor = $access->authenticatedActor();
+        return new Response();
+    }
+    #[Route('/authenticated-late', name: 'authenticated_late')]
+    public function late(AuthenticatedAccess $access): Response {
+        file_put_contents('/tmp/side-effect', 'x');
+        $actor = $access->authenticatedActor();
+        if ($actor === null) { return new Response('', 401); }
+        return new Response();
+    }
+}
+"""
+        (root / 'src/Fixture/AuthenticatedOnly.php').write_text(authenticated)
+        rows = run(root, [])
+        for path, expected in [('app.php/authenticated', 'symfony:authenticated'), ('app.php/authenticated-unguarded', 'unknown'), ('app.php/authenticated-late', 'unknown')]:
+            count += 1
+            if rows.get(path, ('missing',))[0] != expected:
+                failures.append('authenticated-only guard: ' + path + ' ' + str(rows.get(path)))
+        count += 1
+        if not rows['app.php/authenticated'][1].endswith('; AuthenticatedAccess signed-in account; no realm required'):
+            failures.append('authenticated-only page acquired a realm')
+
+        count += 1
+        (root / 'src/Fixture/OtherAccess.php').write_text("<?php namespace Kadupul\\Fixture; final class OtherAccess implements \\Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess { public function authenticatedActor(): ?Actor { return new Actor(); } }")
+        try:
+            run(root, [])
+            failures.append('AuthenticatedAccess alternate implementation must stop classification')
+        except SystemExit:
+            pass
+        (root / 'src/Fixture/OtherAccess.php').unlink()
+
         # A route under an alias is not missed.
         count += 1
         (root / 'src/Fixture/Aliased.php').write_text(ALIASED_CONTROLLER)

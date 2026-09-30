@@ -21,6 +21,9 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'about.php', 'src/Platform/Infrastructure/Symfony/Controller/AboutController.php',
+        'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
+        'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',

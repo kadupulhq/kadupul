@@ -124,6 +124,9 @@ jobs:
           mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration "$RUNNER_TEMP/poller-coverage"
           php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php "$RUNNER_TEMP/poller-coverage" tests/coverage.xml
 
+      - name: About authenticated-only HTTP integration
+        run: mise exec python@3.12.12 -- python tests/Symfony/about_review_http.py
+
       - name: Symfony HTTP and worker coverage
         env:
           PHP_VERSION: '8.4'

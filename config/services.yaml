@@ -239,6 +239,13 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Command\ClearDeviceStatistics: ~
 
+    # About requires an eligible login without a console/object realm.
+    Kadupul\IdentityAccess\Contract\AuthenticatedAccess:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
+
+    Kadupul\Platform\Application\Port\ProductVersion:
+        alias: Kadupul\Platform\Infrastructure\Legacy\InstallationProductVersion
+
 when@test:
     services:
         # A when@ block parses its own "services" key independently of the main
