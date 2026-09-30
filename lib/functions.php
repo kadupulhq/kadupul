@@ -163,14 +163,76 @@ function save_user_settings($user = -1)
                 } elseif ((isset($field_array['items'])) && (is_array($field_array['items']))) {
                     foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
                         if (isset_request_var($sub_field_name)) {
-                            set_user_setting($sub_field_name, get_nfilter_request_var($sub_field_name), $user);
+                            if (user_setting_value_allowed($sub_field_array, get_nfilter_request_var($sub_field_name))) {
+                                set_user_setting($sub_field_name, get_nfilter_request_var($sub_field_name), $user);
+                            } else {
+                                $_SESSION['sess_error_fields'][$sub_field_name] = $sub_field_name;
+                            }
                         }
                     }
                 } elseif (isset_request_var($field_name)) {
-                    set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
+                    if (user_setting_value_allowed($field_array, get_nfilter_request_var($field_name))) {
+                        set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
+                    } else {
+                        $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                    }
                 }
             }
         }
+    }
+}
+
+/**
+ * user_setting_value_allowed - check a submitted value against its user
+ *   setting definition before it is stored.
+ *
+ * Stored values reach script blocks, HTML attributes and font paths, so a
+ * setting may hold only what its form field could have sent.
+ *
+ * @param $field_array - the setting definition from $settings_user
+ * @param $value       - the submitted value
+ *
+ * @return             - true when the value may be stored
+ */
+function user_setting_value_allowed($field_array, $value)
+{
+    if (!is_scalar($value)) {
+        return false;
+    }
+
+    $value = (string) $value;
+
+    if (isset($field_array['default']) && $value === (string) $field_array['default']) {
+        return true;
+    }
+
+    switch ($field_array['method'] ?? '') {
+        case 'checkbox':
+            return $value === 'on' || $value === '';
+        case 'drop_array':
+        case 'drop_language':
+            return isset($field_array['array']) && is_array($field_array['array']) && array_key_exists($value, $field_array['array']);
+        case 'drop_sql':
+            foreach (db_fetch_assoc($field_array['sql']) as $row) {
+                if ((string) $row['id'] === $value) {
+                    return true;
+                }
+            }
+
+            return false;
+        case 'textbox':
+        case 'font':
+            if (isset($field_array['max_length']) && strlen($value) > $field_array['max_length']) {
+                return false;
+            }
+
+            if (isset($field_array['default']) && is_numeric($field_array['default'])) {
+                return is_numeric($value);
+            }
+
+            return preg_match('/[\x00-\x1f\x7f<>"\'`]/', $value) === 0;
+        default:
+            return false;
     }
 }
 

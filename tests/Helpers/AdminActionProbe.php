@@ -135,7 +135,7 @@ function reset_user_perms($user_id) { $GLOBALS['resets'][] = 'user:' . $user_id;
 function reset_group_perms($group_id) { $GLOBALS['resets'][] = 'group:' . $group_id; }
 function kill_session_var($name) { unset($_SESSION[$name]); }
 function raise_message($id, $message = '', $level = 0) { $GLOBALS['messages'][] = $id; }
-function is_error_message() { return false; }
+function is_error_message() { return isset($_SESSION['sess_error_fields']) && cacti_sizeof($_SESSION['sess_error_fields']) > 0; }
 function cacti_log($message, $output = false, $environ = 'CMDPHP', $level = '') { $GLOBALS['logged'][] = $message; }
 function get_client_addr() { return '192.0.2.10'; }
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
