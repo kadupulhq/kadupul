@@ -1,3 +1,15 @@
 .noprint {
     display: none;
 }
+
+/* the screen layout pins the page to the viewport and scrolls inside it */
+html, body, #cactiContent, .cactiContent, #navigation_right, .cactiConsoleContentArea, .cactiGraphContentArea, #main {
+    height: auto !important;
+    max-height: none !important;
+    width: auto !important;
+    overflow: visible !important;
+}
+
+.skip-link, #cactiPageHead, #breadCrumbBar, .cactiShadow, #navigation, .cactiTreeNavigationArea, #cactiConsoleBackdrop, .pace {
+    display: none !important;
+}

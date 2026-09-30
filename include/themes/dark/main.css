@@ -2206,6 +2206,91 @@ ul#nav {
 	.noprint {
 		display: none;
 	}
+
+	/* the screen layout pins the page to the viewport and scrolls inside it */
+	html, body, #cactiContent, .cactiContent, #navigation_right, .cactiConsoleContentArea, .cactiGraphContentArea, #main {
+		height: auto !important;
+		max-height: none !important;
+		overflow: visible !important;
+	}
+
+	.cactiContent {
+		padding-top: 0;
+	}
+
+	.skip-link, #cactiPageHead, #breadCrumbBar, .cactiShadow, #navigation, .cactiTreeNavigationArea, .pace {
+		display: none !important;
+	}
+}
+
+.skip-link {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+.skip-link:focus {
+	top: 5px;
+	left: 5px;
+	width: auto;
+	height: auto;
+	margin: 0;
+	padding: 5px 10px;
+	overflow: visible;
+	clip: auto;
+	z-index: 10000;
+	background-color: #000000;
+	color: #FFFFFF;
+	border: 2px solid #FFFFFF;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	/* a near-zero duration still lands animations on their final frame */
+	*, *:before, *:after {
+		animation-duration: 0.01ms !important;
+		animation-delay: 0s !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		transition-delay: 0s !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+@media (forced-colors: active) {
+	tr.selected, tr.selected td, tr.selected a {
+		forced-color-adjust: none;
+		background-color: Highlight;
+		color: HighlightText;
+	}
+
+	.maintabs a.selected, .tabs a.selected, #gtabs a.selected, .ui-tabs-active .ui-tabs-anchor {
+		outline: 2px solid Highlight;
+		outline-offset: -2px;
+	}
+
+	.checkboxSlider, .radioSlider {
+		border: 1px solid ButtonText;
+	}
+
+	.checkboxSlider:before, .radioSlider:before {
+		forced-color-adjust: none;
+		background-color: ButtonText;
+		background-image: none;
+	}
+
+	input:checked + .checkboxSlider, input:checked + .radioSlider {
+		forced-color-adjust: none;
+		background-color: Highlight;
+	}
+
+	input:checked + .checkboxSlider:before, input:checked + .radioSlider:before {
+		background-color: HighlightText;
+	}
 }
 
 div.preformatted {
