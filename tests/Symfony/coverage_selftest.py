@@ -21,6 +21,10 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'bin/legacy-color-template-sync.php', 'color_templates.php', 'color_templates_items.php',
+        'src/Platform/Infrastructure/Symfony/LegacyPageForwarder.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateDeleteType.php',
+        'src/ColorTemplates/Application/Command/RemoveColorTemplateItem.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -168,6 +172,7 @@ def main():
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'color-template-test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -232,6 +237,8 @@ def main():
                 worker['sha256'] = '0' * 64
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
+            elif case == 'color-template-test-hash':
+                evidence['source_sha256']['tests/Symfony/color_templates_scenarios.py'] = '0' * 64
             elif case == 'details-test-hash':
                 evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'sites-test-hash':

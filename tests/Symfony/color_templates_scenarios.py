@@ -197,6 +197,38 @@ def verify_color_templates(harness, session, user_id, check):
         copied_colors = [int(value) for value in harness.sql(f'SELECT color_id FROM color_template_items WHERE color_template_id={duplicate_id} ORDER BY sequence').splitlines()]
         check(copied_colors == [color_two, color_one], 'duplicate copies palette data and exact item order')
 
+        copied_item = int(harness.sql(f'SELECT color_template_item_id FROM color_template_items WHERE color_template_id={duplicate_id} ORDER BY sequence LIMIT 1').strip())
+        copied_path = f'/app.php/graphing/color-templates/{duplicate_id}/items/{copied_item}/delete'
+        delete_parser, _ = parse_form(copied_path)
+        check(fetch(copied_path, delete_parser.fields, origin=False)[0] == 422,
+              'color item deletion requires same-origin CSRF evidence')
+        missing_token = {key: value for key, value in delete_parser.fields.items() if not key.endswith('[_token]')}
+        check(fetch(copied_path, missing_token)[0] == 422, 'color item deletion requires a CSRF token')
+        current_color = int(harness.sql(f'SELECT color_id FROM color_template_items WHERE color_template_item_id={copied_item}').strip())
+        alternate_color = color_one if current_color != color_one else color_two
+        harness.sql(f'UPDATE color_template_items SET color_id={alternate_color} WHERE color_template_item_id={copied_item}')
+        check(fetch(copied_path, delete_parser.fields)[0] == 409,
+              'color item deletion rejects a stale confirmation revision')
+        fresh_delete, _ = parse_form(copied_path)
+        check(fetch(copied_path, fresh_delete.fields)[0] == 200,
+              'color item deletion succeeds through the protected Symfony form')
+        check(harness.sql(f'SELECT COUNT(*) FROM color_template_items WHERE color_template_item_id={copied_item}').strip() == '0',
+              'color item deletion reaches persisted palette data')
+        check(harness.sql(f'SELECT GROUP_CONCAT(sequence ORDER BY sequence) FROM color_template_items WHERE color_template_id={duplicate_id}').strip() == '2',
+              'color item deletion preserves the surviving legacy sequence value')
+        check(fetch(copied_path)[0] == 404, 'deleted color item editor returns not found')
+
+        for payload, expected in [
+            ({'actor': user_id, 'template_id': template_id, 'unexpected': 'field'}, 'invalid'),
+            ({'actor': 99999999, 'template_id': template_id}, 'denied'),
+            ({'actor': user_id, 'template_id': 99999999}, 'invalid'),
+        ]:
+            worker = harness.compose('exec', '-T', '-u', 'www-data', 'web', 'php', 'bin/legacy-color-template-sync.php',
+                                     data=json.dumps(payload), check=False)
+            result = re.search(r'KADUPUL_COLOR_SYNC_RESULT=(\{[^\r\n]+\})', worker['stdout'])
+            check(worker['exit'] != 0 and result is not None and json.loads(result.group(1))['status'] == expected,
+                  'color sync worker rejects ' + expected + ' command before any graph handoff')
+
         graph_template_id = int(harness.sql('SELECT graph_template_id FROM graph_templates_graph WHERE local_graph_id=0 AND graph_template_id>0 AND graph_template_id IN (SELECT graph_template_id FROM graph_templates_item WHERE local_graph_id=0) ORDER BY graph_template_id LIMIT 1').strip())
         source_template_item_id = int(harness.sql(f'SELECT id FROM graph_templates_item WHERE local_graph_id=0 AND graph_template_id={graph_template_id} ORDER BY sequence LIMIT 1').strip())
         aggregate_fixture_id = int(harness.sql(
@@ -281,6 +313,9 @@ def verify_color_templates(harness, session, user_id, check):
               'legacy template editor URL forwards to Symfony')
         check(fetch('/color_templates_items.php?action=item_edit&color_template_id=' + str(template_id))[0] == 200,
               'legacy item editor URL forwards to Symfony')
+        legacy_before = harness.sql(f'SELECT COUNT(*) FROM color_template_items WHERE color_template_id={template_id}').strip()
+        check(fetch('/color_templates_items.php?color_template_id=' + str(template_id), {'action':'item_remove', 'color_id': str(first_item)})[0] == 409, 'legacy item POST expires without dispatching deletion')
+        check(harness.sql(f'SELECT COUNT(*) FROM color_template_items WHERE color_template_id={template_id}').strip() == legacy_before, 'legacy item POST changes no palette rows')
         check(fetch('/color_templates.php', {'action': 'actions'})[0] == 409,
               'legacy POST mutation is expired without replay')
 

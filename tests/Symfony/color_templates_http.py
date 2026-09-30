@@ -2,13 +2,20 @@
 from pathlib import Path
 from types import SimpleNamespace
 import sys
+import argparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'Support/Behavior'))
 from harness import Harness, Session
 
 
 def main():
-    harness = Harness(SimpleNamespace(project='kadupul-color-review', target='color-templates'))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--coverage-output', type=Path)
+    args = parser.parse_args()
+    harness = Harness(SimpleNamespace(project='kadupul-color-coverage-review', target='color-coverage-review'))
+    if args.coverage_output:
+        from coverage_support import configure_coverage
+        configure_coverage(harness, args.coverage_output)
     try:
         harness.setup()
         session = Session(harness.base)
