@@ -52,7 +52,7 @@ namespace Kadupul\Tests\LegacyRequestContext {
             self::assertFalse((new LegacyRequestContext())->currentPage(new Request()));
         }
 
-        public function testBrowserQueryStringPrefersRawRequestUriAndOtherwiseBuildsFallback(): void
+        public function testBrowserQueryStringReturnsOnlyTheRawRequestUri(): void
         {
             $context = new LegacyRequestContext();
             $request = new Request(server: [
@@ -64,8 +64,8 @@ namespace Kadupul\Tests\LegacyRequestContext {
             self::assertSame('/graphs.php?x=1&y=2', $context->browserQueryString($request));
 
             $fallback = new Request(server: ['SCRIPT_NAME' => '/index.php', 'QUERY_STRING' => 'x=1&y=2']);
-            self::assertSame('index.php?x=1&y=2', $context->browserQueryString($fallback));
-            self::assertSame('index.php', $context->browserQueryString(new Request(server: ['SCRIPT_NAME' => '/index.php'])));
+            self::assertSame('', $context->browserQueryString($fallback));
+            self::assertSame('', $context->browserQueryString(new Request(server: ['SCRIPT_NAME' => '/index.php'])));
         }
 
         public function testLegacyWrappersRetainSanitizationAndMissingPageLogBehavior(): void
