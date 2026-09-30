@@ -188,3 +188,54 @@ test.describe('theme switch controls', () => {
     expect(await page.isChecked('#rowCheck')).toBe(true);
   });
 });
+
+test.describe('dark graph utility icons', () => {
+  const wrapperSize = (page) => page.locator('#dd1 .iconWrapper').evaluate((el) => {
+    const rect = el.getBoundingClientRect();
+    return { width: rect.width, height: rect.height, opacity: getComputedStyle(el).opacity };
+  });
+
+  test('stay hidden until the graph cell is hovered or focused', async ({ page }) => {
+    await openTheme(page, 'dark');
+
+    // The fixture adds the stylesheet after the markup, so let the fade settle.
+    await expect.poll(async () => (await wrapperSize(page)).opacity).toBe('0');
+    expect((await wrapperSize(page)).width).toBeLessThanOrEqual(1);
+
+    await page.locator('#dd1').evaluate((el) => el.classList.add('iconsShown'));
+    const hovered = await wrapperSize(page);
+    expect(hovered.width).toBeGreaterThan(1);
+    expect(hovered.height).toBeGreaterThan(1);
+
+    await page.locator('#dd1').evaluate((el) => el.classList.remove('iconsShown'));
+    expect((await wrapperSize(page)).width).toBeLessThanOrEqual(1);
+  });
+
+  test('are reachable by Tab and shown while focus is inside', async ({ page }) => {
+    await openTheme(page, 'dark');
+
+    await tabTo(page, 'graph_1_util');
+    const focused = await wrapperSize(page);
+    expect(focused.width).toBeGreaterThan(1);
+    await expect(page.locator('#graph_1_util')).toBeVisible();
+
+    await tabTo(page, 'graph_1_csv');
+    expect((await wrapperSize(page)).width).toBeGreaterThan(1);
+
+    await tabTo(page, 'bottomLink');
+    expect((await wrapperSize(page)).width).toBeLessThanOrEqual(1);
+  });
+
+  test('close after a mouse click once the pointer leaves', async ({ page }) => {
+    await openTheme(page, 'dark');
+
+    // Browsers focus a clicked href="#" link, so a :focus-within reveal would
+    // keep the column open after main.js drops the hover class.
+    await page.locator('#dd1').evaluate((el) => el.classList.add('iconsShown'));
+    await page.click('#graph_1_csv');
+    expect(await page.evaluate(() => document.activeElement.id)).toBe('graph_1_csv');
+
+    await page.locator('#dd1').evaluate((el) => el.classList.remove('iconsShown'));
+    expect((await wrapperSize(page)).width).toBeLessThanOrEqual(1);
+  });
+});

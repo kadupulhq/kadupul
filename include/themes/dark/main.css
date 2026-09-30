@@ -343,7 +343,24 @@ label {
 }
 
 .iconWrapper {
-	display: none;
+	/* Clipped rather than display:none, so Tab can still reach the graph tools. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	opacity: 0;
+	transition: opacity .3s;
+}
+
+/* :focus-visible rather than :focus-within, so a clicked icon does not pin the column open. */
+.graphDrillDown.iconsShown .iconWrapper, .graphDrillDown:has(:focus-visible) .iconWrapper {
+	position: static;
+	width: auto;
+	height: auto;
+	overflow: visible;
+	clip-path: none;
+	opacity: 1;
 }
 
 .drillDown {
