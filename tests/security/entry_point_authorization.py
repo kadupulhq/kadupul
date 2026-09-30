@@ -286,6 +286,14 @@ def main():
                 "UPDATE user_auth SET reset_perms = reset_perms + 1 WHERE id = @id;")
         if rig.sql("SELECT COUNT(*) FROM user_auth_realm r JOIN user_auth u ON u.id = r.user_id WHERE u.username = 'entry-norealm'").strip() != '0':
             raise RuntimeError('entry-norealm still holds a realm')
+        # Legacy revocation first clears cached permissions with a bounded
+        # reload marker. Prime that cache and require the actual denied page;
+        # migrated About no longer performs this legacy transition for us.
+        refreshed = norealm.request('auth_profile.php')
+        if re.fullmatch(r'\s*<span style="display:none;">cactiRedirect</span>\s*', refreshed['body']):
+            refreshed = norealm.request('auth_profile.php')
+        if refusal(refreshed) is None:
+            raise RuntimeError('Revoked account profile was not refused after cache refresh')
         console.login('entry-console', PASSWORD)
         admin = Client(base)
         admin.login('admin', 'behavior-admin')
