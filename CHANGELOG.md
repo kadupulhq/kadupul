@@ -134,6 +134,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
 - Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
+- Accept an LDAP Domains login only for a realm that is an enabled domain, and always bind against that domain's directory first. Any other realm, a domain without directory settings, and a directory user with no account and no domain template are refused instead of falling through to the default template or guest account. Domain login errors no longer show directory error text on the login page; the log keeps it.
 
 ### Changed
 
