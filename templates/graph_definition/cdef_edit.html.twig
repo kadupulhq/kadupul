@@ -11,6 +11,7 @@
         <h2>{{ 'CDEF preview'|trans({}, 'graph_definition') }}</h2>
         <pre>cdef={{ preview }}</pre>
         <h2>{{ 'CDEF items'|trans({}, 'graph_definition') }}</h2>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         <p><a href="{{ path('graph_cdef_item_edit', {cdefId: cdef.id, itemId: 0}) }}">{{ 'Add item'|trans({}, 'graph_definition') }}</a></p>
         <table><thead><tr><th>{{ 'Sequence'|trans({}, 'graph_definition') }}</th><th>{{ 'Item type'|trans({}, 'graph_definition') }}</th><th>{{ 'Value'|trans({}, 'graph_definition') }}</th><th>{{ 'Order'|trans({}, 'graph_definition') }}</th><th>{{ 'Actions'|trans({}, 'graph_definition') }}</th></tr></thead>
             <tbody>
@@ -27,12 +28,15 @@
                             </form>
                         {% endif %}
                     </td>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                     <td><a href="{{ path('graph_cdef_item_edit', {cdefId: cdef.id, itemId: item.id}) }}">{{ 'Edit'|trans({}, 'graph_definition') }}</a>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                         <a href="{{ path('graph_cdef_item_delete', {cdefId: cdef.id, itemId: item.id}) }}">{{ 'Delete'|trans({}, 'graph_definition') }}</a></td></tr>
             {% else %}<tr><td colspan="5"><em>{{ 'No items'|trans({}, 'graph_definition') }}</em></td></tr>{% endfor %}
             </tbody>
         </table>
     {% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('graph_cdefs') }}">{{ 'Back to CDEFs'|trans({}, 'graph_definition') }}</a></p>
 </main>
 {% endblock %}

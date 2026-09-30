@@ -9,6 +9,7 @@
     {{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.selection) }}
     {% if operation == 'duplicate' %}{{ form_row(form.title_format) }}{% endif %}
     <button type="submit">{{ 'Confirm'|trans({}, 'graph_definition') }}</button>{{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('graph_cdefs') }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
 </main>
 {% endblock %}

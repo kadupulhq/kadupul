@@ -13,6 +13,7 @@
     </form>
     {{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.id) }}{{ form_row(form.cdef_id) }}{{ form_row(form.type) }}{{ form_row(form.value) }}
     <button type="submit">{{ 'Save item'|trans({}, 'graph_definition') }}</button>{{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('graph_cdef_edit', {id: cdef.id}) }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
 </main>
 {% endblock %}
