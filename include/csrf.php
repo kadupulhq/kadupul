@@ -6,9 +6,37 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+/**
+ * Whether a posted token string has the shape csrf-magic issues.
+ *
+ * csrf-magic adds the time after a token's first comma to the expiry without
+ * checking it is a number, and PHP 8 throws a TypeError for a string there,
+ * so a time that is not all digits is refused before csrf-magic reads it.
+ */
+function csrf_token_is_well_formed($tokens)
+{
+    if (!is_string($tokens)) {
+        return false;
+    }
+
+    foreach (explode(';', $tokens) as $token) {
+        $value = explode(':', $token, 2)[1] ?? '';
+
+        if (strpos($value, ',') === false) {
+            continue;
+        }
+
+        if (!ctype_digit(explode(',', $value, 2)[1]) || !ctype_digit(explode(',', $token, 2)[1])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // Kadupul submits one serialized token string, never PHP parameter arrays.
 // Reject malformed input before csrf-magic iterates nested attacker input.
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && array_key_exists('__csrf_magic', $_POST) && !is_string($_POST['__csrf_magic'])) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && array_key_exists('__csrf_magic', $_POST) && !csrf_token_is_well_formed($_POST['__csrf_magic'])) {
     http_response_code(403);
     exit;
 }
