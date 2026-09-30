@@ -28,6 +28,17 @@ def verify_cdefs(harness, session, check):
     check(listing.status == 200 and '<h1>CDEFs</h1>' in content and 'no-store' in listing.headers.get('Cache-Control', ''),
           'CDEF list executes through the authenticated Symfony route and real MariaDB catalog')
 
+    before_legacy_post = int(harness.sql('SELECT COUNT(*) FROM cdef').strip())
+    legacy_post = _post(session, base + '/cdef.php?action=actions', {
+        'action': 'delete',
+        'selected_items[]': '1',
+    })
+    legacy_body = legacy_post.read().decode('utf-8', 'replace')
+    after_legacy_post = int(harness.sql('SELECT COUNT(*) FROM cdef').strip())
+    check(legacy_post.status == 409 and 'submitted through the Symfony forms' in legacy_body
+          and after_legacy_post == before_legacy_post,
+          'expired legacy CDEF POST is rejected over HTTP without replaying a bulk mutation')
+
     name = 'CDEF HTTP ' + uuid.uuid4().hex[:12]
     create_fields = _page(session, base + '/app.php/graph-definitions/cdefs/new')
     created = _post(session, base + '/app.php/graph-definitions/cdefs/new', {
