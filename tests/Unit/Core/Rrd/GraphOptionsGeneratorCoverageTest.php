@@ -122,14 +122,14 @@ require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/GraphOption
             ->and($rendered)->not->toContain('--legend-position')
             ->and($rendered)->not->toContain('--disable-rrdtool-tag');
 
-        foreach (array('-6', '0', '3') as $exponent) {
+        foreach (array('-18', '-6', '0', '3', '18') as $exponent) {
             $graph['unit_exponent_value'] = $exponent;
             $exponentOptions = array();
             $rendered = $generator->build(1700000000, 1700003600, $graph, $exponentOptions);
             expect(substr_count($rendered, '--units-exponent="' . $exponent . '"'))->toBe(1);
         }
 
-        foreach (array('', '3x', "3\n") as $exponent) {
+        foreach (array('', '3x', "3\n", '-', '--3', '+3', ' -3') as $exponent) {
             $graph['unit_exponent_value'] = $exponent;
             $exponentOptions = array();
             $rendered = $generator->build(1700000000, 1700003600, $graph, $exponentOptions);
