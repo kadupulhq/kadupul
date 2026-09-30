@@ -27,6 +27,8 @@ final class AggregateGraphConfirmationXssTest extends TestCase
         self::assertSame($expected, $inputs->item(0)->getAttribute('value'));
         self::assertSame(3, $inputs->item(0)->attributes->length);
         self::assertCount(0, $xpath->query('//x | //input[@onfocus]'));
+        self::assertCount(1, $xpath->query('//script'));
+        self::assertStringNotContainsString('<script>alert(1)', $result['html']);
         self::assertCount(1, $xpath->query('//form[@action="aggregate_graphs.php"]'));
         if (($scenario['drp_action'] ?? '') === 'tr_6') {
             self::assertSame('6', $xpath->query('//input[@name="tree_id"]')->item(0)->getAttribute('value'));
@@ -38,6 +40,7 @@ final class AggregateGraphConfirmationXssTest extends TestCase
     {
         $cases = array(
             'hostile ID' => array(array('local_graph_id' => "42' onfocus='alert(1)'><x>injected</x>"), "42' onfocus='alert(1)'><x>injected</x>"),
+            'script ID' => array(array('local_graph_id' => "'><script>alert(1)</script>"), "'><script>alert(1)</script>"),
             'array ID' => array(array('local_graph_id' => array('42')), '0'),
             'normal ID' => array(array('local_graph_id' => 42), '42'),
             'missing ID' => array(array(), '0'),
