@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { test, expect } = require('@playwright/test');
+require('./browser-coverage').collectThemeCoverage(test);
 
 const root = path.resolve(__dirname, '../..');
 // The page header defines these labels from lib/html.php.
@@ -40,7 +41,7 @@ async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true } = 
       return add.call(this, type, ...rest);
     };
   }, { auto: autoColorMode, names: labels });
-  await page.addScriptTag({ path: path.join(root, 'include/themes/midwinter/main.js') });
+  await page.addScriptTag({ url: '/include/themes/midwinter/main.js' });
   await page.evaluate(stub => {
     const steps = ['setupTree', 'setupDefaultElements', 'setMenuVisibility', 'updateNavigation', 'checkConsoleMenu'];
     for (const name of stub ? [...steps, 'setupTheme'] : steps) {

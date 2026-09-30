@@ -6,6 +6,8 @@
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
-    "playwright": "1.63.0"
+    "istanbul-lib-coverage": "3.2.2",
+    "playwright": "1.63.0",
+    "v8-to-istanbul": "9.3.0"
   }
 }
