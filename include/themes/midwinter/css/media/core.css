@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 /* main styles */
 ::-webkit-scrollbar {
     width: 12px;
@@ -180,6 +186,11 @@ input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name
 .cactiPageHead, .cactiConsoleNavigationArea, .cactiConsoleNavigationBox,
 .cactiConsoleNavigationUserBox, #compact_user_menu, .loginBody, .logoutBody {
     --focus-ring: var(--focus-ring-navigation);
+}
+
+/* These surfaces stay dark in light mode, where the light link colour measures under 4.5:1. */
+.loginBody, .logoutBody, .cactiTableTitleRow, .messageBox, .spikekillMenu {
+    --text-color-highlight-a: var(--text-color-highlight-a-on-dark);
 }
 
 /* The native box is transparent, so the ring goes on the drawn replacement. */

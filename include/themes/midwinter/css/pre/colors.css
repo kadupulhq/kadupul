@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 html {
     --hue: 233;
     --accent-hue: 240;
@@ -11,7 +17,8 @@ html {
     --text-color-lighter: hsl(var(--hue), 7%, 85%);
     --text-color-richer: hsl(var(--hue), 50%, 72%);
     --text-color-highlight: hsl(var(--accent-hue), 4%, 95%);
-    --text-color-highlight-a: hsl(var(--accent2-hue), 64%, 60%);
+    --text-color-highlight-a-on-dark: hsl(var(--accent2-hue), 64%, 60%);
+    --text-color-highlight-a: var(--text-color-highlight-a-on-dark);
     --focus-ring: var(--text-color-highlight-a);
     --focus-ring-navigation: var(--text-color-highlight-a);
     --text-color-navigation: hsl(var(--hue), 7%, 60%);

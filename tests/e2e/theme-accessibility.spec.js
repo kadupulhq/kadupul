@@ -357,4 +357,23 @@ test.describe('theme text contrast', () => {
       expect(await contrastAgainstBackground(page, '#bodyText', 'color', vars.navigation), `midwinter ${color} navigation`).toBeGreaterThanOrEqual(4.5);
     }
   });
+
+  test('midwinter login, logout and dark panel text reaches 4.5:1 in both colour modes', async ({ page }) => {
+    // These backgrounds stay dark in light mode, so the darker light-mode link
+    // colour must not reach them.
+    const markup = '<div class="loginBody"><div class="loginArea"><fieldset><legend id="loginLegend">User Login</legend></fieldset>'
+      + '<h1 class="loginHeading" id="loginHeading">User Login</h1></div></div>'
+      + '<div class="logoutBody"><div class="logoutArea"><a id="logoutLink" href="#">Login Again</a></div></div>'
+      + '<div class="cactiTableTitleRow"><a id="titleRowLink" href="#">Title</a></div>'
+      + '<div class="messageBox"><a id="messageLink" href="#">Message</a></div>'
+      + '<ul class="spikekillMenu"><li><a id="spikeLink" href="#">Spike</a></li></ul>'
+      + '<div class="cactiContent"><fieldset><legend id="contentLegend">Options</legend></fieldset><a id="contentLink" href="#">link</a></div>';
+    for (const color of [null, 'light']) {
+      await openTheme(page, 'midwinter', color);
+      await page.evaluate((html) => { document.getElementById('contrastArea').innerHTML = html; }, markup);
+      for (const id of ['loginLegend', 'loginHeading', 'logoutLink', 'titleRowLink', 'messageLink', 'spikeLink', 'contentLegend', 'contentLink']) {
+        expect(await contrastAgainstBackground(page, `#${id}`, 'color'), `midwinter ${color} #${id}`).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
 });
