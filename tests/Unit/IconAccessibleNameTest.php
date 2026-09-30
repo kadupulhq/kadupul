@@ -48,7 +48,7 @@ final class IconAccessibleNameTest extends TestCase
     public function testAddAndHelpLinksAreNamedAndHideTheirGlyph(): void
     {
         $html = $this->render(
-            array('html_escape', 'html_start_box'),
+            array('html_escape', 'html_safe_href', 'html_start_box'),
             'html_start_box("Graph Templates", "100%", "", "3", "center", "graph_templates.php?action=template_edit");'
         );
 
@@ -59,7 +59,7 @@ final class IconAccessibleNameTest extends TestCase
     public function testAddLinksUseTheCallerLabelOrTitle(): void
     {
         $html = $this->render(
-            array('html_escape', 'html_start_box'),
+            array('html_escape', 'html_safe_href', 'html_start_box'),
             '$GLOBALS["help_file"] = false;'
             . 'html_start_box("Graph Templates", "100%", "", "3", "center", "graph_templates.php?action=template_edit", "New");'
             . 'html_start_box("Devices", "100%", "", "3", "center", array('
@@ -74,7 +74,7 @@ final class IconAccessibleNameTest extends TestCase
     public function testAddLabelsKeepQuotesInsideTheAttribute(): void
     {
         $html = $this->render(
-            array('html_escape', 'html_start_box'),
+            array('html_escape', 'html_safe_href', 'html_start_box'),
             '$GLOBALS["help_file"] = false;'
             . 'html_start_box("Trees", "100%", "", "3", "center", "tree.php?action=edit", "Ajouter l\'arbre");'
             . 'html_start_box("Trees", "100%", "", "3", "center", array('
@@ -85,10 +85,36 @@ final class IconAccessibleNameTest extends TestCase
         self::assertStringNotContainsString('&amp;', $html, 'labels already escaped with __esc stay single-encoded');
     }
 
+    public function testAddLinksDropScriptAndDataUrls(): void
+    {
+        $html = $this->render(
+            array('html_escape', 'html_safe_href', 'html_start_box'),
+            '$GLOBALS["help_file"] = false;'
+            . 'foreach (array("javascript:alert(1)", " JavaScript:alert(1)", "java\tscript:alert(1)",'
+            . ' "&#106;avascript:alert(1)", "javascript&colon;alert(1)", "data:text/html,<script>alert(1)</script>") as $url) {'
+            . 'html_start_box("Graphs", "100%", "", "3", "center", $url);'
+            . 'html_start_box("Graphs", "100%", "", "3", "center", array(array("href" => $url)));'
+            . '}'
+            . 'html_start_box("Graphs", "100%", "", "3", "center", "graphs.php?action=edit&id=1");'
+            . 'html_start_box("Graphs", "100%", "", "3", "center", array(array("href" => "https://example.com/graphs.php")));'
+        );
+
+        $hrefs = array();
+        foreach ((new DOMXPath($this->document($html)))->query("//span[@class='cactiFilterAdd']/a") as $link) {
+            self::assertInstanceOf(DOMElement::class, $link);
+            $hrefs[] = $link->getAttribute('href');
+        }
+
+        self::assertSame(
+            array_merge(array_fill(0, 12, '#'), array('graphs.php?action=edit&id=1', 'https://example.com/graphs.php')),
+            $hrefs
+        );
+    }
+
     public function testUntitledBoxRendersNoIconLinks(): void
     {
         $html = $this->render(
-            array('html_escape', 'html_start_box'),
+            array('html_escape', 'html_safe_href', 'html_start_box'),
             'html_start_box("", "100%", "", "3", "center", "graph_templates.php?action=template_edit");'
         );
 
@@ -151,6 +177,7 @@ final class IconAccessibleNameTest extends TestCase
         $sources = array(
             'html_escape' => 'lib/html.php',
             'html_start_box' => 'lib/html.php',
+            'html_safe_href' => 'lib/html.php',
             'html_show_tabs_left' => 'lib/html.php',
             'is_hexadecimal' => 'lib/functions.php',
             'strip_alpha' => 'lib/functions.php',

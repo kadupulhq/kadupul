@@ -112,7 +112,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
         }
 
         if ($add_text != '' && !is_array($add_text)) {
-            print "<span class='cactiFilterAdd' title='" . html_escape($add_label) . "'><a class='linkOverDark' href='" . html_escape($add_text) . "' aria-label='" . html_escape($add_label) . "'><i class='fa fa-plus' aria-hidden='true'></i></a></span>";
+            print "<span class='cactiFilterAdd' title='" . html_escape($add_label) . "'><a class='linkOverDark' href='" . html_escape(html_safe_href($add_text)) . "' aria-label='" . html_escape($add_label) . "'><i class='fa fa-plus' aria-hidden='true'></i></a></span>";
         } else {
             if (is_array($add_text)) {
                 if (cacti_sizeof($add_text)) {
@@ -130,7 +130,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                         }
 
                         if (isset($icon['href'])) {
-                            $href = html_escape($icon['href']);
+                            $href = html_escape(html_safe_href($icon['href']));
                         } else {
                             $href = '#';
                         }
@@ -1211,6 +1211,27 @@ function html_escape($string)
     } else {
         return $string;
     }
+}
+
+/* html_safe_href - returns a URL fit for an href attribute
+   @arg $url - the URL a caller wants to link to
+   @returns - $url unchanged when it is a relative reference or an http or
+     https URL, otherwise '#'
+
+   html_escape() keeps the attribute closed but leaves javascript: and data:
+   URLs runnable. It also keeps character references intact, and browsers
+   decode those and drop whitespace and control characters before they read
+   the scheme, so the check does the same. */
+function html_safe_href($url)
+{
+    $probe = html_entity_decode((string) $url, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $probe = preg_replace('/[\x00-\x20\x7f]+/', '', $probe);
+
+    if (preg_match('/^([a-z][a-z0-9+.\-]*):/i', $probe, $scheme) && !in_array(strtolower($scheme[1]), array('http', 'https'), true)) {
+        return '#';
+    }
+
+    return $url;
 }
 
 /* html_split_string - takes a string and breaks it into a number of <br> separated segments
