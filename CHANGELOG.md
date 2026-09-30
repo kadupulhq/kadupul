@@ -25,6 +25,15 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 
 - Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
+- Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.
+
+- Stop the Midwinter ESC shortcut throwing a script error outside fullscreen, and drop the unused `c+F1` shortcut that opened an `[object KeyboardEvent]` alert. SHIFT+k now leaves fullscreen as well as entering it.
+
+- Keep a manual Midwinter colour mode when the operating system switches between light and dark. After turning off the preferred colour theme in the same session, a system change still overrode the choice and reloaded the graphs.
+
+- Stop the Midwinter theme adding another copy of its keyboard shortcuts, menu search highlighting and menu click handlers on every page change, so one shortcut press no longer loads a page once per earlier navigation. A double-click anywhere no longer toggles fullscreen; use SHIFT+k.
+
+- Mark the Midwinter `CactiColorMode` cookie `Secure` only over HTTPS. Over plain HTTP the browser dropped it, so graphs ignored the dark or light colour set and reloaded on every page change.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 

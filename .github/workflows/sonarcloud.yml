@@ -149,6 +149,17 @@ jobs:
           node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/browser-build.test.mjs
           test -s tests/vendor-sync.lcov
 
+      - name: Native browser theme coverage
+        env:
+          KADUPUL_BROWSER_COVERAGE: ${{ runner.temp }}/browser-theme-coverage
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --prefix tests/e2e
+          node tests/e2e/node_modules/@playwright/test/cli.js install --with-deps chromium
+          node tests/e2e/node_modules/@playwright/test/cli.js test --config=tests/e2e/playwright.config.js midwinter-listeners.spec.js
+          node tests/e2e/browser-coverage.js "$KADUPUL_BROWSER_COVERAGE" var/browser-coverage.lcov
+          test -s var/browser-coverage.lcov
+
       - name: Scan
         uses: SonarSource/sonarqube-scan-action@ba9859eae8dd6bd29e412f25ddbbef3d032000f4 # v8.2.2
         env:
