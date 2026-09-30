@@ -194,6 +194,11 @@ input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name
     --text-color-highlight-a: var(--text-color-highlight-a-on-dark);
 }
 
+/* Selected rows keep their dark fill in light mode, so their links need the dark-mode text colour. */
+tr.selected {
+    --text-color-lighter: var(--text-color-lighter-on-dark);
+}
+
 /* The native box is transparent, so the ring goes on the drawn replacement. */
 input[type="checkbox"]:focus-visible + label:before,
 input[type="radio"]:not([name^="reindex"]):focus-visible + label {

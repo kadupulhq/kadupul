@@ -14,7 +14,8 @@ html {
     --text-color-normal: hsl(var(--hue), 7%, 58%);
     --text-color-medium: hsl(var(--hue), 7%, 60%);
     --text-color-light: hsl(var(--hue), 7%, 75%);
-    --text-color-lighter: hsl(var(--hue), 7%, 85%);
+    --text-color-lighter-on-dark: hsl(var(--hue), 7%, 85%);
+    --text-color-lighter: var(--text-color-lighter-on-dark);
     --text-color-richer: hsl(var(--hue), 50%, 72%);
     --text-color-highlight: hsl(var(--accent-hue), 4%, 95%);
     --text-color-highlight-a-on-dark: hsl(var(--accent2-hue), 64%, 60%);

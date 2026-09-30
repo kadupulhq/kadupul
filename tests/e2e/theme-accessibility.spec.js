@@ -403,11 +403,12 @@ test.describe('theme text contrast', () => {
       + '<div class="cactiTableTitleRow"><a id="titleRowLink" href="#">Title</a></div>'
       + '<div class="messageBox"><a id="messageLink" href="#">Message</a></div>'
       + '<ul class="spikekillMenu"><li><a id="spikeLink" href="#">Spike</a></li></ul>'
+      + '<table class="cactiTable"><tr class="selectable selected"><td><a id="selectedLink" class="linkEditMain" href="#">Row</a></td></tr></table>'
       + '<div class="cactiContent"><fieldset><legend id="contentLegend">Options</legend></fieldset><a id="contentLink" href="#">link</a></div>';
     for (const color of [null, 'light']) {
       await openTheme(page, 'midwinter', color);
       await page.evaluate((html) => { document.getElementById('contrastArea').innerHTML = html; }, markup);
-      for (const id of ['loginLegend', 'loginHeading', 'logoutLink', 'titleRowLink', 'messageLink', 'spikeLink', 'contentLegend', 'contentLink']) {
+      for (const id of ['loginLegend', 'loginHeading', 'logoutLink', 'titleRowLink', 'messageLink', 'spikeLink', 'selectedLink', 'contentLegend', 'contentLink']) {
         expect(await contrastAgainstBackground(page, `#${id}`, 'color'), `midwinter ${color} #${id}`).toBeGreaterThanOrEqual(4.5);
       }
     }
