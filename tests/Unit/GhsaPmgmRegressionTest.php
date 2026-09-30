@@ -2,17 +2,16 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
+
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
 $ldapSource = file_get_contents(__DIR__ . '/../../lib/ldap.php');
 
 test('GHSA-pmgm-67h9-59hw: isUserInLDAPGroup routes filter through cacti_ldap_filter', function () use ($ldapSource) {
-    $start = strpos($ldapSource, 'function isUserInLDAPGroup(');
-    expect($start)->not->toBeFalse();
-
-    $end  = strpos($ldapSource, "\n\t}\n", $start);
-    $body = substr($ldapSource, $start, $end - $start);
+    $body = test_php_function_source($ldapSource, 'isUserInLDAPGroup');
 
     // The filter must be assembled by the escaping helper, not by raw
     // string interpolation of $ldapUser / $groupDN.
@@ -21,18 +20,14 @@ test('GHSA-pmgm-67h9-59hw: isUserInLDAPGroup routes filter through cacti_ldap_fi
 });
 
 test('GHSA-pmgm-67h9-59hw: isUserInLDAPGroup passes user and group placeholders', function () use ($ldapSource) {
-    $start = strpos($ldapSource, 'function isUserInLDAPGroup(');
-    $end   = strpos($ldapSource, "\n\t}\n", $start);
-    $body  = substr($ldapSource, $start, $end - $start);
+    $body = test_php_function_source($ldapSource, 'isUserInLDAPGroup');
 
     expect($body)->toContain("'user' => \$ldapUser");
     expect($body)->toContain("'group' => \$groupDN");
 });
 
 test('GHSA-pmgm-67h9-59hw: isUserInLDAPGroup does not interpolate user or group into filter string', function () use ($ldapSource) {
-    $start = strpos($ldapSource, 'function isUserInLDAPGroup(');
-    $end   = strpos($ldapSource, "\n\t}\n", $start);
-    $body  = substr($ldapSource, $start, $end - $start);
+    $body = test_php_function_source($ldapSource, 'isUserInLDAPGroup');
 
     // The vulnerable pattern concatenated $ldapUser and $groupDN directly
     // into the filter. The hardened implementation must not do that.
