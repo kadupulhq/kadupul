@@ -49,12 +49,18 @@
 
 	// Opacity composites a whole subtree, so fold every ancestor's opacity into
 	// the alpha of anything painted inside it.
+	// Cleared on every pointer move and focus change by the callers below,
+	// since hover and focus can change any ancestor's opacity.
+	let opacities = new WeakMap();
+
 	function cumulativeOpacity(el) {
-		let o = 1;
-		for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
-			o *= parseFloat(getComputedStyle(n).opacity);
+		if (!el || el.nodeType !== 1) {
+			return 1;
 		}
-		return o;
+		if (!opacities.has(el)) {
+			opacities.set(el, parseFloat(getComputedStyle(el).opacity) * cumulativeOpacity(el.parentElement));
+		}
+		return opacities.get(el);
 	}
 
 	function isVisible(el) {
@@ -278,11 +284,13 @@
 		const opacity = cumulativeOpacity(el);
 		const layers = [];
 		let image = false;
+		let gradient = false;
 		const bgImage = style.backgroundImage;
 		if (bgImage && bgImage !== 'none') {
 			const sized = style.backgroundSize === 'auto' || style.backgroundSize === 'auto auto' || style.backgroundSize === '100% 100%';
 			for (const img of splitTop(bgImage)) {
 				if (/gradient/.test(img)) {
+					gradient = true;
 					const at = sized && x !== undefined ? gradientAt(img, paintBox(el, style), x, y) : null;
 					const stops = at ? [at] : (img.match(/rgba?\([^)]+\)/g) || []).map(parseColor);
 					if (stops.length) {
@@ -298,7 +306,7 @@
 		if (fill.a > 0) {
 			layers.push([fill]);
 		}
-		return { layers, image };
+		return { layers, image, gradient };
 	}
 
 	// What the canvas shows at (x, y): the root background, or the body's
@@ -346,12 +354,14 @@
 		const layers = [];
 		let image = false;
 		let opaque = false;
+		let gradient = false;
 		for (let i = start; i < stack.length && !opaque; i++) {
 			const el = stack[i];
 			if (self && skipSelf && self.contains(el)) {
 				continue;
 			}
 			const found = layersOf(el, x, y);
+			gradient = gradient || found.gradient;
 			image = image || (found.image && found.layers.length === 0 && layers.length === 0);
 			for (const layer of found.layers) {
 				layers.push(layer);
@@ -365,7 +375,7 @@
 			(below, layer) => layer.flatMap((top) => below.map((bottom) => over(top, bottom))),
 			opaque ? [{ r: 0, g: 0, b: 0, a: 0 }] : canvasColors(x, y),
 		);
-		return { list: list.map((c) => ({ ...c, a: 1 })), image };
+		return { list: list.map((c) => ({ ...c, a: 1 })), image, gradient };
 	}
 
 	function worst(fg, backgrounds) {
@@ -490,7 +500,7 @@
 			const fg = parseColor(style.webkitTextFillColor && style.webkitTextFillColor !== style.color ? style.webkitTextFillColor : style.color);
 			fg.a *= cumulativeOpacity(el);
 			const bgs = backgroundsAt(point.x, point.y, el, false);
-			for (const [ax, ay] of point.also) {
+			for (const [ax, ay] of (bgs.gradient ? point.also : [])) {
 				const more = backgroundsAt(ax, ay, el, false);
 				if (more.list.length) {
 					bgs.list.push(...more.list);
@@ -541,8 +551,14 @@
 			[rect.left + rect.width / 2, rect.top - distance],
 			[rect.left + rect.width / 2, rect.bottom + distance],
 		].filter(([x, y]) => x >= 0 && y >= 0 && x < innerWidth && y < innerHeight);
+		// The first painted box under the point decides whose colour shows.
+		const painter = (x, y) => document.elementsFromPoint(x, y).find((el) => !target.contains(el)
+			&& (parseColor(getComputedStyle(el).backgroundColor).a > 0 || getComputedStyle(el).backgroundImage !== 'none'));
 		const inside = container
-			? points.filter(([x, y]) => document.elementsFromPoint(x, y).some((el) => el === container || container.contains(el)))
+			? points.filter(([x, y]) => {
+				const el = painter(x, y);
+				return el && (el === container || container.contains(el));
+			})
 			: points;
 		const list = [];
 		for (const [x, y] of (inside.length ? inside : points)) {
@@ -613,6 +629,27 @@
 				const r = ratio(b, over(parseColor(prev.background), canvasColors(rect.left, rect.top)[0]));
 				return { ...result, via: 'background change', fg: hex(b), bg: hex(parseColor(prev.background)), ratio: Math.round(r * 100) / 100 };
 			}
+		}
+		// A focused jQuery UI menu marks its active item instead of drawing a
+		// ring, so that item's fill against the menu is the indicator.
+		const active = el.querySelector(':scope > .ui-menu-item > .ui-state-active, :scope > .ui-menu-item.ui-state-active');
+		if (active) {
+			const ar = active.getBoundingClientRect();
+			const fill = backgroundsAt(ar.left + 2, ar.top + ar.height / 2, active, false).list;
+			const around = backgroundsAt(ar.left + 2, ar.top + ar.height / 2, active, true).list;
+			let low = null;
+			for (const f of fill) {
+				for (const o of around) {
+					const r = ratio(f, o);
+					if (!low || r < low.ratio) {
+						low = { ratio: r, fg: f, bg: o };
+					}
+				}
+			}
+			const border = parseColor(getComputedStyle(active).borderTopColor);
+			const edge = parseFloat(getComputedStyle(active).borderTopWidth) > 0 ? worst(border, around) : null;
+			const best = edge && edge.ratio > low.ratio ? { ...edge, via: 'active item border' } : { ...low, via: 'active item fill' };
+			return { ...result, via: best.via, fg: hex(best.fg), bg: hex(best.bg), ratio: Math.round(best.ratio * 100) / 100 };
 		}
 		return { ...result, via: 'none', fg: '', bg: '', ratio: 0 };
 	}
@@ -744,16 +781,21 @@
 		return chosen;
 	}
 
+	const fresh = (fn) => (...args) => {
+		opacities = new WeakMap();
+		return fn(...args);
+	};
+
 	window.__contrast = {
-		measureText,
-		focusIndicator,
-		preFocus,
-		boundaryTargets,
-		measureBoundary,
-		focusables,
-		hoverables,
+		measureText: fresh(measureText),
+		focusIndicator: fresh(focusIndicator),
+		preFocus: fresh(preFocus),
+		boundaryTargets: fresh(boundaryTargets),
+		measureBoundary: fresh(measureBoundary),
+		focusables: fresh(focusables),
+		hoverables: fresh(hoverables),
 		pick,
 		describe,
-		backgroundsAt,
+		backgroundsAt: fresh(backgroundsAt),
 	};
 }());
