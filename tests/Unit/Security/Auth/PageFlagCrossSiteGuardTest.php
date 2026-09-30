@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
+
 /*
  * Some pages change data because of a request variable other than 'action',
  * which the central guard in include/global.php can not see: the RRD Cleaner
@@ -84,7 +86,7 @@ PHP;
 
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require $argv[1];', $root . '/' . $page),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require $argv[1];', $root . '/' . $page), $coverage_dir),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir,
@@ -95,6 +97,7 @@ PHP;
         fclose($pipes[1]);
         fclose($pipes[2]);
         proc_close($process);
+        child_coverage_collect($coverage_dir);
 
         if ($stderr !== '') {
             throw new RuntimeException($stderr . $stdout);

@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
+
 /*
  * State-changing actions that pages still send as same-origin GET must not
  * run from a GET another site started, or by a method that carries no token.
@@ -32,7 +34,7 @@ echo 'DISPATCHED:';
 PHP;
 
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $method, $query, json_encode($headers)),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $method, $query, json_encode($headers)), $coverage_dir),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -41,6 +43,7 @@ PHP;
     fclose($pipes[1]);
     fclose($pipes[2]);
     proc_close($process);
+    child_coverage_collect($coverage_dir);
 
     return array('stdout' => $stdout, 'stderr' => $stderr, 'global_calls_guard' => str_contains($global, 'csrf_refuse_cross_site_actions();'));
 }
@@ -92,13 +95,14 @@ test('host comparison ignores ports and keeps bare IPv6 addresses whole', functi
         . 'require $argv[1] . "/lib/html_utility.php"; require $argv[1] . "/include/csrf.php";'
         . 'echo csrf_strip_host_port($argv[2]) === $argv[3] ? "same" : "different";';
     $process = proc_open(
-        array(PHP_BINARY, '-r', $program, $root, $server, $host),
+        child_coverage_command(array(PHP_BINARY, '-r', $program, $root, $server, $host), $coverage_dir),
         array(1 => array('pipe', 'w')),
         $pipes
     );
     $stdout = stream_get_contents($pipes[1]);
     fclose($pipes[1]);
     proc_close($process);
+    child_coverage_collect($coverage_dir);
 
     expect($stdout)->toBe($expected ? 'same' : 'different');
 })->with(array(

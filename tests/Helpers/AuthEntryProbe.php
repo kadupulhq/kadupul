@@ -11,6 +11,8 @@
  * declare the same names.
  */
 
+require_once __DIR__ . '/ChildProcessCoverage.php';
+
 if (!function_exists('auth_entry_probe_run')) {
     /**
      * @param array<string, mixed> $scenario
@@ -21,7 +23,7 @@ if (!function_exists('auth_entry_probe_run')) {
     {
         $pipes = array();
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . (E_ALL & ~E_DEPRECATED), '-d', 'xdebug.mode=off', __DIR__ . '/AuthEntryProbeChild.php'),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . (E_ALL & ~E_DEPRECATED), '-d', 'xdebug.mode=off', '-r', 'require ' . var_export(__DIR__ . '/AuthEntryProbeChild.php', true) . ';'), $coverage_dir),
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes
         );
@@ -39,6 +41,7 @@ if (!function_exists('auth_entry_probe_run')) {
         fclose($pipes[1]);
         fclose($pipes[2]);
         proc_close($process);
+        child_coverage_collect($coverage_dir);
 
         $decoded = json_decode((string) $stdout, true);
 

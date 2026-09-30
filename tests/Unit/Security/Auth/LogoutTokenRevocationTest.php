@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
+
 /*
  * Every logout, including the automatic timeout, suspension and Remote Data
  * Collector ones, must delete the server-side remember-me token. Expiring the
@@ -57,7 +59,7 @@ PHP;
 
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $action, $cookie === null ? '' : json_encode($cookie)),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $action, $cookie === null ? '' : json_encode($cookie)), $coverage_dir),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -67,6 +69,7 @@ PHP;
         fclose($pipes[1]);
         fclose($pipes[2]);
         proc_close($process);
+        child_coverage_collect($coverage_dir);
     } finally {
         unlink($dir . '/include/auth.php');
         unlink($dir . '/include/global_session.php');

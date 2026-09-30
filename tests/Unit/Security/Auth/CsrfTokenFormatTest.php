@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
+
 /*
  * csrf-magic adds the token time to the expiry without checking it is a
  * number, so a malformed token must be refused before csrf-magic reads it.
@@ -24,7 +26,7 @@ echo 'DISPATCHED:';
 PHP;
 
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'log_errors=0', '-r', $program, $root, $token),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'log_errors=0', '-r', $program, $root, $token), $coverage_dir),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -33,6 +35,7 @@ PHP;
     fclose($pipes[1]);
     fclose($pipes[2]);
     proc_close($process);
+    child_coverage_collect($coverage_dir);
 
     return array('stdout' => $stdout, 'stderr' => $stderr);
 }

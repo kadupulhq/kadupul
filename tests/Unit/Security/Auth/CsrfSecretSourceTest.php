@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
+
 /*
  * csrf-magic generates its own secret and writes it beside itself, under the
  * document root, whenever it is not handed one. Kadupul hands it the
@@ -53,7 +55,7 @@ require $argv[1] . '/include/csrf.php';
 PHP;
 
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, json_encode($scenario)),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, json_encode($scenario)), $coverage_dir),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -62,6 +64,7 @@ PHP;
     fclose($pipes[1]);
     fclose($pipes[2]);
     proc_close($process);
+    child_coverage_collect($coverage_dir);
 
     expect($stderr)->toBe('');
 

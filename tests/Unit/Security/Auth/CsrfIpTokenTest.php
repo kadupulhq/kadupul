@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
+
 /*
  * An ip: token is an HMAC of the client address and is tied to no session,
  * so anyone behind the same address could replay it in a cookie-less POST.
@@ -29,7 +31,7 @@ echo json_encode(array('valid' => csrf_check_tokens($token)));
 PHP;
 
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'session.save_handler=files', '-d', 'session.save_path=' . sys_get_temp_dir(), '-r', $program, $root, $kind),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'session.save_handler=files', '-d', 'session.save_path=' . sys_get_temp_dir(), '-r', $program, $root, $kind), $coverage_dir),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -38,6 +40,7 @@ PHP;
     fclose($pipes[1]);
     fclose($pipes[2]);
     proc_close($process);
+    child_coverage_collect($coverage_dir);
 
     expect($stderr)->toBe('');
 
