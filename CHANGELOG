@@ -1,7 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
--security: update Playwright and @playwright/test in the E2E lockfile to 1.63.0 to address the Snyk command-injection advisory found in their blame reporters
+-security: update Playwright and @playwright/test for E2E tests to 1.63.0 in package.json and the lockfile, addressing GHSA-7mvr-c777-76hp (browser download TLS verification) and the Snyk blame reporter command-injection advisory
 -security: Validate the selected UI theme against installed theme directories before constructing paths, and bind graph-template ordering filters as parameters
 -issue: Build the RRD create definition once for both creators, which kept separate copies that drifted. Boost joined the RRA and consolidation rows around the data source profile rather than through it, so a deleted profile still produced RRA lines with an empty x-files factor where the poller found no RRA and refused; it left the RRA order undetermined when two profiles tie on rows times steps; and it said nothing at all when a data source had no RRA. The poller read the device row and its interface speed on every create, which only a |query_ maximum needs
 -issue: Keep graph-group lookups scoped to the local graph ID, preserve the configuration cache map when setting an option, keep invalid structured filters from becoming unrestricted, and scope user-setting existence cache entries to the user. Public helper signatures and valid filter behavior are unchanged
