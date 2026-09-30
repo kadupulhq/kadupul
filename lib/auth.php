@@ -3890,6 +3890,8 @@ function basic_auth_login_process($username)
  */
 function local_auth_login_process($username)
 {
+    global $error;
+
     $user = array();
 
     if (!api_plugin_hook_function('login_process', false)) {
@@ -3923,14 +3925,17 @@ function local_auth_login_process($username)
                     array($username)
                 );
 
-                if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+                // Rehash only the local row that logged in; other realms may
+                // reuse the username, and a refused login changes nothing.
+                if (!$error && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
                     $password = compat_password_hash($password, PASSWORD_DEFAULT);
                     db_check_password_length();
                     db_execute_prepared(
                         'UPDATE user_auth
 						SET password = ?
-						WHERE username = ?',
-                        array($password, $username)
+						WHERE id = ?
+						AND realm = 0',
+                        array($password, $user['id'])
                     );
                 }
             }
