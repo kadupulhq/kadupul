@@ -25,7 +25,7 @@ from html.parser import HTMLParser
 BASE_URL = os.environ.get("E2E_BASE_URL", "http://localhost:8094").rstrip("/")
 COMPOSE_PROJECT = os.environ.get("E2E_COMPOSE_PROJECT", "kadupul-vdef-e2e")
 COMPOSE_FILE = os.environ.get("E2E_COMPOSE_FILE", "tests/e2e/docker-compose.yml")
-COMPOSE_OVERRIDE = os.environ.get("E2E_COMPOSE_OVERRIDE", "/tmp/vdef-compose-unique.yml")
+COMPOSE_OVERRIDE = os.environ.get("E2E_COMPOSE_OVERRIDE", "")
 
 
 class Forms(HTMLParser):
@@ -99,12 +99,13 @@ def check(condition: bool, message: str) -> None:
 
 
 def seed_graph_dependency(vdef_id: int) -> None:
-    command = [
-        "docker", "compose", "-p", COMPOSE_PROJECT,
-        "-f", COMPOSE_FILE, "-f", COMPOSE_OVERRIDE,
+    command = ["docker", "compose", "-p", COMPOSE_PROJECT, "-f", COMPOSE_FILE]
+    if COMPOSE_OVERRIDE:
+        command.extend(["-f", COMPOSE_OVERRIDE])
+    command.extend([
         "exec", "-T", "mariadb", "mariadb", "-ucactiuser", "-pcactipass", "cacti",
         "-e", f"INSERT INTO graph_templates_item (vdef_id) VALUES ({vdef_id});",
-    ]
+    ])
     subprocess.run(command, check=True, stdout=subprocess.DEVNULL)
 
 

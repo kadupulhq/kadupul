@@ -164,6 +164,12 @@ jobs:
           docker compose -f tests/e2e/docker-compose.yml logs --tail=200 || true
           exit 1
 
+      - name: Run VDEF HTTP and MariaDB scenario
+        env:
+          E2E_BASE_URL: http://localhost:8080
+          E2E_COMPOSE_PROJECT: e2e
+        run: mise exec python@3.12.12 -- python tests/e2e/vdef_http_mariadb.py
+
       - name: Dump Kadupul container logs (diagnostic)
         if: always()
         working-directory: tests/e2e
