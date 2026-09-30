@@ -4285,13 +4285,13 @@ function secpass_login_process($username) {
 	}
 
 	if (db_column_exists('user_auth', 'lastfail')) {
-		$user = db_fetch_row_prepared("SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password
+		$user = db_fetch_row_prepared("SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
 			array($username));
 	} else {
-		$user = db_fetch_row_prepared("SELECT id, username, password, enabled
+		$user = db_fetch_row_prepared("SELECT id, username, password, enabled, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
@@ -4361,6 +4361,16 @@ function secpass_login_process($username) {
 		$message = secpass_check_pass($password);
 
 		if ($message != 'ok') {
+			/* an account that may not change its password cannot finish the forced change */
+			if ($user['password_change'] != 'on') {
+				$error     = true;
+				$error_msg = __('Access Denied!  Login Failed.');
+
+				cacti_log(sprintf('LOGIN FAILED: User %s password does not meet the policy and the account may not change it.', $username), false, 'AUTH');
+
+				return array();
+			}
+
 			db_execute_prepared("UPDATE user_auth
 				SET must_change_password = 'on'
 				WHERE id = ?

@@ -16,7 +16,9 @@
  * and sent to the forced password change. The shipped code redirected to the
  * change page before a session existed, so the change page sent the user back
  * to the login page on every attempt. It also ran for unknown usernames, so
- * the response revealed whether a username existed.
+ * the response revealed whether a username existed. An account that may not
+ * change its password cannot finish the change, so its login is refused as
+ * 1.2.31 refused it, with the same error as a wrong password.
  *
  * The shipped login functions run in a child process against an in-memory
  * user_auth table. A run that ends in exit reports finished=false.
@@ -24,7 +26,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
-function force_old_login_run(string $username, string $password, string $forceold = 'on') : array {
+function force_old_login_run(string $username, string $password, string $forceold = 'on', string $password_change = 'on') : array {
 	$auth = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 
 	$source = <<<'PHP'
@@ -37,7 +39,7 @@ define('MESSAGE_LEVEL_INFO', 1);
 $GLOBALS['req']      = array('login_password' => $scenario['password']);
 $GLOBALS['config']   = array('secpass_forceold' => $scenario['forceold'], 'secpass_minlen' => 8, 'secpass_reqnum' => 'on');
 $GLOBALS['users']    = array(
-	array('id' => 42, 'username' => 'alice', 'realm' => 0, 'enabled' => 'on', 'locked' => '', 'password' => 'hash:weak', 'must_change_password' => '', 'password_change' => 'on'),
+	array('id' => 42, 'username' => 'alice', 'realm' => 0, 'enabled' => 'on', 'locked' => '', 'password' => 'hash:weak', 'must_change_password' => '', 'password_change' => $scenario['password_change']),
 	array('id' => 43, 'username' => 'carol', 'realm' => 0, 'enabled' => 'on', 'locked' => '', 'password' => 'hash:Strong123', 'must_change_password' => '', 'password_change' => 'on'),
 );
 $GLOBALS['messages'] = array();
@@ -163,7 +165,7 @@ PHP;
 	$source .= "\$GLOBALS['user'] = local_auth_login_process(\$scenario['username']);\n";
 	$source .= "\$GLOBALS['finished'] = true;\n";
 
-	return cacti_test_run_php_source($source, array('username' => $username, 'password' => $password, 'forceold' => $forceold));
+	return cacti_test_run_php_source($source, array('username' => $username, 'password' => $password, 'forceold' => $forceold, 'password_change' => $password_change));
 }
 
 test('a correct password that fails the policy completes the login and flags the forced change', function () {
@@ -176,6 +178,25 @@ test('a correct password that fails the policy completes the login and flags the
 		->and($result['user']['password_change'] ?? null)->toBe('on')
 		->and($result['flags'])->toBe(array(42 => 'on', 43 => ''))
 		->and($result['messages'])->toBe(array('forced_password'));
+});
+
+test('a correct password that fails the policy is refused when the account may not change it', function () {
+	$refused = force_old_login_run('alice', 'weak', 'on', '');
+	$wrong   = force_old_login_run('alice', 'short', 'on', '');
+
+	expect($refused['finished'])->toBeTrue()
+		->and($refused['error'])->toBeTrue()
+		->and($refused['error_msg'])->toBe($wrong['error_msg'])
+		->and($refused['messages'])->toBe(array())
+		->and($refused['flags'])->toBe(array(42 => '', 43 => ''));
+});
+
+test('a weak password is accepted as before when the option is off and the account may not change it', function () {
+	$result = force_old_login_run('alice', 'weak', '', '');
+
+	expect($result['error'])->toBeFalse()
+		->and($result['user']['id'] ?? null)->toBe(42)
+		->and($result['user']['must_change_password'] ?? null)->toBe('');
 });
 
 test('an unknown username fails exactly as a wrong password for a known one does', function () {
