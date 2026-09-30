@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -184,10 +185,27 @@ function user_group_enable($id)
 
 function user_group_remove($id)
 {
+    // Read the members first: once their rows are gone nothing links them to
+    // this group, and their sessions would keep its realms until logout.
+    $users = array_rekey(
+        db_fetch_assoc_prepared(
+            'SELECT user_id
+			FROM user_auth_group_members
+			WHERE group_id = ?',
+            array($id)
+        ),
+        'user_id',
+        'user_id'
+    );
+
     db_execute_prepared('DELETE FROM user_auth_group WHERE id = ?', array($id));
     db_execute_prepared('DELETE FROM user_auth_group_members WHERE group_id = ?', array($id));
     db_execute_prepared('DELETE FROM user_auth_group_realm WHERE group_id = ?', array($id));
     db_execute_prepared('DELETE FROM user_auth_group_perms WHERE group_id = ?', array($id));
+
+    foreach ($users as $user_id) {
+        reset_user_perms($user_id);
+    }
 }
 
 function user_group_copy($id, $prefix = 'New Group')
@@ -256,6 +274,8 @@ function update_policies()
         }
     }
 
+    reset_group_perms(get_filter_request_var('id'));
+
     header('Location: user_group_admin.php?action=edit&header=false&tab=' . get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));
     exit;
 }
@@ -291,6 +311,8 @@ function form_actions()
             }
         }
 
+        reset_group_perms(get_nfilter_request_var('id'));
+
         header('Location: user_group_admin.php?action=edit&header=false&tab=permsd&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_graph')) {
@@ -318,6 +340,8 @@ function form_actions()
                 }
             }
         }
+
+        reset_group_perms(get_nfilter_request_var('id'));
 
         header('Location: user_group_admin.php?action=edit&header=false&tab=permsg&id=' . get_nfilter_request_var('id'));
         exit;
@@ -347,6 +371,8 @@ function form_actions()
             }
         }
 
+        reset_group_perms(get_nfilter_request_var('id'));
+
         header('Location: user_group_admin.php?action=edit&header=false&tab=permste&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_tree')) {
@@ -375,6 +401,8 @@ function form_actions()
             }
         }
 
+        reset_group_perms(get_nfilter_request_var('id'));
+
         header('Location: user_group_admin.php?action=edit&header=false&tab=permstr&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_member')) {
@@ -399,6 +427,8 @@ function form_actions()
                         array(get_nfilter_request_var('id'), $matches[1])
                     );
                 }
+
+                reset_user_perms($matches[1]);
             }
         }
 
@@ -644,6 +674,8 @@ function perm_remove()
     } elseif (get_request_var('type') == 'graph_template') {
         db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     }
+
+    reset_group_perms(get_request_var('group_id'));
 
     header('Location: user_group_admin.php?action=edit&header=false&tab=gperms&id=' . get_request_var('group_id'));
 }
