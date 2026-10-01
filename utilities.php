@@ -3419,7 +3419,7 @@ function snmpagent_utilities_run_eventlog()
 
     /* filter by search string */
     if (get_request_var('filter') != '') {
-        $sql_where .= ' AND (`varbinds` LIKE ' . db_qstr('%' . get_request_var('filter') . '%');
+        $sql_where .= ' AND (`varbinds` LIKE ' . db_qstr('%' . get_request_var('filter') . '%') . ')';
     }
 
     $sql_where .= ' ORDER by `time` DESC';

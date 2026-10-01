@@ -15,13 +15,18 @@ final class UtilityViewNativeCoverageTest extends TestCase
         self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
         $xpath = new DOMXPath($document);
         $rows = array();
-        $selector = $view === 'user' ? '//tr[starts-with(@id,"line")]/td[1]' : ($view === 'poller' ? '//tr[@class="odd" or @class="even"]/td[1][a]' : '//tr[contains(@class,"tableRow")]/td[1]');
+        $selector = match ($view) {
+            'user', 'agent' => '//tr[starts-with(@id,"line")]/td[1]',
+            'event' => '//tr[starts-with(@id,"line")]/td[3]',
+            'poller' => '//tr[@class="odd" or @class="even"]/td[1][a]',
+            'snmp' => '//tr[contains(@class,"tableRow")]/td[1]',
+        };
         foreach ($xpath->query($selector) as $cell) {
             $rows[] = trim($cell->textContent);
         }
         self::assertSame($expected, $rows);
         self::assertSame($state['before'], $state['after']);
-        self::assertCount(1, $xpath->query('//script'));
+        self::assertCount(in_array($view, array('agent', 'event'), true) ? 2 : 1, $xpath->query('//script'));
         self::assertSame('utility-fixture', $xpath->query('//script')->item(0)->getAttribute('nonce'));
         if ($view === 'poller') {
             foreach (array('Alpha DS & <script>' => 'public & <script>', 'Beta DS' => 'v3 & <script>', 'Gamma DS' => 'script & <script>', 'Delta DS' => 'server & <script>') as $source => $detail) {
@@ -37,13 +42,25 @@ final class UtilityViewNativeCoverageTest extends TestCase
         self::assertCount(0, $xpath->query('//script[contains(text(),"Alpha") or contains(text(),"Template") or contains(text(),"public")]'));
         self::assertSame('preserved', $state['session']['sentinel']);
         self::assertGreaterThanOrEqual(3, count($state['queries']));
+        if ($view === 'event') {
+            self::assertSame('Receiver & <script>', $xpath->query('//select[@id="receiver"]/option[@value="1"]')->item(0)->textContent);
+            self::assertSame((string) ($request['severity'] ?? -1), $xpath->query('//select[@id="severity"]/option[@selected]')->item(0)->getAttribute('value'));
+            if (($request['receiver'] ?? -1) === 99) {
+                self::assertCount(0, $xpath->query('//select[@id="receiver"]/option[@selected]'));
+            } else {
+                self::assertSame((string) ($request['receiver'] ?? -1), $xpath->query('//select[@id="receiver"]/option[@selected]')->item(0)->getAttribute('value'));
+            }
+        }
+        if ($view === 'agent') {
+            self::assertSame((string) ($request['mib'] ?? -1), $xpath->query('//select[@id="mib"]/option[@selected]')->item(0)->getAttribute('value'));
+        }
         if ($view === 'user') {
             self::assertSame('Alpha & <script>', $xpath->query('//select[@id="username"]/option[@value="Alpha & <script>"]')->item(0)->textContent);
             if (($request['username'] ?? '') === '-2') {
                 self::assertStringContainsString('(User Removed)', $xpath->query('//tr[@id="line0"]')->item(0)->textContent);
                 self::assertStringContainsString('Success - Password Change', $xpath->query('//tr[@id="line0"]')->item(0)->textContent);
             }
-        } else {
+        } elseif (in_array($view, array('snmp', 'poller'), true)) {
             self::assertSame('Alpha & <script>', $xpath->query('//select[@id="host_id"]/option[@value="1"]')->item(0)->textContent);
             self::assertSame((string) ($request['host_id'] ?? -1), $xpath->query('//select[@id="host_id"]/option[@selected]')->item(0)->getAttribute('value'));
         }
@@ -66,6 +83,17 @@ final class UtilityViewNativeCoverageTest extends TestCase
     public static function viewCases(): array
     {
         return array(
+            'agent default' => array('agent', array(), array('1.1', '1.2')),
+            'agent page two' => array('agent', array('page' => 2), array('1.3')),
+            'agent mib' => array('agent', array('mib' => 'MIB-B'), array('1.3')),
+            'agent label filter' => array('agent', array('filter' => 'Name & <script>'), array('1.1')),
+            'agent missing' => array('agent', array('filter' => 'missing'), array()),
+            'event default' => array('event', array(), array('Foreign receiver', 'Receiver & <script>')),
+            'event second page' => array('event', array('page' => 2), array('Receiver & <script>')),
+            'event receiver' => array('event', array('receiver' => 1), array('Receiver & <script>', 'Receiver & <script>')),
+            'event severity' => array('event', array('severity' => 4), array('Foreign receiver')),
+            'event empty receiver' => array('event', array('receiver' => 99), array()),
+            'event literal filter' => array('event', array('filter' => 'Bind & <script>'), array('Receiver & <script>')),
             'users default' => array('user', array(), array('Removed', 'Beta')),
             'users second page' => array('user', array('page' => 2), array('Alpha & <script>', 'Alpha & <script>')),
             'users selected username and result' => array('user', array('username' => 'Beta', 'result' => 2), array('Beta')),

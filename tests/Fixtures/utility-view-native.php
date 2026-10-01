@@ -47,7 +47,13 @@ INSERT INTO data_template VALUES(10,'Template & <script>'),(20,'Other template')
 INSERT INTO data_local VALUES(101,1,10),(102,1,10),(103,2,20),(104,2,0);
 INSERT INTO data_template_data VALUES(101,10,'Alpha DS & <script>','on'),(102,10,'Beta DS','on'),(103,20,'Gamma DS',''),(104,0,'Delta DS','on');
 INSERT INTO poller_item VALUES(101,1,0,'alpha','OID & <script>','/a & <script>.rrd',2,'public & <script>',''),(102,1,0,'alpha','OID-v3','/b.rrd',3,'','v3 & <script>'),(103,2,1,'beta','script & <script>','/c.rrd',0,'',''),(104,2,2,'beta','server & <script>','/d.rrd',0,'','');");
-$tables = array('user_auth', 'user_log', 'host', 'snmp_query', 'host_snmp_cache', 'data_template', 'data_local', 'data_template_data', 'poller_item', 'settings_user');
+$db->exec("CREATE TABLE snmpagent_cache(oid TEXT, name TEXT, mib TEXT, `max-access` TEXT, kind TEXT, value TEXT, description TEXT);
+CREATE TABLE snmpagent_managers(id INTEGER, hostname TEXT);
+CREATE TABLE snmpagent_notifications_log(id INTEGER, manager_id INTEGER, notification TEXT, severity INTEGER, time INTEGER, varbinds TEXT);
+INSERT INTO snmpagent_cache VALUES('1.1','Name & <script>','MIB-A','read-only','Scalar','Value & <script>','Description & <script>'),('1.2','Other','MIB-A','read-write','Column Data','Second',''),('1.3','Foreign','MIB-B','not-accessible','Table','unused','');
+INSERT INTO snmpagent_managers VALUES(1,'Receiver & <script>'),(2,'Foreign receiver');
+INSERT INTO snmpagent_notifications_log VALUES(1,1,'Name & <script>',1,100,'Bind & <script>'),(2,1,'Other',3,200,'Second'),(3,2,'Foreign',4,300,'Foreign');");
+$tables = array('user_auth', 'user_log', 'host', 'snmp_query', 'host_snmp_cache', 'data_template', 'data_local', 'data_template_data', 'poller_item', 'settings_user', 'snmpagent_cache', 'snmpagent_managers', 'snmpagent_notifications_log');
 $before = array();
 foreach ($tables as $table) {
     $before[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
@@ -137,6 +143,8 @@ match ($scenario['view']) {
     'user' => utilities_view_user_log(),
     'snmp' => utilities_view_snmp_cache(),
     'poller' => utilities_view_poller_cache(),
+    'agent' => snmpagent_utilities_run_cache(),
+    'event' => snmpagent_utilities_run_eventlog(),
 };
 $html = ob_get_clean();
 $after = array();
