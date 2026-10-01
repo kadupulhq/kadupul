@@ -81,7 +81,7 @@ cmd_exec	./lib/utility.php:2098		$json     = shell_exec($php . ' -q ' . $php_fil
 cmd_exec	./poller_boost.php:556	        $process = proc_open($arguments, $descriptors, $pipes);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./remote_agent.php:442	                                $cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-cmd_exec	./script_server.php:197	                exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
+cmd_exec	./script_server.php:196	                exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
 cmd_exec	./snmpagent_mibcache.php:32			popen('start "CactiSNMPCacheChild" /I ' . $php . ' ' . $extra_args, 'r');
 cmd_exec	./snmpagent_mibcache.php:34			exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./snmpagent_persist.php:66	    pclose(popen('start "CactiSNMPCache" /I /B ' . $php . ' ' . $extra_args, 'r'));
@@ -335,9 +335,9 @@ dynamic_include	./lib/aggregate.php:817		include_once($config['base_path'] . '/l
 dynamic_include	./lib/api_aggregate.php:1660		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/api_aggregate.php:185		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_aggregate.php:654		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_automation.php:2381	    include_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./lib/api_automation.php:2382	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./lib/api_automation.php:2383	    include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_automation.php:2540	    include_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./lib/api_automation.php:2541	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
+dynamic_include	./lib/api_automation.php:2542	    include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:1189	    include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:1190	    include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:1191	    include_once($config['base_path'] . '/lib/data_query.php');
@@ -520,7 +520,7 @@ dynamic_include	./reports_user.php:9	include_once($config['library_path'] . '/re
 dynamic_include	./rrdcheck.php:8	include_once ($config['library_path'] . '/functions.php');
 dynamic_include	./rrdcleaner.php:10	include_once ($config['library_path'] . '/rrd.php');
 dynamic_include	./rrdcleaner.php:9	include_once ($config['library_path'] . '/functions.php');
-dynamic_include	./script_server.php:322	            include_once($include_file);
+dynamic_include	./script_server.php:321	            include_once($include_file);
 dynamic_include	./scripts/ss_netsnmp_lmsensors.php:26		include($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./snmpagent_persist.php:164	            include($path_mibcache);
 dynamic_include	./spikekill.php:16	include_once($config['base_path'] . '/lib/spikekill.php');
@@ -588,13 +588,13 @@ fs_write	./lib/spikekill.php:514			$source_handle = @fopen($this->rrdfile, 'rb')
 fs_write	./lib/spikekill.php:932			$original = @fopen($rrdfile, 'rb');
 fs_write	./package_import.php:373					file_put_contents($xmlfile, $data);
 fs_write	./package_import.php:79		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
-fs_write	./script_server.php:39	    define('STDIN', fopen('php://stdin', 'r'));
-fs_write	./script_server.php:40	    define('STDOUT', fopen('php://stdout', 'w'));
+fs_write	./script_server.php:38	    define('STDIN', fopen('php://stdin', 'r'));
+fs_write	./script_server.php:39	    define('STDOUT', fopen('php://stdout', 'w'));
 fs_write	./scripts/ss_net_snmp_disk_bytes.php:209			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./snmpagent_mibcachechild.php:75	    $lock = fopen($path_mibcache_lock, 'w');
 fs_write	./snmpagent_mibcachechild.php:79	        file_put_contents($path_mibcache, '<?php $cache = ' . var_export($cache, true) . ';', LOCK_EX);
-fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:49	        $handle = @fopen($path, 'r+b');
+fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:58	            $handle = fopen($path, 'r+b');
 fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:69	                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
@@ -884,13 +884,6 @@ header_redirect	./lib/index.php:7	header("Location:../index.php");
 header_redirect	./lib/plugins.php:734	        header('Location: plugins.php?header=false');
 header_redirect	./link.php:17		header('Location: index.php');
 header_redirect	./link.php:66			header('Location: index.php');
-header_redirect	./links.php:151			header('Location: links.php?header=false');
-header_redirect	./links.php:209			header('Location: links.php?header=false');
-header_redirect	./links.php:30		header('Location: links.php?header=false');
-header_redirect	./links.php:38		header('Location: links.php?header=false');
-header_redirect	./links.php:46		header('Location: links.php?header=false');
-header_redirect	./links.php:94			header('Location: links.php?header=false');
-header_redirect	./links.php:99			header('Location: links.php?action=edit&header=false&id=' . (isset_request_var('id') ? get_filter_request_var('id'):''));
 header_redirect	./log/index.php:7	header("Location:../index.php");
 header_redirect	./logout.php:85		header('Location: index.php');
 header_redirect	./managers.php:1023					header('Location: managers.php?header=false');
