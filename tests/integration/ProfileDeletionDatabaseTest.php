@@ -55,7 +55,13 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
             self::assertSame(array(), $state['hooks']);
             self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
             self::assertStringContainsString('Unable to mark Poller', implode('\n', $state['log']));
+            self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote' || $call[0] === 'availability' || $call[0] === 'connect'));
+            return;
+        }
+        if (in_array($failure, array('connect', 'unavailable'), true)) {
+            self::assertSame(array(), $state['hooks']);
             self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote'));
+            self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
             return;
         }
         if ($failure !== '') {
@@ -105,7 +111,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
 
     public static function collectorEntryPointScenarios(): array
     {
-        return array_merge(self::collectorScenarios(), array('bulk retry-state' => array('bulk', 'retry-state'), 'device retry-state' => array('device', 'retry-state'), 'bulk-data retry-state' => array('bulk', 'retry-state', 'data'), 'bulk-data success' => array('bulk', '', 'data')));
+        return array_merge(self::collectorScenarios(), array('bulk retry-state' => array('bulk', 'retry-state'), 'device retry-state' => array('device', 'retry-state'), 'bulk-data retry-state' => array('bulk', 'retry-state', 'data'), 'bulk-data success' => array('bulk', '', 'data'), 'bulk connection failure' => array('bulk', 'connect'), 'bulk-data connection failure' => array('bulk', 'connect', 'data'), 'device connection failure' => array('device', 'connect'), 'device unavailable' => array('device', 'unavailable')));
     }
 
     /** @dataProvider deletionOutcomes */
