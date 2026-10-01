@@ -74,6 +74,7 @@ async function main(input) {
         }
         assert.ok(pause.hitBreakpoints.includes(breakpoint.breakpointId));
         assert.equal(pause.callFrames[0].location.lineNumber, lineNumber);
+        assert.equal(pause.callFrames[0].location.scriptId, currentScriptId);
         assert.ok(sources.has(pause.callFrames[0].location.scriptId));
         await snapshot();
         await cdp.send('Debugger.removeBreakpoint', { breakpointId: breakpoint.breakpointId });
