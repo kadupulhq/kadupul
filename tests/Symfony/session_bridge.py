@@ -25,7 +25,6 @@ def check(condition, message):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--database-sessions', action='store_true')
-    parser.add_argument('--project', default='kadupul-symfony-auth')
     parser.add_argument('--coverage-output', type=Path)
     parser.add_argument('--project', default='kadupul-symfony-auth')
     args = parser.parse_args()
