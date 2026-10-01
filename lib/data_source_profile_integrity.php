@@ -152,6 +152,9 @@ function replicate_data_source_profile_parents(PDO $connection, array $data): bo
         if (!$source_connection instanceof PDO) {
             throw new RuntimeException('Source profile connection is unavailable.');
         }
+        if ($source_connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' && !data_source_profile_reference_guards_available()) {
+            throw new RuntimeException('Source profile catalogs require InnoDB and intact definition guards.');
+        }
         if (!$source_connection->inTransaction()) {
             if (!db_begin_transaction()) {
                 throw new RuntimeException('Source profile snapshot could not be started.');

@@ -8,15 +8,16 @@ use PHPUnit\Framework\TestCase;
 final class ProfileCollectorCliNativeTest extends TestCase
 {
     /** @dataProvider cases */
-    public function testCliRetainsFailedPollerSynchronization(bool $failure, bool $selected, bool $state_failure = false): void
+    public function testCliRetainsFailedPollerSynchronization(bool $failure, bool $selected, bool $state_failure = false, string $class = 'all'): void
     {
         $root = dirname(__DIR__, 2);
         $directory = sys_get_temp_dir() . '/profile-collector-cli-' . bin2hex(random_bytes(8));
         mkdir($directory, 0700);
         try {
             $coverage = $this->getTestResultObject()->getCodeCoverage();
-            $scenario = array('cli' => true, 'failure' => $failure, 'selected' => $selected, 'completion_failure' => $state_failure);
+            $scenario = array('cli' => true, 'failure' => $failure, 'selected' => $selected, 'completion_failure' => $state_failure, 'class' => $class);
             $failure = $failure || $state_failure;
+            $partial = !in_array($class, array('all', 'data'), true);
             $command = array(PHP_BINARY, $root . '/tests/Fixtures/profile-collector-replication-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
             if ($coverage !== null) {
                 $command[] = $directory;
@@ -32,10 +33,10 @@ final class ProfileCollectorCliNativeTest extends TestCase
             self::assertSame('', $state['stdout']);
             self::assertSame('', $state['stderr']);
             self::assertTrue($state['unregistered']);
-            self::assertSame($failure ? 'on' : '', $state['pollers'][0]['requires_sync']);
-            self::assertSame($failure, $state['pollers'][0]['last_sync'] === '');
-            self::assertSame($selected ? 'on' : '', $state['pollers'][1]['requires_sync']);
-            self::assertSame($selected, $state['pollers'][1]['last_sync'] === '');
+            self::assertSame($failure || $partial ? 'on' : '', $state['pollers'][0]['requires_sync']);
+            self::assertSame($failure || $partial, $state['pollers'][0]['last_sync'] === '');
+            self::assertSame($selected || $partial ? 'on' : '', $state['pollers'][1]['requires_sync']);
+            self::assertSame($selected || $partial, $state['pollers'][1]['last_sync'] === '');
             self::assertSame($failure, str_contains(implode('\n', $state['log']), 'replication failed'));
             if ($coverage !== null) {
                 foreach (glob($directory . '/*.coverage') as $report) {
@@ -52,6 +53,6 @@ final class ProfileCollectorCliNativeTest extends TestCase
 
     public static function cases(): array
     {
-        return array(array(false, false), array(true, false), array(false, true), array(true, true), array(false, false, true), array(false, true, true));
+        return array(array(false, false), array(true, false), array(false, true), array(true, true), array(false, false, true), array(false, true, true), array(false, false, false, 'auth'), array(false, true, false, 'settings'), array(false, false, false, 'data'));
     }
 }

@@ -32,8 +32,38 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         $state = $this->runNative(array('collector' => 'device', 'failure' => '', 'snapshot_edit' => true, 'source_active' => true));
         self::assertTrue($state['snapshot_blocked']);
         self::assertTrue($state['source_active']);
+        self::assertSame(301, (int) $state['caller_before']);
+        self::assertSame(300, (int) $state['caller_after']);
         self::assertSame(60, (int) $state['remote_step']);
         self::assertSame(array(1, 2), array_map('intval', array_column($state['rows'], 'id')));
+    }
+
+    /** @dataProvider sourceDefinitionInserts */
+    public function testReadCommittedSourceSnapshotBlocksDefinitionInsert(string $kind): void
+    {
+        $state = $this->runNative(array('collector' => 'device', 'failure' => '', 'snapshot_edit' => true, 'source_active' => true, 'source_insert' => $kind));
+        self::assertTrue($state['snapshot_blocked']);
+        self::assertTrue($state['source_active']);
+        self::assertSame(301, (int) $state['caller_before']);
+        self::assertSame(300, (int) $state['caller_after']);
+        self::assertCount(4, $state['rras']);
+        self::assertSame(array(1,3), array_values(array_unique(array_map('intval', array_column($state['rras'], 'consolidation_function_id')))));
+    }
+
+    public static function sourceDefinitionInserts(): array
+    {
+        return array('RRA insertion' => array('rra'), 'CF insertion' => array('cf'));
+    }
+
+    public function testReadCommittedCallerRefusesMissingSourceGuardWithoutChangingItsTransaction(): void
+    {
+        $state = $this->runNative(array('collector' => 'device', 'failure' => 'source-guard-missing', 'source_active' => true, 'entrypoint' => true));
+        self::assertFalse($state['result']);
+        self::assertTrue($state['source_active']);
+        self::assertSame(301, (int) $state['caller_before']);
+        self::assertSame(300, (int) $state['caller_after']);
+        self::assertFalse($state['parent']);
+        self::assertStringContainsString('Source profile catalogs require InnoDB and intact definition guards', implode('\n', $state['log']));
     }
 
     public function testCollectorCompletionRefusalRetainsRetryOwnership(): void
@@ -132,7 +162,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     {
         $cases = array();
         foreach (array('bulk', 'device') as $mode) {
-            foreach (array('', 'copy', 'missing', 'rra', 'cf', 'corrupt', 'missing-rra', 'missing-cf', 'collision', 'engine', 'child-write', 'child-late', 'child-schema', 'child-engine', 'child-corrupt', 'guard-missing', 'guard-modified') as $failure) {
+            foreach (array('', 'copy', 'missing', 'rra', 'cf', 'corrupt', 'missing-rra', 'missing-cf', 'collision', 'engine', 'child-write', 'child-late', 'child-schema', 'child-engine', 'child-corrupt', 'guard-missing', 'guard-modified', 'source-engine', 'source-guard-missing', 'source-guard-modified') as $failure) {
                 $cases[$mode . ' ' . ($failure ?: 'custom profile')] = array($mode, $failure);
             }
         }

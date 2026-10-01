@@ -27,7 +27,7 @@ function cacti_sizeof($value) { return count($value); }
 function db_fetch_assoc($sql) { return $GLOBALS['database']->query($sql)->fetchAll(PDO::FETCH_ASSOC); }
 function db_fetch_assoc_prepared($sql, $params) { $query = $GLOBALS['database']->prepare($sql); $query->execute($params); return $query->fetchAll(PDO::FETCH_ASSOC); }
 function register_process_start(...$args) { return true; }
-function replicate_out($id, $class) { if ($id === 2 && (getenv('COLLECTOR_CLI_FAILURE') === '1' || getenv('COLLECTOR_CLI_COMPLETION_FAILURE') === '1')) { return false; } return db_execute_prepared('UPDATE poller SET last_sync=NOW(), requires_sync="" WHERE id=?', [$id]); }
+function replicate_out($id, $class) { if ($id === 2 && (getenv('COLLECTOR_CLI_FAILURE') === '1' || getenv('COLLECTOR_CLI_COMPLETION_FAILURE') === '1')) { return false; } if (!in_array($class, ['all', 'data'], true)) { return true; } return db_execute_prepared('UPDATE poller SET last_sync=NOW(), requires_sync="" WHERE id=?', [$id]); }
 function db_execute_prepared($sql, $params) { $GLOBALS['calls'][] = [$sql, $params]; $query = $GLOBALS['database']->prepare(str_replace('NOW()', "datetime('now')", $sql)); return $query->execute($params); }
 function cacti_log($message, ...$args) { $GLOBALS['log'][] = $message; }
 function unregister_process(...$args) { $GLOBALS['unregistered'] = true; }
@@ -45,6 +45,7 @@ PHP);
         $command[] = 'auto_prepend_file=' . $directory . '/coverage.php';
     }
     $command[] = $directory . '/cli/poller_replicate.php';
+    $command[] = '--class=' . ($scenario['class'] ?? 'all');
     if (!empty($scenario['selected'])) {
         $command[] = '--poller=2';
     }
@@ -80,6 +81,9 @@ function collector_connection(bool $admin = false): PDO
     return new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv($prefix . 'USER') ?: 'root', getenv($prefix . 'PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false]);
 }
 $source = collector_connection();
+if (!empty($scenario['source_active'])) {
+    $source->exec('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED');
+}
 $database_hostname = 'profile-source';
 $database_port = '0';
 $database_default = 'catalog';
@@ -110,7 +114,7 @@ function collector_statement(string $sql, array $params = [], $connection = fals
     $side = $connection === $GLOBALS['source'] ? 'source' : 'remote';
     $GLOBALS['calls'][] = [$side, $sql];
     if (str_contains($sql, 'information_schema.TABLES') || str_contains($sql, 'information_schema.TRIGGERS')) {
-        $params = array_map(static fn($name) => $GLOBALS['maps'][$side][$name] ?? str_replace('kadupul_profile_reference', 'collector_guard_' . $GLOBALS['suffix'], $name), $params);
+        $params = array_map(static fn($name) => $GLOBALS['maps'][$side][$name] ?? str_replace('kadupul_profile_reference', ($side === 'source' ? 'collector_source_guard_' : 'collector_guard_') . $GLOBALS['suffix'], $name), $params);
     }
     foreach ($GLOBALS['maps'][$side] as $logical => $physical) {
         $sql = preg_replace('/\b' . $logical . '\b/', $physical, $sql);
@@ -150,7 +154,13 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
         $editor->exec('SET SESSION innodb_lock_wait_timeout=1');
         $editor->beginTransaction();
         try {
-            $editor->exec('UPDATE `' . $GLOBALS['maps']['source']['data_source_profiles'] . '` SET step=120 WHERE id=77');
+            if (($GLOBALS['scenario']['source_insert'] ?? '') === 'rra') {
+                $editor->exec('INSERT INTO `' . $GLOBALS['maps']['source']['data_source_profiles_rra'] . '` VALUES (79,77,9,999)');
+            } elseif (($GLOBALS['scenario']['source_insert'] ?? '') === 'cf') {
+                $editor->exec('INSERT INTO `' . $GLOBALS['maps']['source']['data_source_profiles_cf'] . '` VALUES (77,4)');
+            } else {
+                $editor->exec('UPDATE `' . $GLOBALS['maps']['source']['data_source_profiles'] . '` SET step=120 WHERE id=77');
+            }
             $GLOBALS['snapshot_blocked'] = false;
         } catch (PDOException $error) {
             $GLOBALS['snapshot_blocked'] = (int) ($error->errorInfo[1] ?? 0) === 1205;
@@ -159,10 +169,11 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
         }
     }
     if (str_contains($sql, 'information_schema.TRIGGERS')) {
+        $side = !$connection || $connection === $GLOBALS['source'] ? 'source' : 'remote';
         // Only fixture table/trigger identities differ from the production catalog.
         foreach ($rows as &$row) {
-            $row['TRIGGER_NAME'] = str_replace('collector_guard_' . $GLOBALS['suffix'], 'kadupul_profile_reference', $row['TRIGGER_NAME']);
-            foreach ($GLOBALS['maps']['remote'] as $logical => $physical) {
+            $row['TRIGGER_NAME'] = str_replace(($side === 'source' ? 'collector_source_guard_' : 'collector_guard_') . $GLOBALS['suffix'], 'kadupul_profile_reference', $row['TRIGGER_NAME']);
+            foreach ($GLOBALS['maps'][$side] as $logical => $physical) {
                 $row['EVENT_OBJECT_TABLE'] = str_replace($physical, $logical, $row['EVENT_OBJECT_TABLE']);
                 $row['ACTION_STATEMENT'] = str_replace($physical, $logical, $row['ACTION_STATEMENT']);
             }
@@ -313,6 +324,16 @@ try {
     foreach (data_source_profile_reference_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_template_data'], 'collector_guard_' . $suffix, $maps['remote']['data_source_profiles_rra'], $maps['remote']['data_source_profiles_cf']) as $definition) {
         $installer->exec($definition['sql']);
     }
+    foreach (data_source_profile_reference_triggers($maps['source']['data_source_profiles'], $maps['source']['data_template_data'], 'collector_source_guard_' . $suffix, $maps['source']['data_source_profiles_rra'], $maps['source']['data_source_profiles_cf']) as $definition) {
+        $installer->exec($definition['sql']);
+    }
+    if (in_array($scenario['failure'] ?? '', ['source-guard-missing', 'source-guard-modified'], true)) {
+        $name = 'collector_source_guard_' . $suffix . '_cf_insert';
+        $installer->exec("DROP TRIGGER `$name`");
+        if ($scenario['failure'] === 'source-guard-modified') {
+            $installer->exec("CREATE TRIGGER `$name` AFTER INSERT ON `" . $maps['source']['data_source_profiles_cf'] . "` FOR EACH ROW SET @profile_source_guard_modified=1");
+        }
+    }
     if (in_array($scenario['failure'] ?? '', ['guard-missing', 'guard-modified'], true)) {
         $name = 'collector_guard_' . $suffix . '_insert';
         $installer->exec("DROP TRIGGER `$name`");
@@ -356,6 +377,9 @@ try {
     if (($scenario['failure'] ?? '') === 'child-corrupt') {
         $installer->exec('CREATE TRIGGER `collector_child_alter_' . $suffix . '` BEFORE INSERT ON `' . $maps['remote']['data_template_data'] . '` FOR EACH ROW SET NEW.name=\'changed\'');
     }
+    if (($scenario['failure'] ?? '') === 'source-engine') {
+        $source->exec('ALTER TABLE `' . $maps['source']['data_source_profiles_rra'] . '` ENGINE=MyISAM');
+    }
     if (($scenario['failure'] ?? '') === 'child-engine') {
         $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` ENGINE=MyISAM');
     }
@@ -372,6 +396,7 @@ try {
     }
     if (!empty($scenario['source_active'])) {
         $source->beginTransaction();
+        $source->exec('UPDATE `' . $maps['source']['data_source_profiles'] . '` SET step=301 WHERE id=1');
     }
     if (!empty($scenario['entrypoint'])) {
         $result = $scenario['collector'] === 'bulk' ? replicate_out(2, $scenario['class'] ?? 'all') : api_device_replicate_out(1, 2);
@@ -383,7 +408,13 @@ try {
     $rows = $remote->query('SELECT * FROM `' . $maps['remote']['data_template_data'] . '` ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
     $parent = $remote->query('SELECT id FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn();
     $rras = $remote->query('SELECT r.steps,r.`rows`,c.consolidation_function_id FROM `' . $maps['remote']['data_template_data'] . '` d JOIN `' . $maps['remote']['data_source_profiles_rra'] . '` r ON r.data_source_profile_id=d.data_source_profile_id JOIN `' . $maps['remote']['data_source_profiles_cf'] . '` c ON c.data_source_profile_id=d.data_source_profile_id WHERE d.id=2')->fetchAll(PDO::FETCH_ASSOC);
-    file_put_contents($directory . '/result.json', json_encode(['source_active' => $source->inTransaction(), 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    $sourceActive = $source->inTransaction();
+    $callerBefore = $source->query('SELECT step FROM `' . $maps['source']['data_source_profiles'] . '` WHERE id=1')->fetchColumn();
+    if (!empty($scenario['source_active']) && $sourceActive) {
+        $source->rollBack();
+    }
+    $callerAfter = $source->query('SELECT step FROM `' . $maps['source']['data_source_profiles'] . '` WHERE id=1')->fetchColumn();
+    file_put_contents($directory . '/result.json', json_encode(['caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
 } finally {
     $source->exec('DROP TABLE IF EXISTS `' . $maps['source']['poller'] . '`');
     foreach ($maps as $map) {
