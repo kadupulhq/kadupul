@@ -15,6 +15,31 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class LinkAnonymousPresentationTest extends TestCase
 {
+    public function testUnsupportedLegacyActionIsBadInputForAnAllowedMethod(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $console = $this->createMock(ConsoleAccess::class);
+            $console->method('consoleActor')->willReturn(new \Kadupul\IdentityAccess\Contract\Actor(1, 'admin'));
+            $container->set(ConsoleAccess::class, $console);
+            $access = $this->createMock(LinkAccess::class);
+            $access->method('authorize')->willReturn(new \Kadupul\IdentityAccess\Contract\Actor(1, 'admin'));
+            $container->set(LinkAccess::class, $access);
+            foreach (['GET', 'HEAD'] as $method) {
+                $request = Request::create('/links/legacy?action=unsupported', $method);
+                $response = $kernel->handle($request);
+                self::assertSame(400, $response->getStatusCode());
+                self::assertFalse($response->headers->has('Allow'));
+                self::assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+                $kernel->terminate($request, $response);
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     public function testAnonymousRequestsAreRejectedBeforePresetAuthorizationOrInputReads(): void
     {
         $kernel = new Kernel('test', true);

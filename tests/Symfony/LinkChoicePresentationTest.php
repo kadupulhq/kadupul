@@ -16,13 +16,30 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 final class LinkChoicePresentationTest extends TestCase
 {
-    private function legacyPageSizes(): array
+    private function legacyPageSizes(int $maxInputVars = 6000): array
     {
-        $source = file_get_contents(dirname(__DIR__, 2) . '/include/global_arrays.php');
-        self::assertSame(1, preg_match('/\$item_rows = array\((.*?)\n\);/s', $source, $block));
-        preg_match_all('/^\s*(\d+)\s*=>/m', $block[1], $matches);
-        self::assertCount(28, $matches[1]);
-        return [-1, ...array_map('intval', $matches[1])];
+        $process = proc_open([PHP_BINARY, '-d', 'max_input_vars=' . $maxInputVars, dirname(__DIR__) . '/Fixtures/navigation-row-choices-native.php'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+        self::assertIsResource($process);
+        $output = stream_get_contents($pipes[1]);
+        $errors = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        self::assertSame(0, proc_close($process), $errors);
+        self::assertSame('', $errors);
+        return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    public function testRuntimeLegacyInitializationRespectsConfiguredInputLimit(): void
+    {
+        $all = $this->legacyPageSizes();
+        self::assertCount(29, $all);
+        foreach ([1000, 120] as $limit) {
+            $choices = $this->legacyPageSizes($limit);
+            self::assertSame(array_values(array_filter($all, static fn(int $size): bool => $size <= $limit - 20)), $choices);
+            foreach ($choices as $size) {
+                self::assertSame($size === -1 ? 40 : $size, LinkListParameters::parse(['rows' => (string) $size], 40)['limit']);
+            }
+        }
     }
 
     public function testLegacyPageSizesRemainAcceptedForPreferencesAndBookmarks(): void

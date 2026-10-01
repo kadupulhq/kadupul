@@ -55,7 +55,7 @@ final class LegacyLinksController
                 return new RedirectResponse($urls->generate('navigation_link_action', ['operation' => $operations[$action], 'ids' => LinkListParameters::ids([$query['id'] ?? null])]), 302, $headers);
             }
             if ($action !== '') {
-                return new Response($translator->trans('Open External Links and use its current forms.', [], 'navigation'), 405, $headers + ['Allow' => 'GET, HEAD']);
+                return new Response($translator->trans('Open External Links and use its current forms.', [], 'navigation'), 400, $headers);
             }
             $filters = LinkListParameters::parse($query);
             unset($filters['limit']);
