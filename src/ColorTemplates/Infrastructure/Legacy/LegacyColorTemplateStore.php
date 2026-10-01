@@ -200,14 +200,63 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         });
     }
 
-    public function delete(int $actorId, array $ids): void
+    public function actionRevisions(array $templates): array
+    {
+        if (array_filter($templates, static fn($template): bool => !$template instanceof ColorTemplate) !== []) {
+            throw new \InvalidArgumentException('Invalid color template selection.');
+        }
+        $ids = $this->normalizeIds(array_map(static fn(ColorTemplate $template): int => $template->id, $templates));
+        if (count($ids) !== count($templates)) {
+            throw new \InvalidArgumentException('Invalid color template selection.');
+        }
+        usort($templates, static fn(ColorTemplate $left, ColorTemplate $right): int => $left->id <=> $right->id);
+        // The revision must describe the names shown on the confirmation,
+        // including when a rename occurs between that read and this snapshot.
+        $rows = array_map(static fn(ColorTemplate $template): array => ['color_template_id' => $template->id, 'name' => $template->name], $templates);
+        return $this->selectionRevisions($this->database->get(), $rows, false);
+    }
+
+    private function selectionRevisions(PDO $db, array $templates, bool $lock): array
+    {
+        $ids = array_map(static fn(array $template): int => (int) $template['color_template_id'], $templates);
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $query = $db->prepare("SELECT color_template_id,color_template_item_id,color_id,sequence FROM color_template_items WHERE color_template_id IN ($placeholders) ORDER BY color_template_id,sequence,color_template_item_id" . ($lock ? $this->lockSuffix($db) : ''));
+        $query->execute($ids);
+        $items = [];
+        foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $items[(int) $row['color_template_id']][] = [(int) $row['color_template_item_id'], (int) $row['color_id'], (int) $row['sequence']];
+        }
+        $revisions = [];
+        foreach ($templates as $template) {
+            $id = (int) $template['color_template_id'];
+            $revisions[$id] = hash('sha256', json_encode([$id, (string) $template['name'], $items[$id] ?? []], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+        }
+        return $revisions;
+    }
+
+    private function assertSelectionRevisions(PDO $db, array $templates, array $expected): void
+    {
+        $current = $this->selectionRevisions($db, $templates, true);
+        ksort($expected, SORT_NUMERIC);
+        if (array_keys($current) !== array_keys($expected)) {
+            throw new \InvalidArgumentException('The selected color templates changed. Reload before continuing.');
+        }
+        foreach ($current as $id => $revision) {
+            if (!is_string($expected[$id]) || !hash_equals($revision, $expected[$id])) {
+                throw new \InvalidArgumentException('The selected color templates changed. Reload before continuing.');
+            }
+        }
+    }
+
+    public function delete(int $actorId, array $ids, array $revisions): void
     {
         $ids = $this->normalizeIds($ids);
-        $this->transaction($actorId, 'color.template.delete', $this->selectionTarget($ids), function (PDO $db) use ($ids): void {
+        $this->transaction($actorId, 'color.template.delete', $this->selectionTarget($ids), function (PDO $db) use ($ids, $revisions): void {
             $templates = $this->lockedTemplates($db, $ids);
             if (count($templates) !== count($ids)) {
                 throw new \InvalidArgumentException('One or more color templates no longer exist.');
             }
+            $this->assertSelectionRevisions($db, $templates, $revisions);
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
             foreach (['aggregate_graph_templates_item', 'aggregate_graphs_graph_item'] as $table) {
                 $references = $db->prepare("SELECT color_template FROM $table WHERE color_template IN ($placeholders) ORDER BY color_template" . $this->lockSuffix($db));
@@ -223,17 +272,18 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         });
     }
 
-    public function duplicate(int $actorId, array $ids, string $titleFormat): void
+    public function duplicate(int $actorId, array $ids, string $titleFormat, array $revisions): void
     {
         $ids = $this->normalizeIds($ids);
         if ($titleFormat === '' || mb_strlen($titleFormat, 'UTF-8') > 255 || preg_match('//u', $titleFormat) !== 1 || str_contains($titleFormat, "\0")) {
             throw new \InvalidArgumentException('Enter a valid title format.');
         }
-        $this->transaction($actorId, 'color.template.duplicate', $this->selectionTarget($ids), function (PDO $db) use ($ids, $titleFormat): void {
+        $this->transaction($actorId, 'color.template.duplicate', $this->selectionTarget($ids), function (PDO $db) use ($ids, $titleFormat, $revisions): void {
             $templates = $this->lockedTemplates($db, $ids);
             if (count($templates) !== count($ids)) {
                 throw new \InvalidArgumentException('One or more color templates no longer exist.');
             }
+            $this->assertSelectionRevisions($db, $templates, $revisions);
             $insert = $db->prepare('INSERT INTO color_templates (name) VALUES (?)');
             $readItems = $db->prepare('SELECT color_id, sequence FROM color_template_items WHERE color_template_id=? ORDER BY sequence, color_template_item_id' . $this->lockSuffix($db));
             $insertItem = $db->prepare('INSERT INTO color_template_items (color_template_id,color_id,sequence) VALUES (?,?,?)');

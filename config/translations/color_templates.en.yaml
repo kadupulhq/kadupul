@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 Access denied.: Access denied.
 Action: Action
 Actions: Actions
@@ -35,7 +38,7 @@ Color Templates per page: Color Templates per page
 Color template or item not found.: Color template or item not found.
 Colors: Colors
 Continue: Continue
-Continue to delete these color templates. Templates referenced by aggregate templates cannot be deleted.: Continue to delete these color templates. Templates referenced by aggregate templates cannot be deleted.
+Continue to delete these color templates. Templates referenced by aggregate graphs or templates cannot be deleted.: Continue to delete these color templates. Templates referenced by aggregate graphs or templates cannot be deleted.
 Continue to duplicate these color templates.: Continue to duplicate these color templates.
 Delete: Delete
 Delete Color Item: Delete Color Item
@@ -52,7 +55,7 @@ Go: Go
 Graphs: Graphs
 Has Graphs: Has Graphs
 Hex: Hex
-In use by aggregate templates: In use by aggregate templates
+In use by aggregate graphs or templates: In use by aggregate graphs or templates
 Invalid color template filters.: Invalid color template filters.
 Invalid color template order.: Invalid color template order.
 Invalid color template request.: Invalid color template request.

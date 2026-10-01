@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Run the color-template feature against an isolated HTTP and MariaDB stack."""
 from pathlib import Path
 from types import SimpleNamespace

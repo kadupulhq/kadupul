@@ -28,6 +28,9 @@ interface ColorTemplateStore
     /** @return list<array{id:int,name:string,hex:string}> */
     public function colors(): array;
 
+    /** @param list<ColorTemplate> $templates @return array<int,string> */
+    public function actionRevisions(array $templates): array;
+
     public function saveTemplate(int $actorId, ?int $id, string $name, ?string $revision): int;
 
     public function saveItem(int $actorId, int $templateId, ?int $itemId, int $colorId, ?string $revision): int;
@@ -38,8 +41,8 @@ interface ColorTemplateStore
     public function reorder(int $actorId, int $templateId, array $orderedItemIds, ?string $revision): void;
 
     /** @param list<int> $ids */
-    public function delete(int $actorId, array $ids): void;
+    public function delete(int $actorId, array $ids, array $revisions): void;
 
     /** @param list<int> $ids */
-    public function duplicate(int $actorId, array $ids, string $titleFormat): void;
+    public function duplicate(int $actorId, array $ids, string $titleFormat, array $revisions): void;
 }

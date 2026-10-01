@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.31\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-20 00:02-0700\n"
+"POT-Creation-Date: 2026-09-30 20:35-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
@@ -20358,4 +20358,12 @@ msgstr ""
 
 #: vdef.php:923
 msgid "No VDEFs"
+msgstr ""
+
+#: aggregate_graphs.php:230 aggregate_templates.php:230
+msgid "Aggregate settings may have been saved, but graph item replacement could not be confirmed. Reload and select existing color templates."
+msgstr ""
+
+#: graphs.php:746
+msgid "An aggregate graph may have been created, but graph item replacement could not be confirmed. Reload and select existing color templates."
 msgstr ""

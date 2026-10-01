@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Color template list, forms, item order, actions and graph-color handoff over HTTP."""
 import json
 import re
@@ -33,6 +36,7 @@ def verify_color_templates(harness, session, user_id, check):
     aggregate_local_graph_id = None
     aggregate_trigger = None
     member_graph_ids = []
+    created_aggregate_graphs = []
     source_template_item_id = None
     realm_rows = harness.sql(f'SELECT COUNT(*) FROM user_auth_realm WHERE user_id={user_id} AND realm_id=5').strip()
     realm_added = False
@@ -70,12 +74,31 @@ def verify_color_templates(harness, session, user_id, check):
         parser, body = parse_form(path)
         return path, parser, body
 
+    def copy_graph_parameters(local_id, graph_template_id):
+        # Copy the installed template's real parameter contract rather than
+        # relying on schema defaults for a synthetic incomplete graph.
+        columns = harness.sql('SHOW COLUMNS FROM graph_templates_graph').splitlines()
+        names = [row.split('\t')[0] for row in columns if row.split('\t')[0] != 'id']
+        expressions = [str(local_id) if name == 'local_graph_id' else
+                       'id' if name == 'local_graph_template_graph_id' else
+                       "'" + marker + " graph'" if name in ('title', 'title_cache') else
+                       '`' + name + '`' for name in names]
+        harness.sql('INSERT INTO graph_templates_graph (' + ','.join('`' + name + '`' for name in names)
+                    + ') SELECT ' + ','.join(expressions) + ' FROM graph_templates_graph '
+                    + f'WHERE local_graph_id=0 AND graph_template_id={graph_template_id} LIMIT 1')
+
     try:
         if realm_rows == '0':
             harness.sql(f'INSERT INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},5)')
             realm_added = True
         status, body, _, _ = fetch('/app.php/graphing/color-templates')
         check(status == 200 and 'Color Templates' in body, 'realm holder sees Symfony color template list')
+        check(fetch('/app.php/graphing/color-templates?' + urlencode({'filter': '界' * 200}))[0] == 200,
+              'color-template search accepts 200 UTF-8 characters')
+        check(fetch('/app.php/graphing/color-templates?' + urlencode({'filter': '界' * 201}))[0] == 400,
+              'color-template search rejects 201 UTF-8 characters')
+        check(fetch('/app.php/graphing/color-templates?filter=')[0] == 200,
+              'color-template search returns to an empty filter after Unicode checks')
         harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language','fr')")
         locale_status, localized_body, _, _ = fetch('/app.php/graphing/color-templates')
         check(locale_status == 200 and 'Modèles de couleurs' in localized_body,
@@ -201,6 +224,38 @@ def verify_color_templates(harness, session, user_id, check):
               'stale reorder with identical item IDs cannot overwrite a concurrent sequence change')
         harness.sql(f'UPDATE color_template_items SET sequence=3 WHERE color_template_item_id={first_item}; UPDATE color_template_items SET sequence=1 WHERE color_template_item_id={second_item}; UPDATE color_template_items SET sequence=2 WHERE color_template_item_id={first_item}')
 
+        for bulk_action in ['delete', 'duplicate']:
+            for changed_field in ['name', 'palette']:
+                stale_bulk_path, stale_bulk_form, _ = save_action(bulk_action, [template_id])
+                check('color_template_action[revisions]' in stale_bulk_form.fields,
+                      'bulk color-template confirmation carries expected revisions')
+                before_bulk_count = harness.sql('SELECT COUNT(*) FROM color_templates').strip()
+                old_name = harness.sql(f'SELECT name FROM color_templates WHERE color_template_id={template_id}').rstrip('\n')
+                old_color = int(harness.sql(f'SELECT color_id FROM color_template_items WHERE color_template_item_id={first_item}').strip())
+                if changed_field == 'name':
+                    harness.sql(f"UPDATE color_templates SET name='{marker} bulk concurrent' WHERE color_template_id={template_id}")
+                else:
+                    new_color = color_two if old_color == color_one else color_one
+                    harness.sql(f'UPDATE color_template_items SET color_id={new_color} WHERE color_template_item_id={first_item}')
+                stale_bulk_status, _, _, _ = fetch(stale_bulk_path, stale_bulk_form.fields)
+                check(stale_bulk_status == 409 and harness.sql('SELECT COUNT(*) FROM color_templates').strip() == before_bulk_count,
+                      f'stale bulk {bulk_action} rejects concurrent {changed_field} changes without selection writes')
+                if changed_field == 'name':
+                    check(harness.sql(f'SELECT name FROM color_templates WHERE color_template_id={template_id}').strip() == marker + ' bulk concurrent',
+                          f'stale bulk {bulk_action} preserves the concurrent template name')
+                else:
+                    check(harness.sql(f'SELECT color_id FROM color_template_items WHERE color_template_item_id={first_item}').strip() == str(new_color),
+                          f'stale bulk {bulk_action} preserves the concurrent palette color')
+                escaped_name = old_name.replace("'", "''")
+                harness.sql(f"UPDATE color_templates SET name='{escaped_name}' WHERE color_template_id={template_id}; UPDATE color_template_items SET color_id={old_color} WHERE color_template_item_id={first_item}")
+        malformed_path, malformed_form, _ = save_action('duplicate', [template_id])
+        before_invalid_count = harness.sql('SELECT COUNT(*) FROM color_templates').strip()
+        extra_revisions = json.loads(malformed_form.fields['color_template_action[revisions]']) | {'99999999': '0' * 64}
+        for snapshot, expected_status, reason in [('not-json', 422, 'malformed JSON'), ('{}', 409, 'missing snapshots'), (json.dumps(extra_revisions), 409, 'extra selection IDs')]:
+            malformed_fields = malformed_form.fields | {'color_template_action[revisions]': snapshot}
+            check(fetch(malformed_path, malformed_fields)[0] == expected_status and harness.sql('SELECT COUNT(*) FROM color_templates').strip() == before_invalid_count,
+                  'bulk color-template action rejects expected revisions before writing: ' + reason)
+
         duplicate_path, duplicate_form, _ = save_action('duplicate', [template_id])
         duplicate_fields = duplicate_form.fields | {'color_template_action[title_format]': '<template_title> Copy'}
         status, _, location, _ = fetch(duplicate_path, duplicate_fields)
@@ -270,12 +325,14 @@ def verify_color_templates(harness, session, user_id, check):
                 f'INSERT INTO graph_local (graph_template_id,host_id) VALUES ({graph_template_id},0); SELECT LAST_INSERT_ID()'
             ).strip())
             member_graph_ids.append(member)
+            copy_graph_parameters(member, graph_template_id)
             harness.sql(
                 f'INSERT INTO graph_templates_item (local_graph_template_item_id,local_graph_id,graph_template_id,color_id,graph_type_id,sequence) '
                 f'SELECT id,{member},{graph_template_id},color_id,graph_type_id,sequence FROM graph_templates_item '
                 f'WHERE id={source_template_item_id} AND local_graph_id=0'
             )
         aggregate_local_graph_id = int(harness.sql('INSERT INTO graph_local (graph_template_id,host_id) VALUES (0,0); SELECT LAST_INSERT_ID()').strip())
+        copy_graph_parameters(aggregate_local_graph_id, graph_template_id)
         aggregate_graph_id = int(harness.sql(
             f"INSERT INTO aggregate_graphs (aggregate_template_id,template_propogation,local_graph_id,title_format,graph_template_id,gprint_prefix,gprint_format,graph_type,total,total_type,total_prefix,order_type,user_id) "
             f"VALUES ({aggregate_fixture_id},'',{aggregate_local_graph_id},'{marker} aggregate graph',{graph_template_id},'', '',0,0,0,'',1,{user_id}); SELECT LAST_INSERT_ID()"
@@ -286,6 +343,56 @@ def verify_color_templates(harness, session, user_id, check):
             f"INSERT INTO aggregate_graphs_graph_item (aggregate_graph_id,graph_templates_item_id,sequence,color_template,t_graph_type_id,graph_type_id,t_cdef_id,cdef_id,item_skip,item_total) "
             f"VALUES ({aggregate_graph_id},{source_template_item_id},1,{template_id},'',0,'',NULL,'','')"
         )
+        for member in member_graph_ids:
+            status, graph_body, _, _ = fetch(f'/graphs.php?action=graph_edit&id={member}')
+            check(status == 200 and marker + ' graph' in graph_body and 'Graph Items' in graph_body,
+                  'aggregate member graph editor renders the stored graph and item handoff')
+        for page, identity, table, owner in [
+            ('aggregate_templates.php', aggregate_fixture_id, 'aggregate_graph_templates_item', 'aggregate_template_id'),
+            ('aggregate_graphs.php', aggregate_local_graph_id, 'aggregate_graphs_graph_item', 'aggregate_graph_id'),
+        ]:
+            status, editor_body, _, _ = fetch(f'/{page}?action=edit&id={identity}')
+            fields = Inputs()
+            fields.feed(editor_body)
+            check(status == 200 and f'agg_color_{source_template_item_id}' in fields.fields,
+                  'aggregate editor renders saved palette selection: ' + page)
+            before_items = harness.sql(f'SELECT * FROM {table} WHERE {owner}=' + str(
+                aggregate_fixture_id if owner == 'aggregate_template_id' else aggregate_graph_id) + ' ORDER BY sequence')
+            rejected_fields = {key: value for key, value in fields.fields.items()
+                               if not key.startswith(('agg_skip_', 'agg_total_')) and key != 'template_propogation'}
+            rejected_fields.update({'action': 'save', f'agg_color_{source_template_item_id}': '2147483647'})
+            rejection_status, rejection_body, _, _ = fetch('/' + page, rejected_fields)
+            after_items = harness.sql(f'SELECT * FROM {table} WHERE {owner}=' + str(
+                aggregate_fixture_id if owner == 'aggregate_template_id' else aggregate_graph_id) + ' ORDER BY sequence')
+            check(rejection_status == 200 and 'graph item replacement could not be confirmed' in rejection_body
+                  and before_items == after_items,
+                  'aggregate caller rejects a missing palette and preserves item replacement: ' + page)
+        harness.sql(f"UPDATE aggregate_graphs SET aggregate_template_id={aggregate_fixture_id},gprint_format='' WHERE id={aggregate_graph_id}; "
+                    f"UPDATE aggregate_graph_templates SET gprint_format='' WHERE id={aggregate_fixture_id}")
+        status, graph_list_body, _, _ = fetch('/graphs.php')
+        listing = Inputs()
+        listing.feed(graph_list_body)
+        selection = {key: value for key, value in listing.fields.items() if 'csrf' in key.lower()}
+        selection.update({'action': 'actions', 'drp_action': '9'})
+        selection.update({f'chk_{member}': 'on' for member in member_graph_ids})
+        confirmation_status, confirmation_body, _, _ = fetch('/graphs.php', selection)
+        confirmation = Inputs()
+        confirmation.feed(confirmation_body)
+        check(confirmation_status == 200 and 'selected_items' in confirmation.fields
+              and f'agg_color_{source_template_item_id}' in confirmation.fields,
+              'graph aggregate creation confirmation carries selected members and palette items')
+        create_fields = {key: value for key, value in confirmation.fields.items()
+                         if not key.startswith(('agg_skip_', 'agg_total_'))}
+        create_fields.update({'action': 'actions', 'title_format': marker + ' rejected creation',
+                              f'agg_color_{source_template_item_id}': '2147483647'})
+        creation_status, creation_body, _, _ = fetch('/graphs.php', create_fields)
+        created_rows = harness.sql(f"SELECT id,local_graph_id FROM aggregate_graphs WHERE title_format='{marker} rejected creation'").splitlines()
+        created_aggregate_graphs.extend(tuple(int(value) for value in row.split('\t')) for row in created_rows)
+        check(creation_status == 200 and 'graph item replacement could not be confirmed' in creation_body
+              and len(created_rows) == 1
+              and harness.sql(f'SELECT COUNT(*) FROM aggregate_graphs_graph_item WHERE aggregate_graph_id={created_aggregate_graphs[-1][0]}').strip() == '0'
+              and harness.sql(f'SELECT COUNT(*) FROM aggregate_graphs_items WHERE aggregate_graph_id={created_aggregate_graphs[-1][0]}').strip() == '0',
+              'graph creation caller reports uncertain partial creation and stops missing-palette propagation')
         sync_path, sync_form, _ = save_action('sync', [template_id])
         before_nontransactional_check = [int(value) for value in harness.sql(f'SELECT color_id FROM graph_templates_item WHERE local_graph_id={aggregate_local_graph_id} ORDER BY sequence').splitlines()]
         harness.sql('ALTER TABLE aggregate_graphs_items ENGINE=MyISAM')
@@ -317,8 +424,17 @@ def verify_color_templates(harness, session, user_id, check):
         aggregate_trigger = None
 
         harness.sql(f'UPDATE aggregate_graphs SET aggregate_template_id=0 WHERE id={aggregate_graph_id}; UPDATE aggregate_graphs_graph_item SET color_template={duplicate_id} WHERE aggregate_graph_id={aggregate_graph_id} AND graph_templates_item_id={source_template_item_id}')
+        standalone_path, standalone_form, _ = save_action('sync', [duplicate_id])
+        standalone_status, _, _, _ = fetch(standalone_path, standalone_form.fields)
+        standalone_colors = [int(value) for value in harness.sql(f'SELECT color_id FROM graph_templates_item WHERE local_graph_id={aggregate_local_graph_id} ORDER BY sequence').splitlines()]
+        expected_standalone = [int(value) for value in harness.sql(f'SELECT color_id FROM color_template_items WHERE color_template_id={duplicate_id} ORDER BY sequence,color_template_item_id').splitlines()]
+        check(standalone_status == 200 and expected_standalone
+              and standalone_colors == [expected_standalone[index % len(expected_standalone)] for index in range(len(member_graph_ids))],
+              'standalone aggregate sync consumes the stored palette and preserves member order')
         direct_graph_delete_path, direct_graph_delete_form, direct_graph_delete_body = save_action('delete', [duplicate_id])
         check('cannot be deleted' in direct_graph_delete_body, 'standalone aggregate graph reference blocks deletion in confirmation')
+        check('aggregate graphs or templates' in direct_graph_delete_body,
+              'color-template dependency confirmation describes both aggregate reference kinds')
         direct_graph_delete_status, _, _, _ = fetch(direct_graph_delete_path, direct_graph_delete_form.fields)
         check(direct_graph_delete_status == 422 and harness.sql(f'SELECT COUNT(*) FROM color_templates WHERE color_template_id={duplicate_id}').strip() == '1',
               'delete rechecks standalone aggregate graph references at write time')
@@ -367,6 +483,8 @@ def verify_color_templates(harness, session, user_id, check):
             for group_id in group_grants:
                 harness.sql(f'INSERT IGNORE INTO user_auth_group_members (group_id,user_id) VALUES ({group_id},{user_id})')
     finally:
+        for created_id, local_id in created_aggregate_graphs:
+            harness.sql(f'DELETE FROM aggregate_graphs_items WHERE aggregate_graph_id={created_id}; DELETE FROM aggregate_graphs_graph_item WHERE aggregate_graph_id={created_id}; DELETE FROM aggregate_graphs WHERE id={created_id}; DELETE FROM graph_templates_item WHERE local_graph_id={local_id}; DELETE FROM graph_templates_graph WHERE local_graph_id={local_id}; DELETE FROM graph_local WHERE id={local_id}')
         if aggregate_trigger is not None:
             harness.sql(f'DROP TRIGGER IF EXISTS {aggregate_trigger}')
         if aggregate_graph_id is not None:

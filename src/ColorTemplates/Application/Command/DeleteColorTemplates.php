@@ -14,8 +14,8 @@ final readonly class DeleteColorTemplates
 {
     public function __construct(private ColorTemplateAccess $access, private ColorTemplateStore $templates) {}
 
-    public function __invoke(array $ids): void
+    public function __invoke(array $ids, array $revisions): void
     {
-        $this->templates->delete($this->access->authorize()->id, $ids);
+        $this->templates->delete($this->access->authorize()->id, $ids, $revisions);
     }
 }

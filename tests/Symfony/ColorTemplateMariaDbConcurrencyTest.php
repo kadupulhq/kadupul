@@ -31,6 +31,7 @@ final class ColorTemplateMariaDbConcurrencyTest extends TestCase
             if ($populated) {
                 $owner->exec("INSERT INTO $table ($column,graph_templates_item_id,color_template,item_skip,item_total) VALUES (99,99,99,'','')");
             }
+            $revisions = $this->store($owner)->actionRevisions([$this->store($owner)->find(1)]);
             $attempted = false;
             $probe = static function (string $sql) use ($writer, $table, $column, &$attempted): void {
                 if (str_starts_with($sql, "SELECT color_template FROM $table ")) {
@@ -39,7 +40,7 @@ final class ColorTemplateMariaDbConcurrencyTest extends TestCase
                 }
             };
             $owner->setAttribute(\PDO::ATTR_STATEMENT_CLASS, [ColorTemplateRaceStatement::class, [$probe]]);
-            $this->store($owner)->delete(42, [1]);
+            $this->store($owner)->delete(42, [1], $revisions);
             self::assertTrue($attempted);
             self::assertSame(0, (int) $owner->query('SELECT COUNT(*) FROM color_templates')->fetchColumn());
             self::assertSame(0, (int) $owner->query("SELECT COUNT(*) FROM $table WHERE color_template=1")->fetchColumn());
@@ -53,6 +54,7 @@ final class ColorTemplateMariaDbConcurrencyTest extends TestCase
             $column = $table === 'aggregate_graph_templates_item' ? 'aggregate_template_id' : 'aggregate_graph_id';
             $owner->exec("INSERT INTO $table ($column,graph_templates_item_id,color_template,item_skip,item_total) VALUES (1,99,0,'','')");
             $schema = $owner->query('SELECT DATABASE()')->fetchColumn();
+            $revisions = $this->store($owner)->actionRevisions([$this->store($owner)->find(1)]);
             $process = null;
             $pipes = [];
             $waiting = false;
@@ -91,7 +93,7 @@ final class ColorTemplateMariaDbConcurrencyTest extends TestCase
             };
             $owner->setAttribute(\PDO::ATTR_STATEMENT_CLASS, [ColorTemplateRaceStatement::class, [$probe]]);
             try {
-                $this->store($owner)->delete(42, [1]);
+                $this->store($owner)->delete(42, [1], $revisions);
                 self::assertTrue($waiting);
                 self::assertFalse($owner->inTransaction());
                 $result = json_decode(stream_get_contents($pipes[1]), true, 512, JSON_THROW_ON_ERROR);

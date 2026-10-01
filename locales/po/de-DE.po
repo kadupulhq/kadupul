@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-20 00:02-0700\n"
+"POT-Creation-Date: 2026-09-30 20:35-0700\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -107,6 +107,10 @@ msgstr "Von Gruppe trennen"
 #, php-format
 msgid "Place on a Tree (%s)"
 msgstr "Auf einem Baum platzieren (%s)"
+
+#: aggregate_graphs.php:230 aggregate_templates.php:230
+msgid "Aggregate settings may have been saved, but graph item replacement could not be confirmed. Reload and select existing color templates."
+msgstr ""
 
 #: aggregate_graphs.php:334
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -4940,6 +4944,10 @@ msgstr "Erstellter Graph: %s"
 #: graphs.php:244 lib/template.php:2125 lib/template.php:2159
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "FEHLER: Keine Datenquelle zugeordnet. Vorlage prüfen"
+
+#: graphs.php:746
+msgid "An aggregate graph may have been created, but graph item replacement could not be confirmed. Reload and select existing color templates."
+msgstr ""
 
 #: graphs.php:867
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."

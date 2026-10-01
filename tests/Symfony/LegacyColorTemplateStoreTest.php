@@ -26,6 +26,74 @@ final class LegacyColorTemplateStoreTest extends TestCase
     private object $audit;
     private LegacyColorTemplateStore $store;
 
+    /** @dataProvider staleBulkActions */
+    public function testBulkActionsRejectChangedSnapshotsBeforeAnySelectionWrite(string $action, string $change): void
+    {
+        $this->db->exec('DELETE FROM aggregate_graph_templates_item; DELETE FROM aggregate_graphs_graph_item');
+        $revisions = $this->store->actionRevisions([$this->store->find(1), $this->store->find(2)]);
+        if ($change === 'name') {
+            $this->db->exec("UPDATE color_templates SET name='Concurrent name' WHERE color_template_id=2");
+        } else {
+            $this->db->exec('UPDATE color_template_items SET color_id=2 WHERE color_template_id=2');
+        }
+        $before = $this->db->query('SELECT * FROM color_templates ORDER BY color_template_id')->fetchAll(\PDO::FETCH_ASSOC);
+        $items = $this->db->query('SELECT * FROM color_template_items ORDER BY color_template_item_id')->fetchAll(\PDO::FETCH_ASSOC);
+        try {
+            if ($action === 'delete') {
+                $this->store->delete(42, [1, 2], $revisions);
+            } else {
+                $this->store->duplicate(42, [1, 2], '<template_title> copy', $revisions);
+            }
+            self::fail('Stale bulk action was accepted');
+        } catch (\InvalidArgumentException $error) {
+            self::assertSame('The selected color templates changed. Reload before continuing.', $error->getMessage());
+        }
+        self::assertSame($before, $this->db->query('SELECT * FROM color_templates ORDER BY color_template_id')->fetchAll(\PDO::FETCH_ASSOC));
+        self::assertSame($items, $this->db->query('SELECT * FROM color_template_items ORDER BY color_template_item_id')->fetchAll(\PDO::FETCH_ASSOC));
+        self::assertFalse($this->db->inTransaction());
+    }
+
+    public static function staleBulkActions(): array
+    {
+        return [['delete', 'name'], ['delete', 'items'], ['duplicate', 'name'], ['duplicate', 'items']];
+    }
+
+    /** @dataProvider invalidRevisionMaps */
+    public function testBulkSelectionRequiresExactRevisionMap(array $revisions): void
+    {
+        $this->db->exec('DELETE FROM aggregate_graph_templates_item; DELETE FROM aggregate_graphs_graph_item');
+        $this->expectExceptionMessage('The selected color templates changed. Reload before continuing.');
+        try {
+            $this->store->delete(42, [1, 2], $revisions);
+        } finally {
+            self::assertSame(2, (int) $this->db->query('SELECT COUNT(*) FROM color_templates')->fetchColumn());
+            self::assertSame(3, (int) $this->db->query('SELECT COUNT(*) FROM color_template_items')->fetchColumn());
+            self::assertFalse($this->db->inTransaction());
+        }
+    }
+
+    public static function invalidRevisionMaps(): array
+    {
+        return [[[]], [[1 => 'invalid']], [[1 => 123, 2 => null]], [[1 => str_repeat('0', 64), 2 => str_repeat('0', 64), 3 => str_repeat('0', 64)]]];
+    }
+
+    public function testMultibyteSearchMatchesTheBrowserCharacterLimit(): void
+    {
+        self::assertSame(str_repeat('界', 200), ColorTemplateFilters::fromQuery(['filter' => str_repeat('界', 200)], 25)->filter);
+        $this->expectExceptionMessage('Invalid color template filters.');
+        ColorTemplateFilters::fromQuery(['filter' => str_repeat('界', 201)], 25);
+    }
+
+    public function testConfirmationSnapshotUsesTheDisplayedNameWhenItChangesDuringPreparation(): void
+    {
+        $displayed = $this->store->find(1);
+        $this->db->exec("UPDATE color_templates SET name='Changed during GET' WHERE color_template_id=1");
+        $revisions = $this->store->actionRevisions([$displayed]);
+        self::assertNotSame($revisions, $this->store->actionRevisions([$this->store->find(1)]));
+        $this->expectExceptionMessage('The selected color templates changed. Reload before continuing.');
+        $this->store->duplicate(42, [1], '<template_title> copy', $revisions);
+    }
+
     protected function setUp(): void
     {
         $this->db = new \PDO('sqlite::memory:');
@@ -106,9 +174,9 @@ final class LegacyColorTemplateStoreTest extends TestCase
         $id = $this->store->saveTemplate(42, null, $name, null);
         self::assertSame($name, $this->store->find($id)?->name);
         $title = str_repeat('é', 255);
-        $this->store->duplicate(42, [$id], $title);
+        $this->store->duplicate(42, [$id], $title, $this->store->actionRevisions([$this->store->find($id)]));
         self::assertSame($title, $this->db->query('SELECT name FROM color_templates ORDER BY color_template_id DESC LIMIT 1')->fetchColumn());
-        foreach ([fn() => $this->store->saveTemplate(42, null, str_repeat('界', 256), null), fn() => $this->store->duplicate(42, [$id], str_repeat('é', 256))] as $mutation) {
+        foreach ([fn() => $this->store->saveTemplate(42, null, str_repeat('界', 256), null), fn() => $this->store->duplicate(42, [$id], str_repeat('é', 256), $this->store->actionRevisions([$this->store->find($id)]))] as $mutation) {
             try {
                 $mutation();
                 self::fail('An overlong character value was accepted.');
@@ -147,7 +215,7 @@ final class LegacyColorTemplateStoreTest extends TestCase
         $revision = hash('sha256', json_encode([1, 2], JSON_THROW_ON_ERROR));
         $this->store->reorder(42, 1, [2, 1], $revision);
         self::assertSame([2, 1], array_map(static fn($item): int => $item->colorId, $this->store->items(1)));
-        $this->store->duplicate(42, [1], '<template_title> copied');
+        $this->store->duplicate(42, [1], '<template_title> copied', $this->store->actionRevisions([$this->store->find(1)]));
         $copy = $this->db->query("SELECT color_template_id FROM color_templates WHERE name='Template A updated copied'")->fetchColumn();
         self::assertNotFalse($copy);
         self::assertSame([2, 1], array_map(static fn($item): int => $item->colorId, $this->store->items((int) $copy)));
@@ -190,19 +258,19 @@ final class LegacyColorTemplateStoreTest extends TestCase
     public function testDeleteBlocksTemplateReferencesAndDeletesItemsAtomicallyForUnusedTemplates(): void
     {
         try {
-            $this->store->delete(42, [2]);
+            $this->store->delete(42, [2], $this->store->actionRevisions([$this->store->find(2)]));
             self::fail('A referenced color template was deleted.');
         } catch (\InvalidArgumentException) {
             self::assertSame(1, (int) $this->db->query('SELECT COUNT(*) FROM color_templates WHERE color_template_id=2')->fetchColumn());
         }
         try {
-            $this->store->delete(42, [1]);
+            $this->store->delete(42, [1], $this->store->actionRevisions([$this->store->find(1)]));
             self::fail('A template referenced only by a standalone aggregate graph was deleted.');
         } catch (\InvalidArgumentException) {
             self::assertSame(1, (int) $this->db->query('SELECT COUNT(*) FROM color_templates WHERE color_template_id=1')->fetchColumn());
         }
         $this->db->exec('DELETE FROM aggregate_graphs_graph_item WHERE aggregate_graph_id=200');
-        $this->store->delete(42, [1]);
+        $this->store->delete(42, [1], $this->store->actionRevisions([$this->store->find(1)]));
         self::assertSame(0, (int) $this->db->query('SELECT COUNT(*) FROM color_templates WHERE color_template_id=1')->fetchColumn());
         self::assertSame(0, (int) $this->db->query('SELECT COUNT(*) FROM color_template_items WHERE color_template_id=1')->fetchColumn());
     }

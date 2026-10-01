@@ -19,6 +19,7 @@ final class ColorTemplateActionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('selection', HiddenType::class)
+            ->add('revisions', HiddenType::class)
             ->add('title_format', TextType::class, ['label' => 'Title Format', 'required' => false, 'trim' => false, 'attr' => ['maxlength' => 255]])
             ->add('continue', SubmitType::class, ['label' => 'Continue']);
     }

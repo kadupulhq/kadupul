@@ -57,7 +57,7 @@ final class ColorTemplateActionController
                 }
                 $templates[] = $template;
             }
-            $form = $forms->create(ColorTemplateActionType::class, ['selection' => json_encode($ids, JSON_THROW_ON_ERROR), 'title_format' => '<template_title> (1)'], [
+            $form = $forms->create(ColorTemplateActionType::class, ['selection' => json_encode($ids, JSON_THROW_ON_ERROR), 'revisions' => json_encode($store->actionRevisions($templates), JSON_THROW_ON_ERROR), 'title_format' => '<template_title> (1)'], [
                 'action' => $urls->generate('color_template_actions', ['action' => $action, 'ids' => $ids] + $filters),
             ]);
             $form->handleRequest($request);
@@ -70,18 +70,22 @@ final class ColorTemplateActionController
                 if (!is_array($selected) || $selected !== $ids) {
                     $form->addError(new FormError($translator->trans('The selected color templates changed. Reload before continuing.', [], 'color_templates')));
                 }
+                $revisions = json_decode((string) $form->get('revisions')->getData(), true);
+                if (!is_array($revisions)) {
+                    $form->addError(new FormError($translator->trans('The selected color templates changed. Reload before continuing.', [], 'color_templates')));
+                }
                 if ($action === 'delete' && array_filter($templates, static fn($template): bool => !$template->deletable()) !== []) {
-                    $form->addError(new FormError($translator->trans('Color templates referenced by aggregate templates cannot be deleted.', [], 'color_templates')));
+                    $form->addError(new FormError($translator->trans('Color templates referenced by aggregate graphs or templates cannot be deleted.', [], 'color_templates')));
                 }
                 if ($form->isValid()) {
                     $data = $form->getData();
                     try {
                         if ($action === 'delete') {
-                            $delete($ids);
+                            $delete($ids, $revisions);
                             return new RedirectResponse($urls->generate('color_template_list', ['deleted' => 1] + $filters), 303, $headers);
                         }
                         if ($action === 'duplicate') {
-                            $duplicate($ids, (string) ($data['title_format'] ?? ''));
+                            $duplicate($ids, (string) ($data['title_format'] ?? ''), $revisions);
                             return new RedirectResponse($urls->generate('color_template_list', ['duplicated' => 1] + $filters), 303, $headers);
                         }
                         $summaries = [];
@@ -92,6 +96,9 @@ final class ColorTemplateActionController
                     } catch (ColorTemplateAccessDenied $error) {
                         return $this->denied($error, $translator);
                     } catch (\InvalidArgumentException $error) {
+                        if ($error->getMessage() === 'The selected color templates changed. Reload before continuing.') {
+                            $status = 409;
+                        }
                         $form->addError(new FormError($translator->trans($error->getMessage(), [], 'color_templates')));
                     } catch (\Throwable) {
                         $status = 502;

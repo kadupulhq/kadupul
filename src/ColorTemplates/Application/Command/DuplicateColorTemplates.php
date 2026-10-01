@@ -14,8 +14,8 @@ final readonly class DuplicateColorTemplates
 {
     public function __construct(private ColorTemplateAccess $access, private ColorTemplateStore $templates) {}
 
-    public function __invoke(array $ids, string $titleFormat): void
+    public function __invoke(array $ids, string $titleFormat, array $revisions): void
     {
-        $this->templates->duplicate($this->access->authorize()->id, $ids, $titleFormat);
+        $this->templates->duplicate($this->access->authorize()->id, $ids, $titleFormat, $revisions);
     }
 }

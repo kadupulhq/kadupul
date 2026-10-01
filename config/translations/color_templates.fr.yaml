@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 Access denied.: Accès refusé.
 Action: Action
 Actions: Actions
@@ -33,7 +36,7 @@ Color Templates: Modèles de couleurs
 Color Templates per page: Modèles par page
 Colors: Couleurs
 Continue: Continuer
-Continue to delete these color templates. Templates referenced by aggregate templates cannot be deleted.: Confirmez la suppression de ces modèles. Ceux utilisés par des modèles agrégés ne peuvent pas être supprimés.
+Continue to delete these color templates. Templates referenced by aggregate graphs or templates cannot be deleted.: Confirmez la suppression de ces modèles. Ceux utilisés par des graphiques ou des modèles agrégés ne peuvent pas être supprimés.
 Continue to duplicate these color templates.: Confirmez la duplication de ces modèles de couleurs.
 Delete: Supprimer
 Delete Color Item: Supprimer la couleur
@@ -50,7 +53,7 @@ Go: Appliquer
 Graphs: Graphiques
 Has Graphs: Avec graphiques
 Hex: Hexadécimal
-In use by aggregate templates: Utilisé par des modèles agrégés
+In use by aggregate graphs or templates: Utilisé par des graphiques ou des modèles agrégés
 Invalid color template filters.: Filtres de modèles de couleurs invalides.
 Invalid color template order.: Ordre de couleurs invalide.
 Invalid color template request.: Requête de modèle de couleurs invalide.
