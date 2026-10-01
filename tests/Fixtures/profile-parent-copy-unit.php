@@ -36,9 +36,23 @@ function db_fetch_assoc_prepared($sql, $params, $log = true, $connection = false
     if ($GLOBALS['case'] === 'query-failure') {
         return false;
     }
-    $query = ($connection ?: $GLOBALS['source'])->prepare($sql);
+    if (str_contains($sql, 'information_schema.TABLES')) {
+        // Explicit metadata boundary: SQLite transactions model the owned native row mutations.
+        return array_map(static fn($table) => ['TABLE_NAME' => $table, 'ENGINE' => $GLOBALS['case'] === 'reference-engine' ? 'MyISAM' : 'InnoDB'], $params);
+    }
+    if ($GLOBALS['case'] === 'reference-parent-lost' && str_contains($sql, 'FOR UPDATE')) {
+        return [];
+    }
+    $query = ($connection ?: $GLOBALS['source'])->prepare(str_replace(' FOR UPDATE', '', $sql));
     $query->execute($params);
     return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_fetch_assoc($sql, $log = true, $connection = false)
+{
+    if ($GLOBALS['case'] === 'reference-schema-failure') {
+        return false;
+    }
+    return array_map(static fn($row) => ['Field' => $row['name']], $connection->query('PRAGMA table_info(data_template_data)')->fetchAll(PDO::FETCH_ASSOC));
 }
 function db_table_exists($table, $log, $connection)
 {
@@ -65,6 +79,11 @@ function sql_save($row, $table, $key, $autoincrement, $connection)
 }
 function db_execute_prepared($sql, $params, $log, $connection)
 {
+    if (($GLOBALS['case'] === 'reference-delete-failure' && $sql === 'DELETE FROM data_template_data') || ($GLOBALS['case'] === 'reference-write-failure' && str_starts_with($sql, 'INSERT INTO data_template_data'))) {
+        return false;
+    }
+    $sql = str_replace(' ON DUPLICATE KEY UPDATE ', ' ON CONFLICT(id) DO UPDATE SET ', $sql);
+    $sql = preg_replace('/VALUES\(`(\w+)`\)/', 'excluded.`$1`', $sql);
     return $connection->prepare($sql)->execute($params);
 }
 function cacti_log(...$arguments) {}
@@ -76,6 +95,24 @@ $data = array(array('data_source_profile_id' => $id), array('data_source_profile
 if ($case === 'success') {
     $data[] = array('data_source_profile_id' => 1);
 }
-$result = replicate_data_source_profile_parents($remote, $data);
+if (str_starts_with($case, 'reference-')) {
+    $remote->exec('CREATE TABLE data_template_data (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, name TEXT)');
+    $remote->exec("INSERT INTO data_template_data VALUES (1,1,'old reference')");
+    $data = [['id' => $case === 'reference-exclude' ? 1 : 2, 'data_source_profile_id' => 77, 'name' => 'new reference']];
+    if ($case === 'reference-empty') {
+        $data = [];
+    }
+    if ($case === 'reference-column-mismatch') {
+        $data[0]['missing_column'] = 'unexpected';
+    }
+    if ($case === 'reference-active') {
+        $remote->beginTransaction();
+    }
+    $result = replicate_data_source_profile_children($remote, $data, $case !== 'reference-device' && $case !== 'reference-exclude', $case === 'reference-exclude' ? ['name'] : false);
+    $children = $remote->query('SELECT * FROM data_template_data ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
+    $active = $remote->inTransaction();
+} else {
+    $result = replicate_data_source_profile_parents($remote, $data);
+}
 $rows = db_table_exists('data_source_profiles', false, $remote) ? $remote->query('SELECT * FROM data_source_profiles ORDER BY id')->fetchAll(PDO::FETCH_ASSOC) : array();
-file_put_contents($directory . '/result.json', json_encode(array('success' => $result, 'rows' => $rows), JSON_THROW_ON_ERROR));
+file_put_contents($directory . '/result.json', json_encode(array('success' => $result, 'rows' => $rows, 'children' => $children ?? [], 'active' => $active ?? false), JSON_THROW_ON_ERROR));

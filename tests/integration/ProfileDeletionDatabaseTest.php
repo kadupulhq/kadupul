@@ -24,14 +24,16 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure));
         if ($failure !== '') {
             self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
-            self::assertFalse($state['parent']);
+            if (!str_starts_with($failure, 'child-')) {
+                self::assertFalse($state['parent']);
+            }
             self::assertStringContainsString('existing collector data-source definitions were retained', implode('\n', $state['log']));
             self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote' && str_starts_with($call[1], 'TRUNCATE')));
         } else {
             self::assertCount(4, $state['rras']);
-            self::assertSame(array(1,3), array_values(array_unique(array_map('intval', array_column($state['rras'], 'consolidation_function_id')))));
+            self::assertSame(array(1, 3), array_values(array_unique(array_map('intval', array_column($state['rras'], 'consolidation_function_id')))));
             self::assertSame(77, (int) $state['parent']);
-            self::assertSame($mode === 'bulk' ? array(2) : array(1,2), array_map('intval', array_column($state['rows'], 'id')));
+            self::assertSame($mode === 'bulk' ? array(2) : array(1, 2), array_map('intval', array_column($state['rows'], 'id')));
             self::assertSame(77, (int) end($state['rows'])['data_source_profile_id']);
         }
     }
@@ -76,10 +78,11 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     {
         $cases = array();
         foreach (array('bulk', 'device') as $mode) {
-            foreach (array('', 'copy', 'missing', 'rra', 'cf', 'corrupt', 'missing-rra', 'missing-cf', 'collision', 'engine') as $failure) {
+            foreach (array('', 'copy', 'missing', 'rra', 'cf', 'corrupt', 'missing-rra', 'missing-cf', 'collision', 'engine', 'child-write', 'child-partial') as $failure) {
                 $cases[$mode . ' ' . ($failure ?: 'custom profile')] = array($mode, $failure);
             }
         }
+        $cases['bulk reference cleanup refusal'] = ['bulk', 'child-delete'];
         return $cases;
     }
 

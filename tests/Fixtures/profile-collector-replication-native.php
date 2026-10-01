@@ -202,7 +202,16 @@ function array_rekey($rows, $key, $value)
 }
 function db_execute_prepared($sql, $params = [], $log = true, $connection = false)
 {
-    if (str_contains($sql, 'data_source_profiles')) {
+    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-delete' && str_starts_with($sql, 'DELETE FROM data_template_data')) {
+        return false;
+    }
+    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-partial' && str_starts_with($sql, 'INSERT INTO data_template_data') && ($params[0] ?? 0) === 3) {
+        return false;
+    }
+    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-write' && str_starts_with($sql, 'INSERT INTO data_template_data')) {
+        return false;
+    }
+    if ((str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data'))) {
         collector_statement($sql, $params, $connection);
         return true;
     }
@@ -277,6 +286,9 @@ try {
     }
     $id = ($scenario['failure'] ?? '') === 'missing' ? 98 : 77;
     $data = [['id' => 2, 'data_source_profile_id' => $id, 'name' => 'replicated']];
+    if (($scenario['failure'] ?? '') === 'child-partial') {
+        $data[] = ['id' => 3, 'data_source_profile_id' => $id, 'name' => 'later reference'];
+    }
     if (!empty($scenario['entrypoint'])) {
         $result = $scenario['collector'] === 'bulk' ? replicate_out(2) : api_device_replicate_out(1, 2);
     } elseif (($scenario['collector'] ?? '') === 'bulk') {

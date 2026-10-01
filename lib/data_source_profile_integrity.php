@@ -213,3 +213,90 @@ function replicate_data_source_profile_parents(PDO $connection, array $data): bo
         return false;
     }
 }
+
+/** Publish references only after complete catalog delivery, retaining old rows on any refusal. */
+function replicate_data_source_profile_children(PDO $connection, array $data, bool $replace, $exclude = false): bool
+{
+    $started = false;
+    try {
+        if ($connection->inTransaction() || !replicate_data_source_profile_parents($connection, $data)) {
+            throw new RuntimeException('Profile catalog delivery failed');
+        }
+        if (!db_table_exists('data_template_data', false, $connection)) {
+            $schema = db_fetch_row('SHOW CREATE TABLE data_template_data');
+            if (!isset($schema['Create Table']) || !db_execute($schema['Create Table'], false, $connection)) {
+                throw new RuntimeException('Collector reference schema creation failed');
+            }
+        }
+        $engines = db_fetch_assoc_prepared('SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN (?,?)', ['data_source_profiles', 'data_template_data'], true, $connection);
+        if (!is_array($engines) || count($engines) !== 2 || array_filter($engines, static fn($row) => strcasecmp($row['ENGINE'] ?? '', 'InnoDB') !== 0)) {
+            throw new RuntimeException('Collector reference tables are not transactional');
+        }
+        $columns = db_fetch_assoc('SHOW COLUMNS FROM data_template_data', false, $connection);
+        if (!is_array($columns) || !$columns) {
+            throw new RuntimeException('Collector reference schema is unavailable');
+        }
+        $allowed = array_column($columns, 'Field');
+        $excluded = $exclude === false ? [] : (is_array($exclude) ? $exclude : [$exclude]);
+        $ids = [];
+        foreach ($data as $row) {
+            if (!is_array($row) || !$row || array_diff(array_keys($row), $allowed)) {
+                throw new RuntimeException('Collector reference schema differs from source');
+            }
+            $id = (int) ($row['data_source_profile_id'] ?? 0);
+            if ($id > 0) {
+                $ids[$id] = $id;
+            }
+        }
+        sort($ids);
+        if (!$connection->beginTransaction()) {
+            throw new RuntimeException('Collector reference transaction could not start');
+        }
+        $started = true;
+        if ($ids) {
+            $parents = db_fetch_assoc_prepared('SELECT id FROM data_source_profiles WHERE id IN (' . implode(',', array_fill(0, count($ids), '?')) . ') ORDER BY id FOR UPDATE', $ids, true, $connection);
+            if (!is_array($parents) || array_map('intval', array_column($parents, 'id')) !== $ids) {
+                throw new RuntimeException('Collector profile disappeared before reference delivery');
+            }
+        }
+        if ($replace && !db_execute_prepared('DELETE FROM data_template_data', [], false, $connection)) {
+            throw new RuntimeException('Collector reference replacement failed');
+        }
+        foreach ($data as $row) {
+            $names = array_keys($row);
+            $updates = [];
+            foreach ($names as $name) {
+                if (!preg_match('/^[a-zA-Z0-9_]+$/D', $name)) {
+                    throw new RuntimeException('Invalid collector reference column');
+                }
+                if (!in_array($name, $excluded, true)) {
+                    $updates[] = '`' . $name . '`=VALUES(`' . $name . '`)';
+                }
+            }
+            $sql = 'INSERT INTO data_template_data (`' . implode('`,`', $names) . '`) VALUES (' . implode(',', array_fill(0, count($names), '?')) . ')';
+            if (!$replace) {
+                if (!$updates) {
+                    throw new RuntimeException('Collector reference update has no permitted columns');
+                }
+                $sql .= ' ON DUPLICATE KEY UPDATE ' . implode(',', $updates);
+            }
+            if (!db_execute_prepared($sql, array_values($row), false, $connection)) {
+                throw new RuntimeException('Collector reference write was not acknowledged');
+            }
+        }
+        if (!$connection->commit()) {
+            throw new RuntimeException('Collector reference commit was not acknowledged');
+        }
+        return true;
+    } catch (Throwable $error) {
+        if ($started && $connection->inTransaction()) {
+            try {
+                $connection->rollBack();
+            } catch (Throwable $rollbackError) {
+                cacti_log('ERROR: Collector reference rollback failed: ' . $rollbackError->getMessage(), false, 'REPLICATE');
+            }
+        }
+        cacti_log('ERROR: Profile delivery failed; existing collector data-source definitions were retained. ' . $error->getMessage(), false, 'REPLICATE');
+        return false;
+    }
+}

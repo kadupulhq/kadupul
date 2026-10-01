@@ -26,6 +26,17 @@ DDL implicitly commits. A missing parent or rejected definition copy stops that 
 existing rows are changed. This keeps guards active on collectors without losing
 their existing data-source definitions when custom profiles are introduced.
 
+Reference delivery then opens a separate InnoDB transaction and locks every
+referenced parent in ID order, rechecking that all parents remain present. Bulk
+replacement uses DELETE inside that transaction instead of TRUNCATE. Both
+bulk and per-device paths require acknowledgement of each reference write and
+an explicit successful commit. A refused cleanup or a later rejected row rolls
+back the whole reference delivery, preserving previous rows and preventing
+success messages, dependent table replication and sync-flag clearing. Schema
+creation is checked before the transaction; schema mismatches fail closed rather
+than dropping existing collector tables. An existing caller transaction is
+preserved and the operation is refused.
+
 The installation account must have TRIGGER privileges on the database, and the
 trigger definer must retain permission to read and lock `data_source_profiles`.
 The application account also needs TRIGGER privileges to inspect the guard
