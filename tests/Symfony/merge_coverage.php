@@ -226,6 +226,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Domain/DeviceTemplateDefinition.php',
         'src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceTemplateStatement.php',
         'src/Inventory/Infrastructure/Legacy/DeviceTemplateTransaction.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateDefinitionController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateDefinitionActionController.php',

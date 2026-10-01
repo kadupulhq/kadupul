@@ -1967,8 +1967,9 @@ function device_template_feature_guard(string $root, string $class, Stmt\ClassMe
     $contract = 'Kadupul\Inventory\Application\Port\DeviceTemplateDefinitions';
     $adapter = 'Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions';
     $reviewed = [
-        'src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php' => '18140ae714207ca61114413a21dc8ba05c7f091bc9f44fd3f83e9dd1a745858b',
-        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php' => '31a40aa7afaee63713ea8e6697c04bc9be4c3505ed7b7a2005526b8b2f4bda97',
+        'src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php' => '6f754cdebf7cede0dc113115a8240f0bcabe81e90a19d5cc1409f8b59f005068',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php' => '30a3bd7549fe89806f0ce692afb03aa1b913e89e021a8e50f530706e9b2a733a',
+        'src/Inventory/Infrastructure/Legacy/DeviceTemplateStatement.php' => 'e915a78b9b4bbb7e8192abadd6b228ec5dc0c08a616860e13e8e0adf4e463d07',
     ];
     foreach ($reviewed as $path => $hash) {
         if (!is_file($root . '/' . $path) || hash_file('sha256', $root . '/' . $path) !== $hash) {

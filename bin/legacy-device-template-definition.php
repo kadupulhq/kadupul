@@ -10,6 +10,7 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceTemplateAuthorization;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceTemplateTransaction;
+use Kadupul\Inventory\Infrastructure\Legacy\DeviceTemplateStatement;
 use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions;
 
 if (PHP_SAPI !== 'cli') {
@@ -94,12 +95,12 @@ try {
             if ($action === 'save') {
                 $data = DeviceTemplateDefinition::validate($command['data'] ?? []);
                 if ($id > 0) {
-                    $query = $db->prepare('UPDATE host_template SET name = ?, class = ? WHERE id = ?');
-                    $query->execute([$data['name'], $data['class'], $id]);
+                    $query = DeviceTemplateStatement::prepare($db, 'UPDATE host_template SET name = ?, class = ? WHERE id = ?');
+                    DeviceTemplateStatement::execute($query, [$data['name'], $data['class'], $id]);
                 } else {
-                    $query = $db->prepare('INSERT INTO host_template (hash, name, class) VALUES (?, ?, ?)');
-                    $query->execute([get_hash_host_template(0), $data['name'], $data['class']]);
-                    $id = (int) $db->lastInsertId();
+                    $query = DeviceTemplateStatement::prepare($db, 'INSERT INTO host_template (hash, name, class) VALUES (?, ?, ?)');
+                    DeviceTemplateStatement::execute($query, [get_hash_host_template(0), $data['name'], $data['class']]);
+                    $id = DeviceTemplateStatement::insertedId($db);
                     if ($id < 1) {
                         throw new RuntimeException();
                     }
@@ -112,21 +113,21 @@ try {
                 }
                 $child = definitionWorkerId($command['child'] ?? null);
                 [$table, $key, $target] = $kind === 'graph' ? ['host_template_graph', 'graph_template_id', 'graph_templates'] : ['host_template_snmp_query', 'snmp_query_id', 'snmp_query'];
-                $query = $db->prepare('SELECT id FROM ' . $target . ' WHERE id = ? LOCK IN SHARE MODE');
-                $query->execute([$child]);
-                if ($query->fetchColumn() === false) {
+                $query = DeviceTemplateStatement::prepare($db, 'SELECT id FROM ' . $target . ' WHERE id = ? LOCK IN SHARE MODE');
+                DeviceTemplateStatement::execute($query, [$child]);
+                if (DeviceTemplateStatement::fetchColumn($query) === false) {
                     throw new InvalidArgumentException();
                 }
                 if ($kind === 'graph' && $operation === 'add') {
-                    $query = $db->prepare('SELECT graph_template_id FROM snmp_query_graph WHERE graph_template_id = ? LOCK IN SHARE MODE');
-                    $query->execute([$child]);
-                    if ($query->fetchColumn() !== false) {
+                    $query = DeviceTemplateStatement::prepare($db, 'SELECT graph_template_id FROM snmp_query_graph WHERE graph_template_id = ? LOCK IN SHARE MODE');
+                    DeviceTemplateStatement::execute($query, [$child]);
+                    if (DeviceTemplateStatement::fetchColumn($query) !== false) {
                         throw new InvalidArgumentException();
                     }
                 }
                 $sql = $operation === 'add' ? "INSERT INTO $table (host_template_id, $key) VALUES (?, ?) ON DUPLICATE KEY UPDATE $key = VALUES($key)" : "DELETE FROM $table WHERE host_template_id = ? AND $key = ?";
-                $query = $db->prepare($sql);
-                $query->execute([$id, $child]);
+                $query = DeviceTemplateStatement::prepare($db, $sql);
+                DeviceTemplateStatement::execute($query, [$id, $child]);
             }
             $ids = [$id];
             DeviceTemplateTransaction::commit($db);
@@ -150,13 +151,13 @@ try {
             if ($action === 'delete') {
                 foreach ($ids as $id) {
                     foreach (['host_template_graph', 'host_template_snmp_query'] as $table) {
-                        $query = $db->prepare('DELETE FROM ' . $table . ' WHERE host_template_id = ?');
-                        $query->execute([$id]);
+                        $query = DeviceTemplateStatement::prepare($db, 'DELETE FROM ' . $table . ' WHERE host_template_id = ?');
+                        DeviceTemplateStatement::execute($query, [$id]);
                     }
-                    $query = $db->prepare("UPDATE host SET host_template_id = 0 WHERE host_template_id = ? AND deleted = ''");
-                    $query->execute([$id]);
-                    $query = $db->prepare('DELETE FROM host_template WHERE id = ?');
-                    $query->execute([$id]);
+                    $query = DeviceTemplateStatement::prepare($db, "UPDATE host SET host_template_id = 0 WHERE host_template_id = ? AND deleted = ''");
+                    DeviceTemplateStatement::execute($query, [$id]);
+                    $query = DeviceTemplateStatement::prepare($db, 'DELETE FROM host_template WHERE id = ?');
+                    DeviceTemplateStatement::execute($query, [$id]);
                 }
                 DeviceTemplateTransaction::commit($db);
                 $started = false;
@@ -184,13 +185,13 @@ try {
                     throw new InvalidArgumentException();
                 }
                 $claim = 'device_template_sync_' . $token;
-                $query = $db->prepare('SELECT value FROM settings WHERE name = ? FOR UPDATE');
-                $query->execute([$claim]);
-                if ($query->fetchColumn() !== false) {
+                $query = DeviceTemplateStatement::prepare($db, 'SELECT value FROM settings WHERE name = ? FOR UPDATE');
+                DeviceTemplateStatement::execute($query, [$claim]);
+                if (DeviceTemplateStatement::fetchColumn($query) !== false) {
                     throw new DeviceEditConflict('Sync outcome exists; do not replay.');
                 }
-                $query = $db->prepare('INSERT INTO settings (name, value) VALUES (?, ?)');
-                $query->execute([$claim, json_encode(['actor' => $actor, 'ids' => $ids, 'status' => 'pending'], JSON_THROW_ON_ERROR)]);
+                $query = DeviceTemplateStatement::prepare($db, 'INSERT INTO settings (name, value) VALUES (?, ?)');
+                DeviceTemplateStatement::execute($query, [$claim, json_encode(['actor' => $actor, 'ids' => $ids, 'status' => 'pending'], JSON_THROW_ON_ERROR)]);
                 // Durable claim survives loss of the response; a retry cannot repeat hooks or remote writes.
                 DeviceTemplateTransaction::commit($db);
                 $claimOwned = true;
@@ -203,14 +204,14 @@ try {
                 }
                 $devices = [];
                 foreach ($ids as $id) {
-                    $query = $db->prepare('SELECT id, host_template_id, poller_id FROM host WHERE host_template_id = ? AND status IN (2,3) ORDER BY id FOR UPDATE');
-                    $query->execute([$id]);
-                    foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $device) {
+                    $query = DeviceTemplateStatement::prepare($db, 'SELECT id, host_template_id, poller_id FROM host WHERE host_template_id = ? AND status IN (2,3) ORDER BY id FOR UPDATE');
+                    DeviceTemplateStatement::execute($query, [$id]);
+                    foreach (DeviceTemplateStatement::fetchAll($query, PDO::FETCH_ASSOC) as $device) {
                         $remote = null;
                         if ((int) $device['poller_id'] > 1) {
-                            $query = $db->prepare('SELECT id, disabled, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(last_status) AS age FROM poller WHERE id = ? FOR UPDATE');
-                            $query->execute([(int) $device['poller_id']]);
-                            $collector = $query->fetch(PDO::FETCH_ASSOC);
+                            $query = DeviceTemplateStatement::prepare($db, 'SELECT id, disabled, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(last_status) AS age FROM poller WHERE id = ? FOR UPDATE');
+                            DeviceTemplateStatement::execute($query, [(int) $device['poller_id']]);
+                            $collector = DeviceTemplateStatement::fetch($query, PDO::FETCH_ASSOC);
                             if (!$collector || $collector['disabled'] !== '' || $collector['age'] === null || (int) $collector['age'] >= (int) read_config_option('poller_interval') * 2) {
                                 throw new RuntimeException('Collector unavailable before synchronization.');
                             }
@@ -218,9 +219,9 @@ try {
                             if (!$remote instanceof PDO) {
                                 throw new RuntimeException('Collector unavailable before synchronization.');
                             }
-                            $query = $remote->prepare('SELECT id FROM host WHERE id = ? AND poller_id = ?');
-                            $query->execute([(int) $device['id'], (int) $device['poller_id']]);
-                            if ($query->fetchColumn() === false) {
+                            $query = DeviceTemplateStatement::prepare($remote, 'SELECT id FROM host WHERE id = ? AND poller_id = ?');
+                            DeviceTemplateStatement::execute($query, [(int) $device['id'], (int) $device['poller_id']]);
+                            if (DeviceTemplateStatement::fetchColumn($query) === false) {
                                 throw new RuntimeException('Collector device unavailable before synchronization.');
                             }
                         }
@@ -235,9 +236,9 @@ try {
                 foreach ($devices as [$device, $remote]) {
                     (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier())->verify($db, $remote, (int) $device['id'], (int) $device['host_template_id'], true);
                     foreach (array_filter([$db, $remote]) as $connection) {
-                        $query = $connection->prepare('SELECT host_template_id FROM host WHERE id = ? AND poller_id = ?');
-                        $query->execute([(int) $device['id'], (int) $device['poller_id']]);
-                        if ((int) $query->fetchColumn() !== (int) $device['host_template_id']) {
+                        $query = DeviceTemplateStatement::prepare($connection, 'SELECT host_template_id FROM host WHERE id = ? AND poller_id = ?');
+                        DeviceTemplateStatement::execute($query, [(int) $device['id'], (int) $device['poller_id']]);
+                        if ((int) DeviceTemplateStatement::fetchColumn($query) !== (int) $device['host_template_id']) {
                             throw new RuntimeException('Collector template assignment could not be verified.');
                         }
                     }
@@ -277,8 +278,8 @@ try {
     }
     if ($rollbackConfirmed && $claimOwned && $claim !== null && $db instanceof PDO) {
         try {
-            $query = $db->prepare('UPDATE settings SET value = ? WHERE name = ?');
-            $query->execute([json_encode(['actor' => $actor, 'ids' => $ids, 'status' => $status], JSON_THROW_ON_ERROR), $claim]);
+            $query = DeviceTemplateStatement::prepare($db, 'UPDATE settings SET value = ? WHERE name = ?');
+            DeviceTemplateStatement::execute($query, [json_encode(['actor' => $actor, 'ids' => $ids, 'status' => $status], JSON_THROW_ON_ERROR), $claim]);
         } catch (Throwable) {
             $status = 'partial';
         }

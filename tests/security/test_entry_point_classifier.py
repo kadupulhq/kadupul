@@ -1128,7 +1128,8 @@ def main():
         with tempfile.TemporaryDirectory(prefix='entry-classifier-device-template-') as directory:
             root = tree(directory)
             proof_files = ['src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php',
-                           'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php']
+                           'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php',
+                           'src/Inventory/Infrastructure/Legacy/DeviceTemplateStatement.php']
             for path in proof_files:
                 (root / path).parent.mkdir(parents=True, exist_ok=True)
                 (root / path).write_text((project / path).read_text())
@@ -1168,6 +1169,12 @@ final class DeviceTemplateAction {
                 if run(root, []).get('app.php/inventory/device-templates', ('missing',))[0] != 'unknown':
                     failures.append('Device template changed realm contract was still certified')
                 authorization.write_text((project / proof_files[0]).read_text())
+                statements = root / proof_files[2]
+                statements.write_text(statements.read_text().replace("$statement->errorCode() !== '00000'", 'false'))
+                count += 1
+                if run(root, []).get('app.php/inventory/device-templates', ('missing',))[0] != 'unknown':
+                    failures.append('Device template unchecked statement helper was still certified')
+                statements.write_text((project / proof_files[2]).read_text())
                 original = services.read_text()
                 services.write_text(original.replace('LegacyDeviceTemplateDefinitions', 'UncheckedDefinitions'))
                 count += 1

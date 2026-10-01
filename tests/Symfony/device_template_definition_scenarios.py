@@ -185,7 +185,7 @@ def verify_device_template_definitions(harness, session, user_id, check):
     link_host = int(harness.sql(f"INSERT INTO host (description,hostname,host_template_id,status,poller_id) VALUES ('link {uid}','127.0.0.1',{tid},3,1); SELECT LAST_INSERT_ID()").strip())
     verified_fronts = []
     def verify_front(front, prefix):
-        status, html = request(front + '/inventory/device-templates?has_hosts=true&q=' + uid)
+        status, html = request(front + '/inventory/device-templates?reset=1&has_hosts=true&class=-1&graph=0&q=' + uid)
         target = prefix + 'host.php?reset=true&amp;host_template_id=' + str(tid)
         check(status == 200 and target in html and '/public/host.php' not in html, 'attached-device link respects configured installation: ' + front)
         check('<td>Yes</td>' in html, 'attached-device template remains deletable: ' + front)

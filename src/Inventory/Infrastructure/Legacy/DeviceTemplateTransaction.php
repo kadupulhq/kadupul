@@ -29,11 +29,14 @@ final class DeviceTemplateTransaction
                     throw new \RuntimeException('Storage inspection was not confirmed.');
                 }
                 $row = $query->fetch(\PDO::FETCH_NUM);
+                if ($query->errorCode() !== '00000') {
+                    throw new \RuntimeException('Storage inspection was not confirmed.');
+                }
                 if (!is_array($row) || !is_string($row[1] ?? null) || !preg_match('/\n\) ENGINE=InnoDB(?:\s|$)/i', $row[1])) {
                     throw new \RuntimeException('Nontransactional storage.');
                 }
             }
-            if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false) {
+            if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false || $db->errorCode() !== '00000') {
                 throw new \RuntimeException('Transaction isolation was not confirmed.');
             }
         }

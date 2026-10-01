@@ -25,14 +25,14 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
     public function defaults(int $actor, bool $reset = false): array
     {
         $db = $this->database->get();
-        $settings = $db->query("SELECT name, value FROM settings WHERE name IN ('num_rows_table', 'default_has')")->fetchAll(\PDO::FETCH_KEY_PAIR);
+        $settings = DeviceTemplateStatement::fetchAll(DeviceTemplateStatement::query($db, "SELECT name, value FROM settings WHERE name IN ('num_rows_table', 'default_has')"), \PDO::FETCH_KEY_PAIR);
         $defaults = ['size' => in_array((int) ($settings['num_rows_table'] ?? 25), \Kadupul\Inventory\Infrastructure\Symfony\DeviceTemplateFilters::SIZES, true) ? (int) ($settings['num_rows_table'] ?? 25) : 25, 'has_hosts' => ($settings['default_has'] ?? '') === 'on' ? 'true' : 'false'];
         if ($reset) {
             return $defaults;
         }
-        $query = $db->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'twig_device_template_filters'");
-        $query->execute([$actor]);
-        $saved = $query->fetchColumn();
+        $query = DeviceTemplateStatement::prepare($db, "SELECT value FROM settings_user WHERE user_id = ? AND name = 'twig_device_template_filters'");
+        DeviceTemplateStatement::execute($query, [$actor]);
+        $saved = DeviceTemplateStatement::fetchColumn($query);
         if (is_string($saved)) {
             try {
                 $saved = json_decode($saved, true, 8, JSON_THROW_ON_ERROR);
@@ -50,8 +50,8 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
         DeviceTemplateTransaction::begin($db, $this->configuration->values(), ['settings_user']);
         try {
             DeviceTemplateAuthorization::authorize($db, $actor, true);
-            $query = $db->prepare("INSERT INTO settings_user (user_id, name, value) VALUES (?, 'twig_device_template_filters', ?) ON DUPLICATE KEY UPDATE value = VALUES(value)");
-            $query->execute([$actor, json_encode($filters, JSON_THROW_ON_ERROR)]);
+            $query = DeviceTemplateStatement::prepare($db, "INSERT INTO settings_user (user_id, name, value) VALUES (?, 'twig_device_template_filters', ?) ON DUPLICATE KEY UPDATE value = VALUES(value)");
+            DeviceTemplateStatement::execute($query, [$actor, json_encode($filters, JSON_THROW_ON_ERROR)]);
             DeviceTemplateTransaction::commit($db);
         } catch (\Throwable $error) {
             if ($db->inTransaction()) {
@@ -82,9 +82,9 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
         }
         $sort = ['name' => 'ht.name', 'id' => 'ht.id', 'class' => 'ht.class', 'hosts' => 'hosts'][$filters['sort']];
         $sql = "SELECT ht.id, ht.name, ht.class, (SELECT COUNT(*) FROM host h WHERE h.host_template_id = ht.id) AS hosts FROM host_template ht WHERE " . implode(' AND ', $where) . ' ORDER BY ' . $sort . ' ' . strtoupper($filters['direction']) . ', ht.id ASC LIMIT ' . ($filters['size'] + 1) . ' OFFSET ' . (($filters['page'] - 1) * $filters['size']);
-        $query = $this->database->get()->prepare($sql);
-        $query->execute($params);
-        $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+        $query = DeviceTemplateStatement::prepare($this->database->get(), $sql);
+        DeviceTemplateStatement::execute($query, $params);
+        $rows = DeviceTemplateStatement::fetchAll($query, \PDO::FETCH_ASSOC);
         return ['rows' => array_slice($rows, 0, $filters['size']), 'hasNext' => count($rows) > $filters['size']];
     }
     public function find(int $id): ?DeviceTemplateDefinition
@@ -93,24 +93,24 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
     }
     public static function read(\PDO $db, int $id, bool $lock = false): ?DeviceTemplateDefinition
     {
-        $query = $db->prepare('SELECT id, name, class FROM host_template WHERE id = ?' . ($lock ? ' FOR UPDATE' : ''));
-        $query->execute([$id]);
-        $row = $query->fetch(\PDO::FETCH_ASSOC);
+        $query = DeviceTemplateStatement::prepare($db, 'SELECT id, name, class FROM host_template WHERE id = ?' . ($lock ? ' FOR UPDATE' : ''));
+        DeviceTemplateStatement::execute($query, [$id]);
+        $row = DeviceTemplateStatement::fetch($query, \PDO::FETCH_ASSOC);
         if (!$row) {
             return null;
         }
         $children = [];
         foreach (['graph' => 'graph_template_id', 'snmp_query' => 'snmp_query_id'] as $table => $key) {
-            $query = $db->prepare('SELECT ' . $key . ' FROM host_template_' . $table . ' WHERE host_template_id = ? ORDER BY ' . $key . ($lock ? ' FOR UPDATE' : ''));
-            $query->execute([$id]);
-            $children[] = array_map('intval', $query->fetchAll(\PDO::FETCH_COLUMN));
+            $query = DeviceTemplateStatement::prepare($db, 'SELECT ' . $key . ' FROM host_template_' . $table . ' WHERE host_template_id = ? ORDER BY ' . $key . ($lock ? ' FOR UPDATE' : ''));
+            DeviceTemplateStatement::execute($query, [$id]);
+            $children[] = array_map('intval', DeviceTemplateStatement::fetchAll($query, \PDO::FETCH_COLUMN));
         }
         return new DeviceTemplateDefinition((int) $row['id'], $row['name'], $row['class'], ...$children);
     }
     public function choices(): array
     {
         $db = $this->database->get();
-        return ['add_graphs' => $db->query('SELECT id, name FROM graph_templates WHERE id > 0 AND id NOT IN (SELECT graph_template_id FROM snmp_query_graph) ORDER BY name, id')->fetchAll(\PDO::FETCH_KEY_PAIR), 'graphs' => $db->query('SELECT id, name FROM graph_templates WHERE id > 0 ORDER BY name, id')->fetchAll(\PDO::FETCH_KEY_PAIR), 'queries' => $db->query('SELECT id, name FROM snmp_query WHERE id > 0 ORDER BY name, id')->fetchAll(\PDO::FETCH_KEY_PAIR)];
+        return ['add_graphs' => DeviceTemplateStatement::fetchAll(DeviceTemplateStatement::query($db, 'SELECT id, name FROM graph_templates WHERE id > 0 AND id NOT IN (SELECT graph_template_id FROM snmp_query_graph) ORDER BY name, id'), \PDO::FETCH_KEY_PAIR), 'graphs' => DeviceTemplateStatement::fetchAll(DeviceTemplateStatement::query($db, 'SELECT id, name FROM graph_templates WHERE id > 0 ORDER BY name, id'), \PDO::FETCH_KEY_PAIR), 'queries' => DeviceTemplateStatement::fetchAll(DeviceTemplateStatement::query($db, 'SELECT id, name FROM snmp_query WHERE id > 0 ORDER BY name, id'), \PDO::FETCH_KEY_PAIR)];
     }
     public function hooks(int $actor, int $id): array
     {
@@ -120,7 +120,7 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
     {
         $correlation = bin2hex(random_bytes(16));
         $command = ['actor' => $actor, 'action' => $action, 'correlation' => $correlation] + $command;
-        $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
+        $configured = DeviceTemplateStatement::fetchColumn(DeviceTemplateStatement::query($this->database->get(), "SELECT value FROM settings WHERE name = 'path_php_binary'"));
         $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . '/php';
         $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-template-definition.php'], $this->projectDir);
         $process->setTimeout(180);
