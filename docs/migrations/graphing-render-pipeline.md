@@ -145,7 +145,6 @@ and where each goes. Database rows that describe the graph go to
 | 42 | `$graph_data_array` mode keys: `print_source`, `get_error`, `export`, `export_filename`, `output_filename`, `export_csv`, `export_realtime`, `graphv`, `output_flag`, `image_format` | `lib/rrd.php:3172-3236`; `GraphOptionsGenerator.php:119-131` | `GraphRequest` |
 | 43 | `$graph_data_array['graph_theme']`, `disable_cache` | `lib/rrd.php:3407-3408`; `lib/boost.php:376` | `GraphRequest` |
 | 44 | `rand()` for gradient variable names | `lib/rrd.php:4960-4961` | `RenderFacts` (name source); the fixture seeds it at `tests/Fixtures/rrd-characterization.php:209` |
-
 | 45 | `auth_method` and configured `guest_user` when there is no session settings user | `lib/functions.php:324-357` | Legacy context factory resolves the guest/settings user; resolved fonts and dates enter `RenderContext` and its fingerprint |
 
 Two findings from this inventory shape the slices:

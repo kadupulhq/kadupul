@@ -201,10 +201,10 @@ reads the graph, builds the command and runs it in one function
   `rrd_graph_graph_options` hook and the transport in today's order.
 
 The hook receives and returns three strings that plugins parse, so through 1.3
-an adapter renders the command into those strings exactly as today. Post-hook command strings keep their bytes in the tagged
+an adapter renders the command into those strings exactly as today. Post-hook
+command strings keep their bytes in the tagged
 `LegacySerializedGraphCommand` compatibility value; transport framing and
-rejection checks remain. The image
-cache is a port that `RenderGraph` calls before reading anything, not a
+rejection checks remain. The image cache is a port that `RenderGraph` calls before reading anything, not a
 decorator around `RrdTransport`: a hit today skips the definition queries,
 `rrdtool info` and percentile fetches, and the transport never sees the
 viewer. [Graph rendering pipeline](graphing-render-pipeline.md) has the
