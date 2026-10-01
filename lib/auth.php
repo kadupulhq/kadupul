@@ -5348,6 +5348,35 @@ function auth_session_end_reason($user_id) {
 }
 
 /**
+ * auth_session_enforce - end the current session when
+ *   auth_session_end_reason() says it may not continue.
+ *
+ * include/auth.php calls this on every request. Pages that load only
+ * include/global.php call it themselves.
+ *
+ * @return (bool) true when the session was ended
+ */
+function auth_session_enforce() {
+	if (empty($_SESSION['sess_user_id'])) {
+		return false;
+	}
+
+	$session_end = auth_session_end_reason($_SESSION['sess_user_id']);
+
+	if ($session_end == '') {
+		return false;
+	}
+
+	cacti_log('NOTE: Session for user id ' . $_SESSION['sess_user_id'] . ' ended because ' . $session_end, false, 'AUTH');
+
+	kill_session_var('sess_user_id');
+	cacti_session_destroy();
+	cacti_session_start(true);
+
+	return true;
+}
+
+/**
  * cacti_csrf_rotate - Rotate CSRF token by regenerating the session.
  *
  * Call at privilege boundaries (login, role change, sensitive form post)

@@ -64,18 +64,8 @@ if ($auth_method != 0) {
 	/* handle alternate authentication realms */
 	api_plugin_hook_function('auth_alternate_realms');
 
-	/* an account disabled or locked, a password change, "logout everywhere" or an idle session ends it */
-	if (!empty($_SESSION['sess_user_id'])) {
-		$session_end = auth_session_end_reason($_SESSION['sess_user_id']);
-
-		if ($session_end != '') {
-			cacti_log('NOTE: Session for user id ' . $_SESSION['sess_user_id'] . ' ended because ' . $session_end, false, 'AUTH');
-
-			kill_session_var('sess_user_id');
-			cacti_session_destroy();
-			cacti_session_start(true);
-		}
-	}
+	/* a disabled or deleted account, a password change, "logout everywhere" or an idle session ends it */
+	auth_session_enforce();
 
 	/**
 	 * handle change password dialog and auth cookie if not using basic auth

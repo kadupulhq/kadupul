@@ -179,14 +179,36 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 }
 
 function db_fetch_row_prepared($sql, $params = array()) {
+	if (strpos($sql, 'SELECT enabled, password') !== false) {
+		return array('enabled' => 'on', 'password' => 'new-hash');
+	}
+
 	$GLOBALS['calls']['lookups']++;
 
 	return array();
 }
 
+function get_guest_account() {
+	return '3';
+}
+
+function cacti_sizeof($value) {
+	return is_array($value) ? count($value) : 0;
+}
+
+function cacti_log($message, $output = false, $environ = '', $level = 0) {
+}
+
+function cacti_session_destroy() {
+	$_SESSION = array();
+}
+
+function cacti_session_start($regenerate = false) {
+}
+
 PHP;
 
-	foreach (array('auth_session_credential_key', 'auth_session_credentials_valid') as $name) {
+	foreach (array('auth_session_credential_key', 'auth_session_credentials_valid', 'auth_session_epoch', 'auth_session_end_reason', 'auth_session_enforce') as $name) {
 		$global .= cacti_test_function_source($auth, $name) . "\n\n";
 	}
 
