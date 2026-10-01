@@ -49,16 +49,16 @@ final readonly class LegacyColorTemplateAccess implements ColorTemplateAccess
         $db = $this->database->get();
         $suffix = $db->inTransaction() && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
         $query = $db->prepare('SELECT id, username, enabled, locked, must_change_password FROM user_auth WHERE id = ?' . $suffix);
-        $query->execute([$actorId]);
-        $user = $query->fetch(\PDO::FETCH_ASSOC);
+        $this->execute($query, [$actorId]);
+        $user = $this->fetchOne($query);
         if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on' || $user['must_change_password'] === 'on') {
             return false;
         }
-        $auth = $db->query("SELECT value FROM settings WHERE name = 'auth_method'" . $suffix)->fetchColumn();
+        $auth = $this->fetchScalar($db->query("SELECT value FROM settings WHERE name = 'auth_method'" . $suffix));
         if ($auth !== false && !in_array((int) $auth, [1, 2, 3, 4], true)) {
             return false;
         }
-        $guest = $db->query("SELECT value FROM settings WHERE name = 'guest_user'" . $suffix)->fetchColumn();
+        $guest = $this->fetchScalar($db->query("SELECT value FROM settings WHERE name = 'guest_user'" . $suffix));
         return $actorId !== (int) $guest && $user['username'] !== $guest;
     }
 
@@ -70,8 +70,8 @@ final readonly class LegacyColorTemplateAccess implements ColorTemplateAccess
         $db = $this->database->get();
         $suffix = $lock && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
         $query = $db->prepare('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?' . $suffix);
-        $query->execute([$actorId, $realmId]);
-        if ($query->fetchColumn() !== false) {
+        $this->execute($query, [$actorId, $realmId]);
+        if ($this->fetchScalar($query) !== false) {
             return true;
         }
         if (!$this->groupTablesExist($db)) {
@@ -81,8 +81,42 @@ final readonly class LegacyColorTemplateAccess implements ColorTemplateAccess
             INNER JOIN user_auth_group_members m ON m.group_id = r.group_id
             INNER JOIN user_auth_group g ON g.id = r.group_id
             WHERE g.enabled = 'on' AND m.user_id = ? AND r.realm_id = ? LIMIT 1" . $suffix);
-        $query->execute([$actorId, $realmId]);
-        return $query->fetchColumn() !== false;
+        $this->execute($query, [$actorId, $realmId]);
+        return $this->fetchScalar($query) !== false;
+    }
+
+    private function execute(\PDOStatement|false $statement, array $parameters): void
+    {
+        if ($statement === false || !$statement->execute($parameters)) {
+            throw new \RuntimeException('Color template authorization could not be verified.');
+        }
+    }
+
+    private function fetchOne(\PDOStatement|false $statement): array|false
+    {
+        if ($statement === false) {
+            throw new \RuntimeException('Color template authorization could not be verified.');
+        }
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
+        $this->assertReadConfirmed($statement);
+        return $row;
+    }
+
+    private function fetchScalar(\PDOStatement|false $statement): mixed
+    {
+        if ($statement === false) {
+            throw new \RuntimeException('Color template authorization could not be verified.');
+        }
+        $value = $statement->fetchColumn();
+        $this->assertReadConfirmed($statement);
+        return $value;
+    }
+
+    private function assertReadConfirmed(\PDOStatement $statement): void
+    {
+        if ($statement->errorCode() !== '00000') {
+            throw new \RuntimeException('Color template authorization could not be verified.');
+        }
     }
 
     private function groupTablesExist(\PDO $db): bool
@@ -90,8 +124,8 @@ final readonly class LegacyColorTemplateAccess implements ColorTemplateAccess
         if ($db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
             $query = $db->prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?");
             foreach (['user_auth_group_realm', 'user_auth_group_members', 'user_auth_group'] as $table) {
-                $query->execute([$table]);
-                if ($query->fetchColumn() === false) {
+                $this->execute($query, [$table]);
+                if ($this->fetchScalar($query) === false) {
                     return false;
                 }
             }
@@ -100,7 +134,7 @@ final readonly class LegacyColorTemplateAccess implements ColorTemplateAccess
         try {
             foreach (['user_auth_group_realm', 'user_auth_group_members', 'user_auth_group'] as $table) {
                 $query = $db->query("SHOW TABLES LIKE '" . $table . "'");
-                if ($query->fetchColumn() === false) {
+                if ($this->fetchScalar($query) === false) {
                     return false;
                 }
             }

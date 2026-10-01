@@ -29,8 +29,12 @@ try {
     if (strlen($input) > 4096) {
         throw new InvalidArgumentException('Payload too large.');
     }
-    $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'template_id']) !== []
+    $wireCommand = json_decode($input, false, 8, JSON_THROW_ON_ERROR);
+    if (!$wireCommand instanceof stdClass) {
+        throw new InvalidArgumentException('Invalid sync command.');
+    }
+    $command = get_object_vars($wireCommand);
+    if (array_diff(array_keys($command), ['actor', 'template_id']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_int($command['template_id'] ?? null) || $command['template_id'] < 1) {
         throw new InvalidArgumentException('Invalid sync command.');
@@ -117,5 +121,5 @@ if ($unexpected !== '') {
     $status = 'failed';
     $summary = [];
 }
-echo 'KADUPUL_COLOR_SYNC_RESULT=' . json_encode(['status' => $status, 'summary' => $summary, 'diagnostic' => $diagnostic], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE) . PHP_EOL;
+echo 'KADUPUL_COLOR_SYNC_RESULT=' . json_encode(['actor' => $command['actor'] ?? null, 'template_id' => $command['template_id'] ?? null, 'status' => $status, 'summary' => $summary, 'diagnostic' => $diagnostic], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE) . PHP_EOL;
 exit($status === 'ok' ? 0 : 1);

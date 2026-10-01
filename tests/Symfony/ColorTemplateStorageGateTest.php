@@ -38,6 +38,7 @@ final class ColorTemplateStorageGateTest extends TestCase
         $db = $this->database();
         $current = '';
         $query = $this->createMock(\PDOStatement::class);
+        $query->method('errorCode')->willReturn('00000');
         $query->method('fetch')->with(\PDO::FETCH_NUM)->willReturnCallback(static function () use (&$current, $invalidTable): array {
             return [$current, "CREATE TABLE `{$current}` (\n `id` bigint\n) ENGINE=" . ($current === $invalidTable ? 'MyISAM' : 'InnoDB')];
         });
@@ -61,6 +62,7 @@ final class ColorTemplateStorageGateTest extends TestCase
     {
         $db = $this->database();
         $query = $this->createMock(\PDOStatement::class);
+        $query->method('errorCode')->willReturn('00000');
         $query->method('fetch')->willReturn(false);
         $db->method('query')->willReturn($query);
         $db->expects(self::never())->method('exec');
@@ -81,10 +83,23 @@ final class ColorTemplateStorageGateTest extends TestCase
     {
         $db = $this->database();
         $query = $this->createMock(\PDOStatement::class);
+        $query->method('errorCode')->willReturn('00000');
         $query->method('fetch')->willReturn(['fixture', "CREATE TABLE `fixture` (\n `id` bigint\n) ENGINE=InnoDB"]);
         $db->method('query')->willReturn($query);
         $db->expects(self::once())->method('exec')->with('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ')->willReturn(false);
         $this->expectExceptionMessage('isolation could not be confirmed');
+        $this->store($db)->saveTemplate(42, null, 'Storage guard', null);
+    }
+
+    public function testLateStorageMetadataFailureRefusesBeforeStartingTransaction(): void
+    {
+        $db = $this->database();
+        $query = $this->createMock(\PDOStatement::class);
+        $query->method('fetch')->willReturn(['fixture', "CREATE TABLE `fixture` (\n `id` bigint\n) ENGINE=InnoDB"]);
+        $query->method('errorCode')->willReturn('08006');
+        $db->method('query')->willReturn($query);
+        $db->expects(self::never())->method('exec');
+        $this->expectExceptionMessage('database result could not be confirmed');
         $this->store($db)->saveTemplate(42, null, 'Storage guard', null);
     }
 

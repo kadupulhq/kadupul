@@ -19,8 +19,13 @@ final readonly class LegacyColorTemplatePreferences implements ColorTemplatePref
     {
         $actor = $this->access->authorize();
         $query = $this->database->get()->prepare("SELECT value FROM settings_user WHERE user_id=? AND name='color_templates_filters'");
-        $query->execute([$actor->id]);
+        if ($query === false || !$query->execute([$actor->id])) {
+            throw new \RuntimeException('Filter preferences could not be loaded.');
+        }
         $json = $query->fetchColumn();
+        if ($query->errorCode() !== '00000') {
+            throw new \RuntimeException('Filter preferences could not be loaded.');
+        }
         if (!is_string($json) || $json === '') {
             return null;
         }
@@ -51,11 +56,22 @@ final readonly class LegacyColorTemplatePreferences implements ColorTemplatePref
             $actor = $this->access->authorize();
             $this->access->assertCurrent($actor->id);
             $query = $db->prepare("REPLACE INTO settings_user (user_id,name,value) VALUES (?,'color_templates_filters',?)");
-            $query->execute([$actor->id, json_encode($filters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)]);
-            $db->commit();
+            if ($query === false || !$query->execute([$actor->id, json_encode($filters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)])) {
+                throw new \RuntimeException('Filter preferences could not be saved.');
+            }
+            if (!$db->commit()) {
+                throw new \RuntimeException('Filter preference commit could not be confirmed.');
+            }
         } catch (\Throwable $error) {
             if ($db->inTransaction()) {
-                $db->rollBack();
+                try {
+                    $confirmed = $db->rollBack();
+                } catch (\Throwable $rollbackError) {
+                    throw new \RuntimeException('Filter preference rollback could not be confirmed.', 0, $rollbackError);
+                }
+                if (!$confirmed) {
+                    throw new \RuntimeException('Filter preference rollback could not be confirmed.', 0, $error);
+                }
             }
             throw $error;
         }

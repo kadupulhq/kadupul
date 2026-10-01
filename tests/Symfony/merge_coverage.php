@@ -62,6 +62,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'graph aggregate creation confirmation carries selected members and palette items',
         'graph creation caller reports uncertain partial creation and stops missing-palette propagation',
         'standalone aggregate sync consumes the stored palette and preserves member order',
+        'color sync worker rejects non-object command before any graph handoff',
+        'color sync worker rejects numeric-key command object before any graph handoff',
         'referenced color templates remain selectable for duplicate and synchronization',
         'stale reorder with identical item IDs cannot overwrite a concurrent sequence change',
         'color-template search accepts 200 UTF-8 characters',

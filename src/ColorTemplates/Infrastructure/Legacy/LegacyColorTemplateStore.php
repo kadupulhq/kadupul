@@ -25,14 +25,14 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
 
     public function defaultRows(): int
     {
-        $value = $this->database->get()->query("SELECT value FROM settings WHERE name = 'num_rows_table'")->fetchColumn();
+        $value = $this->fetchScalar($this->database->get()->query("SELECT value FROM settings WHERE name = 'num_rows_table'"));
         $rows = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5000]]);
         return $rows === false ? 25 : $rows;
     }
 
     public function defaultHasGraphs(): bool
     {
-        return $this->database->get()->query("SELECT value FROM settings WHERE name = 'default_has'")->fetchColumn() === 'on';
+        return $this->fetchScalar($this->database->get()->query("SELECT value FROM settings WHERE name = 'default_has'")) === 'on';
     }
 
     public function list(ColorTemplateFilters $filters): ColorTemplatePage
@@ -54,15 +54,15 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             LEFT JOIN (SELECT color_template, COUNT(*) templates FROM aggregate_graph_templates_item GROUP BY color_template) templates ON templates.color_template=ct.color_template_id
             LEFT JOIN (SELECT color_template_id, COUNT(*) items FROM color_template_items GROUP BY color_template_id) items ON items.color_template_id=ct.color_template_id' . $where;
         $count = $this->database->get()->prepare('SELECT COUNT(*) FROM (' . $aggregate . ') listed' . $usedCondition);
-        $count->execute($parameters);
-        $total = (int) $count->fetchColumn();
+        $this->execute($count, $parameters);
+        $total = (int) $this->fetchScalar($count);
         $sort = match ($filters->sortColumn) {
             'graphs' => 'graphs', 'templates' => 'templates', default => 'name',
         };
         $offset = ($filters->page - 1) * $filters->rows;
         $query = $this->database->get()->prepare('SELECT * FROM (' . $aggregate . ') listed' . $usedCondition . ' ORDER BY ' . $sort . ' ' . $filters->sortDirection . ', color_template_id ASC LIMIT ? OFFSET ?');
-        $query->execute([...$parameters, $filters->rows, $offset]);
-        $templates = array_map(fn(array $row): ColorTemplate => $this->hydrateTemplate($row), $query->fetchAll(PDO::FETCH_ASSOC));
+        $this->execute($query, [...$parameters, $filters->rows, $offset]);
+        $templates = array_map(fn(array $row): ColorTemplate => $this->hydrateTemplate($row), $this->fetchAll($query, PDO::FETCH_ASSOC));
         return new ColorTemplatePage($templates, $total, $filters);
     }
 
@@ -73,8 +73,8 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             (SELECT COUNT(*) FROM aggregate_graph_templates_item WHERE color_template=ct.color_template_id) templates,
             (SELECT COUNT(*) FROM color_template_items WHERE color_template_id=ct.color_template_id) items
             FROM color_templates ct WHERE ct.color_template_id=?');
-        $query->execute([$id]);
-        $row = $query->fetch(PDO::FETCH_ASSOC);
+        $this->execute($query, [$id]);
+        $row = $this->fetchOne($query, PDO::FETCH_ASSOC);
         return $row ? $this->hydrateTemplate($row) : null;
     }
 
@@ -82,14 +82,14 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
     {
         $query = $this->database->get()->prepare('SELECT i.color_template_item_id, i.color_template_id, i.color_id, i.sequence, c.hex
             FROM color_template_items i LEFT JOIN colors c ON c.id=i.color_id WHERE i.color_template_id=? ORDER BY i.sequence, i.color_template_item_id');
-        $query->execute([$templateId]);
-        return array_map(static fn(array $row): ColorTemplateItem => new ColorTemplateItem((int) $row['color_template_item_id'], (int) $row['color_template_id'], (int) $row['color_id'], (int) $row['sequence'], (string) ($row['hex'] ?? '')), $query->fetchAll(PDO::FETCH_ASSOC));
+        $this->execute($query, [$templateId]);
+        return array_map(static fn(array $row): ColorTemplateItem => new ColorTemplateItem((int) $row['color_template_item_id'], (int) $row['color_template_id'], (int) $row['color_id'], (int) $row['sequence'], (string) ($row['hex'] ?? '')), $this->fetchAll($query, PDO::FETCH_ASSOC));
     }
 
     public function colors(): array
     {
         $query = $this->database->get()->query('SELECT id, name, hex FROM colors ORDER BY name, id');
-        return array_map(static fn(array $row): array => ['id' => (int) $row['id'], 'name' => (string) $row['name'], 'hex' => (string) $row['hex']], $query->fetchAll(PDO::FETCH_ASSOC));
+        return array_map(static fn(array $row): array => ['id' => (int) $row['id'], 'name' => (string) $row['name'], 'hex' => (string) $row['hex']], $this->fetchAll($query, PDO::FETCH_ASSOC));
     }
 
     public function saveTemplate(int $actorId, ?int $id, string $name, ?string $revision): int
@@ -98,12 +98,12 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         return $this->transaction($actorId, 'color.template.' . ($id === null ? 'create' : 'edit'), $id === null ? 'new' : (string) $id, function (PDO $db) use ($id, $name, $revision): int {
             if ($id === null) {
                 $query = $db->prepare('INSERT INTO color_templates (name) VALUES (?)');
-                $query->execute([$name]);
+                $this->execute($query, [$name]);
                 return (int) $db->lastInsertId();
             }
             $query = $db->prepare('SELECT color_template_id, name FROM color_templates WHERE color_template_id=?' . $this->lockSuffix($db));
-            $query->execute([$id]);
-            $current = $query->fetch(PDO::FETCH_ASSOC);
+            $this->execute($query, [$id]);
+            $current = $this->fetchOne($query, PDO::FETCH_ASSOC);
             if (!$current) {
                 throw new \InvalidArgumentException('Color template not found.');
             }
@@ -112,7 +112,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
                 throw new \InvalidArgumentException('Color template changed since you opened the form. Reload before saving.');
             }
             $query = $db->prepare('UPDATE color_templates SET name=? WHERE color_template_id=?');
-            $query->execute([$name, $id]);
+            $this->execute($query, [$name, $id]);
             return $id;
         });
     }
@@ -125,20 +125,20 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         return $this->transaction($actorId, 'color.item.' . ($itemId === null ? 'create' : 'edit'), $itemId === null ? (string) $templateId : (string) $itemId, function (PDO $db) use ($templateId, $itemId, $colorId, $revision): int {
             $this->requireTemplate($db, $templateId, true);
             $color = $db->prepare('SELECT id FROM colors WHERE id=?' . $this->lockSuffix($db));
-            $color->execute([$colorId]);
-            if ($color->fetchColumn() === false) {
+            $this->execute($color, [$colorId]);
+            if ($this->fetchScalar($color) === false) {
                 throw new \InvalidArgumentException('Selected color is unavailable.');
             }
             if ($itemId === null) {
                 $sequence = $db->prepare('SELECT COALESCE(MAX(sequence),0)+1 FROM color_template_items WHERE color_template_id=?');
-                $sequence->execute([$templateId]);
+                $this->execute($sequence, [$templateId]);
                 $insert = $db->prepare('INSERT INTO color_template_items (color_template_id,color_id,sequence) VALUES (?,?,?)');
-                $insert->execute([$templateId, $colorId, (int) $sequence->fetchColumn()]);
+                $this->execute($insert, [$templateId, $colorId, (int) $this->fetchScalar($sequence)]);
                 return (int) $db->lastInsertId();
             }
             $query = $db->prepare('SELECT color_template_item_id, color_template_id, color_id, sequence FROM color_template_items WHERE color_template_item_id=? AND color_template_id=?' . $this->lockSuffix($db));
-            $query->execute([$itemId, $templateId]);
-            $current = $query->fetch(PDO::FETCH_ASSOC);
+            $this->execute($query, [$itemId, $templateId]);
+            $current = $this->fetchOne($query, PDO::FETCH_ASSOC);
             if (!$current) {
                 throw new \InvalidArgumentException('Color template item not found.');
             }
@@ -147,7 +147,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
                 throw new \InvalidArgumentException('Color template item changed. Reload before saving.');
             }
             $update = $db->prepare('UPDATE color_template_items SET color_id=? WHERE color_template_item_id=? AND color_template_id=?');
-            $update->execute([$colorId, $itemId, $templateId]);
+            $this->execute($update, [$colorId, $itemId, $templateId]);
             return $itemId;
         });
     }
@@ -156,8 +156,8 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
     {
         $this->transaction($actorId, 'color.item.delete', (string) $itemId, function (PDO $db) use ($templateId, $itemId, $revision): void {
             $query = $db->prepare('SELECT color_template_item_id, color_template_id, color_id, sequence FROM color_template_items WHERE color_template_item_id=? AND color_template_id=?' . $this->lockSuffix($db));
-            $query->execute([$itemId, $templateId]);
-            $current = $query->fetch(PDO::FETCH_ASSOC);
+            $this->execute($query, [$itemId, $templateId]);
+            $current = $this->fetchOne($query, PDO::FETCH_ASSOC);
             if (!$current) {
                 throw new \InvalidArgumentException('Color template item not found.');
             }
@@ -166,7 +166,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
                 throw new \InvalidArgumentException('Color template item changed. Reload before removing it.');
             }
             $delete = $db->prepare('DELETE FROM color_template_items WHERE color_template_item_id=? AND color_template_id=?');
-            $delete->execute([$itemId, $templateId]);
+            $this->execute($delete, [$itemId, $templateId]);
         });
     }
 
@@ -179,8 +179,8 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         $this->transaction($actorId, 'color.item.reorder', (string) $templateId, function (PDO $db) use ($templateId, $orderedItemIds, $revision): void {
             $this->requireTemplate($db, $templateId, true);
             $query = $db->prepare('SELECT color_template_item_id FROM color_template_items WHERE color_template_id=? ORDER BY sequence, color_template_item_id' . $this->lockSuffix($db));
-            $query->execute([$templateId]);
-            $current = array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN));
+            $this->execute($query, [$templateId]);
+            $current = array_map('intval', $this->fetchAll($query, PDO::FETCH_COLUMN));
             $expectedRevision = hash('sha256', json_encode($current, JSON_THROW_ON_ERROR));
             if (!is_string($revision) || !hash_equals($expectedRevision, $revision)) {
                 throw new \InvalidArgumentException('Color template order changed. Reload before reordering.');
@@ -195,7 +195,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             }
             $update = $db->prepare('UPDATE color_template_items SET sequence=? WHERE color_template_id=? AND color_template_item_id=?');
             foreach ($submitted as $position => $itemId) {
-                $update->execute([$position + 1, $templateId, $itemId]);
+                $this->execute($update, [$position + 1, $templateId, $itemId]);
             }
         });
     }
@@ -221,9 +221,9 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         $ids = array_map(static fn(array $template): int => (int) $template['color_template_id'], $templates);
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         $query = $db->prepare("SELECT color_template_id,color_template_item_id,color_id,sequence FROM color_template_items WHERE color_template_id IN ($placeholders) ORDER BY color_template_id,sequence,color_template_item_id" . ($lock ? $this->lockSuffix($db) : ''));
-        $query->execute($ids);
+        $this->execute($query, $ids);
         $items = [];
-        foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($this->fetchAll($query, PDO::FETCH_ASSOC) as $row) {
             $items[(int) $row['color_template_id']][] = [(int) $row['color_template_item_id'], (int) $row['color_id'], (int) $row['sequence']];
         }
         $revisions = [];
@@ -260,15 +260,15 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
             foreach (['aggregate_graph_templates_item', 'aggregate_graphs_graph_item'] as $table) {
                 $references = $db->prepare("SELECT color_template FROM $table WHERE color_template IN ($placeholders) ORDER BY color_template" . $this->lockSuffix($db));
-                $references->execute($ids);
-                if ($references->fetchColumn() !== false) {
+                $this->execute($references, $ids);
+                if ($this->fetchScalar($references) !== false) {
                     throw new \InvalidArgumentException('Color templates referenced by aggregate graphs or templates cannot be deleted.');
                 }
             }
             $items = $db->prepare("DELETE FROM color_template_items WHERE color_template_id IN ($placeholders)");
-            $items->execute($ids);
+            $this->execute($items, $ids);
             $delete = $db->prepare("DELETE FROM color_templates WHERE color_template_id IN ($placeholders)");
-            $delete->execute($ids);
+            $this->execute($delete, $ids);
         });
     }
 
@@ -290,11 +290,11 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             foreach ($templates as $template) {
                 $name = str_replace('<template_title>', (string) $template['name'], $titleFormat);
                 $this->validateName($name);
-                $insert->execute([$name]);
+                $this->execute($insert, [$name]);
                 $newId = (int) $db->lastInsertId();
-                $readItems->execute([(int) $template['color_template_id']]);
-                foreach ($readItems->fetchAll(PDO::FETCH_ASSOC) as $item) {
-                    $insertItem->execute([$newId, (int) $item['color_id'], (int) $item['sequence']]);
+                $this->execute($readItems, [(int) $template['color_template_id']]);
+                foreach ($this->fetchAll($readItems, PDO::FETCH_ASSOC) as $item) {
+                    $this->execute($insertItem, [$newId, (int) $item['color_id'], (int) $item['sequence']]);
                 }
             }
         });
@@ -326,9 +326,10 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             return $result;
         } catch (\Throwable $error) {
             if ($started && $db->inTransaction()) {
-                $db->rollBack();
+                $this->rollbackOwned($db, $error);
             }
             if ($error instanceof \InvalidArgumentException) {
+                $decision = AuditEvent::DENIED;
                 $outcome = AuditEvent::DENIED;
             }
             throw $error;
@@ -338,6 +339,62 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             } catch (\Throwable) {
                 // Audit sink failure must not change a committed template operation.
             }
+        }
+    }
+
+    private function execute(\PDOStatement|false $statement, array $parameters): void
+    {
+        if ($statement === false || !$statement->execute($parameters)) {
+            throw new \RuntimeException('Color template database operation could not be confirmed.');
+        }
+    }
+
+    private function fetchOne(\PDOStatement|false $statement, int $mode = PDO::FETCH_ASSOC): array|false
+    {
+        if ($statement === false) {
+            throw new \RuntimeException('Color template database result could not be confirmed.');
+        }
+        $row = $statement->fetch($mode);
+        $this->assertReadConfirmed($statement);
+        return $row;
+    }
+
+    private function fetchAll(\PDOStatement|false $statement, int $mode = PDO::FETCH_ASSOC): array
+    {
+        if ($statement === false) {
+            throw new \RuntimeException('Color template database result could not be confirmed.');
+        }
+        $rows = $statement->fetchAll($mode);
+        $this->assertReadConfirmed($statement);
+        return $rows;
+    }
+
+    private function fetchScalar(\PDOStatement|false $statement): mixed
+    {
+        if ($statement === false) {
+            throw new \RuntimeException('Color template database result could not be confirmed.');
+        }
+        $value = $statement->fetchColumn();
+        $this->assertReadConfirmed($statement);
+        return $value;
+    }
+
+    private function assertReadConfirmed(\PDOStatement $statement): void
+    {
+        if ($statement->errorCode() !== '00000') {
+            throw new \RuntimeException('Color template database result could not be confirmed.');
+        }
+    }
+
+    private function rollbackOwned(PDO $db, \Throwable $error): void
+    {
+        try {
+            $confirmed = $db->rollBack();
+        } catch (\Throwable $rollbackError) {
+            throw new \RuntimeException('Color template rollback could not be confirmed.', 0, $rollbackError);
+        }
+        if (!$confirmed) {
+            throw new \RuntimeException('Color template rollback could not be confirmed.', 0, $error);
         }
     }
 
@@ -359,7 +416,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             if ($query === false) {
                 throw new \RuntimeException('Color template storage could not be verified.');
             }
-            $definition = $query->fetch(PDO::FETCH_NUM);
+            $definition = $this->fetchOne($query, PDO::FETCH_NUM);
             if (!is_array($definition) || preg_match('/\n\) ENGINE=InnoDB\b/i', (string) ($definition[1] ?? '')) !== 1) {
                 throw new \RuntimeException('Color template writes require transactional tables.');
             }
@@ -372,15 +429,15 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
     private function lockedTemplates(PDO $db, array $ids): array
     {
         $query = $db->prepare('SELECT color_template_id,name FROM color_templates WHERE color_template_id IN (' . implode(',', array_fill(0, count($ids), '?')) . ') ORDER BY color_template_id' . $this->lockSuffix($db));
-        $query->execute($ids);
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $this->execute($query, $ids);
+        return $this->fetchAll($query, PDO::FETCH_ASSOC);
     }
 
     private function requireTemplate(PDO $db, int $templateId, bool $lock): void
     {
         $query = $db->prepare('SELECT color_template_id FROM color_templates WHERE color_template_id=?' . ($lock ? $this->lockSuffix($db) : ''));
-        $query->execute([$templateId]);
-        if ($query->fetchColumn() === false) {
+        $this->execute($query, [$templateId]);
+        if ($this->fetchScalar($query) === false) {
             throw new \InvalidArgumentException('Color template not found.');
         }
     }

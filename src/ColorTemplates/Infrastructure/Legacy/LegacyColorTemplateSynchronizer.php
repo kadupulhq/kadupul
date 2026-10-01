@@ -19,19 +19,39 @@ final readonly class LegacyColorTemplateSynchronizer implements ColorTemplateSyn
 
     public function sync(int $actorId, int $templateId): array
     {
-        $binary = $this->database->get()->query("SELECT value FROM settings WHERE name='path_php_binary'")->fetchColumn();
-        $binary = is_string($binary) && trim($binary) !== '' ? trim($binary) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
-        $process = new Process([$binary, $this->projectDir . '/bin/legacy-color-template-sync.php'], $this->projectDir);
-        $process->setTimeout(180);
-        $process->setInput(json_encode(['actor' => $actorId, 'template_id' => $templateId], JSON_THROW_ON_ERROR));
         $status = AuditEvent::FAILED;
         $summary = [];
         try {
+            $query = $this->database->get()->query("SELECT value FROM settings WHERE name='path_php_binary'");
+            if ($query === false) {
+                throw new \RuntimeException('Color template worker configuration could not be verified.');
+            }
+            $binary = $query->fetchColumn();
+            if ($query->errorCode() !== '00000') {
+                throw new \RuntimeException('Color template worker configuration could not be verified.');
+            }
+            $binary = is_string($binary) && trim($binary) !== '' ? trim($binary) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
+            $process = new Process([$binary, $this->projectDir . '/bin/legacy-color-template-sync.php'], $this->projectDir);
+            $process->setTimeout(180);
+            $process->setInput(json_encode(['actor' => $actorId, 'template_id' => $templateId], JSON_THROW_ON_ERROR));
             $process->run();
-            if (!preg_match('/KADUPUL_COLOR_SYNC_RESULT=(\{[^\r\n]+\})/', $process->getOutput(), $match)) {
+            $output = $process->getOutput();
+            if (preg_match_all('/^KADUPUL_COLOR_SYNC_RESULT=(\{[^\r\n]+\})$/m', $output, $matches) !== 1
+                || trim($output) !== 'KADUPUL_COLOR_SYNC_RESULT=' . $matches[1][0]) {
                 throw new \RuntimeException('Color template synchronization outcome is unknown.');
             }
-            $result = json_decode($match[1], true, 8, JSON_THROW_ON_ERROR);
+            try {
+                $wireResult = json_decode($matches[1][0], false, 8, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $error) {
+                throw new \RuntimeException('Color template synchronization outcome is unknown.', 0, $error);
+            }
+            if (!$wireResult instanceof \stdClass) {
+                throw new \RuntimeException('Color template synchronization could not be confirmed.');
+            }
+            $result = get_object_vars($wireResult);
+            if (($result['actor'] ?? null) !== $actorId || ($result['template_id'] ?? null) !== $templateId) {
+                throw new \RuntimeException('Color template synchronization could not be confirmed.');
+            }
             if (($result['status'] ?? '') === 'denied') {
                 $status = AuditEvent::DENIED;
                 throw new \Kadupul\ColorTemplates\Application\Query\ColorTemplateAccessDenied(false);
@@ -40,15 +60,20 @@ final readonly class LegacyColorTemplateSynchronizer implements ColorTemplateSyn
                 $status = AuditEvent::DENIED;
                 throw new \InvalidArgumentException('Color template not found.');
             }
-            if (!$process->isSuccessful() || ($result['status'] ?? '') !== 'ok' || !is_array($result['summary'] ?? null)) {
+            if (!$process->isSuccessful() || ($result['status'] ?? '') !== 'ok' || !(($result['summary'] ?? null) instanceof \stdClass)) {
                 $diagnostic = $result['diagnostic'] ?? null;
                 if (is_string($diagnostic) && preg_match('/\A[A-Za-z0-9_\\\\]+ in [A-Za-z0-9_.-]+:[0-9]+(?: \((?:missing [A-Za-z0-9_\\\\]+|database error [0-9]+)\))?\z/D', $diagnostic)) {
                     error_log('Color template sync worker failed: ' . $diagnostic);
                 }
                 throw new \RuntimeException('Color template synchronization could not be confirmed.');
             }
+            $summary = get_object_vars($result['summary']);
+            if (count($summary) !== 3 || !is_string($summary['template'] ?? null)
+                || !is_int($summary['aggregate_templates'] ?? null) || $summary['aggregate_templates'] < 0
+                || !is_int($summary['aggregate_graphs'] ?? null) || $summary['aggregate_graphs'] < 0) {
+                throw new \RuntimeException('Color template synchronization could not be confirmed.');
+            }
             $status = AuditEvent::SUCCEEDED;
-            $summary = $result['summary'];
             return $summary;
         } catch (\Throwable $error) {
             if ($status === AuditEvent::FAILED && $error instanceof \InvalidArgumentException) {
@@ -57,7 +82,8 @@ final readonly class LegacyColorTemplateSynchronizer implements ColorTemplateSyn
             throw $error;
         } finally {
             try {
-                $this->audit->record(new AuditEvent(bin2hex(random_bytes(16)), $actorId, 'color.template.sync', 'color_template', (string) $templateId, AuditEvent::ALLOWED, $status));
+                $decision = $status === AuditEvent::DENIED ? AuditEvent::DENIED : AuditEvent::ALLOWED;
+                $this->audit->record(new AuditEvent(bin2hex(random_bytes(16)), $actorId, 'color.template.sync', 'color_template', (string) $templateId, $decision, $status));
             } catch (\Throwable) {
             }
         }

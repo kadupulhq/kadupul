@@ -296,6 +296,15 @@ def verify_color_templates(harness, session, user_id, check):
             result = re.search(r'KADUPUL_COLOR_SYNC_RESULT=(\{[^\r\n]+\})', worker['stdout'])
             check(worker['exit'] != 0 and result is not None and json.loads(result.group(1))['status'] == expected,
                   'color sync worker rejects ' + expected + ' command before any graph handoff')
+        for payload, description in [
+            ([user_id, template_id], 'non-object command'),
+            ({'0': user_id, '1': template_id}, 'numeric-key command object'),
+        ]:
+            worker = harness.compose('exec', '-T', '-u', 'www-data', 'web', 'php', 'bin/legacy-color-template-sync.php',
+                                     data=json.dumps(payload), check=False)
+            results = re.findall(r'^KADUPUL_COLOR_SYNC_RESULT=(\{[^\r\n]+\})$', worker['stdout'], re.MULTILINE)
+            check(worker['exit'] != 0 and len(results) == 1 and json.loads(results[0])['status'] == 'invalid',
+                  'color sync worker rejects ' + description + ' before any graph handoff')
 
         reference_probe = Path(__file__).with_name('color_template_reference_probe.php').read_text()
         # Executing a file honors the existing errors/PCOV auto_prepend INI;

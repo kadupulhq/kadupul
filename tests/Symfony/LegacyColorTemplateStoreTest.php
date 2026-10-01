@@ -94,6 +94,244 @@ final class LegacyColorTemplateStoreTest extends TestCase
         $this->store->duplicate(42, [1], '<template_title> copy', $revisions);
     }
 
+    /** @dataProvider silentWriteOperations */
+    public function testSilentSqlFailurePreservesRowsAndRecordsFailure(string $operation): void
+    {
+        $template = $this->store->find(1);
+        $revisions = $this->store->actionRevisions([$template]);
+        $this->db->exec('DELETE FROM aggregate_graphs_graph_item');
+        $this->db->exec('DELETE FROM aggregate_graph_templates_item');
+        $beforeTemplates = $this->db->query('SELECT * FROM color_templates ORDER BY color_template_id')->fetchAll(\PDO::FETCH_ASSOC);
+        $beforeItems = $this->db->query('SELECT * FROM color_template_items ORDER BY color_template_item_id')->fetchAll(\PDO::FETCH_ASSOC);
+        $sqlOperation = match ($operation) {
+            'create', 'duplicate' => 'INSERT',
+            'rename' => 'UPDATE',
+            default => 'DELETE',
+        };
+        $this->db->exec("CREATE TRIGGER reject_color_write BEFORE $sqlOperation ON color_templates BEGIN SELECT RAISE(FAIL, 'Fixture rejected write'); END");
+        $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        $failure = null;
+        try {
+            match ($operation) {
+                'create' => $this->store->saveTemplate(42, null, 'Rejected', null),
+                'rename' => $this->store->saveTemplate(42, 1, 'Rejected', $template->revision),
+                'duplicate' => $this->store->duplicate(42, [1], '<template_title> copy', $revisions),
+                'delete' => $this->store->delete(42, [1], $revisions),
+            };
+        } catch (\Throwable $error) {
+            $failure = $error;
+        }
+        self::assertInstanceOf(\RuntimeException::class, $failure);
+        self::assertFalse($this->db->inTransaction());
+        self::assertSame($beforeTemplates, $this->db->query('SELECT * FROM color_templates ORDER BY color_template_id')->fetchAll(\PDO::FETCH_ASSOC));
+        self::assertSame($beforeItems, $this->db->query('SELECT * FROM color_template_items ORDER BY color_template_item_id')->fetchAll(\PDO::FETCH_ASSOC));
+        self::assertSame(AuditEvent::FAILED, $this->audit->events[array_key_last($this->audit->events)]->outcome);
+    }
+
+    public static function silentWriteOperations(): array
+    {
+        return [['create'], ['rename'], ['duplicate'], ['delete']];
+    }
+
+    public function testSilentDependencyReadFailureCannotAuthorizeDeletion(): void
+    {
+        $revisions = $this->store->actionRevisions([$this->store->find(1)]);
+        $this->db->exec('DELETE FROM aggregate_graphs_graph_item');
+        $this->db->exec('DROP TABLE aggregate_graph_templates_item');
+        $this->db->exec("CREATE VIEW aggregate_graph_templates_item AS SELECT json_extract('invalid-json', '$') AS color_template");
+        $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        $probe = $this->db->prepare('SELECT color_template FROM aggregate_graph_templates_item WHERE color_template IN (?) ORDER BY color_template');
+        self::assertFalse($probe->execute([1]));
+        self::assertNotSame('00000', $probe->errorCode());
+        $failure = null;
+        try {
+            $this->store->delete(42, [1], $revisions);
+        } catch (\Throwable $error) {
+            $failure = $error;
+        }
+        self::assertInstanceOf(\RuntimeException::class, $failure);
+        self::assertFalse($this->db->inTransaction());
+        self::assertSame(1, (int) $this->db->query('SELECT COUNT(*) FROM color_templates WHERE color_template_id=1')->fetchColumn());
+        self::assertSame(2, (int) $this->db->query('SELECT COUNT(*) FROM color_template_items WHERE color_template_id=1')->fetchColumn());
+        self::assertSame(AuditEvent::FAILED, $this->audit->events[array_key_last($this->audit->events)]->outcome);
+    }
+
+    /** @dataProvider failedPolicySettings */
+    public function testFailedPolicyReadCannotAuthorizeMutation(string $setting): void
+    {
+        $revision = $this->store->find(1)->revision;
+        $this->db->exec('ALTER TABLE settings RENAME TO settings_fixture');
+        $this->db->exec("CREATE VIEW settings AS SELECT name, CASE WHEN name='$setting' THEN json_extract('invalid-json', '$') ELSE value END AS value FROM settings_fixture");
+        $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        $failure = null;
+        try {
+            $this->store->saveTemplate(42, 1, 'Must not be authorized', $revision);
+        } catch (\Throwable $error) {
+            $failure = $error;
+        }
+        self::assertInstanceOf(\RuntimeException::class, $failure);
+        self::assertFalse($this->db->inTransaction());
+        self::assertSame('Template A', $this->db->query('SELECT name FROM color_templates WHERE color_template_id=1')->fetchColumn());
+    }
+
+    public static function failedPolicySettings(): array
+    {
+        return [['auth_method'], ['guest_user']];
+    }
+
+    /** @dataProvider lateAuthorizationReads */
+    public function testLateAuthorizationFetchFailureCannotGrantAccess(string $failedRead): void
+    {
+        $db = $this->createMock(\PDO::class);
+        $db->method('inTransaction')->willReturn(false);
+        $db->method('getAttribute')->willReturn('sqlite');
+        $user = $this->createMock(\PDOStatement::class);
+        $user->method('execute')->willReturn(true);
+        $user->method('fetch')->willReturn(['id' => 42, 'username' => 'color-test', 'enabled' => 'on', 'locked' => '', 'must_change_password' => '']);
+        $user->method('errorCode')->willReturn($failedRead === 'account' ? '08006' : '00000');
+        $realm = $this->createMock(\PDOStatement::class);
+        $realm->method('execute')->willReturn(true);
+        $realm->method('fetchColumn')->willReturn(5);
+        $realm->method('errorCode')->willReturn($failedRead === 'realm' ? '08006' : '00000');
+        $db->method('prepare')->willReturnCallback(static fn(string $sql): \PDOStatement => str_contains($sql, 'FROM user_auth WHERE') ? $user : $realm);
+        $auth = $this->createMock(\PDOStatement::class);
+        $auth->method('fetchColumn')->willReturn(false);
+        $auth->method('errorCode')->willReturn($failedRead === 'auth_method' ? '08006' : '00000');
+        $guest = $this->createMock(\PDOStatement::class);
+        $guest->method('fetchColumn')->willReturn(false);
+        $guest->method('errorCode')->willReturn($failedRead === 'guest_user' ? '08006' : '00000');
+        $db->method('query')->willReturnCallback(static fn(string $sql): \PDOStatement => str_contains($sql, 'auth_method') ? $auth : $guest);
+        $connection = $this->createMock(DatabaseConnection::class);
+        $connection->method('get')->willReturn($db);
+        $access = new LegacyColorTemplateAccess($this->console, $connection);
+        $this->expectException(\RuntimeException::class);
+        $access->authorize();
+    }
+
+    public static function lateAuthorizationReads(): array
+    {
+        return [['account'], ['auth_method'], ['guest_user'], ['realm']];
+    }
+
+    /** @dataProvider silentItemOperations */
+    public function testSilentItemWriteFailureRollsBackEntireOperation(string $operation): void
+    {
+        $revisions = $this->store->actionRevisions([$this->store->find(1)]);
+        $item = $this->store->items(1)[0];
+        $beforeTemplates = $this->db->query('SELECT * FROM color_templates ORDER BY color_template_id')->fetchAll(\PDO::FETCH_ASSOC);
+        $beforeItems = $this->db->query('SELECT * FROM color_template_items ORDER BY color_template_item_id')->fetchAll(\PDO::FETCH_ASSOC);
+        $sqlOperation = match ($operation) {
+            'create', 'duplicate' => 'INSERT',
+            'remove' => 'DELETE',
+            default => 'UPDATE',
+        };
+        $this->db->exec("CREATE TRIGGER reject_color_item BEFORE $sqlOperation ON color_template_items BEGIN SELECT RAISE(FAIL, 'Fixture rejected item write'); END");
+        $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        $failure = null;
+        try {
+            match ($operation) {
+                'create' => $this->store->saveItem(42, 1, null, 3, null),
+                'edit' => $this->store->saveItem(42, 1, $item->id, 3, $item->revision),
+                'remove' => $this->store->removeItem(42, 1, $item->id, $item->revision),
+                'reorder' => $this->store->reorder(42, 1, [2, 1], hash('sha256', json_encode([1, 2], JSON_THROW_ON_ERROR))),
+                'duplicate' => $this->store->duplicate(42, [1], '<template_title> copy', $revisions),
+            };
+        } catch (\Throwable $error) {
+            $failure = $error;
+        }
+        self::assertInstanceOf(\RuntimeException::class, $failure);
+        self::assertFalse($this->db->inTransaction());
+        self::assertSame($beforeTemplates, $this->db->query('SELECT * FROM color_templates ORDER BY color_template_id')->fetchAll(\PDO::FETCH_ASSOC));
+        self::assertSame($beforeItems, $this->db->query('SELECT * FROM color_template_items ORDER BY color_template_item_id')->fetchAll(\PDO::FETCH_ASSOC));
+        self::assertSame(AuditEvent::FAILED, $this->audit->events[array_key_last($this->audit->events)]->outcome);
+    }
+
+    public static function silentItemOperations(): array
+    {
+        return [['create'], ['edit'], ['remove'], ['reorder'], ['duplicate']];
+    }
+
+    public function testLateBatchReadFailureCannotReturnPartialColors(): void
+    {
+        $this->db->exec('DROP TABLE colors');
+        $this->db->exec("CREATE VIEW colors AS SELECT 1 AS id, 'Blue' AS name, '0000FF' AS hex UNION ALL SELECT 2, json_extract('invalid-json', '$'), 'FF0000'");
+        $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        $this->expectException(\RuntimeException::class);
+        $this->store->colors();
+    }
+
+    /** @dataProvider uncertainDatabaseOutcomes */
+    public function testUnconfirmedCommitOrRollbackCannotClaimSuccess(string $failure): void
+    {
+        $db = new class ('sqlite::memory:') extends \PDO {
+            public string $failure = '';
+            public function commit(): bool
+            {
+                return $this->failure === 'commit' ? false : parent::commit();
+            }
+            public function rollBack(): bool
+            {
+                if ($this->failure === 'rollback-throw') {
+                    throw new \PDOException('Fixture rejected rollback.');
+                }
+                return $this->failure === 'rollback-false' ? false : parent::rollBack();
+            }
+        };
+        $db->exec('CREATE TABLE color_templates(color_template_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT)');
+        if ($failure !== 'commit') {
+            $db->exec("CREATE TRIGGER deny_write BEFORE INSERT ON color_templates BEGIN SELECT RAISE(FAIL,'Fixture rejected write'); END");
+        }
+        $db->failure = $failure;
+        $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        $connection = $this->createMock(DatabaseConnection::class);
+        $connection->method('get')->willReturn($db);
+        $access = $this->createMock(\Kadupul\ColorTemplates\Application\Port\ColorTemplateAccess::class);
+        $store = new LegacyColorTemplateStore($connection, $access, $this->audit, $this->createMock(LegacyConfiguration::class));
+        try {
+            $store->saveTemplate(42, null, 'Must not claim success', null);
+            self::fail('Unconfirmed operation claimed success.');
+        } catch (\RuntimeException $error) {
+            self::assertStringContainsString($failure === 'commit' ? 'commit' : 'rollback', $error->getMessage());
+            self::assertSame($failure !== 'commit', $db->inTransaction());
+            self::assertSame(0, (int) $db->query('SELECT COUNT(*) FROM color_templates')->fetchColumn());
+            self::assertSame(AuditEvent::FAILED, $this->audit->events[array_key_last($this->audit->events)]->outcome);
+        } finally {
+            if ($db->inTransaction()) {
+                $db->exec('ROLLBACK');
+            }
+        }
+    }
+
+    public static function uncertainDatabaseOutcomes(): array
+    {
+        return [['commit'], ['rollback-false'], ['rollback-throw']];
+    }
+
+    /** @dataProvider deniedMutations */
+    public function testRejectedMutationRetainsItsDeniedAudit(string $operation): void
+    {
+        $revisions = $this->store->actionRevisions([$this->store->find(1)]);
+        try {
+            match ($operation) {
+                'stale edit' => $this->store->saveTemplate(42, 1, 'Must not save', str_repeat('0', 64)),
+                'referenced delete' => $this->store->delete(42, [1], $revisions),
+                'stale duplicate' => $this->store->duplicate(42, [1], '<template_title> copy', [1 => str_repeat('0', 64)]),
+            };
+            self::fail('Rejected mutation succeeded.');
+        } catch (\InvalidArgumentException) {
+            self::assertFalse($this->db->inTransaction());
+            self::assertSame('Template A', $this->store->find(1)->name);
+        }
+        self::assertCount(1, $this->audit->events);
+        self::assertSame(AuditEvent::DENIED, $this->audit->events[0]->decision);
+        self::assertSame(AuditEvent::DENIED, $this->audit->events[0]->outcome);
+    }
+
+    public static function deniedMutations(): array
+    {
+        return [['stale edit'], ['referenced delete'], ['stale duplicate']];
+    }
+
     protected function setUp(): void
     {
         $this->db = new \PDO('sqlite::memory:');
