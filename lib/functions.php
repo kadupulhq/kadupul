@@ -433,7 +433,7 @@ function set_config_option($config_name, $value, $remote = false)
         cacti_log("ERROR: Config option name '$config_name' is too long, will be truncated", false, 'SYSTEM');
     }
 
-    db_execute_prepared(
+    $success = db_execute_prepared(
         'INSERT INTO settings
 		(name, value) VALUES (?, ?)
 		ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)',
@@ -459,6 +459,7 @@ function set_config_option($config_name, $value, $remote = false)
 
         foreach ($pollers as $p => $t) {
             if ($t > $gone_time) {
+                $success = false;
                 raise_message('poller_' . $p, __('Settings save to Data Collector %d skipped due to heartbeat.', $p), MESSAGE_LEVEL_WARN);
             } else {
                 $rcnn_id = poller_connect_to_remote($p);
@@ -471,6 +472,7 @@ function set_config_option($config_name, $value, $remote = false)
 
                 // check if we still have rcnn_id, if it's now become false, we had a problem
                 if (!$rcnn_id) {
+                    $success = false;
                     raise_message('poller_' . $p, __('Settings save to Data Collector %d Failed.', $p), MESSAGE_LEVEL_ERROR);
                 }
             }
@@ -494,6 +496,8 @@ function set_config_option($config_name, $value, $remote = false)
     if (!empty($config['DEBUG_SET_CONFIG_OPTION'])) {
         file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() . cacti_debug_backtrace($config_name, false, false, 0, 1) . "\n", FILE_APPEND);
     }
+
+    return $success;
 }
 
 /**

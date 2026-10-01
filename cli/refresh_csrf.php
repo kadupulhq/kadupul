@@ -52,7 +52,10 @@ $new_secret = bin2hex(random_bytes(32));
 // Web requests read the secret from $path_csrf_secret when it is set, and
 // otherwise from the database; they no longer read the file under include/.
 if (empty($config['path_csrf_secret'])) {
-    set_config_option('csrf_secret', $new_secret);
+    if (set_config_option('csrf_secret', $new_secret, true) === false) {
+        print "FATAL: CSRF secret rotation could not be stored or propagated to every active collector." . PHP_EOL;
+        exit(1);
+    }
 
     if (read_config_option('csrf_secret', true) !== $new_secret) {
         print "FATAL: Unable to store the new CSRF secret in the database." . PHP_EOL;
@@ -78,30 +81,30 @@ if (!cacti_csrf_external_path_is_safe($path_csrf_secret)) {
     exit(1);
 }
 
-if (!file_exists($path_csrf_secret)) {
-    print "WARNING: csrf_secret.php file does not exist!" . PHP_EOL;
-} elseif (!is_writable($path_csrf_secret)) {
-    print "FATAL: unable to unlink csrf_secret.php!" . PHP_EOL;
-    exit(1);
-} else {
-    print "NOTE: Removing old csrf_secret.php file." . PHP_EOL;
-    if (!@unlink($path_csrf_secret)) {
-        print "FATAL: Unable to remove the configured csrf_secret.php file." . PHP_EOL;
-        exit(1);
+// Keep the working key until its complete replacement is ready.
+$temporary = tempnam(dirname($path_csrf_secret), '.csrf-');
+$contents = '<?php $secret = "' . $new_secret . '";' . PHP_EOL;
+$written = false;
+if ($temporary !== false) {
+    try {
+        $written = chmod($temporary, 0600)
+            && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
+            && file_get_contents($temporary) === $contents
+            && rename($temporary, $path_csrf_secret);
+    } finally {
+        if (file_exists($temporary)) {
+            @unlink($temporary);
+        }
     }
 }
 
-if (csrf_writable($path_csrf_secret)) {
-    umask(0027);
-    $fh = fopen($path_csrf_secret, 'w');
-    fwrite($fh, '<?php $secret = "' . $new_secret . '";' . PHP_EOL);
-    fclose($fh);
-    print "NOTE: New csrf_secret.php file written." . PHP_EOL;
-    exit(0);
-} else {
-    print "FATAL: Unable to write new csrf_secret.php file." . PHP_EOL;
+if (!$written) {
+    print "FATAL: Unable to atomically replace the configured csrf_secret.php file." . PHP_EOL;
     exit(1);
 }
+
+print "NOTE: New csrf_secret.php file written." . PHP_EOL;
+exit(0);
 
 /*  display_version - displays version information */
 function display_version()

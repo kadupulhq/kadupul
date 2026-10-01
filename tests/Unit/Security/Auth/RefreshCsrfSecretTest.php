@@ -20,6 +20,12 @@ function refresh_csrf_run($test, array $scenario): array
     }
     mkdir($outside, 0700);
     copy($root . '/cli/refresh_csrf.php', $dir . '/cli/refresh_csrf.php');
+    if (!empty($scenario['filesystem_failure'])) {
+        $failure = $scenario['filesystem_failure'];
+        $stub = $failure === 'short_write' ? 'function file_put_contents($path,$contents,$flags=0) { return \file_put_contents($path,substr($contents,0,5),$flags); }' : ($failure === 'readback' ? 'function file_get_contents($path) { return false; }' : ($failure === 'rename' ? 'function rename($from,$to) { return false; }' : 'function tempnam($dir,$prefix) { return false; }'));
+        $script = file_get_contents($dir . '/cli/refresh_csrf.php');
+        file_put_contents($dir . '/cli/refresh_csrf.php', preg_replace('/<\?php/', '<?php namespace RefreshCsrfFilesystemProbe; ' . $stub, $script, 1));
+    }
     if (!empty($scenario['unlink_failure'])) {
         // Namespace only the isolated script to model a failed filesystem call.
         $script = file_get_contents($dir . '/cli/refresh_csrf.php');
@@ -43,13 +49,23 @@ $config = array('base_path' => getenv('REFRESH_CSRF_DIR'), 'include_path' => get
 if (getenv('REFRESH_CSRF_SECRET') !== '') {
     $config['path_csrf_secret'] = getenv('REFRESH_CSRF_SECRET');
 }
+$config['path_csrf_web_root'] = getenv('REFRESH_CSRF_WEB_ROOT');
 $GLOBALS['stored'] = array();
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
-function set_config_option($name, $value) { $GLOBALS['stored'][$name] = $value; }
-function read_config_option($name, $force = false) { return getenv('REFRESH_CSRF_STORE') === 'broken' ? '' : ($GLOBALS['stored'][$name] ?? ''); }
+function db_execute_prepared($sql,$params,$log=true,$connection=false) { if($connection){$GLOBALS['pushed']=true;if(getenv('REFRESH_CSRF_STORE')==='remote_failure')return false;}else{$GLOBALS['stored'][$params[0]]=$params[1];}return true; }
+function db_fetch_assoc($sql) { return array(array('id'=>2,'last_polled'=>0)); }
+function array_rekey($rows,$key,$value) { return array_column($rows,$value,$key); }
+function is_remote_path_setting($name) { return false; }
+function poller_connect_to_remote($id) { return 2; }
+function raise_message(...$args) {}
+function __($message,...$args) { return $message; }
+define('MESSAGE_LEVEL_WARN',2);define('MESSAGE_LEVEL_ERROR',3);
+function read_config_option($name, $force = false) { if($name==='poller_interval')return 300;return getenv('REFRESH_CSRF_STORE') === 'broken' ? '' : ($GLOBALS['stored'][$name] ?? ''); }
 require getenv('REFRESH_CSRF_ROOT') . '/include/csrf.php';
-register_shutdown_function(function () { echo 'STORED:' . (isset($GLOBALS['stored']['csrf_secret']) ? strlen($GLOBALS['stored']['csrf_secret']) : 0); });
+register_shutdown_function(function () { echo 'PUSHED:' . (!empty($GLOBALS['pushed']) ? 'yes' : 'no') . ':STORED:' . (isset($GLOBALS['stored']['csrf_secret']) ? strlen($GLOBALS['stored']['csrf_secret']) : 0); });
 PHP;
+    require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+    $bootstrap .= test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'set_config_option');
     file_put_contents($dir . '/include/cli_check.php', $bootstrap);
 
     $coverage = $test->getTestResultObject()->getCodeCoverage();
@@ -65,6 +81,7 @@ PHP;
         'REFRESH_CSRF_DIR' => $dir,
         'REFRESH_CSRF_ROOT' => $root,
         'REFRESH_CSRF_SECRET' => $secret,
+        'REFRESH_CSRF_WEB_ROOT' => empty($scenario['unknown_root']) ? ($scenario['served_outside'] ?? false ? $outside : $dir) : '',
         'REFRESH_CSRF_STORE' => $scenario['store'] ?? 'ok',
     ) + getenv();
 
@@ -114,6 +131,7 @@ test('without an external secret the stored secret is rotated and the old file r
         ->and($result['stdout'])->toContain('New CSRF secret stored in the database.')
         ->and($result['stdout'])->toContain('Removing old csrf_secret.php file.')
         ->and($result['stdout'])->toEndWith('STORED:64')
+        ->and($result['stdout'])->toContain('PUSHED:yes')
         ->and($result['legacy'])->toBeFalse();
 });
 
@@ -137,8 +155,7 @@ test('an external secret outside the document root is replaced', function (bool 
 
     expect($result['exit'])->toBe(0)
         ->and($result['stderr'])->toBe('')
-        ->and($result['stdout'])->toContain($note)
-        ->and($result['stdout'])->toContain('New csrf_secret.php file written.')
+                ->and($result['stdout'])->toContain('New csrf_secret.php file written.')
         ->and($result['stdout'])->toEndWith('STORED:0')
         ->and($result['secret'])->toMatch('/^<\?php \$secret = "[0-9a-f]{64}";\n$/');
 })->with(array(
@@ -152,4 +169,23 @@ test('failed secret cleanup exits without reporting rotation success', function 
         ->and($result['stdout'])->toContain('FATAL: Unable to remove')
         ->and($result['stdout'])->not->toContain('New CSRF secret stored')
         ->and($result['stdout'])->not->toContain('New csrf_secret.php file written');
-})->with(array('', '{outside}/csrf-secret.php'));
+})->with(array(''));
+
+
+test('CLI rejects external secrets when the served root is unknown or contains the secret', function (array $scenario) {
+    $result = refresh_csrf_run($this, $scenario + array('secret' => '{outside}/csrf-secret.php', 'existing' => true));
+    expect($result['exit'])->toBe(1)->and($result['secret'])->toBe('<?php $secret = "old";');
+})->with(array('unknown served root' => array(array('unknown_root' => true)), 'served alias root' => array(array('served_outside' => true))));
+
+test('failed atomic rotation preserves the prior external secret', function (string $failure) {
+    $result = refresh_csrf_run($this, array('secret' => '{outside}/csrf-secret.php', 'existing' => true, 'filesystem_failure' => $failure));
+    expect($result['exit'])->toBe(1)->and($result['secret'])->toBe('<?php $secret = "old";')
+        ->and($result['stdout'])->not->toContain('New csrf_secret.php file written');
+})->with(array('short_write', 'readback', 'rename', 'temporary'));
+
+
+test('collector propagation failure is not reported as rotation success', function () {
+    $result = refresh_csrf_run($this, array('store' => 'remote_failure'));
+    expect($result['exit'])->toBe(1)->and($result['stdout'])->toContain('could not be stored or propagated')
+        ->and($result['stdout'])->not->toContain('New CSRF secret stored');
+});
