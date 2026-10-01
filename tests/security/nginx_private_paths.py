@@ -36,7 +36,8 @@ def main():
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('PRIVATE-CONTENT')
         tools = ['tools/dependencies/install-legacy.php', 'tools/verify-offline.php',
-                 'tools/migrate/assess.php', 'bin/legacy-device-edit.php', 'bin/console']
+                 'tools/migrate/assess.php', 'bin/legacy-device-edit.php', 'bin/console',
+                 'script_server.php']
         guards = []
         for index, relative in enumerate(tools):
             path = stage / relative
