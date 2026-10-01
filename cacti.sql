@@ -1558,6 +1558,7 @@ CREATE TABLE data_template_rrd (
   PRIMARY KEY (id),
   UNIQUE KEY `duplicate_dsname_contraint` (`local_data_id`,`data_source_name`,`data_template_id`),
   KEY data_template_id (data_template_id),
+  KEY data_input_field_id (data_input_field_id),
   KEY local_data_template_rrd_id (local_data_template_rrd_id)
 ) ENGINE=InnoDB ROW_FORMAT=Dynamic;
 
@@ -2426,7 +2427,7 @@ INSERT INTO settings VALUES ('selected_theme', 'modern');
 --
 
 CREATE TABLE settings_user (
-  user_id smallint(8) unsigned NOT NULL default '0',
+  user_id mediumint(8) unsigned NOT NULL default '0',
   name varchar(255) NOT NULL default '',
   value varchar(4096) NOT NULL default '',
   PRIMARY KEY (user_id, name)
