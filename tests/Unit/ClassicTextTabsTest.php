@@ -10,7 +10,7 @@
  * the application's global helpers, which the test stubs with a German
  * translation table so the assertions prove the labels come from __().
  */
-function classic_tabs_render(string $currentPage, string $requestUri): array
+function classic_tabs_render(string $currentPage, string $requestUri, ?callable $launcher = null): array
 {
     $root = dirname(__DIR__, 2);
     $program = <<<'PHP'
@@ -31,11 +31,19 @@ $_SERVER['REQUEST_URI'] = $argv[3];
 html_show_tabs_left();
 PHP;
 
-    $process = proc_open(
+    $launcher ??= function_exists('proc_open') ? 'proc_open' : null;
+    if ($launcher === null) {
+        throw new RuntimeException('Unable to start classic tab renderer: proc_open is unavailable.');
+    }
+    $pipes = array();
+    $process = $launcher(
         array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $currentPage, $requestUri),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
+    if (!is_resource($process)) {
+        throw new RuntimeException('Unable to start classic tab renderer process.');
+    }
     $html = stream_get_contents($pipes[1]);
     $errors = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
@@ -43,6 +51,11 @@ PHP;
 
     return array(proc_close($process), $html, $errors);
 }
+
+test('classic tab renderer reports process startup failure before reading pipes', function () {
+    expect(fn() => classic_tabs_render('index.php', '/kadupul/index.php', static fn(...$args) => false))
+        ->toThrow(RuntimeException::class, 'Unable to start classic tab renderer process.');
+});
 
 test('classic tabs are translated text links, not images', function () {
     [$status, $html, $errors] = classic_tabs_render('index.php', '/kadupul/index.php');

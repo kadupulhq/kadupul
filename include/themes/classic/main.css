@@ -1760,7 +1760,7 @@ div#tabs {
 	background-image: linear-gradient(to bottom, #DC8282 0%, #C45E5E 45%, #A42D2D 75%);
 }
 
-#tabs a.classicTab:focus-visible {
+#tabs a.classicTab:focus {
 	outline: 2px solid #FFFFFF;
 	outline-offset: -4px;
 }

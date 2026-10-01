@@ -1836,12 +1836,14 @@ function is_console_page($url)
     return false;
 }
 
-/* html_classic_tab - renders one top tab for the classic theme as a text link
-   @arg $id - the element id, which layout.js and plugins look up
-   @arg $href - the unescaped link target
-   @arg $title - the already translated label
-   @arg $selected - true when the tab belongs to the current page
-   @returns - the anchor markup */
+/** Render one classic-theme top tab as a text link.
+ *
+ * @param string $id the element id used by layout.js and plugins
+ * @param string $href the unescaped link target
+ * @param string $title the already translated label
+ * @param bool $selected whether the tab belongs to the current page
+ * @return string the anchor markup
+ */
 function html_classic_tab($id, $href, $title, $selected)
 {
     return "<a id='" . html_escape($id) . "' class='classicTab" . ($selected ? ' selected' : '') . "' href='" . html_escape($href) . "'>" . html_escape($title) . '</a>';

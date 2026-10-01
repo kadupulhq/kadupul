@@ -16,10 +16,8 @@ async function loginAsAdmin(page: Page): Promise<void> {
     await page.goto('/');
     await page.locator('input[name="login_username"]').fill('admin');
     await page.locator('input[name="login_password"]').fill('admin');
-    await Promise.all([
-        page.waitForLoadState('networkidle'),
-        page.locator('form#login input[type="submit"]').click(),
-    ]);
+    await page.locator('form#login input[type="submit"]').click();
+    await expect(page.locator('#tabs')).toBeVisible();
 }
 
 async function setTheme(page: Page, theme: string): Promise<void> {
