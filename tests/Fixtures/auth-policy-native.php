@@ -16,7 +16,7 @@ if (isset($argv[3])) {
 $config = ['cacti_db_version' => '1.2.33'];
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$db->exec('CREATE TABLE user_auth (id INTEGER, reset_perms INTEGER, show_tree TEXT, show_list TEXT, show_preview TEXT, graph_settings TEXT, policy_hosts INTEGER, policy_graphs INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER DEFAULT 1)');
+$db->exec('CREATE TABLE user_auth (id INTEGER, reset_perms INTEGER, enabled TEXT DEFAULT \'on\', locked TEXT DEFAULT \'\', show_tree TEXT, show_list TEXT, show_preview TEXT, graph_settings TEXT, policy_hosts INTEGER, policy_graphs INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER DEFAULT 1)');
 $db->prepare('INSERT INTO user_auth(id,reset_perms,show_tree,show_list,show_preview,graph_settings,policy_hosts,policy_graphs,policy_graph_templates) VALUES (42, 0, ?, ?, ?, ?, ?, ?, ?)')->execute(array_merge(array_fill(0, 4, $scenario['view_default'] ?? ''), array_fill(0, 3, $scenario['policy'] ?? 1)));
 $db->exec("INSERT INTO user_auth(id,reset_perms,show_tree,show_list,show_preview,graph_settings,policy_hosts,policy_graphs,policy_graph_templates) VALUES (43, 0, '', '', '', '', 1, 1, 1)");
 $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)');
@@ -26,6 +26,18 @@ $db->exec('CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGE
 $db->exec('CREATE TABLE user_auth_perms (user_id INTEGER, type INTEGER, item_id INTEGER)');
 $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, type INTEGER, item_id INTEGER)');
 $db->exec('CREATE TABLE plugin_realms (id INTEGER, file TEXT, display TEXT)');
+$db->exec("CREATE TABLE graph_tree(id INTEGER PRIMARY KEY, enabled TEXT, name TEXT);
+CREATE TABLE graph_tree_items(id INTEGER PRIMARY KEY, graph_tree_id INTEGER, parent INTEGER, title TEXT DEFAULT '', local_graph_id INTEGER DEFAULT 0, host_id INTEGER DEFAULT 0, site_id INTEGER DEFAULT 0, host_grouping_type INTEGER DEFAULT 0, position INTEGER DEFAULT 0);
+CREATE TABLE host(id INTEGER PRIMARY KEY, site_id INTEGER, description TEXT);
+CREATE TABLE sites(id INTEGER PRIMARY KEY, name TEXT);
+CREATE TABLE user_auth_row_cache(user_id INTEGER, class TEXT, hash TEXT, total_rows INTEGER, time TEXT, PRIMARY KEY(user_id,class,hash));
+CREATE TABLE reports(id INTEGER PRIMARY KEY,user_id INTEGER);
+CREATE TABLE reports_items(id INTEGER PRIMARY KEY,report_id INTEGER);
+INSERT INTO graph_tree VALUES(100,'on','Visible'),(101,'','Disabled'),(102,'on','Other');
+INSERT INTO graph_tree_items(id,graph_tree_id,parent,title,position) VALUES(11,100,0,'Parent',2),(12,100,11,'Child',1),(13,102,0,'Other tree',1);
+INSERT INTO reports VALUES(1,42),(2,43); INSERT INTO reports_items VALUES(10,1),(20,2),(30,999);");
+$db->sqliteCreateFunction('UNIX_TIMESTAMP', static fn($value) => strtotime($value));
+$db->sqliteCreateFunction('FROM_UNIXTIME', static fn($value) => gmdate('Y-m-d H:i:s', $value));
 $db->exec("INSERT INTO plugin_realms VALUES (5, 'first.php,middle.php,last.php', 'Extension realm')");
 foreach ($scenario['realms'] ?? [] as $user) {
     $db->prepare('INSERT INTO user_auth_realm VALUES (?, 21)')->execute([$user]);
@@ -64,13 +76,34 @@ function db_fetch_cell_prepared($sql, $params = [])
     $rows = db_fetch_assoc_prepared($sql, $params);
     return $rows ? reset($rows[0]) : false;
 }
+function db_fetch_assoc($sql)
+{
+    return db_fetch_assoc_prepared($sql);
+}
+function db_fetch_cell($sql)
+{
+    return db_fetch_cell_prepared($sql);
+}
+function db_execute_prepared($sql, $params = [])
+{
+    $query = $GLOBALS['db']->prepare($sql);
+    return $query->execute($params);
+}
+function kill_session_var($name)
+{
+    unset($_SESSION[$name]);
+}
+function get_guest_account()
+{
+    return 0;
+}
 function db_table_exists($name)
 {
     return (bool) db_fetch_cell_prepared('SELECT 1 FROM sqlite_master WHERE type = ? AND name = ?', ['table', $name]);
 }
 function read_config_option($name)
 {
-    return $name === 'auth_method' ? ($GLOBALS['scenario']['auth_method'] ?? 1) : '';
+    return $name === 'auth_method' ? ($GLOBALS['scenario']['auth_method'] ?? 1) : ($GLOBALS['scenario']['config'][$name] ?? '');
 }
 function cacti_version_compare($left, $right, $operator)
 {
@@ -97,6 +130,64 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'branch':
+        if (!empty($scenario['graph'])) {
+            $db->exec('UPDATE graph_tree_items SET local_graph_id=100 WHERE id=12');
+        }
+        if (!empty($scenario['site'])) {
+            $db->exec('UPDATE graph_tree_items SET site_id=500 WHERE id=12');
+        }
+        $result = [is_tree_branch_empty(100), is_tree_branch_empty(100, 11), is_tree_branch_empty(999)];
+        break;
+    case 'tree-content':
+        if (!empty($scenario['graph'])) {
+            $db->exec('UPDATE graph_tree_items SET local_graph_id=100 WHERE id=12');
+        }
+        if (!empty($scenario['site'])) {
+            $db->exec('UPDATE graph_tree_items SET site_id=500 WHERE id=11');
+        }
+        $total = 0;
+        $result = get_allowed_tree_content(100, 0, '', '', '', $total, 42);
+        break;
+    case 'tree-level':
+        $result = get_allowed_tree_level(100, $scenario['parent'] ?? 0, $scenario['editing'] ?? false, 42);
+        break;
+    case 'trees':
+        $total = 0;
+        $result = ['rows' => get_allowed_trees(false, false, '', 'name', '', $total, 42), 'total' => $total];
+        break;
+    case 'row-cache':
+        $sql = !empty($scenario['failure']) ? 'SELECT COUNT(*) FROM nonexistent_table' : 'SELECT COUNT(*) FROM graph_tree WHERE enabled = ?';
+        $db->exec("INSERT INTO user_auth_row_cache VALUES(43,'foreign','foreign',77,'2000-01-01 00:00:00')");
+        try {
+            $first = get_total_row_data(42, $sql, ['on'], 'tree-test');
+            $db->exec("INSERT INTO graph_tree VALUES(103,'on','Later')");
+            $cached = get_total_row_data(42, $sql, ['on'], 'tree-test');
+            $db->exec("UPDATE user_auth_row_cache SET time='2000-01-01 00:00:00' WHERE user_id=42");
+            $refreshed = get_total_row_data(42, $sql, ['on'], 'tree-test');
+            $result = ['first' => $first, 'cached' => $cached, 'refreshed' => $refreshed];
+        } catch (PDOException $exception) {
+            $result = ['error' => get_class($exception)];
+        }
+        $result['stored'] = $db->query('SELECT user_id,class,total_rows FROM user_auth_row_cache ORDER BY user_id')->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 'ownership':
+        $result = cacti_authorize_resource($scenario['user'] ?? 42, $scenario['resource'], $scenario['type']);
+        break;
+    case 'revoked-account':
+        $db->exec("CREATE TABLE user_auth_cache(user_id INTEGER,token TEXT); INSERT INTO user_auth_cache VALUES(42,'target'),(43,'foreign'); UPDATE user_auth SET reset_perms=5 WHERE id=42");
+        if (!empty($scenario['disabled'])) {
+            $db->exec("UPDATE user_auth SET enabled='' WHERE id=42");
+        }
+        $_SESSION += ['sess_user_perms_key' => 0, 'sess_user_realms' => [21 => true], 'sess_user_config_array' => ['stale'], 'sess_config_array' => ['stale'], 'sess_auth_names' => ['stale'], 'sess_tree_perms' => [100 => true], 'sess_simple_perms' => true, 'sess_simple_template_perms' => true];
+        ob_start();
+        register_shutdown_function(static function () use ($db) {
+            $state = ['output' => ob_get_clean(), 'session' => $_SESSION, 'tokens' => $db->query('SELECT user_id,token FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_ASSOC)];
+            $GLOBALS['nativeChildCoverageMarkers'] = ['permission-revocation-shutdown', 'credential-readback'];
+            print json_encode($state, JSON_THROW_ON_ERROR);
+        });
+        is_realm_allowed(21);
+        throw new RuntimeException('Revoked credentials did not take their existing response exit.');
     case 'realm':
         $result = is_realm_allowed(21, $scenario['check_user'] ?? false);
         $before = $queries;

@@ -15,6 +15,12 @@ final class AuthCookieNativeCoverageTest extends TestCase
         $state = $this->runCookie($scenario);
         self::assertSame($principal, $state['result']);
         self::assertSame(array('clear', 'issue'), $state['events']);
+        self::assertCount(isset($scenario['identity']) && is_numeric($scenario['identity']) ? 0 : 2, $state['identity_queries']);
+        if ($state['identity_queries'] !== array()) {
+            foreach ($state['identity_queries'] as $lookup) {
+                self::assertSame(isset($scenario['realm']) ? array('alice', (string) $realm) : array('alice'), $lookup['params']);
+            }
+        }
         self::assertSame($principal, $state['issued']['id']);
         self::assertSame($realm, $state['issued']['realm']);
         self::assertMatchesRegularExpression('/^[0-9a-f]{64}$/', $state['issued']['token']);
@@ -72,13 +78,81 @@ final class AuthCookieNativeCoverageTest extends TestCase
         $state = $this->runCookie(array_merge($scenario, array('operation' => 'clear')));
         self::assertSame(array_values(array_diff(array(42, 43, 44), array($principal))), array_column($state['rows'], 'user_id'));
         self::assertSame(array('clear'), $state['events']);
+        self::assertCount(isset($scenario['identity']) ? 0 : 1, $state['identity_queries']);
         self::assertNull($state['issued']);
         self::assertSame(array(), $state['audit']);
     }
 
     public static function revokedCookies(): array
     {
-        return array('legacy local' => array(array(), 42), 'explicit domain' => array(array('realm' => '3,'), 43));
+        return array('legacy local' => array(array(), 42), 'explicit local' => array(array('realm' => '0,'), 42), 'explicit domain' => array(array('realm' => '3,'), 43), 'numeric local bypasses name lookup' => array(array('identity' => '42'), 42), 'numeric domain bypasses name lookup' => array(array('identity' => '43', 'realm' => '3,'), 43));
+    }
+
+    /** @dataProvider missingClearIdentities */
+    public function testClearingAnUnresolvedUsernameDoesNotRevokeOtherAccounts(array $scenario): void
+    {
+        $state = $this->runCookie(['operation' => 'clear'] + $scenario);
+        self::assertSame([42,43,44], array_column($state['rows'], 'user_id'));
+        self::assertSame([], $state['events']);
+        self::assertNull($state['issued']);
+        self::assertSame([], $state['audit']);
+        self::assertCount(1, $state['identity_queries']);
+    }
+
+    public static function missingClearIdentities(): array
+    {
+        return [[['identity' => 'unknown']], [['realm' => '4,']]];
+    }
+
+    public function testBasicAccountLookupUsesItsRecordedRealmWithoutCookieRotation(): void
+    {
+        $state = $this->runCookie(['operation' => 'basic']);
+        self::assertSame(43, $state['result']['id']);
+        self::assertSame(2, $state['result']['realm']);
+        self::assertSame([], $state['events']);
+        self::assertSame([], $state['audit']);
+    }
+
+    /** @dataProvider localPasswordCases */
+    public function testLocalPasswordVerificationAndLockoutStayInTheLocalRealm(string $password, bool $accepted, int $failed, bool $legacy = false): void
+    {
+        $state = $this->runCookie(['operation' => 'local-password','password' => $password,'legacy_schema' => $legacy,'config' => ['secpass_lockfailed' => $legacy ? 0 : 3]]);
+        self::assertSame($accepted ? 42 : null, $state['result']['id'] ?? null);
+        self::assertSame(!$accepted, $state['error']);
+        self::assertSame($failed, $state['failed_attempts'][42]);
+        self::assertSame(0, $state['failed_attempts'][43]);
+        self::assertSame([], $state['events']);
+    }
+
+    public static function localPasswordCases(): array
+    {
+        return [['test-password',true,0], ['wrong-test-password',false,1], ['',false,1], ['test-password',true,0,true], ['wrong-test-password',false,0,true], ['',false,0,true]];
+    }
+
+    /** @dataProvider historyCases */
+    public function testNativePasswordHistoryEnforcesCurrentAndRetainedHashesButExpiresOldHashes(string $password, int $history, bool $allowed): void
+    {
+        $state = $this->runCookie(['operation' => 'password-history','password' => $password,'config' => ['secpass_history' => $history]]);
+        self::assertSame($allowed, $state['result']);
+        self::assertSame([], $state['events']);
+        self::assertSame([], $state['audit']);
+    }
+
+    public static function historyCases(): array
+    {
+        return [['current-test-password',1,false], ['retained-test-password',1,false], ['expired-test-password',1,true], ['new-test-password',2,true], ['retained-test-password',0,true]];
+    }
+
+    public function testDirectoryCnSearchUsesOnlyItsConfiguredDomainRow(): void
+    {
+        $state = $this->runCookie(['operation' => 'domain-cn']);
+        self::assertSame(['error_num' => 0,'cn' => ['cn' => 'Fixture User','mail' => 'fixture@example.invalid']], $state['result']);
+        self::assertSame([], $state['events']);
+        $missing = $this->runCookie(['operation' => 'domain-cn','directory_realm' => 1004]);
+        self::assertSame([['username' => 'alice','host' => 'fixture.example','cn' => ['cn','mail']]], $state['directory_calls']);
+        self::assertFalse($missing['result']);
+        self::assertSame([], $missing['directory_calls']);
+        self::assertSame([], $missing['events']);
     }
 
     /** @dataProvider domainCases */

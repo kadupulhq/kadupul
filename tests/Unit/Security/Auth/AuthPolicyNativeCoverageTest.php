@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 final class AuthPolicyNativeCoverageTest extends TestCase
 {
-    private static bool $coverageEvidenceChecked = false;
+    private static array $coverageEvidenceChecked = [];
 
     /** @dataProvider realmCases */
     public function testRealmDecisionsUseScopedRealmsAndEnabledMembershipThenCurrentUserCache(array $scenario, bool $expected, bool $cached): void
@@ -128,6 +128,100 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         self::assertSame([1, 2], array_column($state['result'], 'policy_trees'));
     }
 
+    /** @dataProvider branchCases */
+    public function testBranchEmptinessUsesActualChildrenGraphsAndOrphanSites(array $scenario, array $expected): void
+    {
+        $state = $this->runPolicy(['operation' => 'branch'] + $scenario);
+        self::assertSame($expected, $state['result']);
+    }
+
+    public static function branchCases(): array
+    {
+        return ['empty nested branches' => [[], [true,true,true]], 'nested visible graph' => [['graph' => true], [false,false,true]], 'orphan site has no permitted device' => [['site' => true], [true,true,true]]];
+    }
+
+    /** @dataProvider contentCases */
+    public function testTreeContentIncludesVisibleNestedGraphOrSiteAndOmitsEmptyBranches(array $scenario, array $ids): void
+    {
+        $state = $this->runPolicy(['operation' => 'tree-content'] + $scenario);
+        self::assertSame($ids, array_column($state['result'], 'id'));
+    }
+
+    public static function contentCases(): array
+    {
+        return [[[],[]], [['graph' => true],[11]], [['site' => true],[11]]];
+    }
+
+    /** @dataProvider levelCases */
+    public function testTreeLevelsScopeActualParentAndTreeInPositionOrder(int $parent, bool $editing, array $ids): void
+    {
+        $state = $this->runPolicy(['operation' => 'tree-level', 'parent' => $parent, 'editing' => $editing]);
+        self::assertSame($ids, array_column($state['result'], 'id'));
+    }
+
+    public static function levelCases(): array
+    {
+        return [[0,false,[11]], [11,false,[12]], [99,false,[]], [0,true,[11]]];
+    }
+
+    public function testAllowedTreeListAndCountUseTheSameEnabledPolicyRows(): void
+    {
+        $state = $this->runPolicy(['operation' => 'trees']);
+        self::assertSame([102,100], array_column($state['result']['rows'], 'id'));
+        self::assertSame(2, $state['result']['total']);
+    }
+
+    public function testActualRowCountCacheReusesThenRefreshesOnlyItsPrincipalAndClass(): void
+    {
+        $state = $this->runPolicy(['operation' => 'row-cache']);
+        self::assertSame(2, $state['result']['first']);
+        self::assertSame(2, $state['result']['cached']);
+        self::assertSame(3, $state['result']['refreshed']);
+        self::assertSame([['user_id' => 42,'class' => 'tree-test','total_rows' => 3],['user_id' => 43,'class' => 'foreign','total_rows' => 77]], $state['result']['stored']);
+    }
+
+    public function testFailedNativeCountQueryDoesNotCreateACacheSuccessRow(): void
+    {
+        $state = $this->runPolicy(['operation' => 'row-cache', 'failure' => true]);
+        self::assertSame('PDOException', $state['result']['error']);
+        self::assertSame([['user_id' => 43,'class' => 'foreign','total_rows' => 77]], $state['result']['stored']);
+    }
+
+    /** @dataProvider ownershipCases */
+    public function testResourceOwnershipUsesPersistedOwnerAndParentJoin(array $scenario, bool $expected): void
+    {
+        $state = $this->runPolicy(['operation' => 'ownership'] + $scenario);
+        self::assertSame($expected, $state['result']);
+    }
+
+    public static function ownershipCases(): array
+    {
+        return [ [['type' => 'reports','resource' => 1],true], [['type' => 'reports','resource' => 2],false], [['type' => 'reports','resource' => 999],false], [['type' => 'report_item','resource' => 10],true], [['type' => 'report_item','resource' => 20],false], [['type' => 'report_item','resource' => 30],false], [['type' => 'report_item','resource' => 999],false], [['type' => 'reports','resource' => 1,'user' => 0],false], [['type' => 'unknown','resource' => 1],false] ];
+    }
+
+    /** @dataProvider revokedCases */
+    public function testActualStalePermissionExitPreservesForeignTokensAndClearsStaleSession(bool $disabled): void
+    {
+        $state = $this->runPolicy(['operation' => 'revoked-account','disabled' => $disabled]);
+        self::assertStringContainsString($disabled ? 'cactiLoginSuspend' : 'cactiRedirect', $state['output']);
+        self::assertSame(5, $state['session']['sess_user_perms_key']);
+        foreach (['sess_user_realms','sess_user_config_array','sess_config_array','sess_auth_names','sess_tree_perms','sess_simple_perms','sess_simple_template_perms'] as $key) {
+            self::assertArrayNotHasKey($key, $state['session']);
+        }
+        if ($disabled) {
+            self::assertArrayNotHasKey('sess_user_id', $state['session']);
+            self::assertSame([['user_id' => 43,'token' => 'foreign']], $state['tokens']);
+        } else {
+            self::assertSame(42, $state['session']['sess_user_id']);
+            self::assertSame([['user_id' => 42,'token' => 'target'],['user_id' => 43,'token' => 'foreign']], $state['tokens']);
+        }
+    }
+
+    public static function revokedCases(): array
+    {
+        return [[true],[false]];
+    }
+
     private function runPolicy(array $scenario): array
     {
         $root = dirname(__DIR__, 4);
@@ -151,10 +245,11 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-policy-operation-returned', 'policy-session-observed'), array('lib/auth.php'));
-                if (!self::$coverageEvidenceChecked) {
-                    self::assertSame(24, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-policy-operation-returned', 'policy-session-observed'), array('lib/auth.php'), 'lib/rrd.php'));
-                    self::$coverageEvidenceChecked = true;
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : array('native-policy-operation-returned', 'policy-session-observed'), array('lib/auth.php'));
+                $evidenceKind = $scenario['operation'] === 'revoked-account' ? 'shutdown' : 'returned';
+                if (!isset(self::$coverageEvidenceChecked[$evidenceKind])) {
+                    self::assertSame(24, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : array('native-policy-operation-returned', 'policy-session-observed'), array('lib/auth.php'), 'lib/rrd.php'));
+                    self::$coverageEvidenceChecked[$evidenceKind] = true;
                 }
                 $coverage->merge($childCoverage);
             }

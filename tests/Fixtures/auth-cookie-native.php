@@ -41,7 +41,7 @@ if ($scenario['missing_cookie'] ?? false) {
 if ($scenario['missing_table'] ?? false) {
     $db->exec('DROP TABLE user_auth_cache');
 }
-if (($scenario['operation'] ?? '') === 'domain') {
+if (in_array($scenario['operation'] ?? '', array('domain', 'domain-cn'), true)) {
     $db->exec('UPDATE user_auth SET realm=1003 WHERE id=43');
     if ($scenario['foreign_realm'] ?? false) {
         $db->exec('UPDATE user_auth SET realm=1004 WHERE id=43');
@@ -60,6 +60,11 @@ class Ldap
             ? array('error_num' => 2, 'error_text' => 'directory unavailable')
             : array('error_num' => 0, 'dn' => 'uid=alice,dc=fixture');
     }
+    public function Getcn()
+    {
+        $GLOBALS['directory_calls'][] = array('username' => $this->username,'host' => $this->host,'cn' => $this->cn);
+        return array('error_num' => 0, 'cn' => array('cn' => 'Fixture User','mail' => 'fixture@example.invalid'));
+    }
     public function Authenticate()
     {
         $GLOBALS['events'][] = 'bind';
@@ -70,10 +75,12 @@ class Ldap
 }
 function get_nfilter_request_var($name)
 {
-    return $name === 'realm' ? 1003 : 'test-password';
+    return $name === 'realm' ? 1003 : ($GLOBALS['scenario']['password'] ?? 'test-password');
 }
 $events = array();
 $issued = null;
+$identity_queries = array();
+$directory_calls = array();
 function db_fetch_row_prepared($sql, $params = array())
 {
     $q = $GLOBALS['db']->prepare($sql);
@@ -82,6 +89,9 @@ function db_fetch_row_prepared($sql, $params = array())
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
+    if (str_contains($sql, 'WHERE username = ?')) {
+        $GLOBALS['identity_queries'][] = array('sql' => $sql, 'params' => $params);
+    }
     $row = db_fetch_row_prepared($sql, $params);
     return $row ? reset($row) : false;
 }
@@ -96,7 +106,15 @@ function db_table_exists($table)
 }
 function read_config_option($name)
 {
-    return array('auth_cache_enabled' => ($GLOBALS['scenario']['cache_disabled'] ?? false) ? '' : 'on', 'secpass_lockfailed' => 3)[$name] ?? '';
+    return $GLOBALS['scenario']['config'][$name] ?? (array('auth_cache_enabled' => ($GLOBALS['scenario']['cache_disabled'] ?? false) ? '' : 'on', 'secpass_lockfailed' => 3)[$name] ?? '');
+}
+function db_column_exists($table, $column)
+{
+    return in_array($column, array_column($GLOBALS['db']->query('PRAGMA table_info(' . $table . ')')->fetchAll(PDO::FETCH_ASSOC), 'name'), true);
+}
+function cacti_count($items)
+{
+    return count($items);
 }
 function get_guest_account()
 {
@@ -131,7 +149,26 @@ if (isset($argv[3])) {
 }
 require $root . '/include/global_constants.php';
 require $root . '/lib/auth.php';
-if (($scenario['operation'] ?? '') === 'domain') {
+if (($scenario['operation'] ?? '') === 'basic') {
+    $db->exec('UPDATE user_auth SET realm=2 WHERE id=43');
+    $result = basic_auth_login_process('alice');
+} elseif (($scenario['operation'] ?? '') === 'domain-cn') {
+    $result = domains_ldap_search_cn('alice', array('cn', 'mail'), $scenario['directory_realm'] ?? 1003);
+} elseif (($scenario['operation'] ?? '') === 'local-password') {
+    if (!empty($scenario['legacy_schema'])) {
+        $db->exec('ALTER TABLE user_auth DROP COLUMN lastfail');
+    }
+    $query = $db->prepare('UPDATE user_auth SET password=? WHERE id=42');
+    $query->execute(array(password_hash('test-password', PASSWORD_DEFAULT)));
+    $error = false;
+    $error_msg = '';
+    $result = secpass_login_process('alice');
+} elseif (($scenario['operation'] ?? '') === 'password-history') {
+    $db->exec("ALTER TABLE user_auth ADD COLUMN password_history TEXT DEFAULT ''");
+    $query = $db->prepare('UPDATE user_auth SET password=?,password_history=? WHERE id=42');
+    $query->execute(array(password_hash('current-test-password', PASSWORD_DEFAULT), implode('|', array(password_hash('expired-test-password', PASSWORD_DEFAULT), password_hash('retained-test-password', PASSWORD_DEFAULT)))));
+    $result = secpass_check_history(42, $scenario['password']);
+} elseif (($scenario['operation'] ?? '') === 'domain') {
     $error = false;
     $error_msg = '';
     $result = domains_login_process('alice');
@@ -139,6 +176,6 @@ if (($scenario['operation'] ?? '') === 'domain') {
     $result = ($scenario['operation'] ?? 'check') === 'clear' ? clear_auth_cookie() : check_auth_cookie();
 }
 $rows = db_table_exists('user_auth_cache') ? $db->query('SELECT user_id,token FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_ASSOC) : array();
-$state = array('result' => $result, 'rows' => $rows, 'events' => $events, 'issued' => $issued, 'old_hash' => $hash, 'error' => $error ?? false, 'failed_attempts' => $db->query('SELECT id,failed_attempts FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR), 'audit' => $db->query('SELECT user_id,result FROM user_log')->fetchAll(PDO::FETCH_ASSOC));
+$state = array('directory_calls' => $directory_calls, 'identity_queries' => $identity_queries, 'result' => $result, 'rows' => $rows, 'events' => $events, 'issued' => $issued, 'old_hash' => $hash, 'error' => $error ?? false, 'failed_attempts' => $db->query('SELECT id,failed_attempts FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR), 'audit' => $db->query('SELECT user_id,result FROM user_log')->fetchAll(PDO::FETCH_ASSOC));
 $nativeChildCoverageMarkers = array('native-auth-operation-returned', 'credential-and-audit-readback');
 fwrite(STDOUT, json_encode($state, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
