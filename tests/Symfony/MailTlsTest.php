@@ -162,6 +162,62 @@ final class MailTlsTest extends TestCase
         }
     }
 
+    public function testReplyPreservesSuffixAcrossRealSocketBackpressure(): void
+    {
+        $reply = str_repeat("250 reply payload\r\n", 65536);
+        $probe = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+        self::assertIsArray($probe);
+        try {
+            self::assertTrue(socket_set_option(socket_import_stream($probe[0]), SOL_SOCKET, SO_SNDBUF, 4096));
+            self::assertTrue(stream_set_blocking($probe[0], false));
+            $written = fwrite($probe[0], $reply);
+            self::assertIsInt($written);
+            self::assertGreaterThan(0, $written);
+            self::assertLessThan(strlen($reply), $written, 'Native socket must actually produce a positive short write.');
+        } finally {
+            fclose($probe[0]);
+            fclose($probe[1]);
+        }
+
+        $pair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+        self::assertIsArray($pair);
+        self::assertTrue(socket_set_option(socket_import_stream($pair[0]), SOL_SOCKET, SO_SNDBUF, 4096));
+        self::assertTrue(stream_set_blocking($pair[0], false));
+        $capture = tempnam(sys_get_temp_dir(), 'kadupul-mail-short-write-');
+        $pid = pcntl_fork();
+        self::assertNotSame(-1, $pid);
+        if ($pid === 0) {
+            try {
+                fclose($pair[0]);
+                stream_set_timeout($pair[1], 5);
+                usleep(100000); // Real kernel backpressure before the reader drains.
+                $received = stream_get_contents($pair[1]);
+                file_put_contents($capture, $received);
+                fclose($pair[1]);
+                exit(0);
+            } catch (\Throwable) {
+                exit(2);
+            }
+        }
+        fclose($pair[1]);
+        try {
+            $complete = self::writeReply($pair[0], $reply);
+            fclose($pair[0]);
+            pcntl_waitpid($pid, $status);
+            self::assertTrue(pcntl_wifexited($status));
+            self::assertSame(0, pcntl_wexitstatus($status));
+            self::assertTrue($complete, 'A positive short write must retain and send its remaining suffix.');
+            self::assertSame($reply, file_get_contents($capture));
+        } finally {
+            if (is_resource($pair[0])) fclose($pair[0]);
+            if (pcntl_waitpid($pid, $unused, WNOHANG) === 0) {
+                posix_kill($pid, SIGTERM);
+                pcntl_waitpid($pid, $unused);
+            }
+            unlink($capture);
+        }
+    }
+
     private static function writeReply($connection, string $reply): bool
     {
         // Certificate rejection can close the peer just after the server's TLS
@@ -173,7 +229,26 @@ final class MailTlsTest extends TestCase
             throw new \ErrorException($message, 0, $severity, $file, $line);
         }, E_WARNING | E_NOTICE);
         try {
-            return fwrite($connection, $reply) === strlen($reply);
+            $offset = 0;
+            $length = strlen($reply);
+            $nonBlocking = !stream_get_meta_data($connection)['blocked'];
+            $deadline = hrtime(true) + 5_000_000_000;
+            while ($offset < $length) {
+                if ($nonBlocking) {
+                    // A constrained native socket may accept only a prefix. Wait
+                    // for bounded writable readiness rather than spin at EAGAIN.
+                    $remaining = $deadline - hrtime(true);
+                    if ($remaining <= 0) return false;
+                    $read = $except = [];
+                    $write = [$connection];
+                    $ready = stream_select($read, $write, $except, intdiv($remaining, 1_000_000_000), intdiv($remaining % 1_000_000_000, 1000));
+                    if ($ready !== 1) return false;
+                }
+                $written = fwrite($connection, substr($reply, $offset));
+                if ($written === false || $written === 0) return false;
+                $offset += $written;
+            }
+            return true;
         } finally {
             restore_error_handler();
         }

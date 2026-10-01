@@ -130,7 +130,7 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
  *
  * @return array<int, \Symfony\Component\Lock\SharedLockInterface>|false Acquired locks or false.
  */
-function rrd_maintenance_acquire_paths($files, $timeout = 0, &$busy = null)
+function rrd_maintenance_acquire_paths($files, $timeout = 0, &$busy = null): array|false
 {
     global $config;
     $busy = false;
@@ -195,7 +195,7 @@ function rrd_maintenance_acquire_paths($files, $timeout = 0, &$busy = null)
  *
  * @return string|false Workspace path or false when it cannot be trusted or created.
  */
-function rrd_maintenance_workspace()
+function rrd_maintenance_workspace(): string|false
 {
     $directory = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . '/kadupul-rrd-' . bin2hex(random_bytes(16));
     // Preserve mkdir()'s former single-level behavior: a missing temp root is
