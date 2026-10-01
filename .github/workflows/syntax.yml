@@ -208,41 +208,55 @@ jobs:
     - name: Check PHP version
       run: php -v
       
+    # Upstream plugin default branches move without notice; pin each to a
+    # revision this branch's page crawl passes with.
     - name: Checkout Thold Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        owner: 'Cacti'
-        repository: 'plugin_thold'
+        repository: Cacti/plugin_thold
+        ref: 5d08f0d2d35de6f69f85d34722942771651a3e5a
+        path: plugin_thold
+        persist-credentials: false
 
     - name: Checkout Monitor Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        owner: 'Cacti'
-        repository: 'plugin_monitor'
+        repository: Cacti/plugin_monitor
+        ref: 314169ae763c188a5b7106d7140a74a5121f510a
+        path: plugin_monitor
+        persist-credentials: false
 
     - name: Checkout MacTrack Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        owner: 'Cacti'
-        repository: 'plugin_mactrack'
+        repository: Cacti/plugin_mactrack
+        ref: 594ca835257341d08eff0a90f7bc86aeb05c6a29
+        path: plugin_mactrack
+        persist-credentials: false
 
     - name: Checkout Intropage Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        owner: 'Cacti'
-        repository: 'plugin_intropage'
+        repository: Cacti/plugin_intropage
+        ref: 3a968d4d9d044366cff29a9e36a513299471853e
+        path: plugin_intropage
+        persist-credentials: false
 
     - name: Checkout FlowView Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        owner: 'Cacti'
-        repository: 'plugin_flowview'
+        repository: Cacti/plugin_flowview
+        ref: f1382a24a4c72f4948599f6ca9685a1a4a4bc2a5
+        path: plugin_flowview
+        persist-credentials: false
 
     - name: Checkout Audit Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        owner: 'Cacti'
-        repository: 'plugin_audit'
+        repository: Cacti/plugin_audit
+        ref: 6a99d18e9e671750b200f6eee14e57a22103fade
+        path: plugin_audit
+        persist-credentials: false
 
     - name: Checkout Syslog Plugin
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
