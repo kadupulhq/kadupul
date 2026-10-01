@@ -10,6 +10,7 @@ namespace Kadupul\Tests;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Kernel;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Navigation\Application\Port\LinkAccess;
 use Kadupul\Navigation\Application\Port\LinkPreferences;
 use Kadupul\Navigation\Application\Port\LinkStore;
@@ -43,6 +44,9 @@ final class LinkReviewRegressionTest extends TestCase
         try {
             $kernel->boot();
             $container = $kernel->getContainer()->get('test.service_container');
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['collector_id' => 1]);
+            $container->set(LegacyConfiguration::class, $configuration);
             $actor = new Actor(1, 'admin');
             $console = $this->createMock(ConsoleAccess::class);
             $console->method('consoleActor')->willReturn($actor);
@@ -76,6 +80,38 @@ final class LinkReviewRegressionTest extends TestCase
             self::assertSame($unauthenticated ? 401 : 403, $response->getStatusCode());
             self::assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
             self::assertSame('Access denied.', $response->getContent());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testRemoteCollectorRendersFiltersWithoutPreferenceWrites(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $actor = new Actor(1, 'admin');
+            $console = $this->createMock(ConsoleAccess::class);
+            $console->method('consoleActor')->willReturn($actor);
+            $container->set(ConsoleAccess::class, $console);
+            $access = $this->createMock(LinkAccess::class);
+            $access->method('authorize')->willReturn($actor);
+            $container->set(LinkAccess::class, $access);
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['collector_id' => 2]);
+            $container->set(LegacyConfiguration::class, $configuration);
+            $preferences = $this->createMock(LinkPreferences::class);
+            $preferences->method('load')->willReturn(['filter' => 'remembered']);
+            $preferences->expects(self::never())->method('save');
+            $container->set(LinkPreferences::class, $preferences);
+            $store = $this->createMock(LinkStore::class);
+            $store->method('defaultRows')->willReturn(10);
+            $store->expects(self::once())->method('list')->with(self::callback(static fn(array $filters): bool => $filters['filter'] === 'requested'))->willReturn(['links' => [], 'total' => 0]);
+            $container->set(LinkStore::class, $store);
+            $response = $kernel->handle(Request::create('/links?filter=requested'));
+            self::assertSame(200, $response->getStatusCode());
+            self::assertStringContainsString('value="requested"', $response->getContent());
         } finally {
             $kernel->shutdown();
         }

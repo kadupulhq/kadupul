@@ -8,6 +8,7 @@
 namespace Kadupul\Navigation\Infrastructure\Symfony\Controller;
 
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Navigation\Application\Port\LinkAccess;
 use Kadupul\Navigation\Application\Port\LinkStore;
 use Kadupul\Navigation\Application\Port\LinkPreferences;
@@ -23,7 +24,7 @@ use Twig\Environment;
 final class LinkListController
 {
     #[Route('/links', name: 'navigation_links', methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, ConsoleAccess $console, LinkAccess $access, LinkStore $store, LinkPreferences $preferences, ListLinks $list, Environment $twig, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ConsoleAccess $console, LinkAccess $access, LinkStore $store, LinkPreferences $preferences, LegacyConfiguration $configuration, ListLinks $list, Environment $twig, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $console->consoleActor();
@@ -41,7 +42,9 @@ final class LinkListController
             $filters = LinkListParameters::parse(array_replace($remembered, $query), $store->defaultRows());
             $saved = $filters;
             unset($saved['limit']);
-            $preferences->save($saved);
+            if (($configuration->values()['collector_id'] ?? null) === 1) {
+                $preferences->save($saved);
+            }
             $page = $list($filters);
         } catch (LinkAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'navigation'), $error->unauthenticated ? 401 : 403, $headers);

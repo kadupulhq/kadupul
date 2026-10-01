@@ -8,6 +8,8 @@ PHP 8.4.25 selected through `mise`.
 
 - Links retain the TAB, CONSOLE, FRONT and FRONTTOP styles, refresh choices,
   search, sorting, pagination and per-user filter preferences.
+- Remote collectors render validated list filters without persisting preferences.
+  Preference writes remain restricted to the primary collector.
 - Create and edit append to the current maximum order, matching legacy save.
   Bulk deletion retains surviving order values. Adjacent moves normalize gaps
   and duplicates while preserving other links' relative order.
