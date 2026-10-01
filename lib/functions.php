@@ -154,7 +154,18 @@ function graph_font_size($size, $default)
 {
     graph_font_resolver();
 
-    return \Kadupul\Graphing\Domain\Font\GraphFontResolver::size($size, (float) $default);
+    // GraphFontResolver::size() returns floats only. Plugins may compare this
+    // result strictly, so the fallback keeps the type the caller passed and
+    // the cap stays the integer 72, as before the resolver.
+    if (\Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsSize($size)) {
+        return (float) $size;
+    }
+
+    if (is_numeric($size) && is_finite((float) $size) && (float) $size > \Kadupul\Graphing\Domain\Font\GraphFontResolver::MAX_SIZE) {
+        return 72;
+    }
+
+    return $default;
 }
 
 /**

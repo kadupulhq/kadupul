@@ -124,14 +124,9 @@ test('the font size helpers keep their original answers', function () {
     $pairs = rrd_font_parity_pairs($this, array(), '1.7.2', $calls);
 
     expect($pairs)->toHaveCount(count($calls));
+    // graph_font_size() keeps the original return types, the default as given and the integer 72 cap.
     foreach ($pairs as $index => $pair) {
-        // graph_font_size() now always answers a float where it once gave back an int
-        // default or 72; RRDtool is handed floatval() of it either way.
-        if ($calls[$index]['fn'] === 'graph_font_size') {
-            expect($pair[0])->toEqual($pair[1], json_encode($calls[$index]));
-        } else {
-            expect($pair[0])->toBe($pair[1], json_encode($calls[$index]));
-        }
+        expect($pair[0])->toBe($pair[1], json_encode($calls[$index]));
     }
 });
 
