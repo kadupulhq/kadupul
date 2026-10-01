@@ -131,6 +131,11 @@ if (isset($argv[3])) {
     require __DIR__ . '/rrd-process-coverage.php';
 }
 require (getenv('PERMISSION_FILTER_CONTROLLER_ROOT') ?: $root) . '/' . $scenario['page'];
+if (!empty($scenario['no_association'])) {
+    require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
+    print json_encode(array('tab' => \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php'), 'queries' => $queries), JSON_THROW_ON_ERROR);
+    exit;
+}
 if (isset($scenario['association'])) {
     register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn) {
         print json_encode(array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']), JSON_THROW_ON_ERROR);

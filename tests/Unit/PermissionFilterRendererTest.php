@@ -118,6 +118,15 @@ final class PermissionFilterRendererTest extends TestCase
         return $cases;
     }
 
+    public function testOtherActionsDoNotWriteAssociations(): void
+    {
+        foreach (array('user_admin.php', 'user_group_admin.php') as $page) {
+            $result = $this->render(array('page' => $page, 'no_association' => true, 'unrelated_association' => '1'));
+            self::assertNull($result['tab']);
+            self::assertSame(array(), $result['queries']);
+        }
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
