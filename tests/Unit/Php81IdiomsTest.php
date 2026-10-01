@@ -24,7 +24,6 @@ function preg_match($pattern, $subject) {
 }
 function preg_last_error() { return $GLOBALS['php81_pcre_error'] ?? \preg_last_error(); }
 function preg_last_error_msg() { return $GLOBALS['php81_pcre_message'] ?? \preg_last_error_msg(); }
-function error_get_last() { return \error_get_last() ?? ['message' => 'preg_match(): failed']; }
 function cacti_count($value) { return count($value); }
 function fsockopen($address, $port) { $GLOBALS['php81_socket_opened'] = true; return null; }
 function stream_set_timeout(...$arguments) { return true; }

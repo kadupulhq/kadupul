@@ -62,6 +62,13 @@ foreach (['//evil.test/path', 'http://example.test//path', 'http://example.test/
     $result['redirects'][] = validate_redirect_url($url, 'fallback.php');
 }
 $result['regex'] = validate_is_regex('value;other');
+// A real PCRE engine failure need not emit a PHP diagnostic at all.
+// Probe that boundary independently; no error-array stub is involved.
+error_clear_last();
+$result['runtime_regex_probe'] = [@preg_match("'(?R)'", ''), preg_last_error_msg(), error_get_last()];
+define('IN_CACTI_INSTALL', true);
+error_clear_last();
+$result['runtime_regex'] = validate_is_regex('(?R)');
 $result['pages'] = [get_page_list(1, 3, 10, 30, 'host.php'), get_page_list(1, 3, 10, 30, 'host.php?filter=x')];
 $result['indexes'] = [db_format_index_create('name'), db_format_index_create('name(10)'), db_format_index_create(['name', 'value(10)'])];
 $result['quoted'] = [file_escaped('"plain"'), file_escaped('plain'), file_escaped('"plain')];

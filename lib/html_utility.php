@@ -1261,7 +1261,7 @@ function validate_is_regex($regex): bool|string
 
     $last_error = error_get_last();
 
-    $php_error = trim(str_replace('preg_match():', '', $last_error['message']));
+    $php_error = trim(str_replace('preg_match():', '', $last_error['message'] ?? $error_message));
 
     ini_set('track_errors', $track_errors);
 

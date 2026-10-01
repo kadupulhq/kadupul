@@ -40,6 +40,8 @@ test('native predicates preserve rendering redirects and resource replication', 
         $this->assertSame('ORDER BY `description` DESC', $result['sort_get']);
         $this->assertSame(['fallback.php', 'fallback.php', '/path', 'relative.php', 'fallback.php'], $result['redirects']);
         $this->assertStringContainsString('semi-color', $result['regex']);
+        $this->assertSame([false, 'Internal error', null], $result['runtime_regex_probe']);
+        $this->assertSame('There was an internal error!', $result['runtime_regex']);
         $this->assertStringContainsString('host.php?page=1', $result['pages'][0]);
         $this->assertStringContainsString('host.php?filter=x&amp;page=1', $result['pages'][1]);
         $this->assertSame(['`name`', 'name(10)', '`name`,value(10)'], $result['indexes']);
