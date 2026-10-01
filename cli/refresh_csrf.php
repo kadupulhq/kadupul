@@ -82,12 +82,14 @@ if (!cacti_csrf_external_path_is_safe($path_csrf_secret)) {
 }
 
 // Keep the working key until its complete replacement is ready.
+$previous = is_file($path_csrf_secret) ? stat($path_csrf_secret) : false;
 $temporary = tempnam(dirname($path_csrf_secret), '.csrf-');
 $contents = '<?php $secret = "' . $new_secret . '";' . PHP_EOL;
 $written = false;
 if ($temporary !== false) {
     try {
-        $written = chmod($temporary, 0600)
+        $written = (!$previous || (chown($temporary, $previous['uid']) && chgrp($temporary, $previous['gid'])))
+            && chmod($temporary, $previous ? ($previous['mode'] & 0660) : 0640)
             && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
             && file_get_contents($temporary) === $contents
             && rename($temporary, $path_csrf_secret);

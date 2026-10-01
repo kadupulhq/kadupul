@@ -41,6 +41,7 @@ function refresh_csrf_run($test, array $scenario): array
     $secret = str_replace(array('{outside}', '{root}'), array($outside, $dir), $scenario['secret'] ?? '');
     if (!empty($scenario['existing'])) {
         file_put_contents($secret, '<?php $secret = "old";');
+        chmod($secret, 0640);
     }
 
     $bootstrap = <<<'PHP'
@@ -109,6 +110,7 @@ PHP;
             'stdout' => $stdout,
             'stderr' => $stderr,
             'legacy' => file_exists($dir . '/include/vendor/csrf/csrf-secret.php'),
+            'mode' => $secret !== '' && file_exists($secret) ? (fileperms($secret) & 0777) : null,
             'secret' => $secret !== '' && file_exists($secret) ? file_get_contents($secret) : null,
         );
     } finally {
@@ -157,6 +159,7 @@ test('an external secret outside the document root is replaced', function (bool 
         ->and($result['stderr'])->toBe('')
                 ->and($result['stdout'])->toContain('New csrf_secret.php file written.')
         ->and($result['stdout'])->toEndWith('STORED:0')
+        ->and($result['mode'])->toBe(0640)
         ->and($result['secret'])->toMatch('/^<\?php \$secret = "[0-9a-f]{64}";\n$/');
 })->with(array(
     'existing file' => array(true, 'Removing old csrf_secret.php file.'),
