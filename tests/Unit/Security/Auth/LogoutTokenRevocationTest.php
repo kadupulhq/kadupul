@@ -24,12 +24,16 @@ define('OPER_MODE_RESKIN', 2);
 define('COPYRIGHT_YEARS_SHORT', '2004-2026');
 $config = array('url_path' => '/kadupul/');
 $GLOBALS['events'] = array();
+$GLOBALS['cache_db'] = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+$GLOBALS['cache_db']->sqliteCreateFunction('NOW', static fn() => '2026-10-01 00:00:00');
+$GLOBALS['cache_db']->exec('CREATE TABLE user_auth_cache (user_id INTEGER, hostname TEXT, last_update TEXT, token TEXT)');
+$GLOBALS['cache_db']->exec("INSERT INTO user_auth_cache VALUES (43, '192.0.2.11', '', 'unrelated-token')");
 function read_config_option($name, $force = false) { return $name === 'auth_cache_enabled' && $GLOBALS['cache_enabled'] ? 'on' : '';  }
 function db_table_exists($name) { return $name === 'user_auth_cache'; }
 function db_fetch_cell_prepared($sql, $params = array()) { return false; }
 function db_execute_prepared($sql, $params = array()) {
     $GLOBALS['events'][] = array('sql' => trim(preg_replace('/\s+/', ' ', $sql)), 'params' => $params);
-    return true;
+    return $GLOBALS['cache_db']->prepare($sql)->execute($params);
 }
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
 function get_client_addr() { return '192.0.2.10'; }
@@ -47,7 +51,7 @@ function html_common_header($title) {}
 class CactiSecureHeaders { public static function getNonceAttribute() { return ''; } }
 register_shutdown_function(function () {
     $output = ob_get_clean();
-    print json_encode(array('events' => $GLOBALS['events'], 'output' => $output, 'bound' => $GLOBALS['bound'] ?? null));
+    print json_encode(array('events' => $GLOBALS['events'], 'output' => $output, 'bound' => $GLOBALS['bound'] ?? null, 'cache_users' => $GLOBALS['cache_db']->query('SELECT DISTINCT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN)));
 });
 ob_start();
 PHP;
@@ -55,7 +59,7 @@ PHP;
 
     $stubs .= "\n";
     if ($bound) {
-        $stubs .= 'set_auth_cookie(array("id"=>42,"realm"=>0));$GLOBALS["bound"]=$_SESSION["sess_remember_token"];$GLOBALS["events"]=array();';
+        $stubs .= 'set_auth_cookie(array("id"=>42,"realm"=>0));$GLOBALS["bound"]=$_SESSION["sess_remember_token"]??null;$GLOBALS["events"]=array();';
     }
     file_put_contents($dir . '/include/auth.php', $stubs);
     file_put_contents($dir . '/include/global_session.php', "<?php\n");
@@ -150,5 +154,6 @@ test('logout revokes the issued session token after its browser cookie is missin
     $deletes = logout_token_deletes($result);
     expect($result['stderr'])->toBe('')->and($deletes)->toHaveCount(1)
         ->and($deletes[0]['params'])->toBe(array(42, $result['bound']['hash']))
+        ->and($result['cache_users'])->toBe(array(43))
         ->and(array_search($deletes[0], $result['events'], true))->toBeLessThan(array_search('cookie_logout', $result['events'], true));
 })->with(array('missing' => array(null), 'malformed' => array('42'), 'array' => array(array('invalid'))));
