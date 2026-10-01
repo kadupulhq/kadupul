@@ -223,8 +223,9 @@ if (window.HTMLFormElement && HTMLFormElement.prototype.submit && !HTMLFormEleme
 
 // The submit check is installed when this script loads in the page head, so
 // markup that keeps the parser from reaching CsrfMagic.end() cannot switch it
-// off.
-if (window.document && (window.EventTarget || document.addEventListener)) {
+// off. A page that loads the script twice still gets one listener.
+if (window.document && (window.EventTarget || document.addEventListener) && !window.csrfMagicSubmitListener) {
+	window.csrfMagicSubmitListener = true;
 	CsrfMagic.invoke('EventTarget', document, 'addEventListener', ['submit', CsrfMagic.submit, true]);
 }
 
@@ -235,16 +236,19 @@ if (window.XMLHttpRequest && window.XMLHttpRequest.prototype && '\v' != 'v') {
 	var x = XMLHttpRequest.prototype;
 	var c = CsrfMagic.prototype;
 
-	// Save the original functions
-	x.csrf_open = x.open;
-	x.csrf_send = x.send;
-	x.csrf_setRequestHeader = x.setRequestHeader;
+	// A second load would save the decorated open() as the original and recurse.
+	if (!x.csrf_open) {
+		// Save the original functions
+		x.csrf_open = x.open;
+		x.csrf_send = x.send;
+		x.csrf_setRequestHeader = x.setRequestHeader;
 
-	// Notice that CsrfMagic is itself an instantiatable object, but only
-	// open, send and setRequestHeader are necessary as decorators.
-	x.open = c.open;
-	x.send = c.send;
-	x.setRequestHeader = c.setRequestHeader;
+		// Notice that CsrfMagic is itself an instantiatable object, but only
+		// open, send and setRequestHeader are necessary as decorators.
+		x.open = c.open;
+		x.send = c.send;
+		x.setRequestHeader = c.setRequestHeader;
+	}
 } else {
 	// The only way we can do this is by modifying a library you have been
 	// using. We support YUI, script.aculo.us, prototype, MooTools,

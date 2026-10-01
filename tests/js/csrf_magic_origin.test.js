@@ -93,6 +93,18 @@ test('an element named baseURI does not hide the document base', () => {
 	assert.equal(xhrBody('POST', 'graphs.php', 'action=save', { document: { baseURI: { tagName: 'IMG' } } }), 'action=save');
 });
 
+test('loading the script twice keeps one submit listener and one XHR decoration', () => {
+	const Request = requestClass();
+	const listeners = [];
+	const window = load({ XMLHttpRequest: Request, document: { baseURI: page, addEventListener: type => listeners.push(type) } });
+	vm.runInContext(source, window);
+	const request = new Request();
+	request.open('POST', 'graphs.php', true);
+	request.send('action=save');
+	assert.equal(request.sent, withToken);
+	assert.deepEqual(listeners, ['submit']);
+});
+
 test('the jQuery fallback adds the token to same-origin posts only', () => {
 	const calls = [];
 	const jQuery = {
