@@ -185,6 +185,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
             'poller missing' => array('poller', array('filter' => 'missing'), array()),
         );
     }
+
     /** @dataProvider logfileCases */
     public function testNativeLogfileViewReadsActualFilesAndKeepsOrderedFilteredContent(array $request, array $expected): void
     {
