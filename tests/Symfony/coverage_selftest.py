@@ -9,6 +9,17 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def measured_sources(raw, required):
+    """Collect actually hit required sources across every raw report."""
+    measured = {}
+    for path in raw.glob('coverage-*.json'):
+        report = json.loads(path.read_text())
+        for source in required:
+            if 1 in (report['files'] or {}).get(source, {}).get('lines', {}).values():
+                measured[source] = report['files'][source]
+    return measured
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--php', default='php')
@@ -167,16 +178,8 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
-    for path in (args.files / 'raw').glob('coverage-*.json'):
-        report = json.loads(path.read_text())
-        device_template_checks = ['failed child copy rolls back new parent and every association', 'device template storage and authorization guards verified', '100-character Unicode name persists without truncation', 'expanded duplicate database name bound rejects 101 characters', 'device template links work through all four front controllers', 'unexpected create fields reject without parent writes', 'unexpected edit fields reject without parent writes', 'unexpected graph association fields reject without child writes', 'unexpected query association fields reject without child writes', 'unexpected action fields reject without parent deletion']
-    for index in range(len(device_template_checks)):
-        failures['missing-device-template-check-' + str(index)] = 'Incomplete Symfony integration checks'
-    failures['device-template-test-hash'] = 'Integration test source differs'
-    failures['device-template-probe-hash'] = 'Integration test source differs'
-    for source in required:
-            if 1 in (report['files'] or {}).get(source, {}).get('lines', {}).values():
-                measured['files'][source] = report['files'][source]
+    measured['files'] = measured_sources(args.files / 'raw', required)
+    device_template_checks = ['failed child copy rolls back new parent and every association', 'device template storage and authorization guards verified', '100-character Unicode name persists without truncation', 'expanded duplicate database name bound rejects 101 characters', 'device template links work through all four front controllers', 'unexpected create fields reject without parent writes', 'unexpected edit fields reject without parent writes', 'unexpected graph association fields reject without child writes', 'unexpected query association fields reject without child writes', 'unexpected action fields reject without parent deletion', 'device template French control translated: <button>Enregistrer</button>', 'device template French control translated: <button>Continuer</button>', 'device template French control translated: <td>Oui</td>']
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
@@ -230,6 +233,10 @@ def main():
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
     }
+    for index in range(len(device_template_checks)):
+        failures['missing-device-template-check-' + str(index)] = 'Incomplete Symfony integration checks'
+    failures['device-template-test-hash'] = 'Integration test source differs'
+    failures['device-template-probe-hash'] = 'Integration test source differs'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:

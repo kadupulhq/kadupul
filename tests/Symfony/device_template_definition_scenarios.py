@@ -21,6 +21,36 @@ class Fields(HTMLParser):
             self.fields[attrs['name']] = attrs.get('value', '')
 
 
+def verify_french_controls(harness, session, user_id, template_id, check):
+    names = "'i18n_language_support','i18n_auto_detection','i18n_default_language'"
+    settings = harness.rows(f"SELECT JSON_OBJECT('name',name,'value',value) FROM settings WHERE name IN ({names})")
+    preference = harness.rows(f"SELECT JSON_OBJECT('value',value) FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+    def literal(value):
+        return '0x' + value.encode().hex() if value else "''"
+    try:
+        harness.sql("REPLACE INTO settings (name,value) VALUES ('i18n_language_support','1'),('i18n_auto_detection','0'),('i18n_default_language','en-US')")
+        harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language','fr-FR')")
+        french = type(session)(harness.base)
+        check(french.login('behavior-admin')['status'] == 200, 'device templates French session authenticates')
+        paths = [
+            (f'/app.php/inventory/device-templates/{template_id}/edit', '<button>Enregistrer</button>'),
+            (f'/app.php/inventory/device-templates/action/delete?ids[]={template_id}', '<button>Continuer</button>'),
+            ('/app.php/inventory/device-templates?has_hosts=false&size=15', '<td>Oui</td>'),
+        ]
+        for path, translated in paths:
+            with french.opener.open(harness.base + path) as response:
+                body = response.read().decode()
+                check(response.status == 200 and '<html lang="fr">' in body and translated in body,
+                      'device template French control translated: ' + translated)
+    finally:
+        harness.sql(f"DELETE FROM settings WHERE name IN ({names})")
+        for setting in settings:
+            harness.sql(f"INSERT INTO settings (name,value) VALUES ({literal(setting['name'])},{literal(setting['value'])})")
+        harness.sql(f"DELETE FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+        for setting in preference:
+            harness.sql(f"INSERT INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language',{literal(setting['value'])})")
+
+
 def verify_device_template_definitions(harness, session, user_id, check):
     base = '/app.php/inventory/device-templates'
     def request(path, fields=None, origin=True):
@@ -64,6 +94,7 @@ def verify_device_template_definitions(harness, session, user_id, check):
     check(request(base + '/new', fields)[0] == 200, 'create persists then redirects to editor')
     tid = int(harness.sql("SELECT id FROM host_template WHERE name='" + name + "'").strip())
     edit = base + f'/{tid}/edit'
+    verify_french_controls(harness, session, user_id, tid, check)
     defaults = harness.sql("SELECT name,value FROM settings WHERE name IN ('default_has','num_rows_table')").strip()
     try:
         harness.sql("INSERT INTO settings (name,value) VALUES ('default_has','on'),('num_rows_table','30') ON DUPLICATE KEY UPDATE value=VALUES(value)")

@@ -51,7 +51,7 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
                 $container->set(ConsoleAccess::class, $access);
                 $port = $this->createMock(DeviceTemplateDefinitions::class);
                 $port->expects(self::once())->method('authorize')->with(42)->willThrowException(new \Kadupul\Inventory\Application\Query\InventoryAccessDenied(false));
-                foreach (['find', 'execute', 'defaults', 'remember', 'list', 'choices', 'hooks'] as $method) {
+                foreach (['find', 'execute', 'defaults', 'remember', 'list', 'graphChoices', 'choices', 'hooks'] as $method) {
                     $port->expects(self::never())->method($method);
                 }
                 $container->set(DeviceTemplateDefinitions::class, $port);
@@ -77,7 +77,8 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
                 $port = $this->createMock(DeviceTemplateDefinitions::class);
                 $port->method('defaults')->willReturn([]);
                 $port->method('list')->willReturn(['rows' => [['id' => 7, 'name' => 'attached', 'class' => 'router', 'hosts' => 2]], 'hasNext' => false]);
-                $port->method('choices')->willReturn(['graphs' => [], 'queries' => []]);
+                $port->expects(self::never())->method('choices');
+                $port->expects(self::once())->method('graphChoices')->willReturn([]);
                 $port->method('hooks')->willReturn([]);
                 $container->set(DeviceTemplateDefinitions::class, $port);
                 $response = $kernel->handle(Request::create($front . '/inventory/device-templates', 'GET', [], [], [], ['SCRIPT_FILENAME' => '/var/www/html' . $front, 'SCRIPT_NAME' => $front, 'PHP_SELF' => $front . '/inventory/device-templates']));
@@ -166,6 +167,8 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
             $row = new DeviceTemplateDefinition(7, '<script>stored</script>', 'router', [2,3], [4]);
             $port = $this->createMock(DeviceTemplateDefinitions::class);
             $port->method('find')->willReturn($row);
+            $port->method('defaults')->willReturn([]);
+            $port->method('list')->willReturn(['rows' => [['id' => 7, 'name' => 'attached', 'class' => 'router', 'hosts' => 2]], 'hasNext' => false]);
             $port->method('choices')->willReturn(['graphs' => [2 => '<same>', 3 => '<same>'], 'queries' => [4 => '<query>']]);
             $port->method('hooks')->willReturn(['device_template_top' => '<aside id="plugin-top">Installed plugin</aside>', 'device_template_edit' => '<label for="plugin-control">Plugin field</label><input id="plugin-control" name="plugin_field">']);
             $port->expects(self::once())->method('execute')->with(42, 'save', ['id' => 7, 'revision' => $row->revision(), 'data' => ['name' => 'changed', 'class' => 'router']])->willReturn(['ids' => [7], 'status' => 'ok']);
@@ -175,6 +178,7 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
             self::assertSame(200, $response->getStatusCode());
             $body = $response->getContent();
             self::assertStringContainsString('Modèle d’appareil', $body);
+            self::assertStringContainsString('<button>Enregistrer</button>', $body);
             self::assertStringContainsString('maxlength="100"', $body);
             self::assertStringContainsString('&lt;script&gt;stored&lt;/script&gt;', $body);
             self::assertStringNotContainsString('<script>stored</script>', $body);
@@ -200,10 +204,14 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
             $request = Request::create($path, 'POST', ['device_template_definition' => $fields]);
             $request->headers->set('Origin', 'http://localhost');
             self::assertSame(303, $kernel->handle($request)->getStatusCode());
-            $association = $kernel->handle(Request::create('/inventory/device-templates/7/association/graph/remove'));
+            $association = $kernel->handle(Request::create('/inventory/device-templates/7/association/graph/remove', 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(200, $association->getStatusCode());
+            self::assertStringContainsString('<button>Continuer</button>', $association->getContent());
             self::assertStringContainsString('value="2">&lt;same&gt;', $association->getContent());
             self::assertStringContainsString('value="3">&lt;same&gt;', $association->getContent());
+            $listing = $kernel->handle(Request::create('/inventory/device-templates', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $listing->getStatusCode());
+            self::assertStringContainsString('<td>Oui</td>', $listing->getContent());
             self::assertSame(409, $kernel->handle(Request::create('/inventory/device-templates/legacy', 'POST', ['action' => 'actions']))->getStatusCode());
         } finally {
             $kernel->shutdown();

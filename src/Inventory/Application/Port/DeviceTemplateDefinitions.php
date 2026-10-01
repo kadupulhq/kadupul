@@ -16,6 +16,7 @@ interface DeviceTemplateDefinitions
     public function remember(int $actor, array $filters): void;
     public function list(array $filters): array;
     public function find(int $id): ?DeviceTemplateDefinition;
+    public function graphChoices(): array;
     public function choices(): array;
     public function execute(int $actor, string $action, array $command): array;
     public function hooks(int $actor, int $id): array;

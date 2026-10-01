@@ -26,6 +26,14 @@ final class DeviceTemplateStatementTest extends TestCase
         return new LegacyDeviceTemplateDefinitions($database, dirname(__DIR__, 2), $configuration);
     }
 
+    public function testListGraphChoicesDoNotReadEditorOnlySnmpCatalogs(): void
+    {
+        $db = new \PDO('sqlite::memory:');
+        $db->exec('CREATE TABLE graph_templates (id INTEGER, name TEXT)');
+        $db->exec("INSERT INTO graph_templates VALUES (2, 'B'), (1, 'A'), (0, 'Hidden')");
+        self::assertSame([1 => 'A', 2 => 'B'], $this->definitions($db)->graphChoices());
+    }
+
     private function lateFailure(string $method, mixed $result): \PDOStatement
     {
         $failed = false;

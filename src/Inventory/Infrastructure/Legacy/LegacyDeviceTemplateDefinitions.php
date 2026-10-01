@@ -107,6 +107,10 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
         }
         return new DeviceTemplateDefinition((int) $row['id'], $row['name'], $row['class'], ...$children);
     }
+    public function graphChoices(): array
+    {
+        return DeviceTemplateStatement::fetchAll(DeviceTemplateStatement::query($this->database->get(), 'SELECT id, name FROM graph_templates WHERE id > 0 ORDER BY name, id'), \PDO::FETCH_KEY_PAIR);
+    }
     public function choices(): array
     {
         $db = $this->database->get();

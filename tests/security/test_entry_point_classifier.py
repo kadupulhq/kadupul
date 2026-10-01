@@ -923,6 +923,26 @@ def run(root, served):
     return {row[0]: (row[1], row[2]) for row in inventory.classify(root, files, served)}
 
 
+def feature_guard(root):
+    # Exercise the helper independently of the generic route gate. Strip only
+    # the CLI entry invocation; load all unchanged classifier definitions.
+    script = r"""
+$source = file_get_contents($argv[1]);
+$source = str_replace("require __DIR__ . '/../../include/vendor/autoload.php';", 'require ' . var_export($argv[2], true) . ';', $source);
+$source = preg_replace('/exit\(main\(\)\);\s*$/', '', $source);
+eval(substr($source, 5));
+$request = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
+$class = load_class($request['root'], 'Kadupul\Fixture\DeviceTemplateAction');
+$method = find_method($class, 'run');
+echo json_encode(device_template_feature_guard($request['root'], 'Kadupul\Fixture\DeviceTemplateAction', $method, $request['files']));
+"""
+    project = Path(__file__).resolve().parents[2]
+    files = sorted(str(path.relative_to(root)) for path in root.rglob('*.php'))
+    result = subprocess.run([os.environ.get('PHP', 'php'), '-r', script, str(inventory.CLASSIFIER), str(project / 'include/vendor/autoload.php')],
+                            input=json.dumps({'root': str(root), 'files': files}), capture_output=True, text=True, check=True)
+    return json.loads(result.stdout)
+
+
 def gate(root, name, source):
     (root / name).write_text(source)
     return run(root, [name])[name]
@@ -1138,7 +1158,17 @@ def main():
         'rebound actor': ("$actor = $other; $store->authorize($actor->id);", False),
         'early return': ("if (true) { return new Response('feature data'); } $store->authorize($actor->id);", False),
     }
-    for label, (body, admitted) in feature_cases.items():
+    feature_cases = {label: ("if ($actor === null) { return new Response('', 401); }", body, admitted) for label, (body, admitted) in feature_cases.items()}
+    feature_cases.update({
+        'missing null refusal': ('', '$store->authorize($actor->id);', False),
+        'request instead of refusal': ('$request->query->all();', '$store->authorize($actor->id);', False),
+        'write instead of refusal': ("unlink('/tmp/x');", '$store->authorize($actor->id);', False),
+        'actor rebound instead of refusal': ('$actor = $other;', '$store->authorize($actor->id);', False),
+        'nonrefusing null guard': ('if ($actor === null) {}', '$store->authorize($actor->id);', False),
+        'wrong actor null guard': ("if ($other === null) { return new Response('', 401); }", '$store->authorize($actor->id);', False),
+        'late null refusal': ('$request->query->all();', "if ($actor === null) { return new Response('', 401); } $store->authorize($actor->id);", False),
+    })
+    for label, (guard, body, admitted) in feature_cases.items():
         with tempfile.TemporaryDirectory(prefix='entry-classifier-device-template-') as directory:
             root = tree(directory)
             proof_files = ['src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php',
@@ -1166,16 +1196,19 @@ final class DeviceTemplateAction {
     #[Route('/inventory/device-templates', name: 'device_template_fixture')]
     public function run(Request $request, ConsoleAccess $console, DeviceTemplateDefinitions $store): Response {
         $actor = $console->consoleActor();
-        if ($actor === null) { return new Response('', 401); }
+        %s
         %s
         return new Response();
     }
 }
-''' % body)
+''' % (guard, body))
             row = run(root, []).get('app.php/inventory/device-templates', ('missing', ''))
             count += 1
             if (row[0] == 'symfony:device_template_fixture' and row[1].endswith(' + realm 12')) != admitted:
                 failures.append('Device template feature %s: unexpected classification %s' % (label, row))
+            count += 1
+            if feature_guard(root) != admitted:
+                failures.append('Device template isolated feature helper %s: unexpected admission' % label)
             if admitted:
                 authorization = root / proof_files[0]
                 authorization.write_text(authorization.read_text().replace('foreach ([8, 12]', 'foreach ([8, 13]'))

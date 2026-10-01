@@ -252,6 +252,8 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
       - name: Verify offline build runtime selection
         run: mise exec node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
+      - name: Verify coverage selftest setup diagnostics
+        run: mise exec python@3.12.12 -- python tests/tools/test_coverage_selftest_setup.py
       - name: Restore pinned compatibility libraries
         run: php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters

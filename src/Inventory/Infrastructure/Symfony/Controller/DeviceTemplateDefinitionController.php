@@ -47,7 +47,7 @@ final class DeviceTemplateDefinitionController
                 $filters['page'] = 1;
             }
             $store->remember($actor->id, $filters);
-            return new Response($twig->render('inventory/device_templates.html.twig', ['filters' => $filters, 'result' => $store->list($filters), 'choices' => $store->choices(), 'classes' => DeviceTemplateDefinition::CLASSES, 'sizes' => DeviceTemplateFilters::SIZES, 'legacyDevices' => self::legacyDevicesUrl($configuration), 'hooks' => TrustedDeviceTemplatePluginHtml::capturedHooks($store->hooks($actor->id, 0))]), 200, ['Cache-Control' => 'private, no-store']);
+            return new Response($twig->render('inventory/device_templates.html.twig', ['filters' => $filters, 'result' => $store->list($filters), 'choices' => ['graphs' => $store->graphChoices()], 'classes' => DeviceTemplateDefinition::CLASSES, 'sizes' => DeviceTemplateFilters::SIZES, 'legacyDevices' => self::legacyDevicesUrl($configuration), 'hooks' => TrustedDeviceTemplatePluginHtml::capturedHooks($store->hooks($actor->id, 0))]), 200, ['Cache-Control' => 'private, no-store']);
         } catch (InventoryAccessDenied) {
             return new Response($translator->trans('Access denied.', [], 'inventory'), 403, ['Cache-Control' => 'private, no-store']);
         } catch (\InvalidArgumentException) {

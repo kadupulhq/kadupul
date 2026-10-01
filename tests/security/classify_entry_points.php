@@ -1970,7 +1970,7 @@ function device_template_feature_guard(string $root, string $class, Stmt\ClassMe
     $adapter = 'Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions';
     $reviewed = [
         'src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php' => '6f754cdebf7cede0dc113115a8240f0bcabe81e90a19d5cc1409f8b59f005068',
-        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php' => '30a3bd7549fe89806f0ce692afb03aa1b913e89e021a8e50f530706e9b2a733a',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php' => '3dcd4d7f34c7ca2b9f5e1c2687caf75e53919fef7e9ee94a0f95c5c73ef64335',
         'src/Inventory/Infrastructure/Legacy/DeviceTemplateStatement.php' => 'e915a78b9b4bbb7e8192abadd6b228ec5dc0c08a616860e13e8e0adf4e463d07',
     ];
     foreach ($reviewed as $path => $hash) {
@@ -2012,6 +2012,10 @@ function device_template_feature_guard(string $root, string $class, Stmt\ClassMe
         $actor = actor_assignment($root, $stmt, $typeOf);
         if ($actor === null) {
             continue;
+        }
+        $guard = refusal_guard($root, $stmts[$index + 1] ?? null, fn(?Expr $e): bool => true, $typeOf);
+        if ($guard === null || !is_null_check($guard, $actor)) {
+            return false;
         }
         $remaining = array_slice($stmts, $index + 2);
         $written = rebound($remaining, true);
