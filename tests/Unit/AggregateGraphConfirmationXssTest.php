@@ -69,9 +69,18 @@ final class AggregateGraphConfirmationXssTest extends TestCase
                 libxml_use_internal_errors($previous);
             }
             $xpath = new DOMXPath($document);
-            self::assertCount(1, $xpath->query('//select[@id="rows"]'));
-            self::assertSame('Default', $xpath->query('//select[@id="rows"]/option[@value="-1"]')->item(0)->textContent);
-            self::assertSame((string) $scenario['rows'], $xpath->query('//select[@id="rows"]/option[@selected]')->item(0)->getAttribute('value'));
+            self::assertCount(1, $xpath->query('//select[@id="aggregate_graph_rows"]'));
+            self::assertCount(1, $xpath->query('//label[@for="aggregate_graph_rows"]'));
+            self::assertCount(1, $xpath->query('//input[@id="aggregate_graph_go"]'));
+            self::assertCount(1, $xpath->query('//input[@id="aggregate_graph_clear"]'));
+            self::assertCount(0, $xpath->query('//*[@id="rows" or @id="go" or @id="clear"]'));
+            self::assertSame('Default', $xpath->query('//select[@id="aggregate_graph_rows"]/option[@value="-1"]')->item(0)->textContent);
+            self::assertSame((string) $scenario['rows'], $xpath->query('//select[@id="aggregate_graph_rows"]/option[@selected]')->item(0)->getAttribute('value'));
+            self::assertCount(1, $xpath->query('//select[@id="template_id"]'));
+            self::assertSame('Any', $xpath->query('//select[@id="template_id"]/option[@value="-1"]')->item(0)->textContent);
+            self::assertSame('None', $xpath->query('//select[@id="template_id"]/option[@value="0"]')->item(0)->textContent);
+            self::assertSame('Aggregate <x>template</x>', $xpath->query('//select[@id="template_id"]/option[@value="2"]')->item(0)->textContent);
+            self::assertSame((string) ($scenario['template_id'] ?? -1), $xpath->query('//select[@id="template_id"]/option[@selected]')->item(0)->getAttribute('value'));
         }
     }
 
@@ -80,6 +89,8 @@ final class AggregateGraphConfirmationXssTest extends TestCase
         return array(
             'list' => array(array('action' => '', 'rows' => 10), 'Graph title'),
             'default rows' => array(array('action' => '', 'rows' => -1), 'Graph title'),
+            'selected template' => array(array('action' => '', 'rows' => 10, 'template_id' => 2), 'Graph title'),
+            'no template' => array(array('action' => '', 'rows' => 10, 'template_id' => 0), 'No Aggregate Graphs Found'),
             'items' => array(array('action' => 'edit', 'tab' => 'items', 'id' => 42, 'rows' => 10), 'Matching Graphs'),
             'preview' => array(array('action' => 'edit', 'tab' => 'preview', 'id' => 42), 'graph_image.php?action=edit'),
         );

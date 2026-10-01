@@ -1492,7 +1492,7 @@ function aggregate_graph()
 
 	function applyFilter() {
 		strURL  = 'aggregate_graphs.php';
-		strURL += '?rows=' + $('#rows').val();
+		strURL += '?rows=' + $('#aggregate_graph_rows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&template_id=' + $('#template_id').val();
 		strURL += '&header=false';
@@ -1509,11 +1509,11 @@ function aggregate_graph()
 			$('#agg_preview').show();
 		}
 
-		$('#template_id, #rows').on('change', function() {
+		$('#template_id, #aggregate_graph_rows').on('change', function() {
 			applyFilter();
 		});
 
-		$('#clear').on('click', function() {
+		$('#aggregate_graph_clear').on('click', function() {
 			clearFilter();
 		});
 
@@ -1545,31 +1545,38 @@ function aggregate_graph()
 					</td>
 					<td>
 						<select id='template_id' name='template_id'>
-							<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows')); ?>
-						</select>
-					</td>
-					<td>
-						<?php print __('Graphs');?>
-					</td>
-					<td>
-						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
+							<option value='-1'<?php if (get_request_var('template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
+							<option value='0'<?php if (get_request_var('template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
 							<?php
-    if (cacti_sizeof($item_rows) > 0) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
+                            $templates = db_fetch_assoc('SELECT DISTINCT at.id, at.name
+								FROM aggregate_graph_templates AS at
+								INNER JOIN aggregate_graphs AS ag
+								ON ag.aggregate_template_id=at.id
+								ORDER BY name');
+
+    if (cacti_sizeof($templates) > 0) {
+        foreach ($templates as $template) {
+            print "<option value='" . $template['id'] . "'";
+            if (get_request_var('template_id') == $template['id']) {
                 print ' selected';
-            } print '>' . html_escape($value) . "</option>";
+            } print '>' . html_escape($template['name']) . "</option>";
         }
     }
     ?>
 						</select>
 					</td>
 					<td>
+						<label for='aggregate_graph_rows'><?php print __('Graphs');?></label>
+					</td>
+					<td>
+						<select id='aggregate_graph_rows'>
+							<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows')); ?>
+						</select>
+					</td>
+					<td>
 						<span>
-							<input type='submit' class='ui-button ui-corner-all ui-widget' id='go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
-							<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
+							<input type='submit' class='ui-button ui-corner-all ui-widget' id='aggregate_graph_go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
+							<input type='button' class='ui-button ui-corner-all ui-widget' id='aggregate_graph_clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
 						</span>
 					</td>
 				</tr>
