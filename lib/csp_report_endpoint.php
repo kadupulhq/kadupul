@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -18,32 +19,34 @@
  * to PHP's default error log. Either way the report lands somewhere an
  * operator can read it without depending on the Kadupul DB.
  */
-function csp_report_log($message) {
-	$message = preg_replace('/[\x00-\x1f\x7f]/', ' ', (string) $message);
+function csp_report_log($message)
+{
+    $message = preg_replace('/[\x00-\x1f\x7f]/', ' ', (string) $message);
 
-	if (function_exists('cacti_log') && isset($GLOBALS['config']['base_path'])) {
-		@cacti_log($message, false, 'CSP-REPORT');
+    if (function_exists('cacti_log') && isset($GLOBALS['config']['base_path'])) {
+        @cacti_log($message, false, 'CSP-REPORT');
 
-		return;
-	}
+        return;
+    }
 
-	error_log('CACTI CSP-REPORT: ' . $message);
+    error_log('CACTI CSP-REPORT: ' . $message);
 }
 
 /**
  * Strip log-injection characters from a CSP report field before interpolation.
  * A crafted report body with embedded CR/LF would forge extra log lines.
  */
-function csp_report_sanitize_field($v) {
-	if (!is_string($v)) {
-		return '(unknown)';
-	}
-	/* Strip CR/LF and other C0 controls; truncate to 256 chars for log sanity. */
-	$v = preg_replace('/[\x00-\x1f\x7f]/', ' ', $v);
-	if (strlen($v) > 256) {
-		$v = substr($v, 0, 253) . '...';
-	}
-	return $v;
+function csp_report_sanitize_field($v)
+{
+    if (!is_string($v)) {
+        return '(unknown)';
+    }
+    /* Strip CR/LF and other C0 controls; truncate to 256 chars for log sanity. */
+    $v = preg_replace('/[\x00-\x1f\x7f]/', ' ', $v);
+    if (strlen($v) > 256) {
+        $v = substr($v, 0, 253) . '...';
+    }
+    return $v;
 }
 
 /**
@@ -61,144 +64,147 @@ function csp_report_sanitize_field($v) {
  *                         supplied multi-megabyte payload into memory.
  * @return array           ['ok' => bool, 'reason' => string, 'summary' => string]
  */
-function csp_report_validate_payload(array $headers, $body, $maxBytes) {
-	$ct = isset($headers['CONTENT_TYPE']) ? strtolower(trim($headers['CONTENT_TYPE'])) : '';
+function csp_report_validate_payload(array $headers, $body, $maxBytes)
+{
+    $ct = isset($headers['CONTENT_TYPE']) ? strtolower(trim($headers['CONTENT_TYPE'])) : '';
 
-	if (strpos($ct, 'application/csp-report') !== 0 && strpos($ct, 'application/json') !== 0) {
-		return array('ok' => false, 'reason' => 'Unsupported Content-Type', 'summary' => '');
-	}
+    if (strpos($ct, 'application/csp-report') !== 0 && strpos($ct, 'application/json') !== 0) {
+        return array('ok' => false, 'reason' => 'Unsupported Content-Type', 'summary' => '');
+    }
 
-	$len = strlen($body);
+    $len = strlen($body);
 
-	if ($len === 0) {
-		return array('ok' => false, 'reason' => 'Empty body', 'summary' => '');
-	}
+    if ($len === 0) {
+        return array('ok' => false, 'reason' => 'Empty body', 'summary' => '');
+    }
 
-	if ($len > $maxBytes) {
-		return array('ok' => false, 'reason' => 'Body exceeds size limit', 'summary' => '');
-	}
+    if ($len > $maxBytes) {
+        return array('ok' => false, 'reason' => 'Body exceeds size limit', 'summary' => '');
+    }
 
-	$decoded = json_decode($body, true);
+    $decoded = json_decode($body, true);
 
-	if (json_last_error() !== JSON_ERROR_NONE) {
-		return array('ok' => false, 'reason' => 'Invalid JSON', 'summary' => '');
-	}
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return array('ok' => false, 'reason' => 'Invalid JSON', 'summary' => '');
+    }
 
-	if (!is_array($decoded)) {
-		return array('ok' => false, 'reason' => 'JSON root must be an object', 'summary' => '');
-	}
+    if (!is_array($decoded)) {
+        return array('ok' => false, 'reason' => 'JSON root must be an object', 'summary' => '');
+    }
 
-	/* Browsers send either the legacy format:
-	 *   {"csp-report": {"violated-directive": ..., ...}}
-	 * or the Reporting API (report-to) format:
-	 *   {"type": "csp-violation", "body": {"effectiveDirective": ..., ...}}
-	 * Normalise both into a flat map of the violation fields. */
-	if (isset($decoded['csp-report']) && is_array($decoded['csp-report'])) {
-		$report = $decoded['csp-report'];
-		/* Sanitize before interpolation: a crafted report can embed CR/LF to forge log lines. */
-		$directive  = csp_report_sanitize_field(isset($report['violated-directive'])  ? $report['violated-directive']  : '(unknown)');
-		$blockedUri = csp_report_sanitize_field(isset($report['blocked-uri'])         ? $report['blocked-uri']          : '(unknown)');
-		$docUri     = csp_report_sanitize_field(isset($report['document-uri'])        ? $report['document-uri']         : '(unknown)');
-	} elseif (isset($decoded['body']) && is_array($decoded['body'])) {
-		$report = $decoded['body'];
-		/* report-to uses camelCase keys; same log-injection risk applies. */
-		$directive  = csp_report_sanitize_field(isset($report['effectiveDirective'])  ? $report['effectiveDirective']   : '(unknown)');
-		$blockedUri = csp_report_sanitize_field(isset($report['blockedURL'])          ? $report['blockedURL']            : '(unknown)');
-		$docUri     = csp_report_sanitize_field(isset($report['documentURL'])         ? $report['documentURL']           : '(unknown)');
-	} else {
-		return array('ok' => false, 'reason' => 'Missing csp-report or body field', 'summary' => '');
-	}
+    /* Browsers send either the legacy format:
+     *   {"csp-report": {"violated-directive": ..., ...}}
+     * or the Reporting API (report-to) format:
+     *   {"type": "csp-violation", "body": {"effectiveDirective": ..., ...}}
+     * Normalise both into a flat map of the violation fields. */
+    if (isset($decoded['csp-report']) && is_array($decoded['csp-report'])) {
+        $report = $decoded['csp-report'];
+        /* Sanitize before interpolation: a crafted report can embed CR/LF to forge log lines. */
+        $directive  = csp_report_sanitize_field(isset($report['violated-directive']) ? $report['violated-directive'] : '(unknown)');
+        $blockedUri = csp_report_sanitize_field(isset($report['blocked-uri']) ? $report['blocked-uri'] : '(unknown)');
+        $docUri     = csp_report_sanitize_field(isset($report['document-uri']) ? $report['document-uri'] : '(unknown)');
+    } elseif (isset($decoded['body']) && is_array($decoded['body'])) {
+        $report = $decoded['body'];
+        /* report-to uses camelCase keys; same log-injection risk applies. */
+        $directive  = csp_report_sanitize_field(isset($report['effectiveDirective']) ? $report['effectiveDirective'] : '(unknown)');
+        $blockedUri = csp_report_sanitize_field(isset($report['blockedURL']) ? $report['blockedURL'] : '(unknown)');
+        $docUri     = csp_report_sanitize_field(isset($report['documentURL']) ? $report['documentURL'] : '(unknown)');
+    } else {
+        return array('ok' => false, 'reason' => 'Missing csp-report or body field', 'summary' => '');
+    }
 
-	$summary = 'CSP violation: ' . $directive . ' blocked ' . $blockedUri . ' on ' . $docUri;
+    $summary = 'CSP violation: ' . $directive . ' blocked ' . $blockedUri . ' on ' . $docUri;
 
-	return array('ok' => true, 'reason' => '', 'summary' => $summary);
+    return array('ok' => true, 'reason' => '', 'summary' => $summary);
 
 }
 
 /* The effective uid. getmyuid() reports the script file's owner instead, so
  * without the posix extension use the owner of a file this process creates. */
-function csp_report_process_uid() {
-	if (function_exists('posix_geteuid')) {
-		return posix_geteuid();
-	}
+function csp_report_process_uid()
+{
+    if (function_exists('posix_geteuid')) {
+        return posix_geteuid();
+    }
 
-	$probe = @tempnam(sys_get_temp_dir(), 'kadupul_csp_uid');
-	if ($probe === false) {
-		return false;
-	}
+    $probe = @tempnam(sys_get_temp_dir(), 'kadupul_csp_uid');
+    if ($probe === false) {
+        return false;
+    }
 
-	$uid = @fileowner($probe);
-	@unlink($probe);
+    $uid = @fileowner($probe);
+    @unlink($probe);
 
-	return $uid;
+    return $uid;
 }
 
 /* Per-IP / per-minute rate cap. The endpoint is unauthenticated by design
  * (the browser fires reports without credentials) so an attacker can flood
  * cacti_log / error_log unless we drop excess events. We always return the
  * normal HTTP status so probing cannot infer the cap. */
-function csp_report_should_log(string $base = '') : bool {
-	$ip      = isset($_SERVER['REMOTE_ADDR']) ? (string) $_SERVER['REMOTE_ADDR'] : 'unknown';
-	$dir     = ($base !== '' ? $base : sys_get_temp_dir()) . '/kadupul_csp';
-	$cap     = 30;
+function csp_report_should_log(string $base = ''): bool
+{
+    $ip      = isset($_SERVER['REMOTE_ADDR']) ? (string) $_SERVER['REMOTE_ADDR'] : 'unknown';
+    $dir     = ($base !== '' ? $base : sys_get_temp_dir()) . '/kadupul_csp';
+    $cap     = 30;
 
-	/* Bucket names are predictable, and fopen() follows symlinks, so a bucket in
-	 * the shared temp directory lets another local user redirect the write. Keep
-	 * buckets in a directory only this user can write, and refuse any other.
-	 * Mode bits alone do not prove that: an ACL can let this user write another
-	 * user's 0700 directory, so the owner has to match as well. */
-	if (!is_dir($dir)) {
-		@mkdir($dir, 0700);
-	}
+    /* Bucket names are predictable, and fopen() follows symlinks, so a bucket in
+     * the shared temp directory lets another local user redirect the write. Keep
+     * buckets in a directory only this user can write, and refuse any other.
+     * Mode bits alone do not prove that: an ACL can let this user write another
+     * user's 0700 directory, so the owner has to match as well. */
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0700);
+    }
 
-	clearstatcache(true, $dir);
-	if (is_link($dir) || !is_dir($dir) || !is_writable($dir) || (fileperms($dir) & 0077) !== 0 || fileowner($dir) !== csp_report_process_uid()) {
-		return true;
-	}
+    clearstatcache(true, $dir);
+    if (is_link($dir) || !is_dir($dir) || !is_writable($dir) || (fileperms($dir) & 0077) !== 0 || fileowner($dir) !== csp_report_process_uid()) {
+        return true;
+    }
 
-	$bucket = $dir . '/' . hash('sha256', $ip . '|' . gmdate('YmdHi'));
+    $bucket = $dir . '/' . hash('sha256', $ip . '|' . gmdate('YmdHi'));
 
-	// The bucket name is a SHA-256 hex digest of the client IP, so no request data reaches the path.
-	$fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-	if ($fh === false) {
-		return true;
-	}
+    // The bucket name is a SHA-256 hex digest of the client IP, so no request data reaches the path.
+    $fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+    if ($fh === false) {
+        return true;
+    }
 
-	$logged = false;
-	if (flock($fh, LOCK_EX)) {
-		$count = (int) fread($fh, 16);
-		if ($count < $cap) {
-			rewind($fh);
-			ftruncate($fh, 0);
-			fwrite($fh, (string) ($count + 1));
-			$logged = true;
-		}
-		flock($fh, LOCK_UN);
-	}
-	fclose($fh);
+    $logged = false;
+    if (flock($fh, LOCK_EX)) {
+        $count = (int) fread($fh, 16);
+        if ($count < $cap) {
+            rewind($fh);
+            ftruncate($fh, 0);
+            fwrite($fh, (string) ($count + 1));
+            $logged = true;
+        }
+        flock($fh, LOCK_UN);
+    }
+    fclose($fh);
 
-	return $logged;
+    return $logged;
 }
 
 /* --- Entry point ---------------------------------------------------------- */
 
 if (defined('CACTI_CSP_REPORT_TEST_MODE')) {
-	return;
+    return;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-	http_response_code(405);
-	header('Allow: POST');
-	exit;
+    http_response_code(405);
+    header('Allow: POST');
+    exit;
 }
 
 /* $_SERVER['CONTENT_TYPE'] is set by most SAPI implementations; the
  * HTTP_CONTENT_TYPE fallback covers CGI setups that omit the prefix. */
 $contentType = '';
 if (isset($_SERVER['CONTENT_TYPE'])) {
-	$contentType = $_SERVER['CONTENT_TYPE'];
+    $contentType = $_SERVER['CONTENT_TYPE'];
 } elseif (isset($_SERVER['HTTP_CONTENT_TYPE'])) {
-	$contentType = $_SERVER['HTTP_CONTENT_TYPE'];
+    $contentType = $_SERVER['HTTP_CONTENT_TYPE'];
 }
 
 /* Cap the read at 16 KB; file_get_contents does not honour a length argument
@@ -207,21 +213,21 @@ $rawBody = (string) file_get_contents('php://input', false, null, 0, 16385);
 $rawBody = substr($rawBody, 0, 16384);
 
 $result = csp_report_validate_payload(
-	array('CONTENT_TYPE' => $contentType),
-	$rawBody,
-	16384
+    array('CONTENT_TYPE' => $contentType),
+    $rawBody,
+    16384
 );
 
 if ($result['ok']) {
-	if (csp_report_should_log()) {
-		csp_report_log($result['summary']);
-	}
-	http_response_code(204);
+    if (csp_report_should_log()) {
+        csp_report_log($result['summary']);
+    }
+    http_response_code(204);
 } else {
-	http_response_code(400);
-	header('Content-Type: text/plain; charset=UTF-8');
-	/* Emit the rejection reason as plain text. No HTML output here because
-	 * this endpoint is called by the browser's report mechanism, not rendered
-	 * in a page, and we don't want to introduce XSS surface. */
-	print $result['reason'];
+    http_response_code(400);
+    header('Content-Type: text/plain; charset=UTF-8');
+    /* Emit the rejection reason as plain text. No HTML output here because
+     * this endpoint is called by the browser's report mechanism, not rendered
+     * in a page, and we don't want to introduce XSS surface. */
+    print $result['reason'];
 }
