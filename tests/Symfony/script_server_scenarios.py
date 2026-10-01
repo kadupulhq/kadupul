@@ -148,9 +148,8 @@ def verify_runtime_limit(harness, check):
 
 
 def verify_http_guard(harness, check):
-    # Output buffering holds the shebang, which PHP prints outside the CLI, so
-    # the status still reaches the client. Nothing after the guard may run.
-    status = harness.command('curl', '-s', '-w', '%{http_code}', 'http://127.0.0.1/script_server.php')
-    if status['stdout'] != '#!/usr/bin/env php\n404':
-        print(repr(status['stdout']), flush=True)
-    check(status['stdout'] == '#!/usr/bin/env php\n404', 'script server answers 404 over HTTP')
+    # Verify transport status and the absence of bytes emitted before refusal.
+    body = '/tmp/script-server-http-body'
+    status = harness.command('curl', '-s', '-o', body, '-w', '%{http_code}', 'http://127.0.0.1/script_server.php')
+    check(status['exit'] == 0 and status['stdout'] == '404', 'script server answers 404 over HTTP')
+    check(harness.command('cat', body, check=True)['stdout'] == '', 'script server emits no HTTP response body')
