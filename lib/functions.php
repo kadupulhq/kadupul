@@ -158,6 +158,45 @@ function graph_font_size($size, $default)
 }
 
 /**
+ * graph_font_name_filter - FILTER_CALLBACK for the graph font settings
+ *
+ * Refuses a value that is not a Pango font description, or that names no
+ * family fontconfig reports as installed. Without fc-list, as on Windows, a
+ * well-formed name is accepted unchecked and the fact is logged.
+ *
+ * @param $name - the submitted font description
+ *
+ * @return - $name when RRDtool can use it, otherwise false
+ */
+function graph_font_name_filter($name)
+{
+    static $installed = null;
+
+    graph_font_resolver();
+
+    if (!is_string($name) || !\Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsFamily($name)) {
+        return false;
+    }
+
+    // An empty setting leaves the choice to RRDtool.
+    if (trim($name) === '') {
+        return $name;
+    }
+
+    $installed ??= new \Kadupul\Graphing\Infrastructure\Fontconfig\InstalledFontFamilies((new \Symfony\Component\Process\ExecutableFinder())->find('fc-list'));
+
+    $found = $installed->contains($name);
+
+    if ($found === null) {
+        cacti_log('NOTE: Graph font \'' . $name . '\' was saved without checking that it is installed, because fc-list is not available', false, 'SYSTEM', POLLER_VERBOSITY_MEDIUM);
+
+        return $name;
+    }
+
+    return $found ? $name : false;
+}
+
+/**
  * settings_value_passes_filter - checks a value against the filter a setting declares
  *
  * @param $name         - the setting name
@@ -234,7 +273,7 @@ function save_user_settings($user = -1)
                             set_user_setting($sub_field_name, get_nfilter_request_var($sub_field_name), $user);
                         }
                     }
-                } elseif (isset_request_var($field_name)) {
+                } elseif (isset_request_var($field_name) && settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true)) {
                     set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
                 }
             }

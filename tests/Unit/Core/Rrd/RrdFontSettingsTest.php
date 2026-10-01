@@ -36,8 +36,8 @@ test('every graph font size setting refuses sizes RRDtool cannot draw', function
 
 test('settings without a filter accept any value', function () {
     $calls = array(
-        array('fn' => 'settings_value_passes_filter', 'args' => array('title_font', '', false)),
-        array('fn' => 'settings_value_passes_filter', 'args' => array('title_font', 'DejaVu Sans Bold', true)),
+        array('fn' => 'settings_value_passes_filter', 'args' => array('graph_dateformat', '', false)),
+        array('fn' => 'settings_value_passes_filter', 'args' => array('default_date_format', 'anything', true)),
         array('fn' => 'settings_value_passes_filter', 'args' => array('no_such_setting', 'anything', true)),
     );
 
@@ -178,3 +178,217 @@ test('saving all user settings stores the default for a font size they refuse', 
     'above the upper bound' => array('72.5', '12'),
     'infinite' => array('1e400', '12'),
 ));
+
+/** A directory holding a stand-in fc-list that lists DejaVu Sans and DejaVu Sans Mono. */
+function rrd_font_settings_fc_list(): string
+{
+    $directory = sys_get_temp_dir() . '/rrd-font-settings-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    file_put_contents($directory . '/fc-list', "#!/bin/sh\nprintf 'DejaVu Sans\\nDejaVu Sans Mono\\n'\n");
+    chmod($directory . '/fc-list', 0700);
+
+    return $directory;
+}
+
+/** Run $script with only $path to find programs on, and return what it printed as JSON. */
+function rrd_font_settings_php(string $script, string $path, array $argv = array())
+{
+    $pipes = array();
+    $process = proc_open(array_merge(array(PHP_BINARY, '-r', $script, '--'), $argv), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array('PATH' => $path));
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0, $error . $output)->and($error)->toBe('');
+
+    return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+}
+
+/** Script lines that load the font name filter with a logger that records what it is given. */
+function rrd_font_settings_name_filter(string $root): string
+{
+    return 'require ' . var_export($root . '/include/global_constants.php', true) . ';'
+        . 'require ' . var_export($root . '/include/vendor/autoload.php', true) . ';'
+        . rrd_font_settings_filters($root)
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_name_filter'), true) . ');'
+        . '$logged = array(); function cacti_log($message) { $GLOBALS[\'logged\'][] = $message; }';
+}
+
+test('font names are checked against the fonts fontconfig lists', function () {
+    $root = dirname(__DIR__, 4);
+    $directory = rrd_font_settings_fc_list();
+    $names = array('', 'DejaVu Sans', 'dejavu sans mono bold 9', 'Roboto, DejaVu Sans', 'monospace', 'Roboto Mono', "Roboto 'x'", '/usr/share/fonts/DejaVuSans.ttf', 'Sans:bold', "Sans\nBold", str_repeat('A', 256));
+    $script = rrd_font_settings_name_filter($root) . '
+        $answers = array();
+        foreach (json_decode($argv[1], true) as $name) {
+            $answers[] = graph_font_name_filter($name);
+        }
+        echo json_encode(array($answers, $logged));';
+
+    try {
+        $installed = rrd_font_settings_php($script, $directory, array(json_encode($names)));
+        $unchecked = rrd_font_settings_php($script, $directory . '/none', array(json_encode($names)));
+    } finally {
+        unlink($directory . '/fc-list');
+        rmdir($directory);
+    }
+
+    expect($installed)->toBe(array(array('', 'DejaVu Sans', 'dejavu sans mono bold 9', 'Roboto, DejaVu Sans', 'monospace', false, false, false, false, false, false), array()))
+        // Without fc-list only the form of the name is checked, and each unchecked name is logged.
+        ->and($unchecked[0])->toBe(array('', 'DejaVu Sans', 'dejavu sans mono bold 9', 'Roboto, DejaVu Sans', 'monospace', 'Roboto Mono', "Roboto 'x'", false, false, false, false))
+        ->and($unchecked[1])->toHaveCount(6)
+        ->and($unchecked[1][4])->toBe("NOTE: Graph font 'Roboto Mono' was saved without checking that it is installed, because fc-list is not available");
+});
+
+test('every graph font setting checks its font name', function () {
+    $root = dirname(__DIR__, 4);
+    $settings = file_get_contents($root . '/include/global_settings.php');
+    preg_match_all("/'([a-z_]+)' => array\((?:(?!\n        \),).)*'method' => 'font'(?:(?!\n        \),).)*\n        \)/s", $settings, $fields);
+
+    expect($fields[1])->toBe(array('path_rrdtool_default_font', 'title_font', 'legend_font', 'axis_font', 'unit_font', 'title_font', 'legend_font', 'axis_font', 'unit_font'));
+    foreach ($fields[0] as $field) {
+        expect($field)->toContain("'options' => array('options' => 'graph_font_name_filter')");
+    }
+});
+
+/**
+ * Post each request in $requests to settings.php over a site that stores
+ * $stored, and return the writes, messages and error fields of each save.
+ */
+function rrd_font_settings_save(array $requests, array $stored): array
+{
+    $root = dirname(__DIR__, 4);
+    $directory = rrd_font_settings_fc_list();
+    mkdir($directory . '/site/include', 0700, true);
+    mkdir($directory . '/site/lib', 0700);
+    file_put_contents($directory . '/site/lib/poller.php', '<?php');
+    // settings.php includes these relative to the working directory.
+    file_put_contents($directory . '/site/include/auth.php', '<?php
+        $config = array("poller_id" => 1);
+        $local_db_cnn_id = false;
+        $writes = array();
+        $stored = json_decode($argv[2], true);
+        $_SESSION = array();
+        function set_default_action() {}
+        function get_filter_request_var($name) { return $_REQUEST[$name]; }
+        function get_request_var($name) { return $_REQUEST[$name] ?? ""; }
+        function get_nfilter_request_var($name) { return $_REQUEST[$name] ?? ""; }
+        function isset_request_var($name) { return isset($_REQUEST[$name]); }
+        function db_qstr($value) { return "\'" . $value . "\'"; }
+        function db_execute_prepared($sql, $params) { $GLOBALS["writes"][$params[0]] = $params[1]; }
+        function db_execute($sql) {}
+        function db_fetch_assoc($sql) { return array(); }
+        function array_rekey($array) { return $array; }
+        function cacti_sizeof($array) { return count($array); }
+        function read_config_option($name, $force = false) { return $GLOBALS["stored"][$name] ?? ($name == "poller_interval" ? 300 : ""); }
+        function snmpagent_global_settings_update() {}
+        function api_plugin_hook_function($name) {}
+        function kill_session_var($name) {}
+        function raise_message($id) { $GLOBALS["messages"][] = $id; }
+        function __($text) { return $text; }
+        $settings = array("visual" => array(
+            "font_method" => array("method" => "drop_array"),
+            "path_rrdtool_default_font" => array("method" => "font", "filter" => FILTER_CALLBACK, "options" => array("options" => "graph_font_name_filter")),
+            "title_font" => array("method" => "font", "filter" => FILTER_CALLBACK, "options" => array("options" => "graph_font_name_filter")),
+            "title_size" => array("method" => "textbox", "filter" => FILTER_CALLBACK, "options" => array("options" => "graph_font_size_filter")),
+        ));
+        register_shutdown_function(function () { echo json_encode(array($GLOBALS["writes"], $GLOBALS["messages"], $_SESSION["sess_error_fields"] ?? array())); });
+        ');
+    $script = rrd_font_settings_name_filter($root) . '
+        $_REQUEST = json_decode($argv[1], true) + array("action" => "save", "tab" => "visual");
+        chdir(' . var_export($directory . '/site', true) . ');
+        require ' . var_export($root . '/settings.php', true) . ';';
+
+    $saves = array();
+    try {
+        foreach ($requests as $request) {
+            $saves[] = rrd_font_settings_php($script, $directory, array(json_encode($request), json_encode($stored)));
+        }
+    } finally {
+        unlink($directory . '/site/include/auth.php');
+        unlink($directory . '/site/lib/poller.php');
+        rmdir($directory . '/site/include');
+        rmdir($directory . '/site/lib');
+        rmdir($directory . '/site');
+        unlink($directory . '/fc-list');
+        rmdir($directory);
+    }
+
+    return $saves;
+}
+
+test('System settings refuse a font that is not installed and save one that is', function () {
+    [$saved, $refused, $unchanged] = rrd_font_settings_save(array(
+        array('font_method' => '0', 'path_rrdtool_default_font' => 'DejaVu Sans', 'title_font' => 'DejaVu Sans Mono Bold', 'title_size' => '10'),
+        array('font_method' => '0', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_font' => 'Roboto', 'title_size' => '10'),
+        // The rows are visible in System mode, so a stale stored font is shown in red.
+        array('font_method' => '0', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_font' => 'DejaVu Sans', 'title_size' => '10'),
+    ), array('font_method' => '0', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_font' => 'DejaVu Sans'));
+
+    expect($saved)->toBe(array(array('font_method' => '0', 'path_rrdtool_default_font' => 'DejaVu Sans', 'title_font' => 'DejaVu Sans Mono Bold', 'title_size' => '10'), array(1), array()))
+        ->and($refused)->toBe(array(array('font_method' => '0', 'title_size' => '10'), array(35, 3), array('path_rrdtool_default_font' => 'path_rrdtool_default_font', 'title_font' => 'title_font')))
+        ->and($unchanged)->toBe(array(array('font_method' => '0', 'title_font' => 'DejaVu Sans', 'title_size' => '10'), array(35, 3), array('path_rrdtool_default_font' => 'path_rrdtool_default_font')));
+});
+
+// Theme mode hides the font rows, but the browser still posts their stored values.
+test('Theme settings save the hidden fonts they already store, installed or not', function () {
+    $stored = array('font_method' => '1', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_font' => 'Roboto');
+
+    [$unchanged, $changed, $switched] = rrd_font_settings_save(array(
+        array('font_method' => '1', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_font' => 'Roboto', 'title_size' => '10'),
+        array('font_method' => '1', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_font' => 'Roboto Mono', 'title_size' => '10'),
+        array('font_method' => '0', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_font' => 'Roboto', 'title_size' => '10'),
+    ), $stored);
+
+    expect($unchanged)->toBe(array(array('font_method' => '1', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_font' => 'Roboto', 'title_size' => '10'), array(1), array()))
+        // A value that differs from the stored one did not come from the hidden row, so it is still checked.
+        ->and($changed)->toBe(array(array('font_method' => '1', 'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf', 'title_size' => '10'), array(35, 3), array('title_font' => 'title_font')))
+        // Switching to System shows the rows, so the stored fonts are checked.
+        ->and($switched)->toBe(array(array('font_method' => '0', 'title_size' => '10'), array(35, 3), array('path_rrdtool_default_font' => 'path_rrdtool_default_font', 'title_font' => 'title_font')));
+});
+
+test('user and group graph settings keep a font that is not installed unsaved', function () {
+    $root = dirname(__DIR__, 4);
+    $directory = rrd_font_settings_fc_list();
+    $settings_user = '$settings = array(); $settings_user = array("fonts" => array(
+        "title_font" => array("method" => "font", "filter" => FILTER_CALLBACK, "options" => array("options" => "graph_font_name_filter")),
+        "legend_font" => array("method" => "font", "filter" => FILTER_CALLBACK, "options" => array("options" => "graph_font_name_filter")),
+    ));';
+    $request = 'function isset_request_var($name) { return isset($_REQUEST[$name]); }
+        function get_request_var($name) { return $_REQUEST[$name]; }
+        function get_filter_request_var($name) { return $_REQUEST[$name]; }
+        function get_nfilter_request_var($name, $default = "") { return $_REQUEST[$name] ?? $default; }
+        $_REQUEST = array("save_component_graph_settings" => "1", "id" => "3", "title_font" => "Roboto", "legend_font" => "DejaVu Sans Mono");';
+    $functions = file_get_contents($root . '/lib/functions.php');
+    $group = rrd_font_settings_name_filter($root)
+        . 'eval(' . var_export(test_php_function_source($functions, 'settings_value_passes_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/user_group_admin.php'), 'form_save'), true) . ');'
+        . $settings_user . $request . '
+        $writes = array();
+        function db_execute_prepared($sql, $params) { $GLOBALS["writes"][] = $params; }
+        function kill_session_var($name) {}
+        function reset_group_perms($id) {}
+        function raise_message($id) {}
+        register_shutdown_function(function () { echo json_encode($GLOBALS["writes"]); });
+        form_save();';
+    $user = rrd_font_settings_name_filter($root)
+        . 'eval(' . var_export(test_php_function_source($functions, 'settings_value_passes_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source($functions, 'save_user_settings'), true) . ');'
+        . $settings_user . $request . '
+        $writes = array();
+        function set_request_var($name, $value) { $_REQUEST[$name] = $value; }
+        function set_user_setting($name, $value, $user) { $GLOBALS["writes"][] = array($user, $name, $value); }
+        save_user_settings(5);
+        echo json_encode($writes);';
+
+    try {
+        $group_writes = rrd_font_settings_php($group, $directory);
+        $user_writes = rrd_font_settings_php($user, $directory);
+    } finally {
+        unlink($directory . '/fc-list');
+        rmdir($directory);
+    }
+
+    expect($group_writes)->toBe(array(array('3', 'legend_font', 'DejaVu Sans Mono')))
+        ->and($user_writes)->toBe(array(array(5, 'legend_font', 'DejaVu Sans Mono')));
+});

@@ -606,9 +606,12 @@ function form_save()
                 } else {
                     $value = get_nfilter_request_var($field_name);
 
-                    // Same rule as save_user_settings(): a numeric setting that fails its filter keeps its default.
+                    // Same rule as save_user_settings(): a numeric setting that fails its filter
+                    // keeps its default, and any other that fails keeps its stored value.
                     if (isset($field_array['default']) && is_numeric($field_array['default']) && !settings_value_passes_filter($field_name, $value, true)) {
                         $value = $field_array['default'];
+                    } elseif (!settings_value_passes_filter($field_name, $value, true)) {
+                        continue;
                     }
 
                     db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, $value));
