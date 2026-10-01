@@ -115,7 +115,7 @@ function form_save()
         foreach ($items as $item) {
             /* generate a new sequence if needed */
             if (empty($sequence)) {
-                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0');
+                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0));
             }
 
             $task_item_changed = true;
@@ -323,10 +323,10 @@ function item_move($direction)
         move_graph_group(get_request_var('id'), $arr, $next_id, $direction);
     } elseif (!preg_match('/(AREA|STACK|LINE)/', $text_type)) {
         /* this is so we know the "other" graph item to propagate the changes to */
-        $next_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0', $direction);
+        $next_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0), $direction);
 
         $move = $direction === 'next' ? 'move_item_down' : 'move_item_up';
-        $move('graph_templates_item', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0');
+        $move('graph_templates_item', get_request_var('id'), array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0));
     }
 
     if (!isempty_request_var('graph_template_id')) {
