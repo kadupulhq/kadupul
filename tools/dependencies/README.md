@@ -72,6 +72,11 @@ correction. All transformations are recorded in the source manifest.
 The theme CI job checks provenance and runs real-browser tests
 for sanitization, legacy widgets, sorting/paging and D3 rendering.
 
+The build installs only Font Awesome's `css/all.css`, `webfonts/*.woff2` and
+`LICENSE.txt` into a cleared `include/fa`, with `index.php` directory guards.
+Font URLs in `all.css` carry `?v=<package version>`, because Font Awesome 5
+and 7 use the same font file names and browsers cache fonts by URL.
+
 Before changing a pin, compare the current file with its old upstream release
 and retain any application/security patches. Obtain the new checksum from the
 reviewed release, then run the sync and browser suite. Do not substitute a

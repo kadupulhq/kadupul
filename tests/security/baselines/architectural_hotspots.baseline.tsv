@@ -490,9 +490,9 @@ dynamic_include	./poller_realtime.php:11	require_once($config['base_path'] . '/l
 dynamic_include	./poller_realtime.php:12	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller_realtime.php:13	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./poller_realtime.php:225	    include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./poller_recovery.php:18	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller_recovery.php:19	require_once($config['base_path'] . '/lib/boost.php');
-dynamic_include	./poller_recovery.php:20	require_once($config['base_path'] . '/lib/dsstats.php');
+dynamic_include	./poller_recovery.php:19	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller_recovery.php:20	require_once($config['base_path'] . '/lib/boost.php');
+dynamic_include	./poller_recovery.php:21	require_once($config['base_path'] . '/lib/dsstats.php');
 dynamic_include	./poller_reports.php:18	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller_reports.php:19	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./poller_reports.php:20	require_once($config['base_path'] . '/lib/reports.php');
