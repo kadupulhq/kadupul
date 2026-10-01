@@ -27,29 +27,29 @@ class Net_Ping
     var $avail_method;
     var $ping_type;
 
-    function __construct()
+    public function __construct()
     {
         $this->port = 33439;
         return true;
     }
 
-    function __destruct()
+    public function __destruct()
     {
         return true;
     }
 
-    function close_socket()
+    public function close_socket()
     {
         @socket_shutdown($this->socket, 2);
         socket_close($this->socket);
     }
 
-    function start_time()
+    public function start_time()
     {
         $this->timer_start_time = microtime(true);
     }
 
-    function get_time($acc = 2)
+    public function get_time($acc = 2)
     {
         // format start time
         $start_time = $this->timer_start_time;
@@ -58,7 +58,7 @@ class Net_Ping
         return number_format($end_time - $start_time, $acc);
     }
 
-    function build_udp_packet()
+    public function build_udp_packet()
     {
         $data  = 'cacti-monitoring-system'; // the actual test data
 
@@ -67,22 +67,22 @@ class Net_Ping
         $this->request_len = strlen($this->request);
     }
 
-    function ping_error_handler($errno, $errmsg, $filename, $linenum, $vars = [])
+    public function ping_error_handler($errno, $errmsg, $filename, $linenum, $vars = [])
     {
         return true;
     }
 
-    function set_ping_error_handler()
+    public function set_ping_error_handler()
     {
         set_error_handler($this->ping_error_handler(...));
     }
 
-    function restore_cacti_error_handler()
+    public function restore_cacti_error_handler()
     {
         restore_error_handler();
     }
 
-    function build_icmp_packet()
+    public function build_icmp_packet()
     {
         $seq_low   = rand(0, 255);
         $seq_high  = rand(0, 255);
@@ -103,7 +103,7 @@ class Net_Ping
         $this->request_len = strlen($this->request);
     }
 
-    function get_checksum($data)
+    public function get_checksum($data)
     {
         if (strlen($data) % 2) {
             $data .= "\x00";
@@ -119,7 +119,7 @@ class Net_Ping
         return pack('n*', ~$sum);
     }
 
-    function ping_icmp()
+    public function ping_icmp()
     {
         global $config;
 
@@ -248,7 +248,7 @@ class Net_Ping
         }
     }
 
-    function seteuid()
+    public function seteuid()
     {
         global $config;
         $cacti_user = '';
@@ -263,7 +263,7 @@ class Net_Ping
         return $cacti_user;
     }
 
-    function setuid($cacti_poller_account)
+    public function setuid($cacti_poller_account)
     {
         global $config;
 
@@ -274,7 +274,7 @@ class Net_Ping
         }
     }
 
-    function ping_snmp()
+    public function ping_snmp()
     {
         /* initialize variables */
         $this->snmp_status   = 'down';
@@ -325,7 +325,7 @@ class Net_Ping
         return $result;
     }
 
-    function get_snmp_result($session, $oid)
+    public function get_snmp_result($session, $oid)
     {
         /* getnext does not work in php versions less than 5 */
         if (($this->avail_method == AVAIL_SNMP_GET_NEXT) &&
@@ -353,7 +353,7 @@ class Net_Ping
         }
     } /* ping_snmp */
 
-    function ping_udp()
+    public function ping_udp()
     {
         $this->set_ping_error_handler();
 
@@ -491,7 +491,7 @@ class Net_Ping
         }
     } /* end ping_udp */
 
-    function ping_tcp()
+    public function ping_tcp()
     {
         $this->set_ping_error_handler();
 
@@ -632,7 +632,7 @@ class Net_Ping
         }
     } /* end ping_tcp */
 
-    function ping($avail_method = AVAIL_SNMP_AND_PING, $ping_type = PING_ICMP, $timeout = 500, $retries = 3)
+    public function ping($avail_method = AVAIL_SNMP_AND_PING, $ping_type = PING_ICMP, $timeout = 500, $retries = 3)
     {
         $this->set_ping_error_handler();
 
@@ -738,7 +738,7 @@ class Net_Ping
         }
     } /* end_ping */
 
-    function is_ipaddress($ip_address = '')
+    public function is_ipaddress($ip_address = '')
     {
         /* Strip IPv6 Scope ID (Zone Index) for validation, as
            filter_var rejects valid link-local addresses like fe80::1%eth0 */
@@ -762,7 +762,7 @@ class Net_Ping
         }
     }
 
-    function strip_ip_address($ip_address)
+    public function strip_ip_address($ip_address)
     {
         /* clean up hostname if specifying snmp_transport */
         if (strpos($ip_address, 'tcp6:') !== false) {
