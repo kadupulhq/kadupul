@@ -1,0 +1,101 @@
+<form action="settings.php" autocomplete="off" class="cactiFormStart" id="form_settings" method="post" name="form_settings">
+  <div class="cactiTable" id="settings_boost1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Kadupul Settings (Performance)</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Settings-Performance.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="settings_boost1_child">
+      <div class="spacer formHeader collapsible" id="row_boost_hq_header"><div class="formHeaderText">On-demand RRD Update Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_boost_rrd_update_enable"><div class="formColumnLeft"><div class="formFieldName">Enable On-demand RRD Updating<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should Boost enable on demand RRD updating in Kadupul? If you disable, this change will not take affect until after the next polling cycle. When you have Remote Data Collectors, this settings is required to be on.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable On-demand RRD Updating"><input aria-checked="false" class="formCheckbox" id="boost_rrd_update_enable" name="boost_rrd_update_enable" title="Enable On-demand RRD Updating" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="boost_rrd_update_enable">Enable On-demand RRD Updating</label></span></div></div></div>
+      <div class="hidden formRow"><div style="display:none;"><input id="boost_rrd_update_system_enable" name="boost_rrd_update_system_enable" style="height:0px;" type="hidden" value=""></div></div>
+      <div class="formRow even" id="row_boost_rrd_update_interval"><div class="formColumnLeft"><div class="formFieldName">How Often Should Boost Update All RRDs<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When you enable boost, your RRD files are only updated when they are requested by a user, or when this time period elapses.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="boost_rrd_update_interval" name="boost_rrd_update_interval">
+          <option value="30">30 Minutes</option>
+          <option selected="" value="60">1 Hour</option>
+          <option value="120">2 Hours</option>
+          <option value="240">4 Hours</option>
+          <option value="360">6 Hours</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_boost_parallel"><div class="formColumnLeft"><div class="formFieldName">Number of Boost Processes<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of concurrent boost processes to use to use to process all of the RRDs in the boost table.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="boost_parallel" name="boost_parallel">
+          <option selected="" value="1">1 Process</option>
+          <option value="2">2 Processes</option>
+          <option value="3">3 Processes</option>
+          <option value="4">4 Processes</option>
+          <option value="5">5 Processes</option>
+          <option value="6">6 Processes</option>
+          <option value="7">7 Processes</option>
+          <option value="8">8 Processes</option>
+          <option value="9">9 Processes</option>
+          <option value="10">10 Processes</option>
+          <option value="11">11 Processes</option>
+          <option value="12">12 Processes</option>
+          <option value="13">13 Processes</option>
+          <option value="14">14 Processes</option>
+          <option value="15">15 Processes</option>
+          <option value="16">16 Processes</option>
+          <option value="17">17 Processes</option>
+          <option value="18">18 Processes</option>
+          <option value="19">19 Processes</option>
+          <option value="20">20 Processes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_boost_rrd_update_max_records"><div class="formColumnLeft"><div class="formFieldName">Maximum Records<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If the boost output table exceeds this size, in records, an update will take place.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="boost_rrd_update_max_records" maxlength="20" name="boost_rrd_update_max_records" off="" size="10" type="text" value="1000000"></div></div></div>
+      <div class="formRow odd" id="row_boost_rrd_update_max_records_per_select"><div class="formColumnLeft"><div class="formFieldName">Maximum Data Source Items Per Pass<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass. Please be careful not to set too high as graphing performance during major updates can be compromised. If you encounter graphing or polling slowness during updates, lower this number. The default value is 50000.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="boost_rrd_update_max_records_per_select" name="boost_rrd_update_max_records_per_select">
+          <option value="2000">2,000 Data Source Items</option>
+          <option value="5000">5,000 Data Source Items</option>
+          <option value="10000">10,000 Data Source Items</option>
+          <option value="15000">15,000 Data Source Items</option>
+          <option value="25000">25,000 Data Source Items</option>
+          <option selected="" value="50000">50,000 Data Source Items (Default)</option>
+          <option value="100000">100,000 Data Source Items</option>
+          <option value="200000">200,000 Data Source Items</option>
+          <option value="400000">400,000 Data Source Items</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_boost_rrd_update_string_length"><div class="formColumnLeft"><div class="formFieldName">Maximum Argument Length<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length. This varies by operating system and kernel level. For example: Windows 2000 &lt;= 2048, FreeBSD &lt;= 65535, Linux 2.6.22-- &lt;= 131072, Linux 2.6.23++ unlimited</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="boost_rrd_update_string_length" maxlength="20" name="boost_rrd_update_string_length" off="" size="10" type="text" value="2000"></div></div></div>
+      <div class="formRow odd" id="row_boost_poller_mem_limit"><div class="formColumnLeft"><div class="formFieldName">Memory Limit for Boost and Poller<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of memory for the Kadupul Poller and Boosts Poller</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="boost_poller_mem_limit" name="boost_poller_mem_limit">
+          <option value="256">256 MBytes</option>
+          <option value="512">512 MBytes</option>
+          <option selected="" value="1024">1 GByte</option>
+          <option value="1536">1.5 GBytes</option>
+          <option value="2048">2 GBytes</option>
+          <option value="3072">3 GBytes</option>
+          <option value="4096">4 GBytes</option>
+          <option value="5120">5 GBytes</option>
+          <option value="6144">6 GBytes</option>
+          <option value="8192">8 GBytes</option>
+          <option value="-1">Unlimited</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_boost_rrd_update_max_runtime"><div class="formColumnLeft"><div class="formFieldName">Maximum RRD Update Script Run Time<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If the boost poller exceeds this runtime, a warning will be placed in the cacti log,</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="boost_rrd_update_max_runtime" name="boost_rrd_update_max_runtime">
+          <option selected="" value="1200">20 Minutes</option>
+          <option value="2400">40 Minutes</option>
+          <option value="3600">1 Hour</option>
+          <option value="4800">1.5 Hours</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_boost_redirect"><div class="formColumnLeft"><div class="formFieldName">Enable direct population of poller_output_boost table<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable direct population of poller_output_boost table"><input aria-checked="false" class="formCheckbox" id="boost_redirect" name="boost_redirect" title="Enable direct population of poller_output_boost table" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="boost_redirect">Enable direct population of poller_output_boost table</label></span></div></div></div>
+      <div class="formRow even" id="row_path_boost_log"><div class="formColumnLeft"><div class="formFieldName">Boost Debug Log<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If this field is non-blank, Boost will log RRDUpdate output from the boost poller process.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="path_boost_log" maxlength="255" name="path_boost_log" placeholder="Enter a valid file path" size="40" type="text" value=""></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_boost_png_header"><div class="formHeaderText">Image Caching<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_boost_png_cache_enable"><div class="formColumnLeft"><div class="formFieldName">Enable Image Caching<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should image caching be enabled?</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable Image Caching"><input aria-checked="false" class="formCheckbox" id="boost_png_cache_enable" name="boost_png_cache_enable" title="Enable Image Caching" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="boost_png_cache_enable">Enable Image Caching</label></span></div></div></div>
+      <div class="formRow even" id="row_boost_png_cache_directory"><div class="formColumnLeft"><div class="formFieldName">Location for Image Files<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Specify the location where Boost should place your image files. These files will be automatically purged by the poller when they expire.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input id="boost_png_cache_directory" maxlength="255" name="boost_png_cache_directory" placeholder="Enter a valid directory path" size="40" type="text" value="&lt;ROOT&gt;/cache/boost/"><span class="cactiTooltipHint fa fa-check-circle" style="padding:5px;font-size:16px;color:green" title="Directory Found"></span></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="tab" name="tab" style="height:0px;" type="hidden" value="boost"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="save ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>
