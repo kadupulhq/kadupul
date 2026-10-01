@@ -8,6 +8,9 @@
 namespace Kadupul\Tests;
 
 use Kadupul\DataInput\Application\Port\DataInputAccess;
+use Kadupul\DataInput\Application\Port\DataInputGateway;
+use Kadupul\DataInput\Application\DataInputDenied;
+use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Kernel;
 use PHPUnit\Framework\TestCase;
@@ -49,4 +52,38 @@ final class DataInputAnonymousPresentationTest extends TestCase
             $kernel->shutdown();
         }
     }
+    public function testConsoleOnlyRequestsRequireFeatureAuthorizationBeforeParsing(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $console = $this->createMock(ConsoleAccess::class);
+            $console->method('consoleActor')->willReturn(new Actor(9, 'console-only'));
+            $container->set(ConsoleAccess::class, $console);
+            $access = $this->createMock(DataInputAccess::class);
+            $access->expects(self::exactly(7))->method('authorize')->willThrowException(new DataInputDenied());
+            $container->set(DataInputAccess::class, $access);
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->expects(self::never())->method('execute');
+            $container->set(DataInputGateway::class, $gateway);
+            foreach ([
+                '/data-inputs?filter[]=invalid',
+                '/data-inputs/actions/delete?ids[]=invalid',
+                '/data-inputs/new',
+                '/data-inputs/1/edit',
+                '/data-inputs/1/fields/0?direction[]=invalid',
+                '/data-inputs/1/delete?field[]=invalid',
+                '/data-inputs/legacy?action[]=invalid',
+            ] as $url) {
+                $request = Request::create($url);
+                $response = $kernel->handle($request);
+                self::assertSame(403, $response->getStatusCode(), $url);
+                $kernel->terminate($request, $response);
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
 }

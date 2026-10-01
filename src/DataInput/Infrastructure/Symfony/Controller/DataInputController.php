@@ -7,6 +7,7 @@ namespace Kadupul\DataInput\Infrastructure\Symfony\Controller;
 
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\DataInput\Application\DataInputMethods;
+use Kadupul\DataInput\Application\Port\DataInputAccess;
 use Kadupul\DataInput\Application\DataInputDenied;
 use Kadupul\DataInput\Application\DataInputConflict;
 use Kadupul\DataInput\Domain\DataInputState;
@@ -27,13 +28,14 @@ final class DataInputController
 {
     private const array HEADERS = ['Cache-Control' => 'private, no-store'];
     #[Route('/data-inputs', name: 'data_inputs', methods: ['GET','HEAD'])]
-    public function list(Request $request, ConsoleAccess $console, DataInputMethods $methods, Environment $twig, TranslatorInterface $translator): Response
+    public function list(Request $request, ConsoleAccess $console, DataInputAccess $access, DataInputMethods $methods, Environment $twig, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
         if ($actor === null) {
             return new Response($translator->trans('Access denied.', [], 'data_input'), 401, self::HEADERS);
         }
         try {
+            $access->authorize();
             $query = $request->query->all();
             foreach ($query as $value) {
                 if (!is_string($value)) {
@@ -92,13 +94,14 @@ final class DataInputController
         }
     }
     #[Route('/data-inputs/{id}/fields/{field}', name: 'data_input_field', requirements: ['id' => '[1-9][0-9]{0,7}','field' => '[0-9]{1,8}'], methods: ['GET','HEAD','POST'])]
-    public function field(int $id, int $field, Request $request, ConsoleAccess $console, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function field(int $id, int $field, Request $request, ConsoleAccess $console, DataInputAccess $access, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
         if ($actor === null) {
             return new Response($translator->trans('Access denied.', [], 'data_input'), 401, self::HEADERS);
         }
         try {
+            $access->authorize();
             $state = $methods->execute('find', $id);
             $data = null;
             foreach ($state['fields'] as $candidate) {
@@ -146,13 +149,14 @@ final class DataInputController
         }
     }
     #[Route('/data-inputs/{id}/{operation}', name: 'data_input_action', requirements: ['id' => '[1-9][0-9]{0,7}','operation' => 'delete|duplicate|field_delete|propagate|whitelist'], methods: ['GET','HEAD','POST'])]
-    public function action(int $id, string $operation, Request $request, ConsoleAccess $console, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function action(int $id, string $operation, Request $request, ConsoleAccess $console, DataInputAccess $access, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
         if ($actor === null) {
             return new Response($translator->trans('Access denied.', [], 'data_input'), 401, self::HEADERS);
         }
         try {
+            $access->authorize();
             $state = $methods->execute('find', $id);
             $field = 0;
             if ($operation === 'field_delete') {
@@ -189,13 +193,14 @@ final class DataInputController
     }
 
     #[Route('/data-inputs/actions/{operation}', name: 'data_input_bulk', requirements: ['operation' => 'delete|duplicate'], methods: ['GET','HEAD','POST'])]
-    public function bulk(string $operation, Request $request, ConsoleAccess $console, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function bulk(string $operation, Request $request, ConsoleAccess $console, DataInputAccess $access, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
         if ($actor === null) {
             return new Response($translator->trans('Access denied.', [], 'data_input'), 401, self::HEADERS);
         }
         try {
+            $access->authorize();
             $ids = $request->query->all()['ids'] ?? null;
             if (!is_array($ids) || $ids === [] || count($ids) > 100) {
                 throw new \InvalidArgumentException('Invalid selection.');
