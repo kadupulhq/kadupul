@@ -28,6 +28,9 @@ final readonly class SiteSelection
         if ($ids === [] || count($ids) > 100) {
             throw new \InvalidArgumentException('Select between 1 and 100 sites.');
         }
+        if (!array_is_list($ids)) {
+            throw new \InvalidArgumentException('Invalid site selection.');
+        }
         $normalized = [];
         foreach ($ids as $id) {
             if ((!is_int($id) && !is_string($id)) || !preg_match('/\A[1-9][0-9]{0,9}\z/D', (string) $id) || (int) $id > 4294967295) {

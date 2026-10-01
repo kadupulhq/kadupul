@@ -1227,7 +1227,7 @@ function cacti_build_https_redirect_url(string $server_name, string $request_uri
  *
  * @return bool|string Returns true if the regular expression is valid, otherwise returns an error message string.
  */
-function validate_is_regex($regex)
+function validate_is_regex($regex): bool|string
 {
     if ($regex == '') {
         return true;
@@ -1251,7 +1251,7 @@ function validate_is_regex($regex)
     $track_errors = ini_get('track_errors');
     ini_set('track_errors', 1);
 
-    if (@preg_match("'" . $regex . "'", NULL) !== false) {
+    if (@preg_match("'" . $regex . "'", '') !== false) {
         ini_set('track_errors', $track_errors);
         return true;
     }
@@ -1271,6 +1271,7 @@ function validate_is_regex($regex)
     );
 
     $error = preg_last_error();
+    $error_message = preg_last_error_msg();
 
     if (!defined('IN_CACTI_INSTALL')) {
         set_error_handler('CactiErrorHandler');
@@ -1279,7 +1280,7 @@ function validate_is_regex($regex)
     if (empty($error)) {
         return $php_error;
     } else {
-        return $errors[$error];
+        return $errors[$error] ?? $error_message;
     }
 }
 

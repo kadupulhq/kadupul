@@ -22,7 +22,7 @@ final class DeviceStateTest extends TestCase
 {
     public function testSelectionRejectsAmbiguousOrUnboundedIdentifiers(): void
     {
-        foreach ([[], range(1, 101), [1, '1'], [0], [-1], ['01'], [true], [1.5], ['1e1'], [16777216], [[]]] as $ids) {
+        foreach ([[], range(1, 101), [1, '1'], [0], [-1], ['01'], [true], [1.5], ['1e1'], [16777216], [[]], [2 => 1], ['id' => 1]] as $ids) {
             try {
                 DeviceSelection::validateIds($ids);
                 self::fail('Invalid selection accepted');

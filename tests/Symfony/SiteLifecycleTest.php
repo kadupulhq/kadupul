@@ -64,7 +64,7 @@ final class SiteLifecycleTest extends TestCase
 
     public static function invalidSelections(): iterable
     {
-        foreach ([[], [0], [-1], ['01'], ['1e2'], [1, '1'], [4294967296], [[1]], range(1, 101)] as $ids) {
+        foreach ([[], [0], [-1], ['01'], ['1e2'], [1, '1'], [4294967296], [[1]], range(1, 101), [2 => 1], ['id' => 1]] as $ids) {
             yield [$ids];
         }
     }

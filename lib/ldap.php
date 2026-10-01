@@ -472,7 +472,7 @@ class Ldap
         restore_error_handler();
 
         /* set an error handler for ldap */
-        set_error_handler(array($this, 'ErrorHandler'));
+        set_error_handler($this->ErrorHandler(...));
 
         cacti_session_close();
     }

@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -73,7 +74,7 @@ class Net_Ping
 
     function set_ping_error_handler()
     {
-        set_error_handler(array($this, 'ping_error_handler'));
+        set_error_handler($this->ping_error_handler(...));
     }
 
     function restore_cacti_error_handler()
