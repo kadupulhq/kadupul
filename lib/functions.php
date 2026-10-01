@@ -879,7 +879,11 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 		// Capture PCRE state before configuration or logging performs another regex.
 		$regex_error = $regex_result === false ? preg_last_error_msg() : '';
 		if (read_config_option('log_validation') == 'on') {
-			cacti_log("Form Validation Failed: Variable '$field_name' with Value '$field_value' Failed REGEX '$regexp_match'" . ($regex_error !== '' ? ' (PCRE: ' . $regex_error . ')' : ''), false);
+			cacti_log(
+				"Form Validation Failed: Variable '$field_name' with Value '$field_value' Failed REGEX '$regexp_match'"
+				. ($regex_error !== '' ? ' (PCRE: ' . $regex_error . ')' : ''),
+				false
+			);
 			cacti_debug_backtrace('REGEX FAILURE');
 		}
 
@@ -6661,7 +6665,11 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 	}
 
 	// Validate URL is a relative path to prevent SSRF
-	if (str_contains($url, '://') || str_contains($url, '@') || str_contains($url, '../') || (strlen($url) > 0 && $url[0] !== '/')) {
+	if (str_contains($url, '://')
+		|| str_contains($url, '@')
+		|| str_contains($url, '../')
+		|| (strlen($url) > 0 && $url[0] !== '/')
+	) {
 		cacti_log('ERROR: Invalid URL passed to call_remote_data_collector: ' . $url, false, 'SECURITY');
 		return '';
 	}
