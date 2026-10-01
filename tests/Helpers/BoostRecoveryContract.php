@@ -11,7 +11,7 @@ abstract class BoostRecoveryContract extends TestCase
     public function testRecoveryKeepsUnacknowledgedOrChangedSamples(string $scenario): void
     {
         $state = $this->runNative($scenario);
-        $failures = array('final-failure', 'partial-failure', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'exact-boundary', 'changed-row', 'main-failure');
+        $failures = array('final-failure', 'partial-failure', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'exact-boundary', 'changed-row', 'case-change', 'space-change', 'envelope-overflow', 'main-failure');
         if (str_starts_with($scenario, 'main-')) {
             self::assertSame($scenario === 'main-failure' ? 1 : 0, $state['exit']);
             self::assertSame($scenario === 'main-failure' ? 5 : 2, $state['status']);
@@ -23,11 +23,11 @@ abstract class BoostRecoveryContract extends TestCase
         }
         self::assertSame(0, $state['exit']);
         self::assertSame(!in_array($scenario, $failures, true), $state['success']);
-        if (in_array($scenario, array('missing-remote', 'missing-local', 'oversized', 'exact-boundary'), true)) {
+        if (in_array($scenario, array('missing-remote', 'missing-local', 'oversized', 'exact-boundary', 'envelope-overflow'), true)) {
             self::assertSame(0, $state['records']);
             self::assertSame(0, $state['insertCalls']);
             self::assertSame(0, $state['deleteCalls']);
-            self::assertCount($scenario === 'oversized' || $scenario === 'exact-boundary' ? 1 : 3, $state['local']);
+            self::assertCount(in_array($scenario, array('oversized','exact-boundary','envelope-overflow'), true) ? 1 : 3, $state['local']);
             self::assertSame(array(), $state['remote']);
             return;
         }
@@ -41,19 +41,32 @@ abstract class BoostRecoveryContract extends TestCase
             }
             return;
         }
-        if ($scenario === 'changed-row' || $scenario === 'late-row') {
+        if (in_array($scenario, array('changed-row','late-row','case-change','space-change'), true)) {
             self::assertSame(3, $state['records']);
             self::assertCount(3, $state['remote']);
-            self::assertCount($scenario === 'changed-row' ? 2 : 1, $state['local']);
+            self::assertCount($scenario === 'late-row' ? 1 : 2, $state['local']);
             self::assertSame(999, (int) end($state['local'])['local_data_id']);
             if ($scenario === 'changed-row') {
                 self::assertSame('changed value', $state['local'][0]['output']);
                 self::assertSame('sample2', $state['remote'][1]['output']);
             }
+            if ($scenario === 'case-change' || $scenario === 'space-change') {
+                self::assertSame($scenario === 'case-change' ? 'u' : '42 ', $state['local'][0]['output']);
+                self::assertSame($scenario === 'case-change' ? 'U' : '42', $state['remote'][1]['output']);
+            }
+            return;
+        }
+        if ($scenario === 'case-retry' || $scenario === 'space-retry') {
+            self::assertTrue($state['success']);
+            self::assertFalse($state['retryBefore']['success']);
+            self::assertSame(array(), $state['local']);
+            self::assertCount(4, $state['remote']);
+            self::assertSame($scenario === 'case-retry' ? 'u' : '42 ', $state['remote'][1]['output']);
+            self::assertSame(2, $state['records']);
             return;
         }
         $expected = match ($scenario) {
-            'chunk-250' => 250, 'chunk-251' => 251, default => 3
+            'full-packet-exact' => 1, 'chunk-250' => 250, 'chunk-251' => 251, default => 3
         };
         self::assertSame($expected, $state['records']);
         self::assertCount($expected, $state['remote']);
@@ -70,9 +83,12 @@ abstract class BoostRecoveryContract extends TestCase
             self::assertSame("value'quoted\\\\data\n<x>", $state['remote'][0]['output']);
         }
         foreach ($state['queries'] as $query) {
+            if (str_starts_with($query['sql'], 'INSERT INTO poller_output_boost')) {
+                self::assertLessThanOrEqual($state['limit'] ?: 1000000, strlen($query['sql']) + 1);
+            }
             if (str_starts_with($query['sql'], 'DELETE FROM poller_output_boost')) {
                 self::assertFalse($query['remote']);
-                self::assertStringContainsString('output = ?', $query['sql']);
+                self::assertStringContainsString('CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)', $query['sql']);
                 self::assertSame(0, count($query['params']) % 4);
             }
         }
@@ -81,7 +97,7 @@ abstract class BoostRecoveryContract extends TestCase
     public static function scenarios(): array
     {
         $result = array();
-        foreach (array('final-failure', 'partial-failure', 'success', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'default-limit', 'split-boundary', 'exact-boundary', 'chunk-250', 'chunk-251', 'late-row', 'changed-row', 'retry', 'quote-output', 'main-failure', 'main-success') as $scenario) {
+        foreach (array('final-failure', 'partial-failure', 'success', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'default-limit', 'split-boundary', 'exact-boundary', 'chunk-250', 'chunk-251', 'late-row', 'changed-row', 'retry', 'quote-output', 'main-failure', 'main-success', 'case-change', 'space-change', 'case-retry', 'space-retry', 'full-packet-exact', 'envelope-overflow') as $scenario) {
             $result[$scenario] = array($scenario);
         }
         return $result;

@@ -92,27 +92,29 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
         $max_allowed_packet = 1000000;
     }
 
-    $packet_size = 0;
-    $sql_array   = array();
+    $sql_prefix = 'INSERT INTO poller_output_boost (local_data_id, rrd_name, time, output) VALUES ';
+    $sql_suffix = ' ON DUPLICATE KEY UPDATE output=VALUES(output)';
+    // Include the SQL envelope and the protocol command byte in every packet.
+    $overhead = strlen($sql_prefix) + strlen($sql_suffix) + 1;
+    $packet_size = $overhead;
+    $sql_array = array();
 
     foreach ($rows as $row) {
         $sql = '(' . (int) $row['local_data_id'] . ',' . db_qstr($row['rrd_name'], $remote_db_cnn_id) . ',' . db_qstr($row['time'], $remote_db_cnn_id) . ',' . db_qstr($row['output'], $remote_db_cnn_id) . ')';
         $sql_size = strlen($sql);
 
-        if ($sql_size >= $max_allowed_packet) {
+        if ($overhead + $sql_size > $max_allowed_packet) {
             cacti_log('RECOVERY: A buffered sample exceeds max_allowed_packet; local samples were retained.', false, 'POLLER');
 
             return false;
         }
 
-        if (cacti_sizeof($sql_array) > 0 && ($packet_size + $sql_size) >= $max_allowed_packet) {
+        if (cacti_sizeof($sql_array) > 0 && ($packet_size + 1 + $sql_size) > $max_allowed_packet) {
             $record_count = cacti_sizeof($sql_array);
 
             cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (partial).', false, 'POLLER');
 
-            if (db_execute('INSERT IGNORE INTO poller_output_boost
-				(local_data_id, rrd_name, time, output)
-				VALUES ' . implode(',', $sql_array), true, $remote_db_cnn_id) === false) {
+            if (db_execute($sql_prefix . implode(',', $sql_array) . $sql_suffix, true, $remote_db_cnn_id) === false) {
                 cacti_log('RECOVERY: Partial packet delivery failed; local samples were retained.', false, 'POLLER');
 
                 return false;
@@ -120,11 +122,11 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
 
             $records_inserted += $record_count;
             $sql_array = array();
-            $packet_size = 0;
+            $packet_size = $overhead;
         }
 
+        $packet_size += $sql_size + (cacti_sizeof($sql_array) > 0 ? 1 : 0);
         $sql_array[] = $sql;
-        $packet_size += $sql_size;
     }
 
     if (cacti_sizeof($sql_array) > 0) {
@@ -132,9 +134,7 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
 
         cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (last slice).', false, 'POLLER');
 
-        if (db_execute('INSERT IGNORE INTO poller_output_boost
-			(local_data_id, rrd_name, time, output)
-			VALUES ' . implode(',', $sql_array), true, $remote_db_cnn_id) === false) {
+        if (db_execute($sql_prefix . implode(',', $sql_array) . $sql_suffix, true, $remote_db_cnn_id) === false) {
             cacti_log('RECOVERY: Final packet delivery failed; local samples were retained.', false, 'POLLER');
 
             return false;
@@ -150,7 +150,7 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
         $params     = array();
 
         foreach ($delete_rows as $row) {
-            $conditions[] = '(local_data_id = ? AND rrd_name = ? AND time = ? AND output = ?)';
+            $conditions[] = '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))';
             $params[] = $row['local_data_id'];
             $params[] = $row['rrd_name'];
             $params[] = $row['time'];
