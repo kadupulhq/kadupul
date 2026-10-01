@@ -186,11 +186,13 @@ function check_auth_cookie() {
 			if (cacti_sizeof($user_info)) {
 				$secret = hash('sha512', $token, false);
 
+				/* the cookie expires 30 days after the row is written, so an older row only serves a copied cookie */
 				$found  = db_fetch_cell_prepared('SELECT user_id
 					FROM user_auth_cache
 					WHERE user_id = ?
 					AND token = ?
-					AND hostname = ?',
+					AND hostname = ?
+					AND last_update >= NOW() - INTERVAL 30 DAY',
 					array($user_info['id'], $secret, get_client_addr())
 				);
 
@@ -5284,7 +5286,11 @@ function auth_session_epoch_advance($user_id) {
  * Login and remember-me already refuse a disabled or locked account; this
  * applies the same rule to a session that was open when an administrator
  * disabled or locked it, and ends sessions that "logout everywhere" or a
- * password change replaced.
+ * password change replaced, or that sat idle past session.gc_maxlifetime.
+ * The idle limit is the one PHP's session garbage collector and the
+ * client-side logout timer already use, so it does not shorten any session
+ * that would have survived before; it only stops a copied session ID from
+ * outliving a collector that runs late or not at all.
  *
  * The guest account is left to the existing checks. It is saved disabled,
  * any visitor can lock it by failing to log in as it, and guest pages give
@@ -5328,6 +5334,15 @@ function auth_session_end_reason($user_id) {
 	} elseif (!hash_equals($_SESSION['sess_user_epoch'], $epoch)) {
 		return 'the user logged out everywhere';
 	}
+
+	$now  = time();
+	$idle = (int) ini_get('session.gc_maxlifetime');
+
+	if ($idle > 0 && isset($_SESSION['sess_last_activity']) && is_int($_SESSION['sess_last_activity']) && $now - $_SESSION['sess_last_activity'] > $idle) {
+		return 'it was idle for longer than session.gc_maxlifetime';
+	}
+
+	$_SESSION['sess_last_activity'] = $now;
 
 	return '';
 }

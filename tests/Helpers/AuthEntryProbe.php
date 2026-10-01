@@ -278,7 +278,14 @@ function db_fetch_row_prepared($sql, $params = array(), $log = true) {
 
 function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true) {
 	if (strpos($sql, 'FROM user_auth_cache') !== false) {
+		/* a row carries its age in days; a lifetime clause in the query is applied to it */
+		$max_age = preg_match('/last_update\s*>=\s*NOW\(\)\s*-\s*INTERVAL\s+(\d+)\s+DAY/i', $sql, $interval) ? (int) $interval[1] : null;
+
 		foreach ($GLOBALS['probe']['cache'] as $row) {
+			if ($max_age !== null && ($row['age_days'] ?? 0) > $max_age) {
+				continue;
+			}
+
 			if ($row['user_id'] == $params[0] && $row['token'] === $params[1] && $row['hostname'] === $params[2]) {
 				return $row['user_id'];
 			}

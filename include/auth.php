@@ -64,7 +64,7 @@ if ($auth_method != 0) {
 	/* handle alternate authentication realms */
 	api_plugin_hook_function('auth_alternate_realms');
 
-	/* an account disabled or locked, a password change or "logout everywhere" ends it */
+	/* an account disabled or locked, a password change, "logout everywhere" or an idle session ends it */
 	if (!empty($_SESSION['sess_user_id'])) {
 		$session_end = auth_session_end_reason($_SESSION['sess_user_id']);
 
