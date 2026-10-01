@@ -30,6 +30,9 @@ if (defined('PLUGIN_COMPAT_TEST_COVERAGE')) {
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
 }
+if (defined('FORCE_HTTPS_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('HOST_REINDEX_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/host.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
