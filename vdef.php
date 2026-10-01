@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'item_remove', 'item_moveup', 'item_movedown'));
+cacti_require_post_actions(array('actions', 'item_remove', 'item_moveup', 'item_movedown', 'ajax_dnd'));
 include_once('./lib/vdef.php');
 
 $vdef_actions = array(
@@ -683,7 +683,7 @@ function vdef_edit()
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
 		$('#vdef_item').tableDnD({
 			onDrop: function(table, row) {
-				loadPageNoHeader('vdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());
+				loadPageUsingPost('vdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
 			}
 		});
 		<?php } ?>

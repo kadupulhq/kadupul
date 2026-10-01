@@ -6,6 +6,8 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('query_reload'));
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_graph.php');
 include_once('./lib/api_tree.php');
@@ -390,7 +392,12 @@ function graphs()
 	$(function() {
 		$('[id^="reload"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			loadPageNoHeader('graphs_new.php?action=query_reload&header=false&id='+$(this).attr('data-id')+'&host_id='+$('#host_id').val());
+			loadPageUsingPost('graphs_new.php?action=query_reload', {
+				header: 'false',
+				id: $(this).attr('data-id'),
+				host_id: $('#host_id').val(),
+				__csrf_magic: csrfMagicToken
+			});
 		});
 
 		$('#graph_type, #rows').on('change', function() {

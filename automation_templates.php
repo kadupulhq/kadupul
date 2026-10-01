@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'moveup', 'movedown', 'remove'));
+cacti_require_post_actions(array('actions', 'moveup', 'movedown', 'remove', 'ajax_dnd'));
 include_once('./lib/poller.php');
 include_once('./lib/utility.php');
 
@@ -577,7 +577,7 @@ function template()
 
         $('#template_ids').tableDnD({
             onDrop: function(table, row) {
-                loadPageNoHeader('automation_templates.php?action=ajax_dnd&'+$.tableDnD.serialize());
+                loadPageUsingPost('automation_templates.php?action=ajax_dnd', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
             }
         });
 		<?php } ?>

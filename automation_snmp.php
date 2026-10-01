@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'item_moveup', 'item_movedown', 'item_remove'));
+cacti_require_post_actions(array('actions', 'item_moveup', 'item_movedown', 'item_remove', 'ajax_dnd'));
 include_once('./lib/snmp.php');
 
 $automation_snmp_actions = array(
@@ -619,7 +619,7 @@ function automation_snmp_edit()
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
         $('#snmp_item').tableDnD({
             onDrop: function(table, row) {
-                loadPageNoHeader('automation_snmp.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());
+                loadPageUsingPost('automation_snmp.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
             }
         });
 		<?php } ?>

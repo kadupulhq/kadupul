@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'item_remove', 'item_moveup', 'item_movedown'));
+cacti_require_post_actions(array('actions', 'item_remove', 'item_moveup', 'item_movedown', 'ajax_dnd'));
 include_once('./lib/cdef.php');
 
 $cdef_actions = array(
@@ -656,7 +656,7 @@ function cdef_edit()
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
 		$('#cdef_item').tableDnD({
 			onDrop: function(table, row) {
-				loadPageNoHeader('cdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());
+				loadPageUsingPost('cdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
 			}
 		});
 		<?php } ?>
