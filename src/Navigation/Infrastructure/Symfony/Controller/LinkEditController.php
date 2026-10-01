@@ -13,7 +13,7 @@ use Kadupul\Navigation\Application\Port\LinkStore;
 use Kadupul\Navigation\Application\Query\LinkAccessDenied;
 use Kadupul\Navigation\Application\Query\ListLinks;
 use Kadupul\Navigation\Application\Command\SaveLink;
-use Kadupul\Navigation\Domain\LinkConflict;
+use Kadupul\Navigation\Infrastructure\Symfony\LinkFormFailure;
 use Kadupul\Navigation\Infrastructure\Symfony\Form\LinkType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormError;
@@ -40,6 +40,7 @@ final class LinkEditController
         Environment $twig,
         UrlGeneratorInterface $urls,
         TranslatorInterface $translator,
+        LinkFormFailure $failure,
         ?int $id = null
     ): Response {
         $headers = ['Cache-Control' => 'private, no-store'];
@@ -80,16 +81,11 @@ final class LinkEditController
             try {
                 $save($id, $fields, $revision);
                 return new RedirectResponse($urls->generate('navigation_links'), 303, $headers);
-            } catch (LinkAccessDenied $error) {
-                return new Response($translator->trans('Access denied.', [], 'navigation'), $error->unauthenticated ? 401 : 403, $headers);
-            } catch (LinkConflict $error) {
-                $status = 409;
-                $form->addError(new FormError($translator->trans($error->getMessage(), [], 'navigation')));
-            } catch (\InvalidArgumentException $error) {
-                $form->addError(new FormError($translator->trans($error->getMessage(), [], 'navigation')));
-            } catch (\RuntimeException) {
-                $status = 502;
-                $form->addError(new FormError($translator->trans('Save could not be confirmed. Reload before retrying.', [], 'navigation')));
+            } catch (\RuntimeException|\InvalidArgumentException $error) {
+                $status = $failure($error, $form);
+                if ($status instanceof Response) {
+                    return $status;
+                }
             }
         }
         return new Response($twig->render('navigation/link_edit.html.twig', ['link' => $link, 'form' => $form->createView()]), $status, $headers);

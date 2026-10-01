@@ -13,7 +13,7 @@ use Kadupul\Navigation\Application\Query\LinkAccessDenied;
 use Kadupul\Navigation\Application\Query\ListLinks;
 use Kadupul\Navigation\Application\Command\ChangeLinks;
 use Kadupul\Navigation\Domain\ExternalLink;
-use Kadupul\Navigation\Domain\LinkConflict;
+use Kadupul\Navigation\Infrastructure\Symfony\LinkFormFailure;
 use Kadupul\Navigation\Infrastructure\Symfony\LinkListParameters;
 use Kadupul\Navigation\Infrastructure\Symfony\Form\LinkActionType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -39,7 +39,8 @@ final class LinkActionController
         FormFactoryInterface $forms,
         Environment $twig,
         UrlGeneratorInterface $urls,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        LinkFormFailure $failure
     ): Response {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $console->consoleActor();
@@ -78,16 +79,11 @@ final class LinkActionController
             try {
                 $change($ids, $operation, (string) $form->getData()['revision']);
                 return new RedirectResponse($urls->generate('navigation_links'), 303, $headers);
-            } catch (LinkAccessDenied $error) {
-                return new Response($translator->trans('Access denied.', [], 'navigation'), $error->unauthenticated ? 401 : 403, $headers);
-            } catch (LinkConflict $error) {
-                $status = 409;
-                $form->addError(new FormError($translator->trans($error->getMessage(), [], 'navigation')));
-            } catch (\InvalidArgumentException $error) {
-                $form->addError(new FormError($translator->trans($error->getMessage(), [], 'navigation')));
-            } catch (\RuntimeException) {
-                $status = 502;
-                $form->addError(new FormError($translator->trans('Save could not be confirmed. Reload before retrying.', [], 'navigation')));
+            } catch (\RuntimeException|\InvalidArgumentException $error) {
+                $status = $failure($error, $form);
+                if ($status instanceof Response) {
+                    return $status;
+                }
             }
         }
         return new Response($twig->render('navigation/link_action.html.twig', ['links' => $selected, 'operation' => $operation, 'form' => $form->createView()]), $status, $headers);
