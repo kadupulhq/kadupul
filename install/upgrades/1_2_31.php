@@ -22,6 +22,10 @@ function upgrade_to_1_2_31() {
 		db_install_execute('ALTER TABLE snmp_query_graph ADD INDEX graph_template_id (graph_template_id)');
 	}
 
+	if (!db_index_exists('data_template_rrd', 'data_input_field_id')) {
+		db_install_execute('ALTER TABLE data_template_rrd ADD INDEX data_input_field_id (data_input_field_id)');
+	}
+
 	db_install_execute('ALTER TABLE settings_user MODIFY COLUMN name varchar(255) NOT NULL default ""');
 
 	if (!db_index_exists('user_auth_row_cache', 'class_time')) {
