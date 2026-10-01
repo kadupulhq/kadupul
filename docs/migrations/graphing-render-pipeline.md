@@ -75,6 +75,19 @@ The design brief put the output format in `RenderContext`. It belongs in
 `graph_json.php:104-138`), not from the viewer, and both values reach the cache
 key either way.
 
+An absent URL format is not an absent effective format. The legacy image and
+JSON adapters retain their existing pre-render `graph_templates_graph`
+`image_format_id` query and current mapping/fallback behavior
+(`graph_image.php:42-57`, `graph_json.php:107-123`). R1's request factory takes
+that resolved value; for a legacy caller without a supplied format it resolves
+the same graph metadata at the adapter boundary. `GraphRequest.imageFormat`
+always carries the effective format before cache-key generation, command
+construction or content-type selection. R9 keeps this narrow lookup outside
+`GraphDefinitions`; R10 supplies an equivalent DBAL lookup in its adapter.
+The full definition is still loaded only on a miss. R0/R1 gates cover absent
+overrides on PNG and SVG graph definitions, explicit overrides and each
+entry point's existing fallback; cache-key and response format must agree.
+
 `RenderFacts` is the third input. It holds values read from storage while
 rendering: the current time, the last poller run, the consolidation functions
 each RRD file holds, which files exist, substituted host, query and input
@@ -329,6 +342,24 @@ render, as `rrdtool_function_graph()` does now (Issue #502).
 
 ### Authorization in R7
 
+R7 also introduces the `Application/Port/GraphOptionsHook` interface, implemented
+by `Infrastructure/Legacy/LegacyGraphOptionsHook`. The use case calls that port
+for the section-preserving hook/business-hours operation; it never imports the
+legacy adapter. The port accepts Domain inputs and returns the tagged Domain
+command value. Symfony wiring chooses the adapter. The R7 architecture gate
+must reject any Application-to-Infrastructure import, including this boundary.
+
+R7 returns a Domain `RenderResult` describing bytes, source output, real-time
+output bytes with the existing destination, or an error-image request with the
+message and captured render context. Application performs no filesystem, GD,
+theme-file or HTTP writes. Legacy infrastructure maps a real-time result using
+the existing dump/chmod/failure-return rules, and maps an error-image result
+through `Infrastructure/Rrd/ErrorImage`; R9/R10 reuse that output adapter.
+Required R7 gates cover private real-time output, failed storage, and error
+images while enforcing the architecture rule on Application. This is the same
+typed-outcome boundary used for print-source HTML, rather than new implicit
+infrastructure dependencies in `RenderGraph`.
+
 R7 introduces both `src/IdentityAccess/Contract/GraphAuthorizationSubject.php`
 and `src/IdentityAccess/Contract/GraphAccess.php`, with an
 `Infrastructure/Legacy/LegacyGraphAccess` adapter. `RenderGraph` receives the
@@ -518,13 +549,13 @@ and R13 is "Callers moved to Graphing services; wrappers marked
 | Slice | Change | Files | Gate | Risk | Rollback |
 | --- | --- | --- | --- | --- | --- |
 | R0 | Characterization: goldens per `RenderContext` field (dark mode, browser zone with both timezone settings enabled and with either disabled, each date format, a non-English locale, theme and viewer fonts, no-session guest fonts/dates with `auth_method == 0`) and per mode (thumbnail, SVG, `graphv`, export, CSV with zero hook/business-hours calls, real-time, print source, error text); an input census that records every setting, user setting, cookie and session key a render reads and compares it with the table above; the hook string contract; a render timing script | `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`, `tests/Fixtures/rrd-characterization.php`, new `tests/Fixtures/rrd-characterization/graph-context-*.json`, new `RenderInputCensusTest.php`, `GraphOptionsHookContractTest.php`, `tests/tools/graph_render_timing.php` | The new tests pass against unchanged code | Low; tests only | Revert |
-| R1 | `RenderContext`, `GraphRequest` and `LegacyRenderContextFactory`; built once in `rrdtool_function_graph()`; the Boost key from `RenderContext::fingerprint()` | `src/Graphing/Domain/Render/*`, `src/Graphing/Infrastructure/Legacy/LegacyRenderContextFactory.php`, `lib/rrd.php`, `lib/boost.php` | R0 goldens unchanged; `BoostGraphCacheKeyNativeTest` from #705; the census | Medium: a missed input serves one viewer's image to another | Revert; renamed cache files age out |
+| R1 | `RenderContext`, effective-format `GraphRequest`, `LegacyGraphRequestFactory` and `LegacyRenderContextFactory`; built once in `rrdtool_function_graph()`; the Boost key from `RenderContext::fingerprint()` | `src/Graphing/Domain/Render/*`, `src/Graphing/Infrastructure/Legacy/LegacyRenderContextFactory.php`, `LegacyGraphRequestFactory.php`, `lib/rrd.php`, `lib/boost.php` | R0 goldens unchanged; `BoostGraphCacheKeyNativeTest` from #705; the census | Medium: a missed input serves one viewer's image to another | Revert; renamed cache files age out |
 | R2 | Pure helpers to `Domain/Command` (moves 1 to 7); wrappers delegate | `src/Graphing/Domain/Command/*`, `lib/rrd.php`, `lib/functions.php` | `helpers.json`, `graph-gradient*.json`, `graph-business-hours.json`, `graph-cdef-magic.json`, `tests/Unit/Core/Rrd/RrdFontArgumentsTest.php` (#710), `ColourBrightnessTest` | Low | Revert |
 | R3 | `GraphDefinition`, the `GraphDefinitions` port and `LegacyGraphDefinitions` on `db_*`, running today's queries; the render consumes it | `src/Graphing/Domain/GraphDefinition*.php`, `src/Graphing/Application/Port/GraphDefinitions.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphDefinitions.php`, `lib/rrd.php` | All `graph-*.json`; a reader test against the characterization database; per-image timing | Medium | Revert |
 | R4 | `DoctrineGraphDefinitions` on `doctrine.dbal.web_connection` for Symfony routes; read grants added to the read-user list | `src/Graphing/Infrastructure/Persistence/DoctrineGraphDefinitions.php`, `config/services.yaml`, `docs/symfony-migration.md` | Both adapters return equal definitions on the behavior database; the second-connection cost measured on `graph_image.php` | Medium: an extra connection per image if used from a legacy page | Remove the service; R3 remains |
 | R5 | Window, archive choice and options from `GraphDefinition`, `GraphRequest` and `RenderContext` (moves 8 to 11) | `src/Graphing/Domain/Command/GraphOptions.php`, `ArchiveChoice.php`, `src/Graphing/Domain/Render/GraphWindow.php`, `GraphOptionsGenerator.php` (wrapper), `lib/rrd.php` | `graph-options*.json`, `graph-relative-window.json`, `GraphOptionsGeneratorCoverageTest` | Medium | Revert |
 | R6 | `GraphCommandBuilder` returns section-preserving `GraphCommandSections`: `DEF`, `CDEF`, `VDEF`, legend, items and export columns; `RenderFacts` collected through ports (moves 12 to 19). Split into R6a (definitions) and R6b (legend, items, export) if the diff passes about 1,500 lines | `src/Graphing/Domain/Command/*`, `src/Graphing/Application/CollectRenderFacts.php`, ports and Legacy adapters, `lib/rrd.php` | All `graph-*.json`; `RrdGraphCfFallbackTest`, `RrdEmptyCdefGuardTest`, the VDEF export tests and the RRDtool round trip (`RrdGraphCharacterizationTest.php:334`, `377`, `449`, `471`) | High: the largest block; ordering of `DEF` names and caches | Revert; wrappers still hold the old code until R13 |
-| R7 | `RenderGraph`, explicit `GraphAuthorizationSubject`, `GraphAccess` and its legacy adapter, `RrdTransport` (`LocalRrdtool`, `ProxyRrdtool`), `LegacyGraphOptionsHook`; introduce `RenderedGraphCache` and `PendingSamples` ports and legacy Boost adapters before `rrdtool_function_graph()` delegates | `src/Graphing/Application/RenderGraph.php`, `Port/RrdTransport.php`, `Port/RenderedGraphCache.php`, `Port/PendingSamples.php`, `src/IdentityAccess/Contract/GraphAuthorizationSubject.php`, `src/IdentityAccess/Contract/GraphAccess.php`, its legacy adapter, `src/Graphing/Infrastructure/Rrd/ProxyRrdtool.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphOptionsHook.php`, `BoostImageCache.php`, `LegacyPendingSamples.php`, `lib/rrd.php` | Explicit report/remote/guest subjects, trusted legacy 0/-1 bypass with no session and zero auth calls, request rejection of bypass, per-user isolation and zero work on denied cache hits; key-before-update/read ordering and zero cache reads after updates/refusal; CSV zero hook/business-hours calls; print-source zero final render/cache-write calls; PNG/SVG/graphv cache contracts; post-hook legacy section/byte round trip; hook contract; `RrdProxyInteropTest`; `graph-proxy*.json`; the behavior harness graph scenarios | High: authorization identity, plugin hook and proxy session lifetime | Revert |
+| R7 | `RenderGraph`, explicit `GraphAuthorizationSubject`, `GraphAccess` and its legacy adapter, `RrdTransport` (`LocalRrdtool`, `ProxyRrdtool`), `LegacyGraphOptionsHook`; introduce `RenderedGraphCache` and `PendingSamples` ports and legacy Boost adapters before `rrdtool_function_graph()` delegates | `src/Graphing/Application/RenderGraph.php`, `Port/RrdTransport.php`, `Port/RenderedGraphCache.php`, `Port/PendingSamples.php`, `Port/GraphOptionsHook.php`, `src/Graphing/Domain/Render/RenderResult.php`, `src/Graphing/Infrastructure/Legacy/LegacyRenderOutput.php`, `src/IdentityAccess/Contract/GraphAuthorizationSubject.php`, `src/IdentityAccess/Contract/GraphAccess.php`, its legacy adapter, `src/Graphing/Infrastructure/Rrd/ProxyRrdtool.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphOptionsHook.php`, `BoostImageCache.php`, `LegacyPendingSamples.php`, `lib/rrd.php` | Explicit report/remote/guest subjects, trusted legacy 0/-1 bypass with no session and zero auth calls, request rejection of bypass, per-user isolation and zero work on denied cache hits; key-before-update/read ordering and zero cache reads after updates/refusal; CSV zero hook/business-hours calls; print-source zero final render/cache-write calls; PNG/SVG/graphv cache contracts; post-hook legacy section/byte round trip; hook contract; output/storage/error-image contracts; Application has no Infrastructure imports; `RrdProxyInteropTest`; `graph-proxy*.json`; the behavior harness graph scenarios | High: authorization identity, plugin hook and proxy session lifetime | Revert |
 | R8 | Unify cache naming, eligibility, reading and writing in R7's existing Boost adapter, keeping #705; refine failure handling and performance without introducing new R7 dependencies | `src/Graphing/Infrastructure/Legacy/BoostImageCache.php`, `LegacyPendingSamples.php`, `lib/boost.php` | `BoostGraphCacheKeyNativeTest`, `BoostGraphCacheFailureTest`, `BoostPngPurgeTest`; retain R7 ordering gates; cache hit and miss timing | Medium | Revert; R7's working adapters remain |
 | R9 | `graph_image.php` and `graph_json.php` as thin adapters | `graph_image.php`, `graph_json.php`, `src/Graphing/Infrastructure/Legacy/GraphRequestFromLegacyRequest.php` | `entry_points.baseline.tsv` unchanged; `RemoteGraphPermissionTest` (#661); page crawl | Medium | Revert |
 | R10 | Symfony image and JSON routes and a voter reusing R7's `GraphAccess`, per-route cutover flag; legacy URLs kept | `src/Graphing/Infrastructure/Symfony/*`, R7 access contract wiring, `config/services.yaml`, `docs/architecture-alignment.md` | #661 permission tests through the route; guest account; route baseline entry | Medium | Turn the flag off; legacy pages remain |

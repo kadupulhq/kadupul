@@ -18,7 +18,7 @@ src/Graphing/
   Domain/            GraphItemType, ConsolidationFunction, DataSourceType enums;
                      RrdCommand (an argument list, not a string); GraphDefinition
     Font/            GraphFont, GraphFontProfile, GraphFontResolver (PR #710)
-    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow
+    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow, RenderResult
     Command/         GraphCommandBuilder, GraphCommandSections and parts: DefNames, CdefMagic,
                      LegendText, GradientArea, DateLegend, ThemeArguments,
                      LegacySerializedGraphCommand (hook compatibility),
@@ -26,13 +26,14 @@ src/Graphing/
   Application/       RenderGraph, CollectRenderFacts, ExportGraph,
                      CreateDataSourceFile, TuneDataSource
     Port/            RrdTransport, GraphDefinitions, DataSources,
-                     RenderedGraphCache, PendingSamples
+                     RenderedGraphCache, PendingSamples, GraphOptionsHook
   Infrastructure/
     Rrd/             PipeEncoder, LocalRrdtool, ProxyRrdtool, RrdXmlEditor, ErrorImage
     Persistence/     DBAL readers for the web rendering path
     Legacy/          LegacyDataSources for the collector path; RrdBridge;
                      LegacyRenderContextFactory, LegacyGraphDefinitions,
-                     LegacyGraphOptionsHook, BoostImageCache, LegacyPendingSamples
+                     LegacyGraphRequestFactory, LegacyGraphOptionsHook,
+                     LegacyRenderOutput, BoostImageCache, LegacyPendingSamples
     Symfony/         Graph image and JSON controllers; the graph voter
 ```
 
@@ -231,6 +232,18 @@ format and mode. The legacy factory reads the session and cookies; nothing
 inside the pipeline does. The factory applies the browser zone only when both
 site and user `client_timezone_support` settings permit it; otherwise it keeps
 the existing PHP zone and `TZ`.
+
+The request factory captures the effective output format before the cache key
+is built. Existing image/JSON adapters keep their narrow graph-format query
+when no URL override is supplied; other legacy callers resolve equivalent
+metadata at that adapter boundary. Cache keys and response content types use
+the same resolved format; the full graph definition remains a miss-only read.
+
+`RenderGraph` invokes an Application `GraphOptionsHook` port implemented by the
+legacy hook adapter. It returns Domain `RenderResult` outcomes for source HTML,
+real-time output and error images; infrastructure output adapters retain the
+existing filesystem permissions/failure handling and GD/theme behavior.
+Application imports none of those implementations.
 
 The Boost cache key becomes the hash of the context plus the request, which
 covers every input PR #705 keys by. The graph tables carry no revision, so a
