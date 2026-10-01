@@ -24,7 +24,11 @@ printf 'category\tlocation\tmatch\n'
 scan() {
 	local category="$1"
 	local pattern="$2"
-	rg -n --pcre2 --no-config --no-ignore --no-ignore-vcs --no-ignore-parent "$pattern" --glob '*.php' "${EXCLUDE[@]}" . 2>/dev/null | grep -v '\/plugins\/' | while IFS= read -r line; do
+	local multiline=()
+	if [ "$category" = 'fs_write' ]; then
+		multiline=(-U)
+	fi
+	rg -n "${multiline[@]}" --pcre2 --no-config --no-ignore --no-ignore-vcs --no-ignore-parent "$pattern" --glob '*.php' "${EXCLUDE[@]}" . 2>/dev/null | grep -v '\/plugins\/' | while IFS= read -r line; do
 		file="${line%%:*}"
 		rest="${line#*:}"
 		lineno="${rest%%:*}"
@@ -54,4 +58,4 @@ scan "xml_parse" '\b(simplexml_load_file|simplexml_load_string|DOMDocument::load
 scan "header_redirect" '\bheader\s*\(\s*[\"\x27]Location:'
 
 # Filesystem write sinks
-scan "fs_write" '\b(file_put_contents|fopen)\s*\(|(?:->|::)\s*(?:appendToFile|dumpFile)\s*\('
+scan "fs_write" '\b(file_put_contents|fopen)(?=\s*\()|(?:->|::)(?=\s*(?:appendToFile|dumpFile)\s*\()'
