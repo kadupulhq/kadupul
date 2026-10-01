@@ -37,19 +37,20 @@ function automation_host_status_options(): array
 /** Shared device selectors preserve literal template names and accessible labels. */
 function automation_device_filter_controls(string $filter): void
 {
+    $filter = $filter === 'filterd' ? 'filterd' : 'filter';
     ?>
     <td><label for='<?php print html_escape($filter);?>'><?php print __('Search');?></label></td>
-    <td><input type='text' class='ui-state-default ui-corner-all' id='<?php print html_escape($filter);?>' size='25' value='<?php print html_escape_request_var($filter);?>'></td>
+    <td><input type='text' aria-label='<?php print __esc('Search');?>' class='ui-state-default ui-corner-all' id='<?php print html_escape($filter);?>' size='25' value='<?php print htmlspecialchars((string) html_escape_request_var($filter), ENT_QUOTES | ENT_HTML5, ini_get('default_charset') ?: 'UTF-8', false);?>'></td>
     <td><label for='host_template_id'><?php print __('Type');?></label></td>
     <td>
-        <select id='host_template_id'>
+        <select id='host_template_id' aria-label='<?php print __esc('Type');?>'>
             <option value='-1'<?php if (get_request_var('host_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
             <option value='0'<?php if (get_request_var('host_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
             <?php automation_template_options(db_fetch_assoc('SELECT id,name FROM host_template ORDER BY name'), get_request_var('host_template_id'));?>
         </select>
     </td>
     <td><label for='host_status'><?php print __('Status');?></label></td>
-    <td><select id='host_status'><?php html_create_list(automation_host_status_options(), '', '', get_request_var('host_status'));?></select></td>
+    <td><select id='host_status' aria-label='<?php print __esc('Status');?>'><?php html_create_list(automation_host_status_options(), '', '', get_request_var('host_status'));?></select></td>
     <?php
 }
 

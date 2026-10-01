@@ -335,10 +335,28 @@ final class AutomationModuleNativeTest extends TestCase
         foreach (array('host_template_id', 'host_status', $mode === 'matches' ? 'filterd' : 'filter') as $control) {
             self::assertSame(1, $xpath->query('//label[@for="' . $control . '"]')->length);
             self::assertSame(1, $xpath->query('//*[@id="' . $control . '"]')->length);
+            self::assertSame(array('host_template_id' => 'Type', 'host_status' => 'Status', 'filterd' => 'Search', 'filter' => 'Search')[$control], $xpath->query('//*[@id="' . $control . '"]')->item(0)->getAttribute('aria-label'));
         }
         self::assertSame(1, $xpath->query('//select[@id="host_template_id"]/option[@selected]')->length);
         self::assertSame('9', $xpath->query('//select[@id="host_template_id"]/option[@selected]')->item(0)->getAttribute('value'));
         self::assertSame('Fixture template', $xpath->query('//select[@id="host_template_id"]/option[@selected]')->item(0)->textContent);
+    }
+
+    /** @dataProvider templateRenderPaths */
+    public function testSearchValueRemainsTextAndHasAnAccessibleName(string $mode): void
+    {
+        $payload = "'\"/><script>alert(1)</script>` &lt;tag&gt;";
+        $state = $this->runNative(array('mode' => $mode, 'kind' => 'host', 'filter_value' => $payload, 'search' => '^host$', 'replace' => 'A', 'target' => 'host'));
+        $document = new DOMDocument();
+        @$document->loadHTML($state['html']);
+        $xpath = new DOMXPath($document);
+        $id = $mode === 'matches' ? 'filterd' : 'filter';
+        $input = $xpath->query('//input[@id="' . $id . '"]')->item(0);
+        self::assertNotNull($input);
+        self::assertSame('Search', $input->getAttribute('aria-label'));
+        self::assertSame("'\"/><script>alert(1)</script>` <tag>", $input->getAttribute('value'));
+        self::assertSame(0, $xpath->query('//script[contains(text(),"alert(1)")]')->length);
+        self::assertSame(1, $xpath->query('//label[@for="' . $id . '"]')->length);
     }
 
     public static function templateRenderPaths(): array
