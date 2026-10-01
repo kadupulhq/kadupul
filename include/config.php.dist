@@ -139,6 +139,14 @@ $disable_log_rotation = false;
 //$path_csrf_web_root = '/var/www/html';
 
 /**
+ * Minimum complete local-login duration in milliseconds. Default: 1000.
+ * Packagers may raise this to an integer from 1000 through 60000 for slow
+ * servers or higher-cost stored hashes. Invalid values use the 1000 default.
+ * This is a minimum, not an upper bound: work exceeding it remains observable.
+ */
+//$auth_login_timing_floor_ms = 1000;
+
+/**
  * The following are optional variables for debugging low level system
  * functions that are generally only used by Cacti Developers to help
  * identify potential issues in commonly used functions

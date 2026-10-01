@@ -48,6 +48,22 @@ $GLOBALS['probe'] = array(
     'page' => $scenario['page'] ?? 'probe.php',
 );
 
+// The successful-login timing scenario uses the same real PDO transaction
+// as production, so the test observes persisted credentials rather than writes.
+if (!empty($scenario['credential_database'])) {
+    $credential_db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    $credential_db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, realm INTEGER, locked TEXT, password TEXT)');
+    $credential_db->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT, PRIMARY KEY (user_id, name))');
+    $insert = $credential_db->prepare('INSERT INTO user_auth VALUES (?, ?, ?, ?, ?, ?)');
+    foreach ($GLOBALS['probe']['users'] as $row) {
+        $insert->execute(array($row['id'], $row['username'], $row['enabled'], $row['realm'], $row['locked'], $row['password']));
+    }
+    $database_hostname = 'native_fixture';
+    $database_port = 0;
+    $database_default = 'auth_contract';
+    $database_sessions = array('native_fixture:0:auth_contract' => $credential_db);
+}
+
 function probe_normalize_sql(string $sql): string
 {
     return trim(preg_replace('/\s+/', ' ', $sql));
@@ -373,6 +389,8 @@ register_shutdown_function(function () use ($probe_dir): void {
 
     print json_encode(array(
         'return' => $GLOBALS['probe']['return'],
+        'elapsed_seconds' => $GLOBALS['probe']['elapsed_seconds'] ?? null,
+        'credential_password' => isset($GLOBALS['credential_db']) ? $GLOBALS['credential_db']->query('SELECT password FROM user_auth WHERE id = 42')->fetchColumn() : null,
         'session' => $_SESSION,
         'executed' => $GLOBALS['probe']['executed'],
         'events' => $GLOBALS['probe']['events'],
@@ -389,7 +407,7 @@ $config = array(
     'cacti_db_version' => CACTI_VERSION,
     'base_path' => $probe_dir,
     'url_path' => '/kadupul/',
-);
+) + ($scenario['runtime_config'] ?? array());
 
 $_SESSION = $scenario['session'] ?? array();
 
@@ -428,7 +446,9 @@ if ($call['type'] === 'include_auth') {
 
     $GLOBALS['probe']['page_continued'] = true;
 } elseif (in_array($call['type'], array('check_auth_cookie', 'clear_auth_cookie', 'local_auth_login_process', 'auth_login_create_user_from_template', 'cacti_auth_transition'), true)) {
+    $started = hrtime(true);
     $GLOBALS['probe']['return'] = call_user_func_array($call['type'], $call['args'] ?? array());
+    $GLOBALS['probe']['elapsed_seconds'] = (hrtime(true) - $started) / 1000000000;
 } else {
     fwrite(STDERR, 'AuthEntryProbe: unknown call type ' . $call['type']);
     exit(1);

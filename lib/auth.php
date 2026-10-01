@@ -3948,60 +3948,82 @@ function basic_auth_login_process($username)
  */
 function local_auth_login_process($username)
 {
-    global $error, $error_msg;
+    $started = hrtime(true);
+    try {
+        global $error, $error_msg;
 
-    $user = array();
+        $user = array();
 
-    if (!api_plugin_hook_function('login_process', false)) {
-        $user = secpass_login_process($username);
+        if (!api_plugin_hook_function('login_process', false)) {
+            $user = secpass_login_process($username);
 
-        /**
-         * If the password needs to be rehashed for security purposes,
-         * do that now.
-         */
-        $stored_pass = db_fetch_cell_prepared(
-            'SELECT password
+            /**
+             * If the password needs to be rehashed for security purposes,
+             * do that now.
+             */
+            $stored_pass = db_fetch_cell_prepared(
+                'SELECT password
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0',
-            array($username)
-        );
+                array($username)
+            );
 
-        if ($stored_pass != '') {
-            $password = get_nfilter_request_var('login_password');
+            if ($stored_pass != '') {
+                $password = get_nfilter_request_var('login_password');
 
-            $valid = compat_password_verify($password, $stored_pass);
+                $valid = compat_password_verify($password, $stored_pass);
 
-            cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+                cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
-            if ($valid && !$error) {
-                $user = db_fetch_row_prepared(
-                    'SELECT *
+                if ($valid && !$error) {
+                    $user = db_fetch_row_prepared(
+                        'SELECT *
 					FROM user_auth
 					WHERE username = ?
 					AND realm = 0',
-                    array($username)
-                );
+                        array($username)
+                    );
 
-                // Rehash only the local row that logged in; other realms may
-                // reuse the username, and a refused login changes nothing.
-                if (!$error && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
-                    $password = compat_password_hash($password, PASSWORD_DEFAULT);
-                    db_check_password_length();
-                    if (!auth_rehash_password_preserving_sessions($user['id'], $stored_pass, $password)) {
-                        $error     = true;
-                        $error_msg = __('Access Denied!  Login Failed.');
-                        $user      = array();
+                    // Rehash only the local row that logged in; other realms may
+                    // reuse the username, and a refused login changes nothing.
+                    if (!$error && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+                        $password = compat_password_hash($password, PASSWORD_DEFAULT);
+                        db_check_password_length();
+                        if (!auth_rehash_password_preserving_sessions($user['id'], $stored_pass, $password)) {
+                            $error     = true;
+                            $error_msg = __('Access Denied!  Login Failed.');
+                            $user      = array();
+                        }
                     }
                 }
+            } else {
+                // A known account verifies here a second time; keep unknown usernames level.
+                auth_unknown_user_password_verify(get_nfilter_request_var('login_password'));
             }
-        } else {
-            // A known account verifies here a second time; keep unknown usernames level.
-            auth_unknown_user_password_verify(get_nfilter_request_var('login_password'));
         }
-    }
 
-    return $user;
+        return $user;
+    } finally {
+        auth_local_login_timing_floor($started);
+    }
+}
+
+/** Apply one minimum duration to the complete local login, independent of its stored hash cost. */
+function auth_local_login_timing_floor($started)
+{
+    global $config;
+
+    // Packagers may raise the floor for slower servers or higher-cost hashes.
+    $configured = filter_var(
+        $config['auth_login_timing_floor_ms'] ?? 1000,
+        FILTER_VALIDATE_INT,
+        array('options' => array('min_range' => 1000, 'max_range' => 60000))
+    );
+    $deadline = $started + ($configured === false ? 1000 : $configured) * 1000000;
+    while (($remaining = $deadline - hrtime(true)) > 0) {
+        time_nanosleep(intdiv($remaining, 1000000000), $remaining % 1000000000);
+    }
 }
 
 /**

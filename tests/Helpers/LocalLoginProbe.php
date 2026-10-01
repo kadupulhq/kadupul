@@ -74,7 +74,7 @@ function compat_password_needs_rehash($hash, $algo, $options = array()) { return
 function auth_unknown_user_password_verify($password) { return false; }
 PHP;
 
-    foreach (array('secpass_login_process', 'secpass_check_pass', 'local_auth_login_process') as $function) {
+    foreach (array('secpass_login_process', 'secpass_check_pass', 'local_auth_login_process', 'auth_local_login_timing_floor') as $function) {
         // header() is built in, so the copied source calls a recorder instead.
         $program .= "\n" . preg_replace('/\bheader\(/', 'probe_header(', test_php_function_source($auth, $function)) . "\n";
     }
