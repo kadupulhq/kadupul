@@ -171,6 +171,7 @@ def main():
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
         'data-source-profile-test-hash': 'Integration test source differs',
+        'missing-data-source-profile-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'vdef-test-hash': 'Integration test source differs',
@@ -248,6 +249,8 @@ def main():
                 worker['sha256'] = '0' * 64
             elif case == 'data-source-profile-test-hash':
                 evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
+            elif case == 'missing-data-source-profile-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/data_source_profile_scenarios.py', None)
             elif case == 'vdef-probe-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
             elif case == 'vdef-browser-probe-hash':
