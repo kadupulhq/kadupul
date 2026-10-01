@@ -248,6 +248,8 @@ jobs:
         env:
           PHP_VERSION: '8.4'
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+      - name: Verify External Links through HTTP and MariaDB
+        run: mise exec python@3.12.12 -- python tests/Symfony/link_review_http.py
       - name: Refuse forbidden access at every entry point
         run: mise exec python@3.12.12 -- python tests/security/entry_point_authorization.py
       - name: Upload observations

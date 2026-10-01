@@ -22,6 +22,7 @@
             <file>bin/legacy-assignment-bootstrap.php</file>
             <file>include/admin_notifications.php</file>
             <file>sites.php</file>
+            <file>links.php</file>
             <file>lib/database.php</file>
         </include>
     </source>
