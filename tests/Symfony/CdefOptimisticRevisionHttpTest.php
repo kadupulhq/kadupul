@@ -46,6 +46,9 @@ final class CdefOptimisticRevisionHttpTest extends TestCase
             ] as $sql) {
                 $database->executeStatement($sql);
             }
+            if ($mutation === 'reorder') {
+                $database->executeStatement("INSERT INTO cdef_items VALUES (22, 'second-child-hash', 2, 2, 6, 'Second displayed value')");
+            }
             $container->set(Connection::class, $database);
             $container->set('doctrine.dbal.web_connection', $database);
             $configuration = $this->createMock(LegacyConfiguration::class);
@@ -73,8 +76,16 @@ final class CdefOptimisticRevisionHttpTest extends TestCase
             $xpath = new \DOMXPath($dom);
             $revisionField = $group === 'cdef_action' ? 'revisions' : 'revision';
             $input = $xpath->query('//input[@name="' . $group . '[' . $revisionField . ']"]')->item(0);
-            if ($input instanceof \DOMElement) {
-                $data[$revisionField] = $input->getAttribute('value');
+            self::assertInstanceOf(\DOMElement::class, $input, 'The displayed mutation form must include its revision.');
+            $data[$revisionField] = $input->getAttribute('value');
+            self::assertNotSame('', $data[$revisionField]);
+            if ($mutation === 'reorder') {
+                $itemsInput = $xpath->query('//input[@name="order[items]"]')->item(0);
+                self::assertInstanceOf(\DOMElement::class, $itemsInput);
+                $data['items'] = $itemsInput->getAttribute('value');
+                self::assertSame([21, 22], json_decode($data['items'], true, 512, JSON_THROW_ON_ERROR));
+                self::assertSame('21', $xpath->query('//button[@name="order[moveDown]"]')->item(0)?->getAttribute('value'));
+                $data['moveDown'] = '21';
             }
             $tokenId = $group === 'cdef_action' ? 'graph_cdef_action' : 'graph_cdef_edit';
             $data['_token'] = $container->get(CsrfTokenManagerInterface::class)->getToken($tokenId)->getValue();

@@ -267,6 +267,8 @@ def _verify_stale_revisions(harness, session, check):
         parent_id = int(harness.sql(f"SELECT id FROM cdef WHERE hash='{unique}'").strip())
         harness.sql(f"INSERT INTO cdef_items (hash,cdef_id,sequence,type,value) VALUES ('{uuid.uuid4().hex}',{parent_id},1,6,'Displayed value')")
         child_id = int(harness.sql(f'SELECT id FROM cdef_items WHERE cdef_id={parent_id}').strip())
+        if mutation == 'reorder':
+            harness.sql(f"INSERT INTO cdef_items (hash,cdef_id,sequence,type,value) VALUES ('{uuid.uuid4().hex}',{parent_id},2,6,'Second displayed value')")
         path = harness.base + f'/app.php/graph-definitions/cdefs/{parent_id}'
         group = {'parent': 'cdef_edit', 'item-create': 'cdef_item', 'item-edit': 'cdef_item',
                  'item-delete': 'confirm', 'reorder': 'order', 'duplicate': 'cdef_action', 'delete': 'cdef_action'}[mutation]
@@ -278,7 +280,12 @@ def _verify_stale_revisions(harness, session, check):
             rendered = _page(session, url)
             submitted = {key: value for key, value in rendered.items() if key.startswith(group + '[')}
             field = 'revisions' if group == 'cdef_action' else 'revision'
-            check(bool(submitted.get(group + '[' + field + ']')), 'CDEF rendered full revision: ' + mutation)
+            rendered_revision = bool(submitted.get(group + '[' + field + ']'))
+            if mutation == 'reorder':
+                item_ids = json.loads(submitted.get('order[items]', '[]'))
+                rendered_revision = rendered_revision and len(item_ids) == 2 and child_id in item_ids
+                submitted['order[moveDown]'] = str(child_id)
+            check(rendered_revision, 'CDEF rendered full revision: ' + mutation)
             if mutation == 'parent':
                 submitted['cdef_edit[name]'] = 'Stale rename'
             elif mutation in ('item-create', 'item-edit'):
