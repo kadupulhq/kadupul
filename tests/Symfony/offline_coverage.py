@@ -85,7 +85,7 @@ def main():
         compiled_manifest = json.loads((stage / 'public/assets/manifest.json').read_text())
         compiled_font = stage / 'public' / compiled_manifest['include/fa/webfonts/fa-solid-900.woff2'].lstrip('/')
         compiled_font_bytes = compiled_font.read_bytes()
-        compiled_font.unlink()
+        remove_fixture(compiled_font.relative_to(stage).as_posix())
         execute('tools/verify-offline.php', error='Missing offline compiled asset: ../webfonts/')
         compiled_font.write_bytes(b'')
         execute('tools/verify-offline.php', error='Missing offline compiled asset: ../webfonts/')
