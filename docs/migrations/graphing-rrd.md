@@ -18,20 +18,20 @@ src/Graphing/
   Domain/            GraphItemType, ConsolidationFunction, DataSourceType enums;
                      RrdCommand (an argument list, not a string); GraphDefinition
     Font/            GraphFont, GraphFontProfile, GraphFontResolver (PR #710)
-    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow, RenderResult
+    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow, RenderResult, RrdExecutionContext
     Command/         GraphCommandBuilder, GraphCommandSections and parts: DefNames, CdefMagic,
                      LegendText, GradientArea, DateLegend, ThemeArguments,
                      LegacySerializedGraphCommand (hook compatibility),
                      BusinessHours, GraphOptions, ArchiveChoice
   Application/       RenderGraph, CollectRenderFacts, ExportGraph,
                      CreateDataSourceFile, TuneDataSource
-    Port/            RrdTransport, GraphDefinitions, DataSources,
+    Port/            RrdTransport, GraphDefinitions, DataSources, DataSourcePaths,
                      RenderedGraphCache, PendingSamples, GraphOptionsHook
   Infrastructure/
     Rrd/             PipeEncoder, LocalRrdtool, ProxyRrdtool, RrdXmlEditor, ErrorImage
     Persistence/     DBAL readers for the web rendering path
     Legacy/          LegacyDataSources for the collector path; RrdBridge;
-                     LegacyRenderContextFactory, LegacyGraphDefinitions,
+                     LegacyRenderContextFactory, LegacyGraphDefinitions, LegacyDataSourcePaths,
                      LegacyGraphRequestFactory, LegacyGraphOptionsHook,
                      LegacyRenderOutput, BoostImageCache, LegacyPendingSamples
     Symfony/         Graph image and JSON controllers; the graph voter
@@ -45,7 +45,13 @@ PR #314 creates the module with the `DeviceTreePlacement` contract. The RRD
 slices add to that module and do not change the contract.
 
 `RrdTransport` is a port because it has two real implementations: the local
-`rrdtool -` pipe and the RRDtool proxy. Other classes get no interface unless a
+`rrdtool -` pipe and the RRDtool proxy. Its calls also take an explicit
+`RrdExecutionContext` derived from the captured viewer context: effective `TZ`,
+command-specific `LANG`, and `RRD_DEFAULT_FONT`. Local children receive those
+values through an explicit process environment. Proxy font settings use its
+existing supported `setenv` contract; remote graph rendering stays blocked
+until the existing interoperability and remote environment gates pass. R7
+requires real-child environment and sequential-viewer isolation checks. Other classes get no interface unless a
 second implementation or a module boundary needs one.
 
 ## Slices
