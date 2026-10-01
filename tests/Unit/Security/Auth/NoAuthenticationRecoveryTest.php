@@ -142,3 +142,30 @@ test('the final admin-name fallback rejects an ineligible account', function (st
     $result = auth_entry_probe_run(array('config' => array('auth_method' => 0, 'admin_user' => 99), 'users' => array($admin), 'realms' => array()));
     expect(no_auth_updates($result))->toBe(array());
 })->with(array(array('', 0), array('on', 1)));
+
+
+test('recovery rejects empty or locked credentials in every candidate path', function (string $path, string $password, string $locked) {
+    $bad = no_auth_admin(5);
+    $bad['password'] = $password;
+    $bad['locked'] = $locked;
+    if ($path === 'final') {
+        $bad['username'] = 'admin';
+    }
+    $scenario = array('config' => array('auth_method' => 0, 'admin_user' => $path === 'configured' ? 5 : 99), 'users' => array($bad, no_auth_admin(7)), 'realms' => array(array(7, 15)));
+    if ($path === 'direct') {
+        $scenario['realms'][] = array(5, 15);
+    }
+    if ($path === 'group') {
+        $scenario += array('groups' => array(array(4, 'on')), 'group_members' => array(array(4, 5)), 'group_realms' => array(array(4, 15)));
+    }
+    if ($path === 'final') {
+        $scenario['realms'] = array();
+        $scenario['users'] = array($bad);
+    }
+    $result = auth_entry_probe_run($scenario);
+    if ($path === 'final') {
+        expect(no_auth_updates($result))->toBe(array());
+    } else {
+        expect(array_map('strval', no_auth_updates($result)[0]['params']))->toBe(array('7'));
+    }
+})->with(array('configured', 'direct', 'group', 'final'))->with(array(array('', ''), array('stored-hash', 'on')));

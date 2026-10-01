@@ -47,6 +47,8 @@ test('a token with a non-numeric time is refused without a PHP error', function 
         ->and($result['stdout'])->toBe('403');
 })->with(array(
     'letters' => 'sid:abc,later',
+    'implicit sid with letters' => 'abc,later',
+    'implicit sid with empty time' => 'abc,',
     'empty time' => 'sid:abc,',
     'signed time' => 'sid:abc,-1',
     'second of two tokens' => 'sid:abc,1700000000;ip:def,soon',
