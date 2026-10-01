@@ -42,10 +42,12 @@ final class LinkListController
             $saved = $filters;
             unset($saved['limit']);
             $preferences->save($saved);
+            $page = $list($filters);
+        } catch (LinkAccessDenied $error) {
+            return new Response($translator->trans('Access denied.', [], 'navigation'), $error->unauthenticated ? 401 : 403, $headers);
         } catch (\InvalidArgumentException $error) {
             return new Response($translator->trans($error->getMessage(), [], 'navigation'), 400, $headers);
         }
-        $page = $list($filters);
         return new Response($twig->render('navigation/links.html.twig', ['links' => $page['links'], 'filters' => $filters, 'total' => $page['total'], 'viewPath' => $request->getBasePath() . '/link.php']), 200, $headers);
     }
 }

@@ -49,10 +49,10 @@ final class LinkEditController
         }
         try {
             $access->authorize();
+            $snapshot = $list();
         } catch (LinkAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'navigation'), $error->unauthenticated ? 401 : 403, $headers);
         }
-        $snapshot = $list();
         $link = null;
         $sections = [];
         foreach ($snapshot['links'] as $item) {
