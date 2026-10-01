@@ -105,6 +105,8 @@ if ($config['poller_id'] == 1) {
 
 	authcache_purge();
 
+	login_throttle_purge();
+
 	secpass_check_expired();
 
 	secpass_report_legacy_hashes();
@@ -251,6 +253,14 @@ function authcache_purge() {
 	} else {
 		db_execute('TRUNCATE TABLE user_auth_cache');
 	}
+}
+
+/* the longest throttle window is an hour, so an older count can no longer
+   refuse a login; this also clears counts left after throttling is turned off */
+function login_throttle_purge() {
+	db_execute_prepared('DELETE FROM user_auth_throttle
+		WHERE window_start < ?',
+		array(time() - 3600));
 }
 
 function rrdfile_purge($force) {

@@ -237,6 +237,10 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 					exit;
 				}
 
+				if (!$guest_user) {
+					auth_login_throttle_release();
+				}
+
 				/* Mint a persistent credential only after the login transition succeeds. */
 				if ($auth_method != 2 && $user['id'] !== get_guest_account()
 					&& isset_request_var('remember_me')

@@ -3715,6 +3715,129 @@ function auth_process_lockout($username, $realm) {
 }
 
 /**
+ * auth_login_throttle_keys - the throttle counters a login attempt belongs
+ *   to: the client address, with IPv6 grouped by /64 so one host cannot
+ *   rotate through its own prefix, and the login name in its realm.  Names
+ *   are lowercased because user_auth compares them without case.  Keys are
+ *   hashed so the table holds no login names.
+ *
+ * @param  (string) $username - the submitted login name
+ * @param  (int)    $realm    - the realm the attempt is checked against
+ *
+ * @return (array)  'addr' and 'login' keys
+ */
+function auth_login_throttle_keys($username, $realm) {
+	$addr   = get_client_addr();
+	$packed = @inet_pton($addr);
+
+	if ($packed !== false && strlen($packed) == 16 && substr($packed, 0, 12) !== str_repeat("\0", 10) . "\xff\xff") {
+		$addr = bin2hex(substr($packed, 0, 8)) . '/64';
+	}
+
+	return array(
+		'addr'  => hash('sha256', 'addr|' . $addr),
+		'login' => hash('sha256', 'login|' . intval($realm) . '|' . mb_strtolower((string) $username, 'UTF-8')),
+	);
+}
+
+/**
+ * auth_login_throttle_check - when login throttling is on, counts this
+ *   attempt against the client address and the login name before any
+ *   password check or directory call, and refuses it once either count is
+ *   over its limit, even when the password is correct.  The count is taken
+ *   first and read back, so parallel requests cannot all pass under the
+ *   limit.  A successful login gives its count back through
+ *   auth_login_throttle_release().
+ *
+ *   With throttling off, nothing is read or written.
+ *
+ * @param  (string) $username - the submitted login name
+ * @param  (int)    $realm    - the realm the attempt is checked against
+ *
+ * @return (bool)   true if the attempt is refused
+ */
+function auth_login_throttle_check($username, $realm) {
+	global $error, $error_msg, $auth_login_throttle_held;
+
+	$auth_login_throttle_held = array();
+
+	if (read_config_option('secpass_throttle') != 'on') {
+		return false;
+	}
+
+	$now    = time();
+	$window = max(1, intval(read_config_option('secpass_throttle_window'))) * 60;
+	$limits = array(
+		'addr'  => max(1, intval(read_config_option('secpass_throttle_addr'))),
+		'login' => max(1, intval(read_config_option('secpass_throttle_login')))
+	);
+
+	$refused = false;
+
+	foreach (auth_login_throttle_keys($username, $realm) as $type => $key) {
+		db_execute_prepared('INSERT INTO user_auth_throttle
+			(id, failures, window_start)
+			VALUES (?, 1, ?)
+			ON DUPLICATE KEY UPDATE
+			failures = IF(window_start <= ?, 1, failures + 1),
+			window_start = IF(window_start <= ?, VALUES(window_start), window_start)',
+			array($key, $now, $now - $window, $now - $window));
+
+		$auth_login_throttle_held[$type] = $key;
+
+		$failures = db_fetch_cell_prepared('SELECT failures
+			FROM user_auth_throttle
+			WHERE id = ?',
+			array($key));
+
+		if ($failures > $limits[$type]) {
+			$refused = true;
+		}
+	}
+
+	if ($refused) {
+		$error     = true;
+		$error_msg = __('Too many failed login attempts.  Please try again later.');
+
+		cacti_log(sprintf("LOGIN FAILED: Too many failed login attempts for user '%s' from IP Address '%s'.  Login throttled.", auth_log_username($username), get_client_addr()), false, 'AUTH');
+	}
+
+	return $refused;
+}
+
+/**
+ * auth_login_throttle_release - after a successful login, clears the count
+ *   for the login name and takes this attempt back off the address count.
+ *   Only the attempt's own count is returned, so one valid account cannot
+ *   clear the address count for guesses against others.
+ *
+ * @return (void)
+ */
+function auth_login_throttle_release() {
+	global $auth_login_throttle_held;
+
+	if (empty($auth_login_throttle_held)) {
+		return;
+	}
+
+	if (isset($auth_login_throttle_held['login'])) {
+		db_execute_prepared('DELETE FROM user_auth_throttle
+			WHERE id = ?',
+			array($auth_login_throttle_held['login']));
+	}
+
+	if (isset($auth_login_throttle_held['addr'])) {
+		db_execute_prepared('UPDATE user_auth_throttle
+			SET failures = failures - 1
+			WHERE id = ?
+			AND failures > 0',
+			array($auth_login_throttle_held['addr']));
+	}
+
+	$auth_login_throttle_held = array();
+}
+
+/**
  * basic_auth_login_process - login a basic auth account or generate an error
  *   if there is an error, the globals error and error_msg will be set to notify the caller
  *   that a lockout is present and not to proceed with login.  This function will also
@@ -3770,6 +3893,10 @@ function local_auth_login_process($username) {
 	$user = array();
 
 	if (!api_plugin_hook_function('login_process', false)) {
+		if (auth_login_throttle_check($username, 0)) {
+			return array();
+		}
+
 		/* refuse before any hashing; legitimate passwords are far shorter */
 		if (auth_password_too_long(get_nfilter_request_var('login_password'))) {
 			$error     = true;
@@ -3849,6 +3976,10 @@ function ldap_login_process($username) {
 
 		cacti_log('LOGIN FAILED: Empty LDAP Username provided', false, 'AUTH');
 
+		return array();
+	}
+
+	if (auth_login_throttle_check($username, 3)) {
 		return array();
 	}
 
@@ -3943,6 +4074,10 @@ function domains_login_process($username) {
 
 		cacti_log(sprintf("LOGIN FAILED: Unknown Login Realm '%s' provided for user '%s' from IP address %s", $realm, auth_log_username($username), get_client_addr()), false, 'AUTH');
 
+		return array();
+	}
+
+	if (auth_login_throttle_check($username, $realm)) {
 		return array();
 	}
 
