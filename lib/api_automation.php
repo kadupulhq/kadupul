@@ -1979,7 +1979,7 @@ function automation_string_replace($search, $replace, $target)
     $target = (string) $target;
     $delimiter = null;
 
-    foreach (array('~', '#', '%', '!', '@', ';', '`', '=', '_', '/') as $candidate) {
+    foreach (array('~', '#', '%', '!', '@', ';', '`', '/') as $candidate) {
         if (strpos($search, $candidate) === false) {
             $delimiter = $candidate;
 

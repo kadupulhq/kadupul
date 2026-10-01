@@ -27,6 +27,8 @@ final class AutomationTreeReplacementNativeTest extends TestCase
         return array(
             'case insensitive' => array(array('search' => 'host-[0-9]+', 'replace' => 'Device', 'target' => 'HOST-17'), array('Device'), ''),
             'delimiter' => array(array('search' => 'sensor~[0-9]+', 'replace' => 'disk', 'target' => 'sensor~3'), array('disk'), ''),
+            'directive equals delimiter' => array(array('search' => '^[~#%!@;`]+$', 'replace' => 'matched', 'target' => '~#%!@;`'), array('matched'), ''),
+            'directive underscore delimiter' => array(array('search' => '^[~#%!@;`=]+$', 'replace' => 'matched', 'target' => '~#%!@;`='), array('matched'), ''),
             'rare delimiter' => array(array('search' => '^[~#%!@;`=/_]+$', 'replace' => 'matched', 'target' => '~#%!@;`=/_'), array('matched'), ''),
             'no delimiter' => array(array('search' => '^[~#%!@;`=/_' . chr(127) . ']+$', 'replace' => 'x', 'target' => 'y'), array(), 'no available delimiter'),
             'invalid' => array(array('search' => '(', 'replace' => 'x', 'target' => 'y'), array(), 'Internal error'),
