@@ -1,0 +1,11 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_contentfile\"",
+        "select id=\"contentfile\" name=\"contentfile\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

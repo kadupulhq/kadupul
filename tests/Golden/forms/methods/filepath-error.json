@@ -1,0 +1,15 @@
+{
+    "session": {
+        "sess_field_values": {
+            "found": "<DIR>/bin/tool"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_found\"",
+        "input type=\"text\" id=\"found\" name=\"found\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

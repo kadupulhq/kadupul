@@ -1,0 +1,15 @@
+{
+    "session": {
+        "sess_field_values": {
+            "choice": "2"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_choice\"",
+        "select id=\"choice\" name=\"choice\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

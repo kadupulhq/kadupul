@@ -1,0 +1,15 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_go\"",
+        "input type=\"submit\" id=\"go\" name=\"go\"",
+        "div id=\"row_save\"",
+        "input type=\"submit\" id=\"save\" name=\"save\""
+    ],
+    "script_ids": [
+        "save"
+    ],
+    "script_names": []
+}

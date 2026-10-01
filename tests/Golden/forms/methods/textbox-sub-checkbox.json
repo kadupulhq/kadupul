@@ -1,0 +1,12 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_name\"",
+        "input type=\"checkbox\" id=\"name_enabled\" name=\"name_enabled\"",
+        "input type=\"text\" id=\"name\" name=\"name\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

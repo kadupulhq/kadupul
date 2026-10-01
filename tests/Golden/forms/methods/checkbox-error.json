@@ -1,0 +1,15 @@
+{
+    "session": {
+        "sess_field_values": {
+            "stored_off": "on"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_stored_off\"",
+        "input type=\"checkbox\" id=\"stored_off\" name=\"stored_off\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

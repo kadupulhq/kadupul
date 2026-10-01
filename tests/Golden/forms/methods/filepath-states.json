@@ -1,0 +1,17 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_found\"",
+        "input type=\"text\" id=\"found\" name=\"found\"",
+        "div id=\"row_directory\"",
+        "input type=\"text\" id=\"directory\" name=\"directory\"",
+        "div id=\"row_missing\"",
+        "input type=\"text\" id=\"missing\" name=\"missing\"",
+        "div id=\"row_empty\"",
+        "input type=\"text\" id=\"empty\" name=\"empty\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

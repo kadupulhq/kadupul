@@ -1,0 +1,22 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [
+        "<TIME> - CMDPHP ERROR: Field Name: no_value includes Method: other does not include a value 'value' element."
+    ],
+    "elements": [
+        "div id=\"row_other_field\"",
+        "input type=\"hidden\" id=\"other_field\" name=\"other_field\"",
+        "div id=\"row_view_field\"",
+        "input type=\"hidden\" id=\"view_field\" name=\"view_field\"",
+        "div id=\"row_value_field\"",
+        "input type=\"hidden\" id=\"value_field\" name=\"value_field\"",
+        "div id=\"row_template_textbox\"",
+        "input type=\"hidden\" id=\"template_textbox\" name=\"template_textbox\"",
+        "div id=\"row_plugin_widget\"",
+        "input type=\"hidden\" id=\"plugin_widget\" name=\"plugin_widget\"",
+        "div id=\"row_no_value\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

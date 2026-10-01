@@ -1,0 +1,13 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_plain_header\"",
+        "div id=\"row_collapsible_header\"",
+        "div id=\"row_after\"",
+        "input type=\"text\" id=\"after\" name=\"after\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

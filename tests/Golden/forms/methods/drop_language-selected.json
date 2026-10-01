@@ -1,0 +1,15 @@
+{
+    "session": {
+        "form_change_actions": {
+            "user_language": "languageChanged()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_user_language\"",
+        "select id=\"user_language\" name=\"user_language\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

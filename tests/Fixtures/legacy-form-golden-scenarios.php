@@ -1,0 +1,259 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+// Scenarios for tests/Unit/Forms/LegacyFormGoldenTest.php.
+//
+// 'methods' draws field arrays through draw_edit_form(), one or more per
+// field method used on main plus the generated and fallback ones.
+
+$description = 'Plain text, <b>bold</b> & <script>alert(1)</script>a <a href="https://example.com/">link</a>.';
+$special = "a'b\"c<d>&e";
+
+$field = static function (string $method, array $extra = array()) use ($description): array {
+    return $extra + array('method' => $method, 'friendly_name' => 'Field ' . $method, 'description' => $description);
+};
+
+$form = static function (array $fields, array $config = array('no_form_tag' => true)): array {
+    return array('config' => $config, 'fields' => $fields);
+};
+
+$methods = array(
+    'textbox-default' => array('form' => $form(array(
+        'name' => $field('textbox', array('value' => '', 'default' => 'Default value', 'max_length' => '50')),
+        'no_limit' => $field('textbox', array('value' => '', 'max_length' => '', 'size' => '20')),
+    ))),
+    'textbox-stored' => array('form' => $form(array(
+        'name' => $field('textbox', array('value' => $special, 'default' => 'Default value', 'max_length' => '50', 'size' => '30', 'form_id' => '1', 'placeholder' => 'Enter <name>')),
+        'empty_saved' => $field('textbox', array('value' => '', 'default' => 'Default value', 'max_length' => '10', 'form_id' => '1')),
+    ))),
+    'textbox-error' => array(
+        'form' => $form(array('name' => $field('textbox', array('value' => 'saved', 'max_length' => '50', 'form_id' => '1')))),
+        'session' => array('sess_error_fields' => array('name' => 'name'), 'sess_field_values' => array('name' => "submitted'<")),
+    ),
+    'textbox-sub-checkbox' => array('form' => $form(array(
+        'name' => $field('textbox', array('value' => 'saved', 'max_length' => '50', 'form_id' => '1', 'sub_checkbox' => array('name' => 'name_enabled', 'value' => 'on', 'friendly_name' => 'Enabled'))),
+    ))),
+    'textbox_password-stored' => array('form' => $form(array(
+        'secret' => $field('textbox_password', array('value' => 'stored-secret', 'default' => '', 'max_length' => '64', 'size' => '20', 'form_id' => '1')),
+    ))),
+    'textbox_password-error' => array(
+        'form' => $form(array('secret' => $field('textbox_password', array('value' => 'stored-secret', 'max_length' => '64', 'form_id' => '1')))),
+        'session' => array('sess_error_fields' => array('secret' => 'secret', 'secret_confirm' => 'secret_confirm'), 'sess_field_values' => array('secret' => 'typed', 'secret_confirm' => 'mistyped')),
+    ),
+    'textarea-default' => array('form' => $form(array(
+        'notes' => $field('textarea', array('value' => '', 'default' => "line 1\nline 2", 'textarea_rows' => '4', 'textarea_cols' => '50')),
+    ))),
+    'textarea-stored' => array('form' => $form(array(
+        'notes' => $field('textarea', array('value' => $special . "\n</textarea>", 'textarea_rows' => '3', 'textarea_cols' => '40', 'class' => 'monoSpace', 'on_change' => 'notesChanged()', 'placeholder' => 'Notes')),
+    ))),
+    'textarea-error' => array(
+        'form' => $form(array('notes' => $field('textarea', array('value' => 'saved', 'textarea_rows' => '3', 'textarea_cols' => '40')))),
+        'session' => array('sess_error_fields' => array('notes' => 'notes'), 'sess_field_values' => array('notes' => 'submitted')),
+    ),
+    'drop_array-selected' => array('form' => $form(array(
+        'choice' => $field('drop_array', array('value' => '2', 'array' => array('1' => 'One', '2' => 'Two & <2>', 'x' => $special))),
+    ))),
+    'drop_array-default' => array('form' => $form(array(
+        'choice' => $field('drop_array', array('value' => '', 'default' => 'x', 'array' => array('1' => 'One', 'x' => 'Ex'), 'class' => 'wide', 'on_change' => 'choiceChanged()')),
+        'with_none' => $field('drop_array', array('value' => '0', 'none_value' => 'None', 'array' => array('1' => 'One'))),
+    ))),
+    'drop_array-error' => array(
+        'form' => $form(array('choice' => $field('drop_array', array('value' => '1', 'array' => array('1' => 'One', '2' => 'Two'))))),
+        'session' => array('sess_error_fields' => array('choice' => 'choice'), 'sess_field_values' => array('choice' => '2')),
+    ),
+    'drop_sql-selected' => array(
+        'form' => $form(array(
+            'host_id' => $field('drop_sql', array('value' => '7', 'none_value' => 'None', 'sql' => 'SELECT id, description AS name FROM host ORDER BY name')),
+            'empty_list' => $field('drop_sql', array('value' => '', 'default' => '0', 'sql' => 'SELECT id, name FROM site ORDER BY name')),
+        )),
+        'db' => array(array('sql' => 'FROM host ORDER BY name', 'rows' => array(array('id' => '3', 'name' => 'Router <3>'), array('id' => '7', 'name' => $special)))),
+    ),
+    'drop_sql-error' => array(
+        'form' => $form(array('host_id' => $field('drop_sql', array('value' => '3', 'class' => 'hosts', 'on_change' => 'hostChanged()', 'sql' => 'SELECT id, description AS name FROM host ORDER BY name')))),
+        'db' => array(array('sql' => 'FROM host ORDER BY name', 'rows' => array(array('id' => '3', 'name' => 'Three'), array('id' => '7', 'name' => 'Seven')))),
+        'session' => array('sess_error_fields' => array('host_id' => 'host_id'), 'sess_field_values' => array('host_id' => '7')),
+    ),
+    'drop_callback-autocomplete' => array('form' => $form(array(
+        'host_id' => $field('drop_callback', array('value' => $special, 'id' => '7', 'none_value' => 'None', 'action' => 'ajax_hosts', 'on_change' => 'hostChanged()', 'sql' => 'SELECT id, description AS name FROM host ORDER BY name')),
+        'site_id' => $field('drop_callback', array('value' => '', 'id' => '0', 'none_value' => 'Any', 'action' => 'ajax_sites', 'sql' => 'SELECT id, name FROM sites ORDER BY name')),
+    ))),
+    'drop_callback-classic' => array(
+        'form' => $form(array('host_id' => $field('drop_callback', array('value' => 'Seven', 'id' => '7', 'none_value' => 'None', 'action' => 'ajax_hosts', 'sql' => 'SELECT id, description AS name FROM host ORDER BY name')))),
+        'settings' => array('selected_theme' => 'classic'),
+        'db' => array(array('sql' => 'FROM host ORDER BY name', 'rows' => array(array('id' => '3', 'name' => 'Three'), array('id' => '7', 'name' => 'Seven')))),
+    ),
+    'drop_multi-values' => array(
+        'form' => $form(array(
+            'listed' => $field('drop_multi', array('value' => '1,3', 'array' => array('1' => 'One', '2' => 'Two', '3' => 'Three & <3>'))),
+            'from_sql' => $field('drop_multi', array('array' => array('1' => 'One', '2' => 'Two'), 'sql' => 'SELECT id FROM user_auth_group_members WHERE user_id = 1')),
+            'from_settings' => $field('drop_multi', array('value' => '', 'array' => array('a' => 'A', 'b' => 'B'), 'class' => 'ignored', 'on_change' => 'multiChanged()')),
+        )),
+        'db' => array(array('sql' => 'FROM user_auth_group_members', 'rows' => array(array('id' => '2')))),
+    ),
+    'drop_tree-selected' => array(
+        'form' => $form(array('parent_item_id' => $field('drop_tree', array('value' => '12', 'tree_id' => '4')))),
+        'require' => array('lib/html_tree.php'),
+        'db' => array(
+            array('sql' => 'FROM graph_tree_items AS gti WHERE gti.graph_tree_id = ?', 'params' => array(4, 0), 'rows' => array(array('id' => '11', 'title' => 'Branch <A>', 'parent' => '0'))),
+            array('sql' => 'FROM graph_tree_items AS gti WHERE gti.graph_tree_id = ?', 'params' => array(4, 11), 'rows' => array(array('id' => '12', 'title' => 'Leaf', 'parent' => '11'))),
+        ),
+    ),
+    'drop_color-selected' => array(
+        'form' => $form(array(
+            'color_id' => $field('drop_color', array('value' => '9', 'on_change' => 'colorChanged()')),
+            'other_color' => $field('drop_color', array('value' => '', 'default' => '0', 'class' => 'small')),
+        )),
+        'db' => array(
+            array('sql' => 'SELECT hex FROM colors WHERE id = ?', 'params' => array(9), 'rows' => array(array('hex' => 'FF0000'))),
+            array('sql' => 'FROM colors ORDER BY', 'rows' => array(array('id' => '5', 'hex' => 'FFFFFF', 'name' => 'White'), array('id' => '9', 'hex' => 'FF0000', 'name' => ''))),
+        ),
+    ),
+    'drop_language-selected' => array('form' => $form(array(
+        'user_language' => $field('drop_language', array('value' => 'de-DE', 'default' => 'en-US', 'on_change' => 'languageChanged()')),
+    ))),
+    'drop_files-listed' => array(
+        'form' => $form(array('contentfile' => $field('drop_files', array('value' => 'b.html', 'none_value' => 'None', 'directory' => '<DIR>/content', 'exclusions' => array('skip.html'))))),
+        'files' => array('content/a.html', 'content/b.html', 'content/skip.html'),
+    ),
+    'checkbox-states' => array('form' => $form(array(
+        'stored_on' => $field('checkbox', array('value' => 'on', 'default' => '', 'form_id' => '1')),
+        'stored_off' => $field('checkbox', array('value' => '', 'default' => 'on', 'form_id' => '1')),
+        'default_on' => $field('checkbox', array('value' => '', 'default' => 'on', 'class' => 'extra', 'on_change' => 'toggled()')),
+    ))),
+    'checkbox-error' => array(
+        'form' => $form(array('stored_off' => $field('checkbox', array('value' => '', 'form_id' => '1')))),
+        'session' => array('sess_error_fields' => array('stored_off' => 'stored_off'), 'sess_field_values' => array('stored_off' => 'on')),
+    ),
+    'checkbox_group-plain' => array('form' => $form(array(
+        'options' => $field('checkbox_group', array('items' => array(
+            'option_a' => array('value' => 'on', 'friendly_name' => 'Option <A>', 'form_id' => '1'),
+            'option_b' => array('value' => '', 'friendly_name' => 'Option B', 'default' => 'on', 'on_change' => 'optionB()'),
+        ))),
+    ))),
+    'checkbox_group-flex' => array('form' => $form(array(
+        'options' => $field('checkbox_group', array('type' => 'flex', 'class' => 'grouped', 'on_change' => 'groupChanged()', 'items' => array(
+            'option_a' => array('value' => '', 'friendly_name' => 'Option A', 'form_id' => '1'),
+            'option_b' => array('value' => 'on', 'friendly_name' => 'Option B', 'form_id' => '1'),
+        ))),
+    ))),
+    'radio-selected' => array('form' => $form(array(
+        'mode' => $field('radio', array('value' => '2', 'default' => '1', 'on_change' => 'modeChanged()', 'items' => array(
+            array('radio_value' => '1', 'radio_caption' => 'First <1>'),
+            array('radio_value' => '2', 'radio_caption' => 'Second'),
+        ))),
+        'fallback' => $field('radio', array('value' => '', 'default' => 'b', 'class' => 'radios', 'items' => array(
+            array('radio_value' => 'a', 'radio_caption' => 'A'),
+            array('radio_value' => 'b', 'radio_caption' => 'B'),
+        ))),
+    ))),
+    'spacer-headers' => array('form' => $form(array(
+        'plain_header' => array('method' => 'spacer', 'friendly_name' => 'Header <one>'),
+        'collapsible_header' => array('method' => 'spacer', 'friendly_name' => 'Header two', 'collapsible' => 'true', 'description' => $description),
+        'after' => $field('textbox', array('value' => 'x', 'max_length' => '5')),
+    ))),
+    'hidden-values' => array('form' => $form(array(
+        'id' => array('method' => 'hidden', 'value' => $special),
+        'from_default' => array('method' => 'hidden', 'default' => 'fallback'),
+        'missing' => array('method' => 'hidden'),
+        'empty_with_default' => array('method' => 'hidden', 'value' => '', 'default' => 'used'),
+    ))),
+    'hidden_zero-values' => array('form' => $form(array(
+        'local_graph_id' => array('method' => 'hidden_zero', 'value' => '42'),
+        'missing' => array('method' => 'hidden_zero'),
+        'empty' => array('method' => 'hidden_zero', 'value' => ''),
+    ))),
+    'filepath-states' => array(
+        'form' => $form(array(
+            'found' => $field('filepath', array('value' => '<DIR>/bin/tool', 'max_length' => '255', 'form_id' => '1')),
+            'directory' => $field('filepath', array('value' => '<DIR>/bin', 'max_length' => '255', 'form_id' => '1')),
+            'missing' => $field('filepath', array('value' => '<DIR>/bin/none', 'max_length' => '', 'size' => '60', 'form_id' => '1')),
+            'empty' => $field('filepath', array('value' => '', 'default' => '', 'max_length' => '255')),
+        )),
+        'files' => array('bin/tool'),
+    ),
+    'filepath-error' => array(
+        'form' => $form(array('found' => $field('filepath', array('value' => 'saved', 'max_length' => '255', 'form_id' => '1')))),
+        'session' => array('sess_error_fields' => array('found' => 'found'), 'sess_field_values' => array('found' => '<DIR>/bin/tool')),
+        'files' => array('bin/tool'),
+    ),
+    'dirpath-states' => array(
+        'form' => $form(array(
+            'found' => $field('dirpath', array('value' => '<DIR>/rra', 'max_length' => '255', 'form_id' => '1')),
+            'file' => $field('dirpath', array('value' => '<DIR>/rra/file', 'max_length' => '255', 'form_id' => '1')),
+            'missing' => $field('dirpath', array('value' => '<DIR>/none', 'max_length' => '255', 'form_id' => '1')),
+            'empty' => $field('dirpath', array('value' => '', 'max_length' => '255')),
+        )),
+        'files' => array('rra/file'),
+    ),
+    'dirpath-error' => array(
+        'form' => $form(array('found' => $field('dirpath', array('value' => 'saved', 'max_length' => '255', 'form_id' => '1')))),
+        'session' => array('sess_error_fields' => array('found' => 'found'), 'sess_field_values' => array('found' => '<DIR>')),
+    ),
+    'font-states' => array('form' => $form(array(
+        'title_font' => $field('font', array('value' => 'DejaVu Sans Bold 10', 'max_length' => '100', 'form_id' => '1', 'placeholder' => 'Font')),
+        'legend_font' => $field('font', array('value' => '', 'default' => '', 'max_length' => '100', 'size' => '25')),
+    ))),
+    'font-error' => array(
+        'form' => $form(array('title_font' => $field('font', array('value' => 'saved', 'max_length' => '100', 'form_id' => '1')))),
+        'session' => array('sess_error_fields' => array('title_font' => 'title_font'), 'sess_field_values' => array('title_font' => 'Submitted 12')),
+    ),
+    'file-upload' => array('form' => $form(array(
+        'import_file' => $field('file', array('accept' => '.xml,.gz', 'size' => '50')),
+        'plain_file' => $field('file'),
+    ))),
+    'file-error' => array(
+        'form' => $form(array('import_file' => $field('file', array('accept' => '.xml')))),
+        'session' => array('sess_error_fields' => array('import_file' => 'import_file')),
+    ),
+    // A button's click handler is the only thing that makes draw_edit_form()
+    // print the queued change handlers; see the form_change_action check.
+    'button-click-and-change' => array('form' => $form(array(
+        'choice' => $field('drop_array', array('value' => '1', 'array' => array('1' => 'One'), 'on_change' => 'choiceChanged()')),
+        'refresh' => $field('button', array('value' => 'Refresh <now>', 'title' => 'Reload "list"', 'on_click' => 'refreshList()')),
+        'plain' => $field('button', array('value' => 'Plain')),
+    ))),
+    'submit-button' => array('form' => $form(array(
+        'go' => $field('submit', array('value' => 'Go & see', 'title' => 'Apply')),
+        'save' => $field('submit', array('value' => 'Save', 'on_click' => 'saveClicked()')),
+    ))),
+    'display-only-methods' => array('form' => $form(array(
+        'other_field' => $field('other', array('value' => $special)),
+        'view_field' => $field('view', array('value' => 'Viewed')),
+        'value_field' => $field('value', array('value' => '0')),
+        'template_textbox' => $field('template_textbox', array('value' => 'From template')),
+        'plugin_widget' => $field('plugin_widget', array('value' => 'Plugin value')),
+        'no_value' => $field('other'),
+    ))),
+    'template-methods' => array('form' => $form(array(
+        'template_checkbox' => $field('template_checkbox', array('value' => 'on')),
+        'template_checkbox_off' => $field('template_checkbox', array('value' => '')),
+        'template_drop_array' => $field('template_drop_array', array('value' => '2', 'array' => array('1' => 'One', '2' => 'Two <2>'))),
+    ))),
+    'custom-passthrough' => array('form' => $form(array(
+        'custom_field' => $field('custom', array('value' => "<span class='custom'>Raw <b>markup</b></span>")),
+    ))),
+    'config-force-row-color' => array('form' => $form(array(
+        'first' => $field('textbox', array('value' => 'a', 'max_length' => '5')),
+        'second' => $field('textbox', array('value' => 'b', 'max_length' => '5')),
+        'third' => $field('checkbox', array('value' => 'on', 'form_id' => '1')),
+    ), array('no_form_tag' => true, 'force_row_color' => true))),
+    'config-hide-descriptions' => array(
+        'form' => $form(array(
+            'first' => $field('textbox', array('value' => 'a', 'max_length' => '5')),
+            'no_description' => array('method' => 'textbox', 'friendly_name' => 'No description', 'value' => 'b', 'max_length' => '5'),
+        )),
+        'settings' => array('hide_form_description' => 'on'),
+    ),
+    // Plugins may still let draw_edit_form() open its own form.
+    'config-own-form-tag' => array('form' => $form(array(
+        'name' => $field('textbox', array('value' => 'x', 'max_length' => '5')),
+    ), array('post_to' => "plugin.php?a=1&b='2'", 'form_name' => 'plugin_form', 'enctype' => 'multipart/form-data'))),
+    'config-own-form-tag-default' => array(
+        'form' => $form(array('name' => $field('textbox', array('value' => 'x', 'max_length' => '5'))), array()),
+        'page' => 'plugin_page.php',
+    ),
+);
+
+return array('methods' => $methods);

@@ -1,0 +1,13 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_first\"",
+        "input type=\"text\" id=\"first\" name=\"first\"",
+        "div id=\"row_no_description\"",
+        "input type=\"text\" id=\"no_description\" name=\"no_description\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

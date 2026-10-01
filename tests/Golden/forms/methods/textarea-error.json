@@ -1,0 +1,15 @@
+{
+    "session": {
+        "sess_field_values": {
+            "notes": "submitted"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_notes\"",
+        "textarea id=\"notes\" name=\"notes\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

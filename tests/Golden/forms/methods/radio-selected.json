@@ -1,0 +1,20 @@
+{
+    "session": {
+        "form_change_actions": {
+            "mode_1": "modeChanged()",
+            "mode_2": "modeChanged()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_mode\"",
+        "input type=\"radio\" id=\"mode_1\" name=\"mode\"",
+        "input type=\"radio\" id=\"mode_2\" name=\"mode\"",
+        "div id=\"row_fallback\"",
+        "input type=\"radio\" id=\"fallback_a\" name=\"fallback\"",
+        "input type=\"radio\" id=\"fallback_b\" name=\"fallback\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

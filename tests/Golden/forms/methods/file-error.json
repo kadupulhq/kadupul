@@ -1,0 +1,11 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_import_file\"",
+        "input type=\"file\" id=\"import_file\" name=\"import_file\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

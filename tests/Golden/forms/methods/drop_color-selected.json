@@ -1,0 +1,18 @@
+{
+    "session": {
+        "form_change_actions": {
+            "color_id": "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;colorChanged()",
+            "other_color": "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_color_id\"",
+        "select id=\"color_id\" name=\"color_id\"",
+        "div id=\"row_other_color\"",
+        "select id=\"other_color\" name=\"other_color\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

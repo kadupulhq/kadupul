@@ -1,0 +1,12 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "form name=\"plugin_form\"",
+        "div id=\"row_name\"",
+        "input type=\"text\" id=\"name\" name=\"name\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

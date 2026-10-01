@@ -1,0 +1,18 @@
+{
+    "session": {
+        "form_change_actions": {
+            "option_a": "groupChanged()",
+            "option_b": "groupChanged()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_options\"",
+        "div id=\"options_group\"",
+        "input type=\"checkbox\" id=\"option_a\" name=\"option_a\"",
+        "input type=\"checkbox\" id=\"option_b\" name=\"option_b\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}

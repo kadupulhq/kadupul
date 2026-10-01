@@ -1,0 +1,18 @@
+{
+    "session": {
+        "form_change_actions": {
+            "host_id": "hostChanged()"
+        },
+        "sess_field_values": {
+            "host_id": "7"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "div id=\"row_host_id\"",
+        "select id=\"host_id\" name=\"host_id\""
+    ],
+    "script_ids": [],
+    "script_names": []
+}
