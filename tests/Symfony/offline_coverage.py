@@ -53,21 +53,27 @@ def main():
             elif result.returncode == 0 or error not in result.stdout + result.stderr:
                 raise RuntimeError('Expected failure was not observed: ' + error + '\n' + result.stdout + result.stderr)
 
+        def remove_fixture(relative):
+            # Remove fixtures through the verifier's filesystem view. Host
+            # unlink can leave stale bind-mount metadata on Docker Desktop.
+            execute('-r', arguments=[
+                'if (!unlink($argv[1])) { throw new RuntimeException("Cannot remove offline fixture"); }',
+                relative,
+            ])
+
         execute('tools/verify-offline.php')
         execute('tools/dependencies/install-legacy.php')
         manifest_path = stage / 'tools/dependencies/legacy-files.json'
         manifest = json.loads(manifest_path.read_text())
         selected = next(iter(manifest['files']))
-        # Mutate the repair fixture through the same Docker filesystem as the
-        # verifier, avoiding stale host-unlink metadata on Docker Desktop.
-        execute('-r', arguments=[f'if (!unlink({json.dumps(selected)})) {{ throw new RuntimeException("Cannot remove dependency repair fixture"); }}'])
+        remove_fixture(selected)
         execute('tools/dependencies/install-legacy.php', network='bridge')
         if hashlib.sha256((stage / selected).read_bytes()).hexdigest() != manifest['files'][selected]:
             raise RuntimeError('Dependency repair produced incorrect bytes')
         execute('tools/verify-offline.php')
         font = stage / 'include/fa/webfonts/fa-solid-900.woff2'
         font_bytes = font.read_bytes()
-        font.unlink()
+        remove_fixture('include/fa/webfonts/fa-solid-900.woff2')
         execute('tools/verify-offline.php', error='Missing offline asset: include/fa/webfonts/fa-solid-900.woff2')
         font.write_bytes(font_bytes)
         icon_css = stage / 'include/fa/css/all.css'
