@@ -692,14 +692,18 @@ class Ldap {
 					*/
 					$filter = cacti_ldap_filter('(|(uid=<dn>)(cn=<dn>)(userPrincipalName=<dn>))', array('dn' => $this->dn));
 					$true_dn_result = ldap_search($ldap_conn, $this->search_base, $filter, array('dn'));
-					$first_entry    = ldap_first_entry($ldap_conn, $true_dn_result);
+					$true_dn_count  = $true_dn_result ? ldap_count_entries($ldap_conn, $true_dn_result) : 0;
 
 					/* we will test in two ways */
-					if ($first_entry !== false) {
+					if ($true_dn_count == 1) {
+						$first_entry = ldap_first_entry($ldap_conn, $true_dn_result);
 						$true_dn     = ldap_get_dn($ldap_conn, $first_entry);
 						$ldap_group_response = ldap_compare($ldap_conn, $this->group_dn, $this->group_attrib, $true_dn);
-					} else {
+					} elseif ($true_dn_count == 0) {
 						$ldap_group_response = ldap_compare($ldap_conn, $this->group_dn, $this->group_attrib, $this->username);
+					} else {
+						/* several entries answer to the bound name; none of them is known to be this user */
+						$ldap_group_response = false;
 					}
 				}
 
