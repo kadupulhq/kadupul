@@ -1086,7 +1086,8 @@ def main():
         with tempfile.TemporaryDirectory(prefix='entry-classifier-gprint-') as directory:
             root = tree(directory)
             files = ['src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php',
-                     'src/Graphing/Application/Query/FindGprintPreset.php']
+                     'src/Graphing/Application/Query/FindGprintPreset.php',
+                     'src/Graphing/Infrastructure/Legacy/GprintPresetSql.php']
             for path in files:
                 (root / path).parent.mkdir(parents=True, exist_ok=True)
                 (root / path).write_text((project / path).read_text())
@@ -1124,6 +1125,12 @@ final class GprintAction {
                 if run(root, []).get('app.php/graphing/gprint-presets', ('missing',))[0] != 'unknown':
                     failures.append('GPRINT changed authorization adapter was still certified')
                 adapter.write_text((project / files[0]).read_text())
+                helper = root / files[2]
+                helper.write_text(helper.read_text().replace("!== '00000'", "=== '00000'"))
+                count += 1
+                if run(root, []).get('app.php/graphing/gprint-presets', ('missing',))[0] != 'unknown':
+                    failures.append('GPRINT changed SQL helper was still certified')
+                helper.write_text((project / files[2]).read_text())
                 alternative = root / 'src/Fixture/OtherGprintAccess.php'
                 alternative.write_text('<?php namespace Kadupul\\Fixture; final class OtherGprintAccess implements \\Kadupul\\Graphing\\Application\\Port\\GprintPresetAccess {}')
                 count += 1

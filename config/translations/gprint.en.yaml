@@ -58,3 +58,4 @@
 "Unable to load GPRINT Preset. Reload before retrying.": "Unable to load GPRINT Preset. Reload before retrying."
 "Unable to prepare GPRINT Preset form.": "Unable to prepare GPRINT Preset form."
 "Unable to prepare GPRINT Preset deletion.": "Unable to prepare GPRINT Preset deletion."
+"Select up to %count% presets from the first %count% rows. Use %count% rows per page or search to select other presets.": "Select up to %count% presets from the first %count% rows. Use %count% rows per page or search to select other presets."

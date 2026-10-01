@@ -27,7 +27,9 @@
         <a href="{{ path('gprint_preset_list', {reset: 1}) }}">{{ 'Clear'|trans({}, 'gprint') }}</a>
     </form>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
-    <form method="get" action="{{ path('gprint_preset_delete', filters) }}">
+    {% set selectionLimit = constant('Kadupul\\Graphing\\Application\\Port\\GprintPresetStore::MAX_DELETE_SELECTION') %}
+    <p id="gprint-selection-help">{{ 'Select up to %count% presets from the first %count% rows. Use %count% rows per page or search to select other presets.'|trans({'%count%': selectionLimit}, 'gprint') }}</p>
+    <form method="get" action="{{ path('gprint_preset_delete', filters) }}" aria-describedby="gprint-selection-help">
         <table>
             <caption>{{ 'GPRINT Presets'|trans({}, 'gprint') }}</caption>
             <thead><tr>
@@ -45,7 +47,7 @@
             <tbody>
             {% for preset in page.presets %}
                 <tr>
-                    <td><input type="checkbox" name="ids[]" value="{{ preset.id }}"{% if not preset.deletable %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': preset.name}, 'gprint') }}"></td>
+                    <td><input type="checkbox" name="ids[]" value="{{ preset.id }}"{% if not preset.deletable or loop.index > selectionLimit %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': preset.name}, 'gprint') }}"></td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                     <td><a href="{{ path('gprint_preset_edit', filters|merge({id: preset.id})) }}">{{ preset.name }}</a></td>
                     <td>{{ preset.gprintText }}</td>

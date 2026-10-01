@@ -26,6 +26,8 @@ def main():
         'src/Graphing/Domain/GprintPresetFilters.php',
         'src/Graphing/Infrastructure/Legacy/LegacyGprintPresetStore.php',
         'src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php',
+        'src/Graphing/Infrastructure/Legacy/GprintPresetSql.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyGprintPresetPreferences.php',
         'src/Graphing/Infrastructure/Symfony/Controller/GprintPresetController.php',
         'src/Graphing/Infrastructure/Symfony/Controller/GprintPresetEditController.php',
         'src/Graphing/Infrastructure/Symfony/Controller/GprintPresetDeleteController.php',
@@ -185,6 +187,9 @@ def main():
         'missing-gprint-stale-delete': 'Incomplete Symfony integration checks',
         'missing-gprint-malformed-revisions': 'Incomplete Symfony integration checks',
         'missing-gprint-unicode-filter': 'Incomplete Symfony integration checks',
+        'missing-gprint-selection-limit': 'Incomplete Symfony integration checks',
+        'missing-gprint-oversized-selection': 'Incomplete Symfony integration checks',
+        'missing-gprint-max-selection': 'Incomplete Symfony integration checks',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
@@ -259,7 +264,10 @@ def main():
                           'expected-revisions': 'GPRINT deletion carries expected preset revisions',
                           'stale-delete': 'stale GPRINT deletion rejects changed preset format without deleting it',
                           'malformed-revisions': 'GPRINT deletion rejects missing revision identities without deleting presets',
-                          'unicode-filter': 'GPRINT search accepts 200 Unicode characters and rejects 201'}
+                          'unicode-filter': 'GPRINT search accepts 200 Unicode characters and rejects 201',
+                          'selection-limit': 'GPRINT large pages expose at most 100 enabled selections and explain the limit',
+                          'oversized-selection': 'GPRINT oversized forged selection returns 400 without deleting presets',
+                          'max-selection': 'GPRINT maximum selectable batch reaches confirmation with all rows unchanged'}
                 evidence['checks'].remove(checks[case.removeprefix('missing-gprint-')])
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64

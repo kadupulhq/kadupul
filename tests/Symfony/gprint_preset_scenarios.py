@@ -3,6 +3,7 @@
 
 """GPRINT preset form, authorization, reference and legacy route checks over HTTP."""
 import re
+from html.parser import HTMLParser
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request
@@ -107,6 +108,33 @@ def verify_gprint_presets(harness, session, user_id, check):
         status, explicit_rows, _, _ = fetch('/app.php/graphing/gprint-presets?rows=10')
         check(status == 200 and re.search(r'<option value="10" selected>', explicit_rows) is not None,
               'GPRINT explicit page size stays selected in Twig')
+        bulk_names = [f"{marker}-bulk-{index}" for index in range(101)]
+        values = ','.join(f"('{name}','%5.2lf',MD5('{name}'))" for name in bulk_names)
+        harness.sql('INSERT INTO graph_templates_gprint (name,gprint_text,hash) VALUES ' + values)
+        bulk_ids = [int(value) for value in harness.sql(f"SELECT id FROM graph_templates_gprint WHERE name LIKE '{marker}-bulk-%' ORDER BY name").splitlines()]
+        ids.extend(bulk_ids)
+        bulk_status, bulk_body, _, _ = fetch('/app.php/graphing/gprint-presets?' + urlencode({'rows': '5000', 'filter': marker + '-bulk-'}))
+        class SelectionInputs(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.enabled = []
+                self.disabled = []
+            def handle_starttag(self, tag, attrs):
+                attributes = dict(attrs)
+                if tag == 'input' and attributes.get('name') == 'ids[]':
+                    (self.disabled if 'disabled' in attributes else self.enabled).append(attributes.get('value'))
+        selection = SelectionInputs()
+        selection.feed(bulk_body)
+        check(bulk_status == 200 and len(selection.enabled) == 100 and len(selection.disabled) == 1
+              and 'Select up to 100 presets' in bulk_body and '100 rows per page' in bulk_body,
+              'GPRINT large pages expose at most 100 enabled selections and explain the limit')
+        bulk_selection = '/app.php/graphing/gprint-presets/actions/delete?' + urlencode([('ids[]', str(value)) for value in bulk_ids])
+        check(fetch(bulk_selection)[0] == 400,
+              'GPRINT oversized forged selection returns 400 without deleting presets')
+        valid_selection = '/app.php/graphing/gprint-presets/actions/delete?' + urlencode([('ids[]', value) for value in selection.enabled])
+        check(fetch(valid_selection)[0] == 200
+              and harness.sql(f"SELECT COUNT(*) FROM graph_templates_gprint WHERE name LIKE '{marker}-bulk-%'").strip() == '101',
+              'GPRINT maximum selectable batch reaches confirmation with all rows unchanged')
         reset_filter = re.search(r'id="gprint-filter" name="filter" type="search" maxlength="200" value="([^"]*)"', reset)
         check(status == 200 and reset_filter is not None and reset_filter.group(1) == '',
               'clearing GPRINT filters resets the remembered session state')

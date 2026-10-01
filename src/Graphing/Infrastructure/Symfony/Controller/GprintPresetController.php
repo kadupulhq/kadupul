@@ -44,7 +44,8 @@ final class GprintPresetController
             if ($query === [] && $reset !== '1') {
                 $query = $preferences->load() ?? [];
             }
-            $filters = GprintPresetFilters::fromQuery($query, $store->defaultRows(), $store->defaultHasGraphs());
+            $defaultRows = $store->defaultRows();
+            $filters = GprintPresetFilters::fromQuery($query, $defaultRows, $store->defaultHasGraphs());
             if ($request->query->has('reset') || array_intersect(array_keys($request->query->all()), ['filter', 'rows', 'page', 'sort_column', 'sort_direction', 'has_graphs']) !== []) {
                 $preferences->save($filters->query());
             }
@@ -60,7 +61,7 @@ final class GprintPresetController
         return new Response($request->isMethod('HEAD') ? '' : $twig->render('graphing/gprint_presets.html.twig', [
             'page' => $page,
             'filters' => $parameters,
-            'defaultRows' => $store->defaultRows(),
+            'defaultRows' => $defaultRows,
             'saved' => $saved === '1',
             'deleted' => $deleted === '1',
         ]), 200, $headers);

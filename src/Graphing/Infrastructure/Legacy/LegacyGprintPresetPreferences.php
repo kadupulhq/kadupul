@@ -18,9 +18,8 @@ final readonly class LegacyGprintPresetPreferences implements GprintPresetPrefer
     public function load(): ?array
     {
         $actor = $this->access->authorize();
-        $query = $this->database->get()->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'gprint_presets_filters'");
-        $query->execute([$actor->id]);
-        $json = $query->fetchColumn();
+        $query = GprintPresetSql::execute($this->database->get(), "SELECT value FROM settings_user WHERE user_id = ? AND name = 'gprint_presets_filters'", [$actor->id]);
+        $json = GprintPresetSql::column($query);
         if (!is_string($json) || $json === '') {
             return null;
         }
@@ -50,12 +49,20 @@ final readonly class LegacyGprintPresetPreferences implements GprintPresetPrefer
         try {
             $actor = $this->access->authorize();
             $this->access->assertCurrent($actor->id);
-            $query = $db->prepare("REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'gprint_presets_filters', ?)");
-            $query->execute([$actor->id, json_encode($filters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)]);
-            $db->commit();
+            GprintPresetSql::execute($db, "REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'gprint_presets_filters', ?)", [$actor->id, json_encode($filters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)]);
+            if (!$db->commit()) {
+                throw new \RuntimeException('GPRINT preference commit could not be confirmed.');
+            }
         } catch (\Throwable $error) {
             if ($db->inTransaction()) {
-                $db->rollBack();
+                try {
+                    $confirmed = $db->rollBack();
+                } catch (\Throwable $rollbackError) {
+                    throw new \RuntimeException('GPRINT preference rollback could not be confirmed.', 0, $rollbackError);
+                }
+                if (!$confirmed) {
+                    throw new \RuntimeException('GPRINT preference rollback could not be confirmed.', 0, $error);
+                }
             }
             throw $error;
         }

@@ -107,7 +107,7 @@ final class GprintPresetDeleteController
 
     private function ids(mixed $raw): array
     {
-        if (!is_array($raw) || $raw === [] || count($raw) > 100) {
+        if (!is_array($raw) || $raw === [] || count($raw) > \Kadupul\Graphing\Application\Port\GprintPresetStore::MAX_DELETE_SELECTION) {
             throw new \InvalidArgumentException('Invalid GPRINT preset selection.');
         }
         $ids = [];

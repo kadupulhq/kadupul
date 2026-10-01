@@ -1968,8 +1968,10 @@ function gprint_feature_call(string $root, array $target, int $depth = 0): bool
         // Reviewed current-account and realm-5 contract. A changed adapter
         // needs a fresh review before its calls can certify feature access.
         $path = $root . '/src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php';
-        return is_file($path) && hash_file('sha256', $path)
-            === 'f19a1508e84c3cc2fa4cfaa0f224d07f5036a4b3effa16fa58eab7bbe902b8dc';
+        $sql = $root . '/src/Graphing/Infrastructure/Legacy/GprintPresetSql.php';
+        return is_file($path) && is_file($sql) && hash_file('sha256', $path)
+            === '7a69a3b68ee8afd994113d424b8acb074070fbfc91c63cd3f6f4132405a459d9'
+            && hash_file('sha256', $sql) === '267faa2b22e396d096cc51e8288ba305f070d4cf07ee5207e327694f0d87f041';
     }
     if ($depth >= CALL_DEPTH) {
         return false;

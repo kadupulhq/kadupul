@@ -58,3 +58,4 @@
 "Unable to load GPRINT Preset. Reload before retrying.": "Impossible de charger le préréglage GPRINT. Rechargez la page avant de réessayer."
 "Unable to prepare GPRINT Preset form.": "Impossible de préparer le formulaire du préréglage GPRINT."
 "Unable to prepare GPRINT Preset deletion.": "Impossible de préparer la suppression des préréglages GPRINT."
+"Select up to %count% presets from the first %count% rows. Use %count% rows per page or search to select other presets.": "Sélectionnez au maximum %count% préréglages parmi les %count% premières lignes. Affichez %count% lignes par page ou utilisez la recherche pour sélectionner les autres préréglages."

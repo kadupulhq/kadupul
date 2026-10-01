@@ -28,15 +28,15 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
 
     public function defaultRows(): int
     {
-        $query = $this->database->get()->query("SELECT value FROM settings WHERE name = 'num_rows_table'");
-        $rows = filter_var($query->fetchColumn(), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5000]]);
+        $query = GprintPresetSql::execute($this->database->get(), "SELECT value FROM settings WHERE name = 'num_rows_table'");
+        $rows = filter_var(GprintPresetSql::column($query), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5000]]);
         return $rows === false ? 25 : $rows;
     }
 
     public function defaultHasGraphs(): bool
     {
-        $query = $this->database->get()->query("SELECT value FROM settings WHERE name = 'default_has'");
-        return $query->fetchColumn() === 'on';
+        $query = GprintPresetSql::execute($this->database->get(), "SELECT value FROM settings WHERE name = 'default_has'");
+        return GprintPresetSql::column($query) === 'on';
     }
 
     public function find(int $id): ?GprintPreset
@@ -158,7 +158,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
     {
         $ids = array_values(array_unique($ids));
         sort($ids, SORT_NUMERIC);
-        if ($ids === [] || count($ids) > 100 || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1) !== []) {
+        if ($ids === [] || count($ids) > GprintPresetStore::MAX_DELETE_SELECTION || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1) !== []) {
             throw new \InvalidArgumentException('Invalid GPRINT preset selection.');
         }
         ksort($revisions, SORT_NUMERIC);
@@ -292,7 +292,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
                 // Inspect the table this connection will actually mutate,
                 // including a temporary table that shadows a permanent one.
                 $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
-                $definition = $query === false ? false : $query->fetch(\PDO::FETCH_NUM);
+                $definition = $query === false ? false : GprintPresetSql::one($query, \PDO::FETCH_NUM);
             } catch (\PDOException $error) {
                 if (in_array($table, $optional, true) && ($error->errorInfo[1] ?? null) === 1146) {
                     continue;

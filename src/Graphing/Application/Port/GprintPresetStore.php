@@ -13,6 +13,8 @@ use Kadupul\Graphing\Domain\GprintPresetPage;
 
 interface GprintPresetStore
 {
+    public const int MAX_DELETE_SELECTION = 100;
+
     public function defaultRows(): int;
     public function defaultHasGraphs(): bool;
     public function find(int $id): ?GprintPreset;

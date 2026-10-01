@@ -33,6 +33,7 @@ final class GprintPresetFailureHandoffTest extends TestCase
             $message = 'GPRINT mutations require InnoDB tables: graph_templates_gprint';
         } else {
             $statement = $this->createMock(\PDOStatement::class);
+            $statement->method('errorCode')->willReturn('00000');
             $statement->method('fetch')->willReturn(['table', 'CREATE TABLE `table` (id INT) ENGINE=InnoDB']);
             $db->expects(self::exactly(8))->method('query')->willReturn($statement);
             $db->expects(self::once())->method('exec')
@@ -125,6 +126,28 @@ final class GprintPresetFailureHandoffTest extends TestCase
     public static function lateReadFailures(): array
     {
         return [['row'], ['batch'], ['count']];
+    }
+
+    public function testLateEngineMetadataFailureRejectsAValidLookingTableDefinition(): void
+    {
+        $database = $this->createMock(\PDO::class);
+        $database->method('getAttribute')->willReturn('mysql');
+        $database->method('inTransaction')->willReturn(false);
+        $database->expects(self::never())->method('beginTransaction');
+        $database->expects(self::never())->method('exec');
+        $statement = $this->createMock(\PDOStatement::class);
+        $failed = false;
+        $statement->method('fetch')->willReturnCallback(static function () use (&$failed): array {
+            $failed = true;
+            return ['table', 'CREATE TABLE `table` (id INT) ENGINE=InnoDB'];
+        });
+        $statement->method('errorCode')->willReturnCallback(static function () use (&$failed): string {
+            return $failed ? '08006' : '00000';
+        });
+        $database->expects(self::once())->method('query')->willReturn($statement);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('GPRINT database result could not be confirmed.');
+        $this->store($database, $this->createMock(GprintPresetAccess::class))->delete(42, [1], [1 => str_repeat('0', 64)]);
     }
 
     private function store(\PDO $db, GprintPresetAccess $access, ?AuditTrail $audit = null): LegacyGprintPresetStore
