@@ -208,6 +208,10 @@ jobs:
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
+      - name: Verify helper union return contracts
+        working-directory: tests
+        run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/HelperUnionReturnTypeTest.php --colors=never
+
       - name: Exercise production CSV paths
         working-directory: tests
         # The old Pest runner emits dependency deprecations on PHP 8.4. The

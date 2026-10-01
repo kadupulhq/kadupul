@@ -121,7 +121,7 @@ function csp_report_validate_payload(array $headers, $body, $maxBytes)
 
 /* The effective uid. getmyuid() reports the script file's owner instead, so
  * without the posix extension use the owner of a file this process creates. */
-function csp_report_process_uid()
+function csp_report_process_uid(): int|false
 {
     if (function_exists('posix_geteuid')) {
         return posix_geteuid();
