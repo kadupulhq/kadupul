@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -522,8 +523,8 @@ function form_actions()
             grow_dropdown_tree($matches[1], '0', 'tree_item_id', '0');
             print "</p>
 				</td>
-			</tr>
-			<input type='hidden' name='tree_id' value='" . html_escape($matches[1]) . "'>";
+			</tr>";
+            form_hidden_box('tree_id', $matches[1], '0');
 
             $save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __esc('Place Graph(s) on Tree') . "'>";
         }
@@ -533,10 +534,16 @@ function form_actions()
         exit;
     }
 
+    $local_graph_id = get_nfilter_request_var('local_graph_id', 0);
+
+    if (!is_scalar($local_graph_id)) {
+        $local_graph_id = 0;
+    }
+
     print "	<tr>
 		<td class='saveRow'>
 			<input type='hidden' name='action' value='actions'>
-			<input type='hidden' name='local_graph_id' value='" . (isset_request_var('local_graph_id') ? get_nfilter_request_var('local_graph_id') : 0) . "'>
+			<input type='hidden' name='local_graph_id' value='" . html_escape($local_graph_id) . "'>
 			<input type='hidden' name='selected_items' value='" . (isset($graph_array) ? serialize($graph_array) : '') . "'>
 			<input type='hidden' name='drp_action' value='" . html_escape(get_request_var('drp_action')) . "'>
 			$save_html
@@ -1266,17 +1273,7 @@ function aggregate_items()
 					</td>
 					<td>
 						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
-							<?php
-                            if (cacti_sizeof($item_rows) > 0) {
-                                foreach ($item_rows as $key => $value) {
-                                    print "<option value='" . $key . "'";
-                                    if (get_request_var('rows') == $key) {
-                                        print ' selected';
-                                    } print '>' . html_escape($value) . "</option>";
-                                }
-                            }
-    ?>
+							<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows')); ?>
 						</select>
 					</td>
 					<td>
@@ -1497,7 +1494,7 @@ function aggregate_graph()
 
 	function applyFilter() {
 		strURL  = 'aggregate_graphs.php';
-		strURL += '?rows=' + $('#rows').val();
+		strURL += '?rows=' + $('#aggregate_graph_rows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&template_id=' + $('#template_id').val();
 		strURL += '&header=false';
@@ -1514,11 +1511,11 @@ function aggregate_graph()
 			$('#agg_preview').show();
 		}
 
-		$('#template_id, #rows').on('change', function() {
+		$('#template_id, #aggregate_graph_rows').on('change', function() {
 			applyFilter();
 		});
 
-		$('#clear').on('click', function() {
+		$('#aggregate_graph_clear').on('click', function() {
 			clearFilter();
 		});
 
@@ -1571,27 +1568,17 @@ function aggregate_graph()
 						</select>
 					</td>
 					<td>
-						<?php print __('Graphs');?>
+						<label for='aggregate_graph_rows'><?php print __('Graphs');?></label>
 					</td>
 					<td>
-						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
-							<?php
-    if (cacti_sizeof($item_rows) > 0) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . "</option>";
-        }
-    }
-    ?>
+						<select id='aggregate_graph_rows'>
+							<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows')); ?>
 						</select>
 					</td>
 					<td>
 						<span>
-							<input type='submit' class='ui-button ui-corner-all ui-widget' id='go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
-							<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
+							<input type='submit' class='ui-button ui-corner-all ui-widget' id='aggregate_graph_go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
+							<input type='button' class='ui-button ui-corner-all ui-widget' id='aggregate_graph_clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
 						</span>
 					</td>
 				</tr>
