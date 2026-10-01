@@ -11,7 +11,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
  * browser cookie alone leaves a copied cookie value usable.
  */
 
-function logout_run(string $action, $cookie, bool $enabled = true): array
+function logout_run(string $action, $cookie, bool $enabled = true, bool $bound = false): array
 {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/kadupul-logout-' . bin2hex(random_bytes(6));
@@ -32,6 +32,8 @@ function db_execute_prepared($sql, $params = array()) {
     return true;
 }
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
+function get_client_addr() { return '192.0.2.10'; }
+function cacti_cookie_session_set($id,$realm,$token) {}
 function cacti_cookie_session_logout() { $GLOBALS['events'][] = 'cookie_session_logout'; }
 function cacti_cookie_logout() { $GLOBALS['events'][] = 'cookie_logout'; }
 function cacti_session_destroy() { $GLOBALS['events'][] = 'session_destroy'; }
@@ -45,12 +47,16 @@ function html_common_header($title) {}
 class CactiSecureHeaders { public static function getNonceAttribute() { return ''; } }
 register_shutdown_function(function () {
     $output = ob_get_clean();
-    print json_encode(array('events' => $GLOBALS['events'], 'output' => $output));
+    print json_encode(array('events' => $GLOBALS['events'], 'output' => $output, 'bound' => $GLOBALS['bound'] ?? null));
 });
 ob_start();
 PHP;
     $stubs .= "\nrequire_once " . var_export($root . '/lib/auth.php', true) . ";\n";
 
+    $stubs .= "\n";
+    if ($bound) {
+        $stubs .= 'set_auth_cookie(array("id"=>42,"realm"=>0));$GLOBALS["bound"]=$_SESSION["sess_remember_token"];$GLOBALS["events"]=array();';
+    }
     file_put_contents($dir . '/include/auth.php', $stubs);
     file_put_contents($dir . '/include/global_session.php', "<?php\n");
 
@@ -137,3 +143,12 @@ test('each automatic logout explains why the user was logged out', function (str
 test('logout revokes an old token after remember-me is disabled', function () {
     expect(logout_token_deletes(logout_run('timeout', '42,0,remember-me-token', false)))->toHaveCount(1);
 });
+
+
+test('logout revokes the issued session token after its browser cookie is missing or malformed', function ($cookie) {
+    $result = logout_run('timeout', $cookie, true, true);
+    $deletes = logout_token_deletes($result);
+    expect($result['stderr'])->toBe('')->and($deletes)->toHaveCount(1)
+        ->and($deletes[0]['params'])->toBe(array(42, $result['bound']['hash']))
+        ->and(array_search($deletes[0], $result['events'], true))->toBeLessThan(array_search('cookie_logout', $result['events'], true));
+})->with(array('missing' => array(null), 'malformed' => array('42'), 'array' => array(array('invalid'))));

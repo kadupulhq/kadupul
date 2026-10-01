@@ -55,6 +55,7 @@
       <file>./Unit/Security/Auth/PageFlagCrossSiteGuardTest.php</file>
       <file>./Unit/Security/Auth/CsrfTokenFormatTest.php</file>
       <file>./Unit/Security/Auth/CsrfSecretSourceTest.php</file>
+      <file>./Unit/Security/Auth/CsrfSecretInitializationRaceTest.php</file>
       <file>./Unit/Security/Auth/CsrfIpTokenTest.php</file>
       <file>./Unit/Security/Auth/RefreshCsrfSecretTest.php</file>
       <file>./Unit/Security/Auth/LdapTlsRequirementTest.php</file>

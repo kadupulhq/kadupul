@@ -100,7 +100,11 @@ function cacti_csrf_load_secret()
         // An anonymous visitor has no stored session, so a per-session secret
         // would differ between the login form and its POST. Store one instead.
         if (!cacti_csrf_secret_is_valid($secret)) {
-            set_config_option('csrf_secret', bin2hex(random_bytes(32)));
+            $candidate = bin2hex(random_bytes(32));
+            db_execute_prepared('INSERT IGNORE INTO settings (name, value) VALUES (?, ?)', array('csrf_secret', $candidate));
+            // Repair an invalid existing row only if it has not changed since
+            // our read. Never overwrite another request's valid winning key.
+            db_execute_prepared('UPDATE settings SET value = ? WHERE name = ? AND value = ?', array($candidate, 'csrf_secret', $secret));
             $secret = read_config_option('csrf_secret', true);
         }
 
