@@ -111,9 +111,10 @@ def seed_graph_dependency(vdef_id: int) -> None:
 
 def main() -> None:
     scenario = Scenario()
-    status, _, body = scenario.request('/graph-definitions/vdefs?page[]=invalid')
+    status, url, body = scenario.request('/graph-definitions/vdefs?page[]=invalid')
     check(status == 401 and 'Access denied' in body,
-          'unauthenticated VDEF HTTP request is rejected before malformed query parsing')
+          'unauthenticated VDEF HTTP request is rejected before malformed query parsing '
+          f'(HTTP {status}, URL {url}, bootstrap fatal: {"Fatal error" in body})')
 
     status, _, html = scenario.request("/")
     check(status == 200 and "login_username" in html, "login page did not load")
