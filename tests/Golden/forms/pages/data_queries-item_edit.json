@@ -1,0 +1,14 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "data_queries",
+        "graph_template_id",
+        "id",
+        "name",
+        "snmp_query_id"
+    ],
+    "script_names": []
+}
