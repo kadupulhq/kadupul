@@ -20404,14 +20404,22 @@ msgstr "Número de Plantillas de gráficos usando este VDEF."
 msgid "No VDEFs"
 msgstr "No VDEFs"
 
-#: data_source_profiles.php:260 data_source_profiles.php:400
+#: data_source_profiles.php:261 data_source_profiles.php:414
 msgid "Unable to verify Data Source Profile usage. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:285
+#: data_source_profiles.php:286
 msgid "Unable to safely delete the selected Data Source Profiles. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:408
+#: data_source_profiles.php:422
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
+msgstr ""
+
+#: lib/poller.php:2181
+msgid "Synchronization failed while replicating data-source definitions. See the log for details."
+msgstr ""
+
+#: lib/api_device.php:548
+msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
