@@ -27,6 +27,12 @@ function db_execute($sql)
     if (($failure === 'load-truncate-columns' && $sql === 'TRUNCATE table_columns') || ($failure === 'load-truncate-indexes' && $sql === 'TRUNCATE table_indexes')) {
         return false;
     }
+    if (($failure === 'cleanup-backup' && str_starts_with($sql, 'DROP TABLE IF EXISTS `audit_old_columns_')) || ($failure === 'cleanup-marker' && str_starts_with($sql, 'DROP TABLE IF EXISTS `audit_complete_'))) {
+        return false;
+    }
+    if ($failure === 'cleanup-exception' && str_starts_with($sql, 'DROP TABLE IF EXISTS `audit_old_columns_')) {
+        throw new RuntimeException('native fixture cleanup exception');
+    }
     file_put_contents(dirname(__DIR__) . '/db-mutations', $sql . "\n", FILE_APPEND);
     if (str_starts_with($sql, 'RENAME TABLE')) {
         if (getenv('AUDIT_TEST_CASE') === 'swap-failure') {

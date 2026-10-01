@@ -1059,6 +1059,8 @@ function create_tables($load = true)
             print 'FATAL: Unable to stage the Audit Schema' . PHP_EOL;
             return false;
         }
+        $loaded = false;
+        $cleaned = true;
         try {
             $schema = file_get_contents($schema_file);
             if ($schema === false) {
@@ -1100,17 +1102,29 @@ function create_tables($load = true)
             if (!db_execute('RENAME TABLE ' . implode(', ', $renames))) {
                 throw new RuntimeException('Unable to install the Audit Schema');
             }
-            print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
-            return true;
+            $loaded = true;
         } catch (Throwable $failure) {
             print 'FATAL: Failed Load the Audit Schema: ' . $failure->getMessage() . PHP_EOL;
-            return false;
         } finally {
-            unlink($import_file);
+            if (!unlink($import_file)) {
+                $cleaned = false;
+                print 'FATAL: Unable to remove private Audit Schema staging file' . PHP_EOL;
+            }
             foreach (array_merge(array_values($staging), array_values($backups), array($completion)) as $temporary) {
-                db_execute('DROP TABLE IF EXISTS `' . $temporary . '`');
+                try {
+                    if (!db_execute('DROP TABLE IF EXISTS `' . $temporary . '`')) {
+                        throw new RuntimeException('cleanup was not acknowledged');
+                    }
+                } catch (Throwable $cleanupFailure) {
+                    $cleaned = false;
+                    print 'FATAL: Unable to remove Audit Schema temporary table ' . $temporary . ': ' . $cleanupFailure->getMessage() . PHP_EOL;
+                }
             }
         }
+        if ($loaded && $cleaned) {
+            print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
+        }
+        return $loaded && $cleaned;
 
     }
 
