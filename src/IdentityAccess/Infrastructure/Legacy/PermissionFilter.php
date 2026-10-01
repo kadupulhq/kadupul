@@ -54,7 +54,7 @@ final class PermissionFilter
     <form id='forms' action='<?php print html_escape($page); ?>'>
     <table class='filterTable' role='presentation'><tr>
         <td><label for='filter'><?php print __('Search'); ?></label></td>
-        <td><input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>'></td>
+        <td><input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print htmlspecialchars((string) html_escape_request_var('filter'), ENT_QUOTES | ENT_HTML5, ini_get('default_charset') ?: 'UTF-8', false); ?>'></td>
         <?php if ($template_field !== '') { ?>
         <td><label for='<?php print html_escape($template_field); ?>'><?php print __('Template'); ?></label></td>
         <td><select id='<?php print html_escape($template_field); ?>'>

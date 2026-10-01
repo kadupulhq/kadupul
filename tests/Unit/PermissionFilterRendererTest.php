@@ -94,6 +94,17 @@ final class PermissionFilterRendererTest extends TestCase
         self::assertCount(1, $xpath->query('//label[@for="graph_template_id"]'));
     }
 
+    public function testExistingEntitiesAndGraveAccentsKeepLegacyFilterRoundTrips(): void
+    {
+        $result = $this->render(array('page' => 'user_admin.php', 'function' => 'graph', 'filter' => 'A &amp; B ` &lt;value&gt;'));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($result['html'], LIBXML_NOERROR | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        self::assertSame('A & B ` <value>', $xpath->query('//input[@id="filter"]')->item(0)->getAttribute('value'));
+        self::assertStringNotContainsString('&amp;amp;', $result['html']);
+        self::assertStringContainsString('&#96;', $result['html']);
+    }
+
     /** @dataProvider associations */
     public function testNativeAssociationWritesPreserveOtherItemsAndSubjects(string $page, string $flag, int $type, bool $add): void
     {
