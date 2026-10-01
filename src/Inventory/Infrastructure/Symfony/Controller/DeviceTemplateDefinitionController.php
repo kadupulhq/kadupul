@@ -82,6 +82,9 @@ final class DeviceTemplateDefinitionController
             }
             $form = $forms->create(DeviceTemplateDefinitionType::class, ['name' => $row->name, 'class' => $row->class, 'revision' => $id > 0 ? $row->revision() : 'new']);
             $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->getExtraData() !== []) {
+                $form->addError(new FormError($translator->trans('Invalid device template fields.', [], 'inventory')));
+            }
             $status = $request->isMethod('POST') ? 422 : 200;
             if ($form->isSubmitted() && $form->isValid()) {
                 try {

@@ -168,7 +168,7 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
-        device_template_checks = ['failed child copy rolls back new parent and every association', 'device template storage and authorization guards verified', '100-character Unicode name persists without truncation', 'expanded duplicate database name bound rejects 101 characters', 'device template links work through all four front controllers']
+        device_template_checks = ['failed child copy rolls back new parent and every association', 'device template storage and authorization guards verified', '100-character Unicode name persists without truncation', 'expanded duplicate database name bound rejects 101 characters', 'device template links work through all four front controllers', 'unexpected create fields reject without parent writes', 'unexpected edit fields reject without parent writes', 'unexpected graph association fields reject without child writes', 'unexpected query association fields reject without child writes', 'unexpected action fields reject without parent deletion']
     for index in range(len(device_template_checks)):
         failures['missing-device-template-check-' + str(index)] = 'Incomplete Symfony integration checks'
     failures['device-template-test-hash'] = 'Integration test source differs'

@@ -1968,7 +1968,7 @@ function device_template_feature_guard(string $root, string $class, Stmt\ClassMe
     $adapter = 'Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions';
     $reviewed = [
         'src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php' => '18140ae714207ca61114413a21dc8ba05c7f091bc9f44fd3f83e9dd1a745858b',
-        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php' => 'd768528ceb3b5b45ea0dfa27a08acc5d849d4ed8b5614520e285cf68bd29c66e',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php' => '31a40aa7afaee63713ea8e6697c04bc9be4c3505ed7b7a2005526b8b2f4bda97',
     ];
     foreach ($reviewed as $path => $hash) {
         if (!is_file($root . '/' . $path) || hash_file('sha256', $root . '/' . $path) !== $hash) {

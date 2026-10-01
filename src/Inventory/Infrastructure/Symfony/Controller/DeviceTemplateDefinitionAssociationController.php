@@ -51,6 +51,9 @@ final class DeviceTemplateDefinitionAssociationController
             $builder->add('revision', HiddenType::class)->add('child', ChoiceType::class, ['label' => $kind === 'graph' ? 'Graph template' : 'Data query', 'choices' => array_keys($choices), 'choice_label' => static fn($value): string => (string) $choices[$value], 'choice_value' => static fn($value): string => $value === null ? '' : (string) $value]);
             $form = $builder->getForm();
             $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->getExtraData() !== []) {
+                $form->addError(new FormError($translator->trans('Invalid device template selection.', [], 'inventory')));
+            }
             $status = $request->isMethod('POST') ? 422 : 200;
             if ($form->isSubmitted() && $form->isValid()) {
                 try {

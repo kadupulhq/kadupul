@@ -27,7 +27,7 @@ final class DeviceTemplateDefinitionProtocolTest extends TestCase
         $configuration->method('values')->willReturn(['poller_id' => 1]);
         $adapter = new LegacyDeviceTemplateDefinitions($database, $directory, $configuration);
         try {
-            foreach (['malformed', 'actor', 'correlation', 'target', 'partial', 'map', 'float', 'numeric', 'zero', 'oversized', 'repeated', 'new-zero', 'duplicate-marker'] as $case) {
+            foreach (['malformed', 'actor', 'correlation', 'target', 'partial', 'map', 'float', 'numeric', 'zero', 'oversized', 'repeated', 'new-zero', 'duplicate-marker', 'malformed-extra-marker', 'numeric-object'] as $case) {
                 $script = <<<'FIXTURE'
 <?php
 $command = json_decode(stream_get_contents(STDIN), true, 16, JSON_THROW_ON_ERROR);
@@ -37,11 +37,13 @@ switch (CASE_NAME) {
     case 'actor': $result['actor'] = 99; break;
     case 'correlation': $result['correlation'] = str_repeat('f', 32); break;
     case 'target': $result['ids'] = [8]; break;
+    case 'numeric-object': $result['ids'] = (object) [0 => 7]; break;
     case 'map': $result['ids'] = ['target' => 7]; break;
     case 'float': $result['ids'] = [7.5]; break;
     case 'numeric': $result['ids'] = ['7']; break;
     case 'new-zero': $result['ids'] = [0]; break;
     case 'repeated': $result['ids'] = [7, 7]; break;
+    case 'malformed-extra-marker': echo "KADUPUL_DEVICE_DEFINITION_RESULT=not-json\n"; break;
     case 'duplicate-marker': echo 'KADUPUL_DEVICE_DEFINITION_RESULT=' . json_encode($result) . "\n"; break;
     case 'zero': $result['ids'] = [0]; break;
     case 'oversized': $result['ids'] = [16777216]; break;

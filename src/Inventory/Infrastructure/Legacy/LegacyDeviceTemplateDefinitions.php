@@ -133,6 +133,10 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
             throw new \RuntimeException('Device template outcome is unknown. Reload before retrying.');
         }
         try {
+            $wire = json_decode($match[1], false, 16, JSON_THROW_ON_ERROR);
+            if (!$wire instanceof \stdClass || !is_array($wire->ids ?? null)) {
+                throw new \RuntimeException('Device template outcome could not be verified.');
+            }
             $result = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR);
         } catch (\JsonException $error) {
             throw new \RuntimeException('Device template outcome could not be verified.', 0, $error);

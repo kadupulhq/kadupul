@@ -95,6 +95,57 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
             }
         }
     }
+    public function testUnexpectedNestedFieldsNeverReachMutation(): void
+    {
+        foreach ([['/inventory/device-templates/new', 'device_template_definition'], ['/inventory/device-templates/7/edit', 'device_template_definition'], ['/inventory/device-templates/action/delete?ids[]=7', 'device_template_action'], ['/inventory/device-templates/7/association/graph/add', 'device_template_association']] as [$path, $formName]) {
+            $kernel = new Kernel('test', true);
+            try {
+                $kernel->boot();
+                $container = $kernel->getContainer()->get('test.service_container');
+                $configuration = $this->createMock(LegacyConfiguration::class);
+                $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+                $container->set(LegacyConfiguration::class, $configuration);
+                $pdo = new \PDO('sqlite::memory:');
+                $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+                $database = $this->createMock(DatabaseConnection::class);
+                $database->method('get')->willReturn($pdo);
+                $container->set(DatabaseConnection::class, $database);
+                $access = $this->createMock(ConsoleAccess::class);
+                $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+                $container->set(ConsoleAccess::class, $access);
+                $port = $this->createMock(DeviceTemplateDefinitions::class);
+                $port->method('find')->willReturn(new DeviceTemplateDefinition(7, 'existing', 'router'));
+                $port->method('choices')->willReturn(['graphs' => [2 => 'graph'], 'add_graphs' => [2 => 'graph'], 'queries' => []]);
+                $port->method('hooks')->willReturn([]);
+                $port->expects(self::never())->method('execute');
+                $container->set(DeviceTemplateDefinitions::class, $port);
+                $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
+                self::assertSame(200, $response->getStatusCode(), $path);
+                $document = new \DOMDocument();
+                @$document->loadHTML($response->getContent());
+                $fields = [];
+                foreach ((new \DOMXPath($document))->query('//input[@name]') as $input) {
+                    if (preg_match('/^' . $formName . '\[([^]]+)\]$/D', $input->getAttribute('name'), $match)) {
+                        $fields[$match[1]] = $input->getAttribute('value');
+                    }
+                }
+                if ($formName === 'device_template_definition') {
+                    $fields['name'] = 'changed';
+                    $fields['class'] = 'router';
+                } elseif ($formName === 'device_template_association') {
+                    $fields['child'] = '2';
+                }
+                $fields['unexpected'] = ['id' => 999];
+                $request = Request::create(strtok($path, '?'), 'POST', [$formName => $fields], ['Cacti' => 'fixture']);
+                $request->headers->set('Origin', 'http://localhost');
+                $rejected = $kernel->handle($request);
+                self::assertSame(422, $rejected->getStatusCode(), $path);
+                self::assertStringContainsString($formName === 'device_template_definition' ? 'Champs du modèle d’appareil invalides.' : 'Sélection de modèles d’appareils invalide.', $rejected->getContent());
+            } finally {
+                $kernel->shutdown();
+            }
+        }
+    }
     public function testFrenchEditorEscapesStoredNamesAndPreservesTrustedInstalledHookMarkup(): void
     {
         $kernel = new Kernel('test', true);

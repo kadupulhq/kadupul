@@ -62,6 +62,9 @@ final class DeviceTemplateDefinitionActionController
             }
             $form = $builder->getForm();
             $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->getExtraData() !== []) {
+                $form->addError(new FormError($translator->trans('Invalid device template selection.', [], 'inventory')));
+            }
             $status = $request->isMethod('POST') ? 422 : 200;
             $partial = false;
             if ($form->isSubmitted() && $form->isValid()) {

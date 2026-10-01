@@ -47,6 +47,9 @@ def verify_device_template_definitions(harness, session, user_id, check):
         invalid = dict(fields)
         invalid.update({'device_template_definition[name]': invalid_name, 'device_template_definition[class]': 'router'})
         check(request(base + '/new', invalid)[0] == 422, 'database name bound rejects 101 characters before save')
+    create_snapshot = harness.sql('SELECT COUNT(*) FROM host_template').strip()
+    unexpected = dict(fields) | {'device_template_definition[name]': 'extra-' + uid, 'device_template_definition[class]': 'router', 'device_template_definition[unexpected][id]': '999'}
+    check(request(base + '/new', unexpected)[0] == 422 and harness.sql('SELECT COUNT(*) FROM host_template').strip() == create_snapshot, 'unexpected create fields reject without parent writes')
     bounded_name = uid + 'é' * (100 - len(uid))
     bounded = dict(fields)
     bounded.update({'device_template_definition[name]': bounded_name, 'device_template_definition[class]': 'router'})
@@ -80,6 +83,8 @@ def verify_device_template_definitions(harness, session, user_id, check):
         request(base + '?reset=1')
     before = form(edit)
     update = before | {'device_template_definition[name]': '<script>device-template-stored</script>', 'device_template_definition[class]': 'switch'}
+    edit_snapshot = harness.sql(f'SELECT name,class FROM host_template WHERE id={tid}').strip()
+    check(request(edit, update | {'device_template_definition[unexpected][id]': '999'})[0] == 422 and harness.sql(f'SELECT name,class FROM host_template WHERE id={tid}').strip() == edit_snapshot, 'unexpected edit fields reject without parent writes')
     status, body = request(edit, update)
     check(status == 200 and '&lt;script&gt;device-template-stored&lt;/script&gt;' in body and '<script>device-template-stored</script>' not in body, 'stored name remains escaped after save')
     check(request(edit, before | {'device_template_definition[name]': 'stale', 'device_template_definition[class]': 'router'})[0] == 409, 'stale parent revision rejects edit')
@@ -98,6 +103,8 @@ def verify_device_template_definitions(harness, session, user_id, check):
         path = base + f'/{tid}/association/{kind}/add'
         data = form(path)
         data['device_template_association[child]'] = str(child)
+        association_snapshot = harness.sql(f'SELECT COUNT(*) FROM {table} WHERE host_template_id={tid}').strip()
+        check(request(path, data | {'device_template_association[unexpected][id]': '999'})[0] == 422 and harness.sql(f'SELECT COUNT(*) FROM {table} WHERE host_template_id={tid}').strip() == association_snapshot, 'unexpected ' + kind + ' association fields reject without child writes')
         check(request(path, data)[0] == 200, kind + ' association writes through Symfony')
         check(harness.sql(f'SELECT COUNT(*) FROM {table} WHERE host_template_id={tid} AND {key}={child}').strip() == '1', kind + ' child belongs to route template')
     check(request(edit, current | {'device_template_definition[name]': 'child-stale', 'device_template_definition[class]': 'switch'})[0] == 409, 'association changes invalidate parent revision')
@@ -112,6 +119,8 @@ def verify_device_template_definitions(harness, session, user_id, check):
     check(request(path, data)[0] == 200 and harness.sql(f'SELECT COUNT(*) FROM host_template_snmp_query WHERE host_template_id={tid}').strip() == '0', 'remove query is protected and route-bound')
     def bulk(operation, id=tid):
         return form(base + f'/action/{operation}?ids%5B%5D={id}')
+    unexpected_delete = bulk('delete')
+    check(request(base + '/action/delete', unexpected_delete | {'device_template_action[unexpected][id]': '999'})[0] == 422 and harness.sql(f'SELECT COUNT(*) FROM host_template WHERE id={tid}').strip() == '1', 'unexpected action fields reject without parent deletion')
     invalid_copy = bulk('duplicate')
     invalid_copy['device_template_action[title_format]'] = 'x' * 101
     before_copy = harness.sql('SELECT (SELECT COUNT(*) FROM host_template),(SELECT COUNT(*) FROM host_template_graph),(SELECT COUNT(*) FROM host_template_snmp_query)').strip()
