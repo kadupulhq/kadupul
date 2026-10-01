@@ -8,10 +8,12 @@ if (PHP_SAPI !== 'cli') {
     exit;
 }
 $root = dirname(__DIR__, 2);
+$scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
 $directory = $argv[2];
 $source = $root . '/install/upgrades/1_2_31.php';
 $copy = $directory . '/upgrade.php';
 copy($source, $copy);
+file_put_contents($copy, str_replace('dirname(__DIR__, 2)', var_export($root, true), file_get_contents($copy)));
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('RRD_TEST_CLI_COVERAGE_COPY', $copy);
@@ -43,6 +45,21 @@ foreach (array(
     }
 }
 $calls = array();
+$guards = array();
+function db_fetch_assoc_prepared($sql, $params = array())
+{
+    if (str_contains($sql, 'information_schema.TABLES')) {
+        return array(array('TABLE_NAME' => 'data_source_profiles', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_template_data', 'ENGINE' => 'InnoDB'));
+    }
+    if (count($params) === 1) {
+        return isset($GLOBALS['guards'][$params[0]]) ? array(array('TRIGGER_NAME' => $params[0])) : array();
+    }
+    $rows = array();
+    foreach ($GLOBALS['guards'] as $name => $definition) {
+        $rows[] = array('TRIGGER_NAME' => $name, 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']);
+    }
+    return $rows;
+}
 function db_index_exists($table, $index)
 {
     $rows = $GLOBALS['db']->query($GLOBALS['mysql'] ? 'SHOW INDEX FROM ' . $table : 'PRAGMA index_list(' . $table . ')')->fetchAll(PDO::FETCH_ASSOC);
@@ -51,6 +68,15 @@ function db_index_exists($table, $index)
 function db_install_execute($sql)
 {
     $GLOBALS['calls'][] = $sql;
+    foreach (data_source_profile_reference_triggers() as $name => $definition) {
+        if ($sql === $definition['sql']) {
+            if (($GLOBALS['scenario']['guard_failure'] ?? false)) {
+                return false;
+            }
+            $GLOBALS['guards'][$name] = $definition;
+            return true;
+        }
+    }
     if (!$GLOBALS['mysql']) {
         // SQLite can verify the index migration; unrelated MySQL DDL is isolated.
         if (!preg_match('/^ALTER TABLE (\w+) ADD INDEX (\w+) (\(.+\))$/', $sql, $match)) {
@@ -65,8 +91,17 @@ function db_install_execute($sql)
     return true;
 }
 require $copy;
-upgrade_to_1_2_31();
-upgrade_to_1_2_31();
+$upgradeError = null;
+try {
+    upgrade_to_1_2_31();
+    upgrade_to_1_2_31();
+} catch (RuntimeException $error) {
+    $upgradeError = $error->getMessage();
+}
+if ($upgradeError !== null) {
+    file_put_contents($directory . '/result.json', json_encode(array('upgrade_error' => $upgradeError), JSON_THROW_ON_ERROR));
+    exit;
+}
 $indexes = $db->query($mysql ? 'SHOW INDEX FROM data_template_data' : 'PRAGMA index_list(data_template_data)')->fetchAll(PDO::FETCH_ASSOC);
 $audit = array();
 if ($mysql) {

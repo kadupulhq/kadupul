@@ -10,6 +10,7 @@ include('./include/auth.php');
 cacti_require_post_actions(array('actions'));
 include_once('./lib/poller.php');
 include_once('./lib/utility.php');
+require_once __DIR__ . '/lib/data_source_profile_integrity.php';
 
 $profile_actions = array(
     1 => __('Delete'),
@@ -380,6 +381,19 @@ function profiles_not_in_use($selected_items)
     }
 
     try {
+        if (!data_source_profile_reference_guards_available()) {
+            throw new \RuntimeException('Profile reference guards or InnoDB tables are unavailable. Run the database upgrade before deleting profiles.');
+        }
+        // Coordinate with reference guards using the parent row lock before
+        // deciding whether its usage allows deletion.
+        $parents = db_fetch_assoc_prepared(
+            'SELECT id FROM data_source_profiles WHERE id IN (' .
+            implode(',', array_fill(0, cacti_sizeof($selected_items), '?')) . ') ORDER BY id FOR UPDATE',
+            array_values($selected_items)
+        );
+        if (!is_array($parents)) {
+            throw new \RuntimeException('Invalid parent lock result.');
+        }
         $references = db_fetch_assoc_prepared(
             'SELECT data_source_profile_id FROM data_template_data WHERE data_source_profile_id IN (' .
             implode(',', array_fill(0, cacti_sizeof($selected_items), '?')) . ') FOR UPDATE',

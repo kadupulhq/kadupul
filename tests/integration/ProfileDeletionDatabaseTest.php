@@ -18,12 +18,42 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return true;
     }
 
+    /** @dataProvider deletionOutcomes */
+    public function testConcurrentWriterChecksParentAfterDeletionFinishes(string $outcome, string $writer): void
+    {
+        $state = $this->runNative(array('reference_guard' => $outcome, 'writer' => $writer));
+        self::assertTrue($state['available']);
+        self::assertTrue($state['waiting']);
+        self::assertSame(0, $state['orphans']);
+        self::assertSame('upserted', $state['legacyName']);
+        self::assertSame(0, $state['zero']);
+        self::assertSame(array(true, true, true), $state['rejected']);
+        self::assertTrue($state['missingRejected']);
+        self::assertTrue($state['modifiedRejected']);
+        if ($outcome === 'commit') {
+            self::assertSame(array('inserted' => false, 'sqlstate' => '45000'), $state['writer']);
+        } else {
+            self::assertSame(array('inserted' => true), $state['writer']);
+        }
+    }
+
+    public static function deletionOutcomes(): array
+    {
+        $cases = array();
+        foreach (array('commit', 'rollback') as $outcome) {
+            foreach (array('insert', 'update', 'upsert') as $writer) {
+                $cases[$outcome . ' ' . $writer] = array($outcome, $writer);
+            }
+        }
+        return $cases;
+    }
+
     public function testUsageLockBlocksConcurrentReferenceInsertion(): void
     {
         $state = $this->runNative(array());
         $isolation = array_values(array_filter($state['calls'], static fn($call) => $call[0] === 'SET TRANSACTION ISOLATION LEVEL REPEATABLE READ'));
         self::assertCount(1, $isolation);
-        $queries = array_values(array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FOR UPDATE') && $call[1] === array(3)));
+        $queries = array_values(array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FROM data_template_data') && str_contains($call[0], 'FOR UPDATE') && $call[1] === array(3)));
         self::assertCount(1, $queries);
         $table = 'profile_lock_' . bin2hex(random_bytes(8));
         $connect = static fn() => new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false));

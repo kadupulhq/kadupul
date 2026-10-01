@@ -18,6 +18,7 @@ foreach (array('include/auth.php', 'include/global_session.php', 'include/top_he
     file_put_contents($directory . '/' . $stub, '<?php');
 }
 copy($root . '/data_source_profiles.php', $directory . '/data_source_profiles.php');
+copy($root . '/lib/data_source_profile_integrity.php', $directory . '/lib/data_source_profile_integrity.php');
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('RRD_TEST_CLI_COVERAGE_COPY', $directory . '/data_source_profiles.php');
@@ -99,6 +100,19 @@ function db_fetch_row_prepared($sql, $params = array())
 }
 function db_fetch_assoc_prepared($sql, $params = array())
 {
+    if (str_contains($sql, 'information_schema.TABLES')) {
+        return array(array('TABLE_NAME' => 'data_source_profiles', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_template_data', 'ENGINE' => $GLOBALS['failure'] === 'guard-engine' ? 'MyISAM' : 'InnoDB'));
+    }
+    if (str_contains($sql, 'information_schema.TRIGGERS')) {
+        if ($GLOBALS['failure'] === 'guard-missing') {
+            return array();
+        }
+        $rows = array();
+        foreach (data_source_profile_reference_triggers() as $name => $definition) {
+            $rows[] = array('TRIGGER_NAME' => $name, 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $GLOBALS['failure'] === 'guard-modified' ? 'BEGIN END' : $definition['body']);
+        }
+        return $rows;
+    }
     if (str_contains($sql, 'FROM data_template_data') && str_contains($sql, 'FOR UPDATE')) {
         if ($GLOBALS['failure'] === 'lookup-false') {
             return false;

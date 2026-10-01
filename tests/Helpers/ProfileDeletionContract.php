@@ -33,8 +33,8 @@ abstract class ProfileDeletionContract extends TestCase
         if ($failure === 'lookup-aborted' || $failure === 'commit' || str_starts_with($failure, 'data_source_profiles')) {
             self::assertSame(1, $state['rollbacks']);
         }
-        if (!str_starts_with($failure, 'lookup') && !in_array($failure, array('begin', 'isolation'), true)) {
-            $locking = array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FOR UPDATE') && $call[1] === ($scenario['selected'] ?? array(3)));
+        if (!str_starts_with($failure, 'lookup') && !in_array($failure, array('begin', 'isolation', 'guard-missing', 'guard-modified', 'guard-engine'), true)) {
+            $locking = array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FROM data_template_data') && str_contains($call[0], 'FOR UPDATE') && $call[1] === ($scenario['selected'] ?? array(3)));
             self::assertCount(1, $locking);
         }
     }
@@ -92,7 +92,7 @@ abstract class ProfileDeletionContract extends TestCase
     public static function scenarios(): array
     {
         $cases = array('unused' => array(array()), 'mixed' => array(array('selected' => array(1,2,3))), 'all referenced' => array(array('selected' => array(1,2))));
-        foreach (array('lookup-aborted','lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
+        foreach (array('guard-engine','guard-missing','guard-modified','lookup-aborted','lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
             $cases[$failure] = array(array('failure' => $failure));
         }
         return $cases;
@@ -109,6 +109,7 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertContains('data_source_profile_id', $state['indexes']);
         self::assertCount(1, array_filter($state['calls'], static fn($sql) => $sql === 'ALTER TABLE data_template_data ADD INDEX data_source_profile_id (data_source_profile_id)'));
         self::assertSame(2, $state['runs']);
+        self::assertCount(2, array_filter($state['calls'], static fn($sql) => str_starts_with($sql, 'CREATE TRIGGER')));
         if ($this->useMysql()) {
             self::assertSame('MUL', $state['audit']['liveKey']);
             self::assertSame($state['audit']['liveKey'], $state['audit']['baselineKey']);
@@ -117,6 +118,23 @@ abstract class ProfileDeletionContract extends TestCase
             self::assertSame('BTREE', $state['audit']['index']['Index_type']);
             self::assertSame('', $state['audit']['index']['Null']);
         }
+    }
+
+    public function testReferenceGuardInstallationFailureStopsUpgrade(): void
+    {
+        $state = $this->runNative(array('upgrade' => true, 'guard_failure' => true));
+        self::assertStringContainsString('could not be installed', $state['upgrade_error']);
+        self::assertStringContainsString('TRIGGER privileges', $state['upgrade_error']);
+    }
+
+    public function testReferenceGuardsMatchFreshSchemaAndFailClosed(): void
+    {
+        $state = $this->runNative(array('guard_unit' => true));
+        self::assertTrue($state['fresh']);
+        self::assertTrue($state['valid']);
+        self::assertSame(array_fill(0, 8, true), $state['refusals']);
+        self::assertSame(array(true, true, true), $state['engineRefusals']);
+        self::assertSame(array(true, true, true), $state['invalidIdentifiers']);
     }
 
     public function testAuditBaselinePreservesProfileReferenceIndex(): void
@@ -146,7 +164,7 @@ abstract class ProfileDeletionContract extends TestCase
         mkdir($directory, 0700);
         $coverage = $this->getTestResultObject()->getCodeCoverage();
         try {
-            $fixture = isset($scenario['upgrade']) ? 'profile-index-upgrade-native.php' : 'profile-deletion-native.php';
+            $fixture = isset($scenario['guard_unit']) ? 'profile-reference-guard-unit.php' : (isset($scenario['reference_guard']) ? 'profile-reference-race-native.php' : (isset($scenario['upgrade']) ? 'profile-index-upgrade-native.php' : 'profile-deletion-native.php'));
             $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/' . $fixture, json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
             if ($coverage !== null) {
                 $command[] = $directory;
