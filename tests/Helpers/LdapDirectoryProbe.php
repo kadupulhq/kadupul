@@ -378,5 +378,6 @@ function ldap_directory_failover_source() : string {
 	}
 
 	return substr($source, $start, $end - $start) . "\n" . cacti_test_function_source($source, 'cacti_ldap_server_unreachable') . "\n\n" .
-		cacti_test_function_source($source, 'cacti_ldap_search_next_server') . "\n\n";
+		cacti_test_function_source($source, 'cacti_ldap_search_next_server') . "\n\n" .
+		cacti_test_function_source($source, 'cacti_ldap_bind_next_server') . "\n\n";
 }

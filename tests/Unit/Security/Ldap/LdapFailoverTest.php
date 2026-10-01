@@ -42,7 +42,7 @@ function ldap_failover_login(array $scenario, string $password) : array {
 /**
  * @return array<string, mixed>
  */
-function ldap_failover_domain_login(array $scenario, string $password) : array {
+function ldap_failover_domain_login(array $scenario, string $password, string $mode = '2') : array {
 	$scenario['request'] = array('login_password' => $password, 'realm' => '1001');
 	$scenario['domain']  = array(
 		'domain_id'         => 1,
@@ -52,7 +52,7 @@ function ldap_failover_domain_login(array $scenario, string $password) : array {
 		'proto_version'     => '3',
 		'encryption'        => '0',
 		'referrals'         => '0',
-		'mode'              => '2',
+		'mode'              => $mode,
 		'dn'                => 'uid=<username>,ou=people,dc=example,dc=com',
 		'group_require'     => '',
 		'group_dn'          => '',
@@ -172,4 +172,50 @@ test('a Domains login follows the same rules', function () {
 		->and(array_column($down['calls']['searches'], 0))->toBe(array('ldap2'))
 		->and(ldap_failover_user_binds($down))->toBe(array('ldap2'))
 		->and($down['calls']['connects'])->not->toContain('global.example.com');
+});
+
+/*
+ * No Searching mode builds the DN from the template and never asks a server
+ * whether the user exists, so a rejected bind may only mean the user lives on
+ * another server. 1.2.31 moved on in that case, and so does this.
+ */
+function ldap_failover_no_search_servers() : array {
+	$scenario = ldap_directory_probe_replicas();
+
+	array_shift($scenario['servers']['ldap1']['entries']);
+
+	$scenario['config']['ldap_mode'] = '0';
+
+	return $scenario;
+}
+
+test('No Searching mode tries the next server when the first rejects the bind', function () {
+	$result = ldap_failover_login(ldap_failover_no_search_servers(), 'secret');
+
+	expect($result['error'])->toBeFalse()
+		->and($result['result']['id'])->toBe(9)
+		->and($result['calls']['searches'])->toBe(array())
+		->and(ldap_failover_user_binds($result))->toBe(array('ldap1', 'ldap2'))
+		->and($result['lockouts'])->toBe(0);
+});
+
+test('No Searching mode counts a wrong password once per login however many servers reject it', function () {
+	$scenario = ldap_directory_probe_replicas();
+	$scenario['config']['ldap_mode'] = '0';
+
+	$result = ldap_failover_login($scenario, 'wrong');
+
+	expect($result['error'])->toBeTrue()
+		->and(ldap_failover_user_binds($result))->toBe(array('ldap1', 'ldap2'))
+		->and($result['lockouts'])->toBe(1);
+});
+
+test('a No Searching Domains login tries the next server when the first rejects the bind', function () {
+	$scenario = ldap_failover_no_search_servers();
+
+	$result = ldap_failover_domain_login($scenario, 'secret', '0');
+
+	expect($result['error'])->toBeFalse()
+		->and(ldap_failover_user_binds($result))->toBe(array('ldap1', 'ldap2'))
+		->and($result['lockouts'])->toBe(0);
 });

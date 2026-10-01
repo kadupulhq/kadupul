@@ -95,7 +95,7 @@ function cacti_ldap_auth($username, $password = '', $dn = '', $host = '', $port 
 
 		$response = $ldap->Authenticate();
 
-		if (!cacti_ldap_server_unreachable($response)) {
+		if (!cacti_ldap_bind_next_server($response, $ldap->mode == '0')) {
 			return $response;
 		}
 	}
@@ -802,6 +802,7 @@ class Ldap {
 			/* Just bind mode, make dn and return */
 			$output = LdapError::GetErrorDetails(LdapError::Success);
 			$output['dn'] = $this->dn;
+			$output['search_skipped'] = true;
 			$this->RestoreCactiHandler();
 			return $output;
 		} elseif ($this->mode == '2') {
@@ -1059,6 +1060,25 @@ function cacti_ldap_server_unreachable($response) {
 	$unreachable = array(-1, -5, -11, 0x33, 0x34, 0x51, 0x55, 0x5b);
 
 	return isset($response['ldap_errno']) && in_array((int) $response['ldap_errno'], $unreachable, true);
+}
+
+/**
+ * cacti_ldap_bind_next_server - whether a failed user bind should move on to
+ *   the next server.  Besides an unreachable server, a rejected bind qualifies
+ *   in No Searching mode, as in 1.2.31: no server was asked whether the user
+ *   exists, so a rejection may only mean the user lives on another server.
+ *
+ * @param  (array|bool) $response       - an Authenticate() response
+ * @param  (bool)       $search_skipped - true when the DN came from the template, not a search
+ *
+ * @return (bool) true when the next server should be tried
+ */
+function cacti_ldap_bind_next_server($response, $search_skipped) {
+	if (cacti_ldap_server_unreachable($response)) {
+		return true;
+	}
+
+	return $search_skipped && is_array($response) && isset($response['error_num']) && $response['error_num'] == LdapError::Failure;
 }
 
 /**

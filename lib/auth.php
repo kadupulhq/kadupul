@@ -3845,7 +3845,7 @@ function ldap_login_process($username) {
 				/* auth user with LDAP */
 				$ldap_auth_response = cacti_ldap_auth($username, $password, $ldap_dn_search_response['dn'], $ldap_server);
 
-				if (!cacti_ldap_server_unreachable($ldap_auth_response)) {
+				if (!cacti_ldap_bind_next_server($ldap_auth_response, !empty($ldap_dn_search_response['search_skipped']))) {
 					break;
 				}
 			} elseif (!cacti_ldap_search_next_server($ldap_dn_search_response)) {
@@ -3960,7 +3960,7 @@ function domains_login_process($username) {
 				/* auth user with LDAP */
 				$ldap_auth_response = domains_ldap_auth($username, $password, $ldap_dn_search_response['dn'], $realm, $ldap_server);
 
-				if (!cacti_ldap_server_unreachable($ldap_auth_response)) {
+				if (!cacti_ldap_bind_next_server($ldap_auth_response, !empty($ldap_dn_search_response['search_skipped']))) {
 					break;
 				}
 			} elseif (!cacti_ldap_search_next_server($ldap_dn_search_response)) {
@@ -4233,7 +4233,7 @@ function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0, $hos
 
 			$response = $ldap->Authenticate();
 
-			if (!cacti_ldap_server_unreachable($response)) {
+			if (!cacti_ldap_bind_next_server($response, $ldap->mode == '0')) {
 				return $response;
 			}
 		}
