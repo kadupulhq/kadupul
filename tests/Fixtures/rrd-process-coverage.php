@@ -14,6 +14,11 @@ $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('UTILITY_LOG_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/utilities.php');
 }
+if (defined('UTILITY_VIEW_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/utilities.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
