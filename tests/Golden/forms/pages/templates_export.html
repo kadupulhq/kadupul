@@ -1,0 +1,47 @@
+<form action="templates_export.php" autocomplete="off" class="cactiFormStart" id="export" method="post" name="export">
+  <div class="cactiTable" id="templates_export1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Export Templates</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Export-Template.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="formRow odd" id="row_export_type"><div class="formColumnLeft"><div class="formFieldName">What would you like to export?<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select the Template type that you wish to export from Kadupul.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <select id="export_type" name="export_type">
+        <option selected="" value="host_template">Device Template</option>
+        <option value="graph_template">Graph Template</option>
+        <option value="data_template">Data Template</option>
+        <option value="data_query">Data Query</option>
+      </select>
+      </div>
+      </div>
+    </div>
+    <table class="cactiTable" id="templates_export1_child" style="padding:3px;"></table>
+  </div>
+  <div class="break"></div>
+  <div class="cactiTable" id="templates_export2" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Available Templates [Device Template]</span></div><div class="cactiTableButton"><span></span></div></div>
+    <div class="formRow odd" id="row_export_item_id"><div class="formColumnLeft"><div class="formFieldName">Device Template to Export<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Template to export to XML.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <select id="export_item_id" name="export_item_id"></select>
+      </div>
+      </div>
+    </div>
+    <div class="formRow even" id="row_include_deps"><div class="formColumnLeft"><div class="formFieldName">Include Dependencies<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Some templates rely on other items in Kadupul to function properly. It is highly recommended that you select this box or the resulting import may fail.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Include Dependencies"><input aria-checked="true" checked="" class="formCheckbox" id="include_deps" name="include_deps" title="Include Dependencies" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="include_deps">Include Dependencies</label></span></div></div></div>
+    <div class="formRow odd" id="row_output_format"><div class="formColumnLeft"><div class="formFieldName">Output Format<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the format to output the resulting XML file in.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><div style="formRadio"><span class="nowrap"><label class="radioSwitch"><input aria-checked="false" class="formCheckbox" id="output_format_1" name="output_format" type="radio" value="1"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="output_format_1">Output to the Browser (within Kadupul)</label></span><br><span class="nowrap"><label class="radioSwitch"><input aria-checked="false" class="formCheckbox" id="output_format_2" name="output_format" type="radio" value="2"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="output_format_2">Output to the Browser (raw XML)</label></span><br><span class="nowrap"><label class="radioSwitch"><input aria-checked="true" checked="" class="formCheckbox" id="output_format_3" name="output_format" type="radio" value="3"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="output_format_3">Save File Locally</label></span><br></div></div></div></div>
+    <div style="display:none;"><input id="save_component_export" name="save_component_export" style="height:0px;" type="hidden" value="1"></div>
+    <table class="cactiTable" id="templates_export2_child" style="padding:3px;"></table>
+  </div>
+  <div class="break"></div>
+  <script nonce="&lt;NONCE&gt;" type="text/javascript">
+	var stopTimer;
+
+	$(function() {
+		$('#export_type').on('change', function() {
+			strURL = 'templates_export.php?header=false&export_type='+$('#export_type').val();
+			loadPageNoHeader(strURL);
+		});
+
+		$('form#export').on('submit', function(event) {
+			stopTimer = setTimeout(function() { Pace.stop() }, 1000);
+		});
+	});
+	</script>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="export ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Export"></td></tr>
+    </tbody>
+  </table>
+</form>

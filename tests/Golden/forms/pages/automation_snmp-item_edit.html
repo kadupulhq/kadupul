@@ -1,0 +1,114 @@
+<form action="automation_snmp.php" autocomplete="off" class="cactiFormStart" id="automation_item_edit" method="post" name="automation_item_edit">
+  <div class="cactiTable" id="automation_snmp_item_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>SNMP Options [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="SNMP-Options.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="automation_snmp_item_edit1_child">
+      <div class="formRow odd" id="row_snmp_version"><div class="formColumnLeft"><div class="formFieldName">SNMP Version<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the SNMP version for this host.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_version" name="snmp_version">
+          <option value="0">Not In Use</option>
+          <option value="1">Version 1</option>
+          <option selected="" value="2">Version 2</option>
+          <option value="3">Version 3</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_snmp_community"><div class="formColumnLeft"><div class="formFieldName">SNMP Community String<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Fill in the SNMP read community for this device.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_community" maxlength="100" name="snmp_community" off="" size="20" type="text" value="public"></div></div></div>
+      <div class="formRow odd" id="row_snmp_security_level"><div class="formColumnLeft"><div class="formFieldName">SNMP Security Level<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">SNMP v3 Security Level to use when querying the device.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_security_level" name="snmp_security_level">
+          <option value="noAuthNoPriv">noAuthNoPriv</option>
+          <option value="authNoPriv">authNoPriv</option>
+          <option selected="" value="authPriv">authPriv</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_snmp_auth_protocol"><div class="formColumnLeft"><div class="formFieldName">SNMP Auth Protocol (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the SNMPv3 Authorization Protocol.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_auth_protocol" name="snmp_auth_protocol">
+          <option value="[None]">[None]</option>
+          <option selected="" value="MD5">MD5</option>
+          <option value="SHA">SHA</option>
+          <option value="SHA224">SHA-224</option>
+          <option value="SHA256">SHA-256</option>
+          <option value="SHA384">SHA-384</option>
+          <option value="SHA512">SHA-512</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_snmp_username"><div class="formColumnLeft"><div class="formFieldName">SNMP Username (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">SNMP v3 username for this device.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_username" maxlength="50" name="snmp_username" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_snmp_password"><div class="formColumnLeft"><div class="formFieldName">SNMP Password (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">SNMP v3 password for this device.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="snmp_password" maxlength="50" name="snmp_password" placeholder="********" size="40" type="password" value=""><br><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="snmp_password_confirm" maxlength="50" name="snmp_password_confirm" placeholder="********" size="40" type="password" value=""></div></div></div>
+      <div class="formRow odd" id="row_snmp_priv_protocol"><div class="formColumnLeft"><div class="formFieldName">SNMP Privacy Protocol (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the SNMPv3 Privacy Protocol.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_priv_protocol" name="snmp_priv_protocol">
+          <option value="[None]">[None]</option>
+          <option selected="" value="DES">DES</option>
+          <option value="AES">AES</option>
+          <option value="AES128">AES-128</option>
+          <option value="AES192">AES-192</option>
+          <option value="AES192C">AES-192-C</option>
+          <option value="AES256">AES-256</option>
+          <option value="AES256C">AES-256-C</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_snmp_priv_passphrase"><div class="formColumnLeft"><div class="formFieldName">SNMP Privacy Passphrase (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the SNMPv3 Privacy Passphrase.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="snmp_priv_passphrase" maxlength="200" name="snmp_priv_passphrase" placeholder="********" size="80" type="password" value=""><br><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="snmp_priv_passphrase_confirm" maxlength="200" name="snmp_priv_passphrase_confirm" placeholder="********" size="80" type="password" value=""></div></div></div>
+      <div class="formRow odd" id="row_snmp_context"><div class="formColumnLeft"><div class="formFieldName">SNMP Context (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter the SNMP Context to use for this device.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_context" maxlength="64" name="snmp_context" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_snmp_engine_id"><div class="formColumnLeft"><div class="formFieldName">SNMP Engine ID (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_engine_id" maxlength="64" name="snmp_engine_id" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_snmp_port"><div class="formColumnLeft"><div class="formFieldName">SNMP Port<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter the UDP port number to use for SNMP (default is 161).</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_port" maxlength="5" name="snmp_port" off="" size="12" type="text" value="161"></div></div></div>
+      <div class="formRow even" id="row_snmp_timeout"><div class="formColumnLeft"><div class="formFieldName">SNMP Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_timeout" maxlength="8" name="snmp_timeout" off="" size="12" type="text" value="500"></div></div></div>
+      <div class="formRow odd" id="row_max_oids"><div class="formColumnLeft"><div class="formFieldName">Maximum OIDs Per Get Request<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of SNMP OIDs that can be obtained in a single SNMP Get request.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="max_oids" name="max_oids">
+          <option value="1">1 OID</option>
+          <option value="2">2 OID's</option>
+          <option value="3">3 OID's</option>
+          <option value="4">4 OID's</option>
+          <option value="5">5 OID's</option>
+          <option selected="" value="10">10 OID's</option>
+          <option value="15">15 OID's</option>
+          <option value="20">20 OID's</option>
+          <option value="25">25 OID's</option>
+          <option value="30">30 OID's</option>
+          <option value="35">35 OID's</option>
+          <option value="40">40 OID's</option>
+          <option value="45">45 OID's</option>
+          <option value="50">50 OID's</option>
+          <option value="55">55 OID's</option>
+          <option value="60">60 OID's</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_bulk_walk_size"><div class="formColumnLeft"><div class="formFieldName">Bulk Walk Maximum Repetitions<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">For SNMPv2 and SNMPv3 Devices, the SNMP Bulk Walk max-repetitions size. The default is to 'Auto Detect on Re-Index'. For very large switches, high performance servers, Jumbo Frame Networks or for high latency WAN connections, increasing this value may increase poller performance. More data is packed into a single SNMP packet which can reduce data query run time. However, some devices may completely refuse to respond to packets with a max-repetition size which is set too large. This can be especially true for lower-powered IoT type devices or smaller embedded IT appliances. Special attention to the overall network path MTU should also be considered since setting a value which is too high could lead to packet fragmentation.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="bulk_walk_size" name="bulk_walk_size">
+          <option value="-1">Auto Detect on Re-Index</option>
+          <option selected="" value="0">Auto Detect/Set on first Re-Index</option>
+          <option value="1">1 Repitition</option>
+          <option value="2">2 Repetitions</option>
+          <option value="3">3 Repetitions</option>
+          <option value="4">4 Repetitions</option>
+          <option value="5">5 Repetitions</option>
+          <option value="10">10 Repetitions</option>
+          <option value="15">15 Repetitions</option>
+          <option value="20">20 Repetitions</option>
+          <option value="25">25 Repetitions</option>
+          <option value="30">30 Repetitions</option>
+          <option value="35">35 Repetitions</option>
+          <option value="40">40 Repetitions</option>
+          <option value="45">45 Repetitions</option>
+          <option value="50">50 Repetitions</option>
+          <option value="55">55 Repetitions</option>
+          <option value="60">60 Repetitions</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_snmp_retries"><div class="formColumnLeft"><div class="formFieldName">SNMP Retries<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_retries" maxlength="8" name="snmp_retries" off="" size="12" type="text" value="3"></div></div></div>
+      <div class="formRow even" id="row_sequence"><div class="formColumnLeft"><div class="formFieldName">Sequence<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Sequence of Item.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><em>1</em><div style="display:none;"><input id="sequence" name="sequence" style="height:0px;" type="hidden" value="1"></div></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="item_id" name="item_id" style="height:0px;" type="hidden" value="0"></div><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="save_component_automation_snmp_item" name="save_component_automation_snmp_item" style="height:0px;" type="hidden" value="1"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="automation_snmp.php?action=edit&amp;id=1" type="button" value="Cancel"><input class=" ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>

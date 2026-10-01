@@ -29,3 +29,8 @@ trim_trailing_whitespace = false
 
 [Makefile]
 indent_style = tab
+
+# Form goldens are byte-for-byte page output, whitespace included.
+[tests/Golden/forms/**]
+trim_trailing_whitespace = false
+insert_final_newline = unset
