@@ -460,6 +460,16 @@ test('a search password whose confirmation differs does not count as entered aga
 		->and($result['writes'])->toBe(array());
 });
 
+test('a search password of 0, which the settings save never writes, does not count as entered again', function () {
+	$result = ldap_form_settings_run(array(
+		'request'  => ldap_form_settings_post(array('ldap_server' => 'rogue.example.net', 'ldap_specific_password' => '0', 'ldap_specific_password_confirm' => '0')),
+		'settings' => ldap_form_saved_settings(),
+	));
+
+	expect($result['messages'])->toBe(array('ldap_password_reentry'))
+		->and($result['writes'])->toBe(array());
+});
+
 test('settings without a saved search password save a new server as before', function () {
 	$settings = ldap_form_saved_settings();
 	$settings['ldap_specific_password'] = '';

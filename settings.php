@@ -53,11 +53,11 @@ case 'save':
 			'encryption' => get_nfilter_request_var('ldap_encryption', $ldap_saved['encryption'])
 		);
 
-		/* a password only counts as entered again when its confirmation matches;
-		 * otherwise the loop below would save the new server and then stop */
+		/* a password only counts as entered again when the loop below would save
+		 * it: the confirmation must match, and isempty_request_var() skips '0' */
 		$ldap_password = get_nfilter_request_var('ldap_specific_password');
 
-		if ($ldap_password != get_nfilter_request_var('ldap_specific_password_confirm')) {
+		if ($ldap_password != get_nfilter_request_var('ldap_specific_password_confirm') || empty($ldap_password)) {
 			$ldap_password = '';
 		}
 
