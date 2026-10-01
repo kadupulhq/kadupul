@@ -7,8 +7,10 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
-- Coordinate Data Source Profile definition writers with deletion and preserve unchanged legacy references.
-- Index RRD input-field references on fresh installations and through a registered schema upgrade from an already installed 1.2.31, keeping reference locks scoped to the selected fields.
+- Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
+
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
 
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
@@ -60,7 +62,6 @@ Targeting `v1.3.0`, the first planned application release. See
 - Normalize Graph View graph-list values before storing them in the session, escape them in HTML, and encode them for JavaScript. Removing the last selected graph now clears the stored selection, while paging preserves it. Fixes #574.
 - Escape and type-check the posted local graph ID before rendering Aggregate Graphs bulk-action confirmation markup. Fixes #586.
 - Escape color-dropdown values and enclosing form row IDs in their HTML contexts; render color option identifiers as integers. Fixes #576.
-- Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 

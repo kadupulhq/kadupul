@@ -20,7 +20,10 @@ test('the registered index migration adds a missing index and preserves an exist
         fclose($pipes[1]);
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0, $errors . $output)->and($errors)->toBe('');
-        $expected = $state === 'missing' ? ['ALTER TABLE data_template_rrd ADD INDEX data_input_field_id (data_input_field_id)'] : [];
+        $expected = ["ALTER TABLE settings_user MODIFY user_id mediumint(8) unsigned NOT NULL default '0'"];
+        if ($state === 'missing') {
+            $expected[] = 'ALTER TABLE data_template_rrd ADD INDEX data_input_field_id (data_input_field_id)';
+        }
         expect(json_decode($output, true, 16, JSON_THROW_ON_ERROR))->toBe($expected);
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
