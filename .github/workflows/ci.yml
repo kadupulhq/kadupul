@@ -189,16 +189,21 @@ jobs:
           # shellcheck disable=SC2016
           php -r '$manifest = json_decode(file_get_contents("composer.json"), true, 512, JSON_THROW_ON_ERROR); echo "available=" . (isset($manifest["scripts"]["test"]) ? "true" : "false") . PHP_EOL;' >> "$GITHUB_OUTPUT"
 
-      - name: Tests
-        if: steps.composer-test.outputs.available == 'true'
-        run: composer test
-
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22.22.2'
 
       - name: Build installed browser assets for compatibility tests
         run: npm ci --ignore-scripts && npm run build
+
+      # The production command, strict about unresolved url() and @import.
+      # CompiledLegacyAssetsTest compiles again into a scratch directory.
+      - name: Compile browser assets
+        run: php bin/console asset-map:compile
+
+      - name: Tests
+        if: steps.composer-test.outputs.available == 'true'
+        run: composer test
 
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
@@ -341,7 +346,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-hashes.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs
 
   changelog:
     name: Changelog
