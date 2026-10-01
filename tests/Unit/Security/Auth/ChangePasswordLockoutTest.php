@@ -253,6 +253,7 @@ test('the last allowed wrong guess locks the account', function () {
 
 	expect($result['user']['failed_attempts'])->toBe(3)
 		->and($result['user']['locked'])->toBe('on')
+		->and($result['message'])->toBe('Your account has been locked.  Please contact your Administrator.')
 		->and($result['changed'])->toBeFalse();
 });
 

@@ -149,7 +149,14 @@ case 'changepassword':
 		auth_process_lockout($user['username'], 0);
 
 		$bad_password = true;
-		$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
+
+		/* the last allowed guess locks the account, so say that rather than ask for another try */
+		if (auth_process_lockout_check($user['username'], 0)) {
+			$errorMessage = "<span class='badpassword_message'>" . __('Your account has been locked.  Please contact your Administrator.') . "</span>";
+		} else {
+			$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
+		}
+
 		break;
 	}
 
