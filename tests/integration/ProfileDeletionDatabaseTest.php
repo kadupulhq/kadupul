@@ -34,7 +34,8 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     {
         $state = $this->runNative(array('collector' => 'bulk', 'failure' => 'index-equivalent', 'entrypoint' => true, 'class' => $class));
         self::assertTrue($state['result']);
-        self::assertSame($class === 'all' ? '1.2.34' : '1.2.33', $state['remote_version']);
+        self::assertSame('1.2.33', $state['remote_version']);
+        self::assertSame(array(), array_filter($state['calls'], static fn($call) => preg_match('/\bversion\b/', $call[1])));
         self::assertSame(array('', 'on'), $state['sync']);
     }
 

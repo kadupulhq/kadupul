@@ -121,7 +121,7 @@ function data_source_profile_reference_guards_available(
     return true;
 }
 
-/** Collector version publication requires the complete registered profile upgrade. */
+/** Collector synchronization requires the complete registered profile upgrade. */
 function data_source_profile_reference_index_available(PDO|false $connection = false): bool
 {
     $rows = db_fetch_assoc_prepared(
