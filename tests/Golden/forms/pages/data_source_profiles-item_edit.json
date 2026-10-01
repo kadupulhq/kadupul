@@ -1,0 +1,14 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "form_rra",
+        "row_retention",
+        "row_size",
+        "rows",
+        "steps"
+    ],
+    "script_names": []
+}
