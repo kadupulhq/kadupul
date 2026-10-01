@@ -62,7 +62,7 @@ function db_fetch_assoc_prepared($sql,$params=[]){
     }
     if(!str_contains($sql,'information_schema.TRIGGERS')){throw new RuntimeException('Unexpected installer metadata query');}
     $rows=array();
-    foreach(data_source_profile_reference_triggers() as $name=>$definition){
+    foreach(array_merge(data_source_profile_reference_triggers(), data_source_profile_definition_triggers()) as $name=>$definition){
         if(in_array($definition['sql'],$GLOBALS['statements']??array(),true)){
             $rows[]=array('TRIGGER_NAME'=>$name,'ACTION_TIMING'=>$definition['timing'],'EVENT_MANIPULATION'=>$definition['event'],'ACTION_STATEMENT'=>$definition['body']);
         }
@@ -91,13 +91,14 @@ echo json_encode(array($result,$statements,$cacheRemoved));
 INSTALLER;
     try {
         file_put_contents($dir . '/probe.php', $script);
-        $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$dir . '/probe.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+        $process = proc_open(array(PHP_BINARY,'-d','error_reporting=24575','-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$dir . '/probe.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
         $out = stream_get_contents($pipes[1]);
         $err = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0, $err)->and($err)->toBe('');
         $result = json_decode($out, true);
+        $this->assertSame(JSON_ERROR_NONE, json_last_error(), $out);
         expect($result[2])->toBeTrue('The installer cache file must be created and removed by the native probe.');
         if ($engine === 'InnoDB' || $collector === 'recovery') {
             expect($result[0])->toBeFalse();
