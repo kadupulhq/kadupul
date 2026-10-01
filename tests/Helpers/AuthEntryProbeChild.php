@@ -214,6 +214,17 @@ function db_fetch_cell($sql, $col_name = '', $log = true)
 function db_execute_prepared($sql, $params = array(), $log = true)
 {
     $GLOBALS['probe']['executed'][] = array('sql' => probe_normalize_sql($sql), 'params' => $params);
+    if (str_contains($sql, 'DELETE FROM user_auth_cache')) {
+        $db = new PDO('sqlite::memory:');
+        $db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, token TEXT, hostname TEXT)');
+        $insert = $db->prepare('INSERT INTO user_auth_cache VALUES (?, ?, ?)');
+        foreach ($GLOBALS['probe']['cache'] as $row) {
+            $insert->execute(array($row['user_id'], $row['token'], $row['hostname']));
+        }
+        $db->prepare($sql)->execute($params);
+        $GLOBALS['probe']['cache'] = $db->query('SELECT * FROM user_auth_cache')->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     return true;
 }
@@ -390,6 +401,7 @@ register_shutdown_function(function () use ($probe_dir): void {
     print json_encode(array(
         'return' => $GLOBALS['probe']['return'],
         'elapsed_seconds' => $GLOBALS['probe']['elapsed_seconds'] ?? null,
+        'cache' => $GLOBALS['probe']['cache'],
         'credential_password' => isset($GLOBALS['credential_db']) ? $GLOBALS['credential_db']->query('SELECT password FROM user_auth WHERE id = 42')->fetchColumn() : null,
         'session' => $_SESSION,
         'executed' => $GLOBALS['probe']['executed'],

@@ -128,8 +128,15 @@ $config = array('url_path' => '/kadupul/');
 $_SESSION = $GLOBALS['scenario']['session'];
 $GLOBALS['calls'] = array('redirect' => null);
 register_shutdown_function(function () {
-    print json_encode(array('session' => $_SESSION, 'calls' => $GLOBALS['calls']));
+    print json_encode(array('session' => $_SESSION, 'calls' => $GLOBALS['calls'], 'remember_rows' => $GLOBALS['remember_db']->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn()));
 });
+$_COOKIE['cacti_remembers'] = '42,0,before-upgrade';
+$GLOBALS['remember_db'] = new PDO('sqlite::memory:');
+$GLOBALS['remember_db']->exec('CREATE TABLE user_auth_cache (user_id INTEGER, token TEXT)');
+$GLOBALS['remember_db']->prepare('INSERT INTO user_auth_cache VALUES (?, ?)')->execute(array(42, hash('sha512', 'before-upgrade')));
+function db_table_exists($name) { return true; }
+function db_execute_prepared($sql, $params = array()) { return $GLOBALS['remember_db']->prepare($sql)->execute($params); }
+function cacti_cookie_session_logout() {}
 function cacti_require_post_actions($actions) {}
 function set_default_action($default = '') {}
 function get_request_var($name, $default = '') { return $default; }
@@ -145,7 +152,7 @@ function db_fetch_row_prepared($sql, $params = array()) {
 }
 PHP;
 
-    foreach (array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_credentials_valid') as $name) {
+    foreach (array('clear_auth_cookie', 'auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_credentials_valid') as $name) {
         $global .= "\n" . test_php_function_source($auth, $name) . "\n";
     }
 
@@ -226,4 +233,23 @@ test('an administrator who changes another password keeps their own binding', fu
 
     expect($result['saved']['password'])->toBe('hash:N3w-password!')
         ->and($result['session']['sess_user_credential'])->toBe(hash('sha256', 'hash:old'));
+});
+
+test('unbound sessions revoke a valid remember token before the native bootstrap can restore it', function () {
+    $token = 'remember-before-upgrade';
+    $result = auth_entry_probe_run(password_change_request('unchanged-password', array('sess_user_id' => '42'), array(
+        'bind_session' => false,
+        'config' => array('auth_method' => 1, 'auth_cache_enabled' => 'on'),
+        'cookie' => '42,0,' . $token,
+        'cache' => array(array('user_id' => 42, 'token' => hash('sha512', $token), 'hostname' => '192.0.2.10')),
+    )));
+    expect($result['session'])->not->toHaveKey('sess_user_id')
+        ->and($result['cache'])->toBe(array())
+        ->and($result['events'])->toContain('login_page');
+});
+
+test('the standalone password page revokes remember credentials before redirecting an unbound session', function () {
+    $result = password_change_page_run(array('sess_user_id' => '42'));
+    expect((int) $result['remember_rows'])->toBe(0)
+        ->and($result['session'])->not->toHaveKey('sess_user_id');
 });

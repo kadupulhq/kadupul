@@ -65,6 +65,8 @@ $user = db_fetch_row_prepared(
 
 /* A session opened before the last password change or reset is not logged in. */
 if (cacti_sizeof($user) && !auth_session_credentials_valid($user['password'])) {
+    clear_auth_cookie();
+    unset($_COOKIE['cacti_remembers']);
     kill_session_var('sess_change_password');
     kill_session_var('sess_user_id');
 

@@ -52,6 +52,8 @@ if ($auth_method != 0 && isset($_SESSION['sess_user_id'])) {
 
     /* A password change or reset ends every session the account opened before it. */
     if (!auth_session_credentials_valid($session_user['password'])) {
+        clear_auth_cookie();
+        unset($_COOKIE['cacti_remembers']);
         cacti_log('NOTE: Session for user id ' . $_SESSION['sess_user_id'] . ' ended because its password binding is missing or changed', false, 'AUTH');
 
         cacti_session_destroy();

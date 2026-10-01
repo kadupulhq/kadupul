@@ -268,8 +268,8 @@ dynamic_include	./color_templates.php:363		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:413		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:469		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./graph_realtime.php:388	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
-dynamic_include	./include/auth.php:148	                require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/auth.php:215	            require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/auth.php:150	                require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/auth.php:217	            require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:402	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/csrf.php:44	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/global.php:274	include_once($config['library_path'] . '/database.php');
@@ -616,9 +616,9 @@ header_redirect	./aggregate_templates.php:274			header('Location: aggregate_temp
 header_redirect	./aggregate_templates.php:311			header('Location: aggregate_templates.php?header=false');
 header_redirect	./aggregate_templates.php:54			header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
 header_redirect	./aggregate_templates.php:89			header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
-header_redirect	./auth_changepassword.php:115	    header('Location: graph_view.php');
-header_redirect	./auth_changepassword.php:266	            header('Location: logout.php');
-header_redirect	./auth_changepassword.php:359	        header('Location:index.php');
+header_redirect	./auth_changepassword.php:117	    header('Location: graph_view.php');
+header_redirect	./auth_changepassword.php:268	            header('Location: logout.php');
+header_redirect	./auth_changepassword.php:361	        header('Location:index.php');
 header_redirect	./auth_login.php:225	                header('Location: auth_login.php');
 header_redirect	./automation_devices.php:129			header('Location: automation_devices.php?header=false');
 header_redirect	./automation_devices.php:221			header('Location: automation_devices.php?header=false');
@@ -828,9 +828,9 @@ header_redirect	./host_templates.php:50			header('Location: host_templates.php?h
 header_redirect	./host_templates.php:55			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
 header_redirect	./host_templates.php:64			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
 header_redirect	./images/index.php:7	header("Location:../index.php");
-header_redirect	./include/auth.php:102	                        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+header_redirect	./include/auth.php:104	                        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/auth.php:34	    header('Location: ' . $config['url_path'] . 'install/');
-header_redirect	./include/auth.php:78	            header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+header_redirect	./include/auth.php:80	            header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
 header_redirect	./include/csrf.php:260	    header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
 header_redirect	./include/global.php:433	            header('Location: ' . $https_redirect);
