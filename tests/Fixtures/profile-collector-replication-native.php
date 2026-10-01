@@ -91,6 +91,7 @@ foreach ($maps as $side => &$map) {
     $map['data_source_profiles_cf'] = $side . '_cf_' . $suffix;
 }
 unset($map);
+$maps['source']['poller'] = 'src_poller_' . $suffix;
 $calls = [];
 $log = [];
 $affected = 0;
@@ -209,7 +210,7 @@ function array_rekey($rows, $key, $value)
 }
 function db_execute_prepared($sql, $params = [], $log = true, $connection = false)
 {
-    if (str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data')) {
+    if (str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data') || str_starts_with($sql, 'UPDATE poller SET requires_sync')) {
         try {
             collector_statement($sql, $params, $connection);
             return true;
@@ -249,6 +250,8 @@ function __($message)
     return $message;
 }
 try {
+    $source->exec('CREATE TABLE `' . $maps['source']['poller'] . '` (id INTEGER PRIMARY KEY, requires_sync VARCHAR(2)) ENGINE=InnoDB');
+    $source->exec('INSERT INTO `' . $maps['source']['poller'] . '` VALUES (2,""),(3,"on")');
     foreach ($maps as $side => $map) {
         $connection = $side === 'source' ? $source : $remote;
         $connection->exec('CREATE TABLE `' . $map['data_source_profiles'] . '` (id INTEGER PRIMARY KEY, name VARCHAR(32), step INTEGER) ENGINE=InnoDB');
@@ -321,8 +324,9 @@ try {
     $rows = $remote->query('SELECT * FROM `' . $maps['remote']['data_template_data'] . '` ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
     $parent = $remote->query('SELECT id FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn();
     $rras = $remote->query('SELECT r.steps,r.`rows`,c.consolidation_function_id FROM `' . $maps['remote']['data_template_data'] . '` d JOIN `' . $maps['remote']['data_source_profiles_rra'] . '` r ON r.data_source_profile_id=d.data_source_profile_id JOIN `' . $maps['remote']['data_source_profiles_cf'] . '` c ON c.data_source_profile_id=d.data_source_profile_id WHERE d.id=2')->fetchAll(PDO::FETCH_ASSOC);
-    file_put_contents($directory . '/result.json', json_encode(['rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    file_put_contents($directory . '/result.json', json_encode(['sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
 } finally {
+    $source->exec('DROP TABLE IF EXISTS `' . $maps['source']['poller'] . '`');
     foreach ($maps as $map) {
         $remote->exec('DROP TABLE IF EXISTS `' . $map['data_template_data'] . '`');
         $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_rra'] . '`');

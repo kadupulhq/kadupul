@@ -11,6 +11,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
 - Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
+- Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 

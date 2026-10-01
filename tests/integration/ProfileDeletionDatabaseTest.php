@@ -47,6 +47,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     {
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true));
         self::assertSame($failure === '', $state['result']);
+        self::assertSame(array($failure === '' ? '' : 'on', 'on'), $state['sync']);
         if ($failure !== '') {
             self::assertSame(array(), $state['hooks']);
             self::assertNotContains('poller_sync', $state['messages']);

@@ -2176,6 +2176,7 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
             array($remote_poller_id)
         );
         if (replicate_out_table($rcnn_id, $data, 'data_template_data', $remote_poller_id) === false) {
+            db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($remote_poller_id));
             cacti_log('ERROR: Synchronization of Poller ' . $remote_poller_id . ' failed while replicating data-source definitions.', false, 'REPLICATE');
             if ($config['is_web']) {
                 raise_message('poller_sync_failed', __('Synchronization failed while replicating data-source definitions. See the log for details.'), MESSAGE_LEVEL_ERROR);
