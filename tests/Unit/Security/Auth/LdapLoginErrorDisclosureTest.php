@@ -18,7 +18,7 @@
  * lockout counting stays as it was: only a rejected password counts.
  */
 
-require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
+require_once dirname(__DIR__, 3) . '/Helpers/LdapDirectoryProbe.php';
 
 function ldap_login_run(array $scenario) : array {
 	$root = dirname(__DIR__, 4);
@@ -57,11 +57,15 @@ function auth_process_lockout($username, $realm) {
 	$GLOBALS['lockout_calls']++;
 }
 
-function cacti_ldap_search_dn($username) {
+function read_config_option($name, $force = false) {
+	return $name == 'ldap_server' ? 'ldap.example.com' : '';
+}
+
+function cacti_ldap_search_dn($username, $dn = '', $host = '') {
 	return $GLOBALS['scenario']['search'];
 }
 
-function cacti_ldap_auth($username, $password, $dn) {
+function cacti_ldap_auth($username, $password = '', $dn = '', $host = '') {
 	return $GLOBALS['scenario']['auth'];
 }
 
@@ -73,6 +77,7 @@ $GLOBALS['scenario'] = $scenario;
 
 PHP;
 
+	$source .= ldap_directory_failover_source();
 	$source .= $body . "\n\n";
 	$source .= '$user = ldap_login_process($scenario[\'username\']);' . "\n";
 	$source .= 'print json_encode(array(\'error\' => $error, \'error_msg\' => $error_msg, \'user\' => $user, \'logs\' => $GLOBALS[\'logs\'], \'lockout_calls\' => $GLOBALS[\'lockout_calls\']));' . "\n";

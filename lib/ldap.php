@@ -86,7 +86,7 @@ function cacti_ldap_auth($username, $password = '', $dn = '', $host = '', $port 
 	if (!empty($group_member_type)) $ldap->group_member_type = $group_member_type;
 
 	/* If the server list is a space delimited set of servers
-	 * process each server until you get a bind, or fail
+	 * process each server until one answers, or fail
 	 */
 	$ldap_servers = preg_split('/\s+/', $ldap->host);
 
@@ -95,7 +95,7 @@ function cacti_ldap_auth($username, $password = '', $dn = '', $host = '', $port 
 
 		$response = $ldap->Authenticate();
 
-		if ($response['error_num'] == 0) {
+		if (!cacti_ldap_server_unreachable($response)) {
 			return $response;
 		}
 	}
@@ -166,7 +166,7 @@ function cacti_ldap_search_dn($username, $dn = '', $host = '', $port = '', $port
 	if (!empty($specific_password)) $ldap->specific_password = $specific_password;
 
 	/* If the server list is a space delimited set of servers
-	 * process each server until you get a bind, or fail
+	 * process each server until one answers, or fail
 	 */
 	$ldap_servers = preg_split('/\s+/', $ldap->host);
 
@@ -175,7 +175,7 @@ function cacti_ldap_search_dn($username, $dn = '', $host = '', $port = '', $port
 
 		$response = $ldap->Search();
 
-		if ($response['error_num'] == 0) {
+		if (!cacti_ldap_search_next_server($response)) {
 			return $response;
 		}
 	}
@@ -750,6 +750,8 @@ class Ldap {
 				/* general bind error */
 				$output = LdapError::GetErrorDetails(LdapError::ProtocolErrorBind, $ldap_conn, $this->host);
 			}
+
+			$output['ldap_errno'] = $ldap_error;
 		}
 
 		/* Close LDAP connection */
@@ -846,6 +848,7 @@ class Ldap {
 			} else {
 				/* no search results, user not found*/
 				$output = LdapError::GetErrorDetails(LdapError::SearchFoundNoUser);
+				$output['ldap_errno'] = ldap_errno($ldap_conn);
 			}
 		} else {
 			/* unable to bind */
@@ -869,6 +872,8 @@ class Ldap {
 				/* general bind error */
 				$output = LdapError::GetErrorDetails(LdapError::ProtocolErrorBind, $ldap_conn, $this->host);
 			}
+
+			$output['ldap_errno'] = $ldap_error;
 		}
 
 		ldap_close($ldap_conn);
@@ -968,6 +973,7 @@ class Ldap {
 			} else {
 				/* no search results, user not found*/
 				$output = LdapError::GetErrorDetails(LdapError::SearchFoundNoUserDN);
+				$output['ldap_errno'] = ldap_errno($ldap_conn);
 			}
 		} else {
 			/* unable to bind */
@@ -991,6 +997,8 @@ class Ldap {
 				/* general bind error */
 				$output = LdapError::GetErrorDetails(LdapError::ProtocolErrorBind, $ldap_conn, $this->host);
 			}
+
+			$output['ldap_errno'] = $ldap_error;
 		}
 
 		ldap_close($ldap_conn);
@@ -1020,6 +1028,57 @@ class Ldap {
 			return false;
 		}
 	}
+}
+
+/**
+ * cacti_ldap_server_unreachable - whether a failed response leaves the next
+ *   server in the list worth trying.  Only a server that could not be reached,
+ *   or could not secure the connection, qualifies.  A rejected password is the
+ *   same answer on every replica, and asking each of them counts one mistake
+ *   once per server toward the directory's own lockout.
+ *
+ * @param  (array|bool) $response - an Authenticate(), Search() or Getcn() response
+ *
+ * @return (bool) true when the next server should be tried
+ */
+function cacti_ldap_server_unreachable($response) {
+	if (!is_array($response) || !isset($response['error_num']) || $response['error_num'] == 0) {
+		return false;
+	}
+
+	switch ($response['error_num']) {
+		case LdapError::ProtocolErrorTls:
+		case LdapError::MissingLdapObject:
+		case LdapError::ConnectionUnavailable:
+		case LdapError::ConnectionTimeout:
+			return true;
+	}
+
+	/* OpenLDAP reports a lost server as -1, a timeout as -5 and a failed connect
+	 * as -11; busy (0x33) and unavailable (0x34) come from the server itself */
+	$unreachable = array(-1, -5, -11, 0x33, 0x34, 0x51, 0x55, 0x5b);
+
+	return isset($response['ldap_errno']) && in_array((int) $response['ldap_errno'], $unreachable, true);
+}
+
+/**
+ * cacti_ldap_search_next_server - whether a failed user search should move on
+ *   to the next server.  Besides an unreachable server, a server that does not
+ *   hold the user qualifies, as in 1.2.31; the search binds only the service
+ *   account, so no user password is sent, and the user is then bound on the
+ *   server that found them.
+ *
+ * @param  (array|bool) $response - a Search() or Getcn() response
+ *
+ * @return (bool) true when the next server should be searched
+ */
+function cacti_ldap_search_next_server($response) {
+	if (cacti_ldap_server_unreachable($response)) {
+		return true;
+	}
+
+	return is_array($response) && isset($response['error_num']) &&
+		($response['error_num'] == LdapError::SearchFoundNoUser || $response['error_num'] == LdapError::SearchFoundNoUserDN);
 }
 
 /**

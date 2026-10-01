@@ -6,6 +6,8 @@
  +-------------------------------------------------------------------------+
 */
 
+require_once __DIR__ . '/LdapDirectoryProbe.php';
+
 /**
  * Run the shipped domains_login_process() in a child process with LDAP and
  * database calls stubbed. Request values come from get_nfilter_request_var().
@@ -149,7 +151,11 @@ function auth_process_lockout($username, $realm) {
 	$GLOBALS['lockout_calls']++;
 }
 
-function domains_ldap_search_dn($username, $realm) {
+function domains_ldap_servers($realm) {
+	return array('ldap.example.com');
+}
+
+function domains_ldap_search_dn($username, $realm, $host = '') {
 	$GLOBALS['ldap_calls']++;
 
 	if (!empty($GLOBALS['search_false'])) {
@@ -163,7 +169,7 @@ function domains_ldap_search_dn($username, $realm) {
 	return array('error_num' => '0', 'error_text' => '', 'dn' => 'uid=' . $username . ',dc=example,dc=com');
 }
 
-function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0) {
+function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0, $host = '') {
 	$GLOBALS['ldap_calls']++;
 
 	if (!empty($GLOBALS['auth_false'])) {
@@ -230,6 +236,7 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 
 PHP;
 
+	$harness .= ldap_directory_failover_source();
 	$harness .= $body . "\n\n";
 	$harness .= '$user = domains_login_process($scenario[\'username\']);' . "\n";
 	$harness .= 'print json_encode([' . "\n";

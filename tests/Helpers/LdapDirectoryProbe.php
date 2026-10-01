@@ -22,7 +22,8 @@
  * A scenario names its servers. Each server may be 'down' (every operation
  * fails as libldap reports an unreachable server, -1), may refuse StartTLS,
  * and holds its own entries. An entry has a dn, an optional bind password and
- * any attributes a search filter compares.
+ * any attributes a search filter compares; 'bind_errno' makes every bind as
+ * that entry fail with the given libldap error.
  */
 
 require_once __DIR__ . '/AuthEntryProbe.php';
@@ -197,6 +198,10 @@ namespace LdapDirectoryProbe {
 		}
 
 		foreach ($server['entries'] ?? array() as $entry) {
+			if ($entry['dn'] === $dn && isset($entry['bind_errno'])) {
+				return probe_fail($link, $entry['bind_errno']);
+			}
+
 			if (isset($entry['password']) && $entry['dn'] === $dn && $entry['password'] === $password) {
 				return true;
 			}
@@ -357,4 +362,21 @@ function ldap_directory_probe_replicas(array $hosts = array('ldap1', 'ldap2')) :
 			'ldap_specific_password' => 'search-secret',
 		),
 	);
+}
+
+/**
+ * The shipped LdapError class and failover predicates, for login
+ * harnesses that stub the directory calls but keep the failover decision real.
+ */
+function ldap_directory_failover_source() : string {
+	$source = file_get_contents(dirname(__DIR__, 2) . '/lib/ldap.php');
+	$start  = strpos($source, 'abstract class LdapError {');
+	$end    = strpos($source, "\nclass Ldap {", $start);
+
+	if ($start === false || $end === false) {
+		throw new RuntimeException('LdapError not found in lib/ldap.php');
+	}
+
+	return substr($source, $start, $end - $start) . "\n" . cacti_test_function_source($source, 'cacti_ldap_server_unreachable') . "\n\n" .
+		cacti_test_function_source($source, 'cacti_ldap_search_next_server') . "\n\n";
 }
