@@ -1523,6 +1523,7 @@ CREATE TABLE data_template_data (
   t_data_source_profile_id char(2) default '',
   data_source_profile_id mediumint(8) unsigned NOT NULL default '1',
   PRIMARY KEY (id),
+  KEY data_source_profile_id (data_source_profile_id),
   KEY local_data_id (local_data_id),
   KEY data_template_id (data_template_id),
   KEY data_input_id (data_input_id),

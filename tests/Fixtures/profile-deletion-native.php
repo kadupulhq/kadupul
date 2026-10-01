@@ -35,6 +35,7 @@ $db->exec($prefix . 'data_source_profiles (id INTEGER PRIMARY KEY, name VARCHAR(
 $db->exec($prefix . 'data_source_profiles_rra (id ' . $idColumn . ', data_source_profile_id INTEGER, name VARCHAR(255), steps INTEGER, `rows` INTEGER, timespan INTEGER)');
 $db->exec($prefix . 'data_source_profiles_cf (data_source_profile_id INTEGER, consolidation_function_id INTEGER)');
 $db->exec($prefix . 'data_template_data (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, local_data_id INTEGER)');
+$db->exec('CREATE INDEX data_source_profile_id ON data_template_data (data_source_profile_id)');
 $db->exec($prefix . 'settings (name VARCHAR(64) PRIMARY KEY, value VARCHAR(255))');
 $db->exec($prefix . 'settings_user (name VARCHAR(64),user_id INTEGER,value VARCHAR(255))');
 $db->exec($prefix . 'user_auth (id INTEGER PRIMARY KEY,username VARCHAR(64),reset_perms INTEGER)');
@@ -59,17 +60,6 @@ function profile_native_statement($sql, $params = array())
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
-    if (str_contains($sql, 'FROM data_template_data') && str_contains($sql, 'FOR UPDATE')) {
-        if ($GLOBALS['failure'] === 'lookup-false') {
-            return false;
-        }
-        if ($GLOBALS['failure'] === 'lookup-invalid') {
-            return 'invalid';
-        }
-        if ($GLOBALS['failure'] === 'lookup-throw') {
-            throw new RuntimeException('Native lookup failure');
-        }
-    }
     return profile_native_statement($sql, $params)->fetchColumn();
 }
 function db_fetch_cell($sql)
@@ -82,6 +72,20 @@ function db_fetch_row_prepared($sql, $params = array())
 }
 function db_fetch_assoc_prepared($sql, $params = array())
 {
+    if (str_contains($sql, 'FROM data_template_data') && str_contains($sql, 'FOR UPDATE')) {
+        if ($GLOBALS['failure'] === 'lookup-false') {
+            return false;
+        }
+        if ($GLOBALS['failure'] === 'lookup-invalid') {
+            return 'invalid';
+        }
+        if ($GLOBALS['failure'] === 'lookup-invalid-row') {
+            return array(array('data_source_profile_id' => 'invalid'));
+        }
+        if ($GLOBALS['failure'] === 'lookup-throw') {
+            throw new RuntimeException('Native lookup failure');
+        }
+    }
     return profile_native_statement($sql, $params)->fetchAll(PDO::FETCH_ASSOC);
 }
 function db_fetch_assoc($sql)
@@ -107,6 +111,17 @@ function array_to_sql_or($values, $column)
 }
 function db_execute($sql)
 {
+    if ($sql === 'SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') {
+        $GLOBALS['calls'][] = array($sql, array());
+        if ($GLOBALS['failure'] === 'isolation') {
+            return false;
+        }
+        if ($GLOBALS['mysql']) {
+            $GLOBALS['db']->exec('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED');
+            $GLOBALS['db']->exec($sql);
+        }
+        return true;
+    }
     $table = $GLOBALS['failure'];
     if (str_starts_with($sql, 'DELETE FROM ') && $table !== '' && str_starts_with($sql, 'DELETE FROM ' . $table . ' WHERE')) {
         $GLOBALS['calls'][] = array($sql, array());

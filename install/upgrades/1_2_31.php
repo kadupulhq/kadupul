@@ -10,6 +10,10 @@ function upgrade_to_1_2_31()
 {
     global $config;
 
+    if (!db_index_exists('data_template_data', 'data_source_profile_id')) {
+        db_install_execute('ALTER TABLE data_template_data ADD INDEX data_source_profile_id (data_source_profile_id)');
+    }
+
     db_install_execute('ALTER TABLE automation_devices MODIFY COLUMN snmp_priv_protocol char(7) default ""');
     db_install_execute('ALTER TABLE automation_snmp_items MODIFY COLUMN snmp_priv_protocol char(7) default ""');
     db_install_execute('ALTER TABLE snmpagent_managers MODIFY COLUMN snmp_priv_protocol char(7) NOT NULL');

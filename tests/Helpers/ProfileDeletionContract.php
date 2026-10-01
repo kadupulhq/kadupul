@@ -33,11 +33,9 @@ abstract class ProfileDeletionContract extends TestCase
         if ($failure === 'commit' || str_starts_with($failure, 'data_source_profiles')) {
             self::assertSame(1, $state['rollbacks']);
         }
-        if (!str_starts_with($failure, 'lookup') && $failure !== 'begin') {
-            $locking = array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FOR UPDATE') && $call[1] === array(3));
-            if ($expected === array(1,2)) {
-                self::assertNotEmpty($locking);
-            }
+        if (!str_starts_with($failure, 'lookup') && !in_array($failure, array('begin', 'isolation'), true)) {
+            $locking = array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FOR UPDATE') && $call[1] === ($scenario['selected'] ?? array(3)));
+            self::assertCount(1, $locking);
         }
     }
 
@@ -94,7 +92,7 @@ abstract class ProfileDeletionContract extends TestCase
     public static function scenarios(): array
     {
         $cases = array('unused' => array(array()), 'mixed' => array(array('selected' => array(1,2,3))), 'all referenced' => array(array('selected' => array(1,2))));
-        foreach (array('lookup-false','lookup-invalid','lookup-throw','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
+        foreach (array('lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
             $cases[$failure] = array(array('failure' => $failure));
         }
         return $cases;
@@ -105,6 +103,14 @@ abstract class ProfileDeletionContract extends TestCase
         return false;
     }
 
+    public function testProfileReferenceIndexUpgradeIsIdempotent(): void
+    {
+        $state = $this->runNative(array('upgrade' => true));
+        self::assertContains('data_source_profile_id', $state['indexes']);
+        self::assertCount(1, array_filter($state['calls'], static fn($sql) => $sql === 'ALTER TABLE data_template_data ADD INDEX data_source_profile_id (data_source_profile_id)'));
+        self::assertSame(2, $state['runs']);
+    }
+
     protected function runNative(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
@@ -112,7 +118,8 @@ abstract class ProfileDeletionContract extends TestCase
         mkdir($directory, 0700);
         $coverage = $this->getTestResultObject()->getCodeCoverage();
         try {
-            $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/profile-deletion-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
+            $fixture = isset($scenario['upgrade']) ? 'profile-index-upgrade-native.php' : 'profile-deletion-native.php';
+            $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/' . $fixture, json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
             if ($coverage !== null) {
                 $command[] = $directory;
             }
