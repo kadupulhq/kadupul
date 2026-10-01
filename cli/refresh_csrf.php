@@ -96,9 +96,9 @@ if ($temporary !== false) {
                 && ($temporary_stat['gid'] === $previous['gid'] || chgrp($temporary, $previous['gid']));
         }
         $written = $preserved_ownership
-            && chmod($temporary, $previous ? ($previous['mode'] & 0660) : 0640)
             && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
             && file_get_contents($temporary) === $contents
+            && chmod($temporary, $previous ? ($previous['mode'] & 0660) : 0640)
             && rename($temporary, $path_csrf_secret);
     } finally {
         if (file_exists($temporary)) {

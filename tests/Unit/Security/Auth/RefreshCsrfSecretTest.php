@@ -46,7 +46,7 @@ function refresh_csrf_run($test, array $scenario): array
     $secret = str_replace(array('{outside}', '{root}'), array($outside, $dir), $scenario['secret'] ?? '');
     if (!empty($scenario['existing'])) {
         file_put_contents($secret, '<?php $secret = "old";');
-        chmod($secret, 0640);
+        chmod($secret, $scenario['mode'] ?? 0640);
     }
 
     $bootstrap = <<<'PHP'
@@ -178,6 +178,32 @@ test('rotation skips unsupported or unchanged ownership changes', function (stri
     expect($result['exit'])->toBe(0)->and($result['stderr'])->toBe('')
         ->and($result['mode'])->toBe(0640)->and($result['secret'])->not->toBe('<?php $secret = "old";');
 })->with(array('unix', 'win32'));
+
+test('atomic rotation preserves read-only secret modes after writing the replacement', function (int $mode) {
+    $result = refresh_csrf_run($this, array('secret' => '{outside}/csrf-secret.php', 'existing' => true, 'mode' => $mode));
+    expect($result['exit'])->toBe(0)->and($result['stderr'])->toBe('')
+        ->and($result['mode'])->toBe($mode)
+        ->and($result['secret'])->toMatch('/^<\?php \$secret = "[0-9a-f]{64}";\n$/');
+})->with(array(0400, 0440));
+
+test('failed local settings persistence cannot update collectors or the active configuration cache', function (string $mode) {
+    $directory = sys_get_temp_dir() . '/config-propagation-' . bin2hex(random_bytes(8));
+    mkdir($directory . '/lib', 0700, true);
+    file_put_contents($directory . '/lib/poller.php', '<?php');
+    try {
+        $process = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', dirname(__DIR__, 3) . '/Fixtures/config-propagation-native.php', $directory, $mode), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(array(proc_close($process), $error))->toBe(array(0, ''));
+        expect(json_decode($output, true, 512, JSON_THROW_ON_ERROR))->toBe(array('result' => false, 'connections' => 0, 'central' => 'old-central', 'collector' => 'old-collector', 'cache' => 'old-central'));
+    } finally {
+        unlink($directory . '/lib/poller.php');
+        rmdir($directory . '/lib');
+        rmdir($directory);
+    }
+})->with(array('web', 'cli'));
 
 test('failed secret cleanup exits without reporting rotation success', function (string $path) {
     $result = refresh_csrf_run($this, array('secret' => $path, 'legacy' => true, 'existing' => $path !== '', 'unlink_failure' => true));
