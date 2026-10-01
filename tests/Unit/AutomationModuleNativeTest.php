@@ -75,7 +75,10 @@ final class AutomationModuleNativeTest extends TestCase
         $state = $this->runNative($scenario + array('mode' => 'preview'));
         $document = new DOMDocument();
         @$document->loadHTML($state['html']);
-        $cells = (new DOMXPath($document))->query('//tr[@id="line7"]/td');
+        $xpath = new DOMXPath($document);
+        self::assertSame('10', $xpath->query('//select[@id="rows"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertSame('Default', $xpath->query('//select[@id="rows"]/option[@value="-1"]')->item(0)->textContent);
+        $cells = $xpath->query('//tr[@id="line7"]/td');
         self::assertCount(6, $cells);
         self::assertSame($expected, $cells->item(5)->textContent);
         if ($expected !== '') {
@@ -277,7 +280,7 @@ final class AutomationModuleNativeTest extends TestCase
         @$document->loadHTML($state['html']);
         $xpath = new DOMXPath($document);
         $select = $kind === 'graph' ? 'rows' : 'rowsd';
-        self::assertSame('10', $xpath->query('//select[@id="' . $select . '"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertSame($kind === 'graph' ? '10' : '20', $xpath->query('//select[@id="' . $select . '"]/option[@selected]')->item(0)->getAttribute('value'));
         self::assertSame('Default', $xpath->query('//select[@id="' . $select . '"]/option[@value="-1"]')->item(0)->textContent);
         self::assertSame(1, $xpath->query('//tr[@id="line' . ($kind === 'graph' ? '100' : '7') . '"]')->length);
         self::assertStringContainsString($kind === 'graph' ? 'Fixture title' : 'Fixture template', $state['html']);

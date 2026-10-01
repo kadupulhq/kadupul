@@ -197,7 +197,7 @@ $_SERVER['SCRIPT_NAME'] = '/api_automation.php';
 $_SERVER['REQUEST_URI'] = '/api_automation.php';
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_REQUEST = $_POST = array('id' => 8, 'header' => 'false', 'rows' => 10, 'page' => 1, 'host_status' => -1, 'host_template_id' => -1, 'sort_column' => 'description', 'sort_direction' => 'ASC', 'filter' => '');
-$_REQUEST['rowsd'] = 10;
+$_REQUEST['rowsd'] = 20;
 $_REQUEST['paged'] = 1;
 $_REQUEST['filterd'] = '';
 $_CACTI_REQUEST = array();
