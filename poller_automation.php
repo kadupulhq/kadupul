@@ -39,6 +39,27 @@ if ($config['poller_id'] > 1) {
     }
 }
 
+/** Persist only reported SNMP fields, including the uptime storage-name mapping. */
+function updateDiscoveredHostFields($host_id, array $device): void
+{
+    $fields = array(
+        'snmp_sysDescr' => 'snmp_sysDescr',
+        'snmp_sysObjectID' => 'snmp_sysObjectID',
+        'snmp_sysUptime' => 'snmp_sysUptimeInstance',
+        'snmp_sysContact' => 'snmp_sysContact',
+        'snmp_sysName' => 'snmp_sysName',
+        'snmp_sysLocation' => 'snmp_sysLocation',
+    );
+    foreach ($fields as $device_field => $host_field) {
+        if (isset($device[$device_field]) && $device[$device_field] != '') {
+            db_execute_prepared(
+                'UPDATE host SET ' . $host_field . ' = ? WHERE id = ?',
+                array($device[$device_field], $host_id)
+            );
+        }
+    }
+}
+
 /** sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  * @arg $signo  - (int) the signal that was thrown by the interface.
  * @return      - null */
@@ -485,95 +506,53 @@ function discoverDevices($network_id, $thread)
 
             if ($dns != '') {
                 $dnsname = automation_get_dns_from_ip($device['ip_address'], $dns, 300);
-
-                if ($dnsname != $device['ip_address'] && $dnsname != 'timed_out') {
-                    automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Found '" . $dnsname . "'");
-
-                    db_execute_prepared(
-                        'UPDATE automation_ips
-						SET hostname = ?
-						WHERE ip_address = ?',
-                        array($dnsname, $device['ip_address'])
-                    );
-
-                    $device['hostname']      = $dnsname;
-                    $device['dnsname']       = $dnsname;
-                    $device['dnsname_short'] = preg_split('/[\.]+/', strtolower($dnsname), -1, PREG_SPLIT_NO_EMPTY);
-                } elseif ($network['enable_netbios'] == 'on') {
-                    automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Not found, Checking NetBIOS:");
-
-                    $netbios = ping_netbios_name($device['ip_address']);
-
-                    if ($netbios === false) {
-                        automation_debug(" Not found");
-                        $device['hostname']      = $device['ip_address'];
-                        $device['dnsname']       = '';
-                        $device['dnsname_short'] = '';
-                    } else {
-                        automation_debug(" Found: '" . $netbios . "'");
-
-                        db_execute_prepared(
-                            'UPDATE automation_ips
-							SET hostname = ?
-							WHERE ip_address = ?',
-                            array($device['hostname'], $device['ip_address'])
-                        );
-
-                        $device['dnsname']       = $netbios;
-                        $device['dnsname_short'] = $netbios;
-                    }
-                } else {
-                    automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Not found");
-
-                    $device['hostname']      = $device['ip_address'];
-                    $device['dnsname']       = '';
-                    $device['dnsname_short'] = '';
-                }
             } else {
                 $dnsname = @gethostbyaddr($device['ip_address']);
                 $device['hostname'] = $dnsname;
+            }
 
-                if ($dnsname != $device['ip_address']) {
-                    automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Found '" . $dnsname . "'");
+            if ($dnsname != $device['ip_address'] && ($dns == '' || $dnsname != 'timed_out')) {
+                automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Found '" . $dnsname . "'");
 
-                    db_execute_prepared(
-                        'UPDATE automation_ips
+                db_execute_prepared(
+                    'UPDATE automation_ips
 						SET hostname = ?
 						WHERE ip_address = ?',
-                        array($dnsname, $device['ip_address'])
-                    );
+                    array($dnsname, $device['ip_address'])
+                );
 
-                    $device['dnsname']       = $dnsname;
-                    $device['dnsname_short'] = preg_split('/[\.]+/', strtolower($dnsname), -1, PREG_SPLIT_NO_EMPTY);
-                } elseif ($network['enable_netbios'] == 'on') {
-                    automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Not found, Checking NetBIOS:");
+                $device['hostname']      = $dnsname;
+                $device['dnsname']       = $dnsname;
+                $device['dnsname_short'] = preg_split('/[\.]+/', strtolower($dnsname), -1, PREG_SPLIT_NO_EMPTY);
+            } elseif ($network['enable_netbios'] == 'on') {
+                automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Not found, Checking NetBIOS:");
 
-                    $netbios = ping_netbios_name($device['ip_address']);
-                    if ($netbios === false) {
-                        automation_debug(" Not found");
-                        $device['hostname']      = $device['ip_address'];
-                        $device['dnsname']       = '';
-                        $device['dnsname_short'] = '';
-                    } else {
-                        automation_debug(" Found: '" . $netbios . "'");
+                $netbios = ping_netbios_name($device['ip_address']);
 
-                        db_execute_prepared(
-                            'UPDATE automation_ips
-							SET hostname = ?
-							WHERE ip_address = ?',
-                            array($device['hostname'], $device['ip_address'])
-                        );
-
-                        $device['dnsname']       = $netbios;
-                        $device['dnsname_short'] = $netbios;
-                    }
-                } else {
-                    automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Not found");
-
+                if ($netbios === false) {
+                    automation_debug(" Not found");
                     $device['hostname']      = $device['ip_address'];
                     $device['dnsname']       = '';
                     $device['dnsname_short'] = '';
+                } else {
+                    automation_debug(" Found: '" . $netbios . "'");
+
+                    db_execute_prepared(
+                        'UPDATE automation_ips
+							SET hostname = ?
+							WHERE ip_address = ?',
+                        array($device['hostname'], $device['ip_address'])
+                    );
+
+                    $device['dnsname']       = $netbios;
+                    $device['dnsname_short'] = $netbios;
                 }
+            } else {
+                automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Not found");
+
+                $device['hostname']      = $device['ip_address'];
+                $device['dnsname']       = '';
+                $device['dnsname_short'] = '';
             }
 
             $exists = db_fetch_row_prepared(
@@ -763,59 +742,7 @@ function discoverDevices($network_id, $thread)
                                     $host_id = automation_add_device($device);
 
                                     if (!empty($host_id)) {
-                                        if (isset($device['snmp_sysDescr']) && $device['snmp_sysDescr'] != '') {
-                                            db_execute_prepared(
-                                                'UPDATE host
-												SET snmp_sysDescr = ?
-												WHERE id = ?',
-                                                array($device['snmp_sysDescr'], $host_id)
-                                            );
-                                        }
-
-                                        if (isset($device['snmp_sysObjectID']) && $device['snmp_sysObjectID'] != '') {
-                                            db_execute_prepared(
-                                                'UPDATE host
-												SET snmp_sysObjectID = ?
-												WHERE id = ?',
-                                                array($device['snmp_sysObjectID'], $host_id)
-                                            );
-                                        }
-
-                                        if (isset($device['snmp_sysUptime']) && $device['snmp_sysUptime'] != '') {
-                                            db_execute_prepared(
-                                                'UPDATE host
-												SET snmp_sysUptimeInstance = ?
-												WHERE id = ?',
-                                                array($device['snmp_sysUptime'], $host_id)
-                                            );
-                                        }
-
-                                        if (isset($device['snmp_sysContact']) && $device['snmp_sysContact'] != '') {
-                                            db_execute_prepared(
-                                                'UPDATE host
-												SET snmp_sysContact = ?
-												WHERE id = ?',
-                                                array($device['snmp_sysContact'], $host_id)
-                                            );
-                                        }
-
-                                        if (isset($device['snmp_sysName']) && $device['snmp_sysName'] != '') {
-                                            db_execute_prepared(
-                                                'UPDATE host
-												SET snmp_sysName = ?
-												WHERE id = ?',
-                                                array($device['snmp_sysName'], $host_id)
-                                            );
-                                        }
-
-                                        if (isset($device['snmp_sysLocation']) && $device['snmp_sysLocation'] != '') {
-                                            db_execute_prepared(
-                                                'UPDATE host
-												SET snmp_sysLocation = ?
-												WHERE id = ?',
-                                                array($device['snmp_sysLocation'], $host_id)
-                                            );
-                                        }
+                                        updateDiscoveredHostFields($host_id, $device);
 
                                         automation_update_device($host_id);
                                     }
