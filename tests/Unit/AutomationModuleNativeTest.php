@@ -259,6 +259,7 @@ final class AutomationModuleNativeTest extends TestCase
         @$document->loadHTML($state['html']);
         $xpath = new DOMXPath($document);
         self::assertSame('10', $xpath->query('//select[@id="orows"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertSame('Default', $xpath->query('//select[@id="orows"]/option[@value="-1"]')->item(0)->textContent);
         self::assertStringContainsString('Error in data query', $state['html']);
         self::assertStringNotContainsString('Warning:', $state['html']);
     }
