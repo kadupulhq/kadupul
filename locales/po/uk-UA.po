@@ -440,8 +440,8 @@ msgstr "Пошук"
 #: include/global_arrays.php:2010 lib/api_automation.php:283 lib/html.php:1801
 #: lib/html.php:1803 lib/html.php:1881 lib/html_graph.php:191
 #: lib/html_tree.php:1022 lib/html_tree.php:1378 tree.php:857 tree.php:2296
-#: user_admin.php:775 user_admin.php:1046 user_admin.php:2463
-#: user_group_admin.php:770 user_group_admin.php:924 user_group_admin.php:2117
+#: user_admin.php:775 user_admin.php:1046 user_admin.php:2323
+#: user_group_admin.php:770 user_group_admin.php:924 user_group_admin.php:1982
 #: utilities.php:303
 msgid "Graphs"
 msgstr "Графіки"
@@ -488,8 +488,8 @@ msgstr "Частина Агрегованого"
 #: lib/html_graph.php:172 lib/html_reports.php:1977 lib/html_tree.php:1009
 #: links.php:328 managers.php:159 managers.php:509 managers.php:749
 #: plugins.php:530 pollers.php:914 tree.php:2172 user_admin.php:2129
-#: user_admin.php:2463 user_admin.php:2469 user_admin.php:2475
-#: user_admin.php:2481 user_admin.php:2487 user_admin.php:2493
+#: user_admin.php:2323 user_admin.php:2329 user_admin.php:2335
+#: user_admin.php:2341 user_admin.php:2347 user_admin.php:2353
 msgid "Go"
 msgstr "Вперед"
 
@@ -524,9 +524,9 @@ msgstr "Встановити/Оновити Фільтри"
 #: lib/html_graph.php:290 lib/html_reports.php:1978 lib/html_tree.php:1010
 #: lib/html_tree.php:1121 links.php:329 managers.php:160 managers.php:510
 #: managers.php:750 plugins.php:531 pollers.php:915 tree.php:2173
-#: user_admin.php:2130 user_admin.php:2463 user_admin.php:2469
-#: user_admin.php:2475 user_admin.php:2481 user_admin.php:2487
-#: user_admin.php:2493 user_domains.php:666
+#: user_admin.php:2130 user_admin.php:2323 user_admin.php:2329
+#: user_admin.php:2335 user_admin.php:2341 user_admin.php:2347
+#: user_admin.php:2353 user_domains.php:666
 msgid "Clear"
 msgstr "Очистити"
 
@@ -727,7 +727,7 @@ msgstr "Шаблони Агрегування"
 #: aggregate_templates.php:597 automation_templates.php:383
 #: automation_templates.php:470 color_templates.php:647
 #: include/global_arrays.php:1001 include/global_arrays.php:1064
-#: lib/installer.php:2732 user_admin.php:2481 user_group_admin.php:2129
+#: lib/installer.php:2732 user_admin.php:2341 user_group_admin.php:1994
 msgid "Templates"
 msgstr "Шаблони"
 
@@ -1122,8 +1122,8 @@ msgstr "Видалити Пристрій(ої)"
 #: lib/api_automation.php:178 lib/api_automation.php:271
 #: lib/api_automation.php:486 lib/api_automation.php:563
 #: lib/api_automation.php:1189 pollers.php:1031 tree.php:856 tree.php:2290
-#: user_admin.php:1038 user_admin.php:2475 user_group_admin.php:916
-#: user_group_admin.php:2123 utilities.php:298
+#: user_admin.php:1038 user_admin.php:2335 user_group_admin.php:916
+#: user_group_admin.php:1988 utilities.php:298
 msgid "Devices"
 msgstr "Пристрої"
 
@@ -6687,8 +6687,8 @@ msgid "Sites"
 msgstr "Вузли"
 
 #: include/global_arrays.php:991 include/global_arrays.php:1228 tree.php:2141
-#: tree.php:2156 tree.php:2220 user_admin.php:1321 user_admin.php:2487
-#: user_admin.php:2493 user_group_admin.php:1189 user_group_admin.php:2135
+#: tree.php:2156 tree.php:2220 user_admin.php:1321 user_admin.php:2347
+#: user_admin.php:2353 user_group_admin.php:1189 user_group_admin.php:2000
 msgid "Trees"
 msgstr "Дерева"
 
@@ -6764,7 +6764,7 @@ msgstr "Налаштування"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:2576
 #: user_admin.php:2110 user_admin.php:2212 user_group_admin.php:563
-#: user_group_admin.php:2141
+#: user_group_admin.php:2006
 msgid "Users"
 msgstr "Користувачі"
 
@@ -17999,16 +17999,16 @@ msgid "Messages"
 msgstr ""
 
 #: rrdcheck.php:245 rrdcleaner.php:549 user_domains.php:665
-#: user_group_admin.php:1852 user_group_admin.php:2117
-#: user_group_admin.php:2123 user_group_admin.php:2129
-#: user_group_admin.php:2135 user_group_admin.php:2141
+#: user_group_admin.php:1852 user_group_admin.php:1982
+#: user_group_admin.php:1988 user_group_admin.php:1994
+#: user_group_admin.php:2000 user_group_admin.php:2006
 msgctxt "filter: use"
 msgid "Go"
 msgstr ""
 
 #: rrdcheck.php:246 rrdcleaner.php:550 user_group_admin.php:1853
-#: user_group_admin.php:2117 user_group_admin.php:2123
-#: user_group_admin.php:2129 user_group_admin.php:2135
+#: user_group_admin.php:1982 user_group_admin.php:1988
+#: user_group_admin.php:1994 user_group_admin.php:2000
 msgctxt "filter: reset"
 msgid "Clear"
 msgstr ""
@@ -18691,7 +18691,7 @@ msgstr ""
 msgid "Grant Access"
 msgstr ""
 
-#: user_admin.php:889 user_admin.php:2469 user_group_admin.php:1833
+#: user_admin.php:889 user_admin.php:2329 user_group_admin.php:1833
 #: user_group_admin.php:1895
 msgid "Groups"
 msgstr ""
@@ -18914,37 +18914,37 @@ msgstr ""
 msgid "No Users Found"
 msgstr ""
 
-#: user_admin.php:2463 user_group_admin.php:2117
+#: user_admin.php:2323 user_group_admin.php:1982
 #, php-format
 msgid "Graph Permissions %s"
 msgstr ""
 
-#: user_admin.php:2463 user_admin.php:2469
+#: user_admin.php:2323 user_admin.php:2329
 msgid "Show All"
 msgstr ""
 
-#: user_admin.php:2469
+#: user_admin.php:2329
 #, php-format
 msgid "Group Membership %s"
 msgstr ""
 
-#: user_admin.php:2475 user_group_admin.php:2123
+#: user_admin.php:2335 user_group_admin.php:1988
 #, php-format
 msgid "Devices Permission %s"
 msgstr ""
 
-#: user_admin.php:2475 user_admin.php:2481 user_admin.php:2487
-#: user_admin.php:2493 user_group_admin.php:2117 user_group_admin.php:2123
-#: user_group_admin.php:2129 user_group_admin.php:2135
+#: user_admin.php:2335 user_admin.php:2341 user_admin.php:2347
+#: user_admin.php:2353 user_group_admin.php:1982 user_group_admin.php:1988
+#: user_group_admin.php:1994 user_group_admin.php:2000
 msgid "Only Show Exceptions"
 msgstr ""
 
-#: user_admin.php:2481 user_group_admin.php:2129
+#: user_admin.php:2341 user_group_admin.php:1994
 #, php-format
 msgid "Template Permission %s"
 msgstr ""
 
-#: user_admin.php:2487 user_admin.php:2493 user_group_admin.php:2135
+#: user_admin.php:2347 user_admin.php:2353 user_group_admin.php:2000
 #, php-format
 msgid "Tree Permission %s"
 msgstr ""
@@ -19294,12 +19294,12 @@ msgstr ""
 msgid "No User Groups Found"
 msgstr ""
 
-#: user_group_admin.php:2141
+#: user_group_admin.php:2006
 msgctxt "filter reset"
 msgid "Clear"
 msgstr ""
 
-#: user_group_admin.php:2141
+#: user_group_admin.php:2006
 msgid "Show Members"
 msgstr ""
 
