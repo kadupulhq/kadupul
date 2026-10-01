@@ -24,31 +24,45 @@ final readonly class LegacyAuditTrail implements AuditTrail
         if (is_link($path)) {
             throw new \RuntimeException('Audit path is not a regular file.');
         }
-        if (!is_file($path)) {
-            $temporary = tempnam($directory, '.kadupul-audit-');
-            if ($temporary === false) {
-                throw new \RuntimeException('Audit sink is unavailable.');
-            }
-            try {
-                $entry = lstat($temporary);
-                if (realpath(dirname($temporary)) !== realpath($directory) || $entry === false
-                    || ($entry['mode'] & 0170000) !== 0100000 || ($entry['mode'] & 07777) !== 0600) {
-                    throw new \RuntimeException('Audit staging file is not private.');
-                }
-                // Publish a private inode exclusively; another creator may win.
-                if (!@link($temporary, $path) && !is_file($path)) {
+        $openError = null;
+        set_error_handler(
+            static function (int $severity, string $message, string $file, int $line) use (&$openError): bool {
+                $openError = new \ErrorException($message, 0, $severity, $file, $line);
+                return true;
+            },
+            E_WARNING,
+        );
+        try {
+            if (!is_file($path)) {
+                $temporary = tempnam($directory, '.kadupul-audit-');
+                if ($temporary === false) {
                     throw new \RuntimeException('Audit sink is unavailable.');
                 }
-            } finally {
-                if (!unlink($temporary)) {
-                    throw new \RuntimeException('Audit staging file could not be removed.');
+                try {
+                    $entry = lstat($temporary);
+                    if (realpath(dirname($temporary)) !== realpath($directory) || $entry === false
+                        || ($entry['mode'] & 0170000) !== 0100000 || ($entry['mode'] & 07777) !== 0600) {
+                        throw new \RuntimeException('Audit staging file is not private.');
+                    }
+                    // Publish a private inode exclusively; another creator may win.
+                    if (!@link($temporary, $path) && !is_file($path)) {
+                        throw new \RuntimeException('Audit sink is unavailable.');
+                    }
+                } finally {
+                    if (!unlink($temporary)) {
+                        throw new \RuntimeException('Audit staging file could not be removed.');
+                    }
                 }
             }
-        }
-        // Never recreate a pathname removed between validation and opening.
-        $handle = @fopen($path, 'r+b');
-        if ($handle === false) {
-            throw new \RuntimeException('Audit sink is unavailable.');
+            // Never recreate a pathname removed between validation and opening.
+            $handle = fopen($path, 'r+b');
+            if ($handle === false) {
+                throw new \RuntimeException('Audit sink is unavailable.');
+            }
+        } catch (\RuntimeException $failure) {
+            throw new \RuntimeException($failure->getMessage(), 0, $openError ?? $failure->getPrevious());
+        } finally {
+            restore_error_handler();
         }
         try {
             if (!flock($handle, LOCK_EX)) {
