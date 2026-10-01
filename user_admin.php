@@ -743,6 +743,10 @@ function perm_remove()
         );
     }
 
+    if (in_array(get_request_var('type'), array('graph', 'tree', 'host', 'graph_template'), true)) {
+        reset_user_perms(get_request_var('user_id'));
+    }
+
     header('Location: user_admin.php?action=user_edit&header=false&tab=graph_perms_edit&id=' . get_request_var('user_id'));
 }
 

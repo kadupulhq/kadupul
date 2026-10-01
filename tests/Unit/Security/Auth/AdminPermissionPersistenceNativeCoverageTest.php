@@ -10,14 +10,14 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
     /** @dataProvider realmCases */
     public function testRealmSavesReplaceOnlyTheTargetPrincipalAndResetItsUsers(bool $group, array $realms, bool $self): void
     {
-        $state = $this->runController(array('group' => $group, 'operation' => 'realm', 'realms' => $realms, 'self' => $self));
+        $state = $this->runController(['group' => $group, 'operation' => 'realm', 'realms' => $realms, 'self' => $self]);
         $principal = $group ? 'group_id' : 'user_id';
-        $expected = array();
+        $expected = [];
         sort($realms);
         foreach ($realms as $realm) {
-            $expected[] = array($principal => 42, 'realm_id' => $realm);
+            $expected[] = [$principal => 42, 'realm_id' => $realm];
         }
-        $expected[] = array($principal => 43, 'realm_id' => 9);
+        $expected[] = [$principal => 43, 'realm_id' => 9];
         self::assertSame($expected, $state['realms']);
         self::assertCount(12, $state['permissions']);
         foreach ($state['reset'] as $account) {
@@ -28,54 +28,68 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
             }
         }
         if (!$group && $self) {
-            self::assertSame(array('sess_user_id' => 42), $state['session']);
+            self::assertSame(['sess_user_id' => 42, 'sess_user_perms_key' => 0], $state['session']);
         } else {
             self::assertSame($state['initial_session'], $state['session']);
         }
-        self::assertSame(array(1), $state['messages']);
+        self::assertSame([1], $state['messages']);
         self::assertSame('', $state['output']);
     }
 
     public static function realmCases(): array
     {
-        return array(
-            'user replaces realms' => array(false, array(21, 8), false),
-            'self user clears cached permissions' => array(false, array(21, 8), true),
-            'user removes all realms' => array(false, array(), false),
-            'group replaces realms' => array(true, array(21, 8), false),
-            'group removes all realms' => array(true, array(), false),
-        );
+        return [
+            'user replaces realms' => [false, [21, 8], false],
+            'self user clears cached permissions' => [false, [21, 8], true],
+            'user removes all realms' => [false, [], false],
+            'group replaces realms' => [true, [21, 8], false],
+            'group removes all realms' => [true, [], false],
+        ];
     }
 
     /** @dataProvider permissionCases */
-    public function testPermissionRemovalPreservesOtherTypesItemsAndPrincipals(bool $group, string $typeName, int $typeId): void
+    public function testPermissionRemovalPreservesOtherTypesItemsAndPrincipals(bool $group, string $typeName, int $typeId, bool $self): void
     {
-        $state = $this->runController(array('group' => $group, 'operation' => 'remove', 'type' => $typeName));
+        $state = $this->runController(['group' => $group, 'operation' => 'remove', 'type' => $typeName, 'self' => $self]);
         $principal = $group ? 'group_id' : 'user_id';
-        $expected = array();
-        foreach (array(42 => array(100, 101), 43 => array(100)) as $id => $items) {
+        $expected = [];
+        foreach ([42 => [100, 101], 43 => [100]] as $id => $items) {
             foreach ($items as $item) {
                 foreach (range(1, 4) as $type) {
                     if ($id === 42 && $item === 100 && $type === $typeId) {
                         continue;
                     }
-                    $expected[] = array($principal => $id, 'item_id' => $item, 'type' => $type);
+                    $expected[] = [$principal => $id, 'item_id' => $item, 'type' => $type];
                 }
             }
         }
         self::assertSame($expected, $state['permissions']);
-        self::assertSame(array(array($principal => 42, 'realm_id' => 7), array($principal => 43, 'realm_id' => 9)), $state['realms']);
-        self::assertSame(array(0, 0, 0, 0), array_column($state['reset'], 'reset_perms'));
-        self::assertSame($state['initial_session'], $state['session']);
+        self::assertSame([[$principal => 42, 'realm_id' => 7], [$principal => 43, 'realm_id' => 9]], $state['realms']);
+        foreach ($state['reset'] as $account) {
+            if ($typeId !== 0 && ($account['id'] === 42 || ($group && $account['id'] === 44))) {
+                self::assertGreaterThan(0, $account['reset_perms']);
+            } else {
+                self::assertSame(0, $account['reset_perms']);
+            }
+        }
+        self::assertSame(!($self && $typeId !== 0), $state['perms_valid']);
+        if ($self && !$group && $typeId !== 0) {
+            self::assertSame(['sess_user_id' => 42, 'sess_user_perms_key' => 0], $state['session']);
+        } else {
+            self::assertSame($state['initial_session'], $state['session']);
+        }
         self::assertSame('', $state['output']);
     }
 
     public static function permissionCases(): array
     {
-        $cases = array();
-        foreach (array(false, true) as $group) {
-            foreach (array('graph' => 1, 'tree' => 2, 'host' => 3, 'graph_template' => 4, 'unknown' => 0) as $name => $id) {
-                $cases[($group ? 'group ' : 'user ') . $name] = array($group, $name, $id);
+        $cases = [];
+        foreach ([false, true] as $group) {
+            foreach (['graph' => 1, 'tree' => 2, 'host' => 3, 'graph_template' => 4, 'unknown' => 0] as $name => $id) {
+                $cases[($group ? 'group ' : 'user ') . $name] = [$group, $name, $id, false];
+                if ($id !== 0) {
+                    $cases[($group ? 'self group ' : 'self user ') . $name] = [$group, $name, $id, true];
+                }
             }
         }
         return $cases;
@@ -89,12 +103,12 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         mkdir($directory . '/include', 0700);
         file_put_contents($directory . '/include/auth.php', '<?php');
         $coverage = $this->getTestResultObject()->getCodeCoverage();
-        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
+        $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory];
         if ($coverage !== null) {
             $command[] = 'coverage';
         }
         try {
-            $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+            $process = proc_open($command, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
             self::assertIsResource($process);
             $stdout = stream_get_contents($pipes[1]);
             $stderr = stream_get_contents($pipes[2]);

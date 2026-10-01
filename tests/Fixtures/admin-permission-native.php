@@ -14,9 +14,10 @@ $directory = $argv[2];
 chdir($directory);
 $group = $scenario['group'];
 $target = 42;
+$config = ['cacti_db_version' => '1.2.33'];
 $operation = $scenario['operation'];
-$request = array('action' => $operation === 'realm' ? 'save' : 'perm_remove', 'id' => $operation === 'realm' ? $target : 100, 'user_id' => $target, 'group_id' => $target, 'type' => $scenario['type'] ?? 'graph');
-$_POST = array();
+$request = ['action' => $operation === 'realm' ? 'save' : 'perm_remove', 'id' => $operation === 'realm' ? $target : 100, 'user_id' => $target, 'group_id' => $target, 'type' => $scenario['type'] ?? 'graph'];
+$_POST = [];
 if ($operation === 'realm') {
     $request['save_component_realm_perms'] = '1';
     foreach ($scenario['realms'] as $realm) {
@@ -25,9 +26,9 @@ if ($operation === 'realm') {
     $_POST['unrelated_field'] = 'on';
 }
 $_SERVER['REQUEST_METHOD'] = 'POST';
-$_SESSION = array('sess_user_id' => ($scenario['self'] ?? false) ? $target : 41, 'sess_user_realms' => array(99), 'sess_user_config_array' => array('stale'), 'sess_config_array' => array('stale'), 'sess_auth_names' => array('stale'));
+$_SESSION = ['sess_user_id' => ($scenario['self'] ?? false) ? $target : 41, 'sess_user_perms_key' => 0, 'sess_user_realms' => [99], 'sess_user_config_array' => ['stale'], 'sess_config_array' => ['stale'], 'sess_auth_names' => ['stale']];
 $initial_session = $_SESSION;
-$messages = array();
+$messages = [];
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 // Native SQL's random reset marker stays a marker rather than a canned UPDATE.
@@ -44,10 +45,10 @@ $db->exec('INSERT INTO user_auth_group_realm VALUES (42, 7), (43, 9)');
 $db->exec('CREATE TABLE user_auth_perms (user_id INTEGER, item_id INTEGER, type INTEGER, UNIQUE(user_id, item_id, type))');
 $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, item_id INTEGER, type INTEGER, UNIQUE(group_id, item_id, type))');
 foreach (range(1, 4) as $type) {
-    $db->prepare('INSERT INTO user_auth_perms VALUES (42, 100, ?), (42, 101, ?), (43, 100, ?)')->execute(array($type, $type, $type));
-    $db->prepare('INSERT INTO user_auth_group_perms VALUES (42, 100, ?), (42, 101, ?), (43, 100, ?)')->execute(array($type, $type, $type));
+    $db->prepare('INSERT INTO user_auth_perms VALUES (42, 100, ?), (42, 101, ?), (43, 100, ?)')->execute([$type, $type, $type]);
+    $db->prepare('INSERT INTO user_auth_group_perms VALUES (42, 100, ?), (42, 101, ?), (43, 100, ?)')->execute([$type, $type, $type]);
 }
-function db_execute_prepared($sql, $params = array())
+function db_execute_prepared($sql, $params = [])
 {
     return $GLOBALS['db']->prepare($sql)->execute($params);
 }
@@ -55,7 +56,7 @@ function db_execute($sql)
 {
     return $GLOBALS['db']->exec($sql);
 }
-function db_fetch_assoc_prepared($sql, $params = array())
+function db_fetch_assoc_prepared($sql, $params = [])
 {
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
@@ -63,7 +64,7 @@ function db_fetch_assoc_prepared($sql, $params = array())
 }
 function array_rekey($rows, $key, $value)
 {
-    $result = array();
+    $result = [];
     foreach ($rows as $row) {
         $result[$row[$key]] = $row[$value];
     }
@@ -92,6 +93,16 @@ function get_filter_request_var($name)
 function isset_request_var($name)
 {
     return array_key_exists($name, $GLOBALS['request']);
+}
+function db_fetch_cell_prepared($sql, $params = [])
+{
+    $query = $GLOBALS['db']->prepare($sql);
+    $query->execute($params);
+    return $query->fetchColumn();
+}
+function cacti_version_compare($left, $right, $operator)
+{
+    return version_compare($left, $right, $operator);
 }
 function set_default_action() {}
 function is_error_message()
@@ -122,9 +133,13 @@ require $root . '/lib/auth.php';
 ob_start();
 register_shutdown_function(static function () use ($db, $group, $initial_session) {
     $output = ob_get_clean();
+    $session = $_SESSION;
+    // The old epoch is held by the existing session; query the actual reset
+    // marker through the native validity helper after the controller writes.
+    $perms_valid = is_user_perms_valid($session['sess_user_id']);
     $principal = $group ? 'group_id' : 'user_id';
     $realm_table = $group ? 'user_auth_group_realm' : 'user_auth_realm';
     $perm_table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
-    print json_encode(array('realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $_SESSION, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output), JSON_THROW_ON_ERROR);
+    print json_encode(['realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $session, 'perms_valid' => $perms_valid, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output], JSON_THROW_ON_ERROR);
 });
 require $root . ($group ? '/user_group_admin.php' : '/user_admin.php');
