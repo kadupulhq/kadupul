@@ -403,8 +403,11 @@ function boost_graph_cache_render_key($graph_data_array)
         $color_mode = $_COOKIE['CactiColorMode'];
     }
 
-    $font_method = read_config_option('font_method');
-    $parts       = array('theme' => $theme, 'color_mode' => $color_mode, 'font_method' => (string) $font_method);
+    $parts = array('theme' => $theme, 'color_mode' => $color_mode);
+
+    /* the fonts rrdtool_function_theme_font_options() draws with, resolved from
+     * the theme, the site and the viewer; settings that resolve alike share a key */
+    $parts['fonts'] = rrdtool_graph_font_profile(rrdtool_theme_fonts($theme))->fingerprint();
 
     /* the From/To legend comment, as rrdtool_function_format_graph_date() resolves it */
     $parts['date_format'] = (string) read_user_setting('default_date_format', read_config_option('default_date_format'));
@@ -432,24 +435,7 @@ function boost_graph_cache_render_key($graph_data_array)
     $parts['graphv']       = isset($graph_data_array['graphv']) ? 'on' : '';
     $parts['image_format'] = (string) ($graph_data_array['image_format'] ?? '');
 
-    /* mirrors rrdtool_function_set_font(); theme fonts are covered by the theme */
-    if ($font_method == 0) {
-        $custom_fonts = read_user_setting('custom_fonts') == 'on';
-
-        $parts['custom_fonts'] = $custom_fonts ? 'on' : '';
-
-        foreach (array('title', 'axis', 'legend', 'unit', 'watermark') as $type) {
-            if ($custom_fonts) {
-                $parts[$type . '_font'] = (string) read_user_setting($type . '_font');
-                $parts[$type . '_size'] = (string) read_user_setting($type . '_size');
-            } else {
-                $parts[$type . '_font'] = (string) read_config_option($type . '_font');
-                $parts[$type . '_size'] = (string) read_config_option($type . '_size');
-            }
-        }
-    }
-
-    /* serialize() is binary safe; a stored font name need not be valid UTF-8 */
+    /* serialize() is binary safe, so no part has to be valid UTF-8 */
     return hash('sha256', serialize($parts));
 }
 

@@ -3476,6 +3476,28 @@ function rrdtool_function_set_font($type, $no_legend, $themefonts)
 }
 
 /**
+ * rrdtool_theme_fonts - the $rrdfonts a theme's rrdtheme.php defines
+ *
+ * @param $theme - an installed theme name
+ *
+ * @return - the theme fonts, or an empty array when the theme sets none
+ */
+function rrdtool_theme_fonts($theme)
+{
+    global $config;
+
+    $rrdtheme = $config['base_path'] . '/include/themes/' . $theme . '/rrdtheme.php';
+    if (!file_exists($rrdtheme) || !is_readable($rrdtheme)) {
+        return array();
+    }
+
+    $rrdfonts = array();
+    include($rrdtheme);
+
+    return is_array($rrdfonts) ? $rrdfonts : array();
+}
+
+/**
  * rrdtool_graph_font_profile - the fonts a graph render uses
  *
  * Reads only the settings the resolver needs for $elements, so asking for one
