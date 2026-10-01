@@ -59,6 +59,24 @@ try {
     }
 }
 $indexCreates = 0;
+// Profile guard installation has its own native database contracts. This
+// temporary-table probe models existing guards and exercises only row-cache DDL.
+function db_fetch_assoc_prepared(string $sql, array $params = []): array
+{
+    if (str_contains($sql, 'information_schema.TABLES')) {
+        return array_map(static fn($name) => ['TABLE_NAME' => $name, 'ENGINE' => 'InnoDB'], $params);
+    }
+    if (!str_contains($sql, 'information_schema.TRIGGERS')) {
+        throw new RuntimeException('Unexpected row-cache upgrade metadata query.');
+    }
+    $rows = [];
+    foreach (data_source_profile_reference_triggers() as $name => $definition) {
+        $rows[] = ['TRIGGER_NAME' => $name, 'ACTION_TIMING' => $definition['timing'],
+            'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']];
+    }
+    return str_contains($sql, 'ACTION_STATEMENT') ? $rows
+        : array_values(array_filter($rows, static fn($row) => $row['TRIGGER_NAME'] === $params[0]));
+}
 function db_index_exists(string $table, string $index): bool
 {
     global $pdo;

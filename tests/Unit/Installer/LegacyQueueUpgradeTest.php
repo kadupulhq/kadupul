@@ -56,6 +56,19 @@ function cacti_sizeof($value){return is_array($value)?count($value):0;}
 function db_install_execute($sql){$GLOBALS['statements'][]=$sql;}
 function db_install_add_key(...$args){}
 function db_index_exists(...$args){return true;}
+function db_fetch_assoc_prepared($sql,$params=[]){
+    if(str_contains($sql,'information_schema.TABLES')){
+        return array_map(fn($name)=>array('TABLE_NAME'=>$name,'ENGINE'=>'InnoDB'),$params);
+    }
+    if(!str_contains($sql,'information_schema.TRIGGERS')){throw new RuntimeException('Unexpected installer metadata query');}
+    $rows=array();
+    foreach(data_source_profile_reference_triggers() as $name=>$definition){
+        if(in_array($definition['sql'],$GLOBALS['statements']??array(),true)){
+            $rows[]=array('TRIGGER_NAME'=>$name,'ACTION_TIMING'=>$definition['timing'],'EVENT_MANIPULATION'=>$definition['event'],'ACTION_STATEMENT'=>$definition['body']);
+        }
+    }
+    return str_contains($sql,'ACTION_STATEMENT')?$rows:array_values(array_filter($rows,fn($row)=>$row['TRIGGER_NAME']===$params[0]));
+}
 function db_execute(...$args){}
 function db_fetch_cell_prepared(...$args){if($GLOBALS['collector']==='recovery'){throw new RuntimeException('Recovery collector must use Boost backlog');}if(($args[4]??false)!==($GLOBALS['collector']==='online'?'primary-connection':false)){throw new RuntimeException('Queue checked on wrong collector database');}return $GLOBALS['engine'];}
 require $root.'/lib/installer.php';
@@ -83,7 +96,7 @@ INSTALLER;
         $err = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        expect(proc_close($process))->toBe(0)->and($err)->toBe('');
+        expect(proc_close($process))->toBe(0, $err)->and($err)->toBe('');
         $result = json_decode($out, true);
         expect($result[2])->toBeTrue('The installer cache file must be created and removed by the native probe.');
         if ($engine === 'InnoDB' || $collector === 'recovery') {
