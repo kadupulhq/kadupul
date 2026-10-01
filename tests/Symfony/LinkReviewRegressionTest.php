@@ -10,6 +10,7 @@ namespace Kadupul\Tests;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Kernel;
+use Kadupul\Navigation\Domain\ExternalLink;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Navigation\Application\Port\LinkAccess;
 use Kadupul\Navigation\Application\Port\LinkPreferences;
@@ -125,7 +126,7 @@ final class LinkReviewRegressionTest extends TestCase
             $factory = $kernel->getContainer()->get('test.service_container')->get(FormFactoryInterface::class);
             $form = $factory->create(LinkType::class, null, ['files' => [], 'sections' => ['New Name Below'], 'csrf_protection' => false]);
             $choices = $form->get('consolesection')->createView()->vars['choices'];
-            self::assertSame(['External Links', 'New Name Below', '__NEW__'], array_map(static fn($choice) => $choice->value, $choices));
+            self::assertSame(['External Links', 'New Name Below', ExternalLink::NEW_SECTION_SELECTION], array_map(static fn($choice) => $choice->value, $choices));
             $form->submit(['title' => 'Example', 'style' => 'CONSOLE', 'filename' => '0', 'fileurl' => 'https://example.org', 'consolesection' => 'New Name Below', 'consolenewsection' => '', 'enabled' => '1', 'refresh' => '0', 'revision' => str_repeat('a', 64)]);
             self::assertTrue($form->isValid(), (string) $form->getErrors(true));
             self::assertSame('New Name Below', $form->getData()['consolesection']);

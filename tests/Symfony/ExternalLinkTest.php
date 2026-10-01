@@ -41,7 +41,9 @@ final class ExternalLinkTest extends TestCase
         yield [['filename' => 'unknown.php']];
         yield [['refresh' => 61]];
         yield [['enabled' => 'on']];
-        yield [['style' => 'CONSOLE', 'consolesection' => '__NEW__', 'consolenewsection' => str_repeat('x', 21)]];
+        yield [['style' => 'CONSOLE', 'consolesection' => ExternalLink::NEW_SECTION_SELECTION, 'consolenewsection' => str_repeat('x', 21)]];
+        yield [['style' => 'CONSOLE', 'consolesection' => str_repeat('x', 51)]];
+        yield [['style' => 'CONSOLE', 'consolesection' => ExternalLink::NEW_SECTION_SELECTION, 'consolenewsection' => ExternalLink::NEW_SECTION_SELECTION]];
     }
     #[DataProvider('invalid')]
     public function testRejectsInvalidFields(array $change): void
@@ -51,7 +53,7 @@ final class ExternalLinkTest extends TestCase
     }
     public function testInstalledFileAndSections(): void
     {
-        $fields = array_replace(self::fields(), ['filename' => 'valid.php', 'style' => 'CONSOLE', 'consolesection' => '__NEW__', 'consolenewsection' => 'Section 東京']);
+        $fields = array_replace(self::fields(), ['filename' => 'valid.php', 'style' => 'CONSOLE', 'consolesection' => ExternalLink::NEW_SECTION_SELECTION, 'consolenewsection' => 'Section 東京']);
         $value = ExternalLink::validate($fields, ['valid.php']);
         self::assertSame('valid.php', $value['contentfile']);
         self::assertSame('Section 東京', $value['extendedstyle']);

@@ -7,6 +7,7 @@
 
 namespace Kadupul\Navigation\Infrastructure\Symfony\Form;
 
+use Kadupul\Navigation\Domain\ExternalLink;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -29,10 +30,10 @@ final class LinkType extends AbstractType
         foreach ($options['sections'] as $section) {
             $sections[] = $section;
         }
-        $sections[] = '__NEW__';
+        $sections[] = ExternalLink::NEW_SECTION_SELECTION;
         $builder->add('title', TextType::class, ['label' => 'Tab/Menu Name', 'trim' => false, 'attr' => ['maxlength' => 20]])
             ->add('style', ChoiceType::class, ['label' => 'Style', 'choices' => ['Top Tab' => 'TAB', 'Console Menu' => 'CONSOLE', 'Bottom of Console Page' => 'FRONT', 'Top of Console Page' => 'FRONTTOP']])
-            ->add('consolesection', ChoiceType::class, ['label' => 'Console Menu Section', 'choices' => array_unique($sections), 'choice_value' => static fn(?string $section): string => $section ?? '', 'choice_label' => static fn(string $section): string => $section === '__NEW__' ? $newSectionLabel : $section, 'choice_translation_domain' => false])
+            ->add('consolesection', ChoiceType::class, ['label' => 'Console Menu Section', 'choices' => array_unique($sections), 'choice_value' => static fn(?string $section): string => $section ?? '', 'choice_label' => static fn(string $section): string => $section === ExternalLink::NEW_SECTION_SELECTION ? $newSectionLabel : $section, 'choice_translation_domain' => false])
             ->add('consolenewsection', TextType::class, ['label' => 'New Console Section', 'required' => false, 'empty_data' => '', 'trim' => false])
             ->add('filename', ChoiceType::class, ['label' => 'Content File/URL', 'choices' => $files, 'choice_value' => static fn(?string $file): string => $file ?? '', 'choice_label' => static fn(string $file): string => $file === '0' ? $webUrlLabel : $file, 'choice_translation_domain' => false])
             ->add('fileurl', TextType::class, ['label' => 'Web URL Location', 'required' => false, 'empty_data' => '', 'trim' => false])

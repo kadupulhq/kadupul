@@ -74,7 +74,7 @@ final readonly class LegacyLinkStore implements LinkStore
         $values = ExternalLink::validate($fields, $this->files());
         return $this->write($actorId, 'save', function (\PDO $db) use ($actorId, $id, $values, $revision, $fields): int {
             $rows = $this->checkedRows($revision);
-            if ($values['style'] === 'CONSOLE' && $fields['consolesection'] !== '__NEW__' && $fields['consolesection'] !== ''
+            if ($values['style'] === 'CONSOLE' && $fields['consolesection'] !== ExternalLink::NEW_SECTION_SELECTION && $fields['consolesection'] !== ''
                 && !in_array($fields['consolesection'], ['External Links', ...array_column($rows, 'extendedstyle')], true)) {
                 throw new \InvalidArgumentException('Invalid console section.');
             }

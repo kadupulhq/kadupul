@@ -9,6 +9,8 @@ namespace Kadupul\Navigation\Domain;
 
 final readonly class ExternalLink
 {
+    // Longer than both the 50-character legacy and 20-character new-name limits.
+    public const string NEW_SECTION_SELECTION = '__CREATE_NEW_CONSOLE_SECTION_NOT_A_PERSISTED_SECTION_NAME__';
     public const array STYLES = ['TAB', 'CONSOLE', 'FRONT', 'FRONTTOP'];
     public const array REFRESHES = [0, 10, 15, 20, 30, 60, 300];
     public function __construct(
@@ -46,9 +48,9 @@ final readonly class ExternalLink
         }
         $section = '';
         if ($fields['style'] === 'CONSOLE') {
-            $section = $fields['consolesection'] === '__NEW__' ? $fields['consolenewsection'] : $fields['consolesection'];
+            $section = $fields['consolesection'] === self::NEW_SECTION_SELECTION ? $fields['consolenewsection'] : $fields['consolesection'];
             $section = $section === '' ? 'External Links' : $section;
-            if (mb_strlen($section, 'UTF-8') > ($fields['consolesection'] === '__NEW__' ? 20 : 50)) {
+            if (mb_strlen($section, 'UTF-8') > ($fields['consolesection'] === self::NEW_SECTION_SELECTION ? 20 : 50)) {
                 throw new \InvalidArgumentException('Invalid console section.');
             }
         }

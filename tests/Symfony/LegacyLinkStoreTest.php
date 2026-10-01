@@ -9,6 +9,7 @@ namespace Kadupul\Tests;
 
 use Kadupul\Navigation\Application\Port\LinkAccess;
 use Kadupul\Navigation\Domain\LinkConflict;
+use Kadupul\Navigation\Domain\ExternalLink;
 use Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkStore;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
@@ -56,6 +57,18 @@ final class LegacyLinkStoreTest extends TestCase
         self::assertSame('A <tag> 東京', $this->db->query("SELECT title FROM external_links WHERE id=$a")->fetchColumn());
         self::assertSame(2, (int) $this->db->query('SELECT COUNT(*) FROM user_auth_realm')->fetchColumn());
         self::assertSame([$a,$b], array_map(static fn($link) => $link->id, $this->store->snapshot()['links']));
+    }
+
+    public function testLiteralOldSentinelSectionCanBeCreatedAndEditedWithoutReplacement(): void
+    {
+        self::assertGreaterThan(50, mb_strlen(ExternalLink::NEW_SECTION_SELECTION));
+        $fields = array_replace(ExternalLinkTest::fields(), ['style' => 'CONSOLE', 'consolesection' => ExternalLink::NEW_SECTION_SELECTION, 'consolenewsection' => '__NEW__']);
+        $id = $this->store->save(1, null, $fields, $this->store->snapshot()['revision']);
+        $snapshot = $this->store->snapshot();
+        self::assertSame('__NEW__', $snapshot['links'][0]->extendedstyle);
+        $fields = $snapshot['links'][0]->fields([]);
+        $this->store->save(1, $id, $fields, $snapshot['revision']);
+        self::assertSame('__NEW__', $this->store->snapshot()['links'][0]->extendedstyle);
     }
     public function testStaleSaveAndActionsDoNotChangeRows(): void
     {

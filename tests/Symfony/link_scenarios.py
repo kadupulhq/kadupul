@@ -3,6 +3,7 @@ from urllib.parse import urlencode
 from urllib.request import Request
 from urllib.error import HTTPError
 import json
+import re
 from device_edit_scenarios import Inputs
 from harness import Session
 
@@ -15,6 +16,8 @@ def verify_links(harness, session, user_id, check):
             body = response.read().decode()
         parser = Inputs()
         parser.feed(body)
+        new_section = re.search(r'<option value="([^"]+)">New Name Below</option>', body)
+        parser.new_section_value = new_section.group(1) if new_section else None
         return parser
     def post(path, fields, origin=None, client=None):
         request = Request(harness.base + path, data=urlencode(fields).encode(), headers={'Origin': origin or harness.base})
@@ -31,7 +34,8 @@ def verify_links(harness, session, user_id, check):
         check(session.request('/links.php')['status'] == 200, 'links legacy listing forwards')
         check(post('/links.php', {'action': 'save'})[0] == 409, 'links expired legacy POST never mutates')
         form = get_form(base + '/new')
-        fields = form.fields | {'link[title]': 'Link <tag> 東京', 'link[style]': 'CONSOLE', 'link[filename]': '0', 'link[fileurl]': 'https://example.org/?x=1&y=2', 'link[consolesection]': '__NEW__', 'link[consolenewsection]': 'Section 東京', 'link[enabled]': '1', 'link[refresh]': '60'}
+        check(form.new_section_value is not None, 'links new section uses the rendered creation choice')
+        fields = form.fields | {'link[title]': 'Link <tag> 東京', 'link[style]': 'CONSOLE', 'link[filename]': '0', 'link[fileurl]': 'https://example.org/?x=1&y=2', 'link[consolesection]': form.new_section_value, 'link[consolenewsection]': '__NEW__', 'link[enabled]': '1', 'link[refresh]': '60'}
         check(post(base + '/new', {k:v for k,v in fields.items() if k != 'link[_token]'})[0] == 422, 'links missing CSRF rejected')
         check(post(base + '/new', fields, origin='https://attacker.invalid')[0] == 422, 'links cross-origin rejected')
         for changes in [{'link[fileurl]': 'javascript:alert(1)'}, {'link[filename]': '../index.php'}, {'link[refresh]':'61'}, {'link[title]':'x'*21}, {'link[unknown]':'1'}]:
@@ -58,6 +62,10 @@ def verify_links(harness, session, user_id, check):
         check(session.request('/links.php?clear=1&header=false')['status'] == 200 and preferences()['filter'] == '' and preferences()['page'] == '1', 'legacy clear explicitly resets remembered link filters')
         check(harness.sql(f'SELECT contentfile FROM external_links WHERE id={link_id}').strip() == 'https://example.org/?x=1&y=2', 'links URL bytes persist unchanged')
         check(harness.sql(f'SELECT COUNT(*) FROM user_auth_realm WHERE user_id={user_id} AND realm_id={link_id + 10000}').strip() == '1', 'links save grants actor its viewing realm')
+        check(harness.sql(f'SELECT extendedstyle FROM external_links WHERE id={link_id}').strip() == '__NEW__', 'new console section may be named literally __NEW__')
+        editor = get_form(base + f'/{link_id}/edit')
+        check(editor.fields['link[consolesection]'] == '__NEW__' and editor.new_section_value != '__NEW__', 'existing __NEW__ section has its own selected form choice')
+        check(post(base + f'/{link_id}/edit', editor.fields)[0] == 200 and harness.sql(f'SELECT extendedstyle FROM external_links WHERE id={link_id}').strip() == '__NEW__', 'unchanged edit preserves the stored __NEW__ section')
         editor = get_form(base + f'/{link_id}/edit')
         edit_fields = editor.fields | {'link[title]': 'Edited link', 'link[style]': 'TAB', 'link[filename]': '0', 'link[fileurl]':'ftp://example.org/a', 'link[consolesection]':'External Links','link[consolenewsection]':'','link[enabled]':'1','link[refresh]':'0'}
         stale = dict(edit_fields)
