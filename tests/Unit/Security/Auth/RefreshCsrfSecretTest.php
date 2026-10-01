@@ -10,6 +10,8 @@
  * runs against an isolated bootstrap and the shipped include/csrf.php.
  */
 
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
+
 function refresh_csrf_run($test, array $scenario): array
 {
     $root = dirname(__DIR__, 4);
@@ -191,12 +193,15 @@ test('failed local settings persistence cannot update collectors or the active c
     mkdir($directory . '/lib', 0700, true);
     file_put_contents($directory . '/lib/poller.php', '<?php');
     try {
-        $process = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', dirname(__DIR__, 3) . '/Fixtures/config-propagation-native.php', $directory, $mode), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $program = 'require ' . var_export(dirname(__DIR__, 3) . '/Fixtures/config-propagation-native.php', true) . ';';
+        $process = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $directory, $mode), $coverage_dir), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        expect(array(proc_close($process), $error))->toBe(array(0, ''));
+        $exit = proc_close($process);
+        child_coverage_collect($coverage_dir);
+        expect(array($exit, $error))->toBe(array(0, ''));
         expect(json_decode($output, true, 512, JSON_THROW_ON_ERROR))->toBe(array('result' => false, 'connections' => 0, 'central' => 'old-central', 'collector' => 'old-collector', 'cache' => 'old-central'));
     } finally {
         unlink($directory . '/lib/poller.php');
