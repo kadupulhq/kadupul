@@ -332,7 +332,9 @@
 	// already decided that `self` is what shows at this point.
 	function backgroundsAt(x, y, self, skipSelf) {
 		// Hit testing skips table rows and row groups, whose backgrounds still
-		// paint behind their cells, so put the skipped ancestors back.
+		// paint behind their cells, so put the skipped ancestors back. An
+		// ancestor whose box does not cover the point paints nothing there;
+		// content that overflows it shows whatever lies further down.
 		const hits = document.elementsFromPoint(x, y);
 		const stack = [];
 		hits.forEach((el, i) => {
@@ -340,7 +342,10 @@
 			const next = hits[i + 1];
 			if (next && next.contains(el)) {
 				for (let n = el.parentElement; n && n !== next; n = n.parentElement) {
-					stack.push(n);
+					const box = n.getBoundingClientRect();
+					if (x >= box.left && x < box.right && y >= box.top && y < box.bottom) {
+						stack.push(n);
+					}
 				}
 			}
 		});
