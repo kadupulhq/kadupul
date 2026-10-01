@@ -3717,9 +3717,15 @@ function auth_process_lockout($username, $realm) {
 /**
  * auth_login_throttle_keys - the throttle counters a login attempt belongs
  *   to: the client address, with IPv6 grouped by /64 so one host cannot
- *   rotate through its own prefix, and the login name in its realm.  Names
- *   are lowercased because user_auth compares them without case.  Keys are
- *   hashed so the table holds no login names.
+ *   rotate through its own prefix, and the login name in its realm.  Keys
+ *   are hashed so the table holds no login names.
+ *
+ *   user_auth matches names under utf8mb4_unicode_ci, which ignores case,
+ *   accents and trailing spaces, so every spelling that reaches one account
+ *   must land on one count.  The name is keyed on its collation weight, and
+ *   trailing spaces are removed first because WEIGHT_STRING() keeps them.
+ *   Directories also ignore leading spaces and runs of spaces, so LDAP and
+ *   Domains names drop those too.
  *
  * @param  (string) $username - the submitted login name
  * @param  (int)    $realm    - the realm the attempt is checked against
@@ -3734,9 +3740,22 @@ function auth_login_throttle_keys($username, $realm) {
 		$addr = bin2hex(substr($packed, 0, 8)) . '/64';
 	}
 
+	$name = rtrim((string) $username, ' ');
+
+	if ($realm != 0) {
+		$name = trim(preg_replace('/ {2,}/', ' ', $name), ' ');
+	}
+
+	$weight = db_fetch_cell_prepared('SELECT HEX(WEIGHT_STRING(CONVERT(? USING utf8mb4) COLLATE utf8mb4_unicode_ci))',
+		array($name));
+
+	if ($weight == '') {
+		$weight = mb_strtolower($name, 'UTF-8');
+	}
+
 	return array(
 		'addr'  => hash('sha256', 'addr|' . $addr),
-		'login' => hash('sha256', 'login|' . intval($realm) . '|' . mb_strtolower((string) $username, 'UTF-8')),
+		'login' => hash('sha256', 'login|' . intval($realm) . '|' . $weight),
 	);
 }
 

@@ -100,12 +100,33 @@ function db_column_exists($table, $column) {
 	return true;
 }
 
+/* utf8mb4_unicode_ci weights as MariaDB 13.0.2 returns them: case and
+ * accents fold, but trailing spaces still count */
+function collation_weight($name) {
+	return strtoupper(bin2hex(strtolower(strtr($name, array('Á' => 'a', 'á' => 'a', 'ä' => 'a', 'Í' => 'i', 'í' => 'i')))));
+}
+
+/* a PAD SPACE comparison, as user_auth lookups make */
+function collation_match($name) {
+	return collation_weight(rtrim($name, ' '));
+}
+
 function db_fetch_row_prepared($sql, $params = array()) {
-	return $GLOBALS['users'][$params[0]] ?? array();
+	foreach ($GLOBALS['users'] as $name => $user) {
+		if (collation_match($name) === collation_match($params[0])) {
+			return $user;
+		}
+	}
+
+	return array();
 }
 
 function db_fetch_cell_prepared($sql, $params = array()) {
 	global $pdo;
+
+	if (strpos($sql, 'WEIGHT_STRING(') !== false) {
+		return collation_weight($params[0]);
+	}
 
 	if (strpos($sql, 'user_auth_throttle') !== false) {
 		$statement = $pdo->prepare(throttle_sql($sql));
@@ -114,7 +135,7 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 		return $statement->fetchColumn();
 	}
 
-	return $GLOBALS['users'][$params[0]]['password'] ?? '';
+	return db_fetch_row_prepared($sql, $params)['password'] ?? '';
 }
 
 function db_execute_prepared($sql, $params = array()) {
@@ -363,4 +384,39 @@ test('the login page returns the count only after a non-guest login passes the a
 	expect(substr_count($source, 'auth_login_throttle_release('))->toBe(1)
 		->and($transition)->toBeInt()
 		->and($release)->toBeGreaterThan($transition);
+});
+
+test('spellings that reach the same account share one login name count', function () {
+	$steps = array(
+		array('call' => 'local', 'username' => 'alice', 'password' => 'wrong'),
+		array('call' => 'local', 'username' => 'alice ', 'password' => 'wrong'),
+		array('call' => 'local', 'username' => 'Álice', 'password' => 'wrong'),
+		array('call' => 'local', 'username' => 'ALÍCE   ', 'password' => 'right'),
+		array('call' => 'local', 'username' => 'älice', 'password' => 'right'),
+	);
+
+	$result = login_throttle_run(login_throttle_on(3), $steps);
+
+	/* each spelling still reaches alice's row and her password check */
+	expect($result['steps'][2]['verify_calls'])->toBeGreaterThan(0)
+		->and($result['steps'][3]['user'])->toBeNull()
+		->and($result['steps'][3]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
+		->and($result['steps'][4]['user'])->toBeNull()
+		->and($result['steps'][4]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.');
+});
+
+test('directory login names share one count across surrounding and repeated spaces', function () {
+	$steps = array(
+		array('call' => 'ldap', 'username' => 'bob', 'password' => 'wrong'),
+		array('call' => 'ldap', 'username' => '  BOB', 'password' => 'wrong'),
+		array('call' => 'ldap', 'username' => 'Bob  ', 'password' => 'right'),
+		array('call' => 'local', 'username' => 'Bob  ', 'password' => 'wrong'),
+	);
+
+	$result = login_throttle_run(login_throttle_on(2), $steps);
+
+	expect($result['steps'][1]['ldap_calls'])->toBe(2)
+		->and($result['steps'][2]['ldap_calls'])->toBe(0)
+		->and($result['steps'][2]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
+		->and($result['steps'][3]['error_msg'])->toBe('Access Denied!  Login Failed.');
 });
