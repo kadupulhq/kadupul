@@ -23,6 +23,10 @@ function cacti_escapeshellarg($value)
 }
 function db_execute($sql)
 {
+    $failure = getenv('AUDIT_TEST_CASE');
+    if (($failure === 'load-truncate-columns' && $sql === 'TRUNCATE table_columns') || ($failure === 'load-truncate-indexes' && $sql === 'TRUNCATE table_indexes')) {
+        return false;
+    }
     file_put_contents(dirname(__DIR__) . '/db-mutations', $sql . "\n", FILE_APPEND);
     if (str_starts_with($sql, 'RENAME TABLE')) {
         if (getenv('AUDIT_TEST_CASE') === 'swap-failure') {
@@ -120,6 +124,9 @@ function db_fetch_assoc($sql)
 }
 function db_execute_prepared($sql, $params = array())
 {
+    if ((getenv('AUDIT_TEST_CASE') === 'load-column-failure' && str_contains($sql, 'INSERT INTO table_columns')) || (getenv('AUDIT_TEST_CASE') === 'load-index-failure' && str_contains($sql, 'INSERT INTO table_indexes'))) {
+        return false;
+    }
     return audit_query($sql, $params) !== false;
 }
 function db_column_exists($table, $column)
@@ -132,6 +139,7 @@ function db_index_exists($table, $index)
 }
 function db_dump_data(...$arguments)
 {
+    file_put_contents(dirname(__DIR__) . '/dump-called', '1');
     return getenv('AUDIT_TEST_CASE') === 'dump-failure' ? 1 : 0;
 }
 

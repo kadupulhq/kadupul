@@ -61,6 +61,17 @@ final class AuditNativeContractTest extends TestCase
                     $schema .= "INSERT INTO `table_indexes` VALUES ('other',0,'PRIMARY',1,'id','A',1,NULL,NULL,'','BTREE','');";
                 }
             }
+            if ($case === 'load-index-failure') {
+                $db->exec('CREATE INDEX probe_index ON probe(id)');
+            }
+            if ($case === 'truncated-import') {
+                $candidate = new PDO('sqlite::memory:');
+                $candidate->exec($schema);
+                self::assertSame(1, (int) $candidate->query('SELECT COUNT(*) FROM table_columns')->fetchColumn());
+                self::assertSame(1, (int) $candidate->query('SELECT COUNT(*) FROM table_indexes')->fetchColumn());
+            } else {
+                $schema .= "\n-- Dump completed on 2026-10-01 00:00:00\n";
+            }
             file_put_contents($directory . '/docs/audit_schema.sql', $schema);
             if ($case === 'missing') {
                 unlink($directory . '/docs/audit_schema.sql');
@@ -143,7 +154,10 @@ final class AuditNativeContractTest extends TestCase
             if ($option === '--alters') {
                 self::assertStringContainsString('Proposed Alter', $output);
             }
-            if ($option === '--load') {
+            if (str_starts_with($case, 'load-')) {
+                self::assertStringContainsString('Failed to populate Audit Schema', $output);
+                self::assertFileDoesNotExist($directory . '/dump-called');
+            } elseif ($option === '--load') {
                 self::assertStringContainsString($case === 'missing-docs' ? 'Docs directory does not exist' : 'Finished Creating Audit Schema', $output);
             }
             $messages = array('report-type' => 'ERROR Col:', 'report-missing-column' => 'is missing', 'report-unexpected-column' => 'Plugin possible', 'report-no-baseline' => 'Does not Exist', 'report-missing-index' => 'ERROR Index:', 'report-unique-index' => 'ERROR Index:', 'report-primary-index' => 'ERROR Index:', 'report-index-reordered' => 'resequenced columns', 'report-unexpected-index' => 'does not exist in default Kadupul');
@@ -193,6 +207,6 @@ final class AuditNativeContractTest extends TestCase
     public static function cases(): array
     {
         $reports = array_map(static fn($case) => array($case, '--report', 0), array('report-type', 'report-missing-column', 'report-unexpected-column', 'report-no-baseline', 'report-missing-index', 'report-unique-index', 'report-primary-index', 'report-index-reordered', 'report-unexpected-index', 'report-clean', 'report-index-clean'));
-        return array_merge($reports, array(array('valid', '--create', 0), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-failure', '--upgrade', 0), array('version', '--version', 0), array('help', '--help', 0)));
+        return array_merge($reports, array(array('valid', '--create', 0), array('truncated-import', '--create', 1), array('partial-success', '--create', 1), array('load-truncate-columns', '--load', 1), array('load-truncate-indexes', '--load', 1), array('load-column-failure', '--load', 1), array('load-index-failure', '--load', 1), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-failure', '--upgrade', 0), array('version', '--version', 0), array('help', '--help', 0)));
     }
 }

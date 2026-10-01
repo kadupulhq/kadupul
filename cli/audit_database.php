@@ -1033,6 +1033,7 @@ function create_tables($load = true)
         }
 
         $suffix = bin2hex(random_bytes(8));
+        $completion = 'audit_complete_' . $suffix;
         $staging = array('table_columns' => 'audit_columns_' . $suffix, 'table_indexes' => 'audit_indexes_' . $suffix);
         $backups = array('table_columns' => 'audit_old_columns_' . $suffix, 'table_indexes' => 'audit_old_indexes_' . $suffix);
         $import_file = tempnam(sys_get_temp_dir(), 'kadupul-audit-');
@@ -1045,9 +1046,13 @@ function create_tables($load = true)
             if ($schema === false) {
                 throw new RuntimeException('Unable to read the Audit Schema');
             }
+            if (!preg_match('/-- Dump completed on [^\r\n]+\s*$/D', $schema)) {
+                throw new RuntimeException('Audit Schema completion footer is missing');
+            }
             foreach ($staging as $live => $stage) {
                 $schema = str_replace('`' . $live . '`', '`' . $stage . '`', $schema);
             }
+            $schema .= "\nCREATE TABLE `$completion` (id INTEGER PRIMARY KEY);\nINSERT INTO `$completion` VALUES (1);\n";
             if (file_put_contents($import_file, $schema) !== strlen($schema)) {
                 throw new RuntimeException('Unable to stage the Audit Schema');
             }
@@ -1060,6 +1065,9 @@ function create_tables($load = true)
                 ' < ' . cacti_escapeshellarg($import_file), $output, $error);
             if ($error !== 0) {
                 throw new RuntimeException('Audit Schema import failed');
+            }
+            if (!db_table_exists($completion) || (int) db_fetch_cell('SELECT COUNT(*) FROM `' . $completion . '` WHERE id=1') !== 1) {
+                throw new RuntimeException('Audit Schema import did not reach its completion marker');
             }
             foreach ($staging as $stage) {
                 if (!db_table_exists($stage) || (int) db_fetch_cell('SELECT COUNT(*) FROM `' . $stage . '`') < 1) {
@@ -1081,7 +1089,7 @@ function create_tables($load = true)
             return false;
         } finally {
             unlink($import_file);
-            foreach (array_merge(array_values($staging), array_values($backups)) as $temporary) {
+            foreach (array_merge(array_values($staging), array_values($backups), array($completion)) as $temporary) {
                 db_execute('DROP TABLE IF EXISTS `' . $temporary . '`');
             }
         }
@@ -1101,8 +1109,10 @@ function load_audit_database()
         return false;
     }
 
-    db_execute('TRUNCATE table_columns');
-    db_execute('TRUNCATE table_indexes');
+    if (!db_execute('TRUNCATE table_columns') || !db_execute('TRUNCATE table_indexes')) {
+        print 'FATAL: Failed to populate Audit Schema: baseline cleanup failed' . PHP_EOL;
+        return false;
+    }
 
     $tables = db_fetch_assoc('SHOW TABLES');
 
@@ -1118,7 +1128,7 @@ function load_audit_database()
             $i = 1;
             if (cacti_sizeof($columns)) {
                 foreach ($columns as $c) {
-                    db_execute_prepared(
+                    if (!db_execute_prepared(
                         'INSERT INTO table_columns
 						(table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra)
 						VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -1132,7 +1142,10 @@ function load_audit_database()
                             $c['Default'],
                             $c['Extra']
                         )
-                    );
+                    )) {
+                        print 'FATAL: Failed to populate Audit Schema: baseline row write failed' . PHP_EOL;
+                        return false;
+                    }
 
                     $i++;
                 }
@@ -1142,7 +1155,7 @@ function load_audit_database()
 
             if (cacti_sizeof($indexes)) {
                 foreach ($indexes as $i) {
-                    db_execute_prepared(
+                    if (!db_execute_prepared(
                         'INSERT INTO table_indexes
 						(idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name,
 						idx_collation, idx_cardinality, idx_sub_part, idx_packed, idx_null, idx_index_type, idx_comment)
@@ -1161,7 +1174,10 @@ function load_audit_database()
                             $i['Index_type'],
                             $i['Comment']
                         )
-                    );
+                    )) {
+                        print 'FATAL: Failed to populate Audit Schema: baseline row write failed' . PHP_EOL;
+                        return false;
+                    }
                 }
             }
         }

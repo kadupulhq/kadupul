@@ -10,6 +10,11 @@ if (!in_array('fixture database; echo ignored', $argv, true)) {
 $db = new PDO('sqlite:' . getenv('AUDIT_TEST_SQLITE'));
 $sql = stream_get_contents(STDIN);
 $case = getenv('AUDIT_TEST_CASE');
+if ($case === 'partial-success') {
+    $prefix = substr($sql, 0, strpos($sql, 'CREATE TABLE `audit_complete_'));
+    $db->exec($prefix);
+    exit(0);
+}
 if ($case === 'partial-import') {
     $statements = explode(';', $sql);
     $db->exec($statements[0]);
