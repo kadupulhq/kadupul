@@ -54,7 +54,8 @@ msgstr "Эта программа распространяется в надеж
 #: color_templates.php:10 color_templates.php:105 data_input.php:14
 #: data_input.php:639 data_input.php:681 data_queries.php:13
 #: data_queries.php:805 data_queries.php:912 data_queries.php:1172
-#: data_sources.php:19 data_source_profiles.php:16 data_source_profiles.php:846
+#: data_source_profiles.php:16 data_source_profiles.php:856
+#: data_sources.php:19
 #: data_sources.php:1070 data_templates.php:16 data_templates.php:730
 #: gprint_presets.php:10 graph_templates.php:22 graph_templates.php:500
 #: graphs.php:29 host.php:24 host_templates.php:17 host_templates.php:460
@@ -112,7 +113,7 @@ msgstr "Нажмите \"Продолжить\", чтобы удалить сл�
 #: color_templates.php:237 color_templates.php:246
 #: color_templates_items.php:281 data_input.php:280 data_input.php:332
 #: data_queries.php:394 data_queries.php:408 data_queries.php:572
-#: data_source_profiles.php:381 data_source_profiles.php:393 data_source_profiles.php:575
+#: data_source_profiles.php:380 data_source_profiles.php:392 data_source_profiles.php:585
 #: data_sources.php:517 data_sources.php:527
 #: data_sources.php:536 data_sources.php:545 data_sources.php:554
 #: data_sources.php:560 data_templates.php:449 data_templates.php:459
@@ -150,7 +151,7 @@ msgstr "Отмена"
 #: color_templates.php:237 color_templates.php:246
 #: color_templates_items.php:282 data_input.php:280 data_input.php:333
 #: data_queries.php:394 data_queries.php:408 data_queries.php:573
-#: data_source_profiles.php:381 data_source_profiles.php:393 data_source_profiles.php:576
+#: data_source_profiles.php:380 data_source_profiles.php:392 data_source_profiles.php:586
 #: data_sources.php:517 data_sources.php:527
 #: data_sources.php:536 data_sources.php:545 data_sources.php:554
 #: data_sources.php:560 data_templates.php:449 data_templates.php:459
@@ -410,7 +411,8 @@ msgstr "Сопоставление графиков"
 #: automation_networks.php:1222 automation_snmp.php:682
 #: automation_templates.php:375 automation_tree_rules.php:819 cdef.php:729
 #: color.php:512 color_templates.php:520 data_debug.php:1106 data_input.php:797
-#: data_queries.php:1290 data_sources.php:1443 data_source_profiles.php:1098
+#: data_source_profiles.php:1108
+#: data_queries.php:1290 data_sources.php:1443
 #: data_templates.php:1024 gprint_presets.php:253 graph_templates.php:698
 #: graph_view.php:636 graphs.php:2049 graphs_new.php:443 host.php:1665
 #: host_templates.php:764 lib/api_automation.php:127 lib/api_automation.php:468
@@ -452,7 +454,8 @@ msgstr "Графики"
 #: automation_snmp.php:692 automation_templates.php:385
 #: automation_tree_rules.php:839 cdef.php:739 color.php:522
 #: color_templates.php:536 data_debug.php:1116 data_input.php:807
-#: data_queries.php:1300 data_source_profiles.php:1108 data_source_profiles.php:1230
+#: data_source_profiles.php:1118 data_source_profiles.php:1240
+#: data_queries.php:1300
 #: data_sources.php:1453 data_templates.php:1050
 #: gprint_presets.php:263 graph_templates.php:708 graph_view.php:710
 #: graphs.php:2070 graphs_new.php:453 host.php:1690 host_templates.php:774
@@ -482,7 +485,8 @@ msgstr "Часть совокупности"
 #: automation_snmp.php:704 automation_templates.php:397
 #: automation_tree_rules.php:851 cdef.php:757 color.php:546
 #: color_templates.php:558 data_debug.php:1034 data_input.php:819
-#: data_queries.php:1312 data_sources.php:1396 data_source_profiles.php:1129
+#: data_source_profiles.php:1139
+#: data_queries.php:1312 data_sources.php:1396
 #: data_templates.php:1068 gprint_presets.php:281 graph_templates.php:726
 #: graph_view.php:644 graphs.php:2040 graphs_new.php:432 host.php:1655
 #: host_templates.php:755 lib/api_automation.php:182 lib/api_automation.php:459
@@ -500,7 +504,8 @@ msgstr "Выполнить"
 #: aggregate_graphs.php:1249 aggregate_graphs.php:1543
 #: automation_devices.php:493 automation_snmp.php:704
 #: automation_templates.php:397 cdef.php:757 color.php:546 data_debug.php:1034
-#: data_input.php:819 data_queries.php:1312 data_source_profiles.php:1129
+#: data_source_profiles.php:1139
+#: data_input.php:819 data_queries.php:1312
 #: data_sources.php:1396 data_templates.php:1068 gprint_presets.php:281
 #: graph_templates.php:726 graph_view.php:644 graphs.php:2040
 #: graphs_new.php:432 host.php:1655 host_templates.php:755
@@ -522,7 +527,8 @@ msgstr "Выбрать/Обновить фильтры"
 #: automation_snmp.php:705 automation_templates.php:398
 #: automation_tree_rules.php:852 cdef.php:758 color.php:547
 #: color_templates.php:559 data_debug.php:1035 data_input.php:820
-#: data_queries.php:1313 data_sources.php:1397 data_source_profiles.php:1130
+#: data_source_profiles.php:1140
+#: data_queries.php:1313 data_sources.php:1397
 #: data_templates.php:1069 gprint_presets.php:282 graph_templates.php:727
 #: graph_view.php:645 graphs.php:2041 graphs_new.php:433 host.php:1656
 #: host_templates.php:756 lib/api_automation.php:183 lib/api_automation.php:460
@@ -539,7 +545,8 @@ msgstr "Очистить"
 
 #: aggregate_graphs.php:1250 aggregate_graphs.php:1544 automation_snmp.php:705
 #: automation_templates.php:398 cdef.php:758 color.php:547 data_debug.php:1035
-#: data_input.php:820 data_queries.php:1313 data_source_profiles.php:1130
+#: data_source_profiles.php:1140
+#: data_input.php:820 data_queries.php:1313
 #: data_sources.php:1397 data_templates.php:1069 gprint_presets.php:282
 #: graph_templates.php:727 graph_view.php:645 graphs.php:2041
 #: graphs_new.php:433 host.php:1656 host_templates.php:756
@@ -586,7 +593,7 @@ msgstr "Размер"
 #: aggregate_graphs.php:1294 aggregate_templates.php:707
 #: automation_tree_rules.php:698 cdef.php:884 color.php:705 color.php:707
 #: color_templates.php:664 data_input.php:951 data_queries.php:1450
-#: data_source_profiles.php:1310 data_source_profiles.php:1311
+#: data_source_profiles.php:1320 data_source_profiles.php:1321
 #: data_sources.php:1705 data_sources.php:1706 data_templates.php:1238
 #: gprint_presets.php:428 graph_templates.php:889 host_templates.php:963
 #: include/global_settings.php:876 include/global_settings.php:1915
@@ -600,7 +607,7 @@ msgstr "Нет"
 #: automation_tree_rules.php:691 cdef.php:884 color.php:705 color.php:707
 #: color_templates.php:664 data_debug.php:682 data_debug.php:687
 #: data_debug.php:692 data_input.php:951 data_queries.php:1450
-#: data_source_profiles.php:1309 data_source_profiles.php:1310 data_source_profiles.php:1311
+#: data_source_profiles.php:1319 data_source_profiles.php:1320 data_source_profiles.php:1321
 #: data_sources.php:1705 data_sources.php:1706
 #: data_templates.php:1238 gprint_presets.php:428 graph_templates.php:889
 #: host_templates.php:963 include/global_settings.php:875
@@ -760,7 +767,8 @@ msgstr "Используемые агрегированные шаблоны н�
 
 #: aggregate_templates.php:690 cdef.php:867 color.php:682
 #: color_templates.php:635 data_input.php:912 data_queries.php:1404
-#: data_sources.php:1636 data_templates.php:1183 data_source_profiles.php:1235
+#: data_source_profiles.php:1245
+#: data_sources.php:1636 data_templates.php:1183
 #: gprint_presets.php:388 graph_templates.php:838 host_templates.php:921
 #: vdef.php:898
 msgid "Deletable"
@@ -1245,7 +1253,8 @@ msgstr "Очистить обнаруженные устройства"
 #: automation_devices.php:672 automation_networks.php:1147
 #: automation_snmp.php:550 automation_snmp.php:551 automation_snmp.php:552
 #: automation_snmp.php:553 automation_snmp.php:554 automation_snmp.php:555
-#: data_debug.php:607 host.php:1863 data_source_profiles.php:61
+#: data_source_profiles.php:61
+#: data_debug.php:607 host.php:1863
 #: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1742 lib/html_reports.php:1768
 #: lib/html_reports.php:1839 lib/html_reports.php:1840
@@ -1262,7 +1271,8 @@ msgstr "Н/Д"
 
 #: automation_graph_rules.php:11 automation_snmp.php:12
 #: automation_tree_rules.php:11 cdef.php:12 color_templates.php:11
-#: data_input.php:15 data_queries.php:14 data_source_profiles.php:17
+#: data_source_profiles.php:17
+#: data_input.php:15 data_queries.php:14
 #: data_templates.php:17 graph_templates.php:23 graphs.php:49
 #: host_templates.php:18 include/global_arrays.php:1644 sites.php:11
 #: vdef.php:12
@@ -1549,7 +1559,8 @@ msgstr "Общие Настройки"
 
 #: automation_networks.php:437 automation_snmp.php:491 data_input.php:590
 #: data_input.php:651 data_queries.php:759 data_queries.php:864
-#: data_queries.php:1131 graph_templates.php:483 data_source_profiles.php:808
+#: data_source_profiles.php:818
+#: data_queries.php:1131 graph_templates.php:483
 #: include/global_form.php:198 include/global_form.php:264
 #: include/global_form.php:321 include/global_form.php:341
 #: include/global_form.php:382 include/global_form.php:512
@@ -1697,7 +1708,8 @@ msgid "%d Hour"
 msgstr "%d Час"
 
 #: automation_networks.php:525 automation_networks.php:526
-#: automation_networks.php:527 data_source_profiles.php:1035
+#: data_source_profiles.php:1045
+#: automation_networks.php:527
 #: include/global_arrays.php:712 include/global_arrays.php:713
 #: include/global_arrays.php:714 include/global_arrays.php:715
 #: include/global_arrays.php:716 include/global_arrays.php:757
@@ -2576,7 +2588,8 @@ msgstr[0] "Нажмите «Продолжить», чтобы дублиров�
 msgstr[1] "Нажмите \"Продолжить\", чтобы скопировать следующие CDEFs. Вы можете изменить формат заголовка для новых CDEFs."
 msgstr[2] ""
 
-#: cdef.php:264 color_templates.php:231 data_source_profiles.php:387
+#: data_source_profiles.php:386
+#: cdef.php:264 color_templates.php:231
 #: data_templates.php:455 graph_templates.php:367 host_templates.php:216
 #: vdef.php:267
 msgid "Title Format:"
@@ -2662,7 +2675,8 @@ msgstr "CDEFs"
 msgid "CDEF Name"
 msgstr "CDEF Имя"
 
-#: cdef.php:866 data_source_profiles.php:1227
+#: data_source_profiles.php:1237
+#: cdef.php:866
 msgid "The name of this CDEF."
 msgstr "Название этого CDEF."
 
@@ -2675,7 +2689,8 @@ msgid "The number of Graphs using this CDEF."
 msgstr "Количество Графиков, использующих этот CDEF."
 
 #: cdef.php:869 color.php:684 data_input.php:923 data_queries.php:1415
-#: gprint_presets.php:399 vdef.php:900 data_source_profiles.php:1263
+#: data_source_profiles.php:1273
+#: gprint_presets.php:399 vdef.php:900
 msgid "Templates Using"
 msgstr "Использование шаблонов"
 
@@ -3481,7 +3496,8 @@ msgstr "Идентификатор внутренней базы данных д
 msgid "Data Inputs that are in use cannot be Deleted. In use is defined as being referenced either by a Data Source or a Data Template."
 msgstr "Используемые входы данных не могут быть удалены. Под используемыми понимается ссылка либо на источник данных, либо на шаблон данных."
 
-#: data_input.php:917 data_templates.php:1188 data_source_profiles.php:1257
+#: data_source_profiles.php:1267
+#: data_input.php:917 data_templates.php:1188
 msgid "Data Sources Using"
 msgstr "Источники данных Использование"
 
@@ -3715,124 +3731,128 @@ msgstr "Запросов данных не найдено"
 msgid "Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool's 'tune' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct.<br>"
 msgstr "Изменение частоты Heartbeat на этой странице не приводит к изменению частоты Heartbeat для существующих источников данных. Используйте функцию RRDtool 'tune', чтобы внести это изменение в ваши существующие файлы RRD, или запустите CLI утилиту update_heartbeat.php чтобы изменить.<br>"
 
-#: data_source_profiles.php:376
+#: data_source_profiles.php:375
 msgid "Click 'Continue' to delete the following Data Source Profile"
 msgid_plural "Click 'Continue' to delete following Data Source Profiles"
 msgstr[0] "Нажмите кнопку \"Продолжить\", чтобы удалить следующий Профиль источника данных"
 msgstr[1] "Нажмите кнопку \"Продолжить\", чтобы удалить следующие Профили источников данных"
 msgstr[2] "Нажмите кнопку \"Продолжить\", чтобы удалить следующие Профили источников данных"
 
-#: data_source_profiles.php:381
+#: data_source_profiles.php:380
 msgid "Delete Data Source Profile"
 msgid_plural "Delete Data Source Profiles"
 msgstr[0] "Удалить профиль источника данных"
 msgstr[1] "Удалить профили источников данных"
 msgstr[2] "Удалить профили источников данных"
 
-#: data_source_profiles.php:385
+#: data_source_profiles.php:384
 msgid "Click 'Continue' to duplicate the following Data Source Profile. You can optionally change the title format for the new Data Source Profile"
 msgid_plural "Click 'Continue' to duplicate following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles."
 msgstr[0] "Нажмите «Продолжить», чтобы дублировать следующий профиль источника данных. Вы можете по желанию изменить формат заголовка для нового профиля источника данных"
 msgstr[1] ""
 msgstr[2] ""
 
-#: data_source_profiles.php:393
+#: data_source_profiles.php:392
 msgid "Duplicate Data Source Profile"
 msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "Дублировать профиль источника данных"
 msgstr[1] ""
 msgstr[2] ""
 
-#: data_source_profiles.php:543
+#: data_source_profiles.php:492 data_source_profiles.php:553
 #, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr "Неудачно отремонтирован один или несколько RRD-файлов.  Ошибки см. в журнале Kadupul."
 
-#: data_source_profiles.php:569
+#: data_source_profiles.php:579
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
 msgstr "Нажмите кнопку \"Продолжить\", чтобы удалить следующий Профиль источника данных RRA."
 
-#: data_source_profiles.php:570
+#: data_source_profiles.php:580
 #, php-format
 msgid "Profile Name: %s"
 msgstr "Имя профиля: %s"
 
-#: data_source_profiles.php:576
+#: data_source_profiles.php:586
 msgid "Remove Data Source Profile RRA"
 msgstr "Удаление профиля источника данных RRA"
 
-#: data_source_profiles.php:631 data_source_profiles.php:652
+#: data_source_profiles.php:641 data_source_profiles.php:662
 msgid "Each Insert is New Row"
 msgstr "Каждая вставка является новой строкой"
 
-#: data_source_profiles.php:680
+#: data_source_profiles.php:690
 msgid "(Some Elements Read Only)"
 msgstr "(Только для чтения некоторых элементов)"
 
-#: data_source_profiles.php:680
+#: data_source_profiles.php:690
 #, php-format
 msgid "RRA [edit: %s %s]"
 msgstr "RRA [редактирование: %s %s]"
 
-#: data_source_profiles.php:781
+#: data_source_profiles.php:791
 #, php-format
 msgid "Data Source Profile [edit: %s]"
 msgstr "Профиль источника данных [редактировать: %s]"
 
-#: data_source_profiles.php:783
+#: data_source_profiles.php:793
 msgid "Data Source Profile [new]"
 msgstr "Профиль источника данных [новый]"
 
-#: data_source_profiles.php:802
+#: data_source_profiles.php:812
 msgid "Data Source Profile RRAs (press save to update timespans)"
 msgstr "Профиль источника данных RRA (нажмите сохранить, чтобы обновить промежутки времени)"
 
-#: data_source_profiles.php:804
+#: data_source_profiles.php:814
 msgid "Data Source Profile RRAs (Read Only)"
 msgstr "Профиль источника данных RRA (только для чтения)"
 
-#: include/global_form.php:297 data_source_profiles.php:809
+#: data_source_profiles.php:819
+#: include/global_form.php:297
 msgid "Data Retention"
 msgstr "Хранение данных"
 
-#: include/global_settings.php:1006 data_source_profiles.php:810
+#: data_source_profiles.php:820
+#: include/global_settings.php:1006
 #: lib/html_reports.php:1151
 msgid "Graph Timespan"
 msgstr "Интервал графика"
 
-#: data_source_profiles.php:811
+#: data_source_profiles.php:821
 msgid "Steps"
 msgstr "Шаги"
 
-#: graphs_new.php:449 include/global_form.php:281 data_source_profiles.php:812
+#: data_source_profiles.php:822
+#: graphs_new.php:449 include/global_form.php:281
 #: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2818
 #: lib/rrd.php:3816 utilities.php:849 utilities.php:1771
 msgid "Rows"
 msgstr "Строк"
 
-#: data_source_profiles.php:869
+#: data_source_profiles.php:879
 msgid "Select Consolidation Function(s)"
 msgstr "Выберите функцию(ы) консолидации"
 
-#: data_source_profiles.php:909
+#: data_source_profiles.php:919
 msgid "Delete Data Source Profile Item"
 msgstr "Удалить профиль источника данных Элемент профиля источника данных"
 
-#: data_source_profiles.php:974
+#: data_source_profiles.php:984
 #, php-format
 msgid "%s KBytes per Data Sources and %s Bytes for the Header"
 msgstr "%s Кбайт на источник данных и %s Байт заголовка"
 
-#: data_source_profiles.php:983
+#: data_source_profiles.php:993
 #, php-format
 msgid "%s KBytes per Data Source"
 msgstr "%s Кбайт на источник данных"
 
-#: data_source_profiles.php:985
+#: data_source_profiles.php:995
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr "Введите действительное число строк, чтобы получения размера RRA."
 
-#: include/global_arrays.php:783 data_source_profiles.php:1000
+#: data_source_profiles.php:1010
+#: include/global_arrays.php:783
 #: include/global_arrays.php:784 include/global_arrays.php:785
 #: include/global_arrays.php:786 include/global_arrays.php:787
 #: include/global_arrays.php:788 include/global_arrays.php:789
@@ -3842,17 +3862,19 @@ msgstr "Введите действительное число строк, чт�
 msgid "%d Years"
 msgstr "%d Года"
 
-#: data_source_profiles.php:1000
+#: data_source_profiles.php:1010
 msgid "1 Year"
 msgstr "1 Год"
 
-#: include/global_arrays.php:777 data_source_profiles.php:1009
+#: data_source_profiles.php:1019
+#: include/global_arrays.php:777
 #: include/global_arrays.php:1460 rrdcleaner.php:525
 #, php-format
 msgid "%d Month"
 msgstr "%d Месяц"
 
-#: include/global_arrays.php:778 data_source_profiles.php:1009
+#: data_source_profiles.php:1019
+#: include/global_arrays.php:778
 #: include/global_arrays.php:779 include/global_arrays.php:780
 #: include/global_arrays.php:781 include/global_arrays.php:1461
 #: include/global_arrays.php:1462 include/global_arrays.php:1463
@@ -3862,14 +3884,16 @@ msgstr "%d Месяц"
 msgid "%d Months"
 msgstr "%d Месяца"
 
-#: include/global_arrays.php:718 data_source_profiles.php:1018
+#: data_source_profiles.php:1028
+#: include/global_arrays.php:718
 #: include/global_arrays.php:774 include/global_arrays.php:1458
 #: rrdcleaner.php:521 rrdcleaner.php:522
 #, php-format
 msgid "%d Week"
 msgstr "%d Неделя"
 
-#: include/global_arrays.php:775 data_source_profiles.php:1018
+#: data_source_profiles.php:1028
+#: include/global_arrays.php:775
 #: include/global_arrays.php:776 include/global_arrays.php:1459
 #: include/global_settings.php:2918 include/global_settings.php:2919
 #: include/global_settings.php:2920 rrdcleaner.php:523 rrdcleaner.php:524
@@ -3877,14 +3901,16 @@ msgstr "%d Неделя"
 msgid "%d Weeks"
 msgstr "%d Недели"
 
-#: include/global_arrays.php:717 data_source_profiles.php:1027
+#: data_source_profiles.php:1037
+#: include/global_arrays.php:717
 #: include/global_arrays.php:761 include/global_arrays.php:771
 #: include/global_arrays.php:1454
 #, php-format
 msgid "%d Day"
 msgstr "%d День"
 
-#: include/global_arrays.php:762 data_source_profiles.php:1027
+#: data_source_profiles.php:1037
+#: include/global_arrays.php:762
 #: include/global_arrays.php:772 include/global_arrays.php:773
 #: include/global_arrays.php:1455 include/global_arrays.php:1456
 #: include/global_arrays.php:1457 include/global_settings.php:1619
@@ -3896,7 +3922,8 @@ msgstr "%d День"
 msgid "%d Days"
 msgstr "%d Дней"
 
-#: include/global_arrays.php:711 data_source_profiles.php:1035
+#: data_source_profiles.php:1045
+#: include/global_arrays.php:711
 #: include/global_arrays.php:1519 include/global_arrays.php:1540
 #: include/global_arrays.php:1550 include/global_arrays.php:1580
 #: include/global_arrays.php:1589 include/global_arrays.php:1617
@@ -3905,65 +3932,70 @@ msgstr "%d Дней"
 msgid "1 Hour"
 msgstr "1 Час"
 
-#: include/global_arrays.php:1228 data_source_profiles.php:1089
+#: data_source_profiles.php:1099
+#: include/global_arrays.php:1228
 msgid "Data Source Profiles"
 msgstr "Профили источников данных"
 
-#: data_source_profiles.php:1104 data_source_profiles.php:1270
+#: data_source_profiles.php:1114 data_source_profiles.php:1280
 msgid "Profiles"
 msgstr "Профили"
 
-#: data_templates.php:1063 data_source_profiles.php:1124
+#: data_source_profiles.php:1134
+#: data_templates.php:1063
 msgid "Has Data Sources"
 msgstr "Имеет ли источник данных"
 
-#: data_source_profiles.php:1224
+#: data_source_profiles.php:1234
 msgid "Data Source Profile Name"
 msgstr "Имя профиля источника данных Имя профиля"
 
-#: data_source_profiles.php:1232
+#: data_source_profiles.php:1242
 msgid "Is this the default Profile for all new Data Templates?"
 msgstr "Это профиль по умолчанию для всех новых шаблонов данных?"
 
-#: data_source_profiles.php:1237
+#: data_source_profiles.php:1247
 msgid "Profiles that are in use cannot be Deleted. In use is defined as being referenced by a Data Source or a Data Template."
 msgstr "Используемые профили удалить нельзя. Под используемыми понимается ссылка на источник данных или шаблон данных."
 
-#: include/global_form.php:357 data_source_profiles.php:1240
+#: data_source_profiles.php:1250
+#: include/global_form.php:357
 msgid "Read Only"
 msgstr "Только чтение"
 
-#: data_source_profiles.php:1242
+#: data_source_profiles.php:1252
 msgid "Profiles that are in use by Data Sources become read only for now."
 msgstr "Профили, которые используются Источниками данных, читаются только в настоящее время."
 
-#: data_sources.php:1630 data_source_profiles.php:1245
+#: data_source_profiles.php:1255
+#: data_sources.php:1630
 #: include/global_settings.php:1216
 msgid "Poller Interval"
 msgstr "Частота Опроса"
 
-#: data_source_profiles.php:1248
+#: data_source_profiles.php:1258
 msgid "The Polling Frequency for the Profile"
 msgstr "Частота опроса для профиля"
 
-#: include/global_form.php:215 data_source_profiles.php:1251
+#: data_source_profiles.php:1261
+#: include/global_form.php:215
 #: include/global_form.php:636 pollers.php:33
 msgid "Heartbeat"
 msgstr "Пульс RRD данных"
 
-#: data_source_profiles.php:1254
+#: data_source_profiles.php:1264
 msgid "The Amount of Time, in seconds, without good data before Data is stored as Unknown"
 msgstr "Количество времени, в секундах, без хороших данных перед сохранением данных как Неизвестно."
 
-#: data_source_profiles.php:1260
+#: data_source_profiles.php:1270
 msgid "The number of Data Sources using this Profile."
 msgstr "Количество источников данных, использующих данный Профиль."
 
-#: data_source_profiles.php:1266
+#: data_source_profiles.php:1276
 msgid "The number of Data Templates using this Profile."
 msgstr "Количество Шаблонов данных, использующих этот профиль."
 
-#: data_source_profiles.php:1320
+#: data_source_profiles.php:1330
 msgid "No Data Source Profiles Found"
 msgstr "Профили источников данных не найдены"
 
@@ -8022,7 +8054,7 @@ msgid "Tree Rule Items"
 msgstr "Пункты правила деревьев"
 
 #: include/global_arrays.php:2850 include/global_arrays.php:2866
-#: lib/api_device.php:1587
+#: lib/api_device.php:1931
 msgid "days"
 msgstr "дней"
 
@@ -8038,11 +8070,13 @@ msgstr "мин"
 msgid "secs"
 msgstr "сек"
 
-#: include/global_arrays.php:2867 lib/api_device.php:1587
+#: lib/api_device.php:1931
+#: include/global_arrays.php:2867
 msgid "hours"
 msgstr "часов"
 
-#: include/global_arrays.php:2868 lib/api_device.php:1587
+#: lib/api_device.php:1931
+#: include/global_arrays.php:2868
 msgid "minutes"
 msgstr "минут"
 
@@ -10542,7 +10576,8 @@ msgstr "Метод выбора шрифта"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Как вы хотите, чтобы шрифты обрабатывались по умолчанию?"
 
-#: include/global_settings.php:1060 lib/api_device.php:1542
+#: lib/api_device.php:1886
+#: include/global_settings.php:1060
 msgid "System"
 msgstr "Система"
 
@@ -12617,17 +12652,7 @@ msgstr "Добавлено с помощью Kadupul Automation"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "ОШИБКА: диапазоны IP-адресов в форме диапазон1-диапазон2 больше не поддерживаются."
 
-#: lib/api_device.php:107 lib/api_device.php:110 lib/api_device.php:276
-#: lib/api_device.php:280 lib/api_device.php:326 lib/api_device.php:331
-#: lib/api_device.php:372 lib/api_device.php:376 lib/api_device.php:441
-#: lib/api_device.php:445 lib/api_device.php:493 lib/api_device.php:497
-#: lib/api_device.php:553 lib/api_device.php:556 lib/api_device.php:610
-#: lib/api_device.php:613 lib/api_device.php:655 lib/api_device.php:658
-#: lib/api_device.php:692 lib/api_device.php:695 lib/api_device.php:1028
-#: lib/api_device.php:1041 lib/api_device.php:1045 lib/api_device.php:1078
-#: lib/api_device.php:1081 lib/api_device.php:1250 lib/api_device.php:1254
-#: lib/api_device.php:1281 lib/api_device.php:1285 lib/api_device.php:1317
-#: lib/api_device.php:1321 lib/api_device.php:1373 lib/api_device.php:1377
+#: lib/api_device.php:154 lib/api_device.php:157 lib/api_device.php:384 lib/api_device.php:388 lib/api_device.php:450 lib/api_device.php:455 lib/api_device.php:500 lib/api_device.php:504 lib/api_device.php:580 lib/api_device.php:584 lib/api_device.php:639 lib/api_device.php:643 lib/api_device.php:709 lib/api_device.php:712 lib/api_device.php:785 lib/api_device.php:788 lib/api_device.php:837 lib/api_device.php:840 lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1297 lib/api_device.php:1310 lib/api_device.php:1314 lib/api_device.php:1359 lib/api_device.php:1362 lib/api_device.php:1549 lib/api_device.php:1553 lib/api_device.php:1588 lib/api_device.php:1592 lib/api_device.php:1632 lib/api_device.php:1636 lib/api_device.php:1697 lib/api_device.php:1701
 #: lib/utility.php:663 lib/utility.php:667 lib/utility.php:743
 #: lib/utility.php:747 lib/utility.php:769 lib/utility.php:773
 #: lib/utility.php:796 lib/utility.php:799
@@ -12635,72 +12660,73 @@ msgstr "ОШИБКА: диапазоны IP-адресов в форме диа�
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Удалённый Poller %s выключен, вам нужно будет выполнить полную синхронизацию, как только он снова включится"
 
-#: lib/api_device.php:1477
+#: lib/api_device.php:1807
 msgid "ERROR: Device ID is Blank"
 msgstr "ОШИБКА: ID устройства пуст"
 
-#: lib/api_device.php:1488 lib/api_device.php:1490
+#: lib/api_device.php:1820 lib/api_device.php:1822
 msgid "ERROR: Device["
 msgstr "ОШИБКА: Устройство ["
 
-#: lib/api_device.php:1506
+#: lib/api_device.php:1838
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "ОШИБКА: Не удалось подключиться к удаленному сборщику."
 
-#: lib/api_device.php:1513
+#: lib/api_device.php:1845
 msgid "Device is Disabled"
 msgstr "Устройство отключено"
 
-#: lib/api_device.php:1514
+#: lib/api_device.php:1846
 msgid "Device Availability Check Bypassed"
 msgstr "Проверка доступности устройства пройдена"
 
-#: lib/api_device.php:1521
+#: lib/api_device.php:1853
 msgid "SNMP Information"
 msgstr "Информация SNMP"
 
-#: lib/api_device.php:1525
+#: lib/api_device.php:1857
 msgid "SNMP not in use"
 msgstr "SNMP не используется"
 
-#: lib/api_device.php:1534 lib/api_device.php:1542 lib/api_device.php:1561
+#: lib/api_device.php:1878 lib/api_device.php:1886 lib/api_device.php:1905
 msgid "SNMP error"
 msgstr "ошибка SNMP"
 
-#: lib/api_device.php:1534
+#: lib/api_device.php:1878
 msgid "Session"
 msgstr "Сессия"
 
-#: lib/api_device.php:1561
+#: lib/api_device.php:1905
 msgid "Host"
 msgstr "Хост"
 
-#: lib/api_device.php:1579
+#: lib/api_device.php:1923
 msgid "System:"
 msgstr "Система:"
 
-#: lib/api_device.php:1586
+#: lib/api_device.php:1930
 msgid "Uptime:"
 msgstr "Работает:"
 
-#: lib/api_device.php:1588
+#: lib/api_device.php:1932
 msgid "Hostname:"
 msgstr "Имя хоста: "
 
-#: lib/api_device.php:1589
+#: lib/api_device.php:1933
 msgid "Location:"
 msgstr "Местоположение:"
 
-#: lib/api_device.php:1590
+#: lib/api_device.php:1934
 msgid "Contact:"
 msgstr "Контактная информация:"
 
-#: lib/api_device.php:1621 lib/functions.php:5604 lib/functions.php:5606
+#: lib/api_device.php:1965
+#: lib/functions.php:5604 lib/functions.php:5606
 #: lib/functions.php:5610
 msgid "Ping Results"
 msgstr "Результаты тестирования"
 
-#: lib/api_device.php:1626
+#: lib/api_device.php:1970
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Нет Ping или SNMP Проверка доступности Используется"
 
@@ -20558,19 +20584,19 @@ msgstr "Количество графиков Шаблоны с использо
 msgid "No VDEFs"
 msgstr "Нет VDEFs"
 
-#: data_source_profiles.php:311 data_source_profiles.php:464
+#: data_source_profiles.php:310 data_source_profiles.php:463
 msgid "Unable to verify Data Source Profile usage. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:336
+#: data_source_profiles.php:335
 msgid "Unable to safely delete the selected Data Source Profiles. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:472
+#: data_source_profiles.php:471
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
 msgstr ""
 
-#: lib/poller.php:2181
+#: lib/poller.php:2187
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 

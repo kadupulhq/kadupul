@@ -104,8 +104,8 @@ function collector_statement(string $sql, array $params = [], $connection = fals
     $connection = $connection ?: $GLOBALS['source'];
     $side = $connection === $GLOBALS['source'] ? 'source' : 'remote';
     $GLOBALS['calls'][] = [$side, $sql];
-    if (str_contains($sql, 'information_schema.TABLES')) {
-        $params = array_map(static fn($name) => $GLOBALS['maps'][$side][$name] ?? $name, $params);
+    if (str_contains($sql, 'information_schema.TABLES') || str_contains($sql, 'information_schema.TRIGGERS')) {
+        $params = array_map(static fn($name) => $GLOBALS['maps'][$side][$name] ?? str_replace('kadupul_profile_reference', 'collector_guard_' . $GLOBALS['suffix'], $name), $params);
     }
     foreach ($GLOBALS['maps'][$side] as $logical => $physical) {
         $sql = preg_replace('/\b' . $logical . '\b/', $physical, $sql);
@@ -122,12 +122,24 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
             $GLOBALS['calls'][] = ['source', $sql];
             return $GLOBALS['data'];
         }
-        if (!preg_match('/data_source_profiles|information_schema.TABLES|SHOW COLUMNS FROM data_template_data/', $sql)) {
+        if (!preg_match('/data_source_profiles|information_schema.TABLES|information_schema.TRIGGERS|SHOW COLUMNS FROM data_template_data|FROM data_template_data WHERE/', $sql)) {
             $GLOBALS['calls'][] = ['source', $sql];
             return [];
         }
     }
-    return collector_statement($sql, $params, $connection)->fetchAll(PDO::FETCH_ASSOC);
+    $rows = collector_statement($sql, $params, $connection)->fetchAll(PDO::FETCH_ASSOC);
+    if (str_contains($sql, 'information_schema.TRIGGERS')) {
+        // Only fixture table/trigger identities differ from the production catalog.
+        foreach ($rows as &$row) {
+            $row['TRIGGER_NAME'] = str_replace('collector_guard_' . $GLOBALS['suffix'], 'kadupul_profile_reference', $row['TRIGGER_NAME']);
+            foreach ($GLOBALS['maps']['remote'] as $logical => $physical) {
+                $row['EVENT_OBJECT_TABLE'] = str_replace($physical, $logical, $row['EVENT_OBJECT_TABLE']);
+                $row['ACTION_STATEMENT'] = str_replace($physical, $logical, $row['ACTION_STATEMENT']);
+            }
+        }
+        unset($row);
+    }
+    return $rows;
 }
 function db_fetch_assoc($sql, $log = true, $connection = false)
 {
@@ -159,8 +171,15 @@ function db_execute($sql, $log = true, $connection = false)
         $GLOBALS['calls'][] = ['source', $sql];
         return true;
     }
-    collector_statement($sql, [], $connection);
-    return true;
+    try {
+        collector_statement($sql, [], $connection);
+        return true;
+    } catch (PDOException $error) {
+        if (str_contains($sql, 'data_template_data')) {
+            return false;
+        }
+        throw $error;
+    }
 }
 function db_table_exists($table, $log = true, $connection = false)
 {
@@ -203,18 +222,16 @@ function array_rekey($rows, $key, $value)
 }
 function db_execute_prepared($sql, $params = [], $log = true, $connection = false)
 {
-    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-delete' && str_starts_with($sql, 'DELETE FROM data_template_data')) {
-        return false;
-    }
-    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-partial' && str_starts_with($sql, 'INSERT INTO data_template_data') && ($params[0] ?? 0) === 3) {
-        return false;
-    }
-    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-write' && str_starts_with($sql, 'INSERT INTO data_template_data')) {
-        return false;
-    }
-    if ((str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data') || str_starts_with($sql, 'UPDATE poller SET requires_sync'))) {
-        collector_statement($sql, $params, $connection);
-        return true;
+    if (str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data') || str_starts_with($sql, 'UPDATE poller SET requires_sync')) {
+        try {
+            collector_statement($sql, $params, $connection);
+            return true;
+        } catch (PDOException $error) {
+            if (str_contains($sql, 'data_template_data') || str_starts_with($sql, 'UPDATE poller SET requires_sync')) {
+                return false;
+            }
+            throw $error;
+        }
     }
     $GLOBALS['calls'][] = ['source', $sql];
     return true;
@@ -262,8 +279,18 @@ try {
     // Stale collector definitions must be replaced, not accumulated.
     $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_rra'] . '` VALUES (79,77,24,900)');
     $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_cf'] . '` VALUES (77,4)');
-    foreach (array_merge(data_source_profile_reference_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_template_data'], 'collector_guard_' . $suffix), data_source_profile_definition_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_source_profiles_rra'], $maps['remote']['data_source_profiles_cf'], 'collector_guard_' . $suffix)) as $definition) {
+    foreach (data_source_profile_reference_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_template_data'], 'collector_guard_' . $suffix, $maps['remote']['data_source_profiles_rra'], $maps['remote']['data_source_profiles_cf']) as $definition) {
         $installer->exec($definition['sql']);
+    }
+    if (in_array($scenario['failure'] ?? '', ['guard-missing', 'guard-modified'], true)) {
+        $name = 'collector_guard_' . $suffix . '_insert';
+        $installer->exec("DROP TRIGGER `$name`");
+        if ($scenario['failure'] === 'guard-modified') {
+            $installer->exec("CREATE TRIGGER `$name` AFTER INSERT ON `" . $maps['remote']['data_template_data'] . "` FOR EACH ROW SET @profile_guard_modified=1");
+        }
+    }
+    if (($scenario['failure'] ?? '') === 'retry-state') {
+        $installer->exec('CREATE TRIGGER `collector_retry_reject_' . $suffix . '` BEFORE UPDATE ON `' . $maps['source']['poller'] . "` FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Retry state rejected'");
     }
     if (($scenario['failure'] ?? '') === 'copy') {
         $installer->exec('CREATE TRIGGER `collector_reject_' . $suffix . '` BEFORE INSERT ON `' . $maps['remote']['data_source_profiles'] . "` FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Parent copy rejected'");
@@ -287,13 +314,30 @@ try {
     if (($scenario['failure'] ?? '') === 'engine') {
         $remote->exec('ALTER TABLE `' . $maps['remote']['data_source_profiles_cf'] . '` ENGINE=MyISAM');
     }
+    if (in_array($scenario['failure'] ?? '', ['child-write','child-late','child-delete'], true)) {
+        $event = $scenario['failure'] === 'child-delete' ? 'DELETE' : 'INSERT';
+        $body = $scenario['failure'] === 'child-late' ? "BEGIN IF NEW.id=502 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Reference rejected'; END IF; END" : "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Reference rejected'";
+        $installer->exec('CREATE TRIGGER `collector_child_reject_' . $suffix . '` BEFORE ' . $event . ' ON `' . $maps['remote']['data_template_data'] . '` FOR EACH ROW ' . $body);
+    }
+    if (($scenario['failure'] ?? '') === 'child-corrupt') {
+        $installer->exec('CREATE TRIGGER `collector_child_alter_' . $suffix . '` BEFORE INSERT ON `' . $maps['remote']['data_template_data'] . '` FOR EACH ROW SET NEW.name=\'changed\'');
+    }
+    if (($scenario['failure'] ?? '') === 'child-engine') {
+        $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` ENGINE=MyISAM');
+    }
+    if (($scenario['failure'] ?? '') === 'child-schema') {
+        $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` DROP COLUMN name');
+    }
     $id = ($scenario['failure'] ?? '') === 'missing' ? 98 : 77;
     $data = [['id' => 2, 'data_source_profile_id' => $id, 'name' => 'replicated']];
-    if (($scenario['failure'] ?? '') === 'child-partial') {
-        $data[] = ['id' => 3, 'data_source_profile_id' => $id, 'name' => 'later reference'];
+    if (($scenario['failure'] ?? '') === 'child-late') {
+        $data = [];
+        foreach (range(2, 502) as $childId) {
+            $data[] = ['id' => $childId, 'data_source_profile_id' => 77, 'name' => 'replicated'];
+        }
     }
     if (!empty($scenario['entrypoint'])) {
-        $result = $scenario['collector'] === 'bulk' ? replicate_out(2) : api_device_replicate_out(1, 2);
+        $result = $scenario['collector'] === 'bulk' ? replicate_out(2, $scenario['class'] ?? 'all') : api_device_replicate_out(1, 2);
     } elseif (($scenario['collector'] ?? '') === 'bulk') {
         replicate_out_table($remote, $data, 'data_template_data', 2);
     } else {

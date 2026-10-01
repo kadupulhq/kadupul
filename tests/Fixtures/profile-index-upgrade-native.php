@@ -10,8 +10,8 @@ if (PHP_SAPI !== 'cli') {
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
 $directory = $argv[2];
-$source = $root . '/install/upgrades/1_2_31.php';
-$copy = $directory . '/install/upgrades/1_2_31.php';
+$source = $root . '/install/upgrades/1_2_34.php';
+$copy = $directory . '/install/upgrades/1_2_34.php';
 mkdir(dirname($copy), 0700, true);
 mkdir($directory . '/lib', 0700);
 copy($root . '/lib/data_source_profile_integrity.php', $directory . '/lib/data_source_profile_integrity.php');
@@ -58,7 +58,7 @@ function db_fetch_assoc_prepared($sql, $params = array())
     }
     $rows = array();
     foreach ($GLOBALS['guards'] as $name => $definition) {
-        $rows[] = array('TRIGGER_NAME' => $name, 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']);
+        $rows[] = array('TRIGGER_NAME' => $name, 'EVENT_OBJECT_TABLE' => $definition['table'], 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']);
     }
     return $rows;
 }
@@ -95,8 +95,8 @@ function db_install_execute($sql)
 require $copy;
 $upgradeError = null;
 try {
-    upgrade_to_1_2_31();
-    upgrade_to_1_2_31();
+    upgrade_to_1_2_34();
+    upgrade_to_1_2_34();
 } catch (RuntimeException $error) {
     $upgradeError = $error->getMessage();
 }

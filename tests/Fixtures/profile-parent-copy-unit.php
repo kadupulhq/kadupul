@@ -36,6 +36,9 @@ function db_fetch_assoc_prepared($sql, $params, $log = true, $connection = false
     if ($GLOBALS['case'] === 'query-failure') {
         return false;
     }
+    if (str_contains($sql, 'information_schema.TRIGGERS')) {
+        return array_map(static fn($name, $definition) => ['TRIGGER_NAME' => $name, 'EVENT_OBJECT_TABLE' => $definition['table'], 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']], array_keys(data_source_profile_reference_triggers()), array_values(data_source_profile_reference_triggers()));
+    }
     if (str_contains($sql, 'information_schema.TABLES')) {
         // Explicit metadata boundary: SQLite transactions model the owned native row mutations.
         return array_map(static fn($table) => ['TABLE_NAME' => $table, 'ENGINE' => $GLOBALS['case'] === 'reference-engine' ? 'MyISAM' : 'InnoDB'], $params);

@@ -4,19 +4,20 @@ Deleting a profile locks its parent row before checking template and local-data
 usage. A range lock alone cannot protect a writer that resumes after deletion
 commits, so the database guards every newly assigned nonzero profile reference.
 
-Profile and RRA form saves run within a transaction, lock and revalidate the
+Profile copies and profile/RRA form saves run within a transaction, lock and revalidate the
 posted parent ID before saving, acknowledge all mutations and raise success only
 after commit. A queued save that resumes after deletion cannot recreate the
 deleted parent. Failed child writes roll back the parent change.
 
-Fresh `cacti.sql` imports and the `1_2_31` upgrade install
+Fresh `cacti.sql` imports and the registered `1_2_34` upgrade install
 `kadupul_profile_reference_insert` (AFTER INSERT) and
 `kadupul_profile_reference_update` (BEFORE UPDATE) on `data_template_data`.
 The same insert/update guards, with `_rra` and `_cf` in their names, protect
-`data_source_profiles_rra` and `data_source_profiles_cf`. All six guards
+`data_source_profiles_rra` and `data_source_profiles_cf`. The six insert/update guards
 perform a locking parent lookup and reject a missing profile with SQLSTATE
 45000. InnoDB rolls back the rejected statement. This covers form saves, imports,
 duplication, installer writes, suggested-value updates, and direct SQL writers.
+Two BEFORE DELETE guards on RRA and CF definitions also lock their existing parent, allowing historical orphan cleanup while coordinating deletion.
 The insert guard runs after insertion so existing-row upserts use the update
 rule; unchanged historical orphan IDs remain editable, and zero retains its
 legacy meaning. Assigning a new orphan reference is rejected. No existing
@@ -33,16 +34,18 @@ DDL implicitly commits. A missing parent or rejected definition copy stops that 
 existing rows are changed. This keeps guards active on collectors without losing
 their existing data-source definitions when custom profiles are introduced.
 
+Before catalog delivery, both collector paths inspect all eight expected guard bodies, tables, timing and events through the collector connection. Missing tables or missing/changed/inaccessible guards refuse delivery and preserve references; schema creation alone does not install triggers. Provision or rerun the registered migration on the collector before retrying.
+
 Reference delivery then opens a separate InnoDB transaction and locks every
 referenced parent in ID order, rechecking that all parents remain present. Bulk
 replacement uses DELETE inside that transaction instead of TRUNCATE. Both
 bulk and per-device paths require acknowledgement of each reference write and
-an explicit successful commit. A refused cleanup or a later rejected row rolls
+exact read-back of each delivered value and an explicit successful commit. A refused cleanup or a later rejected row rolls
 back the whole reference delivery, preserving previous rows and preventing
 success messages, dependent table replication and sync-flag clearing. Schema
 creation is checked before the transaction; schema mismatches fail closed rather
 than dropping existing collector tables. An existing caller transaction is
-preserved and the operation is refused.
+preserved and the operation is refused. Bulk and device entry points acknowledge setting the retry flag before any delivery; a rejected retry-state update aborts before collector mutations. Successful full synchronization callers own clearing that flag after all work succeeds.
 
 The installation account must have TRIGGER privileges on the database, and the
 trigger definer must retain permission to read and lock `data_source_profiles`.
@@ -50,7 +53,7 @@ The application account also needs TRIGGER privileges to inspect the guard
 metadata before deletion; an account that cannot inspect it fails closed.
 Binary-log policies may impose additional server privileges during installation.
 A denied creation or an existing modified guard stops the upgrade explicitly.
-Physical profile deletion and form saves check all six trigger bodies, timing, and events and
+Physical profile deletion and form saves check all eight trigger bodies, target tables, timing, and events and
 fail closed if any guard is missing, modified, or inaccessible, or if any of `data_source_profiles`, `data_template_data`,
 `data_source_profiles_rra`, or `data_source_profiles_cf` uses a non-InnoDB engine. Run the
 upgrade after restoring the required privileges; do not remove this check.

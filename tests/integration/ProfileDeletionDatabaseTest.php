@@ -24,26 +24,40 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure));
         if ($failure !== '') {
             self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
-            if (!str_starts_with($failure, 'child-')) {
+            if (str_starts_with($failure, 'child-') && $failure !== 'child-engine') {
+                self::assertSame(77, (int) $state['parent']);
+            } else {
                 self::assertFalse($state['parent']);
             }
-            self::assertStringContainsString('existing collector data-source definitions were retained', implode('\n', $state['log']));
+            if (!str_starts_with($failure, 'child-')) {
+                self::assertStringContainsString('existing collector data-source definitions were retained', implode('\n', $state['log']));
+            }
             self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote' && str_starts_with($call[1], 'TRUNCATE')));
         } else {
             self::assertCount(4, $state['rras']);
-            self::assertSame(array(1, 3), array_values(array_unique(array_map('intval', array_column($state['rras'], 'consolidation_function_id')))));
+            self::assertSame(array(1,3), array_values(array_unique(array_map('intval', array_column($state['rras'], 'consolidation_function_id')))));
             self::assertSame(77, (int) $state['parent']);
-            self::assertSame($mode === 'bulk' ? array(2) : array(1, 2), array_map('intval', array_column($state['rows'], 'id')));
+            self::assertSame($mode === 'bulk' ? array(2) : array(1,2), array_map('intval', array_column($state['rows'], 'id')));
             self::assertSame(77, (int) end($state['rows'])['data_source_profile_id']);
         }
     }
 
-    /** @dataProvider collectorScenarios */
-    public function testCollectorEntryPointsReportReplicationOutcome(string $mode, string $failure): void
+    /** @dataProvider collectorEntryPointScenarios */
+    public function testCollectorEntryPointsReportReplicationOutcome(string $mode, string $failure, string $class = 'all'): void
     {
-        $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true));
+        $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
         self::assertSame($failure === '', $state['result']);
-        self::assertSame(array($failure === '' ? '' : 'on', 'on'), $state['sync']);
+        if ($failure !== 'retry-state') {
+            self::assertSame(array('on', 'on'), $state['sync']);
+        }
+        if ($failure === 'retry-state') {
+            self::assertSame(array('', 'on'), $state['sync']);
+            self::assertSame(array(), $state['hooks']);
+            self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
+            self::assertStringContainsString('Unable to mark Poller', implode('\n', $state['log']));
+            self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote'));
+            return;
+        }
         if ($failure !== '') {
             self::assertSame(array(), $state['hooks']);
             self::assertNotContains('poller_sync', $state['messages']);
@@ -54,7 +68,9 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
                 self::assertContains('poller_sync_failed', $state['messages']);
             }
         } else {
-            self::assertNotEmpty($state['hooks']);
+            if ($class === 'all') {
+                self::assertNotEmpty($state['hooks']);
+            }
             if ($mode === 'bulk') {
                 self::assertContains('poller_sync', $state['messages']);
             }
@@ -79,18 +95,23 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     {
         $cases = array();
         foreach (array('bulk', 'device') as $mode) {
-            foreach (array('', 'copy', 'missing', 'rra', 'cf', 'corrupt', 'missing-rra', 'missing-cf', 'collision', 'engine', 'child-write', 'child-partial') as $failure) {
+            foreach (array('', 'copy', 'missing', 'rra', 'cf', 'corrupt', 'missing-rra', 'missing-cf', 'collision', 'engine', 'child-write', 'child-late', 'child-schema', 'child-engine', 'child-corrupt', 'guard-missing', 'guard-modified') as $failure) {
                 $cases[$mode . ' ' . ($failure ?: 'custom profile')] = array($mode, $failure);
             }
         }
-        $cases['bulk reference cleanup refusal'] = ['bulk', 'child-delete'];
+        $cases['bulk child-delete'] = array('bulk', 'child-delete');
         return $cases;
     }
 
-    /** @dataProvider deletionOutcomes */
-    public function testConcurrentWriterChecksParentAfterDeletionFinishes(string $outcome, string $writer, string $definition): void
+    public static function collectorEntryPointScenarios(): array
     {
-        $state = $this->runNative(array('reference_guard' => $outcome, 'writer' => $writer, 'definition' => $definition));
+        return array_merge(self::collectorScenarios(), array('bulk retry-state' => array('bulk', 'retry-state'), 'device retry-state' => array('device', 'retry-state'), 'bulk-data retry-state' => array('bulk', 'retry-state', 'data'), 'bulk-data success' => array('bulk', '', 'data')));
+    }
+
+    /** @dataProvider deletionOutcomes */
+    public function testConcurrentWriterChecksParentAfterDeletionFinishes(string $outcome, string $writer): void
+    {
+        $state = $this->runNative(array('reference_guard' => $outcome, 'writer' => $writer));
         self::assertTrue($state['available']);
         self::assertTrue($state['waiting']);
         self::assertSame(0, $state['orphans']);
@@ -106,14 +127,38 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         }
     }
 
+    /** @dataProvider editorOutcomes */
+    public function testConcurrentEditorCannotResurrectDeletedDefinitions(string $outcome, string $editor): void
+    {
+        $state = $this->runNative(array('reference_guard' => $outcome, 'editor' => $editor));
+        self::assertTrue($state['waiting']);
+        self::assertSame(0, $state['definitionOrphans']);
+        $ids = array_map('intval', array_column($state['writer']['tables']['data_source_profiles'], 'id'));
+        self::assertSame($outcome === 'commit' ? array() : ($editor === 'copy' ? array(3,4) : array(3)), $ids);
+        if ($outcome === 'rollback') {
+            self::assertNotEmpty($state['writer']['tables']['data_source_profiles_cf']);
+            if ($editor !== 'remove') {
+                self::assertNotEmpty($state['writer']['tables']['data_source_profiles_rra']);
+            }
+        }
+    }
+    public static function editorOutcomes(): array
+    {
+        $cases = array();
+        foreach (array('commit','rollback') as $outcome) {
+            foreach (array('profile','rra','copy','remove') as $editor) {
+                $cases[$outcome . ' ' . $editor] = array($outcome, $editor);
+            }
+        }
+        return $cases;
+    }
+
     public static function deletionOutcomes(): array
     {
         $cases = array();
         foreach (array('commit', 'rollback') as $outcome) {
-            foreach (array('insert', 'update', 'upsert') as $writer) {
-                foreach (['data', 'rra', 'cf'] as $definition) {
-                    $cases[$outcome . ' ' . $writer . ' ' . $definition] = [$outcome, $writer, $definition];
-                }
+            foreach (array('insert', 'update', 'upsert', 'rra-insert', 'rra-update', 'rra-upsert', 'cf-insert', 'cf-update', 'cf-upsert') as $writer) {
+                $cases[$outcome . ' ' . $writer] = array($outcome, $writer);
             }
         }
         return $cases;
