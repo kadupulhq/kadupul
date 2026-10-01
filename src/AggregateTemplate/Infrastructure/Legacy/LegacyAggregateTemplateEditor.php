@@ -72,7 +72,9 @@ final readonly class LegacyAggregateTemplateEditor implements AggregateTemplateE
         $process->setTimeout(180);
         $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         $process->run();
-        if (preg_match_all('/^KADUPUL_AGGREGATE_RESULT=(\{[^\r\n]+\})$/m', $process->getOutput(), $matches) !== 1) {
+        $output = $process->getOutput();
+        if (preg_match_all('/^KADUPUL_AGGREGATE_RESULT=/m', $output) !== 1
+            || preg_match_all('/^KADUPUL_AGGREGATE_RESULT=(\{[^\r\n]+\})$/m', $output, $matches) !== 1) {
             throw new \RuntimeException('Aggregate template operation outcome is unknown.');
         }
         try {

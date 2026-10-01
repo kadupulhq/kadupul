@@ -26,19 +26,24 @@ final class AggregateTemplateWorkerConflictTest extends TestCase
         yield 'identity object' => [7, [1 => 7]];
         yield 'numeric-key identity object' => [7, (object) ['0' => 7]];
         yield 'multiple success records' => [7, [7], true];
+        yield 'malformed extra result' => [7, [7], false, 'KADUPUL_AGGREGATE_RESULT=not-json'];
         yield 'new success without an identity' => [0, [0]];
     }
 
     #[DataProvider('unverifiedIdentities')]
-    public function testWorkerSuccessCannotCoerceAnUnverifiedIdentity(int $id, array|\stdClass $ids, bool $duplicateRecord = false): void
+    public function testWorkerSuccessCannotCoerceAnUnverifiedIdentity(int $id, array|\stdClass $ids, bool $duplicateRecord = false, string $extraRecord = ''): void
     {
         $directory = sys_get_temp_dir() . '/aggregate-identity-' . bin2hex(random_bytes(8));
         mkdir($directory . '/bin', 0700, true);
         $worker = $directory . '/bin/legacy-aggregate-template.php';
         $result = ['actor' => 42, 'action' => 'save', 'ids' => $ids, 'status' => 'ok'];
         $record = 'KADUPUL_AGGREGATE_RESULT=' . json_encode($result);
+        $output = $duplicateRecord ? $record . "\n" . $record : $record;
+        if ($extraRecord !== '') {
+            $output .= "\n" . $extraRecord;
+        }
         file_put_contents($worker, '<?php stream_get_contents(STDIN); echo '
-            . var_export($duplicateRecord ? $record . "\n" . $record : $record, true) . ';');
+            . var_export($output, true) . ';');
         try {
             $pdo = new \PDO('sqlite::memory:');
             $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
@@ -51,7 +56,7 @@ final class AggregateTemplateWorkerConflictTest extends TestCase
             ));
             $editor = new LegacyAggregateTemplateEditor($database, $audit, $directory);
             $this->expectException(\RuntimeException::class);
-            $this->expectExceptionMessage($duplicateRecord
+            $this->expectExceptionMessage($duplicateRecord || $extraRecord !== ''
                 ? 'Aggregate template operation outcome is unknown.'
                 : 'Aggregate template operation outcome could not be verified.');
             $editor->save(42, $id, [], $id > 0 ? 'old' : '');
