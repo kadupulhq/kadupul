@@ -114,7 +114,7 @@ final class GprintPresetEditController
         return new Response($twig->render('graphing/gprint_preset_edit.html.twig', [
             'preset' => $preset,
             'form' => $form->createView(),
-            'saved' => $request->query->get('saved') === '1',
+            'saved' => ($request->query->all()['saved'] ?? null) === '1',
             'filters' => $filters,
         ]), $status, $headers);
     }

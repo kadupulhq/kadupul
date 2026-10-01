@@ -1961,9 +1961,74 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     return method_checks($root, $type, $callee, $depth + 1, $seen, $handed, $refuses);
 }
 
-/**
- * @return array<string, int> check method => realm it requires
- */
+/** Prove a direct feature check or the first check of a final delegated use case. */
+function gprint_feature_call(string $root, array $target, int $depth = 0): bool
+{
+    if ($target === ['Kadupul\\Graphing\\Application\\Port\\GprintPresetAccess', 'authorize']) {
+        // Reviewed current-account and realm-5 contract. A changed adapter
+        // needs a fresh review before its calls can certify feature access.
+        $path = $root . '/src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php';
+        return is_file($path) && hash_file('sha256', $path)
+            === '987a4076da5ec7a8802e21030bfe83bee660df258f697849a1d7d5a6780b26ca';
+    }
+    if ($depth >= CALL_DEPTH) {
+        return false;
+    }
+    $loaded = load_class($root, $target[0]);
+    $callee = $loaded === null ? null : find_method($loaded, $target[1]);
+    if ($callee === null || !$loaded instanceof Stmt\Class_ || !$loaded->isFinal()) {
+        return false;
+    }
+    $found = first_service_call($root, $callee->stmts ?? [], receiver_types($root, $target[0], $callee), null);
+    return $found !== null && gprint_feature_call($root, $found[0], $depth + 1);
+}
+
+function gprint_feature_guard(string $root, string $class, Stmt\ClassMethod $method, array $files): bool
+{
+    $contract = 'Kadupul\\Graphing\\Application\\Port\\GprintPresetAccess';
+    $adapter = 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyGprintPresetAccess';
+    foreach ($files as $path) {
+        foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+            if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== $adapter) {
+                foreach ($node->implements as $interface) {
+                    if ($interface->toString() === $contract) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    $typeOf = receiver_types($root, $class, $method);
+    $stmts = array_values($method->stmts ?? []);
+    foreach ($stmts as $index => $stmt) {
+        if (actor_assignment($root, $stmt, $typeOf) !== null) {
+            // guarded_checks already proved the actor assignment and its
+            // immediate refusal. The next service must authorize before
+            // request parsing, database reads, or another side effect.
+            $found = first_service_call($root, array_slice($stmts, $index + 2), $typeOf, fn(?Expr $e): bool => true);
+            if ($found !== null) {
+                foreach (walk(array_slice($stmts, $index + 2), false) as $node) {
+                    if ($node instanceof Stmt\Return_ && $node->getStartFilePos() < $found[1]->getStartFilePos()) {
+                        return false;
+                    }
+                    if ($node instanceof Expr\MethodCall && $node->getStartFilePos() < $found[1]->getEndFilePos()) {
+                        $receiver = $node->var;
+                        while ($receiver instanceof Expr\PropertyFetch) {
+                            $receiver = $receiver->var;
+                        }
+                        if ($typeOf($receiver) === 'Symfony\\Component\\HttpFoundation\\Request') {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return $found !== null && gprint_feature_call($root, $found[0]);
+        }
+    }
+    return false;
+}
+
+/** @return array<string, int> check method => realm it requires */
 function session_realms(string $root, array $files): array
 {
     // The realm labels are only true while the adapter is the one
@@ -2125,6 +2190,13 @@ function symfony_routes(string $root, array $files): array
                             $grant = 'realm ' . $realms['consoleActor'];
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
+                            }
+                            if ($route['path'] === '/graphing/gprint-presets' || str_starts_with($route['path'], '/graphing/gprint-presets/')) {
+                                if (!gprint_feature_guard($root, $name, $method, $sources)) {
+                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no proven GPRINT realm-5 guard before input or effects'];
+                                    continue;
+                                }
+                                $grant .= ' + realm 5';
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

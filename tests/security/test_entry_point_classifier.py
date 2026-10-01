@@ -1045,6 +1045,66 @@ def main():
         if rows.get('app.php/aliased', ('missing',))[0] != 'unknown' or rows.get('app.php', ('missing',))[0] != 'unknown':
             failures.append('aliased #[Route]: expected unknown rows, got %s' % {k: v for k, v in rows.items() if 'aliased' in k or k == 'app.php'})
 
+    project = Path(__file__).resolve().parents[2]
+    feature_cases = {
+        'direct': ("$access->authorize();", True),
+        'delegated': ("$find(1);", True),
+        'conditional': ("if ($request->query->has('check')) { $access->authorize(); }", False),
+        'input first': ("$query = $request->query->all(); $access->authorize();", False),
+        'effect first': ("unlink('/tmp/x'); $access->authorize();", False),
+        'swallowed': ("try { $access->authorize(); } catch (\\Throwable) {}", False),
+        'refused exception': ("try { $access->authorize(); } catch (\\Throwable) { return new Response('', 403); }", True),
+        'missing': ("$query = $request->query->all();", False),
+        'early return': ("if (true) { return new Response('feature data'); } $access->authorize();", False),
+    }
+    for label, (body, admitted) in feature_cases.items():
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-gprint-') as directory:
+            root = tree(directory)
+            files = ['src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php',
+                     'src/Graphing/Application/Query/FindGprintPreset.php']
+            for path in files:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text((project / path).read_text())
+            session = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+            session.parent.mkdir(parents=True, exist_ok=True)
+            session.write_text(SESSION)
+            controller = root / 'src/Fixture/GprintAction.php'
+            controller.parent.mkdir(parents=True, exist_ok=True)
+            controller.write_text('''<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Kadupul\\Graphing\\Application\\Port\\GprintPresetAccess;
+use Kadupul\\Graphing\\Application\\Query\\FindGprintPreset;
+use Symfony\\Component\\HttpFoundation\\Request;
+use Symfony\\Component\\HttpFoundation\\Response;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+final class GprintAction {
+    #[Route('/graphing/gprint-presets', name: 'gprint_fixture')]
+    public function run(Request $request, ConsoleAccess $console, GprintPresetAccess $access, FindGprintPreset $find): Response {
+        $actor = $console->consoleActor();
+        if ($actor === null) { return new Response('', 401); }
+        %s
+        return new Response();
+    }
+}
+''' % body)
+            row = run(root, []).get('app.php/graphing/gprint-presets', ('missing', ''))
+            count += 1
+            if (row[0] == 'symfony:gprint_fixture' and row[1].endswith(' + realm 5')) != admitted:
+                failures.append('GPRINT feature %s: unexpected classification %s' % (label, row))
+            if admitted:
+                adapter = root / files[0]
+                adapter.write_text(adapter.read_text().replace('REALM_ID = 5', 'REALM_ID = 6'))
+                count += 1
+                if run(root, []).get('app.php/graphing/gprint-presets', ('missing',))[0] != 'unknown':
+                    failures.append('GPRINT changed authorization adapter was still certified')
+                adapter.write_text((project / files[0]).read_text())
+                alternative = root / 'src/Fixture/OtherGprintAccess.php'
+                alternative.write_text('<?php namespace Kadupul\\Fixture; final class OtherGprintAccess implements \\Kadupul\\Graphing\\Application\\Port\\GprintPresetAccess {}')
+                count += 1
+                if run(root, []).get('app.php/graphing/gprint-presets', ('missing',))[0] != 'unknown':
+                    failures.append('GPRINT alternative authorization implementation was still certified')
+
     for failure in failures:
         print('FAIL: ' + failure)
     if failures:

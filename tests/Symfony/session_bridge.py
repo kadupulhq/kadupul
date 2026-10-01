@@ -26,9 +26,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--database-sessions', action='store_true')
     parser.add_argument('--coverage-output', type=Path)
+    parser.add_argument('--project', default='kadupul-symfony-auth')
     args = parser.parse_args()
     database_sessions = args.database_sessions
-    harness = Harness(SimpleNamespace(project='kadupul-symfony-auth', target='symfony-auth'))
+    harness = Harness(SimpleNamespace(project=args.project, target='symfony-auth'))
     if args.coverage_output:
         from coverage_support import configure_coverage
         configure_coverage(harness, args.coverage_output)

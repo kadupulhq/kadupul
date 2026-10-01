@@ -16,6 +16,7 @@ use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
 
 final class LegacyGprintPresetStoreTest extends TestCase
@@ -24,6 +25,7 @@ final class LegacyGprintPresetStoreTest extends TestCase
     private object $sessionAccess;
     private object $audit;
     private LegacyGprintPresetStore $store;
+    private object $configuration;
 
     protected function setUp(): void
     {
@@ -66,7 +68,14 @@ final class LegacyGprintPresetStoreTest extends TestCase
             }
         };
         $access = new LegacyGprintPresetAccess($this->sessionAccess, $database);
-        $this->store = new LegacyGprintPresetStore($database, $access, $this->audit);
+        $this->configuration = new class implements LegacyConfiguration {
+            public int $collectorId = 1;
+            public function values(): array
+            {
+                return ['collector_id' => $this->collectorId];
+            }
+        };
+        $this->store = new LegacyGprintPresetStore($database, $access, $this->audit, $this->configuration);
     }
 
     public function testItCountsGraphAndTemplateReferencesAndFiltersResults(): void
@@ -135,5 +144,38 @@ final class LegacyGprintPresetStoreTest extends TestCase
         self::assertSame('succeeded', $event->outcome);
         self::assertStringNotContainsString('private-preset-name', $event->json());
         self::assertStringNotContainsString('private-format', $event->json());
+    }
+
+    public function testMutationsPreserveTheCallersTransaction(): void
+    {
+        $this->pdo->beginTransaction();
+        $this->pdo->exec("UPDATE graph_templates_gprint SET name='Caller change' WHERE id=3");
+        foreach ([fn() => $this->store->save(42, null, 'New', '%5.2lf', null), fn() => $this->store->delete(42, [3])] as $mutation) {
+            try {
+                $mutation();
+                self::fail('Caller-owned transaction was accepted.');
+            } catch (\LogicException $error) {
+                self::assertStringContainsString('ownership', $error->getMessage());
+            }
+            self::assertTrue($this->pdo->inTransaction());
+            self::assertSame('Caller change', $this->pdo->query('SELECT name FROM graph_templates_gprint WHERE id=3')->fetchColumn());
+        }
+        $this->pdo->rollBack();
+        self::assertSame('Unused preset', $this->pdo->query('SELECT name FROM graph_templates_gprint WHERE id=3')->fetchColumn());
+    }
+
+    public function testRemoteCollectorCannotMutateEvenWithAnAccessibleDatabase(): void
+    {
+        $this->configuration->collectorId = 2;
+        foreach ([fn() => $this->store->save(42, null, 'New', '%5.2lf', null), fn() => $this->store->delete(42, [3])] as $mutation) {
+            try {
+                $mutation();
+                self::fail('Collector mutation was accepted.');
+            } catch (\RuntimeException $error) {
+                self::assertStringContainsString('primary installation', $error->getMessage());
+            }
+            self::assertFalse($this->pdo->inTransaction());
+            self::assertSame(3, (int) $this->pdo->query('SELECT COUNT(*) FROM graph_templates_gprint')->fetchColumn());
+        }
     }
 }

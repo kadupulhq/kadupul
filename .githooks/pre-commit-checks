@@ -9,6 +9,8 @@ set -euo pipefail
 root=$(git rev-parse --show-toplevel)
 cd "$root"
 
+git diff --cached --check
+
 merge_head=$(git rev-parse -q --verify MERGE_HEAD 2>/dev/null || true)
 files=()
 php_files=()
@@ -54,9 +56,6 @@ done < <(git diff --cached --name-status --diff-filter=ACMR -M -z)
 if [ "${#files[@]}" -eq 0 ]; then
 	exit 0
 fi
-
-# Check authored and conflict-resolved paths; incoming blobs are handled above.
-git diff --cached --check -- "${files[@]}"
 
 if [ "${#php_files[@]}" -eq 0 ]; then
 	exit 0

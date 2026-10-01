@@ -70,6 +70,8 @@ def verify_gprint_presets(harness, session, user_id, check):
 
         edit_path = f'/app.php/graphing/gprint-presets/{created_id}/edit'
         parser, _ = form(edit_path)
+        check(fetch(edit_path + '?saved%5B%5D=1')[0] == 200,
+              'nested GPRINT saved flag cannot trigger an uncontrolled error')
         old_revision = parser.fields['gprint_preset[revision]']
         harness.sql(f"UPDATE graph_templates_gprint SET name='concurrent edit' WHERE id={created_id}")
         stale = parser.fields | {'gprint_preset[name]': 'stale overwrite'}
@@ -89,6 +91,9 @@ def verify_gprint_presets(harness, session, user_id, check):
         check(status == 200 and 'fresh &lt;name&gt;' in remembered,
               'validated GPRINT filters persist in the authenticated user preferences')
         status, reset, _, _ = fetch('/app.php/graphing/gprint-presets?reset=1')
+        status, explicit_rows, _, _ = fetch('/app.php/graphing/gprint-presets?rows=10')
+        check(status == 200 and re.search(r'<option value="10" selected>', explicit_rows) is not None,
+              'GPRINT explicit page size stays selected in Twig')
         reset_filter = re.search(r'id="gprint-filter" name="filter" type="search" maxlength="200" value="([^"]*)"', reset)
         check(status == 200 and reset_filter is not None and reset_filter.group(1) == '',
               'clearing GPRINT filters resets the remembered session state')

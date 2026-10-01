@@ -15,6 +15,7 @@ use Kadupul\Graphing\Domain\GprintPresetPage;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 
 final readonly class LegacyGprintPresetStore implements GprintPresetStore
 {
@@ -22,6 +23,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
         private DatabaseConnection $database,
         private GprintPresetAccess $access,
         private AuditTrail $audit,
+        private LegacyConfiguration $configuration,
     ) {}
 
     public function defaultRows(): int
@@ -94,10 +96,16 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
     {
         $db = $this->database->get();
         $target = $id === null ? 'new' : (string) $id;
+        $this->assertTransactionAvailable($db);
+        $ownsTransaction = false;
         $decision = AuditEvent::DENIED;
         $outcome = AuditEvent::DENIED;
         try {
-            $db->beginTransaction();
+            $this->prepareMutation($db);
+            $ownsTransaction = $db->beginTransaction();
+            if (!$ownsTransaction) {
+                throw new \RuntimeException('GPRINT transaction could not be started.');
+            }
             $this->access->assertCurrent($actorId);
             $decision = AuditEvent::ALLOWED;
             $outcome = AuditEvent::FAILED;
@@ -137,7 +145,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             $outcome = AuditEvent::SUCCEEDED;
             return $savedId;
         } catch (\Throwable $error) {
-            if ($db->inTransaction()) {
+            if ($ownsTransaction && $db->inTransaction()) {
                 $db->rollBack();
             }
             throw $error;
@@ -155,10 +163,16 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
         }
         $db = $this->database->get();
         $target = 'selection-' . substr(hash('sha256', json_encode($ids, JSON_THROW_ON_ERROR)), 0, 32);
+        $this->assertTransactionAvailable($db);
+        $ownsTransaction = false;
         $decision = AuditEvent::DENIED;
         $outcome = AuditEvent::DENIED;
         try {
-            $db->beginTransaction();
+            $this->prepareMutation($db);
+            $ownsTransaction = $db->beginTransaction();
+            if (!$ownsTransaction) {
+                throw new \RuntimeException('GPRINT transaction could not be started.');
+            }
             $this->access->assertCurrent($actorId);
             $decision = AuditEvent::ALLOWED;
             $outcome = AuditEvent::FAILED;
@@ -185,13 +199,54 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             }
             $outcome = AuditEvent::SUCCEEDED;
         } catch (\Throwable $error) {
-            if ($db->inTransaction()) {
+            if ($ownsTransaction && $db->inTransaction()) {
                 $db->rollBack();
             }
             throw $error;
         } finally {
             $this->record($actorId, 'graphing.gprint.delete', $target, $decision, $outcome);
         }
+    }
+
+    private function assertTransactionAvailable(\PDO $db): void
+    {
+        if ($db->inTransaction()) {
+            throw new \LogicException('GPRINT mutations require ownership of their transaction.');
+        }
+    }
+
+    private function prepareMutation(\PDO $db): void
+    {
+        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
+            throw new \RuntimeException('GPRINT mutations require the primary installation.');
+        }
+        $driver = $db->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'sqlite') {
+            return;
+        }
+        if ($driver !== 'mysql') {
+            throw new \RuntimeException('Unsupported GPRINT mutation database.');
+        }
+        $required = ['graph_templates_gprint', 'graph_templates_item', 'settings', 'user_auth', 'user_auth_realm'];
+        $optional = ['user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'];
+        foreach ([...$required, ...$optional] as $table) {
+            try {
+                // Inspect the table this connection will actually mutate,
+                // including a temporary table that shadows a permanent one.
+                $definition = $db->query('SHOW CREATE TABLE `' . $table . '`')->fetch(\PDO::FETCH_NUM);
+            } catch (\PDOException $error) {
+                if (in_array($table, $optional, true) && ($error->errorInfo[1] ?? null) === 1146) {
+                    continue;
+                }
+                throw $error;
+            }
+            if (!is_array($definition) || preg_match('/\)\s*ENGINE\s*=\s*InnoDB(?:\s|$)/i', (string) ($definition[1] ?? '')) !== 1) {
+                throw new \RuntimeException('GPRINT mutations require InnoDB tables: ' . $table);
+            }
+        }
+        // Dependency and authorization gap locks must also work when the
+        // session default was configured as READ COMMITTED.
+        $db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
     }
 
     private function validate(string $value, string $field): void

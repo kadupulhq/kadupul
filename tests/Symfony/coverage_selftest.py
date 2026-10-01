@@ -21,6 +21,15 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'gprint_presets.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyGprintPresetStore.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/GprintPresetController.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/GprintPresetEditController.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/GprintPresetDeleteController.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/LegacyGprintPresetsController.php',
+        'src/Graphing/Infrastructure/Symfony/Form/GprintPresetType.php',
+        'src/Graphing/Infrastructure/Symfony/Form/GprintPresetDeletionType.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -166,6 +175,10 @@ def main():
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
+        'gprint-test-hash': 'Integration test source differs',
+        'missing-gprint-handoff': 'Incomplete Symfony integration checks',
+        'missing-gprint-saved': 'Incomplete Symfony integration checks',
+        'missing-gprint-rows': 'Incomplete Symfony integration checks',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
@@ -230,6 +243,13 @@ def main():
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'gprint-test-hash':
+                evidence['source_sha256']['tests/Symfony/gprint_preset_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-gprint-'):
+                checks = {'handoff': 'preset format handoff preserves literal RRD format text',
+                          'saved': 'nested GPRINT saved flag cannot trigger an uncontrolled error',
+                          'rows': 'GPRINT explicit page size stays selected in Twig'}
+                evidence['checks'].remove(checks[case.removeprefix('missing-gprint-')])
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'details-test-hash':
