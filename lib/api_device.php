@@ -892,7 +892,7 @@ function api_device_gt_remove($device_id, $graph_template_id)
  * @param  (int) The id of the device
  * @param  (int) The poller id of the device.  If null, we determine it
  *
- * @return (void)
+ * @return bool Whether device replication completed successfully
  */
 function api_device_replicate_out($device_id, $poller_id = 1)
 {
