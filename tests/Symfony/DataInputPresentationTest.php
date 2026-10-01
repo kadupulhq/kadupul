@@ -129,6 +129,23 @@ final class DataInputPresentationTest extends TestCase
         }
     }
 
+    public function testFieldDeletionConfirmationNamesOnlyTheSelectedFieldAndEscapesItsValues(): void
+    {
+        [$kernel, $container] = $this->authorizedKernel();
+        try {
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->expects(self::once())->method('execute')->willReturn(['method' => ['id' => 3, 'name' => 'Fixture'], 'fields' => [['id' => 7, 'name' => '<script>Friendly</script>', 'data_name' => '<selected>'], ['id' => 8, 'name' => 'Other field', 'data_name' => 'other']], 'revision' => str_repeat('a', 64)]);
+            $container->set(DataInputGateway::class, $gateway);
+            $response = $kernel->handle(Request::create('/data-inputs/3/field_delete?field=7'));
+            self::assertSame(200, $response->getStatusCode());
+            self::assertStringContainsString('&lt;script&gt;Friendly&lt;/script&gt;', $response->getContent());
+            self::assertStringContainsString('&lt;selected&gt;', $response->getContent());
+            self::assertStringNotContainsString('Other field', $response->getContent());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     private function authorizedKernel(): array
     {
         $kernel = new Kernel('test', true);

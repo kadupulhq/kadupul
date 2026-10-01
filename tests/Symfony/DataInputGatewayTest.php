@@ -96,6 +96,71 @@ final class DataInputGatewayTest extends TestCase
         yield ['selection_name', false];
     }
 
+    public function testWindowsFallbackLaunchesPhpExeWhenTheSettingIsEmpty(): void
+    {
+        [$gateway, $audit, $directory] = $this->gateway('ok');
+        try {
+            $wrapper = null;
+            $binaryDirectory = PHP_BINDIR;
+            if (PHP_OS_FAMILY !== 'Windows') {
+                $wrapper = $directory . '/php.exe';
+                file_put_contents($wrapper, "#!/bin/sh\nexec " . escapeshellarg(PHP_BINARY) . " \"\$@\"\n");
+                chmod($wrapper, 0700);
+                $binaryDirectory = $directory;
+            }
+            $program = 'require ' . var_export(dirname(__DIR__, 2) . '/include/vendor/autoload.php', true) . ';'
+                . 'define("Kadupul\\DataInput\\Infrastructure\\Legacy\\PHP_OS_FAMILY", "Windows");'
+                . 'define("Kadupul\\DataInput\\Infrastructure\\Legacy\\PHP_BINDIR", ' . var_export($binaryDirectory, true) . ');'
+                . '$pdo = new PDO("sqlite::memory:"); $pdo->exec("CREATE TABLE settings(name TEXT,value TEXT)");'
+                . '$database = new class($pdo) implements \Kadupul\Platform\Contract\DatabaseConnection { public function __construct(private PDO $pdo) {} public function get(): PDO { return $this->pdo; } };'
+                . '$audit = new class implements \Kadupul\IdentityAccess\Contract\AuditTrail { public function record(\Kadupul\IdentityAccess\Contract\AuditEvent $event): void {} };'
+                . '$gateway = new \Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputGateway($database, $audit, ' . var_export($directory, true) . ');'
+                . 'echo json_encode($gateway->execute(9,"save",3));';
+            $process = new \Symfony\Component\Process\Process([PHP_BINARY, '-r', $program]);
+            $process->run();
+            self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
+            self::assertSame(3, json_decode($process->getOutput(), true, 512, JSON_THROW_ON_ERROR)['id']);
+        } finally {
+            if ($wrapper !== null) {
+                unlink($wrapper);
+            }
+            $this->cleanup($directory);
+        }
+    }
+
+    #[DataProvider('bulkAuditResponses')]
+    public function testBulkAuditIdentifiesEveryValidatedTarget(string $mode, string $action, bool $valid, array $expectedIds, string $outcome): void
+    {
+        [$gateway, $audit, $directory] = $this->gateway($mode);
+        try {
+            try {
+                $gateway->execute(9, $action, 0, ['selection' => [3 => str_repeat('a', 64), 5 => str_repeat('b', 64)]]);
+                self::assertTrue($valid, 'Invalid worker targets were accepted.');
+            } catch (\RuntimeException $error) {
+                self::assertFalse($valid, $error->getMessage());
+            }
+            self::assertSame($expectedIds, array_map(static fn(AuditEvent $event): string => $event->targetId, $audit->events));
+            self::assertCount(1, array_unique(array_map(static fn(AuditEvent $event): string => $event->correlationId, $audit->events)));
+            foreach ($audit->events as $event) {
+                self::assertSame($outcome, $event->outcome);
+                self::assertSame('data-input.' . $action, $event->action);
+            }
+        } finally {
+            $this->cleanup($directory);
+        }
+    }
+
+    public static function bulkAuditResponses(): iterable
+    {
+        yield ['bulk_delete', 'bulk_delete', true, ['3', '5'], AuditEvent::SUCCEEDED];
+        yield ['bulk_duplicate', 'bulk_duplicate', true, ['7', '8'], AuditEvent::SUCCEEDED];
+        yield ['bulk_audit_failure', 'bulk_duplicate', true, ['7', '8'], AuditEvent::SUCCEEDED];
+        yield ['bulk_partial', 'bulk_duplicate', true, ['7', '8'], AuditEvent::FAILED];
+        yield ['bulk_bad_id', 'bulk_duplicate', false, ['3', '5'], AuditEvent::FAILED];
+        yield ['bulk_mismatch', 'bulk_delete', false, ['3', '5'], AuditEvent::FAILED];
+        yield ['bulk_repeated', 'bulk_duplicate', false, ['3', '5'], AuditEvent::FAILED];
+    }
+
     private function gateway(string $mode): array
     {
         $directory = sys_get_temp_dir() . '/data-input-gateway-' . bin2hex(random_bytes(8));
@@ -115,6 +180,13 @@ if (str_starts_with($mode, 'selection_')) {
 }
 
 $r=['actor'=>$c['actor'],'action'=>$c['action'],'request_id'=>$c['id'],'nonce'=>$c['nonce'],'status'=>'ok','result'=>['id'=>$c['id']]];
+if (str_starts_with($mode, 'bulk_')) {
+    $r['result'] = ['ids' => $mode === 'bulk_delete' ? [3, 5] : [7, 8]];
+    if ($mode === 'bulk_bad_id') $r['result']['ids'] = [7, 'bad'];
+    if ($mode === 'bulk_repeated') $r['result']['ids'] = [7, 7];
+    if ($mode === 'bulk_partial') $r['status'] = 'partial';
+}
+
 if (in_array($mode,['actor','action','request_id','nonce','result'],true)) $r[$mode]='mismatch';
 if ($mode==='target'||$mode==='duplicate') $r['result']['id']=4;
 if (in_array($mode,['denied','conflict','invalid','failed','partial'],true)) $r['status']=$mode;
@@ -130,7 +202,7 @@ PHP);
         $statement->execute(['path_php_binary', PHP_BINARY]);
         $database = $this->createMock(DatabaseConnection::class);
         $database->method('get')->willReturn($pdo);
-        $audit = new class ($mode === 'audit_failure') implements AuditTrail {
+        $audit = new class (in_array($mode, ['audit_failure', 'bulk_audit_failure'], true)) implements AuditTrail {
             public array $events = [];
             public function __construct(private readonly bool $fail) {}
             public function record(AuditEvent $event): void

@@ -160,12 +160,19 @@ final class DataInputController
             $access->authorize();
             $state = $methods->execute('find', $id);
             $field = 0;
+            $selectedField = null;
             if ($operation === 'field_delete') {
                 $raw = $request->query->all()['field'] ?? null;
                 if (!is_string($raw) || !preg_match('/\A[1-9][0-9]{0,7}\z/D', $raw)) {
                     throw new \InvalidArgumentException('Invalid field.');
                 } $field = (int) $raw;
-                if (!in_array($field, array_map('intval', array_column($state['fields'], 'id')), true)) {
+                foreach ($state['fields'] as $candidate) {
+                    if ((int) $candidate['id'] === $field) {
+                        $selectedField = $candidate;
+                        break;
+                    }
+                }
+                if ($selectedField === null) {
                     throw new \InvalidArgumentException('Field does not belong to this input.');
                 }
             }
@@ -187,7 +194,7 @@ final class DataInputController
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
                 }
             }
-            return new Response($twig->render('data_input/action.html.twig', ['state' => $state, 'operation' => $operation, 'form' => $form->createView()]), $status, self::HEADERS);
+            return new Response($twig->render('data_input/action.html.twig', ['state' => $state, 'operation' => $operation, 'selected_field' => $selectedField, 'form' => $form->createView()]), $status, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }

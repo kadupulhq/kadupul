@@ -19,9 +19,21 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
     public function execute(int $actorId, string $action, int $id, array $payload = []): array
     {
         $nonce = bin2hex(random_bytes(16));
+        $bulk = in_array($action, ['bulk_delete', 'bulk_duplicate'], true);
+        $selectedIds = [];
+        $auditTargets = [$id > 0 ? $id : 'unknown'];
+        if ($bulk && is_array($payload['selection'] ?? null)) {
+            try {
+                $selectedIds = $this->validatedIds(array_keys($payload['selection']));
+                $auditTargets = $selectedIds;
+            } catch (\RuntimeException) {
+                // Invalid selections still reach the worker's validation boundary.
+            }
+        }
+
         $command = ['actor' => $actorId, 'action' => $action, 'id' => $id, 'payload' => $payload, 'nonce' => $nonce];
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name='path_php_binary'")->fetchColumn();
-        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . '/php';
+        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $this->projectDir . '/bin/legacy-data-input.php'], $this->projectDir);
         $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         $process->setTimeout(180);
@@ -77,15 +89,41 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
                     }
                 }
             }
+            if ($bulk) {
+                $affectedIds = $this->validatedIds($result['ids'] ?? null);
+                if (count($affectedIds) !== count($selectedIds) || ($action === 'bulk_delete' && $affectedIds !== $selectedIds)) {
+                    throw new \RuntimeException('Operation target could not be verified.');
+                }
+                $auditTargets = $affectedIds;
+            } elseif (is_int($result['id'] ?? null) && $result['id'] > 0) {
+                $auditTargets = [$result['id']];
+            }
             $outcome = $status === 'ok' ? AuditEvent::SUCCEEDED : AuditEvent::FAILED;
             return $response['result'] + ['partial' => $status === 'partial'];
         } finally {
             if (!in_array($action, ['list', 'find', 'selection'], true)) {
-                try {
-                    $this->audit->record(new AuditEvent($nonce, $actorId, 'data-input.' . $action, 'data-input', (string) ($response['result']['id'] ?? $id), $decision, $outcome));
-                } catch (\Throwable) { /* Audit cannot overwrite confirmed persistence. */
+                foreach ($auditTargets as $target) {
+                    try {
+                        $this->audit->record(new AuditEvent($nonce, $actorId, 'data-input.' . $action, 'data-input', (string) $target, $decision, $outcome));
+                    } catch (\Throwable) { /* Audit cannot overwrite confirmed persistence or suppress later targets. */
+                    }
                 }
             }
         }
+    }
+    private function validatedIds(mixed $ids): array
+    {
+        if (!is_array($ids) || !array_is_list($ids) || $ids === [] || count($ids) > 100) {
+            throw new \RuntimeException('Operation target could not be verified.');
+        }
+        foreach ($ids as $id) {
+            if (!is_int($id) || $id < 1 || $id > 99999999) {
+                throw new \RuntimeException('Operation target could not be verified.');
+            }
+        }
+        if (count(array_unique($ids)) !== count($ids)) {
+            throw new \RuntimeException('Operation target could not be verified.');
+        }
+        return $ids;
     }
 }

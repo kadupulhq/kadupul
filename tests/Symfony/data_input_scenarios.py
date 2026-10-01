@@ -90,7 +90,8 @@ def verify_data_inputs(harness, session, check):
     check(harness.sql(f"SELECT CONCAT(input_output,':',update_rra) FROM data_input_fields WHERE id={output}").strip() == 'out:on', 'forged output-form hidden direction preserves output and RRA controls')
     harness.sql(f"INSERT INTO data_template_rrd(hash,data_input_field_id) VALUES ('{uuid.uuid4().hex}',{output})")
     delete_path=f'/app.php/data-inputs/{target}/field_delete?field={output}'
-    fields, _=page(session,delete_path)
+    fields, confirmation=page(session,delete_path)
+    check('<dd>Result</dd>' in confirmation and '<dd>result</dd>' in confirmation, 'field deletion confirmation identifies the selected friendly and field names')
     payload={'data_input_action[revision]':fields['data_input_action[revision]'],'data_input_action[_token]':fields['data_input_action[_token]']}
     check(post(session,delete_path,payload)[0]==422 and harness.sql(f'SELECT COUNT(*) FROM data_input_fields WHERE id={output}').strip()=='1','server prevents removal of referenced output field')
     check(session.request(f'/app.php/data-inputs/3/fields/{output}')['status']==404,'field route binds actual parent ownership')
