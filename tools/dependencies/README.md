@@ -80,6 +80,13 @@ and `jquery-ui-dist` currently lags the official jQuery UI distribution.
 
 ## Remaining upgrade work (2026-09-19)
 
+DOMPurify is now pinned to 3.4.16. Its rolldown bundle changes the formatting
+of the former 3.4.15 patch anchors; the manifest consolidates those steps into
+exact function replacements while retaining their behavior. The upstream
+3.4.16 refusal to return an in-place root selected for removal is retained and
+has a browser regression. Original upstream source and map checksums are
+verified before applying the compatibility recipes.
+
 This first compatibility-preserving batch updates DOMPurify 3.4.7 → 3.4.15,
 D3 7.8.2 → 7.9.0, jQuery UI 1.14.0 → 1.14.2, and tablesorter core/widgets/pager
 to 2.32.0. It synchronizes the bundled HTML Purifier 4.19.0 with the already
