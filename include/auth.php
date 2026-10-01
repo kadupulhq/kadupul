@@ -57,6 +57,7 @@ if ($auth_method != 0 && isset($_SESSION['sess_user_id'])) {
         cacti_log('NOTE: Session for user id ' . $_SESSION['sess_user_id'] . ' ended because its password binding is missing or changed', false, 'AUTH');
 
         cacti_session_destroy();
+        cacti_session_start();
         cacti_session_start(true);
     }
 }

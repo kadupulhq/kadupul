@@ -324,15 +324,24 @@ function kill_session_var($var_name)
     unset($_SESSION[$var_name]);
 }
 
-function cacti_session_start($regenerate = false)
-{
-    $GLOBALS['probe']['events'][] = 'session_start';
-}
+if (empty($scenario['real_sessions'])) {
+    function cacti_session_start($regenerate = false)
+    {
+        $GLOBALS['probe']['events'][] = 'session_start';
+    }
 
-function cacti_session_destroy()
-{
-    $GLOBALS['probe']['events'][] = 'session_destroy';
-    $_SESSION = array();
+    function cacti_session_destroy()
+    {
+        $GLOBALS['probe']['events'][] = 'session_destroy';
+        $_SESSION = array();
+    }
+
+} else {
+    require_once __DIR__ . '/PhpSource.php';
+    $functions = file_get_contents($root . '/lib/functions.php');
+    foreach (array('cacti_session_start', 'cacti_session_regenerate', 'cacti_session_destroy') as $function) {
+        eval(test_php_function_source($functions, $function));
+    }
 }
 
 function cacti_cookie_logout()
@@ -382,6 +391,7 @@ file_put_contents($probe_dir . '/auth_login.php', "<?php\n\$GLOBALS['probe']['ev
 set_include_path($probe_dir);
 
 register_shutdown_function(function () use ($probe_dir): void {
+    $session_status = session_status();
     $output = '';
 
     while (ob_get_level() > 0) {
@@ -392,6 +402,12 @@ register_shutdown_function(function () use ($probe_dir): void {
         unlink($probe_dir . '/' . $file);
     }
 
+    if (!empty($GLOBALS['scenario']['real_sessions'])) {
+        session_write_close();
+        foreach (glob($probe_dir . '/sess_*') as $session_file) {
+            unlink($session_file);
+        }
+    }
     rmdir($probe_dir);
 
     foreach (headers_list() as $header) {
@@ -400,6 +416,8 @@ register_shutdown_function(function () use ($probe_dir): void {
 
     print json_encode(array(
         'return' => $GLOBALS['probe']['return'],
+        'session_id' => session_id(),
+        'session_status' => $session_status,
         'elapsed_seconds' => $GLOBALS['probe']['elapsed_seconds'] ?? null,
         'cache' => $GLOBALS['probe']['cache'],
         'credential_password' => isset($GLOBALS['credential_db']) ? $GLOBALS['credential_db']->query('SELECT password FROM user_auth WHERE id = 42')->fetchColumn() : null,
@@ -421,6 +439,13 @@ $config = array(
     'url_path' => '/kadupul/',
 ) + ($scenario['runtime_config'] ?? array());
 
+if (!empty($scenario['real_sessions'])) {
+    $config['cacti_session_name'] = 'kadupulnative';
+    $config['cookie_options'] = array('use_cookies' => false, 'cache_limiter' => '');
+    session_save_path($probe_dir);
+    session_id('native-old-session-id');
+    cacti_session_start();
+}
 $_SESSION = $scenario['session'] ?? array();
 
 // Ordinary persisted-session fixtures represent a completed login. Tests of

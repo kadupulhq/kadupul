@@ -253,3 +253,12 @@ test('the standalone password page revokes remember credentials before redirecti
     expect((int) $result['remember_rows'])->toBe(0)
         ->and($result['session'])->not->toHaveKey('sess_user_id');
 });
+
+test('the actual PHP session replacement regenerates only after starting a new active session', function () {
+    $result = auth_entry_probe_run(password_change_request('unchanged-password', array('sess_user_id' => '42'), array('bind_session' => false, 'real_sessions' => true)));
+    expect($result['stderr'])->toBe('')
+        ->and($result['session_status'])->toBe(PHP_SESSION_ACTIVE)
+        ->and($result['session_id'])->not->toBe('native-old-session-id')
+        ->and($result['session'])->not->toHaveKey('sess_user_id')
+        ->and($result['events'])->toContain('login_page');
+});
