@@ -1,3 +1,5 @@
+<!-- SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later -->
 # Device templates on main
 
 `host_templates.php` is a compatibility entry point. Symfony owns device template
@@ -15,9 +17,13 @@ forced-password accounts cannot write.
 
 Symfony forms require same-origin CSRF proof. Route IDs bind association parents;
 clients cannot choose a parent in POST. Parent and child sets are locked before
-revision comparison. Local template mutations require primary InnoDB storage and
-roll back together. Delete detaches active devices only, leaving their graphs and
-queries intact. Duplication preserves the public API hash and association behavior.
+revision comparison. New and expanded duplicate names are limited to 100 Unicode
+characters, matching the database column. Local template writes and saved filters
+reject caller-owned transactions, require the primary collector and inspect each
+actual connection table (including temporary shadows) for InnoDB before beginning
+a REPEATABLE READ transaction. Account, policy and direct/group grant tables are
+covered by the same precondition. Local mutations roll back together. Delete detaches active devices only, leaving
+their graphs and queries intact. Duplication preserves the public API hash and association behavior.
 List counts and the has-devices filter include soft-deleted device references, preserving legacy semantics; only active devices are detached by deletion.
 List graph filtering includes graph templates reached through attached SNMP queries.
 

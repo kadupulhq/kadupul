@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Device template management through actual Symfony HTTP and MariaDB."""
 from html.parser import HTMLParser
 from urllib.request import Request
@@ -36,10 +38,22 @@ def verify_device_template_definitions(harness, session, user_id, check):
         return parser.fields
     probe = Path(__file__).with_name('device_template_definition_authorization_probe.php').read_text().removeprefix('<?php')
     evidence = harness.php('-r', probe, str(user_id))
-    check(evidence['exit'] == 0 and all(json.loads(evidence['stdout']).values()), 'permission, forced-password and auth policy inputs stay locked through transaction')
+    results = json.loads(evidence['stdout']) if evidence['exit'] == 0 else {}
+    check(len(results) == 16 and all(value is True for value in results.values()), 'device template storage and authorization guards verified')
     uid = uuid.uuid4().hex[:12]
     name = 'Twig Device ' + uid
     fields = form(base + '/new')
+    for invalid_name in ('x' * 101, 'é' * 101):
+        invalid = dict(fields)
+        invalid.update({'device_template_definition[name]': invalid_name, 'device_template_definition[class]': 'router'})
+        check(request(base + '/new', invalid)[0] == 422, 'database name bound rejects 101 characters before save')
+    bounded_name = uid + 'é' * (100 - len(uid))
+    bounded = dict(fields)
+    bounded.update({'device_template_definition[name]': bounded_name, 'device_template_definition[class]': 'router'})
+    check(request(base + '/new', bounded)[0] == 200, '100-character Unicode name persists without truncation')
+    bounded_id = int(harness.sql(f"SELECT id FROM host_template WHERE BINARY name=0x{bounded_name.encode('utf-8').hex()}").strip())
+    check(harness.sql(f'SELECT CHAR_LENGTH(name) FROM host_template WHERE id={bounded_id}').strip() == '100', 'database stores all 100 Unicode characters')
+    harness.sql(f'DELETE FROM host_template WHERE id={bounded_id}')
     fields.update({'device_template_definition[name]': name, 'device_template_definition[class]': 'router'})
     check(request(base + '/new', fields, origin=False)[0] == 422, 'create requires same-origin CSRF proof')
     check(request(base + '/new', fields)[0] == 200, 'create persists then redirects to editor')
@@ -98,10 +112,28 @@ def verify_device_template_definitions(harness, session, user_id, check):
     check(request(path, data)[0] == 200 and harness.sql(f'SELECT COUNT(*) FROM host_template_snmp_query WHERE host_template_id={tid}').strip() == '0', 'remove query is protected and route-bound')
     def bulk(operation, id=tid):
         return form(base + f'/action/{operation}?ids%5B%5D={id}')
+    invalid_copy = bulk('duplicate')
+    invalid_copy['device_template_action[title_format]'] = 'x' * 101
+    before_copy = harness.sql('SELECT (SELECT COUNT(*) FROM host_template),(SELECT COUNT(*) FROM host_template_graph),(SELECT COUNT(*) FROM host_template_snmp_query)').strip()
+    check(request(base + '/action/duplicate', invalid_copy)[0] == 422, 'expanded duplicate database name bound rejects 101 characters')
+    check(harness.sql('SELECT (SELECT COUNT(*) FROM host_template),(SELECT COUNT(*) FROM host_template_graph),(SELECT COUNT(*) FROM host_template_snmp_query)').strip() == before_copy, 'invalid duplicate creates no parent or child rows')
+    harness.sql(f'INSERT INTO host_template_graph (host_template_id,graph_template_id) VALUES ({tid},{graph}); INSERT INTO host_template_snmp_query (host_template_id,snmp_query_id) VALUES ({tid},{query})')
     copy = bulk('duplicate'); copy['device_template_action[title_format]'] = '<template_title> copied ' + uid
     check(request(base + '/action/duplicate', copy)[0] == 200, 'duplicate API returns to list')
     duplicate = int(harness.sql("SELECT id FROM host_template WHERE name='<script>device-template-stored</script> copied " + uid + "'").strip())
     check(harness.sql(f'SELECT COUNT(DISTINCT hash) FROM host_template WHERE id IN ({tid},{duplicate})').strip() == '2', 'duplicate retains unique API-generated hash')
+    check(harness.sql(f'SELECT COUNT(*) FROM host_template_graph WHERE host_template_id={duplicate} AND graph_template_id={graph}').strip() == '1', 'duplicate copies the actual graph association to the returned parent')
+    check(harness.sql(f'SELECT COUNT(*) FROM host_template_snmp_query WHERE host_template_id={duplicate} AND snmp_query_id={query}').strip() == '1', 'duplicate copies the actual query association to the returned parent')
+    child_failure = bulk('duplicate')
+    child_failure['device_template_action[title_format]'] = 'child rollback ' + uid
+    child_snapshot = harness.sql('SELECT (SELECT COUNT(*) FROM host_template),(SELECT COUNT(*) FROM host_template_graph),(SELECT COUNT(*) FROM host_template_snmp_query)').strip()
+    harness.sql("CREATE TRIGGER twig_device_template_child_fail BEFORE INSERT ON host_template_snmp_query FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='injected child copy failure'")
+    try:
+        check(request(base + '/action/duplicate', child_failure)[0] == 502, 'child copy failure rejects duplicate after parent and graph writes')
+        check(harness.sql('SELECT (SELECT COUNT(*) FROM host_template),(SELECT COUNT(*) FROM host_template_graph),(SELECT COUNT(*) FROM host_template_snmp_query)').strip() == child_snapshot, 'failed child copy rolls back new parent and every association')
+    finally:
+        harness.sql('DROP TRIGGER twig_device_template_child_fail')
+        harness.sql(f'DELETE FROM host_template_graph WHERE host_template_id={tid}; DELETE FROM host_template_snmp_query WHERE host_template_id={tid}')
     stale_delete = bulk('delete')
     harness.sql(f"UPDATE host_template SET name='updated {uid}' WHERE id={tid}")
     check(request(base + '/action/delete', stale_delete)[0] == 409, 'stale bulk action has no effect')
@@ -139,6 +171,31 @@ def verify_device_template_definitions(harness, session, user_id, check):
         harness.sql(f"UPDATE user_auth SET must_change_password='{original}' WHERE id={user_id}")
     check(request('/host_templates.php', {'action': 'actions', 'selected_items': 'a:1:{i:0;i:' + str(tid) + ';}'})[0] == 409, 'legacy POST expires without replay')
     check(harness.sql(f'SELECT COUNT(*) FROM host_template WHERE id={tid}').strip() == '1', 'legacy POST cannot delete')
+    link_host = int(harness.sql(f"INSERT INTO host (description,hostname,host_template_id,status,poller_id) VALUES ('link {uid}','127.0.0.1',{tid},3,1); SELECT LAST_INSERT_ID()").strip())
+    verified_fronts = []
+    def verify_front(front, prefix):
+        status, html = request(front + '/inventory/device-templates?has_hosts=true&q=' + uid)
+        target = prefix + 'host.php?reset=true&amp;host_template_id=' + str(tid)
+        check(status == 200 and target in html and '/public/host.php' not in html, 'attached-device link respects configured installation: ' + front)
+        check('<td>Yes</td>' in html, 'attached-device template remains deletable: ' + front)
+        legacy_status, legacy_html = request(prefix + 'host.php?reset=true&host_template_id=' + str(tid))
+        check(legacy_status == 200 and 'link ' + uid in legacy_html, 'legacy target filters the actual attached device: ' + front)
+        verified_fronts.append(front)
+    try:
+        verify_front('/app.php', '/')
+        verify_front('/public/index.php', '/')
+        harness.command('php', '-r', 'if (!copy("include/config.php", "/tmp/device-template-prefix-config.php")) { throw new RuntimeException("Cannot back up prefix fixture configuration."); }', check=True)
+        try:
+            harness.command('php', '-r', 'if (file_put_contents("include/config.php", PHP_EOL . chr(36) . "url_path = " . var_export("/cacti/", true) . ";" . PHP_EOL, FILE_APPEND) === false) { throw new RuntimeException("Cannot write prefix fixture configuration."); }', check=True)
+            harness.compose('exec', '-T', 'web', 'sh', '-ec', "printf 'Alias /cacti/ /var/www/html/\\n' > /etc/apache2/conf-available/device-template-prefix.conf; a2enconf device-template-prefix; apachectl -k graceful", check=True)
+            verify_front('/cacti/app.php', '/cacti/')
+            verify_front('/cacti/public/index.php', '/cacti/')
+        finally:
+            harness.command('php', '-r', 'if (!copy("/tmp/device-template-prefix-config.php", "include/config.php")) { throw new RuntimeException("Cannot restore prefix fixture configuration."); }', check=True)
+            harness.compose('exec', '-T', 'web', 'sh', '-ec', 'a2disconf device-template-prefix; apachectl -k graceful', check=True)
+        check(verified_fronts == ['/app.php', '/public/index.php', '/cacti/app.php', '/cacti/public/index.php'], 'device template links work through all four front controllers')
+    finally:
+        harness.sql(f'DELETE FROM host WHERE id={link_host}')
     sync_host = int(harness.sql(f"INSERT INTO host (description,hostname,host_template_id,status,poller_id) VALUES ('sync {uid}','127.0.0.1',{tid},3,1); SELECT LAST_INSERT_ID()").strip())
     old_engine = harness.sql("SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='host_snmp_cache'").strip()
     try:

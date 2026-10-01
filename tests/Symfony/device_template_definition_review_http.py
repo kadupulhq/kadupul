@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Run device template management against an isolated real database and HTTP stack."""
 from pathlib import Path
 from types import SimpleNamespace
@@ -12,16 +14,16 @@ from device_template_definition_scenarios import verify_device_template_definiti
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--coverage-output', type=Path)
+    parser.add_argument('--project', default='kadupul-device-template-definition-review')
     args = parser.parse_args()
-    harness = Harness(SimpleNamespace(project='kadupul-device-template-definition-review', target='device-template-definition-review'))
+    harness = Harness(SimpleNamespace(project=args.project, target='device-template-definition-review'))
     if args.coverage_output:
         from coverage_support import configure_coverage
         configure_coverage(harness, args.coverage_output)
-    assertions = 0
+    checks = []
     def check(condition, label):
-        nonlocal assertions
         if not condition: raise AssertionError(label)
-        assertions += 1
+        checks.append(label)
         print('PASS ' + label, flush=True)
     try:
         harness.setup()
@@ -29,7 +31,10 @@ def main():
         check(not session.login('behavior-admin')['login_form'], 'administrator authenticated')
         user = int(harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip())
         verify_device_template_definitions(harness, session, user, check)
-        print(f'{assertions} device template HTTP/MariaDB checks passed', flush=True)
+        if args.coverage_output:
+            from coverage_support import publish_coverage
+            publish_coverage(args.coverage_output, False, checks)
+        print(f'{len(checks)} device template HTTP/MariaDB checks passed', flush=True)
     except Exception:
         diagnostics = harness.command('php', '-r', '$lines = @file("log/cacti.log") ?: []; foreach ($lines as $line) { if (str_contains($line, "DEVICE-TEMPLATE-DEFINITION:")) echo $line; }')
         print(diagnostics['stdout'], flush=True)

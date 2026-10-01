@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Inventory\Infrastructure\Symfony\Form;
@@ -19,7 +19,7 @@ final class DeviceTemplateDefinitionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', TextType::class, ['label' => 'Name', 'trim' => false, 'attr' => ['maxlength' => 255]])
+        $builder->add('name', TextType::class, ['label' => 'Name', 'trim' => false, 'attr' => ['maxlength' => DeviceTemplateDefinition::NAME_MAX_LENGTH]])
             ->add('class', ChoiceType::class, ['label' => 'Class', 'choices' => array_combine(DeviceTemplateDefinition::CLASSES, DeviceTemplateDefinition::CLASSES), 'required' => false, 'placeholder' => 'Unassigned', 'empty_data' => ''])
             ->add('revision', HiddenType::class);
     }

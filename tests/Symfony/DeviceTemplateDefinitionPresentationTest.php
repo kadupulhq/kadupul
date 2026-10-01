@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Tests;
@@ -39,6 +39,62 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
             }
         }
     }
+    public function testConsoleOnlyActorIsRejectedBeforeSelectionParsing(): void
+    {
+        foreach (['/inventory/device-templates?q[x]=1', '/inventory/device-templates/new', '/inventory/device-templates/7/edit', '/inventory/device-templates/action/delete?ids[x]=bad', '/inventory/device-templates/7/association/graph/add', '/inventory/device-templates/legacy?action[x]=1'] as $path) {
+            $kernel = new Kernel('test', true);
+            try {
+                $kernel->boot();
+                $container = $kernel->getContainer()->get('test.service_container');
+                $access = $this->createMock(ConsoleAccess::class);
+                $access->method('consoleActor')->willReturn(new Actor(42, 'console-only'));
+                $container->set(ConsoleAccess::class, $access);
+                $port = $this->createMock(DeviceTemplateDefinitions::class);
+                $port->expects(self::once())->method('authorize')->with(42)->willThrowException(new \Kadupul\Inventory\Application\Query\InventoryAccessDenied(false));
+                foreach (['find', 'execute', 'defaults', 'remember', 'list', 'choices', 'hooks'] as $method) {
+                    $port->expects(self::never())->method($method);
+                }
+                $container->set(DeviceTemplateDefinitions::class, $port);
+                self::assertSame(403, $kernel->handle(Request::create($path))->getStatusCode(), $path);
+            } finally {
+                $kernel->shutdown();
+            }
+        }
+    }
+    public function testLegacyDeviceLinksUseInstallationPathThroughAllFrontControllers(): void
+    {
+        foreach ([['/app.php', '/'], ['/public/index.php', '/'], ['/cacti/app.php', '/cacti/'], ['/cacti/public/index.php', '/cacti/'], ['/app.php', '//evil.invalid/'], ['/app.php', 'relative/'], ['/app.php', '/x?y/'], ['/app.php', '/x#y/'], ['/app.php', "/x\n/"], ['/app.php', '/x\\y/']] as [$front, $prefix]) {
+            $kernel = new Kernel('test', true);
+            try {
+                $kernel->boot();
+                $container = $kernel->getContainer()->get('test.service_container');
+                $configuration = $this->createMock(LegacyConfiguration::class);
+                $configuration->method('values')->willReturn(['url_path' => $prefix, 'forced_locale' => 'en-US']);
+                $container->set(LegacyConfiguration::class, $configuration);
+                $access = $this->createMock(ConsoleAccess::class);
+                $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+                $container->set(ConsoleAccess::class, $access);
+                $port = $this->createMock(DeviceTemplateDefinitions::class);
+                $port->method('defaults')->willReturn([]);
+                $port->method('list')->willReturn(['rows' => [['id' => 7, 'name' => 'attached', 'class' => 'router', 'hosts' => 2]], 'hasNext' => false]);
+                $port->method('choices')->willReturn(['graphs' => [], 'queries' => []]);
+                $port->method('hooks')->willReturn([]);
+                $container->set(DeviceTemplateDefinitions::class, $port);
+                $response = $kernel->handle(Request::create($front . '/inventory/device-templates', 'GET', [], [], [], ['SCRIPT_FILENAME' => '/var/www/html' . $front, 'SCRIPT_NAME' => $front, 'PHP_SELF' => $front . '/inventory/device-templates']));
+                if (!in_array($prefix, ['/', '/cacti/'], true)) {
+                    self::assertSame(502, $response->getStatusCode(), $prefix);
+                    self::assertStringNotContainsString('evil.invalid', $response->getContent());
+                    continue;
+                }
+                self::assertSame(200, $response->getStatusCode(), $front);
+                self::assertStringContainsString('href="' . $prefix . 'host.php?reset=true&amp;host_template_id=7"', $response->getContent());
+                self::assertStringContainsString('<td>Yes</td>', $response->getContent());
+                self::assertStringNotContainsString('/public/host.php', $response->getContent());
+            } finally {
+                $kernel->shutdown();
+            }
+        }
+    }
     public function testFrenchEditorEscapesStoredNamesAndPreservesTrustedInstalledHookMarkup(): void
     {
         $kernel = new Kernel('test', true);
@@ -68,6 +124,7 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
             self::assertSame(200, $response->getStatusCode());
             $body = $response->getContent();
             self::assertStringContainsString('Modèle d’appareil', $body);
+            self::assertStringContainsString('maxlength="100"', $body);
             self::assertStringContainsString('&lt;script&gt;stored&lt;/script&gt;', $body);
             self::assertStringNotContainsString('<script>stored</script>', $body);
             self::assertStringContainsString('<aside id="plugin-top">', $body);
@@ -83,6 +140,11 @@ final class DeviceTemplateDefinitionPresentationTest extends TestCase
                     $request->headers->set('Origin', $origin);
                 }
                 self::assertSame(422, $kernel->handle($request)->getStatusCode());
+            }
+            foreach ([str_repeat('x', 101), str_repeat('é', 101)] as $oversized) {
+                $invalid = Request::create($path, 'POST', ['device_template_definition' => ['name' => $oversized] + $fields]);
+                $invalid->headers->set('Origin', 'http://localhost');
+                self::assertSame(422, $kernel->handle($invalid)->getStatusCode());
             }
             $request = Request::create($path, 'POST', ['device_template_definition' => $fields]);
             $request->headers->set('Origin', 'http://localhost');

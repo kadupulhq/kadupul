@@ -2,12 +2,13 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Inventory\Application\Port\DeviceTemplateDefinitions;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\DeviceTemplateDefinition;
@@ -28,7 +29,7 @@ use Twig\Environment;
 final class DeviceTemplateDefinitionController
 {
     #[Route('/inventory/device-templates', name: 'inventory_device_templates', methods: ['GET', 'HEAD'])]
-    public function list(Request $request, ConsoleAccess $console, DeviceTemplateDefinitions $store, Environment $twig, TranslatorInterface $translator): Response
+    public function list(Request $request, ConsoleAccess $console, DeviceTemplateDefinitions $store, Environment $twig, TranslatorInterface $translator, LegacyConfiguration $configuration): Response
     {
         $actor = $console->consoleActor();
         if ($actor === null) {
@@ -46,7 +47,7 @@ final class DeviceTemplateDefinitionController
                 $filters['page'] = 1;
             }
             $store->remember($actor->id, $filters);
-            return new Response($twig->render('inventory/device_templates.html.twig', ['filters' => $filters, 'result' => $store->list($filters), 'choices' => $store->choices(), 'classes' => DeviceTemplateDefinition::CLASSES, 'sizes' => DeviceTemplateFilters::SIZES, 'legacyDevices' => rtrim(str_replace('\\', '/', dirname($request->getBaseUrl())), '/.') . '/host.php', 'hooks' => TrustedDeviceTemplatePluginHtml::capturedHooks($store->hooks($actor->id, 0))]), 200, ['Cache-Control' => 'private, no-store']);
+            return new Response($twig->render('inventory/device_templates.html.twig', ['filters' => $filters, 'result' => $store->list($filters), 'choices' => $store->choices(), 'classes' => DeviceTemplateDefinition::CLASSES, 'sizes' => DeviceTemplateFilters::SIZES, 'legacyDevices' => self::legacyDevicesUrl($configuration), 'hooks' => TrustedDeviceTemplatePluginHtml::capturedHooks($store->hooks($actor->id, 0))]), 200, ['Cache-Control' => 'private, no-store']);
         } catch (InventoryAccessDenied) {
             return new Response($translator->trans('Access denied.', [], 'inventory'), 403, ['Cache-Control' => 'private, no-store']);
         } catch (\InvalidArgumentException) {
@@ -54,6 +55,15 @@ final class DeviceTemplateDefinitionController
         } catch (\RuntimeException) {
             return new Response($translator->trans('Device template outcome is unknown. Reload before retrying.', [], 'inventory'), 502, ['Cache-Control' => 'private, no-store']);
         }
+    }
+    private static function legacyDevicesUrl(LegacyConfiguration $configuration): string
+    {
+        $path = $configuration->values()['url_path'] ?? '/';
+        if (!is_string($path) || !str_starts_with($path, '/') || str_starts_with($path, '//')
+            || str_contains($path, '\\') || preg_match('/[\x00-\x20?#]/', $path)) {
+            throw new \RuntimeException('Invalid installation path.');
+        }
+        return rtrim($path, '/') . '/host.php';
     }
     #[Route('/inventory/device-templates/new', name: 'inventory_device_template_definition_create', methods: ['GET', 'HEAD', 'POST'])]
     #[Route('/inventory/device-templates/{id}/edit', name: 'inventory_device_template_definition_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]

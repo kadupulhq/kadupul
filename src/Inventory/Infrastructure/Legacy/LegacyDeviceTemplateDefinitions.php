@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
@@ -12,11 +12,12 @@ use Kadupul\Inventory\Domain\DeviceTemplateDefinition;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\Process\Process;
 
 final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDefinitions
 {
-    public function __construct(private DatabaseConnection $database, private string $projectDir) {}
+    public function __construct(private DatabaseConnection $database, private string $projectDir, private LegacyConfiguration $configuration) {}
     public function authorize(int $actor): void
     {
         DeviceTemplateAuthorization::authorize($this->database->get(), $actor);
@@ -46,15 +47,15 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
     public function remember(int $actor, array $filters): void
     {
         $db = $this->database->get();
-        $db->beginTransaction();
+        DeviceTemplateTransaction::begin($db, $this->configuration->values(), ['settings_user']);
         try {
             DeviceTemplateAuthorization::authorize($db, $actor, true);
             $query = $db->prepare("INSERT INTO settings_user (user_id, name, value) VALUES (?, 'twig_device_template_filters', ?) ON DUPLICATE KEY UPDATE value = VALUES(value)");
             $query->execute([$actor, json_encode($filters, JSON_THROW_ON_ERROR)]);
-            $db->commit();
+            DeviceTemplateTransaction::commit($db);
         } catch (\Throwable $error) {
             if ($db->inTransaction()) {
-                $db->rollBack();
+                DeviceTemplateTransaction::rollback($db);
             } throw $error;
         }
     }
@@ -125,6 +126,9 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
         $process->setTimeout(180);
         $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         $process->run();
+        if (preg_match_all('/^KADUPUL_DEVICE_DEFINITION_RESULT=/m', $process->getOutput()) > 1) {
+            throw new \RuntimeException('Device template outcome could not be verified.');
+        }
         if (!preg_match('/^KADUPUL_DEVICE_DEFINITION_RESULT=(\{[^\r\n]+\})$/m', $process->getOutput(), $match)) {
             throw new \RuntimeException('Device template outcome is unknown. Reload before retrying.');
         }
@@ -137,7 +141,7 @@ final readonly class LegacyDeviceTemplateDefinitions implements DeviceTemplateDe
             throw new \RuntimeException('Device template outcome could not be verified.');
         }
         $ids = $result['ids'] ?? null;
-        if (!is_array($ids) || array_filter($ids, static fn($id): bool => !is_int($id) || $id < 1) !== []) {
+        if (!is_array($ids) || !array_is_list($ids) || count(array_unique($ids, SORT_REGULAR)) !== count($ids) || array_filter($ids, static fn($id): bool => !is_int($id) || $id < 1 || $id > 16777215) !== []) {
             throw new \RuntimeException('Device template outcome could not be verified.');
         }
         if (($result['status'] ?? '') === 'ok' && $action !== 'hooks') {

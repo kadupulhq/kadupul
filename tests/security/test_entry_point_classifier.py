@@ -1070,6 +1070,76 @@ def main():
         if rows.get('app.php/aliased', ('missing',))[0] != 'unknown' or rows.get('app.php', ('missing',))[0] != 'unknown':
             failures.append('aliased #[Route]: expected unknown rows, got %s' % {k: v for k, v in rows.items() if 'aliased' in k or k == 'app.php'})
 
+    project = Path(__file__).resolve().parents[2]
+    feature_cases = {
+        'direct': ("$store->authorize($actor->id);", True),
+        'conditional': ("if ($request->query->has('check')) { $store->authorize($actor->id); }", False),
+        'input first': ("$query = $request->query->all(); $store->authorize($actor->id);", False),
+        'effect first': ("unlink('/tmp/x'); $store->authorize($actor->id);", False),
+        'swallowed': ("try { $store->authorize($actor->id); } catch (\\Throwable) {}", False),
+        'refused exception': ("try { $store->authorize($actor->id); } catch (\\Throwable) { return new Response('', 403); }", True),
+        'missing': ("$query = $request->query->all();", False),
+        'wrong actor': ("$store->authorize(99);", False),
+        'mutated actor ID': ("$actor->id = 99; $store->authorize($actor->id);", False),
+        'rebound actor': ("$actor = $other; $store->authorize($actor->id);", False),
+        'early return': ("if (true) { return new Response('feature data'); } $store->authorize($actor->id);", False),
+    }
+    for label, (body, admitted) in feature_cases.items():
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-device-template-') as directory:
+            root = tree(directory)
+            proof_files = ['src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php',
+                           'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php']
+            for path in proof_files:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text((project / path).read_text())
+            services = root / 'config/services.yaml'
+            services.parent.mkdir(parents=True)
+            services.write_text('services:\n    Kadupul\\Inventory\\Application\\Port\\DeviceTemplateDefinitions:\n        alias: Kadupul\\Inventory\\Infrastructure\\Legacy\\LegacyDeviceTemplateDefinitions\n')
+            session = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+            session.parent.mkdir(parents=True, exist_ok=True)
+            session.write_text(SESSION)
+            controller = root / 'src/Fixture/DeviceTemplateAction.php'
+            controller.parent.mkdir(parents=True, exist_ok=True)
+            controller.write_text(r'''<?php
+namespace Kadupul\Fixture;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Inventory\Application\Port\DeviceTemplateDefinitions;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+final class DeviceTemplateAction {
+    #[Route('/inventory/device-templates', name: 'device_template_fixture')]
+    public function run(Request $request, ConsoleAccess $console, DeviceTemplateDefinitions $store): Response {
+        $actor = $console->consoleActor();
+        if ($actor === null) { return new Response('', 401); }
+        %s
+        return new Response();
+    }
+}
+''' % body)
+            row = run(root, []).get('app.php/inventory/device-templates', ('missing', ''))
+            count += 1
+            if (row[0] == 'symfony:device_template_fixture' and row[1].endswith(' + realm 12')) != admitted:
+                failures.append('Device template feature %s: unexpected classification %s' % (label, row))
+            if admitted:
+                authorization = root / proof_files[0]
+                authorization.write_text(authorization.read_text().replace('foreach ([8, 12]', 'foreach ([8, 13]'))
+                count += 1
+                if run(root, []).get('app.php/inventory/device-templates', ('missing',))[0] != 'unknown':
+                    failures.append('Device template changed realm contract was still certified')
+                authorization.write_text((project / proof_files[0]).read_text())
+                original = services.read_text()
+                services.write_text(original.replace('LegacyDeviceTemplateDefinitions', 'UncheckedDefinitions'))
+                count += 1
+                if run(root, []).get('app.php/inventory/device-templates', ('missing',))[0] != 'unknown':
+                    failures.append('Device template alternate binding was still certified')
+                services.write_text(original)
+                alternative = root / 'src/Fixture/UncheckedDefinitions.php'
+                alternative.write_text('<?php namespace Kadupul\\Fixture; final class UncheckedDefinitions implements \\Kadupul\\Inventory\\Application\\Port\\DeviceTemplateDefinitions {}')
+                count += 1
+                if run(root, []).get('app.php/inventory/device-templates', ('missing',))[0] != 'unknown':
+                    failures.append('Device template alternate implementation was still certified')
+
     for failure in failures:
         print('FAIL: ' + failure)
     if failures:

@@ -1961,6 +1961,89 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     return method_checks($root, $type, $callee, $depth + 1, $seen, $handed, $refuses);
 }
 
+/** Reviewed sole implementation and first-effect realm-12 authorization contract. */
+function device_template_feature_guard(string $root, string $class, Stmt\ClassMethod $method, array $files): bool
+{
+    $contract = 'Kadupul\Inventory\Application\Port\DeviceTemplateDefinitions';
+    $adapter = 'Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions';
+    $reviewed = [
+        'src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php' => '18140ae714207ca61114413a21dc8ba05c7f091bc9f44fd3f83e9dd1a745858b',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php' => 'd768528ceb3b5b45ea0dfa27a08acc5d849d4ed8b5614520e285cf68bd29c66e',
+    ];
+    foreach ($reviewed as $path => $hash) {
+        if (!is_file($root . '/' . $path) || hash_file('sha256', $root . '/' . $path) !== $hash) {
+            return false;
+        }
+    }
+    $services = @file_get_contents($root . '/config/services.yaml');
+    $binding = '/^    ' . preg_quote($contract, '/') . ':\R        alias: ' . preg_quote($adapter, '/') . '\s*$/m';
+    if (!is_string($services) || preg_match_all($binding, $services) !== 1
+        || substr_count($services, $contract . ':') !== 1) {
+        return false;
+    }
+    // A classification request has one immutable source list. Inspect its
+    // implementations once, retaining the same fail-closed result per route.
+    static $soleAdapters = [];
+    $sourceSet = $root . '|' . hash('sha256', implode("\0", $files));
+    if (!array_key_exists($sourceSet, $soleAdapters)) {
+        $soleAdapters[$sourceSet] = true;
+        foreach ($files as $path) {
+            foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+                if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== $adapter) {
+                    foreach ($node->implements as $interface) {
+                        if ($interface->toString() === $contract) {
+                            $soleAdapters[$sourceSet] = false;
+                            break 3;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (!$soleAdapters[$sourceSet]) {
+        return false;
+    }
+    $typeOf = receiver_types($root, $class, $method);
+    $stmts = array_values($method->stmts ?? []);
+    foreach ($stmts as $index => $stmt) {
+        $actor = actor_assignment($root, $stmt, $typeOf);
+        if ($actor === null) {
+            continue;
+        }
+        $remaining = array_slice($stmts, $index + 2);
+        $written = rebound($remaining, true);
+        if (isset($written[$actor]) || isset($written['*'])) {
+            return false;
+        }
+        $found = first_service_call($root, $remaining, $typeOf, fn(?Expr $e): bool => true);
+        if ($found === null || $found[0] !== [$contract, 'authorize']) {
+            return false;
+        }
+        $args = plain_args($found[1]);
+        $id = $args[0] ?? null;
+        if (count($args ?? []) !== 1 || !$id instanceof Expr\PropertyFetch || !is_variable($id->var, $actor)
+            || !$id->name instanceof Node\Identifier || $id->name->toString() !== 'id') {
+            return false;
+        }
+        foreach (walk($remaining, false) as $node) {
+            if ($node instanceof Stmt\Return_ && $node->getStartFilePos() < $found[1]->getStartFilePos()) {
+                return false;
+            }
+            if ($node instanceof Expr\MethodCall && $node->getStartFilePos() < $found[1]->getEndFilePos()) {
+                $receiver = $node->var;
+                while ($receiver instanceof Expr\PropertyFetch) {
+                    $receiver = $receiver->var;
+                }
+                if ($typeOf($receiver) === 'Symfony\Component\HttpFoundation\Request') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 /**
  * @return array<string, int> check method => realm it requires
  */
@@ -2125,6 +2208,13 @@ function symfony_routes(string $root, array $files): array
                             $grant = 'realm ' . $realms['consoleActor'];
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
+                            }
+                            if ($route['path'] === '/inventory/device-templates' || str_starts_with($route['path'], '/inventory/device-templates/')) {
+                                if (!device_template_feature_guard($root, $name, $method, $sources)) {
+                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no proven device-template realm-12 guard before input or effects'];
+                                    continue;
+                                }
+                                $grant .= ' + realm 12';
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

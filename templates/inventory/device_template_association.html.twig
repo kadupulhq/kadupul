@@ -1,3 +1,5 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
 {% extends 'base.html.twig' %}{% trans_default_domain 'inventory' %}{% block title %}{{ 'Device Template'|trans }} · Kadupul{% endblock %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed local Symfony routes encode validated IDs and filters; device URL uses the local application mount and fixed host.php path. #}
 {% block body %}<main><h1>{{ row.name }}</h1><p>{{ operation|trans }} — {{ kind|trans }}</p>{{ form_start(form) }}{{ form_widget(form) }}<button>{{ 'Continue'|trans }}</button>{{ form_end(form) }}<p><a href="{{ path('inventory_device_template_definition_edit',{id:row.id}) }}">{{ 'Cancel'|trans }}</a></p></main>{% endblock %}

@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Tests;
@@ -21,6 +21,29 @@ final class DeviceTemplateDefinitionTest extends TestCase
         }
         self::assertSame($original->revision(), (new DeviceTemplateDefinition(1, '<router>', 'router', [1, 2], [3]))->revision());
         self::assertSame(['name' => ' raw name ', 'class' => 'router'], DeviceTemplateDefinition::validate(['name' => ' raw name ', 'class' => 'router']));
+    }
+    public function testNameBoundsMatchTheDatabaseAndDuplicateExpansion(): void
+    {
+        foreach ([str_repeat('x', 100), str_repeat('é', 100)] as $name) {
+            self::assertSame($name, DeviceTemplateDefinition::validate(['name' => $name, 'class' => 'router'])['name']);
+            self::assertSame($name, DeviceTemplateDefinition::duplicateName($name, '<template_title>'));
+        }
+        foreach ([str_repeat('x', 101), str_repeat('é', 101), "\xff"] as $name) {
+            try {
+                DeviceTemplateDefinition::validate(['name' => $name, 'class' => 'router']);
+                self::fail('Invalid database name accepted.');
+            } catch (\InvalidArgumentException) {
+                self::assertTrue(true);
+            }
+        }
+        foreach (['<template_title>x', "\xff", "a\0"] as $format) {
+            try {
+                DeviceTemplateDefinition::duplicateName(str_repeat('x', 100), $format);
+                self::fail('Invalid expanded duplicate name accepted.');
+            } catch (\InvalidArgumentException) {
+                self::assertTrue(true);
+            }
+        }
     }
     public function testInvalidFieldsAndFiltersFailBeforeCasting(): void
     {

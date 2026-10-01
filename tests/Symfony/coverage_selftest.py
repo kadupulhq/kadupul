@@ -50,6 +50,15 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceCollectorController.php',
         'bin/legacy-device-template.php', 'bin/legacy-device-template-definition.php',
+        'src/Inventory/Domain/DeviceTemplateDefinition.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceTemplateTransaction.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateDefinitionController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateDefinitionActionController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateDefinitionAssociationController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/LegacyDeviceTemplateDefinitionsController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceTemplateDefinitionType.php',
         'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'bin/legacy-device-state.php',
         'bin/legacy-device-remove.php',
@@ -159,7 +168,12 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
-        for source in required:
+        device_template_checks = ['failed child copy rolls back new parent and every association', 'device template storage and authorization guards verified', '100-character Unicode name persists without truncation', 'expanded duplicate database name bound rejects 101 characters', 'device template links work through all four front controllers']
+    for index in range(len(device_template_checks)):
+        failures['missing-device-template-check-' + str(index)] = 'Incomplete Symfony integration checks'
+    failures['device-template-test-hash'] = 'Integration test source differs'
+    failures['device-template-probe-hash'] = 'Integration test source differs'
+    for source in required:
             if 1 in (report['files'] or {}).get(source, {}).get('lines', {}).values():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
@@ -249,6 +263,12 @@ def main():
             elif case.startswith('unmeasured-') and case.removeprefix('unmeasured-').endswith('.php'):
                 source = next(path for path in required if path.endswith('/' + case.removeprefix('unmeasured-')))
                 data['files'][source]['lines'] = {line: -1 for line in data['files'][source]['lines']}
+            elif case.startswith('missing-device-template-check-'):
+                evidence['checks'].remove(device_template_checks[int(case.removeprefix('missing-device-template-check-'))])
+            elif case == 'device-template-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_template_definition_scenarios.py'] = '0' * 64
+            elif case == 'device-template-probe-hash':
+                evidence['source_sha256']['tests/Symfony/device_template_definition_authorization_probe.php'] = '0' * 64
             elif case == 'device-create-test-hash':
                 evidence['source_sha256']['tests/Symfony/device_create_scenarios.py'] = '0' * 64
             elif case == 'device-compatibility-test-hash':

@@ -42,6 +42,11 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'failed child copy rolls back new parent and every association',
+        'device template storage and authorization guards verified',
+        '100-character Unicode name persists without truncation',
+        'expanded duplicate database name bound rejects 101 characters',
+        'device template links work through all four front controllers',
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',
         'site counts exclude hidden and deleted devices', 'site persistence rechecks actor and revision and rolls back rejected saves',
@@ -214,6 +219,15 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceCollectorController.php',
         'bin/legacy-device-template.php', 'bin/legacy-device-template-definition.php',
+        'src/Inventory/Domain/DeviceTemplateDefinition.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceTemplateAuthorization.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateDefinitions.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceTemplateTransaction.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateDefinitionController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateDefinitionActionController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateDefinitionAssociationController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/LegacyDeviceTemplateDefinitionsController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceTemplateDefinitionType.php',
         'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'bin/legacy-device-state.php',
         'bin/legacy-device-remove.php',

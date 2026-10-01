@@ -2,13 +2,14 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 use Kadupul\Inventory\Domain\DeviceTemplateDefinition;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceTemplateAuthorization;
+use Kadupul\Inventory\Infrastructure\Legacy\DeviceTemplateTransaction;
 use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions;
 
 if (PHP_SAPI !== 'cli') {
@@ -51,7 +52,14 @@ try {
     if (!$db instanceof PDO || (int) ($config['poller_id'] ?? 0) !== 1) {
         throw new RuntimeException();
     }
-    $db->beginTransaction();
+    $tables = ['host_template', 'host_template_graph', 'host_template_snmp_query', 'graph_templates', 'snmp_query', 'snmp_query_graph'];
+    if ($action === 'delete') {
+        $tables[] = 'host';
+    }
+    if ($action === 'sync') {
+        $tables = [...$tables, 'settings', 'host', 'host_graph', 'host_snmp_query', 'host_snmp_cache', 'poller_item', 'poller_reindex', 'graph_local', 'graph_templates_graph', 'graph_templates_item', 'data_local', 'data_template_data', 'data_template_rrd'];
+    }
+    DeviceTemplateTransaction::begin($db, $config, $tables);
     $started = true;
     DeviceTemplateAuthorization::authorize($db, $actor, true);
     $_SESSION['sess_user_id'] = $actor;
@@ -68,18 +76,10 @@ try {
             api_plugin_hook($hook);
             $hooks[$hook] = ob_get_clean();
         }
-        $db->rollBack();
+        DeviceTemplateTransaction::rollback($db);
         $started = false;
         $status = 'ok';
     } else {
-        $tables = ['host_template', 'host_template_graph', 'host_template_snmp_query', 'graph_templates', 'snmp_query', 'snmp_query_graph'];
-        if ($action === 'delete') {
-            $tables[] = 'host';
-        }
-        if ($action === 'sync') {
-            $tables = [...$tables, 'settings', 'host', 'host_graph', 'host_snmp_query', 'host_snmp_cache', 'poller_item', 'poller_reindex', 'graph_local', 'graph_templates_graph', 'graph_templates_item', 'data_local', 'data_template_data', 'data_template_rrd'];
-        }
-        definitionWorkerStorage($db, $tables);
         if (in_array($action, ['save', 'association'], true)) {
             $id = definitionWorkerId($command['id'] ?? null, $action === 'save');
             $revision = $command['revision'] ?? null;
@@ -129,7 +129,7 @@ try {
                 $query->execute([$id, $child]);
             }
             $ids = [$id];
-            $db->commit();
+            DeviceTemplateTransaction::commit($db);
             $started = false;
             $status = 'ok';
         } else {
@@ -158,27 +158,24 @@ try {
                     $query = $db->prepare('DELETE FROM host_template WHERE id = ?');
                     $query->execute([$id]);
                 }
-                $db->commit();
+                DeviceTemplateTransaction::commit($db);
                 $started = false;
                 $status = 'ok';
             } elseif ($action === 'duplicate') {
                 $format = $command['title_format'] ?? null;
-                if (!is_string($format) || trim($format) === '' || mb_strlen($format) > 255 || str_contains($format, "\0")) {
-                    throw new InvalidArgumentException();
+                foreach ($ids as $id) {
+                    $row = LegacyDeviceTemplateDefinitions::read($db, $id);
+                    DeviceTemplateDefinition::duplicateName($row->name, $format);
                 }
                 $new = [];
                 foreach ($ids as $id) {
-                    $row = LegacyDeviceTemplateDefinitions::read($db, $id);
-                    if (mb_strlen(str_replace('<template_title>', $row->name, $format)) > 255) {
-                        throw new InvalidArgumentException();
-                    }
                     $newId = api_duplicate_device_template($id, $format);
                     if (!$newId) {
                         throw new RuntimeException();
                     } $new[] = (int) $newId;
                 }
                 $ids = $new;
-                $db->commit();
+                DeviceTemplateTransaction::commit($db);
                 $started = false;
                 $status = 'ok';
             } else {
@@ -195,10 +192,10 @@ try {
                 $query = $db->prepare('INSERT INTO settings (name, value) VALUES (?, ?)');
                 $query->execute([$claim, json_encode(['actor' => $actor, 'ids' => $ids, 'status' => 'pending'], JSON_THROW_ON_ERROR)]);
                 // Durable claim survives loss of the response; a retry cannot repeat hooks or remote writes.
-                $db->commit();
+                DeviceTemplateTransaction::commit($db);
                 $claimOwned = true;
                 $started = false;
-                $db->beginTransaction();
+                DeviceTemplateTransaction::begin($db, $config, $tables);
                 $started = true;
                 DeviceTemplateAuthorization::authorize($db, $actor, true);
                 foreach ($ids as $id) {
@@ -253,7 +250,7 @@ try {
                 if (is_error_message() || db_error() !== '' || !$db->inTransaction()) {
                     throw new RuntimeException('Sync had external effects.');
                 }
-                $db->commit();
+                DeviceTemplateTransaction::commit($db);
                 $started = false;
                 $status = 'ok';
             }
@@ -269,10 +266,16 @@ try {
     cacti_log("DEVICE-TEMPLATE-DEFINITION: " . get_class($error) . " file=" . basename($error->getFile()) . " line=" . $error->getLine(), false, "AUDIT");
     $status = $syncStarted ? 'partial' : 'failed';
 } finally {
-    if ($started && $db instanceof PDO && $db->inTransaction()) {
-        $db->rollBack();
+    $rollbackConfirmed = true;
+    if ($started && $db instanceof PDO) {
+        try {
+            DeviceTemplateTransaction::rollback($db);
+        } catch (Throwable) {
+            $rollbackConfirmed = false;
+            $status = $syncStarted || $claimOwned ? 'partial' : 'failed';
+        }
     }
-    if ($claimOwned && $claim !== null && $db instanceof PDO) {
+    if ($rollbackConfirmed && $claimOwned && $claim !== null && $db instanceof PDO) {
         try {
             $query = $db->prepare('UPDATE settings SET value = ? WHERE name = ?');
             $query->execute([json_encode(['actor' => $actor, 'ids' => $ids, 'status' => $status], JSON_THROW_ON_ERROR), $claim]);
@@ -314,16 +317,5 @@ function definitionWorkerLock(PDO $db, int $id, string $revision): void
     $row = LegacyDeviceTemplateDefinitions::read($db, $id, true);
     if (!$row || !hash_equals($row->revision(), $revision)) {
         throw new DeviceEditConflict();
-    }
-}
-function definitionWorkerStorage(PDO $db, array $tables): void
-{
-    $query = $db->prepare('SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (' . implode(',', array_fill(0, count($tables), '?')) . ')');
-    $query->execute($tables);
-    $engines = $query->fetchAll(PDO::FETCH_KEY_PAIR);
-    foreach ($tables as $table) {
-        if (strtoupper($engines[$table] ?? '') !== 'INNODB') {
-            throw new RuntimeException('Nontransactional storage.');
-        }
     }
 }

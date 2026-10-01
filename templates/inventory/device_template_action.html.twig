@@ -1,3 +1,5 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
 {% extends 'base.html.twig' %}{% trans_default_domain 'inventory' %}{% block title %}{{ 'Device Templates'|trans }} · Kadupul{% endblock %}
 {% block body %}<main><h1>{{ 'Confirm device template action'|trans }}</h1><p>{{ operation|trans }}</p><ul>{% for row in rows %}<li>{{ row.name }}</li>{% endfor %}</ul>
 {% if partial %}<p role="alert">{{ 'Synchronization may have reached devices, collectors or plugins. Reload and inspect their state before retrying. This operation will not be replayed.'|trans }}</p>{% else %}
