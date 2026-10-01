@@ -41,6 +41,20 @@ final class AutomationTreeReplacementNativeTest extends TestCase
             'fallback block comment quote' => array(array('search' => '(?#~#%!@;`=/_\Q)' . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
             'fallback delimiter inside comment' => array(array('search' => '(?#~#%!@;`=/_\Q' . chr(127) . ')' . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
             'fallback extended line comment quote' => array(array('search' => '(?x)#~#%!@;`=/_\Q' . "\n" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback default LF ignores bare CR' => array(array('search' => '(?x)#~#%!@;`=/_' . "\r" . '\Q' . "\n" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback explicit LF ignores bare CR' => array(array('search' => '(*LF)(?x)#~#%!@;`=/_' . "\r" . '\Q' . "\n" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback CR ignores bare LF' => array(array('search' => '(*CR)(?x)#~#%!@;`=/_' . "\n" . '\Q' . "\r" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback CRLF ignores individual newlines' => array(array('search' => '(*CRLF)(?x)#~#%!@;`=/_' . "\r" . '\Q' . "\n\r\n" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback ANYCRLF' => array(array('search' => '(*ANYCRLF)(?x)#~#%!@;`=/_\Q' . "\r" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback ANY vertical tab' => array(array('search' => '(*ANY)(?x)#~#%!@;`=/_\Q' . "\v" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback ANY form feed' => array(array('search' => '(*ANY)(?x)#~#%!@;`=/_\Q' . "\f" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback ANY byte NEL' => array(array('search' => '(*ANY)(?x)#~#%!@;`=/_\Q' . "\x85" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback ANY UTF NEL' => array(array('search' => '(*UTF)(*ANY)(?x)#~#%!@;`=/_\Q' . "\u{85}" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback ANY UTF line separator' => array(array('search' => '(*UTF)(*ANY)(?x)#~#%!@;`=/_\Q' . "\u{2028}" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback ANY UTF paragraph separator' => array(array('search' => '(*UTF)(*ANY)(?x)#~#%!@;`=/_\Q' . "\u{2029}" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback NUL comments' => array(array('search' => '(*NUL)(?x)#~#%!@;`=/_\Q' . "\0" . chr(127) . '\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
+            'fallback control verb hash literal' => array(array('search' => '(?x)(*MARK:~#%!@;`=/_)\Q' . chr(127) . '\E', 'replace' => 'matched', 'target' => chr(127)), array('matched'), ''),
+            'fallback control verb quote literal' => array(array('search' => '(?x)(*MARK:~#%!@;`=/_\Q)\Q' . chr(127) . '\E', 'replace' => 'matched', 'target' => chr(127)), array('matched'), ''),
             'fallback reset extended mode' => array(array('search' => '(?^x)#~#%!@;`=/_\\Q' . "\n" . chr(127) . '\\d+', 'replace' => 'matched', 'target' => chr(127) . '42'), array('matched'), ''),
             'fallback reset disables extended mode' => array(array('search' => '(?x)(?#~#%!@;`=/_)(?^)' . chr(127) . '#\\d+', 'replace' => 'matched', 'target' => chr(127) . '#42'), array('matched'), ''),
             'fallback scoped reset extended mode' => array(array('search' => '(?^x:#~#%!@;`=/_\\Q' . "\n" . chr(127) . '\\d+)#', 'replace' => 'matched', 'target' => chr(127) . '42#'), array('matched'), ''),
@@ -125,7 +139,12 @@ final class AutomationTreeReplacementNativeTest extends TestCase
         $coverage = $this->getTestResultObject()->getCodeCoverage();
         try {
             $fixture = 'automation-module-native.php';
-            $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/' . $fixture, json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
+            $transport = $scenario;
+            if (isset($scenario['search'])) {
+                $transport['search_base64'] = base64_encode($scenario['search']);
+                unset($transport['search']);
+            }
+            $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/' . $fixture, json_encode($transport, JSON_THROW_ON_ERROR), $directory);
             if ($coverage !== null) {
                 $command[] = $directory;
             }

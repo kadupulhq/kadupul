@@ -1996,6 +1996,18 @@ function automation_string_replace($search, $replace, $target)
         $quoted = false;
         $block_comment = false;
         $line_comment = false;
+        $verb_argument = false;
+        $newline = 'LF';
+        $unicode = false;
+        $prefix_offset = 0;
+        while (preg_match('/\G\(\*([A-Z_]+)(?:=[^)]*)?\)/', $search, $prefix, 0, $prefix_offset)) {
+            if (in_array($prefix[1], array('CR', 'LF', 'CRLF', 'ANYCRLF', 'ANY', 'NUL'), true)) {
+                $newline = $prefix[1];
+            } elseif ($prefix[1] === 'UTF') {
+                $unicode = true;
+            }
+            $prefix_offset += strlen($prefix[0]);
+        }
         $extended = false;
         $modes = array();
         $class_start = null;
@@ -2009,7 +2021,20 @@ function automation_string_replace($search, $replace, $target)
             if ($block_comment) {
                 $block_comment = $character !== ')';
             } elseif ($line_comment) {
-                $line_comment = $character !== "\n" && $character !== "\r";
+                $ends_comment = match ($newline) {
+                    'CR' => $character === "\r",
+                    'CRLF' => $character === "\r" && $next === "\n",
+                    'ANYCRLF' => $character === "\r" || $character === "\n",
+                    'NUL' => $character === "\0",
+                    'ANY' => in_array($character, array("\r", "\n", "\v", "\f"), true)
+                        || (!$unicode && $character === "\x85")
+                        || ($unicode && (substr($search, $offset, 2) === "\xc2\x85"
+                            || in_array(substr($search, $offset, 3), array("\xe2\x80\xa8", "\xe2\x80\xa9"), true))),
+                    default => $character === "\n",
+                };
+                $line_comment = !$ends_comment;
+            } elseif ($verb_argument) {
+                $verb_argument = $character !== ')';
             } elseif ($quoted) {
                 if ($character === '\\' && $next === 'E') {
                     $quoted = false;
@@ -2028,6 +2053,8 @@ function automation_string_replace($search, $replace, $target)
                     }
                 } elseif ($character === '[') {
                     $class_start = $offset;
+                } elseif ($character === '(' && preg_match('/\G\(\*[A-Z_]+:/', $search, $verb, 0, $offset)) {
+                    $verb_argument = true;
                 } elseif ($character === '(' && substr($search, $offset, 3) === '(?#') {
                     $block_comment = true;
                 } elseif ($character === '#' && $extended) {
