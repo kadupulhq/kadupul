@@ -2074,6 +2074,10 @@ function automation_string_replace($search, $replace, $target)
         $delimiter = chr(127);
 
         if (strpos($search, $delimiter) !== false) {
+            if (function_exists('cacti_log')) {
+                cacti_log('WARNING: Tree automation regex has no available delimiter. Pattern: ' . json_encode($search, JSON_INVALID_UTF8_SUBSTITUTE), false, 'AUTOM8');
+            }
+
             return array();
         }
     }
@@ -2088,7 +2092,7 @@ function automation_string_replace($search, $replace, $target)
 
     if ($repl === null || preg_last_error() !== PREG_NO_ERROR) {
         if (function_exists('cacti_log')) {
-            cacti_log('WARNING: Tree automation regex failed or exceeded its match limit.', false, 'AUTOM8');
+            cacti_log('WARNING: Tree automation regex failed: ' . preg_last_error_msg() . '. Pattern: ' . json_encode($search, JSON_INVALID_UTF8_SUBSTITUTE), false, 'AUTOM8');
         }
 
         return array();
