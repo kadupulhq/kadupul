@@ -70,7 +70,7 @@ function db_fetch_assoc_prepared(string $sql, array $params = []): array
         throw new RuntimeException('Unexpected row-cache upgrade metadata query.');
     }
     $rows = [];
-    foreach (data_source_profile_reference_triggers() as $name => $definition) {
+    foreach (array_merge(data_source_profile_reference_triggers(), data_source_profile_definition_triggers()) as $name => $definition) {
         $rows[] = ['TRIGGER_NAME' => $name, 'ACTION_TIMING' => $definition['timing'],
             'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']];
     }
