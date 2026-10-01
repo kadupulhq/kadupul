@@ -1997,6 +1997,7 @@ function automation_string_replace($search, $replace, $target)
         $block_comment = false;
         $line_comment = false;
         $verb_argument = false;
+        $callout_end = null;
         $newline = 'LF';
         $unicode = false;
         $prefix_offset = 0;
@@ -2018,7 +2019,17 @@ function automation_string_replace($search, $replace, $target)
             $character = $search[$offset];
             $next = $search[$offset + 1] ?? '';
 
-            if ($block_comment) {
+            if ($callout_end !== null) {
+                if ($character === $callout_end) {
+                    if ($next === $callout_end) {
+                        $delimited_search .= $character . $next;
+                        $offset++;
+                        $escaped = false;
+                        continue;
+                    }
+                    $callout_end = null;
+                }
+            } elseif ($block_comment) {
                 $block_comment = $character !== ')';
             } elseif ($line_comment) {
                 $ends_comment = match ($newline) {
@@ -2053,7 +2064,16 @@ function automation_string_replace($search, $replace, $target)
                     }
                 } elseif ($character === '[') {
                     $class_start = $offset;
-                } elseif ($character === '(' && preg_match('/\G\(\*[A-Z_]+:/', $search, $verb, 0, $offset)) {
+                } elseif ($character === '(' && substr($search, $offset, 3) === '(?C'
+                    && in_array($search[$offset + 3] ?? '', array('`', "'", '"', '^', '%', '#', '$', '{'), true)) {
+                    $opening = $search[$offset + 3];
+                    $callout_end = $opening === '{' ? '}' : $opening;
+                    $modes[] = $extended;
+                    $delimited_search .= substr($search, $offset, 4);
+                    $offset += 3;
+                    $escaped = false;
+                    continue;
+                } elseif ($character === '(' && preg_match('/\G\(\*[A-Z_]*:/', $search, $verb, 0, $offset)) {
                     $verb_argument = true;
                 } elseif ($character === '(' && substr($search, $offset, 3) === '(?#') {
                     $block_comment = true;
