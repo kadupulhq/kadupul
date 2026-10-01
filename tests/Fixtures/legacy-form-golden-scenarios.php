@@ -127,6 +127,12 @@ $methods = array(
         )),
         'db' => array(array('sql' => 'FROM user_auth_group_members', 'rows' => array(array('id' => '2')))),
     ),
+    // A populated same-name setting reaches the PHP 8 string append error in #701.
+    'drop_multi-settings-failure' => array(
+        'form' => $form(array('from_settings' => $field('drop_multi', array('value' => '', 'array' => array('a' => 'A', 'b' => 'B'))))),
+        'settings' => array('from_settings' => 'b'),
+        'expected_exception' => array('class' => 'Error', 'message' => '[] operator not supported for strings'),
+    ),
     'drop_tree-selected' => array(
         'form' => $form(array('parent_item_id' => $field('drop_tree', array('value' => '12', 'tree_id' => '4')))),
         'require' => array('lib/html_tree.php'),

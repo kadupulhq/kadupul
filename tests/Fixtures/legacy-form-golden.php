@@ -728,7 +728,20 @@ if (isset($scenario['form'])) {
     foreach ($scenario['require'] ?? array() as $library) {
         require_once $root . '/' . $library;
     }
-    draw_edit_form($scenario['form']);
+    $exception_recorded = false;
+    try {
+        draw_edit_form($scenario['form']);
+    } catch (Throwable $exception) {
+        $expected = $scenario['expected_exception'] ?? null;
+        if ($expected === null || get_class($exception) !== $expected['class'] || $exception->getMessage() !== $expected['message']) {
+            throw $exception;
+        }
+        $diagnostics[] = get_class($exception) . ': ' . $exception->getMessage();
+        $exception_recorded = true;
+    }
+    if (isset($scenario['expected_exception']) && !$exception_recorded) {
+        throw new RuntimeException('The expected legacy rendering exception did not occur');
+    }
 } else {
     // The page includes ./include/auth.php and ./lib files relative to the
     // working directory. Authentication is outside these scenarios, so only
