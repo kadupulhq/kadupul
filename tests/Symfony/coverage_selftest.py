@@ -165,6 +165,24 @@ def main():
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
+    aggregate_handoff_checks = [
+        'database row does not match submitted actor and source',
+        'graph override data handoff failed',
+        'source graph items were not handed off',
+        'stale concurrent editor was accepted',
+        'stale editor overwrote current value',
+        'updated aggregate graph setting did not propagate to the dependent graph',
+        'unchanged save modified child graph',
+        'failed propagation did not roll back template settings',
+        'failed propagation did not roll back child graph settings',
+        'failed propagation did not restore child graph items',
+        'invalid CSRF token was accepted',
+        'stale delete confirmation was accepted',
+        'stale delete removed changed row',
+        'invalid delete CSRF token was accepted',
+        'child aggregate graph was not unlinked',
+        'template was not deleted',
+    ]
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
@@ -227,6 +245,8 @@ def main():
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
     }
+    failures.update({f'missing-aggregate-handoff-{index}': 'Incomplete Symfony integration'
+                     for index in range(len(aggregate_handoff_checks))})
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -267,6 +287,8 @@ def main():
                 evidence['checks'].remove('supported STACK default survives the worker data handoff')
             elif case == 'missing-aggregate-duplicate-choices-check':
                 evidence['checks'].remove('duplicate-name graph templates retain both selectable identities')
+            elif case.startswith('missing-aggregate-handoff-'):
+                evidence['checks'].remove(aggregate_handoff_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'details-test-hash':
                 evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'sites-test-hash':
