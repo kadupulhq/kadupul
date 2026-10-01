@@ -868,7 +868,7 @@ header_redirect	./lib/auth.php:5333	        header('Location: ' . $config['url_p
 header_redirect	./lib/clog_webapi.php:88	        header('Location: ' . get_current_page());
 header_redirect	./lib/functions.php:8683	    header('Location: ' . $save_url);
 header_redirect	./lib/functions.php:8707	    header('Location: ' . $safe_url, true, $status);
-header_redirect	./lib/html_graph.php:480			header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
+header_redirect	./lib/html_graph.php:496	        header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
 header_redirect	./lib/html_reports.php:1566				header('Location: reports.php');
 header_redirect	./lib/html_reports.php:228			header('Location: ' . get_reports_page());
 header_redirect	./lib/html_reports.php:289					header('Location: reports.php');
