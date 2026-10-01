@@ -39,3 +39,23 @@ if ! grep -q 'authored.txt.*trailing whitespace' "$fixture/failure.log"; then
     exit 1
 fi
 printf 'OK: incoming unchanged whitespace preserved; authored whitespace rejected\n'
+git restore --staged authored.txt
+for excluded in include/vendor tests/Fixtures node_modules; do
+    mkdir -p "$excluded"
+    file="$excluded/authored.php"
+    printf 'invalid PHP with authored trailing space \n' > "$file"
+    git add -f "$file"
+    if bash "$root/.githooks/pre-commit-checks" > "$fixture/excluded-failure.log" 2>&1; then
+        echo "ERROR: authored whitespace was accepted under $excluded" >&2
+        exit 1
+    fi
+    if ! grep -Fq "$file:1: trailing whitespace" "$fixture/excluded-failure.log"; then
+        cat "$fixture/excluded-failure.log"
+        exit 1
+    fi
+    printf '<?php deliberately invalid syntax\n' > "$file"
+    git add -f "$file"
+    bash "$root/.githooks/pre-commit-checks"
+    git restore --staged "$file"
+done
+printf 'OK: PHP exclusions retain authored whitespace validation\n'
