@@ -119,6 +119,8 @@ test('viewers that render the same graph share one cache file', function ($write
     'first weekday on a preset that ignores it' => array(array('preset' => 'GT_LAST_DAY', 'user' => array('first_weekdayid' => '0')),
         array('preset' => 'GT_LAST_DAY', 'user' => array('first_weekdayid' => '1'))),
     'same day shift' => array(array('preset' => 'GT_DAY_SHIFT', 'user' => $shift), array('preset' => 'GT_DAY_SHIFT', 'user' => $shift)),
+    'browser zone with the server zone set between check and write' => array(array_merge($browserZone, array('cookie_offset' => 300, 'check_first' => true)),
+        array_merge($browserZone, array('cookie_offset' => 300))),
 ));
 
 test('the cache file name keeps its layout and appends a fixed-length render key', function () {
@@ -180,3 +182,42 @@ test('a repeated render for a viewer who sees a different graph renders again', 
     'site font size' => array(array('graph' => array(), 'options' => array('font_method' => '0')), array('graph' => array(), 'options' => array('legend_size' => '10'))),
     'window' => array(array('graph' => array('graph_start' => -86400)), array('graph' => array('graph_start' => -3600))),
 ));
+
+// include/global.php applies the CactiTimeZone cookie on every request. On-demand
+// Boost updates then move PHP to the server zone, and the render moves it back.
+test('a viewer in a browser zone gets a cache hit when on-demand updates run before the render', function () {
+    $items = array(rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '00CF00', 'text_format' => 'Inbound')));
+    $options = array('boost_png_cache_enable' => 'on', 'boost_png_cache_directory' => 'rra', 'boost_rrd_update_enable' => 'on',
+        'boost_rrd_update_system_enable' => 'on', 'client_timezone_support' => 'on') + rrd_characterization_options();
+    $session = array('sess_user_id' => 3, 'sess_user_config_array' => array('client_timezone_support' => 'on'), 'sess_config_array' => $options);
+    $calls = array();
+    foreach (array(1, 2) as $request) {
+        // Each request starts in the server zone.
+        $calls[] = array('fn' => 'putenv', 'args' => array('TZ=UTC'));
+        $calls[] = array('fn' => 'cacti_time_zone_set', 'args' => array(300), 'config' => array('is_web' => true), 'globals' => array('_SESSION' => $session));
+        $calls[] = array('fn' => 'rrdtool_function_graph', 'args' => array(7, 0, array(), false, array(), 0), 'config' => array('is_web' => true));
+    }
+    $db = array_merge(array(
+        array('sql' => 'SELECT DISTINCT data_template_rrd.local_data_id', 'result' => array(array('local_data_id' => 11))),
+        array('sql' => 'SELECT realm_id FROM user_auth_realm', 'result' => false),
+        array('sql' => "name='selected_theme'", 'result' => false),
+        array('sql' => "SHOW tables LIKE 'poller_output_boost_arch%'", 'result' => array(array('Tables' => 'poller_output_boost_arch_1'))),
+        array('sql' => 'FROM poller_time', 'result' => false),
+        array('sql' => 'FROM poller_output_boost_temp_', 'result' => array()),
+    ), rrd_characterization_graph_db(rrd_characterization_graph(), $items));
+
+    $results = rrd_characterization_run($this, array(
+        'files' => array('router_traffic_11.rrd'),
+        'options' => $options,
+        'db' => $db,
+        'cookies' => array('CactiTimeZone' => '300'),
+        'replies' => array('graph' => 'PNG rendered by RRDtool'),
+        'writes' => array('UPDATE snmpagent_cache', 'UPDATE `snmpagent_cache`', 'CREATE TEMPORARY TABLE', 'DROP TEMPORARY TABLE', 'INSERT INTO poller_output_boost_temp'),
+        'calls' => $calls,
+    ))['results'];
+    $graphs = fn(array $sent) => count(array_filter($sent, fn($command) => str_starts_with(ltrim($command['stdin']), 'graph')));
+
+    expect($graphs($results[2]['sent']))->toBe(1)
+        ->and($graphs($results[5]['sent']))->toBe(0)
+        ->and($results[5]['returned'])->toBe($results[2]['returned']);
+});

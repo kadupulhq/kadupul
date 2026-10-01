@@ -2262,12 +2262,14 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
     }
 
     /* check the purge the boost poller output cache, and check for a live image file if caching is enabled */
-    $graph_data = boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, $graph_data_array, false);
+    $boost_cache_file = null;
+    $graph_data       = boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, $graph_data_array, false, $boost_cache_file);
     if ($graph_data !== false) {
         return $graph_data;
     }
 
-    /* the cache write must use the key the check above used, which the window defaults below would change */
+    /* the cache write uses the path the check above named; without one it keys the
+     * request as checked, before the window defaults below */
     $boost_cache_request = $graph_data_array;
 
     if (empty($graph_data_array['graph_start'])) {
@@ -3228,7 +3230,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                 $output = rrdtool_execute("$graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrdtool_pipe);
 
-                boost_graph_set_file($output, $local_graph_id, $rra_id, $boost_cache_request);
+                boost_graph_set_file($output, $local_graph_id, $rra_id, $boost_cache_request, $boost_cache_file);
 
                 return $output;
             }

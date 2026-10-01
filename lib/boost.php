@@ -476,7 +476,11 @@ function boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, 
     return $cache_file;
 }
 
-function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$graph_data_array, $return = true)
+/**
+ * $cache_file receives the path the image for this request is cached under;
+ * pass it to boost_graph_set_file() so the write cannot pick another name.
+ */
+function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$graph_data_array, $return = true, &$cache_file = null)
 {
     global $config;
 
@@ -527,6 +531,19 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
         return false;
     }
 
+    if (isset($_SESSION['sess_current_timespan'])) {
+        $timespan = $_SESSION['sess_current_timespan'];
+    } else {
+        $timespan = 0;
+    }
+
+    /* name the image before the on-demand updates below, which move PHP to the
+     * server zone until the render moves it back to the viewer's */
+    $cache_directory = read_config_option('boost_png_cache_directory');
+    if ($cache_directory != '') {
+        $cache_file = boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array);
+    }
+
     /* get the information to populate into the rrd files */
     if (boost_check_correct_enabled()) {
         /* before we make a graph, we need to check for rrd updates and perform them. */
@@ -559,26 +576,13 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
         }
     }
 
-    if (isset($_SESSION['sess_current_timespan'])) {
-        $timespan = $_SESSION['sess_current_timespan'];
-    } else {
-        $timespan = 0;
-    }
-
     /* check the graph cache and use it if it is valid, otherwise turn over to
      * cacti's graphing functions.
      */
     if (boost_return_cached_image($graph_data_array)) {
-        /* if timespan is greater than 1, it is a predefined, if it does not
-         * exist, it is the old fashioned MRTG type graph
-         */
-        $cache_directory = read_config_option('boost_png_cache_directory');
-
         if ($cache_directory != '') {
             if (is_dir($cache_directory)) {
                 if (is_writable($cache_directory)) {
-                    $cache_file = boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array);
-
                     if (file_exists($cache_file)) {
                         $mod_time = filemtime($cache_file);
                         $poller_interval = read_config_option('poller_interval');
@@ -652,12 +656,12 @@ function boost_prep_graph_array($graph_data_array)
 }
 
 /**
- * $graph_data_array must be the array boost_graph_cache_check() was given for
- * this render, before the render filled in any defaults, or the file is written
- * under a name the next check for the same request will not use. The global
- * fallback keeps older three-argument callers working.
+ * $cache_file should be the path boost_graph_cache_check() returned for this
+ * render. Without it the name is built again from $graph_data_array, which must
+ * then be the array the check was given, before the render filled in any
+ * defaults. The global fallback keeps older three-argument callers working.
  */
-function boost_graph_set_file(&$output, $local_graph_id, $rra_id, $graph_data_array = null)
+function boost_graph_set_file(&$output, $local_graph_id, $rra_id, $graph_data_array = null, $cache_file = null)
 {
     global $config, $boost_sock;
 
@@ -696,7 +700,10 @@ function boost_graph_set_file(&$output, $local_graph_id, $rra_id, $graph_data_ar
 
         if ($cache_directory != '') {
             if (is_dir($cache_directory)) {
-                $cache_file = boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array);
+                /* SECURITY: only a PNG name inside the cache directory is written */
+                if (!is_string($cache_file) || dirname($cache_file) !== dirname($cache_directory . '/x') || substr($cache_file, -4) !== '.png') {
+                    $cache_file = boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array);
+                }
 
                 if (is_writable($cache_directory)) {
                     /* if the cache file was created in a prior step, save it */

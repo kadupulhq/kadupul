@@ -20,6 +20,7 @@ require $root . '/tests/Helpers/PhpSource.php';
 $functions = file_get_contents($root . '/lib/functions.php');
 eval(test_php_function_source($functions, 'cacti_browser_zone_enabled')); // nosemgrep: php.lang.security.eval-use.eval-use
 eval(test_php_function_source($functions, 'cacti_time_zone_set')); // nosemgrep: php.lang.security.eval-use.eval-use
+eval(test_php_function_source($functions, 'cacti_system_zone_set')); // nosemgrep: php.lang.security.eval-use.eval-use
 function read_config_option($name)
 {
     $settings = array('boost_png_cache_enable' => 'on', 'boost_png_cache_directory' => $GLOBALS['cacheDirectory'],
@@ -99,7 +100,15 @@ foreach (array('writer', 'reader') as $role) {
 
 boost_fixture_enter($scenario['writer']);
 $image = 'PNG rendered for the writer';
-if (!empty($scenario['writer']['function_scope'])) {
+if (!empty($scenario['writer']['check_first'])) {
+    // rrdtool_function_graph() order: the check names the file, on-demand Boost
+    // updates move PHP to the server zone, then the render writes the image.
+    $graph = $GLOBALS['graph_data_array'];
+    $path = null;
+    boost_graph_cache_check(7, 1, false, $graph, false, $path);
+    cacti_system_zone_set();
+    boost_graph_set_file($image, 7, 1, $graph, $path);
+} elseif (!empty($scenario['writer']['function_scope'])) {
     // remote_agent.php and lib/reports.php build the array locally, not in the global.
     $local = $GLOBALS['graph_data_array'];
     $GLOBALS['graph_data_array'] = array();
