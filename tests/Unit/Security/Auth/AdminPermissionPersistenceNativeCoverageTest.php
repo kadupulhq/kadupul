@@ -65,7 +65,13 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         }
         self::assertSame($expected, $state['permissions']);
         self::assertSame(array(array($principal => 42, 'realm_id' => 7), array($principal => 43, 'realm_id' => 9)), $state['realms']);
-        self::assertSame(array(0, 0, 0, 0), array_column($state['reset'], 'reset_perms'));
+        foreach ($state['reset'] as $account) {
+            if ($account['id'] === 42 || ($group && $account['id'] === 44)) {
+                self::assertGreaterThan(0, $account['reset_perms']);
+            } else {
+                self::assertSame(0, $account['reset_perms']);
+            }
+        }
         self::assertSame($state['initial_session'], $state['session']);
         self::assertSame('', $state['output']);
     }

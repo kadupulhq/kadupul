@@ -20,8 +20,17 @@ $events = array();
 $messages = array();
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$database_hostname = 'native';
+$database_port = 0;
+$database_default = 'auth';
+$database_sessions = array('native:0:auth' => $db);
 $db->sqliteCreateFunction('NOW', static fn() => date('Y-m-d H:i:s'));
 $db->exec("CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER DEFAULT 0, enabled TEXT DEFAULT 'on', locked TEXT DEFAULT '', password TEXT, lastfail INTEGER DEFAULT 0, failed_attempts INTEGER DEFAULT 0, lastlogin INTEGER DEFAULT 0, must_change_password TEXT DEFAULT '', password_change TEXT DEFAULT 'on', login_opts INTEGER DEFAULT 3, show_tree TEXT DEFAULT '', show_list TEXT DEFAULT '', show_preview TEXT DEFAULT '', password_history TEXT DEFAULT '', lastchange INTEGER DEFAULT 0)");
+$db->exec('CREATE TABLE settings (name TEXT PRIMARY KEY,value TEXT)');
+$db->exec("INSERT INTO settings VALUES ('ldap_tls_certificate','2')");
+$db->exec('CREATE TABLE settings_user (user_id INTEGER,name TEXT,value TEXT,PRIMARY KEY(user_id,name))');
+$db->exec("CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY, enabled TEXT, show_tree TEXT, show_list TEXT, show_preview TEXT, login_opts INTEGER DEFAULT 3)");
+$db->exec("INSERT INTO user_auth_group (id,enabled,show_tree,show_list,show_preview) VALUES (5,'on','','','')");
 $db->exec('CREATE TABLE user_log (username TEXT, user_id INTEGER, result INTEGER, ip TEXT, time TEXT)');
 $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)');
 $db->exec('CREATE TABLE user_auth_group_members (user_id INTEGER, group_id INTEGER, show_tree TEXT, show_list TEXT, show_preview TEXT)');
@@ -219,7 +228,7 @@ ob_start();
 register_shutdown_function(static function () use ($db) {
     $html = ob_get_clean();
     $account = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = 42');
-    $state = array('session' => $_SESSION, 'events' => $GLOBALS['events'], 'messages' => $GLOBALS['messages'], 'error' => $GLOBALS['error'] ?? false, 'error_message' => $GLOBALS['error_msg'] ?? '', 'password_error' => $GLOBALS['errorMessage'] ?? '', 'failed_attempts' => $account['failed_attempts'], 'locked' => $account['locked'], 'must_change' => $account['must_change_password'], 'lastlogin' => $account['lastlogin'] > 0, 'password_matches_original' => password_verify('Correct1!', $account['password']), 'password_matches_new' => password_verify('NewCorrect2!', $account['password']), 'legacy_hash_retained' => strlen($account['password']) === 32, 'audit' => $db->query('SELECT result FROM user_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN), 'cache_users' => $db->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'session_users' => $db->query('SELECT user_id FROM sessions ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'html' => $html);
+    $state = array('credential_valid' => isset($_SESSION['sess_user_id']) && auth_session_credentials_valid($account['password']), 'session' => $_SESSION, 'events' => $GLOBALS['events'], 'messages' => $GLOBALS['messages'], 'error' => $GLOBALS['error'] ?? false, 'error_message' => $GLOBALS['error_msg'] ?? '', 'password_error' => $GLOBALS['errorMessage'] ?? '', 'failed_attempts' => $account['failed_attempts'], 'locked' => $account['locked'], 'must_change' => $account['must_change_password'], 'lastlogin' => $account['lastlogin'] > 0, 'password_matches_original' => password_verify('Correct1!', $account['password']), 'password_matches_new' => password_verify('NewCorrect2!', $account['password']), 'legacy_hash_retained' => strlen($account['password']) === 32, 'audit' => $db->query('SELECT result FROM user_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN), 'cache_users' => $db->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'session_users' => $db->query('SELECT user_id FROM sessions ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'html' => $html);
     print json_encode($state, JSON_THROW_ON_ERROR);
 });
 $mode = $scenario['mode'] ?? 'login';
@@ -229,6 +238,7 @@ if ($mode === 'logout') {
 } elseif ($mode === 'password') {
     if (!($scenario['no_session'] ?? false)) {
         $_SESSION['sess_user_id'] = 42;
+        auth_session_bind_credentials(42);
         $_SESSION['sess_change_password'] = true;
     }
     require $root . '/auth_changepassword.php';

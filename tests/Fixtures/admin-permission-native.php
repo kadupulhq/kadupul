@@ -35,6 +35,8 @@ $db->sqliteCreateFunction('RAND', static fn() => random_int(1, 4294967294) / 429
 $db->sqliteCreateFunction('FLOOR', static fn($value) => floor($value));
 $db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, reset_perms INTEGER DEFAULT 0)');
 $db->exec('INSERT INTO user_auth (id) VALUES (41), (42), (43), (44)');
+$db->exec('CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY)');
+$db->exec('INSERT INTO user_auth_group VALUES (42),(43)');
 $db->exec('CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER)');
 $db->exec('INSERT INTO user_auth_group_members VALUES (42, 42), (42, 44), (43, 43)');
 $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER, UNIQUE(user_id, realm_id))');
@@ -46,6 +48,24 @@ $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, item_id INTEGER
 foreach (range(1, 4) as $type) {
     $db->prepare('INSERT INTO user_auth_perms VALUES (42, 100, ?), (42, 101, ?), (43, 100, ?)')->execute(array($type, $type, $type));
     $db->prepare('INSERT INTO user_auth_group_perms VALUES (42, 100, ?), (42, 101, ?), (43, 100, ?)')->execute(array($type, $type, $type));
+}
+function db_fetch_cell_prepared($sql, $params = array())
+{
+    $q = $GLOBALS['db']->prepare(str_replace(' FOR UPDATE', '', $sql));
+    $q->execute($params);
+    return $q->fetchColumn();
+}
+function db_begin_transaction()
+{
+    return $GLOBALS['db']->beginTransaction();
+}
+function db_commit_transaction()
+{
+    return $GLOBALS['db']->commit();
+}
+function db_rollback_transaction()
+{
+    return $GLOBALS['db']->rollBack();
 }
 function db_execute_prepared($sql, $params = array())
 {
