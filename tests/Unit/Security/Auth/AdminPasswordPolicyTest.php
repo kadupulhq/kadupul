@@ -116,7 +116,7 @@ test('an account outside the local realm is not held to the local rules', functi
         ->and($result['messages'])->not->toContain('password_policy');
 });
 
-function admin_realm_save(array $request, array $alice, array $templates = array()): array
+function admin_realm_save(array $request, array $alice, array $templates = array(), array $config = array()): array
 {
     return user_admin_save_probe_run(array(
         'session' => array('sess_user_id' => 1),
@@ -126,7 +126,7 @@ function admin_realm_save(array $request, array $alice, array $templates = array
             $alice + array('id' => 42, 'username' => 'alice', 'password_history' => '', 'enabled' => 'on'),
         ),
         'template_accounts' => $templates,
-        'config' => array('secpass_minlen' => 8, 'secpass_reqnum' => 'on', 'secpass_reqmixcase' => 'on'),
+        'config' => $config + array('secpass_minlen' => 8, 'secpass_reqnum' => 'on', 'secpass_reqmixcase' => 'on'),
         'auth_functions' => array('auth_session_credential_key', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
     ));
 }
@@ -180,6 +180,38 @@ test('a template account is held to the local rules whatever realm is posted', f
 
     expect($result['saved'])->toBeNull()
         ->and($result['messages'])->toContain('password_policy');
+});
+
+// is_template_account() matches the primary administrator as well.
+test('a primary administrator outside the local realm saves without a password and keeps the realm', function (int $realm) {
+    $result = admin_realm_save(
+        array('realm' => $realm, 'full_name' => 'Alice Renamed'),
+        array('realm' => $realm, 'password' => ''),
+        array('42'),
+        array('admin_user' => 42)
+    );
+
+    expect($result['saved']['realm'] ?? null)->toBe($realm)
+        ->and($result['saved']['full_name'] ?? null)->toBe('Alice Renamed')
+        ->and($result['messages'])->not->toContain('password_policy');
+})->with(array('basic' => 2, 'ldap' => 3));
+
+test('a primary administrator outside the local realm keeps the realm when given a password', function () {
+    $result = admin_realm_save(
+        array('realm' => 3, 'password' => 'short', 'password_confirm' => 'short'),
+        array('realm' => 3, 'password' => ''),
+        array('42'),
+        array('admin_user' => 42)
+    );
+
+    expect($result['saved']['realm'] ?? null)->toBe(3)
+        ->and($result['messages'])->not->toContain('password_policy');
+});
+
+test('a template account is saved in the local realm whatever realm is posted', function () {
+    $result = admin_realm_save(array('realm' => 3, 'password' => 'Str0ngpass', 'password_confirm' => 'Str0ngpass'), array('realm' => 0, 'password' => 'hash:Old-pass1'), array('42'));
+
+    expect($result['saved']['realm'] ?? null)->toBe(0);
 });
 
 test('the live check reports the rule a password breaks', function () {

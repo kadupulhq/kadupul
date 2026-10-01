@@ -606,9 +606,10 @@ function form_save()
 
         $old_realm = db_fetch_cell_prepared('SELECT realm FROM user_auth WHERE id = ?', array(get_nfilter_request_var('id')));
 
-        // The local rules follow the realm this save stores. A template account
-        // is always local, whatever realm the request names.
-        if (is_template_account(get_nfilter_request_var('id'))) {
+        // The local rules follow the realm this save stores, in the same order
+        // as the save below: is_template_account() also matches the primary
+        // administrator, who keeps any realm, while a template is always local.
+        if (read_config_option('admin_user') != get_nfilter_request_var('id') && is_template_account(get_nfilter_request_var('id'))) {
             $realm = 0;
         } elseif (get_nfilter_request_var('realm') != '') {
             $realm = get_nfilter_request_var('realm');
