@@ -35,7 +35,7 @@ function treeDraggable() {
 }
 
 async function loadLayout(page) {
-  await page.goto('/tests/e2e/theme-smoke.html');
+  await page.goto('/tests/e2e/theme-smoke.html?theme=modern');
   await page.waitForFunction(() => window.__themeSmokeReady);
   await page.addScriptTag({ url: '/include/js/jquery.tablesorter.js' });
   // Skip the application-ready bootstrap; this fixture supplies its own page.
