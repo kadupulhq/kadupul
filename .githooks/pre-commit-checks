@@ -50,7 +50,7 @@ matches_incoming() {
 	local staged_oid
 	local incoming_head
 	local incoming_oid
-	staged_oid=$(git rev-parse ":$file")
+	staged_oid=$(git rev-parse ":0:$file")
 	for incoming_head in "${merge_heads[@]}"; do
 		if git cat-file -e "$incoming_head:$file" 2>/dev/null; then
 			incoming_oid=$(git rev-parse "$incoming_head:$file")

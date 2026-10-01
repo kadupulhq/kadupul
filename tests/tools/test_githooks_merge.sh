@@ -21,6 +21,11 @@ base=$(git rev-parse HEAD)
 git checkout -qb incoming
 printf 'inherited trailing space \n' > incoming.txt
 git add incoming.txt
+# A colon after an index stage digit is part of the literal filename.
+for file in '0:foo' '1:foo' '2:foo' '3:foo'; do
+    printf 'inherited stage-prefixed trailing space \n' > "$file"
+    git add -- "$file"
+done
 git commit -qm incoming
 git checkout -qb local "$base"
 printf 'local\n' > local.txt
