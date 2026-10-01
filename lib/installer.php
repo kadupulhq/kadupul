@@ -3261,6 +3261,16 @@ class Installer implements JsonSerializable
             $failure = __('Unable to update application defaults.');
         }
 
+        if (empty($failure) && $this->mode != Installer::MODE_POLLER && (int) ($config['poller_id'] ?? 0) <= 1) {
+            require_once __DIR__ . '/cdef_reference.php';
+            try {
+                cdef_reference_install();
+            } catch (Throwable $error) {
+                $failure = __('The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.');
+                $this->addError(Installer::STEP_ERROR, 'CDEF reference contract', $failure);
+            }
+        }
+
         log_install_always('', __('Finished %s Process for v%s', $which, CACTI_VERSION));
 
         set_install_config_option('install_error', $failure);

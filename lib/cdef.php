@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -55,4 +56,54 @@ function get_cdef($cdef_id)
         }
     }
     return $cdef_string;
+}
+
+
+function duplicate_cdef($_cdef_id, $cdef_title)
+{
+    global $fields_cdef_edit;
+
+    $cdef       = db_fetch_row_prepared('SELECT * FROM cdef WHERE id = ?', array($_cdef_id));
+    $cdef_items = db_fetch_assoc_prepared('SELECT * FROM cdef_items WHERE cdef_id = ?', array($_cdef_id));
+    if (!$cdef) {
+        return false;
+    }
+
+    /* substitute the title variable */
+    $cdef['name'] = str_replace('<cdef_title>', $cdef['name'], $cdef_title);
+
+    /* create new entry: host_template */
+    $save['id']   = 0;
+    $save['hash'] = get_hash_cdef(0);
+
+    foreach ($fields_cdef_edit as $field => $array) {
+        if (!preg_match('/^hidden/', $array['method'])) {
+            $save[$field] = $cdef[$field];
+        }
+    }
+
+    $cdef_id = sql_save($save, 'cdef');
+    if ($cdef_id === false || !is_numeric($cdef_id) || (int) $cdef_id < 1) {
+        return false;
+    }
+
+    /* create new entry(s): cdef_items */
+    if (cacti_sizeof($cdef_items) > 0) {
+        foreach ($cdef_items as $cdef_item) {
+            unset($save);
+
+            $save['id']       = 0;
+            $save['hash']     = get_hash_cdef(0, 'cdef_item');
+            $save['cdef_id']  = $cdef_id;
+            $save['sequence'] = $cdef_item['sequence'];
+            $save['type']     = $cdef_item['type'];
+            $save['value']    = $cdef_item['value'];
+
+            $cdef_item_id = sql_save($save, 'cdef_items');
+            if ($cdef_item_id === false || !is_numeric($cdef_item_id) || (int) $cdef_item_id < 1) {
+                return false;
+            }
+        }
+    }
+    return $cdef_id;
 }

@@ -28,8 +28,8 @@ cmd_exec	./lib/functions.php:7625	            exec(sprintf('grep :%s: /etc/passw
 cmd_exec	./lib/functions.php:7928	 * shell_exec() callers that already assemble the command string.
 cmd_exec	./lib/functions.php:7970	    $process = proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/functions.php:8039	 * shell_exec() and expect a string return value.
-cmd_exec	./lib/installer.php:3530	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:3566	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:3540	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:3576	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:845	            $process = @proc_open(
 cmd_exec	./lib/ping.php:149					$result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:151					$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -250,11 +250,11 @@ dynamic_include	./cli/repair_templates.php:11	require_once($config['base_path'] 
 dynamic_include	./cli/repair_templates.php:12	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/replay_rejected_samples.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/sqltable_to_php.php:70		include_once($config['library_path'] . '/database.php');
-dynamic_include	./cli/upgrade_database.php:10	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./cli/upgrade_database.php:11	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/upgrade_database.php:12	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/upgrade_database.php:13	require_once($config['base_path'] . '/install/functions.php');
-dynamic_include	./cli/upgrade_database.php:192			include($upgrade_file);
+dynamic_include	./cli/upgrade_database.php:11	require_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./cli/upgrade_database.php:12	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/upgrade_database.php:13	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/upgrade_database.php:14	require_once($config['base_path'] . '/install/functions.php');
+dynamic_include	./cli/upgrade_database.php:218	        include($upgrade_file);
 dynamic_include	./cmd.php:101	require_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./cmd.php:102	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cmd.php:103	require_once($config['base_path'] . '/lib/rrd.php');
@@ -378,8 +378,8 @@ dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/glo
 dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/import.php:2132	    include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/installer.php:3676	                include_once($upgrade_file);
+dynamic_include	./lib/import.php:2153	    include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/installer.php:3686	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:1016	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/plugins.php:145	                        include_once($plugin_include);
@@ -679,15 +679,15 @@ header_redirect	./cache/index.php:7	header("Location:../index.php");
 header_redirect	./cache/mibcache/index.php:7	header("Location:../../index.php");
 header_redirect	./cache/realtime/index.php:7	header("Location:../index.php");
 header_redirect	./cache/spikekill/index.php:7	header("Location:../index.php");
-header_redirect	./cdef.php:125			header('Location: cdef.php?header=false&action=edit&id=' . (empty($cdef_id) ? get_nfilter_request_var('id') : $cdef_id));
-header_redirect	./cdef.php:153				header('Location: cdef.php?header=false&action=item_edit&cdef_id=' . get_nfilter_request_var('cdef_id') . '&id=' . (empty($cdef_item_id) ? get_nfilter_request_var('id') : $cdef_item_id));
-header_redirect	./cdef.php:155				header('Location: cdef.php?header=false&action=edit&id=' . get_nfilter_request_var('cdef_id'));
-header_redirect	./cdef.php:224			header('Location: cdef.php?header=false');
-header_redirect	./cdef.php:275			header('Location: cdef.php?header=false');
-header_redirect	./cdef.php:36			header('Location: cdef.php?action=edit&id=' . get_request_var('cdef_id'));
-header_redirect	./cdef.php:43			header('Location: cdef.php?action=edit&id=' . get_request_var('cdef_id'));
-header_redirect	./cdef.php:50			header('Location: cdef.php?action=edit&id=' . get_request_var('cdef_id'));
-header_redirect	./cdef.php:531		header('Location: cdef.php?action=edit&header=false&id=' . get_request_var('id'));
+header_redirect	./cdef.php:128	        header('Location: cdef.php?header=false&action=edit&id=' . (empty($cdef_id) ? get_nfilter_request_var('id') : $cdef_id));
+header_redirect	./cdef.php:156	            header('Location: cdef.php?header=false&action=item_edit&cdef_id=' . get_nfilter_request_var('cdef_id') . '&id=' . (empty($cdef_item_id) ? get_nfilter_request_var('id') : $cdef_item_id));
+header_redirect	./cdef.php:158	            header('Location: cdef.php?header=false&action=edit&id=' . get_nfilter_request_var('cdef_id'));
+header_redirect	./cdef.php:198	        header('Location: cdef.php?header=false');
+header_redirect	./cdef.php:251	        header('Location: cdef.php?header=false');
+header_redirect	./cdef.php:37	        header('Location: cdef.php?action=edit&id=' . get_request_var('cdef_id'));
+header_redirect	./cdef.php:44	        header('Location: cdef.php?action=edit&id=' . get_request_var('cdef_id'));
+header_redirect	./cdef.php:51	        header('Location: cdef.php?action=edit&id=' . get_request_var('cdef_id'));
+header_redirect	./cdef.php:522	    header('Location: cdef.php?action=edit&header=false&id=' . get_request_var('id'));
 header_redirect	./cli/index.php:7	header("Location:../index.php");
 header_redirect	./clog.php:23			header('Location: logout.php?action=remote');
 header_redirect	./clog.php:25			header('Location: permission_denied.php');

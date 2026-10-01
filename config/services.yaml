@@ -9,7 +9,14 @@ services:
         resource: '../src/Platform/Infrastructure/'
         # Built by InstallationConnectionMiddleware around each DBAL driver; a
         # container service of its own would have no driver to wrap.
-        exclude: '../src/Platform/Infrastructure/Doctrine/InstallationConnectionDriver.php'
+        exclude:
+            - '../src/Platform/Infrastructure/Doctrine/InstallationConnectionDriver.php'
+            # Native schema services are built with the explicit primary PDO
+            # connection at the legacy installer/CLI boundary.
+            - '../src/Platform/Infrastructure/Legacy/CdefReferenceContract.php'
+            - '../src/Platform/Infrastructure/Legacy/CdefReferenceReadiness.php'
+            - '../src/Platform/Infrastructure/Legacy/CdefReferenceReadinessProcedure.php'
+            - '../src/Platform/Infrastructure/Legacy/CdefReferenceTriggers.php'
 
     # Public so a cli/ shim can reach it through the kernel container before running
     # a command, instead of passing the output mode as a hidden command option.
