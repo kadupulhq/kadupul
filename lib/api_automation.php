@@ -1993,16 +1993,28 @@ function automation_string_replace($search, $replace, $target)
 
         // Escape only unescaped fallback delimiters; preserve backslash parity.
         $escaped = false;
+        $quoted = false;
         $delimited_search = '';
 
         for ($offset = 0, $length = strlen($search); $offset < $length; $offset++) {
             $character = $search[$offset];
 
-            if ($character === $delimiter && !$escaped) {
-                $delimited_search .= '\\';
+            if ($character === '\\' && ($search[$offset + 1] ?? '') === 'E' && $quoted) {
+                $quoted = false;
+            } elseif ($character === '\\' && !$escaped && ($search[$offset + 1] ?? '') === 'Q' && !$quoted) {
+                $quoted = true;
             }
 
-            $delimited_search .= $character;
+            if ($character === $delimiter && $quoted) {
+                // An escape inside \Q is literal: leave quoting around this byte.
+                $delimited_search .= '\\E\\' . $character . '\\Q';
+            } else {
+                if ($character === $delimiter && !$escaped) {
+                    $delimited_search .= '\\';
+                }
+
+                $delimited_search .= $character;
+            }
             $escaped = $character === '\\' ? !$escaped : false;
         }
 
