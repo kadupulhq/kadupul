@@ -134,6 +134,8 @@ function api_auth_logout_everywhere() {
 		db_execute_prepared('DELETE FROM user_auth_cache
 			WHERE user_id = ?',
 			array($user));
+
+		auth_session_epoch_advance($user);
 	}
 }
 
@@ -142,8 +144,10 @@ function api_auth_clear_user_settings() {
 
 	if (!empty($user)) {
 		if (isset_request_var('tab') && get_nfilter_request_var('tab') == 'general') {
-			db_execute_prepared('DELETE FROM settings_user
-				WHERE user_id = ?',
+			/* deleting the counter would bring back the sessions "logout everywhere" ended */
+			db_execute_prepared("DELETE FROM settings_user
+				WHERE user_id = ?
+				AND name != 'session_epoch'",
 				array($user));
 
 			kill_session_var('sess_user_config_array');
@@ -166,9 +170,10 @@ function api_auth_clear_user_setting($name) {
 
 	if (!empty($user)) {
 		if (isset_request_var('tab') && get_nfilter_request_var('tab') == 'general') {
-			db_execute_prepared('DELETE FROM settings_user
+			db_execute_prepared("DELETE FROM settings_user
 				WHERE user_id = ?
-				AND name = ?',
+				AND name = ?
+				AND name != 'session_epoch'",
 				array($user, $name));
 
 			foreach($settings_user as $tab => $settings) {

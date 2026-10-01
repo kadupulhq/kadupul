@@ -150,6 +150,7 @@ $GLOBALS['probe'] = array(
 	'config'         => $scenario['config'] ?? array(),
 	'users'          => $scenario['users'] ?? array(),
 	'cache'          => $scenario['cache'] ?? array(),
+	'settings_user'  => $scenario['settings_user'] ?? array(),
 	'realms'         => $scenario['realms'] ?? null,
 	'groups'         => $scenario['groups'] ?? array(),
 	'group_members'  => $scenario['group_members'] ?? array(),
@@ -180,18 +181,23 @@ function probe_user_rows(string $sql, array $params) : array {
 		return array_values($GLOBALS['probe']['users']);
 	}
 
-	preg_match_all("/`?([a-z_]+)`?\s*=\s*(\?|'[^']*'|\d+)/i", $where, $matches, PREG_SET_ORDER);
+	preg_match_all("/`?([a-z_]+)`?\s*(!?=)\s*(\?|'[^']*'|\d+)/i", $where, $matches, PREG_SET_ORDER);
 
 	$bind    = 0;
 	$filters = array();
 
 	foreach ($matches as $match) {
-		$filters[] = array($match[1], $match[2] === '?' ? $params[$bind++] : trim($match[2], "'"));
+		$filters[] = array($match[1], $match[3] === '?' ? $params[$bind++] : trim($match[3], "'"), $match[2] === '!=');
 	}
 
 	foreach ($GLOBALS['probe']['users'] as $row) {
 		foreach ($filters as $filter) {
-			if (!array_key_exists($filter[0], $row) || (string) $row[$filter[0]] !== (string) $filter[1]) {
+			if ($filter[2]) {
+				/* a column the fixture leaves out holds the schema default, '' */
+				if ((string) ($row[$filter[0]] ?? '') === (string) $filter[1]) {
+					continue 2;
+				}
+			} elseif (!array_key_exists($filter[0], $row) || (string) $row[$filter[0]] !== (string) $filter[1]) {
 				continue 2;
 			}
 		}
@@ -275,6 +281,16 @@ function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = 
 		foreach ($GLOBALS['probe']['cache'] as $row) {
 			if ($row['user_id'] == $params[0] && $row['token'] === $params[1] && $row['hostname'] === $params[2]) {
 				return $row['user_id'];
+			}
+		}
+
+		return false;
+	}
+
+	if (strpos($sql, 'FROM settings_user') !== false) {
+		foreach ($GLOBALS['probe']['settings_user'] as $row) {
+			if ($row['user_id'] == $params[0] && $row['name'] === $params[1]) {
+				return $row['value'];
 			}
 		}
 

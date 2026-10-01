@@ -170,14 +170,16 @@ function check_auth_cookie() {
 					FROM user_auth
 					WHERE id = ?
 					AND realm = 0
-					AND enabled = 'on'",
+					AND enabled = 'on'
+					AND locked != 'on'",
 					array($user_id));
 			} else {
 				$user_info = db_fetch_row_prepared("SELECT id, realm, username
 					FROM user_auth
 					WHERE id = ?
 					AND realm = ?
-					AND enabled = 'on'",
+					AND enabled = 'on'
+					AND locked != 'on'",
 					array($user_id, $realm_id));
 			}
 
@@ -5148,6 +5150,8 @@ function cacti_auth_transition($user_id, $reason = 'login') {
 
 	auth_session_bind_credentials($user_id);
 
+	$_SESSION['sess_user_epoch'] = auth_session_epoch($user_id);
+
 	cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
 
 	return true;
@@ -5202,12 +5206,17 @@ function auth_session_bind_credentials($user_id) {
  * An account that can not be read is left to the existing checks, as before.
  * A session opened before this check existed is bound on its first request.
  *
- * @param  (int) $user_id The account the session belongs to
+ * @param  (int)         $user_id  The account the session belongs to
+ * @param  (string|null) $password The stored hash when the caller already read it
  *
  * @return (bool) false when the password changed after the session was bound
  */
-function auth_session_credentials_valid($user_id) {
-	$key = auth_session_credential_key($user_id);
+function auth_session_credentials_valid($user_id, $password = null) {
+	if ($password === null) {
+		$key = auth_session_credential_key($user_id);
+	} else {
+		$key = hash('sha256', (string) $password);
+	}
 
 	if ($key === false) {
 		return true;
@@ -5224,6 +5233,103 @@ function auth_session_credentials_valid($user_id) {
 	}
 
 	return hash_equals($_SESSION['sess_user_credential'], $key);
+}
+
+/**
+ * auth_session_epoch - the account's "logout everywhere" counter.
+ *
+ * It lives in settings_user so 1.2 needs no schema change. An account that
+ * never used the button has no row, which reads as 0.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (string) The current counter
+ */
+function auth_session_epoch($user_id) {
+	$epoch = db_fetch_cell_prepared('SELECT value
+		FROM settings_user
+		WHERE user_id = ?
+		AND name = ?',
+		array($user_id, 'session_epoch'));
+
+	if ($epoch === false || $epoch === null || $epoch === '') {
+		return '0';
+	}
+
+	return (string) $epoch;
+}
+
+/**
+ * auth_session_epoch_advance - end every other session of the account, and
+ *   keep the current one by binding it to the new counter.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (void)
+ */
+function auth_session_epoch_advance($user_id) {
+	db_execute_prepared("INSERT INTO settings_user
+		(user_id, name, value)
+		VALUES (?, 'session_epoch', '1')
+		ON DUPLICATE KEY UPDATE value = CAST(value AS UNSIGNED) + 1",
+		array($user_id));
+
+	$_SESSION['sess_user_epoch'] = auth_session_epoch($user_id);
+}
+
+/**
+ * auth_session_end_reason - recheck, on every request, that the account
+ *   behind a session may still use it.
+ *
+ * Login and remember-me already refuse a disabled or locked account; this
+ * applies the same rule to a session that was open when an administrator
+ * disabled or locked it, and ends sessions that "logout everywhere" or a
+ * password change replaced.
+ *
+ * The guest account is left to the existing checks. It is saved disabled,
+ * any visitor can lock it by failing to log in as it, and guest pages give
+ * every visitor a new guest session anyway.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (string) Why the session must end, or '' when it may continue
+ */
+function auth_session_end_reason($user_id) {
+	if ($user_id == get_guest_account()) {
+		return auth_session_credentials_valid($user_id) ? '' : 'the password changed';
+	}
+
+	$account = db_fetch_row_prepared('SELECT enabled, locked, password
+		FROM user_auth
+		WHERE id = ?',
+		array($user_id));
+
+	if (!cacti_sizeof($account)) {
+		return 'the account no longer exists';
+	}
+
+	if ($account['enabled'] != 'on') {
+		return 'the account is disabled';
+	}
+
+	if ($account['locked'] == 'on') {
+		return 'the account is locked';
+	}
+
+	if (!auth_session_credentials_valid($user_id, $account['password'])) {
+		return 'the password changed';
+	}
+
+	$epoch = auth_session_epoch($user_id);
+
+	/* a session opened before this check existed is bound on its first request, as the credential is */
+	if (!isset($_SESSION['sess_user_epoch']) || !is_string($_SESSION['sess_user_epoch'])) {
+		$_SESSION['sess_user_epoch'] = $epoch;
+	} elseif (!hash_equals($_SESSION['sess_user_epoch'], $epoch)) {
+		return 'the user logged out everywhere';
+	}
+
+	return '';
 }
 
 /**
