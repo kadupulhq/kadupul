@@ -76,6 +76,7 @@ second implementation or a module boundary needs one.
 | Web-side graph reads through DBAL; collector writes stay on `db_*` | Pending |
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
 | Callers moved to Graphing services; wrappers marked `#[\Deprecated]` | Pending |
+| P0: native explicit-PNG and render-triggered Boost zone corrections with recorded before/after goldens | Planned; before R0/R1 |
 | R0: render characterization per context field and mode, input census, hook string contract, timing script | Planned |
 | R1: `RenderContext` and `GraphRequest` built once per render; Boost key from the context | Planned; after PRs #705 and #710 |
 | R2: escape, `DEF` names, magic CDEF, gradient, date legend, theme and font arguments, business hours to `Domain/Command` | Planned |
@@ -92,7 +93,7 @@ second implementation or a module boundary needs one.
 | R13: wrapper deprecation | Planned |
 
 [Graph rendering pipeline](graphing-render-pipeline.md#slices) gives each of
-R0 to R13 its files, gating tests, risk and rollback. R3 and R4 split the
+P0 and R0 to R13 their files, gating tests, risk and rollback. R3 and R4 split the
 "web-side graph reads" row above, R2 takes the colour helpers from the "RRD file repair" row,
 and R13 is the last pending row.
 
@@ -104,7 +105,7 @@ the split: `rrdtool_cdef_magic_variables()`, `rrdtool_cdef_magic_append()` and
 `rrd_datasource_add()`, `rrd_rra_delete()` and `rrd_rra_clone()`. A move of
 those callers takes its helper along.
 
-Each slice keeps the characterization tests passing unchanged. A slice that
+Each migration slice keeps the P0-corrected characterization tests passing unchanged. A slice that
 has to change a pinned output says so and states why.
 
 ## Decisions
@@ -258,7 +259,17 @@ The request factory captures the effective output format before the cache key
 is built. Existing image/JSON adapters keep their narrow graph-format query
 when no URL override is supplied; other legacy callers resolve equivalent
 metadata at that adapter boundary. Cache keys and response content types use
-the same resolved format; the full graph definition remains a miss-only read.
+the same resolved format; the full graph definition remains a miss-only read. The detailed
+plan records the frozen JSON explicit-PNG defect and render-triggered Boost
+system-zone changes as prerequisite P0 corrections before R0/R1. Native
+regressions must demonstrate the defects and separately reviewed fixes before
+updating only their affected goldens; later migration slices preserve the
+corrected output. Boost gates include no/applied/refused samples and later
+metadata updates, with both timezone settings enabled and either disabled.
+The render instant is captured immediately after authorization, before cache
+and pending-sample work, and remains the single instant in RenderFacts even
+when that work crosses a time boundary. These fixes and tests are proposed;
+this PR changes documentation only.
 
 `RenderGraph` invokes an Application `GraphOptionsHook` port implemented by the
 legacy hook adapter. It returns Domain `RenderResult` outcomes for source HTML,
