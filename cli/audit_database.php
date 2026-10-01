@@ -1076,13 +1076,25 @@ function create_tables($load = true)
             if (file_put_contents($import_file, $schema) !== strlen($schema)) {
                 throw new RuntimeException('Unable to stage the Audit Schema');
             }
-            exec(cacti_escapeshellarg($db_shell) .
-                ' -u' . cacti_escapeshellarg($database_username) .
-                ($database_password !== '' ? ' -p' . cacti_escapeshellarg($database_password) : '') .
-                ' -h' . cacti_escapeshellarg($database_hostname) .
-                ' -P' . cacti_escapeshellarg($database_port) .
-                ' ' . cacti_escapeshellarg($database_default) .
-                ' < ' . cacti_escapeshellarg($import_file), $output, $error);
+            $command = array($db_shell,
+                '--user=' . $database_username,
+                '--host=' . $database_hostname,
+                '--port=' . $database_port,
+                '--database=' . $database_default);
+            $process = proc_open(
+                $command,
+                array(0 => array('file', $import_file, 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)),
+                $pipes,
+                null,
+                array_merge(getenv(), array('MYSQL_PWD' => $database_password))
+            );
+            if (!is_resource($process)) {
+                throw new RuntimeException('Unable to start the Audit Schema client');
+            }
+            // Drain combined output without exposing credentials or blocking the client.
+            stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            $error = proc_close($process);
             if ($error !== 0) {
                 throw new RuntimeException('Audit Schema import failed');
             }

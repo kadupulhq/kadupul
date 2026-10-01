@@ -4,7 +4,11 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-if (!in_array('fixture database; echo ignored', $argv, true)) {
+$database = getenv('AUDIT_TEST_CASE') === 'leading-hyphen' ? '-audit' : 'fixture database; echo ignored';
+if (!in_array('--database=' . $database, $argv, true)
+    || getenv('MYSQL_PWD') !== 'fixture password with quotes \" and spaces'
+    || count($argv) !== 5
+    || array_filter($argv, static fn($argument) => str_starts_with($argument, '-p') || str_contains($argument, 'fixture password'))) {
     exit(2);
 }
 $db = new PDO('sqlite:' . getenv('AUDIT_TEST_SQLITE'));
