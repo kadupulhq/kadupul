@@ -1,7 +1,7 @@
 <?php
 
 /* SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later */
+ * SPDX-License-Identifier: GPL-3.0-or-later */
 
 namespace Kadupul\DataInput\Infrastructure\Symfony\Controller;
 
@@ -27,7 +27,7 @@ use Twig\Environment;
 final class DataInputController
 {
     private const array HEADERS = ['Cache-Control' => 'private, no-store'];
-    #[Route('/data-inputs', name: 'data_inputs', methods: ['GET','HEAD'])]
+    #[Route('/data-inputs', name: 'data_inputs', methods: ['GET', 'HEAD'])]
     public function list(Request $request, ConsoleAccess $console, DataInputAccess $access, DataInputMethods $methods, Environment $twig, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
@@ -42,13 +42,13 @@ final class DataInputController
                     throw new \InvalidArgumentException('Invalid list filters.');
                 }
             }
-            $data = $methods->execute('list', 0, ['filter' => $query['filter'] ?? null,'page' => $query['page'] ?? 1,'rows' => $query['rows'] ?? null,'sort' => $query['sort'] ?? null,'direction' => $query['direction'] ?? null,'clear' => ($query['clear'] ?? '') === '1']);
-            return new Response($twig->render('data_input/list.html.twig', ['data' => $data]), 200, self::HEADERS);
+            $data = $methods->execute('list', 0, ['filter' => $query['filter'] ?? null, 'page' => $query['page'] ?? 1, 'rows' => $query['rows'] ?? null, 'sort' => $query['sort'] ?? null, 'direction' => $query['direction'] ?? null, 'clear' => ($query['clear'] ?? '') === '1']);
+            return new Response($twig->render('data_input/list.html.twig', ['data' => $data, 'saved' => $this->queryString($request, 'saved'), 'retry_ids' => $this->retryIds($request)]), 200, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
     }
-    #[Route('/data-inputs/new', name: 'data_input_create', methods: ['GET','HEAD','POST'])]
+    #[Route('/data-inputs/new', name: 'data_input_create', methods: ['GET', 'HEAD', 'POST'])]
     public function create(Request $request, ConsoleAccess $console, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
@@ -57,7 +57,7 @@ final class DataInputController
         }
         return $this->editor(0, $request, $methods, $forms, $twig, $urls, $translator);
     }
-    #[Route('/data-inputs/{id}/edit', name: 'data_input_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET','HEAD','POST'])]
+    #[Route('/data-inputs/{id}/edit', name: 'data_input_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function edit(int $id, Request $request, ConsoleAccess $console, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
@@ -70,7 +70,7 @@ final class DataInputController
     {
         try {
             $state = $methods->execute('find', $id);
-            $form = $forms->create(DataInputMethodType::class, ($state['method'] ?: ['name' => '','input_string' => '','type_id' => 1]) + ['revision' => $state['revision']], ['existing_type' => (int) ($state['method']['type_id'] ?? 1)]);
+            $form = $forms->create(DataInputMethodType::class, ($state['method'] ?: ['name' => '', 'input_string' => '', 'type_id' => 1]) + ['revision' => $state['revision']], ['existing_type' => (int) ($state['method']['type_id'] ?? 1)]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->getExtraData() !== []) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'data_input')));
@@ -79,8 +79,8 @@ final class DataInputController
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
                 try {
-                    $result = $methods->execute('save', $id, ['revision' => $data['revision'] ?? '','data' => $data]);
-                    return new RedirectResponse($urls->generate('data_input_edit', ['id' => $result['id'],'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
+                    $result = $methods->execute('save', $id, ['revision' => $data['revision'] ?? '', 'data' => $data]);
+                    return new RedirectResponse($urls->generate('data_input_edit', ['id' => $result['id'], 'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
@@ -88,12 +88,12 @@ final class DataInputController
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
                 }
             }
-            return new Response($twig->render('data_input/edit.html.twig', ['state' => $state,'form' => $form->createView(),'saved' => $this->queryString($request, 'saved')]), $status, self::HEADERS);
+            return new Response($twig->render('data_input/edit.html.twig', ['state' => $state, 'form' => $form->createView(), 'saved' => $this->queryString($request, 'saved')]), $status, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
     }
-    #[Route('/data-inputs/{id}/fields/{field}', name: 'data_input_field', requirements: ['id' => '[1-9][0-9]{0,7}','field' => '[0-9]{1,8}'], methods: ['GET','HEAD','POST'])]
+    #[Route('/data-inputs/{id}/fields/{field}', name: 'data_input_field', requirements: ['id' => '[1-9][0-9]{0,7}', 'field' => '[0-9]{1,8}'], methods: ['GET', 'HEAD', 'POST'])]
     public function field(int $id, int $field, Request $request, ConsoleAccess $console, DataInputAccess $access, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
@@ -113,19 +113,19 @@ final class DataInputController
                 return new Response($translator->trans('Field not found.', [], 'data_input'), 404, self::HEADERS);
             }
             $direction = $data['input_output'] ?? $this->queryString($request, 'direction', 'in');
-            if (!in_array($direction, ['in','out'], true)) {
+            if (!in_array($direction, ['in', 'out'], true)) {
                 throw new \InvalidArgumentException('Invalid field direction.');
             }
-            $data ??= ['name' => '','data_name' => '','input_output' => $direction,'type_code' => '','regexp_match' => '','allow_nulls' => '','update_rra' => ''];
-            foreach (['allow_nulls','update_rra'] as $key) {
+            $data ??= ['name' => '', 'data_name' => '', 'input_output' => $direction, 'type_code' => '', 'regexp_match' => '', 'allow_nulls' => '', 'update_rra' => ''];
+            foreach (['allow_nulls', 'update_rra'] as $key) {
                 $data[$key] = $data[$key] === 'on';
             }
-            $placeholders = $direction === 'in' && in_array((int) $state['method']['type_id'], [1,5], true) ? DataInputState::placeholders($state['method']['input_string']) : null;
+            $placeholders = $direction === 'in' && in_array((int) $state['method']['type_id'], [1, 5], true) ? DataInputState::placeholders($state['method']['input_string']) : null;
             if ($placeholders !== null) {
                 $used = array_column(array_filter($state['fields'], static fn(array $item): bool => $item['input_output'] === 'in' && (int) $item['id'] !== $field), 'data_name');
                 $placeholders = array_values(array_diff($placeholders, $used));
             }
-            $form = $forms->create(DataInputFieldType::class, $data + ['revision' => $state['revision']], ['direction' => $direction,'placeholders' => $placeholders]);
+            $form = $forms->create(DataInputFieldType::class, $data + ['revision' => $state['revision']], ['direction' => $direction, 'placeholders' => $placeholders]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->getExtraData() !== []) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'data_input')));
@@ -134,8 +134,8 @@ final class DataInputController
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
                 try {
-                    $result = $methods->execute('field_save', $id, ['field' => $field,'revision' => $data['revision'],'data' => $data]);
-                    return new RedirectResponse($urls->generate('data_input_edit', ['id' => $id,'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
+                    $result = $methods->execute('field_save', $id, ['field' => $field, 'revision' => $data['revision'], 'data' => $data]);
+                    return new RedirectResponse($urls->generate('data_input_edit', ['id' => $id, 'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
@@ -143,12 +143,12 @@ final class DataInputController
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
                 }
             }
-            return new Response($twig->render('data_input/field.html.twig', ['state' => $state,'form' => $form->createView()]), $status, self::HEADERS);
+            return new Response($twig->render('data_input/field.html.twig', ['state' => $state, 'form' => $form->createView()]), $status, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
     }
-    #[Route('/data-inputs/{id}/{operation}', name: 'data_input_action', requirements: ['id' => '[1-9][0-9]{0,7}','operation' => 'delete|duplicate|field_delete|propagate|whitelist'], methods: ['GET','HEAD','POST'])]
+    #[Route('/data-inputs/{id}/{operation}', name: 'data_input_action', requirements: ['id' => '[1-9][0-9]{0,7}', 'operation' => 'delete|duplicate|field_delete|propagate|whitelist'], methods: ['GET', 'HEAD', 'POST'])]
     public function action(int $id, string $operation, Request $request, ConsoleAccess $console, DataInputAccess $access, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
@@ -168,7 +168,7 @@ final class DataInputController
                     throw new \InvalidArgumentException('Field does not belong to this input.');
                 }
             }
-            $form = $forms->create(DataInputActionType::class, ['revision' => $state['revision'],'title' => '<input_title> (1)'], ['duplicate' => $operation === 'duplicate']);
+            $form = $forms->create(DataInputActionType::class, ['revision' => $state['revision'], 'title' => '<input_title> (1)'], ['duplicate' => $operation === 'duplicate']);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->getExtraData() !== []) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'data_input')));
@@ -178,7 +178,7 @@ final class DataInputController
                 $data = $form->getData();
                 try {
                     $result = $methods->execute($operation, $id, $data + ['field' => $field]);
-                    return new RedirectResponse($urls->generate($operation === 'delete' ? 'data_inputs' : 'data_input_edit', $operation === 'delete' ? [] : ['id' => $result['id'],'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
+                    return new RedirectResponse($urls->generate($operation === 'delete' ? 'data_inputs' : 'data_input_edit', $operation === 'delete' ? [] : ['id' => $result['id'], 'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
@@ -186,13 +186,13 @@ final class DataInputController
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
                 }
             }
-            return new Response($twig->render('data_input/action.html.twig', ['state' => $state,'operation' => $operation,'form' => $form->createView()]), $status, self::HEADERS);
+            return new Response($twig->render('data_input/action.html.twig', ['state' => $state, 'operation' => $operation, 'form' => $form->createView()]), $status, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
     }
 
-    #[Route('/data-inputs/actions/{operation}', name: 'data_input_bulk', requirements: ['operation' => 'delete|duplicate'], methods: ['GET','HEAD','POST'])]
+    #[Route('/data-inputs/actions/{operation}', name: 'data_input_bulk', requirements: ['operation' => 'delete|duplicate'], methods: ['GET', 'HEAD', 'POST'])]
     public function bulk(string $operation, Request $request, ConsoleAccess $console, DataInputAccess $access, DataInputMethods $methods, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $actor = $console->consoleActor();
@@ -219,7 +219,7 @@ final class DataInputController
                 $selection[$target] = $state['revision'];
                 $names[] = $state['method']['name'];
             }
-            $form = $forms->create(DataInputActionType::class, ['revision' => json_encode($selection, JSON_THROW_ON_ERROR),'title' => '<input_title> (1)'], ['duplicate' => $operation === 'duplicate']);
+            $form = $forms->create(DataInputActionType::class, ['revision' => json_encode($selection, JSON_THROW_ON_ERROR), 'title' => '<input_title> (1)'], ['duplicate' => $operation === 'duplicate']);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->getExtraData() !== []) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'data_input')));
@@ -232,8 +232,8 @@ final class DataInputController
                     if (!is_array($snapshot) || array_keys($snapshot) !== array_keys($selection)) {
                         throw new \InvalidArgumentException('Invalid selection.');
                     }
-                    $result = $methods->execute('bulk_' . $operation, 0, ['selection' => $snapshot,'title' => $data['title'] ?? '<input_title> (1)']);
-                    return new RedirectResponse($urls->generate('data_inputs', ['saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
+                    $result = $methods->execute('bulk_' . $operation, 0, ['selection' => $snapshot, 'title' => $data['title'] ?? '<input_title> (1)']);
+                    return new RedirectResponse($urls->generate('data_inputs', ['saved' => $result['partial'] ? 'partial' : '1', 'retry_ids' => $operation === 'duplicate' && $result['partial'] ? implode(',', $result['ids']) : '']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
@@ -241,10 +241,18 @@ final class DataInputController
                     $form->addError(new FormError($translator->trans('Invalid selection.', [], 'data_input')));
                 }
             }
-            return new Response($twig->render('data_input/bulk.html.twig', ['names' => $names,'operation' => $operation,'form' => $form->createView()]), $status, self::HEADERS);
+            return new Response($twig->render('data_input/bulk.html.twig', ['names' => $names, 'operation' => $operation, 'form' => $form->createView()]), $status, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
+    }
+    private function retryIds(Request $request): array
+    {
+        $value = $request->query->all()['retry_ids'] ?? '';
+        if (!is_string($value) || strlen($value) > 899 || ($value !== '' && !preg_match('/\A[1-9][0-9]{0,7}(?:,[1-9][0-9]{0,7}){0,99}\z/D', $value))) {
+            throw new \InvalidArgumentException('Invalid selection.');
+        }
+        return $value === '' ? [] : array_values(array_unique(array_map('intval', explode(',', $value))));
     }
     private function queryString(Request $request, string $name, string $default = ''): string
     {

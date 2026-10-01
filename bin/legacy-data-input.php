@@ -27,7 +27,7 @@ try {
         throw new InvalidArgumentException('Invalid payload.');
     }
     $command = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || !is_int($command['actor'] ?? null) || $command['actor'] < 1 || !is_int($command['id'] ?? null) || $command['id'] < 0 || !is_string($command['nonce'] ?? null) || !is_array($command['payload'] ?? null) || !in_array($command['action'] ?? null, ['list','find','save','field_save','field_delete','delete','duplicate','propagate','whitelist','bulk_delete','bulk_duplicate'], true)) {
+    if (!is_array($command) || !is_int($command['actor'] ?? null) || $command['actor'] < 1 || !is_int($command['id'] ?? null) || $command['id'] < 0 || !is_string($command['nonce'] ?? null) || !is_array($command['payload'] ?? null) || !in_array($command['action'] ?? null, ['list', 'find', 'save', 'field_save', 'field_delete', 'delete', 'duplicate', 'propagate', 'whitelist', 'bulk_delete', 'bulk_duplicate'], true)) {
         throw new InvalidArgumentException('Invalid command.');
     }
     $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
@@ -42,7 +42,7 @@ try {
     $id = $command['id'];
     $action = $command['action'];
     $payload = $command['payload'];
-    $writes = !in_array($action, ['list','find'], true);
+    $writes = !in_array($action, ['list', 'find'], true);
     if ($writes) {
         dataInputWorkerStorage($db);
     }
@@ -57,17 +57,17 @@ try {
         }
         $default = (int) (read_config_option('num_rows_table') ?: 25);
         $defaultRows = !isset($payload['rows']) ? (!isset($remembered['rows']) || $remembered['rows'] === '-1') : $payload['rows'] === '-1';
-        $values = array_replace(['filter' => '','rows' => $default,'sort' => 'name','direction' => 'ASC'], $remembered, array_filter($payload, static fn(mixed $value): bool => $value !== null));
+        $values = array_replace(['filter' => '', 'rows' => $default, 'sort' => 'name', 'direction' => 'ASC'], $remembered, array_filter($payload, static fn(mixed $value): bool => $value !== null));
         $payload = $values;
         if ($defaultRows) {
             $payload['rows'] = $default;
         }
         $filter = DataInputState::text($payload['filter'] ?? '', 200);
-        $rows = filter_var($payload['rows'] ?? 25, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1,'max_range' => 5000]]);
-        $page = filter_var($payload['page'] ?? 1, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1,'max_range' => 100000]]);
+        $rows = filter_var($payload['rows'] ?? 25, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5000]]);
+        $page = filter_var($payload['page'] ?? 1, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 100000]]);
         $sort = $payload['sort'] ?? 'name';
         $direction = $payload['direction'] ?? 'ASC';
-        if ($rows === false || $page === false || !in_array($sort, ['name','id','type_id','templates','data_sources'], true) || !in_array($direction, ['ASC','DESC'], true)) {
+        if ($rows === false || $page === false || !in_array($sort, ['name', 'id', 'type_id', 'templates', 'data_sources'], true) || !in_array($direction, ['ASC', 'DESC'], true)) {
             throw new InvalidArgumentException('Invalid list filters.');
         }
         // Preserve installed plugin restrictions with the legacy hook; all supplied
@@ -77,22 +77,22 @@ try {
             $where .= ' AND di.name LIKE ' . $db->quote('%' . $filter . '%');
         }
         $where = api_plugin_hook_function('data_input_sql_where', $where);
-        foreach (['filter' => $filter,'rows' => $defaultRows ? '-1' : (string) $rows,'sort' => $sort,'direction' => $direction] as $key => $value) {
-            db_execute_prepared('REPLACE INTO settings_user (user_id,name,value) VALUES (?,?,?)', [$command['actor'],'twig_data_input_' . $key,$value]);
+        foreach (['filter' => $filter, 'rows' => $defaultRows ? '-1' : (string) $rows, 'sort' => $sort, 'direction' => $direction] as $key => $value) {
+            db_execute_prepared('REPLACE INTO settings_user (user_id,name,value) VALUES (?,?,?)', [$command['actor'], 'twig_data_input_' . $key, $value]);
         }
         if (!is_string($where)) {
             throw new RuntimeException('Invalid plugin restriction.');
         }
         $total = (int) $db->query('SELECT COUNT(*) FROM data_input di ' . $where)->fetchColumn();
         $data = dataInputWorkerRead($db, 'SELECT di.*, SUM(CASE WHEN dtd.local_data_id=0 THEN 1 ELSE 0 END) AS templates, SUM(CASE WHEN dtd.local_data_id>0 THEN 1 ELSE 0 END) AS data_sources FROM data_input di LEFT JOIN data_template_data dtd ON dtd.data_input_id=di.id ' . $where . ' GROUP BY di.id ORDER BY ' . $sort . ' ' . $direction . ',di.id LIMIT ' . (int) $rows . ' OFFSET ' . (($page - 1) * $rows));
-        $result = ['items' => $data,'total' => $total,'filter' => $filter,'rows' => $rows,'default_rows' => $defaultRows,'page' => $page,'sort' => $sort,'direction' => $direction];
+        $result = ['items' => $data, 'total' => $total, 'filter' => $filter, 'rows' => $rows, 'default_rows' => $defaultRows, 'page' => $page, 'sort' => $sort, 'direction' => $direction];
     } elseif ($action === 'find') {
-        $result = $id === 0 ? ['method' => [],'fields' => [],'revision' => '','whitelist' => 'disabled'] : dataInputWorkerState($db, $id);
+        $result = $id === 0 ? ['method' => [], 'fields' => [], 'revision' => '', 'whitelist' => 'disabled'] : dataInputWorkerState($db, $id);
         if ($id > 0 && isset($config['input_whitelist'])) {
             $verified = verify_data_input_whitelist($result['method']['hash'], $result['method']['input_string']);
             $result['whitelist'] = $verified === true ? 'verified' : 'requires_update';
         }
-    } elseif (in_array($action, ['bulk_delete','bulk_duplicate'], true)) {
+    } elseif (in_array($action, ['bulk_delete', 'bulk_duplicate'], true)) {
         $selection = $payload['selection'] ?? null;
         if (!is_array($selection) || $selection === [] || count($selection) > 100) {
             throw new InvalidArgumentException('Invalid selection.');
@@ -137,10 +137,10 @@ try {
         }
         if ($action === 'save') {
             $data = DataInputState::method($payload['data'] ?? []);
-            if ($id === 0 && !in_array($data['type_id'], [1,5], true)) {
+            if ($id === 0 && !in_array($data['type_id'], [1, 5], true)) {
                 throw new InvalidArgumentException('New inputs must use a script type.');
             }
-            if ($state && !in_array($data['type_id'], [1,5,(int) $state['method']['type_id']], true)) {
+            if ($state && !in_array($data['type_id'], [1, 5, (int) $state['method']['type_id']], true)) {
                 throw new InvalidArgumentException('Invalid input type change.');
             }
             if (!cacti_input_string_is_safe($data['input_string'])) {
@@ -176,7 +176,7 @@ try {
             if ($existing && $existing['input_output'] !== $data['input_output']) {
                 throw new InvalidArgumentException('Field direction cannot change.');
             }
-            if (in_array((int) $state['method']['type_id'], [1,5], true) && $data['input_output'] === 'in' && !in_array($data['data_name'], DataInputState::placeholders($state['method']['input_string']), true)) {
+            if (in_array((int) $state['method']['type_id'], [1, 5], true) && $data['input_output'] === 'in' && !in_array($data['data_name'], DataInputState::placeholders($state['method']['input_string']), true)) {
                 throw new InvalidArgumentException('Input field must match a command placeholder.');
             }
             foreach ($state['fields'] as $field) {
@@ -211,7 +211,7 @@ try {
                 dataInputWorkerFieldUnused($db, $id, $fieldId);
             }
             db_execute_prepared('DELETE FROM data_input_data WHERE data_input_field_id=?', [$fieldId]);
-            db_execute_prepared('DELETE FROM data_input_fields WHERE id=? AND data_input_id=?', [$fieldId,$id]);
+            db_execute_prepared('DELETE FROM data_input_fields WHERE id=? AND data_input_id=?', [$fieldId, $id]);
             if ($field['input_output'] === 'in') {
                 generate_data_input_field_sequences($state['method']['input_string'], $id);
             }
@@ -238,7 +238,7 @@ try {
     $status = 'ok';
     // Network collectors and whitelist files are outside the primary transaction.
     // Failures leave the confirmed local edit intact and expose an explicit retry.
-    if (in_array($action, ['save','field_save','field_delete','duplicate','propagate'], true)) {
+    if (in_array($action, ['save', 'field_save', 'field_delete', 'duplicate', 'propagate'], true)) {
         $database_last_error = '';
         push_out_data_input_method($id);
         if (db_error() !== '' || is_error_message() || array_filter($_SESSION['sess_messages'] ?? [], static fn(array $message): bool => ($message['level'] ?? 0) >= MESSAGE_LEVEL_WARN) !== []) {
@@ -258,7 +258,7 @@ try {
             throw new RuntimeException('Whitelist is not writable.');
         }
         $output = [];
-        $code = cacti_exec(read_config_option('path_php_binary'), ['-q',$config['base_path'] . '/cli/input_whitelist.php','--update','--push','--id=' . $id], $output, false);
+        $code = cacti_exec(read_config_option('path_php_binary'), ['-q', $config['base_path'] . '/cli/input_whitelist.php', '--update', '--push', '--id=' . $id], $output, false);
         if ($code !== 0 || verify_data_input_whitelist($state['method']['hash'], $state['method']['input_string']) !== true) {
             $status = 'partial';
         } else {
@@ -288,8 +288,8 @@ try {
 while (ob_get_level() > 0) {
     ob_end_clean();
 }
-echo 'KADUPUL_DATA_INPUT_RESULT=' . json_encode(['actor' => $command['actor'] ?? 0,'action' => $command['action'] ?? '','request_id' => $command['id'] ?? 0,'nonce' => $command['nonce'] ?? '','status' => $status,'result' => $result], JSON_THROW_ON_ERROR) . "\n";
-exit(in_array($status, ['ok','partial'], true) ? 0 : 1);
+echo 'KADUPUL_DATA_INPUT_RESULT=' . json_encode(['actor' => $command['actor'] ?? 0, 'action' => $command['action'] ?? '', 'request_id' => $command['id'] ?? 0, 'nonce' => $command['nonce'] ?? '', 'status' => $status, 'result' => $result], JSON_THROW_ON_ERROR) . "\n";
+exit(in_array($status, ['ok', 'partial'], true) ? 0 : 1);
 
 function dataInputWorkerRead(PDO $db, string $sql, array $params = []): array
 {
@@ -307,7 +307,7 @@ function dataInputWorkerState(PDO $db, int $id, bool $lock = false): array
     $fields = dataInputWorkerRead($db, 'SELECT * FROM data_input_fields WHERE data_input_id=? ORDER BY id' . $suffix, [$id]);
     $counts = dataInputWorkerRead($db, 'SELECT SUM(CASE WHEN local_data_id=0 THEN 1 ELSE 0 END) AS templates,SUM(CASE WHEN local_data_id>0 THEN 1 ELSE 0 END) AS data_sources FROM data_template_data WHERE data_input_id=?', [$id])[0];
     $counts = ['templates' => (int) ($counts['templates'] ?? 0), 'data_sources' => (int) ($counts['data_sources'] ?? 0)];
-    return ['method' => $method,'fields' => $fields,'counts' => $counts,'revision' => DataInputState::revision($method, $fields),'whitelist' => 'disabled'];
+    return ['method' => $method, 'fields' => $fields, 'counts' => $counts, 'revision' => DataInputState::revision($method, $fields), 'whitelist' => 'disabled'];
 }
 function dataInputWorkerFieldUnused(PDO $db, int $id, int $fieldId): void
 {
@@ -324,7 +324,7 @@ function dataInputWorkerMethodUnused(PDO $db, int $id): void
 }
 function dataInputWorkerStorage(PDO $db): void
 {
-    foreach (['data_input','data_input_fields','data_input_data','data_template_data','data_template_rrd','settings','user_auth','user_auth_realm','user_auth_group','user_auth_group_members','user_auth_group_realm'] as $table) {
+    foreach (['data_input', 'data_input_fields', 'data_input_data', 'data_template_data', 'data_template_rrd', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'] as $table) {
         $rows = dataInputWorkerRead($db, 'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?', [$table]);
         if (strtoupper($rows[0]['ENGINE'] ?? '') !== 'INNODB') {
             throw new RuntimeException('Transactional storage required.');

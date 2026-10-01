@@ -1,7 +1,7 @@
 <?php
 
 /* SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later */
+ * SPDX-License-Identifier: GPL-3.0-or-later */
 
 namespace Kadupul\DataInput\Infrastructure\Legacy;
 
@@ -19,10 +19,10 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
     public function execute(int $actorId, string $action, int $id, array $payload = []): array
     {
         $nonce = bin2hex(random_bytes(16));
-        $command = ['actor' => $actorId,'action' => $action,'id' => $id,'payload' => $payload,'nonce' => $nonce];
+        $command = ['actor' => $actorId, 'action' => $action, 'id' => $id, 'payload' => $payload, 'nonce' => $nonce];
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name='path_php_binary'")->fetchColumn();
         $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . '/php';
-        $process = new Process([$binary,$this->projectDir . '/bin/legacy-data-input.php'], $this->projectDir);
+        $process = new Process([$binary, $this->projectDir . '/bin/legacy-data-input.php'], $this->projectDir);
         $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         $process->setTimeout(180);
         $outcome = AuditEvent::FAILED;
@@ -48,7 +48,7 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
             if ($status === 'invalid') {
                 throw new \InvalidArgumentException($response['result']['message'] ?? 'Invalid data input.');
             }
-            if (!$process->isSuccessful() || !in_array($status, ['ok','partial'], true)) {
+            if (!$process->isSuccessful() || !in_array($status, ['ok', 'partial'], true)) {
                 throw new \RuntimeException('Operation failed. Reload before retrying.');
             }
             $result = $response['result'];
@@ -63,7 +63,7 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
             $outcome = $status === 'ok' ? AuditEvent::SUCCEEDED : AuditEvent::FAILED;
             return $response['result'] + ['partial' => $status === 'partial'];
         } finally {
-            if (!in_array($action, ['list','find'], true)) {
+            if (!in_array($action, ['list', 'find'], true)) {
                 try {
                     $this->audit->record(new AuditEvent($nonce, $actorId, 'data-input.' . $action, 'data-input', (string) ($response['result']['id'] ?? $id), $decision, $outcome));
                 } catch (\Throwable) { /* Audit cannot overwrite confirmed persistence. */

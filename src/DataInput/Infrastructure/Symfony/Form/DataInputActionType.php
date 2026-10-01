@@ -1,7 +1,7 @@
 <?php
 
 /* SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later */
+ * SPDX-License-Identifier: GPL-3.0-or-later */
 
 namespace Kadupul\DataInput\Infrastructure\Symfony\Form;
 
@@ -17,11 +17,11 @@ final class DataInputActionType extends AbstractType
     {
         $builder->add('revision', HiddenType::class);
         if ($options['duplicate']) {
-            $builder->add('title', TextType::class, ['label' => 'Name format','trim' => false,'attr' => ['maxlength' => 200]]);
+            $builder->add('title', TextType::class, ['label' => 'Name format', 'trim' => false, 'attr' => ['maxlength' => 200]]);
         }
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['csrf_token_id' => 'data_input_action','translation_domain' => 'data_input','duplicate' => false]);
+        $resolver->setDefaults(['csrf_token_id' => 'data_input_action', 'translation_domain' => 'data_input', 'duplicate' => false]);
     }
 }
