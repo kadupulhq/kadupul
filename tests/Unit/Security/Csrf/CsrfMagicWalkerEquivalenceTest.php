@@ -119,9 +119,29 @@ test('the walkers agree when the regular expression hits a PCRE limit', function
 
 	try {
 		$page = csrf_walker_device_page(50);
-		expect(preg_match('~\G(?:<[^>]*+>|[^<]++){0,1000}+~', $page))->toBeFalse()
+		expect(preg_match(csrf_plain_tag_pattern(), $page))->toBeFalse()
 			->and(csrf_walker_mismatches(array('device list' => $page) + csrf_walker_soup(300, 5)))->toBe(array());
 	} finally {
 		ini_set('pcre.backtrack_limit', $limit);
 	}
+});
+
+test('pages with many scripts take time in proportion to their size', function () {
+	$time = function ($scripts) {
+		$page = "<html><body><form method='post'></form>" . str_repeat('<script>var a = 1;</script>', $scripts) .
+			"<form method='post'></form></body></html>";
+		$start = microtime(true);
+		$output = csrf_rewrite_forms($page, CSRF_WALKER_FIELD);
+		expect(substr_count($output, CSRF_WALKER_FIELD))->toBe(2);
+
+		return microtime(true) - $start;
+	};
+
+	$time(1000);
+	$small = $time(4000);
+	$large = $time(32000);
+
+	// Eight times the scripts; a search to the end of the page for each one
+	// made this about seventy times slower.
+	expect($large / $small)->toBeLessThan(20);
 });

@@ -134,21 +134,14 @@ function csrf_scan_tags($buffer) {
 	// Their content parses differently with scripting off, in SVG or MathML,
 	// or in a frameset.
 	$unsupported = array('noscript' => true, 'plaintext' => true, 'svg' => true, 'math' => true, 'frameset' => true);
-	/* Runs of text and plain tags are skipped by a regular expression. A
-	 * plain tag has an ordinary name and attributes that are a name, or a
-	 * name, "=" and a quoted value, each after whitespace or "/".
-	 * csrf_parse_tag() ends such a tag at the same ">", so the loop below
-	 * only reads the rest. Each match takes at most 1000 tokens to stay
-	 * within the PCRE backtracking limit. */
-	$special = csrf_ascii_caseless('form|frameset|base|select|svg|style|script|template|textarea|title|' .
-		'noscript|noembed|noframes|plaintext|math|xmp|iframe');
-	$skip = '~(?(DEFINE)(?<plain>[^<]++|</?(?!(?:' . $special . ')[\t\n\f\r />])' .
-		'[A-Za-z][^\t\n\f\r />"\'=]*+(?:[\t\n\f\r /]++(?:[^\t\n\f\r />"\'=]++' .
-		'(?:=[\t\n\f\r ]*+(?:"[^"]*+"|\'[^\']*+\'))?+)?+)*+>))\G(?&plain){0,1000}+~';
+	$skip = csrf_plain_tag_pattern();
 	$tags = array();
 	$length = strlen($buffer);
 	$offset = 0;
 	$fast = true;
+	// Offsets only grow, so the next "<!--" is searched for again only once
+	// the scan has passed it.
+	$comment = -1;
 
 	while (true) {
 		while ($fast && ($skipped = preg_match($skip, $buffer, $match, 0, $offset)) === 1 && $match[0] !== '') {
@@ -220,14 +213,17 @@ function csrf_scan_tags($buffer) {
 		}
 
 		if (!$end_tag && isset($raw[$name])) {
-			if (!preg_match('#</' . csrf_ascii_caseless($name) . '(?=[\t\n\f\r />])#', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
+			$close = csrf_end_tag_offset($buffer, $name, $offset);
+			if ($close === false) {
 				return array('tags' => $tags, 'stop' => $offset);
 			}
 
 			// "<!--" inside a script can keep a later "</script>" from ending it.
-			$close = $match[0][1];
-			$comment = $name === 'script' ? strpos($buffer, '<!--', $offset) : false;
-			if ($comment !== false && $comment < $close) {
+			if ($name === 'script' && $comment !== false && $comment < $offset) {
+				$comment = strpos($buffer, '<!--', $offset);
+			}
+
+			if ($name === 'script' && $comment !== false && $comment < $close) {
 				return array('tags' => $tags, 'stop' => $offset);
 			}
 
@@ -236,6 +232,49 @@ function csrf_scan_tags($buffer) {
 	}
 
 	return array('tags' => $tags, 'stop' => false);
+}
+
+/**
+ * Runs of text and plain tags are skipped by this regular expression. A plain
+ * tag is a start tag the scan does not treat specially, or an end tag it does
+ * not list, whose attributes are a name, or a name, "=" and a quoted value,
+ * each after whitespace or "/". csrf_parse_tag() ends such a tag at the same
+ * ">", so the scan reads only the rest. Each match takes at most 1000 tokens
+ * to stay within the PCRE backtracking limit.
+ */
+function csrf_plain_tag_pattern() {
+	static $pattern = null;
+
+	if ($pattern === null) {
+		$special = csrf_ascii_caseless('form|frameset|base|select|svg|style|script|template|textarea|title|' .
+			'noscript|noembed|noframes|plaintext|math|xmp|iframe');
+		$listed_end = csrf_ascii_caseless('form|base|select|template');
+		$pattern = '~(?(DEFINE)(?<plain>[^<]++|(?:<(?!(?:' . $special . ')[\t\n\f\r />])|</(?!(?:' . $listed_end . ')[\t\n\f\r />]))' .
+			'[A-Za-z][^\t\n\f\r />"\'=]*+(?:[\t\n\f\r /]++(?:[^\t\n\f\r />"\'=]++' .
+			'(?:=[\t\n\f\r ]*+(?:"[^"]*+"|\'[^\']*+\'))?+)?+)*+>))\G(?&plain){0,1000}+~';
+	}
+
+	return $pattern;
+}
+
+/**
+ * Returns the offset of the first "</name" at or after $offset that is
+ * followed by whitespace, "/" or ">", or false when there is none.
+ */
+function csrf_end_tag_offset($buffer, $name, $offset) {
+	$length = strlen($name);
+
+	while (($offset = strpos($buffer, '</', $offset)) !== false) {
+		$next = substr($buffer, $offset + 2 + $length, 1);
+		if ($next !== '' && strpos("\t\n\f\r />", $next) !== false &&
+			csrf_ascii_lower(substr($buffer, $offset + 2, $length)) === $name) {
+			return $offset;
+		}
+
+		$offset += 2;
+	}
+
+	return false;
 }
 
 /**
