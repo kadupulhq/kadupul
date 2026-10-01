@@ -354,6 +354,9 @@ def main():
                 worker['lines']['0'] = 1
             elif case == 'unmeasured-worker':
                 worker['lines'] = {line: -1 for line in worker['lines']}
+            elif case == 'unmeasured-aggregate-worker':
+                aggregate_worker = data['files'][prefix + 'bin/legacy-aggregate-template.php']
+                aggregate_worker['lines'] = {line: -1 for line in aggregate_worker['lines']}
             elif case == 'unmeasured-site-editor':
                 editor = data['files'][prefix + 'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php']
                 editor['lines'] = {line: -1 for line in editor['lines']}

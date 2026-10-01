@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Real HTTP/MariaDB aggregate-template create/edit/delete scenario."""
 
 from __future__ import annotations
