@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 final class UtilityLogPersistenceTest extends TestCase
 {
     /** @dataProvider retainedHistoryCases */
-    public function testCleanupRetainsTheNewestLoginAndTokenForEachCurrentPrincipal(int $count): void
+    public function testCleanupRetainsTheNewestLoginAndTokenForEachCurrentPrincipal(int $count, bool $current): void
     {
         if (!getenv('KADUPUL_TEST_MYSQL_DSN')) {
             self::markTestSkipped('A real MySQL or MariaDB connection is required.');
@@ -25,7 +25,7 @@ final class UtilityLogPersistenceTest extends TestCase
             file_put_contents($directory . '/' . $stub, '<?php');
         }
         $coverage = \PHPUnit\Runner\CodeCoverage::instance()->isActive() ? \PHPUnit\Runner\CodeCoverage::instance()->codeCoverage() : null;
-        $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/utility-log-native.php', json_encode(['rows' => $count], JSON_THROW_ON_ERROR), $directory];
+        $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/utility-log-native.php', json_encode(['rows' => $count, 'current' => $current], JSON_THROW_ON_ERROR), $directory];
         if ($coverage !== null) {
             $command[] = 'coverage';
         }
@@ -39,11 +39,15 @@ final class UtilityLogPersistenceTest extends TestCase
             self::assertSame(0, proc_close($process), $stderr . $stdout);
             self::assertSame('', $stderr);
             $state = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
-            self::assertCount(4, $state['rows']);
-            self::assertSame([1, 1, 2, 2], array_column($state['rows'], 'user_id'));
-            self::assertSame([1, 2, 1, 2], array_column($state['rows'], 'result'));
-            self::assertSame(["quote' principal", "quote' principal", 'other principal', 'other principal'], array_column($state['rows'], 'username'));
-            self::assertSame(array_fill(0, 4, sprintf('2026-09-%02d 12:00:00', $count)), array_column($state['rows'], 'time'));
+            if ($current) {
+                self::assertCount(4, $state['rows']);
+                self::assertSame([1, 1, 2, 2], array_column($state['rows'], 'user_id'));
+                self::assertSame([1, 2, 1, 2], array_column($state['rows'], 'result'));
+                self::assertSame(["quote' principal", "quote' principal", 'other principal', 'other principal'], array_column($state['rows'], 'username'));
+                self::assertSame(array_fill(0, 4, sprintf('2026-09-%02d 12:00:00', $count)), array_column($state['rows'], 'time'));
+            } else {
+                self::assertSame([], $state['rows']);
+            }
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
@@ -66,6 +70,6 @@ final class UtilityLogPersistenceTest extends TestCase
 
     public static function retainedHistoryCases(): array
     {
-        return ['single entries' => [1], 'multiple entries' => [4]];
+        return ['single entries' => [1, true], 'multiple entries' => [4, true], 'no current accounts' => [4, false]];
     }
 }

@@ -1261,12 +1261,13 @@ function utilities_clear_user_log()
             );
         }
 
-        /* delete inactive users */
-        db_execute('DELETE
+    }
+
+    /* delete inactive users, including when no accounts remain */
+    db_execute('DELETE
 			FROM user_log
 			WHERE user_id NOT IN (SELECT id FROM user_auth)
 			OR username NOT IN (SELECT username FROM user_auth)');
-    }
 }
 
 function utilities_view_logfile()

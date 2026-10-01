@@ -62,7 +62,9 @@ try {
     $insertLog = $db->prepare('INSERT INTO `' . $tables['user_log'] . '` VALUES (?, ?, ?, ?, ?)');
     $rowId = 0;
     foreach ([1 => "quote' principal", 2 => 'other principal'] as $userId => $username) {
-        $insertUser->execute([$userId, $username]);
+        if ($scenario['current']) {
+            $insertUser->execute([$userId, $username]);
+        }
         foreach ([0, 1, 2] as $result) {
             foreach (range(1, $scenario['rows']) as $ordinal) {
                 // Insert newest first; deletion must use time, not insertion order.
