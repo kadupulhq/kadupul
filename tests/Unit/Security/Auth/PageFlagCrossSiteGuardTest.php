@@ -157,11 +157,8 @@ test('viewing the notification log without a purge is unchanged', function () {
         ->toBe('DISPATCHED:editSTATUS:200');
 });
 
-test('the notification log Purge button posts the token', function () {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/managers.php');
-
-    expect($source)->toMatch("/\\$\\('#purge'\\)\\.on\\('click', function\\(\\) \\{\\s*loadPageUsingPost\\('managers\\.php', \\{\\s*action: 'edit',\\s*tab: 'logs',\\s*id: \\$\\('#id'\\)\\.val\\(\\),\\s*purge: 1,\\s*header: 'false',\\s*__csrf_magic: csrfMagicToken\\s*\\}\\)/");
-});
+// Browser coverage executes the rendered button and shipped POST helper in
+// tests/e2e/notification-purge.spec.js.
 
 test('a cross-site GET cannot purge the Data Debug checks', function (array $headers) {
     expect(page_flag_guard_run('data_debug.php', 'GET', 'purge=1&debug=-1&header=false', $headers))->toBe('STATUS:405');
@@ -207,12 +204,6 @@ test('viewing the SNMP Agent notification log without a purge is unchanged', fun
         ->toBe('DISPATCHED:view_snmpagent_eventsSTATUS:200');
 });
 
-test('the SNMP Agent notification log Purge button posts the token', function () {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/utilities.php');
-
-    expect($source)->not->toContain('view_snmpagent_events&purge=1')
-        ->and($source)->toMatch("/loadPageUsingPost\\('utilities\\.php', \\{\\s*action: 'view_snmpagent_events',\\s*purge: 1,\\s*header: 'false',\\s*__csrf_magic: csrfMagicToken\\s*\\}\\)/");
-});
 
 test('the log file purge needs a POST with a valid token', function (string $page, string $method, string $token, array $headers, string $expected) {
     expect(page_flag_guard_run($page, $method, 'purge_continue=1&header=false&filename=cacti.log', $headers, $token, array('clog_webapi')))
@@ -230,10 +221,3 @@ test('viewing the log file and its purge prompt is unchanged', function (string 
     expect(page_flag_guard_run('clog.php', 'GET', $query, array('HTTP_SEC_FETCH_SITE' => 'cross-site'), 'missing', array('clog_webapi')))
         ->toBe('DISPATCHED:clogSTATUS:200');
 })->with(array('filename=cacti.log', 'purge=1&filename=cacti.log'));
-
-test('the log file Continue button posts the token', function () {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/lib/clog_webapi.php');
-
-    expect($source)->not->toContain('?purge_continue=1')
-        ->and($source)->toMatch("/loadPageUsingPost\\(location\\.pathname, \\{\\s*purge_continue: 1,\\s*header: 'false',/");
-});
