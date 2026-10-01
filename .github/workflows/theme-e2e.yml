@@ -14,9 +14,9 @@ name: Theme E2E
 
 on:
   push:
-    branches: [develop]
+    branches: [lts/1.2]
   pull_request:
-    branches: [develop]
+    branches: [lts/1.2]
 
 permissions:
   contents: read

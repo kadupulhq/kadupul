@@ -1,6 +1,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -41,7 +42,6 @@ body, table, tr, td, textarea {
 
 body {
 	margin: 0px;
-	background-color: white;
 	background-repeat: repeat-y;
 	overflow: hidden;
 	background-color: #000000;
@@ -810,12 +810,6 @@ label.ui-state-hover > span {
 	width: 100%;
 	padding: 0px;
 	border-color: rgba(255,255,255,0.2);
-	*/
-	box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
-	*/
-	background-color: #000000;
-	*/
-	background-image: -webkit-gradient(linear, left 0%, left 100%, from(#3a3b3c), to(#000000));
 	background-image: -webkit-linear-gradient(top, #3a3b3c 0%, #000000 100%);
 	background-image: -moz-linear-gradient(top, #3a3b3c 0%, #000000 100%);
 	background-image: linear-gradient(to bottom, #3a3b3c 0%, #000000 100%);
@@ -1683,7 +1677,6 @@ table.cactiTable {
 }
 
 .graphSubHeaderColumn {
-	color: #white;
 	font-size: 12px;
 	vertical-align: middle;
 	text-align: left;
@@ -2646,7 +2639,7 @@ tr#realtime td:first-child {
 	background-image: -moz-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	background-image: -o-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	background-image: -ms-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
-	background-image: linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
+	background-image: linear-gradient(to right, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	-webkit-transition: .4s;
 	transition: .4s;
 	border: 1px solid #7F83A2;
@@ -2670,10 +2663,10 @@ tr#realtime td:first-child {
 
 input:checked + .checkboxSlider {
 	background-color: rgba(255, 170, 0, 0.5) !important;
-	background-image: -webkit-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
-	background-image: -moz-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
-	background-image: -o-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
-	background-image: -ms-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
+	background-image: -webkit-linear-gradient(left, black, rgba(255, 170, 0, 0.5)) !important;
+	background-image: -moz-linear-gradient(left, black, rgba(255, 170, 0, 0.5)) !important;
+	background-image: -o-linear-gradient(left, black, rgba(255, 170, 0, 0.5)) !important;
+	background-image: -ms-linear-gradient(left, black, rgba(255, 170, 0, 0.5)) !important;
 	background-image: linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
 }
 
