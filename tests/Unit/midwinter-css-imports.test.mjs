@@ -4,6 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const theme = new URL('../../include/themes/midwinter/', import.meta.url);
 const imports = [...readFileSync(new URL('main.css', theme), 'utf8').matchAll(/@import url\('([^']+)'\)/g)]
@@ -16,10 +17,13 @@ test('main.css imports every Midwinter stylesheet', () => {
   }
 });
 
-// asset-map:compile digests each import; a hand-kept query would go stale
-// because nothing rewrites it any more.
-test('imports carry no cache-busting query', () => {
+// Source deployments serve these URLs without a compiled manifest.
+test('imports carry the actual generated child content version', () => {
   for (const file of imports) {
-    assert.doesNotMatch(file, /[?#]/, `${file} carries a query`);
+    const url = new URL(file, theme);
+    const version = url.searchParams.get('v');
+    url.search = '';
+    const digest = createHash('sha256').update(readFileSync(url)).digest('hex');
+    assert.equal(version, digest, `${file} does not version its child bytes`);
   }
 });

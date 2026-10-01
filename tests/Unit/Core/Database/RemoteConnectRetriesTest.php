@@ -7,6 +7,8 @@
 
 namespace RemoteConnectRetriesTest;
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 $root = dirname(__DIR__, 4);
 
 /**
@@ -49,19 +51,9 @@ function connect_arguments($needle, array $vars, $file = 'include/global.php', $
     $code = 'function db_connect_real() { echo json_encode(func_get_args()); exit(0); }'
         . $assignments . $statement;
 
-    $pipes   = array();
-    $process = proc_open(
-        array(PHP_BINARY, '-r', $code),
-        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes
-    );
-    expect($process)->not->toBeFalse();
-
-    $out = stream_get_contents($pipes[1]);
-    $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    proc_close($process);
+    $result = \test_php_run($code);
+    $out = $result['out'];
+    $err = $result['err'];
 
     expect($err)->toBe('');
 
@@ -176,29 +168,13 @@ function bootstrap_connect_calls(array $vars, $poller_id = 2, $conn_mode = 'onli
     expect($start)->not->toBeFalse();
 
     // Stop after the $conn_mode block, which holds the remote call.
-    $guard = strpos($source, 'if ($conn_mode != \'offline\') {', $start);
-    expect($guard)->not->toBeFalse();
-
-    $open  = strpos($source, '{', $guard);
-    $depth = 0;
-    $end   = $open;
-
-    for ($i = $open; $i < strlen($source); $i++) {
-        if ($source[$i] === '{') {
-            $depth++;
-        } elseif ($source[$i] === '}') {
-            $depth--;
-
-            if ($depth === 0) {
-                $end = $i + 1;
-
-                break;
-            }
-        }
-    }
+    $guard = 'if ($conn_mode != \'offline\')';
+    $guard_block = \test_php_block_source($source, $guard, '$local_db_cnn_id = db_connect_real(');
+    $guard_start = strpos($source, $guard, $local);
+    expect($guard_start)->not->toBeFalse();
 
     // Close the outer if, whose body this slice cuts short.
-    $block = substr($source, $start, $end - $start) . "\n}\n";
+    $block = substr($source, $start, $guard_start - $start) . $guard_block . "\n}\n";
 
     $assignments = '';
     foreach ($vars as $name => $value) {
@@ -213,19 +189,9 @@ function bootstrap_connect_calls(array $vars, $poller_id = 2, $conn_mode = 'onli
         . $assignments . $block
         . 'echo json_encode($GLOBALS["calls"]);';
 
-    $pipes   = array();
-    $process = proc_open(
-        array(PHP_BINARY, '-r', $code),
-        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes
-    );
-    expect($process)->not->toBeFalse();
-
-    $out = stream_get_contents($pipes[1]);
-    $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    proc_close($process);
+    $result = \test_php_run($code);
+    $out = $result['out'];
+    $err = $result['err'];
 
     expect($err)->toBe('');
 

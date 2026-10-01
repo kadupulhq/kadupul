@@ -11,6 +11,28 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/database.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
+}
+if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
+if (defined('REPORT_PERSISTENCE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/reports.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_reports.php');
+}
+if (defined('AUTH_CONTROLLER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_changepassword.php');
+    $coverageFilter->includeFile($coverageRoot . '/logout.php');
+}
 if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_33.php');
     $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
