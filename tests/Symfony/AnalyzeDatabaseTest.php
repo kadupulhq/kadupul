@@ -195,7 +195,7 @@ final class AnalyzeDatabaseTest extends TestCase
     public function testTableNamesAreQuotedAsIdentifiers(): void
     {
         $db = $this->mariaDb();
-        $db->expects(self::once())->method('executeQuery')->with('ANALYZE TABLE NO_WRITE_TO_BINLOG `we``ird`')->willReturn($this->rows([
+        $db->expects(self::once())->method('executeQuery')->with('ANALYZE NO_WRITE_TO_BINLOG TABLE `we``ird`')->willReturn($this->rows([
             ['Table' => 'we`ird', 'Op' => 'analyze', 'Msg_type' => 'status', 'Msg_text' => 'OK'],
         ]));
 
@@ -257,7 +257,8 @@ final class AnalyzeDatabaseTest extends TestCase
     {
         $db = $this->realMariaDb();
 
-        $tables = ['kadupul_analyze_a', 'kadupul_analyze_b', 'kadupul_analyze_c'];
+        $prefix = 'kadupul_analyze_' . bin2hex(random_bytes(6));
+        $tables = [$prefix . '_a', $prefix . '_b', $prefix . '_c'];
         // Setup sits inside the try too, so a table created before a failing
         // CREATE is still dropped.
         try {
@@ -270,8 +271,13 @@ final class AnalyzeDatabaseTest extends TestCase
             self::assertSame([], array_diff($tables, $maintenance->tables(DatabaseTarget::Local)));
             $maintenance->binlogEnabled(DatabaseTarget::Local);
             foreach ($tables as $table) {
-                self::assertTrue($maintenance->analyze(DatabaseTarget::Local, $table, false));
+                foreach ([false, true] as $noBinlog) {
+                    self::assertTrue($maintenance->analyze(DatabaseTarget::Local, $table, $noBinlog));
+                    self::assertSame('1', (string) $db->fetchOne('SELECT 1'));
+                }
             }
+
+            self::assertFalse($maintenance->analyze(DatabaseTarget::Local, $prefix . '_missing', true));
 
             // An unconsumed ANALYZE TABLE result set would make the server refuse
             // the next statement; confirm a normal query still runs afterward.
