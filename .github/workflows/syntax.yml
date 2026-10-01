@@ -222,7 +222,7 @@ jobs:
       run: |
         test -s plugin_thold/thold_functions.php
         php -l plugin_thold/thold_functions.php
-        rg -q '^function get_allowed_thresholds\(' plugin_thold/thold_functions.php
+        grep -q '^function get_allowed_thresholds(' plugin_thold/thold_functions.php
 
     - name: Checkout Monitor Plugin
       uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
