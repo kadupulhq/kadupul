@@ -219,6 +219,24 @@ def verify_data_inputs(harness, session, check):
     harness.command('php','-r',"if (is_file('/tmp/data-input-review-whitelist.json')) { unlink('/tmp/data-input-review-whitelist.json'); }")
     _,missing_whitelist=page(session,f'/app.php/data-inputs/{target}/edit')
     check('Whitelist requires an update.' in missing_whitelist and 'Whitelist verification succeeded.' not in missing_whitelist,'missing configured whitelist requires an update instead of claiming successful verification')
+    for input_type in (1, 2):
+        empty_hash = uuid.uuid4().hex
+        harness.sql(f"INSERT INTO data_input(name,hash,input_string,type_id) VALUES ('Empty whitelist fixture','{empty_hash}','',{input_type})")
+        empty_id = int(harness.sql(f"SELECT id FROM data_input WHERE hash='{empty_hash}'").strip())
+        _, empty_body = page(session, f'/app.php/data-inputs/{empty_id}/edit')
+        check('Whitelist requires an update.' not in empty_body and f'/data-inputs/{empty_id}/whitelist' not in empty_body, f'empty type {input_type} has no impossible whitelist-update state')
+        find_request = {'actor': user, 'action': 'find', 'id': empty_id, 'nonce': uuid.uuid4().hex, 'payload': {}}
+        def worker_result(command):
+            encoded = json.dumps(json.dumps(command)).replace('$', '\\$')
+            probe = harness.php('-r', "require 'include/vendor/autoload.php'; $p=new Symfony\\Component\\Process\\Process([PHP_BINARY,'bin/legacy-data-input.php']); $p->setInput(" + encoded + "); $p->run(); echo $p->getOutput();")
+            match = re.search(r'^KADUPUL_DATA_INPUT_RESULT=(.*)$', probe['stdout'], re.MULTILINE)
+            if match is None:
+                raise AssertionError('Worker did not return a verified result')
+            return json.loads(match[1])
+        state = worker_result(find_request)
+        update_request = dict(find_request, action='whitelist', payload={'revision': state['result']['revision']})
+        outcome = worker_result(update_request)
+        check(outcome['status'] == 'invalid', f'worker refuses forged empty type {input_type} whitelist operation')
     whitelist=f'/app.php/data-inputs/{target}/whitelist'
     fields,_=page(session,whitelist)
     payload={'data_input_action[revision]':fields['data_input_action[revision]'],'data_input_action[_token]':fields['data_input_action[_token]']}

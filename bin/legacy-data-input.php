@@ -90,7 +90,7 @@ try {
         $result = dataInputWorkerSelection($db, $payload['ids'] ?? null);
     } elseif ($action === 'find') {
         $result = $id === 0 ? ['method' => [], 'fields' => [], 'revision' => '', 'whitelist' => 'disabled'] : dataInputWorkerState($db, $id);
-        if ($id > 0 && isset($config['input_whitelist'])) {
+        if ($id > 0 && $result['method']['input_string'] !== '' && isset($config['input_whitelist'])) {
             $verified = is_file($config['input_whitelist']) && is_readable($config['input_whitelist'])
                 && verify_data_input_whitelist($result['method']['hash'], $result['method']['input_string']) === true;
             $result['whitelist'] = $verified === true ? 'verified' : 'requires_update';
@@ -137,6 +137,9 @@ try {
         $state = $id > 0 ? dataInputWorkerState($db, $id, true) : null;
         if ($id > 0 && (!is_string($payload['revision'] ?? null) || !hash_equals($state['revision'], $payload['revision']))) {
             throw new DataInputWorkerConflict();
+        }
+        if ($action === 'whitelist' && ($state === null || $state['method']['input_string'] === '')) {
+            throw new InvalidArgumentException('Empty input strings do not require a whitelist entry.');
         }
         if ($action === 'save') {
             $data = DataInputState::method($payload['data'] ?? []);
