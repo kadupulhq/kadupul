@@ -64,7 +64,8 @@ def verify_arguments(harness, check):
             (['--environ=spine'], 'spine'), (['--environ=realtime', '--poller=1'], 'realtime'), \
             (['--environ=cmd', '--poller=1', '--mode=online'], 'cmd'), (['--environ=other'], 'other'), \
             (['--environ'], 'cmd'), (['--environ='], 'cmd'), \
-            (['--environ=spine', '--environ=realtime'], 'cmd'), (['--environ=unknown'], 'cmd'):
+            (['--environ=spine', '--environ=realtime'], 'cmd'), \
+            (['--environ=spine', '--environ='], 'cmd'), (['--environ=', '--environ=spine'], 'cmd'), (['--environ=unknown'], 'cmd'):
         result = serve(harness, arguments, ['quit'])
         check(result['exit'] == 0 and result['stdout'] == STARTED + parent + '\n' + SHUTDOWN + '\n',
               f'script server started with {arguments} reports parent {parent} and quits')

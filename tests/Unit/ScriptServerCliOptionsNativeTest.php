@@ -49,6 +49,9 @@ BOOT);
                 self::assertStringStartsWith('Kadupul Script Server, Version fixture-version ', $output);
                 self::assertStringNotContainsString('has Started', $output);
                 self::assertSame($expected === 'help', str_contains($output, 'usage: script_server.php [environ poller_id]'));
+                if ($expected === 'help') {
+                    self::assertStringContainsString("'realtime', and 'other'", $output);
+                }
                 self::assertFileDoesNotExist($directory . '/include/closed');
             } else {
                 self::assertSame('PHP Script Server has Started - Parent is ' . $expected . "\nPHP Script Server Shutdown request received, exiting\n", $output);
@@ -86,6 +89,11 @@ BOOT);
             [['--environ', 'spine'], 'cmd'],
             [['--environ=spine', '--environ=realtime'], 'cmd'],
             [['--environ=unknown'], 'cmd'],
+            [['--environ=spine', '--environ='], 'cmd'],
+            [['--environ=', '--environ=spine'], 'cmd'],
+            [['--environ', '--environ=spine'], 'cmd'],
+            [['--environ=spine', '--', '--environ='], 'spine'],
+            [['--', '--environ='], 'other'],
             [['spine', '1'], 'spine'],
             [['--version'], 'version'],
             [['-v'], 'version'],
