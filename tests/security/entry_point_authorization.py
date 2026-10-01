@@ -166,6 +166,20 @@ def refusal(response):
     return next((name for name, test in REFUSALS if test(response)), None)
 
 
+def has_feature_realm(entry):
+    """These migrated pages require a feature grant in addition to Console."""
+    legacy = {'gprint_presets.php', 'vdef.php', 'cdef.php', 'color_templates.php',
+              'color_templates_items.php', 'aggregate_templates.php', 'host_templates.php',
+              'color.php', 'links.php', 'data_input.php'}
+    prefixes = ('graphing/gprint-presets', 'graph-definitions/vdefs',
+                'graph-definitions/cdefs', 'graphing/color-templates',
+                'graphing/color-template-items', 'aggregate-templates',
+                'inventory/device-templates', 'graphing/colors', 'links', 'data-inputs')
+    return entry in legacy or any(entry == 'app.php/' + prefix or
+                                 entry.startswith('app.php/' + prefix + '/')
+                                 for prefix in prefixes)
+
+
 def sample(entry, detail, ids):
     """Use concrete parent/child rows; never turn a missing fixture into a 404."""
     prefix = next((key for key in sorted(ids, key=len, reverse=True)
@@ -365,7 +379,7 @@ def main():
                 if gate == 'authenticated' or 'AuthenticatedAccess' in detail:
                     continue
                 for name, client in (('norealm', norealm), ('console', console)):
-                    if name == 'console' and (gate == 'realm:%d' % CONSOLE_REALM or 'ConsoleAccess realm 8;' in detail + ';'):
+                    if name == 'console' and not has_feature_realm(entry) and (gate == 'realm:%d' % CONSOLE_REALM or 'ConsoleAccess realm 8;' in detail + ';'):
                         continue
                     if get_allowed:
                         expect(name + ' GET ' + url, client.request(url))

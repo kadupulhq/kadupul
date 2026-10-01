@@ -21,6 +21,10 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'vdef.php',
+        'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -168,6 +172,8 @@ def main():
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'vdef-test-hash': 'Integration test source differs',
+        'missing-vdef-handoff': 'Incomplete Symfony integration',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -230,6 +236,10 @@ def main():
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'vdef-test-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_scenarios.py'] = '0' * 64
+            elif case == 'missing-vdef-handoff':
+                evidence['checks'].remove('VDEF duplicate preserves all item rows')
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'details-test-hash':

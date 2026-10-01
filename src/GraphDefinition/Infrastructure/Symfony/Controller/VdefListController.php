@@ -8,6 +8,7 @@
 namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Controller;
 
 use Kadupul\GraphDefinition\Application\Query\ListVdefs;
+use Kadupul\GraphDefinition\Application\Query\VdefAuthorization;
 use Kadupul\GraphDefinition\Domain\VdefListCriteria;
 use Kadupul\GraphDefinition\Application\Query\VdefAccessDenied;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
@@ -20,7 +21,7 @@ use Twig\Environment;
 final class VdefListController
 {
     #[Route('/graph-definitions/vdefs', name: 'graph_vdefs', methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, ListVdefs $list, Environment $twig, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
+    public function __invoke(Request $request, ListVdefs $list, VdefAuthorization $authorization, Environment $twig, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $consoleAccess->consoleActor();
@@ -28,6 +29,7 @@ final class VdefListController
             return new Response($translator->trans('Access denied.', [], 'graph_definition'), 401, $headers);
         }
         try {
+            $authorization->actor();
             $query = $request->query->all();
             $page = self::int($query['page'] ?? 1, 'page');
             $pageSize = self::int($query['rows'] ?? 30, 'rows');
