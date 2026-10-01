@@ -1,0 +1,23 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "extended_paths",
+        "form_settings",
+        "row_extended_paths_type",
+        "row_rrdp_fingerprint",
+        "row_rrdp_fingerprint_backup",
+        "row_rrdp_header",
+        "row_rrdp_header2",
+        "row_rrdp_load_balancing",
+        "row_rrdp_port",
+        "row_rrdp_port_backup",
+        "row_rrdp_server",
+        "row_rrdp_server_backup",
+        "storage_location",
+        "tab"
+    ],
+    "script_names": []
+}

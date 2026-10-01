@@ -14,3 +14,6 @@
 
 # Composer-installed trees are not our code; do not let them skew language stats.
 /include/vendor/** linguist-vendored
+
+# Form goldens are byte-for-byte page output, whitespace included.
+/tests/Golden/forms/** -whitespace
