@@ -23,6 +23,12 @@ function db_fetch_cell_prepared($sql, $params = array()) {
     $statement->execute($params);
     return $statement->fetchColumn();
 }
+function db_fetch_row_prepared($sql, $params = array()) {
+    global $db;
+    $statement = $db->prepare($sql);
+    $statement->execute($params);
+    return $statement->fetch(PDO::FETCH_ASSOC) ?: array();
+}
 $_SESSION = array('sess_user_id' => 42);
 auth_session_bind_credentials(42);
 $first = $_SESSION;
@@ -49,6 +55,9 @@ $new_binding = null;
 $reset_second_valid = null;
 if ($argv[1] === 'normal') {
     $second_upgrade = auth_rehash_password_preserving_sessions(42, 'new-hash', 'third-hash', $db);
+    // A request can read the password immediately before that commit and
+    // read its mapping immediately afterwards. Its binding must survive.
+    $split_read_valid = auth_session_credentials_valid('new-hash');
     $password = $db->query('SELECT password FROM user_auth WHERE id=42')->fetchColumn();
     $second_valid = auth_session_credentials_valid($password);
     $_SESSION = array('sess_user_id' => 42);
@@ -59,10 +68,11 @@ if ($argv[1] === 'normal') {
     $reset_valid = auth_session_credentials_valid('reset-hash');
     $_SESSION = $second;
     $reset_second_valid = auth_session_credentials_valid('reset-hash');
+    $split_reset_valid = auth_session_credentials_valid('new-hash');
 }
 $_SESSION = array('sess_user_id' => 42);
 $unbound_valid = auth_session_credentials_valid($password);
-print json_encode(array('new_binding'=>$new_binding,'reset_second_valid'=>$reset_second_valid,'upgraded'=>$upgraded, 'first_valid'=>$first_valid,'second_valid'=>$second_valid,'second_upgrade'=>$second_upgrade,'reset_valid'=>$reset_valid,'password'=>$password,'mapping_count'=>(int)$db->query("SELECT COUNT(*) FROM settings_user WHERE name='auth_credential_generation'")->fetchColumn(),'in_transaction'=>$db->inTransaction(),'unbound_valid'=>$unbound_valid));
+print json_encode(array('split_read_valid'=>$split_read_valid ?? null,'split_reset_valid'=>$split_reset_valid ?? null,'new_binding'=>$new_binding,'reset_second_valid'=>$reset_second_valid,'upgraded'=>$upgraded, 'first_valid'=>$first_valid,'second_valid'=>$second_valid,'second_upgrade'=>$second_upgrade,'reset_valid'=>$reset_valid,'password'=>$password,'mapping_count'=>(int)$db->query("SELECT COUNT(*) FROM settings_user WHERE name='auth_credential_generation'")->fetchColumn(),'in_transaction'=>$db->inTransaction(),'unbound_valid'=>$unbound_valid));
 PHP;
     $process = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $scenario), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $stdout = stream_get_contents($pipes[1]);
@@ -76,6 +86,7 @@ PHP;
 
 test('two sessions survive successive transparent rehashes but a reset invalidates them', function () {
     $result = credential_generation_probe('normal');
+    expect($result['split_read_valid'])->toBeTrue()->and($result['split_reset_valid'])->toBeFalse();
     expect($result['upgraded'])->toBeTrue()->and($result['new_binding'])->toBeTrue()->and($result['reset_second_valid'])->toBeFalse()->and($result['first_valid'])->toBeTrue()->and($result['second_valid'])->toBeTrue()->and($result['second_upgrade'])->toBeTrue()->and($result['reset_valid'])->toBeFalse()->and($result['password'])->toBe('third-hash')->and($result['unbound_valid'])->toBeFalse();
 });
 

@@ -3942,8 +3942,9 @@ function local_auth_login_process($username)
                     $password = compat_password_hash($password, PASSWORD_DEFAULT);
                     db_check_password_length();
                     if (!auth_rehash_password_preserving_sessions($user['id'], $stored_pass, $password)) {
-                        $error = true;
-                        $user = array();
+                        $error     = true;
+                        $error_msg = __('Access Denied!  Login Failed.');
+                        $user      = array();
                     }
                 }
             }
@@ -5410,9 +5411,32 @@ function auth_session_credential_generation($user_id, $password, $db = false)
     } else {
         $mapping = db_fetch_cell_prepared("SELECT value FROM settings_user WHERE user_id = ? AND name = 'auth_credential_generation'", array($user_id));
     }
-    if (is_string($mapping) && preg_match('/^[a-f0-9]{64}:[a-f0-9]{64}$/D', $mapping)
-        && hash_equals($fingerprint, substr($mapping, 0, 64))) {
-        return substr($mapping, 65);
+    if (is_string($mapping) && preg_match('/^[a-f0-9]{64}:[a-f0-9]{64}$/D', $mapping)) {
+        if (hash_equals($fingerprint, substr($mapping, 0, 64))) {
+            return substr($mapping, 65);
+        }
+        if (!$db instanceof PDO) {
+            // The caller may have read the password before a rehash commit
+            // and the mapping after it. Read both live values together so
+            // successive upgrades do not revoke an unchanged credential.
+            $live = db_fetch_row_prepared(
+                "SELECT ua.password, su.value
+                FROM user_auth AS ua
+                LEFT JOIN settings_user AS su ON su.user_id = ua.id
+                    AND su.name = 'auth_credential_generation'
+                WHERE ua.id = ?",
+                array($user_id)
+            );
+            if (!array_key_exists('password', $live)) {
+                return '';
+            }
+            $fingerprint = auth_session_credential_key($live['password']);
+            $mapping = $live['value'] ?? '';
+            if (is_string($mapping) && preg_match('/^[a-f0-9]{64}:[a-f0-9]{64}$/D', $mapping)
+                && hash_equals($fingerprint, substr($mapping, 0, 64))) {
+                return substr($mapping, 65);
+            }
+        }
     }
     return $fingerprint;
 }
