@@ -87,7 +87,7 @@ try {
     }
     fclose($pipes[0]);
     $writerId = (int) fgets($pipes[1]);
-    $monitor = profile_guard_connection();
+    $monitor = profile_guard_connection(true);
     $waiting = false;
     $deadline = microtime(true) + 5;
     do {
@@ -120,9 +120,9 @@ try {
     $orphans = (int) $db->query("SELECT COUNT(*) FROM `$data` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.id=2 AND d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn();
     // Removing or modifying either guard must stop physical deletion.
     $name = array_key_first($definitions);
-    $db->exec("DROP TRIGGER `$name`");
+    $installer->exec("DROP TRIGGER `$name`");
     $missingRejected = !data_source_profile_reference_guards_available($profiles, $data, $prefix);
-    $db->exec("CREATE TRIGGER `$name` BEFORE INSERT ON `$data` FOR EACH ROW SET NEW.name=NEW.name");
+    $installer->exec("CREATE TRIGGER `$name` BEFORE INSERT ON `$data` FOR EACH ROW SET NEW.name=NEW.name");
     $modifiedRejected = !data_source_profile_reference_guards_available($profiles, $data, $prefix);
     file_put_contents($directory . '/result.json', json_encode(['available' => $available, 'waiting' => $waiting, 'writer' => $writer, 'orphans' => $orphans, 'legacyName' => $db->query("SELECT name FROM `$data` WHERE id=1")->fetchColumn(), 'zero' => (int) $db->query("SELECT data_source_profile_id FROM `$data` WHERE id=4")->fetchColumn(), 'rejected' => $rejected, 'missingRejected' => $missingRejected, 'modifiedRejected' => $modifiedRejected], JSON_THROW_ON_ERROR));
 } finally {
