@@ -16,6 +16,7 @@ function profile_guard_connection(bool $installer = false): PDO
 if (($argv[1] ?? '') === '--writer') {
     $db = profile_guard_connection();
     $data = $argv[2];
+    $db->exec('SET SESSION innodb_lock_wait_timeout=30');
     echo $db->query('SELECT CONNECTION_ID()')->fetchColumn() . "\n";
     flush();
     try {
@@ -77,6 +78,7 @@ try {
     if ($operation !== 'insert') {
         $db->exec("INSERT INTO `$data` VALUES (2,0,'existing')");
     }
+    $parentId = (int) $db->query('SELECT CONNECTION_ID()')->fetchColumn();
     $db->beginTransaction();
     $db->query("SELECT id FROM `$profiles` WHERE id=3 FOR UPDATE")->fetchAll();
     $db->query("SELECT data_source_profile_id FROM `$data` WHERE data_source_profile_id=3 FOR UPDATE")->fetchAll();
@@ -88,20 +90,43 @@ try {
     fclose($pipes[0]);
     $writerId = (int) fgets($pipes[1]);
     $monitor = profile_guard_connection(true);
+    $version = $monitor->query('SELECT VERSION()')->fetchColumn();
+    $waitSql = str_contains($version, 'MariaDB')
+        ? 'SELECT COUNT(*) FROM information_schema.INNODB_LOCK_WAITS w
+            JOIN information_schema.INNODB_TRX requester ON requester.trx_id=w.requesting_trx_id
+            JOIN information_schema.INNODB_TRX blocker ON blocker.trx_id=w.blocking_trx_id
+            WHERE requester.trx_mysql_thread_id=? AND blocker.trx_mysql_thread_id=?'
+        : 'SELECT COUNT(*) FROM performance_schema.data_lock_waits w
+            JOIN performance_schema.threads requester ON requester.THREAD_ID=w.REQUESTING_THREAD_ID
+            JOIN performance_schema.threads blocker ON blocker.THREAD_ID=w.BLOCKING_THREAD_ID
+            WHERE requester.PROCESSLIST_ID=? AND blocker.PROCESSLIST_ID=?';
+    $statement = $monitor->prepare($waitSql);
     $waiting = false;
-    $deadline = microtime(true) + 5;
+    $deadline = microtime(true) + 20;
     do {
-        $statement = $monitor->prepare("SELECT trx_state FROM information_schema.INNODB_TRX WHERE trx_mysql_thread_id=?");
-        $statement->execute([$writerId]);
-        $waiting = $statement->fetchColumn() === 'LOCK WAIT';
+        $statement->execute([$writerId, $parentId]);
+        $waiting = (int) $statement->fetchColumn() > 0;
+        $statement->closeCursor();
         if (!$waiting) {
-            usleep(20000);
+            // MariaDB shares a cached snapshot between its InnoDB metadata
+            // tables. Leave more than 100 ms between reads so it can refresh.
+            usleep(250000);
         }
     } while (!$waiting && microtime(true) < $deadline);
     if (!$waiting) {
         stream_set_blocking($pipes[1], false);
         stream_set_blocking($pipes[2], false);
-        throw new RuntimeException('Concurrent writer did not wait for the deletion transaction: ' . stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]));
+        $diagnostic = $monitor->prepare('SELECT ID, STATE, INFO FROM information_schema.PROCESSLIST WHERE ID IN (?,?)');
+        $diagnostic->execute([$writerId, $parentId]);
+        throw new RuntimeException('Concurrent writer did not wait for the deletion transaction: ' . json_encode([
+            'version' => $version,
+            'writer' => $writerId,
+            'parent' => $parentId,
+            'processlist' => $diagnostic->fetchAll(PDO::FETCH_ASSOC),
+            'process' => proc_get_status($process),
+            'stdout' => stream_get_contents($pipes[1]),
+            'stderr' => stream_get_contents($pipes[2]),
+        ], JSON_THROW_ON_ERROR));
     }
     if (($scenario['reference_guard'] ?? '') === 'rollback') {
         $db->rollBack();
