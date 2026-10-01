@@ -504,22 +504,15 @@ function user_remove($user_id) {
 	input_validate_input_number($user_id);
 	/* ==================================================== */
 
-	/* check for guest or template user */
-	$username = db_fetch_cell_prepared('SELECT username
-		FROM user_auth
-		WHERE id = ?',
-		array($user_id));
+	/* template and guest accounts are never removable, whatever the request carries */
+	if (is_template_account($user_id)) {
+		raise_message(21);
+		return;
+	}
 
-	if ($username != get_nfilter_request_var('username')) {
-		if (is_template_account($user_id)) {
-			raise_message(21);
-			return;
-		}
-
-		if ($user_id === get_guest_account()) {
-			raise_message(21);
-			return;
-		}
+	if ((string) $user_id === (string) get_guest_account()) {
+		raise_message(21);
+		return;
 	}
 
 	db_execute_prepared('DELETE FROM user_auth WHERE id = ?', array($user_id));
