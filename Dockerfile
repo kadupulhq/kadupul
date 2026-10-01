@@ -26,6 +26,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY tools/dependencies ./tools/dependencies
 COPY include/js/jquery.tablesorter.pager.js ./include/js/jquery.tablesorter.pager.js
+COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 
 # --- runtime ----------------------------------------------------------------
@@ -93,6 +94,7 @@ COPY --chown=www-data:www-data . .
 COPY --from=vendor --chown=www-data:www-data /app/include/vendor ./include/vendor
 COPY --from=assets --chown=www-data:www-data /app/include/js ./include/js
 COPY --from=assets --chown=www-data:www-data /app/include/fa ./include/fa
+COPY --from=assets --chown=www-data:www-data /app/include/themes/midwinter ./include/themes/midwinter
 COPY --from=assets --chown=www-data:www-data /app/include/vendor/flag-icons ./include/vendor/flag-icons
 
 # asset-map:compile writes digested copies of the theme, script and font files

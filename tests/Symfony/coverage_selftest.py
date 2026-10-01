@@ -21,8 +21,13 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
-        'bin/legacy-color-template-sync.php', 'color_templates.php', 'color_templates_items.php',
-        'lib/api_aggregate.php', 'aggregate_templates.php', 'aggregate_graphs.php', 'graphs.php',
+        'bin/legacy-color-template-sync.php',
+        'color_templates.php',
+        'color_templates_items.php',
+        'lib/api_aggregate.php',
+        'aggregate_templates.php',
+        'aggregate_graphs.php',
+        'graphs.php',
         'src/Platform/Infrastructure/Symfony/LegacyPageForwarder.php',
         'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateDeleteType.php',
         'src/ColorTemplates/Application/Command/RemoveColorTemplateItem.php',
@@ -40,6 +45,9 @@ def main():
         'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateItemType.php',
         'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateActionType.php',
         'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateOrderType.php',
+        'links.php',
+        'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',

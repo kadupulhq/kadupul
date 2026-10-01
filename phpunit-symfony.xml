@@ -25,6 +25,8 @@
             <file>color_templates.php</file>
             <file>color_templates_items.php</file>
             <file>bin/legacy-color-template-sync.php</file>
+
+            <file>links.php</file>
             <file>lib/database.php</file>
             <file>lib/functions.php</file>
         </include>
