@@ -39,11 +39,16 @@ function trackedSources() {
   const files = execFileSync('git', ['ls-files', '-z', '--', '*.php', '*.js', '*.mjs', '*.html', '*.twig'], {
     cwd: fileURLToPath(root),
     encoding: 'utf8',
+    stdio: 'pipe',
   }).split('\0');
 
-  return files
-    .filter(path => path !== '' && !/^(include\/vendor|include\/fa|tests|docs)\//.test(path))
-    .map(path => [path, readFileSync(new URL(path, root), 'utf8')]);
+  return (function* () {
+    for (const path of files) {
+      if (path !== '' && !/^(include\/vendor|include\/fa|tests|docs)\//.test(path)) {
+        yield [path, readFileSync(new URL(path, root), 'utf8')];
+      }
+    }
+  })();
 }
 
 test('the icon scan matches class names and ignores other fa- text', () => {
@@ -61,11 +66,27 @@ test('the icon scan matches class names and ignores other fa- text', () => {
   assert.deepEqual(undefinedIcons([], defined), []);
 });
 
-test('every Font Awesome class in the source exists in the built stylesheet', { skip: !existsSync(allCss) && 'include/fa is not built; run npm ci && npm run build' }, () => {
+test('every Font Awesome class in the source exists in the built stylesheet', { skip: !existsSync(allCss) && 'include/fa is not built; run npm ci && npm run build' }, t => {
   const defined = definedIcons(readFileSync(allCss, 'utf8'));
   assert.ok(defined.has('fa-plus') && defined.size > 1000, 'include/fa/css/all.css is the full Font Awesome build');
 
-  const sources = trackedSources();
-  assert.ok(sources.some(([path]) => path === 'include/layout.js'), 'git ls-files lists the application sources');
-  assert.deepEqual(undefinedIcons(sources, defined), []);
+  let sources;
+  try {
+    sources = trackedSources();
+  } catch (error) {
+    if (error.code === 'ENOENT' || (error.status === 128 && /not a git repository/.test(String(error.stderr)))) {
+      t.skip('Source-wide icon audit requires git and a repository checkout');
+      return;
+    }
+    throw error;
+  }
+  let layoutSeen = false;
+  const missing = undefinedIcons((function* () {
+    for (const source of sources) {
+      layoutSeen ||= source[0] === 'include/layout.js';
+      yield source;
+    }
+  })(), defined);
+  assert.ok(layoutSeen, 'git ls-files lists the application sources');
+  assert.deepEqual(missing, []);
 });
