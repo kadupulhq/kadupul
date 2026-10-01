@@ -27,7 +27,7 @@ function cacti_sizeof($value) { return count($value); }
 function db_fetch_assoc($sql) { return $GLOBALS['database']->query($sql)->fetchAll(PDO::FETCH_ASSOC); }
 function db_fetch_assoc_prepared($sql, $params) { $query = $GLOBALS['database']->prepare($sql); $query->execute($params); return $query->fetchAll(PDO::FETCH_ASSOC); }
 function register_process_start(...$args) { return true; }
-function replicate_out($id, $class) { return $id !== 2 || getenv('COLLECTOR_CLI_FAILURE') !== '1'; }
+function replicate_out($id, $class) { if ($id === 2 && (getenv('COLLECTOR_CLI_FAILURE') === '1' || getenv('COLLECTOR_CLI_COMPLETION_FAILURE') === '1')) { return false; } return db_execute_prepared('UPDATE poller SET last_sync=NOW(), requires_sync="" WHERE id=?', [$id]); }
 function db_execute_prepared($sql, $params) { $GLOBALS['calls'][] = [$sql, $params]; $query = $GLOBALS['database']->prepare(str_replace('NOW()', "datetime('now')", $sql)); return $query->execute($params); }
 function cacti_log($message, ...$args) { $GLOBALS['log'][] = $message; }
 function unregister_process(...$args) { $GLOBALS['unregistered'] = true; }
@@ -35,6 +35,7 @@ register_shutdown_function(function () {
     file_put_contents(dirname(__DIR__) . '/cli-state.json', json_encode(['calls' => $GLOBALS['calls'], 'log' => $GLOBALS['log'], 'unregistered' => $GLOBALS['unregistered'] ?? false, 'pollers' => $GLOBALS['database']->query('SELECT * FROM poller ORDER BY id')->fetchAll(PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR));
 });
 PHP);
+    putenv('COLLECTOR_CLI_COMPLETION_FAILURE=' . (!empty($scenario['completion_failure']) ? '1' : '0'));
     putenv('COLLECTOR_CLI_FAILURE=' . (!empty($scenario['failure']) ? '1' : '0'));
     $command = [PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'error_reporting=24575', '-d', 'pcov.directory=/'];
     if (isset($argv[3])) {
@@ -115,6 +116,18 @@ function collector_statement(string $sql, array $params = [], $connection = fals
     $GLOBALS['affected'] = $statement->rowCount();
     return $statement;
 }
+function db_begin_transaction()
+{
+    return !$GLOBALS['source']->inTransaction() && $GLOBALS['source']->beginTransaction();
+}
+function db_commit_transaction()
+{
+    return $GLOBALS['source']->commit();
+}
+function db_rollback_transaction()
+{
+    return $GLOBALS['source']->rollBack();
+}
 function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = false)
 {
     if (!empty($GLOBALS['scenario']['entrypoint'])) {
@@ -128,6 +141,19 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
         }
     }
     $rows = collector_statement($sql, $params, $connection)->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($GLOBALS['scenario']['snapshot_edit']) && !$connection && str_contains($sql, 'SELECT * FROM data_source_profiles WHERE')) {
+        $editor = collector_connection();
+        $editor->exec('SET SESSION innodb_lock_wait_timeout=1');
+        $editor->beginTransaction();
+        try {
+            $editor->exec('UPDATE `' . $GLOBALS['maps']['source']['data_source_profiles'] . '` SET step=120 WHERE id=77');
+            $GLOBALS['snapshot_blocked'] = false;
+        } catch (PDOException $error) {
+            $GLOBALS['snapshot_blocked'] = (int) ($error->errorInfo[1] ?? 0) === 1205;
+        } finally {
+            $editor->rollBack();
+        }
+    }
     if (str_contains($sql, 'information_schema.TRIGGERS')) {
         // Only fixture table/trigger identities differ from the production catalog.
         foreach ($rows as &$row) {
@@ -222,12 +248,12 @@ function array_rekey($rows, $key, $value)
 }
 function db_execute_prepared($sql, $params = [], $log = true, $connection = false)
 {
-    if (str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data') || str_starts_with($sql, 'UPDATE poller SET requires_sync')) {
+    if (str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data') || str_starts_with($sql, 'UPDATE poller SET')) {
         try {
             collector_statement($sql, $params, $connection);
             return true;
         } catch (PDOException $error) {
-            if (str_contains($sql, 'data_template_data') || str_starts_with($sql, 'UPDATE poller SET requires_sync')) {
+            if (str_contains($sql, 'data_template_data') || str_starts_with($sql, 'UPDATE poller SET')) {
                 return false;
             }
             throw $error;
@@ -263,8 +289,8 @@ function __($message)
     return $message;
 }
 try {
-    $source->exec('CREATE TABLE `' . $maps['source']['poller'] . '` (id INTEGER PRIMARY KEY, requires_sync VARCHAR(2)) ENGINE=InnoDB');
-    $source->exec('INSERT INTO `' . $maps['source']['poller'] . '` VALUES (2,""),(3,"on")');
+    $source->exec('CREATE TABLE `' . $maps['source']['poller'] . '` (id INTEGER PRIMARY KEY, requires_sync VARCHAR(2), last_sync VARCHAR(30) DEFAULT "") ENGINE=InnoDB');
+    $source->exec('INSERT INTO `' . $maps['source']['poller'] . '` VALUES (2,"",""),(3,"on","")');
     foreach ($maps as $side => $map) {
         $connection = $side === 'source' ? $source : $remote;
         $connection->exec('CREATE TABLE `' . $map['data_source_profiles'] . '` (id INTEGER PRIMARY KEY, name VARCHAR(32), step INTEGER) ENGINE=InnoDB');
@@ -292,6 +318,9 @@ try {
     }
     if (($scenario['failure'] ?? '') === 'retry-state') {
         $installer->exec('CREATE TRIGGER `collector_retry_reject_' . $suffix . '` BEFORE UPDATE ON `' . $maps['source']['poller'] . "` FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Retry state rejected'");
+    }
+    if (($scenario['failure'] ?? '') === 'completion-state') {
+        $installer->exec('CREATE TRIGGER `collector_completion_reject_' . $suffix . '` BEFORE UPDATE ON `' . $maps['source']['poller'] . "` FOR EACH ROW BEGIN IF NEW.requires_sync='' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Completion state rejected'; END IF; END");
     }
     if (($scenario['failure'] ?? '') === 'copy') {
         $installer->exec('CREATE TRIGGER `collector_reject_' . $suffix . '` BEFORE INSERT ON `' . $maps['remote']['data_source_profiles'] . "` FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Parent copy rejected'");
@@ -347,7 +376,7 @@ try {
     $rows = $remote->query('SELECT * FROM `' . $maps['remote']['data_template_data'] . '` ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
     $parent = $remote->query('SELECT id FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn();
     $rras = $remote->query('SELECT r.steps,r.`rows`,c.consolidation_function_id FROM `' . $maps['remote']['data_template_data'] . '` d JOIN `' . $maps['remote']['data_source_profiles_rra'] . '` r ON r.data_source_profile_id=d.data_source_profile_id JOIN `' . $maps['remote']['data_source_profiles_cf'] . '` c ON c.data_source_profile_id=d.data_source_profile_id WHERE d.id=2')->fetchAll(PDO::FETCH_ASSOC);
-    file_put_contents($directory . '/result.json', json_encode(['sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    file_put_contents($directory . '/result.json', json_encode(['source_active' => $source->inTransaction(), 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
 } finally {
     $source->exec('DROP TABLE IF EXISTS `' . $maps['source']['poller'] . '`');
     foreach ($maps as $map) {

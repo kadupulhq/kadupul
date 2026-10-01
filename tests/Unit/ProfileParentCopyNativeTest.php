@@ -26,6 +26,7 @@ final class ProfileParentCopyNativeTest extends TestCase
             self::assertSame(0, proc_close($process), $output);
             self::assertSame('', $output);
             $state = json_decode(file_get_contents($directory . '/result.json'), true, flags: JSON_THROW_ON_ERROR);
+            self::assertSame($case === 'source-active', $state['source_active']);
             self::assertSame(in_array($case, array('success', 'zero', 'missing-table'), true), $state['success']);
             if ($case === 'success') {
                 self::assertSame(array(array('id' => 1, 'name' => 'Updated default'), array('id' => 77, 'name' => 'Custom profile')), $state['rows']);
@@ -51,6 +52,6 @@ final class ProfileParentCopyNativeTest extends TestCase
 
     public static function cases(): array
     {
-        return array_map(static fn($case) => array($case), array('success', 'zero', 'negative', 'invalid', 'missing-parent', 'query-failure', 'copy-failure', 'copy-exception', 'missing-table', 'create-failure', 'missing-definition'));
+        return array_map(static fn($case) => array($case), array('success', 'zero', 'negative', 'invalid', 'missing-parent', 'query-failure', 'copy-failure', 'copy-exception', 'missing-table', 'create-failure', 'missing-definition', 'snapshot-begin', 'snapshot-commit', 'source-active'));
     }
 }

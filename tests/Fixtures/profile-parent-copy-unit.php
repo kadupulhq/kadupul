@@ -31,6 +31,18 @@ $source->exec('INSERT INTO data_source_profiles_cf VALUES (1,1),(77,1)');
 if ($case === 'copy-exception') {
     $remote->exec("CREATE TRIGGER reject_parent BEFORE INSERT ON data_source_profiles BEGIN SELECT RAISE(FAIL,'Rejected parent'); END");
 }
+function db_begin_transaction()
+{
+    return $GLOBALS['case'] !== 'snapshot-begin' && !$GLOBALS['source']->inTransaction() && $GLOBALS['source']->beginTransaction();
+}
+function db_commit_transaction()
+{
+    return $GLOBALS['case'] !== 'snapshot-commit' && $GLOBALS['source']->commit();
+}
+function db_rollback_transaction()
+{
+    return $GLOBALS['source']->rollBack();
+}
 function db_fetch_assoc_prepared($sql, $params, $log = true, $connection = false)
 {
     if ($GLOBALS['case'] === 'query-failure') {
@@ -94,6 +106,9 @@ require $copy;
 $id = match ($case) {
     'missing-parent' => 98, 'negative' => -1, 'invalid' => '3 --foo', 'zero' => 0, default => 77
 };
+if ($case === 'source-active') {
+    $source->beginTransaction();
+}
 $data = array(array('data_source_profile_id' => $id), array('data_source_profile_id' => $id));
 if ($case === 'success') {
     $data[] = array('data_source_profile_id' => 1);
@@ -118,4 +133,4 @@ if (str_starts_with($case, 'reference-')) {
     $result = replicate_data_source_profile_parents($remote, $data);
 }
 $rows = db_table_exists('data_source_profiles', false, $remote) ? $remote->query('SELECT * FROM data_source_profiles ORDER BY id')->fetchAll(PDO::FETCH_ASSOC) : array();
-file_put_contents($directory . '/result.json', json_encode(array('success' => $result, 'rows' => $rows, 'children' => $children ?? [], 'active' => $active ?? false), JSON_THROW_ON_ERROR));
+file_put_contents($directory . '/result.json', json_encode(array('source_active' => $source->inTransaction(), 'success' => $result, 'rows' => $rows, 'children' => $children ?? [], 'active' => $active ?? false), JSON_THROW_ON_ERROR));

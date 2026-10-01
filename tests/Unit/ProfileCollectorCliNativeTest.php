@@ -8,14 +8,15 @@ use PHPUnit\Framework\TestCase;
 final class ProfileCollectorCliNativeTest extends TestCase
 {
     /** @dataProvider cases */
-    public function testCliRetainsFailedPollerSynchronization(bool $failure, bool $selected): void
+    public function testCliRetainsFailedPollerSynchronization(bool $failure, bool $selected, bool $state_failure = false): void
     {
         $root = dirname(__DIR__, 2);
         $directory = sys_get_temp_dir() . '/profile-collector-cli-' . bin2hex(random_bytes(8));
         mkdir($directory, 0700);
         try {
             $coverage = $this->getTestResultObject()->getCodeCoverage();
-            $scenario = array('cli' => true, 'failure' => $failure, 'selected' => $selected);
+            $scenario = array('cli' => true, 'failure' => $failure, 'selected' => $selected, 'completion_failure' => $state_failure);
+            $failure = $failure || $state_failure;
             $command = array(PHP_BINARY, $root . '/tests/Fixtures/profile-collector-replication-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
             if ($coverage !== null) {
                 $command[] = $directory;
@@ -51,6 +52,6 @@ final class ProfileCollectorCliNativeTest extends TestCase
 
     public static function cases(): array
     {
-        return array(array(false, false), array(true, false), array(false, true), array(true, true));
+        return array(array(false, false), array(true, false), array(false, true), array(true, true), array(false, false, true), array(false, true, true));
     }
 }

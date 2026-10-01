@@ -18,6 +18,28 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return true;
     }
 
+    public function testCollectorCapturesOneLockedSourceDefinitionSnapshot(): void
+    {
+        $state = $this->runNative(array('collector' => 'bulk', 'failure' => '', 'snapshot_edit' => true));
+        self::assertTrue($state['snapshot_blocked']);
+        self::assertFalse($state['source_active']);
+        self::assertSame(60, (int) $state['remote_step']);
+        self::assertCount(4, $state['rras']);
+    }
+
+    public function testCollectorCompletionRefusalRetainsRetryOwnership(): void
+    {
+        foreach (array('all', 'data') as $class) {
+            $state = $this->runNative(array('collector' => 'bulk', 'failure' => 'completion-state', 'entrypoint' => true, 'class' => $class));
+            self::assertFalse($state['result']);
+            self::assertSame(array('on', 'on'), $state['sync']);
+            self::assertFalse($state['source_active']);
+            self::assertSame(77, (int) $state['parent']);
+            self::assertNotContains('poller_sync', $state['messages']);
+            self::assertStringContainsString('completion-state write failed', implode('\n', $state['log']));
+        }
+    }
+
     /** @dataProvider collectorScenarios */
     public function testCollectorCopiesParentsBeforeDataDefinitions(string $mode, string $failure): void
     {
@@ -48,7 +70,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
         self::assertSame($failure === '', $state['result']);
         if ($failure !== 'retry-state') {
-            self::assertSame(array('on', 'on'), $state['sync']);
+            self::assertSame(array($mode === 'bulk' && $failure === '' ? '' : 'on', 'on'), $state['sync']);
         }
         if ($failure === 'retry-state') {
             self::assertSame(array('', 'on'), $state['sync']);
