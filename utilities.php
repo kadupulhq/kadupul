@@ -1124,13 +1124,13 @@ function utilities_view_user_log()
         $params[] = '%' . get_request_var('filter') . '%';
     }
 
-    $total_rows = get_total_row_data($_SESSION['sess_user_id'], "SELECT COUNT(*) FROM user_auth AS ua RIGHT JOIN user_log AS ul ON ua.username=ul.username $sql_where", $params);
+    $total_rows = get_total_row_data($_SESSION['sess_user_id'], "SELECT COUNT(*) FROM user_auth AS ua RIGHT JOIN user_log AS ul ON ua.username=ul.username AND ua.id=ul.user_id $sql_where", $params);
 
     $user_log_sql = "SELECT ul.username, ua.full_name, ua.realm,
 		ul.time, ul.result, ul.ip
 		FROM user_auth AS ua
 		RIGHT JOIN user_log AS ul
-		ON ua.username=ul.username
+		ON ua.username=ul.username AND ua.id=ul.user_id
 		$sql_where
 		" . get_order_string() . "
 		LIMIT " . ($rows * (get_request_var('page') - 1)) . ',' . $rows;

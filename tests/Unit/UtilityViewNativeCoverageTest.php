@@ -80,6 +80,35 @@ final class UtilityViewNativeCoverageTest extends TestCase
         }
     }
 
+    /** @dataProvider sameNameRealmCases */
+    public function testNativeUserLogJoinsTheRecordedAccountAcrossSameNameRealms(array $request, array $names, array $dates, int $total): void
+    {
+        $state = $this->render(array('view' => 'user', 'request' => $request, 'same_name_realms' => true));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $actualNames = $actualDates = array();
+        foreach ($xpath->query('//tr[starts-with(@id,"line")]') as $row) {
+            $cells = $xpath->query('./td', $row);
+            $actualNames[] = trim($cells->item(1)->textContent);
+            $actualDates[] = trim($cells->item(3)->textContent);
+        }
+        self::assertSame(array($total), $state['total_rows']);
+        self::assertSame($names, $actualNames);
+        self::assertSame($dates, $actualDates);
+        self::assertSame($state['before'], $state['after']);
+    }
+
+    public static function sameNameRealmCases(): array
+    {
+        return array(
+            'same name first page' => array(array('username' => 'Shared Name'), array('Foreign Account', 'Original Account'), array('2026-09-07', '2026-09-06'), 3),
+            'same name next page' => array(array('username' => 'Shared Name', 'page' => 2), array('Original Account'), array('2026-09-05'), 3),
+            'original account name filter' => array(array('filter' => 'Original Account'), array('Original Account', 'Original Account'), array('2026-09-06', '2026-09-05'), 2),
+            'foreign account name filter' => array(array('filter' => 'Foreign Account'), array('Foreign Account'), array('2026-09-07'), 1),
+        );
+    }
+
     public static function viewCases(): array
     {
         return array(

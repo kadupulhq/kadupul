@@ -54,9 +54,9 @@ if ($boost) {
 $db->exec("CREATE TABLE settings_user(user_id INTEGER, name TEXT, value TEXT);
 INSERT INTO settings_user VALUES(99, 'selected_theme', 'classic');
 CREATE TABLE user_auth(id INTEGER, username TEXT, full_name TEXT, realm INTEGER);
-CREATE TABLE user_log(username TEXT, time TEXT, result INTEGER, ip TEXT);
+CREATE TABLE user_log(user_id INTEGER, username TEXT, time TEXT, result INTEGER, ip TEXT);
 INSERT INTO user_auth VALUES(1, 'Alpha & <script>', 'A & <script>', 0),(2, 'Beta', 'B', 9);
-INSERT INTO user_log VALUES('Alpha & <script>', '2026-09-01', 0, '192.0.2.1'),('Alpha & <script>', '2026-09-02', 1, '192.0.2.2'),('Beta', '2026-09-03', 2, '192.0.2.3'),('Removed', '2026-09-04', 3, '192.0.2.4');
+INSERT INTO user_log VALUES(1, 'Alpha & <script>', '2026-09-01', 0, '192.0.2.1'),(1, 'Alpha & <script>', '2026-09-02', 1, '192.0.2.2'),(2, 'Beta', '2026-09-03', 2, '192.0.2.3'),(99, 'Removed', '2026-09-04', 3, '192.0.2.4');
 CREATE TABLE host(id INTEGER, description TEXT, disabled TEXT);
 CREATE TABLE snmp_query(id INTEGER, name TEXT);
 CREATE TABLE host_snmp_cache(host_id INTEGER, snmp_query_id INTEGER, snmp_index TEXT, field_name TEXT, field_value TEXT, oid TEXT);
@@ -71,6 +71,10 @@ INSERT INTO data_template VALUES(10,'Template & <script>'),(20,'Other template')
 INSERT INTO data_local VALUES(101,1,10),(102,1,10),(103,2,20),(104,2,0);
 INSERT INTO data_template_data VALUES(101,10,'Alpha DS & <script>','on'),(102,10,'Beta DS','on'),(103,20,'Gamma DS',''),(104,0,'Delta DS','on');
 INSERT INTO poller_item VALUES(101,1,0,'alpha','OID & <script>','/a & <script>.rrd',2,'public & <script>',''),(102,1,0,'alpha','OID-v3','/b.rrd',3,'','v3 & <script>'),(103,2,1,'beta','script & <script>','/c.rrd',0,'',''),(104,2,2,'beta','server & <script>','/d.rrd',0,'','');");
+if ($scenario['same_name_realms'] ?? false) {
+    $db->exec("INSERT INTO user_auth VALUES(3, 'Shared Name', 'Original Account', 0),(4, 'Shared Name', 'Foreign Account', 9);
+INSERT INTO user_log VALUES(3, 'Shared Name', '2026-09-05', 1, '192.0.2.5'),(3, 'Shared Name', '2026-09-06', 1, '192.0.2.6'),(4, 'Shared Name', '2026-09-07', 1, '192.0.2.7');");
+}
 $db->exec("CREATE TABLE snmpagent_cache(oid TEXT, name TEXT, mib TEXT, `max-access` TEXT, kind TEXT, value TEXT, description TEXT);
 CREATE TABLE snmpagent_managers(id INTEGER, hostname TEXT);
 CREATE TABLE snmpagent_notifications_log(id INTEGER, manager_id INTEGER, notification TEXT, severity INTEGER, time INTEGER, varbinds TEXT);
@@ -152,7 +156,8 @@ function db_qstr($value)
 }
 function get_total_row_data($user, $sql, $params)
 {
-    return db_fetch_cell_prepared($sql, $params);
+    $GLOBALS['total_rows'][] = (int) db_fetch_cell_prepared($sql, $params);
+    return end($GLOBALS['total_rows']);
 }
 function get_allowed_devices($where)
 {
@@ -234,4 +239,4 @@ foreach ($tables as $table) {
     $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
 }
 // This CLI-only fixture emits a JSON protocol, with HTML characters escaped.
-fwrite(STDOUT, json_encode(array('log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+fwrite(STDOUT, json_encode(array('total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
