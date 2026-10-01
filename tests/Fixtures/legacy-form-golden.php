@@ -15,6 +15,7 @@
 // clock functions pointed at the frozen time. The output is then recorded as
 // printed, except for what still differs between runs or machines:
 // - the CSP nonce becomes <NONCE> and csrf-magic tokens become <CSRF>;
+// - the emitted cactiVersion must match the current release, then becomes <VERSION>;
 // - the checkout and the scratch directory become <ROOT> and <DIR>, also
 //   where they appear HTML-escaped, and the machine name in the default
 //   Server Base URL becomes <HOST>;
@@ -678,6 +679,7 @@ register_shutdown_function(function () use ($root, $directory, $capture_level, &
     $html = ob_get_clean();
     $replace = array(
         CactiSecureHeaders::getNonce() => '<NONCE>',
+        "var cactiVersion='" . CACTI_VERSION . "';" => "var cactiVersion='<VERSION>';",
         $directory => '<DIR>',
         $root => '<ROOT>',
         htmlspecialchars($directory, ENT_QUOTES) => '<DIR>',
