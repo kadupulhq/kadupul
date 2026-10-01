@@ -32,7 +32,9 @@ if ($mode === 'clog') {
         return 'Title ' . $id;
     }
     require $root . '/lib/clog_webapi.php';
-    echo json_encode(array(clog_get_datasource_titles(array(7, 7, 8)), clog_get_datasource_titles(7), $calls));
+    $result = array(clog_get_datasource_titles(array(7, 7, 8)), clog_get_datasource_titles(7), $calls);
+    define('NATIVE_COVERAGE_COMPLETED', array('clog-production-observed'));
+    echo json_encode($result);
     exit;
 }
 
@@ -43,6 +45,7 @@ function cacti_sizeof($value)
 if ($mode === 'csrf') {
     function get_cacti_cli_version()
     {
+        define('NATIVE_COVERAGE_COMPLETED', array('csrf-production-observed'));
         return 'fixture-version';
     }
     define('COPYRIGHT_YEARS', '2026');
@@ -112,6 +115,7 @@ function html_nav_bar($url, ...$args)
     while (ob_get_level()) {
         ob_end_clean();
     }
+    define('NATIVE_COVERAGE_COMPLETED', array('cleaner-production-observed'));
     echo json_encode(array('url' => $url));
     exit;
 }

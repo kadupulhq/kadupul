@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
+
 function per_cs_review_run($test, string $mode, string $argument = ''): array
 {
     $root = dirname(__DIR__, 2);
@@ -16,16 +18,27 @@ function per_cs_review_run($test, string $mode, string $argument = ''): array
     copy($root . '/cli/refresh_csrf.php', $directory . '/cli/refresh_csrf.php');
     $coverage = $test->getTestResultObject()->getCodeCoverage();
     try {
-        $process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/per-cs-review-native.php', $mode, $directory, $argument, $coverage === null ? '' : 'coverage'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/per-cs-review-native.php', $mode, $directory, $argument, $coverage === null ? '' : 'coverage'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
         $status = proc_close($process);
         if ($coverage !== null) {
-            foreach (glob($directory . '/*.coverage') as $report) {
-                $coverage->merge(unserialize(file_get_contents($report)));
+            $reports = glob($directory . '/*.coverage');
+            $test->assertCount(1, $reports);
+            $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/PerCsReviewRegressionTest.php', 'rrdcleaner.php', 'lib/clog_webapi.php');
+            if ($mode === 'csrf') {
+                $sources[] = 'cli/refresh_csrf.php';
             }
+            $markers = array($mode . '-production-observed');
+            $hitSources = array($mode === 'csrf' ? 'cli/refresh_csrf.php' : ($mode === 'clog' ? 'lib/clog_webapi.php' : 'rrdcleaner.php'));
+            $scenario = json_encode(array($mode, $argument), JSON_THROW_ON_ERROR);
+            $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/per-cs-review-native.php', $scenario, $sources, $markers, $hitSources);
+            if ($mode === 'cleaner' && $argument === 'traffic') {
+                $test->assertSame(27, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/per-cs-review-native.php', $scenario, $sources, $markers, $hitSources, 'lib/boost.php'));
+            }
+            $coverage->merge($child);
         }
         return array($status, $output, $error);
     } finally {

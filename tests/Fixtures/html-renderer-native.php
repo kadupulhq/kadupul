@@ -121,4 +121,5 @@ switch ($case['kind']) {
     default: throw new RuntimeException('Unknown native renderer case');
 }
 $html = ob_get_clean();
+define('NATIVE_COVERAGE_COMPLETED', array('html-rendered:' . $case['kind']));
 fwrite(STDOUT, json_encode(array('html' => $html, 'queries' => $queries, 'hooks' => $hooks), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
