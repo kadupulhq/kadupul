@@ -2532,6 +2532,13 @@ input:focus-visible + .radioSlider {
     box-shadow: inset 0 0 0 1px var(--control-border), 0 0 0 6px var(--focus-halo);
 }
 
+/* The sliders' transition also fades the focus ring in. */
+@media (prefers-reduced-motion: reduce) {
+    .checkboxSlider, .radioSlider {
+        transition: none;
+    }
+}
+
 input:disabled + .radioSlider {
     cursor: not-allowed;
 }
