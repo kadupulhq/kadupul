@@ -31,12 +31,12 @@ final class AggregateTemplateReviewRegressionTest extends TestCase
 
     public static function unsafePages(): array
     {
-        return [[1000001], [PHP_INT_MAX]];
+        return [[50001], [1000000], [PHP_INT_MAX]];
     }
 
     public function testMaximumSupportedOffsetRemainsAnInteger(): void
     {
-        self::assertSame(99999900, (new AggregateTemplateCriteria(page: 1000000, pageSize: 100))->offset());
+        self::assertSame(4999900, (new AggregateTemplateCriteria(page: 50000, pageSize: 100))->offset());
     }
 
     #[DataProvider('legacyRows')]

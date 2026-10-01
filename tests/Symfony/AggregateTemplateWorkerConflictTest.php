@@ -67,6 +67,47 @@ final class AggregateTemplateWorkerConflictTest extends TestCase
         }
     }
 
+    public static function deniedActions(): iterable
+    {
+        foreach (['save', 'delete'] as $action) {
+            yield $action => [$action, 42, $action, 1, true];
+            yield $action . ' wrong actor' => [$action, 43, $action, 1, false];
+            yield $action . ' string actor' => [$action, '42', $action, 1, false];
+            yield $action . ' wrong action' => [$action, 42, 'other', 1, false];
+            yield $action . ' wrong exit' => [$action, 42, $action, 0, false];
+        }
+    }
+
+    #[DataProvider('deniedActions')]
+    public function testActorBoundDeniedEnvelopeNeedsNoTargetIds(string $action, int|string $reportedActor, string $reportedAction, int $exitCode, bool $verified): void
+    {
+        $directory = sys_get_temp_dir() . '/aggregate-denied-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/bin', 0700, true);
+        $worker = $directory . '/bin/legacy-aggregate-template.php';
+        $result = ['actor' => $reportedActor, 'action' => $reportedAction, 'ids' => [], 'status' => 'denied'];
+        file_put_contents($worker, '<?php stream_get_contents(STDIN); echo ' . var_export('KADUPUL_AGGREGATE_RESULT=' . json_encode($result), true) . '; exit(' . $exitCode . ');');
+        try {
+            $pdo = new \PDO('sqlite::memory:');
+            $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+            $pdo->prepare('INSERT INTO settings VALUES (?, ?)')->execute(['path_php_binary', PHP_BINARY]);
+            $database = $this->createMock(DatabaseConnection::class);
+            $database->method('get')->willReturn($pdo);
+            $audit = $this->createMock(AuditTrail::class);
+            $audit->expects(self::once())->method('record')->with(self::callback(static fn(AuditEvent $event): bool => $event->decision === ($verified ? AuditEvent::DENIED : AuditEvent::ALLOWED) && $event->outcome === ($verified ? AuditEvent::DENIED : AuditEvent::FAILED)));
+            $editor = new LegacyAggregateTemplateEditor($database, $audit, $directory);
+            $this->expectException($verified ? \Kadupul\AggregateTemplate\Application\Query\AggregateTemplateAccessDenied::class : \RuntimeException::class);
+            if ($action === 'save') {
+                $editor->save(42, 7, [], 'old');
+            } else {
+                $editor->delete(42, [7 => 'old']);
+            }
+        } finally {
+            unlink($worker);
+            rmdir($directory . '/bin');
+            rmdir($directory);
+        }
+    }
+
     public static function actions(): iterable
     {
         yield 'save' => ['save', 'Aggregate template changed. Reload before saving.'];

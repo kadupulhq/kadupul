@@ -89,6 +89,12 @@ final readonly class LegacyAggregateTemplateEditor implements AggregateTemplateE
         $actor = $command['actor'];
         $action = $command['action'];
         $resultIds = $result['ids'] ?? null;
+        // Authorization can refuse before the worker resolves any targets.
+        if (($result['status'] ?? null) === 'denied' && $resultIds === []
+            && ($result['actor'] ?? null) === $actor && ($result['action'] ?? null) === $action
+            && $process->getExitCode() === 1) {
+            throw new AggregateTemplateAccessDenied();
+        }
         if (!is_array($resultIds) || !array_is_list($resultIds) || $resultIds === []) {
             throw new \RuntimeException('Aggregate template operation outcome could not be verified.');
         }
