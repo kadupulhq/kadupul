@@ -330,3 +330,20 @@ function csrf_strip_host_port($host) {
 }
 
 include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
+
+/**
+ * Print the CSRF token field for a hand-written POST form. It is the field the
+ * output handler adds to POST forms that stay on this site, so a form that
+ * prints it works the same with or without the rewrite.
+ */
+if (!function_exists('csrf_field')) {
+	function csrf_field() {
+		if (!empty($GLOBALS['csrf']['disable'])) {
+			return;
+		}
+
+		print "<input type='hidden' name='" . htmlspecialchars($GLOBALS['csrf']['input-name'], ENT_QUOTES, 'UTF-8') .
+			"' value=\"" . htmlspecialchars(csrf_get_tokens(), ENT_QUOTES, 'UTF-8') . '"' .
+			($GLOBALS['csrf']['xhtml'] ? ' /' : '') . '>';
+	}
+}
