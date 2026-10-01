@@ -28,12 +28,19 @@ $db->exec('CREATE TABLE user_auth_group_members (user_id INTEGER, group_id INTEG
 $db->exec('CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)');
 $db->exec('CREATE TABLE user_auth_cache (user_id INTEGER)');
 $db->exec('CREATE TABLE sessions (user_id INTEGER)');
-$hash = $scenario['legacy_hash'] ?? false ? md5('Correct1!') : password_hash('Correct1!', PASSWORD_DEFAULT);
+// Fixed historical test vector for Correct1!: migration must replace an existing
+// weak legacy record; new fixture credentials always use password_hash().
+$hash = ($scenario['legacy_hash'] ?? false)
+    ? '231b340f63aab54c7a81f940a521e8c6'
+    : password_hash('Correct1!', PASSWORD_DEFAULT);
 $db->prepare('INSERT INTO user_auth (id, username, password) VALUES (42, ?, ?)')->execute(array('alice', $hash));
 $db->prepare('INSERT INTO user_auth (id, username, password) VALUES (43, ?, ?)')->execute(array('bob', $hash));
 foreach ($scenario['account'] ?? array() as $field => $value) {
     if (!in_array($field, array('enabled', 'locked', 'lastfail', 'failed_attempts', 'must_change_password', 'password_change', 'realm'), true)) {
         throw new InvalidArgumentException('Unknown account fixture field.');
+    }
+    if ($field === 'lastfail' && $value === 'recent') {
+        $value = time();
     }
     $db->prepare('UPDATE user_auth SET ' . $field . ' = ? WHERE id = 42')->execute(array($value));
 }

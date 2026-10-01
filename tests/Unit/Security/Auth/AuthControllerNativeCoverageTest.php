@@ -35,9 +35,9 @@ final class AuthControllerNativeCoverageTest extends TestCase
             'unknown username' => array(array('request' => array('login_username' => 'missing')), array('error' => true, 'failed_attempts' => 0, 'audit' => array(0))),
             'empty username' => array(array('request' => array('login_username' => '')), array('error' => true, 'failed_attempts' => 0, 'audit' => array(0))),
             'disabled account' => array(array('account' => array('enabled' => '')), array('error' => true, 'failed_attempts' => 0, 'audit' => array(0))),
-            'active lockout' => array(array('account' => array('locked' => 'on', 'lastfail' => time())), array('error' => true, 'locked' => 'on', 'lastlogin' => false, 'audit' => array(0))),
+            'active lockout' => array(array('account' => array('locked' => 'on', 'lastfail' => 'recent')), array('error' => true, 'locked' => 'on', 'lastlogin' => false, 'audit' => array(0))),
             'expired lockout' => array(array('account' => array('locked' => 'on', 'lastfail' => 1, 'failed_attempts' => 3)), array('error' => false, 'locked' => '', 'failed_attempts' => 0, 'audit' => array(1))),
-            'threshold locks account' => array(array('request' => array('login_password' => 'Wrong1!'), 'account' => array('failed_attempts' => 2, 'lastfail' => time())), array('error' => true, 'failed_attempts' => 3, 'locked' => 'on', 'audit' => array(0, 0))),
+            'threshold locks account' => array(array('request' => array('login_password' => 'Wrong1!'), 'account' => array('failed_attempts' => 2, 'lastfail' => 'recent')), array('error' => true, 'failed_attempts' => 3, 'locked' => 'on', 'audit' => array(0, 0))),
             'no area access' => array(array('no_realm' => true), array('error' => true, 'failed_attempts' => 0, 'audit' => array(1))),
             'group area access' => array(array('no_realm' => true, 'group_realm' => true), array('error' => false, 'audit' => array(1))),
         );
