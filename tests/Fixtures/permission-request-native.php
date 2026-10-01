@@ -55,4 +55,4 @@ if (!empty($scenario['reject'])) {
     $function();
 }
 $output = ob_get_clean();
-print json_encode(array('request' => $_REQUEST, 'session' => $_SESSION, 'output' => $output, 'error' => $error), JSON_THROW_ON_ERROR);
+fwrite(STDOUT, json_encode(array('request' => $_REQUEST, 'session' => $_SESSION, 'output' => $output, 'error' => $error), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
