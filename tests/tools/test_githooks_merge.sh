@@ -34,7 +34,7 @@ if bash "$root/.githooks/pre-commit-checks" > "$fixture/failure.log" 2>&1; then
     echo 'ERROR: authored whitespace was accepted' >&2
     exit 1
 fi
-if ! rg -q 'authored.txt.*trailing whitespace' "$fixture/failure.log"; then
+if ! grep -q 'authored.txt.*trailing whitespace' "$fixture/failure.log"; then
     cat "$fixture/failure.log"
     exit 1
 fi
