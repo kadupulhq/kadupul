@@ -5,15 +5,5 @@
         }
     },
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_listed\"",
-        "select id=\"listed\" name=\"listed[]\"",
-        "div id=\"row_from_sql\"",
-        "select id=\"from_sql\" name=\"from_sql[]\"",
-        "div id=\"row_from_settings\"",
-        "select id=\"from_settings\" name=\"from_settings[]\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

@@ -5,11 +5,5 @@
         }
     },
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_notes\"",
-        "textarea id=\"notes\" name=\"notes\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

@@ -2,26 +2,7 @@
     "session": [],
     "diagnostics": [],
     "log": [],
-    "elements": [
-        "form id=\"export\" name=\"export\"",
-        "div id=\"templates_export1\"",
-        "div id=\"row_export_type\"",
-        "select id=\"export_type\" name=\"export_type\"",
-        "table id=\"templates_export1_child\"",
-        "div id=\"templates_export2\"",
-        "div id=\"row_export_item_id\"",
-        "select id=\"export_item_id\" name=\"export_item_id\"",
-        "div id=\"row_include_deps\"",
-        "input type=\"checkbox\" id=\"include_deps\" name=\"include_deps\"",
-        "div id=\"row_output_format\"",
-        "input type=\"radio\" id=\"output_format_1\" name=\"output_format\"",
-        "input type=\"radio\" id=\"output_format_2\" name=\"output_format\"",
-        "input type=\"radio\" id=\"output_format_3\" name=\"output_format\"",
-        "input type=\"hidden\" id=\"save_component_export\" name=\"save_component_export\"",
-        "table id=\"templates_export2_child\"",
-        "input type=\"hidden\" name=\"action\"",
-        "input type=\"submit\" id=\"submit\""
-    ],
+    "elements_outside_forms": [],
     "script_ids": [
         "export",
         "export_type"

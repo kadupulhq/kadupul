@@ -1,26 +1,5 @@
 {
     "session": [],
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_host_id\"",
-        "span id=\"host_id_wrap\"",
-        "span id=\"host_id_click\"",
-        "input type=\"text\" id=\"host_id_input\"",
-        "input type=\"hidden\" id=\"host_id\" name=\"host_id\"",
-        "div id=\"row_site_id\"",
-        "span id=\"site_id_wrap\"",
-        "span id=\"site_id_click\"",
-        "input type=\"text\" id=\"site_id_input\"",
-        "input type=\"hidden\" id=\"site_id\" name=\"site_id\""
-    ],
-    "script_ids": [
-        "host_id",
-        "host_id_input",
-        "host_id_wrap",
-        "site_id",
-        "site_id_input",
-        "site_id_wrap"
-    ],
-    "script_names": []
+    "log": []
 }

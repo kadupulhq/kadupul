@@ -2,25 +2,7 @@
     "session": [],
     "diagnostics": [],
     "log": [],
-    "elements": [
-        "form id=\"form_network\" name=\"form_network\"",
-        "div id=\"automation_templates_edit1\"",
-        "div id=\"automation_templates_edit1_child\"",
-        "div id=\"row_host_template\"",
-        "select id=\"host_template\" name=\"host_template\"",
-        "div id=\"row_availability_method\"",
-        "select id=\"availability_method\" name=\"availability_method\"",
-        "div id=\"row_sysDescr\"",
-        "input type=\"text\" id=\"sysDescr\" name=\"sysDescr\"",
-        "div id=\"row_sysName\"",
-        "input type=\"text\" id=\"sysName\" name=\"sysName\"",
-        "div id=\"row_sysOid\"",
-        "input type=\"text\" id=\"sysOid\" name=\"sysOid\"",
-        "input type=\"hidden\" id=\"id\" name=\"id\"",
-        "input type=\"hidden\" id=\"save_component_template\" name=\"save_component_template\"",
-        "input type=\"hidden\" name=\"action\"",
-        "input type=\"submit\" id=\"submit\""
-    ],
+    "elements_outside_forms": [],
     "script_ids": [
         "form_network"
     ],

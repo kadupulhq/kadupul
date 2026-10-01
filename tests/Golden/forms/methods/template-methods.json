@@ -1,15 +1,5 @@
 {
     "session": [],
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_template_checkbox\"",
-        "input type=\"hidden\" id=\"template_checkbox\" name=\"template_checkbox\"",
-        "div id=\"row_template_checkbox_off\"",
-        "input type=\"hidden\" id=\"template_checkbox_off\" name=\"template_checkbox_off\"",
-        "div id=\"row_template_drop_array\"",
-        "input type=\"hidden\" id=\"template_drop_array\" name=\"template_drop_array\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

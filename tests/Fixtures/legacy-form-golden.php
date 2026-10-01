@@ -10,13 +10,14 @@
 // query that no fixture row matches returns no rows, which is what a fresh
 // install returns for an object that does not exist yet.
 //
-// The output is recorded as printed, except for what differs between runs or
-// machines:
+// The clock is frozen at 2026-06-15 12:34:56 UTC: every application file the
+// child includes is loaded with its calls to time(), date() and the other
+// clock functions pointed at the frozen time. The output is then recorded as
+// printed, except for what still differs between runs or machines:
 // - the CSP nonce becomes <NONCE> and csrf-magic tokens become <CSRF>;
-// - Unix times, dates and JavaScript Date() calls within a week of the run
-//   become <TIME>, as does the time prefix of each log line;
-// - the checkout and the scratch directory become <ROOT> and <DIR>, and the
-//   machine name in the default Server Base URL becomes <HOST>;
+// - the checkout and the scratch directory become <ROOT> and <DIR>, also
+//   where they appear HTML-escaped, and the machine name in the default
+//   Server Base URL becomes <HOST>;
 // - debug backtrace lines are left out of the log, since they name source
 //   lines.
 // The time zone, the rand() seed, ext-ldap and the php.ini values the test
@@ -29,6 +30,309 @@ if (PHP_SAPI !== 'cli') {
 
 [, $root, $directory] = $argv;
 $directory = realpath($directory);
+
+// The goldens depend on extensions composer.json requires, such as gd for the
+// report formats. ext-ldap has a stand-in below.
+$missing = array();
+foreach (array_keys(json_decode(file_get_contents($root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR)['require']) as $package) {
+    if (str_starts_with($package, 'ext-') && $package !== 'ext-ldap' && !extension_loaded(substr($package, 4))) {
+        $missing[] = $package;
+    }
+}
+if ($missing) {
+    fwrite(STDERR, 'The form goldens need ' . implode(', ', $missing) . ' in ' . PHP_BINARY . PHP_EOL);
+    exit(3);
+}
+
+const LEGACY_FORM_GOLDEN_NOW = 1781526896;
+
+function legacy_form_golden_time()
+{
+    return LEGACY_FORM_GOLDEN_NOW;
+}
+
+function legacy_form_golden_microtime($as_float = false)
+{
+    return $as_float ? (float) LEGACY_FORM_GOLDEN_NOW : '0.00000000 ' . LEGACY_FORM_GOLDEN_NOW;
+}
+
+function legacy_form_golden_date($format, $timestamp = null)
+{
+    return date($format, $timestamp ?? LEGACY_FORM_GOLDEN_NOW);
+}
+
+function legacy_form_golden_gmdate($format, $timestamp = null)
+{
+    return gmdate($format, $timestamp ?? LEGACY_FORM_GOLDEN_NOW);
+}
+
+function legacy_form_golden_idate($format, $timestamp = null)
+{
+    return idate($format, $timestamp ?? LEGACY_FORM_GOLDEN_NOW);
+}
+
+function legacy_form_golden_getdate($timestamp = null)
+{
+    return getdate($timestamp ?? LEGACY_FORM_GOLDEN_NOW);
+}
+
+function legacy_form_golden_localtime($timestamp = null, $associative = false)
+{
+    return localtime($timestamp ?? LEGACY_FORM_GOLDEN_NOW, $associative);
+}
+
+function legacy_form_golden_strtotime($datetime, $base = null)
+{
+    return strtotime($datetime, $base ?? LEGACY_FORM_GOLDEN_NOW);
+}
+
+// Arguments left out default to the current hour, minute and so on.
+function legacy_form_golden_mktime(...$arguments)
+{
+    $now = explode(',', date('G,i,s,n,j,Y', LEGACY_FORM_GOLDEN_NOW));
+    for ($i = 0; $i < 6; $i++) {
+        $arguments[$i] = (int) ($arguments[$i] ?? $now[$i]);
+    }
+
+    return mktime(...$arguments);
+}
+
+function legacy_form_golden_gmmktime(...$arguments)
+{
+    $now = explode(',', gmdate('G,i,s,n,j,Y', LEGACY_FORM_GOLDEN_NOW));
+    for ($i = 0; $i < 6; $i++) {
+        $arguments[$i] = (int) ($arguments[$i] ?? $now[$i]);
+    }
+
+    return gmmktime(...$arguments);
+}
+
+function legacy_form_golden_date_create($datetime = 'now', $timezone = null)
+{
+    $date = (new DateTime('@' . LEGACY_FORM_GOLDEN_NOW))->setTimezone($timezone ?? new DateTimeZone(date_default_timezone_get()));
+
+    return $datetime === 'now' || $datetime === '' ? $date : $date->modify($datetime);
+}
+
+function legacy_form_golden_date_create_immutable($datetime = 'now', $timezone = null)
+{
+    return DateTimeImmutable::createFromMutable(legacy_form_golden_date_create($datetime, $timezone));
+}
+
+function legacy_form_golden_uniqid($prefix = '', $more_entropy = false)
+{
+    static $count = 0;
+
+    return $prefix . sprintf('%08x%05x', LEGACY_FORM_GOLDEN_NOW, ++$count) . ($more_entropy ? '.00000000' : '');
+}
+
+/** Point each call to a clock function at its frozen stand-in. */
+function legacy_form_golden_freeze($code)
+{
+    static $clock = array(
+        'time', 'microtime', 'date', 'gmdate', 'idate', 'getdate', 'localtime', 'strtotime', 'mktime', 'gmmktime',
+        'date_create', 'date_create_immutable', 'uniqid',
+    );
+    static $not_a_call = array(T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR, T_DOUBLE_COLON, T_FUNCTION, T_NEW, T_CONST);
+
+    $tokens = PhpToken::tokenize($code);
+    $previous = null;
+    $frozen = '';
+    foreach ($tokens as $index => $token) {
+        $name = strtolower(ltrim($token->text, '\\'));
+        if (($token->is(T_STRING) || $token->is(T_NAME_FULLY_QUALIFIED)) && in_array($name, $clock, true) && !($previous && $previous->is($not_a_call))) {
+            $next = $index + 1;
+            while (isset($tokens[$next]) && $tokens[$next]->isIgnorable()) {
+                $next++;
+            }
+            if (isset($tokens[$next]) && $tokens[$next]->text === '(') {
+                $frozen .= '\\legacy_form_golden_' . $name;
+                $previous = $token;
+                continue;
+            }
+        }
+        $frozen .= $token->text;
+        if (!$token->isIgnorable()) {
+            $previous = $token;
+        }
+    }
+
+    return $frozen;
+}
+
+/**
+ * Stands in for the file:// wrapper. Application PHP files opened for include
+ * are served frozen; everything else, vendor code included, passes through.
+ */
+final class LegacyFormGoldenFiles
+{
+    // STREAM_OPEN_FOR_INCLUDE, which PHP does not expose to scripts.
+    private const OPEN_FOR_INCLUDE = 0x80;
+
+    public static $root;
+    public $context;
+    private $handle;
+
+    private static function real(callable $operation)
+    {
+        stream_wrapper_restore('file');
+        try {
+            return $operation();
+        } finally {
+            stream_wrapper_unregister('file');
+            stream_wrapper_register('file', self::class);
+        }
+    }
+
+    public function stream_open($path, $mode, $options, &$opened_path)
+    {
+        return self::real(function () use ($path, $mode, $options) {
+            $real = realpath($path);
+            if (($options & self::OPEN_FOR_INCLUDE) && $real !== false && str_ends_with($real, '.php')
+                && str_starts_with($real, self::$root . '/') && !str_starts_with($real, self::$root . '/include/vendor/')) {
+                $this->handle = fopen('php://memory', 'r+');
+                fwrite($this->handle, legacy_form_golden_freeze(file_get_contents($real)));
+                rewind($this->handle);
+
+                return true;
+            }
+            $this->handle = ($options & STREAM_REPORT_ERRORS) ? fopen($path, $mode, false, $this->context) : @fopen($path, $mode, false, $this->context);
+
+            return $this->handle !== false;
+        });
+    }
+
+    public function stream_read($count)
+    {
+        return fread($this->handle, $count);
+    }
+
+    public function stream_write($data)
+    {
+        return fwrite($this->handle, $data);
+    }
+
+    public function stream_eof()
+    {
+        return feof($this->handle);
+    }
+
+    public function stream_tell()
+    {
+        return ftell($this->handle);
+    }
+
+    public function stream_seek($offset, $whence)
+    {
+        return fseek($this->handle, $offset, $whence) === 0;
+    }
+
+    public function stream_flush()
+    {
+        return fflush($this->handle);
+    }
+
+    public function stream_close()
+    {
+        fclose($this->handle);
+    }
+
+    public function stream_stat()
+    {
+        return fstat($this->handle);
+    }
+
+    public function stream_lock($operation)
+    {
+        return $operation === 0 ? true : flock($this->handle, $operation);
+    }
+
+    public function stream_truncate($size)
+    {
+        return ftruncate($this->handle, $size);
+    }
+
+    public function stream_set_option($option, $value, $extra)
+    {
+        return false;
+    }
+
+    public function stream_cast($as)
+    {
+        return $this->handle;
+    }
+
+    public function stream_metadata($path, $option, $value)
+    {
+        return self::real(function () use ($path, $option, $value) {
+            return match ($option) {
+                STREAM_META_TOUCH => touch($path, ...$value),
+                STREAM_META_ACCESS => chmod($path, $value),
+                STREAM_META_OWNER, STREAM_META_OWNER_NAME => chown($path, $value),
+                STREAM_META_GROUP, STREAM_META_GROUP_NAME => chgrp($path, $value),
+                default => false,
+            };
+        });
+    }
+
+    public function url_stat($path, $flags)
+    {
+        return self::real(function () use ($path, $flags) {
+            // PHP reports a failed stat itself unless the caller asked for quiet.
+            return ($flags & STREAM_URL_STAT_LINK) ? @lstat($path) : @stat($path);
+        });
+    }
+
+    public function unlink($path)
+    {
+        return self::real(fn() => unlink($path));
+    }
+
+    public function rename($from, $to)
+    {
+        return self::real(fn() => rename($from, $to));
+    }
+
+    public function mkdir($path, $mode, $options)
+    {
+        return self::real(fn() => mkdir($path, $mode, (bool) ($options & STREAM_MKDIR_RECURSIVE)));
+    }
+
+    public function rmdir($path, $options)
+    {
+        return self::real(fn() => rmdir($path));
+    }
+
+    public function dir_opendir($path, $options)
+    {
+        $this->handle = self::real(fn() => opendir($path));
+
+        return $this->handle !== false;
+    }
+
+    public function dir_readdir()
+    {
+        return readdir($this->handle);
+    }
+
+    public function dir_rewinddir()
+    {
+        rewinddir($this->handle);
+
+        return true;
+    }
+
+    public function dir_closedir()
+    {
+        closedir($this->handle);
+
+        return true;
+    }
+}
+
+LegacyFormGoldenFiles::$root = $root;
+stream_wrapper_unregister('file');
+stream_wrapper_register('file', LegacyFormGoldenFiles::class);
 // '<DIR>' in a scenario stands for this run's directory, where it may create files.
 $scenario = json_decode(strtr(file_get_contents($directory . '/scenario.json'), array('<DIR>' => $directory)), true, 512, JSON_THROW_ON_ERROR);
 foreach ($scenario['files'] ?? array() as $file) {
@@ -234,36 +538,10 @@ function legacy_form_golden_project($sql, $row)
     return $projected;
 }
 
-/**
- * Some forms default a field to a time derived from now, and graph previews
- * embed now in their URLs. Unix times, 'Y-m-d H:i[:s]' dates and JavaScript
- * 'new Date(Y, m, d, H, i, s, ms)' calls within a week of the run become
- * '<TIME>'; fixture dates are further away and stay.
- */
-function legacy_form_golden_clock($text, $from, $to)
-{
-    $text = preg_replace_callback('/\b[0-9]{10}\b/', function ($match) use ($from, $to) {
-        return $match[0] >= $from && $match[0] <= $to ? '<TIME>' : $match[0];
-    }, $text);
-
-    $text = preg_replace_callback('/\b[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}(:[0-9]{2})?\b/', function ($match) use ($from, $to) {
-        $time = strtotime($match[0] . ' UTC');
-
-        return $time !== false && $time >= $from && $time <= $to ? '<TIME>' : $match[0];
-    }, $text);
-
-    return preg_replace_callback('/new Date\(([0-9]{4}), ([0-9]{1,2}), ([0-9]{1,2}), ([0-9]{1,2}), ([0-9]{1,2}), ([0-9]{1,2}), ([0-9]{1,3})\)/', function ($match) use ($from, $to) {
-        $time = gmmktime((int) $match[4], (int) $match[5], (int) $match[6], (int) $match[2] + 1, (int) $match[3], (int) $match[1]);
-
-        return $time >= $from && $time <= $to ? 'new Date(<TIME>)' : $match[0];
-    }, $text);
-}
-
 // Formatted dates and log lines use the process zone. Pages that add a random
 // cache buster to a URL draw it from rand(), which this seed fixes.
 date_default_timezone_set('UTC');
 mt_srand(20260930);
-$clock_start = time();
 putenv('TZ=UTC');
 setlocale(LC_CTYPE, 'en_US.UTF-8');
 
@@ -272,6 +550,10 @@ setlocale(LC_CTYPE, 'en_US.UTF-8');
 // between the PHP versions main supports.
 $diagnostics = array();
 set_error_handler(function ($level, $message) use (&$diagnostics) {
+    // An @-silenced call stays silent, as it is in production.
+    if (!(error_reporting() & $level)) {
+        return true;
+    }
     if ($level !== E_DEPRECATED && $level !== E_USER_DEPRECATED) {
         $diagnostics[] = $level . ': ' . $message;
     }
@@ -287,11 +569,12 @@ define('CACTI_CLI', false);
 define('CACTI_DOCUMENTATION_TOC', 'docs/Table-of-Contents.html');
 
 $database_type = 'mysql';
-$database_default = 'cacti';
-$database_hostname = 'localhost';
-$database_username = 'cactiuser';
-$database_password = 'cactiuser';
-$database_port = '3306';
+// Nothing listens here, so a path that bypasses the fixture connection fails.
+$database_default = 'legacy_form_golden';
+$database_hostname = '127.0.0.1';
+$database_username = 'nobody';
+$database_password = 'nothing';
+$database_port = '1';
 $database_retries = 2;
 $database_ssl = false;
 $cacti_session_name = 'Cacti';
@@ -332,7 +615,7 @@ require $root . '/lib/html.php';
 require $root . '/lib/html_utility.php';
 require $root . '/lib/html_validate.php';
 
-$database_sessions = array('localhost:3306:cacti' => new LegacyFormGoldenConnection());
+$database_sessions = array($database_hostname . ':' . $database_port . ':' . $database_default => new LegacyFormGoldenConnection());
 $config['cacti_db_version'] = CACTI_VERSION;
 
 // csrf-magic keeps its secret beside the scenario, not in include/vendor.
@@ -351,6 +634,8 @@ $_SERVER['PHP_SELF'] = '/' . $page;
 $_SERVER['SCRIPT_FILENAME'] = $root . '/' . $page;
 $_SERVER['REQUEST_URI'] = '/' . $page . ($_GET ? '?' . http_build_query($_GET) : '');
 $_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['REQUEST_TIME'] = LEGACY_FORM_GOLDEN_NOW;
+$_SERVER['REQUEST_TIME_FLOAT'] = (float) LEGACY_FORM_GOLDEN_NOW;
 $_SERVER['SERVER_NAME'] = 'kadupul.example';
 $_SERVER['HTTP_HOST'] = 'kadupul.example';
 unset($_SERVER['HTTP_REFERER'], $_SERVER['argv'], $_SERVER['argc']);
@@ -387,7 +672,7 @@ require $root . '/lib/api_automation.php';
 // is what that buffer hands to the web server.
 ob_start();
 $capture_level = ob_get_level();
-register_shutdown_function(function () use ($root, $directory, $capture_level, $clock_start, &$diagnostics) {
+register_shutdown_function(function () use ($root, $directory, $capture_level, &$diagnostics) {
     while (ob_get_level() > $capture_level) {
         ob_end_flush();
     }
@@ -396,6 +681,8 @@ register_shutdown_function(function () use ($root, $directory, $capture_level, $
         CactiSecureHeaders::getNonce() => '<NONCE>',
         $directory => '<DIR>',
         $root => '<ROOT>',
+        htmlspecialchars($directory, ENT_QUOTES) => '<DIR>',
+        htmlspecialchars($root, ENT_QUOTES) => '<ROOT>',
         // The default Server Base URL names the machine.
         'http://' . gethostname() . '/' => 'http://<HOST>/',
     );
@@ -404,8 +691,7 @@ register_shutdown_function(function () use ($root, $directory, $capture_level, $
         foreach (file($directory . '/cacti.log', FILE_IGNORE_NEW_LINES) as $line) {
             // A debug backtrace names source lines, which any edit moves.
             if (!str_contains($line, ' Backtrace: ')) {
-                // The prefix is the time of the call; the rest is the message.
-                $log[] = preg_replace('/^.*? - /', '<TIME> - ', $line);
+                $log[] = $line;
             }
         }
     }
@@ -421,7 +707,6 @@ register_shutdown_function(function () use ($root, $directory, $capture_level, $
             // A csrf-magic token is an HMAC of the session id and the time,
             // followed by that time.
             $value = preg_replace('/\b(sid|cookie|key|user|ip):[0-9a-f]{40,128},[0-9]+/', '$1:<CSRF>', strtr($value, $replace));
-            $value = legacy_form_golden_clock($value, $clock_start - 8 * 86400, time() + 8 * 86400);
         }
     });
     echo json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

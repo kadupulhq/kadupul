@@ -1,15 +1,56 @@
-<form class="cactiFormStart" id="form_rra" name="form_rra" action="data_source_profiles.php" autocomplete="off" method="post"><div id="data_source_profiles_item_edit1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>RRA [edit:  ]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Data-Profiles.html" href="#"><i class="far fa-question-circle"></i></a></span><span> </span></div></div><div id="data_source_profiles_item_edit1_child" class="cactiTable"><div id="row_name" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How data is to be entered in RRAs.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="name" name="name" size="60" maxlength="100" value="New Profile RRA"></div></div></div><div id="row_steps" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Aggregation Level<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="steps" name="steps"><option value="1">Each Insert is New Row</option></select></div></div></div><div id="row_rows" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Rows<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How many generations data is kept in the RRA.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="rows" name="rows" size="10" maxlength="12" value="600"></div></div></div><div id="row_timespan" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Default Timespan<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="timespan" name="timespan"><option value="3600">1 Hour</option><option value="7200">2 Hours</option><option value="14400">4 Hours</option><option value="21600">6 Hours</option><option value="43200">12 Hours</option><option value="86400">1 Day</option><option value="172800">2 Days</option><option value="345600">4 Days</option><option value="604800">1 Week</option><option value="1209600">2 Weeks</option><option value="1814400">3 Weeks</option><option value="2618784">1 Month</option><option value="5237568">2 Months</option><option value="7856352">3 Months</option><option value="10475136">4 Months</option><option value="15712704">6 Months</option><option value="31536000">1 Year</option><option value="63072000">2 Years</option><option value="94608000">3 Years</option><option value="126144000">4 Years</option><option value="157680000">5 Years</option><option value="189216000">6 Years</option><option value="220752000">7 Years</option><option value="252288000">8 Years</option><option value="283824000">9 Years</option><option value="315360000">10 Years</option></select></div></div></div><div id="row_retention" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Data Retention<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><em></em><div style="display:none;"><input style="height:0px;" type="hidden" id="retention" name="retention" value=""></div></div></div></div><div id="row_size" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">RRA Size (in Bytes)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Based upon the number of Rows and the number of Consolidation Functions selected, the size of this RRA in the RRDfile.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><em></em><div style="display:none;"><input style="height:0px;" type="hidden" id="size" name="size" value=""></div></div></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="id" name="id" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_rra" name="save_component_rra" value="1"></div></div></div></div><div class="break"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="profile_id" name="profile_id" value="1"></div>	<table style="width:100%;text-align:center;">
-		<tbody><tr>
-			<td class="saveRow">
-				<input type="hidden" name="action" value="save">
-				<input type="button" class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="data_source_profiles.php?action=edit&amp;id=1" value="Cancel">				<input type="submit" class=" ui-button ui-corner-all ui-widget" id="submit" value="Create">
-			</td>
-		</tr>
-	</tbody></table>
-	</form>
+<form action="data_source_profiles.php" autocomplete="off" class="cactiFormStart" id="form_rra" method="post" name="form_rra">
+  <div class="cactiTable" id="data_source_profiles_item_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>RRA [edit: ]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Data-Profiles.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="data_source_profiles_item_edit1_child">
+      <div class="formRow odd" id="row_name"><div class="formColumnLeft"><div class="formFieldName">Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How data is to be entered in RRAs.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="name" maxlength="100" name="name" off="" size="60" type="text" value="New Profile RRA"></div></div></div>
+      <div class="formRow even" id="row_steps"><div class="formColumnLeft"><div class="formFieldName">Aggregation Level<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of samples required prior to filling a row in the RRA specification. The first RRA should always have a value of 1.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="steps" name="steps">
+          <option value="1">Each Insert is New Row</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_rows"><div class="formColumnLeft"><div class="formFieldName">Rows<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How many generations data is kept in the RRA.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="rows" maxlength="12" name="rows" off="" size="10" type="text" value="600"></div></div></div>
+      <div class="formRow even" id="row_timespan"><div class="formColumnLeft"><div class="formFieldName">Default Timespan<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="timespan" name="timespan">
+          <option value="3600">1 Hour</option>
+          <option value="7200">2 Hours</option>
+          <option value="14400">4 Hours</option>
+          <option value="21600">6 Hours</option>
+          <option value="43200">12 Hours</option>
+          <option value="86400">1 Day</option>
+          <option value="172800">2 Days</option>
+          <option value="345600">4 Days</option>
+          <option value="604800">1 Week</option>
+          <option value="1209600">2 Weeks</option>
+          <option value="1814400">3 Weeks</option>
+          <option value="2618784">1 Month</option>
+          <option value="5237568">2 Months</option>
+          <option value="7856352">3 Months</option>
+          <option value="10475136">4 Months</option>
+          <option value="15712704">6 Months</option>
+          <option value="31536000">1 Year</option>
+          <option value="63072000">2 Years</option>
+          <option value="94608000">3 Years</option>
+          <option value="126144000">4 Years</option>
+          <option value="157680000">5 Years</option>
+          <option value="189216000">6 Years</option>
+          <option value="220752000">7 Years</option>
+          <option value="252288000">8 Years</option>
+          <option value="283824000">9 Years</option>
+          <option value="315360000">10 Years</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_retention"><div class="formColumnLeft"><div class="formFieldName">Data Retention<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA</span></div></div></div></div><div class="formColumnRight"><div class="formData"><em></em><div style="display:none;"><input id="retention" name="retention" style="height:0px;" type="hidden" value=""></div></div></div></div>
+      <div class="formRow even" id="row_size"><div class="formColumnLeft"><div class="formFieldName">RRA Size (in Bytes)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Based upon the number of Rows and the number of Consolidation Functions selected, the size of this RRA in the RRDfile.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><em></em><div style="display:none;"><input id="size" name="size" style="height:0px;" type="hidden" value=""></div></div></div></div>
+      <div class="hidden formRow"><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="save_component_rra" name="save_component_rra" style="height:0px;" type="hidden" value="1"></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="profile_id" name="profile_id" style="height:0px;" type="hidden" value="1"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="data_source_profiles.php?action=edit&amp;id=1" type="button" value="Cancel"><input class=" ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Create"></td></tr>
+    </tbody>
+  </table>
+</form>

@@ -6,20 +6,7 @@
     },
     "diagnostics": [],
     "log": [],
-    "elements": [
-        "form id=\"chk\" name=\"chk\"",
-        "div id=\"automation_graph_rules_edit1\"",
-        "div id=\"automation_graph_rules_edit1_child\"",
-        "div id=\"row_name\"",
-        "input type=\"text\" id=\"name\" name=\"name\"",
-        "div id=\"row_snmp_query_id\"",
-        "select id=\"snmp_query_id\" name=\"snmp_query_id\"",
-        "input type=\"hidden\" id=\"id\" name=\"id\"",
-        "input type=\"hidden\" id=\"item_id\" name=\"item_id\"",
-        "input type=\"hidden\" id=\"save_component_automation_graph_rule\" name=\"save_component_automation_graph_rule\"",
-        "input type=\"hidden\" name=\"action\"",
-        "input type=\"submit\" id=\"submit\""
-    ],
+    "elements_outside_forms": [],
     "script_ids": [
         "chk",
         "id",

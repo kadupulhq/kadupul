@@ -1,13 +1,5 @@
 {
     "session": [],
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_host_id\"",
-        "select id=\"host_id\" name=\"host_id\"",
-        "div id=\"row_empty_list\"",
-        "select id=\"empty_list\" name=\"empty_list\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

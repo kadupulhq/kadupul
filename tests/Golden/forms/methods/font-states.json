@@ -1,13 +1,5 @@
 {
     "session": [],
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_title_font\"",
-        "input type=\"text\" id=\"title_font\" name=\"title_font\"",
-        "div id=\"row_legend_font\"",
-        "input type=\"text\" id=\"legend_font\" name=\"legend_font\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

@@ -1,18 +1,5 @@
 {
     "session": [],
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_choice\"",
-        "select id=\"choice\" name=\"choice\"",
-        "div id=\"row_refresh\"",
-        "input type=\"button\" id=\"refresh\" name=\"refresh\"",
-        "div id=\"row_plain\"",
-        "input type=\"button\" id=\"plain\" name=\"plain\""
-    ],
-    "script_ids": [
-        "choice",
-        "refresh"
-    ],
-    "script_names": []
+    "log": []
 }

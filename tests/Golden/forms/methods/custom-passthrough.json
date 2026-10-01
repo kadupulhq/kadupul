@@ -1,10 +1,5 @@
 {
     "session": [],
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_custom_field\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

@@ -1,39 +1,215 @@
-<form class="cactiFormStart" id="form_network" name="form_network" action="automation_networks.php" autocomplete="off" method="post"><div id="automation_networks_edit1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Network Discovery Range [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Automation-Networks.html" href="#"><i class="far fa-question-circle"></i></a></span><span> </span></div></div><div id="automation_networks_edit1_child" class="cactiTable"><div class="spacer formHeader collapsible" id="row_spacer0"><div class="formHeaderText">General Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_name" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Give this Network a meaningful name.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="name" placeholder="New Network Discovery Range" name="name" size="40" maxlength="250" value=""></div></div></div><div id="row_poller_id" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Data Collector<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Kadupul Data Collector/Poller to be used to gather data from this Device.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="poller_id" name="poller_id"></select></div></div></div><div id="row_site_id" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Associated Site<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Kadupul Site that you wish to associate discovered Devices with.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="site_id" name="site_id"><option value="0">None</option></select></div></div></div><div id="row_subnet_range" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Subnet Range<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><textarea class=" ui-state-default ui-corner-all" aria-multiline="true" cols="80" rows="4" id="subnet_range" name="subnet_range" placeholder="192.168.1.0/24"></textarea></div></div></div><div id="row_total_ips" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Total IP Addresses<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Total addressable IP Addresses in this Network Range.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><em>0</em><div style="display:none;"><input style="height:0px;" type="hidden" id="total_ips" name="total_ips" value="0"></div></div></div></div><div id="row_dns_servers" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Alternate DNS Servers<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="dns_servers" placeholder="Enter IPs or FQDNs of DNS Servers" name="dns_servers" size="40" maxlength="250" value=""></div></div></div><div id="row_sched_type" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Schedule Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Define the collection frequency.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="sched_type" name="sched_type"><option value="1" selected="">Manual</option><option value="2">Daily</option><option value="3">Weekly</option><option value="4">Monthly</option><option value="5">Monthly on Day</option></select></div></div></div><div id="row_threads" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Discovery Threads<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Define the number of threads to use for discovering this Network Range.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="threads" name="threads"><option value="1" selected="">1 Thread</option><option value="2">2 Threads</option><option value="3">3 Threads</option><option value="4">4 Threads</option><option value="5">5 Threads</option><option value="6">6 Threads</option><option value="7">7 Threads</option><option value="8">8 Threads</option><option value="9">9 Threads</option><option value="10">10 Threads</option><option value="20">20 Threads</option><option value="50">50 Threads</option></select></div></div></div><div id="row_run_limit" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Run Limit<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">After the selected Run Limit, the discovery process will be terminated.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="run_limit" name="run_limit"><option value="60">1 Minute</option><option value="300">5 Minutes</option><option value="600">10 Minutes</option><option value="1200" selected="">20 Minutes</option><option value="1800">30 Minutes</option><option value="3600">1 Hour</option><option value="7200">2 Hours</option><option value="14400">4 Hours</option><option value="28800">8 Hours</option></select></div></div></div><div id="row_enabled" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enable this Network Range.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enabled"><input title="Enabled" class="formCheckbox" type="checkbox" id="enabled" name="enabled" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enabled">Enabled</label></span></div></div></div><div id="row_enable_netbios" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Enable NetBIOS<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Use NetBIOS to attempt to resolve the hostname of up hosts.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable NetBIOS"><input title="Enable NetBIOS" class="formCheckbox" type="checkbox" id="enable_netbios" name="enable_netbios" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enable_netbios">Enable NetBIOS</label></span></div></div></div><div id="row_add_to_cacti" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Automatically Add to Kadupul<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Automatically Add to Kadupul"><input title="Automatically Add to Kadupul" class="formCheckbox" type="checkbox" id="add_to_cacti" name="add_to_cacti" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="add_to_cacti">Automatically Add to Kadupul</label></span></div></div></div><div id="row_same_sysname" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Allow same sysName on different hosts<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When discovering devices, allow duplicate sysnames to be added on different hosts</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Allow same sysName on different hosts"><input title="Allow same sysName on different hosts" class="formCheckbox" type="checkbox" id="same_sysname" name="same_sysname" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="same_sysname">Allow same sysName on different hosts</label></span></div></div></div><div id="row_rerun_data_queries" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Rerun Data Queries<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If a device previously added to Kadupul is found, rerun its data queries.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Rerun Data Queries"><input title="Rerun Data Queries" class="formCheckbox" type="checkbox" id="rerun_data_queries" name="rerun_data_queries" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="rerun_data_queries">Rerun Data Queries</label></span></div></div></div><div class="spacer formHeader collapsible" id="row_spacern"><div class="formHeaderText">Notification Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_notification_enabled" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Notification Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account..</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Notification Enabled"><input title="Notification Enabled" class="formCheckbox" type="checkbox" id="notification_enabled" name="notification_enabled" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="notification_enabled">Notification Enabled</label></span></div></div></div><div id="row_notification_email" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Notification Email<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Email account to be used to send the Notification Email to.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="notification_email" name="notification_email" size="40" maxlength="250" value=""></div></div></div><div id="row_notification_fromname" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Notification From Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="notification_fromname" name="notification_fromname" size="30" maxlength="32" value=""></div></div></div><div id="row_notification_fromemail" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Notification From Email Address<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="notification_fromemail" name="notification_fromemail" size="40" maxlength="128" value=""></div></div></div><div class="spacer formHeader collapsible" id="row_spacer2"><div class="formHeaderText">Discovery Timing<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_start_at" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Starting Date/Time<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What time will this Network discover item start?</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="start_at" name="start_at" size="20" maxlength="30" value="<TIME>"></div></div></div><div id="row_recur_every" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Rerun Every<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Rerun discovery for this Network Range every X.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="recur_every" name="recur_every"><option value="1" selected="">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select></div></div></div><div id="row_day_of_week" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Days of Week<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Day(s) of the week will this Network Range be discovered.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select style="height:20px;" size="1" class="multiselect multiselect" id="day_of_week" name="day_of_week[]" multiple=""><option value="1">Sunday</option><option value="2">Monday</option><option value="3">Tuesday</option><option value="4">Wednesday</option><option value="5">Thursday</option><option value="6">Friday</option><option value="7">Saturday</option></select></div></div></div><div id="row_month" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Months of Year<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Months(s) of the Year will this Network Range be discovered.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select style="height:20px;" size="1" class="multiselect multiselect" id="month" name="month[]" multiple=""><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></div></div></div><div id="row_day_of_month" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Days of Month<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Day(s) of the Month will this Network Range be discovered.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select style="height:20px;" size="1" class="multiselect multiselect" id="day_of_month" name="day_of_month[]" multiple=""><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">Last</option></select></div></div></div><div id="row_monthly_week" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Week(s) of Month<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Week(s) of the Month will this Network Range be discovered.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select style="height:20px;" size="1" class="multiselect multiselect" id="monthly_week" name="monthly_week[]" multiple=""><option value="1">First</option><option value="2">Second</option><option value="3">Third</option><option value="32">Last</option></select></div></div></div><div id="row_monthly_day" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Day(s) of Week<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Day(s) of the week will this Network Range be discovered.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select style="height:20px;" size="1" class="multiselect multiselect" id="monthly_day" name="monthly_day[]" multiple=""><option value="1">Sunday</option><option value="2">Monday</option><option value="3">Tuesday</option><option value="4">Wednesday</option><option value="5">Thursday</option><option value="6">Friday</option><option value="7">Saturday</option></select></div></div></div><div class="spacer formHeader collapsible" id="row_spacer1"><div class="formHeaderText">Reachability Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_snmp_id" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">SNMP Options<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select the SNMP Options to use for discovery of this Network Range.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="snmp_id" name="snmp_id"></select></div></div></div><div id="row_ping_method" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Ping Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The type of ping packet to send.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="ping_method" name="ping_method"><option value="1">ICMP Ping</option><option value="3">TCP Ping</option><option value="5">TCP Ping Closed</option><option value="2" selected="">UDP Ping</option><option value="4">SNMP Get</option></select></div></div></div><div id="row_ping_port" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Ping Port<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">TCP or UDP port to attempt connection.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="ping_port" name="ping_port" size="5" maxlength="5" value="23"></div></div></div><div id="row_ping_timeout" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Ping Timeout Value<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="ping_timeout" name="ping_timeout" size="5" maxlength="5" value="400"></div></div></div><div id="row_ping_retries" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Ping Retry Count<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">After an initial failure, the number of ping retries Kadupul will attempt before failing.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="ping_retries" name="ping_retries" size="5" maxlength="5" value="1"></div></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="orig_start_at" name="orig_start_at" value=""></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="orig_sched_type" name="orig_sched_type" value=""></div></div></div></div><div class="break"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_network" name="save_component_network" value="1"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="id" name="id" value="0"></div>	<table style="width:100%;text-align:center;">
-		<tbody><tr>
-			<td class="saveRow">
-				<input type="hidden" name="action" value="save">
-				<input type="button" class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="automation_networks.php" value="Cancel">				<input type="submit" class="return ui-button ui-corner-all ui-widget" id="submit" value="Create">
-			</td>
-		</tr>
-	</tbody></table>
-	</form>
+<form action="automation_networks.php" autocomplete="off" class="cactiFormStart" id="form_network" method="post" name="form_network">
+  <div class="cactiTable" id="automation_networks_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Network Discovery Range [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Automation-Networks.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="automation_networks_edit1_child">
+      <div class="spacer formHeader collapsible" id="row_spacer0"><div class="formHeaderText">General Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_name"><div class="formColumnLeft"><div class="formFieldName">Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Give this Network a meaningful name.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="name" maxlength="250" name="name" off="" placeholder="New Network Discovery Range" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_poller_id"><div class="formColumnLeft"><div class="formFieldName">Data Collector<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Kadupul Data Collector/Poller to be used to gather data from this Device.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="poller_id" name="poller_id"></select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_site_id"><div class="formColumnLeft"><div class="formFieldName">Associated Site<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Kadupul Site that you wish to associate discovered Devices with.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="site_id" name="site_id">
+          <option value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_subnet_range"><div class="formColumnLeft"><div class="formFieldName">Subnet Range<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter valid Network Ranges separated by commas. You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <textarea aria-multiline="true" class=" ui-state-default ui-corner-all" cols="80" id="subnet_range" name="subnet_range" placeholder="192.168.1.0/24" rows="4"></textarea>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_total_ips"><div class="formColumnLeft"><div class="formFieldName">Total IP Addresses<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Total addressable IP Addresses in this Network Range.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><em>0</em><div style="display:none;"><input id="total_ips" name="total_ips" style="height:0px;" type="hidden" value="0"></div></div></div></div>
+      <div class="formRow even" id="row_dns_servers"><div class="formColumnLeft"><div class="formFieldName">Alternate DNS Servers<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="dns_servers" maxlength="250" name="dns_servers" off="" placeholder="Enter IPs or FQDNs of DNS Servers" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_sched_type"><div class="formColumnLeft"><div class="formFieldName">Schedule Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Define the collection frequency.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="sched_type" name="sched_type">
+          <option selected="" value="1">Manual</option>
+          <option value="2">Daily</option>
+          <option value="3">Weekly</option>
+          <option value="4">Monthly</option>
+          <option value="5">Monthly on Day</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_threads"><div class="formColumnLeft"><div class="formFieldName">Discovery Threads<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Define the number of threads to use for discovering this Network Range.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="threads" name="threads">
+          <option selected="" value="1">1 Thread</option>
+          <option value="2">2 Threads</option>
+          <option value="3">3 Threads</option>
+          <option value="4">4 Threads</option>
+          <option value="5">5 Threads</option>
+          <option value="6">6 Threads</option>
+          <option value="7">7 Threads</option>
+          <option value="8">8 Threads</option>
+          <option value="9">9 Threads</option>
+          <option value="10">10 Threads</option>
+          <option value="20">20 Threads</option>
+          <option value="50">50 Threads</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_run_limit"><div class="formColumnLeft"><div class="formFieldName">Run Limit<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">After the selected Run Limit, the discovery process will be terminated.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="run_limit" name="run_limit">
+          <option value="60">1 Minute</option>
+          <option value="300">5 Minutes</option>
+          <option value="600">10 Minutes</option>
+          <option selected="" value="1200">20 Minutes</option>
+          <option value="1800">30 Minutes</option>
+          <option value="3600">1 Hour</option>
+          <option value="7200">2 Hours</option>
+          <option value="14400">4 Hours</option>
+          <option value="28800">8 Hours</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_enabled"><div class="formColumnLeft"><div class="formFieldName">Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enable this Network Range.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enabled"><input aria-checked="false" class="formCheckbox" id="enabled" name="enabled" title="Enabled" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enabled">Enabled</label></span></div></div></div>
+      <div class="formRow odd" id="row_enable_netbios"><div class="formColumnLeft"><div class="formFieldName">Enable NetBIOS<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Use NetBIOS to attempt to resolve the hostname of up hosts.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable NetBIOS"><input aria-checked="false" class="formCheckbox" id="enable_netbios" name="enable_netbios" title="Enable NetBIOS" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enable_netbios">Enable NetBIOS</label></span></div></div></div>
+      <div class="formRow even" id="row_add_to_cacti"><div class="formColumnLeft"><div class="formFieldName">Automatically Add to Kadupul<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Automatically Add to Kadupul"><input aria-checked="false" class="formCheckbox" id="add_to_cacti" name="add_to_cacti" title="Automatically Add to Kadupul" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="add_to_cacti">Automatically Add to Kadupul</label></span></div></div></div>
+      <div class="formRow odd" id="row_same_sysname"><div class="formColumnLeft"><div class="formFieldName">Allow same sysName on different hosts<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When discovering devices, allow duplicate sysnames to be added on different hosts</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Allow same sysName on different hosts"><input aria-checked="false" class="formCheckbox" id="same_sysname" name="same_sysname" title="Allow same sysName on different hosts" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="same_sysname">Allow same sysName on different hosts</label></span></div></div></div>
+      <div class="formRow even" id="row_rerun_data_queries"><div class="formColumnLeft"><div class="formFieldName">Rerun Data Queries<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If a device previously added to Kadupul is found, rerun its data queries.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Rerun Data Queries"><input aria-checked="false" class="formCheckbox" id="rerun_data_queries" name="rerun_data_queries" title="Rerun Data Queries" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="rerun_data_queries">Rerun Data Queries</label></span></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_spacern"><div class="formHeaderText">Notification Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_notification_enabled"><div class="formColumnLeft"><div class="formFieldName">Notification Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account..</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Notification Enabled"><input aria-checked="false" class="formCheckbox" id="notification_enabled" name="notification_enabled" title="Notification Enabled" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="notification_enabled">Notification Enabled</label></span></div></div></div>
+      <div class="formRow even" id="row_notification_email"><div class="formColumnLeft"><div class="formFieldName">Notification Email<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Email account to be used to send the Notification Email to.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="notification_email" maxlength="250" name="notification_email" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_notification_fromname"><div class="formColumnLeft"><div class="formFieldName">Notification From Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Email account name to be used as the senders name for the Notification Email. If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="notification_fromname" maxlength="32" name="notification_fromname" off="" size="30" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_notification_fromemail"><div class="formColumnLeft"><div class="formFieldName">Notification From Email Address<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Email Address to be used as the senders Email for the Notification Email. If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="notification_fromemail" maxlength="128" name="notification_fromemail" off="" size="40" type="text" value=""></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_spacer2"><div class="formHeaderText">Discovery Timing<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_start_at"><div class="formColumnLeft"><div class="formFieldName">Starting Date/Time<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What time will this Network discover item start?</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="start_at" maxlength="30" name="start_at" off="" size="20" type="text" value="2026-06-15 12:34:56"></div></div></div>
+      <div class="formRow even" id="row_recur_every"><div class="formColumnLeft"><div class="formFieldName">Rerun Every<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Rerun discovery for this Network Range every X.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="recur_every" name="recur_every">
+          <option selected="" value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_day_of_week"><div class="formColumnLeft"><div class="formFieldName">Days of Week<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Day(s) of the week will this Network Range be discovered.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select class="multiselect multiselect" id="day_of_week" multiple="" name="day_of_week[]" size="1" style="height:20px;">
+          <option value="1">Sunday</option>
+          <option value="2">Monday</option>
+          <option value="3">Tuesday</option>
+          <option value="4">Wednesday</option>
+          <option value="5">Thursday</option>
+          <option value="6">Friday</option>
+          <option value="7">Saturday</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_month"><div class="formColumnLeft"><div class="formFieldName">Months of Year<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Months(s) of the Year will this Network Range be discovered.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select class="multiselect multiselect" id="month" multiple="" name="month[]" size="1" style="height:20px;">
+          <option value="1">January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_day_of_month"><div class="formColumnLeft"><div class="formFieldName">Days of Month<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Day(s) of the Month will this Network Range be discovered.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select class="multiselect multiselect" id="day_of_month" multiple="" name="day_of_month[]" size="1" style="height:20px;">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+          <option value="21">21</option>
+          <option value="22">22</option>
+          <option value="23">23</option>
+          <option value="24">24</option>
+          <option value="25">25</option>
+          <option value="26">26</option>
+          <option value="27">27</option>
+          <option value="28">28</option>
+          <option value="29">29</option>
+          <option value="30">30</option>
+          <option value="31">31</option>
+          <option value="32">Last</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_monthly_week"><div class="formColumnLeft"><div class="formFieldName">Week(s) of Month<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Week(s) of the Month will this Network Range be discovered.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select class="multiselect multiselect" id="monthly_week" multiple="" name="monthly_week[]" size="1" style="height:20px;">
+          <option value="1">First</option>
+          <option value="2">Second</option>
+          <option value="3">Third</option>
+          <option value="32">Last</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_monthly_day"><div class="formColumnLeft"><div class="formFieldName">Day(s) of Week<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What Day(s) of the week will this Network Range be discovered.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select class="multiselect multiselect" id="monthly_day" multiple="" name="monthly_day[]" size="1" style="height:20px;">
+          <option value="1">Sunday</option>
+          <option value="2">Monday</option>
+          <option value="3">Tuesday</option>
+          <option value="4">Wednesday</option>
+          <option value="5">Thursday</option>
+          <option value="6">Friday</option>
+          <option value="7">Saturday</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_spacer1"><div class="formHeaderText">Reachability Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_snmp_id"><div class="formColumnLeft"><div class="formFieldName">SNMP Options<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select the SNMP Options to use for discovery of this Network Range.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_id" name="snmp_id"></select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_ping_method"><div class="formColumnLeft"><div class="formFieldName">Ping Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The type of ping packet to send.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="ping_method" name="ping_method">
+          <option value="1">ICMP Ping</option>
+          <option value="3">TCP Ping</option>
+          <option value="5">TCP Ping Closed</option>
+          <option selected="" value="2">UDP Ping</option>
+          <option value="4">SNMP Get</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_ping_port"><div class="formColumnLeft"><div class="formFieldName">Ping Port<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">TCP or UDP port to attempt connection.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ping_port" maxlength="5" name="ping_port" off="" size="5" type="text" value="23"></div></div></div>
+      <div class="formRow odd" id="row_ping_timeout"><div class="formColumnLeft"><div class="formFieldName">Ping Timeout Value<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The timeout value to use for host ICMP and UDP pinging. This host SNMP timeout value applies for SNMP pings.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ping_timeout" maxlength="5" name="ping_timeout" off="" size="5" type="text" value="400"></div></div></div>
+      <div class="formRow even" id="row_ping_retries"><div class="formColumnLeft"><div class="formFieldName">Ping Retry Count<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">After an initial failure, the number of ping retries Kadupul will attempt before failing.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ping_retries" maxlength="5" name="ping_retries" off="" size="5" type="text" value="1"></div></div></div>
+      <div class="hidden formRow"><div style="display:none;"><input id="orig_start_at" name="orig_start_at" style="height:0px;" type="hidden" value=""></div></div><div class="hidden formRow"><div style="display:none;"><input id="orig_sched_type" name="orig_sched_type" style="height:0px;" type="hidden" value=""></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="save_component_network" name="save_component_network" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="0"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="automation_networks.php" type="button" value="Cancel"><input class="return ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Create"></td></tr>
+    </tbody>
+  </table>
+</form>

@@ -2,14 +2,7 @@
     "session": [],
     "diagnostics": [],
     "log": [
-        "<TIME> - CMDPHP WARNING: Kadupul Form field 'missing' does not include a 'value' Column.  Using default.",
-        "<TIME> - CMDPHP WARNING: Kadupul Form field 'missing' does not include a 'default' Column.  Using '0'."
-    ],
-    "elements": [
-        "input type=\"hidden\" id=\"local_graph_id\" name=\"local_graph_id\"",
-        "input type=\"hidden\" id=\"missing\" name=\"missing\"",
-        "input type=\"hidden\" id=\"empty\" name=\"empty\""
-    ],
-    "script_ids": [],
-    "script_names": []
+        "06/15/2026 12:34:56 - CMDPHP WARNING: Kadupul Form field 'missing' does not include a 'value' Column.  Using default.",
+        "06/15/2026 12:34:56 - CMDPHP WARNING: Kadupul Form field 'missing' does not include a 'default' Column.  Using '0'."
+    ]
 }

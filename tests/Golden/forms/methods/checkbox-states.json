@@ -5,15 +5,5 @@
         }
     },
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_stored_on\"",
-        "input type=\"checkbox\" id=\"stored_on\" name=\"stored_on\"",
-        "div id=\"row_stored_off\"",
-        "input type=\"checkbox\" id=\"stored_off\" name=\"stored_off\"",
-        "div id=\"row_default_on\"",
-        "input type=\"checkbox\" id=\"default_on\" name=\"default_on\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

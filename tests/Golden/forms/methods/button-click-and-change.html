@@ -1,8 +1,13 @@
-<div id='row_choice' class='formRow odd'><div class='formColumnLeft'><div class='formFieldName'>Field drop_array<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Plain text, <b>bold</b> &amp; a <a href="https://example.com/">link</a>.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id='choice' name='choice'><option value="1" selected>One</option></select></div></div></div><div id='row_refresh' class='formRow even'><div class='formColumnLeft'><div class='formFieldName'>Field button<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Plain text, <b>bold</b> &amp; a <a href="https://example.com/">link</a>.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type='button' class='ui-button ui-corner-all ui-widget' id='refresh' name='refresh' value='Refresh &lt;now&gt;' title='Reload &quot;list&quot;'></div></div></div><div id='row_plain' class='formRow odd'><div class='formColumnLeft'><div class='formFieldName'>Field button<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Plain text, <b>bold</b> &amp; a <a href="https://example.com/">link</a>.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type='button' class='ui-button ui-corner-all ui-widget' id='plain' name='plain' value='Plain' ></div></div></div>
-<script type="text/javascript" nonce="<NONCE>">
+<div class="formRow odd" id="row_choice"><div class="formColumnLeft"><div class="formFieldName">Field drop_array<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Plain text, <b>bold</b> &amp; a <a href="https://example.com/">link</a>.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+  <select id="choice" name="choice">
+    <option selected="" value="1">One</option>
+  </select>
+  </div>
+  </div>
+</div>
+<div class="formRow even" id="row_refresh"><div class="formColumnLeft"><div class="formFieldName">Field button<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Plain text, <b>bold</b> &amp; a <a href="https://example.com/">link</a>.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-button ui-corner-all ui-widget" id="refresh" name="refresh" title="Reload &quot;list&quot;" type="button" value="Refresh &lt;now&gt;"></div></div></div>
+<div class="formRow odd" id="row_plain"><div class="formColumnLeft"><div class="formFieldName">Field button<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Plain text, <b>bold</b> &amp; a <a href="https://example.com/">link</a>.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-button ui-corner-all ui-widget" id="plain" name="plain" type="button" value="Plain"></div></div></div>
+<script nonce="&lt;NONCE&gt;" type="text/javascript">
 $('#choice').on('change', function() { choiceChanged(); });
 $('#refresh').on('click', function() { refreshList(); });
 </script>

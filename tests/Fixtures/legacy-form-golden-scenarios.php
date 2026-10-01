@@ -316,6 +316,11 @@ $pages = array(
         ))),
     )),
     'auth_profile' => $page('auth_profile.php', array()),
+    // managers.php queues these and nothing prints them; the next form the
+    // user opens inherits them.
+    'auth_profile-stale-change-handlers' => $page('auth_profile.php', array(), array(), array('session' => array('form_change_actions' => array(
+        'snmp_version' => 'setSNMP()', 'snmp_security_level' => 'setSNMP()', 'snmp_auth_protocol' => 'setSNMP()', 'snmp_priv_protocol' => 'setSNMP()',
+    )))),
     'automation_graph_rules-edit' => $page('automation_graph_rules.php', array('action' => 'edit')),
     'automation_graph_rules-item_edit' => $page('automation_graph_rules.php', array('action' => 'item_edit', 'id' => '1', 'rule_type' => '1'), array_merge($columns, array(
         array('sql' => 'FROM automation_graph_rules WHERE id = ?', 'params' => array(1), 'rows' => array(array(
@@ -338,12 +343,16 @@ $pages = array(
     'data_queries-item_edit' => $page('data_queries.php', array('action' => 'item_edit', 'snmp_query_id' => '1')),
     'data_source_profiles-edit' => $page('data_source_profiles.php', array('action' => 'edit')),
     'data_source_profiles-item_edit' => $page('data_source_profiles.php', array('action' => 'item_edit', 'profile_id' => '1')),
-    'data_sources-ds_edit' => $page('data_sources.php', array('action' => 'ds_edit')),
+    'data_sources-ds_edit' => $page('data_sources.php', array('action' => 'ds_edit'), array(
+        array('sql' => 'SELECT id, name FROM data_template ORDER BY name', 'rows' => array(array('id' => '4', 'name' => 'Interface - Traffic <in/out>'), array('id' => '9', 'name' => 'Unix - Load Average'))),
+    )),
     'data_templates-template_edit' => $page('data_templates.php', array('action' => 'template_edit')),
     'graph_templates-template_edit' => $page('graph_templates.php', array('action' => 'template_edit')),
     'graph_templates_inputs-input_edit' => $page('graph_templates_inputs.php', array('action' => 'input_edit', 'graph_template_id' => '1')),
     'graph_templates_items-item_edit' => $page('graph_templates_items.php', array('action' => 'item_edit', 'graph_template_id' => '1')),
-    'graphs-graph_edit' => $page('graphs.php', array('action' => 'graph_edit')),
+    'graphs-graph_edit' => $page('graphs.php', array('action' => 'graph_edit'), array(
+        array('sql' => 'FROM graph_templates AS gt WHERE id NOT IN', 'rows' => array(array('id' => '3', 'name' => 'Interface - Traffic <bits>'), array('id' => '8', 'name' => 'Unix - Load Average'))),
+    )),
     'graphs_items-item_edit' => $page('graphs_items.php', array('action' => 'item_edit', 'local_graph_id' => '1')),
     'reports_admin-edit' => $page('reports_admin.php', array('action' => 'edit')),
     'reports_admin-item_edit' => $page('reports_admin.php', array('action' => 'item_edit', 'id' => '4'), array(
@@ -363,7 +372,16 @@ $pages = array(
     'templates_import' => $page('templates_import.php', array()),
     'user_admin-user_edit' => $page('user_admin.php', array('action' => 'user_edit')),
     'user_admin-user_edit-existing' => $page('user_admin.php', array('action' => 'user_edit', 'id' => '1')),
-    'user_admin-settings' => $page('user_admin.php', array('action' => 'user_edit', 'tab' => 'settings', 'id' => '1')),
+    // The save failed: the fields it flagged come back highlighted, holding
+    // what was typed.
+    'user_admin-user_edit-failed-submit' => $page('user_admin.php', array('action' => 'user_edit', 'id' => '1'), array(), array('session' => array(
+        'sess_error_fields' => array('username' => 'username', 'email_address' => 'email_address'),
+        'sess_field_values' => array('username' => "taken'<name>", 'full_name' => 'Typed name', 'email_address' => 'not-an-address'),
+    ))),
+    'user_admin-settings' => $page('user_admin.php', array('action' => 'user_edit', 'tab' => 'settings', 'id' => '1'), array(
+        array('sql' => 'FROM data_source_profiles_rra ORDER BY steps', 'rows' => array(array('id' => '1', 'name' => 'Daily (5 Minute Average)'), array('id' => '2', 'name' => 'Weekly (30 Minute Average)'))),
+        array('sql' => 'FROM graph_tree ORDER BY name', 'rows' => array(array('id' => '1', 'name' => 'Default <tree>'), array('id' => '2', 'name' => 'Servers'))),
+    )),
     'user_domains-edit' => $page('user_domains.php', array('action' => 'edit')),
     'user_group_admin-edit' => $page('user_group_admin.php', array('action' => 'edit')),
     'user_group_admin-settings' => $page('user_group_admin.php', array('action' => 'edit', 'tab' => 'settings', 'id' => '1'), array(

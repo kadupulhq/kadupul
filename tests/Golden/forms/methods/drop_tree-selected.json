@@ -1,11 +1,5 @@
 {
     "session": [],
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_parent_item_id\"",
-        "select id=\"parent_item_id\" name=\"parent_item_id\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

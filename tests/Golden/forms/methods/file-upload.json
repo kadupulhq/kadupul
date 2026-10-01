@@ -1,13 +1,5 @@
 {
     "session": [],
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_import_file\"",
-        "input type=\"file\" id=\"import_file\" name=\"import_file\"",
-        "div id=\"row_plain_file\"",
-        "input type=\"file\" id=\"plain_file\" name=\"plain_file\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

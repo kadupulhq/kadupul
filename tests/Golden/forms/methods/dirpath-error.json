@@ -5,11 +5,5 @@
         }
     },
     "diagnostics": [],
-    "log": [],
-    "elements": [
-        "div id=\"row_found\"",
-        "input type=\"text\" id=\"found\" name=\"found\""
-    ],
-    "script_ids": [],
-    "script_names": []
+    "log": []
 }

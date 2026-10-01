@@ -1,24 +1,140 @@
-<form class="cactiFormStart" id="form1" name="form1" action="reports_admin.php" autocomplete="off" method="post"><div id="reports_admin_edit1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Details [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Reports-Admin.html" href="#"><i class="far fa-question-circle"></i></a></span><span> </span></div></div><div id="reports_admin_edit1_child" class="cactiTable"><div class="spacer formHeader collapsible" id="row_genhead"><div class="formHeaderText">General Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_name" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Report Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Give this Report a descriptive Name</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="name" name="name" size="40" maxlength="99" value="New Report"></div></div></div><div id="row_enabled" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Enable Report<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Check this box to enable this Report.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable Report"><input title="Enable Report" class="formCheckbox" type="checkbox" id="enabled" name="enabled" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enabled">Enable Report</label></span></div></div></div><div class="spacer formHeader collapsible" id="row_formathead"><div class="formHeaderText">Output Formatting<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_cformat" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Use Custom Format HTML<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Check this box if you want to use custom html and CSS for the report.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Use Custom Format HTML"><input title="Use Custom Format HTML" class="formCheckbox" type="checkbox" id="cformat" name="cformat" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="cformat">Use Custom Format HTML</label></span></div></div></div><div id="row_format_file" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Format File to Use<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special  tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="format_file" name="format_file"><option value="cacti_group.format">Kadupul Format (cacti_group.format)</option><option value="cacti_group_dark.format">Kadupul Dark Format (cacti_group_dark.format)</option><option value="cacti_monitor.format">Kadupul Monitoring Format (cacti_monitor.format)</option><option value="default.format" selected="">Standard Formating (default.format)</option></select></div></div></div><div id="row_font_size" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Default Text Font Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Defines the default font size for all text in the report including the Report Title.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="font_size" name="font_size"><option value="7">7</option><option value="8">8</option><option value="10">10</option><option value="12">12</option><option value="14">14</option><option value="16" selected="">16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option><option value="28">28</option><option value="32">32</option></select></div></div></div><div id="row_alignment" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Default Object Alignment<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Defines the default Alignment for Text and Graphs.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="alignment" name="alignment"><option value="1">left</option><option value="2">center</option><option value="3">right</option></select></div></div></div><div id="row_graph_linked" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Graph Linked<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should the Graphs be linked back to the Kadupul site?</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Graph Linked"><input title="Graph Linked" class="formCheckbox" type="checkbox" id="graph_linked" name="graph_linked" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="graph_linked">Graph Linked</label></span></div></div></div><div class="spacer formHeader collapsible" id="row_graphhead"><div class="formHeaderText">Graph Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_graph_columns" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Graph Columns<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of Graph columns.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="graph_columns" name="graph_columns"><option value="1" selected="">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div></div><div id="row_graph_width" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Graph Width<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Graph width in pixels.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="graph_width" name="graph_width"><option value="100">100</option><option value="150">150</option><option value="200">200</option><option value="250">250</option><option value="300" selected="">300</option><option value="350">350</option><option value="400">400</option><option value="500">500</option><option value="600">600</option><option value="700">700</option><option value="800">800</option><option value="900">900</option><option value="1000">1000</option></select></div></div></div><div id="row_graph_height" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Graph Height<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Graph height in pixels.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="graph_height" name="graph_height"><option value="75">75</option><option value="100">100</option><option value="125" selected="">125</option><option value="150">150</option><option value="175">175</option><option value="200">200</option><option value="250">250</option><option value="300">300</option></select></div></div></div><div id="row_thumbnails" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Thumbnails<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should the Graphs be rendered as Thumbnails?</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Thumbnails"><input title="Thumbnails" class="formCheckbox" type="checkbox" id="thumbnails" name="thumbnails" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="thumbnails">Thumbnails</label></span></div></div></div><div class="spacer formHeader collapsible" id="row_freqhead"><div class="formHeaderText">Email Frequency<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_mailtime" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Next Timestamp for Sending Mail Report<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Start time for [first|next] mail to take place. All future mailing times will be based upon this start time. A good example would be 2:00am. The time must be in the future.  If a fractional time is used, say 2:00am, it is assumed to be in the future.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="mailtime" name="mailtime" size="20" maxlength="20" value="<TIME>"></div></div></div><div id="row_intrvl" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Report Interval<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Defines a Report Frequency relative to the given Mailtime above.<br>e.g. 'Week(s)' represents a weekly Reporting Interval.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="intrvl" name="intrvl"><option value="10">Minute(s)</option><option value="11">Hour(s)</option><option value="1" selected="">Day(s)</option><option value="2">Week(s)</option><option value="3">Month(s), Day of Month</option><option value="4">Month(s), Day of Week</option><option value="5">Year(s)</option></select></div></div></div><div id="row_count" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Interval Frequency<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Based upon the Timespan of the Report Interval above, defines the Frequency within that Interval.<br>e.g. If the Report Interval is 'Month(s)', then '2' indicates Every '2 Month(s) from the next Mailtime.' Lastly, if using the Month(s) Report Intervals, the 'Day of Week' and the 'Day of Month' are both calculated based upon the Mailtime you specify above.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="count" name="count" size="10" maxlength="10" value="1"></div></div></div><div class="spacer formHeader collapsible" id="row_emailhead"><div class="formHeaderText">Email Sender/Receiver Details<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_subject" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Subject<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value will be used as the default Email subject.  The report name will be used if left blank.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="subject" name="subject" size="40" maxlength="255" value="Kadupul Report"></div></div></div><div id="row_from_name" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">From Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This Name will be used as the default E-mail Sender</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="from_name" name="from_name" size="40" maxlength="255" value=""></div></div></div><div id="row_from_email" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">From Email Address<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This Address will be used as the E-mail Senders address</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="from_email" name="from_email" size="40" maxlength="255" value=""></div></div></div><div id="row_email" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">To Email Address(es)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Please separate multiple addresses by comma (,)</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><textarea class="textAreaNotes ui-state-default ui-corner-all" aria-multiline="true" cols="60" rows="5" id="email" name="email"></textarea></div></div></div><div id="row_bcc" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">BCC Address(es)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Blind carbon copy. Please separate multiple addresses by comma (,)</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><textarea class="textAreaNotes ui-state-default ui-corner-all" aria-multiline="true" cols="60" rows="5" id="bcc" name="bcc"></textarea></div></div></div><div id="row_attachment_type" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Image attach type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select one of the given Types for the Image Attachments</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="attachment_type" name="attachment_type"><option value="1" selected="">Inline PNG Image</option><option value="2">Inline JPEG Image</option><option value="3">Inline GIF Image</option><option value="11">Attached PNG Image</option><option value="12">Attached JPEG Image</option><option value="13">Attached GIF Image</option></select></div></div></div></div></div><div class="break"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="id" name="id" value="0"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_report" name="save_component_report" value="1"></div>		<script type="text/javascript" nonce="<NONCE>">
+<form action="reports_admin.php" autocomplete="off" class="cactiFormStart" id="form1" method="post" name="form1">
+  <div class="cactiTable" id="reports_admin_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Details [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Reports-Admin.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="reports_admin_edit1_child">
+      <div class="spacer formHeader collapsible" id="row_genhead"><div class="formHeaderText">General Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_name"><div class="formColumnLeft"><div class="formFieldName">Report Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Give this Report a descriptive Name</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="name" maxlength="99" name="name" off="" size="40" type="text" value="New Report"></div></div></div>
+      <div class="formRow even" id="row_enabled"><div class="formColumnLeft"><div class="formFieldName">Enable Report<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Check this box to enable this Report.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable Report"><input aria-checked="false" class="formCheckbox" id="enabled" name="enabled" title="Enable Report" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enabled">Enable Report</label></span></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_formathead"><div class="formHeaderText">Output Formatting<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_cformat"><div class="formColumnLeft"><div class="formFieldName">Use Custom Format HTML<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Check this box if you want to use custom html and CSS for the report.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Use Custom Format HTML"><input aria-checked="false" class="formCheckbox" id="cformat" name="cformat" title="Use Custom Format HTML" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="cformat">Use Custom Format HTML</label></span></div></div></div>
+      <div class="formRow even" id="row_format_file"><div class="formColumnLeft"><div class="formFieldName">Format File to Use<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the custom html wrapper and CSS file to use. This file contains both html and CSS to wrap around your report. If it contains more than simply CSS, you need to place a special tag inside of the file. This format tag will be replaced by the report content. These files are located in the 'formats' directory.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="format_file" name="format_file">
+          <option value="cacti_group.format">Kadupul Format (cacti_group.format)</option>
+          <option value="cacti_group_dark.format">Kadupul Dark Format (cacti_group_dark.format)</option>
+          <option value="cacti_monitor.format">Kadupul Monitoring Format (cacti_monitor.format)</option>
+          <option selected="" value="default.format">Standard Formating (default.format)</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_font_size"><div class="formColumnLeft"><div class="formFieldName">Default Text Font Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Defines the default font size for all text in the report including the Report Title.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="font_size" name="font_size">
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+          <option selected="" value="16">16</option>
+          <option value="18">18</option>
+          <option value="20">20</option>
+          <option value="24">24</option>
+          <option value="28">28</option>
+          <option value="32">32</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_alignment"><div class="formColumnLeft"><div class="formFieldName">Default Object Alignment<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Defines the default Alignment for Text and Graphs.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="alignment" name="alignment">
+          <option value="1">left</option>
+          <option value="2">center</option>
+          <option value="3">right</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_graph_linked"><div class="formColumnLeft"><div class="formFieldName">Graph Linked<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should the Graphs be linked back to the Kadupul site?</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Graph Linked"><input aria-checked="false" class="formCheckbox" id="graph_linked" name="graph_linked" title="Graph Linked" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="graph_linked">Graph Linked</label></span></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_graphhead"><div class="formHeaderText">Graph Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_graph_columns"><div class="formColumnLeft"><div class="formFieldName">Graph Columns<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of Graph columns.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="graph_columns" name="graph_columns">
+          <option selected="" value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_graph_width"><div class="formColumnLeft"><div class="formFieldName">Graph Width<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Graph width in pixels.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="graph_width" name="graph_width">
+          <option value="100">100</option>
+          <option value="150">150</option>
+          <option value="200">200</option>
+          <option value="250">250</option>
+          <option selected="" value="300">300</option>
+          <option value="350">350</option>
+          <option value="400">400</option>
+          <option value="500">500</option>
+          <option value="600">600</option>
+          <option value="700">700</option>
+          <option value="800">800</option>
+          <option value="900">900</option>
+          <option value="1000">1000</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_graph_height"><div class="formColumnLeft"><div class="formFieldName">Graph Height<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Graph height in pixels.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="graph_height" name="graph_height">
+          <option value="75">75</option>
+          <option value="100">100</option>
+          <option selected="" value="125">125</option>
+          <option value="150">150</option>
+          <option value="175">175</option>
+          <option value="200">200</option>
+          <option value="250">250</option>
+          <option value="300">300</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_thumbnails"><div class="formColumnLeft"><div class="formFieldName">Thumbnails<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should the Graphs be rendered as Thumbnails?</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Thumbnails"><input aria-checked="false" class="formCheckbox" id="thumbnails" name="thumbnails" title="Thumbnails" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="thumbnails">Thumbnails</label></span></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_freqhead"><div class="formHeaderText">Email Frequency<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_mailtime"><div class="formColumnLeft"><div class="formFieldName">Next Timestamp for Sending Mail Report<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Start time for [first|next] mail to take place. All future mailing times will be based upon this start time. A good example would be 2:00am. The time must be in the future. If a fractional time is used, say 2:00am, it is assumed to be in the future.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="mailtime" maxlength="20" name="mailtime" off="" size="20" type="text" value="2026-06-15 12:30"></div></div></div>
+      <div class="formRow odd" id="row_intrvl"><div class="formColumnLeft"><div class="formFieldName">Report Interval<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Defines a Report Frequency relative to the given Mailtime above.<br>e.g. 'Week(s)' represents a weekly Reporting Interval.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="intrvl" name="intrvl">
+          <option value="10">Minute(s)</option>
+          <option value="11">Hour(s)</option>
+          <option selected="" value="1">Day(s)</option>
+          <option value="2">Week(s)</option>
+          <option value="3">Month(s), Day of Month</option>
+          <option value="4">Month(s), Day of Week</option>
+          <option value="5">Year(s)</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_count"><div class="formColumnLeft"><div class="formFieldName">Interval Frequency<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Based upon the Timespan of the Report Interval above, defines the Frequency within that Interval.<br>e.g. If the Report Interval is 'Month(s)', then '2' indicates Every '2 Month(s) from the next Mailtime.' Lastly, if using the Month(s) Report Intervals, the 'Day of Week' and the 'Day of Month' are both calculated based upon the Mailtime you specify above.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="count" maxlength="10" name="count" off="" size="10" type="text" value="1"></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_emailhead"><div class="formHeaderText">Email Sender/Receiver Details<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_subject"><div class="formColumnLeft"><div class="formFieldName">Subject<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value will be used as the default Email subject. The report name will be used if left blank.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="subject" maxlength="255" name="subject" off="" size="40" type="text" value="Kadupul Report"></div></div></div>
+      <div class="formRow even" id="row_from_name"><div class="formColumnLeft"><div class="formFieldName">From Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This Name will be used as the default E-mail Sender</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="from_name" maxlength="255" name="from_name" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_from_email"><div class="formColumnLeft"><div class="formFieldName">From Email Address<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This Address will be used as the E-mail Senders address</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="from_email" maxlength="255" name="from_email" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_email"><div class="formColumnLeft"><div class="formFieldName">To Email Address(es)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Please separate multiple addresses by comma (,)</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <textarea aria-multiline="true" class="textAreaNotes ui-state-default ui-corner-all" cols="60" id="email" name="email" rows="5"></textarea>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_bcc"><div class="formColumnLeft"><div class="formFieldName">BCC Address(es)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Blind carbon copy. Please separate multiple addresses by comma (,)</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <textarea aria-multiline="true" class="textAreaNotes ui-state-default ui-corner-all" cols="60" id="bcc" name="bcc" rows="5"></textarea>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_attachment_type"><div class="formColumnLeft"><div class="formFieldName">Image attach type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select one of the given Types for the Image Attachments</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="attachment_type" name="attachment_type">
+          <option selected="" value="1">Inline PNG Image</option>
+          <option value="2">Inline JPEG Image</option>
+          <option value="3">Inline GIF Image</option>
+          <option value="11">Attached PNG Image</option>
+          <option value="12">Attached JPEG Image</option>
+          <option value="13">Attached GIF Image</option>
+        </select>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="0"></div><div style="display:none;"><input id="save_component_report" name="save_component_report" style="height:0px;" type="hidden" value="1"></div>
+  <script nonce="&lt;NONCE&gt;" type="text/javascript">
 		function changeFormat() {
 			if (cformat && cformat.checked) {
 				$('#row_font_size').hide();
@@ -49,12 +165,9 @@
 			changeFormat();
 		});
 		</script>
-			<table style="width:100%;text-align:center;">
-		<tbody><tr>
-			<td class="saveRow">
-				<input type="hidden" name="action" value="save">
-				<input type="button" class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="reports_admin.php" value="Cancel">				<input type="submit" class="return ui-button ui-corner-all ui-widget" id="submit" value="Create">
-			</td>
-		</tr>
-	</tbody></table>
-	</form>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="reports_admin.php" type="button" value="Cancel"><input class="return ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Create"></td></tr>
+    </tbody>
+  </table>
+</form>

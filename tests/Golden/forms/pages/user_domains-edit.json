@@ -2,23 +2,7 @@
     "session": [],
     "diagnostics": [],
     "log": [],
-    "elements": [
-        "form id=\"form1\" name=\"form1\"",
-        "div id=\"user_domains_edit1\"",
-        "div id=\"user_domains_edit1_child\"",
-        "div id=\"row_domain_name\"",
-        "input type=\"text\" id=\"domain_name\" name=\"domain_name\"",
-        "div id=\"row_type\"",
-        "select id=\"type\" name=\"type\"",
-        "div id=\"row_user_id\"",
-        "select id=\"user_id\" name=\"user_id\"",
-        "div id=\"row_enabled\"",
-        "input type=\"checkbox\" id=\"enabled\" name=\"enabled\"",
-        "input type=\"hidden\" id=\"domain_id\" name=\"domain_id\"",
-        "input type=\"hidden\" id=\"save_component_domain\" name=\"save_component_domain\"",
-        "input type=\"hidden\" name=\"action\"",
-        "input type=\"submit\" id=\"submit\""
-    ],
+    "elements_outside_forms": [],
     "script_ids": [
         "form1"
     ],

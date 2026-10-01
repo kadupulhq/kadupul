@@ -1,20 +1,160 @@
-<form class="cactiFormStart" id="form_settings" name="form_settings" action="settings.php" autocomplete="off" method="post"><div id="settings_spikes1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Kadupul Settings (Spikes)</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Settings-Spikes.html" href="#"><i class="far fa-question-circle"></i></a></span><span> </span></div></div><div id="settings_spikes1_child" class="cactiTable"><div class="spacer formHeader collapsible" id="row_spikekill_header"><div class="formHeaderText">Spike Kill Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_spikekill_method" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Removal Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">There are two removal methods.  The first, Standard Deviation, will remove any sample that is X number of standard deviations away from the average of samples.  The second method, Variance, will remove any sample that is X% more than the Variance average.  The Variance method takes into account a certain number of 'outliers'.  Those are exceptional samples, like the spike, that need to be excluded from the Variance Average calculation.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="spikekill_method" name="spikekill_method"><option value="1">Standard Deviation</option><option value="2" selected="">Variance Based w/Outliers Removed</option></select></div></div></div><div id="row_spikekill_avgnan" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Replacement Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="spikekill_avgnan" name="spikekill_avgnan"><option value="avg">Average</option><option value="nan">NaN's</option><option value="last" selected="">Last Known Good</option></select></div></div></div><div id="row_spikekill_deviations" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Number of Standard Deviations<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="spikekill_deviations" name="spikekill_deviations"><option value="3">3 Standard Deviations</option><option value="4">4 Standard Deviations</option><option value="5">5 Standard Deviations</option><option value="6">6 Standard Deviations</option><option value="7">7 Standard Deviations</option><option value="8">8 Standard Deviations</option><option value="9">9 Standard Deviations</option><option value="10" selected="">10 Standard Deviations</option><option value="15">15 Standard Deviations</option><option value="20">20 Standard Deviations</option><option value="50">50 Standard Deviations</option><option value="100">100 Standard Deviations</option><option value="200">200 Standard Deviations</option></select></div></div></div><div id="row_spikekill_percent" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Variance Percentage<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="spikekill_percent" name="spikekill_percent"><option value="100">100 %</option><option value="200">200 %</option><option value="300">300 %</option><option value="400">400 %</option><option value="500">500 %</option><option value="600">600 %</option><option value="700">700 %</option><option value="800">800 %</option><option value="900">900 %</option><option value="1000" selected="">1000 %</option><option value="2000">2000 %</option><option value="3000">3000 %</option><option value="10000">10000 %</option><option value="50000">50000 %</option><option value="100000">100000 %</option><option value="500000">500000 %</option></select></div></div></div><div id="row_spikekill_outliers" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Variance Number of Outliers<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="spikekill_outliers" name="spikekill_outliers"><option value="3">3 High/Low Samples</option><option value="4">4 High/Low Samples</option><option value="5" selected="">5 High/Low Samples</option><option value="6">6 High/Low Samples</option><option value="7">7 High/Low Samples</option><option value="8">8 High/Low Samples</option><option value="9">9 High/Low Samples</option><option value="10">10 High/Low Samples</option><option value="20">20 High/Low Samples</option><option value="50">50 High/Low Samples</option><option value="100">100 High/Low Samples</option><option value="500">500 High/Low Samples</option><option value="1000">1000 High/Low Samples</option></select></div></div></div><div id="row_spikekill_number" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Max Kills Per RRA<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value represents the maximum number of spikes to remove from a Graph RRA.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="spikekill_number" name="spikekill_number"><option value="1">1 Spikes</option><option value="2">2 Spikes</option><option value="3">3 Spikes</option><option value="4">4 Spikes</option><option value="5" selected="">5 Spikes</option><option value="6">6 Spikes</option><option value="7">7 Spikes</option><option value="8">8 Spikes</option><option value="9">9 Spikes</option><option value="10">10 Spikes</option><option value="50">50 Spikes</option><option value="100">100 Spikes</option></select></div></div></div><div id="row_spikekill_backupdir" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">RRDfile Backup Directory<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If this directory is not empty, then your original RRDfiles will be backed up to this location.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" id="spikekill_backupdir" name="spikekill_backupdir" placeholder="Enter a valid directory path" size="60" maxlength="255" value="<ROOT>/cache/spikekill/"><span class="cactiTooltipHint fa fa-check-circle" style="padding:5px;font-size:16px;color:green" title="Directory Found"></span></div></div></div><div class="spacer formHeader collapsible" id="row_spikekill_batch_header"><div class="formHeaderText">Batch Spike Kill Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_spikekill_batch" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Removal Schedule<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Do you wish to periodically remove spikes from your graphs?  If so, select the frequency below.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="spikekill_batch" name="spikekill_batch"><option value="0" selected="">Disabled</option><option value="6">Every 6 Hours</option><option value="12">Every 12 Hours</option><option value="24">Once a Day</option><option value="48">Every Other Day</option></select></div></div></div><div id="row_spikekill_basetime" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Base Time<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="spikekill_basetime" name="spikekill_basetime" size="10" maxlength="10" value="12:00am"></div></div></div><div id="row_spikekill_templates" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Graph Templates to Spike Kill<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When performing batch spike removal, only the templates selected below will be acted on.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select style="height:20px;" size="1" class="multiselect multiselect" id="spikekill_templates" name="spikekill_templates[]" multiple=""></select></div></div></div><div id="row_spikekill_purge" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Backup Retention<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When SpikeKill kills spikes in graphs, it makes a backup of the RRDfile.  How long should these backup files be retained?</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="spikekill_purge" name="spikekill_purge"><option value="0">Never</option><option value="3600">1 Hour</option><option value="7200">2 Hours</option><option value="14400">4 Hours</option><option value="21600">6 Hours</option><option value="43200">12 Hours</option><option value="86400">1 Day</option><option value="172800">2 Days</option><option value="345600">4 Days</option><option value="604800">1 Week</option><option value="1209600">2 Weeks</option><option value="1814400">3 Weeks</option><option value="2618784">1 Month</option><option value="5237568">2 Months</option><option value="7856352" selected="">3 Months</option><option value="10475136">4 Months</option><option value="15712704">6 Months</option><option value="31536000">1 Year</option><option value="63072000">2 Years</option><option value="94608000">3 Years</option><option value="126144000">4 Years</option><option value="157680000">5 Years</option><option value="189216000">6 Years</option><option value="220752000">7 Years</option><option value="252288000">8 Years</option><option value="283824000">9 Years</option><option value="315360000">10 Years</option></select></div></div></div></div></div><div class="break"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="tab" name="tab" value="spikes"></div>	<table style="width:100%;text-align:center;">
-		<tbody><tr>
-			<td class="saveRow">
-				<input type="hidden" name="action" value="save">
-								<input type="submit" class="save ui-button ui-corner-all ui-widget" id="submit" value="Save">
-			</td>
-		</tr>
-	</tbody></table>
-	</form>
+<form action="settings.php" autocomplete="off" class="cactiFormStart" id="form_settings" method="post" name="form_settings">
+  <div class="cactiTable" id="settings_spikes1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Kadupul Settings (Spikes)</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Settings-Spikes.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="settings_spikes1_child">
+      <div class="spacer formHeader collapsible" id="row_spikekill_header"><div class="formHeaderText">Spike Kill Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_spikekill_method"><div class="formColumnLeft"><div class="formFieldName">Removal Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">There are two removal methods. The first, Standard Deviation, will remove any sample that is X number of standard deviations away from the average of samples. The second method, Variance, will remove any sample that is X% more than the Variance average. The Variance method takes into account a certain number of 'outliers'. Those are exceptional samples, like the spike, that need to be excluded from the Variance Average calculation.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_method" name="spikekill_method">
+          <option value="1">Standard Deviation</option>
+          <option selected="" value="2">Variance Based w/Outliers Removed</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_spikekill_avgnan"><div class="formColumnLeft"><div class="formFieldName">Replacement Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">There are three replacement methods. The first method replaces the spike with the average of the data source in question. The second method replaces the spike with a 'NaN'. The last replaces the spike with the last known good value found.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_avgnan" name="spikekill_avgnan">
+          <option value="avg">Average</option>
+          <option value="nan">NaN's</option>
+          <option selected="" value="last">Last Known Good</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_spikekill_deviations"><div class="formColumnLeft"><div class="formFieldName">Number of Standard Deviations<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Any value that is this many standard deviations above the average will be excluded. A good number will be dependent on the type of data to be operated on. We recommend a number no lower than 5 Standard Deviations.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_deviations" name="spikekill_deviations">
+          <option value="3">3 Standard Deviations</option>
+          <option value="4">4 Standard Deviations</option>
+          <option value="5">5 Standard Deviations</option>
+          <option value="6">6 Standard Deviations</option>
+          <option value="7">7 Standard Deviations</option>
+          <option value="8">8 Standard Deviations</option>
+          <option value="9">9 Standard Deviations</option>
+          <option selected="" value="10">10 Standard Deviations</option>
+          <option value="15">15 Standard Deviations</option>
+          <option value="20">20 Standard Deviations</option>
+          <option value="50">50 Standard Deviations</option>
+          <option value="100">100 Standard Deviations</option>
+          <option value="200">200 Standard Deviations</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_spikekill_percent"><div class="formColumnLeft"><div class="formFieldName">Variance Percentage<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value represents the percentage above the adjusted sample average once outliers have been removed from the sample. For example, a Variance Percentage of 100% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_percent" name="spikekill_percent">
+          <option value="100">100 %</option>
+          <option value="200">200 %</option>
+          <option value="300">300 %</option>
+          <option value="400">400 %</option>
+          <option value="500">500 %</option>
+          <option value="600">600 %</option>
+          <option value="700">700 %</option>
+          <option value="800">800 %</option>
+          <option value="900">900 %</option>
+          <option selected="" value="1000">1000 %</option>
+          <option value="2000">2000 %</option>
+          <option value="3000">3000 %</option>
+          <option value="10000">10000 %</option>
+          <option value="50000">50000 %</option>
+          <option value="100000">100000 %</option>
+          <option value="500000">500000 %</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_spikekill_outliers"><div class="formColumnLeft"><div class="formFieldName">Variance Number of Outliers<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average. If you choose an outlier value of 5, then both the top and bottom 5 averages are removed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_outliers" name="spikekill_outliers">
+          <option value="3">3 High/Low Samples</option>
+          <option value="4">4 High/Low Samples</option>
+          <option selected="" value="5">5 High/Low Samples</option>
+          <option value="6">6 High/Low Samples</option>
+          <option value="7">7 High/Low Samples</option>
+          <option value="8">8 High/Low Samples</option>
+          <option value="9">9 High/Low Samples</option>
+          <option value="10">10 High/Low Samples</option>
+          <option value="20">20 High/Low Samples</option>
+          <option value="50">50 High/Low Samples</option>
+          <option value="100">100 High/Low Samples</option>
+          <option value="500">500 High/Low Samples</option>
+          <option value="1000">1000 High/Low Samples</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_spikekill_number"><div class="formColumnLeft"><div class="formFieldName">Max Kills Per RRA<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value represents the maximum number of spikes to remove from a Graph RRA.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_number" name="spikekill_number">
+          <option value="1">1 Spikes</option>
+          <option value="2">2 Spikes</option>
+          <option value="3">3 Spikes</option>
+          <option value="4">4 Spikes</option>
+          <option selected="" value="5">5 Spikes</option>
+          <option value="6">6 Spikes</option>
+          <option value="7">7 Spikes</option>
+          <option value="8">8 Spikes</option>
+          <option value="9">9 Spikes</option>
+          <option value="10">10 Spikes</option>
+          <option value="50">50 Spikes</option>
+          <option value="100">100 Spikes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_spikekill_backupdir"><div class="formColumnLeft"><div class="formFieldName">RRDfile Backup Directory<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If this directory is not empty, then your original RRDfiles will be backed up to this location.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input id="spikekill_backupdir" maxlength="255" name="spikekill_backupdir" placeholder="Enter a valid directory path" size="60" type="text" value="&lt;ROOT&gt;/cache/spikekill/"><span class="cactiTooltipHint fa fa-check-circle" style="padding:5px;font-size:16px;color:green" title="Directory Found"></span></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_spikekill_batch_header"><div class="formHeaderText">Batch Spike Kill Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_spikekill_batch"><div class="formColumnLeft"><div class="formFieldName">Removal Schedule<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Do you wish to periodically remove spikes from your graphs? If so, select the frequency below.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_batch" name="spikekill_batch">
+          <option selected="" value="0">Disabled</option>
+          <option value="6">Every 6 Hours</option>
+          <option value="12">Every 12 Hours</option>
+          <option value="24">Once a Day</option>
+          <option value="48">Every Other Day</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_spikekill_basetime"><div class="formColumnLeft"><div class="formFieldName">Base Time<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Base Time for Spike removal to occur. For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="spikekill_basetime" maxlength="10" name="spikekill_basetime" off="" size="10" type="text" value="12:00am"></div></div></div>
+      <div class="formRow even" id="row_spikekill_templates"><div class="formColumnLeft"><div class="formFieldName">Graph Templates to Spike Kill<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When performing batch spike removal, only the templates selected below will be acted on.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select class="multiselect multiselect" id="spikekill_templates" multiple="" name="spikekill_templates[]" size="1" style="height:20px;"></select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_spikekill_purge"><div class="formColumnLeft"><div class="formFieldName">Backup Retention<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When SpikeKill kills spikes in graphs, it makes a backup of the RRDfile. How long should these backup files be retained?</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_purge" name="spikekill_purge">
+          <option value="0">Never</option>
+          <option value="3600">1 Hour</option>
+          <option value="7200">2 Hours</option>
+          <option value="14400">4 Hours</option>
+          <option value="21600">6 Hours</option>
+          <option value="43200">12 Hours</option>
+          <option value="86400">1 Day</option>
+          <option value="172800">2 Days</option>
+          <option value="345600">4 Days</option>
+          <option value="604800">1 Week</option>
+          <option value="1209600">2 Weeks</option>
+          <option value="1814400">3 Weeks</option>
+          <option value="2618784">1 Month</option>
+          <option value="5237568">2 Months</option>
+          <option selected="" value="7856352">3 Months</option>
+          <option value="10475136">4 Months</option>
+          <option value="15712704">6 Months</option>
+          <option value="31536000">1 Year</option>
+          <option value="63072000">2 Years</option>
+          <option value="94608000">3 Years</option>
+          <option value="126144000">4 Years</option>
+          <option value="157680000">5 Years</option>
+          <option value="189216000">6 Years</option>
+          <option value="220752000">7 Years</option>
+          <option value="252288000">8 Years</option>
+          <option value="283824000">9 Years</option>
+          <option value="315360000">10 Years</option>
+        </select>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="tab" name="tab" style="height:0px;" type="hidden" value="spikes"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="save ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>

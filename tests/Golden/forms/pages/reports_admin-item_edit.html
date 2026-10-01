@@ -1,11 +1,44 @@
-<form class="cactiFormStart" id="chk" name="chk" action="reports_admin.php" autocomplete="off" method="post"><div id="reports_admin_item_edit1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Report Item [new Report: Daily &lt;report&gt;]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Reports-Admin.html" href="#"><i class="far fa-question-circle"></i></a></span><span class="cactiFilterAdd" title="Add"><a class="linkOverDark" href="reports_admin.php?action=item_edit&amp;id=4"><i class="fa fa-plus"></i></a></span></div></div><div id="reports_admin_item_edit1_child" class="cactiTable"><div id="row_item_type" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Item Type to be added.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="item_type" name="item_type"><option value="2">Text</option><option value="3">Tree</option><option value="1" selected="">Graph</option><option value="5">Device</option><option value="4">Horizontal Rule</option></select></div></div></div><div id="row_tree_id" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Graph Tree<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Tree to use.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="tree_id" name="tree_id"></select></div></div></div><div id="row_branch_id" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Graph Tree Branch<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Tree Branch to use for Graphs and Devices.  Devices will be considered as Branches.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="branch_id" name="branch_id"><option value="0" selected="">All</option></select></div></div></div><div id="row_tree_cascade" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Cascade to Branches<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should all Branch Graphs be rendered?</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Cascade to Branches"><input title="Cascade to Branches" class="formCheckbox" type="checkbox" id="tree_cascade" name="tree_cascade" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="tree_cascade">Cascade to Branches</label></span></div></div></div><div id="row_site_id" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Site<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Site to filter for Devices and Graphs.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="site_id" name="site_id"></select></div></div></div><div id="row_host_template_id" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Device Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Device Template to use to filter for Devices or Graphs.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="host_template_id" name="host_template_id"><option value="0">None</option></select></div></div></div><div id="row_host_id" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Device<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Device to be used to filter for of select for Graphs in the case of a Device Type.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span id="host_id_wrap" class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget"><span id="host_id_click" style="z-index:4" class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s"></span><span class="ui-select-text"><input type="text" class="ui-state-default ui-corner-all" id="host_id_input" value="Any"></span></span><input type="hidden" id="host_id" name="host_id" value="-1">		<script type="text/javascript" nonce="<NONCE>">
+<form action="reports_admin.php" autocomplete="off" class="cactiFormStart" id="chk" method="post" name="chk">
+  <div class="cactiTable" id="reports_admin_item_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Report Item [new Report: Daily &lt;report&gt;]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Reports-Admin.html" href="#"><i class="far fa-question-circle"></i></a></span><span class="cactiFilterAdd" title="Add"><a class="linkOverDark" href="reports_admin.php?action=item_edit&amp;id=4"><i class="fa fa-plus"></i></a></span></div></div>
+    <div class="cactiTable" id="reports_admin_item_edit1_child">
+      <div class="formRow odd" id="row_item_type"><div class="formColumnLeft"><div class="formFieldName">Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Item Type to be added.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="item_type" name="item_type">
+          <option value="2">Text</option>
+          <option value="3">Tree</option>
+          <option selected="" value="1">Graph</option>
+          <option value="5">Device</option>
+          <option value="4">Horizontal Rule</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_tree_id"><div class="formColumnLeft"><div class="formFieldName">Graph Tree<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Tree to use.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="tree_id" name="tree_id"></select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_branch_id"><div class="formColumnLeft"><div class="formFieldName">Graph Tree Branch<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Tree Branch to use for Graphs and Devices. Devices will be considered as Branches.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="branch_id" name="branch_id">
+          <option selected="" value="0">All</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_tree_cascade"><div class="formColumnLeft"><div class="formFieldName">Cascade to Branches<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should all Branch Graphs be rendered?</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Cascade to Branches"><input aria-checked="false" class="formCheckbox" id="tree_cascade" name="tree_cascade" title="Cascade to Branches" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="tree_cascade">Cascade to Branches</label></span></div></div></div>
+      <div class="formRow odd" id="row_site_id"><div class="formColumnLeft"><div class="formFieldName">Site<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Site to filter for Devices and Graphs.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="site_id" name="site_id"></select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_host_template_id"><div class="formColumnLeft"><div class="formFieldName">Device Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Device Template to use to filter for Devices or Graphs.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="host_template_id" name="host_template_id">
+          <option value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_host_id"><div class="formColumnLeft"><div class="formFieldName">Device<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Device to be used to filter for of select for Graphs in the case of a Device Type.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget" id="host_id_wrap"><span class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s" id="host_id_click" style="z-index:4"></span><span class="ui-select-text"><input class="ui-state-default ui-corner-all" id="host_id_input" type="text" value="Any"></span></span><input id="host_id" name="host_id" type="hidden" value="-1">
+        <script nonce="&lt;NONCE&gt;" type="text/javascript">
 		var host_idTimer;
 		var host_idClickTimer;
 		var host_idOpen = false;
@@ -77,8 +110,11 @@
 			});
 		});
 		</script>
-		</div></div></div><div id="row_graph_template_id" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Graph Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Graph Template for the Device to be used to filter for or select Graphs in the case of a Device Type.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span id="graph_template_id_wrap" class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget"><span id="graph_template_id_click" style="z-index:4" class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s"></span><span class="ui-select-text"><input type="text" class="ui-state-default ui-corner-all" id="graph_template_id_input" value="Any"></span></span><input type="hidden" id="graph_template_id" name="graph_template_id" value="-1">		<script type="text/javascript" nonce="<NONCE>">
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_graph_template_id"><div class="formColumnLeft"><div class="formFieldName">Graph Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Graph Template for the Device to be used to filter for or select Graphs in the case of a Device Type.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget" id="graph_template_id_wrap"><span class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s" id="graph_template_id_click" style="z-index:4"></span><span class="ui-select-text"><input class="ui-state-default ui-corner-all" id="graph_template_id_input" type="text" value="Any"></span></span><input id="graph_template_id" name="graph_template_id" type="hidden" value="-1">
+        <script nonce="&lt;NONCE&gt;" type="text/javascript">
 		var graph_template_idTimer;
 		var graph_template_idClickTimer;
 		var graph_template_idOpen = false;
@@ -150,9 +186,12 @@
 			});
 		});
 		</script>
-		</div></div></div><div id="row_graph_name_regexp" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Graph Name Regular Expression<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A Perl compatible regular expression (REGEXP) used to select Graphs to include from the Tree or Device.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="graph_name_regexp" name="graph_name_regexp" size="80" maxlength="255" value=""></div></div></div><div id="row_local_graph_id" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Graph Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Graph to use for this report item.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><span id="local_graph_id_wrap" class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget"><span id="local_graph_id_click" style="z-index:4" class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s"></span><span class="ui-select-text"><input type="text" class="ui-state-default ui-corner-all" id="local_graph_id_input" value="None"></span></span><input type="hidden" id="local_graph_id" name="local_graph_id" value="0">		<script type="text/javascript" nonce="<NONCE>">
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_graph_name_regexp"><div class="formColumnLeft"><div class="formFieldName">Graph Name Regular Expression<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A Perl compatible regular expression (REGEXP) used to select Graphs to include from the Tree or Device.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="graph_name_regexp" maxlength="255" name="graph_name_regexp" off="" size="80" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_local_graph_id"><div class="formColumnLeft"><div class="formFieldName">Graph Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Graph to use for this report item.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget" id="local_graph_id_wrap"><span class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s" id="local_graph_id_click" style="z-index:4"></span><span class="ui-select-text"><input class="ui-state-default ui-corner-all" id="local_graph_id_input" type="text" value="None"></span></span><input id="local_graph_id" name="local_graph_id" type="hidden" value="0">
+        <script nonce="&lt;NONCE&gt;" type="text/javascript">
 		var local_graph_idTimer;
 		var local_graph_idClickTimer;
 		var local_graph_idOpen = false;
@@ -224,17 +263,77 @@
 			});
 		});
 		</script>
-		</div></div></div><div id="row_timespan" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Graph Timespan<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Graph End time will be set to the scheduled report send time.  So, if you wish the end time on the various Graphs to be midnight, ensure you send the report at midnight.  The Graph Start time will be the End Time minus the Graph Timespan.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="timespan" name="timespan"><option value="1">Last Half Hour</option><option value="2">Last Hour</option><option value="3">Last 2 Hours</option><option value="4">Last 4 Hours</option><option value="5">Last 6 Hours</option><option value="6">Last 12 Hours</option><option value="7" selected="">Last Day</option><option value="8">Last 2 Days</option><option value="9">Last 3 Days</option><option value="10">Last 4 Days</option><option value="11">Last Week</option><option value="12">Last 2 Weeks</option><option value="13">Last Month</option><option value="14">Last 2 Months</option><option value="15">Last 3 Months</option><option value="16">Last 4 Months</option><option value="17">Last 6 Months</option><option value="18">Last Year</option><option value="19">Last 2 Years</option><option value="20">Day Shift</option><option value="21">This Day</option><option value="22">This Week</option><option value="23">This Month</option><option value="24">This Year</option><option value="25">Previous Day</option><option value="26">Previous Week</option><option value="27">Previous Month</option><option value="28">Previous Year</option></select></div></div></div><div id="row_align" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Alignment<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Alignment of the Item</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="align" name="align"><option value="1">left</option><option value="2">center</option><option value="3">right</option></select></div></div></div><div id="row_item_text" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Fixed Text<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter descriptive Text</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="item_text" name="item_text" size="40" maxlength="255" value=""></div></div></div><div id="row_font_size" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Font Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Font Size of the Item</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><select id="font_size" name="font_size"><option value="7">7</option><option value="8">8</option><option value="10">10</option><option value="12">12</option><option value="14">14</option><option value="16" selected="">16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option><option value="28">28</option><option value="32">32</option></select></div></div></div><div id="row_sequence" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Sequence<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Sequence of Item.</span></div>
-</div></div></div><div class="formColumnRight"><div class="formData"><em></em><div style="display:none;"><input style="height:0px;" type="hidden" id="sequence" name="sequence" value=""></div></div></div></div></div></div><div class="break"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="id" name="id" value="0"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="report_id" name="report_id" value="4"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_report_item" name="save_component_report_item" value="1"></div>	<table style="width:100%;text-align:center;">
-		<tbody><tr>
-			<td class="saveRow">
-				<input type="hidden" name="action" value="save">
-				<input type="button" class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="reports_admin.php?action=edit&amp;tab=items&amp;id=4" value="Return">				<input type="submit" class="return ui-button ui-corner-all ui-widget" id="submit" value="Save">
-			</td>
-		</tr>
-	</tbody></table>
-	</form>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_timespan"><div class="formColumnLeft"><div class="formFieldName">Graph Timespan<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Graph End time will be set to the scheduled report send time. So, if you wish the end time on the various Graphs to be midnight, ensure you send the report at midnight. The Graph Start time will be the End Time minus the Graph Timespan.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="timespan" name="timespan">
+          <option value="1">Last Half Hour</option>
+          <option value="2">Last Hour</option>
+          <option value="3">Last 2 Hours</option>
+          <option value="4">Last 4 Hours</option>
+          <option value="5">Last 6 Hours</option>
+          <option value="6">Last 12 Hours</option>
+          <option selected="" value="7">Last Day</option>
+          <option value="8">Last 2 Days</option>
+          <option value="9">Last 3 Days</option>
+          <option value="10">Last 4 Days</option>
+          <option value="11">Last Week</option>
+          <option value="12">Last 2 Weeks</option>
+          <option value="13">Last Month</option>
+          <option value="14">Last 2 Months</option>
+          <option value="15">Last 3 Months</option>
+          <option value="16">Last 4 Months</option>
+          <option value="17">Last 6 Months</option>
+          <option value="18">Last Year</option>
+          <option value="19">Last 2 Years</option>
+          <option value="20">Day Shift</option>
+          <option value="21">This Day</option>
+          <option value="22">This Week</option>
+          <option value="23">This Month</option>
+          <option value="24">This Year</option>
+          <option value="25">Previous Day</option>
+          <option value="26">Previous Week</option>
+          <option value="27">Previous Month</option>
+          <option value="28">Previous Year</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_align"><div class="formColumnLeft"><div class="formFieldName">Alignment<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Alignment of the Item</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="align" name="align">
+          <option value="1">left</option>
+          <option value="2">center</option>
+          <option value="3">right</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_item_text"><div class="formColumnLeft"><div class="formFieldName">Fixed Text<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter descriptive Text</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="item_text" maxlength="255" name="item_text" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_font_size"><div class="formColumnLeft"><div class="formFieldName">Font Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Font Size of the Item</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="font_size" name="font_size">
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+          <option selected="" value="16">16</option>
+          <option value="18">18</option>
+          <option value="20">20</option>
+          <option value="24">24</option>
+          <option value="28">28</option>
+          <option value="32">32</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_sequence"><div class="formColumnLeft"><div class="formFieldName">Sequence<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Sequence of Item.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><em></em><div style="display:none;"><input id="sequence" name="sequence" style="height:0px;" type="hidden" value=""></div></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="0"></div><div style="display:none;"><input id="report_id" name="report_id" style="height:0px;" type="hidden" value="4"></div><div style="display:none;"><input id="save_component_report_item" name="save_component_report_item" style="height:0px;" type="hidden" value="1"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="reports_admin.php?action=edit&amp;tab=items&amp;id=4" type="button" value="Return"><input class="return ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>
