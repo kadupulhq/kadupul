@@ -89,8 +89,8 @@ test('date selectors preserve integer string and fallback settings', function ($
     expect(Php80Modernization\date_time_format())->toBe($expected . ' H:i:s');
     $graph = ['graph_start' => 1767323045, 'graph_end' => 1767326645];
     $legend = Php80Modernization\rrdtool_function_format_graph_date($graph);
-    $start = str_replace(':', '\\:', gmdate($expected . ' H:i:s', $graph['graph_start']));
-    $end = str_replace(':', '\\:', gmdate($expected . ' H:i:s', $graph['graph_end']));
+    $start = str_replace(':', '\\:', date($expected . ' H:i:s', $graph['graph_start']));
+    $end = str_replace(':', '\\:', date($expected . ' H:i:s', $graph['graph_end']));
     expect($legend)->toContain('From ' . $start . ' To ' . $end);
 })->with($dateCases);
 
