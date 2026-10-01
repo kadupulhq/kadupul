@@ -36,7 +36,7 @@
             <tbody>
             {% for vdef in rows %}
                 <tr>
-                    <td><input type="checkbox" name="ids[]" value="{{ vdef.id }}" aria-label="{{ 'Select %name%'|trans({'%name%': vdef.name}, 'graph_definition') }}"{% if vdef.inUse %} disabled{% endif %}></td>
+                    <td><input type="checkbox" name="ids[]" value="{{ vdef.id }}" aria-label="{{ 'Select %name%'|trans({'%name%': vdef.name}, 'graph_definition') }}"></td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                     <td><a href="{{ path('graph_vdef_edit', {id: vdef.id}) }}">{{ vdef.name }}</a></td>
                     <td>{{ vdef.inUse ? 'No'|trans({}, 'graph_definition') : 'Yes'|trans({}, 'graph_definition') }}</td>

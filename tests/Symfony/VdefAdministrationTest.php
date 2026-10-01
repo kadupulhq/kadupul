@@ -48,6 +48,51 @@ final class VdefAdministrationTest extends TestCase
         $this->catalog = new DoctrineVdefCatalog($this->database);
     }
 
+    public function testBulkSelectionReadsFiveHundredRevisionsInTwoQueries(): void
+    {
+        $logger = new class extends \Psr\Log\AbstractLogger {
+            public array $queries = [];
+            public function log($level, string|\Stringable $message, array $context = []): void
+            {
+                if (isset($context['sql'])) {
+                    $this->queries[] = $context['sql'];
+                }
+            }
+        };
+        $config = new \Doctrine\DBAL\Configuration();
+        $config->setMiddlewares([new \Doctrine\DBAL\Logging\Middleware($logger)]);
+        $database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true], $config);
+        $database->executeStatement('CREATE TABLE vdef (id INTEGER PRIMARY KEY, name TEXT)');
+        $database->executeStatement('CREATE TABLE vdef_items (id INTEGER PRIMARY KEY, vdef_id INTEGER, sequence INTEGER, type INTEGER, value TEXT)');
+        $ids = range(1, 500);
+        foreach ($ids as $id) {
+            $database->insert('vdef', ['id' => $id, 'name' => 'Selected ' . $id]);
+            $database->insert('vdef_items', ['id' => $id, 'vdef_id' => $id, 'sequence' => 1, 'type' => 5, 'value' => '999']);
+        }
+        $catalog = new DoctrineVdefCatalog($database);
+        $logger->queries = [];
+        $selected = $catalog->selected($ids);
+        self::assertCount(2, $logger->queries);
+        self::assertCount(500, $selected);
+        foreach ($selected as $id => $record) {
+            self::assertSame($id, $record['id']);
+            self::assertSame('Selected ' . $id, $record['name']);
+            self::assertSame(\Kadupul\GraphDefinition\Domain\VdefRevision::fromState($record['name'], [['id' => $id, 'sequence' => 1, 'type' => 5, 'value' => '999']]), $record['revision']);
+        }
+        $database->executeStatement('DELETE FROM vdef WHERE id = 500');
+        self::assertArrayNotHasKey(500, $catalog->selected($ids));
+        $database->close();
+    }
+
+    public function testInUseDefinitionCanBeDuplicatedButCannotBeDeleted(): void
+    {
+        $this->editor->act(42, 'duplicate', [1], '<vdef_title> copy', [1 => $this->revision(1)]);
+        self::assertSame('Traffic <peak> copy', $this->database->fetchOne('SELECT name FROM vdef WHERE id = 3'));
+        self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM vdef_items WHERE vdef_id = 3'));
+        $this->expectExceptionMessage('VDEFs in use cannot be deleted.');
+        $this->editor->act(42, 'delete', [1], '', [1 => $this->revision(1)]);
+    }
+
     public function testCallerOwnedTransactionIsPreservedWhenMutationIsRefused(): void
     {
         $this->database->beginTransaction();
@@ -137,6 +182,53 @@ final class VdefAdministrationTest extends TestCase
 
         self::assertSame(1, (int) $this->database->fetchOne('SELECT COUNT(*) FROM vdef WHERE id = 3'));
         self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM vdef_items WHERE vdef_id = 2'));
+    }
+
+    /** @dataProvider legacyReferenceValues */
+    public function testLegacyReferenceIdentityMatchesPreviewAndDeletion(string $value): void
+    {
+        $this->database->executeStatement("INSERT INTO vdef VALUES (3, 'hash-three', 'Nested target')");
+        $this->database->insert('vdef_items', ['hash' => 'nested', 'vdef_id' => 2, 'sequence' => 2, 'type' => 5, 'value' => $value]);
+        $this->database->insert('vdef_items', ['hash' => 'same-owner-alias', 'vdef_id' => 2, 'sequence' => 3, 'type' => 5, 'value' => '3']);
+        $target = array_values(array_filter($this->catalog->list(new VdefListCriteria()), static fn($row): bool => $row->id === 3))[0];
+        self::assertSame(1, $target->referencingVdefs, 'Distinct owners use the same PHP numeric identity as preview.');
+        self::assertTrue($target->inUse());
+        $this->database->executeStatement("DELETE FROM vdef_items WHERE hash = 'same-owner-alias'");
+        $before = $this->database->fetchAllAssociative('SELECT * FROM vdef_items ORDER BY id');
+        try {
+            $this->editor->act(42, 'delete', [3], '<vdef_title> (1)', [3 => $this->revision(3)]);
+            self::fail('A preserved legacy reference was not protected.');
+        } catch (\InvalidArgumentException $error) {
+            self::assertSame('VDEFs in use cannot be deleted.', $error->getMessage());
+        }
+        self::assertSame($before, $this->database->fetchAllAssociative('SELECT * FROM vdef_items ORDER BY id'));
+        self::assertSame('Nested target', $this->database->fetchOne('SELECT name FROM vdef WHERE id = 3'));
+    }
+
+    public static function legacyReferenceValues(): array
+    {
+        return array_map(static fn(string $value): array => [$value], ['03', '3 ', ' 3', '+3', '3tail', '3.9', '3e0', '30e-1']);
+    }
+
+    /** @dataProvider invalidDuplicateTitles */
+    public function testDuplicateRejectsInvalidNamesWithoutPartialCopies(string $format): void
+    {
+        $parents = $this->database->fetchAllAssociative('SELECT * FROM vdef ORDER BY id');
+        $items = $this->database->fetchAllAssociative('SELECT * FROM vdef_items ORDER BY id');
+        try {
+            $this->editor->act(42, 'duplicate', [2], $format, [2 => $this->revision(2)]);
+            self::fail('A duplicate name outside the save invariant was accepted.');
+        } catch (\InvalidArgumentException $error) {
+            self::assertSame('Enter a valid VDEF name.', $error->getMessage());
+        }
+        self::assertSame($parents, $this->database->fetchAllAssociative('SELECT * FROM vdef ORDER BY id'));
+        self::assertSame($items, $this->database->fetchAllAssociative('SELECT * FROM vdef_items ORDER BY id'));
+        self::assertFalse($this->database->isTransactionActive());
+    }
+
+    public static function invalidDuplicateTitles(): array
+    {
+        return array_map(static fn(string $value): array => [$value], ['', '  ', "bad\nname", "bad\rname", "bad\0name", str_repeat('é', 256), '<vdef_title>' . str_repeat('x', 250)]);
     }
 
     public function testDuplicatePreservesSequenceTypeAndValueAndSubstitutesTitle(): void

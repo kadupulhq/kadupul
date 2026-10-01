@@ -127,6 +127,7 @@ final class VdefPresentationTest extends TestCase
             $catalog->method('list')->willReturn([new VdefSummary(1, '<router-Ø>', 2, 3)]);
             $catalog->method('count')->willReturn(1);
             $catalog->method('find')->willReturn(['id' => 1, 'name' => '<router-Ø>', 'revision' => 'fixture', 'items' => [['id' => 99, 'type' => 99, 'value' => 'legacy', 'label' => 'legacy']]]);
+            $catalog->method('selected')->willReturn([1 => ['id' => 1, 'name' => '<router-Ø>', 'revision' => 'fixture']]);
             $catalog->method('preview')->willReturn('CURRENT_DATA_SOURCE,MAXIMUM');
             $container->set(VdefCatalog::class, $catalog);
             $list = $kernel->handle(Request::create('/graph-definitions/vdefs', 'GET', [], ['Cacti' => 'fixture']));
@@ -142,6 +143,11 @@ final class VdefPresentationTest extends TestCase
             self::assertStringContainsString('Enregistrer l’élément', $item->getContent());
             self::assertStringContainsString('CURRENT_DATA_SOURCE,MAXIMUM', $item->getContent());
             self::assertStringContainsString('>MAXIMUM</option>', $item->getContent());
+            $special = $kernel->handle(Request::create('/graph-definitions/vdefs/1/items/0?type=4', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $special->getStatusCode());
+            self::assertStringContainsString('Source de données de l’élément du graphique actuel', $special->getContent());
+            self::assertStringContainsString('value="CURRENT_DATA_SOURCE"', $special->getContent());
+            self::assertStringNotContainsString('Current Graph Item Data Source', $special->getContent());
             $delete = $kernel->handle(Request::create('/graph-definitions/vdefs/1/items/99/delete', 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(200, $delete->getStatusCode(), $delete->getContent());
             self::assertStringContainsString('Élément VDEF', $delete->getContent());
@@ -227,6 +233,8 @@ final class VdefPresentationTest extends TestCase
             self::assertStringContainsString('&lt;VDEF&gt;', $denied->getContent());
             self::assertStringNotContainsString('<VDEF>', $denied->getContent());
             self::assertStringContainsString('Graphs using', $denied->getContent());
+            self::assertMatchesRegularExpression('/name="ids\[\]" value="1"[^>]*>/', $denied->getContent());
+            self::assertDoesNotMatchRegularExpression('/name="ids\[\]" value="1"[^>]*disabled/', $denied->getContent());
 
             $legacyEdit = $kernel->handle(Request::create('/graph-definitions/vdefs/legacy?action=edit&id=1'));
             self::assertSame(302, $legacyEdit->getStatusCode());

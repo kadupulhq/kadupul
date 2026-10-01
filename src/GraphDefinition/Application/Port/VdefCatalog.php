@@ -20,6 +20,9 @@ interface VdefCatalog
     /** @return array{id:int,name:string,revision:string,items:list<array{id:int,sequence:int,type:int,value:string,label:string}>}|null */
     public function find(int $id): ?array;
 
+    /** @return array<int,array{id:int,name:string,revision:string}> */
+    public function selected(array $ids): array;
+
     public function preview(int $id): string;
 
 }

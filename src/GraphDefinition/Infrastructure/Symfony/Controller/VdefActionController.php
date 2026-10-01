@@ -39,8 +39,9 @@ final class VdefActionController
             $ids = self::ids($request->query->all()['ids'] ?? null);
             $rows = [];
             $revisions = [];
+            $selected = $catalog->selected($ids);
             foreach ($ids as $id) {
-                $record = $catalog->find($id);
+                $record = $selected[$id] ?? null;
                 if ($record === null) {
                     return new Response($translator->trans('VDEF not found.', [], 'graph_definition'), 404, $headers);
                 }

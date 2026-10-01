@@ -21,9 +21,10 @@ final readonly class LegacyVdefEditor implements VdefEditor
 
     public function save(int $actorId, int $id, string $name, string $revision = ''): int
     {
-        if ($id < 0 || trim($name) === '' || mb_strlen($name) > 255 || preg_match('/[\x00\r\n]/', $name)) {
+        if ($id < 0) {
             throw new \InvalidArgumentException('Enter a valid VDEF name.');
         }
+        $this->validateName($name);
         return $this->transaction($actorId, function () use ($id, $name, $revision): int {
             if ($id > 0) {
                 $this->assertRevision($this->lockState($id), $revision);
@@ -107,7 +108,9 @@ final readonly class LegacyVdefEditor implements VdefEditor
                 $vdef = ['name' => $state['name']];
                 if ($action === 'delete') {
                     $usage = $this->database->fetchFirstColumn('SELECT id FROM graph_templates_item WHERE vdef_id = ?' . $this->forUpdate(), [$id]);
-                    $nestedUsage = $this->database->fetchFirstColumn('SELECT id FROM vdef_items WHERE type = 5 AND value = ?' . $this->forUpdate(), [(string) $id]);
+                    // Preserve the PHP integer identity used by legacy preview/runtime.
+                    $references = $this->database->fetchFirstColumn('SELECT value FROM vdef_items WHERE type = 5' . $this->forUpdate());
+                    $nestedUsage = array_filter($references, static fn(mixed $value): bool => (int) $value === $id);
                     if ($usage !== [] || $nestedUsage !== []) {
                         throw new \InvalidArgumentException('VDEFs in use cannot be deleted.');
                     }
@@ -116,7 +119,8 @@ final readonly class LegacyVdefEditor implements VdefEditor
                     continue;
                 }
                 $name = str_replace('<vdef_title>', (string) $vdef['name'], $titleFormat);
-                $this->database->insert('vdef', ['hash' => bin2hex(random_bytes(16)), 'name' => mb_substr($name, 0, 255)]);
+                $this->validateName($name);
+                $this->database->insert('vdef', ['hash' => bin2hex(random_bytes(16)), 'name' => $name]);
                 $copyId = (int) $this->database->lastInsertId();
                 $items = $this->database->fetchAllAssociative('SELECT sequence, type, value FROM vdef_items WHERE vdef_id = ? ORDER BY sequence, id', [$id]);
                 foreach ($items as $item) {
@@ -124,6 +128,13 @@ final readonly class LegacyVdefEditor implements VdefEditor
                 }
             }
         });
+    }
+
+    private function validateName(string $name): void
+    {
+        if (trim($name) === '' || mb_strlen($name) > 255 || preg_match('/[\x00\r\n]/', $name)) {
+            throw new \InvalidArgumentException('Enter a valid VDEF name.');
+        }
     }
 
     private function validateItem(int $type, string $value): void

@@ -8,7 +8,6 @@
 namespace Kadupul\GraphDefinition\Infrastructure\Persistence;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Kadupul\GraphDefinition\Application\Port\VdefCatalog;
 use Kadupul\GraphDefinition\Domain\VdefFunctions;
 use Kadupul\GraphDefinition\Domain\VdefListCriteria;
@@ -33,25 +32,24 @@ final readonly class DoctrineVdefCatalog implements VdefCatalog
         }
         $order = ['name' => 'v.name', 'graphs' => 'vdef_usage.graphs', 'templates' => 'vdef_usage.templates'][$criteria->sort];
         $direction = strtoupper($criteria->direction);
-        $referenceJoin = $this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform
-            ? 'BINARY vdef_references.value = BINARY CAST(v.id AS CHAR)'
-            : 'vdef_references.value = CAST(v.id AS TEXT)';
-        $rows = $this->database->fetchAllAssociative("SELECT v.id, v.name, vdef_usage.graphs, vdef_usage.templates, vdef_references.referencing_vdefs FROM vdef v
+        $rows = $this->database->fetchAllAssociative("SELECT v.id, v.name, vdef_usage.graphs, vdef_usage.templates FROM vdef v
             LEFT JOIN (SELECT usage_rows.vdef_id,
                 SUM(CASE WHEN usage_rows.local_graph_id > 0 THEN 1 ELSE 0 END) AS graphs,
                 SUM(CASE WHEN usage_rows.local_graph_id = 0 THEN 1 ELSE 0 END) AS templates
                 FROM (SELECT vdef_id, graph_template_id, local_graph_id FROM graph_templates_item
                     WHERE vdef_id > 0 GROUP BY vdef_id, graph_template_id, local_graph_id) usage_rows
                 GROUP BY usage_rows.vdef_id) vdef_usage ON vdef_usage.vdef_id = v.id
-            LEFT JOIN (SELECT value, COUNT(DISTINCT vdef_id) AS referencing_vdefs FROM vdef_items
-                WHERE type = 5 GROUP BY value) vdef_references ON $referenceJoin
             WHERE $where ORDER BY $order $direction, v.id $direction LIMIT {$criteria->pageSize} OFFSET {$criteria->offset()}", $parameters);
+        $references = [];
+        foreach ($this->database->fetchAllAssociative('SELECT vdef_id, value FROM vdef_items WHERE type = 5') as $reference) {
+            $references[(int) $reference['value']][(int) $reference['vdef_id']] = true;
+        }
         return array_map(static fn(array $row): VdefSummary => new VdefSummary(
             (int) $row['id'],
             (string) $row['name'],
             (int) ($row['graphs'] ?? 0),
             (int) ($row['templates'] ?? 0),
-            (int) ($row['referencing_vdefs'] ?? 0)
+            count($references[(int) $row['id']] ?? [])
         ), $rows);
     }
 
@@ -92,6 +90,30 @@ final readonly class DoctrineVdefCatalog implements VdefCatalog
                     : VdefFunctions::itemLabel((int) $item['type'], (string) $item['value']),
             ], $items),
         ];
+    }
+
+    public function selected(array $ids): array
+    {
+        if ($ids === [] || count($ids) > 500 || count(array_unique($ids)) !== count($ids)
+            || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 99999999) !== []) {
+            throw new \InvalidArgumentException('Invalid VDEF selection.');
+        }
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $parents = $this->database->fetchAllAssociative("SELECT id, name FROM vdef WHERE id IN ($placeholders)", $ids);
+        $itemsByParent = [];
+        foreach ($this->database->fetchAllAssociative("SELECT vdef_id, id, sequence, type, value FROM vdef_items WHERE vdef_id IN ($placeholders) ORDER BY vdef_id, sequence, id", $ids) as $item) {
+            $itemsByParent[(int) $item['vdef_id']][] = [
+                'id' => (int) $item['id'], 'sequence' => (int) $item['sequence'],
+                'type' => (int) $item['type'], 'value' => (string) $item['value'],
+            ];
+        }
+        $selected = [];
+        foreach ($parents as $parent) {
+            $id = (int) $parent['id'];
+            $name = (string) $parent['name'];
+            $selected[$id] = ['id' => $id, 'name' => $name, 'revision' => VdefRevision::fromState($name, $itemsByParent[$id] ?? [])];
+        }
+        return $selected;
     }
 
     public function preview(int $id): string

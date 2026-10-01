@@ -29,7 +29,7 @@ final class VdefItemType extends AbstractType
             ->add('type', ChoiceType::class, ['label' => 'Item type', 'choices' => array_combine(array_values(VdefFunctions::TYPES), array_keys(VdefFunctions::TYPES)), 'choice_translation_domain' => 'graph_definition'])
             ->add('value', $type === '6' ? TextType::class : ChoiceType::class, $type === '6'
                 ? ['label' => 'Value', 'trim' => false, 'attr' => ['maxlength' => 150]]
-                : ['label' => 'Value', 'choices' => $valueChoices, 'choice_translation_domain' => false]);
+                : ['label' => 'Value', 'choices' => $valueChoices, 'choice_translation_domain' => $type === '4' ? 'graph_definition' : false]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
