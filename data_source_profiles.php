@@ -292,11 +292,15 @@ function form_save() {
 /* A profile is read only once a Data Source uses it, because its RRDfiles
    already hold the step, the consolidation functions and the RRAs. */
 function profile_is_read_only($profile_id) {
-	$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
-		FROM data_template_data
-		WHERE data_source_profile_id = ?
-		AND local_data_id > 0',
-		array($profile_id));
+	try {
+		$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM data_template_data
+			WHERE data_source_profile_id = ?
+			AND local_data_id > 0',
+			array($profile_id));
+	} catch (\Throwable $e) {
+		$in_use = false;
+	}
 
 	if ($in_use === false || !is_numeric($in_use)) {
 		cacti_log('ERROR: Unable to check whether Data Source Profile ' . (int) $profile_id . ' is in use.', false, 'WEBUI');

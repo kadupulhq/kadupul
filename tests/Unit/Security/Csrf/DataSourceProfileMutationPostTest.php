@@ -360,6 +360,20 @@ test('saving an RRA refuses one of another profile, and a new or resized RRA of 
 	expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"7","name":"r","data_source_profile_id":"3","timespan":"86400"}')
 		->and($output)->not->toContain('Refused');
 
+	/* a usage lookup that fails reads as in use, so only the name and timespan of an owned RRA still save */
+	foreach (array(false, 'exception') as $failure) {
+		foreach (array(array('id' => '0', 'steps' => '300', 'rows' => '600'), array('id' => '7', 'steps' => '600'), array('id' => '7', 'rows' => '900')) as $locked) {
+			$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400') + $locked, array(), $save, array('3' => $failure), array('7' => 3));
+
+			expect($output)->toContain('MESSAGE:profile_read_only')
+				->and($output)->not->toContain('SAVE:data_source_profiles_rra');
+		}
+
+		$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '7', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400'), array(), $save, array('3' => $failure), array('7' => 3));
+
+		expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"7","name":"r","data_source_profile_id":"3","timespan":"86400"}');
+	}
+
 	$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '0', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400', 'steps' => '600', 'rows' => '700'), array(), $save, array('3' => array(2, 0)));
 
 	expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"0","name":"r","data_source_profile_id":"3","timespan":"86400","steps":2,"rows":"700"}')
