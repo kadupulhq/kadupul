@@ -1,4 +1,21 @@
+const fs = require('fs');
+const path = require('path');
 const { test, expect } = require('@playwright/test');
+
+const root = path.join(__dirname, '..', '..');
+
+// Returns the body of a page's [data-tooltip] content callback, exactly as the
+// PHP file prints it.
+function permissionTooltipBody(file) {
+  const source = fs.readFileSync(path.join(root, file), 'utf8');
+  const match = source.match(/items: '\[data-tooltip\]',\s*content: function\(\) \{([\s\S]*?)\n\t+\}/);
+
+  if (!match) {
+    throw new Error(`No permission tooltip callback in ${file}`);
+  }
+
+  return match[1];
+}
 
 async function loadLayout(page) {
   await page.goto('/tests/e2e/theme-smoke.html');
@@ -49,3 +66,40 @@ test('an ordinary color name is shown in the color dropdown input', async ({ pag
 
   await expect(page.locator('#sandbox input')).toHaveValue('Red (FF0000)');
 });
+
+for (const file of ['user_admin.php', 'user_group_admin.php']) {
+  test(`${file} shows permission reasons with markup as text`, async ({ page }) => {
+    // Two 20-character group names that only form a tag once the reason joins them.
+    const reasons = [
+      'Granted By: Group:(<img src=x a="), Group:(" onerror=window.pwn=1>)',
+      'Granted By: Group:(Operators)',
+    ];
+
+    await loadLayout(page);
+    await page.evaluate((body) => {
+      $(document).tooltip({ items: '[data-tooltip]', content: new Function(body) });
+    }, permissionTooltipBody(file));
+
+    for (const reason of reasons) {
+      await page.evaluate((text) => {
+        window.pwn = 0;
+        $('.ui-tooltip').remove();
+        const span = $('<span class="accessGranted">Granted</span>').attr('data-tooltip', text);
+        $('#sandbox').empty().append(span);
+      }, reason);
+      await page.locator('#sandbox span[data-tooltip]').hover();
+      await expect(page.locator('.ui-tooltip-content')).toBeVisible();
+      await page.waitForTimeout(100);
+
+      const state = await page.evaluate(() => ({
+        images: $('.ui-tooltip img').length,
+        handlers: $('.ui-tooltip [onerror]').length,
+        pwn: window.pwn,
+      }));
+
+      expect(state).toEqual({ images: 0, handlers: 0, pwn: 0 });
+      await expect(page.locator('.ui-tooltip-content')).toHaveText(reason);
+      await page.mouse.move(0, 0);
+    }
+  });
+}
