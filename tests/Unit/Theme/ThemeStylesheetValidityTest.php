@@ -40,7 +40,7 @@ function theme_css_invalid_declarations(string $css): array
             // Values inside strings/functions cannot begin another declaration.
             // Retain the legacy Microsoft filter's namespaced function spelling.
             $visible = preg_replace('/\bprogid:[a-z0-9_.]+/i', 'legacy_filter', trim($visible));
-            if (!str_starts_with($visible, '--') && preg_match('/\s+(?:--)?[a-z][a-z-]*\s*:(?!:)/i', $visible)) {
+            if (!str_starts_with($visible, '--') && preg_match('/\s+(?:--|-)?[a-z][a-z-]*\s*:(?!:)/i', $visible)) {
                 $problems[] = 'missing semicolon: ' . $declaration;
             }
 
@@ -249,6 +249,7 @@ it('flags each discarded declaration pattern', function (string $css, string $la
     'gradient shadow'     => ['.a { box-shadow: -moz-linear-gradient(top, #45484d 100%, #000 100%); }', 'gradient in border-color'],
     'float middle'        => ['.a { float: middle; }', 'float: middle'],
     'missing semicolon'   => [".a {\n\tbox-shadow: 0 0 18px #00438C, 0 0 5px #00438C\n\topacity: 1.0;\n}", 'missing semicolon'],
+    'vendor semicolon'    => ['.a { color: red -webkit-appearance: none; }', 'missing semicolon'],
     'same-line semicolon' => ['.a { color: red opacity: .5; }', 'missing semicolon'],
     'missing before var'  => [".a {\n    padding: 6px\n\tborder: 1px solid var(--border-color);\n}", 'missing semicolon'],
     'unitless padding'    => ['.moveArrowNone { padding-left: 8.75; }', 'unitless length'],
