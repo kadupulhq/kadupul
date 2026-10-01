@@ -78,7 +78,7 @@ function csrf_ob_handler($buffer, $flags) {
  */
 function csrf_rewrite_forms($buffer, $input) {
 	// Without a form start tag there is nothing to rewrite.
-	if (!preg_match('/<form/i', $buffer)) {
+	if (!preg_match('/<[Ff][Oo][Rr][Mm]/', $buffer)) {
 		return $buffer;
 	}
 
@@ -140,8 +140,9 @@ function csrf_scan_tags($buffer) {
 	 * csrf_parse_tag() ends such a tag at the same ">", so the loop below
 	 * only reads the rest. Each match takes at most 1000 tokens to stay
 	 * within the PCRE backtracking limit. */
-	$skip = '~(?(DEFINE)(?<plain>[^<]++|</?(?!(?i:f(?:orm|rameset)|base|s(?:elect|vg|tyle|cript)|' .
-		't(?:e(?:mplate|xtarea)|itle)|no(?:script|embed|frames)|plaintext|math|xmp|iframe)[\t\n\f\r />])' .
+	$special = csrf_ascii_caseless('form|frameset|base|select|svg|style|script|template|textarea|title|' .
+		'noscript|noembed|noframes|plaintext|math|xmp|iframe');
+	$skip = '~(?(DEFINE)(?<plain>[^<]++|</?(?!(?:' . $special . ')[\t\n\f\r />])' .
 		'[A-Za-z][^\t\n\f\r />"\'=]*+(?:[\t\n\f\r /]++(?:[^\t\n\f\r />"\'=]++' .
 		'(?:=[\t\n\f\r ]*+(?:"[^"]*+"|\'[^\']*+\'))?+)?+)*+>))\G(?&plain){0,1000}+~';
 	$tags = array();
@@ -207,7 +208,7 @@ function csrf_scan_tags($buffer) {
 
 		$name_start = $start + ($end_tag ? 2 : 1);
 		$name_length = strcspn($buffer, "\t\n\f\r />", $name_start);
-		$name = strtolower(substr($buffer, $name_start, $name_length));
+		$name = csrf_ascii_lower(substr($buffer, $name_start, $name_length));
 		$tag = csrf_parse_tag($buffer, $name_start + $name_length, !$end_tag && !empty($listed[$name]));
 		if (!$tag['closed'] || (!$end_tag && isset($unsupported[$name]))) {
 			return array('tags' => $tags, 'stop' => $start);
@@ -219,7 +220,7 @@ function csrf_scan_tags($buffer) {
 		}
 
 		if (!$end_tag && isset($raw[$name])) {
-			if (!preg_match('#</' . $name . '(?=[\t\n\f\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
+			if (!preg_match('#</' . csrf_ascii_caseless($name) . '(?=[\t\n\f\r />])#', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
 				return array('tags' => $tags, 'stop' => $offset);
 			}
 
@@ -279,7 +280,7 @@ function csrf_parse_tag($html, $position, $read = true) {
 
 		// A name may start with "=" and runs to whitespace, "/", ">" or "=".
 		$name_length = 1 + strcspn($html, $space . '/>=', $position + 1);
-		$name = $read ? strtolower(substr($html, $position, $name_length)) : '';
+		$name = $read ? csrf_ascii_lower(substr($html, $position, $name_length)) : '';
 		$position += $name_length;
 		$position += strspn($html, $space, $position);
 		$value = '';
@@ -333,7 +334,7 @@ function csrf_decode_attribute($value) {
 }
 
 function csrf_form_is_local_post($attributes, $relative_is_local) {
-	if (!isset($attributes['method']) || strtolower($attributes['method']) !== 'post') {
+	if (!isset($attributes['method']) || csrf_ascii_lower($attributes['method']) !== 'post') {
 		return false;
 	}
 
@@ -356,6 +357,34 @@ function csrf_form_action_is_local($form_tag) {
 }
 
 /**
+ * HTML tag and attribute names are compared as ASCII. strtolower(), stripos()
+ * and the PCRE /i flag follow the locale on some PHP versions, and in a
+ * Turkish locale "I" does not lower to "i", so they are not used here.
+ */
+function csrf_ascii_lower($text) {
+	return strtr($text, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+}
+
+/**
+ * Returns a pattern matching $text with ASCII letters in either case, as in
+ * [Ff][Oo][Rr][Mm]. Characters other than letters are kept, so "|" still
+ * separates alternatives.
+ */
+function csrf_ascii_caseless($text) {
+	static $patterns = array();
+
+	if (!isset($patterns[$text])) {
+		$patterns[$text] = preg_replace_callback('/[A-Za-z]/', function($matches) {
+			$lower = csrf_ascii_lower($matches[0]);
+
+			return '[' . strtr($lower, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') . $lower . ']';
+		}, $text);
+	}
+
+	return $patterns[$text];
+}
+
+/**
  * Accepts only a URL that resolves against the base URL without naming a
  * scheme or host. Browsers drop tabs and newlines inside a URL and read "\"
  * as "/", so any control character, space or backslash is refused.
@@ -365,7 +394,7 @@ function csrf_url_is_relative($url) {
 
 	return strpos($url, '\\') === false &&
 		!preg_match('/[\x00-\x20\x7f]/', $url) &&
-		!preg_match('#^(?:[a-z][a-z0-9+.-]*:|//)#i', $url);
+		!preg_match('#^(?:[A-Za-z][A-Za-z0-9+.-]*:|//)#', $url);
 }
 
 /**
@@ -385,7 +414,7 @@ function csrf_base_is_local($buffer, $scan = null) {
 		}
 	}
 
-	return $scan['stop'] === false || !preg_match('#<base(?=[\t\n\f\r />]|$)#i', $buffer, $match, 0, $scan['stop']);
+	return $scan['stop'] === false || !preg_match('#<[Bb][Aa][Ss][Ee](?=[\t\n\f\r />]|$)#', $buffer, $match, 0, $scan['stop']);
 }
 
 /**

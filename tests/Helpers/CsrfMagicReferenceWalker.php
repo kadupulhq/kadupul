@@ -16,7 +16,8 @@
  * The csrf-magic tag walker as it was before the regular-expression skip
  * was added: it reads every tag with csrf_parse_tag(). Tests compare the
  * shipped walker with it, so the speed-up cannot change a decision.
- * Copied from include/vendor/csrf/csrf-magic.php at 0ae9abbb5.
+ * Copied from include/vendor/csrf/csrf-magic.php at 0ae9abbb5, with tag
+ * names compared as ASCII as the shipped walker does.
  */
 
 function csrf_reference_rewrite_forms($buffer, $input) {
@@ -116,7 +117,7 @@ function csrf_reference_scan_tags($buffer) {
 
 		$name_start = $start + ($end_tag ? 2 : 1);
 		$name_length = strcspn($buffer, "\t\n\f\r />", $name_start);
-		$name = strtolower(substr($buffer, $name_start, $name_length));
+		$name = csrf_ascii_lower(substr($buffer, $name_start, $name_length));
 		$tag = csrf_parse_tag($buffer, $name_start + $name_length, !$end_tag && !empty($listed[$name]));
 		if (!$tag['closed'] || (!$end_tag && isset($unsupported[$name]))) {
 			return array('tags' => $tags, 'stop' => $start);
@@ -128,7 +129,7 @@ function csrf_reference_scan_tags($buffer) {
 		}
 
 		if (!$end_tag && isset($raw[$name])) {
-			if (!preg_match('#</' . $name . '(?=[\t\n\f\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
+			if (!preg_match('#</' . csrf_ascii_caseless($name) . '(?=[\t\n\f\r />])#', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
 				return array('tags' => $tags, 'stop' => $offset);
 			}
 
