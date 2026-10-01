@@ -376,7 +376,8 @@ function profiles_not_in_use($selected_items)
             $in_use = db_fetch_cell_prepared(
                 'SELECT COUNT(*)
 				FROM data_template_data
-				WHERE data_source_profile_id = ?',
+				WHERE data_source_profile_id = ?
+				FOR UPDATE',
                 array($profile_id)
             );
         } catch (\Throwable $e) {
