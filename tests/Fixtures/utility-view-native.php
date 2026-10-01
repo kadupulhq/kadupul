@@ -215,6 +215,7 @@ if (isset($argv[3])) {
     define('UTILITY_VIEW_TEST_COVERAGE', true);
     require __DIR__ . '/rrd-process-coverage.php';
 }
+require $root . '/src/Platform/Infrastructure/Legacy/UtilityRows.php';
 require $root . '/utilities.php';
 ob_start();
 match ($scenario['view']) {
@@ -225,6 +226,7 @@ match ($scenario['view']) {
     'event' => snmpagent_utilities_run_eventlog(),
     'log' => utilities_view_logfile(),
     'boost' => boost_display_run_status(),
+    'options' => \Kadupul\Platform\Infrastructure\Legacy\UtilityRows::renderOptions($scenario['choices'], $scenario['selected']),
 };
 $html = ob_get_clean();
 $after = array();

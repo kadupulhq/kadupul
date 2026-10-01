@@ -236,6 +236,22 @@ final class UtilityViewNativeCoverageTest extends TestCase
         return $cases;
     }
 
+    public function testNativeRowOptionsEscapeQuoteContainingAttributeKeys(): void
+    {
+        $key = "quote'\"<&";
+        $label = '</option><script>markup</script> & label';
+        $state = $this->render(array('view' => 'options', 'request' => array(), 'choices' => array($key => $label), 'selected' => $key));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML('<select>' . $state['html'] . '</select>', LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        self::assertCount(1, $xpath->query('//select/option'));
+        $option = $xpath->query('//select/option')->item(0);
+        self::assertSame($key, $option->getAttribute('value'));
+        self::assertSame($label, $option->textContent);
+        self::assertTrue($option->hasAttribute('selected'));
+        self::assertCount(0, $xpath->query('//script'));
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);

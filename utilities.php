@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+use Kadupul\Platform\Infrastructure\Legacy\UtilityRows;
+
 include('./include/auth.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/boost.php');
@@ -1060,14 +1062,7 @@ function utilities_view_user_log()
 						<select id='rows'>
 							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
 							<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . '</option>';
-        }
-    }
+    UtilityRows::renderOptions($item_rows, get_request_var('rows'));
     ?>
 						</select>
 					</td>
@@ -2137,14 +2132,7 @@ function utilities_view_poller_cache()
 						<select id='rows'>
 							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
 							<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . '</option>';
-        }
-    }
+    UtilityRows::renderOptions($item_rows, get_request_var('rows'));
     ?>
 						</select>
 					</td>
@@ -3097,14 +3085,7 @@ function snmpagent_utilities_run_cache()
 							<select id='rows'>
 								<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
 								<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . '</option>';
-        }
-    }
+    UtilityRows::renderOptions($item_rows, get_request_var('rows'));
     ?>
 							</select>
 						</td>
@@ -3376,14 +3357,7 @@ function snmpagent_utilities_run_eventlog()
 							<select id='rows'>
 								<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
 								<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . '</option>';
-        }
-    }
+    UtilityRows::renderOptions($item_rows, get_request_var('rows'));
     ?>
 							</select>
 						</td>
