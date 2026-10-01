@@ -57,15 +57,17 @@ END";
 function data_source_profile_reference_guards_available(
     string $profiles = 'data_source_profiles',
     string $data = 'data_template_data',
-    string $prefix = 'kadupul_profile_reference'
+    string $prefix = 'kadupul_profile_reference',
+    string $rra = 'data_source_profiles_rra',
+    string $cf = 'data_source_profiles_cf'
 ): bool {
     $definitions = data_source_profile_reference_triggers($profiles, $data, $prefix);
     $engines = db_fetch_assoc_prepared(
         'SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES
-        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?, ?)',
-        [$profiles, $data]
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?, ?, ?, ?)',
+        [$profiles, $data, $rra, $cf]
     );
-    if (!is_array($engines) || count($engines) !== 2) {
+    if (!is_array($engines) || count($engines) !== 4) {
         return false;
     }
     foreach ($engines as $table) {
@@ -120,19 +122,92 @@ function replicate_data_source_profile_parents(PDO $connection, array $data): bo
         if (!is_array($profiles) || count($profiles) !== count($ids)) {
             return false;
         }
-        if (!db_table_exists('data_source_profiles', false, $connection)) {
-            $definition = db_fetch_row('SHOW CREATE TABLE data_source_profiles');
-            if (!isset($definition['Create Table']) || !db_execute($definition['Create Table'], false, $connection)) {
+        $definitions = ['data_source_profiles' => $profiles];
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        foreach (['data_source_profiles_rra', 'data_source_profiles_cf'] as $table) {
+            $rows = db_fetch_assoc_prepared("SELECT * FROM $table WHERE data_source_profile_id IN ($placeholders)", array_values($ids));
+            if (!is_array($rows)) {
+                return false;
+            }
+            $delivered = array_unique(array_map(static fn($row) => (int) ($row['data_source_profile_id'] ?? 0), $rows));
+            if (array_diff($ids, $delivered)) {
+                return false;
+            }
+            $definitions[$table] = $rows;
+        }
+        // Complete schema creation before opening the delivery transaction:
+        // MySQL DDL would otherwise commit a partly copied profile.
+        foreach ($definitions as $table => $rows) {
+            if (!db_table_exists($table, false, $connection)) {
+                $definition = db_fetch_row("SHOW CREATE TABLE $table");
+                if (!isset($definition['Create Table']) || !db_execute($definition['Create Table'], false, $connection)) {
+                    return false;
+                }
+            }
+        }
+        if ($connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
+            $engines = db_fetch_assoc_prepared('SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN (?,?,?)', array_keys($definitions), true, $connection);
+            if (!is_array($engines) || count($engines) !== 3 || array_filter($engines, static fn($row) => strcasecmp($row['ENGINE'] ?? '', 'InnoDB') !== 0)) {
                 return false;
             }
         }
-        foreach ($profiles as $profile) {
-            if (!isset($profile['id']) || !isset($ids[(int) $profile['id']])
-                || sql_save($profile, 'data_source_profiles', 'id', true, $connection) === false) {
-                return false;
-            }
+        if ($connection->inTransaction() || !$connection->beginTransaction()) {
+            return false;
         }
-        return true;
+        try {
+            foreach ($profiles as $profile) {
+                if (!isset($profile['id']) || !isset($ids[(int) $profile['id']])
+                    || sql_save($profile, 'data_source_profiles', 'id', true, $connection) === false) {
+                    throw new RuntimeException('Profile parent delivery failed.');
+                }
+            }
+            foreach (['data_source_profiles_rra', 'data_source_profiles_cf'] as $table) {
+                // RRA IDs are shared catalog identities. Do not overwrite a
+                // collector row owned by an unrelated profile on collision.
+                if ($table === 'data_source_profiles_rra') {
+                    foreach ($definitions[$table] as $row) {
+                        $existing = db_fetch_assoc_prepared("SELECT * FROM $table WHERE id=? AND data_source_profile_id<>?", [$row['id'], $row['data_source_profile_id']], true, $connection);
+                        if (!is_array($existing) || $existing) {
+                            throw new RuntimeException('Collector RRA identity conflicts with another profile.');
+                        }
+                    }
+                }
+                if (!db_execute_prepared("DELETE FROM $table WHERE data_source_profile_id IN ($placeholders)", array_values($ids), true, $connection)) {
+                    throw new RuntimeException('Collector profile definition replacement failed.');
+                }
+                foreach ($definitions[$table] as $row) {
+                    $columns = '`' . implode('`,`', array_keys($row)) . '`';
+                    $values = implode(',', array_fill(0, count($row), '?'));
+                    if (!db_execute_prepared("INSERT INTO $table ($columns) VALUES ($values)", array_values($row), true, $connection)) {
+                        throw new RuntimeException('Collector profile definition delivery failed.');
+                    }
+                }
+            }
+            $normalize = static function (array $rows): array {
+                $values = array_map(static function ($row) {
+                    ksort($row);
+                    return json_encode(array_map(static fn($value) => $value === null ? null : (string) $value, $row), JSON_THROW_ON_ERROR);
+                }, $rows);
+                sort($values);
+                return $values;
+            };
+            foreach ($definitions as $table => $rows) {
+                $key = $table === 'data_source_profiles' ? 'id' : 'data_source_profile_id';
+                $actual = db_fetch_assoc_prepared("SELECT * FROM $table WHERE $key IN ($placeholders)", array_values($ids), true, $connection);
+                if (!is_array($actual) || $normalize($actual) !== $normalize($rows)) {
+                    throw new RuntimeException('Collector profile definition verification failed.');
+                }
+            }
+            if (!$connection->commit()) {
+                throw new RuntimeException('Collector profile delivery commit failed.');
+            }
+            return true;
+        } catch (Throwable $error) {
+            if ($connection->inTransaction()) {
+                $connection->rollBack();
+            }
+            throw $error;
+        }
     } catch (Throwable $error) {
         cacti_log('ERROR: Unable to replicate profile parents: ' . $error->getMessage(), false, 'REPLICATE');
         return false;

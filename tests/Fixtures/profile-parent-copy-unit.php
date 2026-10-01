@@ -22,21 +22,27 @@ if ($case !== 'missing-table' && $case !== 'create-failure' && $case !== 'missin
     $remote->exec('CREATE TABLE data_source_profiles (id INTEGER PRIMARY KEY, name TEXT)');
     $remote->exec("INSERT INTO data_source_profiles VALUES (1,'Old default')");
 }
+foreach ([$source, $remote] as $connection) {
+    $connection->exec('CREATE TABLE data_source_profiles_rra (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, steps INTEGER)');
+    $connection->exec('CREATE TABLE data_source_profiles_cf (data_source_profile_id INTEGER, consolidation_function_id INTEGER)');
+}
+$source->exec('INSERT INTO data_source_profiles_rra VALUES (1,1,1),(77,77,6)');
+$source->exec('INSERT INTO data_source_profiles_cf VALUES (1,1),(77,1)');
 if ($case === 'copy-exception') {
     $remote->exec("CREATE TRIGGER reject_parent BEFORE INSERT ON data_source_profiles BEGIN SELECT RAISE(FAIL,'Rejected parent'); END");
 }
-function db_fetch_assoc_prepared($sql, $params)
+function db_fetch_assoc_prepared($sql, $params, $log = true, $connection = false)
 {
     if ($GLOBALS['case'] === 'query-failure') {
         return false;
     }
-    $query = $GLOBALS['source']->prepare($sql);
+    $query = ($connection ?: $GLOBALS['source'])->prepare($sql);
     $query->execute($params);
     return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 function db_table_exists($table, $log, $connection)
 {
-    return (bool) $connection->query("SELECT name FROM sqlite_master WHERE type='table' AND name='data_source_profiles'")->fetchColumn();
+    return (bool) $connection->query("SELECT name FROM sqlite_master WHERE type='table' AND name='$table'")->fetchColumn();
 }
 function db_fetch_row($sql)
 {
@@ -56,6 +62,10 @@ function sql_save($row, $table, $key, $autoincrement, $connection)
     }
     $connection->prepare('INSERT INTO data_source_profiles VALUES (?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name')->execute(array($row['id'], $row['name']));
     return $row['id'];
+}
+function db_execute_prepared($sql, $params, $log, $connection)
+{
+    return $connection->prepare($sql)->execute($params);
 }
 function cacti_log(...$arguments) {}
 require $copy;

@@ -86,6 +86,11 @@ $maps = [
     'source' => ['data_source_profiles' => 'src_profiles_' . $suffix, 'data_template_data' => 'src_data_' . $suffix],
     'remote' => ['data_source_profiles' => 'rc_profiles_' . $suffix, 'data_template_data' => 'rc_data_' . $suffix],
 ];
+foreach ($maps as $side => &$map) {
+    $map['data_source_profiles_rra'] = $side . '_rra_' . $suffix;
+    $map['data_source_profiles_cf'] = $side . '_cf_' . $suffix;
+}
+unset($map);
 $calls = [];
 $log = [];
 $affected = 0;
@@ -98,6 +103,9 @@ function collector_statement(string $sql, array $params = [], $connection = fals
     $connection = $connection ?: $GLOBALS['source'];
     $side = $connection === $GLOBALS['source'] ? 'source' : 'remote';
     $GLOBALS['calls'][] = [$side, $sql];
+    if (str_contains($sql, 'information_schema.TABLES')) {
+        $params = array_map(static fn($name) => $GLOBALS['maps'][$side][$name] ?? $name, $params);
+    }
     foreach ($GLOBALS['maps'][$side] as $logical => $physical) {
         $sql = preg_replace('/\b' . $logical . '\b/', $physical, $sql);
     }
@@ -113,7 +121,7 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
             $GLOBALS['calls'][] = ['source', $sql];
             return $GLOBALS['data'];
         }
-        if (!preg_match('/data_source_profiles|SHOW COLUMNS FROM data_template_data/', $sql)) {
+        if (!preg_match('/data_source_profiles|information_schema.TABLES|SHOW COLUMNS FROM data_template_data/', $sql)) {
             $GLOBALS['calls'][] = ['source', $sql];
             return [];
         }
@@ -192,8 +200,12 @@ function array_rekey($rows, $key, $value)
 {
     return array_column($rows, $value, $key);
 }
-function db_execute_prepared($sql, $params = [], ...$options)
+function db_execute_prepared($sql, $params = [], $log = true, $connection = false)
 {
+    if (str_contains($sql, 'data_source_profiles')) {
+        collector_statement($sql, $params, $connection);
+        return true;
+    }
     $GLOBALS['calls'][] = ['source', $sql];
     return true;
 }
@@ -227,6 +239,10 @@ try {
         $connection = $side === 'source' ? $source : $remote;
         $connection->exec('CREATE TABLE `' . $map['data_source_profiles'] . '` (id INTEGER PRIMARY KEY, name VARCHAR(32), step INTEGER) ENGINE=InnoDB');
         $connection->exec('CREATE TABLE `' . $map['data_template_data'] . '` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32)) ENGINE=InnoDB');
+        $connection->exec('CREATE TABLE `' . $map['data_source_profiles_rra'] . '` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, steps INTEGER, `rows` INTEGER) ENGINE=InnoDB');
+        $connection->exec('CREATE TABLE `' . $map['data_source_profiles_cf'] . '` (data_source_profile_id INTEGER, consolidation_function_id INTEGER, PRIMARY KEY(data_source_profile_id,consolidation_function_id)) ENGINE=InnoDB');
+        $connection->exec('INSERT INTO `' . $map['data_source_profiles_rra'] . '` VALUES (1,1,1,600)');
+        $connection->exec('INSERT INTO `' . $map['data_source_profiles_cf'] . '` VALUES (1,1)');
         $connection->exec('INSERT INTO `' . $map['data_source_profiles'] . "` VALUES (1,'default',300)");
     }
     $source->exec('INSERT INTO `' . $maps['source']['data_source_profiles'] . "` VALUES (77,'custom',60)");
@@ -236,6 +252,28 @@ try {
     }
     if (($scenario['failure'] ?? '') === 'copy') {
         $installer->exec('CREATE TRIGGER `collector_reject_' . $suffix . '` BEFORE INSERT ON `' . $maps['remote']['data_source_profiles'] . "` FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Parent copy rejected'");
+    }
+    $source->exec('INSERT INTO `' . $maps['source']['data_source_profiles_rra'] . '` VALUES (77,77,1,600),(78,77,6,700)');
+    $source->exec('INSERT INTO `' . $maps['source']['data_source_profiles_cf'] . '` VALUES (77,1),(77,3)');
+    // Stale collector definitions must be replaced, not accumulated.
+    $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_rra'] . '` VALUES (79,77,24,900)');
+    $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_cf'] . '` VALUES (77,4)');
+    if (in_array($scenario['failure'] ?? '', ['rra', 'cf', 'corrupt'], true)) {
+        $table = ($scenario['failure'] ?? '') === 'rra' ? 'data_source_profiles_rra' : 'data_source_profiles_cf';
+        $body = ($scenario['failure'] ?? '') === 'corrupt' ? 'SET NEW.consolidation_function_id=4' : "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Definition copy rejected'";
+        $installer->exec('CREATE TRIGGER `collector_definition_reject_' . $suffix . '` BEFORE INSERT ON `' . $maps['remote'][$table] . '` FOR EACH ROW ' . $body);
+    }
+    if (($scenario['failure'] ?? '') === 'missing-rra') {
+        $source->exec('DELETE FROM `' . $maps['source']['data_source_profiles_rra'] . '` WHERE data_source_profile_id=77');
+    }
+    if (($scenario['failure'] ?? '') === 'missing-cf') {
+        $source->exec('DELETE FROM `' . $maps['source']['data_source_profiles_cf'] . '` WHERE data_source_profile_id=77');
+    }
+    if (($scenario['failure'] ?? '') === 'collision') {
+        $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_rra'] . '` VALUES (77,1,24,900)');
+    }
+    if (($scenario['failure'] ?? '') === 'engine') {
+        $remote->exec('ALTER TABLE `' . $maps['remote']['data_source_profiles_cf'] . '` ENGINE=MyISAM');
     }
     $id = ($scenario['failure'] ?? '') === 'missing' ? 98 : 77;
     $data = [['id' => 2, 'data_source_profile_id' => $id, 'name' => 'replicated']];
@@ -248,10 +286,13 @@ try {
     }
     $rows = $remote->query('SELECT * FROM `' . $maps['remote']['data_template_data'] . '` ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
     $parent = $remote->query('SELECT id FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn();
-    file_put_contents($directory . '/result.json', json_encode(['result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    $rras = $remote->query('SELECT r.steps,r.`rows`,c.consolidation_function_id FROM `' . $maps['remote']['data_template_data'] . '` d JOIN `' . $maps['remote']['data_source_profiles_rra'] . '` r ON r.data_source_profile_id=d.data_source_profile_id JOIN `' . $maps['remote']['data_source_profiles_cf'] . '` c ON c.data_source_profile_id=d.data_source_profile_id WHERE d.id=2')->fetchAll(PDO::FETCH_ASSOC);
+    file_put_contents($directory . '/result.json', json_encode(['rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
 } finally {
     foreach ($maps as $map) {
         $remote->exec('DROP TABLE IF EXISTS `' . $map['data_template_data'] . '`');
+        $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_rra'] . '`');
+        $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_cf'] . '`');
         $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles'] . '`');
     }
 }

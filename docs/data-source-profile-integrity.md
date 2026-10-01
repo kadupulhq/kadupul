@@ -16,9 +16,13 @@ legacy meaning. Assigning a new orphan reference is rejected. No existing
 references are rewritten and no foreign key conversion is performed.
 
 Both bulk collector replication and per-device replication copy every referenced
-nonzero profile parent to the collector before writing `data_template_data`.
-The copy checks the main catalog and the collector save result. A missing parent
-or rejected parent copy stops that table's replication before its schema or
+nonzero profile parent and its RRA/CF definitions before writing `data_template_data`.
+Every requested profile must have RRA and CF rows. Delivery replaces stale
+collector definitions within one InnoDB transaction and verifies all three
+catalogs against the source rows before committing. A conflicting RRA identity,
+missing definition, rejected write, or altered delivered value rolls back the
+catalog changes. Schema creation occurs before the transaction because MySQL
+DDL implicitly commits. A missing parent or rejected definition copy stops that table's replication before its schema or
 existing rows are changed. This keeps guards active on collectors without losing
 their existing data-source definitions when custom profiles are introduced.
 
@@ -29,8 +33,8 @@ metadata before deletion; an account that cannot inspect it fails closed.
 Binary-log policies may impose additional server privileges during installation.
 A denied creation or an existing modified guard stops the upgrade explicitly.
 Physical profile deletion checks both trigger bodies, timing, and events and
-fails closed if either guard is missing, modified, or inaccessible, or if either
-table uses a non-InnoDB engine. Run the
+fails closed if either guard is missing, modified, or inaccessible, or if any of `data_source_profiles`, `data_template_data`,
+`data_source_profiles_rra`, or `data_source_profiles_cf` uses a non-InnoDB engine. Run the
 upgrade after restoring the required privileges; do not remove this check.
 
 Keep triggers in database backups and restores. The project's default

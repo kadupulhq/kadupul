@@ -51,7 +51,7 @@ $guards = array();
 function db_fetch_assoc_prepared($sql, $params = array())
 {
     if (str_contains($sql, 'information_schema.TABLES')) {
-        return array(array('TABLE_NAME' => 'data_source_profiles', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_template_data', 'ENGINE' => 'InnoDB'));
+        return array(array('TABLE_NAME' => 'data_source_profiles_rra', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_source_profiles_cf', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_source_profiles', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_template_data', 'ENGINE' => 'InnoDB'));
     }
     if (count($params) === 1) {
         return isset($GLOBALS['guards'][$params[0]]) ? array(array('TRIGGER_NAME' => $params[0])) : array();

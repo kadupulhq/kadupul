@@ -33,7 +33,7 @@ abstract class ProfileDeletionContract extends TestCase
         if ($failure === 'lookup-aborted' || $failure === 'commit' || str_starts_with($failure, 'data_source_profiles')) {
             self::assertSame(1, $state['rollbacks']);
         }
-        if (!str_starts_with($failure, 'lookup') && !in_array($failure, array('begin', 'isolation', 'guard-missing', 'guard-modified', 'guard-engine'), true)) {
+        if (!str_starts_with($failure, 'lookup') && !in_array($failure, array('begin', 'isolation', 'guard-missing', 'guard-modified', 'guard-engine', 'guard-rra-engine', 'guard-cf-engine'), true)) {
             $locking = array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FROM data_template_data') && str_contains($call[0], 'FOR UPDATE') && $call[1] === ($scenario['selected'] ?? array(3)));
             self::assertCount(1, $locking);
         }
@@ -92,7 +92,7 @@ abstract class ProfileDeletionContract extends TestCase
     public static function scenarios(): array
     {
         $cases = array('unused' => array(array()), 'mixed' => array(array('selected' => array(1,2,3))), 'all referenced' => array(array('selected' => array(1,2))));
-        foreach (array('guard-engine','guard-missing','guard-modified','lookup-aborted','lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
+        foreach (array('guard-engine', 'guard-rra-engine', 'guard-cf-engine','guard-missing','guard-modified','lookup-aborted','lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
             $cases[$failure] = array(array('failure' => $failure));
         }
         return $cases;

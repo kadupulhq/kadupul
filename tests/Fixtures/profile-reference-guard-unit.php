@@ -35,6 +35,8 @@ foreach ($definitions as $name => $definition) {
     $fresh = $fresh && str_contains($schema, $definition['sql'] . '$$');
     $rows[] = ['TRIGGER_NAME' => $name, 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']];
 }
+$engines[] = ['TABLE_NAME' => 'data_source_profiles_rra', 'ENGINE' => 'InnoDB'];
+$engines[] = ['TABLE_NAME' => 'data_source_profiles_cf', 'ENGINE' => 'InnoDB'];
 $valid = data_source_profile_reference_guards_available();
 $baseline = $rows;
 $refusals = [];

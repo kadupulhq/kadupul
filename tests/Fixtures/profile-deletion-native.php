@@ -31,9 +31,9 @@ $db = $mysql ? new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MY
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 $tableMap = array();
-if ($mysql && ($scenario['request']['drp_action'] ?? '') === '2') {
+if ($mysql) {
     $ownedPrefix = 'pr_profile_' . bin2hex(random_bytes(8)) . '_';
-    foreach (array('data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $table) {
+    foreach (array('data_source_profiles','data_source_profiles_rra','data_source_profiles_cf','data_template_data') as $table) {
         $tableMap[$table] = $ownedPrefix . $table;
     }
 }
@@ -62,8 +62,8 @@ $idColumn = $mysql ? 'INTEGER PRIMARY KEY AUTO_INCREMENT' : 'INTEGER PRIMARY KEY
 $db->exec($profilePrefix . profile_native_sql('data_source_profiles (id INTEGER PRIMARY KEY, name VARCHAR(255), hash VARCHAR(64), step INTEGER, heartbeat INTEGER, x_files_factor DOUBLE, `default` VARCHAR(4))'));
 $db->exec($profilePrefix . profile_native_sql('data_source_profiles_rra (id ' . $idColumn . ', data_source_profile_id INTEGER, name VARCHAR(255), steps INTEGER, `rows` INTEGER, timespan INTEGER)'));
 $db->exec($profilePrefix . profile_native_sql('data_source_profiles_cf (data_source_profile_id INTEGER, consolidation_function_id INTEGER)'));
-$db->exec($prefix . 'data_template_data (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, local_data_id INTEGER)');
-$db->exec('CREATE INDEX data_source_profile_id ON data_template_data (data_source_profile_id)');
+$db->exec($profilePrefix . profile_native_sql('data_template_data (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, local_data_id INTEGER)'));
+$db->exec(profile_native_sql('CREATE INDEX data_source_profile_id ON data_template_data (data_source_profile_id)'));
 $db->exec($prefix . 'settings (name VARCHAR(64) PRIMARY KEY, value VARCHAR(255))');
 $db->exec($prefix . 'settings_user (name VARCHAR(64),user_id INTEGER,value VARCHAR(255))');
 $db->exec($prefix . 'user_auth (id INTEGER PRIMARY KEY,username VARCHAR(64),reset_perms INTEGER)');
@@ -71,11 +71,15 @@ $db->exec("INSERT INTO user_auth VALUES (7,'fixture-admin',0)");
 $db->exec(profile_native_sql("INSERT INTO data_source_profiles VALUES (1,'Template profile','abc',300,600,0.5,''),(2,'Local profile','def',300,600,0.5,''),(3,'Unused profile','ghi',300,600,0.5,'')"));
 $db->exec(profile_native_sql("INSERT INTO data_source_profiles_rra VALUES (11,1,'Hourly',1,100,30000),(12,2,'Hourly',1,100,30000),(13,3,'Hourly',1,100,30000)"));
 $db->exec(profile_native_sql('INSERT INTO data_source_profiles_cf VALUES (1,1),(2,1),(3,1)'));
-$db->exec('INSERT INTO data_template_data VALUES (1,1,0),(2,2,42)');
+$db->exec(profile_native_sql('INSERT INTO data_template_data VALUES (1,1,0),(2,2,42)'));
 $calls = array();
 $rollbacks = 0;
 $commits = 0;
 $failure = $scenario['failure'] ?? '';
+if ($mysql && in_array($failure, ['guard-rra-engine', 'guard-cf-engine'], true)) {
+    $table = $failure === 'guard-rra-engine' ? 'data_source_profiles_rra' : 'data_source_profiles_cf';
+    $db->exec(profile_native_sql('ALTER TABLE ' . $table . ' ENGINE=MyISAM'));
+}
 function profile_native_statement($sql, $params = array())
 {
     $GLOBALS['calls'][] = array($sql, $params);
@@ -101,7 +105,12 @@ function db_fetch_row_prepared($sql, $params = array())
 function db_fetch_assoc_prepared($sql, $params = array())
 {
     if (str_contains($sql, 'information_schema.TABLES')) {
-        return array(array('TABLE_NAME' => 'data_source_profiles', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_template_data', 'ENGINE' => $GLOBALS['failure'] === 'guard-engine' ? 'MyISAM' : 'InnoDB'));
+        if ($GLOBALS['mysql'] && $GLOBALS['failure'] !== 'guard-engine') {
+            $statement = $GLOBALS['db']->prepare($sql);
+            $statement->execute(array_map(static fn($table) => $GLOBALS['tableMap'][$table] ?? $table, $params));
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return array(array('TABLE_NAME' => 'data_source_profiles_rra', 'ENGINE' => $GLOBALS['failure'] === 'guard-rra-engine' ? 'MyISAM' : 'InnoDB'), array('TABLE_NAME' => 'data_source_profiles_cf', 'ENGINE' => $GLOBALS['failure'] === 'guard-cf-engine' ? 'MyISAM' : 'InnoDB'), array('TABLE_NAME' => 'data_source_profiles', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_template_data', 'ENGINE' => $GLOBALS['failure'] === 'guard-engine' ? 'MyISAM' : 'InnoDB'));
     }
     if (str_contains($sql, 'information_schema.TRIGGERS')) {
         if ($GLOBALS['failure'] === 'guard-missing') {

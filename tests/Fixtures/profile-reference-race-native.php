@@ -38,6 +38,8 @@ $root = dirname(__DIR__, 2);
 $suffix = bin2hex(random_bytes(6));
 $profiles = 'guard_parent_' . $suffix;
 $data = 'guard_child_' . $suffix;
+$rra = 'guard_rra_' . $suffix;
+$cf = 'guard_cf_' . $suffix;
 $prefix = 'guard_trigger_' . $suffix;
 $db = profile_guard_connection();
 function db_fetch_assoc_prepared($sql, $params = [])
@@ -49,6 +51,8 @@ function db_fetch_assoc_prepared($sql, $params = [])
 $process = null;
 $pipes = [];
 try {
+    $db->exec("CREATE TABLE `$rra` (id INTEGER PRIMARY KEY) ENGINE=InnoDB");
+    $db->exec("CREATE TABLE `$cf` (id INTEGER PRIMARY KEY) ENGINE=InnoDB");
     $db->exec("CREATE TABLE `$profiles` (id INTEGER PRIMARY KEY) ENGINE=InnoDB");
     $db->exec("CREATE TABLE `$data` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32), INDEX(data_source_profile_id)) ENGINE=InnoDB");
     $db->exec("INSERT INTO `$profiles` VALUES (3)");
@@ -61,7 +65,7 @@ try {
     foreach ($definitions as $definition) {
         $installer->exec($definition['sql']);
     }
-    $available = data_source_profile_reference_guards_available($profiles, $data, $prefix);
+    $available = data_source_profile_reference_guards_available($profiles, $data, $prefix, $rra, $cf);
     $db->exec("UPDATE `$data` SET name='edited' WHERE id=1");
     $db->exec("INSERT INTO `$data` VALUES (1,99,'upserted') ON DUPLICATE KEY UPDATE data_source_profile_id=VALUES(data_source_profile_id), name=VALUES(name)");
     $db->exec("INSERT INTO `$data` VALUES (4,0,'default')");
@@ -146,9 +150,9 @@ try {
     // Removing or modifying either guard must stop physical deletion.
     $name = array_key_first($definitions);
     $installer->exec("DROP TRIGGER `$name`");
-    $missingRejected = !data_source_profile_reference_guards_available($profiles, $data, $prefix);
+    $missingRejected = !data_source_profile_reference_guards_available($profiles, $data, $prefix, $rra, $cf);
     $installer->exec("CREATE TRIGGER `$name` BEFORE INSERT ON `$data` FOR EACH ROW SET NEW.name=NEW.name");
-    $modifiedRejected = !data_source_profile_reference_guards_available($profiles, $data, $prefix);
+    $modifiedRejected = !data_source_profile_reference_guards_available($profiles, $data, $prefix, $rra, $cf);
     file_put_contents($directory . '/result.json', json_encode(['available' => $available, 'waiting' => $waiting, 'writer' => $writer, 'orphans' => $orphans, 'legacyName' => $db->query("SELECT name FROM `$data` WHERE id=1")->fetchColumn(), 'zero' => (int) $db->query("SELECT data_source_profile_id FROM `$data` WHERE id=4")->fetchColumn(), 'rejected' => $rejected, 'missingRejected' => $missingRejected, 'modifiedRejected' => $modifiedRejected], JSON_THROW_ON_ERROR));
 } finally {
     if ($db->inTransaction()) {
@@ -158,6 +162,8 @@ try {
         proc_terminate($process);
         proc_close($process);
     }
+    $db->exec("DROP TABLE IF EXISTS `$rra`");
+    $db->exec("DROP TABLE IF EXISTS `$cf`");
     $db->exec("DROP TABLE IF EXISTS `$data`");
     $db->exec("DROP TABLE IF EXISTS `$profiles`");
 }
