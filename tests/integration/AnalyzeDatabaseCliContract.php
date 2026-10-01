@@ -11,6 +11,7 @@ if (!$port || !$password) {
     throw new RuntimeException('Disposable database connection is required.');
 }
 $admin = new PDO('mysql:host=127.0.0.1;port=' . $port, 'root', $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+echo 'Native database version: ' . $admin->getAttribute(PDO::ATTR_SERVER_VERSION) . PHP_EOL;
 $actualBinlog = $admin->query("SHOW GLOBAL VARIABLES LIKE 'log_bin'")->fetch(PDO::FETCH_ASSOC);
 if ((strtolower($actualBinlog['Value']) === 'on') !== $expectedBinlog) {
     throw new RuntimeException('The native server binary-log mode does not match the requested contract.');
@@ -85,9 +86,11 @@ try {
     $admin->exec('CREATE TABLE `' . $database . '`.`z_allowed``tick` (id INT PRIMARY KEY) ENGINE=InnoDB');
     $admin->exec('INSERT INTO `' . $database . '`.`a_denied` VALUES (1)');
     $admin->exec('INSERT INTO `' . $database . '`.`z_allowed``tick` VALUES (2)');
-    $before = $admin->query('SHOW MASTER STATUS')->fetch(PDO::FETCH_ASSOC);
+    $version = $admin->getAttribute(PDO::ATTR_SERVER_VERSION);
+    $statusQuery = stripos($version, 'MariaDB') === false && version_compare($version, '8.4', '>=') ? 'SHOW BINARY LOG STATUS' : 'SHOW MASTER STATUS';
+    $before = $expectedBinlog ? $admin->query($statusQuery)->fetch(PDO::FETCH_ASSOC) : false;
     list($status, $output, $log) = $run();
-    $after = $admin->query('SHOW MASTER STATUS')->fetch(PDO::FETCH_ASSOC);
+    $after = $expectedBinlog ? $admin->query($statusQuery)->fetch(PDO::FETCH_ASSOC) : false;
     $assert($status === 0 && substr_count($output, ' Successful') === 2 && strpos($output, ' Failed') === false,
         'Native analysis must successfully process both tables, including the quoted identifier.');
     $assert(strpos($log, 'Analyzing Cacti Tables complete.') !== false, 'Successful completion must be logged.');
