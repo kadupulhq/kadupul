@@ -1560,6 +1560,8 @@ function form_end($ajax = true)
 							loadTopTab(href, scroll_or_id, true);
 						} else if (type == 'post') {
 							loadPage(href, true, true);
+						} else if (type == 'postdata') {
+							scroll_or_id();
 						} else {
 							loadPage(href, true);
 						}

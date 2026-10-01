@@ -1360,7 +1360,7 @@ function device_javascript()
 
 		$('[id^="verbose"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			loadPageUsingPost('host.php?action=query_verbose', {
+			loadPageUsingPostChecked('host.php?action=query_verbose', {
 				id: $(this).attr('data-id'),
 				host_id: $('#id').val(),
 				nostate: 'true',
@@ -1458,7 +1458,7 @@ function device_javascript()
 		$('input[id^="reindex_"]').on('change', function() {
 			height = $('.hostInfoHeader').height();
 
-			loadPageUsingPost(urlPath+'host.php?action=query_change', {
+			loadPageUsingPostChecked(urlPath+'host.php?action=query_change', {
 				header: 'false',
 				host_id: $(this).attr('data-device-id'),
 				data_query_id: $(this).attr('data-query-id'),

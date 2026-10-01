@@ -683,7 +683,7 @@ function vdef_edit()
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
 		$('#vdef_item').tableDnD({
 			onDrop: function(table, row) {
-				loadPageUsingPost('vdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
+				loadPageUsingPostChecked('vdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
 			}
 		});
 		<?php } ?>

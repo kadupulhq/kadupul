@@ -2375,6 +2375,19 @@ function loadPageUsingPost(href, postData, returnLocation) {
 	});
 }
 
+/* Posts as loadPageUsingPost() does, but first asks before discarding unsaved
+ * form edits, as loadPageNoHeader() did for these actions when they were GETs.
+ * Continue sends the same POST. */
+function loadPageUsingPostChecked(href, postData) {
+	var send = function() {
+		loadPageUsingPost(href, postData);
+	};
+
+	if (checkFormStatus(href, 'postdata', send)) {
+		send();
+	}
+}
+
 /** Symfony Sites pages own their full document rather than legacy AJAX fragments. */
 function navigateToSymfonySites(href) {
 	var target;

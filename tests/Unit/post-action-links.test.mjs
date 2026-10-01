@@ -177,3 +177,31 @@ test('continuing past the unsaved form warning replays a post action by POST', (
   const form = readFileSync(new URL('../../lib/html_form.php', import.meta.url), 'utf8');
   assert.match(form, /\} else if \(type == 'post'\) \{\s*loadPage\(href, true, true\);/);
 });
+
+test('a posted reorder or device action asks before discarding unsaved form edits', () => {
+  const { scope, state } = harness();
+  let resume = null;
+  scope.checkFormStatus = (href, type, next) => { state.formStatus.push(type); resume = next; return false; };
+  runInNewContext(['loadPageUsingPost', 'loadPageUsingPostChecked'].map(implementation).join('\n'), scope);
+
+  scope.loadPageUsingPostChecked('cdef.php?action=ajax_dnd&id=2', 'cdef_item[]=4&cdef_item[]=3');
+  assert.deepEqual(state.formStatus, ['postdata']);
+  assert.deepEqual(state.posts, []);
+
+  resume();
+  assert.deepEqual(state.posts, [{ url: 'cdef.php?action=ajax_dnd&id=2', data: 'cdef_item[]=4&cdef_item[]=3' }]);
+});
+
+test('a posted reorder or device action is sent at once when no form has changed', () => {
+  const { scope, state } = harness();
+  runInNewContext(['loadPageUsingPost', 'loadPageUsingPostChecked'].map(implementation).join('\n'), scope);
+
+  scope.loadPageUsingPostChecked('host.php?action=query_verbose', { id: 1 });
+  assert.deepEqual(state.formStatus, ['postdata']);
+  assert.deepEqual(state.posts, [{ url: 'host.php?action=query_verbose', data: { id: 1 } }]);
+});
+
+test('continuing past the unsaved form warning sends a checked POST', () => {
+  const form = readFileSync(new URL('../../lib/html_form.php', import.meta.url), 'utf8');
+  assert.match(form, /\} else if \(type == 'postdata'\) \{\s*scroll_or_id\(\);/);
+});

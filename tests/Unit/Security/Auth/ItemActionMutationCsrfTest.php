@@ -282,8 +282,8 @@ test('pages send the device, tree, rule, data source and utility actions by POST
         expect($source('host.php'))->toMatch("/\\$\\.post\\('host\\.php\\?action=$action', \\{" . $token . '/');
     }
     expect($source('host.php'))->toMatch("/\\$\\.post\\('host\\.php\\?action=query_reload', \\{" . $token . '/')
-        ->toMatch("/loadPageUsingPost\\('host\\.php\\?action=query_verbose', \\{" . $token . '/')
-        ->toMatch("/loadPageUsingPost\\(urlPath\\+'host\\.php\\?action=query_change', \\{" . $token . '/')
+        ->toMatch("/loadPageUsingPostChecked\\('host\\.php\\?action=query_verbose', \\{" . $token . '/')
+        ->toMatch("/loadPageUsingPostChecked\\(urlPath\\+'host\\.php\\?action=query_change', \\{" . $token . '/')
         ->not->toContain('hostPageLoad')
         ->not->toMatch('/strURL[^;]*action=(?:gt|query)_/');
     foreach (array('enable_debug', 'disable_debug', 'repopulate') as $action) {
@@ -329,7 +329,7 @@ test('no page triggers ajax_dnd or query_reload by GET', function () {
     foreach (array_merge(glob($root . '/*.php'), glob($root . '/lib/*.php'), glob($root . '/include/*.js')) as $path) {
         foreach (file($path) as $number => $line) {
             // Every request for these actions must be a POST that carries the token.
-            if (preg_match('/action=(?:ajax_dnd|query_reload)(?![a-z_])/', $line) && !preg_match('/loadPageUsingPost\\(|\\$\\.post\\(/', $line)) {
+            if (preg_match('/action=(?:ajax_dnd|query_reload)(?![a-z_])/', $line) && !preg_match('/loadPageUsingPost(?:Checked)?\\(|\\$\\.post\\(/', $line)) {
                 $offenders[] = substr($path, strlen($root) + 1) . ':' . ($number + 1);
             }
         }
@@ -339,7 +339,7 @@ test('no page triggers ajax_dnd or query_reload by GET', function () {
 
     foreach (array('cdef.php', 'vdef.php', 'automation_snmp.php', 'automation_templates.php', 'color_templates.php', 'tree.php') as $file) {
         expect(file_get_contents($root . '/' . $file))
-            ->toMatch("/loadPageUsingPost\\('[a-z_]+\\.php\\?action=ajax_dnd.*?', \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
+            ->toMatch("/loadPageUsingPost(?:Checked)?\\('[a-z_]+\\.php\\?action=ajax_dnd.*?', \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
     }
     expect(file_get_contents($root . '/graphs_new.php'))
         ->toMatch("/loadPageUsingPost\\('graphs_new\\.php\\?action=query_reload', \\{[^;]*__csrf_magic: csrfMagicToken/");
