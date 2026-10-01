@@ -88,7 +88,7 @@ final class DataInputController
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
                 }
             }
-            return new Response($twig->render('data_input/edit.html.twig', ['state' => $state, 'form' => $form->createView(), 'saved' => $this->queryString($request, 'saved')]), $status, self::HEADERS);
+            return new Response($twig->render('data_input/edit.html.twig', ['state' => $state, 'form' => $form->createView(), 'saved' => $this->queryString($request, 'saved'), 'operation' => $this->queryString($request, 'operation')]), $status, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
@@ -186,7 +186,7 @@ final class DataInputController
                 $data = $form->getData();
                 try {
                     $result = $methods->execute($operation, $id, $data + ['field' => $field]);
-                    return new RedirectResponse($urls->generate($operation === 'delete' ? 'data_inputs' : 'data_input_edit', $operation === 'delete' ? [] : ['id' => $result['id'], 'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
+                    return new RedirectResponse($urls->generate($operation === 'delete' ? 'data_inputs' : 'data_input_edit', $operation === 'delete' ? [] : ['id' => $result['id'], 'saved' => $result['partial'] ? 'partial' : '1', 'operation' => $operation]), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));

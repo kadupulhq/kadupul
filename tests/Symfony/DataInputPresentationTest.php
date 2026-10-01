@@ -146,6 +146,49 @@ final class DataInputPresentationTest extends TestCase
         }
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('handoffResults')]
+    public function testHandoffResultsReportTheirOperationWithoutClaimingLocalPersistence(string $operation, bool $partial, string $message): void
+    {
+        [$kernel, $container] = $this->authorizedKernel();
+        try {
+            $state = ['method' => ['id' => 3, 'name' => 'Fixture', 'type_id' => 1, 'input_string' => '/usr/bin/printf 1'], 'fields' => [], 'counts' => ['templates' => 0, 'data_sources' => 0], 'revision' => str_repeat('a', 64), 'whitelist' => 'requires_update'];
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->expects(self::exactly(3))->method('execute')->willReturnCallback(static function (int $actor, string $action, int $id, array $payload) use ($state, $operation, $partial): array {
+                self::assertSame(9, $actor);
+                self::assertSame(3, $id);
+                if ($action === 'find') {
+                    return $state;
+                }
+                self::assertSame($operation, $action);
+                self::assertSame($state['revision'], $payload['revision']);
+                return ['id' => 3, 'partial' => $partial];
+            });
+            $container->set(DataInputGateway::class, $gateway);
+            $response = $kernel->handle(Request::create('/data-inputs/3/' . $operation, 'POST', ['data_input_action' => ['revision' => $state['revision'], '_token' => 'csrf-token']], server: ['HTTP_ORIGIN' => 'http://localhost']));
+            self::assertSame(303, $response->getStatusCode(), $response->getContent());
+            $location = $response->headers->get('Location');
+            parse_str(parse_url($location, PHP_URL_QUERY), $query);
+            self::assertSame($operation, $query['operation'] ?? null);
+            self::assertSame($partial ? 'partial' : '1', $query['saved']);
+            $page = $kernel->handle(Request::create($location));
+            self::assertSame(200, $page->getStatusCode(), $page->getContent());
+            self::assertStringContainsString($message, $page->getContent());
+            self::assertStringNotContainsString('Data input saved.', $page->getContent());
+            self::assertStringNotContainsString('Local changes were saved.', $page->getContent());
+            self::assertSame($partial, str_contains($page->getContent(), 'role="alert"'));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public static function handoffResults(): iterable
+    {
+        yield ['propagate', false, 'Collector propagation completed.'];
+        yield ['propagate', true, 'Collector propagation is incomplete.'];
+        yield ['whitelist', false, 'Whitelist verification and collector propagation completed.'];
+        yield ['whitelist', true, 'Whitelist verification or collector propagation is incomplete.'];
+    }
+
     private function authorizedKernel(): array
     {
         $kernel = new Kernel('test', true);
