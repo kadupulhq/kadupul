@@ -7,6 +7,7 @@
       <file>./integration/PluginManageAllPermissionsDatabaseTest.php</file>
       <file>./integration/GraphItemOrderingDatabaseTest.php</file>
       <file>./integration/GroupMembershipConcurrencyTest.php</file>
+      <file>./integration/BoostRecoveryDatabaseTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
