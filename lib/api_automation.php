@@ -5,6 +5,21 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+function automation_template_options($templates, $selected): void
+{
+    if (!cacti_sizeof($templates)) {
+        return;
+    }
+    foreach ($templates as $template) {
+        printf(
+            '<option value="%s"%s>%s</option>',
+            html_escape($template['id']),
+            $template['id'] == $selected ? ' selected' : '',
+            html_escape($template['name'])
+        );
+    }
+}
+
 function automation_host_status_options(): array
 {
     return array(
@@ -154,7 +169,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 								<?php
                                 $host_templates = db_fetch_assoc('SELECT id,name FROM host_template ORDER BY name');
 
-    html_create_list($host_templates, 'name', 'id', get_request_var('host_template_id'));
+    automation_template_options($host_templates, get_request_var('host_template_id'));
     ?>
 							</select>
 						</td>
@@ -1081,7 +1096,7 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 							<?php
                             $host_templates = db_fetch_assoc('select id,name from host_template order by name');
 
-    html_create_list($host_templates, 'name', 'id', get_request_var('host_template_id'));
+    automation_template_options($host_templates, get_request_var('host_template_id'));
     ?>
 						</select>
 					</td>

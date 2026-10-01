@@ -81,6 +81,8 @@ final class AutomationModuleNativeTest extends TestCase
         self::assertSame('Any', $xpath->query('//select[@id="host_template_id"]/option[@value="-1"]')->item(0)->textContent);
         self::assertSame('None', $xpath->query('//select[@id="host_template_id"]/option[@value="0"]')->item(0)->textContent);
         self::assertSame('Fixture template', $xpath->query('//select[@id="host_template_id"]/option[@value="9"]')->item(0)->textContent);
+        self::assertSame('|host_description| <b>routers</b>', $xpath->query('//select[@id="host_template_id"]/option[@value="10"]')->item(0)->textContent);
+        self::assertStringContainsString('|host_description| &lt;b&gt;routers&lt;/b&gt;', $state['html']);
         $statuses = array('-1' => 'Any', '-3' => 'Enabled', '-2' => 'Disabled', '-4' => 'Not Up', '3' => 'Up', '1' => 'Down', '2' => 'Recovering', '0' => 'Unknown');
         foreach ($statuses as $value => $label) {
             self::assertSame($label, $xpath->query('//select[@id="host_status"]/option[@value="' . $value . '"]')->item(0)->textContent);
@@ -302,6 +304,8 @@ final class AutomationModuleNativeTest extends TestCase
             self::assertSame('Any', $xpath->query('//select[@id="host_template_id"]/option[@value="-1"]')->item(0)->textContent);
             self::assertSame('None', $xpath->query('//select[@id="host_template_id"]/option[@value="0"]')->item(0)->textContent);
             self::assertSame('Fixture template', $xpath->query('//select[@id="host_template_id"]/option[@value="9"]')->item(0)->textContent);
+            self::assertSame('|host_description| <b>routers</b>', $xpath->query('//select[@id="host_template_id"]/option[@value="10"]')->item(0)->textContent);
+            self::assertStringContainsString('|host_description| &lt;b&gt;routers&lt;/b&gt;', $state['html']);
             $statuses = array('-1' => 'Any', '-3' => 'Enabled', '-2' => 'Disabled', '-4' => 'Not Up', '3' => 'Up', '1' => 'Down', '2' => 'Recovering', '0' => 'Unknown');
             foreach ($statuses as $value => $label) {
                 self::assertSame($label, $xpath->query('//select[@id="host_status"]/option[@value="' . $value . '"]')->item(0)->textContent);

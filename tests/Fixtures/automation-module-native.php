@@ -71,6 +71,7 @@ $db->exec("INSERT INTO user_auth VALUES (7,'fixture-admin',0,1,1,1,1)");
 $db->exec('INSERT INTO graph_tree VALUES (8,1),(9,1)');
 $db->exec("INSERT INTO graph_tree_items (id,graph_tree_id,parent,title) VALUES (77,8,0,'Parent'),(88,9,0,'Unrelated')");
 $db->exec("INSERT INTO host_template VALUES (9,'Fixture template')");
+$db->exec("INSERT INTO host_template VALUES (10,'|host_description| <b>routers</b>')");
 $stmt = $db->prepare("INSERT INTO host VALUES (7,'127.0.0.1',?,'',3,9,'')");
 $stmt->execute(array(($scenario['target'] ?? 'host')));
 $calls = array();
