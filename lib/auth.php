@@ -4117,6 +4117,36 @@ function auth_ldap_equalize_failure($started) {
 }
 
 /**
+ * ldap_bind_password_reentry_required - a saved LDAP search password was given
+ *   for one server.  When the server, a port or the encryption changes and no
+ *   new password is typed, saving would send the old password to a server it
+ *   was never entered for, so the save must be refused.
+ *
+ * @param  (array)  $saved           - server, port, port_ssl and encryption in effect now
+ * @param  (array)  $submitted       - the same keys as the form would leave them
+ * @param  (string) $stored_password - the saved search password
+ * @param  (string) $new_password    - the search password typed into the form
+ *
+ * @return (bool)   true when the password must be entered again
+ */
+function ldap_bind_password_reentry_required($saved, $submitted, $stored_password, $new_password) {
+	if ($stored_password == '' || $new_password != '') {
+		return false;
+	}
+
+	foreach (array('server', 'port', 'port_ssl', 'encryption') as $key) {
+		$before = trim(preg_replace('/\s+/', ' ', (string) $saved[$key]));
+		$after  = trim(preg_replace('/\s+/', ' ', (string) $submitted[$key]));
+
+		if ($before !== $after) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * domains_ldap_servers - the servers a domain login tries, in order
  *
  * @param  (int)    $realm     - The LDAP Realm number

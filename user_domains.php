@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -85,6 +86,17 @@ function domain_exists($domain_id) {
 	return $domain_id > 0 && db_fetch_cell_prepared('SELECT COUNT(*) FROM user_domains WHERE domain_id = ?', array($domain_id)) > 0;
 }
 
+/* The server, ports and encryption a domain binds with.  Empty values fall
+   back to the global LDAP settings, as domains_ldap_auth() does. */
+function domain_ldap_target($ldap) {
+	return array(
+		'server'     => !empty($ldap['server'])     ? $ldap['server']     : read_config_option('ldap_server'),
+		'port'       => !empty($ldap['port'])       ? $ldap['port']       : read_config_option('ldap_port'),
+		'port_ssl'   => !empty($ldap['port_ssl'])   ? $ldap['port_ssl']   : read_config_option('ldap_port_ssl'),
+		'encryption' => !empty($ldap['encryption']) ? $ldap['encryption'] : read_config_option('ldap_encryption')
+	);
+}
+
 function form_save() {
 	global $registered_cacti_names;
 
@@ -99,6 +111,26 @@ function form_save() {
 			raise_message('domain_template_user', __('Choose a local account as the user template.'), MESSAGE_LEVEL_ERROR);
 			header('Location: user_domains.php?header=false&action=edit&domain_id=' . get_nfilter_request_var('domain_id'));
 			exit;
+		}
+
+		$saved_ldap = db_fetch_row_prepared('SELECT *
+			FROM user_domains_ldap
+			WHERE domain_id = ?',
+			array(get_request_var('domain_id')));
+
+		if (cacti_sizeof($saved_ldap)) {
+			$submitted_ldap = array(
+				'server'     => get_nfilter_request_var('server'),
+				'port'       => get_nfilter_request_var('port'),
+				'port_ssl'   => get_nfilter_request_var('port_ssl'),
+				'encryption' => get_nfilter_request_var('encryption')
+			);
+
+			if (ldap_bind_password_reentry_required(domain_ldap_target($saved_ldap), domain_ldap_target($submitted_ldap), $saved_ldap['specific_password'], get_nfilter_request_var('specific_password'))) {
+				raise_message('domain_ldap_password', __('Enter the Search Password again to change the Server, Port or Encryption.  Nothing was saved.'), MESSAGE_LEVEL_ERROR);
+				header('Location: user_domains.php?header=false&action=edit&domain_id=' . get_request_var('domain_id'));
+				exit;
+			}
 		}
 
 		$save['domain_id']   = get_nfilter_request_var('domain_id');
@@ -152,7 +184,15 @@ function form_save() {
 				$save['search_base']       = form_input_validate(get_nfilter_request_var('search_base'),       'search_base',     '', true, 3);
 				$save['search_filter']     = form_input_validate(get_nfilter_request_var('search_filter'),     'search_filter',   '', true, 3);
 				$save['specific_dn']         = form_input_validate(get_nfilter_request_var('specific_dn'),         'specific_dn',       '', true, 3);
-				$save['specific_password']   = form_input_validate(get_nfilter_request_var('specific_password'),   'specific_password', '', true, 3);
+
+				/* the edit form never shows the saved password, so a blank field keeps it */
+				$specific_password = get_nfilter_request_var('specific_password');
+
+				if ($specific_password == '' && cacti_sizeof($saved_ldap)) {
+					$specific_password = $saved_ldap['specific_password'];
+				}
+
+				$save['specific_password']   = form_input_validate($specific_password,   'specific_password', '', true, 3);
                                 $save['cn_full_name']        = get_nfilter_request_var('cn_full_name');
                                 $save['cn_email']            = get_nfilter_request_var('cn_email');
 
@@ -536,7 +576,7 @@ function domain_edit() {
 			'friendly_name' => __('Search Password'),
 			'description' => __('Password for Specific Searching binding to the LDAP directory.'),
 			'method' => 'textbox_password',
-			'value' => '|arg1:specific_password|',
+			'value' => '',
 			'max_length' => '255'
 			),
 		'cn_header' => array(
