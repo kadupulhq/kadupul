@@ -76,6 +76,17 @@ foreach (['include/js/purify.js', 'include/js/jquery-ui.js', 'include/js/d3.js',
         throw new RuntimeException('Missing offline asset: ' . $file);
     }
 }
+// A stylesheet without its fonts still loads, but every icon draws as a missing glyph.
+preg_match_all('~url\(["\']?\.\./webfonts/([\w.-]+)(?:\?[^"\')]*)?["\']?\)~', file_get_contents($root . '/include/fa/css/all.css'), $fonts);
+if ($fonts[1] === []) {
+    throw new RuntimeException('Offline Font Awesome stylesheet references no webfonts');
+}
+foreach (array_unique($fonts[1]) as $font) {
+    $file = 'include/fa/webfonts/' . $font;
+    if (!is_file($root . '/' . $file) || filesize($root . '/' . $file) === 0) {
+        throw new RuntimeException('Missing offline asset: ' . $file);
+    }
+}
 foreach (['node_modules', 'include/vendor/phpunit', 'include/config.php', 'include/vendor/csrf/csrf-secret.php'] as $path) {
     if (file_exists($root . '/' . $path)) {
         throw new RuntimeException('Development dependency or installation state in bundle: ' . $path);

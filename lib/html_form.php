@@ -39,6 +39,7 @@ function draw_edit_form($array)
         $row_class = 'odd';
 
         foreach ($fields_array as $field_name => $field_array) {
+            $field_id_attribute = cacti_html_context_escape($field_name, CACTI_ESC_ATTR);
             if ($field_array['method'] == 'hidden') {
                 if (!isset($field_array['value'])) {
                     cacti_log("WARNING: Kadupul Form field '$field_name' does not include a 'value' Column.  Using default.", false);
@@ -74,15 +75,15 @@ function draw_edit_form($array)
             } elseif ($field_array['method'] == 'spacer') {
                 $collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
 
-                print "<div class='spacer formHeader" . ($collapsible ? ' collapsible' : '') . "' id='row_$field_name'><div class='formHeaderText'>" . html_escape($field_array['friendly_name']);
+                print "<div class='spacer formHeader" . ($collapsible ? ' collapsible' : '') . "' id='row_$field_id_attribute'><div class='formHeaderText'>" . cacti_html_context_escape($field_array['friendly_name'], CACTI_ESC_ELEMENT);
                 print '<div class="formTooltip">' . (isset($field_array['description']) ? display_tooltip(html_purify($field_array['description'])) : '') . '</div>';
                 print ($collapsible ? "<div class='formHeaderAnchor'><i class='fa fa-angle-double-up'></i></div>" : '') . '</div></div>';
             } else {
                 // Make a row using a div
                 if (isset($config_array['force_row_color'])) {
-                    print "<div id='row_$field_name' class='formRow even-alternate $row_class'>";
+                    print "<div id='row_$field_id_attribute' class='formRow even-alternate $row_class'>";
                 } else {
-                    print "<div id='row_$field_name' class='formRow $row_class'>";
+                    print "<div id='row_$field_id_attribute' class='formRow $row_class'>";
                     if ($row_class == 'even') {
                         $row_class = 'odd';
                     } else {
@@ -120,7 +121,7 @@ function draw_edit_form($array)
                     );
                 }
 
-                print html_escape($field_array['friendly_name']);
+                print cacti_html_context_escape($field_array['friendly_name'], CACTI_ESC_ELEMENT);
 
                 if (read_config_option('hide_form_description') == 'on') {
                     print '<br><span class="formFieldDescription">' . ((isset($field_array['description'])) ? html_purify($field_array['description']) : '') . '</span>';
@@ -1256,10 +1257,10 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
         $form_previous_value = $form_default_value;
     }
 
+    $class_name = 'colordropdown';
+
     if ($class != '') {
-        $class = " class='colordropdown $class' ";
-    } else {
-        $class = " class='colordropdown'";
+        $class_name .= ' ' . $class;
     }
 
     $current_color = db_fetch_cell_prepared(
@@ -1284,10 +1285,10 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 
     $colors_list = db_fetch_assoc($colors_sql);
 
-    print "<select style='background-color: #$current_color;' id='$form_name' name='$form_name'" . $class . ">";
+    print "<select style='background-color: #" . cacti_html_context_escape($current_color, CACTI_ESC_ATTR) . ";' id='" . cacti_html_context_escape($form_name, CACTI_ESC_ATTR) . "' name='" . cacti_html_context_escape($form_name, CACTI_ESC_ATTR) . "' class='" . cacti_html_context_escape($class_name, CACTI_ESC_ATTR) . "'>";
 
     if ($form_none_entry != '') {
-        print "<option value='0'>$form_none_entry</option>";
+        print "<option value='0'>" . cacti_html_context_escape($form_none_entry, CACTI_ESC_ELEMENT) . '</option>';
     }
 
     if (cacti_sizeof($colors_list)) {
@@ -1298,13 +1299,13 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
                 $display = $color['name'] . ' (' . $color['hex'] . ')';
             }
 
-            print "<option data-color='" . html_escape($color['hex']) . "' style='background-color: #" . html_escape($color['hex']) . ";' value='" . $color['id'] . "'";
+            print "<option data-color='" . cacti_html_context_escape($color['hex'], CACTI_ESC_ATTR) . "' style='background-color: #" . cacti_html_context_escape($color['hex'], CACTI_ESC_ATTR) . ";' value='" . (int) $color['id'] . "'";
 
             if ($form_previous_value == $color['id']) {
                 print ' selected';
             }
 
-            print '>' . html_escape($display) . '</option>';
+            print '>' . cacti_html_context_escape($display, CACTI_ESC_ELEMENT) . '</option>';
         }
     }
 

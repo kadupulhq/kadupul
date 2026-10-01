@@ -19,7 +19,6 @@ $writer->exec('SET SESSION innodb_lock_wait_timeout=1');
 $root = dirname(__DIR__, 2);
 $source = file_get_contents($root . '/cacti.sql');
 $created = [];
-$upgraded = false;
 function db_install_execute($sql)
 {
     return $GLOBALS['owner']->exec($sql);
@@ -30,9 +29,63 @@ function db_index_exists($table, $name)
     $statement->execute([$name]);
     return $statement->fetch() !== false;
 }
-require $root . '/install/upgrades/1_2_31.php';
-$tables = ['data_template_rrd', 'data_input_fields', 'automation_devices', 'automation_snmp_items', 'snmpagent_managers', 'settings', 'settings_user', 'snmp_query_graph', 'user_auth_row_cache'];
-foreach ([...$tables, 'poller_output_rejected'] as $table) {
+function __($text, ...$arguments)
+{
+    return $arguments ? vsprintf($text, $arguments) : $text;
+}
+function __x($context, $text, ...$arguments)
+{
+    return __($text, ...$arguments);
+}
+function cacti_version_compare($old, $new, $operator)
+{
+    return version_compare($old, $new, $operator);
+}
+function get_rrdtool_version()
+{
+    return '1.8';
+}
+function get_auth_realms()
+{
+    return [];
+}
+function read_config_option(...$arguments)
+{
+    return '';
+}
+function log_install_always(...$arguments) {}
+function api_plugin_hook(...$arguments) {}
+function set_install_config_option($name, $value)
+{
+    if ($name === 'install_cache_db') {
+        $GLOBALS['cache_file'] = $value;
+    }
+}
+function get_cacti_cli_version()
+{
+    return $GLOBALS['owner']->query('SELECT cacti FROM version')->fetchColumn();
+}
+function cacti_sizeof($value)
+{
+    return is_countable($value) ? count($value) : 0;
+}
+function db_execute($sql)
+{
+    $GLOBALS['owner']->exec($sql);
+    return true;
+}
+function db_fetch_cell_prepared($sql, $parameters = [], ...$arguments)
+{
+    $statement = $GLOBALS['owner']->prepare($sql);
+    $statement->execute($parameters);
+    return $statement->fetchColumn();
+}
+$config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_web' => false, 'url_path' => '/', 'cacti_server_os' => 'unix'];
+require $root . '/include/global_constants.php';
+require $root . '/include/global_arrays.php';
+require $root . '/lib/installer.php';
+$tables = ['data_template_rrd', 'data_input_fields', 'version', 'poller_output'];
+foreach ($tables as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);
     if ((int) $check->fetchColumn() !== 0) {
@@ -50,12 +103,20 @@ try {
         }
     }
     foreach ($tables as $table) {
+        if ($table === 'poller_output') {
+            // The unrelated final installer preflight inspects only its engine.
+            // Avoid legacy zero-date defaults in this index-specific fixture.
+            $owner->exec('CREATE TABLE poller_output (id INT PRIMARY KEY) ENGINE=InnoDB');
+            $created[] = $table;
+            continue;
+        }
         if (!preg_match('/CREATE TABLE `?' . $table . '`? \(.*?;\s/s', $source, $match)) {
             throw new RuntimeException('Native fixture schema unavailable: ' . $table);
         }
         $owner->exec($match[0]);
         $created[] = $table;
     }
+    $owner->exec("INSERT INTO version VALUES ('1.2.31')");
     for ($id = 1; $id <= 1000; ++$id) {
         $owner->exec("INSERT INTO data_input_fields (id,data_input_id) VALUES ($id," . intdiv($id, 10) . ')');
     }
@@ -69,15 +130,28 @@ try {
     foreach (['fresh', 'upgrade'] as $mode) {
         if ($mode === 'upgrade') {
             $owner->exec('ALTER TABLE data_template_rrd DROP INDEX data_input_field_id');
-            $upgraded = true;
-            upgrade_to_1_2_31();
-            upgrade_to_1_2_31(); // An already upgraded installation must remain valid.
+            // Execute the real installer's version gate using the real registry,
+            // starting at an already installed 1.2.31, rather than calling the
+            // migration directly and concealing a skipped version.
+            $reflection = new ReflectionClass(Installer::class);
+            $installer = $reflection->newInstanceWithoutConstructor();
+            $reflection->getProperty('old_cacti_version')->setValue($installer, '1.2.31');
+            ob_start();
+            try {
+                $result = $reflection->getMethod('upgradeDatabase')->invoke($installer);
+            } finally {
+                ob_end_clean();
+            }
+            if ($result !== false || get_cacti_cli_version() === '1.2.31' || get_cacti_cli_version() !== trim(file_get_contents($root . '/include/cacti_version'))) {
+                throw new RuntimeException('Native version-gated upgrade did not advance the installed 1.2.31 database.');
+            }
+            upgrade_to_1_2_32(); // An already upgraded installation must remain valid.
         }
         $owner->query('ANALYZE TABLE data_template_rrd,data_input_fields')->fetchAll();
         $actual = $owner->query("SHOW INDEX FROM data_template_rrd WHERE Key_name='data_input_field_id'")->fetch(PDO::FETCH_ASSOC);
         $expected = $owner->query("SELECT * FROM table_indexes WHERE idx_key_name='data_input_field_id'")->fetch(PDO::FETCH_ASSOC);
         foreach (['Non_unique' => 'idx_non_unique', 'Seq_in_index' => 'idx_seq_in_index', 'Column_name' => 'idx_column_name', 'Index_type' => 'idx_index_type'] as $live => $audit) {
-            if (!$expected || (string) $actual[$live] !== (string) $expected[$audit]) {
+            if (!$expected || !$actual || (string) $actual[$live] !== (string) $expected[$audit]) {
                 throw new RuntimeException('RRD field index differs from the native audit baseline.');
             }
         }
@@ -125,7 +199,7 @@ try {
     foreach (array_reverse($created) as $table) {
         $owner->exec("DROP TABLE `$table`");
     }
-    if ($upgraded) {
-        $owner->exec('DROP TABLE IF EXISTS poller_output_rejected');
+    if (isset($cache_file) && is_file($cache_file)) {
+        unlink($cache_file);
     }
 }

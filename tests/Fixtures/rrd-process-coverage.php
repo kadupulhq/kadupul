@@ -14,11 +14,18 @@ $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_32.php');
+    $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
+}
 if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyRequestContext.php');
 }
 if (defined('FORM_RENDERER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+}
+if (defined('COLOR_DROPDOWN_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
 if (defined('PACKAGE_XML_TEST_COVERAGE')) {
@@ -30,9 +37,16 @@ if (defined('PLUGIN_COMPAT_TEST_COVERAGE')) {
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
 }
+if (defined('FORCE_HTTPS_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('HOST_REINDEX_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/host.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
+if (defined('GRAPH_ZOOM_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_zoom.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('REALTIME_EXEC_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
