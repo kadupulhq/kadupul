@@ -24,6 +24,8 @@
             <file>sites.php</file>
             <file>data_input.php</file>
             <file>bin/legacy-data-input.php</file>
+            <file>bin/legacy-data-input-handoff.php</file>
+            <file>lib/data_input_worker.php</file>
             <file>links.php</file>
             <file>lib/database.php</file>
             <file>lib/functions.php</file>

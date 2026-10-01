@@ -166,7 +166,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-data-input.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -193,7 +193,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'links.php',
         'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
         'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
-        'bin/legacy-data-input.php', 'data_input.php', 'src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',

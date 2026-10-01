@@ -24,7 +24,7 @@ def main():
         'links.php',
         'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
         'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
-        'bin/legacy-data-input.php', 'data_input.php', 'src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',

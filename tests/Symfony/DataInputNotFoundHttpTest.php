@@ -28,6 +28,7 @@ final class DataInputNotFoundHttpTest extends TestCase
             mkdir($directory . $folder, 0700);
         }
         copy($root . '/bin/legacy-data-input.php', $directory . '/bin/legacy-data-input.php');
+        copy($root . '/lib/data_input_worker.php', $directory . '/lib/data_input_worker.php');
         copy($root . '/tests/Fixtures/data-input-not-found-bootstrap.php', $directory . '/include/cli_check.php');
         file_put_contents($directory . '/source.json', json_encode($root, JSON_THROW_ON_ERROR));
         foreach (['api_data_source', 'poller', 'template', 'utility'] as $library) {

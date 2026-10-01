@@ -29,6 +29,25 @@ array and verifies the stored command afterward. The worker then propagates the
 method and rebuilds dependent collector caches once, reporting any failed handoff.
 Diagnostic output is never rendered in HTTP responses.
 
+Post-commit handoffs share a monotonic 160-second deadline measured from before
+legacy bootstrap, below the gateway's 180-second timeout. Each whitelist or
+collector child receives at most 30 seconds and the remaining shared budget,
+with a drain margin reserved for stopping/reaping and returning the result.
+Whitelist update omits `--push`; a separate collector leaf rechecks the original
+actor's current grants and the method's availability using the same production
+policy as the primary worker. It only rebuilds collector caches, and never
+repeats the primary save, duplicate, delete, or replication-CRC publication.
+The leaf's actor, target, nonce and phase must match its confirmation frame;
+its database errors and session warnings mean an incomplete handoff.
+
+Timeouts, revoked grants and budget exhaustion after a confirmed commit return
+an explicit partial result with the committed IDs intact. Remaining phases are
+skipped when the shared budget expires; there are no automatic retries. Reload
+and use the existing CSRF-protected propagation/whitelist retry rather than
+resubmitting a successful duplicate or save. A gateway timeout during the
+primary transaction still has an unknown outcome and requires reloading before
+retrying; post-commit supervision does not establish whether that commit occurred.
+
 Verification: `mise exec php@8.4.25 -- php include/vendor/bin/phpunit -c phpunit-symfony.xml`
 and `mise exec python@3.12.12 -- python tests/Symfony/data_input_review_http.py`.
 The same scenarios run inside both session-handler coverage suites, with source
