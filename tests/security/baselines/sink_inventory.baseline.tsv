@@ -803,9 +803,9 @@ header_redirect	./graphs_items.php:162	            header('Location: graphs.php?
 header_redirect	./graphs_items.php:25	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
 header_redirect	./graphs_items.php:39	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
 header_redirect	./graphs_items.php:46	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
-header_redirect	./graphs_new.php:150			header('Location: graphs_new.php?host_id=' . $host_id . '&header=false');
-header_redirect	./graphs_new.php:156			header('Location: graphs_new.php?host_id=' . get_filter_request_var('host_id') . '&header=false');
-header_redirect	./graphs_new.php:30			header('Location: graphs_new.php?host_id=' . get_request_var('host_id') . '&header=false');
+header_redirect	./graphs_new.php:154	        header('Location: graphs_new.php?host_id=' . $host_id . '&header=false');
+header_redirect	./graphs_new.php:160	        header('Location: graphs_new.php?host_id=' . get_filter_request_var('host_id') . '&header=false');
+header_redirect	./graphs_new.php:30	        header('Location: graphs_new.php?host_id=' . get_request_var('host_id') . '&header=false');
 header_redirect	./host.php:108	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 header_redirect	./host.php:116	        header('Location: host.php?header=' . (isset_request_var('header') && get_nfilter_request_var('header') == 'true' ? 'true' : 'false') . '&action=edit&id=' . get_request_var('host_id') . '&display_dq_details=true');
 header_redirect	./host.php:135	        header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
