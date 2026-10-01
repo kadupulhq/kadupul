@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -11,11 +12,11 @@ $dqSource   = file_get_contents(__DIR__ . '/../../lib/data_query.php');
 $impSource  = file_get_contents(__DIR__ . '/../../lib/import.php');
 
 test('ping constructor casts retries to int', function () use ($pingSource) {
-    expect($pingSource)->toContain('$retries = (int)$retries');
+    expect($pingSource)->toMatch('/\$retries\s*=\s*\(int\)\s*\$retries/');
 });
 
 test('ping constructor casts timeout to int', function () use ($pingSource) {
-    expect($pingSource)->toContain('$timeout = (int)$timeout');
+    expect($pingSource)->toMatch('/\$timeout\s*=\s*\(int\)\s*\$timeout/');
 });
 
 test('snmp_escape_string always wraps Windows strings', function () use ($snmpSource) {
