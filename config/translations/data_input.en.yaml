@@ -63,7 +63,7 @@
 "Retry collector propagation": "Retry collector propagation"
 "delete": "delete"
 "duplicate": "duplicate"
-"field_delete": "field_delete"
+"field_delete": "Delete field"
 "propagate": "propagate"
 "whitelist": "whitelist"
 "Script/Command": "Script/Command"

@@ -129,21 +129,39 @@ final class DataInputPresentationTest extends TestCase
         }
     }
 
-    public function testFieldDeletionConfirmationNamesOnlyTheSelectedFieldAndEscapesItsValues(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('fieldDeletionLocales')]
+    public function testFieldDeletionConfirmationNamesOnlyTheSelectedFieldAndEscapesItsValues(string $language, string $label): void
     {
         [$kernel, $container] = $this->authorizedKernel();
         try {
+            $locale = $this->createMock(LocalePreference::class);
+            $locale->method('preferredLocale')->willReturn($language);
+            $container->set(LocalePreference::class, $locale);
+            $config = $this->createMock(LegacyConfiguration::class);
+            $config->method('values')->willReturn(['forced_locale' => $language]);
+            $container->set(LegacyConfiguration::class, $config);
             $gateway = $this->createMock(DataInputGateway::class);
             $gateway->expects(self::once())->method('execute')->willReturn(['method' => ['id' => 3, 'name' => 'Fixture'], 'fields' => [['id' => 7, 'name' => '<script>Friendly</script>', 'data_name' => '<selected>'], ['id' => 8, 'name' => 'Other field', 'data_name' => 'other']], 'revision' => str_repeat('a', 64)]);
             $container->set(DataInputGateway::class, $gateway);
-            $response = $kernel->handle(Request::create('/data-inputs/3/field_delete?field=7'));
+            $request = Request::create('/data-inputs/3/field_delete?field=7', 'GET', [], ['Cacti' => 'fixture']);
+            $response = $kernel->handle($request);
             self::assertSame(200, $response->getStatusCode());
             self::assertStringContainsString('&lt;script&gt;Friendly&lt;/script&gt;', $response->getContent());
             self::assertStringContainsString('&lt;selected&gt;', $response->getContent());
             self::assertStringNotContainsString('Other field', $response->getContent());
+            self::assertStringContainsString('<p>' . $label . ': Fixture</p>', $response->getContent());
+            self::assertStringNotContainsString('<p>field_delete:', $response->getContent());
+            self::assertSame('/data-inputs/3/field_delete', $request->getPathInfo());
+            self::assertSame('7', $request->query->get('field'));
         } finally {
             $kernel->shutdown();
         }
+    }
+
+    public static function fieldDeletionLocales(): iterable
+    {
+        yield 'English' => ['en', 'Delete field'];
+        yield 'French' => ['fr', 'Supprimer le champ'];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('handoffResults')]
