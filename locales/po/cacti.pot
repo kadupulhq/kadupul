@@ -4550,7 +4550,7 @@ msgid "The Graph you requested does not exist."
 msgstr ""
 
 #: graph.php:512
-msgid "This Graph has no stored data to zoom into."
+msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."
 msgstr ""
 
 #: graph.php:301 lib/html.php:599

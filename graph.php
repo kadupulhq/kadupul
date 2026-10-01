@@ -509,7 +509,7 @@ case 'view':
 
 	break;
 case 'zoom':
-	$graph_no_data_message = __('This Graph has no stored data to zoom into.');
+	$graph_no_data_message = __('This Graph has no RRA definition to zoom into; check its Data Source Profile.');
 
 	if (!cacti_sizeof($rras)) {
 		raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);

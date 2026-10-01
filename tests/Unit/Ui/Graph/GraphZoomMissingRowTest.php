@@ -34,7 +34,7 @@ test('zoom refuses missing RRA and graph rows before using their fields', functi
         ->toThrow(ZoomRedirect::class, 'graph_view.php');
     $expectedMessage = in_array($missing, array('all', 'rra'), true) ? 'graph_no_data' : 'graph_not_found';
     $expectedText = $expectedMessage === 'graph_no_data'
-        ? 'This Graph has no stored data to zoom into.'
+        ? 'This Graph has no RRA definition to zoom into; check its Data Source Profile.'
         : 'The Graph you requested does not exist.';
     expect($GLOBALS['zoom_messages'])->toHaveCount(1)
         ->and($GLOBALS['zoom_messages'][0][0])->toBe($expectedMessage)
