@@ -80,9 +80,34 @@ final class ThemeSelectionAllowlistTest extends TestCase
             '../../evil'
         );
 
+        self::assertSame('modern', $state['theme']);
+        self::assertSame('modern', $state['session']['selected_theme']);
+        self::assertSame(array(array('modern', 7)), $state['updates']);
+    }
+
+    public function testNonClassicFallbackRepairsTheUserOnceAndCachesTheResult(): void
+    {
+        foreach (array('classic', 'dark', 'modern') as $theme) {
+            $this->installTheme($theme, true);
+        }
+        $state = $this->selectTheme(array('classic' => 'Classic', 'dark' => 'Dark', 'modern' => 'Modern'), array('sess_user_id' => 7), 'modern', '../invalid');
+        self::assertSame('dark', $state['theme']);
+        self::assertSame('dark', $state['again']);
+        self::assertSame('dark', $state['session']['selected_theme']);
+        self::assertSame(array(array('dark', 7)), $state['updates']);
+        self::assertSame(1, $state['lookups']);
+    }
+
+    public function testClassicIsUsedWhenAllNonClassicStylesheetsAreMissing(): void
+    {
+        $this->installTheme('classic', true);
+        $this->installTheme('dark', false);
+        $this->installTheme('modern', false);
+        $state = $this->selectTheme(array('classic' => 'Classic', 'dark' => 'Dark', 'modern' => 'Modern'), array('sess_user_id' => 7), 'modern', 'dark');
         self::assertSame('classic', $state['theme']);
-        self::assertSame('classic', $state['session']['selected_theme']);
+        self::assertSame('classic', $state['again']);
         self::assertSame(array(array('classic', 7)), $state['updates']);
+        self::assertSame(1, $state['lookups']);
     }
 
     public function testSessionThemeOutsideTheInstalledListIsIgnored(): void
@@ -149,6 +174,7 @@ final class ThemeSelectionAllowlistTest extends TestCase
         $this->installTheme('dark', true);
 
         self::assertSame('dark', $this->validateTheme('dark', 'modern'));
+        self::assertSame('modern', $this->validateTheme('../modern', 'dark'));
     }
 
     public function testConfiguredDefaultIsUsedWhenItIsInstalled(): void
@@ -212,8 +238,8 @@ final class ThemeSelectionAllowlistTest extends TestCase
             . '$GLOBALS["updates"] = array();'
             . '$GLOBALS["lookups"] = 0;'
             . '$_SESSION = ' . var_export($session, true) . ';'
-            . '$theme = get_selected_theme();'
-            . 'echo json_encode(array("theme" => $theme, "session" => $_SESSION, "updates" => $GLOBALS["updates"], "lookups" => $GLOBALS["lookups"]), JSON_THROW_ON_ERROR);';
+            . '$theme = get_selected_theme(); $again = get_selected_theme();'
+            . 'echo json_encode(array("theme" => $theme, "again" => $again, "session" => $_SESSION, "updates" => $GLOBALS["updates"], "lookups" => $GLOBALS["lookups"]), JSON_THROW_ON_ERROR);';
 
         return json_decode($this->runPhp($script), true, flags: JSON_THROW_ON_ERROR);
     }
@@ -249,7 +275,7 @@ final class ThemeSelectionAllowlistTest extends TestCase
         }
         $pipes = [];
         $process = proc_open(
-            [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', '-r', $script],
+            [PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', '-r', $script],
             [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes
         );

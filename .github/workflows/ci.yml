@@ -107,8 +107,11 @@ jobs:
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: '8.4'
-        extensions: pdo_mysql
+        extensions: gd, gmp, intl, ldap, mbstring, pdo_mysql, sockets, sqlite3, xml
         coverage: none
+
+    - name: Install application dependencies
+      run: composer install --no-dev --no-interaction --no-progress --prefer-dist
 
     - name: Install test dependencies
       working-directory: tests
@@ -121,6 +124,9 @@ jobs:
         BOOST_DB_NAME: cacti_boost_contract
         BOOST_DB_USER: cactiuser
         BOOST_DB_PASSWORD: cactiuser
+        KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=cacti_boost_contract;charset=utf8mb4
+        KADUPUL_TEST_MYSQL_USER: cactiuser
+        KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
