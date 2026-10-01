@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -issue: Stop schema audits and repairs when docs/audit_schema.sql cannot be loaded, and preserve the existing audit baseline tables until a replacement loads successfully; CACTI_MYSQL_CLIENT optionally selects the database client executable
+-issue: Midwinter binds keyboard shortcuts once after a successful cached script revalidation, retaining working shortcuts across AJAX page loads
 -issue: Paper-plane shows its scroll-to-top icon again; it used a Font Awesome 4 name that the shipped Font Awesome 5 does not define
 -issue: Classic no longer removes every window event handler on each page load, which stopped open user and ellipsis menus from closing on a click elsewhere
 -issue: The Midwinter ESC shortcut no longer throws an error outside fullscreen, and c+F1 no longer opens an alert reading [object KeyboardEvent]
