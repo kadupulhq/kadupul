@@ -10,12 +10,12 @@ require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
  * logout page when the session lifetime passes.
  */
 
-function login_page_refresh_run(string $uri, array $session): array
+function login_page_refresh_run(string $uri, array $session, ?string $script = null): array
 {
     $root = dirname(__DIR__, 4);
     $program = <<<'PHP'
 $_SERVER['REQUEST_URI'] = $argv[2];
-$_SERVER['SCRIPT_NAME'] = parse_url($argv[2], PHP_URL_PATH);
+$_SERVER['SCRIPT_NAME'] = $argv[4];
 $_SESSION = json_decode($argv[3], true);
 $config = array('url_path' => '/kadupul/', 'cacti_version' => '1.3.0', 'cacti_server_os' => 'unix');
 ini_set('session.gc_maxlifetime', '1440');
@@ -40,7 +40,7 @@ require $argv[1] . '/include/global_session.php';
 PHP;
 
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $root, $uri, json_encode($session)), $coverage_dir),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $root, $uri, json_encode($session), $script ?? parse_url($uri, PHP_URL_PATH)), $coverage_dir),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -71,4 +71,12 @@ test('an anonymous visitor elsewhere still times out to the logout page', functi
 test('a signed-in user on the index page still times out to the logout page', function () {
     expect(login_page_refresh_run('/kadupul/index.php', array('sess_user_id' => 7)))
         ->toBe(array('logout' => 'true', 'page' => '/kadupul/logout.php?action=timeout'));
+});
+
+test('the application root refreshes the executing login script', function () {
+    expect(login_page_refresh_run('/kadupul/', array(), '/kadupul/index.php'))->toBe(array('logout' => 'false', 'page' => '/kadupul/'));
+});
+
+test('index.php in another page query is not the login page', function () {
+    expect(login_page_refresh_run('/kadupul/host.php?return=index.php', array()))->toBe(array('logout' => 'true', 'page' => '/kadupul/logout.php?action=timeout'));
 });

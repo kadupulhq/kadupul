@@ -12,7 +12,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-function local_login_timing_run(string $username, string $password): array
+function local_login_timing_run(string $username, string $password, string $state = "enabled"): array
 {
     $auth = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 
@@ -20,6 +20,7 @@ function local_login_timing_run(string $username, string $password): array
 $scenario = json_decode($argv[1], true);
 define('POLLER_VERBOSITY_DEBUG', 5);
 $GLOBALS['users'] = array('alice' => array('id' => 42, 'username' => 'alice', 'enabled' => 'on', 'locked' => '', 'password' => 'known-hash'));
+$GLOBALS['users']['alice']['enabled'] = $scenario['state'] === 'disabled' ? '' : 'on';
 $GLOBALS['hashes'] = array();
 $error = false;
 $error_msg = '';
@@ -30,7 +31,7 @@ function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
 function read_config_option($name, $force = false) { return ''; }
 function api_plugin_hook_function($name, $parm = null) { return $parm; }
 function auth_checkclear_lockout($username, $realm) {}
-function auth_process_lockout_check($username, $realm) { return false; }
+function auth_process_lockout_check($username, $realm) { global $error; if ($GLOBALS['scenario']['state'] === 'locked' && $username === 'alice') { $error = true; return true; } return false; }
 function auth_process_lockout($username, $realm) {}
 function db_column_exists($table, $column) { return true; }
 function db_fetch_row_prepared($sql, $params = array()) { return $GLOBALS['users'][$params[0]] ?? array(); }
@@ -58,7 +59,7 @@ PHP;
     $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'hashes\' => $GLOBALS[\'hashes\']));';
 
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password))),
+        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state))),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -97,3 +98,9 @@ test('a correct password still returns the account', function () {
     expect($result['user']['id'] ?? null)->toBe(42)
         ->and($result['error'])->toBeFalse();
 });
+
+test('disabled and locked usernames do the same password work as unknown names', function (string $state, string $password) {
+    $known = local_login_timing_run('alice', $password, $state);
+    $unknown = local_login_timing_run('nobody', $password, $state);
+    expect($known['error'])->toBeTrue()->and(count($known['hashes']))->toBe(count($unknown['hashes']));
+})->with(array(array('disabled', 'guess'), array('locked', 'guess'), array('disabled', ''), array('locked', '')));

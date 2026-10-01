@@ -11,7 +11,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
  * browser cookie alone leaves a copied cookie value usable.
  */
 
-function logout_run(string $action, $cookie): array
+function logout_run(string $action, $cookie, bool $enabled = true): array
 {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/kadupul-logout-' . bin2hex(random_bytes(6));
@@ -24,7 +24,8 @@ define('OPER_MODE_RESKIN', 2);
 define('COPYRIGHT_YEARS_SHORT', '2004-2026');
 $config = array('url_path' => '/kadupul/');
 $GLOBALS['events'] = array();
-function read_config_option($name, $force = false) { return $name === 'auth_cache_enabled' ? 'on' : ''; }
+function read_config_option($name, $force = false) { return $name === 'auth_cache_enabled' && $GLOBALS['cache_enabled'] ? 'on' : '';  }
+function db_table_exists($name) { return $name === 'user_auth_cache'; }
 function db_fetch_cell_prepared($sql, $params = array()) { return false; }
 function db_execute_prepared($sql, $params = array()) {
     $GLOBALS['events'][] = array('sql' => trim(preg_replace('/\s+/', ' ', $sql)), 'params' => $params);
@@ -53,7 +54,7 @@ PHP;
     file_put_contents($dir . '/include/auth.php', $stubs);
     file_put_contents($dir . '/include/global_session.php', "<?php\n");
 
-    $program = '$_GET["action"] = $argv[1];'
+    $program = '$GLOBALS["cache_enabled"] = ' . ($enabled ? 'true;' : 'false;') . '$_GET["action"] = $argv[1];'
         . 'if ($argv[2] !== "") { $_COOKIE["cacti_remembers"] = json_decode($argv[2], true); }'
         . 'require ' . var_export($root . '/logout.php', true) . ';';
 
@@ -132,3 +133,7 @@ test('each automatic logout explains why the user was logged out', function (str
     'disabled' => array('disabled', 'You have been logged out of Kadupul due to an account suspension.'),
     'remote' => array('remote', 'You have been logged out of Kadupul due to a Remote Data Collector state change'),
 ));
+
+test('logout revokes an old token after remember-me is disabled', function () {
+    expect(logout_token_deletes(logout_run('timeout', '42,0,remember-me-token', false)))->toHaveCount(1);
+});
