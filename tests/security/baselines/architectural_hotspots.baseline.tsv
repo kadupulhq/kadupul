@@ -335,11 +335,11 @@ dynamic_include	./lib/aggregate.php:817		include_once($config['base_path'] . '/l
 dynamic_include	./lib/api_aggregate.php:1660		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/api_aggregate.php:185		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_aggregate.php:654		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_automation.php:2367		include_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./lib/api_automation.php:2368		include_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./lib/api_automation.php:2369		include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./lib/api_automation.php:3063					include_once($config['base_path'] . '/plugins/thold/thold-functions.php');
-dynamic_include	./lib/api_automation.php:3066					include_once($config['base_path'] . '/plugins/thold/thold_functions.php');
+dynamic_include	./lib/api_automation.php:2381	    include_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./lib/api_automation.php:2382	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
+dynamic_include	./lib/api_automation.php:2383	    include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_automation.php:3182	                include_once($config['base_path'] . '/plugins/thold/thold-functions.php');
+dynamic_include	./lib/api_automation.php:3185	                include_once($config['base_path'] . '/plugins/thold/thold_functions.php');
 dynamic_include	./lib/api_device.php:1175	    include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:1176	    include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:1177	    include_once($config['base_path'] . '/lib/data_query.php');
@@ -445,18 +445,18 @@ dynamic_include	./poller.php:23	require_once($config['base_path'] . '/lib/dsdebu
 dynamic_include	./poller.php:24	require_once($config['base_path'] . '/lib/boost.php');
 dynamic_include	./poller.php:25	require_once($config['base_path'] . '/lib/reports.php');
 dynamic_include	./poller.php:26	require_once($config['base_path'] . '/lib/rrdcheck.php');
-dynamic_include	./poller_automation.php:18	require_once($config['base_path'] . '/lib/api_device.php');
-dynamic_include	./poller_automation.php:19	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./poller_automation.php:20	require_once($config['base_path'] . '/lib/api_graph.php');
-dynamic_include	./poller_automation.php:21	require_once($config['base_path'] . '/lib/api_tree.php');
-dynamic_include	./poller_automation.php:22	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./poller_automation.php:23	require_once($config['base_path'] . '/lib/html_form_template.php');
-dynamic_include	./poller_automation.php:24	require_once($config['base_path'] . '/lib/ping.php');
-dynamic_include	./poller_automation.php:25	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller_automation.php:26	require_once($config['base_path'] . '/lib/snmp.php');
-dynamic_include	./poller_automation.php:27	require_once($config['base_path'] . '/lib/sort.php');
-dynamic_include	./poller_automation.php:28	require_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./poller_automation.php:29	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./poller_automation.php:19	require_once($config['base_path'] . '/lib/api_device.php');
+dynamic_include	./poller_automation.php:20	require_once($config['base_path'] . '/lib/api_data_source.php');
+dynamic_include	./poller_automation.php:21	require_once($config['base_path'] . '/lib/api_graph.php');
+dynamic_include	./poller_automation.php:22	require_once($config['base_path'] . '/lib/api_tree.php');
+dynamic_include	./poller_automation.php:23	require_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./poller_automation.php:24	require_once($config['base_path'] . '/lib/html_form_template.php');
+dynamic_include	./poller_automation.php:25	require_once($config['base_path'] . '/lib/ping.php');
+dynamic_include	./poller_automation.php:26	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller_automation.php:27	require_once($config['base_path'] . '/lib/snmp.php');
+dynamic_include	./poller_automation.php:28	require_once($config['base_path'] . '/lib/sort.php');
+dynamic_include	./poller_automation.php:29	require_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./poller_automation.php:30	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./poller_boost.php:19	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller_boost.php:20	require_once($config['base_path'] . '/lib/boost.php');
 dynamic_include	./poller_boost.php:21	require_once($config['base_path'] . '/lib/dsstats.php');
@@ -541,3 +541,4 @@ sort_order_input	./host_templates.php:451				ORDER BY graph_templates.name', arr
 sort_order_input	./host_templates.php:489									ORDER BY gt.name', array(get_request_var('id'))),'name','id','','','');?>
 sort_order_input	./host_templates.php:508				ORDER BY snmp_query.name', array(get_request_var('id')));
 sort_order_input	./host_templates.php:543									ORDER BY snmp_query.name', array(get_request_var('id'))),'name','id','','','');?>
+sort_order_input	./lib/api_automation.php:49	            <?php automation_template_options(db_fetch_assoc('SELECT id,name FROM host_template ORDER BY name'), get_request_var('host_template_id'));?>
