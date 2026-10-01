@@ -217,7 +217,7 @@ function db_execute_prepared($sql, $params = array()) {
 
 PHP;
 
-	foreach (array('auth_session_credential_key', 'auth_session_credentials_valid', 'auth_session_epoch', 'auth_session_end_reason', 'auth_session_enforce', 'auth_checkclear_lockout', 'auth_process_lockout_check', 'auth_process_lockout', 'auth_password_too_long', 'secpass_check_pass') as $name) {
+	foreach (array('auth_log_username', 'auth_session_credential_key', 'auth_session_credentials_valid', 'auth_session_epoch', 'auth_session_end_reason', 'auth_session_enforce', 'auth_checkclear_lockout', 'auth_process_lockout_check', 'auth_process_lockout', 'auth_password_too_long', 'secpass_check_pass') as $name) {
 		$global .= cacti_test_function_source($auth, $name) . "\n\n";
 	}
 

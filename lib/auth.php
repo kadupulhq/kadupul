@@ -324,7 +324,7 @@ function get_basic_auth_username() {
 			}
 
 			if (!$found) {
-				cacti_log("WARNING: Username $username not found in basic mapfile.", false, 'AUTH');
+				cacti_log("WARNING: Username " . auth_log_username($username) . " not found in basic mapfile.", false, 'AUTH');
 			}
 		}
 	}
@@ -3528,6 +3528,21 @@ function auth_get_username() {
 }
 
 /**
+ * auth_log_username - a login name as it may appear in a log line.  The name
+ *   comes from the request, so control characters are removed and it is cut
+ *   to 64 characters to keep one attempt from forging or flooding log lines.
+ *
+ * @param  (string) $username - the login name as submitted
+ *
+ * @return (string) the name to log
+ */
+function auth_log_username($username) {
+	$username = preg_replace('/[\x00-\x1F\x7F]/', '', (string) $username);
+
+	return mb_substr($username, 0, 64, 'UTF-8');
+}
+
+/**
  * auth_checkclear_lockout - checks the lockout status of a user and unlocks if necessary
  *
  * @param  (string) $username The username of the user to check
@@ -3557,7 +3572,7 @@ function auth_checkclear_lockout($username, $realm) {
 				$secs_unlock = $unlock * 60;
 				$secs_fail = time() - $user['lastfail'];
 
-				cacti_log('DEBUG: User \'' . $username . '\' secs_fail = ' . $secs_fail . ', secs_unlock = ' . $secs_unlock, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+				cacti_log('DEBUG: User \'' . auth_log_username($username) . '\' secs_fail = ' . $secs_fail . ', secs_unlock = ' . $secs_unlock, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 				if ($unlock > 0 && ($secs_fail > $secs_unlock)) {
 					db_execute_prepared("UPDATE user_auth
@@ -3642,7 +3657,7 @@ function auth_process_lockout($username, $realm) {
 					array(time(), $username, $realm));
 
 				if ($user['enabled'] == '') {
-					cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.  User account Disabled.", false, 'AUTH');
+					cacti_log("LOGIN FAILED: Local Login Failed for user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.  User account Disabled.", false, 'AUTH');
 
 					$error     = true;
 					$error_msg = __('Access Denied!  Login Disabled.');
@@ -3658,7 +3673,7 @@ function auth_process_lockout($username, $realm) {
 					AND enabled = 'on'",
 					array($username, $realm));
 
-				cacti_log("LOGIN FAILED: User '$username' failed authentication, incrementing lockout ($failed of $max)", false, 'AUTH', POLLER_VERBOSITY_LOW);
+				cacti_log("LOGIN FAILED: User '" . auth_log_username($username) . "' failed authentication, incrementing lockout ($failed of $max)", false, 'AUTH', POLLER_VERBOSITY_LOW);
 
 				if ($failed >= $max && $user['locked'] != 'on') {
 					db_execute_prepared("UPDATE user_auth
@@ -3677,18 +3692,18 @@ function auth_process_lockout($username, $realm) {
 					array($username, isset($user['id']) ? $user['id']:0, get_client_addr()));
 
 				if ($user['locked'] == 'on') {
-					cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.  Account is locked out.", false, 'AUTH');
+					cacti_log("LOGIN FAILED: Local Login Failed for user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.  Account is locked out.", false, 'AUTH');
 
 					$error     = true;
 					$error_msg = __('Your account has been locked.  Please contact your Administrator.');
 				} else {
-					cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
+					cacti_log("LOGIN FAILED: Local Login Failed for user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
 
 					$error     = true;
 					$error_msg = __('Access Denied!  Login Failed.');
 				}
 			} else {
-				cacti_log("LOGIN FAILED: Local Login Failed to find user '" . $username . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
+				cacti_log("LOGIN FAILED: Local Login Failed to find user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
 
 				$error     = true;
 				$error_msg = __('Access Denied!  Login Failed.');
@@ -3729,7 +3744,7 @@ function basic_auth_login_process($username) {
 		$error     = true;
 		$error_msg = __esc('%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti.', $username);
 
-		cacti_log("LOGIN FAILED: User '" . $username . "' authenticated by Web Server, but both Template and Guest Users are not defined in Cacti.  Exiting.", false, 'AUTH');
+		cacti_log("LOGIN FAILED: User '" . auth_log_username($username) . "' authenticated by Web Server, but both Template and Guest Users are not defined in Cacti.  Exiting.", false, 'AUTH');
 
 		auth_display_custom_error_message($error_msg);
 		exit;
@@ -3758,7 +3773,7 @@ function local_auth_login_process($username) {
 			$error     = true;
 			$error_msg = __('Access Denied!  Login Failed.');
 
-			cacti_log(sprintf('LOGIN FAILED: Password longer than 4096 bytes for user %s', $username), false, 'AUTH');
+			cacti_log(sprintf('LOGIN FAILED: Password longer than 4096 bytes for user %s', auth_log_username($username)), false, 'AUTH');
 
 			return array();
 		}
@@ -3783,7 +3798,7 @@ function local_auth_login_process($username) {
 
 			$valid = compat_password_verify($password, $stored_pass);
 
-			cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '':'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+			cacti_log("DEBUG: User '" . auth_log_username($username) . "' password for rehash is " . ($valid ? '':'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 			if ($valid) {
 				$user = db_fetch_row_prepared('SELECT *
@@ -4319,7 +4334,7 @@ function secpass_login_process($username) {
 			$error     = true;
 			$error_msg = __('Access Denied!  Login Failed.');
 
-			cacti_log(sprintf('LOGIN FAILED: User %s, account disabled.', $username), false, 'AUTH');
+			cacti_log(sprintf('LOGIN FAILED: User %s, account disabled.', auth_log_username($username)), false, 'AUTH');
 
 			return array();
 		}
@@ -4329,14 +4344,14 @@ function secpass_login_process($username) {
 			$error     = true;
 			$error_msg = __('Access Denied!  No password provided by user.');
 
-			cacti_log(sprintf('LOGIN FAILED: No password provided for user %s', $username), false, 'AUTH');
+			cacti_log(sprintf('LOGIN FAILED: No password provided for user %s', auth_log_username($username)), false, 'AUTH');
 
 			$valid_pass = false;
 		} else {
 			$valid_pass = compat_password_verify($password, $user['password']);
 		}
 
-		cacti_log('DEBUG: User \'' . $username . '\' valid password = ' . $valid_pass, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+		cacti_log('DEBUG: User \'' . auth_log_username($username) . '\' valid password = ' . $valid_pass, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 		if (!$valid_pass) {
 			auth_process_lockout($username, 0);
@@ -4358,7 +4373,7 @@ function secpass_login_process($username) {
 		$error     = true;
 		$error_msg = __('Access Denied!  Login Failed.');
 
-		cacti_log(sprintf('LOGIN FAILED: Invalid user %s specified.', $username), false, 'AUTH');
+		cacti_log(sprintf('LOGIN FAILED: Invalid user %s specified.', auth_log_username($username)), false, 'AUTH');
 
 		/* an unknown username must fail exactly as a wrong password does */
 		return array();
@@ -4382,7 +4397,7 @@ function secpass_login_process($username) {
 				$error     = true;
 				$error_msg = __('Access Denied!  Login Failed.');
 
-				cacti_log(sprintf('LOGIN FAILED: User %s password does not meet the policy and the account may not change it.', $username), false, 'AUTH');
+				cacti_log(sprintf('LOGIN FAILED: User %s password does not meet the policy and the account may not change it.', auth_log_username($username)), false, 'AUTH');
 
 				return array();
 			}
@@ -4987,7 +5002,7 @@ function auth_basename($referer) {
 function auth_login_create_user_from_template($username, $realm) {
 	global $error, $error_msg;
 
-	cacti_log("NOTE: User '" . $username . "' does not exist, copying template user", false, 'AUTH');
+	cacti_log("NOTE: User '" . auth_log_username($username) . "' does not exist, copying template user", false, 'AUTH');
 
 	$user = array();
 

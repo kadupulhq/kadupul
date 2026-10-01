@@ -80,7 +80,7 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 		$realm = $frv_realm;
 	}
 
-	cacti_log("DEBUG: User '" . $username . "' attempting to login with realm ". $frv_realm . ", using method " . $auth_method, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+	cacti_log("DEBUG: User '" . auth_log_username($username) . "' attempting to login with realm ". $frv_realm . ", using method " . $auth_method, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 	switch ($auth_method) {
 		case '0': // No authentication, should not be reachable
@@ -95,25 +95,25 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 
 			break;
 		case '1': // Local authentication
-			cacti_log("DEBUG: Local User '" . $username . "' to attempt login.", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+			cacti_log("DEBUG: Local User '" . auth_log_username($username) . "' to attempt login.", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 			$user = local_auth_login_process($username);
 
 			break;
 		case '2': // Basic authentication
-			cacti_log("DEBUG: Basic Auth User '" . $username . "' attempting to login.", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+			cacti_log("DEBUG: Basic Auth User '" . auth_log_username($username) . "' attempting to login.", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 			$user = basic_auth_login_process($username);
 
 			break;
 		case '3': // LDAP Authentication
-			cacti_log("DEBUG: LDAP User '" . $username . "' to attempt login.", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+			cacti_log("DEBUG: LDAP User '" . auth_log_username($username) . "' to attempt login.", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 			$user = ldap_login_process($username);
 
 			break;
 		case '4': // LDAP Domains login
-			cacti_log("DEBUG: Domains User '" . $username . "' to attempt login.", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+			cacti_log("DEBUG: Domains User '" . auth_log_username($username) . "' to attempt login.", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 			$user = domains_login_process($username);
 
@@ -122,7 +122,7 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 			$error     = true;
 			$error_msg = __esc('Unable to determine user Login Realm or Domain. Please contact your System Administrator.');
 
-			cacti_log("LOGIN FAILED: User '" . $username . "' Unable to determine Login Realm.  Exiting.", false, 'AUTH');
+			cacti_log("LOGIN FAILED: User '" . auth_log_username($username) . "' Unable to determine Login Realm.  Exiting.", false, 'AUTH');
 
 			auth_display_custom_error_message($error_msg);
 
@@ -145,7 +145,7 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 			array(get_guest_account()));
 
 		if ($user) {
-			cacti_log("LOGIN: Authenticated user '" . $username . "' using guest account '" . $user['username'] . "'", false, 'AUTH');
+			cacti_log("LOGIN: Authenticated user '" . auth_log_username($username) . "' using guest account '" . $user['username'] . "'", false, 'AUTH');
 
 			if ($username != '' && get_template_account($username) == 0) {
 				raise_message('template_disabled', __('User was Authenticated, but the Template Account is disabled.  Using Guest Account'), MESSAGE_LEVEL_WARN);
@@ -267,7 +267,7 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 				$_SESSION['sess_user_language'] = read_user_setting('user_language');
 			}
 
-			cacti_log("DEBUG: User '" . $username . "' about to re-direct to preferred login page", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+			cacti_log("DEBUG: User '" . auth_log_username($username) . "' about to re-direct to preferred login page", false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 			auth_login_redirect($user['login_opts']);
 		}
@@ -297,7 +297,7 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 			VALUES (?, ?, 0, ?, NOW())',
 			array($username, !empty($id) ? $id:0, get_client_addr()));
 
-		cacti_log('LOGIN FAILED: ' . $realm_name . " Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
+		cacti_log('LOGIN FAILED: ' . $realm_name . " Login Failed for user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
 	}
 }
 

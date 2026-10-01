@@ -98,6 +98,7 @@ function compat_password_needs_rehash($password, $algo, $options = array()) {
 
 PHP;
 
+	$source .= cacti_test_function_source($auth, 'auth_log_username') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'auth_dummy_password_hash') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'auth_password_too_long') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'secpass_login_process') . "\n\n";
