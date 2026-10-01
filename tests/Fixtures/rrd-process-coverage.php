@@ -23,6 +23,7 @@ if (defined('PERMISSION_REQUEST_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php');
 }
 if (defined('ADMIN_LIST_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');

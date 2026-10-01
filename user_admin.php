@@ -2289,172 +2289,32 @@ function user()
 
 function process_graph_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'graph_template_id' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => '-1',
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uag');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'graph');
 }
 
 function process_group_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uagr');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'group');
 }
 
 function process_device_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'host_template_id' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => '-1',
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uad');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'device');
 }
 
 function process_template_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'graph_template_id' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => '-1',
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uate');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'template');
 }
 
 function process_tree_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'graph_template_id' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => '-1',
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uatr');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'tree');
 }
 
 function graph_filter($header_label)

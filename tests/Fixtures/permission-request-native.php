@@ -43,6 +43,16 @@ if (isset($argv[3])) {
 require $root . '/' . $page;
 $function = 'process_' . $scenario['kind'] . '_request_vars';
 ob_start();
-$function();
+$error = null;
+if (!empty($scenario['reject'])) {
+    require_once $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    try {
+        \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process($scenario['group'], $scenario['kind']);
+    } catch (InvalidArgumentException $exception) {
+        $error = get_class($exception);
+    }
+} else {
+    $function();
+}
 $output = ob_get_clean();
-print json_encode(array('request' => $_REQUEST, 'session' => $_SESSION, 'output' => $output), JSON_THROW_ON_ERROR);
+print json_encode(array('request' => $_REQUEST, 'session' => $_SESSION, 'output' => $output, 'error' => $error), JSON_THROW_ON_ERROR);

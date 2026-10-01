@@ -116,6 +116,23 @@ final class PermissionRequestNativeTest extends TestCase
         return $cases;
     }
 
+    /** @dataProvider rejectedChoices */
+    public function testClosedHelperRejectsUnknownContextsWithoutChangingState(bool $group, string $kind): void
+    {
+        $session = array('sess_default_rows' => 13, 'sentinel' => 'keep');
+        $request = array('filter' => 'unchanged');
+        $state = $this->render(array('group' => $group, 'kind' => $kind, 'request' => $request, 'session' => $session, 'reject' => true));
+        self::assertSame(InvalidArgumentException::class, $state['error']);
+        self::assertSame(array('action' => 'fixture') + $request, $state['request']);
+        self::assertSame($session, $state['session']);
+        self::assertSame('', $state['output']);
+    }
+
+    public static function rejectedChoices(): array
+    {
+        return array(array(false, 'member'), array(true, 'group'), array(false, 'unknown'), array(true, 'unknown'));
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
