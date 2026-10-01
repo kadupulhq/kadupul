@@ -71,7 +71,7 @@ const SELF_GATED = [
     'link.php' => [
         'realm:10000+id',
         "is_realm_allowed(\$page['id'] + 10000)",
-        'own realm check per external link id',
+        'persisted session eligibility before protected lookup; own realm check per external link id',
         'admission',
     ],
     'remote_agent.php' => [

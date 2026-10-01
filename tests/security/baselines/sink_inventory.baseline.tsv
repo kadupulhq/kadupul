@@ -268,8 +268,8 @@ dynamic_include	./color_templates.php:363		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:413		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:469		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./graph_realtime.php:388	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
-dynamic_include	./include/auth.php:151	                require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/auth.php:218	            require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/auth.php:135	                require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/auth.php:202	            require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:402	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/csrf.php:44	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/global.php:274	include_once($config['library_path'] . '/database.php');
@@ -431,7 +431,7 @@ dynamic_include	./lib/utility.php:164		include_once($config['library_path'] . '/
 dynamic_include	./lib/utility.php:165		include_once($config['library_path'] . '/api_poller.php');
 dynamic_include	./lib/utility.php:29		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:820		include_once($config['library_path'] . '/api_data_source.php');
-dynamic_include	./link.php:55					include_once($file);
+dynamic_include	./link.php:62					include_once($file);
 dynamic_include	./poller.php:1167	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:1346	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:19	require_once($config['base_path'] . '/lib/poller.php');
@@ -828,9 +828,9 @@ header_redirect	./host_templates.php:50			header('Location: host_templates.php?h
 header_redirect	./host_templates.php:55			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
 header_redirect	./host_templates.php:64			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
 header_redirect	./images/index.php:7	header("Location:../index.php");
-header_redirect	./include/auth.php:105	                        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/auth.php:34	    header('Location: ' . $config['url_path'] . 'install/');
-header_redirect	./include/auth.php:81	            header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+header_redirect	./include/auth.php:65	            header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+header_redirect	./include/auth.php:89	                        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
 header_redirect	./include/csrf.php:260	    header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
 header_redirect	./include/global.php:433	            header('Location: ' . $https_redirect);
@@ -881,8 +881,8 @@ header_redirect	./lib/html_reports.php:524			header('Location: ' . get_reports_p
 header_redirect	./lib/html_reports.php:553			header('Location: ' . get_reports_page() . '?header=false');
 header_redirect	./lib/index.php:7	header("Location:../index.php");
 header_redirect	./lib/plugins.php:734	        header('Location: plugins.php?header=false');
-header_redirect	./link.php:17		header('Location: index.php');
-header_redirect	./link.php:66			header('Location: index.php');
+header_redirect	./link.php:24		header('Location: index.php');
+header_redirect	./link.php:73			header('Location: index.php');
 header_redirect	./log/index.php:7	header("Location:../index.php");
 header_redirect	./logout.php:86	    header('Location: index.php');
 header_redirect	./managers.php:1020	            header('Location: managers.php?action=edit&id=' . get_nfilter_request_var('id') . '&tab=notifications&header=false');

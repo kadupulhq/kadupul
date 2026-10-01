@@ -41,25 +41,9 @@ if (get_current_page() == 'logout.php') {
 }
 
 /* Recheck persisted session eligibility before any protected-page shortcut. */
-if ($auth_method != 0 && isset($_SESSION['sess_user_id'])) {
-    $session_user = db_fetch_row_prepared('SELECT enabled, locked, password FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
-    if (!$session_user || $session_user['locked'] === 'on' || ($session_user['enabled'] !== 'on' && (int) $_SESSION['sess_user_id'] !== (int) get_guest_account())) {
-        cacti_cookie_logout();
-        cacti_session_destroy();
-        http_response_code(403);
-        exit;
-    }
-
-    /* A password change or reset ends every session the account opened before it. */
-    if (!auth_session_credentials_valid($session_user['password'])) {
-        clear_auth_cookie();
-        unset($_COOKIE['cacti_remembers']);
-        cacti_log('NOTE: Session for user id ' . $_SESSION['sess_user_id'] . ' ended because its password binding is missing or changed', false, 'AUTH');
-
-        cacti_session_destroy();
-        cacti_session_start();
-        cacti_session_start(true);
-    }
+if (auth_session_check_eligibility($auth_method) === 403) {
+    http_response_code(403);
+    exit;
 }
 
 /**

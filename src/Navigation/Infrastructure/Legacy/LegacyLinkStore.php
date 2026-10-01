@@ -99,6 +99,25 @@ final readonly class LegacyLinkStore implements LinkStore
                 throw new \RuntimeException('Link authorization realm capacity exceeded.');
             }
             $db->prepare('REPLACE INTO user_auth_realm (user_id, realm_id) VALUES (?, ?)')->execute([$actorId, $id + 10000]);
+            // The viewer caches denied realms too. Commit its new grant and a
+            // different nonzero uint32 permission generation as one operation.
+            $current = $db->prepare('SELECT reset_perms FROM user_auth WHERE id = ?');
+            $current->execute([$actorId]);
+            $previous = $current->fetchColumn();
+            if ($previous === false || filter_var($previous, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 4294967295]]) === false) {
+                throw new \RuntimeException('Link permission generation unavailable.');
+            }
+            $expected = (int) $previous === 4294967295 ? 1 : (int) $previous + 1;
+            $current->closeCursor();
+            $epoch = $db->prepare('UPDATE user_auth SET reset_perms = (reset_perms % 4294967295) + 1 WHERE id = ?');
+            if (!$epoch->execute([$actorId]) || $epoch->rowCount() !== 1) {
+                throw new \RuntimeException('Link permission invalidation was not confirmed.');
+            }
+            $current->execute([$actorId]);
+            if ((int) $current->fetchColumn() !== $expected) {
+                throw new \RuntimeException('Link permission invalidation readback changed.');
+            }
+            $current->closeCursor();
             return $id;
         });
     }
@@ -152,6 +171,17 @@ final readonly class LegacyLinkStore implements LinkStore
                 throw new \RuntimeException('Link transaction unavailable.');
             }
             $started = true;
+            if ($action === 'save') {
+                // Acquire the actor's exclusive lock before authorization's
+                // shared reads, avoiding a shared-to-exclusive lock upgrade.
+                $suffix = $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+                $actor = $db->prepare('SELECT id FROM user_auth WHERE id = ?' . $suffix);
+                if (!$actor->execute([$actorId])) {
+                    throw new \RuntimeException('Link actor lock was not confirmed.');
+                }
+                $actor->fetchColumn();
+                $actor->closeCursor();
+            }
             $this->access->assertCurrent($actorId);
             $decision = AuditEvent::ALLOWED;
             $outcome = AuditEvent::FAILED;

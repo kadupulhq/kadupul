@@ -6,6 +6,13 @@
 
 include_once('./include/global.php');
 
+/* This viewer owns a dynamic link realm and must validate identity even when
+ * header=false suppresses the normal authenticated page header. */
+if (auth_session_check_eligibility(read_config_option('auth_method')) !== 0) {
+	http_response_code(403);
+	exit;
+}
+
 $page = db_fetch_row_prepared('SELECT
 	id, title, style, contentfile, enabled, refresh
 	FROM external_links AS el

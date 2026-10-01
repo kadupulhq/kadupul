@@ -198,7 +198,7 @@ install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal ass
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/index.php	anonymous-allowed	redirect-only
 lib/	web-server-denied	nginx; apache .htaccess
-link.php	realm:10000+id	own realm check per external link id; reviewed at 929a564cf868
+link.php	realm:10000+id	persisted session eligibility before protected lookup; own realm check per external link id; reviewed at 5f440c6ca12c
 links.php	symfony:forward	forwards to app.php/links/legacy
 locales/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 locales/index.php	anonymous-allowed	redirect-only
