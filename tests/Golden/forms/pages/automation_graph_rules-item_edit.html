@@ -1,0 +1,61 @@
+<form action="automation_graph_rules.php" autocomplete="off" class="cactiFormStart" id="form_automation_global_item_edit" method="post" name="form_automation_global_item_edit">
+  <div class="cactiTable" id="automation_graph_rules_item_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Rule Item [new rule item for Device Match Rule: Traffic &lt;rule&gt;]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Graph-Rules.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="automation_graph_rules_item_edit1_child">
+      <div class="formRow odd" id="row_operation"><div class="formColumnLeft"><div class="formFieldName">Operation<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Logical operation to combine rules.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="operation" name="operation">
+          <option value="0"></option>
+          <option value="1">AND</option>
+          <option value="2">OR</option>
+          <option value="3">(</option>
+          <option value="4">)</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_field"><div class="formColumnLeft"><div class="formFieldName">Field Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Field Name that shall be used for this Rule Item.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="field" name="field">
+          <option selected="" value="0">None</option>
+          <option value="ht.name">HT: name - varchar(100)</option>
+          <option value="ht.class">HT: class - varchar(40)</option>
+          <option value="h.description">H: description - varchar(150)</option>
+          <option value="h.hostname">H: hostname - varchar(100)</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_operator"><div class="formColumnLeft"><div class="formFieldName">Operator<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Operator.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="operator" name="operator">
+          <option value="0">None</option>
+          <option value="1">contains</option>
+          <option value="2">does not contain</option>
+          <option value="3">begins with</option>
+          <option value="4">does not begin with</option>
+          <option value="5">ends with</option>
+          <option value="6">does not end with</option>
+          <option value="7">matches</option>
+          <option value="8">is not equal to</option>
+          <option value="9">is less than</option>
+          <option value="10">is less than or equal</option>
+          <option value="11">is greater than</option>
+          <option value="12">is greater than or equal</option>
+          <option value="13">is unknown</option>
+          <option value="14">is not unknown</option>
+          <option value="15">is empty</option>
+          <option value="16">is not empty</option>
+          <option value="17">matches regular expression</option>
+          <option value="18">does not match regular expression</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_pattern"><div class="formColumnLeft"><div class="formFieldName">Matching Pattern<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Pattern to be matched against.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="pattern" maxlength="255" name="pattern" off="" size="50" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_sequence"><div class="formColumnLeft"><div class="formFieldName">Sequence<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Sequence.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><em>1</em><div style="display:none;"><input id="sequence" name="sequence" style="height:0px;" type="hidden" value="1"></div></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="rule_type" name="rule_type" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="item_id" name="item_id" style="height:0px;" type="hidden" value="0"></div><div style="display:none;"><input id="save_component_automation_match_item" name="save_component_automation_match_item" style="height:0px;" type="hidden" value="1"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="automation_graph_rules.php?action=edit&amp;id=1&amp;rule_type=1" type="button" value="Cancel"><input class=" ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>

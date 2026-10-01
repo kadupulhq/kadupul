@@ -20,6 +20,8 @@ use Kadupul\Platform\Application\Command\InstallationAccessDenied;
 use Kadupul\Platform\Application\Command\MaintenanceTarget;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
+use Kadupul\Platform\Application\ReadModel\AnalysisOutcome;
+use Kadupul\Platform\Application\ReadModel\TableAnalysis;
 use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
 use Kadupul\Platform\Infrastructure\Legacy\CollectorIdentity;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
@@ -127,7 +129,7 @@ final class AnalyzeDatabaseTest extends TestCase
         $report = $this->analyze($this->maintenance(false, DatabaseTarget::Local))(false, null);
         self::assertFalse($report->main);
         self::assertTrue($report->noBinlog);
-        self::assertSame([['name' => 'host', 'ok' => true], ['name' => 'settings', 'ok' => false]], $report->tables);
+        self::assertEquals([new TableAnalysis('host', AnalysisOutcome::Succeeded), new TableAnalysis('settings', AnalysisOutcome::Failed)], $report->tables);
         self::assertSame(3, $report->seconds);
     }
 

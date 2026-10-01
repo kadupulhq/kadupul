@@ -1,0 +1,159 @@
+<form action="settings.php" autocomplete="off" class="cactiFormStart" id="form_settings" method="post" name="form_settings">
+  <div class="cactiTable" id="settings_snmp1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Kadupul Settings (Device Defaults)</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Settings-Device-Defaults.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="settings_snmp1_child">
+      <div class="spacer formHeader collapsible" id="row_general_header"><div class="formHeaderText">General Defaults<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_default_template"><div class="formColumnLeft"><div class="formFieldName">Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default Device Template used on all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_template" name="default_template">
+          <option selected="" value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_default_site"><div class="formColumnLeft"><div class="formFieldName">Site<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default Site for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_site" name="default_site">
+          <option value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_default_poller"><div class="formColumnLeft"><div class="formFieldName">Poller<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default Poller for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_poller" name="default_poller">
+          <option value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_device_threads"><div class="formColumnLeft"><div class="formFieldName">Device Threads<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default number of Device Threads. This is only applicable when using the Spine Data Collector.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="device_threads" name="device_threads">
+          <option selected="" value="1">1 Thread</option>
+          <option value="2">2 Threads</option>
+          <option value="3">3 Threads</option>
+          <option value="4">4 Threads</option>
+          <option value="5">5 Threads</option>
+          <option value="6">6 Threads</option>
+          <option value="7">7 Threads</option>
+          <option value="8">8 Threads</option>
+          <option value="9">9 Threads</option>
+          <option value="10">10 Threads</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_reindex_method"><div class="formColumnLeft"><div class="formFieldName">Re-index Method for Data Queries<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default Re-index Method to use for all Data Queries.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="reindex_method" name="reindex_method">
+          <option value="0">None</option>
+          <option selected="" value="1">Uptime</option>
+          <option value="2">Index Count</option>
+          <option value="3">Verify All</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_default_interface_speed"><div class="formColumnLeft"><div class="formFieldName">Default Interface Speed<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_interface_speed" name="default_interface_speed">
+          <option value="100">100 Mbps Ethernet</option>
+          <option selected="" value="1000">1 Gbps Ethernet</option>
+          <option value="10000">10 Gbps Ethernet</option>
+          <option value="25000">25 Gbps Ethernet</option>
+          <option value="40000">40 Gbps Ethernet</option>
+          <option value="56000">56 Gbps Ethernet</option>
+          <option value="100000">100 Gbps Ethernet</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_snmp_header"><div class="formHeaderText">SNMP Defaults<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_snmp_version"><div class="formColumnLeft"><div class="formFieldName">Version<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMP version for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_version" name="snmp_version">
+          <option value="0">Not In Use</option>
+          <option value="1">Version 1</option>
+          <option selected="" value="2">Version 2</option>
+          <option value="3">Version 3</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_snmp_community"><div class="formColumnLeft"><div class="formFieldName">Community<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMP read community for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_community" maxlength="100" name="snmp_community" off="" size="40" type="text" value="public"></div></div></div>
+      <div class="formRow odd" id="row_snmp_security_level"><div class="formColumnLeft"><div class="formFieldName">Security Level<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMP v3 Security Level for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_security_level" name="snmp_security_level">
+          <option value="noAuthNoPriv">noAuthNoPriv</option>
+          <option value="authNoPriv">authNoPriv</option>
+          <option selected="" value="authPriv">authPriv</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_snmp_auth_protocol"><div class="formColumnLeft"><div class="formFieldName">Auth Protocol (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMPv3 Authorization Protocol for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_auth_protocol" name="snmp_auth_protocol">
+          <option value="[None]">[None]</option>
+          <option selected="" value="MD5">MD5</option>
+          <option value="SHA">SHA</option>
+          <option value="SHA224">SHA-224</option>
+          <option value="SHA256">SHA-256</option>
+          <option value="SHA384">SHA-384</option>
+          <option value="SHA512">SHA-512</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_snmp_username"><div class="formColumnLeft"><div class="formFieldName">Auth User (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMP v3 Authorization User for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_username" maxlength="50" name="snmp_username" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_snmp_password"><div class="formColumnLeft"><div class="formFieldName">Auth Passphrase (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMP v3 Authorization Passphrase for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="snmp_password" maxlength="50" name="snmp_password" placeholder="********" size="40" type="password" value="stored-snmp-secret"><br><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="snmp_password_confirm" maxlength="50" name="snmp_password_confirm" placeholder="********" size="40" type="password" value="stored-snmp-secret"></div></div></div>
+      <div class="formRow odd" id="row_snmp_priv_protocol"><div class="formColumnLeft"><div class="formFieldName">Privacy Protocol (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMPv3 Privacy Protocol for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_priv_protocol" name="snmp_priv_protocol">
+          <option value="[None]">[None]</option>
+          <option selected="" value="DES">DES</option>
+          <option value="AES">AES</option>
+          <option value="AES128">AES-128</option>
+          <option value="AES192">AES-192</option>
+          <option value="AES192C">AES-192-C</option>
+          <option value="AES256">AES-256</option>
+          <option value="AES256C">AES-256-C</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_snmp_priv_passphrase"><div class="formColumnLeft"><div class="formFieldName">Privacy Passphrase (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMPv3 Privacy Passphrase for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="snmp_priv_passphrase" maxlength="200" name="snmp_priv_passphrase" placeholder="********" size="80" type="password" value="stored-snmp-passphrase"><br><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="snmp_priv_passphrase_confirm" maxlength="200" name="snmp_priv_passphrase_confirm" placeholder="********" size="80" type="password" value="stored-snmp-passphrase"></div></div></div>
+      <div class="formRow odd" id="row_snmp_context"><div class="formColumnLeft"><div class="formFieldName">SNMP Context (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter the SNMP v3 Context for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_context" maxlength="64" name="snmp_context" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_snmp_engine_id"><div class="formColumnLeft"><div class="formFieldName">SNMP Engine ID (v3)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_engine_id" maxlength="64" name="snmp_engine_id" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_snmp_port"><div class="formColumnLeft"><div class="formFieldName">Port Number<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default UDP Port for all new Devices. Typically 161.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_port" maxlength="10" name="snmp_port" off="" size="5" type="text" value="161"></div></div></div>
+      <div class="formRow even" id="row_snmp_timeout"><div class="formColumnLeft"><div class="formFieldName">Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMP timeout in milli-seconds for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_timeout" maxlength="10" name="snmp_timeout" off="" size="5" type="text" value="500"></div></div></div>
+      <div class="formRow odd" id="row_snmp_retries"><div class="formColumnLeft"><div class="formFieldName">Retries<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default SNMP retries for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="snmp_retries" maxlength="10" name="snmp_retries" off="" size="5" type="text" value="3"></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_availability_header"><div class="formHeaderText">Availability/Reachability<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_availability_method"><div class="formColumnLeft"><div class="formFieldName">Downed Device Detection<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default Availability/Reachability for all new Devices. The method Kadupul will use to determine if a Device is available for polling. <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i></span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="availability_method" name="availability_method">
+          <option value="0">None</option>
+          <option value="1">Ping and SNMP Uptime</option>
+          <option value="4">Ping or SNMP Uptime</option>
+          <option selected="" value="2">SNMP Uptime</option>
+          <option value="5">SNMP Desc</option>
+          <option value="6">SNMP getNext</option>
+          <option value="3">Ping</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_ping_method"><div class="formColumnLeft"><div class="formFieldName">Ping Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default Ping type for all new Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="ping_method" name="ping_method">
+          <option value="1">ICMP Ping</option>
+          <option value="3">TCP Ping</option>
+          <option value="5">TCP Ping Closed</option>
+          <option selected="" value="2">UDP Ping</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_ping_port"><div class="formColumnLeft"><div class="formFieldName">Ping Port<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default Ping Port for all new Devices. With TCP, Kadupul will attempt to Syn the port. With UDP, Kadupul requires either a successful connection, or a 'port not reachable' error to determine if the Device is up or not.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ping_port" maxlength="10" name="ping_port" off="" size="5" type="text" value="23"></div></div></div>
+      <div class="formRow odd" id="row_ping_timeout"><div class="formColumnLeft"><div class="formFieldName">Ping Timeout Value<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Default Ping Timeout value in milli-seconds for all new Devices. The timeout values to use for Device SNMP, ICMP, UDP and TCP pinging. ICMP Pings will be rounded up to the nearest second. TCP and UDP connection timeouts on Windows are controlled by the operating system, and are therefore not recommended on Windows.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ping_timeout" maxlength="10" name="ping_timeout" off="" size="5" type="text" value="400"></div></div></div>
+      <div class="formRow even" id="row_ping_retries"><div class="formColumnLeft"><div class="formFieldName">Ping Retry Count<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of times Kadupul will attempt to ping a Device before marking it as down.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ping_retries" maxlength="10" name="ping_retries" off="" size="5" type="text" value="1"></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_updown_header"><div class="formHeaderText">Up/Down Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_ping_failure_count"><div class="formColumnLeft"><div class="formFieldName">Failure Count<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of polling intervals a Device must be down before logging an error and reporting Device as down.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ping_failure_count" maxlength="10" name="ping_failure_count" off="" size="5" type="text" value="2"></div></div></div>
+      <div class="formRow even" id="row_ping_recovery_count"><div class="formColumnLeft"><div class="formFieldName">Recovery Count<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of polling intervals a Device must remain up before returning Device to an up status and issuing a notice.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ping_recovery_count" maxlength="10" name="ping_recovery_count" off="" size="5" type="text" value="3"></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="tab" name="tab" style="height:0px;" type="hidden" value="snmp"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="save ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>
