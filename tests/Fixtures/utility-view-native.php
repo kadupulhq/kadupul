@@ -237,6 +237,7 @@ match ($scenario['view']) {
     'options' => \Kadupul\Platform\Infrastructure\Legacy\UtilityRows::renderOptions($scenario['choices'], $scenario['selected']),
 };
 $html = ob_get_clean();
+define('NATIVE_COVERAGE_COMPLETED', array('utility-view-observed:' . $scenario['view']));
 $after = array();
 foreach ($tables as $table) {
     $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);

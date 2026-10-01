@@ -179,6 +179,26 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
+    foreach ($coverageFilter->files() as $file) {
+        // Preserve copied-source attribution only after the existing byte identity check.
+        $source = defined('RRD_TEST_CLI_COVERAGE_COPY') && $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
+        $nativeSources[] = substr($source, strlen($coverageRoot) + 1);
+    }
+    if (defined('UTILITY_VIEW_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/UtilityViewNativeCoverageTest.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'lib/utility.php'));
+        $nativeProducer = 'tests/Fixtures/utility-view-native.php';
+    } elseif (defined('UTILITY_LOG_TEST_COVERAGE')) {
+        $nativeSources[] = 'tests/Symfony/UtilityLogPersistenceTest.php';
+        $nativeProducer = 'tests/Fixtures/utility-log-native.php';
+    } else {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/HelperUnionNativeTest.php', 'src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php'));
+        $nativeProducer = 'tests/Fixtures/helper-union-native.php';
+    }
+    $nativeCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, $nativeProducer, $argv[1], $nativeSources);
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
@@ -206,6 +226,12 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
         }
         if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
             throw new RuntimeException('Unable to preserve child process coverage');
+        }
+        if (isset($GLOBALS['nativeCoverageEvidence'])) {
+            if (!defined('NATIVE_COVERAGE_COMPLETED')) {
+                throw new RuntimeException('Native coverage production scenario did not complete.');
+            }
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeCoverageEvidence'], NATIVE_COVERAGE_COMPLETED);
         }
     });
 });

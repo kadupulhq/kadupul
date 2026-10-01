@@ -90,6 +90,7 @@ try {
     require $root . '/utilities.php';
     utilities_clear_user_log();
     $result = $db->query('SELECT * FROM `' . $tables['user_log'] . '` ORDER BY user_id, result')->fetchAll(PDO::FETCH_ASSOC);
+    define('NATIVE_COVERAGE_COMPLETED', ['retained-history-readback']);
     echo json_encode(['rows' => $result, 'queries' => $calls], JSON_THROW_ON_ERROR);
 } finally {
     foreach ($tables as $table) {
