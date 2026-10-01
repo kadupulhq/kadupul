@@ -5,12 +5,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 if ($argv[1] === '--version') {
-    echo "mariadb Ver 10.11.8-MariaDB";
+    echo getenv('AUDIT_TEST_CLIENT_FAMILY') === 'mysql' ? 'mysql Ver 8.4.0' : 'mariadb Ver 10.11.8-MariaDB';
     exit(0);
 }
 $database = 'fixture database; echo ignored';
-if (count($argv) !== 4 || !str_starts_with($argv[1], '--defaults-extra-file=')
-    || $argv[2] !== '--skip-ssl' || $argv[3] !== '--database=' . $database) {
+$ssl = getenv('AUDIT_TEST_CLIENT_SSL') === '1';
+$expected_option = getenv('AUDIT_TEST_CLIENT_FAMILY') === 'mysql' ? '--ssl-mode=DISABLED' : '--skip-ssl';
+if (count($argv) !== ($ssl ? 3 : 4) || !str_starts_with($argv[1], '--defaults-extra-file=')
+    || (!$ssl && $argv[2] !== $expected_option) || end($argv) !== '--database=' . $database) {
     exit(2);
 }
 $defaults = substr($argv[1], strlen('--defaults-extra-file='));
@@ -33,6 +35,7 @@ if ($case === 'partial-import') {
     exit(1);
 }
 if ($case === 'import-failure') {
+    fwrite(STDERR, 'Fixture SQL import was rejected: ' . getenv('AUDIT_TEST_DIAGNOSTIC_SECRET') . str_repeat('Z', 6000));
     exit(1);
 }
 $db->exec($sql);

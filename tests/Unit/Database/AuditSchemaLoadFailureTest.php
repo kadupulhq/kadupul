@@ -62,7 +62,7 @@ test('LTS schema import preserves the actual baseline until verified publication
         if (str_starts_with($case, 'upgrade-')) {
             $command[] = '--report';
         }
-        $environment = array_merge(getenv(), array('AUDIT_TEST_SQLITE' => $path, 'AUDIT_TEST_CASE' => $case, 'AUDIT_TEST_VERSION' => trim(file_get_contents($root . '/include/cacti_version')), 'CACTI_MYSQL_CLIENT' => $client));
+        $environment = array_merge(getenv(), array('AUDIT_TEST_CLIENT_FAMILY' => str_contains($case, 'mysql') ? 'mysql' : 'mariadb', 'AUDIT_TEST_CLIENT_SSL' => str_contains($case, 'tls') ? '1' : '0', 'AUDIT_TEST_DIAGNOSTIC_SECRET' => 'fixture password with quotes \" and spaces', 'AUDIT_TEST_SQLITE' => $path, 'AUDIT_TEST_CASE' => $case, 'AUDIT_TEST_VERSION' => trim(file_get_contents($root . '/include/cacti_version')), 'CACTI_MYSQL_CLIENT' => $client));
         if (str_starts_with($case, 'discovery-')) {
             unset($environment['CACTI_MYSQL_CLIENT']);
             if ($case === 'discovery-empty') {
@@ -86,6 +86,13 @@ test('LTS schema import preserves the actual baseline until verified publication
         }
         if (str_starts_with($case, 'discovery-')) {
             $this->assertStringContainsString('mysql or mariadb command not found', $output . $error);
+        }
+        if ($case === 'import-failure') {
+            $this->assertStringContainsString('Fixture SQL import was rejected', $error);
+            $this->assertStringContainsString('[redacted]', $error);
+            $this->assertStringNotContainsString($environment['AUDIT_TEST_DIAGNOSTIC_SECRET'], $error . $output);
+            $this->assertLessThan(4300, strlen($error));
+            $this->assertStringNotContainsString('FATAL:', $output);
         }
         if ($option === '--create' || in_array($case, array('partial-import', 'import-failure', 'empty-import', 'swap-failure', 'missing'), true)) {
             $old = $expected !== 0 && !str_starts_with($case, 'cleanup-');
@@ -133,5 +140,8 @@ test('LTS schema import preserves the actual baseline until verified publication
     'swap-failure' => ['swap-failure', '--create', 1],
     'discovery-unset' => ['discovery-unset', '--create', 1],
     'discovery-empty' => ['discovery-empty', '--create', 1],
+    'valid mysql arguments' => ['valid-mysql', '--create', 0],
+    'valid mysql TLS arguments' => ['valid-mysql-tls', '--create', 0],
+    'valid MariaDB TLS arguments' => ['valid-mariadb-tls', '--create', 0],
     'valid' => ['valid', '--create', 0],
 ]);

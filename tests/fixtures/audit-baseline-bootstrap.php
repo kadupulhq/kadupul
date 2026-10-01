@@ -7,7 +7,7 @@ $config = array('base_path' => dirname(__DIR__), 'poller_id' => 1);
 $database_default = getenv('AUDIT_TEST_CASE') === 'leading-hyphen' ? '-audit' : 'fixture database; echo ignored';
 $database_username = 'fixture';
 $database_password = 'fixture password with quotes \" and spaces';
-$database_ssl = false;
+$database_ssl = getenv('AUDIT_TEST_CLIENT_SSL') === '1';
 $database_hostname = 'localhost';
 $database_port = '3306';
 define('CACTI_VERSION', getenv('AUDIT_TEST_VERSION'));

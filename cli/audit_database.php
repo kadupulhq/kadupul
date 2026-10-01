@@ -1352,7 +1352,7 @@ function create_tables($load = true) {
 		$backups = array('table_columns' => 'audit_old_columns_' . $suffix, 'table_indexes' => 'audit_old_indexes_' . $suffix);
 		$import_file = tempnam(sys_get_temp_dir(), 'kadupul-audit-');
 		if ($import_file === false) {
-			print 'FATAL: Unable to stage the Audit Schema' . PHP_EOL;
+			fwrite(STDERR, 'FATAL: Unable to stage the Audit Schema' . PHP_EOL);
 			return false;
 		}
 		$defaults_file = false;
@@ -1398,11 +1398,14 @@ function create_tables($load = true) {
 				throw new RuntimeException('Unable to start the Audit Schema client');
 			}
 			// Drain combined output without exposing credentials or blocking the client.
-			stream_get_contents($pipes[1]);
+			$client_output = stream_get_contents($pipes[1]);
 			fclose($pipes[1]);
 			$error = proc_close($process);
 			if ($error !== 0) {
-				throw new RuntimeException('Audit Schema import failed');
+				// Redact before limiting diagnostic text so truncation cannot expose a password fragment.
+				$diagnostic = $database_password === '' ? $client_output : str_replace($database_password, '[redacted]', $client_output);
+				$diagnostic = trim(substr($diagnostic, 0, 4096));
+				throw new RuntimeException('Audit Schema import failed' . ($diagnostic === '' ? '' : ': ' . $diagnostic));
 			}
 			if (!db_table_exists($completion) || (int) db_fetch_cell('SELECT COUNT(*) FROM `' . $completion . '` WHERE id=1') !== 1) {
 				throw new RuntimeException('Audit Schema import did not reach its completion marker');
@@ -1422,15 +1425,15 @@ function create_tables($load = true) {
 			}
 			$loaded = true;
 		} catch (Throwable $failure) {
-			print 'FATAL: Failed Load the Audit Schema: ' . $failure->getMessage() . PHP_EOL;
+			fwrite(STDERR, 'FATAL: Failed to load the Audit Schema: ' . $failure->getMessage() . PHP_EOL);
 		} finally {
 			if ($defaults_file !== false && !unlink($defaults_file)) {
 				$cleaned = false;
-				print 'FATAL: Unable to remove private database credentials file' . PHP_EOL;
+				fwrite(STDERR, 'FATAL: Unable to remove private database credentials file' . PHP_EOL);
 			}
 			if (!unlink($import_file)) {
 				$cleaned = false;
-				print 'FATAL: Unable to remove private Audit Schema staging file' . PHP_EOL;
+				fwrite(STDERR, 'FATAL: Unable to remove private Audit Schema staging file' . PHP_EOL);
 			}
 			foreach (array_merge(array_values($staging), array_values($backups), array($completion)) as $temporary) {
 				try {
@@ -1439,7 +1442,7 @@ function create_tables($load = true) {
 					}
 				} catch (Throwable $cleanupFailure) {
 					$cleaned = false;
-					print 'FATAL: Unable to remove Audit Schema temporary table ' . $temporary . ': ' . $cleanupFailure->getMessage() . PHP_EOL;
+					fwrite(STDERR, 'FATAL: Unable to remove Audit Schema temporary table ' . $temporary . ': ' . $cleanupFailure->getMessage() . PHP_EOL);
 				}
 			}
 		}
