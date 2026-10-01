@@ -1,8 +1,8 @@
 category	location	match
 cmd_exec	./cactid.php:85		exec('pgrep -a php | grep cactid.php', $output);
 cmd_exec	./cli/audit_database.php:1026	                $db_shell = trim((string) shell_exec('which mysql'));
-cmd_exec	./cli/audit_database.php:1036	            exec(cacti_escapeshellarg($db_shell) .
-cmd_exec	./cli/audit_database.php:134	    exec('php ' . $config['base_path'] . '/cli/upgrade_database.php --debug', $output, $return_var);
+cmd_exec	./cli/audit_database.php:1054	            exec(cacti_escapeshellarg($db_shell) .
+cmd_exec	./cli/audit_database.php:134	    exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/cli/upgrade_database.php') . ' --debug', $output, $return_var);
 cmd_exec	./cli/batchgapfix.php:293		$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/batchgapfix.php:363			exec($command, $output, $return_var);
 cmd_exec	./cli/float_rrdfiles.php:665		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
@@ -529,6 +529,7 @@ dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.p
 dynamic_include	./tools/verify-offline.php:17	$kernel = require $root . '/config/bootstrap.php';
 fs_write	./cactid.php:82		$STDERR = fopen('/dev/null', 'wb');
 fs_write	./cactid.php:93		$STDERR = fopen('null', 'wb');
+fs_write	./cli/audit_database.php:1051	            if (file_put_contents($import_file, $schema) !== strlen($schema)) {
 fs_write	./cli/float_rrdfiles.php:366				$fp = fopen($tmp_file, 'x');
 fs_write	./cli/float_rrdfiles.php:369					$lf = fopen($tmp_dir . '/clearer.log', 'x');
 fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename

@@ -131,7 +131,7 @@ function upgrade_database()
     $return_var = 0;
     $output     = array();
 
-    exec('php ' . $config['base_path'] . '/cli/upgrade_database.php --debug', $output, $return_var);
+    exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/cli/upgrade_database.php') . ' --debug', $output, $return_var);
 
     $end = microtime(true);
 
@@ -214,7 +214,7 @@ function upgrade_database()
                             $ufunc2(true);
                         } elseif (function_exists($ufunc1)) {
                             cacti_log("NOTE: Upgrading Plugin $pname from $old to $version using standard upgrade path.", true, 'UPGRADE');
-                            $ufunc1;
+                            $ufunc1();
                         } else {
                             cacti_log("WARNING: Plugin $pname lacks an upgrade function.", true, 'UPGRADE');
                         }
@@ -224,7 +224,7 @@ function upgrade_database()
                             $return_var = 0;
                             $output     = array();
 
-                            exec('php ' . $config['base_path'] . '/plugins/' . $pname . '/database_upgrade.php --type=large --force-ver=' . $old, $output, $return_var);
+                            exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/plugins/' . $pname . '/database_upgrade.php') . ' --type=large --force-ver=' . cacti_escapeshellarg($old), $output, $return_var);
 
                             if ($return_var == 0) {
                                 print implode(PHP_EOL, $output) . PHP_EOL;
@@ -1032,27 +1032,60 @@ function create_tables($load = true)
             }
         }
 
-        if (is_file($schema_file) && is_readable($schema_file)) {
-            exec(cacti_escapeshellarg($db_shell) .
-                ' -u' . cacti_escapeshellarg($database_username) .
-                ' -p' . cacti_escapeshellarg($database_password) .
-                ' -h' . cacti_escapeshellarg($database_hostname) .
-                ' -P' . cacti_escapeshellarg($database_port) .
-                ' ' . $database_default .
-                ' < ' . $schema_file, $output, $error);
-
-            if ($error == 0) {
-                print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
-                return true;
-            } else {
-                print 'FATAL: Failed Load the Audit Schema' . PHP_EOL;
-                print 'ERROR: ' . implode(",\n   ", $output) . PHP_EOL;
-                return false;
-            }
-        } else {
-            print 'FATAL: Failed to find or read Audit Schema' . PHP_EOL;
+        $suffix = bin2hex(random_bytes(8));
+        $staging = array('table_columns' => 'audit_columns_' . $suffix, 'table_indexes' => 'audit_indexes_' . $suffix);
+        $backups = array('table_columns' => 'audit_old_columns_' . $suffix, 'table_indexes' => 'audit_old_indexes_' . $suffix);
+        $import_file = tempnam(sys_get_temp_dir(), 'kadupul-audit-');
+        if ($import_file === false) {
+            print 'FATAL: Unable to stage the Audit Schema' . PHP_EOL;
             return false;
         }
+        try {
+            $schema = file_get_contents($schema_file);
+            if ($schema === false) {
+                throw new RuntimeException('Unable to read the Audit Schema');
+            }
+            foreach ($staging as $live => $stage) {
+                $schema = str_replace('`' . $live . '`', '`' . $stage . '`', $schema);
+            }
+            if (file_put_contents($import_file, $schema) !== strlen($schema)) {
+                throw new RuntimeException('Unable to stage the Audit Schema');
+            }
+            exec(cacti_escapeshellarg($db_shell) .
+                ' -u' . cacti_escapeshellarg($database_username) .
+                ($database_password !== '' ? ' -p' . cacti_escapeshellarg($database_password) : '') .
+                ' -h' . cacti_escapeshellarg($database_hostname) .
+                ' -P' . cacti_escapeshellarg($database_port) .
+                ' ' . cacti_escapeshellarg($database_default) .
+                ' < ' . cacti_escapeshellarg($import_file), $output, $error);
+            if ($error !== 0) {
+                throw new RuntimeException('Audit Schema import failed');
+            }
+            foreach ($staging as $stage) {
+                if (!db_table_exists($stage) || (int) db_fetch_cell('SELECT COUNT(*) FROM `' . $stage . '`') < 1) {
+                    throw new RuntimeException('Audit Schema staging table is missing or empty');
+                }
+            }
+            $renames = array();
+            foreach ($staging as $live => $stage) {
+                $renames[] = "`$live` TO `{$backups[$live]}`";
+                $renames[] = "`$stage` TO `$live`";
+            }
+            if (!db_execute('RENAME TABLE ' . implode(', ', $renames))) {
+                throw new RuntimeException('Unable to install the Audit Schema');
+            }
+            print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
+            return true;
+        } catch (Throwable $failure) {
+            print 'FATAL: Failed Load the Audit Schema: ' . $failure->getMessage() . PHP_EOL;
+            return false;
+        } finally {
+            unlink($import_file);
+            foreach (array_merge(array_values($staging), array_values($backups)) as $temporary) {
+                db_execute('DROP TABLE IF EXISTS `' . $temporary . '`');
+            }
+        }
+
     }
 
     return true;
