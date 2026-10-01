@@ -5,12 +5,15 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
 } else {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('UTILITY_LOG_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/utilities.php');
+}
 if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
