@@ -26,6 +26,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY tools/dependencies ./tools/dependencies
 COPY include/js/jquery.tablesorter.pager.js ./include/js/jquery.tablesorter.pager.js
+COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 
 # --- runtime ----------------------------------------------------------------
@@ -93,12 +94,19 @@ COPY --chown=www-data:www-data . .
 COPY --from=vendor --chown=www-data:www-data /app/include/vendor ./include/vendor
 COPY --from=assets --chown=www-data:www-data /app/include/js ./include/js
 COPY --from=assets --chown=www-data:www-data /app/include/fa ./include/fa
+COPY --from=assets --chown=www-data:www-data /app/include/themes/midwinter ./include/themes/midwinter
 COPY --from=assets --chown=www-data:www-data /app/include/vendor/flag-icons ./include/vendor/flag-icons
 
+# asset-map:compile writes digested copies of the theme, script and font files
+# legacy pages load. It leaves a root-owned kernel cache behind, which is
+# removed so the runtime rebuilds it as www-data.
+#
 # Writable state is exactly these three directories and nothing else. They are
 # declared as volumes so an operator who forgets to mount them still keeps data
 # across a restart.
 RUN set -eux; \
+    php bin/console asset-map:compile --no-debug; \
+    rm -rf var/cache; \
     mkdir -p cache log rra var; \
     chown -R www-data:www-data cache log rra var; \
     chmod 0755 /usr/local/bin/entrypoint; \

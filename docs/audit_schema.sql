@@ -414,7 +414,7 @@ INSERT INTO `table_columns` VALUES ('data_template_data',11,'active','char(2)','
 INSERT INTO `table_columns` VALUES ('data_template_data',12,'t_rrd_step','char(2)','YES','','','');
 INSERT INTO `table_columns` VALUES ('data_template_data',13,'rrd_step','mediumint(8) unsigned','NO','','0','');
 INSERT INTO `table_columns` VALUES ('data_template_data',14,'t_data_source_profile_id','char(2)','YES','','','');
-INSERT INTO `table_columns` VALUES ('data_template_data',15,'data_source_profile_id','mediumint(8) unsigned','NO','','1','');
+INSERT INTO `table_columns` VALUES ('data_template_data',15,'data_source_profile_id','mediumint(8) unsigned','NO','MUL','1','');
 INSERT INTO `table_columns` VALUES ('data_template_rrd',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment');
 INSERT INTO `table_columns` VALUES ('data_template_rrd',2,'hash','varchar(32)','NO','','','');
 INSERT INTO `table_columns` VALUES ('data_template_rrd',3,'local_data_template_rrd_id','int(10) unsigned','NO','MUL','0','');
@@ -431,7 +431,7 @@ INSERT INTO `table_columns` VALUES ('data_template_rrd',13,'data_source_type_id'
 INSERT INTO `table_columns` VALUES ('data_template_rrd',14,'t_data_source_name','char(2)','YES','',NULL,'');
 INSERT INTO `table_columns` VALUES ('data_template_rrd',15,'data_source_name','varchar(19)','NO','','','');
 INSERT INTO `table_columns` VALUES ('data_template_rrd',16,'t_data_input_field_id','char(2)','YES','',NULL,'');
-INSERT INTO `table_columns` VALUES ('data_template_rrd',17,'data_input_field_id','mediumint(8) unsigned','NO','','0','');
+INSERT INTO `table_columns` VALUES ('data_template_rrd',17,'data_input_field_id','mediumint(8) unsigned','NO','MUL','0','');
 INSERT INTO `table_columns` VALUES ('external_links',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment');
 INSERT INTO `table_columns` VALUES ('external_links',2,'sortorder','int(10) unsigned','NO','','0','');
 INSERT INTO `table_columns` VALUES ('external_links',3,'enabled','char(2)','YES','','on','');
@@ -845,7 +845,7 @@ INSERT INTO `table_columns` VALUES ('settings',2,'value','varchar(4096)','NO',''
 INSERT INTO `table_columns` VALUES ('settings_tree',1,'user_id','mediumint(8) unsigned','NO','PRI','0','');
 INSERT INTO `table_columns` VALUES ('settings_tree',2,'graph_tree_item_id','int(10) unsigned','NO','PRI','0','');
 INSERT INTO `table_columns` VALUES ('settings_tree',3,'status','tinyint(4)','NO','','0','');
-INSERT INTO `table_columns` VALUES ('settings_user',1,'user_id','smallint(8) unsigned','NO','PRI','0','');
+INSERT INTO `table_columns` VALUES ('settings_user',1,'user_id','mediumint(8) unsigned','NO','PRI','0','');
 INSERT INTO `table_columns` VALUES ('settings_user',2,'name','varchar(255)','NO','PRI','','');
 INSERT INTO `table_columns` VALUES ('settings_user',3,'value','varchar(4096)','NO','','','');
 INSERT INTO `table_columns` VALUES ('settings_user_group',1,'group_id','smallint(8) unsigned','NO','PRI','0','');
@@ -1194,6 +1194,7 @@ INSERT INTO `table_indexes` VALUES ('data_source_stats_yearly',0,'PRIMARY',2,'rr
 INSERT INTO `table_indexes` VALUES ('data_template',1,'name',1,'name','A',198,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('data_template',0,'PRIMARY',1,'id','A',198,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('data_template_data',1,'data_input_id',1,'data_input_id','A',101,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('data_template_data',1,'data_source_profile_id',1,'data_source_profile_id','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('data_template_data',1,'data_template_id',1,'data_template_id','A',203,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('data_template_data',1,'local_data_id',1,'local_data_id','A',12,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('data_template_data',1,'name_cache',1,'name_cache','A',12,NULL,NULL,'','BTREE','');
@@ -1204,6 +1205,7 @@ INSERT INTO `table_indexes` VALUES ('data_template_rrd',0,'duplicate_dsname_cont
 INSERT INTO `table_indexes` VALUES ('data_template_rrd',0,'duplicate_dsname_contraint',3,'data_template_id','A',286,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('data_template_rrd',1,'local_data_template_rrd_id',1,'local_data_template_rrd_id','A',16,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('data_template_rrd',0,'PRIMARY',1,'id','A',286,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('data_template_rrd',1,'data_input_field_id',1,'data_input_field_id','A',286,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('external_links',0,'PRIMARY',1,'id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('graph_local',1,'graph_template_id',1,'graph_template_id','A',4,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('graph_local',1,'host_id',1,'host_id','A',2,NULL,NULL,'','BTREE','');
