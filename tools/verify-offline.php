@@ -99,7 +99,8 @@ if ($fonts[1] === []) {
     throw new RuntimeException('Offline compiled Font Awesome stylesheet references no webfonts');
 }
 foreach (array_unique($fonts[1]) as $font) {
-    if (!is_file(dirname($root . '/public' . $stylesheet) . '/' . $font)) {
+    $file = dirname($root . '/public' . $stylesheet) . '/' . $font;
+    if (!is_file($file) || filesize($file) === 0) {
         throw new RuntimeException('Missing offline compiled asset: ' . $font);
     }
 }
