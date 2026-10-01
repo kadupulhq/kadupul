@@ -11,7 +11,6 @@ use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Graphing\Application\Port\PaletteColorStore;
 use Kadupul\Graphing\Application\Port\PaletteColorAccess;
 use Kadupul\Graphing\Application\Query\PaletteColorAccessDenied;
-use Kadupul\Graphing\Application\Query\ListPaletteColors;
 use Kadupul\Graphing\Domain\PaletteColorFilters;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class LegacyPaletteColorsController
 {
     #[Route('/graphing/colors/legacy', name: 'palette_color_legacy', methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(Request $request, ConsoleAccess $console, PaletteColorAccess $access, PaletteColorStore $store, ListPaletteColors $list, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ConsoleAccess $console, PaletteColorAccess $access, PaletteColorStore $store, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $console->consoleActor();
@@ -64,6 +63,16 @@ final class LegacyPaletteColorsController
             if ($action !== '') {
                 throw new \InvalidArgumentException('Invalid color filters.');
             }
+            if (array_key_exists('clear', $query)) {
+                if ($query['clear'] !== '1') {
+                    throw new \InvalidArgumentException('Invalid color filters.');
+                }
+                return new RedirectResponse($urls->generate('palette_color_list', ['reset' => '1']), 302, $headers);
+            }
+            $context = array_intersect_key($query, array_flip(['filter', 'rows', 'page', 'sort_column', 'sort_direction', 'has_graphs', 'named']));
+            if ($context === []) {
+                return new RedirectResponse($urls->generate('palette_color_list'), 302, $headers);
+            }
             $rows = $store->defaultRows();
             $hasGraphs = $store->defaultHasGraphs();
             $filters = PaletteColorFilters::fromQuery([
@@ -75,7 +84,6 @@ final class LegacyPaletteColorsController
                 'named' => $query['named'] ?? 'true',
                 'has_graphs' => $query['has_graphs'] ?? ($hasGraphs ? 'true' : 'false'),
             ], $rows, $hasGraphs);
-            $list($filters);
             return new RedirectResponse($urls->generate('palette_color_list', $filters->query()), 302, $headers);
         } catch (PaletteColorAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'palette'), $error->unauthenticated ? 401 : 403, $headers);

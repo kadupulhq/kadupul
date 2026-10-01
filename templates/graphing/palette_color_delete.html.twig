@@ -9,7 +9,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <h1>{{ 'Delete Colors'|trans({}, 'palette') }}</h1>
     <p>{{ 'Click Continue to delete the following Colors.'|trans({}, 'palette') }}</p>
     <ul>
-        {% for preset in presets %}<li>{{ preset.name }}</li>{% endfor %}
+        {% for preset in presets %}<li>{{ preset.hex }}{% if preset.name|trim is not empty %} · {{ preset.name }}{% endif %}</li>{% endfor %}
     </ul>
     {% if used %}<p role="alert">{{ 'Colors in use by a graph or graph template cannot be deleted.'|trans({}, 'palette') }}</p>{% endif %}
     {{ form_start(form) }}

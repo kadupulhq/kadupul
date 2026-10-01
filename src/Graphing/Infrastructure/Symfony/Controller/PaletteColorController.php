@@ -8,6 +8,7 @@
 namespace Kadupul\Graphing\Infrastructure\Symfony\Controller;
 
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Graphing\Application\Port\PaletteColorStore;
 use Kadupul\Graphing\Application\Port\PaletteColorPreferences;
 use Kadupul\Graphing\Application\Port\PaletteColorAccess;
@@ -23,7 +24,7 @@ use Twig\Environment;
 final class PaletteColorController
 {
     #[Route('/graphing/colors', name: 'palette_color_list', methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, ConsoleAccess $console, PaletteColorAccess $access, PaletteColorStore $store, PaletteColorPreferences $preferences, ListPaletteColors $list, Environment $twig, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ConsoleAccess $console, PaletteColorAccess $access, PaletteColorStore $store, PaletteColorPreferences $preferences, LegacyConfiguration $configuration, ListPaletteColors $list, Environment $twig, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $console->consoleActor();
@@ -45,7 +46,8 @@ final class PaletteColorController
                 $query = $preferences->load() ?? [];
             }
             $filters = PaletteColorFilters::fromQuery($query, $store->defaultRows(), $store->defaultHasGraphs());
-            if ($request->query->has('reset') || array_intersect(array_keys($request->query->all()), ['filter', 'rows', 'page', 'sort_column', 'sort_direction', 'has_graphs', 'named']) !== []) {
+            if (($configuration->values()['collector_id'] ?? null) === 1
+                && ($request->query->has('reset') || array_intersect(array_keys($request->query->all()), ['filter', 'rows', 'page', 'sort_column', 'sort_direction', 'has_graphs', 'named']) !== [])) {
                 $preferences->save($filters->query());
             }
             $page = $list($filters);

@@ -53,6 +53,92 @@ final class PaletteColorReviewPresentationTest extends TestCase
         }
     }
 
+    public function testBareLegacyMenuRedirectDoesNotReadCatalogOrOverwriteRememberedFilters(): void
+    {
+        $kernel = $this->kernel();
+        try {
+            $container = $kernel->getContainer()->get('test.service_container');
+            $store = $this->createMock(PaletteColorStore::class);
+            foreach (['defaultRows', 'defaultHasGraphs', 'list'] as $method) $store->expects(self::never())->method($method);
+            $container->set(PaletteColorStore::class, $store);
+            $response = $kernel->handle(Request::create('/graphing/colors/legacy'));
+            self::assertSame(302, $response->getStatusCode());
+            self::assertSame('/graphing/colors', $response->headers->get('Location'));
+            $cleared = $kernel->handle(Request::create('/graphing/colors/legacy?clear=1&header=false'));
+            self::assertSame(302, $cleared->getStatusCode());
+            self::assertSame('/graphing/colors?reset=1', $cleared->headers->get('Location'));
+            self::assertSame(400, $kernel->handle(Request::create('/graphing/colors/legacy?clear[x]=1'))->getStatusCode());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testRemoteCollectorRendersExplicitFiltersWithoutWritingPrimaryPreferences(): void
+    {
+        $kernel = $this->kernel(collector: 2);
+        try {
+            $container = $kernel->getContainer()->get('test.service_container');
+            $store = $this->createMock(PaletteColorStore::class);
+            $store->method('defaultRows')->willReturn(25);
+            $store->method('defaultHasGraphs')->willReturn(false);
+            $store->expects(self::once())->method('list')->willReturnCallback(static function (PaletteColorFilters $filters): PaletteColorPage {
+                self::assertSame('remote', $filters->query()['filter']);
+                return new PaletteColorPage([], 0, $filters);
+            });
+            $container->set(PaletteColorStore::class, $store);
+            $preferences = $this->createMock(PaletteColorPreferences::class);
+            $preferences->expects(self::never())->method('save');
+            $container->set(PaletteColorPreferences::class, $preferences);
+            self::assertSame(200, $kernel->handle(Request::create('/graphing/colors?filter=remote&named=false'))->getStatusCode());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testDeleteGetFormCarriesOriginatingFiltersAsSuccessfulControls(): void
+    {
+        $kernel = $this->kernel();
+        try {
+            $container = $kernel->getContainer()->get('test.service_container');
+            $store = $this->createMock(PaletteColorStore::class);
+            $store->method('defaultRows')->willReturn(25);
+            $store->method('defaultHasGraphs')->willReturn(false);
+            $store->method('list')->willReturnCallback(static fn(PaletteColorFilters $filters): PaletteColorPage => new PaletteColorPage([new PaletteColor(7, 'same', '123', false)], 26, $filters));
+            $container->set(PaletteColorStore::class, $store);
+            $container->set(PaletteColorPreferences::class, $this->createMock(PaletteColorPreferences::class));
+            $filters = ['filter' => '東京 & x', 'rows' => '25', 'page' => '2', 'sort_column' => 'hex', 'sort_direction' => 'DESC', 'has_graphs' => 'false', 'named' => 'false'];
+            $response = $kernel->handle(Request::create('/graphing/colors?' . http_build_query($filters)));
+            self::assertSame(200, $response->getStatusCode());
+            $xpath = $this->xpath($response->getContent());
+            foreach ($filters as $key => $value) {
+                self::assertSame($value, $xpath->evaluate('string(//form[@aria-describedby="palette-selection-help"]/input[@type="hidden" and @name="' . $key . '"]/@value)'), $key);
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testDeletionConfirmationIdentifiesUnnamedAndDuplicateNamedColorsByHex(): void
+    {
+        $kernel = $this->kernel();
+        try {
+            $container = $kernel->getContainer()->get('test.service_container');
+            $store = $this->createMock(PaletteColorStore::class);
+            $store->method('findMany')->willReturn([new PaletteColor(7, '', '123', false), new PaletteColor(8, " \t", '456', false), new PaletteColor(9, 'same', '789', false), new PaletteColor(10, 'same', 'abc', false)]);
+            $container->set(PaletteColorStore::class, $store);
+            $response = $kernel->handle(Request::create('/graphing/colors/actions/delete?ids[]=7&ids[]=8&ids[]=9&ids[]=10'));
+            self::assertSame(200, $response->getStatusCode());
+            $xpath = $this->xpath($response->getContent());
+            foreach ([1 => '123', 2 => '456', 3 => '789', 4 => 'abc'] as $index => $hex) {
+                $text = $xpath->evaluate('string(//main/ul/li[' . $index . '])');
+                self::assertStringContainsString($hex, $text);
+                if ($index > 2) self::assertStringContainsString('same', $text);
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     public function testKnownDuplicateHexIsRenderedAsFrenchValidationWithSameOriginCsrf(): void
     {
         $kernel = $this->kernel(locale: 'fr');
@@ -112,7 +198,7 @@ final class PaletteColorReviewPresentationTest extends TestCase
         ];
     }
 
-    private function kernel(bool $allowed = true, string $locale = 'en'): Kernel
+    private function kernel(bool $allowed = true, string $locale = 'en', int $collector = 1): Kernel
     {
         $kernel = new Kernel('test', true);
         $kernel->boot();
@@ -123,7 +209,7 @@ final class PaletteColorReviewPresentationTest extends TestCase
         $database->method('get')->willReturn($pdo);
         $container->set(DatabaseConnection::class, $database);
         $configuration = $this->createMock(LegacyConfiguration::class);
-        $configuration->method('values')->willReturn(['forced_locale' => $locale]);
+        $configuration->method('values')->willReturn(['forced_locale' => $locale, 'collector_id' => $collector]);
         $container->set(LegacyConfiguration::class, $configuration);
         $actor = new Actor(42, 'console-only');
         $console = $this->createMock(ConsoleAccess::class);

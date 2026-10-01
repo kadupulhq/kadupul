@@ -217,7 +217,7 @@ def verify_palette_colors(h, s, uid, check):
     h.sql('INSERT INTO colors (name,hex,read_only) VALUES ' + ','.join(limit_values))
     limit_ids = [int(value) for value in h.sql(f"SELECT id FROM colors WHERE name LIKE '{limit_name}-%' ORDER BY id").split()]
     try:
-        limit_path = '/app.php/graphing/colors?' + urlencode({'filter': limit_name, 'rows': '5000'})
+        limit_path = '/app.php/graphing/colors?' + urlencode({'filter': limit_name, 'rows': '5000', 'named': 'false'})
         status, body, _ = fetch(limit_path)
         labels = PaletteLabels(); labels.feed(body)
         check(status == 200 and len(limit_ids) == 101 and len(labels.labels) == 101

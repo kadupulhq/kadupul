@@ -34,7 +34,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
     {% set selectionLimit = constant('Kadupul\\Graphing\\Application\\Port\\PaletteColorStore::MAX_DELETE_SELECTION') %}
     <p id="palette-selection-help">{{ 'Select up to %count% colors from the first %count% rows. Use %count% rows per page or search to select other colors.'|trans({'%count%': selectionLimit}, 'palette') }}</p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
-    <form method="get" action="{{ path('palette_color_delete', filters) }}" aria-describedby="palette-selection-help">
+    <form method="get" action="{{ path('palette_color_delete') }}" aria-describedby="palette-selection-help">
+        {% for key, value in filters %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
         <table>
             <caption>{{ 'Colors'|trans({}, 'palette') }}</caption>
             <thead><tr>
