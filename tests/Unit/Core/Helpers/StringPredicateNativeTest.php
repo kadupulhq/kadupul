@@ -42,6 +42,17 @@ test('native predicates preserve rendering redirects and resource replication', 
         $this->assertStringContainsString('semi-color', $result['regex']);
         $this->assertSame([false, 'Internal error', null], $result['runtime_regex_probe']);
         $this->assertSame('There was an internal error!', $result['runtime_regex']);
+        $this->assertSame([33439, bin2hex("\0\1\0cacti-monitoring-system\0"), 27], $result['native_udp']);
+        $this->assertSame(['0800', '0000', 31], $result['native_icmp']);
+        $this->assertSame('3b9d', $result['native_checksum']);
+        $this->assertSame([true, true, true, false], $result['native_addresses']);
+        $this->assertSame(['127.0.0.1', '::1', '::1'], $result['native_transports']);
+        $this->assertTrue($result['native_timer']);
+        $this->assertTrue($result['native_no_ping']);
+        $this->assertSame([false, false, false], $result['native_missing_target']);
+        $this->assertTrue($result['native_ping_error']);
+        $this->assertTrue($result['native_ping_handler']);
+        $this->assertSame(['ERROR', 'ERROR', 'ERROR'], $result['native_dns_rejections']);
         $this->assertStringContainsString('host.php?page=1', $result['pages'][0]);
         $this->assertStringContainsString('host.php?filter=x&amp;page=1', $result['pages'][1]);
         $this->assertSame(['`name`', 'name(10)', '`name`,value(10)'], $result['indexes']);

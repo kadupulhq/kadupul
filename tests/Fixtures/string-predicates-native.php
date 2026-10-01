@@ -70,6 +70,32 @@ $result['runtime_regex_probe'] = [@preg_match("'(*NO_JIT)(?R)'", ''), preg_last_
 define('IN_CACTI_INSTALL', true);
 error_clear_last();
 $result['runtime_regex'] = validate_is_regex('(*NO_JIT)(?R)');
+// Native complete networking modules; these admission/packet paths need no server.
+require $root . '/lib/ping.php';
+require $root . '/lib/api_automation.php';
+$ping = new Net_Ping();
+$ping->build_udp_packet();
+$result['native_udp'] = [$ping->port, bin2hex($ping->request), $ping->request_len];
+$ping->build_icmp_packet();
+$result['native_icmp'] = [substr(bin2hex($ping->request), 0, 4), bin2hex($ping->get_checksum($ping->request)), $ping->request_len];
+$result['native_checksum'] = bin2hex($ping->get_checksum("abc"));
+$result['native_addresses'] = array_map([$ping, 'is_ipaddress'], ['127.0.0.1', '::1', 'fe80::1%eth0', 'invalid']);
+$result['native_transports'] = array_map([$ping, 'strip_ip_address'], ['tcp:127.0.0.1', 'udp6:[::1]', '[::1]']);
+$ping->start_time();
+$result['native_timer'] = is_numeric($ping->get_time());
+$result['native_no_ping'] = $ping->ping(AVAIL_NONE);
+$ping->host = ['hostname' => ''];
+$result['native_missing_target'] = [$ping->ping_icmp(), $ping->ping_udp(), $ping->ping_tcp()];
+$result['native_ping_error'] = $ping->ping_error_handler(E_USER_WARNING, 'owned fixture warning', __FILE__, __LINE__);
+$ping->set_ping_error_handler();
+$installedHandler = set_error_handler(static fn() => false);
+$result['native_ping_handler'] = $installedHandler instanceof Closure
+    && (new ReflectionFunction($installedHandler))->getClosureThis() === $ping
+    && $installedHandler(E_USER_WARNING, 'owned fixture warning', __FILE__, __LINE__) === true;
+restore_error_handler();
+$ping->restore_cacti_error_handler();
+$result['native_dns_rejections'] = array_map(static fn($ip) => automation_get_dns_from_ip($ip, 'unused'), ['1.2.3', '1.2.3.', '1234.2.3.4']);
+
 $result['pages'] = [get_page_list(1, 3, 10, 30, 'host.php'), get_page_list(1, 3, 10, 30, 'host.php?filter=x')];
 $result['indexes'] = [db_format_index_create('name'), db_format_index_create('name(10)'), db_format_index_create(['name', 'value(10)'])];
 $result['quoted'] = [file_escaped('"plain"'), file_escaped('plain'), file_escaped('"plain')];
