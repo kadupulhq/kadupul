@@ -78,6 +78,22 @@ final class PermissionFilterRendererTest extends TestCase
         }
     }
 
+    public function testHostileFilterAndIdentifierRemainPlainFormValues(): void
+    {
+        $filter = "\"'><img src=x onerror=alert(1)>";
+        $result = $this->render(array('page' => 'user_admin.php', 'function' => 'graph', 'filter' => $filter, 'id' => '7\"><script>alert(1)</script>'));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($result['html'], LIBXML_NOERROR | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        self::assertCount(0, $xpath->query('//img'));
+        self::assertCount(1, $xpath->query('//script'));
+        self::assertSame($filter, $xpath->query('//input[@id="filter"]')->item(0)->getAttribute('value'));
+        self::assertSame('7', $xpath->query('//input[@name="id"]')->item(0)->getAttribute('value'));
+        self::assertCount(1, $xpath->query('//label[@for="filter"]'));
+        self::assertCount(1, $xpath->query('//label[@for="rows"]'));
+        self::assertCount(1, $xpath->query('//label[@for="graph_template_id"]'));
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
