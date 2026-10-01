@@ -322,6 +322,23 @@ final class AutomationModuleNativeTest extends TestCase
         return array(array('host'), array('graph'));
     }
 
+    /** @dataProvider templateRenderPaths */
+    public function testDatabaseTemplateRemainsSelected(string $mode): void
+    {
+        $state = $this->runNative(array('mode' => $mode, 'kind' => 'host', 'host_template_id' => 9, 'search' => '^host$', 'replace' => 'A\\nB', 'target' => 'host'));
+        $document = new DOMDocument();
+        @$document->loadHTML($state['html']);
+        $xpath = new DOMXPath($document);
+        self::assertSame(1, $xpath->query('//select[@id="host_template_id"]/option[@selected]')->length);
+        self::assertSame('9', $xpath->query('//select[@id="host_template_id"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertSame('Fixture template', $xpath->query('//select[@id="host_template_id"]/option[@selected]')->item(0)->textContent);
+    }
+
+    public static function templateRenderPaths(): array
+    {
+        return array(array('matches'), array('preview'));
+    }
+
     protected function runNative(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
