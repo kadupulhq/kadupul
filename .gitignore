@@ -138,6 +138,7 @@ notepad.md
 
 # Generated browser distributions.
 /include/fa/
+/public/assets/
 /include/js/purify.js
 /include/js/purify.js.map
 /include/js/d3.js
