@@ -31,7 +31,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
             'no delimiter' => array(array('search' => '^[~#%!@;`=/_' . chr(127) . ']+$', 'replace' => 'x', 'target' => 'y'), array(), 'no available delimiter'),
             'invalid' => array(array('search' => '(', 'replace' => 'x', 'target' => 'y'), array(), 'Internal error'),
             'limited' => array(array('search' => '^(a+)+$', 'replace' => 'matched', 'target' => str_repeat('a', 255) . '!'), array(), 'Backtrack limit exhausted'),
-            'split empty segments' => array(array('search' => '^host$', 'replace' => 'A\\n\\nB\\n', 'target' => 'host'), array('A','B'), ''),
+            'split empty segments' => array(array('search' => '^host$', 'replace' => 'A\\n\\nB\\n', 'target' => 'host'), array('A', 'B'), ''),
             'nonmatching' => array(array('search' => '^other$', 'replace' => 'x', 'target' => 'host'), array('host'), ''),
             'slash' => array(array('search' => 'eth(\\d+)/(\\d+)', 'replace' => 'Port$1-$2', 'target' => 'eth12/5'), array('Port12-5'), ''),
         );
@@ -60,7 +60,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
     public static function handoffs(): array
     {
         return array(
-            'nested' => array(array('search' => '^host$', 'replace' => 'A\\nB', 'target' => 'host'), array('A','B')),
+            'nested' => array(array('search' => '^host$', 'replace' => 'A\\nB', 'target' => 'host'), array('A', 'B')),
             'slash' => array(array('search' => 'eth(\\d+)/(\\d+)', 'replace' => 'Port$1-$2', 'target' => 'eth12/5'), array('Port12-5')),
             'invalid' => array(array('search' => '(', 'replace' => 'x', 'target' => 'y'), array()),
             'limited' => array(array('search' => '^(a+)+$', 'replace' => 'x', 'target' => str_repeat('a', 255) . '!'), array()),
@@ -103,7 +103,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
 
     public static function eligibility(): array
     {
-        return array('complete' => array('complete',true), 'graph required' => array('graph',false), 'data required' => array('data',false), 'input required' => array('input',false), 'optional input' => array('optional',true));
+        return array('complete' => array('complete', true), 'graph required' => array('graph', false), 'data required' => array('data', false), 'input required' => array('input', false), 'optional input' => array('optional', true));
     }
 
     /** @dataProvider leaves */
@@ -118,7 +118,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
 
     public static function leaves(): array
     {
-        return array('device' => array(3,array(3,4)), 'unchanged' => array(2,array(1,2,3,4)), 'graph' => array(1,array(1,2,3,4)));
+        return array('device' => array(3, array(3, 4)), 'unchanged' => array(2, array(1, 2, 3, 4)), 'graph' => array(1, array(1, 2, 3, 4)));
     }
 
     /** @dataProvider schedules */
@@ -135,9 +135,9 @@ final class AutomationTreeReplacementNativeTest extends TestCase
     public static function schedules(): array
     {
         $cases = array();
-        foreach (array(1,2,3,4,5) as $type) {
-            foreach (array(false,true) as $future) {
-                foreach (array(false,true) as $next) {
+        foreach (array(1, 2, 3, 4, 5) as $type) {
+            foreach (array(false, true) as $future) {
+                foreach (array(false, true) as $next) {
                     $cases[$type . '-' . (int) $future . '-' . (int) $next] = array(array('type' => $type, 'future' => $future, 'next' => $next), $type !== 1 && !$future);
                 }
             }
@@ -148,12 +148,12 @@ final class AutomationTreeReplacementNativeTest extends TestCase
     /** @dataProvider nodeKinds */
     public function testNativeNodeCallerPreservesOwnershipAndReusesExistingNode(string $kind, bool $reject): void
     {
-        $state = $this->runNative(array('mode' => 'node','kind' => $kind,'reject' => $reject));
+        $state = $this->runNative(array('mode' => 'node', 'kind' => $kind, 'reject' => $reject));
         self::assertCount(1, $state['contracts']['save']);
         $args = $state['contracts']['save'][0];
         self::assertSame(8, $args[1]);
         self::assertSame(77, $args[3]);
-        self::assertSame(7, $args[array('host' => 6,'site' => 7,'graph' => 5)[$kind]]);
+        self::assertSame(7, $args[array('host' => 6, 'site' => 7, 'graph' => 5)[$kind]]);
         self::assertSame(false, $args[10]);
         if ($reject) {
             self::assertSame(0, $state['result']);
@@ -168,7 +168,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
 
     public static function nodeKinds(): array
     {
-        return array(array('host',false),array('site',false),array('graph',false),array('host',true),array('site',true),array('graph',true));
+        return array(array('host', false), array('site', false), array('graph', false), array('host', true), array('site', true), array('graph', true));
     }
 
     /** @dataProvider devices */
@@ -184,18 +184,18 @@ final class AutomationTreeReplacementNativeTest extends TestCase
         self::assertSame($scenario['overrides'] ? 3 : 1, $args[24]);
         self::assertSame($scenario['overrides'] ? 4 : 2, $args[25]);
         self::assertSame($scenario['reject'] ? 0 : 17, $state['result']);
-        self::assertSame($scenario['reject'] ? array('192.0.2.7','192.0.2.8') : array('192.0.2.8'), $state['contracts']['queued']);
+        self::assertSame($scenario['reject'] ? array('192.0.2.7', '192.0.2.8') : array('192.0.2.8'), $state['contracts']['queued']);
     }
 
     public static function devices(): array
     {
-        return array(array(array('name' => 'System','hostname' => 'dns','overrides' => false,'reject' => false),'System'),array(array('name' => '','hostname' => 'dns','overrides' => true,'reject' => false),'dns'),array(array('name' => '','hostname' => '','overrides' => false,'reject' => true),'192.0.2.7'));
+        return array(array(array('name' => 'System', 'hostname' => 'dns', 'overrides' => false, 'reject' => false), 'System'), array(array('name' => '', 'hostname' => 'dns', 'overrides' => true, 'reject' => false), 'dns'), array(array('name' => '', 'hostname' => '', 'overrides' => false, 'reject' => true), '192.0.2.7'));
     }
 
     /** @dataProvider snmpCases */
     public function testNativeSnmpCredentialFallbackPreservesStatusAndClosesSuccessfulSession(string $case, bool $expected): void
     {
-        $state = $this->runNative(array('mode' => 'snmp','case' => $case));
+        $state = $this->runNative(array('mode' => 'snmp', 'case' => $case));
         self::assertSame($expected, $state['result']);
         self::assertSame($expected ? 3 : 1, $state['contracts']['device']['snmp_status']);
         if ($expected) {
@@ -208,23 +208,23 @@ final class AutomationTreeReplacementNativeTest extends TestCase
 
     public static function snmpCases(): array
     {
-        return array(array('valid',true),array('fallback',true),array('unknown',false),array('session-failed',false),array('empty',false));
+        return array(array('valid', true), array('fallback', true), array('unknown', false), array('session-failed', false), array('empty', false));
     }
 
     /** @dataProvider graphQueries */
     public function testNativeDataQueryCreatesOnlyMissingGraphsForSelectedDevice(string $case): void
     {
-        $state = $this->runNative(array('mode' => 'dq','case' => $case));
+        $state = $this->runNative(array('mode' => 'dq', 'case' => $case));
         if ($case === 'missing') {
             self::assertSame(false, $state['result']);
             self::assertStringContainsString('not found for the Device', $state['log']);
             self::assertArrayNotHasKey('created', $state['contracts']);
         } else {
             self::assertCount(1, $state['contracts']['created']);
-            self::assertSame(array(9,7), array_slice($state['contracts']['created'][0], 0, 2));
+            self::assertSame(array(9, 7), array_slice($state['contracts']['created'][0], 0, 2));
             self::assertSame('2', $state['contracts']['created'][0][2]['snmp_index']);
             if ($case === 'created') {
-                self::assertSame(array(array(7,201)), $state['contracts']['pushed']);
+                self::assertSame(array(array(7, 201)), $state['contracts']['pushed']);
                 self::assertStringContainsString('Graph Added', $state['log']);
             } else {
                 self::assertArrayNotHasKey('pushed', $state['contracts']);
@@ -235,7 +235,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
 
     public static function graphQueries(): array
     {
-        return array(array('created'),array('rejected'),array('empty'),array('missing'));
+        return array(array('created'), array('rejected'), array('empty'), array('missing'));
     }
 
     public function testNativeObjectPreviewRetainsRowFilterAndReportsUnavailableQuery(): void
@@ -252,7 +252,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
     /** @dataProvider editors */
     public function testNativeRuleEditorOffersFieldsForEachRuleType(int $type, int $leaf, string $title): void
     {
-        $state = $this->runNative(array('mode' => 'edit','type' => $type,'leaf' => $leaf));
+        $state = $this->runNative(array('mode' => 'edit', 'type' => $type, 'leaf' => $leaf));
         self::assertStringContainsString($title, $state['html']);
         self::assertStringContainsString('form_automation_global_item_edit', $state['html']);
         self::assertStringNotContainsString('Warning:', $state['html']);
@@ -263,13 +263,13 @@ final class AutomationTreeReplacementNativeTest extends TestCase
 
     public static function editors(): array
     {
-        return array(array(1,3,'Device Match Rule'),array(2,3,'Create Graph Rule'),array(3,3,'Device Match Rule'),array(3,2,'Graph Match Rule'),array(4,3,'Create Tree Rule (Device)'),array(4,2,'Create Tree Rule (Graph)'));
+        return array(array(1, 3, 'Device Match Rule'), array(2, 3, 'Create Graph Rule'), array(3, 3, 'Device Match Rule'), array(3, 2, 'Graph Match Rule'), array(4, 3, 'Create Tree Rule (Device)'), array(4, 2, 'Create Tree Rule (Graph)'));
     }
 
     /** @dataProvider matchingLists */
     public function testNativeMatchingListPreservesSelectedRowsAndObjectIdentity(string $kind): void
     {
-        $state = $this->runNative(array('mode' => 'matches','kind' => $kind));
+        $state = $this->runNative(array('mode' => 'matches', 'kind' => $kind));
         $document = new DOMDocument();
         @$document->loadHTML($state['html']);
         $xpath = new DOMXPath($document);
@@ -283,7 +283,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
 
     public static function matchingLists(): array
     {
-        return array(array('host'),array('graph'));
+        return array(array('host'), array('graph'));
     }
 
     protected function runNative(array $scenario): array
@@ -299,7 +299,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
                 $command[] = $directory;
             }
             $environment = getenv();
-            $process = proc_open($command, array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, $directory, $environment);
+            $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
             self::assertIsResource($process);
             $stdout = stream_get_contents($pipes[1]);
             $stderr = stream_get_contents($pipes[2]);
