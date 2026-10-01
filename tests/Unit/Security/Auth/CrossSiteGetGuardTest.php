@@ -13,7 +13,6 @@ require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 function cross_site_guard_run(string $method, string $query, array $headers = array()): array
 {
     $root = dirname(__DIR__, 4);
-    $global = file_get_contents($root . '/include/global.php');
 
     $program = <<<'PHP'
 $config = array('include_path' => $argv[1] . '/include', 'is_web' => false);
@@ -45,12 +44,80 @@ PHP;
     proc_close($process);
     child_coverage_collect($coverage_dir);
 
-    return array('stdout' => $stdout, 'stderr' => $stderr, 'global_calls_guard' => str_contains($global, 'csrf_refuse_cross_site_actions();'));
+    return array('stdout' => $stdout, 'stderr' => $stderr);
 }
 
-test('include/global.php runs the guard for every web request', function () {
-    expect(cross_site_guard_run('GET', '')['global_calls_guard'])->toBeTrue();
-});
+function cross_site_bootstrap_run(array $headers, string $query): array
+{
+    $root = dirname(__DIR__, 4);
+    $directory = sys_get_temp_dir() . '/cross-site-bootstrap-' . bin2hex(random_bytes(8));
+    mkdir($directory . '/include/vendor', 0700, true);
+    mkdir($directory . '/lib', 0700);
+    mkdir($directory . '/log', 0700);
+    try {
+        foreach (array('global.php', 'runtime.php', 'cacti_version') as $file) {
+            copy($root . '/include/' . $file, $directory . '/include/' . $file);
+        }
+        file_put_contents($directory . '/include/config.php', '<?php $url_path = "/";');
+        foreach (array('functions', 'headers_secure', 'html', 'html_utility', 'html_validate') as $module) {
+            file_put_contents($directory . '/lib/' . $module . '.php', '<?php require ' . var_export($root . '/lib/' . $module . '.php', true) . ';');
+        }
+        file_put_contents($directory . '/lib/database.php', '<?php require ' . var_export($root . '/tests/Fixtures/force-https-native-database.php', true) . ';');
+        foreach (array('auth', 'html_form', 'html_filter', 'variables', 'mib_cache', 'poller', 'snmpagent', 'aggregate', 'api_automation') as $module) {
+            file_put_contents($directory . '/lib/' . $module . '.php', '<?php');
+        }
+        file_put_contents($directory . '/lib/plugins.php', '<?php function api_plugin_hook($name) {}');
+        foreach (array('global_languages', 'plugins', 'global_arrays', 'global_settings', 'global_form') as $module) {
+            file_put_contents($directory . '/include/' . $module . '.php', '<?php');
+        }
+        file_put_contents($directory . '/include/global_constants.php', '<?php require ' . var_export($root . '/include/global_constants.php', true) . ';');
+        file_put_contents($directory . '/include/vendor/autoload.php', '<?php');
+        // The actual CSRF implementation and its dependencies are retained.
+        symlink($root . '/include/vendor/csrf', $directory . '/include/vendor/csrf');
+        file_put_contents($directory . '/include/csrf.php', '<?php require ' . var_export($root . '/include/csrf.php', true) . ';');
+        $program = <<<'PHP'
+$scenario = array('force' => '');
+define('IN_CACTI_INSTALL', true);
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['SERVER_NAME'] = 'kadupul.example.com';
+$_SERVER['HTTP_HOST'] = 'kadupul.example.com';
+$_SERVER['SCRIPT_NAME'] = '/host.php';
+$_SERVER['REQUEST_URI'] = '/host.php?' . $argv[2];
+$_SERVER['REMOTE_ADDR'] = '192.0.2.20';
+$_SERVER += json_decode($argv[3], true);
+parse_str($argv[2], $_GET);
+$_REQUEST = $_GET;
+register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
+require $argv[1] . '/include/global.php';
+echo 'DISPATCHED:';
+PHP;
+        $worker = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'session.save_path=' . $directory, '-r', $program, $directory, $query, json_encode($headers)), $coverage_dir), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        proc_close($worker);
+        child_coverage_collect($coverage_dir);
+        return array('stdout' => $output, 'stderr' => $error);
+    } finally {
+        unlink($directory . '/include/vendor/csrf');
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($files as $file) {
+            $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
+        }
+        rmdir($directory);
+    }
+}
+
+test('actual global bootstrap guards mutations before dispatch while permitting listings and same-origin actions', function (array $headers, string $query, string $expected) {
+    $result = cross_site_bootstrap_run($headers, $query);
+    expect($result['stderr'])->toBe('')->and($result['stdout'])->toBe($expected);
+})->with(array(
+    'cross-site mutation' => array(array('HTTP_SEC_FETCH_SITE' => 'cross-site'), 'action=lock&id=1', 'STATUS:405'),
+    'foreign origin mutation' => array(array('HTTP_ORIGIN' => 'https://other.example'), 'action=lock&id=1', 'STATUS:405'),
+    'cross-site listing' => array(array('HTTP_SEC_FETCH_SITE' => 'cross-site'), '', 'DISPATCHED:STATUS:200'),
+    'same-origin mutation' => array(array('HTTP_SEC_FETCH_SITE' => 'same-origin'), 'action=lock&id=1', 'DISPATCHED:STATUS:200'),
+));
 
 test('a cross-site GET cannot run a state-changing action', function (string $query, array $headers) {
     $result = cross_site_guard_run('GET', $query, $headers);
