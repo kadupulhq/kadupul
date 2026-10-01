@@ -1,0 +1,17 @@
+{
+    "session": {
+        "form_change_actions": {
+            "auto_scale_log": "changeScaleLog()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "auto_scale_log",
+        "graph_templates",
+        "scale_log_units",
+        "t_scale_log_units"
+    ],
+    "script_names": []
+}
