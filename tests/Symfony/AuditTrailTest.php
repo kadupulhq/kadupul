@@ -103,9 +103,29 @@ final class AuditTrailTest extends TestCase
                 $root = sys_get_temp_dir() . '/kadupul-private-' . bin2hex(random_bytes(8));
                 mkdir($root . '/log', 0700, true);
                 try {
-                    $probe = new Process([PHP_BINARY, __DIR__ . '/audit_creation_probe.php', $root, $mask, $scenario]);
+                    $coverage = \PHPUnit\Runner\CodeCoverage::instance()->isActive()
+                        ? \PHPUnit\Runner\CodeCoverage::instance()->codeCoverage() : null;
+                    $source = (new \ReflectionClass(LegacyAuditTrail::class))->getFileName();
+                    $hash = hash_file('sha256', $source);
+                    $command = [PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/'];
+                    if ($coverage !== null) {
+                        file_put_contents($root . '/coverage.php', '<?php define("AUDIT_TRAIL_TEST_COVERAGE", true); define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require '
+                            . var_export(dirname(__DIR__) . '/Fixtures/rrd-process-coverage.php', true) . ';');
+                        $command[] = '-d';
+                        $command[] = 'auto_prepend_file=' . $root . '/coverage.php';
+                    }
+                    $probe = new Process(array_merge($command, [__DIR__ . '/audit_creation_probe.php', $root, $mask, $scenario]));
                     $probe->mustRun();
                     $result = json_decode($probe->getOutput(), true, 8, JSON_THROW_ON_ERROR);
+                    if ($coverage !== null) {
+                        $reports = glob($root . '/*.coverage');
+                        self::assertCount(1, $reports);
+                        $child = unserialize(file_get_contents($reports[0]));
+                        self::assertInstanceOf(\SebastianBergmann\CodeCoverage\CodeCoverage::class, $child);
+                        self::assertArrayHasKey($source, $child->getData()->lineCoverage());
+                        self::assertSame($hash, hash_file('sha256', $source));
+                        $coverage->merge($child);
+                    }
                     self::assertSame([], $result['violations']);
                     self::assertSame((int) $mask, $result['mask']);
                     self::assertSame([], glob($root . '/log/.kadupul-audit-*'));
@@ -122,6 +142,9 @@ final class AuditTrailTest extends TestCase
                         unlink($file);
                     }
                     rmdir($root . '/log');
+                    foreach (glob($root . '/*') as $file) {
+                        unlink($file);
+                    }
                     rmdir($root);
                 }
             }
