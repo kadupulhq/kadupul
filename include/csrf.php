@@ -214,24 +214,27 @@ function cacti_csrf_external_path_is_safe($path)
         return false;
     }
 
-    $base_path = realpath($config['base_path']);
+    $roots = array($config['base_path']);
+    if (!empty($_SERVER['DOCUMENT_ROOT'])) {
+        $roots[] = $_SERVER['DOCUMENT_ROOT'];
+    }
+
     $secret_dir = realpath(dirname($path));
-
-    if ($base_path === false || $secret_dir === false) {
+    $secret_path = file_exists($path) ? realpath($path) : null;
+    if ($secret_dir === false || $secret_path === false) {
         return false;
     }
 
-    $base_prefix = rtrim(str_replace('\\', '/', $base_path), '/') . '/';
     $secret_prefix = rtrim(str_replace('\\', '/', $secret_dir), '/') . '/';
+    foreach ($roots as $root) {
+        $served_root = realpath($root);
+        if ($served_root === false) {
+            return false;
+        }
 
-    if (stripos($secret_prefix, $base_prefix) === 0) {
-        return false;
-    }
-
-    if (file_exists($path)) {
-        $secret_path = realpath($path);
-
-        if ($secret_path === false || stripos(str_replace('\\', '/', $secret_path), $base_prefix) === 0) {
+        $served_prefix = rtrim(str_replace('\\', '/', $served_root), '/') . '/';
+        if (stripos($secret_prefix, $served_prefix) === 0
+            || ($secret_path !== null && stripos(str_replace('\\', '/', $secret_path), $served_prefix) === 0)) {
             return false;
         }
     }

@@ -270,7 +270,7 @@ dynamic_include	./color_templates.php:469		include_once($config['base_path'] . '
 dynamic_include	./graph_realtime.php:388	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:140	                require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:207	            require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/csrf.php:390	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
+dynamic_include	./include/csrf.php:393	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/csrf.php:44	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/global.php:266	include_once($config['library_path'] . '/database.php');
 dynamic_include	./include/global.php:267	include_once($config['library_path'] . '/functions.php');

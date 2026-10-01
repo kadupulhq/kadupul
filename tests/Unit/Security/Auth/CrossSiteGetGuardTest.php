@@ -72,7 +72,7 @@ test('a state-changing action by a method other than GET or POST is refused', fu
     expect(cross_site_guard_run($method, 'action=remove&id=4')['stdout'])->toBe('405');
 })->with(array('HEAD', 'PUT', 'DELETE'));
 
-test('same-site and header-less GET requests still reach the page', function (string $query, array $headers) {
+test('same-origin and header-less GET requests still reach the page', function (string $query, array $headers) {
     $result = cross_site_guard_run('GET', $query, $headers);
 
     expect($result['stderr'])->toBe('')
