@@ -58,9 +58,12 @@ function db_fetch_row(...$args) { handler_reached(); }
 function db_fetch_row_prepared(...$args) { handler_reached(); }
 function db_fetch_assoc(...$args) { handler_reached(); }
 function db_fetch_assoc_prepared(...$args) { handler_reached(); }
+function db_column_exists(...$args) { handler_reached(); }
 function raise_message(...$args) { handler_reached(); }
-// include/global.php loads lib/snmpagent.php; color.php calls color_remove()
-// although no file defines it.
+// include/global.php loads lib/functions.php and lib/snmpagent.php; color.php
+// calls color_remove() although no file defines it.
+function enable_device_debug($host_id) { handler_reached(); }
+function disable_device_debug($host_id) { handler_reached(); }
 function snmpagent_cache_rebuilt() { handler_reached(); }
 function color_remove() { handler_reached(); }
 session_id('item-csrf-test');
@@ -174,6 +177,12 @@ function itemActionCases()
         array('host.php', 'gt_remove', array('host_id' => '1')),
         array('host.php', 'query_add', array('host_id' => '1', 'reindex_method' => '1')),
         array('host.php', 'query_remove', array('host_id' => '1')),
+        array('host.php', 'query_change', array('host_id' => '1', 'data_query_id' => '1', 'reindex_method' => '1')),
+        array('host.php', 'query_reload', array('host_id' => '1')),
+        array('host.php', 'query_verbose', array('host_id' => '1')),
+        array('host.php', 'enable_debug', array('host_id' => '1')),
+        array('host.php', 'disable_debug', array('host_id' => '1')),
+        array('host.php', 'repopulate', array('host_id' => '1')),
         array('tree.php', 'sortasc', array()),
         array('tree.php', 'sortdesc', array()),
         array('tree.php', 'copy_node', array('tree_id' => '1', 'id' => 'tbranch:2', 'parent' => 'tbranch:1', 'position' => '0')),
@@ -183,6 +192,9 @@ function itemActionCases()
         array('tree.php', 'rename_node', array('tree_id' => '1', 'id' => 'tbranch:2', 'text' => 'Renamed')),
         array('tree.php', 'set_host_sort', array('nodeid' => 'tbranch:1', 'type' => 'hsgt')),
         array('tree.php', 'set_branch_sort', array('nodeid' => 'tbranch:1', 'type' => '1')),
+        array('tree.php', 'lock', array()),
+        array('tree.php', 'unlock', array()),
+        array('tree.php', 'ajax_dnd', array('tree_ids' => array('line1', 'line2'))),
         array('automation_graph_rules.php', 'remove', array()),
         array('automation_tree_rules.php', 'remove', array()),
         array('data_sources.php', 'ds_enable', array()),
@@ -263,7 +275,15 @@ test('pages send the device, tree, rule, data source and utility actions by POST
     foreach (array('query_add', 'gt_add', 'query_remove', 'gt_remove') as $action) {
         expect($source('host.php'))->toMatch("/\\$\\.post\\('host\\.php\\?action=$action', \\{" . $token . '/');
     }
-    expect($source('host.php'))->not->toMatch('/hostPageLoad\\([^)]*(?:query|gt)_remove|action=(?:query|gt)_remove&/');
+    expect($source('host.php'))->toMatch("/\\$\\.post\\('host\\.php\\?action=query_reload', \\{" . $token . '/')
+        ->toMatch("/loadPageUsingPost\\('host\\.php\\?action=query_verbose', \\{" . $token . '/')
+        ->toMatch("/loadPageUsingPost\\(urlPath\\+'host\\.php\\?action=query_change', \\{" . $token . '/')
+        ->not->toContain('hostPageLoad')
+        ->not->toMatch('/strURL[^;]*action=(?:gt|query)_/');
+    foreach (array('enable_debug', 'disable_debug', 'repopulate') as $action) {
+        expect($source('host.php'))->toMatch("/class='hyperLink cactiPostAction' href='#' data-url='\" \\. html_escape\\('host\\.php\\?action=$action&/");
+    }
+    expect($source('graphs_new.php'))->toMatch("/class='cactiPostAction' href='#' data-url='\" \\. html_escape\\('host\\.php\\?action=query_verbose&/");
 
     foreach (array('copy_node', 'create_node', 'delete_node', 'move_node', 'rename_node') as $action) {
         expect($source('tree.php'))->toMatch("/\\$\\.post\\('\\?action=$action', \\{" . $token . '/');
@@ -275,8 +295,12 @@ test('pages send the device, tree, rule, data source and utility actions by POST
         expect($source('tree.php'))->toMatch("/loadPage\\('tree\\.php\\?action=$action', false, true\\)/")
             ->toMatch("/'href'\\s+=> 'tree\\.php\\?action=$action',\\s+'post'\\s+=> true,/");
     }
-    expect($source('tree.php'))->not->toMatch('/\\$\\.get\\([^)]*action=(?:\\w+_node|set_\\w+_sort|sort(?:asc|desc))/')
-        ->not->toMatch('/loadPageNoHeader\\([^)]*action=sort/');
+    expect($source('tree.php'))->toMatch("/strURL = 'tree\\.php\\?action=lock&[^\\n]*\\n\\s+loadTreeEdit\\(strURL\\);/")
+        ->toMatch("/strURL = 'tree\\.php\\?action=unlock&[^\\n]*\\n\\s+loadTreeEdit\\(strURL\\);/")
+        ->toMatch("/function loadTreeEdit\\(url\\) \\{[^}]*\\$\\.post\\(url, \\{ __csrf_magic: csrfMagicToken \\}\\)/")
+        ->toMatch("/loadPageUsingPost\\('tree\\.php\\?action=ajax_dnd', [^;]*__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)/");
+    expect($source('tree.php'))->not->toMatch('/\\$\\.get\\([^)]*action=(?:\\w+_node|set_\\w+_sort|sort(?:asc|desc)|lock|unlock|ajax_dnd)/')
+        ->not->toMatch('/loadPageNoHeader\\([^)]*action=(?:sort|ajax_dnd)/');
 
     expect($source('lib/html.php'))->toMatch('/\\$classo \\.= \' cactiPostAction\';\\s+\\$post\\s+= " data-url=\'\\$href\'";/');
     expect($source('lib/html_form.php'))->toMatch('/class=\'[^\']*cactiPostAction\' data-url=\'<\\?php print html_escape\\(\\$config\\[\'url_path\'\\] \\. \\$action_url \\. \'&confirm=true\'\\)/');

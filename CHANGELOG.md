@@ -138,6 +138,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Require a POST with a CSRF token to add or remove device graph templates and data queries, to create, rename, copy, move or delete tree branches, set their sort order, or sort the tree list, to delete automation rules and data input fields, to enable or disable a data source, to remove a color, and to rebuild the poller, resource and SNMP agent caches, purge data source statistics, or clear or purge the Kadupul and user logs. The pages that offer these actions now post them with the token.
 
+- Require a POST with a CSRF token to lock or unlock a tree for editing, reorder trees by drag and drop, change, reload or verbosely re-run a device data query, turn device debugging on or off, and repopulate a device's poller cache. The tree, device and new graph pages now post these actions with the token.
+
 ### Changed
 
 - Serve legacy stylesheets and scripts from `public/assets/` with digested file names once `php bin/console asset-map:compile` has run, using Symfony AssetMapper 7.4. Theme `url()` and `@import` references are rewritten to the digested copies, so Midwinter no longer keeps hand-maintained import hashes and `update_hash.php` is gone. Without a compiled manifest, and for `custom.css`, plugins and the flag-icons stylesheet, pages keep the `?md5` URLs. Docker images and offline bundles ship the compiled files; source installations must rerun the compile after each upgrade.

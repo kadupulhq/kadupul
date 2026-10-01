@@ -9,7 +9,8 @@ include('./include/auth.php');
 
 cacti_require_post_actions(array(
     'actions', 'tree_up', 'tree_down', 'sortasc', 'sortdesc', 'copy_node', 'create_node',
-    'delete_node', 'move_node', 'rename_node', 'set_host_sort', 'set_branch_sort'
+    'delete_node', 'move_node', 'rename_node', 'set_host_sort', 'set_branch_sort', 'lock', 'unlock',
+    'ajax_dnd'
 ));
 include_once('./lib/api_tree.php');
 include_once('./lib/html_tree.php');
@@ -2429,7 +2430,7 @@ function tree()
 
 			$('#tree_ids').tableDnD({
 				onDrop: function(table, row) {
-					loadPageNoHeader('tree.php?action=ajax_dnd&'+$.tableDnD.serialize());
+					loadPageUsingPost('tree.php?action=ajax_dnd', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
 				}
 			});
 			<?php } ?>
