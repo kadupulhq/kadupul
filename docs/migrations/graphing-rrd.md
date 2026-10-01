@@ -72,8 +72,8 @@ second implementation or a module boundary needs one.
 | R4: DBAL reader for Symfony routes | Planned; legacy pages only if the timing gate allows |
 | R5: window, archive choice and graph options from the definition, request and context | Planned |
 | R6: `GraphCommandBuilder` for `DEF`, `CDEF`, `VDEF`, legend, items and export columns | Planned |
-| R7: `RenderGraph`, explicit authorization subject, IdentityAccess `GraphAccess` and its legacy adapter, `RrdTransport` and the plugin hook adapter | Planned |
-| R8: image cache and pending Boost samples as ports, keeping PR #705 | Planned |
+| R7: `RenderGraph`, explicit user/trusted-legacy authorization subject, IdentityAccess `GraphAccess` and its legacy adapter, `RrdTransport`, the mode-guarded plugin hook adapter, and initial image-cache/pending-samples ports and legacy Boost adapters | Planned |
+| R8: unify cache naming, eligibility, reading and writing in R7's adapters, keeping PR #705; refine failure handling and performance | Planned |
 | R9: `graph_image.php` and `graph_json.php` as thin adapters | Planned; after PR #661 |
 | R10: Symfony graph routes with a voter reusing R7's access contract | Planned |
 | R11: template propagation services | Planned; after characterization |
@@ -198,7 +198,10 @@ reads the graph, builds the command and runs it in one function
   the context and the facts to an `RrdCommand`.
 - `RenderGraph` receives an explicit authorization subject and asks R7's
   IdentityAccess `GraphAccess` contract before the cache, the builder, the
-  `rrd_graph_graph_options` hook and the transport in today's order.
+  mode-guarded `rrd_graph_graph_options` hook and the transport in today's order.
+  The wrapper's trusted nonpositive user argument maps to an explicit legacy
+  bypass; request adapters accept positive identities only. CSV skips the hook
+  and business hours, as it does today.
 
 The hook receives and returns three strings that plugins parse, so through 1.3
 an adapter renders the command into those strings exactly as today. Post-hook
@@ -212,7 +215,7 @@ evidence, the order of the moves and the callers outside `lib/`.
 
 ## RenderContext
 
-A render reads viewer and site state from 44 places: session values, cookies,
+A render reads viewer and site state from 46 places: session values, cookies,
 environment variables, globals and settings, listed with their lines in
 [Graph rendering pipeline](graphing-render-pipeline.md#inputs-read-today).
 `RenderContext` gathers them once per request: theme and palette, colour mode,
@@ -220,7 +223,9 @@ the `GraphFontProfile` from PR #710, time zone, date format, locale, and site
 graph settings such as the watermark and business hours. `GraphRequest` holds
 what the caller asks for: graph, archive, window, size, thumbnail, output
 format and mode. The legacy factory reads the session and cookies; nothing
-inside the pipeline does.
+inside the pipeline does. The factory applies the browser zone only when both
+site and user `client_timezone_support` settings permit it; otherwise it keeps
+the existing PHP zone and `TZ`.
 
 The Boost cache key becomes the hash of the context plus the request, which
 covers every input PR #705 keys by. The graph tables carry no revision, so a
