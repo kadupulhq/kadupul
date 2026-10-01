@@ -189,6 +189,40 @@ final class DataInputPresentationTest extends TestCase
         yield ['whitelist', true, 'Whitelist verification or collector propagation is incomplete.'];
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('frenchHandoffResults')]
+    public function testFrenchHandoffResultsUseTranslatedOperationMessages(string $operation, bool $partial, string $message): void
+    {
+        [$kernel, $container] = $this->authorizedKernel();
+        try {
+            $locale = $this->createMock(LocalePreference::class);
+            $locale->method('preferredLocale')->willReturn('fr');
+            $container->set(LocalePreference::class, $locale);
+            $config = $this->createMock(LegacyConfiguration::class);
+            $config->method('values')->willReturn(['forced_locale' => 'fr']);
+            $container->set(LegacyConfiguration::class, $config);
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->expects(self::once())->method('execute')->with(9, 'find', 3, [])->willReturn(['method' => ['id' => 3, 'name' => 'Fixture', 'type_id' => 1, 'input_string' => '/usr/bin/printf 1'], 'fields' => [], 'counts' => ['templates' => 0, 'data_sources' => 0], 'revision' => str_repeat('a', 64), 'whitelist' => 'requires_update']);
+            $container->set(DataInputGateway::class, $gateway);
+            $response = $kernel->handle(Request::create('/data-inputs/3/edit?' . http_build_query(['operation' => $operation, 'saved' => $partial ? 'partial' : '1']), 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $response->getStatusCode());
+            self::assertStringContainsString('<html lang="fr">', $response->getContent());
+            self::assertStringContainsString($message, $response->getContent());
+            self::assertStringNotContainsString('Collector propagation', $response->getContent());
+            self::assertStringNotContainsString('Whitelist verification', $response->getContent());
+            self::assertSame($partial, str_contains($response->getContent(), 'role="alert"'));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public static function frenchHandoffResults(): iterable
+    {
+        yield ['propagate', false, 'Propagation aux collecteurs terminée.'];
+        yield ['propagate', true, 'La propagation aux collecteurs est incomplète.'];
+        yield ['whitelist', false, 'Vérification de la liste blanche et propagation aux collecteurs terminées.'];
+        yield ['whitelist', true, 'La vérification de la liste blanche ou la propagation aux collecteurs est incomplète.'];
+    }
+
     private function authorizedKernel(): array
     {
         $kernel = new Kernel('test', true);

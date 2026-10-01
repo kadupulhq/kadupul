@@ -91,3 +91,7 @@
 "Unexpected fields were submitted.": "Unexpected fields were submitted."
 "Default": "Default"
 "Retry propagation for input %id%": "Retry propagation for input %id%"
+"Collector propagation completed.": "Collector propagation completed."
+"Collector propagation is incomplete. Retry propagation; remote collectors may need a FullSync.": "Collector propagation is incomplete. Retry propagation; remote collectors may need a FullSync."
+"Whitelist verification and collector propagation completed.": "Whitelist verification and collector propagation completed."
+"Whitelist verification or collector propagation is incomplete. Retry the whitelist update; remote collectors may need a FullSync.": "Whitelist verification or collector propagation is incomplete. Retry the whitelist update; remote collectors may need a FullSync."
