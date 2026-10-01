@@ -421,7 +421,10 @@ function is_remote_path_setting($config_name)
  * @param $value       - the values to be saved
  * @param $remote      - push the setting to the remote with the exception of path variables
  *
- * @return (void)
+ * @return (bool) True when the local write and every requested eligible collector
+ *   write succeed; false for a local write failure, skipped collector heartbeat,
+ *   collector connection failure, or collector write failure. Local persistence
+ *   may already have succeeded when collector propagation fails.
  */
 function set_config_option($config_name, $value, $remote = false)
 {
