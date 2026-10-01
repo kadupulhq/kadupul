@@ -257,3 +257,37 @@ test('spike removal menu items keep caller values inside their attributes', func
     expect($xpath->query('//li//i')->item(0)->getAttribute('class'))->toBe(decoded('fa fa-check' . $payload));
     expect($xpath->query('//span[@class="spikeKillMenuItem"]')->item(0)->textContent)->toBe('Remove');
 })->with(PAYLOADS);
+
+test('section headers render array and scalar labels as text', function ($payload) {
+    $html = render(
+        'print "<table>";'
+        . 'html_section_header(array("display" => "Array " . $a["p"], "align" => "left"), 2);'
+        . 'html_section_header("Scalar " . $a["p"], 3);'
+        . 'print "</table>";',
+        array('p' => $payload),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+    expectNoInjection($xpath);
+    $headers = $xpath->query('//th');
+    expect($headers->length)->toBe(2);
+    expect($headers->item(0)->textContent)->toBe(decoded('Array ' . $payload));
+    expect($headers->item(1)->textContent)->toBe(decoded('Scalar ' . $payload));
+    expect($headers->item(0)->getAttribute('colspan'))->toBe('2');
+    expect($headers->item(1)->getAttribute('colspan'))->toBe('3');
+})->with(PAYLOADS);
+
+test('spike menu labels stay text while nested menu markup remains functional', function ($payload) {
+    $html = render(
+        '$child = html_spikekill_menu_item("Child &amp; label", "fa fa-check", "child", "child");'
+        . 'print html_spikekill_menu_item("Parent " . $a["p"], "fa fa-cog", "parent", "parent", "", $child);',
+        array('p' => $payload),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+    expectNoInjection($xpath);
+    expect($xpath->query('//li[@id="parent"]/span')->item(0)->textContent)->toBe(decoded('Parent ' . $payload));
+    expect($xpath->query('//li[@id="parent"]/ul/li[@id="child"]')->length)->toBe(1);
+    expect($xpath->query('//li[@id="child"]/span')->item(0)->textContent)->toBe('Child & label');
+    expect($xpath->query('//li[@id="child"]/span/i')->item(0)->getAttribute('class'))->toBe('fa fa-check');
+})->with(PAYLOADS);

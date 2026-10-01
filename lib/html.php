@@ -1094,9 +1094,9 @@ function html_section_header($header_item, $last_item_colspan = 1)
     $colspan = html_escape($last_item_colspan);
 
     if (is_array($header_item) && isset($header_item['display'])) {
-        print "<th " . (isset($header_item['align']) ? "style='text-align:" . html_escape($header_item['align']) . ";'" : "") . " colspan='$colspan'>" . $header_item['display'] . '</th>';
+        print "<th " . (isset($header_item['align']) ? "style='text-align:" . html_escape($header_item['align']) . ";'" : "") . " colspan='$colspan'>" . html_escape($header_item['display']) . '</th>';
     } else {
-        print "<th colspan='$colspan'>" . $header_item . '</th>';
+        print "<th colspan='$colspan'>" . html_escape($header_item) . '</th>';
     }
 
     print '</tr>';
@@ -2451,7 +2451,7 @@ function html_spikekill_menu_item($text, $icon = '', $class = '', $id = '', $dat
         $output .= "<i class='" . html_escape($icon) . "'></i>";
     }
 
-    $output .= "$text</span>";
+    $output .= html_escape($text) . '</span>';
 
     if (!empty($subitem)) {
         $output .= "<ul>$subitem</ul>";
