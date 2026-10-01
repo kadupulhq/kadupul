@@ -116,6 +116,7 @@ function pageDom({ submitter = true } = {}) {
   }
   return {
     Element,
+    listeners,
     load: () => load(scope),
     form: (attributes, controls = []) => {
       const form = new Element('form', { method: 'post', ...attributes });
@@ -128,6 +129,13 @@ function pageDom({ submitter = true } = {}) {
     submit(form, button = null) {
       for (const [type, listener] of listeners) {
         if (type === 'submit') listener({ target: form, submitter: button });
+      }
+      return nodes.some(node => node.form === form && attribute(node, 'name') === field && !node.disabled);
+    },
+    // A submit event from a browser without SubmitEvent.submitter.
+    submitUnknown(form) {
+      for (const [type, listener] of listeners) {
+        if (type === 'submit') listener({ target: form });
       }
       return nodes.some(node => node.form === form && attribute(node, 'name') === field && !node.disabled);
     },
@@ -182,6 +190,46 @@ test('without SubmitEvent.submitter a form with a cross-origin formaction gets n
   dom.load().CsrfMagic.end();
   assert.equal(dom.submit(form), false);
   assert.equal(dom.submit(other), true);
+});
+
+test('without SubmitEvent.submitter a server-rendered token is withheld from a form with a cross-origin formaction', () => {
+  const dom = pageDom({ submitter: false });
+  const rendered = [{ name: field, value: token, type: 'hidden' }];
+  const form = dom.form({ action: 'graphs.php' }, rendered);
+  dom.button(form, { formaction: 'https://evil.example/collect' });
+  const outside = dom.form({ action: 'graphs.php', id: 'f' }, rendered);
+  dom.button(outside, { formaction: '//evil.example/collect', form: 'f' });
+  const foreign = dom.form({ action: 'https://evil.example/collect' }, rendered);
+  const other = dom.form({ action: 'graphs.php' }, rendered);
+  dom.button(other, { formaction: 'graphs.php' });
+  dom.load();
+  assert.equal(dom.submitUnknown(form), false);
+  assert.equal(dom.submitUnknown(outside), false);
+  assert.equal(dom.submitUnknown(foreign), false);
+  assert.equal(dom.submitUnknown(other), true);
+});
+
+// An unclosed <plaintext>, <textarea>, <title>, <xmp> or comment after a form
+// puts the CsrfMagic.end() call into text, so the browser never runs it while
+// the form still holds the token the server added.
+test('the submit check works when CsrfMagic.end() never runs', () => {
+  const dom = pageDom();
+  const form = dom.form({ action: 'graphs.php', id: 'f' }, [{ name: field, value: token, type: 'hidden' }]);
+  const inside = dom.button(form, { formaction: '//evil.example/collect' });
+  // <button form="f"> outside the form is associated with it the same way.
+  const outside = dom.button(form, { formaction: 'https://evil.example/collect', form: 'f' });
+  const plain = dom.button(form, {});
+  dom.load();
+  assert.equal(dom.listeners.filter(([type]) => type === 'submit').length, 1);
+  assert.equal(dom.submit(form, inside), false);
+  assert.equal(dom.submit(form, outside), false);
+  assert.equal(dom.submit(form, plain), true);
+});
+
+test('CsrfMagic.end() does not add a second submit listener', () => {
+  const dom = pageDom();
+  dom.load().CsrfMagic.end();
+  assert.equal(dom.listeners.filter(([type]) => type === 'submit').length, 1);
 });
 
 test('a server-rendered token is withheld from a cross-origin submission', () => {

