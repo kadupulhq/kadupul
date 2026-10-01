@@ -10,11 +10,58 @@ namespace Kadupul\Tests;
 use Kadupul\Kernel;
 use Kadupul\Navigation\Domain\ExternalLink;
 use Kadupul\Navigation\Infrastructure\Symfony\Form\LinkType;
+use Kadupul\Navigation\Infrastructure\Symfony\LinkListParameters;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactoryInterface;
 
 final class LinkChoicePresentationTest extends TestCase
 {
+    private function legacyPageSizes(): array
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/include/global_arrays.php');
+        self::assertSame(1, preg_match('/\$item_rows = array\((.*?)\n\);/s', $source, $block));
+        preg_match_all('/^\s*(\d+)\s*=>/m', $block[1], $matches);
+        self::assertCount(28, $matches[1]);
+        return [-1, ...array_map('intval', $matches[1])];
+    }
+
+    public function testLegacyPageSizesRemainAcceptedForPreferencesAndBookmarks(): void
+    {
+        foreach ($this->legacyPageSizes() as $size) {
+            $filters = LinkListParameters::parse(['rows' => (string) $size], 40);
+            self::assertSame($size === -1 ? 40 : $size, $filters['limit']);
+        }
+        foreach (['0', '28', '9999999', '750x'] as $invalid) {
+            try {
+                LinkListParameters::parse(['rows' => $invalid]);
+                self::fail('Unsupported page size was accepted: ' . $invalid);
+            } catch (\InvalidArgumentException) {
+                self::assertTrue(true);
+            }
+        }
+    }
+
+    public function testRenderedSelectorPreservesEveryLegacyPageSize(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $twig = $kernel->getContainer()->get('test.service_container')->get('twig');
+            foreach ($this->legacyPageSizes() as $size) {
+                $html = $twig->render('navigation/links.html.twig', ['links' => [], 'filters' => ['filter' => '', 'rows' => $size, 'sort_column' => 'sortorder', 'sort_direction' => 'ASC', 'page' => 1, 'limit' => $size === -1 ? 40 : $size], 'total' => 0, 'viewPath' => '/link.php']);
+                $document = new \DOMDocument();
+                self::assertTrue(@$document->loadHTML($html));
+                $options = (new \DOMXPath($document))->query('//select[@name="rows"]/option');
+                self::assertSame($this->legacyPageSizes(), array_map(static fn(\DOMNode $option): int => (int) $option->getAttribute('value'), iterator_to_array($options)));
+                $selected = (new \DOMXPath($document))->query('//select[@name="rows"]/option[@selected]');
+                self::assertCount(1, $selected);
+                self::assertSame((string) $size, $selected->item(0)->getAttribute('value'));
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     public function testLegacyNewSentinelNameRemainsLiteralThroughRenderingAndSubmission(): void
     {
         $kernel = new Kernel('test', true);

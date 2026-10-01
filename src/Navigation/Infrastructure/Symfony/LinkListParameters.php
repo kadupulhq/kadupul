@@ -9,6 +9,9 @@ namespace Kadupul\Navigation\Infrastructure\Symfony;
 
 final class LinkListParameters
 {
+    // Complete legacy item_rows choices plus the remembered-default sentinel.
+    public const ROW_CHOICES = [-1, 10, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 30, 40, 44, 45, 50, 100, 250, 500, 750, 1000, 2000, 3000, 4000, 5000];
+
     public static function parse(array $query, int $defaultRows = 25): array
     {
         $q = $query['filter'] ?? '';
@@ -22,7 +25,7 @@ final class LinkListParameters
                 throw new \InvalidArgumentException('Invalid link list filters.');
             }
         }
-        if (!in_array((int) $rows, [-1, 10, 15, 20, 25, 30, 40, 50, 100, 250, 500, 1000, 2000, 5000], true) || (int) $page < 1) {
+        if (!in_array((int) $rows, self::ROW_CHOICES, true) || (int) $page < 1) {
             throw new \InvalidArgumentException('Invalid link list filters.');
         }
         $sort = $query['sort_column'] ?? 'sortorder';
