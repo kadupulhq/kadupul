@@ -37,6 +37,10 @@ if (defined('HOST_REINDEX_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/host.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }
+if (defined('GRAPH_ZOOM_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_zoom.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+}
 if (defined('REALTIME_EXEC_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
