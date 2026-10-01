@@ -8,7 +8,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
-- Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm.
+- Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
 
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
 - Scope remote-agent host operations to the requesting main poller and the receiver's assigned devices; require an authenticated session user for remote graph rendering.

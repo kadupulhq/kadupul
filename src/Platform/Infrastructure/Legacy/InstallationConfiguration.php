@@ -133,7 +133,9 @@ final class InstallationConfiguration implements LegacyConfiguration
     private function requireSiteRoute(): void
     {
         $route = $this->requests?->getCurrentRequest()?->attributes->get('_route');
-        if (!in_array($route, ['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action'], true)) {
+        // About is read-only, but still authenticates against the reachable
+        // primary using the same online collector checks as Sites.
+        if (!in_array($route, ['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action', 'platform_about', 'platform_about_legacy'], true)) {
             throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside online collector Sites routes.');
         }
     }
