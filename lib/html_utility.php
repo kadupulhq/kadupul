@@ -175,9 +175,9 @@ function form_alternate_row($row_id = '', $light = false, $disabled = false)
 
     $i++;
 
-    if ($row_id != '' && !$disabled && substr($row_id, 0, 4) != 'row_') {
+    if ($row_id != '' && !$disabled && !str_starts_with((string) $row_id, 'row_')) {
         print "<tr class='$class selectable tableRow' id='$row_id'>\n";
-    } elseif (substr($row_id, 0, 4) == 'row_') {
+    } elseif (str_starts_with((string) $row_id, 'row_')) {
         print "<tr class='$class tableRow' id='$row_id'>\n";
     } elseif ($row_id != '') {
         print "<tr class='$class tableRow' id='$row_id'>\n";
@@ -195,9 +195,9 @@ function form_alternate_row($row_id = '', $light = false, $disabled = false)
  */
 function form_alternate_row_class($row_id = '', $class = 'tableRow', $disabled = false)
 {
-    if ($row_id != '' && !$disabled && substr($row_id, 0, 4) != 'row_') {
+    if ($row_id != '' && !$disabled && !str_starts_with((string) $row_id, 'row_')) {
         print "<tr class='$class selectable' id='$row_id'>";
-    } elseif (substr($row_id, 0, 4) == 'row_' || $row_id != '') {
+    } elseif (str_starts_with((string) $row_id, 'row_') || $row_id != '') {
         print "<tr class='$class' id='$row_id'>";
     } else {
         print "<tr class='$class'>";
@@ -226,7 +226,7 @@ function form_selectable_cell($contents, $id, $width = '', $style_or_class = '',
     $output = '';
 
     if ($style_or_class != '') {
-        if (strpos($style_or_class, ':') === false) {
+        if (!str_contains($style_or_class, ':')) {
             $output = "class='nowrap " . $style_or_class . "'";
             if ($width != '') {
                 $output .= " style='width:$width;'";
@@ -834,7 +834,7 @@ function update_order_string($inplace = false)
         $request_column = '';
     }
 
-    if (strpos((string) $request_column, '(') === false && strpos((string) $request_column, '`') === false) {
+    if (!str_contains((string) $request_column, '(') && !str_contains((string) $request_column, '`')) {
         $del = '`';
     } else {
         $del = '';
@@ -907,7 +907,7 @@ function update_order_string($inplace = false)
                 $_SESSION['sort_string'][$page] = 'ORDER BY ';
 
                 foreach ($_SESSION['sort_data'][$page] as $column => $direction) {
-                    if (strpos((string) $column, '(') === false && strpos((string) $column, '`') === false) {
+                    if (!str_contains((string) $column, '(') && !str_contains((string) $column, '`')) {
                         $del = '`';
                     } else {
                         $del = '';
@@ -956,7 +956,7 @@ function get_order_string()
         $request_column = '';
     }
 
-    if (strpos((string) $request_column, '(') === false && strpos((string) $request_column, '`') === false) {
+    if (!str_contains((string) $request_column, '(') && !str_contains((string) $request_column, '`')) {
         $del = '`';
     } else {
         $del = '';
@@ -1072,7 +1072,7 @@ function validate_redirect_url($url = '', $default = 'index.php')
     }
 
     // reject protocol-relative URLs
-    if (strpos($url, '//') === 0) {
+    if (str_starts_with($url, '//')) {
         return $default;
     }
 
@@ -1135,17 +1135,17 @@ function validate_redirect_url($url = '', $default = 'index.php')
     $ref_query = isset($parsed['query']) ? $parsed['query'] : null;
 
     if ($ref_path !== '') {
-        if (strpos($ref_path, '//') === 0) {
+        if (str_starts_with($ref_path, '//')) {
             return $default;
         }
 
-        if ($ref_path[0] !== '/' && strpos($ref_path, ':') !== false) {
+        if ($ref_path[0] !== '/' && str_contains($ref_path, ':')) {
             return $default;
         }
     }
 
     $safe = sanitize_uri($ref_path . ($ref_query !== null ? '?' . $ref_query : ''));
-    if ($safe === '' || strpos($safe, '//') === 0) {
+    if ($safe === '' || str_starts_with($safe, '//')) {
         return $default;
     }
 
@@ -1242,7 +1242,7 @@ function validate_is_regex($regex)
         return __('Kadupul regular expressions are limited to 50 characters only for security reasons.');
     }
 
-    if (strpos($regex, ';') !== false) {
+    if (str_contains($regex, ';')) {
         return __('Kadupul regular expressions can not includes the semi-color character.');
     }
 
@@ -1396,7 +1396,7 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
     $pages_per_screen += 2;
     $url_page_select = "<ul class='pagination'>";
 
-    if (strpos($url, '?') !== false) {
+    if (str_contains($url, '?')) {
         $url .= '&';
     } else {
         $url .= '?';

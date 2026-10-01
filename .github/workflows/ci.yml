@@ -221,6 +221,12 @@ jobs:
         # on every diagnostic, including CSV default-argument deprecations.
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
 
+      - name: Verify string predicates and directory boundaries
+        working-directory: tests
+        run: |
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/StringPredicateHelpersTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/PathHelpersTest.php --colors=never
+
       - name: Legacy form goldens
         working-directory: tests
         # Pest 1 emits dependency deprecations on PHP 8.4.
