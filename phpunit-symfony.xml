@@ -23,6 +23,7 @@
             <file>include/admin_notifications.php</file>
             <file>sites.php</file>
             <file>lib/database.php</file>
+            <file>lib/functions.php</file>
         </include>
     </source>
 </phpunit>

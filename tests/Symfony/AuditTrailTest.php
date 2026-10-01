@@ -68,6 +68,89 @@ final class AuditTrailTest extends TestCase
         }
     }
 
+    public function testCreatesPrivateFileWithoutChangingTheProcessUmask(): void
+    {
+        $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));
+        mkdir($root . '/log', 0700, true);
+        $path = $root . '/log/kadupul-audit.jsonl';
+        $mask = umask(0);
+        try {
+            (new LegacyAuditTrail($root))->record(new AuditEvent(
+                bin2hex(random_bytes(16)),
+                42,
+                'inventory.device.edit',
+                'device',
+                '7',
+                AuditEvent::ALLOWED,
+                'succeeded',
+                '2026-09-23T04:00:00Z',
+            ));
+
+            self::assertSame(0600, fileperms($path) & 0777);
+            self::assertSame(0, umask());
+        } finally {
+            umask($mask);
+            @unlink($path);
+            @rmdir($root . '/log');
+            @rmdir($root);
+        }
+    }
+
+    public function testPrivateInodeBeforePublicationAndConcurrentCreation(): void
+    {
+        foreach (['0', '18'] as $mask) {
+            foreach (['create', 'existing', 'concurrent', 'link-failure', 'temp-failure'] as $scenario) {
+                $root = sys_get_temp_dir() . '/kadupul-private-' . bin2hex(random_bytes(8));
+                mkdir($root . '/log', 0700, true);
+                try {
+                    $coverage = \PHPUnit\Runner\CodeCoverage::instance()->isActive()
+                        ? \PHPUnit\Runner\CodeCoverage::instance()->codeCoverage() : null;
+                    $source = (new \ReflectionClass(LegacyAuditTrail::class))->getFileName();
+                    $hash = hash_file('sha256', $source);
+                    $command = [PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/'];
+                    if ($coverage !== null) {
+                        file_put_contents($root . '/coverage.php', '<?php define("AUDIT_TRAIL_TEST_COVERAGE", true); define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require '
+                            . var_export(dirname(__DIR__) . '/Fixtures/rrd-process-coverage.php', true) . ';');
+                        $command[] = '-d';
+                        $command[] = 'auto_prepend_file=' . $root . '/coverage.php';
+                    }
+                    $probe = new Process(array_merge($command, [__DIR__ . '/audit_creation_probe.php', $root, $mask, $scenario]));
+                    $probe->mustRun();
+                    $result = json_decode($probe->getOutput(), true, 8, JSON_THROW_ON_ERROR);
+                    if ($coverage !== null) {
+                        $reports = glob($root . '/*.coverage');
+                        self::assertCount(1, $reports);
+                        $child = unserialize(file_get_contents($reports[0]));
+                        self::assertInstanceOf(\SebastianBergmann\CodeCoverage\CodeCoverage::class, $child);
+                        self::assertArrayHasKey($source, $child->getData()->lineCoverage());
+                        self::assertSame($hash, hash_file('sha256', $source));
+                        $coverage->merge($child);
+                    }
+                    self::assertSame([], $result['violations']);
+                    self::assertSame((int) $mask, $result['mask']);
+                    self::assertSame([], glob($root . '/log/.kadupul-audit-*'));
+                    if (str_ends_with($scenario, 'failure')) {
+                        self::assertSame('Audit sink is unavailable.', $result['error']);
+                        self::assertFileDoesNotExist($root . '/log/kadupul-audit.jsonl');
+                    } else {
+                        self::assertNull($result['error']);
+                        self::assertSame(in_array($scenario, ['concurrent', 'existing'], true) ? 2 : 1, $result['lines']);
+                        self::assertSame(0600, fileperms($root . '/log/kadupul-audit.jsonl') & 07777);
+                    }
+                } finally {
+                    foreach (glob($root . '/log/*') as $file) {
+                        unlink($file);
+                    }
+                    rmdir($root . '/log');
+                    foreach (glob($root . '/*') as $file) {
+                        unlink($file);
+                    }
+                    rmdir($root);
+                }
+            }
+        }
+    }
+
     public function testRejectsSymlinkAuditPath(): void
     {
         $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));
