@@ -18,7 +18,8 @@ src/Graphing/
   Domain/            GraphItemType, ConsolidationFunction, DataSourceType enums;
                      RrdCommand (an argument list, not a string); GraphDefinition
     Font/            GraphFont, GraphFontProfile, GraphFontResolver (PR #710)
-    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow, RenderResult, RrdExecutionContext
+    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow, RenderResult, RrdExecutionContext,
+                     GraphThemeProfile, UnrepresentableGraphArgument
     Command/         GraphCommandBuilder, GraphCommandSections and parts: DefNames, CdefMagic,
                      LegendText, GradientArea, DateLegend, ThemeArguments,
                      LegacySerializedGraphCommand (hook compatibility),
@@ -26,13 +27,14 @@ src/Graphing/
   Application/       RenderGraph, CollectRenderFacts, ExportGraph,
                      CreateDataSourceFile, TuneDataSource
     Port/            RrdTransport, GraphDefinitions, DataSources, DataSourcePaths,
-                     RenderedGraphCache, PendingSamples, GraphOptionsHook
+                     RenderedGraphCache, PendingSamples, GraphOptionsHook, RenderClock
   Infrastructure/
     Rrd/             PipeEncoder, LocalRrdtool, ProxyRrdtool, RrdXmlEditor, ErrorImage
     Persistence/     DBAL readers for the web rendering path
     Legacy/          LegacyDataSources for the collector path; RrdBridge;
                      LegacyRenderContextFactory, LegacyGraphDefinitions, LegacyDataSourcePaths,
-                     LegacyGraphRequestFactory, LegacyGraphOptionsHook,
+                     LegacyGraphRequestFactory, LegacyGraphThemeProfileResolver, LegacyGraphOptionsHook,
+                     LegacyRenderClock, LegacyRrdWebContext,
                      LegacyRenderOutput, BoostImageCache, LegacyPendingSamples
     Symfony/         Graph image and JSON controllers; the graph voter
 ```
@@ -275,7 +277,9 @@ R1's legacy request factory resolves validated theme overrides through
 `LegacyGraphThemeProfileResolver` into `GraphRequest.commandTheme`, an
 immutable `GraphThemeProfile`. The builder receives resolved palette/border/fonts;
 Infrastructure owns theme-file reads and existing default, colour-mode and font
-precedence. R0/R1/R2 include override/fallback arguments, cache isolation and
+precedence. R0 additionally characterizes invalid/unavailable session/site/user viewer-theme
+choices against the installed `$themes` allowlist and `main.css` availability,
+preserving fallback identity in context fingerprints. R0/R1/R2 include override/fallback arguments, cache isolation and
 warm-cache cost gates, retaining the viewer profile for error output.
 The render instant is captured immediately after authorization, before cache
 and pending-sample work, and remains the single instant in RenderFacts even
