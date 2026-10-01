@@ -11201,10 +11201,6 @@ msgstr "Crittografia supportata dal server. TLS è supportato solo dalla version
 msgid "TLS Certificate Requirements"
 msgstr "Requisiti del certificato TLS"
 
-#: include/global_settings.php:1763
-msgid "Should LDAP verify TLS Certificates when received by the Client."
-msgstr "LDAP dovrebbe verificare i certificati TLS quando ricevuti dal cliente."
-
 #: include/global_settings.php:1769 user_domains.php:391
 msgid "Referrals"
 msgstr "Referral"
@@ -12730,24 +12726,9 @@ msgstr "Web Basic Authentication configurato, ma nessun nome utente è stato pas
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s autenticati dal Web Server, ma sia il Template che gli Utenti Ospiti non sono definiti in Kadupul."
 
-#: lib/auth.php:3788
-#, php-format
-msgid "Access Denied!  LDAP Search Error: %s"
-msgstr "Errore di ricerca LDAP: %s"
-
-#: lib/auth.php:3809 lib/auth.php:3973
-#, php-format
-msgid "Access Denied!  LDAP Error: %s"
-msgstr "Errore LDAP: %s"
-
 #: lib/auth.php:3821 lib/auth.php:3988 lib/auth.php:4249
 msgid "Access Denied!  No password provided by user."
 msgstr "Accesso negato! Nessuna password fornita dall'utente."
-
-#: lib/auth.php:3872
-#, php-format
-msgid "LDAP Search Error: %s"
-msgstr "Errore di ricerca LDAP: %s"
 
 #: lib/auth.php:3965 lib/auth.php:4875
 #, php-format
@@ -20428,3 +20409,23 @@ msgstr "Il numero di modelli di grafici che utilizzano questo VDEF."
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "Nessun VDEF"
+
+#: user_admin.php:340
+msgid "You are not allowed to overwrite the primary administrator account"
+msgstr ""
+
+#: user_admin.php:306
+msgid "You are not allowed to disable the primary administrator account"
+msgstr ""
+
+#: user_admin.php:336
+msgid "You are not allowed to overwrite the current login account"
+msgstr ""
+
+#: include/global_settings.php:1757
+msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
+msgstr ""
+
+#: user_admin.php:669
+msgid "Set a new password to move this account to the Local realm."
+msgstr ""

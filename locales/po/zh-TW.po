@@ -13128,10 +13128,6 @@ msgstr "服務器支持的加密。 TLS僅受協議版本3支持。"
 msgid "TLS Certificate Requirements"
 msgstr "TLS 證書要求"
 
-#: include/global_settings.php:1763
-msgid "Should LDAP verify TLS Certificates when received by the Client."
-msgstr "客戶端收到 LDAP 時是否應驗證 TLS 證書。"
-
 #: include/global_settings.php:1769 user_domains.php:391
 #, fuzzy
 msgid "Referrals"
@@ -14952,24 +14948,9 @@ msgstr "已配置Web基本身份驗證，但未從Web服務器傳遞用戶名。
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s由Web Server進行身份驗證，但模板和來賓用戶都未在Kadupul中定義。"
 
-#: lib/auth.php:3788
-#, fuzzy, php-format
-msgid "Access Denied!  LDAP Search Error: %s"
-msgstr "LDAP搜索錯誤：%s"
-
-#: lib/auth.php:3809 lib/auth.php:3973
-#, fuzzy, php-format
-msgid "Access Denied!  LDAP Error: %s"
-msgstr "LDAP錯誤：%s"
-
 #: lib/auth.php:3821 lib/auth.php:3988 lib/auth.php:4249
 msgid "Access Denied!  No password provided by user."
 msgstr "拒絕訪問！用戶未提供密碼。"
-
-#: lib/auth.php:3872
-#, fuzzy, php-format
-msgid "LDAP Search Error: %s"
-msgstr "LDAP搜索錯誤：%s"
 
 #: lib/auth.php:3965 lib/auth.php:4875
 #, fuzzy, php-format
@@ -23749,3 +23730,23 @@ msgstr "使用此VDEF的圖表模板數。"
 #, fuzzy
 msgid "No VDEFs"
 msgstr "沒有VDEF"
+
+#: user_admin.php:340
+msgid "You are not allowed to overwrite the primary administrator account"
+msgstr ""
+
+#: user_admin.php:306
+msgid "You are not allowed to disable the primary administrator account"
+msgstr ""
+
+#: user_admin.php:336
+msgid "You are not allowed to overwrite the current login account"
+msgstr ""
+
+#: include/global_settings.php:1757
+msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
+msgstr ""
+
+#: user_admin.php:669
+msgid "Set a new password to move this account to the Local realm."
+msgstr ""

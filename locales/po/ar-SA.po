@@ -11367,10 +11367,6 @@ msgstr "تشفير يدعم الخادم. لا يتم دعم TLS إلا من خ�
 msgid "TLS Certificate Requirements"
 msgstr "متطلبات شهادة TLS"
 
-#: include/global_settings.php:1763
-msgid "Should LDAP verify TLS Certificates when received by the Client."
-msgstr "يجب أن يتحقق LDAP من شهادات TLS عند استلامها من قبل العميل."
-
 #: include/global_settings.php:1769 user_domains.php:391
 msgid "Referrals"
 msgstr "الإحالات"
@@ -12904,24 +12900,9 @@ msgstr "تم تكوين مصادقة الويب الأساسية ، ولكن ل�
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s مصادقته بواسطة خادم الويب ، ولكن لم يتم تعريف كل من المستخدمين القالب والمستخدمين الضيوف في Kadupul."
 
-#: lib/auth.php:3788
-#, php-format
-msgid "Access Denied!  LDAP Search Error: %s"
-msgstr "تم رفض الوصول!  خطأ في بحث LDAP: %s"
-
-#: lib/auth.php:3809 lib/auth.php:3973
-#, php-format
-msgid "Access Denied!  LDAP Error: %s"
-msgstr "تم رفض الوصول!  خطأ LDAP: %s"
-
 #: lib/auth.php:3821 lib/auth.php:3988 lib/auth.php:4249
 msgid "Access Denied!  No password provided by user."
 msgstr "تم رفض الوصول!  لا توجد كلمة مرور مقدمة من قبل المستخدم."
-
-#: lib/auth.php:3872
-#, php-format
-msgid "LDAP Search Error: %s"
-msgstr "خطأ في بحث LDAP: %s"
 
 #: lib/auth.php:3965 lib/auth.php:4875
 #, php-format
@@ -20786,3 +20767,23 @@ msgstr "عدد قوالب الرسوم البيانية باستخدام هذا 
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "لا VDEFs"
+
+#: user_admin.php:340
+msgid "You are not allowed to overwrite the primary administrator account"
+msgstr ""
+
+#: user_admin.php:306
+msgid "You are not allowed to disable the primary administrator account"
+msgstr ""
+
+#: user_admin.php:336
+msgid "You are not allowed to overwrite the current login account"
+msgstr ""
+
+#: include/global_settings.php:1757
+msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
+msgstr ""
+
+#: user_admin.php:669
+msgid "Set a new password to move this account to the Local realm."
+msgstr ""

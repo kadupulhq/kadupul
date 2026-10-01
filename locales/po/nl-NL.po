@@ -11203,10 +11203,6 @@ msgstr "Encryptie die de server ondersteund. TLS is alleen ondersteund door prot
 msgid "TLS Certificate Requirements"
 msgstr "Vereisten voor TLS-certificaat"
 
-#: include/global_settings.php:1763
-msgid "Should LDAP verify TLS Certificates when received by the Client."
-msgstr "Moet LDAP TLS-certificaten verifiëren wanneer deze door de Klant worden ontvangen."
-
 #: include/global_settings.php:1769 user_domains.php:391
 msgid "Referrals"
 msgstr "Verwijzingen"
@@ -12735,24 +12731,9 @@ msgstr "Web Basic Authentication is geconfigureerd, maar geen gebruikersnaam was
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s geautoriseerd door de webserver, maar zowel template als gast gebruikers zijn niet gedefinieerd in Kadupul."
 
-#: lib/auth.php:3788
-#, php-format
-msgid "Access Denied!  LDAP Search Error: %s"
-msgstr "LDAP zoekfoutmelding: %s"
-
-#: lib/auth.php:3809 lib/auth.php:3973
-#, php-format
-msgid "Access Denied!  LDAP Error: %s"
-msgstr "LDAP foutmelding: %s"
-
 #: lib/auth.php:3821 lib/auth.php:3988 lib/auth.php:4249
 msgid "Access Denied!  No password provided by user."
 msgstr "Toegang geweigerd! Geen wachtwoord verstrekt door gebruiker."
-
-#: lib/auth.php:3872
-#, php-format
-msgid "LDAP Search Error: %s"
-msgstr "LDAP zoekfoutmelding: %s"
 
 #: lib/auth.php:3965 lib/auth.php:4875
 #, php-format
@@ -20434,3 +20415,23 @@ msgstr "Het aantal grafiektemplates die deze VDEF gebruiken."
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "Geen VDEF's"
+
+#: user_admin.php:340
+msgid "You are not allowed to overwrite the primary administrator account"
+msgstr ""
+
+#: user_admin.php:306
+msgid "You are not allowed to disable the primary administrator account"
+msgstr ""
+
+#: user_admin.php:336
+msgid "You are not allowed to overwrite the current login account"
+msgstr ""
+
+#: include/global_settings.php:1757
+msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
+msgstr ""
+
+#: user_admin.php:669
+msgid "Set a new password to move this account to the Local realm."
+msgstr ""
