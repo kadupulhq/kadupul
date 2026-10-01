@@ -11,7 +11,7 @@ const root = path.join(__dirname, '..', '..');
 // PHP file prints it.
 function permissionTooltipBody(file) {
   const source = fs.readFileSync(path.join(root, file), 'utf8');
-  const match = source.match(/items: '\[data-tooltip\]',\s*content: function\(\) \{([\s\S]*?)\n\t+\}/);
+  const match = source.match(/items: '\[data-tooltip\]',\s*content: function\(\)\s*\{([\s\S]*?)\n\s*\}/);
 
   if (!match) {
     throw new Error(`No permission tooltip callback in ${file}`);
@@ -33,7 +33,7 @@ function managerLogsScript() {
 // utilities.php.
 function notificationLogTooltipBody() {
   const source = fs.readFileSync(path.join(root, 'utilities.php'), 'utf8');
-  const match = source.match(/\$\('\.tooltip'\)\.tooltip\(\{\n\t\ttrack: true,\n\t\tposition: \{ collision: 'flipfit' \},\n\t\tcontent: function\(\) \{([^}]*)\}/);
+  const match = source.match(/\$\('\.tooltip'\)\.tooltip\(\{\s*track: true,\s*position: \{\s*collision: 'flipfit'\s*\},\s*content: function\(\)\s*\{([^}]*)\}/);
 
   if (!match) {
     throw new Error('No notification log tooltip in utilities.php');
