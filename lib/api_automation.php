@@ -34,6 +34,25 @@ function automation_host_status_options(): array
     );
 }
 
+/** Shared device selectors preserve literal template names and accessible labels. */
+function automation_device_filter_controls(string $filter): void
+{
+    ?>
+    <td><label for='<?php print html_escape($filter);?>'><?php print __('Search');?></label></td>
+    <td><input type='text' class='ui-state-default ui-corner-all' id='<?php print html_escape($filter);?>' size='25' value='<?php print html_escape_request_var($filter);?>'></td>
+    <td><label for='host_template_id'><?php print __('Type');?></label></td>
+    <td>
+        <select id='host_template_id'>
+            <option value='-1'<?php if (get_request_var('host_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
+            <option value='0'<?php if (get_request_var('host_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
+            <?php automation_template_options(db_fetch_assoc('SELECT id,name FROM host_template ORDER BY name'), get_request_var('host_template_id'));?>
+        </select>
+    </td>
+    <td><label for='host_status'><?php print __('Status');?></label></td>
+    <td><select id='host_status'><?php html_create_list(automation_host_status_options(), '', '', get_request_var('host_status'));?></select></td>
+    <?php
+}
+
 function display_matching_hosts($rule, $rule_type, $url)
 {
     global $device_actions, $item_rows;
@@ -153,36 +172,9 @@ function display_matching_hosts($rule, $rule_type, $url)
 			<form method='post' id='form_automation_host' action='<?php print html_escape($url);?>'>
 				<table class='filterTable'>
 					<tr>
+                        <?php automation_device_filter_controls('filterd');?>
 						<td>
-							<?php print __('Search');?>
-						</td>
-						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filterd' size='25' value='<?php print html_escape_request_var('filterd');?>'>
-						</td>
-						<td>
-							<?php print __('Type');?>
-						</td>
-						<td>
-							<select id='host_template_id'>
-								<option value='-1'<?php if (get_request_var('host_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-								<option value='0'<?php if (get_request_var('host_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
-								<?php
-                                $host_templates = db_fetch_assoc('SELECT id,name FROM host_template ORDER BY name');
-
-    automation_template_options($host_templates, get_request_var('host_template_id'));
-    ?>
-							</select>
-						</td>
-						<td>
-							<?php print __('Status');?>
-						</td>
-						<td>
-							<select id='host_status'>
-								<?php html_create_list(automation_host_status_options(), '', '', get_request_var('host_status'));?>
-							</select>
-						</td>
-						<td>
-							<?php print __('Devices');?>
+							<label for='rowsd'><?php print __('Devices');?></label>
 						</td>
 						<td>
 							<select id='rowsd'>
@@ -490,7 +482,7 @@ function display_matching_graphs($rule, $rule_type, $url)
 							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
 						</td>
 						<td>
-							<?php print __('Devices');?>
+							<label for='rows'><?php print __('Devices');?></label>
 						</td>
 						<td>
 							<select id='rows'>
@@ -718,7 +710,7 @@ function display_new_graphs($rule, $url)
 							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
 						</td>
 						<td>
-							<?php print __('Objects');?>
+							<label for='orows'><?php print __('Objects');?></label>
 						</td>
 						<td>
 							<select id='orows'>
@@ -1080,36 +1072,9 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 		<td>
 			<table class='filterTable'>
 				<tr>
+                        <?php automation_device_filter_controls('filter');?>
 					<td>
-						<?php print __('Search');?>
-					</td>
-					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
-					</td>
-					<td>
-						<?php print __('Type');?>
-					</td>
-					<td>
-						<select id='host_template_id'>
-							<option value='-1'<?php if (get_request_var('host_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-							<option value='0'<?php if (get_request_var('host_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
-							<?php
-                            $host_templates = db_fetch_assoc('select id,name from host_template order by name');
-
-    automation_template_options($host_templates, get_request_var('host_template_id'));
-    ?>
-						</select>
-					</td>
-					<td>
-						<?php print __('Status');?>
-					</td>
-					<td>
-						<select id='host_status'>
-							<?php html_create_list(automation_host_status_options(), '', '', get_request_var('host_status'));?>
-						</select>
-					</td>
-					<td>
-						<?php print __('Data Queries');?>
+						<label for='rows'><?php print __('Data Queries');?></label>
 					</td>
 					<td>
 						<select id='rows'>

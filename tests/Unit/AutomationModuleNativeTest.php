@@ -78,6 +78,7 @@ final class AutomationModuleNativeTest extends TestCase
         $xpath = new DOMXPath($document);
         self::assertSame('10', $xpath->query('//select[@id="rows"]/option[@selected]')->item(0)->getAttribute('value'));
         self::assertSame('Default', $xpath->query('//select[@id="rows"]/option[@value="-1"]')->item(0)->textContent);
+        self::assertSame(1, $xpath->query('//label[@for="rows"]')->length);
         self::assertSame('Any', $xpath->query('//select[@id="host_template_id"]/option[@value="-1"]')->item(0)->textContent);
         self::assertSame('None', $xpath->query('//select[@id="host_template_id"]/option[@value="0"]')->item(0)->textContent);
         self::assertSame('Fixture template', $xpath->query('//select[@id="host_template_id"]/option[@value="9"]')->item(0)->textContent);
@@ -291,6 +292,7 @@ final class AutomationModuleNativeTest extends TestCase
         @$document->loadHTML($state['html']);
         $xpath = new DOMXPath($document);
         $select = $kind === 'graph' ? 'rows' : 'rowsd';
+        self::assertSame(1, $xpath->query('//label[@for="' . $select . '"]')->length);
         $refresh = $kind === 'graph' ? 'refresh' : 'refreshd';
         $clear = $kind === 'graph' ? 'clear' : 'cleard';
         self::assertSame(1, $xpath->query('//input[@id="' . $refresh . '"]')->length);
