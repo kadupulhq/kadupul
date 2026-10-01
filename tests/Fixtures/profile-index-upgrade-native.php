@@ -32,7 +32,15 @@ foreach (array(
     'snmp_query_graph' => 'snmp_query_id INTEGER, graph_template_id INTEGER',
     'user_auth_row_cache' => 'class VARCHAR(64), time INTEGER',
 ) as $table => $columns) {
-    $db->exec($prefix . $table . ' (' . $columns . ')');
+    if ($mysql && $table === 'data_template_data') {
+        if (!preg_match('/CREATE TABLE data_template_data \(.*?\) ENGINE=.*?;/s', file_get_contents($root . '/cacti.sql'), $definition)) {
+            throw new RuntimeException('Fresh profile reference schema unavailable');
+        }
+        $db->exec(str_replace('CREATE TABLE ', 'CREATE TEMPORARY TABLE ', $definition[0]));
+        $db->exec('ALTER TABLE data_template_data DROP INDEX data_source_profile_id');
+    } else {
+        $db->exec($prefix . $table . ' (' . $columns . ')');
+    }
 }
 $calls = array();
 function db_index_exists($table, $index)
@@ -60,4 +68,27 @@ require $copy;
 upgrade_to_1_2_31();
 upgrade_to_1_2_31();
 $indexes = $db->query($mysql ? 'SHOW INDEX FROM data_template_data' : 'PRAGMA index_list(data_template_data)')->fetchAll(PDO::FETCH_ASSOC);
-file_put_contents($directory . '/result.json', json_encode(array('calls' => $calls, 'runs' => 2, 'indexes' => array_column($indexes, $mysql ? 'Key_name' : 'name')), JSON_THROW_ON_ERROR));
+$audit = array();
+if ($mysql) {
+    $baseline = file_get_contents($root . '/docs/audit_schema.sql');
+    foreach (array('table_columns', 'table_indexes') as $table) {
+        if (!preg_match('/CREATE TABLE `' . $table . '` \(.*?\) ENGINE=.*?;/s', $baseline, $definition)) {
+            throw new RuntimeException('Audit baseline table unavailable');
+        }
+        $db->exec(str_replace('CREATE TABLE ', 'CREATE TEMPORARY TABLE ', $definition[0]));
+        preg_match_all('/^INSERT INTO `' . $table . '` VALUES \(\x27data_template_data\x27,.*?;$/m', $baseline, $records);
+        foreach ($records[0] as $record) {
+            $db->exec($record);
+        }
+    }
+    $columns = $db->query('SHOW FULL COLUMNS FROM data_template_data')->fetchAll(PDO::FETCH_ASSOC);
+    $column = array_values(array_filter($columns, static fn($row) => $row['Field'] === 'data_source_profile_id'))[0];
+    $audit['liveKey'] = $column['Key'];
+    $audit['baselineKey'] = $db->query("SELECT table_key FROM table_columns WHERE table_name='data_template_data' AND table_field='data_source_profile_id'")->fetchColumn();
+    // These are the native audit workflow's index identity predicates.
+    $query = $db->prepare('SELECT COUNT(*) FROM table_indexes WHERE idx_table_name=? AND idx_key_name=? AND idx_seq_in_index=? AND idx_column_name=?');
+    $query->execute(array('data_template_data', 'data_source_profile_id', 1, 'data_source_profile_id'));
+    $audit['recognized'] = (int) $query->fetchColumn();
+    $audit['index'] = array_values(array_filter($indexes, static fn($row) => $row['Key_name'] === 'data_source_profile_id'))[0];
+}
+file_put_contents($directory . '/result.json', json_encode(array('calls' => $calls, 'runs' => 2, 'indexes' => array_column($indexes, $mysql ? 'Key_name' : 'name'), 'audit' => $audit), JSON_THROW_ON_ERROR));

@@ -20496,14 +20496,14 @@ msgstr "Die Anzahl der Grafikvorlagen, die diesen VDEF verwenden."
 msgid "No VDEFs"
 msgstr "VDEFs"
 
-#: data_source_profiles.php:260 data_source_profiles.php:396
+#: data_source_profiles.php:260 data_source_profiles.php:400
 msgid "Unable to verify Data Source Profile usage. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:281
+#: data_source_profiles.php:285
 msgid "Unable to safely delete the selected Data Source Profiles. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:404
+#: data_source_profiles.php:408
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
 msgstr ""

@@ -109,6 +109,14 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertContains('data_source_profile_id', $state['indexes']);
         self::assertCount(1, array_filter($state['calls'], static fn($sql) => $sql === 'ALTER TABLE data_template_data ADD INDEX data_source_profile_id (data_source_profile_id)'));
         self::assertSame(2, $state['runs']);
+        if ($this->useMysql()) {
+            self::assertSame('MUL', $state['audit']['liveKey']);
+            self::assertSame($state['audit']['liveKey'], $state['audit']['baselineKey']);
+            self::assertSame(1, $state['audit']['recognized']);
+            self::assertSame('data_source_profile_id', $state['audit']['index']['Column_name']);
+            self::assertSame('BTREE', $state['audit']['index']['Index_type']);
+            self::assertSame('', $state['audit']['index']['Null']);
+        }
     }
 
     public function testAuditBaselinePreservesProfileReferenceIndex(): void

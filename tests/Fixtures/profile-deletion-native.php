@@ -29,20 +29,47 @@ $mysql = getenv('PROFILE_DELETE_MYSQL') === '1';
 $db = $mysql ? new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '') : new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+$tableMap = array();
+if ($mysql && ($scenario['request']['drp_action'] ?? '') === '2') {
+    $ownedPrefix = 'pr_profile_' . bin2hex(random_bytes(8)) . '_';
+    foreach (array('data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $table) {
+        $tableMap[$table] = $ownedPrefix . $table;
+    }
+}
+function profile_native_sql($sql)
+{
+    foreach ($GLOBALS['tableMap'] as $logical => $physical) {
+        $sql = preg_replace('/\b' . preg_quote($logical, '/') . '\b/', $physical, $sql);
+    }
+    return $sql;
+}
+function profile_native_cleanup()
+{
+    foreach ($GLOBALS['tableMap'] as $table) {
+        $GLOBALS['db']->exec('DROP TABLE IF EXISTS ' . $table);
+    }
+}
+$snapshotRegistered = false;
+register_shutdown_function(function () {
+    if (!$GLOBALS['snapshotRegistered']) {
+        profile_native_cleanup();
+    }
+});
 $prefix = $mysql ? 'CREATE TEMPORARY TABLE ' : 'CREATE TABLE ';
+$profilePrefix = $tableMap ? 'CREATE TABLE ' : $prefix;
 $idColumn = $mysql ? 'INTEGER PRIMARY KEY AUTO_INCREMENT' : 'INTEGER PRIMARY KEY';
-$db->exec($prefix . 'data_source_profiles (id INTEGER PRIMARY KEY, name VARCHAR(255), hash VARCHAR(64), step INTEGER, heartbeat INTEGER, x_files_factor DOUBLE, `default` VARCHAR(4))');
-$db->exec($prefix . 'data_source_profiles_rra (id ' . $idColumn . ', data_source_profile_id INTEGER, name VARCHAR(255), steps INTEGER, `rows` INTEGER, timespan INTEGER)');
-$db->exec($prefix . 'data_source_profiles_cf (data_source_profile_id INTEGER, consolidation_function_id INTEGER)');
+$db->exec($profilePrefix . profile_native_sql('data_source_profiles (id INTEGER PRIMARY KEY, name VARCHAR(255), hash VARCHAR(64), step INTEGER, heartbeat INTEGER, x_files_factor DOUBLE, `default` VARCHAR(4))'));
+$db->exec($profilePrefix . profile_native_sql('data_source_profiles_rra (id ' . $idColumn . ', data_source_profile_id INTEGER, name VARCHAR(255), steps INTEGER, `rows` INTEGER, timespan INTEGER)'));
+$db->exec($profilePrefix . profile_native_sql('data_source_profiles_cf (data_source_profile_id INTEGER, consolidation_function_id INTEGER)'));
 $db->exec($prefix . 'data_template_data (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, local_data_id INTEGER)');
 $db->exec('CREATE INDEX data_source_profile_id ON data_template_data (data_source_profile_id)');
 $db->exec($prefix . 'settings (name VARCHAR(64) PRIMARY KEY, value VARCHAR(255))');
 $db->exec($prefix . 'settings_user (name VARCHAR(64),user_id INTEGER,value VARCHAR(255))');
 $db->exec($prefix . 'user_auth (id INTEGER PRIMARY KEY,username VARCHAR(64),reset_perms INTEGER)');
 $db->exec("INSERT INTO user_auth VALUES (7,'fixture-admin',0)");
-$db->exec("INSERT INTO data_source_profiles VALUES (1,'Template profile','abc',300,600,0.5,''),(2,'Local profile','def',300,600,0.5,''),(3,'Unused profile','ghi',300,600,0.5,'')");
-$db->exec("INSERT INTO data_source_profiles_rra VALUES (11,1,'Hourly',1,100,30000),(12,2,'Hourly',1,100,30000),(13,3,'Hourly',1,100,30000)");
-$db->exec('INSERT INTO data_source_profiles_cf VALUES (1,1),(2,1),(3,1)');
+$db->exec(profile_native_sql("INSERT INTO data_source_profiles VALUES (1,'Template profile','abc',300,600,0.5,''),(2,'Local profile','def',300,600,0.5,''),(3,'Unused profile','ghi',300,600,0.5,'')"));
+$db->exec(profile_native_sql("INSERT INTO data_source_profiles_rra VALUES (11,1,'Hourly',1,100,30000),(12,2,'Hourly',1,100,30000),(13,3,'Hourly',1,100,30000)"));
+$db->exec(profile_native_sql('INSERT INTO data_source_profiles_cf VALUES (1,1),(2,1),(3,1)'));
 $db->exec('INSERT INTO data_template_data VALUES (1,1,0),(2,2,42)');
 $calls = array();
 $rollbacks = 0;
@@ -54,7 +81,7 @@ function profile_native_statement($sql, $params = array())
     if (!$GLOBALS['mysql']) {
         $sql = str_replace('FOR UPDATE', '', $sql);
     }
-    $statement = $GLOBALS['db']->prepare($sql);
+    $statement = $GLOBALS['db']->prepare(profile_native_sql($sql));
     $statement->execute($params);
     return $statement;
 }
@@ -85,6 +112,10 @@ function db_fetch_assoc_prepared($sql, $params = array())
         }
         if ($GLOBALS['failure'] === 'lookup-invalid-row') {
             return array(array('data_source_profile_id' => 'invalid'));
+        }
+        if ($GLOBALS['failure'] === 'lookup-aborted') {
+            $GLOBALS['db']->rollBack();
+            return false;
         }
         if ($GLOBALS['failure'] === 'lookup-throw') {
             throw new RuntimeException('Native lookup failure');
@@ -225,11 +256,16 @@ require $root . '/include/global_form.php';
 $config['base_path'] = $directory;
 ob_start();
 register_shutdown_function(function () use ($db, $directory) {
-    $tables = array();
-    foreach (array('data_source_profiles', 'data_source_profiles_rra', 'data_source_profiles_cf') as $table) {
-        $tables[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
+    try {
+        $tables = array();
+        foreach (array('data_source_profiles', 'data_source_profiles_rra', 'data_source_profiles_cf') as $table) {
+            $tables[$table] = $db->query(profile_native_sql('SELECT * FROM ' . $table))->fetchAll(PDO::FETCH_ASSOC);
+        }
+        file_put_contents($directory . '/result.json', json_encode(array('html' => ob_get_clean(), 'tables' => $tables, 'messages' => $_SESSION['sess_messages'] ?? array(), 'log' => is_file($directory . '/native.log') ? file_get_contents($directory . '/native.log') : '', 'calls' => $GLOBALS['calls'], 'rollbacks' => $GLOBALS['rollbacks'], 'commits' => $GLOBALS['commits']), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+    } finally {
+        profile_native_cleanup();
     }
-    file_put_contents($directory . '/result.json', json_encode(array('html' => ob_get_clean(), 'tables' => $tables, 'messages' => $_SESSION['sess_messages'] ?? array(), 'log' => is_file($directory . '/native.log') ? file_get_contents($directory . '/native.log') : '', 'calls' => $GLOBALS['calls'], 'rollbacks' => $GLOBALS['rollbacks'], 'commits' => $GLOBALS['commits']), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
 });
+$snapshotRegistered = true;
 chdir($directory);
 require $directory . '/data_source_profiles.php';
