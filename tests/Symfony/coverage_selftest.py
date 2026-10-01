@@ -196,6 +196,7 @@ def main():
         'template was not deleted',
     ]
     failures = {
+        'data-source-profile-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'aggregate-test-hash': 'Integration test source differs',
@@ -274,6 +275,8 @@ def main():
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'data-source-profile-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'aggregate-test-hash':
