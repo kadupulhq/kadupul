@@ -1991,18 +1991,66 @@ function automation_string_replace($search, $replace, $target)
     if ($delimiter === null) {
         $delimiter = chr(127);
 
-        // Escape only unescaped fallback delimiters; preserve backslash parity.
+        // Escape only delimiter bytes interpreted by PHP, preserving PCRE quoting.
         $escaped = false;
         $quoted = false;
+        $block_comment = false;
+        $line_comment = false;
+        $extended = false;
+        $modes = array();
+        $class_start = null;
+        $posix_class = null;
         $delimited_search = '';
 
         for ($offset = 0, $length = strlen($search); $offset < $length; $offset++) {
             $character = $search[$offset];
+            $next = $search[$offset + 1] ?? '';
 
-            if ($character === '\\' && ($search[$offset + 1] ?? '') === 'E' && $quoted) {
-                $quoted = false;
-            } elseif ($character === '\\' && !$escaped && ($search[$offset + 1] ?? '') === 'Q' && !$quoted) {
-                $quoted = true;
+            if ($block_comment) {
+                $block_comment = $character !== ')';
+            } elseif ($line_comment) {
+                $line_comment = $character !== "\n" && $character !== "\r";
+            } elseif ($quoted) {
+                if ($character === '\\' && $next === 'E') {
+                    $quoted = false;
+                }
+            } elseif (!$escaped) {
+                if ($character === '\\' && $next === 'Q') {
+                    $quoted = true;
+                } elseif ($class_start !== null) {
+                    if ($character === '[' && in_array($next, array(':', '.', '='), true)) {
+                        $posix_class = $next;
+                    } elseif ($character === ']' && $posix_class !== null && ($search[$offset - 1] ?? '') === $posix_class) {
+                        $posix_class = null;
+                    } elseif ($character === ']' && $posix_class === null && $offset !== $class_start + 1
+                        && !($offset === $class_start + 2 && $search[$class_start + 1] === '^')) {
+                        $class_start = null;
+                    }
+                } elseif ($character === '[') {
+                    $class_start = $offset;
+                } elseif ($character === '(' && substr($search, $offset, 3) === '(?#') {
+                    $block_comment = true;
+                } elseif ($character === '#' && $extended) {
+                    $line_comment = true;
+                } elseif ($character === '(') {
+                    if (preg_match('/\G\(\?([a-zA-Z]*)(?:-([a-zA-Z]*))?([:)])/', $search, $modifiers, 0, $offset)) {
+                        if ($modifiers[3] === ':') {
+                            $modes[] = $extended;
+                        }
+                        if (strpos($modifiers[2] ?? '', 'x') !== false) {
+                            $extended = false;
+                        } elseif (strpos($modifiers[1], 'x') !== false) {
+                            $extended = true;
+                        }
+                        $delimited_search .= $modifiers[0];
+                        $offset += strlen($modifiers[0]) - 1;
+                        $escaped = false;
+                        continue;
+                    }
+                    $modes[] = $extended;
+                } elseif ($character === ')' && $modes) {
+                    $extended = array_pop($modes);
+                }
             }
 
             if ($character === $delimiter && $quoted) {
@@ -2012,7 +2060,6 @@ function automation_string_replace($search, $replace, $target)
                 if ($character === $delimiter && !$escaped) {
                     $delimited_search .= '\\';
                 }
-
                 $delimited_search .= $character;
             }
             $escaped = $character === '\\' ? !$escaped : false;
