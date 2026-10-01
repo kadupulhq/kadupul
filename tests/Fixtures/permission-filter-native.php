@@ -103,4 +103,19 @@ require (getenv('PERMISSION_FILTER_CONTROLLER_ROOT') ?: $root) . '/' . $scenario
 ob_start();
 ($scenario['function'] . '_filter')('Example');
 $html = ob_get_clean();
-print json_encode(array('html' => $html, 'queries' => $queries), JSON_THROW_ON_ERROR);
+// Browser behavior tests execute the script nodes parsed from the actual markup.
+$document = new DOMDocument();
+$previous_errors = libxml_use_internal_errors(true);
+try {
+    if (!$document->loadHTML($html, LIBXML_NONET)) {
+        throw new RuntimeException('Could not parse the native permission filter markup.');
+    }
+} finally {
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous_errors);
+}
+$scripts = array();
+foreach ($document->getElementsByTagName('script') as $script) {
+    $scripts[] = $script->textContent;
+}
+print json_encode(array('html' => $html, 'queries' => $queries, 'scripts' => $scripts), JSON_THROW_ON_ERROR);

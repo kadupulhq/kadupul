@@ -25,10 +25,9 @@ for (const page of ['user_admin.php', 'user_group_admin.php']) {
       }
       assert.equal(result.status, 0, result.stdout + result.stderr);
       assert.equal(result.stderr, '');
-      const { html } = JSON.parse(result.stdout);
-      const scriptPattern = /<script\b[^>]*>([\s\S]*?)<\/script\s*>/i;
-      const script = html.match(scriptPattern)[1];
-      assert.equal(html.replace('<script ', '<SCRIPT ').replace('</script>', '</SCRIPT >').match(scriptPattern)[1], script);
+      const { scripts } = JSON.parse(result.stdout);
+      assert.equal(scripts.length, 1);
+      const script = scripts[0];
       const bindings = new Map();
       const calls = [];
       const fields = { '#rows': '25', '#filter': 'literal search', '#graph_template_id': '3', '#host_template_id': '4' };
