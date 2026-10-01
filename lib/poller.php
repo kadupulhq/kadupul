@@ -2254,6 +2254,11 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
         );
     }
 
+    if (($class == 'all' || $class == 'data') && !db_execute_prepared('UPDATE poller SET last_sync=NOW(), requires_sync="" WHERE id=?', array($remote_poller_id))) {
+        cacti_log('ERROR: Poller ' . $remote_poller_id . ' completion-state write failed; synchronization remains required.', false, 'REPLICATE');
+        return false;
+    }
+
     if ($class != 'plugins' && $config['is_web']) {
         replicate_log('Synchronization of Poller ' . $remote_poller_id . ' completed', POLLER_VERBOSITY_LOW);
         raise_message('poller_sync');

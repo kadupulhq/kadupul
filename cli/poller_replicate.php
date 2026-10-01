@@ -105,13 +105,6 @@ if (cacti_sizeof($pollers)) {
             continue;
         }
 
-        db_execute_prepared(
-            'UPDATE poller
-			SET last_sync = NOW(), requires_sync=""
-			WHERE id = ?',
-            array($poller['id'])
-        );
-
         cacti_log('STATS: Poller ID ' . $poller['id'] . ' fully Replicated', false, 'POLLER');
     }
 

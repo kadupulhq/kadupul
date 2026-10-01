@@ -131,6 +131,8 @@ function data_source_profile_definition_triggers(string $profiles = 'data_source
 /** Copy the parent catalog before either collector replication path writes children. */
 function replicate_data_source_profile_parents(PDO $connection, array $data): bool
 {
+    global $database_sessions, $database_default, $database_hostname, $database_port;
+
     $ids = [];
     foreach ($data as $row) {
         $id = $row['data_source_profile_id'] ?? 0;
@@ -144,27 +146,42 @@ function replicate_data_source_profile_parents(PDO $connection, array $data): bo
     if (!$ids) {
         return true;
     }
+    $source_started = false;
     try {
+        $source_connection = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+        if (!$source_connection instanceof PDO) {
+            throw new RuntimeException('Source profile connection is unavailable.');
+        }
+        if (!$source_connection->inTransaction()) {
+            if (!db_begin_transaction()) {
+                throw new RuntimeException('Source profile snapshot could not be started.');
+            }
+            $source_started = true;
+        }
         $profiles = db_fetch_assoc_prepared(
-            'SELECT * FROM data_source_profiles WHERE id IN (' . implode(',', array_fill(0, count($ids), '?')) . ')',
+            'SELECT * FROM data_source_profiles WHERE id IN (' . implode(',', array_fill(0, count($ids), '?')) . ') ORDER BY id FOR UPDATE',
             array_values($ids)
         );
         if (!is_array($profiles) || count($profiles) !== count($ids)) {
-            return false;
+            throw new RuntimeException('Source profile catalog is incomplete.');
         }
         $definitions = ['data_source_profiles' => $profiles];
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         foreach (['data_source_profiles_rra', 'data_source_profiles_cf'] as $table) {
-            $rows = db_fetch_assoc_prepared("SELECT * FROM $table WHERE data_source_profile_id IN ($placeholders)", array_values($ids));
+            $rows = db_fetch_assoc_prepared("SELECT * FROM $table WHERE data_source_profile_id IN ($placeholders) FOR UPDATE", array_values($ids));
             if (!is_array($rows)) {
-                return false;
+                throw new RuntimeException('Source profile definitions could not be read.');
             }
             $delivered = array_unique(array_map(static fn($row) => (int) ($row['data_source_profile_id'] ?? 0), $rows));
             if (array_diff($ids, $delivered)) {
-                return false;
+                throw new RuntimeException('Source profile definitions are incomplete.');
             }
             $definitions[$table] = $rows;
         }
+        if ($source_started && !db_commit_transaction()) {
+            throw new RuntimeException('Source profile snapshot completion was not acknowledged.');
+        }
+        $source_started = false;
         // Complete schema creation before opening the delivery transaction:
         // MySQL DDL would otherwise commit a partly copied profile.
         foreach ($definitions as $table => $rows) {
@@ -239,6 +256,13 @@ function replicate_data_source_profile_parents(PDO $connection, array $data): bo
             throw $error;
         }
     } catch (Throwable $error) {
+        if ($source_started) {
+            try {
+                db_rollback_transaction();
+            } catch (Throwable $rollback_error) {
+                cacti_log('ERROR: Source profile snapshot rollback failed: ' . $rollback_error->getMessage(), false, 'REPLICATE');
+            }
+        }
         cacti_log('ERROR: Unable to replicate profile parents: ' . $error->getMessage(), false, 'REPLICATE');
         return false;
     }

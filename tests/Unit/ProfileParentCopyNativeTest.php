@@ -26,9 +26,12 @@ final class ProfileParentCopyNativeTest extends TestCase
             self::assertSame(0, proc_close($process), $output);
             self::assertSame('', $output);
             $state = json_decode(file_get_contents($directory . '/result.json'), true, flags: JSON_THROW_ON_ERROR);
-            self::assertSame(in_array($case, array('success', 'zero', 'missing-table'), true), $state['success']);
+            self::assertSame(in_array($case, ['source-active', 'source-active-failure'], true), $state['source_active']);
+            self::assertSame(in_array($case, array('success', 'zero', 'missing-table', 'source-active'), true), $state['success']);
             if ($case === 'success') {
                 self::assertSame(array(array('id' => 1, 'name' => 'Updated default'), array('id' => 77, 'name' => 'Custom profile')), $state['rows']);
+            } elseif ($case === 'source-active') {
+                self::assertSame(array(array('id' => 1, 'name' => 'Old default'), array('id' => 77, 'name' => 'Custom profile')), $state['rows']);
             } elseif ($case === 'missing-table') {
                 self::assertSame(array(array('id' => 77, 'name' => 'Custom profile')), $state['rows']);
             } elseif ($case !== 'create-failure' && $case !== 'missing-definition') {
@@ -51,6 +54,6 @@ final class ProfileParentCopyNativeTest extends TestCase
 
     public static function cases(): array
     {
-        return array_map(static fn($case) => array($case), array('success', 'zero', 'negative', 'invalid', 'missing-parent', 'query-failure', 'copy-failure', 'copy-exception', 'missing-table', 'create-failure', 'missing-definition'));
+        return array_map(static fn($case) => array($case), array('success', 'zero', 'negative', 'invalid', 'missing-parent', 'query-failure', 'copy-failure', 'copy-exception', 'missing-table', 'create-failure', 'missing-definition', 'snapshot-begin', 'snapshot-commit', 'source-active', 'source-active-failure', 'source-unavailable'));
     }
 }

@@ -15,13 +15,17 @@ $dsn = "mysql:host=$host;port=$port;dbname=$database;charset=utf8mb4";
 $connect = static fn() => new PDO($dsn, getenv('BOOST_DB_USER'), getenv('BOOST_DB_PASSWORD'), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 $owner = $connect();
 $writer = $connect();
+// Schema installation needs a dedicated DDL account; lock owners remain ordinary users.
+$installer_connection = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER')
+    ? new PDO($dsn, getenv('KADUPUL_TEST_MYSQL_ADMIN_USER'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION])
+    : $connect();
 $writer->exec('SET SESSION innodb_lock_wait_timeout=1');
 $root = dirname(__DIR__, 2);
 $source = file_get_contents($root . '/cacti.sql');
 $created = [];
 function db_install_execute($sql)
 {
-    return $GLOBALS['owner']->exec($sql);
+    return $GLOBALS['installer_connection']->exec($sql);
 }
 function db_index_exists($table, $name)
 {
@@ -71,7 +75,7 @@ function cacti_sizeof($value)
 }
 function db_execute($sql)
 {
-    $GLOBALS['owner']->exec($sql);
+    $GLOBALS['installer_connection']->exec($sql);
     return true;
 }
 function db_fetch_assoc_prepared($sql, $parameters = [], ...$arguments)
