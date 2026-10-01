@@ -960,16 +960,29 @@ def main():
         if 'classify_entry_points.php timed out after 120 seconds' not in str(error):
             failures.append('classifier timeout: expected a bounded-time diagnostic, got %s' % error)
     invalid_requests = [
-        ('missing root', {'files': [], 'served': [], 'plugin_realms': []}, 'root'),
+        ('missing root', {'files': [], 'served': [], 'plugin_realms': {}}, 'root'),
         ('empty root', {'root': '  ', 'files': [], 'served': [], 'plugin_realms': {}}, 'root'),
         ('mistyped files', {'root': '/tmp', 'files': 'page.php', 'served': [], 'plugin_realms': {}}, 'files'),
         ('mistyped served entry', {'root': '/tmp', 'files': [], 'served': [7], 'plugin_realms': {}}, 'served[0]'),
         ('mistyped plugin realm', {'root': '/tmp', 'files': [], 'served': [], 'plugin_realms': {'page.php': '3'}}, 'plugin_realms'),
+        ('scalar request', json.dumps('x'), 'JSON object'),
+        ('numeric request', 5, 'JSON object'),
+        ('null request', 'null', 'JSON object'),
+        ('array request', [], 'JSON object'),
+        ('files object', {'root': '/tmp', 'files': {'slot': 'page.php'}, 'served': [], 'plugin_realms': {}}, 'files'),
+        ('empty files object', {'root': '/tmp', 'files': {}, 'served': [], 'plugin_realms': {}}, 'files'),
+        ('served object', {'root': '/tmp', 'files': [], 'served': {'slot': 'page.php'}, 'plugin_realms': {}}, 'served'),
+        ('empty served object', {'root': '/tmp', 'files': [], 'served': {}, 'plugin_realms': {}}, 'served'),
+        ('files entry', {'root': '/tmp', 'files': [3], 'served': [], 'plugin_realms': {}}, 'files[0]'),
+        ('missing plugin realms', {'root': '/tmp', 'files': [], 'served': []}, 'plugin_realms'),
+        ('mistyped served', {'root': '/tmp', 'files': [], 'served': 'x', 'plugin_realms': {}}, 'served'),
+        ('realm list', {'root': '/tmp', 'files': [], 'served': [], 'plugin_realms': [5]}, 'plugin_realms'),
+        ('empty realm list', {'root': '/tmp', 'files': [], 'served': [], 'plugin_realms': []}, 'plugin_realms'),
     ]
     for case, request, key in invalid_requests:
         count += 1
         result = raw_classifier(request)
-        if result.returncode != 2 or key not in result.stderr:
+        if result.returncode != 2 or key not in result.stderr or result.stdout:
             failures.append('%s: expected exit 2 and an error naming %s, got %d: %s' % (
                 case, key, result.returncode, result.stderr.strip()))
 
