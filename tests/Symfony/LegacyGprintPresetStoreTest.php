@@ -79,6 +79,49 @@ final class LegacyGprintPresetStoreTest extends TestCase
         $this->store = new LegacyGprintPresetStore($database, $access, $this->audit, $this->configuration);
     }
 
+    #[DataProvider('silentDriverFailures')]
+    public function testFailedStatementsCannotReportASaveOrDelete(string $operation): void
+    {
+        $revision = $this->store->find(3)->revision;
+        $before = $this->pdo->query('SELECT * FROM graph_templates_gprint ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC);
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        if ($operation === 'insert' || $operation === 'update') {
+            $event = strtoupper($operation);
+            self::assertNotFalse($this->pdo->exec("CREATE TRIGGER reject_gprint_write BEFORE $event ON graph_templates_gprint BEGIN SELECT RAISE(FAIL, 'Fixture rejected write'); END"));
+            self::assertGreaterThan(0, (int) $this->pdo->lastInsertId());
+        } else {
+            self::assertNotFalse($this->pdo->exec('DROP TABLE graph_templates_item'));
+            self::assertNotFalse($this->pdo->exec("CREATE VIEW graph_templates_item AS SELECT CAST(3 AS INTEGER) AS gprint_id, 0 AS local_graph_id, json_extract('invalid-json', '$') AS graph_template_id"));
+            $probe = $this->pdo->prepare('SELECT gprint_id, local_graph_id, graph_template_id FROM graph_templates_item WHERE gprint_id IN (?) ORDER BY gprint_id, graph_template_id, local_graph_id');
+            self::assertInstanceOf(\PDOStatement::class, $probe);
+            if ($probe->execute([3])) {
+                $probe->fetch();
+            }
+            self::assertNotSame('00000', $probe->errorCode(), 'The dependency fixture must produce a real driver error.');
+        }
+        $failure = null;
+        try {
+            if ($operation === 'insert') {
+                $this->store->save(42, null, 'New rejected preset', '%6.2lf', null);
+            } elseif ($operation === 'update') {
+                $this->store->save(42, 3, 'Rejected update', '%6.2lf', $revision);
+            } else {
+                $this->store->delete(42, [3], [3 => $revision]);
+            }
+        } catch (\Throwable $error) {
+            $failure = $error;
+        }
+        self::assertInstanceOf(\RuntimeException::class, $failure);
+        self::assertFalse($this->pdo->inTransaction());
+        self::assertSame($before, $this->pdo->query('SELECT * FROM graph_templates_gprint ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC));
+        self::assertSame(AuditEvent::FAILED, $this->audit->events[array_key_last($this->audit->events)]->outcome);
+    }
+
+    public static function silentDriverFailures(): array
+    {
+        return [['insert'], ['update'], ['dependency-read']];
+    }
+
     public function testItCountsGraphAndTemplateReferencesAndFiltersResults(): void
     {
         $page = $this->store->list(GprintPresetFilters::fromQuery(['filter' => 'In use'], 25));

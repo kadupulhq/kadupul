@@ -10,6 +10,7 @@ namespace Kadupul\Tests;
 use Kadupul\Graphing\Application\Port\GprintPresetAccess;
 use Kadupul\Graphing\Infrastructure\Legacy\LegacyGprintPresetStore;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
+use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -80,12 +81,58 @@ final class GprintPresetFailureHandoffTest extends TestCase
         return [['save', false], ['save', true], ['delete', false], ['delete', true]];
     }
 
-    private function store(\PDO $db, GprintPresetAccess $access): LegacyGprintPresetStore
+    #[DataProvider('lateReadFailures')]
+    public function testLateReadFailuresCannotBecomeMissingRowsOrEmptyCounts(string $read): void
+    {
+        $count = $read === 'count';
+        $db = $this->createMock(\PDO::class);
+        $db->method('getAttribute')->with(\PDO::ATTR_DRIVER_NAME)->willReturn('sqlite');
+        $db->method('inTransaction')->willReturnOnConsecutiveCalls(false, true);
+        $db->expects($count ? self::never() : self::once())->method('beginTransaction')->willReturn(true);
+        $db->expects($count ? self::never() : self::once())->method('rollBack')->willReturn(true);
+        $db->expects(self::never())->method('commit');
+        $statement = $this->createMock(\PDOStatement::class);
+        $statement->expects(self::once())->method('execute')->willReturn(true);
+        $failed = false;
+        // The driver succeeds at execution and reports connection loss during
+        // the public operation's subsequent fetch, rather than an empty result.
+        $statement->method('errorCode')->willReturnCallback(static function () use (&$failed): string {
+            return $failed ? '08006' : '00000';
+        });
+        $method = match ($read) {
+            'row' => 'fetch', 'batch' => 'fetchAll', default => 'fetchColumn'
+        };
+        $statement->expects(self::once())->method($method)->willReturnCallback(static function () use (&$failed, $read): array|false {
+            $failed = true;
+            return $read === 'batch' ? [] : false;
+        });
+        $db->expects(self::once())->method('prepare')->willReturn($statement);
+        $access = $this->createMock(GprintPresetAccess::class);
+        $access->expects($count ? self::never() : self::once())->method('assertCurrent');
+        $audit = $this->createMock(AuditTrail::class);
+        $audit->expects($count ? self::never() : self::once())->method('record')
+            ->with(self::callback(static fn(AuditEvent $event): bool => $event->outcome === AuditEvent::FAILED));
+        $store = $this->store($db, $access, $audit);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('GPRINT database result could not be confirmed.');
+        match ($read) {
+            'row' => $store->save(42, 1, 'Preset', '%6.2lf', str_repeat('0', 64)),
+            'batch' => $store->delete(42, [1], [1 => str_repeat('0', 64)]),
+            default => $store->list(\Kadupul\Graphing\Domain\GprintPresetFilters::fromQuery([], 25)),
+        };
+    }
+
+    public static function lateReadFailures(): array
+    {
+        return [['row'], ['batch'], ['count']];
+    }
+
+    private function store(\PDO $db, GprintPresetAccess $access, ?AuditTrail $audit = null): LegacyGprintPresetStore
     {
         $connection = $this->createMock(DatabaseConnection::class);
         $connection->method('get')->willReturn($db);
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['collector_id' => 1]);
-        return new LegacyGprintPresetStore($connection, $access, $this->createMock(AuditTrail::class), $configuration);
+        return new LegacyGprintPresetStore($connection, $access, $audit ?? $this->createMock(AuditTrail::class), $configuration);
     }
 }

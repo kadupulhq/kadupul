@@ -45,8 +45,8 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             return null;
         }
         $query = $this->database->get()->prepare($this->presetQuery() . ' WHERE gp.id = ? GROUP BY gp.id, gp.name, gp.gprint_text, gp.hash');
-        $query->execute([$id]);
-        $row = $query->fetch();
+        $this->execute($query, [$id]);
+        $row = $this->fetchOne($query);
         return $row ? $this->hydrate($row) : null;
     }
 
@@ -57,8 +57,8 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
         }
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         $query = $this->database->get()->prepare($this->presetQuery() . ' WHERE gp.id IN (' . $placeholders . ') GROUP BY gp.id, gp.name, gp.gprint_text, gp.hash ORDER BY gp.id');
-        $query->execute($ids);
-        return array_map($this->hydrate(...), $query->fetchAll());
+        $this->execute($query, $ids);
+        return array_map($this->hydrate(...), $this->fetchAll($query));
     }
 
     public function list(GprintPresetFilters $filters): GprintPresetPage
@@ -74,8 +74,8 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
         $count = $db->prepare('SELECT COUNT(*) FROM (SELECT gp.id, SUM(CASE WHEN ref.local_graph_id > 0 THEN 1 ELSE 0 END) graphs,
             SUM(CASE WHEN ref.local_graph_id = 0 THEN 1 ELSE 0 END) templates FROM graph_templates_gprint gp
             LEFT JOIN (' . $this->referenceQuery() . ') ref ON ref.gprint_id = gp.id' . $where . ' GROUP BY gp.id' . $having . ') counted');
-        $count->execute($parameters);
-        $total = (int) $count->fetchColumn();
+        $this->execute($count, $parameters);
+        $total = (int) $this->fetchScalar($count);
 
         $sort = match ($filters->sortColumn) {
             'gprint_text' => 'gp.gprint_text', 'graphs' => 'graphs', 'templates' => 'templates', default => 'gp.name',
@@ -87,8 +87,8 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             FROM graph_templates_gprint gp LEFT JOIN (' . $this->referenceQuery() . ') ref ON ref.gprint_id = gp.id'
             . $where . ' GROUP BY gp.id, gp.name, gp.gprint_text, gp.hash' . $having
             . ' ORDER BY ' . $sort . ' ' . $filters->sortDirection . ', gp.id ASC LIMIT ? OFFSET ?');
-        $query->execute([...$parameters, $filters->rows, $offset]);
-        $presets = array_map($this->hydrate(...), $query->fetchAll());
+        $this->execute($query, [...$parameters, $filters->rows, $offset]);
+        $presets = array_map($this->hydrate(...), $this->fetchAll($query));
         return new GprintPresetPage($presets, $total, $filters);
     }
 
@@ -113,8 +113,8 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             if ($id !== null) {
                 $suffix = $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
                 $query = $db->prepare('SELECT id, name, gprint_text, hash FROM graph_templates_gprint WHERE id = ?' . $suffix);
-                $query->execute([$id]);
-                $current = $query->fetch() ?: null;
+                $this->execute($query, [$id]);
+                $current = $this->fetchOne($query) ?: null;
                 if ($current === null) {
                     throw new \InvalidArgumentException('GPRINT Preset not found.');
                 }
@@ -128,7 +128,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             if ($current === null) {
                 $hash = bin2hex(random_bytes(16));
                 $insert = $db->prepare('INSERT INTO graph_templates_gprint (hash, name, gprint_text) VALUES (?, ?, ?)');
-                $insert->execute([$hash, $name, $gprintText]);
+                $this->execute($insert, [$hash, $name, $gprintText]);
                 $savedId = (int) $db->lastInsertId();
                 if ($savedId < 1) {
                     throw new \RuntimeException('GPRINT Preset creation was not confirmed.');
@@ -136,7 +136,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
                 $target = (string) $savedId;
             } else {
                 $update = $db->prepare('UPDATE graph_templates_gprint SET name = ?, gprint_text = ? WHERE id = ?');
-                $update->execute([$name, $gprintText, $id]);
+                $this->execute($update, [$name, $gprintText, $id]);
                 $savedId = $id;
             }
             if (!$db->commit()) {
@@ -183,8 +183,8 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
             $suffix = $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
             $query = $db->prepare('SELECT id, name, gprint_text, hash FROM graph_templates_gprint WHERE id IN (' . $placeholders . ') ORDER BY id' . $suffix);
-            $query->execute($ids);
-            $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $this->execute($query, $ids);
+            $rows = $this->fetchAll($query);
             $found = array_map('intval', array_column($rows, 'id'));
             if ($found !== $ids) {
                 throw new \InvalidArgumentException('One or more selected GPRINT Presets no longer exist.');
@@ -196,12 +196,12 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
                 }
             }
             $refs = $db->prepare('SELECT gprint_id, local_graph_id, graph_template_id FROM graph_templates_item WHERE gprint_id IN (' . $placeholders . ') ORDER BY gprint_id, graph_template_id, local_graph_id' . $suffix);
-            $refs->execute($ids);
-            if ($refs->fetch() !== false) {
+            $this->execute($refs, $ids);
+            if ($this->fetchOne($refs) !== false) {
                 throw new \InvalidArgumentException('GPRINT Presets in use by a graph or graph template cannot be deleted.');
             }
             $delete = $db->prepare('DELETE FROM graph_templates_gprint WHERE id IN (' . $placeholders . ')');
-            $delete->execute($ids);
+            $this->execute($delete, $ids);
             if ($delete->rowCount() !== count($ids)) {
                 throw new \RuntimeException('GPRINT Preset deletion was not confirmed.');
             }
@@ -216,6 +216,41 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             throw $error;
         } finally {
             $this->record($actorId, 'graphing.gprint.delete', $target, $decision, $outcome);
+        }
+    }
+
+    private function execute(\PDOStatement|false $statement, array $parameters): void
+    {
+        if ($statement === false || !$statement->execute($parameters)) {
+            throw new \RuntimeException('GPRINT database operation could not be confirmed.');
+        }
+    }
+
+    private function fetchOne(\PDOStatement $statement): array|false
+    {
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
+        $this->assertReadConfirmed($statement);
+        return $row;
+    }
+
+    private function fetchAll(\PDOStatement $statement): array
+    {
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $this->assertReadConfirmed($statement);
+        return $rows;
+    }
+
+    private function fetchScalar(\PDOStatement $statement): mixed
+    {
+        $value = $statement->fetchColumn();
+        $this->assertReadConfirmed($statement);
+        return $value;
+    }
+
+    private function assertReadConfirmed(\PDOStatement $statement): void
+    {
+        if ($statement->errorCode() !== '00000') {
+            throw new \RuntimeException('GPRINT database result could not be confirmed.');
         }
     }
 
