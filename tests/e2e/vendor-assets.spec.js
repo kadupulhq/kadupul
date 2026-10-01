@@ -142,6 +142,26 @@ test("spike removal and dry-run requests carry POST tokens", async ({ page }) =>
   expect(requests[1].url).toContain("dryrun=true");
 });
 
+test("DOMPurify refuses to return an in-place raw-text root selected for removal", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("style");
+    root.textContent = "</style><img src=x onerror=alert(1)>";
+    document.body.append(root);
+    let message;
+    try {
+      DOMPurify.sanitize(root, { IN_PLACE: true, ADD_TAGS: ["style"] });
+    } catch (error) {
+      message = error.message;
+    }
+    return { message, connected: root.isConnected };
+  });
+  expect(result).toEqual({
+    message: "a node selected for removal could not be safely returned; refusing to sanitize in place",
+    connected: false,
+  });
+});
+
 test("DOMPurify abort clears shadow and template trees and unsafe URI attributes", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {
@@ -249,7 +269,7 @@ test("D3 quantileIndex ignores invalid members while retaining original indexes"
 
 test("DOMPurify final template scrub includes a template root", async ({ page }) => {
   const source = fs.readFileSync(path.resolve(__dirname, "../../include/js/purify.js"), "utf8");
-  const anchor = "    DOMPurify.setConfig = function () {";
+  const anchor = "DOMPurify.setConfig = function() {";
   expect(source.split(anchor)).toHaveLength(2);
   await page.addScriptTag({ content: source.replace(anchor, "    DOMPurify.testTemplateScrub = _scrubTemplateExpressions2;\n" + anchor) });
   const result = await page.evaluate(() => {
@@ -325,7 +345,7 @@ test("DOMPurify final template scrub handles deeply nested fragments without rec
   // Expose the production closure only in this isolated test, exercising the final
   // scrub independently of the separate element-sanitization traversal.
   const source = fs.readFileSync(path.resolve(__dirname, "../../include/js/purify.js"), "utf8");
-  const anchor = "    DOMPurify.setConfig = function () {";
+  const anchor = "DOMPurify.setConfig = function() {";
   expect(source.split(anchor)).toHaveLength(2);
   await page.addScriptTag({ content: source.replace(anchor, "    DOMPurify.testTemplateScrub = _scrubTemplateExpressions2;\n" + anchor) });
   const result = await page.evaluate(() => {
@@ -722,7 +742,7 @@ test("DOMPurify keeps harmless markup and strips executable HTML and SVG", async
     };
   });
   expect(result).toEqual({
-    version: "3.4.15",
+    version: "3.4.16",
     text: "safe",
     scripts: 0,
     handlers: 0,

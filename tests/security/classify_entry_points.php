@@ -2171,7 +2171,55 @@ function symfony_routes(string $root, array $files): array
 
 function main(): int
 {
-    $request = json_decode((string) stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
+    try {
+        $request = json_decode((string) stream_get_contents(STDIN), false, 512, JSON_THROW_ON_ERROR);
+    } catch (JsonException $error) {
+        fwrite(STDERR, 'ERROR: invalid JSON request: ' . $error->getMessage() . PHP_EOL);
+
+        return 2;
+    }
+
+    if (!$request instanceof stdClass) {
+        fwrite(STDERR, 'ERROR: request must be a JSON object' . PHP_EOL);
+
+        return 2;
+    }
+
+    $request = get_object_vars($request);
+
+    foreach (['root' => 'string', 'files' => 'array', 'served' => 'array', 'plugin_realms' => 'object'] as $key => $type) {
+        $valid_type = 'is_' . $type;
+        if (!array_key_exists($key, $request) || !$valid_type($request[$key])) {
+            fwrite(STDERR, 'ERROR: request key "' . $key . '" must be ' . ($type === 'string' ? 'a string' : ($type === 'object' ? 'a JSON object' : 'an array')) . PHP_EOL);
+
+            return 2;
+        }
+    }
+
+    if (trim($request['root']) === '') {
+        fwrite(STDERR, 'ERROR: request key "root" must not be empty' . PHP_EOL);
+
+        return 2;
+    }
+
+    foreach (['files', 'served'] as $key) {
+        foreach ($request[$key] as $index => $path) {
+            if (!is_string($path)) {
+                fwrite(STDERR, 'ERROR: request key "' . $key . '[' . $index . ']" must be a string' . PHP_EOL);
+
+                return 2;
+            }
+        }
+    }
+
+    foreach ($request['plugin_realms'] as $name => $realm) {
+        if (!is_string($name) || !is_int($realm)) {
+            fwrite(STDERR, 'ERROR: request key "plugin_realms" must map string names to integer realm ids' . PHP_EOL);
+
+            return 2;
+        }
+    }
+
     $root = rtrim($request['root'], '/');
     $files = $request['files'];
     try {

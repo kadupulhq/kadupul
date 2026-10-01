@@ -107,8 +107,11 @@ jobs:
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: '8.4'
-        extensions: pdo_mysql
+        extensions: gd, gmp, intl, ldap, mbstring, pdo_mysql, sockets, sqlite3, xml
         coverage: none
+
+    - name: Install application dependencies
+      run: composer install --no-dev --no-interaction --no-progress --prefer-dist
 
     - name: Install test dependencies
       working-directory: tests
@@ -121,11 +124,15 @@ jobs:
         BOOST_DB_NAME: cacti_boost_contract
         BOOST_DB_USER: cactiuser
         BOOST_DB_PASSWORD: cactiuser
+        KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=cacti_boost_contract;charset=utf8mb4
+        KADUPUL_TEST_MYSQL_USER: cactiuser
+        KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
         # Pest 1 dependency deprecations: see docs/testing/php84-modernization-audit.md.
         php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-database.xml --colors=never
+        php Symfony/data_input_lock_probe.php
         php Support/verify_row_cache.php
 
   php:
@@ -182,16 +189,21 @@ jobs:
           # shellcheck disable=SC2016
           php -r '$manifest = json_decode(file_get_contents("composer.json"), true, 512, JSON_THROW_ON_ERROR); echo "available=" . (isset($manifest["scripts"]["test"]) ? "true" : "false") . PHP_EOL;' >> "$GITHUB_OUTPUT"
 
-      - name: Tests
-        if: steps.composer-test.outputs.available == 'true'
-        run: composer test
-
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22.22.2'
 
       - name: Build installed browser assets for compatibility tests
         run: npm ci --ignore-scripts && npm run build
+
+      # The production command, strict about unresolved url() and @import.
+      # CompiledLegacyAssetsTest compiles again into a scratch directory.
+      - name: Compile browser assets
+        run: php bin/console asset-map:compile
+
+      - name: Tests
+        if: steps.composer-test.outputs.available == 'true'
+        run: composer test
 
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
@@ -248,6 +260,10 @@ jobs:
         env:
           PHP_VERSION: '8.4'
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+      - name: Verify External Links through HTTP and MariaDB
+        run: mise exec python@3.12.12 -- python tests/Symfony/link_review_http.py
+      - name: Verify the actual CLI upgrades an installed LTS database version
+        run: mise exec python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
       - name: Refuse forbidden access at every entry point
         run: |
           mise exec python@3.12.12 -- python tests/security/test_entry_route_samples.py
@@ -330,7 +346,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-hashes.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs
 
   changelog:
     name: Changelog
