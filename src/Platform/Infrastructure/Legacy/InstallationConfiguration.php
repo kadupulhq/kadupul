@@ -22,7 +22,7 @@ final class InstallationConfiguration implements LegacyConfiguration
     {
         if ($this->configuration !== null) {
             if (($this->configuration['collector_id'] ?? 1) !== 1) {
-                $this->requireSiteRoute();
+                $this->requireOnlinePrimaryRoute();
             }
             return $this->configuration;
         }
@@ -43,9 +43,9 @@ final class InstallationConfiguration implements LegacyConfiguration
             throw new \RuntimeException('Invalid collector identity.');
         }
         if ($values['collector_id'] !== 1) {
-            $this->requireSiteRoute();
+            $this->requireOnlinePrimaryRoute();
             if (($settings['rdatabase_type'] ?? 'mysql') !== 'mysql' || empty($settings['rdatabase_hostname']) || empty($settings['rdatabase_default']) || !isset($settings['rdatabase_username'], $settings['rdatabase_password']) || ($settings['conn_mode'] ?? '') === 'offline') {
-                throw new \RuntimeException('Online primary configuration is required for collector Sites administration.');
+                throw new \RuntimeException('Online primary configuration is required for collector administration.');
             }
             $primary = array_replace($values, [
                 'host' => $settings['rdatabase_hostname'], 'database' => $settings['rdatabase_default'],
@@ -130,14 +130,15 @@ final class InstallationConfiguration implements LegacyConfiguration
         return get_defined_vars();
     }
 
-    private function requireSiteRoute(): void
+    private function requireOnlinePrimaryRoute(): void
     {
         $route = $this->requests?->getCurrentRequest()?->attributes->get('_route');
         if (!in_array($route, [
             'inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action',
+            'navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action',
             'graph_cdefs', 'graph_cdef_create', 'graph_cdef_edit', 'graph_cdef_item_edit', 'graph_cdef_item_delete', 'graph_cdef_item_reorder', 'graph_cdef_action', 'graph_cdef_legacy',
         ], true)) {
-            throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside online collector Sites routes.');
+            throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside online collector Sites, Navigation and CDEF routes.');
         }
     }
 }

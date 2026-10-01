@@ -5,12 +5,45 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
 } else {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
+if (defined('REPORT_PERSISTENCE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/reports.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_reports.php');
+}
+if (defined('AUTH_CONTROLLER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_changepassword.php');
+    $coverageFilter->includeFile($coverageRoot . '/logout.php');
+}
+if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_33.php');
+    $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
+}
+if (defined('AUDIT_TRAIL_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php');
+}
+if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyRequestContext.php');
+}
+if (defined('FORM_RENDERER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+}
+if (defined('COLOR_DROPDOWN_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+}
 if (defined('PACKAGE_XML_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
 }
@@ -20,9 +53,16 @@ if (defined('PLUGIN_COMPAT_TEST_COVERAGE')) {
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
 }
+if (defined('FORCE_HTTPS_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('HOST_REINDEX_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/host.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
+if (defined('GRAPH_ZOOM_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_zoom.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('REALTIME_EXEC_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
