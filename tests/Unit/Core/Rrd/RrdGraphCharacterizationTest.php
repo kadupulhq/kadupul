@@ -408,7 +408,7 @@ test('VDEF-backed drawing lines render but do not become XPORT columns', functio
             'update rra/router_traffic_11.rrd 1700000100:1:2 1700000400:2:4 1700000700:3:6',
             'update rra/router_errors_12.rrd 1700000100:0 1700000400:1 1700000700:2',
         );
-        $input = implode("\n", array_merge(array($create_traffic, $create_errors), $updates, array($graph_commands[0]['stdin'], $xport_commands[0]['stdin'], 'quit'))) . "\n";
+        $input = implode("\n", array_merge(array($create_traffic, $create_errors), $updates, array(preg_replace('/\s*quit\s*$/', '', $graph_commands[0]['stdin']), preg_replace('/\s*quit\s*$/', '', $xport_commands[0]['stdin']), 'quit'))) . "\n";
         $environment = array('PATH' => getenv('PATH'), 'LANG' => 'C', 'LC_ALL' => 'C', 'HOME' => $directory, 'XDG_CACHE_HOME' => $directory . '/cache');
         $process = proc_open(array($binary, '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
         fwrite($pipes[0], $input);
@@ -429,7 +429,94 @@ test('VDEF-backed drawing lines render but do not become XPORT columns', functio
     expect($stderr)->toBe('');
     expect($stdout)->not->toContain('ERROR');
     expect($stdout)->toContain('795x300');
-    expect(preg_match_all('/^OK u:/m', $stdout))->toBe(5);
+    expect(preg_match_all('/^OK u:/m', $stdout))->toBe(6);
+    expect($stdout)->toContain('<columns>2</columns>', '<entry>Inbound</entry>', '<entry>Outbound</entry>');
+});
+
+test('interleaved VDEF drawings do not consume blank-legend export columns or stack flags', function () {
+    $window = array('graph_start' => 1700000000, 'graph_end' => 1700003600, 'export_csv' => true);
+    $items = array(
+        rrd_characterization_item(1, 'LINE1', rrd_characterization_ds('traffic_in') + array('vdef_id' => '1')),
+        rrd_characterization_item(2, 'AREA', rrd_characterization_ds('traffic_in')),
+        rrd_characterization_item(3, 'LINE1', rrd_characterization_ds('traffic_out') + array('vdef_id' => '1')),
+        rrd_characterization_item(4, 'STACK', rrd_characterization_ds('traffic_out')),
+    );
+    $xml = '<?xml version="1.0"?><xport><meta><start>1700000000</start><step>300</step><end>1700003600</end><rows>0</rows><columns>2</columns><legend><entry>first</entry><entry>second</entry></legend></meta><data></data></xport>';
+    $scenario = rrd_characterization_graph_scenario($window, array(), array(), $items, array('replies' => array('xport' => $xml)));
+    $scenario['calls'] = array(array('fn' => 'rrdtool_function_xport', 'args' => array(7, 0, $window, array(), 0)));
+    $output = rrd_characterization_run($this, $scenario);
+    $result = $output['results'][0];
+    $commands = array_values(array_filter($result['sent'], static function ($command) {
+        return strncmp($command['stdin'], 'xport ', 6) === 0;
+    }));
+    expect($commands)->toHaveCount(1);
+    expect($commands[0]['stdin'])->toContain("XPORT:'a':'col1-a'", "XPORT:'b':'col2-b'");
+    expect(substr_count($commands[0]['stdin'], 'XPORT:'))->toBe(2);
+    expect($result['returned']['meta']['stacked_columns'])->toBe(array('col1' => 0, 'col2' => 1));
+});
+
+test('VDEF-only drawings leave export metadata without time-series columns', function () {
+    $window = array('graph_start' => 1700000000, 'graph_end' => 1700003600, 'export_csv' => true);
+    $items = array(rrd_characterization_item(1, 'LINE1', rrd_characterization_ds('traffic_in') + array('vdef_id' => '1')));
+    $scenario = rrd_characterization_graph_scenario($window, array(), array(), $items);
+    $scenario['calls'] = array(array('fn' => 'rrdtool_function_xport', 'args' => array(7, 0, $window, array(), 0)));
+    $output = rrd_characterization_run($this, $scenario);
+    $result = $output['results'][0];
+    $commands = array_values(array_filter($result['sent'], static function ($command) {
+        return strncmp($command['stdin'], 'xport ', 6) === 0;
+    }));
+    expect($commands)->toHaveCount(1);
+    expect($commands[0]['stdin'])->not->toContain('XPORT:');
+    expect($result['returned']['meta']['stacked_columns'])->toBe(array());
+    // graph_xport.php guards CSV metadata/rows on start/data before iteration.
+    expect(isset($result['returned']['meta']['start']))->toBeFalse();
+    expect(isset($result['returned']['data']))->toBeFalse();
+    $directory = sys_get_temp_dir() . '/rrd-empty-csv-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    mkdir($directory . '/include', 0700);
+    mkdir($directory . '/lib', 0700);
+    try {
+        $root = dirname(__DIR__, 4);
+        copy($root . '/graph_xport.php', $directory . '/graph_xport.php');
+        expect(hash_file('sha256', $directory . '/graph_xport.php'))->toBe(hash_file('sha256', $root . '/graph_xport.php'));
+        file_put_contents($directory . '/result.json', json_encode($result['returned'], JSON_THROW_ON_ERROR));
+        file_put_contents($directory . '/include/auth.php', <<<'PHP'
+<?php
+$_SESSION = array('sess_user_id' => 1);
+function get_filter_request_var($name) { return get_request_var($name); }
+function get_request_var($name) { return $name === 'local_graph_id' ? 7 : 0; }
+function isempty_request_var($name) { return true; }
+function isset_request_var($name) { return $name === 'stdout'; }
+function cacti_session_close() {}
+define('POLLER_VERBOSITY_MEDIUM', 1);
+function cacti_log($message, $echo, $subsystem, $verbosity) {}
+function db_fetch_row_prepared($sql, $args) { return array(); }
+PHP);
+        // Native RRD result above is the page's explicit producer boundary.
+        file_put_contents($directory . '/lib/rrd.php', <<<'PHP'
+<?php
+function rrdtool_function_xport($graph, $rra, $options, &$metadata, $user) {
+    return json_decode(file_get_contents(dirname(__DIR__) . '/result.json'), true, 512, JSON_THROW_ON_ERROR);
+}
+PHP);
+        $process = proc_open(array(PHP_BINARY, '-d', 'display_errors=1', '-d', 'error_reporting=32767', 'graph_xport.php'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory);
+        fclose($pipes[0]);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $status = proc_close($process);
+        $this->assertSame(0, $status, $stdout . $stderr);
+        expect($stdout)->toBe('');
+        expect($stderr)->toBe('');
+    } finally {
+        foreach (array('/include/auth.php', '/lib/rrd.php', '/graph_xport.php', '/result.json') as $file) {
+            unlink($directory . $file);
+        }
+        rmdir($directory . '/include');
+        rmdir($directory . '/lib');
+        rmdir($directory);
+    }
 });
 
 /**
