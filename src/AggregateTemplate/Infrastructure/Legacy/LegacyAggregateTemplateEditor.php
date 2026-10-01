@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\AggregateTemplate\Infrastructure\Legacy;
@@ -82,17 +82,28 @@ final readonly class LegacyAggregateTemplateEditor implements AggregateTemplateE
         }
         $actor = $command['actor'];
         $action = $command['action'];
+        $resultIds = $result['ids'] ?? null;
+        if (!is_array($resultIds) || !array_is_list($resultIds) || $resultIds === []) {
+            throw new \RuntimeException('Aggregate template operation outcome could not be verified.');
+        }
+        foreach ($resultIds as $resultId) {
+            if (!is_int($resultId) || $resultId < 0 || ($resultId === 0 && ($result['status'] ?? '') === 'ok')) {
+                throw new \RuntimeException('Aggregate template operation outcome could not be verified.');
+            }
+        }
         $expectedIds = $action === 'save'
             ? [(int) ($command['id'] ?? 0) > 0 ? (int) $command['id'] : (int) ($result['ids'][0] ?? 0)]
             : array_map('intval', array_keys($command['revisions'] ?? []));
         sort($expectedIds, SORT_NUMERIC);
-        $actualIds = array_map('intval', is_array($result['ids'] ?? null) ? $result['ids'] : []);
+        $actualIds = $resultIds;
         sort($actualIds, SORT_NUMERIC);
         if (($result['actor'] ?? null) !== $actor || ($result['action'] ?? null) !== $action || $actualIds !== $expectedIds) {
             throw new \RuntimeException('Aggregate template operation outcome could not be verified.');
         }
         if (($result['status'] ?? '') === 'conflict') {
-            throw new AggregateTemplateConflict('Aggregate template changed. Reload before saving.');
+            throw new AggregateTemplateConflict($action === 'delete'
+                ? 'Aggregate template changed. Reload before deleting.'
+                : 'Aggregate template changed. Reload before saving.');
         }
         if (($result['status'] ?? '') === 'denied') {
             throw new AggregateTemplateAccessDenied();

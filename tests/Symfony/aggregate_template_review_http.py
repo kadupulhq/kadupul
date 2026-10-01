@@ -22,7 +22,7 @@ def main():
 
         scenario_module.BASE_URL = harness.base
         scenario_module.sql = lambda statement: harness.sql(statement).strip()
-        scenario_module.main(authenticated_session=session)
+        scenario_module.main(authenticated_session=session, harness=harness)
     finally:
         if harness.setup_started:
             harness.compose('down', '--volumes', '--remove-orphans', timeout=120)

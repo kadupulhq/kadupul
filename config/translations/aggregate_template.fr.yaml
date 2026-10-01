@@ -55,6 +55,7 @@
 "Enter an aggregate template name of at most 64 characters.": "Saisissez un nom de modèle agrégé de 64 caractères maximum."
 "Aggregate template selection changed. Reload before saving.": "La sélection du modèle agrégé a changé. Rechargez avant d’enregistrer."
 "Aggregate template changed. Reload before saving.": "Le modèle agrégé a changé. Rechargez avant d’enregistrer."
+"Aggregate template changed. Reload before deleting.": "Le modèle agrégé a changé. Rechargez avant de supprimer."
 "Save outcome could not be confirmed. Reload before retrying.": "L’enregistrement n’a pas pu être confirmé. Rechargez avant de réessayer."
 "Delete outcome could not be confirmed. Reload the list before retrying.": "La suppression n’a pas pu être confirmée. Rechargez la liste avant de réessayer."
 "Delete confirmation selection changed. Reload and try again.": "La sélection de suppression a changé. Rechargez et réessayez."

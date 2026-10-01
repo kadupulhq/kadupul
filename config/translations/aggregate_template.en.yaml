@@ -55,6 +55,7 @@
 "Enter an aggregate template name of at most 64 characters.": "Enter an aggregate template name of at most 64 characters."
 "Aggregate template selection changed. Reload before saving.": "Aggregate template selection changed. Reload before saving."
 "Aggregate template changed. Reload before saving.": "Aggregate template changed. Reload before saving."
+"Aggregate template changed. Reload before deleting.": "Aggregate template changed. Reload before deleting."
 "Save outcome could not be confirmed. Reload before retrying.": "Save outcome could not be confirmed. Reload before retrying."
 "Delete outcome could not be confirmed. Reload the list before retrying.": "Delete outcome could not be confirmed. Reload the list before retrying."
 "Delete confirmation selection changed. Reload and try again.": "Delete confirmation selection changed. Reload and try again."

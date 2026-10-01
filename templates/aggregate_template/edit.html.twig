@@ -38,10 +38,6 @@
     {{ form_end(form) }}
 </main>
 {% if template.id == 0 %}
-<script>
-    document.getElementById('aggregate_template_graph_template_id')?.addEventListener('change', function () {
-        window.location.assign(this.dataset.editorUrl + '?source=' + encodeURIComponent(this.value));
-    });
-</script>
+<script src="{{ sourceSelectorAsset }}" defer></script>
 {% endif %}
 {% endblock %}

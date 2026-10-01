@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\AggregateTemplate\Infrastructure\Symfony\Controller;
@@ -45,6 +45,11 @@ final readonly class LegacyAggregateTemplatesController
             return new Response($translator->trans('Open Aggregate Templates and use its current forms.', [], 'aggregate_template'), 400, $headers);
         }
         $filters = array_intersect_key($query, array_flip(['filter', 'page', 'rows', 'has_graphs']));
+        if (isset($filters['has_graphs'])) {
+            $filters['has_graphs'] = match ($filters['has_graphs']) {
+                'true' => 'on', 'false' => '', default => $filters['has_graphs'],
+            };
+        }
         if (isset($query['sort_column'])) {
             $filters['sort'] = match ($query['sort_column']) {
                 'name' => 'name', 'graphs' => 'graphs', 'graph_template_name' => 'source', default => 'name',

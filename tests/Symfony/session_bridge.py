@@ -26,9 +26,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--database-sessions', action='store_true')
     parser.add_argument('--coverage-output', type=Path)
+    parser.add_argument('--project', default='kadupul-symfony-auth')
     args = parser.parse_args()
     database_sessions = args.database_sessions
-    harness = Harness(SimpleNamespace(project='kadupul-symfony-auth', target='symfony-auth'))
+    harness = Harness(SimpleNamespace(project=args.project, target='symfony-auth'))
     if args.coverage_output:
         from coverage_support import configure_coverage
         configure_coverage(harness, args.coverage_output)
@@ -111,11 +112,12 @@ def main():
         verify_site_lifecycle(harness, session, user_id, check)
         from device_create_scenarios import verify_device_create
         verify_device_create(harness, session, user_id, check)
-        if args.coverage_output and not database_sessions:
+        if args.coverage_output:
             import aggregate_template_http
             aggregate_template_http.BASE_URL = harness.base
             aggregate_template_http.sql = lambda statement: harness.sql(statement).strip()
-            aggregate_template_http.main(authenticated_session=session)
+            aggregate_template_http.check = check
+            aggregate_template_http.main(authenticated_session=session, harness=harness)
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()

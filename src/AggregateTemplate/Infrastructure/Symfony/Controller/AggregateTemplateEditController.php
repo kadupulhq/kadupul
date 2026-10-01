@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\AggregateTemplate\Infrastructure\Symfony\Controller;
@@ -15,6 +15,7 @@ use Kadupul\AggregateTemplate\Domain\AggregateTemplateCriteria;
 use Kadupul\AggregateTemplate\Infrastructure\Persistence\AggregateTemplateConflict;
 use Kadupul\AggregateTemplate\Infrastructure\Symfony\Form\AggregateTemplateType;
 use Kadupul\IdentityAccess\Contract\CurrentActor;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,7 +29,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final readonly class AggregateTemplateEditController
 {
     #[Route('/aggregate-templates/{id}/edit', name: 'aggregate_template_edit', requirements: ['id' => '0|[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(int $id, Request $request, CurrentActor $currentActor, AggregateTemplatePermissions $access, AggregateTemplateCatalog $catalog, AggregateTemplateEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(int $id, Request $request, CurrentActor $currentActor, AggregateTemplatePermissions $access, AggregateTemplateCatalog $catalog, AggregateTemplateEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, LegacyConfiguration $configuration): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $currentActor();
@@ -44,6 +45,7 @@ final readonly class AggregateTemplateEditController
             return new Response($translator->trans('Aggregate template not found.', [], 'aggregate_template'), 404, $headers);
         }
         $template = $data['template'];
+        $sourceSelectorAsset = rtrim($configuration->values()['url_path'] ?? '/', '/') . '/public/js/aggregate-template-source.js';
         $form = $forms->create(AggregateTemplateType::class, $template, [
             'action' => $urls->generate('aggregate_template_edit', ['id' => $template['id'], 'source' => $template['id'] === 0 ? $template['graph_template_id'] : null]),
             'graph_templates' => ['Select a source graph template' => 0] + $data['graphTemplates'],
@@ -64,7 +66,7 @@ final readonly class AggregateTemplateEditController
                 if (!is_string($values['name'] ?? null) || trim($values['name']) === '' || mb_strlen($values['name']) > 64) {
                     $form->addError(new FormError($translator->trans('Enter an aggregate template name of at most 64 characters.', [], 'aggregate_template')));
                     return new Response($twig->render('aggregate_template/edit.html.twig', [
-                        'template' => $template, 'data' => $data, 'form' => $form->createView(), 'saved' => false,
+                        'template' => $template, 'data' => $data, 'form' => $form->createView(), 'saved' => false, 'sourceSelectorAsset' => $sourceSelectorAsset,
                     ]), 422, $headers);
                 }
                 if ((int) $values['id'] !== $id) {
@@ -92,6 +94,7 @@ final readonly class AggregateTemplateEditController
         return new Response($twig->render('aggregate_template/edit.html.twig', [
             'template' => $template, 'data' => $data, 'form' => $form->createView(),
             'saved' => $request->query->get('saved') === '1',
+            'sourceSelectorAsset' => $sourceSelectorAsset,
         ]), $status, $headers);
     }
 }

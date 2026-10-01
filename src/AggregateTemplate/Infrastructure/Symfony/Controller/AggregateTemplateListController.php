@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\AggregateTemplate\Infrastructure\Symfony\Controller;
@@ -11,6 +11,7 @@ use Kadupul\AggregateTemplate\Domain\AggregateTemplateCriteria;
 use Kadupul\AggregateTemplate\Application\Port\AggregateTemplateCatalog;
 use Kadupul\AggregateTemplate\Application\Port\AggregateTemplatePermissions;
 use Kadupul\IdentityAccess\Contract\CurrentActor;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final readonly class AggregateTemplateListController
 {
     #[Route('/aggregate-templates', name: 'aggregate_template_list', methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, CurrentActor $currentActor, AggregateTemplatePermissions $access, AggregateTemplateCatalog $catalog, Environment $twig, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, CurrentActor $currentActor, AggregateTemplatePermissions $access, AggregateTemplateCatalog $catalog, Environment $twig, TranslatorInterface $translator, LegacyConfiguration $configuration): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $currentActor();
@@ -57,6 +58,7 @@ final readonly class AggregateTemplateListController
         return new Response($request->isMethod('HEAD') ? '' : $twig->render('aggregate_template/list.html.twig', [
             'result' => $result, 'criteria' => $criteria,
             'pages' => max(1, (int) ceil($result['total'] / $criteria->pageSize)),
+            'legacyAggregateGraphsUrl' => rtrim($configuration->values()['url_path'] ?? '/', '/') . '/aggregate_graphs.php',
         ]), 200, $headers);
     }
 }

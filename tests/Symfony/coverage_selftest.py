@@ -169,6 +169,16 @@ def main():
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'aggregate-test-hash': 'Integration test source differs',
+        'aggregate-browser-python-hash': 'Integration test source differs',
+        'aggregate-browser-probe-hash': 'Integration test source differs',
+        'aggregate-browser-script-hash': 'Integration test source differs',
+        'missing-aggregate-browser-root-app': 'Incomplete Symfony integration',
+        'missing-aggregate-browser-root-public': 'Incomplete Symfony integration',
+        'missing-aggregate-browser-prefix-app': 'Incomplete Symfony integration',
+        'missing-aggregate-browser-prefix-public': 'Incomplete Symfony integration',
+        'missing-aggregate-default-check': 'Incomplete Symfony integration',
+        'missing-aggregate-default-handoff-check': 'Incomplete Symfony integration',
+        'missing-aggregate-duplicate-choices-check': 'Incomplete Symfony integration',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -236,6 +246,27 @@ def main():
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'aggregate-test-hash':
                 evidence['source_sha256']['tests/Symfony/aggregate_template_http.py'] = '0' * 64
+            elif case.startswith('aggregate-browser-') and case.endswith('-hash'):
+                changed = {
+                    'aggregate-browser-python-hash': 'tests/Symfony/aggregate_template_browser.py',
+                    'aggregate-browser-probe-hash': 'tests/Symfony/aggregate_template_browser_probe.cjs',
+                    'aggregate-browser-script-hash': 'public/js/aggregate-template-source.js',
+                }[case]
+                evidence['source_sha256'][changed] = '0' * 64
+            elif case.startswith('missing-aggregate-browser-'):
+                front = {
+                    'missing-aggregate-browser-root-app': '/app.php',
+                    'missing-aggregate-browser-root-public': '/public/index.php',
+                    'missing-aggregate-browser-prefix-app': '/cacti/app.php',
+                    'missing-aggregate-browser-prefix-public': '/cacti/public/index.php',
+                }[case]
+                evidence['checks'].remove('aggregate browser CSP selector and source items verified: ' + front)
+            elif case == 'missing-aggregate-default-check':
+                evidence['checks'].remove('new aggregate template uses the supported STACK default')
+            elif case == 'missing-aggregate-default-handoff-check':
+                evidence['checks'].remove('supported STACK default survives the worker data handoff')
+            elif case == 'missing-aggregate-duplicate-choices-check':
+                evidence['checks'].remove('duplicate-name graph templates retain both selectable identities')
             elif case == 'details-test-hash':
                 evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'sites-test-hash':

@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\AggregateTemplate\Infrastructure\Persistence;
@@ -66,7 +66,7 @@ final readonly class DoctrineAggregateTemplateCatalog implements AggregateTempla
     public function editData(?int $id, int $sourceTemplateId = 0): ?array
     {
         $template = $id === null
-            ? ['id' => 0, 'name' => '', 'graph_template_id' => $sourceTemplateId, 'gprint_prefix' => '', 'gprint_format' => '', 'graph_type' => 2,
+            ? ['id' => 0, 'name' => '', 'graph_template_id' => $sourceTemplateId, 'gprint_prefix' => '', 'gprint_format' => '', 'graph_type' => 8,
                 'total' => 1, 'total_type' => 1, 'total_prefix' => '', 'order_type' => 1, 'user_id' => 0]
             : $this->database->fetchAssociative('SELECT id, name, graph_template_id, gprint_prefix, gprint_format, graph_type, total, total_type, total_prefix, order_type, user_id FROM aggregate_graph_templates WHERE id = ?', [$id]);
         if ($template === false) {
@@ -106,7 +106,7 @@ final readonly class DoctrineAggregateTemplateCatalog implements AggregateTempla
             'legend_position' => ['None' => '', 'North' => 'north', 'South' => 'south', 'West' => 'west', 'East' => 'east'],
             'legend_direction' => ['None' => '', 'Top to bottom' => 'topdown', 'Bottom to top' => 'bottomup'],
         ];
-        $graphChoices['right_axis_format'] = ['None' => ''] + $this->database->fetchAllKeyValue("SELECT name, id FROM graph_templates_gprint WHERE gprint_text NOT LIKE '%\\\\%s%' ORDER BY name");
+        $graphChoices['right_axis_format'] = ['None' => ''] + self::namedChoices($this->database->fetchAllAssociative("SELECT name, id FROM graph_templates_gprint WHERE gprint_text NOT LIKE '%\\\\%s%' ORDER BY name, id"));
         $textLengths = ['vertical_label' => 200, 'right_axis' => 20, 'right_axis_label' => 200, 'unit_value' => 20,
             'unit_exponent_value' => 5, 'unit_length' => 10, 'tab_width' => 20, 'upper_limit' => 20, 'lower_limit' => 20];
         foreach (self::GRAPH_FIELDS as $field) {
@@ -166,16 +166,27 @@ final readonly class DoctrineAggregateTemplateCatalog implements AggregateTempla
         return [
             'template' => $template,
             'source' => $source === false ? null : ['id' => $sourceId, 'name' => (string) $source['name']],
-            'graphTemplates' => $this->database->fetchAllKeyValue('SELECT name, id FROM graph_templates ORDER BY name'),
+            'graphTemplates' => self::namedChoices($this->database->fetchAllAssociative('SELECT name, id FROM graph_templates ORDER BY name, id')),
             'graphSettings' => $graphSettings,
             'graphFieldMetadata' => $graphFieldMetadata,
             'items' => $items,
-            'colorTemplates' => ['None' => 0] + $this->database->fetchAllKeyValue('SELECT name, color_template_id FROM color_templates ORDER BY name'),
+            'colorTemplates' => ['None' => 0] + self::namedChoices($this->database->fetchAllAssociative('SELECT name, color_template_id AS id FROM color_templates ORDER BY name, color_template_id')),
             'graphTypes' => ['Keep Graph Types' => 0, 'Keep Type and STACK' => 50, 'Convert to AREA/STACK' => 8, 'Convert to LINE1' => 4, 'Convert to LINE2' => 5, 'Convert to LINE3' => 6, 'Convert to LINE1/STACK' => 51, 'Convert to LINE2/STACK' => 52, 'Convert to LINE3/STACK' => 53],
             'totals' => ['No Totals' => 1, 'Print All Legend Items' => 2, 'Print Totaling Legend Items Only' => 3],
             'totalTypes' => ['Total Similar Data Sources' => 1, 'Total All Data Sources' => 2],
             'orderTypes' => ['No Reordering' => 1, 'Data Source, Graph' => 2, 'Graph, Data Source' => 3, 'Base Graph Order' => 4],
         ];
+    }
+
+    /** @param list<array{name:string,id:int|string}> $rows @return array<string,int> */
+    private static function namedChoices(array $rows): array
+    {
+        $choices = [];
+        foreach ($rows as $row) {
+            $id = (int) $row['id'];
+            $choices[(string) $row['name'] . ' (#' . $id . ')'] = $id;
+        }
+        return $choices;
     }
 
     private static function graphTypeName(int $id): string

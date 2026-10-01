@@ -114,7 +114,7 @@ def seed_child_graph(template_id: int, source_id: int, marker: str) -> int:
     return int(sql("SELECT id FROM graph_local ORDER BY id DESC LIMIT 1"))
 
 
-def main(scenario: Scenario | None = None, authenticate: bool = True, authenticated_session=None) -> None:
+def main(scenario: Scenario | None = None, authenticate: bool = True, authenticated_session=None, harness=None) -> None:
     sql("DROP TRIGGER IF EXISTS aggregate_e2e_fail_child_item")
     marker = "AGG_E2E_" + uuid.uuid4().hex[:14]
     source_name = marker + "_source"
@@ -124,6 +124,8 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
         "INSERT INTO graph_templates_item (graph_template_id,graph_type_id,consolidation_function_id,text_format,value,sequence) "
         "VALUES (@gt,4,1,'source item one','test_value_one',0),(@gt,4,1,'source item two','test_value_two',1);")
     source_id = int(sql(f"SELECT id FROM graph_templates WHERE name='{source_name}'"))
+    sql(f"INSERT INTO graph_templates (name) VALUES ('{source_name}')")
+    duplicate_source_id = int(sql(f"SELECT MAX(id) FROM graph_templates WHERE name='{source_name}'"))
 
     if authenticated_session is not None:
         scenario = Scenario(client=authenticated_session.opener, base_url=authenticated_session.base)
@@ -141,9 +143,18 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
 
     status, _, page = scenario.request("/aggregate-templates")
     check(status == 200 and "Aggregate graph templates" in page, "aggregate list did not render")
+    if harness is not None:
+        from aggregate_template_browser import verify_source_selector
+        verify_source_selector(harness, scenario, source_id, check)
     status, _, page = scenario.request(f"/aggregate-templates/0/edit?source={source_id}")
     check(status == 200, f"create form did not render (HTTP {status}): {page[:600]}")
     form = scenario.form(page, lambda item: "aggregate_template[name]" in item["fields"])
+    source_select = re.search(r'<select\b[^>]*id="aggregate_template_graph_template_id"[^>]*>(.*?)</select>', page, re.S)
+    check(source_select is not None and all(
+        f'value="{identity}"' in source_select.group(1) and f'{source_name} (#{identity})' in source_select.group(1)
+        for identity in [source_id, duplicate_source_id]
+    ), 'duplicate-name graph templates retain both selectable identities')
+    check(form['fields']['aggregate_template[graph_type]'] == '8', 'new aggregate template uses the supported STACK default')
     item_controls = re.findall(r'name="(aggregate_template\[items\][^"]+)"', page)
     check(len(item_controls) >= 8, f"template item controls were not rendered as expected: {item_controls}")
     status, url, page = scenario.submit(form, {
@@ -159,6 +170,7 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
     check(match is not None, f"save did not redirect to the editor: {url}")
     template_id = int(match.group(1))
     check(sql(f"SELECT CONCAT(name,':',graph_template_id,':',user_id) FROM aggregate_graph_templates WHERE id={template_id}") == f"{marker}:{source_id}:1", "database row does not match submitted actor and source")
+    check(sql(f"SELECT graph_type FROM aggregate_graph_templates WHERE id={template_id}") == '8', 'supported STACK default survives the worker data handoff')
     check(sql(f"SELECT CONCAT(t_width,':',width) FROM aggregate_graph_templates_graph WHERE aggregate_template_id={template_id}") == "on:640", "graph override data handoff failed")
     check(int(sql(f"SELECT COUNT(*) FROM aggregate_graph_templates_item WHERE aggregate_template_id={template_id}")) == 2, "source graph items were not handed off")
     item_flags = sql(f"SELECT GROUP_CONCAT(CONCAT(sequence,':',item_skip,':',item_total) ORDER BY sequence SEPARATOR ',') FROM aggregate_graph_templates_item WHERE aggregate_template_id={template_id}")
