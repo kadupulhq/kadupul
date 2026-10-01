@@ -7,11 +7,12 @@
 
 namespace Kadupul\Graphing\Domain;
 
-/** Exact UTF-8 names and hex survive RFC 4180 export/import, including quotes and newlines. */
+/** Versioned literal-text exports preserve exact UTF-8 values on reimport. */
 final class PaletteCsv
 {
     public const int MAX_BYTES = 1048576;
     public const int MAX_ROWS = 5000;
+    public const string LITERAL_MARKER = 'kadupul_literal_v1';
     /** @return list<array{name: string, hex: string}> */
     public static function parse(string $csv): array
     {
@@ -24,16 +25,26 @@ final class PaletteCsv
             fwrite($stream, $csv);
             rewind($stream);
             $headers = fgetcsv($stream, null, ',', '"', '');
-            if (!is_array($headers) || count($headers) !== 2 || count(array_unique($headers)) !== 2 || array_diff($headers, ['name', 'hex']) !== []) {
-                throw new \InvalidArgumentException('CSV requires exactly the name and hex header columns.');
+            $literal = is_array($headers) && count($headers) === 3 && in_array(self::LITERAL_MARKER, $headers, true);
+            $expected = $literal ? ['name', 'hex', self::LITERAL_MARKER] : ['name', 'hex'];
+            if (!is_array($headers) || count($headers) !== count($expected) || count(array_unique($headers)) !== count($expected) || array_diff($headers, $expected) !== []) {
+                throw new \InvalidArgumentException('CSV requires name and hex columns, with only the supported literal-text marker.');
             }
             $rows = [];
             $hexes = [];
             while (($values = fgetcsv($stream, null, ',', '"', '')) !== false) {
-                if (count($values) !== 2 || !is_string($values[0]) || !is_string($values[1])) {
+                if (count($values) !== count($expected) || count(array_filter($values, is_string(...))) !== count($expected)) {
                     throw new \InvalidArgumentException('CSV contains an invalid row.');
                 }
                 $row = array_combine($headers, $values);
+                if ($literal) {
+                    if ($row[self::LITERAL_MARKER] !== '1' || !str_starts_with($row['name'], "'") || !str_starts_with($row['hex'], "'")) {
+                        throw new \InvalidArgumentException('CSV contains an invalid literal-text marker.');
+                    }
+                    $row['name'] = substr($row['name'], 1);
+                    $row['hex'] = substr($row['hex'], 1);
+                    unset($row[self::LITERAL_MARKER]);
+                }
                 PaletteColor::validate($row['name'], $row['hex']);
                 $key = strtolower($row['hex']);
                 if (isset($hexes[$key])) {
@@ -87,9 +98,12 @@ final class PaletteCsv
     {
         $stream = fopen('php://temp', 'w+');
         try {
-            fputcsv($stream, ['name', 'hex'], ',', '"', '', "\r\n");
+            fputcsv($stream, ['name', 'hex', self::LITERAL_MARKER], ',', '"', '', "\r\n");
             foreach ($colors as $color) {
-                fputcsv($stream, [$color->name, $color->hex], ',', '"', '', "\r\n");
+                // Match the existing device exporter: all operator-controlled
+                // cells are spreadsheet text, even after whitespace/control prefixes.
+                // Only the explicit versioned marker permits reversing this encoding.
+                fputcsv($stream, ["'" . $color->name, "'" . $color->hex, '1'], ',', '"', '', "\r\n");
             }
             rewind($stream);
             return stream_get_contents($stream);

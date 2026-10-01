@@ -175,6 +175,17 @@ def main():
         'test-hash': 'Integration test source differs',
         'palette-test-hash': 'Integration test source differs',
         'missing-palette-handoff-check': 'Incomplete Symfony integration',
+        'missing-palette-concurrent-auth': 'Incomplete Symfony integration',
+        'missing-palette-write-guards': 'Incomplete Symfony integration',
+        'missing-palette-review-check-0': 'Incomplete Symfony integration',
+        'missing-palette-review-check-1': 'Incomplete Symfony integration',
+        'missing-palette-review-check-2': 'Incomplete Symfony integration',
+        'missing-palette-review-check-3': 'Incomplete Symfony integration',
+        'missing-palette-review-check-4': 'Incomplete Symfony integration',
+        'missing-palette-review-check-5': 'Incomplete Symfony integration',
+        'missing-palette-review-check-6': 'Incomplete Symfony integration',
+        'missing-palette-review-check-7': 'Incomplete Symfony integration',
+
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -239,6 +250,14 @@ def main():
                 worker['sha256'] = '0' * 64
             elif case == 'missing-palette-handoff-check':
                 evidence['checks'].remove('CSV exact name data handoff')
+            elif case.startswith('missing-palette-review-check-'):
+                required_palette_checks = ['duplicate hex creation is a known validation failure after rollback', 'duplicate hex edit is a known validation failure after rollback', 'duplicate hex edit preserves the original name and hex', 'unnamed palette color has a visible edit link and accessible hex label', 'palette exports neutralize formulas and preserve exact versioned roundtrip names', 'unsupported or malformed palette literal marker rejects the whole import', 'ordinary legacy CSV import preserves its leading apostrophe literally', 'console-only palette account cannot parse or mutate any route']
+                missing = required_palette_checks[int(case.removeprefix('missing-palette-review-check-'))]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case == 'missing-palette-write-guards':
+                evidence['checks'].remove('palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
+            elif case == 'missing-palette-concurrent-auth':
+                evidence['checks'].remove('two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
             elif case == 'palette-test-hash':
                 evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
             elif case == 'test-hash':

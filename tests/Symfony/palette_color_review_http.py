@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Palette CRUD, CSV, authorization and transaction handoff on isolated MariaDB."""
 from pathlib import Path
 from types import SimpleNamespace

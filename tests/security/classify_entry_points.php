@@ -1961,6 +1961,71 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     return method_checks($root, $type, $callee, $depth + 1, $seen, $handed, $refuses);
 }
 
+/** Prove a direct feature check or the first check of a final delegated use case. */
+function palette_feature_call(string $root, array $target, int $depth = 0): bool
+{
+    if ($target === ['Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess', 'authorize']) {
+        // Exact reviewed current-account and realm-5 authorization contract.
+        $adapter = $root . '/src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php';
+        return is_file($adapter) && hash_file('sha256', $adapter) === '6e8dda47940d6961fc40d78af76ea28ad5bf8c50c630f4cc5dd98f14f907aaf3';
+    }
+    if ($depth >= CALL_DEPTH) {
+        return false;
+    }
+    $loaded = load_class($root, $target[0]);
+    $callee = $loaded === null ? null : find_method($loaded, $target[1]);
+    if ($callee === null || !$loaded instanceof Stmt\Class_ || !$loaded->isFinal()) {
+        return false;
+    }
+    $found = first_service_call($root, $callee->stmts ?? [], receiver_types($root, $target[0], $callee), null);
+    return $found !== null && palette_feature_call($root, $found[0], $depth + 1);
+}
+
+function palette_feature_guard(string $root, string $class, Stmt\ClassMethod $method, array $files): bool
+{
+    $contract = 'Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess';
+    $adapter = 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyPaletteColorAccess';
+    foreach ($files as $path) {
+        foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+            if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== $adapter) {
+                foreach ($node->implements as $interface) {
+                    if ($interface->toString() === $contract) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    $typeOf = receiver_types($root, $class, $method);
+    $stmts = array_values($method->stmts ?? []);
+    foreach ($stmts as $index => $stmt) {
+        if (actor_assignment($root, $stmt, $typeOf) !== null) {
+            // guarded_checks already proved the actor assignment and its
+            // immediate refusal. The next service must authorize before
+            // request parsing, database reads, or another side effect.
+            $found = first_service_call($root, array_slice($stmts, $index + 2), $typeOf, fn(?Expr $e): bool => true);
+            if ($found !== null) {
+                foreach (walk(array_slice($stmts, $index + 2), false) as $node) {
+                    if ($node instanceof Stmt\Return_ && $node->getStartFilePos() < $found[1]->getStartFilePos()) {
+                        return false;
+                    }
+                    if ($node instanceof Expr\MethodCall && $node->getStartFilePos() < $found[1]->getEndFilePos()) {
+                        $receiver = $node->var;
+                        while ($receiver instanceof Expr\PropertyFetch) {
+                            $receiver = $receiver->var;
+                        }
+                        if ($typeOf($receiver) === 'Symfony\\Component\\HttpFoundation\\Request') {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return $found !== null && palette_feature_call($root, $found[0]);
+        }
+    }
+    return false;
+}
+
 /**
  * @return array<string, int> check method => realm it requires
  */
@@ -2125,6 +2190,13 @@ function symfony_routes(string $root, array $files): array
                             $grant = 'realm ' . $realms['consoleActor'];
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
+                            }
+                            if ($route['path'] === '/graphing/colors' || str_starts_with($route['path'], '/graphing/colors/')) {
+                                if (!palette_feature_guard($root, $name, $method, $sources)) {
+                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no reviewed first-effect palette realm-5 check'];
+                                    continue;
+                                }
+                                $grant .= ' + realm 5';
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

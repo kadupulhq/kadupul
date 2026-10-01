@@ -43,6 +43,17 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'quoted newline CSV upload succeeds', 'CSV exact name data handoff',
+        'palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work',
+        'two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect',
+        'duplicate hex creation is a known validation failure after rollback',
+        'duplicate hex edit is a known validation failure after rollback',
+        'duplicate hex edit preserves the original name and hex',
+        'unnamed palette color has a visible edit link and accessible hex label',
+        'palette exports neutralize formulas and preserve exact versioned roundtrip names',
+        'unsupported or malformed palette literal marker rejects the whole import',
+        'ordinary legacy CSV import preserves its leading apostrophe literally',
+        'console-only palette account cannot parse or mutate any route',
+
         'transaction rollback restores prior import updates', 'missing palette realm rejected',
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',

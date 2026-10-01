@@ -72,31 +72,49 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
     public function save(int $actorId, ?int $id, string $name, string $hex, ?string $revision): int
     {
         PaletteColor::validate($name, $hex);
-        return $this->write($actorId, $id === null ? 'create' : 'edit', function (\PDO $db) use ($id, $name, $hex, $revision): int {
-            if ($id !== null) {
-                $query = $db->prepare('SELECT * FROM colors WHERE id = ?' . $this->lock());
-                $query->execute([$id]);
-                $row = $query->fetch(\PDO::FETCH_ASSOC);
-                if (!$row) {
-                    throw new \InvalidArgumentException('Color not found.');
+        try {
+            return $this->write($actorId, $id === null ? 'create' : 'edit', function (\PDO $db) use ($id, $name, $hex, $revision): int {
+                if ($id !== null) {
+                    $query = $db->prepare('SELECT * FROM colors WHERE id = ?' . $this->lock());
+                    $query->execute([$id]);
+                    $row = $query->fetch(\PDO::FETCH_ASSOC);
+                    if (!$row) {
+                        throw new \InvalidArgumentException('Color not found.');
+                    }
+                    $color = $this->hydrate($row);
+                    if ($revision === null || !hash_equals($color->revision, $revision)) {
+                        throw new \InvalidArgumentException('Color changed since you opened this form. Reload before saving.');
+                    }
+                    if ($color->readOnly) {
+                        throw new \InvalidArgumentException('Named colors are read only.');
+                    }
+                    $db->prepare('UPDATE colors SET name = ?, hex = ? WHERE id = ?')->execute([$name, $hex, $id]);
+                    return $id;
                 }
-                $color = $this->hydrate($row);
-                if ($revision === null || !hash_equals($color->revision, $revision)) {
-                    throw new \InvalidArgumentException('Color changed since you opened this form. Reload before saving.');
+                $db->prepare("INSERT INTO colors (name, hex, read_only) VALUES (?, ?, '')")->execute([$name, $hex]);
+                $newId = (int) $db->lastInsertId();
+                if ($newId < 1) {
+                    throw new \RuntimeException('Color creation was not confirmed.');
                 }
-                if ($color->readOnly) {
-                    throw new \InvalidArgumentException('Named colors are read only.');
+                return $newId;
+            });
+        } catch (\PDOException $error) {
+            // write() only rethrows after its owned transaction was rolled back.
+            // A failed rollback is a RuntimeException and keeps the uncertain outcome.
+            $db = $this->database->get();
+            $driver = $db->getAttribute(\PDO::ATTR_DRIVER_NAME);
+            $unique = $driver === 'mysql' ? ($error->errorInfo[1] ?? null) === 1062
+                : ($driver === 'sqlite' && ($error->errorInfo[1] ?? null) === 19
+                    && ($error->errorInfo[2] ?? '') === 'UNIQUE constraint failed: colors.hex');
+            if ($unique && !$db->inTransaction()) {
+                $query = $db->prepare('SELECT id FROM colors WHERE hex = ? AND (? IS NULL OR id <> ?)');
+                $query->execute([$hex, $id, $id]);
+                if ($query->fetchColumn() !== false) {
+                    throw new \InvalidArgumentException('A Color with this hex value already exists.', 0, $error);
                 }
-                $db->prepare('UPDATE colors SET name = ?, hex = ? WHERE id = ?')->execute([$name, $hex, $id]);
-                return $id;
             }
-            $db->prepare("INSERT INTO colors (name, hex, read_only) VALUES (?, ?, '')")->execute([$name, $hex]);
-            $newId = (int) $db->lastInsertId();
-            if ($newId < 1) {
-                throw new \RuntimeException('Color creation was not confirmed.');
-            }
-            return $newId;
-        });
+            throw $error;
+        }
     }
     public function delete(int $actorId, array $ids, array $revisions = []): void
     {
@@ -188,8 +206,11 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
         $outcome = AuditEvent::DENIED;
         $started = false;
         try {
+            if ($db->inTransaction()) {
+                throw new \RuntimeException('Color transaction unavailable.');
+            }
             $this->assertTransactional($db);
-            if ($db->inTransaction() || !$db->beginTransaction()) {
+            if (!$db->beginTransaction()) {
                 throw new \RuntimeException('Color transaction unavailable.');
             }
             $started = true;
@@ -204,7 +225,14 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
             return $result;
         } catch (\Throwable $error) {
             if ($started && $db->inTransaction()) {
-                $db->rollBack();
+                try {
+                    $rolledBack = $db->rollBack();
+                } catch (\Throwable $rollbackError) {
+                    throw new \RuntimeException('Color operation rollback was not confirmed.', 0, $rollbackError);
+                }
+                if (!$rolledBack) {
+                    throw new \RuntimeException('Color operation rollback was not confirmed.', 0, $error);
+                }
             }
             throw $error;
         } finally {
@@ -223,12 +251,17 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
         if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
             throw new \RuntimeException('Colors must be changed on the primary collector.');
         }
-        $query = $db->prepare('SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?');
         foreach (['colors', 'graph_templates_item', 'color_template_items', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
-            $query->execute([$table]);
-            if (strcasecmp((string) $query->fetchColumn(), 'InnoDB') !== 0) {
+            // Check the actual connection table, including temporary shadows.
+            $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
+            $definition = $query === false ? false : $query->fetch(\PDO::FETCH_NUM);
+            if ($definition === false || !preg_match('/\n\) ENGINE=InnoDB\b/i', (string) $definition[1])) {
                 throw new \RuntimeException('Color writes require transactional tables.');
             }
+        }
+        // Preserve dependency range locks when the session default was changed.
+        if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false) {
+            throw new \RuntimeException('Color transaction isolation was not confirmed.');
         }
     }
     private function lock(): string

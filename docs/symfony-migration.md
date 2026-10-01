@@ -1119,3 +1119,18 @@ but remote writes can survive a later failure. The UI reports an uncertain outco
 in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
+
+### Palette CSV spreadsheet safety
+
+Palette downloads mark every operator-controlled name and hex cell as literal
+spreadsheet text with a leading apostrophe, following the device exporter.
+The downloaded schema is `name,hex,kadupul_literal_v1`; each marker cell must be
+`1`, and both text cells must carry that prefix. The importer validates the
+complete recognized marker before removing exactly one apostrophe from each
+cell, preserving original apostrophes, quotes, newlines and machine values.
+Unsupported versions or malformed marked rows fail before any writes.
+
+Ordinary two-column `name,hex` imports remain literal and never lose a leading
+apostrophe. Existing external consumers of palette downloads must allow the
+new marker column and literal prefixes; plain CSV readers see the prefixes.
+The import form accepts both downloaded exports and ordinary legacy files.

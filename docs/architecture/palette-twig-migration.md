@@ -19,14 +19,20 @@ Graphs, graph templates and color-template item references block deletion.
 Deletion binds the selected IDs and row revisions; import binds a complete ordered
 palette snapshot so concurrent changes require a fresh form.
 
-CSV accepts exactly `name` and `hex` headers in either order, RFC quoted commas,
-quotes and newlines, at most 1 MiB and 5000 rows. Invalid fields, duplicate hex or
+Ordinary CSV imports accept exactly `name` and `hex` headers in either order,
+preserving leading apostrophes literally. Downloaded exports add the explicit
+`kadupul_literal_v1` column and prefix both value cells with one apostrophe for
+spreadsheet safety. Only this recognized schema and a valid marker on every row
+permit removing exactly one prefix on reimport; original apostrophes survive.
+External export consumers must account for the extra column and prefixed values.
+Both formats support RFC quoted commas, quotes and newlines, at most 1 MiB and
+5000 rows. Invalid fields, duplicate hex, unsupported or malformed markers, or
 malformed quoting reject the entire file. Existing hex rows are skipped unless
 updates are enabled; named colors always remain unchanged. A database failure
 rolls back all rows. Export honors remembered search/named/usage filters and
 exports every matching row, independent of pagination, using standard quoted CSV.
-Values are literal data; spreadsheet formula interpretation is not enabled by the
-application. New custom colors cannot be promoted to protected built-ins by a form.
+Formula prefixes, including those after whitespace or controls, are exported as
+spreadsheet text. New custom colors cannot be promoted to protected built-ins by a form.
 
 Unit and actual kernel tests cover validation, revisions, dependencies, rollback,
 account policy and all seven anonymous routes. Run real HTTP/MariaDB checks with:

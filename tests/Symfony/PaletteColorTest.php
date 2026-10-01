@@ -51,6 +51,46 @@ final class PaletteColorTest extends TestCase
         self::assertSame([['name' => $name, 'hex' => 'aBc']], PaletteCsv::parse(PaletteCsv::export([new PaletteColor(1, $name, 'aBc', false)])));
         self::assertSame([['hex' => '123456', 'name' => '']], PaletteCsv::parse("hex,name\r\n123456,\r\n"));
     }
+    public function testSpreadsheetExportsAreLiteralAndRoundTripWithoutChangingLegacyImports(): void
+    {
+        foreach (["=1+1", "+SUM(1,2)", "-1+2", "@SUM(1,2)", " =1+1", "\t=1+1", "\r=1+1", "\n=1+1", "'already literal", "''two apostrophes", ''] as $name) {
+            $export = PaletteCsv::export([new PaletteColor(7, $name, 'aBc', false)]);
+            $stream = fopen('php://temp', 'w+');
+            fwrite($stream, $export);
+            rewind($stream);
+            self::assertSame(['name', 'hex', PaletteCsv::LITERAL_MARKER], fgetcsv($stream, null, ',', '"', ''));
+            self::assertSame(["'" . $name, "'aBc", '1'], fgetcsv($stream, null, ',', '"', ''));
+            fclose($stream);
+            self::assertSame([['name' => $name, 'hex' => 'aBc']], PaletteCsv::parse($export));
+            $stream = fopen('php://temp', 'w+');
+            fputcsv($stream, ['name', 'hex'], ',', '"', '');
+            fputcsv($stream, [$name, 'aBc'], ',', '"', '');
+            rewind($stream);
+            $legacy = stream_get_contents($stream);
+            fclose($stream);
+            self::assertSame([['name' => $name, 'hex' => 'aBc']], PaletteCsv::parse($legacy));
+        }
+    }
+
+    public function testUnsupportedOrMalformedLiteralMarkersFailBeforeDecodingNames(): void
+    {
+        foreach ([
+            "name,hex,kadupul_literal_v2\n'name,'abc,1\n",
+            "name,hex,kadupul_literal_v1\n'name,'abc,2\n",
+            "name,hex,kadupul_literal_v1\nname,'abc,1\n",
+            "name,hex,kadupul_literal_v1\n'name,abc,1\n",
+            "name,hex,kadupul_literal_v1\n'name,'abc,\n",
+            "name,hex,kadupul_literal_v1\n'name,'abc,1,extra\n",
+        ] as $csv) {
+            try {
+                PaletteCsv::parse($csv);
+                self::fail('Unsupported or malformed marker was accepted.');
+            } catch (\InvalidArgumentException $error) {
+                self::assertStringStartsWith('CSV ', $error->getMessage());
+            }
+        }
+    }
+
     /** @dataProvider invalidCsv */
     public function testInvalidCsvFailsBeforeWriting(string $csv): void
     {
@@ -70,6 +110,109 @@ final class PaletteColorTest extends TestCase
         $this->store->save(1, $id, $name, '123456', $color->revision);
         self::assertSame($name, $this->store->find($id)->name);
     }
+    public function testDuplicateHexCreateAndEditAreValidationFailuresAfterRollback(): void
+    {
+        $first = $this->store->save(1, null, 'first', 'aBc', null);
+        $second = $this->store->save(1, null, 'second', '123', null);
+        foreach ([null, $second] as $id) {
+            try {
+                $this->store->save(1, $id, 'replacement', 'ABC', $id === null ? null : $this->store->find($id)->revision);
+                self::fail('Duplicate hex was accepted.');
+            } catch (\InvalidArgumentException $error) {
+                self::assertSame('A Color with this hex value already exists.', $error->getMessage());
+                self::assertInstanceOf(\PDOException::class, $error->getPrevious());
+                self::assertFalse($this->db->inTransaction());
+                self::assertSame(2, (int) $this->db->query('SELECT COUNT(*) FROM colors')->fetchColumn());
+                self::assertSame('first', $this->store->find($first)->name);
+                self::assertSame('second', $this->store->find($second)->name);
+                self::assertSame('123', $this->store->find($second)->hex);
+            }
+        }
+        $this->store->save(1, $first, 'same identity', 'abc', $this->store->find($first)->revision);
+        self::assertSame('same identity', $this->store->find($first)->name);
+    }
+
+    public function testFailedRollbackCannotBecomeDuplicateHexValidation(): void
+    {
+        foreach ([false, true] as $throw) {
+            $db = new class ('sqlite::memory:') extends \PDO {
+                public bool $throw = false;
+                public function rollBack(): bool
+                {
+                    if ($this->throw) {
+                        throw new \PDOException('Injected rollback failure.');
+                    }
+                    return false;
+                }
+            };
+            $db->throw = $throw;
+            $db->exec("CREATE TABLE colors (id INTEGER PRIMARY KEY, name TEXT, hex TEXT UNIQUE, read_only TEXT); INSERT INTO colors VALUES (1,'original','abc','')");
+            $connection = $this->createMock(DatabaseConnection::class);
+            $connection->method('get')->willReturn($db);
+            $store = new LegacyPaletteColorStore($connection, $this->createMock(PaletteColorAccess::class), $this->createMock(AuditTrail::class), $this->createMock(LegacyConfiguration::class));
+            try {
+                $store->save(1, null, 'duplicate', 'abc', null);
+                self::fail('An unconfirmed rollback was reported as validation.');
+            } catch (\RuntimeException $error) {
+                self::assertNotInstanceOf(\InvalidArgumentException::class, $error);
+                self::assertSame('Color operation rollback was not confirmed.', $error->getMessage());
+                self::assertTrue($db->inTransaction());
+                self::assertSame('original', $db->query('SELECT name FROM colors WHERE id=1')->fetchColumn());
+            } finally {
+                $db->exec('ROLLBACK');
+            }
+        }
+    }
+
+    public function testFalseMysqlPreconditionsFailBeforeBeginningTheOwnedTransaction(): void
+    {
+        foreach (['engine', 'isolation'] as $failure) {
+            $db = new class ('sqlite::memory:') extends \PDO {
+                public string $failure = '';
+                public bool $begun = false;
+                public function getAttribute(int $attribute): mixed
+                {
+                    return $attribute === \PDO::ATTR_DRIVER_NAME ? 'mysql' : parent::getAttribute($attribute);
+                }
+                public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): \PDOStatement|false
+                {
+                    if (str_starts_with($query, 'SHOW CREATE TABLE ')) {
+                        return $this->failure === 'engine' ? false
+                            : parent::query("SELECT 'fixture', " . $this->quote("CREATE TABLE fixture (\n) ENGINE=InnoDB"));
+                    }
+                    return parent::query($query);
+                }
+                public function exec(string $statement): int|false
+                {
+                    return str_starts_with($statement, 'SET TRANSACTION ISOLATION') ? false : parent::exec($statement);
+                }
+                public function beginTransaction(): bool
+                {
+                    $this->begun = true;
+                    return parent::beginTransaction();
+                }
+            };
+            $db->failure = $failure;
+            $db->exec('CREATE TABLE colors (id INTEGER PRIMARY KEY, name TEXT, hex TEXT)');
+            $connection = $this->createMock(DatabaseConnection::class);
+            $connection->method('get')->willReturn($db);
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['collector_id' => 1]);
+            $access = $this->createMock(PaletteColorAccess::class);
+            $access->expects(self::never())->method('assertCurrent');
+            $store = new LegacyPaletteColorStore($connection, $access, $this->createMock(AuditTrail::class), $configuration);
+            try {
+                $store->save(1, null, 'refused', 'abc', null);
+                self::fail('An unconfirmed transaction precondition was accepted.');
+            } catch (\RuntimeException $error) {
+                self::assertSame($failure === 'engine' ? 'Color writes require transactional tables.' : 'Color transaction isolation was not confirmed.', $error->getMessage());
+                self::assertFalse($db->begun);
+                self::assertFalse($db->inTransaction());
+                self::assertSame(0, (int) $db->query('SELECT COUNT(*) FROM colors')->fetchColumn());
+            }
+        }
+    }
+
     public function testStaleEditDoesNotOverwrite(): void
     {
         $id = $this->store->save(1, null, 'before', '123', null);

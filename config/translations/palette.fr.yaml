@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 "Access denied.": "Accès refusé."
 "Add Color": "Ajouter une couleur"
 "Back to Colors": "Retour aux couleurs"
@@ -76,3 +79,8 @@
 "Unexpected fields were submitted.": "Des champs inattendus ont été envoyés."
 "Update existing colors": "Mettre à jour les couleurs existantes"
 "Yes": "Oui"
+
+"A Color with this hex value already exists.": "Une couleur avec cette valeur hexadécimale existe déjà."
+"CSV requires name and hex columns, with only the supported literal-text marker.": "Le CSV nécessite les colonnes name et hex, avec uniquement le marqueur de texte littéral pris en charge."
+"CSV contains an invalid literal-text marker.": "Le CSV contient un marqueur de texte littéral invalide."
+"Use a downloaded Colors CSV or a CSV with name and hex columns.": "Utilisez un CSV de couleurs téléchargé ou un CSV avec les colonnes name et hex."

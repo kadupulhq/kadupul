@@ -1,3 +1,7 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
 {% extends 'base.html.twig' %}
 {% block title %}{{ 'Colors'|trans({}, 'palette') }} · Kadupul{% endblock %}
 {% block body %}
@@ -46,10 +50,11 @@
             </tr></thead>
             <tbody>
             {% for preset in page.presets %}
+                {% set displayName = preset.name|trim is not empty ? preset.name : preset.hex %}
                 <tr>
-                    <td><input type="checkbox" name="ids[]" value="{{ preset.id }}"{% if not preset.deletable %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': preset.name}, 'palette') }}"></td>
+                    <td><input type="checkbox" name="ids[]" value="{{ preset.id }}"{% if not preset.deletable %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': displayName}, 'palette') }}"></td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
-                    <td><a href="{{ path('palette_color_edit', filters|merge({id: preset.id})) }}">{{ preset.name }}</a></td>
+                    <td><a href="{{ path('palette_color_edit', filters|merge({id: preset.id})) }}">{{ displayName }}</a></td>
                     <td>{{ preset.hex }} <input type="color" value="#{{ preset.previewHex }}" disabled aria-label="{{ 'Color preview'|trans({}, 'palette') }}"></td><td>{{ (preset.readOnly ? 'Yes' : 'No')|trans({}, 'palette') }}</td><td>{{ preset.otherReferences }}</td>
                     <td>{{ (preset.deletable ? 'Yes' : 'No')|trans({}, 'palette') }}</td>
                     <td>{{ preset.graphs }}</td>

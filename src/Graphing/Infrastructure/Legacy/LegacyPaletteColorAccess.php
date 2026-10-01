@@ -47,7 +47,7 @@ final readonly class LegacyPaletteColorAccess implements PaletteColorAccess
     private function accountAllows(int $actorId): bool
     {
         $db = $this->database->get();
-        $suffix = $db->inTransaction() && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+        $suffix = $db->inTransaction() && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
         $query = $db->prepare('SELECT id, username, enabled, locked, must_change_password FROM user_auth WHERE id = ?' . $suffix);
         $query->execute([$actorId]);
         $user = $query->fetch(\PDO::FETCH_ASSOC);
@@ -68,7 +68,7 @@ final readonly class LegacyPaletteColorAccess implements PaletteColorAccess
             return false;
         }
         $db = $this->database->get();
-        $suffix = $lock && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+        $suffix = $lock && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
         $query = $db->prepare('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?' . $suffix);
         $query->execute([$actorId, $realmId]);
         if ($query->fetchColumn() !== false) {
