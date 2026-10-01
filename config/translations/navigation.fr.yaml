@@ -71,7 +71,7 @@
 "Link not found.": "Lien introuvable."
 "Link no longer exists.": "Le lien n’existe plus."
 "Links changed since you opened this form. Reload before saving.": "Les liens ont changé. Rechargez avant d’enregistrer."
-"Save could not be confirmed. Reload before retrying.": "Enregistrement non confirmé. Rechargez avant de réessayer."
+"Link operation could not be confirmed. Reload before retrying.": "L’opération sur le lien n’a pas été confirmée. Rechargez avant de réessayer."
 "This legacy form has expired. Open External Links and submit a new form.": "Ce formulaire a expiré. Ouvrez les liens externes et utilisez un nouveau formulaire."
 "Open External Links and use its current forms.": "Ouvrez les liens externes et utilisez les formulaires actuels."
 "Unexpected fields were submitted.": "Des champs inattendus ont été envoyés."

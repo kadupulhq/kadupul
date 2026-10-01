@@ -48,4 +48,14 @@ final class LinkFormFailureTest extends TestCase
             self::assertSame($status, $result);
         }
     }
+
+    public function testFrenchOperationFailureUsesTheApplicationCatalog(): void
+    {
+        $translator = new \Symfony\Component\Translation\Translator('fr');
+        $translator->addLoader('yaml', new \Symfony\Component\Translation\Loader\YamlFileLoader());
+        $translator->addResource('yaml', dirname(__DIR__, 2) . '/config/translations/navigation.fr.yaml', 'fr', 'navigation');
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::once())->method('addError')->with(self::callback(static fn(FormError $error): bool => $error->getMessage() === 'L’opération sur le lien n’a pas été confirmée. Rechargez avant de réessayer.'))->willReturnSelf();
+        self::assertSame(502, (new LinkFormFailure($translator))(new \RuntimeException('private SQL detail'), $form));
+    }
 }
