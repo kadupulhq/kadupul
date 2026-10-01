@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
 // Exercise the production functions while isolating configuration and logging.
 eval(<<<'ADAPTERS'
@@ -36,7 +36,7 @@ foreach ([
     define('Php80Modernization\\' . $name, $value);
 }
 
-$root = dirname(__DIR__, 2);
+$root = dirname(__DIR__, 4);
 foreach ([
     'lib/functions.php' => ['form_input_validate', 'get_message_level', 'get_format_message_instance',
         'date_time_format', 'determine_display_log_entry', 'is_hex_string', 'is_ipaddress',
