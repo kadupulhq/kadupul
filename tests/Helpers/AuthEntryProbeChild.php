@@ -373,6 +373,7 @@ register_shutdown_function(function () use ($probe_dir): void {
 
     print json_encode(array(
         'return' => $GLOBALS['probe']['return'],
+        'elapsed_seconds' => $GLOBALS['probe']['elapsed_seconds'] ?? null,
         'session' => $_SESSION,
         'executed' => $GLOBALS['probe']['executed'],
         'events' => $GLOBALS['probe']['events'],
@@ -389,7 +390,7 @@ $config = array(
     'cacti_db_version' => CACTI_VERSION,
     'base_path' => $probe_dir,
     'url_path' => '/kadupul/',
-);
+) + ($scenario['runtime_config'] ?? array());
 
 $_SESSION = $scenario['session'] ?? array();
 
@@ -421,7 +422,9 @@ if ($call['type'] === 'include_auth') {
 
     $GLOBALS['probe']['page_continued'] = true;
 } elseif (in_array($call['type'], array('check_auth_cookie', 'clear_auth_cookie', 'local_auth_login_process', 'auth_login_create_user_from_template'), true)) {
+    $started = hrtime(true);
     $GLOBALS['probe']['return'] = call_user_func_array($call['type'], $call['args'] ?? array());
+    $GLOBALS['probe']['elapsed_seconds'] = (hrtime(true) - $started) / 1000000000;
 } else {
     fwrite(STDERR, 'AuthEntryProbe: unknown call type ' . $call['type']);
     exit(1);

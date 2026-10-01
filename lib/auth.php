@@ -3906,57 +3906,79 @@ function basic_auth_login_process($username)
  */
 function local_auth_login_process($username)
 {
-    $user = array();
+    $started = hrtime(true);
+    try {
+        $user = array();
 
-    if (!api_plugin_hook_function('login_process', false)) {
-        $user = secpass_login_process($username);
+        if (!api_plugin_hook_function('login_process', false)) {
+            $user = secpass_login_process($username);
 
-        /**
-         * If the password needs to be rehashed for security purposes,
-         * do that now.
-         */
-        $stored_pass = db_fetch_cell_prepared(
-            'SELECT password
+            /**
+             * If the password needs to be rehashed for security purposes,
+             * do that now.
+             */
+            $stored_pass = db_fetch_cell_prepared(
+                'SELECT password
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0',
-            array($username)
-        );
+                array($username)
+            );
 
-        if ($stored_pass != '') {
-            $password = get_nfilter_request_var('login_password');
+            if ($stored_pass != '') {
+                $password = get_nfilter_request_var('login_password');
 
-            $valid = compat_password_verify($password, $stored_pass);
+                $valid = compat_password_verify($password, $stored_pass);
 
-            cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+                cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
-            if ($valid) {
-                $user = db_fetch_row_prepared(
-                    'SELECT *
+                if ($valid) {
+                    $user = db_fetch_row_prepared(
+                        'SELECT *
 					FROM user_auth
 					WHERE username = ?
 					AND realm = 0',
-                    array($username)
-                );
+                        array($username)
+                    );
 
-                if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
-                    $password = compat_password_hash($password, PASSWORD_DEFAULT);
-                    db_check_password_length();
-                    db_execute_prepared(
-                        'UPDATE user_auth
+                    if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+                        $password = compat_password_hash($password, PASSWORD_DEFAULT);
+                        db_check_password_length();
+                        db_execute_prepared(
+                            'UPDATE user_auth
 						SET password = ?
 						WHERE username = ?',
-                        array($password, $username)
-                    );
+                            array($password, $username)
+                        );
+                    }
                 }
+            } else {
+                // A known account verifies here a second time; keep unknown usernames level.
+                auth_unknown_user_password_verify(get_nfilter_request_var('login_password'));
             }
-        } else {
-            // A known account verifies here a second time; keep unknown usernames level.
-            auth_unknown_user_password_verify(get_nfilter_request_var('login_password'));
         }
-    }
 
-    return $user;
+        return $user;
+    } finally {
+        auth_local_login_timing_floor($started);
+    }
+}
+
+/** Apply one minimum duration to the complete local login, independent of its stored hash cost. */
+function auth_local_login_timing_floor($started)
+{
+    global $config;
+
+    // Packagers may raise the floor for slower servers or higher-cost hashes.
+    $configured = filter_var(
+        $config['auth_login_timing_floor_ms'] ?? 1000,
+        FILTER_VALIDATE_INT,
+        array('options' => array('min_range' => 1000, 'max_range' => 60000))
+    );
+    $deadline = $started + ($configured === false ? 1000 : $configured) * 1000000;
+    while (($remaining = $deadline - hrtime(true)) > 0) {
+        time_nanosleep(intdiv($remaining, 1000000000), $remaining % 1000000000);
+    }
 }
 
 /**

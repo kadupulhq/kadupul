@@ -272,30 +272,30 @@ dynamic_include	./include/auth.php:140	                require_once($config['bas
 dynamic_include	./include/auth.php:207	            require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:402	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/csrf.php:44	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
-dynamic_include	./include/global.php:270	include_once($config['library_path'] . '/database.php');
-dynamic_include	./include/global.php:271	include_once($config['library_path'] . '/functions.php');
-dynamic_include	./include/global.php:272	include_once($config['library_path'] . '/headers_secure.php');
-dynamic_include	./include/global.php:273	include_once($config['include_path'] . '/global_constants.php');
-dynamic_include	./include/global.php:274	include_once($config['library_path'] . '/html.php');
-dynamic_include	./include/global.php:275	include_once($config['library_path'] . '/html_utility.php');
-dynamic_include	./include/global.php:276	include_once($config['library_path'] . '/html_validate.php');
-dynamic_include	./include/global.php:546	include_once($config['include_path'] . '/global_languages.php');
-dynamic_include	./include/global.php:547	include_once($config['library_path'] . '/auth.php');
-dynamic_include	./include/global.php:548	include_once($config['library_path'] . '/plugins.php');
-dynamic_include	./include/global.php:549	include_once($config['include_path'] . '/plugins.php');
-dynamic_include	./include/global.php:550	include_once($config['include_path'] . '/global_arrays.php');
-dynamic_include	./include/global.php:551	include_once($config['include_path'] . '/global_settings.php');
-dynamic_include	./include/global.php:552	include_once($config['include_path'] . '/global_form.php');
-dynamic_include	./include/global.php:553	include_once($config['library_path'] . '/html_form.php');
-dynamic_include	./include/global.php:554	include_once($config['library_path'] . '/html_filter.php');
-dynamic_include	./include/global.php:555	include_once($config['library_path'] . '/variables.php');
-dynamic_include	./include/global.php:556	include_once($config['library_path'] . '/mib_cache.php');
-dynamic_include	./include/global.php:557	include_once($config['library_path'] . '/poller.php');
-dynamic_include	./include/global.php:558	include_once($config['library_path'] . '/snmpagent.php');
-dynamic_include	./include/global.php:559	include_once($config['library_path'] . '/aggregate.php');
-dynamic_include	./include/global.php:560	include_once($config['library_path'] . '/api_automation.php');
-dynamic_include	./include/global.php:561	include_once($config['include_path'] . '/csrf.php');
-dynamic_include	./include/global.php:562	include_once($config['include_path'] . '/vendor/autoload.php');
+dynamic_include	./include/global.php:274	include_once($config['library_path'] . '/database.php');
+dynamic_include	./include/global.php:275	include_once($config['library_path'] . '/functions.php');
+dynamic_include	./include/global.php:276	include_once($config['library_path'] . '/headers_secure.php');
+dynamic_include	./include/global.php:277	include_once($config['include_path'] . '/global_constants.php');
+dynamic_include	./include/global.php:278	include_once($config['library_path'] . '/html.php');
+dynamic_include	./include/global.php:279	include_once($config['library_path'] . '/html_utility.php');
+dynamic_include	./include/global.php:280	include_once($config['library_path'] . '/html_validate.php');
+dynamic_include	./include/global.php:550	include_once($config['include_path'] . '/global_languages.php');
+dynamic_include	./include/global.php:551	include_once($config['library_path'] . '/auth.php');
+dynamic_include	./include/global.php:552	include_once($config['library_path'] . '/plugins.php');
+dynamic_include	./include/global.php:553	include_once($config['include_path'] . '/plugins.php');
+dynamic_include	./include/global.php:554	include_once($config['include_path'] . '/global_arrays.php');
+dynamic_include	./include/global.php:555	include_once($config['include_path'] . '/global_settings.php');
+dynamic_include	./include/global.php:556	include_once($config['include_path'] . '/global_form.php');
+dynamic_include	./include/global.php:557	include_once($config['library_path'] . '/html_form.php');
+dynamic_include	./include/global.php:558	include_once($config['library_path'] . '/html_filter.php');
+dynamic_include	./include/global.php:559	include_once($config['library_path'] . '/variables.php');
+dynamic_include	./include/global.php:560	include_once($config['library_path'] . '/mib_cache.php');
+dynamic_include	./include/global.php:561	include_once($config['library_path'] . '/poller.php');
+dynamic_include	./include/global.php:562	include_once($config['library_path'] . '/snmpagent.php');
+dynamic_include	./include/global.php:563	include_once($config['library_path'] . '/aggregate.php');
+dynamic_include	./include/global.php:564	include_once($config['library_path'] . '/api_automation.php');
+dynamic_include	./include/global.php:565	include_once($config['include_path'] . '/csrf.php');
+dynamic_include	./include/global.php:566	include_once($config['include_path'] . '/vendor/autoload.php');
 dynamic_include	./include/global_languages.php:156				require_once($providerFull);
 dynamic_include	./install/background.php:11	include_once($config['base_path'] . '/install/functions.php');
 dynamic_include	./install/background.php:12	include_once($config['base_path'] . '/lib/api_data_source.php');
@@ -535,7 +535,7 @@ fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosem
 fs_write	./cli/import_template.php:105				$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/input_whitelist.php:171			file_put_contents($config['input_whitelist'], json_encode($input));
 fs_write	./cli/md5sum.php:163		if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-fs_write	./cli/refresh_csrf.php:93	            && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
+fs_write	./cli/refresh_csrf.php:100	            && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
 fs_write	./cli/splice_rrd.php:268		$handle = fopen($xmlfile, 'x');
 fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:339	file_put_contents($newxmlfile, $new_xml);
@@ -831,7 +831,7 @@ header_redirect	./include/auth.php:70	            header('Location: ' . $config[
 header_redirect	./include/auth.php:94	                        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
 header_redirect	./include/csrf.php:260	    header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
-header_redirect	./include/global.php:429	            header('Location: ' . $https_redirect);
+header_redirect	./include/global.php:433	            header('Location: ' . $https_redirect);
 header_redirect	./include/index.php:7	header("Location:../index.php");
 header_redirect	./include/js/LC_MESSAGES/index.php:7	header("Location:../index.php");
 header_redirect	./include/js/index.php:7	header("Location:../index.php");
@@ -858,14 +858,14 @@ header_redirect	./include/themes/sunrise/default/index.php:7	header("Location:..
 header_redirect	./include/themes/sunrise/images/index.php:7	header("Location:../index.php");
 header_redirect	./include/themes/sunrise/index.php:7	header("Location:../index.php");
 header_redirect	./install/upgrades/index.php:7	header("Location:../../index.php");
-header_redirect	./lib/auth.php:4562	            header('Location: auth_changepassword.php?header=false');
-header_redirect	./lib/auth.php:5081	                header('Location: ' . $referer);
-header_redirect	./lib/auth.php:5085	                header('Location: graph_view.php');
-header_redirect	./lib/auth.php:5089	                header('Location: index.php');
-header_redirect	./lib/auth.php:5095	                header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
-header_redirect	./lib/auth.php:5097	                header('Location: ' . $config['url_path'] . 'index.php' . ($newtheme ? '?newtheme=1' : ''));
-header_redirect	./lib/auth.php:5102	            header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
-header_redirect	./lib/auth.php:5313	        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
+header_redirect	./lib/auth.php:4584	            header('Location: auth_changepassword.php?header=false');
+header_redirect	./lib/auth.php:5103	                header('Location: ' . $referer);
+header_redirect	./lib/auth.php:5107	                header('Location: graph_view.php');
+header_redirect	./lib/auth.php:5111	                header('Location: index.php');
+header_redirect	./lib/auth.php:5117	                header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
+header_redirect	./lib/auth.php:5119	                header('Location: ' . $config['url_path'] . 'index.php' . ($newtheme ? '?newtheme=1' : ''));
+header_redirect	./lib/auth.php:5124	            header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
+header_redirect	./lib/auth.php:5335	        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
 header_redirect	./lib/clog_webapi.php:88	        header('Location: ' . get_current_page());
 header_redirect	./lib/functions.php:8587	    header('Location: ' . $save_url);
 header_redirect	./lib/functions.php:8611	    header('Location: ' . $safe_url, true, $status);

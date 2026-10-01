@@ -50,7 +50,7 @@ function compat_password_hash($password, $algo, $options = array()) {
 $GLOBALS['scenario'] = $scenario;
 PHP;
 
-    foreach (array('secpass_login_process', 'local_auth_login_process', 'auth_unknown_user_password_verify') as $function) {
+    foreach (array('secpass_login_process', 'local_auth_login_process', 'auth_local_login_timing_floor', 'auth_unknown_user_password_verify') as $function) {
         if (strpos($auth, "\nfunction $function(") !== false) {
             $program .= "\n" . test_php_function_source($auth, $function) . "\n";
         }
@@ -125,3 +125,49 @@ test('legacy MD5 and empty hashes run the same fixed-cost password work as an un
     array('7c4f29407893c334a6cb7a87bf045c0d', '', 'enabled'), array('', '', 'enabled'),
     array('7c4f29407893c334a6cb7a87bf045c0d', chr(0), 'enabled'),
 ));
+
+test('native local login enforces one elapsed floor across real bcrypt costs and unknown accounts', function () {
+    require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
+    $durations = array();
+    foreach (array(10, 12, null) as $cost) {
+        $scenario = array(
+            'call' => array('type' => 'local_auth_login_process', 'args' => array($cost === null ? 'unknown' : 'alice')),
+            'request' => array('login_password' => 'wrong'),
+            'users' => array(),
+        );
+        if ($cost !== null) {
+            // Neither a lower floor nor invalid text may disable the default.
+            $scenario['runtime_config'] = array('auth_login_timing_floor_ms' => $cost === 10 ? 0 : 'invalid');
+        }
+        if ($cost !== null) {
+            $scenario['users'][] = array('id' => 42, 'username' => 'alice', 'realm' => 0, 'enabled' => 'on', 'locked' => '', 'password' => password_hash('right', PASSWORD_BCRYPT, array('cost' => $cost)), 'lastfail' => 0, 'failed_attempts' => 0);
+        }
+        $result = auth_entry_probe_run($scenario);
+        expect($result['stderr'])->toBe('')->and($result['return'])->toBe(array())
+            ->and($result['error'])->toBeTrue()->and($result['elapsed_seconds'])->toBeGreaterThanOrEqual(0.99);
+        $durations[] = $result['elapsed_seconds'];
+    }
+    // These real cost-10/12 paths must fit inside the default floor on this
+    // test host, rather than merely count calls to a stubbed verifier.
+    expect(max($durations) - min($durations))->toBeLessThan(0.35);
+});
+
+test('native successful login preserves real bcrypt rehash and a raised timing floor', function () {
+    require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
+    $scenario = array(
+        'call' => array('type' => 'local_auth_login_process', 'args' => array('alice')),
+        'request' => array('login_password' => 'right'),
+        'runtime_config' => array('auth_login_timing_floor_ms' => 1200),
+        'users' => array(array(
+            'id' => 42, 'username' => 'alice', 'realm' => 0, 'enabled' => 'on', 'locked' => '',
+            'password' => password_hash('right', PASSWORD_BCRYPT, array('cost' => 10)),
+            'lastfail' => 0, 'failed_attempts' => 0,
+        )),
+    );
+    $result = auth_entry_probe_run($scenario);
+    expect($result['stderr'])->toBe('')->and($result['return']['id'])->toBe(42)
+        ->and($result['elapsed_seconds'])->toBeGreaterThanOrEqual(1.19);
+    $writes = array_values(array_filter($result['executed'], fn($write) => str_contains($write['sql'], 'SET password = ?')));
+    expect($writes)->toHaveCount(1)->and(password_verify('right', $writes[0]['params'][0]))->toBeTrue()
+        ->and(password_needs_rehash($writes[0]['params'][0], PASSWORD_DEFAULT))->toBeFalse();
+});
