@@ -1,0 +1,137 @@
+<form class="cactiFormStart" id="form1" name="form1" action="graph_templates_inputs.php" autocomplete="off" method="post"><div id="graph_templates_inputs_input_edit1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Graph Item Inputs [edit graph: ]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Graph-Templates.html" href="#"><i class="far fa-question-circle"></i></a></span><span> </span></div></div><div id="graph_templates_inputs_input_edit1_child" class="cactiTable"><div id="row_name" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter a name for this graph item input, make sure it is something you recognize.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="name" name="name" size="40" maxlength="50" value=""></div></div></div><div id="row_description" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Description<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter a description for this graph item input to describe what this input is used for.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><textarea class=" ui-state-default ui-corner-all" aria-multiline="true" cols="40" rows="5" id="description" name="description"></textarea></div></div></div><div id="row_column_name" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Field Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How data is to be represented on the graph.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="column_name" name="column_name"><option value="graph_type_id">Graph Item Type</option><option value="task_item_id">Data Source</option><option value="color_id">Color</option><option value="alpha">Opacity/Alpha Channel</option><option value="consolidation_function_id">Consolidation Function</option><option value="cdef_id">CDEF Function</option><option value="vdef_id">VDEF Function</option><option value="shift">Shift Data</option><option value="value">Value</option><option value="gprint_id">GPRINT Type</option><option value="textalign">Text Alignment (TEXTALIGN)</option><option value="text_format">Text Format</option><option value="hard_return">Insert Hard Return</option><option value="line_width">Line Width</option><option value="dashes">Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])</option><option value="dash_offset">Dash Offset (dash-offset=offset)</option><option value="sequence">Sequence</option></select></div></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="graph_template_id" name="graph_template_id" value="1"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="graph_template_input_id" name="graph_template_input_id" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_input" name="save_component_input" value="1"></div></div></div></div><div class="break"></div><div id="graph_templates_inputs_input_edit2" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Associated Graph Items</span></div><div class="cactiTableButton"><span> </span></div></div><div style="display:none;"><input style="height:0px;" type="hidden" id="any_selected_item" name="any_selected_item" value=""></div><div class="break"></div><table id="graph_templates_inputs_input_edit2_child" class="cactiTable" style="padding:3px;"><tbody><tr><td><em>No Items</em></td></tr>	</tbody></table><table style="width:100%;text-align:center;">
+		<tbody><tr>
+			<td class="saveRow">
+				<input type="hidden" name="action" value="save">
+				<input type="button" class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="graph_templates.php?action=template_edit&amp;id=1" value="Cancel">				<input type="submit" class=" ui-button ui-corner-all ui-widget" id="submit" value="Create">
+			</td>
+		</tr>
+	</tbody></table>
+	
+		<script type="text/javascript" nonce="<NONCE>">
+		var formArray = [];
+		var changed = false;
+
+		function warningMessage(href, type, scroll_or_id) {
+			title='Warning Unsaved Form Data';
+			returnStr = '<div id="messageContainer" style="display:none">' +
+				'<h4>Unsaved Changes Detected</h4>' +
+				'<p style="display:table-cell;overflow:auto">You have unsaved changes on this form.  If you press &#039;Continue&#039; these changes will be discarded.  Press &#039;Cancel&#039; to continue editing the form.</p>' +
+				'</div>';
+
+			$('#messageContainer').remove();
+			$('body').append(returnStr);
+
+			var messageButtons = {
+				'Cancel': {
+					text: sessionMessageCancel,
+					id: 'messageCancel',
+					click: function() {
+						$(this).dialog('close');
+						$('#messageContainer').remove();
+					}
+				},
+				'Continue': {
+					text: sessionMessageContinue,
+					id: 'messageContinue',
+					click: function() {
+						$('#messageContainer').remove();
+
+						if (type == 'noheader') {
+							loadPageNoHeader(href, scroll_or_id, true);
+						} else if (type == 'toptab') {
+							loadTopTab(href, scroll_or_id, true);
+						} else {
+							loadPage(href, true);
+						}
+					}
+				}
+			};
+
+			messageWidth = $(window).width();
+			if (messageWidth > 600) {
+				messageWidth = 600;
+			} else {
+				messageWidth -= 50;
+			}
+
+			$('#messageContainer').dialog({
+				draggable: true,
+				resizable: false,
+				height: 'auto',
+				minWidth: messageWidth,
+				maxWidth: 800,
+				maxHeight: 600,
+				title: title,
+				buttons: messageButtons
+			});
+		}
+
+		$(function() {
+			var formElement = document.getElementById('form1');
+			if (!formElement) {
+				return;
+			}
+
+			formArray['form1'] = $(formElement).serializeForm();
+			changed = false;
+
+			$(formElement).on('submit', function(event) {
+				event.preventDefault();
+
+				// Enable the form if it's disabled
+				$(this).find('input, textarea, select').prop('disabled', false);
+
+				strURL  = 'graph_templates_inputs.php';
+				strURL += (strURL.indexOf('?') >= 0 ? '&':'?') + 'header=false';
+
+				json =  $(this).serializeObject();
+				$.post(strURL, json).done(function(data) {
+					checkForLogout(data);
+					var htmlObject  = $(data);
+					var matches     = data.match(/<title>(.*?)<\/title>/);
+
+					if (matches != null) {
+						var htmlTitle   = matches[1];
+						var breadCrumbs = htmlObject.find('#breadcrumbs').html();
+						var data        = htmlObject.find('#main').html();
+
+						$('#main').empty().hide();
+						$('title').text(htmlTitle);
+						if (breadCrumbs !== undefined) {
+							$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+						}
+						$('div[class^="ui-"]').remove();
+						$('#main').html(data);
+						applySkin();
+					} else {
+						$('#main').empty().hide().html(data);
+						applySkin();
+					}
+
+					if (isMobile.any() != null) {
+						window.scrollTo(0,1);
+					} else {
+						window.scrollTo(0,0);
+					}
+				});
+			});
+		});
+		</script>
+		<script type="text/javascript" nonce="<NONCE>">
+	var cactiVersion='1.2.31';
+	var cactiNonce='<NONCE>';
+	var cactiServerOS='unix';
+	var cactiAction='input_edit';
+	var theme='modern';
+	var refreshIsLogout=true;
+	var refreshPage='/logout.php?action=timeout';
+	var refreshMSeconds=1440000;
+	var urlPath='/';
+	var previousPage='';
+	var sessionMessage=[];
+	var csrfMagicToken='sid:<CSRF>';
+</script>
+</div></form>

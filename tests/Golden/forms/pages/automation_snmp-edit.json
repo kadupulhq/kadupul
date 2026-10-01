@@ -1,0 +1,20 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "form id=\"automation_snmp_group\" name=\"automation_snmp_group\"",
+        "div id=\"automation_snmp_edit1\"",
+        "div id=\"automation_snmp_edit1_child\"",
+        "div id=\"row_name\"",
+        "input type=\"text\" id=\"name\" name=\"name\"",
+        "input type=\"hidden\" id=\"id\" name=\"id\"",
+        "input type=\"hidden\" id=\"save_component_automation_snmp\" name=\"save_component_automation_snmp\"",
+        "input type=\"hidden\" name=\"action\"",
+        "input type=\"submit\" id=\"submit\""
+    ],
+    "script_ids": [
+        "automation_snmp_group"
+    ],
+    "script_names": []
+}

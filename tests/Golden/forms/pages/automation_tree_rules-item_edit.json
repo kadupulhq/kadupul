@@ -1,0 +1,40 @@
+{
+    "session": {
+        "form_change_actions": {
+            "operation": "toggle_operation()",
+            "operator": "toggle_operator()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "form id=\"form_automation_global_item_edit\" name=\"form_automation_global_item_edit\"",
+        "div id=\"automation_tree_rules_item_edit1\"",
+        "div id=\"automation_tree_rules_item_edit1_child\"",
+        "div id=\"row_operation\"",
+        "select id=\"operation\" name=\"operation\"",
+        "div id=\"row_field\"",
+        "select id=\"field\" name=\"field\"",
+        "div id=\"row_operator\"",
+        "select id=\"operator\" name=\"operator\"",
+        "div id=\"row_pattern\"",
+        "input type=\"text\" id=\"pattern\" name=\"pattern\"",
+        "div id=\"row_sequence\"",
+        "input type=\"hidden\" id=\"sequence\" name=\"sequence\"",
+        "input type=\"hidden\" id=\"rule_type\" name=\"rule_type\"",
+        "input type=\"hidden\" id=\"id\" name=\"id\"",
+        "input type=\"hidden\" id=\"item_id\" name=\"item_id\"",
+        "input type=\"hidden\" id=\"save_component_automation_match_item\" name=\"save_component_automation_match_item\"",
+        "input type=\"hidden\" name=\"action\"",
+        "input type=\"submit\" id=\"submit\""
+    ],
+    "script_ids": [
+        "field",
+        "form_automation_global_item_edit",
+        "operator",
+        "pattern",
+        "rule_type",
+        "sequence"
+    ],
+    "script_names": []
+}

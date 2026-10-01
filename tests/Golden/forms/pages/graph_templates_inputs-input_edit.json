@@ -1,0 +1,28 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "form id=\"form1\" name=\"form1\"",
+        "div id=\"graph_templates_inputs_input_edit1\"",
+        "div id=\"graph_templates_inputs_input_edit1_child\"",
+        "div id=\"row_name\"",
+        "input type=\"text\" id=\"name\" name=\"name\"",
+        "div id=\"row_description\"",
+        "textarea id=\"description\" name=\"description\"",
+        "div id=\"row_column_name\"",
+        "select id=\"column_name\" name=\"column_name\"",
+        "input type=\"hidden\" id=\"graph_template_id\" name=\"graph_template_id\"",
+        "input type=\"hidden\" id=\"graph_template_input_id\" name=\"graph_template_input_id\"",
+        "input type=\"hidden\" id=\"save_component_input\" name=\"save_component_input\"",
+        "div id=\"graph_templates_inputs_input_edit2\"",
+        "input type=\"hidden\" id=\"any_selected_item\" name=\"any_selected_item\"",
+        "table id=\"graph_templates_inputs_input_edit2_child\"",
+        "input type=\"hidden\" name=\"action\"",
+        "input type=\"submit\" id=\"submit\""
+    ],
+    "script_ids": [
+        "form1"
+    ],
+    "script_names": []
+}

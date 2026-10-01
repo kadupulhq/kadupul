@@ -6,7 +6,12 @@
 // Scenarios for tests/Unit/Forms/LegacyFormGoldenTest.php.
 //
 // 'methods' draws field arrays through draw_edit_form(), one or more per
-// field method used on main plus the generated and fallback ones.
+// field method used on main plus the generated and fallback ones. 'pages'
+// runs each track A edit form from the forms plan inventory and each settings
+// tab as the browser requests it, with header=false. Page scenarios start
+// from an empty database except for the signed-in administrator, so most
+// render the "create" form; the rows below are the least a page needs to
+// draw its form at all.
 
 $description = 'Plain text, <b>bold</b> & <script>alert(1)</script>a <a href="https://example.com/">link</a>.';
 $special = "a'b\"c<d>&e";
@@ -17,6 +22,36 @@ $field = static function (string $method, array $extra = array()) use ($descript
 
 $form = static function (array $fields, array $config = array('no_form_tag' => true)): array {
     return array('config' => $config, 'fields' => $fields);
+};
+
+$administrator = array(
+    'id' => '1', 'username' => 'admin', 'password' => 'stored-password-hash', 'realm' => '0', 'full_name' => 'Administrator',
+    'email_address' => 'admin@example.com', 'must_change_password' => '', 'password_change' => 'on', 'show_tree' => 'on',
+    'show_list' => 'on', 'show_preview' => 'on', 'graph_settings' => 'on', 'login_opts' => '1', 'policy_graphs' => '1',
+    'policy_trees' => '1', 'policy_hosts' => '1', 'policy_graph_templates' => '1', 'enabled' => 'on', 'lastchange' => '-1',
+    'lastlogin' => '-1', 'password_history' => '-1', 'locked' => '', 'failed_attempts' => '0', 'lastfail' => '0',
+    'reset_perms' => '0', 'tfa_enabled' => '', 'tfa_secret' => '',
+);
+
+// The current user, read by include/auth.php and by is_realm_allowed().
+$user_rows = array(
+    array('sql' => 'FROM user_auth WHERE id = ?', 'params' => array(1), 'rows' => array($administrator)),
+);
+
+// global_item_edit() lists these columns as rule fields.
+$columns = array(
+    array('sql' => 'SHOW COLUMNS FROM host_template', 'rows' => array(
+        array('Field' => 'id', 'Type' => 'mediumint(8) unsigned'), array('Field' => 'hash', 'Type' => 'varchar(32)'),
+        array('Field' => 'name', 'Type' => 'varchar(100)'), array('Field' => 'class', 'Type' => 'varchar(40)'),
+    )),
+    array('sql' => 'SHOW COLUMNS FROM host', 'rows' => array(
+        array('Field' => 'id', 'Type' => 'mediumint(8) unsigned'), array('Field' => 'host_template_id', 'Type' => 'mediumint(8) unsigned'),
+        array('Field' => 'description', 'Type' => 'varchar(150)'), array('Field' => 'hostname', 'Type' => 'varchar(100)'),
+    )),
+);
+
+$page = static function (string $page, array $request, array $db = array(), array $extra = array()) use ($user_rows): array {
+    return $extra + array('page' => $page, 'request' => $request + array('header' => 'false'), 'db' => array_merge($db, $user_rows));
 };
 
 $methods = array(
@@ -256,4 +291,105 @@ $methods = array(
     ),
 );
 
-return array('methods' => $methods);
+$pages = array(
+    'aggregate_graphs-edit' => $page('aggregate_graphs.php', array('action' => 'edit', 'id' => '42'), array(
+        array('sql' => 'FROM graph_templates_graph WHERE local_graph_id = ?', 'params' => array(42), 'rows' => array(array(
+            'id' => '5', 'local_graph_template_graph_id' => '0', 'local_graph_id' => '42', 'graph_template_id' => '0',
+            't_image_format_id' => '', 'image_format_id' => '1', 't_title' => '', 'title' => 'Aggregate <one>', 'title_cache' => 'Aggregate <one>',
+            't_height' => '', 'height' => '200', 't_width' => '', 'width' => '700', 't_upper_limit' => '', 'upper_limit' => '100',
+            't_lower_limit' => '', 'lower_limit' => '0', 't_vertical_label' => '', 'vertical_label' => 'bits', 't_slope_mode' => '',
+            'slope_mode' => 'on', 't_auto_scale' => '', 'auto_scale' => 'on', 't_auto_scale_opts' => '', 'auto_scale_opts' => '2',
+            't_auto_scale_log' => '', 'auto_scale_log' => '', 't_scale_log_units' => '', 'scale_log_units' => '', 't_auto_scale_rigid' => '',
+            'auto_scale_rigid' => '', 't_auto_padding' => '', 'auto_padding' => 'on', 't_base_value' => '', 'base_value' => '1000',
+            't_grouping' => '', 'grouping' => '', 't_unit_value' => '', 'unit_value' => '', 't_unit_exponent_value' => '',
+            'unit_exponent_value' => '', 't_alt_y_grid' => '', 'alt_y_grid' => '', 't_right_axis' => '', 'right_axis' => '',
+            't_right_axis_label' => '', 'right_axis_label' => '', 't_right_axis_format' => '', 'right_axis_format' => '0',
+            't_right_axis_formatter' => '', 'right_axis_formatter' => '0', 't_left_axis_formatter' => '', 'left_axis_formatter' => '0',
+            't_no_gridfit' => '', 'no_gridfit' => '', 't_unit_length' => '', 'unit_length' => '', 't_tab_width' => '', 'tab_width' => '30',
+            't_dynamic_labels' => '', 'dynamic_labels' => '', 't_force_rules_legend' => '', 'force_rules_legend' => '',
+            't_legend_position' => '', 'legend_position' => '', 't_legend_direction' => '', 'legend_direction' => '',
+        ))),
+        array('sql' => 'FROM aggregate_graphs WHERE local_graph_id = ?', 'params' => array(42), 'rows' => array(array(
+            'id' => '9', 'aggregate_template_id' => '0', 'template_propogation' => '', 'local_graph_id' => '42', 'title_format' => 'Aggregate <one>',
+            'graph_template_id' => '3', 'gprint_prefix' => '', 'gprint_format' => '', 'graph_type' => '0', 'total' => '0', 'total_type' => '1',
+            'total_prefix' => '', 'order_type' => '1', 'created' => '2026-01-01 00:00:00', 'user_id' => '1',
+        ))),
+    )),
+    'auth_profile' => $page('auth_profile.php', array()),
+    'automation_graph_rules-edit' => $page('automation_graph_rules.php', array('action' => 'edit')),
+    'automation_graph_rules-item_edit' => $page('automation_graph_rules.php', array('action' => 'item_edit', 'id' => '1', 'rule_type' => '1'), array_merge($columns, array(
+        array('sql' => 'FROM automation_graph_rules WHERE id = ?', 'params' => array(1), 'rows' => array(array(
+            'id' => '1', 'name' => 'Traffic <rule>', 'snmp_query_id' => '1', 'graph_type_id' => '2', 'enabled' => 'on',
+        ))),
+    ))),
+    'automation_networks-edit' => $page('automation_networks.php', array('action' => 'edit')),
+    'automation_snmp-edit' => $page('automation_snmp.php', array('action' => 'edit')),
+    'automation_snmp-item_edit' => $page('automation_snmp.php', array('action' => 'item_edit', 'id' => '1'), array(
+        array('sql' => 'FROM automation_snmp WHERE id = ?', 'params' => array(1), 'rows' => array(array('id' => '1', 'name' => 'Default <snmp>'))),
+    )),
+    'automation_templates-edit' => $page('automation_templates.php', array('action' => 'edit')),
+    'automation_tree_rules-edit' => $page('automation_tree_rules.php', array('action' => 'edit')),
+    'automation_tree_rules-item_edit' => $page('automation_tree_rules.php', array('action' => 'item_edit', 'id' => '1', 'rule_type' => '3'), array_merge($columns, array(
+        array('sql' => 'FROM automation_tree_rules WHERE id = ?', 'params' => array(1), 'rows' => array(array(
+            'id' => '1', 'name' => 'Devices <rule>', 'tree_id' => '1', 'tree_item_id' => '0', 'leaf_type' => '3', 'host_grouping_type' => '1', 'enabled' => 'on',
+        ))),
+    ))),
+    'data_queries-edit' => $page('data_queries.php', array('action' => 'edit')),
+    'data_queries-item_edit' => $page('data_queries.php', array('action' => 'item_edit', 'snmp_query_id' => '1')),
+    'data_source_profiles-edit' => $page('data_source_profiles.php', array('action' => 'edit')),
+    'data_source_profiles-item_edit' => $page('data_source_profiles.php', array('action' => 'item_edit', 'profile_id' => '1')),
+    'data_sources-ds_edit' => $page('data_sources.php', array('action' => 'ds_edit')),
+    'data_templates-template_edit' => $page('data_templates.php', array('action' => 'template_edit')),
+    'graph_templates-template_edit' => $page('graph_templates.php', array('action' => 'template_edit')),
+    'graph_templates_inputs-input_edit' => $page('graph_templates_inputs.php', array('action' => 'input_edit', 'graph_template_id' => '1')),
+    'graph_templates_items-item_edit' => $page('graph_templates_items.php', array('action' => 'item_edit', 'graph_template_id' => '1')),
+    'graphs-graph_edit' => $page('graphs.php', array('action' => 'graph_edit')),
+    'graphs_items-item_edit' => $page('graphs_items.php', array('action' => 'item_edit', 'local_graph_id' => '1')),
+    'reports_admin-edit' => $page('reports_admin.php', array('action' => 'edit')),
+    'reports_admin-item_edit' => $page('reports_admin.php', array('action' => 'item_edit', 'id' => '4'), array(
+        array('sql' => 'SELECT user_id FROM reports WHERE id = ?', 'params' => array(4), 'rows' => array(array('user_id' => '1'))),
+        array('sql' => 'SELECT id FROM reports WHERE id = ?', 'params' => array(4), 'rows' => array(array('id' => '4'))),
+        array('sql' => 'FROM reports WHERE id = ?', 'params' => array(4), 'rows' => array(array(
+            'id' => '4', 'user_id' => '1', 'name' => 'Daily <report>', 'cformat' => 'on', 'format_file' => 'default.format', 'font_size' => '16',
+            'alignment' => '0', 'graph_linked' => 'on', 'intrvl' => '2', 'count' => '1', 'offset' => '0', 'mailtime' => '1767225600',
+            'subject' => 'Report', 'from_name' => 'Kadupul', 'from_email' => 'reports@example.com', 'email' => 'ops@example.com', 'bcc' => '',
+            'attachment_type' => '1', 'graph_height' => '150', 'graph_width' => '500', 'graph_columns' => '1', 'thumbnails' => '',
+            'lastsent' => '0', 'enabled' => 'on',
+        ))),
+    )),
+    'managers-edit' => $page('managers.php', array('action' => 'edit')),
+    'package_import' => $page('package_import.php', array()),
+    'templates_export' => $page('templates_export.php', array()),
+    'templates_import' => $page('templates_import.php', array()),
+    'user_admin-user_edit' => $page('user_admin.php', array('action' => 'user_edit')),
+    'user_admin-user_edit-existing' => $page('user_admin.php', array('action' => 'user_edit', 'id' => '1')),
+    'user_admin-settings' => $page('user_admin.php', array('action' => 'user_edit', 'tab' => 'settings', 'id' => '1')),
+    'user_domains-edit' => $page('user_domains.php', array('action' => 'edit')),
+    'user_group_admin-edit' => $page('user_group_admin.php', array('action' => 'edit')),
+    'user_group_admin-settings' => $page('user_group_admin.php', array('action' => 'edit', 'tab' => 'settings', 'id' => '1'), array(
+        array('sql' => 'FROM user_auth_group WHERE id = ?', 'params' => array(1), 'rows' => array(array(
+            'id' => '1', 'name' => 'Operators <ops>', 'description' => 'On call', 'graph_settings' => 'on', 'login_opts' => '1', 'show_tree' => 'on',
+            'show_list' => 'on', 'show_preview' => 'on', 'policy_graphs' => '1', 'policy_trees' => '1', 'policy_hosts' => '1',
+            'policy_graph_templates' => '1', 'enabled' => 'on',
+        ))),
+    )),
+);
+
+// Two path defaults point at files a working copy may or may not have. The
+// stored passwords show what the tabs print for them today.
+$stored = array(
+    'settings' => array(
+        'path_stderrlog' => '<DIR>/cacti_stderr.log',
+        'rrd_archive' => '<DIR>/archive/',
+        'settings_smtp_password' => 'stored-smtp-secret',
+        'snmp_password' => 'stored-snmp-secret',
+        'snmp_priv_passphrase' => 'stored-snmp-passphrase',
+        'ldap_specific_password' => 'stored-ldap-secret',
+    ),
+    'files' => array('cacti_stderr.log'),
+);
+foreach (array('general', 'path', 'snmp', 'poller', 'data', 'visual', 'authentication', 'boost', 'spikes', 'mail') as $tab) {
+    $pages['settings-' . $tab] = $page('settings.php', array('tab' => $tab), array(), $stored);
+}
+
+return array('methods' => $methods, 'pages' => $pages);

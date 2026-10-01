@@ -1,0 +1,28 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "form id=\"data_queries\" name=\"data_queries\"",
+        "div id=\"data_queries_item_edit1\"",
+        "div id=\"data_queries_item_edit1_child\"",
+        "div id=\"row_graph_template_id\"",
+        "select id=\"graph_template_id\" name=\"graph_template_id\"",
+        "div id=\"row_name\"",
+        "input type=\"text\" id=\"name\" name=\"name\"",
+        "input type=\"hidden\" id=\"id\" name=\"id\"",
+        "input type=\"hidden\" id=\"snmp_query_id\" name=\"snmp_query_id\"",
+        "input type=\"hidden\" id=\"graph_template_id_prev\" name=\"graph_template_id_prev\"",
+        "input type=\"hidden\" id=\"save_component_snmp_query_item\" name=\"save_component_snmp_query_item\"",
+        "input type=\"hidden\" name=\"action\"",
+        "input type=\"submit\" id=\"submit\""
+    ],
+    "script_ids": [
+        "data_queries",
+        "graph_template_id",
+        "id",
+        "name",
+        "snmp_query_id"
+    ],
+    "script_names": []
+}

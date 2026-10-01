@@ -1,0 +1,83 @@
+<form class="cactiFormStart" id="form1" name="form1" action="graphs.php" autocomplete="off" method="post"><div id="graphs_graph_edit1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Graph [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Graphs.html" href="#"><i class="far fa-question-circle"></i></a></span><span> </span></div></div><div id="graphs_graph_edit1_child" class="cactiTable"><div id="row_graph_template_id" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Selected Graph Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100% compatible Graph Template, which means that it includes identical Data Sources.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="graph_template_id" name="graph_template_id"><option value="0" selected="">None</option></select></div></div></div><div id="row_host_id" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Device<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Device that this Graph belongs to.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span id="host_id_wrap" class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget"><span id="host_id_click" style="z-index:4" class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s"></span><span class="ui-select-text"><input type="text" class="ui-state-default ui-corner-all" id="host_id_input" value="None"></span></span><input type="hidden" id="host_id" name="host_id" value="0">		<script type="text/javascript" nonce="<NONCE>">
+		var host_idTimer;
+		var host_idClickTimer;
+		var host_idOpen = false;
+
+		$(function() {
+		    $('#host_id_input').autocomplete({
+				source: 'graphs.php?action=ajax_hosts_noany',
+				autoFocus: true,
+				minLength: 0,
+				select: function(event,ui) {
+					$('#host_id_input').val(ui.item.label);
+					if (ui.item.id) {
+						$('#host_id').val(ui.item.id);
+					} else {
+						$('#host_id').val(ui.item.value);
+					}
+					;
+				}
+			}).css('border', 'none').css('background-color', 'transparent');
+
+			$('#host_id_wrap').on('dblclick', function() {
+				host_idOpen = false;
+				clearTimeout(host_idTimer);
+				clearTimeout(host_idClickTimer);
+				$('#host_id_input').autocomplete('close').select();
+			}).on('click', function() {
+				if (host_idOpen) {
+					$('#host_id_input').autocomplete('close');
+					clearTimeout(host_idTimer);
+					host_idOpen = false;
+				} else {
+					host_idClickTimer = setTimeout(function() {
+						$('#host_id_input').autocomplete('search', '');
+						clearTimeout(host_idTimer);
+						host_idOpen = true;
+					}, 200);
+				}
+				$('#host_id_input').select();
+			}).on('mouseleave', function() {
+				host_idTimer = setTimeout(function() { $('#host_id_input').autocomplete('close'); }, 800);
+			});
+
+			width = $('#host_id_input').textBoxWidth();
+			if (width < 100) {
+				width = 100;
+			}
+
+			$('#host_id_wrap').css('width', width+20);
+			$('#host_id_input').css('width', width);
+
+			$('ul[id^="ui-id"]').on('mouseenter', function() {
+				clearTimeout(host_idTimer);
+			}).on('mouseleave', function() {
+				host_idTimer = setTimeout(function() { $('#host_id_input').autocomplete('close'); }, 800);
+			});
+
+			$('ul[id^="ui-id"] > li').each().on('mouseenter', function() {
+				$(this).addClass('ui-state-hover');
+			}).on('mouseleave', function() {
+				$(this).removeClass('ui-state-hover');
+			});
+
+			$('#host_id_wrap').on('mouseenter', function() {
+				$(this).addClass('ui-state-hover');
+				$('input#host_id_input').addClass('ui-state-hover');
+			}).on('mouseleave', function() {
+				$(this).removeClass('ui-state-hover');
+				$('input#host_id_input').removeClass('ui-state-hover');
+			});
+		});
+		</script>
+		</div></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="graph_template_graph_id" name="graph_template_graph_id" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="local_graph_id" name="local_graph_id" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="local_graph_template_graph_id" name="local_graph_template_graph_id" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="graph_template_id_prev" name="graph_template_id_prev" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="host_id_prev" name="host_id_prev" value="0"></div></div></div></div><div class="break"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_graph_new" name="save_component_graph_new" value="1"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="rrdtool_version" name="rrdtool_version" value="1.4.0"></div>	<table style="width:100%;text-align:center;">
+		<tbody><tr>
+			<td class="saveRow">
+				<input type="hidden" name="action" value="save">
+				<input type="button" class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="graphs.php" value="Cancel">				<input type="submit" class="return ui-button ui-corner-all ui-widget" id="submit" value="Create">
+			</td>
+		</tr>
+	</tbody></table>
+	</form>

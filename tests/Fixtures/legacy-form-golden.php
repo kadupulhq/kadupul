@@ -6,8 +6,9 @@
 // Child process for tests/Unit/Forms/LegacyFormGoldenTest.php. It loads the
 // libraries in the order include/global.php does, with the real database
 // layer on a connection that answers each query from fixture rows, then
-// calls draw_edit_form(). A query that no fixture row matches returns no
-// rows.
+// either calls draw_edit_form() or runs a whole page with header=false. A
+// query that no fixture row matches returns no rows, which is what a fresh
+// install returns for an object that does not exist yet.
 //
 // The output is recorded as printed, except for what differs between runs or
 // machines:
@@ -434,8 +435,24 @@ $config['cacti_version'] = CACTI_VERSION;
 // include/auth.php leaves the signed-in user here.
 $current_user = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
 
-// A few methods call helpers from libraries their pages include.
-foreach ($scenario['require'] ?? array() as $library) {
-    require_once $root . '/' . $library;
+if (isset($scenario['form'])) {
+    // A few methods call helpers from libraries their pages include.
+    foreach ($scenario['require'] ?? array() as $library) {
+        require_once $root . '/' . $library;
+    }
+    draw_edit_form($scenario['form']);
+} else {
+    // The page includes ./include/auth.php and ./lib files relative to the
+    // working directory. Authentication is outside these scenarios, so only
+    // that file is replaced; everything else is the real tree.
+    mkdir($directory . '/www/include', 0700, true);
+    file_put_contents($directory . '/www/include/auth.php', '<?php');
+    symlink($root . '/lib', $directory . '/www/lib');
+    foreach (scandir($root . '/include') as $entry) {
+        if ($entry !== '.' && $entry !== '..' && $entry !== 'auth.php') {
+            symlink($root . '/include/' . $entry, $directory . '/www/include/' . $entry);
+        }
+    }
+    chdir($directory . '/www');
+    require $root . '/' . $page;
 }
-draw_edit_form($scenario['form']);

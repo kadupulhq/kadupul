@@ -1,0 +1,76 @@
+<form class="cactiFormStart" id="form1" name="form1" action="user_domains.php" autocomplete="off" method="post"><div id="user_domains_edit1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>User Domain [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="User-Domains.html" href="#"><i class="far fa-question-circle"></i></a></span><span> </span></div></div><div id="user_domains_edit1_child" class="cactiTable"><div id="row_domain_name" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enter a meaningful name for this domain. This will be the name that appears in the Login Realm during login.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="domain_name" name="domain_name" size="40" maxlength="255" value=""></div></div></div><div id="row_type" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Domains Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose what type of domain this is.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="type" name="type"><option value="1">LDAP</option><option value="2" selected="">Active Directory</option></select></div></div></div><div id="row_user_id" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">User Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The name of the user that Kadupul will use as a template for new user accounts.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="user_id" name="user_id"><option value="0" selected="">No User</option></select></div></div></div><div id="row_enabled" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If this checkbox is checked, users will be able to login using this domain.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enabled"><input title="Enabled" class="formCheckbox" type="checkbox" id="enabled" name="enabled" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enabled">Enabled</label></span></div></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="domain_id" name="domain_id" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_domain" name="save_component_domain" value="1"></div></div></div></div><div class="break"></div>	<script type="text/javascript" nonce="<NONCE>">
+	function initGroupMember() {
+		if ($('#group_require').is(':checked')) {
+			$('#row_group_header').show();
+			$('#row_group_dn').show();
+			$('#row_group_attrib').show();
+			$('#row_group_member_type').show();
+		} else {
+			$('#row_group_header').hide();
+			$('#row_group_dn').hide();
+			$('#row_group_attrib').hide();
+			$('#row_group_member_type').hide();
+		}
+	}
+
+	function initSearch() {
+		switch($('#mode').val()) {
+		case '0':
+			$('#row_search_base_header').hide();
+			$('#row_search_base').hide();
+			$('#row_search_filter').hide();
+			$('#row_specific_dn').hide();
+			$('#row_specific_password').hide();
+			$('#row_cn_header').hide();
+			$('#row_cn_full_name').hide();
+			$('#row_cn_email').hide();
+			break;
+		case '1':
+			$('#row_search_base_header').show();
+			$('#row_search_base').show();
+			$('#row_search_filter').show();
+			$('#row_specific_dn').hide();
+			$('#row_specific_password').hide();
+			$('#row_cn_header').hide();
+			$('#row_cn_full_name').hide();
+			$('#row_cn_email').hide();
+			break;
+		case '2':
+			$('#row_search_base_header').show();
+			$('#row_search_base').show();
+			$('#row_search_filter').show();
+			$('#row_specific_dn').show();
+			$('#row_specific_password').show();
+			$('#row_cn_header').show();
+			$('#row_cn_full_name').show();
+			$('#row_cn_email').show();
+			break;
+		}
+	}
+
+	$(function() {
+		initSearch();
+		initGroupMember();
+
+		$('#mode').on('change', function() {
+			initSearch();
+		});
+
+		$('#group_require').on('change', function() {
+			initGroupMember();
+		});
+	});
+	</script>
+		<table style="width:100%;text-align:center;">
+		<tbody><tr>
+			<td class="saveRow">
+				<input type="hidden" name="action" value="save">
+				<input type="button" class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="user_domains.php" value="Cancel">				<input type="submit" class="return ui-button ui-corner-all ui-widget" id="submit" value="Create">
+			</td>
+		</tr>
+	</tbody></table>
+	</form>

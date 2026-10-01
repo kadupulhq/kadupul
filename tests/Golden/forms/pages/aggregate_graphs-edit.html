@@ -1,0 +1,342 @@
+<form class="cactiFormStart" id="template_edit" name="template_edit" action="aggregate_graphs.php" autocomplete="off" method="post"><div id="templated"><div id="aggregate_graphs_edit1" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Aggregate Graph [edit: ]</span></div><div class="cactiTableButton"><span> </span></div></div><div id="aggregate_graphs_edit1_child" class="cactiTable"><div class="spacer formHeader" id="row_spacer0"><div class="formHeaderText">General Settings<div class="formTooltip"></div></div></div><div id="row_title_format" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Graph Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Please name this Aggregate Graph.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="title_format" name="title_format" size="80" maxlength="255" value="Aggregate <one>"></div></div></div><div id="row_template_propogation" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Propagation Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Is this to carry the template?</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Propagation Enabled"><input title="Propagation Enabled" class="formCheckbox" type="checkbox" id="template_propogation" name="template_propogation" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="template_propogation">Propagation Enabled</label></span></div></div></div><div class="spacer formHeader" id="row_spacer1"><div class="formHeaderText">Aggregate Graph Settings<div class="formTooltip"></div></div></div><div id="row_gprint_prefix" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Prefix<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A Prefix for all GPRINT lines to distinguish e.g. different hosts.  You may use both Host as well as Data Query replacement variables in this prefix.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="gprint_prefix" name="gprint_prefix" size="40" maxlength="255" value=""></div></div></div><div id="row_gprint_format" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Include Prefix Text<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Include the source Graphs GPRINT Title Text with the Aggregate Graph(s).</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Include Prefix Text"><input title="Include Prefix Text" class="formCheckbox" type="checkbox" id="gprint_format" name="gprint_format" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="gprint_format">Include Prefix Text</label></span></div></div></div><div id="row_graph_type" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Graph Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Use this Option to create e.g. STACKed graphs.<br>AREA/STACK: 1st graph keeps AREA/STACK items, others convert to STACK<br>LINE1: all items convert to LINE1 items<br>LINE2: all items convert to LINE2 items<br>LINE3: all items convert to LINE3 items</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="graph_type" name="graph_type"><option value="0" selected="">Keep Graph Types</option><option value="50">Keep Type and STACK</option><option value="8">Convert to AREA/STACK Graph</option><option value="4">Convert to LINE1 Graph</option><option value="5">Convert to LINE2 Graph</option><option value="6">Convert to LINE3 Graph</option><option value="51">Convert to LINE1/STACK Graph</option><option value="52">Convert to LINE2/STACK Graph</option><option value="53">Convert to LINE3/STACK Graph</option></select></div></div></div><div id="row_total" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Totaling<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Please check those Items that shall be totaled in the "Total" column, when selecting any totaling option here.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="total" name="total"><option value="1">No Totals</option><option value="2">Print All Legend Items</option><option value="3">Print Totaling Legend Items Only</option></select></div></div></div><div id="row_total_type" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Total Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Which type of totaling shall be performed.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="total_type" name="total_type"><option value="1" selected="">Total Similar Data Sources</option><option value="2">Total All Data Sources</option></select></div></div></div><div id="row_total_prefix" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Prefix for GPRINT Totals<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A Prefix for all <strong>totaling</strong> GPRINT lines.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="total_prefix" name="total_prefix" size="40" maxlength="255" value=""></div></div></div><div id="row_order_type" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Reorder Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Reordering of Graphs.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="order_type" name="order_type"><option value="1" selected="">No Reordering</option><option value="2">Data Source, Graph</option><option value="3">Graph, Data Source</option><option value="4">Base Graph Order</option></select></div></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="id" name="id" value="9"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="local_graph_id" name="local_graph_id" value="42"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="aggregate_template_id" name="aggregate_template_id" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input style="height:0px;" type="hidden" id="graph_template_id" name="graph_template_id" value="3"></div></div><div id="row_suggestions" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Prefix Replacement Values<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">You may use these replacement values for the Prefix in the Aggregate Graph</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><em>|host_description|</em><div style="display:none;"><input style="height:0px;" type="hidden" id="suggestions" name="suggestions" value="|host_description|"></div></div></div></div></div></div><div class="break"></div><div id="aggregate_graphs_edit2" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Graph Items</span></div><div class="cactiTableButton"><span> </span></div></div><table id="aggregate_graphs_edit2_child" class="cactiTable" style="padding:3px;"><tbody><tr class="tableHeader">	<th style="height:1px;" colspan="1">
+		<div class="textSubHeaderDark">Graph Item</div>
+	</th>
+		<th style="height:1px;" colspan="1">
+		<div class="textSubHeaderDark">Data Source</div>
+	</th>
+		<th style="height:1px;" colspan="1">
+		<div class="textSubHeaderDark">Graph Item Type</div>
+	</th>
+		<th style="height:1px;" colspan="1">
+		<div class="textSubHeaderDark">CF Type</div>
+	</th>
+		<th style="height:1px;" colspan="2">
+		<div class="textSubHeaderDark">Item Color</div>
+	</th>
+		<th style="height:1px;" colspan="1">
+		<div class="textSubHeaderDark">Color Template</div>
+	</th>
+		<th style="height:1px;" colspan="1">
+		<div class="textSubHeaderDark">Skip</div>
+	</th>
+		<th style="height:1px;" colspan="1">
+		<div class="textSubHeaderDark">Total</div>
+	</th>
+	</tr><tr><td colspan="7"><em>No Items</em></td></tr></tbody></table></div><div class="break"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="item_no" name="item_no" value="0"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_template" name="save_component_template" value="1"></div>			<script type="text/javascript" nonce="<NONCE>">
+
+			var templated_selectors = [
+				'#gprint_prefix',
+				'#gprint_format',
+				'#graph_type',
+				'#total',
+				'#total_type',
+				'#total_prefix',
+				'#order_type',
+				'select[id^="agg_color"]',
+				'input[id^="agg_total"]',
+				'input[id^="agg_skip"]',
+				'#image_format_id',
+				'#height',
+				'#width',
+				'#slope_mode',
+				'#auto_scale',
+				'#auto_scale_opts',
+				'#auto_scale_log',
+				'#scale_log_units',
+				'#auto_scale_rigid',
+				'#auto_padding',
+				'#export',
+				'#upper_limit',
+				'#lower_limit',
+				'#base_value',
+				'#unit_value',
+				'#unit_exponent_value',
+				'#alt_y_grid',
+				'#right_axis',
+				'#right_axis_label',
+				'#right_axis_format',
+				'#right_axis_formatter',
+				'#left_axis_formatter',
+				'#no_gridfit',
+				'#unit_length',
+				'#tab_width',
+				'#dynamic_labels',
+				'#force_rules_legend',
+				'#legend_position',
+				'#legend_direction',
+				'#vertical_label'
+			];
+
+			$(function() {
+				if ($('input[id^="agg_total"]').is(':checked') || $('#template_propogation').is(':checked')) {
+					$('#agg_preview').show();
+				}
+
+				if ($('#template_propogation').is(':checked')) {
+					for (var i = 0; i < templated_selectors.length; i++) {
+						$(templated_selectors[i]).prop('disabled', true).addClass('ui-state-disabled');
+						if ($(templated_selectors[i]).selectmenu('instance')) {
+							$(templated_selectors[i]).selectmenu('disable');
+						}
+					}
+				} else {
+					$('#row_template_propogation').hide();
+					$('#row_spacer0').hide();
+				}
+
+				$('input[id^="agg_total"], input[id^="agg_skip"]').on('click', function() {
+					id = $(this).attr('id');
+
+					if (id.indexOf('skip') > 0) {
+						altId = id.replace('skip', 'total');
+					} else {
+						altId = id.replace('total', 'skip');
+					}
+
+					if ($('#'+id).is(':checked')) {
+						$('#'+altId).prop('checked', false);
+					} else {
+						$('#'+altId).prop('checked', true);
+					}
+
+					changeTotals();
+
+					updateSaveButton();
+				});
+
+				$('#total').on('change', function() {
+					changeTotals();
+				});
+
+				$('#total_type').on('change', function() {
+					changeTotalsType();
+				});
+
+				$('#template_propogation').on('change', function() {
+					if (!$('#template_propogation').is(':checked')) {
+						for (var i = 0; i < templated_selectors.length; i++) {
+							$(templated_selectors[i]).prop('disabled', false);
+						}
+					} else {
+						for (var i = 0; i < templated_selectors.length; i++) {
+							$(templated_selectors[i]).prop('disabled', true);
+						}
+					}
+				});
+
+				updateSaveButton();
+			});
+
+			function updateSaveButton() {
+				if ($('input[id^="agg_total"]').is(':checked')) {
+					$('#submit').prop('disabled', false);
+
+					if ($('#submit').button('instance')) {
+						$('#submit').button('enable');
+					}
+				} else {
+					$('#submit').prop('disabled', true);
+
+					if ($('#submit').button('instance')) {
+						$('#submit').button('disable');
+					}
+				}
+			}
+
+			function changeTotals() {
+				switch ($('#total').val()) {
+					case '1':
+						$('#row_total_type').hide();
+						$('#row_total_prefix').hide();
+						$('#row_order_type').show();
+						break;
+					case '2':
+						$('#row_total_type').show();
+						$('#row_total_prefix').show();
+						$('#row_order_type').show();
+						changeTotalsType();
+						break;
+					case '3':
+						$('#row_total_type').show();
+						$('#row_total_prefix').show();
+						//$('#order_type').prop('disabled', true);
+						changeTotalsType();
+						break;
+				}
+			}
+
+			function changeTotalsType() {
+				if ($('#total_type').val() == 1) {
+					if ($('#total_prefix').val() == '' && $('#id').val() == 0) {
+						$('#total_prefix').attr('value', 'Total');
+					}
+				} else if ($('#total_type').val() == 2) {
+					if ($('#total_prefix').val() == '' && $('#id').val() == 0) {
+						$('#total_prefix').attr('value', 'All Items');
+					}
+				}
+			}
+			</script>
+			</div><div id="classic">		<input type="hidden" id="graph_template_graph_id" name="graph_template_graph_id" value="5">
+		<input type="hidden" id="local_graph_template_graph_id" name="local_graph_template_graph_id" value="0">
+		<div id="aggregate_graphs_edit3" class="cactiTable" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Graph Configuration</span></div><div class="cactiTableButton"><span> </span></div></div><div id="aggregate_graphs_edit3_child" class="cactiTable"><div class="spacer formHeader collapsible" id="row_general_header"><div class="formHeaderText">Common Options<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_vertical_label" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Vertical Label (--vertical-label)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The label vertically printed to the left of the graph.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="vertical_label" name="vertical_label" size="30" maxlength="255" value="bits"></div></div></div><div id="row_image_format_id" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Image Format (--imgformat)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="image_format_id" name="image_format_id"><option value="1" selected="">PNG</option><option value="3">SVG</option></select></div></div></div><div id="row_height" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Height (--height)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The height (in pixels) of the graph area within the graph. This area does not include the legend, axis legends, or title.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="height" name="height" size="7" maxlength="50" value="200"></div></div></div><div id="row_width" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Width (--width)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The width (in pixels) of the graph area within the graph. This area does not include the legend, axis legends, or title.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="width" name="width" size="7" maxlength="50" value="700"></div></div></div><div id="row_base_value" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Base Value (--base)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should be set to 1024 for memory and 1000 for traffic measurements.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="base_value" name="base_value" size="12" maxlength="50" value="1000"></div></div></div><div id="row_slope_mode" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Slope Mode (--slope-mode)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Using Slope Mode evens out the shape of the graphs at the expense of some on screen resolution.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Slope Mode (--slope-mode)"><input title="Slope Mode (--slope-mode)" class="formCheckbox" type="checkbox" id="slope_mode" name="slope_mode" checked="" aria-checked="true"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="slope_mode">Slope Mode (--slope-mode)</label></span></div></div></div><div class="spacer formHeader collapsible" id="row_scaling_header"><div class="formHeaderText">Scaling Options<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_auto_scale" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Auto Scale<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Auto scale the y-axis instead of defining an upper and lower limit. Note: if this is check both the Upper and Lower limit will be ignored.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Auto Scale"><input title="Auto Scale" class="formCheckbox" type="checkbox" id="auto_scale" name="auto_scale" checked="" aria-checked="true"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="auto_scale">Auto Scale</label></span></div></div></div><div id="row_auto_scale_opts" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Auto Scale Options<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br></span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><div style="formRadio">
+<span class="nowrap"><label class="radioSwitch"><input value="1" class="formCheckbox" type="radio" id="auto_scale_opts_1" name="auto_scale_opts" aria-checked="false"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="auto_scale_opts_1">Use --alt-autoscale (ignoring given limits)</label></span><br><span class="nowrap"><label class="radioSwitch"><input value="2" class="formCheckbox" type="radio" id="auto_scale_opts_2" name="auto_scale_opts" checked="" aria-checked="true"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="auto_scale_opts_2">Use --alt-autoscale-max (accepting a lower limit)</label></span><br><span class="nowrap"><label class="radioSwitch"><input value="3" class="formCheckbox" type="radio" id="auto_scale_opts_3" name="auto_scale_opts" aria-checked="false"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="auto_scale_opts_3">Use --alt-autoscale-min (accepting an upper limit)</label></span><br><span class="nowrap"><label class="radioSwitch"><input value="4" class="formCheckbox" type="radio" id="auto_scale_opts_4" name="auto_scale_opts" aria-checked="false"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="auto_scale_opts_4">Use --alt-autoscale (accepting both limits, RRDtool default)</label></span><br></div>
+</div></div></div><div id="row_auto_scale_log" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Logarithmic Scaling (--logarithmic)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Use Logarithmic y-axis scaling</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Logarithmic Scaling (--logarithmic)"><input title="Logarithmic Scaling (--logarithmic)" class="formCheckbox" type="checkbox" id="auto_scale_log" name="auto_scale_log" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="auto_scale_log">Logarithmic Scaling (--logarithmic)</label></span></div></div></div><div id="row_scale_log_units" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">SI Units for Logarithmic Scaling (--units=si)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Use SI Units for Logarithmic Scaling instead of using exponential notation.<br> Note: Linear graphs use SI notation by default.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="SI Units for Logarithmic Scaling (--units=si)"><input title="SI Units for Logarithmic Scaling (--units=si)" class="formCheckbox" type="checkbox" id="scale_log_units" name="scale_log_units" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="scale_log_units">SI Units for Logarithmic Scaling (--units=si)</label></span></div></div></div><div id="row_auto_scale_rigid" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Rigid Boundaries Mode (--rigid)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Do not expand the lower and upper limit if the graph contains a value outside the valid range.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Rigid Boundaries Mode (--rigid)"><input title="Rigid Boundaries Mode (--rigid)" class="formCheckbox" type="checkbox" id="auto_scale_rigid" name="auto_scale_rigid" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="auto_scale_rigid">Rigid Boundaries Mode (--rigid)</label></span></div></div></div><div id="row_upper_limit" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Upper Limit (--upper-limit)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum vertical value for the graph.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="upper_limit" name="upper_limit" size="12" maxlength="50" value="100"></div></div></div><div id="row_lower_limit" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Lower Limit (--lower-limit)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The minimum vertical value for the graph.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="lower_limit" name="lower_limit" size="12" maxlength="255" value="0"></div></div></div><div class="spacer formHeader collapsible" id="row_grid_header"><div class="formHeaderText">Grid Options<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_unit_value" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Unit Grid Value (--unit/--y-grid)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Sets the exponent value on the Y-axis for numbers. Note: This option is deprecated and replaced by the --y-grid option.  In this option, Y-axis grid lines appear at each grid step interval.  Labels are placed every label factor lines.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="unit_value" name="unit_value" size="12" maxlength="50" value=""></div></div></div><div id="row_unit_exponent_value" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Unit Exponent Value (--units-exponent)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What unit Kadupul should use on the Y-axis. Use 3 to display everything in "k" or -6 to display everything in "u" (micro).</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="unit_exponent_value" name="unit_exponent_value" size="12" maxlength="50" value=""></div></div></div><div id="row_unit_length" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Unit Length (--units-length &amp;lt;length&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How many digits should RRDtool assume the y-axis labels to be? You may have to use this option to make enough space once you start fiddling with the y-axis labeling.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="unit_length" name="unit_length" size="30" maxlength="50" value=""></div></div></div><div id="row_no_gridfit" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">No Gridfit (--no-gridfit)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="No Gridfit (--no-gridfit)"><input title="No Gridfit (--no-gridfit)" class="formCheckbox" type="checkbox" id="no_gridfit" name="no_gridfit" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="no_gridfit">No Gridfit (--no-gridfit)</label></span></div></div></div><div id="row_alt_y_grid" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Alternative Y Grid (--alt-y-grid)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Alternative Y Grid (--alt-y-grid)"><input title="Alternative Y Grid (--alt-y-grid)" class="formCheckbox" type="checkbox" id="alt_y_grid" name="alt_y_grid" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="alt_y_grid">Alternative Y Grid (--alt-y-grid)</label></span></div></div></div><div class="spacer formHeader collapsible" id="row_axis_header"><div class="formHeaderText">Axis Options<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_right_axis" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Right Axis (--right-axis &amp;lt;scale:shift&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A second axis will be drawn to the right of the graph. It is tied to the left axis via the scale and shift parameters.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="right_axis" name="right_axis" size="20" maxlength="20" value=""></div></div></div><div id="row_right_axis_label" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Right Axis Label (--right-axis-label &amp;lt;string&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The label for the right axis.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="right_axis_label" name="right_axis_label" size="30" maxlength="200" value=""></div></div></div><div id="row_right_axis_format" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Right Axis Format (--right-axis-format &amp;lt;format&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="right_axis_format" name="right_axis_format"><option value="0" selected="">None</option></select></div></div></div><div id="row_right_axis_formatter" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Right Axis Formatter (--right-axis-formatter &amp;lt;formatname&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When you setup the right axis labeling, apply a rule to the data format.  Supported formats include "numeric" where data is treated as numeric, "timestamp" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is "%Y-%m-%d %H:%M:%S").  See also --units-length and --right-axis-format.  Finally "duration" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="right_axis_formatter" name="right_axis_formatter"><option value="0" selected="">None</option><option value="numeric">Numeric</option><option value="timestamp">Timestamp</option><option value="duration">Duration</option></select></div></div></div><div id="row_left_axis_formatter" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Left Axis Formatter (--left-axis-formatter &amp;lt;formatname&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When you setup the left axis labeling, apply a rule to the data format.  Supported formats include "numeric" where data is treated as numeric, "timestamp" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is "%Y-%m-%d %H:%M:%S").  See also --units-length.  Finally "duration" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="left_axis_formatter" name="left_axis_formatter"><option value="0" selected="">None</option><option value="numeric">Numeric</option><option value="timestamp">Timestamp</option><option value="duration">Duration</option></select></div></div></div><div class="spacer formHeader collapsible" id="row_legend_header"><div class="formHeaderText">Legend Options<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div><div id="row_auto_padding" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Auto Padding<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Pad text so that legend and graph data always line up. Note: this could cause graphs to take longer to render because of the larger overhead. Also Auto Padding may not be accurate on all types of graphs, consistent labeling usually helps.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Auto Padding"><input title="Auto Padding" class="formCheckbox" type="checkbox" id="auto_padding" name="auto_padding" checked="" aria-checked="true"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="auto_padding">Auto Padding</label></span></div></div></div><div id="row_dynamic_labels" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Dynamic Labels (--dynamic-labels)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Draw line markers as a line.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Dynamic Labels (--dynamic-labels)"><input title="Dynamic Labels (--dynamic-labels)" class="formCheckbox" type="checkbox" id="dynamic_labels" name="dynamic_labels" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="dynamic_labels">Dynamic Labels (--dynamic-labels)</label></span></div></div></div><div id="row_force_rules_legend" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Force Rules Legend (--force-rules-legend)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Force the generation of HRULE and VRULE legends.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Force Rules Legend (--force-rules-legend)"><input title="Force Rules Legend (--force-rules-legend)" class="formCheckbox" type="checkbox" id="force_rules_legend" name="force_rules_legend" aria-checked="false"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="force_rules_legend">Force Rules Legend (--force-rules-legend)</label></span></div></div></div><div id="row_tab_width" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Tab Width (--tabwidth &amp;lt;pixels&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">By default the tab-width is 40 pixels, use this option to change it.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><input type="text" off="" class="ui-state-default ui-corner-all" id="tab_width" name="tab_width" size="10" maxlength="50" value="30"></div></div></div><div id="row_legend_position" class="formRow even"><div class="formColumnLeft"><div class="formFieldName">Legend Position (--legend-position=&amp;lt;position&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Place the legend at the given side of the graph.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="legend_position" name="legend_position"><option value="0" selected="">None</option><option value="north">North</option><option value="south">South</option><option value="west">West</option><option value="east">East</option></select></div></div></div><div id="row_legend_direction" class="formRow odd"><div class="formColumnLeft"><div class="formFieldName">Legend Direction (--legend-direction=&amp;lt;direction&amp;gt;)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Place the legend items in the given vertical order.</span></div>
+</div></div></div><div class="formColumnRight"><div class="formData"><select id="legend_direction" name="legend_direction"><option value="0" selected="">None</option><option value="topdown">Top -&gt; Down</option><option value="bottomup">Bottom -&gt; Up</option></select></div></div></div></div></div><div class="break"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_graph" name="save_component_graph" value="1"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="save_component_input" name="save_component_input" value="1"></div><div style="display:none;"><input style="height:0px;" type="hidden" id="rrdtool_version" name="rrdtool_version" value="1.4.0"></div>	<table style="width:100%;text-align:center;">
+		<tbody><tr>
+			<td class="saveRow">
+				<input type="hidden" name="action" value="save">
+				<input type="button" class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="aggregate_graphs.php" value="Return">				<input type="submit" class="return ui-button ui-corner-all ui-widget" id="submit" value="Save">
+			</td>
+		</tr>
+	</tbody></table>
+	
+		<script type="text/javascript" nonce="<NONCE>">
+		var formArray = [];
+		var changed = false;
+
+		function warningMessage(href, type, scroll_or_id) {
+			title='Warning Unsaved Form Data';
+			returnStr = '<div id="messageContainer" style="display:none">' +
+				'<h4>Unsaved Changes Detected</h4>' +
+				'<p style="display:table-cell;overflow:auto">You have unsaved changes on this form.  If you press &#039;Continue&#039; these changes will be discarded.  Press &#039;Cancel&#039; to continue editing the form.</p>' +
+				'</div>';
+
+			$('#messageContainer').remove();
+			$('body').append(returnStr);
+
+			var messageButtons = {
+				'Cancel': {
+					text: sessionMessageCancel,
+					id: 'messageCancel',
+					click: function() {
+						$(this).dialog('close');
+						$('#messageContainer').remove();
+					}
+				},
+				'Continue': {
+					text: sessionMessageContinue,
+					id: 'messageContinue',
+					click: function() {
+						$('#messageContainer').remove();
+
+						if (type == 'noheader') {
+							loadPageNoHeader(href, scroll_or_id, true);
+						} else if (type == 'toptab') {
+							loadTopTab(href, scroll_or_id, true);
+						} else {
+							loadPage(href, true);
+						}
+					}
+				}
+			};
+
+			messageWidth = $(window).width();
+			if (messageWidth > 600) {
+				messageWidth = 600;
+			} else {
+				messageWidth -= 50;
+			}
+
+			$('#messageContainer').dialog({
+				draggable: true,
+				resizable: false,
+				height: 'auto',
+				minWidth: messageWidth,
+				maxWidth: 800,
+				maxHeight: 600,
+				title: title,
+				buttons: messageButtons
+			});
+		}
+
+		$(function() {
+			var formElement = document.getElementById('template_edit');
+			if (!formElement) {
+				return;
+			}
+
+			formArray['template_edit'] = $(formElement).serializeForm();
+			changed = false;
+
+			$(formElement).on('submit', function(event) {
+				event.preventDefault();
+
+				// Enable the form if it's disabled
+				$(this).find('input, textarea, select').prop('disabled', false);
+
+				strURL  = 'aggregate_graphs.php';
+				strURL += (strURL.indexOf('?') >= 0 ? '&':'?') + 'header=false';
+
+				json =  $(this).serializeObject();
+				$.post(strURL, json).done(function(data) {
+					checkForLogout(data);
+					var htmlObject  = $(data);
+					var matches     = data.match(/<title>(.*?)<\/title>/);
+
+					if (matches != null) {
+						var htmlTitle   = matches[1];
+						var breadCrumbs = htmlObject.find('#breadcrumbs').html();
+						var data        = htmlObject.find('#main').html();
+
+						$('#main').empty().hide();
+						$('title').text(htmlTitle);
+						if (breadCrumbs !== undefined) {
+							$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+						}
+						$('div[class^="ui-"]').remove();
+						$('#main').html(data);
+						applySkin();
+					} else {
+						$('#main').empty().hide().html(data);
+						applySkin();
+					}
+
+					if (isMobile.any() != null) {
+						window.scrollTo(0,1);
+					} else {
+						window.scrollTo(0,0);
+					}
+				});
+			});
+		});
+		</script>
+		</div></form>

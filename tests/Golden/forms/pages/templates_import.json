@@ -1,0 +1,36 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "form id=\"import\" name=\"import\"",
+        "div id=\"templates_import1\"",
+        "div id=\"templates_import1_child\"",
+        "div id=\"row_import_file\"",
+        "input type=\"file\" id=\"import_file\" name=\"import_file\"",
+        "div id=\"row_data_header\"",
+        "div id=\"row_import_data_source_profile\"",
+        "select id=\"import_data_source_profile\" name=\"import_data_source_profile\"",
+        "div id=\"row_graph_header\"",
+        "div id=\"row_remove_orphans\"",
+        "input type=\"checkbox\" id=\"remove_orphans\" name=\"remove_orphans\"",
+        "div id=\"row_replace_svalues\"",
+        "input type=\"checkbox\" id=\"replace_svalues\" name=\"replace_svalues\"",
+        "div id=\"row_image_format\"",
+        "select id=\"image_format\" name=\"image_format\"",
+        "div id=\"row_graph_height\"",
+        "input type=\"text\" id=\"graph_height\" name=\"graph_height\"",
+        "div id=\"row_graph_width\"",
+        "input type=\"text\" id=\"graph_width\" name=\"graph_width\"",
+        "div id=\"contents\"",
+        "input type=\"hidden\" id=\"save_component_import\" name=\"save_component_import\"",
+        "input type=\"hidden\" name=\"action\"",
+        "input type=\"submit\" id=\"submit\""
+    ],
+    "script_ids": [
+        "contents",
+        "import",
+        "import_file"
+    ],
+    "script_names": []
+}

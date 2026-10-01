@@ -1,0 +1,37 @@
+{
+    "session": {
+        "form_change_actions": {
+            "tree_id": "applyTreeChange()",
+            "leaf_type": "applyItemTypeChange()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements": [
+        "form id=\"form_automation_tree_rule_edit\" name=\"form_automation_tree_rule_edit\"",
+        "div id=\"automation_tree_rules_edit1\"",
+        "div id=\"automation_tree_rules_edit1_child\"",
+        "div id=\"row_name\"",
+        "input type=\"text\" id=\"name\" name=\"name\"",
+        "div id=\"row_tree_id\"",
+        "select id=\"tree_id\" name=\"tree_id\"",
+        "div id=\"row_leaf_type\"",
+        "select id=\"leaf_type\" name=\"leaf_type\"",
+        "div id=\"row_host_grouping_type\"",
+        "select id=\"host_grouping_type\" name=\"host_grouping_type\"",
+        "input type=\"hidden\" id=\"id\" name=\"id\"",
+        "input type=\"hidden\" id=\"item_id\" name=\"item_id\"",
+        "input type=\"hidden\" id=\"save_component_automation_tree_rule\" name=\"save_component_automation_tree_rule\"",
+        "input type=\"hidden\" name=\"action\"",
+        "input type=\"submit\" id=\"submit\""
+    ],
+    "script_ids": [
+        "form_automation_tree_rule_edit",
+        "id",
+        "leaf_type",
+        "name",
+        "row_host_grouping_type",
+        "tree_id"
+    ],
+    "script_names": []
+}

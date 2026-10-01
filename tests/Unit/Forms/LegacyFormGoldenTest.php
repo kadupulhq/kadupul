@@ -3,10 +3,10 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-// Records what draw_edit_form() prints today, so a new renderer can prove it
-// prints the same thing. The goldens in
-// tests/Golden/forms include output that looks wrong; rewrite one only for an
-// intended change: run tests/bin/forms-golden and review the diff.
+// Records what draw_edit_form() and the pages that call it print today, so a
+// new renderer can prove it prints the same thing. The goldens in
+// tests/Golden/forms include output that looks wrong; rewrite one only for
+// an intended change: run tests/bin/forms-golden and review the diff.
 
 namespace Kadupul\Tests\Forms;
 
@@ -19,6 +19,22 @@ final class LegacyFormGoldenTest extends TestCase
     public function testFieldMethodMatchesGolden(string $name, array $scenario): void
     {
         $this->assertGolden('methods/' . $name, $scenario);
+    }
+
+    /** @dataProvider pages */
+    public function testPageMatchesGoldenAndKeepsScriptTargets(string $name, array $scenario): void
+    {
+        $observed = $this->assertGolden('pages/' . $name, $scenario, true);
+        $golden = json_decode(file_get_contents(self::goldenPath('pages/' . $name . '.json')), true, 512, JSON_THROW_ON_ERROR);
+
+        // The page's own script finds these elements by id or name. A renderer
+        // that changes markup must keep every one of them.
+        foreach ($golden['script_ids'] as $id) {
+            self::assertContains($id, $observed['ids'], $name . ' script targets #' . $id);
+        }
+        foreach ($golden['script_names'] as $field) {
+            self::assertContains($field, $observed['names'], $name . ' script targets [name=' . $field . ']');
+        }
     }
 
     public function testEveryFieldMethodOnMainHasAGolden(): void
@@ -45,6 +61,11 @@ final class LegacyFormGoldenTest extends TestCase
         return self::cases('methods');
     }
 
+    public static function pages(): array
+    {
+        return self::cases('pages');
+    }
+
     private static function cases(string $kind): array
     {
         $cases = array();
@@ -67,18 +88,31 @@ final class LegacyFormGoldenTest extends TestCase
         return dirname(__DIR__, 2) . '/Golden/forms/' . $name;
     }
 
-    /** Compare the printed markup and what it means to the browser with the goldens. */
-    private function assertGolden(string $name, array $scenario): array
+    /**
+     * Compare the printed markup and what it means to the browser with the
+     * goldens. For a page, the markup golden holds only its forms, which
+     * contain everything draw_edit_form() prints; the rest of the page is
+     * covered by the element inventory and the script targets.
+     */
+    private function assertGolden(string $name, array $scenario, bool $forms_only = false): array
     {
         $result = $this->render($scenario);
+        $document = HTMLDocument::createFromString('<!DOCTYPE html><html><body>' . $result['html'] . '</body></html>', LIBXML_NOERROR);
         $observed = array(
             'session' => $result['session'],
             'diagnostics' => $result['diagnostics'],
             'log' => $result['log'],
-        ) + self::inventory($result['html']);
+        ) + self::inventory($document);
         $recorded = array_diff_key($observed, array('ids' => true, 'names' => true));
+        $markup = $result['html'];
+        if ($forms_only) {
+            $markup = '';
+            foreach ($document->getElementsByTagName('form') as $form) {
+                $markup .= $document->saveHtml($form) . "\n";
+            }
+        }
         $files = array(
-            $name . '.html' => $result['html'],
+            $name . '.html' => $markup,
             $name . '.json' => json_encode($recorded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR) . "\n",
         );
         foreach ($files as $file => $contents) {
@@ -101,9 +135,8 @@ final class LegacyFormGoldenTest extends TestCase
      * parser builds them, and the ids and names the page's scripts select
      * that exist in the markup.
      */
-    private static function inventory(string $html): array
+    private static function inventory(HTMLDocument $document): array
     {
-        $document = HTMLDocument::createFromString('<!DOCTYPE html><html><body>' . $html . '</body></html>', LIBXML_NOERROR);
         $elements = array();
         $ids = array();
         $names = array();
