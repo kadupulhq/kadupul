@@ -8,7 +8,7 @@ Cacti CHANGELOG
 -security: Hold a failed LDAP or Domains login until one second after it started, so an unknown username no longer answers sooner than a wrong password; successful logins do not wait
 -issue: Move an LDAP or Domains login to the next configured server only when the current one cannot be reached, so a wrong password is no longer tried against every server and counted by each directory, and bind the user on the server whose search found them. A search that does not find the user still tries the next server, and in No Searching mode a rejected bind still does, as in 1.2.31
 -security: Refuse LDAP group membership of type Username when more than one directory entry matches the bound name, instead of checking whichever entry the server returned first
--security: Leave the packet level out of the libldap debug level that Selective DEBUG sets on the login page, so libldap cannot write a bind packet and its password to the web server error log
+-security: Leave the packet level out of the libldap debug level that Selective DEBUG sets on the login page, as a precaution against bind packets reaching the web server error log; no password was seen there at the old level with libldap 2.4.46, 2.5 and 2.6
 -issue: Paper-plane shows its scroll-to-top icon again; it used a Font Awesome 4 name that the shipped Font Awesome 5 does not define
 -issue: Classic no longer removes every window event handler on each page load, which stopped open user and ellipsis menus from closing on a click elsewhere
 -issue: The Midwinter ESC shortcut no longer throws an error outside fullscreen, and c+F1 no longer opens an alert reading [object KeyboardEvent]
