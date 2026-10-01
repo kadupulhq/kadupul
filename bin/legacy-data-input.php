@@ -91,7 +91,8 @@ try {
     } elseif ($action === 'find') {
         $result = $id === 0 ? ['method' => [], 'fields' => [], 'revision' => '', 'whitelist' => 'disabled'] : dataInputWorkerState($db, $id);
         if ($id > 0 && isset($config['input_whitelist'])) {
-            $verified = verify_data_input_whitelist($result['method']['hash'], $result['method']['input_string']);
+            $verified = is_file($config['input_whitelist']) && is_readable($config['input_whitelist'])
+                && verify_data_input_whitelist($result['method']['hash'], $result['method']['input_string']) === true;
             $result['whitelist'] = $verified === true ? 'verified' : 'requires_update';
         }
     } elseif (in_array($action, ['bulk_delete', 'bulk_duplicate'], true)) {
@@ -261,7 +262,7 @@ try {
         }
         $output = [];
         $code = cacti_exec(read_config_option('path_php_binary'), ['-q', $config['base_path'] . '/cli/input_whitelist.php', '--update', '--push', '--id=' . $id], $output, false);
-        if ($code !== 0 || verify_data_input_whitelist($state['method']['hash'], $state['method']['input_string']) !== true) {
+        if ($code !== 0 || !is_file($config['input_whitelist']) || !is_readable($config['input_whitelist']) || verify_data_input_whitelist($state['method']['hash'], $state['method']['input_string']) !== true) {
             $status = 'partial';
         } else {
             push_out_data_input_method($id);

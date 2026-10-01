@@ -201,6 +201,9 @@ def verify_data_inputs(harness, session, check):
     # Legacy whitelist update runs a real CLI process and verifies its file bytes.
     config="\n$input_whitelist = '/tmp/data-input-review-whitelist.json';\n"
     harness.compose('exec','-T','-u','root','web','php','-r',"file_put_contents('include/config.php', " + json.dumps(config).replace('$','\\$') + ", FILE_APPEND);")
+    harness.command('php','-r',"if (is_file('/tmp/data-input-review-whitelist.json')) { unlink('/tmp/data-input-review-whitelist.json'); }")
+    _,missing_whitelist=page(session,f'/app.php/data-inputs/{target}/edit')
+    check('Whitelist requires an update.' in missing_whitelist and 'Whitelist verification succeeded.' not in missing_whitelist,'missing configured whitelist requires an update instead of claiming successful verification')
     whitelist=f'/app.php/data-inputs/{target}/whitelist'
     fields,_=page(session,whitelist)
     payload={'data_input_action[revision]':fields['data_input_action[revision]'],'data_input_action[_token]':fields['data_input_action[_token]']}
