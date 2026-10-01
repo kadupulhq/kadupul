@@ -81,7 +81,7 @@ cmd_exec	./lib/utility.php:2098		$json     = shell_exec($php . ' -q ' . $php_fil
 cmd_exec	./poller_boost.php:556	        $process = proc_open($arguments, $descriptors, $pipes);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./remote_agent.php:442	                                $cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-cmd_exec	./script_server.php:185	                exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
+cmd_exec	./script_server.php:188	                exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
 cmd_exec	./snmpagent_mibcache.php:32			popen('start "CactiSNMPCacheChild" /I ' . $php . ' ' . $extra_args, 'r');
 cmd_exec	./snmpagent_mibcache.php:34			exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./snmpagent_persist.php:66	    pclose(popen('start "CactiSNMPCache" /I /B ' . $php . ' ' . $extra_args, 'r'));
@@ -520,7 +520,7 @@ dynamic_include	./reports_user.php:9	include_once($config['library_path'] . '/re
 dynamic_include	./rrdcheck.php:8	include_once ($config['library_path'] . '/functions.php');
 dynamic_include	./rrdcleaner.php:10	include_once ($config['library_path'] . '/rrd.php');
 dynamic_include	./rrdcleaner.php:9	include_once ($config['library_path'] . '/functions.php');
-dynamic_include	./script_server.php:310	            include_once($include_file);
+dynamic_include	./script_server.php:313	            include_once($include_file);
 dynamic_include	./scripts/ss_netsnmp_lmsensors.php:26		include($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./snmpagent_persist.php:164	            include($path_mibcache);
 dynamic_include	./spikekill.php:16	include_once($config['base_path'] . '/lib/spikekill.php');

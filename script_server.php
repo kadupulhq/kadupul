@@ -69,6 +69,7 @@ $longopts = array(
     'help'
 );
 
+// getopt omits an explicitly empty optional value; keep the default environment.
 $options = getopt($shortopts, $longopts);
 
 if (sizeof($options)) {
@@ -77,7 +78,9 @@ if (sizeof($options)) {
 
         switch ($arg) {
             case 'environ':
-                $environ = $value;
+                if (is_string($value) && in_array($value, array('cmd', 'spine', 'realtime', 'other'), true)) {
+                    $environ = $value;
+                }
 
                 break;
             case 'v':
@@ -108,7 +111,7 @@ if (sizeof($options)) {
                 break;
         }
     }
-} elseif ($_SERVER['argc'] >= 2) {
+} elseif ($_SERVER['argc'] >= 2 && !in_array('--environ=', $_SERVER['argv'], true)) {
     if (in_array('spine', $_SERVER['argv'])) {
         $environ = 'spine';
     } elseif (in_array('realtime', $_SERVER['argv'])) {
