@@ -109,16 +109,36 @@ function test_php_block_source(string $source, string $needle, string $after = '
 function test_php_run($codeOrCommand): array
 {
     $command = is_array($codeOrCommand) ? $codeOrCommand : [PHP_BINARY, '-r', $codeOrCommand];
-    $pipes = [];
-    $process = proc_open($command, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
-    if (!is_resource($process)) {
-        throw new RuntimeException('PHP test subprocess did not start.');
+    $error_file = tmpfile();
+    if ($error_file === false) {
+        throw new RuntimeException('PHP test stderr capture could not be created.');
     }
 
-    $out = stream_get_contents($pipes[1]);
-    $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
+    $pipes = [];
+    $process = null;
+    try {
+        // A file cannot fill a pipe buffer while the parent drains stdout.
+        $process = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => $error_file], $pipes);
+        if (!is_resource($process)) {
+            throw new RuntimeException('PHP test subprocess did not start.');
+        }
+        fclose($pipes[0]);
+        $out = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        $status = proc_close($process);
+        rewind($error_file);
+        $err = stream_get_contents($error_file);
 
-    return ['out' => $out, 'err' => $err, 'status' => proc_close($process)];
+        return ['out' => $out, 'err' => $err, 'status' => $status];
+    } finally {
+        foreach ($pipes as $pipe) {
+            if (is_resource($pipe)) {
+                fclose($pipe);
+            }
+        }
+        if (is_resource($process)) {
+            proc_close($process);
+        }
+        fclose($error_file);
+    }
 }
