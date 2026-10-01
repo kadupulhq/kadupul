@@ -195,7 +195,7 @@ function user_group_exists($id) {
 	return $id > 0 && db_fetch_cell_prepared('SELECT COUNT(*) FROM user_auth_group WHERE id = ?', array($id)) > 0;
 }
 
-function user_group_refuse($id) {
+function user_group_refuse($id): never {
 	cacti_log('WARNING: Refused a change to missing User Group ID ' . $id . ' from IP ' . get_client_addr(), false, 'AUTH');
 	raise_message('permission_denied');
 	header('Location: user_group_admin.php?header=false');
@@ -292,7 +292,7 @@ function user_group_copy($id, $prefix = 'New Group') {
 	$count++;
 }
 
-function update_policies() {
+function update_policies(): never {
 	csrf_require_post(true);
 
 	if (!user_group_exists(get_filter_request_var('id'))) {

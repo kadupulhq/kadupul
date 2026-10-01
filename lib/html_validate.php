@@ -77,7 +77,7 @@ function security_log_input_validation_failure($variable) {
 	return $event_id;
 }
 
-function die_html_input_error($variable = '', $value = '', $message = '') {
+function die_html_input_error($variable = '', $value = '', $message = ''): never {
 	global $config;
 	/* The SECURITY line carries the correlation id; the backtrace line below keeps
 	 * its 1.2.31 text because log parsers match it. */

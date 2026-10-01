@@ -358,7 +358,7 @@ function db_check_reconnect_handle(&$db_conn = false, $log = true) {
 	}
 }
 
-function db_warning_handler($errno, $errstr, $errfile, $errline, $errcontext = []) {
+function db_warning_handler($errno, $errstr, $errfile, $errline, $errcontext = []): never {
 	throw new Exception($errstr, $errno);
 }
 

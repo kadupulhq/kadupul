@@ -80,7 +80,7 @@ switch (get_request_var('action')) {
     The Save Function
    -------------------------- */
 
-function form_save() {
+function form_save(): never {
 	if (isset_request_var('save_component_color')) {
 		/* ================= input validation ================= */
 		get_filter_request_var('id');

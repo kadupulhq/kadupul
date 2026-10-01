@@ -98,6 +98,8 @@ if (!function_exists(__NAMESPACE__ . '\reports_form_save')) {
 
 	$code .= $match[0];
 
+	// This harness substitutes returns for exits, so its copy cannot declare never.
+	$code = str_replace('function reports_form_save(): never', 'function reports_form_save()', $code);
 	// each exit follows a recorded redirect, and would otherwise end the run
 	// test-only eval of source read from this repository, not external input
 	eval('namespace ' . __NAMESPACE__ . '; ' . str_replace('exit;', 'return;', $code));
