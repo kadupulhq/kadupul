@@ -72,6 +72,11 @@ correction. All transformations are recorded in the source manifest.
 The theme CI job checks provenance and runs real-browser tests
 for sanitization, legacy widgets, sorting/paging and D3 rendering.
 
+The build installs only Font Awesome's `css/all.css`, `webfonts/*.woff2` and
+`LICENSE.txt` into a cleared `include/fa`, with `index.php` directory guards.
+Font URLs in `all.css` carry `?v=<package version>`, because Font Awesome 5
+and 7 use the same font file names and browsers cache fonts by URL.
+
 Before changing a pin, compare the current file with its old upstream release
 and retain any application/security patches. Obtain the new checksum from the
 reviewed release, then run the sync and browser suite. Do not substitute a
@@ -79,6 +84,13 @@ similarly named npm package: Kadupul's `jquery.zoom.js` is application-owned,
 and `jquery-ui-dist` currently lags the official jQuery UI distribution.
 
 ## Remaining upgrade work (2026-09-19)
+
+DOMPurify is now pinned to 3.4.16. Its rolldown bundle changes the formatting
+of the former 3.4.15 patch anchors; the manifest consolidates those steps into
+exact function replacements while retaining their behavior. The upstream
+3.4.16 refusal to return an in-place root selected for removal is retained and
+has a browser regression. Original upstream source and map checksums are
+verified before applying the compatibility recipes.
 
 This first compatibility-preserving batch updates DOMPurify 3.4.7 → 3.4.15,
 D3 7.8.2 → 7.9.0, jQuery UI 1.14.0 → 1.14.2, and tablesorter core/widgets/pager

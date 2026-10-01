@@ -841,11 +841,15 @@ function get_selected_theme()
         foreach ($installed as $t => $name) {
             $candidate = (string) $t;
 
-            if (file_exists($config['base_path'] . '/include/themes/' . $candidate . '/main.css')) {
+            if ($candidate !== 'classic' && file_exists($config['base_path'] . '/include/themes/' . $candidate . '/main.css')) {
                 $fallback_theme = $candidate;
 
                 break;
             }
+        }
+
+        if ($fallback_theme === null && isset($installed['classic']) && file_exists($config['base_path'] . '/include/themes/classic/main.css')) {
+            $fallback_theme = 'classic';
         }
 
         if ($fallback_theme === null) {
@@ -1923,7 +1927,7 @@ function update_host_status($status, $host_id, &$ping, $ping_availability, $prin
 		total_polls = ?,
 		failed_polls = ?,
 		availability = ?
-		WHERE hostname = ?
+		WHERE id = ?
 		AND deleted = ""',
         array(
             $host['status'],
@@ -1938,7 +1942,7 @@ function update_host_status($status, $host_id, &$ping, $ping_availability, $prin
             $host['total_polls'],
             $host['failed_polls'],
             $host['availability'],
-            $host['hostname']
+            $host_id
         )
     );
 }
@@ -3494,9 +3498,9 @@ function move_graph_group($graph_template_item_id, $graph_group_array, $target_i
     );
 
     if (empty($graph_item['local_graph_id'])) {
-        $sql_where = 'graph_template_id = ' . $graph_item['graph_template_id'] . ' AND local_graph_id = 0';
+        $filters = array('graph_template_id' => $graph_item['graph_template_id'], 'local_graph_id' => 0);
     } else {
-        $sql_where = 'local_graph_id = ' . $graph_item['local_graph_id'];
+        $filters = array('local_graph_id' => $graph_item['local_graph_id']);
     }
 
     /* get a list of parent+children of our target group */
@@ -3505,9 +3509,9 @@ function move_graph_group($graph_template_item_id, $graph_group_array, $target_i
     /* if this "parent" item has no children, then treat it like a regular gprint */
     if (cacti_sizeof($target_graph_group_array) == 0) {
         if ($direction == 'next') {
-            move_item_down('graph_templates_item', $graph_template_item_id, $sql_where);
+            move_item_down('graph_templates_item', $graph_template_item_id, $filters);
         } elseif ($direction == 'previous') {
-            move_item_up('graph_templates_item', $graph_template_item_id, $sql_where);
+            move_item_up('graph_templates_item', $graph_template_item_id, $filters);
         }
 
         return;
@@ -3516,10 +3520,12 @@ function move_graph_group($graph_template_item_id, $graph_group_array, $target_i
     /* start the sequence at '1' */
     $sequence_counter = 1;
 
+    $where_params = array();
+    $where_clause = build_where_from_array($filters, $where_params);
     $graph_items = db_fetch_assoc_prepared("SELECT id, sequence
 		FROM graph_templates_item
-		WHERE $sql_where
-		ORDER BY sequence");
+		WHERE $where_clause
+		ORDER BY sequence", $where_params);
 
     if (cacti_sizeof($graph_items)) {
         foreach ($graph_items as $item) {
@@ -7417,6 +7423,34 @@ function get_include_relpath($path)
     return $npath;
 }
 
+/**
+ * get_compiled_asset_path - the web-root-relative path of the copy that
+ * asset-map:compile wrote for an include, such as
+ * public/assets/include/js/jquery-3Xa9fQ1.js
+ *
+ * @param $relpath - the include path relative to the web root
+ *
+ * @return - the compiled path, or an empty string when there is no manifest
+ *   or the manifest does not map $relpath
+ */
+function get_compiled_asset_path($relpath)
+{
+    global $config;
+
+    static $manifest = null;
+
+    if ($manifest === null) {
+        // The installer can emit includes before Composer's autoloader loads.
+        if (!class_exists(\Kadupul\Platform\Infrastructure\Asset\CompiledAssetManifest::class)) {
+            return '';
+        }
+
+        $manifest = new \Kadupul\Platform\Infrastructure\Asset\CompiledAssetManifest(rtrim($config['base_path'], '/') . '/public/assets/manifest.json', 'public');
+    }
+
+    return $manifest->publicPath($relpath) ?? '';
+}
+
 function get_md5_include_js($path, $async = false)
 {
     global $config;
@@ -7426,10 +7460,16 @@ function get_md5_include_js($path, $async = false)
         return '';
     }
 
+    // A compiled file carries its digest in the name, so it needs no query.
+    $src = get_compiled_asset_path($relpath);
+    if ($src === '') {
+        $src = $relpath . '?' . get_md5_hash($path);
+    }
+
     if ($async) {
-        return '<script type=\'text/javascript\' ' . CactiSecureHeaders::getNonceAttribute() . ' src=\'' . $config['url_path'] . $relpath . '?' . get_md5_hash($path) . '\' async></script>' . PHP_EOL;
+        return '<script type=\'text/javascript\' ' . CactiSecureHeaders::getNonceAttribute() . ' src=\'' . $config['url_path'] . $src . '\' async></script>' . PHP_EOL;
     } else {
-        return '<script type=\'text/javascript\' ' . CactiSecureHeaders::getNonceAttribute() . ' src=\'' . $config['url_path'] . $relpath . '?' . get_md5_hash($path) . '\'></script>' . PHP_EOL;
+        return '<script type=\'text/javascript\' ' . CactiSecureHeaders::getNonceAttribute() . ' src=\'' . $config['url_path'] . $src . '\'></script>' . PHP_EOL;
     }
 }
 
@@ -7442,7 +7482,12 @@ function get_md5_include_css($path)
         return '';
     }
 
-    return '<link href=\'' . $config['url_path'] . $relpath . '?' . get_md5_hash($relpath) . '\' type=\'text/css\' rel=\'stylesheet\'>' . PHP_EOL;
+    $href = get_compiled_asset_path($relpath);
+    if ($href === '') {
+        $href = $relpath . '?' . get_md5_hash($relpath);
+    }
+
+    return '<link href=\'' . $config['url_path'] . $href . '\' type=\'text/css\' rel=\'stylesheet\'>' . PHP_EOL;
 }
 
 function is_resource_writable($path)
