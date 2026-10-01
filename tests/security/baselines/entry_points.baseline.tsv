@@ -88,7 +88,7 @@ include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at aadb66a8a7cc; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
-include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at f9f34cbb5b50; included by auth_changepassword.php, auth_login.php, graph_realtime.php
+include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 89b8966e06b4; included by auth_changepassword.php, auth_login.php, graph_realtime.php
 include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 183e1a4a3b86; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only

@@ -5554,7 +5554,8 @@ function auth_session_credential_generation($user_id, $password, $db = false)
 {
     $fingerprint = auth_session_credential_key($password);
     if ($db instanceof PDO) {
-        $query = $db->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'auth_credential_generation'");
+        $lock = $db->inTransaction() && $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
+        $query = $db->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'auth_credential_generation'" . $lock);
         $query->execute(array($user_id));
         $mapping = $query->fetchColumn();
     } else {

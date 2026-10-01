@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Move External Links into the Navigation Symfony module with Twig forms, transactional viewing grants, stale-order protection and safe legacy redirects.
+- Revoke migrated-route sessions after credential replacement while preserving transparent hash upgrades, and retain Console section names equal to `0` in External Links.
 
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.

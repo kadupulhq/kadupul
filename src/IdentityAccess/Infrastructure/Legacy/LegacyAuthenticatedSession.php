@@ -27,10 +27,16 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
         if ($authMethod !== false && !in_array((int) $authMethod, [1, 2, 3, 4], true)) {
             return null;
         }
-        $query = $this->database->get()->prepare('SELECT id, username, enabled, locked FROM user_auth WHERE id = ?' . $this->readLock());
+        $query = $this->database->get()->prepare('SELECT id, username, enabled, locked, password FROM user_auth WHERE id = ?' . $this->readLock());
         $query->execute([$id]);
         $user = $query->fetch();
         if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on') {
+            $this->session->revoke();
+            return null;
+        }
+        require_once dirname(__DIR__, 4) . '/lib/auth.php';
+        $binding = $snapshot['sess_user_credential'] ?? null;
+        if (!is_string($binding) || !hash_equals(\auth_session_credential_generation($id, $user['password'], $this->database->get()), $binding)) {
             $this->session->revoke();
             return null;
         }
@@ -68,6 +74,6 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
     {
         // MySQL and MariaDB locking reads see the current committed row even
         // after an earlier consistent read, and hold it through the site write.
-        return $this->database->get()->inTransaction() ? ' LOCK IN SHARE MODE' : '';
+        return $this->database->get()->inTransaction() && $this->database->get()->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
     }
 }
