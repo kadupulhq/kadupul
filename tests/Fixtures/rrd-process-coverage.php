@@ -11,6 +11,11 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
 if (defined('REPORT_PERSISTENCE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/reports.php');

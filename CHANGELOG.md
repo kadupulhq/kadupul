@@ -32,7 +32,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
-- Exercise local login, password changes, logout and report ownership/persistence through native production files with isolated SQL fixtures. Part of #699.
+- Exercise local login, password changes, logout, user/group realm and permission changes, and report ownership/persistence through native production files with isolated SQL fixtures. Part of #699.
 
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
