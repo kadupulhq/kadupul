@@ -563,7 +563,6 @@ set_error_handler(function ($level, $message) use (&$diagnostics) {
 
 // The page scenarios run as a web request would; CACTI_CLI follows suit.
 require $root . '/include/runtime.php';
-require $root . '/include/vendor/autoload.php';
 define('CACTI_VERSION', trim(file_get_contents($root . '/include/cacti_version')));
 define('CACTI_CLI', false);
 define('CACTI_DOCUMENTATION_TOC', 'docs/Table-of-Contents.html');
@@ -712,7 +711,11 @@ register_shutdown_function(function () use ($root, $directory, $capture_level, &
     echo json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 });
 
+if (class_exists('Composer\\Autoload\\ClassLoader', false)) {
+    throw new RuntimeException('Composer loaded before the production CSRF boundary');
+}
 require $root . '/include/csrf.php';
+require $root . '/include/vendor/autoload.php';
 cacti_require_post_actions(array('save', 'update_data', 'changepassword'));
 api_plugin_hook('config_insert');
 $config['cacti_version'] = CACTI_VERSION;
