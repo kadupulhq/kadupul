@@ -61,7 +61,10 @@ if (empty($config['path_csrf_secret'])) {
 
     if (file_exists($legacy_path)) {
         print "NOTE: Removing old csrf_secret.php file." . PHP_EOL;
-        @unlink($legacy_path);
+        if (!@unlink($legacy_path)) {
+            print "FATAL: Unable to remove the old csrf_secret.php file." . PHP_EOL;
+            exit(1);
+        }
     }
 
     print "NOTE: New CSRF secret stored in the database." . PHP_EOL;
@@ -82,7 +85,10 @@ if (!file_exists($path_csrf_secret)) {
     exit(1);
 } else {
     print "NOTE: Removing old csrf_secret.php file." . PHP_EOL;
-    unlink($path_csrf_secret);
+    if (!@unlink($path_csrf_secret)) {
+        print "FATAL: Unable to remove the configured csrf_secret.php file." . PHP_EOL;
+        exit(1);
+    }
 }
 
 if (csrf_writable($path_csrf_secret)) {
