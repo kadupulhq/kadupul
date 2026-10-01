@@ -145,7 +145,13 @@ function save_user_settings($user = -1)
                     set_user_setting($field_name, (isset_request_var($field_name) ? 'on' : ''), $user);
                 } elseif ($field_array['method'] == 'checkbox_group') {
                     foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
-                        set_user_setting($sub_field_name, (isset_request_var($sub_field_name) ? 'on' : ''), $user);
+                        $sub_field_array['method'] = 'checkbox';
+                        $value = isset_request_var($sub_field_name) ? 'on' : '';
+                        if (user_setting_value_allowed($sub_field_array, $value)) {
+                            set_user_setting($sub_field_name, $value, $user);
+                        } else {
+                            $_SESSION['sess_error_fields'][$sub_field_name] = $sub_field_name;
+                        }
                     }
                 } elseif ($field_array['method'] == 'textbox_password') {
                     if (get_nfilter_request_var($field_name) != get_nfilter_request_var($field_name . '_confirm')) {

@@ -750,7 +750,11 @@ function form_save()
 
         reset_user_perms(get_request_var('id'));
 
-        raise_message(1);
+        if (!is_error_message()) {
+            raise_message(1);
+        } else {
+            raise_message(35);
+        }
     } elseif (isset_request_var('save_component_graph_perms')) {
         /* ================= input validation ================= */
         get_filter_request_var('id');

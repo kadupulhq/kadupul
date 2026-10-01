@@ -34,3 +34,12 @@ test('a refused login does not rehash', function () {
     expect($result['error'])->toBeTrue()
         ->and(local_login_policy_writes($result, '/SET password = \?/'))->toBe(array());
 });
+
+
+test('transactional rehash refusal provides the global login failure message', function () {
+    $scenario = local_login_policy_scenario('alice', 'weak', array('rehash' => true, 'rehash_failure' => true));
+    $scenario['config'] = array();
+    $result = local_login_policy_run($scenario);
+    expect($result['error'])->toBeTrue()->and($result['user'])->toBe(array())
+        ->and($result['error_msg'])->toBe('Access Denied!  Login Failed.');
+});

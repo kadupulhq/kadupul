@@ -25,6 +25,7 @@ function profile_setting_definitions(): array
         ),
         'tree' => array(
             'default_tree_id' => array('method' => 'drop_sql', 'sql' => 'SELECT id,name FROM graph_tree ORDER BY name', 'default' => '0'),
+            'thumbnail_section' => array('method' => 'checkbox_group', 'items' => array('thumbnail_section_tree_2' => array('default' => ''))),
             'min_tree_width' => array('method' => 'textbox', 'default' => '170', 'max_length' => '5'),
         ),
         'fonts' => array(
@@ -33,7 +34,7 @@ function profile_setting_definitions(): array
     );
 }
 
-function profile_setting_run(string $function, array $request, bool $graph_settings = true): array
+function profile_setting_run(string $function, array $request, bool $graph_settings = true, string $page = 'auth_profile.php'): array
 {
     $functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
     $stubs = test_php_function_source($functions, 'user_setting_value_allowed') . "\n"
@@ -42,7 +43,7 @@ function profile_setting_run(string $function, array $request, bool $graph_setti
         . 'function set_user_setting($name, $value, $user = -1) { $GLOBALS["executed"][] = array("sql" => "set_user_setting", "params" => array($name, $value, $user)); }';
 
     return admin_action_probe_run(array(
-        'page' => 'auth_profile.php',
+        'page' => $page,
         'functions' => array($function),
         'request' => $request,
         'session' => array('sess_user_id' => 5),
@@ -125,3 +126,21 @@ test('the form save rejects malformed numeric defaults without replacing the sub
         ->and($result['session']['sess_field_values']['min_tree_width'])->toBe('invalid-number')
         ->and($result['messages'])->toContain(35)->not->toContain(1);
 });
+
+
+test('administrator graph settings reports failure without a success message for rejected input', function () {
+    $result = profile_setting_run('form_save', array('id' => 42, 'save_component_graph_settings' => '1', 'min_tree_width' => 'invalid-number'), true, 'user_admin.php');
+    expect($result['session']['sess_error_fields'])->toHaveKey('min_tree_width')
+        ->and($result['messages'])->toContain(35)->not->toContain(1);
+});
+
+test('nested thumbnail checkboxes can be enabled and disabled', function (bool $enabled) {
+    $request = array('tab' => 'general');
+    if ($enabled) {
+        $request['thumbnail_section_tree_2'] = 'on';
+    }
+    $result = profile_setting_run('form_save', $request);
+    $stored = array_column(array_column(admin_action_probe_writes($result, '/^set_user_setting$/'), 'params'), 1, 0);
+    expect($stored['thumbnail_section_tree_2'])->toBe($enabled ? 'on' : '')
+        ->and($result['session']['sess_error_fields'] ?? array())->not->toHaveKey('thumbnail_section_tree_2');
+})->with(array(true,false));

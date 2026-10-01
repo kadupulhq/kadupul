@@ -49,7 +49,7 @@ function auth_checkclear_lockout($username, $realm) {}
 function auth_process_lockout_check($username, $realm) { return false; }
 function auth_process_lockout($username, $realm) {}
 function db_check_password_length() {}
-function auth_rehash_password_preserving_sessions($id, $verified, $replacement) { return db_execute_prepared('UPDATE user_auth SET password = ? WHERE id = ? AND realm = 0 AND password = ?', array($replacement, $id, $verified)); }
+function auth_rehash_password_preserving_sessions($id, $verified, $replacement) { if(!empty($GLOBALS['scenario']['rehash_failure']))return false;return db_execute_prepared('UPDATE user_auth SET password = ? WHERE id = ? AND realm = 0 AND password = ?', array($replacement, $id, $verified)); }
 function db_column_exists($table, $column) { return true; }
 function user_rows($username) {
     return array_values(array_filter($GLOBALS['scenario']['users'], function ($row) use ($username) { return $row['username'] === $username; }));
