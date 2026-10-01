@@ -1257,6 +1257,13 @@ function create_tables($load = true) {
 	global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
 	global $altersopt, $database_ssl;
 
+	$schema_file = $config['base_path'] . '/docs/audit_schema.sql';
+	if ($load && (!is_file($schema_file) || !is_readable($schema_file))) {
+		fwrite(STDERR, "FATAL: Failed to find or read docs/audit_schema.sql.\n");
+
+		return false;
+	}
+
 	if (db_execute("CREATE TABLE IF NOT EXISTS table_columns (
 		table_name varchar(50) NOT NULL,
 		table_sequence int(10) unsigned NOT NULL,
@@ -1312,35 +1319,34 @@ function create_tables($load = true) {
 	}
 
 	if ($load) {
-		if (db_execute('TRUNCATE table_columns') === false || db_execute('TRUNCATE table_indexes') === false) {
-			fwrite(STDERR, "FATAL: Failed to clear the audit schema baseline tables.\n");
-
-			return false;
-		}
-
 		$output = array();
 		$error  = 0;
 
-		//Handle case to address Mariadb dropping the mysql command
-		if (file_exists('/usr/bin/mariadb')) {
+		$db_shell = getenv('CACTI_MYSQL_CLIENT');
+
+		// Allow installations and isolated checks to select a specific client.
+		if ($db_shell === false || $db_shell === '') {
+			// Handle systems where MariaDB does not provide the mysql command.
+			if (file_exists('/usr/bin/mariadb')) {
 			$db_shell = '/usr/bin/mariadb';
-		} elseif (file_exists('/usr/bin/mysql')) {
+			} elseif (file_exists('/usr/bin/mysql')) {
 			$db_shell = '/usr/bin/mysql';
-		} elseif (file_exists('/usr/local/bin/mariadb')) {
+			} elseif (file_exists('/usr/local/bin/mariadb')) {
 			$db_shell = '/usr/local/bin/mariadb';
-		} elseif (file_exists('/usr/local/bin/mysql')) {
+			} elseif (file_exists('/usr/local/bin/mysql')) {
 			$db_shell = '/usr/local/bin/mysql';
-		} else {
-			$db_shell = trim((string) shell_exec('which mysql'));
+			} else {
+				$db_shell = trim((string) shell_exec('which mysql'));
 
-			if ($db_shell == '') {
-				fwrite(STDERR, "FATAL: mysql or mariadb command not found.\n");
+				if ($db_shell == '') {
+					fwrite(STDERR, "FATAL: mysql or mariadb command not found.\n");
 
-				return false;
+					return false;
+				}
 			}
 		}
 
-		if (file_exists($config['base_path'] . '/docs/audit_schema.sql')) {
+		if (is_file($schema_file) && is_readable($schema_file)) {
 			/* the credentials go in a private defaults file rather than on the
 			 * command line, where any local user could read them out of the
 			 * process list for as long as the import runs */
@@ -1367,11 +1373,11 @@ function create_tables($load = true) {
 				return false;
 			}
 
-			exec(cacti_escapeshellarg($db_shell) .
+				exec(cacti_escapeshellarg($db_shell) .
 				' --defaults-extra-file=' . cacti_escapeshellarg($defaults_file) .
 				$ssl_option .
 				' ' . cacti_escapeshellarg($database_default) .
-				' < ' . cacti_escapeshellarg($config['base_path'] . '/docs/audit_schema.sql'), $output, $error);
+				' < ' . cacti_escapeshellarg($schema_file), $output, $error);
 
 			unlink($defaults_file);
 
