@@ -662,7 +662,7 @@ function form_save() {
 
 			if ($user_id) {
 				/* an administrator who changes their own password keeps this session */
-				if ($user_id == $_SESSION['sess_user_id']) {
+				if ($user_id == $_SESSION['sess_user_id'] && $password != $old_password) {
 					auth_session_bind_credentials($user_id);
 				}
 

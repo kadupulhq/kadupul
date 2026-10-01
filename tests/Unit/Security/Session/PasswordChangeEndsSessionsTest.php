@@ -77,6 +77,16 @@ test('a malformed binding ends the session rather than passing', function () {
 		->and($result['page_continued'])->toBeFalse();
 });
 
+test('a binding that is not a string ends the session rather than being replaced', function () {
+	$result = cacti_test_run_auth_entry_probe(password_change_request('new-hash', array(
+		'sess_user_id'         => '42',
+		'sess_user_credential' => 42,
+	)));
+
+	expect($result['session'])->not->toHaveKey('sess_user_id')
+		->and($result['page_continued'])->toBeFalse();
+});
+
 test('a stale session on a guest page falls back to the guest account', function () {
 	$result = cacti_test_run_auth_entry_probe(password_change_request('new-hash', array(
 		'sess_user_id'         => '42',
@@ -221,7 +231,7 @@ test('the change password page keeps a current session', function () {
 });
 
 /* user_admin.php form_save runs with the request, database and session helpers stubbed */
-function password_change_admin_save(string $session_user, string $target) : array {
+function password_change_admin_save(string $session_user, string $target, string $password = 'N3w-password', string $stored = 'old-hash') : array {
 	$root = dirname(__DIR__, 4);
 	$auth = file_get_contents($root . '/lib/auth.php');
 
@@ -231,8 +241,8 @@ $scenario = json_decode(stream_get_contents(STDIN), true);
 
 $_SESSION = array('sess_user_id' => $scenario['session_user'], 'sess_user_credential' => hash('sha256', 'old-hash'));
 $_POST    = array();
-$GLOBALS['request']  = array('save_component_user' => 1, 'id' => $scenario['target'], 'username' => 'alice', 'realm' => 0, 'password' => 'N3w-password', 'password_confirm' => 'N3w-password', 'enabled' => 'on');
-$GLOBALS['password'] = array('42' => 'old-hash', '43' => 'other-hash');
+$GLOBALS['request']  = array('save_component_user' => 1, 'id' => $scenario['target'], 'username' => 'alice', 'realm' => 0, 'password' => $scenario['password'], 'password_confirm' => $scenario['password'], 'enabled' => 'on');
+$GLOBALS['password'] = array('42' => $scenario['stored'], '43' => 'other-hash');
 
 function isset_request_var($name) {
 	return isset($GLOBALS['request'][$name]);
@@ -316,7 +326,7 @@ PHP;
 	$source .= "form_save();\n";
 	$source .= "print json_encode(array('valid' => auth_session_credentials_valid(\$_SESSION['sess_user_id'])));\n";
 
-	return cacti_test_run_php_source($source, array('session_user' => $session_user, 'target' => $target));
+	return cacti_test_run_php_source($source, array('session_user' => $session_user, 'target' => $target, 'password' => $password, 'stored' => $stored));
 }
 
 test('an administrator who changes their own password keeps the session they used', function () {
@@ -325,4 +335,8 @@ test('an administrator who changes their own password keeps the session they use
 
 test('an administrator who changes another password keeps their own session', function () {
 	expect(password_change_admin_save('42', '43')['valid'])->toBeTrue();
+});
+
+test('a self-save that keeps the password does not rebind a session from before a change', function () {
+	expect(password_change_admin_save('42', '42', '', 'new-hash')['valid'])->toBeFalse();
 });

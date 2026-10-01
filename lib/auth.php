@@ -5213,10 +5213,14 @@ function auth_session_credentials_valid($user_id) {
 		return true;
 	}
 
-	if (!isset($_SESSION['sess_user_credential']) || !is_string($_SESSION['sess_user_credential'])) {
+	if (!isset($_SESSION['sess_user_credential'])) {
 		$_SESSION['sess_user_credential'] = $key;
 
 		return true;
+	}
+
+	if (!is_string($_SESSION['sess_user_credential'])) {
+		return false;
 	}
 
 	return hash_equals($_SESSION['sess_user_credential'], $key);
