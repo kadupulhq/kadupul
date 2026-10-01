@@ -11,7 +11,7 @@ final class UtilityRows
     public static function renderOptions(array $choices, mixed $selected): void
     {
         foreach ($choices as $key => $label) {
-            print "<option value='" . \html_escape((string) $key) . "'" . ($selected == $key ? ' selected' : '') . '>' . \html_escape($label) . '</option>';
+            print "<option value='" . \html_escape((string) $key) . "'" . ((string) $selected === (string) $key ? ' selected' : '') . '>' . \html_escape($label) . '</option>';
         }
     }
 }

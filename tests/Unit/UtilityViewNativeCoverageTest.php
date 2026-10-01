@@ -316,6 +316,33 @@ final class UtilityViewNativeCoverageTest extends TestCase
         self::assertCount(0, $xpath->query('//script'));
     }
 
+    /** @dataProvider exactRowSelectionCases */
+    public function testNativeRowOptionsSelectOnlyTheExactStringForm(array $choices, mixed $selected, string $expected): void
+    {
+        $state = $this->render(array('view' => 'options', 'request' => array(), 'choices' => $choices, 'selected' => $selected));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML('<select>' . $state['html'] . '</select>', LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        self::assertCount(1, $xpath->query('//select/option[@selected]'));
+        self::assertSame($expected, $xpath->query('//select/option[@selected]')->item(0)->getAttribute('value'));
+        $values = array();
+        foreach ($xpath->query('//select/option') as $option) {
+            $values[] = $option->getAttribute('value');
+        }
+        self::assertSame(array_map('strval', array_keys($choices)), $values);
+        self::assertSame($state['before'], $state['after']);
+    }
+
+    public static function exactRowSelectionCases(): array
+    {
+        return array(
+            'first scientific-looking string' => array(array('0e1' => 'First', '0e2' => 'Second'), '0e1', '0e1'),
+            'second scientific-looking string' => array(array('0e1' => 'First', '0e2' => 'Second'), '0e2', '0e2'),
+            'integer key with request string' => array(array(2 => 'Two', 4 => 'Four'), '2', '2'),
+            'integer key with integer request' => array(array(2 => 'Two', 4 => 'Four'), 2, '2'),
+        );
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
