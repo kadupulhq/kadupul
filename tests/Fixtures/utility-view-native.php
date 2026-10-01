@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // Real controller, validator, HTML and SQL. Bootstrap, permission dropdown
-// visibility, translation and total-count caching are isolated boundaries;
+// visibility, translation, CSRF tokens and total-count caching are isolated boundaries;
 // this fixture does not exercise HTTP authentication or authorization.
 if (PHP_SAPI !== 'cli') {
     exit(1);
@@ -19,14 +19,38 @@ chdir($directory);
 $_SERVER['PHP_SELF'] = 'utilities.php';
 $_SERVER['SCRIPT_NAME'] = 'utilities.php';
 $_SERVER['REQUEST_METHOD'] = 'GET';
+session_start();
 $_SESSION = array('sess_user_id' => 99, 'sentinel' => 'preserved');
-$config = array('base_path' => $root, 'poller_id' => 1, 'connection' => 'online', 'url_path' => '/', 'is_web' => false, 'config_options_array' => array('num_rows_table' => 2, 'selected_theme' => 'classic', 'autocomplete_enabled' => ''));
+$config = array('base_path' => $root, 'poller_id' => 1, 'connection' => 'online', 'url_path' => '/', 'is_web' => false, 'cacti_version' => 'native', 'cacti_server_os' => 'unix', 'config_options_array' => array('num_rows_table' => 2, 'selected_theme' => 'classic', 'autocomplete_enabled' => '', 'path_cactilog' => $directory . '/cacti.log', 'path_stderrlog' => $directory . '/stderr.log', 'max_display_rows' => 2, 'log_refresh_interval' => 300, 'guest_user' => 0, 'auth_method' => 0));
+$no_session_write = array('utilities.php');
+$messages = array();
 $themes = array('classic' => 'Classic');
-$item_rows = array(1 => 'One', 2 => 'Two & more', 10 => 'Ten');
+$item_rows = $scenario['choices'] ?? array(1 => 'One', 2 => 'Two & more', 10 => 'Ten');
 $auth_realms = array(0 => 'Local & trusted');
 $poller_actions = array(0 => 'SNMP', 1 => 'Script', 2 => 'Script Server');
-$_REQUEST = array_merge(array('action' => 'native_fixture'), $scenario['request']);
-$db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+$_REQUEST = array_merge(array('action' => 'native_fixture', 'header' => 'false'), $scenario['request']);
+$log_tail_lines = array(-1 => 'Default', 2 => 'Two', 10 => 'Ten');
+$page_refresh_interval = array(60 => 'One minute', 300 => 'Five minutes');
+file_put_contents($directory . '/cacti.log', "STATS Device[1] DS[101] Alpha & <script>\nWARN Beta\nERROR Gamma\nDEBUG Delta\nPlain Fifth\n");
+file_put_contents($directory . '/cacti.log-20260930', "WARN Archived\n");
+file_put_contents($directory . '/stderr.log', "ERROR Stderr\n");
+$logBefore = hash_file('sha256', $directory . '/cacti.log');
+$boost = $scenario['view'] === 'boost';
+if ($boost) {
+    $db = new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false));
+    $ownedDatabase = 'utility_boost_' . bin2hex(random_bytes(8));
+    $db->exec('CREATE DATABASE `' . $ownedDatabase . '`');
+    $db->exec('USE `' . $ownedDatabase . '`');
+    register_shutdown_function(static function () use ($db, $ownedDatabase) {
+        $db->exec('DROP DATABASE `' . $ownedDatabase . '`');
+    });
+    $database_hostname = 'native-fixture';
+    $database_port = 3306;
+    $database_default = $ownedDatabase;
+    $database_sessions = array('native-fixture:3306:' . $ownedDatabase => $db);
+} else {
+    $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+}
 $db->exec("CREATE TABLE settings_user(user_id INTEGER, name TEXT, value TEXT);
 INSERT INTO settings_user VALUES(99, 'selected_theme', 'classic');
 CREATE TABLE user_auth(id INTEGER, username TEXT, full_name TEXT, realm INTEGER);
@@ -54,6 +78,34 @@ INSERT INTO snmpagent_cache VALUES('1.1','Name & <script>','MIB-A','read-only','
 INSERT INTO snmpagent_managers VALUES(1,'Receiver & <script>'),(2,'Foreign receiver');
 INSERT INTO snmpagent_notifications_log VALUES(1,1,'Name & <script>',1,100,'Bind & <script>'),(2,1,'Other',3,200,'Second'),(3,2,'Foreign',4,300,'Foreign');");
 $tables = array('user_auth', 'user_log', 'host', 'snmp_query', 'host_snmp_cache', 'data_template', 'data_local', 'data_template_data', 'poller_item', 'settings_user', 'snmpagent_cache', 'snmpagent_managers', 'snmpagent_notifications_log');
+if ($boost) {
+    $db->exec("CREATE TABLE settings(name VARCHAR(100) PRIMARY KEY, value TEXT);
+CREATE TABLE poller_output_boost(local_data_id INTEGER, output VARCHAR(100)) ENGINE=InnoDB;
+CREATE TABLE poller_output_boost_local_data_ids(local_data_id INTEGER, process_handler INTEGER);
+CREATE TABLE processes(tasktype VARCHAR(20), taskname VARCHAR(20), taskid INTEGER, started DATETIME);
+INSERT INTO poller_output_boost VALUES(101,'one'),(102,'two');
+INSERT INTO poller_output_boost_local_data_ids VALUES(101,1);
+INSERT INTO processes VALUES('boost','child',1,NOW()),('other','child',2,NOW());");
+    mkdir($directory . '/images');
+    file_put_contents($directory . '/images/one.png', 'abc');
+    file_put_contents($directory . '/images/two.JPG', 'defgh');
+    file_put_contents($directory . '/images/ignored.txt', 'not an image');
+    $boostSettings = array('boost_last_run_time' => 1700000000, 'boost_next_run_time' => 1700000300, 'boost_last_end_time' => 1700000090, 'boost_rrd_update_enable' => 'on', 'boost_png_cache_enable' => 'on', 'boost_rrd_update_max_records' => 1000, 'boost_rrd_update_max_runtime' => 60, 'boost_rrd_update_interval' => 5, 'boost_peak_memory' => 2097152, 'stats_detail_boost' => 'Rows:10 Time:2 GetRows:3 ResultsCycle:4 FileAndTemplate:5 LastUpdate:6 RRDUpdate:7 Delete:8', 'boost_poller_status' => $scenario['status'], 'stats_boost' => 'Runtime:90 RRDs:2', 'boost_png_cache_directory' => $directory . '/images', 'boost_max_output_length' => time() . ':8', 'boost_poller_mem_limit' => -1, 'boost_parallel' => 2, 'stats_boost_1' => 'Runtime:7 Other:0 RRDs:9', 'stats_boost_2' => '');
+    if (!empty($scenario['empty'])) {
+        $boostSettings['stats_detail_boost'] = '';
+        $boostSettings['stats_boost'] = '';
+        $boostSettings['boost_png_cache_directory'] = $directory . '/missing';
+        $boostSettings['boost_png_cache_enable'] = '';
+    }
+    $insertSetting = $db->prepare('INSERT INTO settings VALUES(?,?)');
+    foreach ($boostSettings as $name => $value) {
+        $insertSetting->execute(array($name, $value));
+    }
+    $boost_utilities_interval = array(30 => 'Thirty seconds', 60 => 'One minute');
+    $boost_refresh_interval = array(5 => 'Five minutes');
+    $boost_max_runtime = array(60 => 'One hour');
+    $tables = array_merge($tables, array('settings', 'poller_output_boost', 'poller_output_boost_local_data_ids', 'processes'));
+}
 $before = array();
 foreach ($tables as $table) {
     $before[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
@@ -65,6 +117,19 @@ function db_fetch_assoc_prepared($sql, $params = array())
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
     return $q->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_fetch_row_prepared($sql, $params = array())
+{
+    return db_fetch_assoc_prepared($sql, $params)[0] ?? array();
+}
+function db_table_exists($table)
+{
+    return (bool) db_fetch_cell_prepared('SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=SCHEMA() AND TABLE_NAME=?', array($table));
+}
+function db_execute($sql)
+{
+    $GLOBALS['queries'][] = array($sql, array());
+    return $GLOBALS['db']->exec($sql) !== false;
 }
 function db_fetch_assoc($sql)
 {
@@ -114,12 +179,25 @@ function api_plugin_hook_function($hook, $value)
     return true;
 }
 function api_plugin_hook($hook) {}
-function number_format_i18n($number, $decimals)
+function api_plugin_is_enabled($name)
+{
+    return false;
+}
+function db_close() {}
+function csrf_get_tokens()
+{
+    return 'isolated-csrf-boundary';
+}
+function number_format_i18n($number, $decimals = 0)
 {
     return number_format($number, $decimals);
 }
 final class CactiSecureHeaders
 {
+    public static function getNonce()
+    {
+        return 'utility-fixture';
+    }
     public static function getNonceAttribute()
     {
         return "nonce='utility-fixture'";
@@ -145,10 +223,12 @@ match ($scenario['view']) {
     'poller' => utilities_view_poller_cache(),
     'agent' => snmpagent_utilities_run_cache(),
     'event' => snmpagent_utilities_run_eventlog(),
+    'log' => utilities_view_logfile(),
+    'boost' => boost_display_run_status(),
 };
 $html = ob_get_clean();
 $after = array();
 foreach ($tables as $table) {
     $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
 }
-echo json_encode(array('before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR);
+echo json_encode(array('log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR);

@@ -121,6 +121,121 @@ final class UtilityViewNativeCoverageTest extends TestCase
             'poller missing' => array('poller', array('filter' => 'missing'), array()),
         );
     }
+    /** @dataProvider logfileCases */
+    public function testNativeLogfileViewReadsActualFilesAndKeepsOrderedFilteredContent(array $request, array $expected): void
+    {
+        $state = $this->render(array('view' => 'log', 'request' => $request));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $lines = array();
+        foreach ($xpath->query('//tr[@class="clogError" or @class="clogWarning" or @class="clogDebug" or @class="clogStats" or @class="odd" or @class="even"]/td') as $cell) {
+            $lines[] = trim($cell->textContent);
+        }
+        self::assertSame($expected, $lines);
+        self::assertSame($state['log_before'], $state['log_after']);
+        self::assertSame($state['before'], $state['after']);
+        self::assertCount(2, $xpath->query('//script'));
+        self::assertSame((string) ($request['tail_lines'] ?? -1), $xpath->query('//select[@id="tail_lines"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertSame((string) ($request['refresh'] ?? 300), $xpath->query('//select[@id="refresh"]/option[@selected]')->item(0)->getAttribute('value'));
+        if (isset($request['filename'])) {
+            self::assertSame($request['filename'], $xpath->query('//select[@id="filename"]/option[@selected]')->item(0)->getAttribute('value'));
+        } else {
+            self::assertCount(0, $xpath->query('//select[@id="filename"]/option[@selected]'));
+        }
+        self::assertSame($request['rfilter'] ?? '', $xpath->query('//input[@id="rfilter"]')->item(0)->getAttribute('value'));
+        if (in_array('STATS Device[1] DS[101] Alpha & <script>', $expected, true)) {
+            self::assertCount(1, $xpath->query('//a[@href="host.php?action=edit&id=1"]'));
+            self::assertCount(1, $xpath->query('//a[@href="data_sources.php?action=ds_edit&id=101"]'));
+        }
+    }
+
+    public static function logfileCases(): array
+    {
+        return array(
+            'default newest first' => array(array(), array('Plain Fifth', 'DEBUG Delta')),
+            'oldest first' => array(array('reverse' => 2), array('DEBUG Delta', 'Plain Fifth')),
+            'second page' => array(array('page' => 2), array('ERROR Gamma', 'WARN Beta')),
+            'stats with links and literal markup' => array(array('tail_lines' => 10, 'message_type' => 1, 'rfilter' => 'Alpha'), array('STATS Device[1] DS[101] Alpha & <script>')),
+            'warnings' => array(array('message_type' => 2, 'refresh' => 60), array('WARN Beta')),
+            'empty search' => array(array('rfilter' => 'missing'), array()),
+            'archive file' => array(array('filename' => 'cacti.log-20260930'), array('WARN Archived')),
+            'stderr file' => array(array('filename' => 'stderr.log'), array('ERROR Stderr')),
+        );
+    }
+
+    /** @dataProvider boostCases */
+    public function testNativeBoostStatusUsesRealDatabaseMetadataWorkersAndCacheFiles(string $status, string $expectedStatus, bool $empty): void
+    {
+        if (!getenv('KADUPUL_TEST_MYSQL_DSN')) {
+            self::markTestSkipped('A real MySQL or MariaDB connection is required for Boost metadata.');
+        }
+        $state = $this->render(array('view' => 'boost', 'request' => array('refresh' => 60), 'status' => $status, 'empty' => $empty));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $text = $document->textContent;
+        self::assertSame($state['before'], $state['after']);
+        self::assertCount(1, $xpath->query('//script'));
+        self::assertSame('60', $xpath->query('//select[@id="refresh"]/option[@selected]')->item(0)->getAttribute('value'));
+        foreach (array('Boost On-demand Updating:' => $expectedStatus, 'Database Engine:' => 'InnoDB', 'Total Poller Items:' => '2', 'Running Processes:' => '1', 'Concurrent Processes:' => '2', 'Update Frequency:' => 'Five minutes', 'Maximum Records:' => '1,000 Records', 'Maximum Allowed Runtime:' => 'One hour') as $label => $expected) {
+            self::assertSame($expected, trim($xpath->query('//tr[td[1][text()="' . $label . '"]]/td[2]')->item(0)->textContent), $label);
+        }
+        self::assertStringContainsString('Process: 1', $text);
+        self::assertStringContainsString('Status: Running, Remaining: 1', $text);
+        self::assertStringContainsString('Process: 2', $text);
+        self::assertStringContainsString('Status: Idle, PrevRuntime: 0', $text);
+        if ($empty) {
+            self::assertStringContainsString('Directory Does NOT Exist!!', $text);
+            self::assertSame('Disabled', trim($xpath->query('//tr[td[1][text()="Image Caching Status:"]]/td[2]')->item(0)->textContent));
+        } else {
+            self::assertSame('2 Files', trim($xpath->query('//tr[td[1][text()="Cached Files:"]]/td[2]')->item(0)->textContent));
+            self::assertSame('8.00 Bytes', trim($xpath->query('//tr[td[1][text()="Cached Files Size:"]]/td[2]')->item(0)->textContent));
+            self::assertStringContainsString('Records: 10 (ds rows), Time: 2 (secs)', $text);
+            self::assertSame('2', trim($xpath->query('//tr[td[1][text()="RRD Updates:"]]/td[2]')->item(0)->textContent));
+        }
+    }
+
+    public static function boostCases(): array
+    {
+        return array(
+            'running and populated cache' => array('running:1700000000', 'Running', false),
+            'idle and empty optional stats' => array('complete:1700000000', 'Idle', true),
+            'disabled' => array('disabled', 'Disabled', false),
+            'overrun' => array('overrun:1700000000', 'Overrun Warning', false),
+        );
+    }
+
+    /** @dataProvider rowChoiceCases */
+    public function testNativeRowChoicesPreserveOrderEscapedLabelsAndEmptyConfiguration(string $view, array $choices, int $rows): void
+    {
+        $state = $this->render(array('view' => $view, 'request' => array('rows' => $rows), 'choices' => $choices));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $values = $labels = array();
+        foreach ($xpath->query('//select[@id="rows"]/option') as $option) {
+            $values[] = $option->getAttribute('value');
+            $labels[] = $option->textContent;
+        }
+        self::assertSame(array_merge(array('-1'), array_map('strval', array_keys($choices))), $values);
+        self::assertSame(array_merge(array('Default'), array_values($choices)), $labels);
+        self::assertSame((string) $rows, $xpath->query('//select[@id="rows"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertSame($state['before'], $state['after']);
+        self::assertCount(in_array($view, array('agent', 'event'), true) ? 2 : 1, $xpath->query('//script'));
+    }
+
+    public static function rowChoiceCases(): array
+    {
+        $cases = array();
+        foreach (array('user', 'poller', 'agent', 'event') as $view) {
+            $cases[$view . ' configured order'] = array($view, array(2 => 'Two & more', 1 => 'One'), -1);
+            $cases[$view . ' selected escaped label'] = array($view, array(2 => 'Two & <script>', 4 => 'Four'), 2);
+            $cases[$view . ' empty choices'] = array($view, array(), -1);
+        }
+        return $cases;
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
@@ -148,6 +263,15 @@ final class UtilityViewNativeCoverageTest extends TestCase
         } finally {
             foreach (glob($directory . '/*.coverage') as $report) {
                 unlink($report);
+            }
+            if (is_dir($directory . '/images')) {
+                foreach (glob($directory . '/images/*') as $image) {
+                    unlink($image);
+                }
+                rmdir($directory . '/images');
+            }
+            foreach (array('cacti.log', 'cacti.log-20260930', 'stderr.log') as $logfile) {
+                unlink($directory . '/' . $logfile);
             }
             unlink($directory . '/lib');
             unlink($directory . '/include/auth.php');
