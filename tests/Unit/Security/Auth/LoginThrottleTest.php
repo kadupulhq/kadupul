@@ -375,11 +375,11 @@ test('Domains attempts are counted after the realm is validated and before any d
 		->and($search)->toBeGreaterThan($throttle);
 });
 
-test('the login page returns the count only after a non-guest login passes the account checks', function () {
+test('the login page returns the count after the account checks, including a directory login on the guest account', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/auth_login.php');
 
 	$transition = strpos($source, "cacti_auth_transition((int)\$user['id'], 'login')");
-	$release    = strpos($source, "if (!\$guest_user) {\n\t\t\t\t\tauth_login_throttle_release();");
+	$release    = strpos($source, "if (!\$guest_user || \$auth_method == 3 || \$auth_method == 4) {\n\t\t\t\t\tauth_login_throttle_release();");
 
 	expect(substr_count($source, 'auth_login_throttle_release('))->toBe(1)
 		->and($transition)->toBeInt()
