@@ -24,9 +24,10 @@ Collector cache rebuilds and whitelist files are subsequent operations outside
 that transaction. An incomplete handoff reports that local changes were saved,
 offers a CSRF-protected retry and advises FullSync for unreachable collectors.
 An unknown worker outcome requires reloading before retrying; do not assume rollback.
-Whitelist update invokes `cli/input_whitelist.php --update --push --id=N` with an
-argv array and verifies the stored command afterward. Diagnostic output is never
-rendered in HTTP responses.
+Whitelist update invokes `cli/input_whitelist.php --update --id=N` with an argv
+array and verifies the stored command afterward. The worker then propagates the
+method and rebuilds dependent collector caches once, reporting any failed handoff.
+Diagnostic output is never rendered in HTTP responses.
 
 Verification: `mise exec php@8.4.25 -- php include/vendor/bin/phpunit -c phpunit-symfony.xml`
 and `mise exec python@3.12.12 -- python tests/Symfony/data_input_review_http.py`.

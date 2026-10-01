@@ -172,7 +172,7 @@ final class DataInputAccessTest extends TestCase
         $db->beginTransaction();
         try {
             $access->assertCurrent(9);
-            self::fail('A still-present session actor passed after its GPRINT realm grant was revoked.');
+            self::fail('A still-present session actor passed after its Data Input Methods realm grant was revoked.');
         } catch (DataInputDenied $error) {
             self::assertFalse($error->anonymous);
         } finally {
