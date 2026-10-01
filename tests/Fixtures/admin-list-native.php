@@ -34,6 +34,26 @@ CREATE TABLE user_log(user_id INTEGER, time TEXT);
 INSERT INTO user_auth VALUES(1, 'Alpha & <script>', 'First', 0, 'on', 1, 2, 1), (2, 'Beta', 'Second', 0, '', 2, 1, 2), (3, 'Gamma', 'Third', 2, 'on', 1, 1, 1);
 INSERT INTO user_auth_group VALUES(7, 'Alpha & <script>', 'A & B', 'on', 1, 2, 1), (8, 'Beta', 'Other', '', 2, 1, 2);
 INSERT INTO user_auth_group_members VALUES(7,1),(7,2),(8,3);");
+$permissions_before = null;
+if (!empty($scenario['grid'])) {
+    $db->exec('ALTER TABLE user_auth ADD COLUMN policy_trees INTEGER DEFAULT 1');
+    $db->exec('ALTER TABLE user_auth_group ADD COLUMN policy_trees INTEGER DEFAULT 1');
+    $db->exec("CREATE TABLE graph_templates(id INTEGER, name TEXT);
+CREATE TABLE graph_local(id INTEGER, graph_template_id INTEGER);
+CREATE TABLE user_auth_perms(user_id INTEGER, item_id INTEGER, type INTEGER);
+CREATE TABLE user_auth_group_perms(group_id INTEGER, item_id INTEGER, type INTEGER);
+INSERT INTO graph_templates VALUES(10, 'Alpha & <script>'),(20, 'Beta');
+INSERT INTO graph_local VALUES(101,10),(102,10),(103,20);
+INSERT INTO user_auth_perms VALUES(1,10,4),(2,20,4),(1,20,1);
+INSERT INTO user_auth_group_perms VALUES(7,10,4),(8,20,4),(7,20,1);");
+    $table = $group ? 'user_auth_group' : 'user_auth';
+    $target = $group ? 7 : 1;
+    $q = $db->prepare('UPDATE ' . $table . ' SET policy_graph_templates=? WHERE id=?');
+    $q->execute(array($scenario['policy'], $target));
+    $_REQUEST['id'] = $target;
+    $_REQUEST['associated'] = $scenario['associated'];
+    $permissions_before = $db->query('SELECT * FROM ' . $table . '_perms')->fetchAll(PDO::FETCH_ASSOC);
+}
 $queries = array();
 function db_fetch_assoc_prepared($sql, $params = array())
 {
@@ -41,6 +61,11 @@ function db_fetch_assoc_prepared($sql, $params = array())
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
     return $q->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_fetch_row_prepared($sql, $params = array())
+{
+    $rows = db_fetch_assoc_prepared($sql, $params);
+    return $rows[0] ?? array();
 }
 function db_fetch_assoc($sql)
 {
@@ -116,6 +141,10 @@ if (isset($argv[3])) {
 }
 require $root . '/' . $page;
 ob_start();
-$group ? user_group() : user();
+if (!empty($scenario['grid'])) {
+    $group ? user_group_graph_perms_edit('permste', 'Target') : graph_perms_edit('permste', 'Target');
+} else {
+    $group ? user_group() : user();
+}
 $html = ob_get_clean();
-print json_encode(array('html' => $html, 'queries' => $queries), JSON_THROW_ON_ERROR);
+print json_encode(array('html' => $html, 'queries' => $queries, 'permissions_before' => $permissions_before, 'permissions_after' => !empty($scenario['grid']) ? $db->query('SELECT * FROM ' . $table . '_perms')->fetchAll(PDO::FETCH_ASSOC) : null), JSON_THROW_ON_ERROR);

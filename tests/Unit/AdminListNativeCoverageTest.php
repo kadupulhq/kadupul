@@ -59,6 +59,50 @@ final class AdminListNativeCoverageTest extends TestCase
         );
     }
 
+    /** @dataProvider templateCases */
+    public function testTemplateGridsUseTargetTypedExceptionsAndActualGraphCounts(bool $group, int $policy, string $associated, string $filter): void
+    {
+        $state = $this->render(array('group' => $group, 'grid' => true, 'policy' => $policy, 'associated' => $associated, 'request' => array('filter' => $filter)));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $expected = $filter === 'missing' ? array() : ($filter === 'Beta' ? array('line20') : ($associated === 'true' ? array('line10') : array('line10', 'line20')));
+        $actual = array();
+        foreach ($xpath->query('//tr[starts-with(@id,"line")]') as $row) {
+            $actual[] = $row->getAttribute('id');
+        }
+        self::assertSame($expected, $actual);
+        $expectedNavigation = $expected ? 'All ' . count($expected) . ' Graph Templates' : 'No Graph Templates Found';
+        self::assertSame($expectedNavigation, trim($xpath->query('//div[@class="navBarNavigationNone"]')->item(0)->textContent));
+        foreach ($expected as $row) {
+            $cells = $xpath->query('//tr[@id="' . $row . '"]/td');
+            $exception = $row === 'line10';
+            $granted = ($policy === 1) !== $exception;
+            self::assertSame($granted ? 'Access Granted' : 'Access Restricted', trim($cells->item(2)->textContent));
+            self::assertSame($exception ? '2' : '1', trim($cells->item(3)->textContent));
+        }
+        self::assertSame((string) $policy, $xpath->query('//select[@id="policy_graph_templates"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertSame('permste', $xpath->query('//form[@id="chk"]//input[@name="tab"]')->item(0)->getAttribute('value'));
+        self::assertSame($group ? '7' : '1', $xpath->query('//form[@id="chk"]//input[@name="id"]')->item(0)->getAttribute('value'));
+        self::assertSame('1', $xpath->query('//form[@id="chk"]//input[@name="associate_template"]')->item(0)->getAttribute('value'));
+        self::assertSame($state['permissions_before'], $state['permissions_after']);
+        self::assertCount(0, $xpath->query('//script[contains(text(),"Alpha")]'));
+    }
+
+    public static function templateCases(): array
+    {
+        $cases = array();
+        foreach (array(false, true) as $group) {
+            foreach (array(1, 2) as $policy) {
+                $cases[($group ? 'group' : 'user') . ' policy ' . $policy] = array($group, $policy, 'false', '');
+            }
+            $cases[($group ? 'group' : 'user') . ' exceptions only'] = array($group, 1, 'true', '');
+            $cases[($group ? 'group' : 'user') . ' foreign exception ignored'] = array($group, 1, 'false', 'Beta');
+            $cases[($group ? 'group' : 'user') . ' missing'] = array($group, 1, 'false', 'missing');
+        }
+        return $cases;
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
