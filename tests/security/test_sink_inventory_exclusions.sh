@@ -12,12 +12,14 @@ cat > "$fixture/filesystem.php" <<'PHP'
 <?php
 $fs->dumpFile($p, $d);
 Fs::appendToFile($p, $d);
+$fs -> dumpFile ($p, $d);
+Fs :: appendToFile ($p, $d);
 $fs->dumpFileX($p);
 dumpFile($p);
 PHP
 bash "$fixture/tests/security/build_sink_inventory.sh" | LC_ALL=C sort > "$fixture/before.tsv"
 awk -F '\t' '$1 == "fs_write" { print $2 }' "$fixture/before.tsv" > "$fixture/writes.txt"
-printf './filesystem.php:2\n./filesystem.php:3\n' > "$fixture/expected-writes.txt"
+printf './filesystem.php:2\n./filesystem.php:3\n./filesystem.php:4\n./filesystem.php:5\n' > "$fixture/expected-writes.txt"
 diff -u "$fixture/expected-writes.txt" "$fixture/writes.txt"
 
 # Direct children used to override the exclusion through the final *.php glob.
