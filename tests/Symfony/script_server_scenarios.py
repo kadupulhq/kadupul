@@ -50,15 +50,22 @@ def verify_script_server(harness, check):
 
 def verify_arguments(harness, check):
     version = harness.sql('SELECT cacti FROM version').strip()
-    result = serve(harness, ['--version'], [])
-    check(result['exit'] == 0 and result['stdout'].startswith(f'Kadupul Script Server, Version {version} ')
-          and STARTED not in result['stdout'], 'script server --version prints the version without serving')
-    result = serve(harness, ['--help'], [])
-    check(result['exit'] == 0 and 'usage: script_server.php [environ poller_id]' in result['stdout']
-          and STARTED not in result['stdout'], 'script server --help prints usage without serving')
+    for option in ['--version', '-v', '-V']:
+        result = serve(harness, [option], [])
+        check(result['exit'] == 0 and result['stdout'].startswith(f'Kadupul Script Server, Version {version} ')
+              and STARTED not in result['stdout'], f'script server {option} prints the version without serving')
+    for arguments in [['--help'], ['-h'], ['-H'], ['-h', '-v']]:
+        result = serve(harness, arguments, [])
+        check(result['exit'] == 0 and 'usage: script_server.php [environ poller_id]' in result['stdout']
+              and STARTED not in result['stdout'], f'script server {arguments} prints usage without serving')
     # cmd.php and spine pass the legacy positional form: environ, then poller id.
     for arguments, parent in ([], 'cmd'), (['spine', '1'], 'spine'), (['realtime', '1'], 'realtime'), \
-            (['cmd.php'], 'cmd'), (['--bogus'], 'other'), (['--poller=1', '--mode=offline'], 'cmd'):
+            (['cmd.php'], 'cmd'), (['--bogus'], 'other'), (['--poller=1', '--mode=offline'], 'cmd'), \
+            (['--environ=spine'], 'spine'), (['--environ=realtime', '--poller=1'], 'realtime'), \
+            (['--environ=cmd', '--poller=1', '--mode=online'], 'cmd'), (['--environ=other'], 'other'), \
+            (['--environ'], 'cmd'), (['--environ='], 'cmd'), \
+            (['--environ=spine', '--environ=realtime'], 'cmd'), \
+            (['--environ=spine', '--environ='], 'cmd'), (['--environ=', '--environ=spine'], 'cmd'), (['--environ=unknown'], 'cmd'):
         result = serve(harness, arguments, ['quit'])
         check(result['exit'] == 0 and result['stdout'] == STARTED + parent + '\n' + SHUTDOWN + '\n',
               f'script server started with {arguments} reports parent {parent} and quits')
