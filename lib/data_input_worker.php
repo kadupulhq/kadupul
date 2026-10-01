@@ -58,6 +58,26 @@ function dataInputWorkerState(PDO $db, int $id, bool $lock = false): array
     $counts = ['templates' => (int) ($counts['templates'] ?? 0), 'data_sources' => (int) ($counts['data_sources'] ?? 0)];
     return ['method' => $method, 'fields' => $fields, 'counts' => $counts, 'revision' => DataInputState::revision($method, $fields), 'whitelist' => 'disabled'];
 }
+/** Whitelist confirmation is strict; legacy loose comparisons remain unchanged. */
+function dataInputWorkerWhitelist(string $hash, string $command): bool
+{
+    global $config;
+    $path = $config['input_whitelist'] ?? null;
+    if (!is_string($path) || !is_file($path) || !is_readable($path)) {
+        return false;
+    }
+    $contents = @file_get_contents($path);
+    if (!is_string($contents)) {
+        return false;
+    }
+    try {
+        $whitelist = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
+        return is_array($whitelist) && is_string($whitelist[$hash] ?? null) && $whitelist[$hash] === $command;
+    } catch (JsonException) {
+        return false;
+    }
+}
+
 function dataInputWorkerFieldUnused(PDO $db, int $id, int $fieldId): void
 {
     if (dataInputWorkerRead($db, 'SELECT id FROM data_template_rrd WHERE data_input_field_id=? FOR UPDATE', [$fieldId]) !== [] || dataInputWorkerRead($db, 'SELECT id FROM data_template_data WHERE data_input_id=? AND local_data_id>0 FOR UPDATE', [$id]) !== []) {

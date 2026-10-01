@@ -26,11 +26,15 @@ final readonly class DataInputHandoff
         return $this->run($process);
     }
 
-    public function propagate(int $id): bool
+    public function propagate(int $id, ?string $revision = null): bool
     {
         $nonce = bin2hex(random_bytes(16));
         $process = new Process([$this->binary, $this->projectDir . '/bin/legacy-data-input-handoff.php'], $this->projectDir);
-        $process->setInput(json_encode(['actor' => $this->actorId, 'id' => $id, 'nonce' => $nonce], JSON_THROW_ON_ERROR));
+        $command = ['actor' => $this->actorId, 'id' => $id, 'nonce' => $nonce];
+        if ($revision !== null) {
+            $command['revision'] = $revision;
+        }
+        $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         if (!$this->run($process) || !preg_match('/^KADUPUL_DATA_INPUT_HANDOFF_RESULT=(\{[^\r\n]+\})$/m', $process->getOutput(), $match)) {
             return false;
         }

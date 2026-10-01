@@ -22,8 +22,12 @@ $status = 'partial';
 try {
     $raw = stream_get_contents(STDIN, 1025);
     $command = json_decode($raw, true, 4, JSON_THROW_ON_ERROR);
-    if (strlen($raw) > 1024 || !is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'nonce']) !== [] || !is_int($command['actor'] ?? null) || $command['actor'] < 1 || !is_int($command['id'] ?? null) || $command['id'] < 1 || $command['id'] > 99999999 || !is_string($command['nonce'] ?? null) || !preg_match('/\A[a-f0-9]{32}\z/D', $command['nonce'])) {
+    if (strlen($raw) > 1024 || !is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'nonce', 'revision']) !== [] || !is_int($command['actor'] ?? null) || $command['actor'] < 1 || !is_int($command['id'] ?? null) || $command['id'] < 1 || $command['id'] > 99999999 || !is_string($command['nonce'] ?? null) || !preg_match('/\A[a-f0-9]{32}\z/D', $command['nonce'])) {
         throw new InvalidArgumentException('Invalid handoff.');
+    }
+    $bound = array_key_exists('revision', $command);
+    if ($bound && (!is_string($command['revision']) || !preg_match('/\A[a-f0-9]{64}\z/D', $command['revision']))) {
+        throw new InvalidArgumentException('Invalid revision.');
     }
     $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
     if (!$db instanceof PDO || (int) ($config['poller_id'] ?? 0) !== 1) {
@@ -33,8 +37,11 @@ try {
     $db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
     $db->beginTransaction();
     dataInputWorkerAuthorize($db, $command['actor']);
-    dataInputWorkerState($db, $command['id']);
-    if (!$db->commit()) {
+    $state = dataInputWorkerState($db, $command['id'], $bound);
+    if ($bound && (!hash_equals($state['revision'], $command['revision']) || !dataInputWorkerWhitelist($state['method']['hash'], $state['method']['input_string']))) {
+        throw new RuntimeException('Whitelist snapshot changed.');
+    }
+    if (!$bound && !$db->commit()) {
         throw new RuntimeException('Authorization was not confirmed.');
     }
     $_SESSION['sess_user_id'] = $command['actor'];
@@ -43,6 +50,12 @@ try {
     // save, duplicate, delete, or replication-CRC update.
     push_out_data_input_method($command['id']);
     if (db_error() === '' && !is_error_message() && array_filter($_SESSION['sess_messages'] ?? [], static fn(array $message): bool => ($message['level'] ?? 0) >= MESSAGE_LEVEL_WARN) === []) {
+        // Bound whitelist handoffs own this fresh leaf transaction. Keep the
+        // target and field locks through collector reads; success releases them.
+        // The original worker's primary edit was committed before this leaf began.
+        if ($bound && !$db->commit()) {
+            throw new RuntimeException('Handoff commit was not confirmed.');
+        }
         $status = 'ok';
     }
 } catch (Throwable) {

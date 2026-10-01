@@ -25,6 +25,9 @@ $database_port = '0';
 $database_default = 'fixture';
 $database_sessions = ['fixture:0:fixture' => $db];
 $config = ['poller_id' => file_get_contents(dirname(__DIR__) . '/mode') === 'collector' ? 2 : 1, 'base_path' => dirname(__DIR__), 'input_whitelist' => dirname(__DIR__) . '/whitelist'];
+if (file_get_contents(dirname(__DIR__) . '/mode') === 'disabled') {
+    unset($config['input_whitelist']);
+}
 $_SESSION = [];
 define('MESSAGE_LEVEL_WARN', 2);
 function read_config_option($name)
@@ -53,11 +56,8 @@ function is_error_message()
 {
     return file_get_contents(dirname(__DIR__) . '/mode') === 'message_error';
 }
-function verify_data_input_whitelist($hash, $command)
-{
-    global $config;
-    return is_file($config['input_whitelist']);
-}
+// Load actual legacy template functions alongside the worker verifier; no verification stub.
+require_once $fixtureRoot . '/lib/template.php';
 function cacti_log(...$arguments) {}
 // The fail-before worker executes the unchanged real legacy launcher.
 require $fixtureRoot . '/tests/Helpers/PhpSource.php';

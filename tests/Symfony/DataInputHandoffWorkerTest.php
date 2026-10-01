@@ -88,6 +88,104 @@ final class DataInputHandoffWorkerTest extends TestCase
         yield 'error message' => ['message_error', 3, 'partial', true];
     }
 
+    #[DataProvider('whitelistPresentationCases')]
+    public function testReadStatePreservesDisabledMissingAndStrictVerifiedDistinctions(string $mode, ?string $contents, string $expected): void
+    {
+        file_put_contents($this->directory . '/mode', $mode);
+        if ($contents !== null) {
+            file_put_contents($this->directory . '/whitelist', $contents);
+        }
+        if ($mode === 'empty command') {
+            $this->database->exec("UPDATE data_input SET input_string='' WHERE id=3");
+        }
+        $process = new Process([PHP_BINARY, $this->directory . '/bin/legacy-data-input.php'], $this->directory);
+        $process->setInput(json_encode(['actor' => 9, 'id' => 3, 'nonce' => str_repeat('a', 32), 'action' => 'find', 'payload' => []], JSON_THROW_ON_ERROR));
+        $process->run();
+        self::assertSame('', $process->getErrorOutput());
+        self::assertTrue($process->isSuccessful());
+        $result = json_decode(substr(trim($process->getOutput()), strlen('KADUPUL_DATA_INPUT_RESULT=')), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame('ok', $result['status']);
+        self::assertSame($expected, $result['result']['whitelist']);
+    }
+
+    public static function whitelistPresentationCases(): iterable
+    {
+        yield 'disabled' => ['disabled', null, 'disabled'];
+        yield 'empty command' => ['empty command', null, 'disabled'];
+        yield 'configured missing file' => ['ok', null, 'requires_update'];
+        yield 'exact string' => ['ok', '{"fixture-hash":"fixture command"}', 'verified'];
+        yield 'wrong type' => ['ok', '{"fixture-hash":true}', 'requires_update'];
+        yield 'missing entry' => ['ok', '{}', 'requires_update'];
+        yield 'corrupt JSON' => ['ok', '{broken', 'requires_update'];
+    }
+
+    #[DataProvider('whitelistValues')]
+    public function testWhitelistConfirmationRequiresTheExactSavedCommand(mixed $value, string $expected, bool $changed = false): void
+    {
+        $json = json_encode(['fixture-hash' => $value], JSON_THROW_ON_ERROR);
+        $program = '<?php file_put_contents("whitelist", ' . var_export($json, true) . ');';
+        if ($changed) {
+            // A distinct connection commits a concurrent edit after the whitelist
+            // file snapshot is written but before the post-commit leaf returns.
+            $program .= ' $db = new PDO("sqlite:worker.sqlite"); $db->exec("UPDATE data_input SET input_string=\"changed command\" WHERE id=3");';
+        }
+        file_put_contents($this->directory . '/cli/input_whitelist.php', $program);
+        $method = $this->database->query('SELECT * FROM data_input WHERE id=3')->fetch(\PDO::FETCH_ASSOC);
+        $command = ['actor' => 9, 'id' => 3, 'nonce' => str_repeat('a', 32), 'action' => 'whitelist', 'payload' => ['revision' => DataInputState::revision($method, [])]];
+        $process = new Process([PHP_BINARY, $this->directory . '/bin/legacy-data-input.php'], $this->directory);
+        $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
+        $process->run();
+        self::assertSame('', $process->getErrorOutput());
+        self::assertTrue($process->isSuccessful());
+        $result = json_decode(substr(trim($process->getOutput()), strlen('KADUPUL_DATA_INPUT_RESULT=')), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame($expected, $result['status']);
+        self::assertSame($expected === 'ok', is_file($this->directory . '/collector-3'));
+        self::assertSame(2, (int) $this->database->query("SELECT COUNT(*) FROM settings WHERE name LIKE 'poller_replicate%' AND value='1'")->fetchColumn());
+        self::assertSame($changed ? 'changed command' : 'fixture command', $this->database->query('SELECT input_string FROM data_input WHERE id=3')->fetchColumn());
+    }
+
+    public static function whitelistValues(): iterable
+    {
+        yield 'exact saved command' => ['fixture command', 'ok'];
+        yield 'different command' => ['another command', 'partial'];
+        yield 'boolean cannot verify text' => [true, 'partial'];
+        yield 'command changed after whitelist snapshot' => ['fixture command', 'partial', true];
+    }
+
+    #[DataProvider('boundLeafCases')]
+    public function testWhitelistLeafReauthorizesTheBoundRevisionAndExactFileEntry(string $mode, string $expected): void
+    {
+        $method = $this->database->query('SELECT * FROM data_input WHERE id=3')->fetch(\PDO::FETCH_ASSOC);
+        $revision = DataInputState::revision($method, []);
+        file_put_contents($this->directory . '/whitelist', json_encode(['fixture-hash' => $mode === 'boolean' ? true : 'fixture command'], JSON_THROW_ON_ERROR));
+        if ($mode === 'changed') {
+            $this->database->exec("UPDATE data_input SET input_string='changed command' WHERE id=3");
+        } elseif ($mode === 'malformed revision') {
+            $revision = 'not-a-revision';
+        } elseif ($mode === 'revoked') {
+            $this->database->exec('DELETE FROM user_auth_realm WHERE realm_id=2');
+        }
+        if ($mode === 'missing') {
+            unlink($this->directory . '/whitelist');
+        }
+        $process = new Process([PHP_BINARY, $this->directory . '/bin/legacy-data-input-handoff.php'], $this->directory);
+        $process->setInput(json_encode(['actor' => 9, 'id' => 3, 'nonce' => str_repeat('a', 32), 'revision' => $revision], JSON_THROW_ON_ERROR));
+        $process->run();
+        self::assertSame('', $process->getErrorOutput());
+        $result = json_decode(substr(trim($process->getOutput()), strlen('KADUPUL_DATA_INPUT_HANDOFF_RESULT=')), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame($expected, $result['status']);
+        self::assertSame($expected === 'ok', is_file($this->directory . '/collector-3'));
+        self::assertSame(0, (int) $this->database->query("SELECT COUNT(*) FROM settings WHERE name LIKE 'poller_replicate%'")->fetchColumn());
+    }
+
+    public static function boundLeafCases(): iterable
+    {
+        yield 'matching snapshot' => ['ok', 'ok'];
+        foreach (['changed', 'boolean', 'missing', 'malformed revision', 'revoked'] as $mode) {
+            yield $mode => [$mode, 'partial'];
+        }
+    }
+
     public function testDefaultWhitelistPhaseTimesOutWithoutLateWritesAndPreservesTheCommittedResult(): void
     {
         file_put_contents($this->directory . '/cli/input_whitelist.php', <<<'PROGRAM'

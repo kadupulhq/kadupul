@@ -96,7 +96,7 @@ try {
         $result = $id === 0 ? ['method' => [], 'fields' => [], 'revision' => '', 'whitelist' => 'disabled'] : dataInputWorkerState($db, $id);
         if ($id > 0 && $result['method']['input_string'] !== '' && isset($config['input_whitelist'])) {
             $verified = is_file($config['input_whitelist']) && is_readable($config['input_whitelist'])
-                && verify_data_input_whitelist($result['method']['hash'], $result['method']['input_string']) === true;
+                && dataInputWorkerWhitelist($result['method']['hash'], $result['method']['input_string']);
             $result['whitelist'] = $verified === true ? 'verified' : 'requires_update';
         }
     } elseif (in_array($action, ['bulk_delete', 'bulk_duplicate'], true)) {
@@ -267,7 +267,7 @@ try {
         if (!isset($config['input_whitelist']) || !is_writable(dirname($config['input_whitelist'])) || (file_exists($config['input_whitelist']) && !is_writable($config['input_whitelist']))) {
             throw new RuntimeException('Whitelist is not writable.');
         }
-        if (!$handoff->whitelist($id) || !is_file($config['input_whitelist']) || !is_readable($config['input_whitelist']) || verify_data_input_whitelist($state['method']['hash'], $state['method']['input_string']) !== true || !$handoff->propagate($id)) {
+        if (!$handoff->whitelist($id) || !is_file($config['input_whitelist']) || !is_readable($config['input_whitelist']) || !dataInputWorkerWhitelist($state['method']['hash'], $state['method']['input_string']) || !$handoff->propagate($id, $state['revision'])) {
             $status = 'partial';
         }
     }
