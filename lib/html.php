@@ -1224,7 +1224,9 @@ function html_escape($string)
    the scheme, so the check does the same. */
 function html_safe_href($url)
 {
-    $probe = html_entity_decode((string) $url, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    // HTML accepts numeric references without a semicolon; PHP's decoder does not.
+    $probe = preg_replace('/&#(x[0-9a-f]+|[0-9]+);?/i', '&#$1;', (string) $url);
+    $probe = html_entity_decode($probe, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     $probe = preg_replace('/[\x00-\x20\x7f]+/', '', $probe);
 
     if (preg_match('/^([a-z][a-z0-9+.\-]*):/i', $probe, $scheme) && !in_array(strtolower($scheme[1]), array('http', 'https'), true)) {

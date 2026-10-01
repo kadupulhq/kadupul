@@ -91,7 +91,9 @@ final class IconAccessibleNameTest extends TestCase
             array('html_escape', 'html_safe_href', 'html_start_box'),
             '$GLOBALS["help_file"] = false;'
             . 'foreach (array("javascript:alert(1)", " JavaScript:alert(1)", "java\tscript:alert(1)",'
-            . ' "&#106;avascript:alert(1)", "javascript&colon;alert(1)", "data:text/html,<script>alert(1)</script>") as $url) {'
+            . ' "&#106;avascript:alert(1)", "&#106avascript:alert(1)", "&#x6Avascript:alert(1)",'
+            . ' "javascript&#58alert(1)", "java&#9script:alert(1)",'
+            . ' "javascript&colon;alert(1)", "data:text/html,<script>alert(1)</script>") as $url) {'
             . 'html_start_box("Graphs", "100%", "", "3", "center", $url);'
             . 'html_start_box("Graphs", "100%", "", "3", "center", array(array("href" => $url)));'
             . '}'
@@ -106,7 +108,7 @@ final class IconAccessibleNameTest extends TestCase
         }
 
         self::assertSame(
-            array_merge(array_fill(0, 12, '#'), array('graphs.php?action=edit&id=1', 'https://example.com/graphs.php')),
+            array_merge(array_fill(0, 20, '#'), array('graphs.php?action=edit&id=1', 'https://example.com/graphs.php')),
             $hrefs
         );
     }
