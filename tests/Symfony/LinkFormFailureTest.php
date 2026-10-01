@@ -25,7 +25,7 @@ final class LinkFormFailureTest extends TestCase
         yield 'authenticated denial' => [new LinkAccessDenied(false), 403, 'Access denied.'];
         yield 'stale write' => [new LinkConflict('Links changed since you opened this form. Reload before saving.'), 409, 'Links changed since you opened this form. Reload before saving.'];
         yield 'invalid input' => [new \InvalidArgumentException('Invalid link fields.'), 422, 'Invalid link fields.'];
-        yield 'write not confirmed' => [new \RuntimeException('internal database failure'), 502, 'Save could not be confirmed. Reload before retrying.'];
+        yield 'write not confirmed' => [new \RuntimeException('internal database failure'), 502, 'Link operation could not be confirmed. Reload before retrying.'];
     }
 
     #[DataProvider('failures')]

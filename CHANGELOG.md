@@ -38,6 +38,8 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 - Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
 
+- Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
+- Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
 - Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
 - Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
 - Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.
@@ -126,6 +128,9 @@ Targeting `v1.3.0`, the first planned application release. See
 - Check every changed PHP file in the style check; a large file list could make it skip some.
 
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
+
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
 
 ### Changed
 

@@ -1,8 +1,8 @@
 category	location	match
 cmd_exec	./cactid.php:85		exec('pgrep -a php | grep cactid.php', $output);
-cmd_exec	./cli/audit_database.php:131		exec('php ' . $config['base_path'] . '/cli/upgrade_database.php --debug', $output, $return_var);
-cmd_exec	./cli/audit_database.php:963				$db_shell = shell_exec('which mysql');
-cmd_exec	./cli/audit_database.php:972				exec($db_shell .
+cmd_exec	./cli/audit_database.php:1044	                $db_shell = trim((string) shell_exec('which mysql'));
+cmd_exec	./cli/audit_database.php:1084	            $process = proc_open(
+cmd_exec	./cli/audit_database.php:136	    exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/cli/upgrade_database.php') . ' --debug', $output, $return_var);
 cmd_exec	./cli/batchgapfix.php:293		$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/batchgapfix.php:363			exec($command, $output, $return_var);
 cmd_exec	./cli/float_rrdfiles.php:665		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
@@ -148,8 +148,8 @@ dynamic_include	./cli/apply_automation_rules.php:18	require_once($config['base_p
 dynamic_include	./cli/apply_automation_rules.php:19	require_once($config['base_path'] . '/lib/reports.php');
 dynamic_include	./cli/apply_automation_rules.php:20	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/apply_automation_rules.php:21	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/audit_database.php:195							include_once($plugin . '/setup.php');
-dynamic_include	./cli/audit_database.php:197								include_once($plugin . '/includes/database.php');
+dynamic_include	./cli/audit_database.php:204	                        include_once($plugin . '/setup.php');
+dynamic_include	./cli/audit_database.php:206	                            include_once($plugin . '/includes/database.php');
 dynamic_include	./cli/batchgapfix.php:18	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/change_device.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/change_device.php:12	require_once($config['base_path'] . '/lib/api_device.php');
@@ -529,6 +529,7 @@ dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.p
 dynamic_include	./tools/verify-offline.php:17	$kernel = require $root . '/config/bootstrap.php';
 fs_write	./cactid.php:82		$STDERR = fopen('/dev/null', 'wb');
 fs_write	./cactid.php:93		$STDERR = fopen('null', 'wb');
+fs_write	./cli/audit_database.php:1076	            if (file_put_contents($import_file, $schema) !== strlen($schema)) {
 fs_write	./cli/float_rrdfiles.php:366				$fp = fopen($tmp_file, 'x');
 fs_write	./cli/float_rrdfiles.php:369					$lf = fopen($tmp_dir . '/clearer.log', 'x');
 fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
@@ -576,6 +577,7 @@ fs_write	./lib/poller.php:1707	                                            file_
 fs_write	./lib/poller.php:1736	                            file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1698			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1755			$f = fopen($fn, 'wb');
+fs_write	./lib/rrd.php:3210	                    rrdtool_filesystem()->dumpFile($graph_data_array['export_realtime'], (string) $output);
 fs_write	./lib/rrd.php:3273	                file_put_contents('php://stderr', $buffer);
 fs_write	./lib/rrd_maintenance.php:350	            $handle = @fopen($probe, 'x+b');
 fs_write	./lib/rrd_maintenance.php:93	    $handle = @fopen($canonical, 'r');
@@ -594,6 +596,7 @@ fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmp
 fs_write	./snmpagent_mibcachechild.php:75	    $lock = fopen($path_mibcache_lock, 'w');
 fs_write	./snmpagent_mibcachechild.php:79	        file_put_contents($path_mibcache, '<?php $cache = ' . var_export($cache, true) . ';', LOCK_EX);
 fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:29	            $handle = @fopen($path, is_file($path) ? 'c+b' : 'x+b');
+fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:69	                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
 fs_write	./tools/dependencies/install-legacy.php:53	    $destination = fopen($archivePath, 'wb');

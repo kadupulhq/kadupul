@@ -32,7 +32,7 @@ final readonly class LinkFormFailure
             $message = $error->getMessage();
         } else {
             $status = 502;
-            $message = 'Save could not be confirmed. Reload before retrying.';
+            $message = 'Link operation could not be confirmed. Reload before retrying.';
         }
         $form->addError(new FormError($this->translator->trans($message, [], 'navigation')));
         return $status;
