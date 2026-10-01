@@ -18,6 +18,12 @@ if (defined('HTML_REPORT_RENDER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/reports.php');
 }
+if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/database.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
+}
 if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
