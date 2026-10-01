@@ -56,7 +56,11 @@ if [ "${#files[@]}" -eq 0 ]; then
 fi
 
 # Check authored and conflict-resolved paths; incoming blobs are handled above.
-git diff --cached --check -- "${files[@]}"
+if [ -n "$merge_head" ]; then
+	git diff --cached --check "$merge_head" -- "${files[@]}"
+else
+	git diff --cached --check -- "${files[@]}"
+fi
 
 if [ "${#php_files[@]}" -eq 0 ]; then
 	exit 0

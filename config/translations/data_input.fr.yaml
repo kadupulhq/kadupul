@@ -90,3 +90,4 @@
 "Update dependent Data Templates before collectors use new or changed input fields.": "Mettez à jour les modèles de données associés avant que les collecteurs utilisent des champs d’entrée nouveaux ou modifiés."
 "Unexpected fields were submitted.": "Des champs inattendus ont été envoyés."
 "Default": "Par défaut"
+"Retry propagation for input %id%": "Réessayer la propagation de l’entrée %id%"

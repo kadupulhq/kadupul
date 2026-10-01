@@ -192,6 +192,14 @@ def verify_data_inputs(harness, session, check):
     status,body,_=post(session,propagate,payload)
     check(status==200 and 'propagation is incomplete' in body and harness.sql(f'SELECT input_string FROM data_input WHERE id={target}').strip()=='/usr/bin/printf 1','offline collector yields explicit partial handoff without undoing local definition')
     harness.sql(f'UPDATE host SET poller_id=1 WHERE id={host}')
+    # Bulk duplication must expose partial handoff even when new IDs are off-page.
+    bulk_url = '/app.php/data-inputs/actions/duplicate?' + urllib.parse.urlencode([('ids[]', str(target))])
+    fields, _ = page(session, bulk_url)
+    payload = {'data_input_action[revision]': fields['data_input_action[revision]'], 'data_input_action[title]': '<input_title> partial bulk', 'data_input_action[_token]': fields['data_input_action[_token]']}
+    status, body, final_url = post(session, bulk_url, payload)
+    created = int(harness.sql("SELECT id FROM data_input WHERE name='" + name + " partial bulk'").strip())
+    check(status == 200 and 'propagation is incomplete' in body and f'/data-inputs/{created}/propagate' in body and 'retry_ids=' in final_url, 'bulk duplicate partial handoff exposes explicit retry for created input')
+
     # Legacy whitelist update runs a real CLI process and verifies its file bytes.
     config="\n$input_whitelist = '/tmp/data-input-review-whitelist.json';\n"
     harness.compose('exec','-T','-u','root','web','php','-r',"file_put_contents('include/config.php', " + json.dumps(config).replace('$','\\$') + ", FILE_APPEND);")

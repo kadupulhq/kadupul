@@ -1,7 +1,7 @@
 <?php
 
 /* SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later */
+ * SPDX-License-Identifier: GPL-3.0-or-later */
 
 namespace Kadupul\DataInput\Infrastructure\Symfony\Controller;
 
@@ -43,7 +43,7 @@ final class DataInputController
                 }
             }
             $data = $methods->execute('list', 0, ['filter' => $query['filter'] ?? null,'page' => $query['page'] ?? 1,'rows' => $query['rows'] ?? null,'sort' => $query['sort'] ?? null,'direction' => $query['direction'] ?? null,'clear' => ($query['clear'] ?? '') === '1']);
-            return new Response($twig->render('data_input/list.html.twig', ['data' => $data]), 200, self::HEADERS);
+            return new Response($twig->render('data_input/list.html.twig', ['data' => $data, 'saved' => $this->queryString($request, 'saved'), 'retry_ids' => $this->retryIds($request)]), 200, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
@@ -233,7 +233,7 @@ final class DataInputController
                         throw new \InvalidArgumentException('Invalid selection.');
                     }
                     $result = $methods->execute('bulk_' . $operation, 0, ['selection' => $snapshot,'title' => $data['title'] ?? '<input_title> (1)']);
-                    return new RedirectResponse($urls->generate('data_inputs', ['saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
+                    return new RedirectResponse($urls->generate('data_inputs', ['saved' => $result['partial'] ? 'partial' : '1', 'retry_ids' => $operation === 'duplicate' && $result['partial'] ? implode(',', $result['ids']) : '']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
@@ -245,6 +245,14 @@ final class DataInputController
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
+    }
+    private function retryIds(Request $request): array
+    {
+        $value = $request->query->all()['retry_ids'] ?? '';
+        if (!is_string($value) || strlen($value) > 899 || ($value !== '' && !preg_match('/\A[1-9][0-9]{0,7}(?:,[1-9][0-9]{0,7}){0,99}\z/D', $value))) {
+            throw new \InvalidArgumentException('Invalid selection.');
+        }
+        return $value === '' ? [] : array_values(array_unique(array_map('intval', explode(',', $value))));
     }
     private function queryString(Request $request, string $name, string $default = ''): string
     {

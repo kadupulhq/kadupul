@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Tests;
@@ -56,5 +56,65 @@ final class DataInputPresentationTest extends TestCase
         } finally {
             $kernel->shutdown();
         }
+    }
+
+    public function testPartialBulkStatusIncludesRetryLinksOutsideTheVisiblePage(): void
+    {
+        [$kernel, $container] = $this->authorizedKernel();
+        try {
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->expects(self::once())->method('execute')->with(9, 'list', 0, self::anything())->willReturn(['items' => [], 'total' => 0, 'filter' => '', 'rows' => 10, 'default_rows' => false, 'page' => 1, 'sort' => 'name', 'direction' => 'ASC']);
+            $container->set(DataInputGateway::class, $gateway);
+            $response = $kernel->handle(Request::create('/data-inputs?saved=partial&retry_ids=37,38'));
+            self::assertSame(200, $response->getStatusCode());
+            self::assertStringContainsString('role="alert"', $response->getContent());
+            self::assertStringContainsString('propagation is incomplete', $response->getContent());
+            foreach ([37, 38] as $id) {
+                self::assertStringContainsString('/data-inputs/' . $id . '/propagate', $response->getContent());
+                self::assertStringContainsString('Retry propagation for input ' . $id, $response->getContent());
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testWhitelistConfirmationRejectsMissingAndForgedTokensWithoutMutation(): void
+    {
+        [$kernel, $container] = $this->authorizedKernel();
+        try {
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->expects(self::exactly(3))->method('execute')->with(9, 'find', 3, [])->willReturn(['method' => ['id' => 3, 'name' => 'Fixture', 'type_id' => 1, 'input_string' => '/usr/bin/printf 1'], 'fields' => [], 'counts' => ['templates' => 0, 'data_sources' => 0], 'revision' => str_repeat('a', 64), 'whitelist' => 'requires_update']);
+            $container->set(DataInputGateway::class, $gateway);
+            foreach ([null, 'forged', ['invalid']] as $token) {
+                $payload = ['revision' => str_repeat('a', 64)];
+                if ($token !== null) {
+                    $payload['_token'] = $token;
+                }
+                $response = $kernel->handle(Request::create('/data-inputs/3/whitelist?_token=query-only', 'POST', ['data_input_action' => $payload]));
+                self::assertSame(422, $response->getStatusCode());
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    private function authorizedKernel(): array
+    {
+        $kernel = new Kernel('test', true);
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+        $actor = new Actor(9, 'operator');
+        $console = $this->createMock(ConsoleAccess::class);
+        $console->method('consoleActor')->willReturn($actor);
+        $container->set(ConsoleAccess::class, $console);
+        $access = $this->createMock(DataInputAccess::class);
+        $access->method('authorize')->willReturn($actor);
+        $container->set(DataInputAccess::class, $access);
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE settings(name TEXT,value TEXT)');
+        $database = $this->createMock(DatabaseConnection::class);
+        $database->method('get')->willReturn($pdo);
+        $container->set(DatabaseConnection::class, $database);
+        return [$kernel, $container];
     }
 }

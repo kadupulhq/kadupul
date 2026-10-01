@@ -14,17 +14,20 @@ git config core.hooksPath "$fixture/hooks"
 git config user.name HookTest
 git config user.email hook-test@example.invalid
 git config commit.gpgsign false
+printf 'first\n\n\n\nlast\n' > shared.txt
 printf 'base\n' > base.txt
-git add base.txt
+git add base.txt shared.txt
 git commit -qm base
 base=$(git rev-parse HEAD)
 git checkout -qb incoming
+printf 'first incoming \n\n\n\nlast\n' > shared.txt
 printf 'inherited trailing space \n' > incoming.txt
-git add incoming.txt
+git add incoming.txt shared.txt
 git commit -qm incoming
 git checkout -qb local "$base"
+printf 'first\n\n\n\nlast local\n' > shared.txt
 printf 'local\n' > local.txt
-git add local.txt
+git add local.txt shared.txt
 git commit -qm local
 git merge --no-commit --no-ff incoming >/dev/null 2>&1
 bash "$root/.githooks/pre-commit-checks"
