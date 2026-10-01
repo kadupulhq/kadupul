@@ -91,7 +91,7 @@ include/global_constants.php	anonymous-allowed	fragment without bootstrap, revie
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at aadb66a8a7cc; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 0db939a69dc9; included by auth_changepassword.php, auth_login.php, graph_realtime.php
-include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 0e36496c6cea; included by include/global.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at c283385e45ca; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only
@@ -111,7 +111,6 @@ include/themes/midwinter/default/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/images/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
-include/themes/midwinter/update_hash.php	cli-only	guard: php_sapi_name() check
 include/themes/modern/default/index.php	anonymous-allowed	redirect-only
 include/themes/modern/images/index.php	anonymous-allowed	redirect-only
 include/themes/modern/index.php	anonymous-allowed	redirect-only
@@ -195,6 +194,7 @@ install/upgrades/1_2_26.php	anonymous-allowed	inert: declarations and literal as
 install/upgrades/1_2_27.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_3.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_31.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_33.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
