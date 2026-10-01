@@ -425,7 +425,7 @@ label {
 }
 
 .deviceUnknownBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #0000ff;
@@ -446,7 +446,7 @@ label {
 }
 
 .deviceErrorBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #750F7D;
@@ -481,7 +481,7 @@ label {
 }
 
 .deviceAlertBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #660000;
@@ -1741,7 +1741,7 @@ legend {
 	padding: 0px;
 	display: none;
 	overflow: auto;
-	color: snow;
+	color: #222222;
 	background-color: #e5e5e5;
 	border: 1px solid #e5e5e5;
 }
@@ -1761,7 +1761,7 @@ legend {
 }
 
 .textMenuHeader {
-	color: snow;
+	color: #222222;
 	background-color: #9C9C9C;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
@@ -2021,7 +2021,7 @@ div#gtabs {
 	padding: 2px 4px;
 	background: #ccc;
 	text-decoration: none;
-	color: #fff;
+	color: #222222;
 }
 
 #nav li a.active {
@@ -2186,12 +2186,7 @@ ul.pagination li a.active {
 }
 
 ul.pagination li a:hover:not(.active) {
-	background: rgba(167,217,134,0.4);
-	background: -moz-linear-gradient(top, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
-	background: -webkit-linear-gradient(top, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
-	background: -o-linear-gradient(top, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
-	background: -ms-linear-gradient(top, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
-	background: linear-gradient(to bottom, rgba(167,217,134,0.4) 0%, rgba(148,179,107,0.4) 100%);
+	background: #315025;
 	border-radius: 3px;
 	padding: 3px;
 	color: snow;
@@ -2202,7 +2197,7 @@ tr#realtime td:first-child {
 }
 
 .logEmergency {
-	background-color: rgba(255, 6, 6, 0.4);
+	background-color: #6f1212;
 	text-align: center;
 	width: 12.5%;
 	padding: 3px;
@@ -2210,7 +2205,7 @@ tr#realtime td:first-child {
 }
 
 .logCritical {
-	background-color: rgba(242, 23, 33, 0.2);
+	background-color: #591018;
 	text-align: center;
 	width: 12.5%;
 	padding: 3px;
@@ -2218,7 +2213,7 @@ tr#realtime td:first-child {
 }
 
 .logAlert {
-	background-color: rgba(242, 25, 36, 0.2);
+	background-color: #591018;
 	text-align: center;
 	width: 12.5%;
 	padding: 3px;
@@ -2226,7 +2221,7 @@ tr#realtime td:first-child {
 }
 
 .logWarning {
-	background-color: rgba(255, 122, 48, 0.2);
+	background-color: #5c2a08;
 	text-align: center;
 	width: 12.5%;
 	padding: 3px;
@@ -2234,7 +2229,7 @@ tr#realtime td:first-child {
 }
 
 .logError {
-	background-color: rgba(251, 74, 20, 0.2);
+	background-color: #621a0e;
 	text-align: center;
 	width: 12.5%;
 	padding: 3px;
@@ -2242,7 +2237,7 @@ tr#realtime td:first-child {
 }
 
 .logNotice {
-	background-color: rgba(250, 253, 158, 0.2);
+	background-color: #414619;
 	text-align: center;
 	width: 12.5%;
 	padding: 3px;
@@ -2250,7 +2245,7 @@ tr#realtime td:first-child {
 }
 
 .logInfo {
-	background-color: rgba(204, 255, 204, 0.2);
+	background-color: #204520;
 	text-align: center;
 	width: 12.5%;
 	padding: 3px;
@@ -2258,7 +2253,7 @@ tr#realtime td:first-child {
 }
 
 .logDebug {
-	background-color: rgba(205, 207, 196, 0.2);
+	background-color: #3e4038;
 	text-align: center;
 	width: 12.5%;
 	padding: 3px;

@@ -30,19 +30,25 @@ function theme_css_invalid_declarations(string $css): array
         '/^(?:border-color|box-shadow)\s*:[^:]*gradient\(/i' => 'gradient in border-color or box-shadow',
         '/^float\s*:\s*middle\b/i'                   => 'float: middle',
         '/^!important$/i'                            => 'detached !important',
-        '/\n\s*-?[a-z][a-z-]*\s*:(?!:)/i'            => 'missing semicolon',
     ];
 
     preg_match_all('/\{([^{}]*)\}/', $css, $blocks);
 
     foreach ($blocks[1] as $block) {
-        foreach (explode(';', $block) as $declaration) {
+        foreach (theme_css_declarations($block) as [$declaration, $visible]) {
             $declaration = trim($declaration);
 
             foreach ($patterns as $pattern => $label) {
                 if (preg_match($pattern, $declaration)) {
                     $problems[] = $label . ': ' . $declaration;
                 }
+            }
+
+            // Values inside strings/functions cannot begin another declaration.
+            // Retain the legacy Microsoft filter's namespaced function spelling.
+            $visible = preg_replace('/\bprogid:[a-z0-9_.]+/i', 'legacy_filter', trim($visible));
+            if (!str_starts_with($visible, '--') && preg_match('/\s+(?:--)?[a-z][a-z-]*\s*:(?!:)/i', $visible)) {
+                $problems[] = 'missing semicolon: ' . $declaration;
             }
 
             if (theme_css_has_unitless_length($declaration)) {
@@ -52,6 +58,45 @@ function theme_css_invalid_declarations(string $css): array
     }
 
     return $problems;
+}
+
+/** Split only top-level semicolons and expose only top-level value text. */
+function theme_css_declarations(string $block): array
+{
+    $declarations = [];
+    $original = $visible = '';
+    $quote = null;
+    $depth = 0;
+    for ($i = 0, $length = strlen($block); $i < $length; $i++) {
+        $character = $block[$i];
+        $original .= $character;
+        if ($quote !== null) {
+            if ($character === '\\' && $i + 1 < $length) {
+                $original .= $block[++$i];
+            } elseif ($character === $quote) {
+                $quote = null;
+            }
+            $visible .= ' ';
+        } elseif ($character === '"' || $character === "'") {
+            $quote = $character;
+            $visible .= ' ';
+        } elseif ($character === '(') {
+            $depth++;
+            $visible .= ' ';
+        } elseif ($character === ')') {
+            $depth--;
+            $visible .= ' ';
+        } elseif ($character === ';' && $depth === 0) {
+            $declarations[] = [substr($original, 0, -1), $visible];
+            $original = $visible = '';
+        } else {
+            $visible .= $depth === 0 ? $character : ' ';
+        }
+    }
+    if (trim($original) !== '') {
+        $declarations[] = [$original, $visible];
+    }
+    return $declarations;
 }
 
 /**
@@ -81,7 +126,7 @@ function theme_css_has_unitless_length(string $declaration): bool
 
 function theme_css_files(): array
 {
-    $themes = dirname(__DIR__, 2) . '/include/themes';
+    $themes = dirname(__DIR__, 3) . '/include/themes';
     $files = [];
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($themes));
 
@@ -97,19 +142,21 @@ function theme_css_files(): array
 }
 
 /**
- * Midwinter loads its partials through @import url('file?md5'). A hash that no
+ * Midwinter partials use a legacy MD5 or current v=SHA-256 query. A hash that no
  * longer matches the file lets browsers and proxies keep serving the old copy.
  */
 function midwinter_stale_imports(string $css, string $directory): array
 {
     $stale = [];
 
-    preg_match_all('/@import url\([\'"]([^?\'"]+)(?:\?([0-9a-f]*))?[\'"]\)/', $css, $imports, PREG_SET_ORDER);
+    preg_match_all('/@import url\([\'"]([^?\'"]+)(?:\?([^\'"]*))?[\'"]\)/', $css, $imports, PREG_SET_ORDER);
 
     foreach ($imports as $import) {
-        $expected = md5_file($directory . '/' . $import[1]);
+        $query = $import[2] ?? '';
+        $algorithm = str_starts_with($query, 'v=') ? 'sha256' : 'md5';
+        $expected = ($algorithm === 'sha256' ? 'v=' : '') . hash_file($algorithm, $directory . '/' . $import[1]);
 
-        if (($import[2] ?? '') !== $expected) {
+        if ($query !== $expected) {
             $stale[] = $import[1];
         }
     }
@@ -125,7 +172,7 @@ it('ships theme stylesheets without declarations browsers discard', function ():
     $problems = [];
 
     foreach ($files as $file) {
-        $relative = substr($file, strlen(dirname(__DIR__, 2)) + 1);
+        $relative = substr($file, strlen(dirname(__DIR__, 3)) + 1);
 
         foreach (theme_css_invalid_declarations(file_get_contents($file)) as $problem) {
             $problems[] = $relative . ': ' . $problem;
@@ -157,6 +204,7 @@ it('flags each discarded declaration pattern', function (string $css, string $la
     'gradient shadow'     => ['.a { box-shadow: -moz-linear-gradient(top, #45484d 100%, #000 100%); }', 'gradient in border-color'],
     'float middle'        => ['.a { float: middle; }', 'float: middle'],
     'missing semicolon'   => [".a {\n\tbox-shadow: 0 0 18px #00438C, 0 0 5px #00438C\n\topacity: 1.0;\n}", 'missing semicolon'],
+    'same-line semicolon' => ['.a { color: red opacity: .5; }', 'missing semicolon'],
     'missing before var'  => [".a {\n    padding: 6px\n\tborder: 1px solid var(--border-color);\n}", 'missing semicolon'],
     'unitless padding'    => ['.moveArrowNone { padding-left: 8.75; }', 'unitless length'],
     'unitless shorthand'  => ['.a { margin: 0 4 0 0 !important; }', 'unitless length'],
@@ -183,24 +231,27 @@ it('accepts valid declarations that look like the invalid ones', function (): vo
                 url('data:font/woff;base64,AA==') format('woff');
         }
         .i { box-shadow: 0 0 18px #00438C, 0 0 5px #00438C }
+        .j { content: 'name; opacity: value'; background: url('https://example.test/a:b.png'); }
         CSS;
 
     expect(theme_css_invalid_declarations($css))->toBe([]);
 });
 
 it('keeps midwinter import hashes in step with the imported files', function (): void {
-    $directory = dirname(__DIR__, 2) . '/include/themes/midwinter';
+    $directory = dirname(__DIR__, 3) . '/include/themes/midwinter';
 
     expect(midwinter_stale_imports(file_get_contents($directory . '/main.css'), $directory))->toBe([]);
 });
 
 it('reports a midwinter import whose hash is wrong or missing', function (): void {
-    $directory = dirname(__DIR__, 2) . '/include/themes/midwinter';
+    $directory = dirname(__DIR__, 3) . '/include/themes/midwinter';
     $current = md5_file($directory . '/css/pre/fonts.css');
     $css = "@import url('./css/pre/fonts.css?{$current}');\n"
         . "@import url('./css/pre/colors.css?00000000000000000000000000000000');\n"
+        . "@import url('./css/pre/colors.css?not-a-hash');\n"
+        . "@import url('./css/pre/colors.css?v=bad');\n"
         . "@import url(\"./css/pre/keyframes.css\");\n";
 
     expect(midwinter_stale_imports($css, $directory))
-        ->toBe(['./css/pre/colors.css', './css/pre/keyframes.css']);
+        ->toBe(['./css/pre/colors.css', './css/pre/colors.css', './css/pre/colors.css', './css/pre/keyframes.css']);
 });

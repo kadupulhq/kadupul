@@ -390,7 +390,7 @@ label {
 }
 
 .deviceUnknownBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #0000ff;
@@ -411,7 +411,7 @@ label {
 }
 
 .deviceErrorBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #750F7D;
@@ -446,7 +446,7 @@ label {
 }
 
 .deviceAlertBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #660000;
@@ -484,7 +484,7 @@ label {
 .submenuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .menuoptions {
@@ -515,7 +515,7 @@ label {
 .menuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .import_label {
@@ -640,7 +640,7 @@ label {
 .saveRow > input.ui-button:hover {
 	color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .treeArea, .treeItemsArea {
@@ -877,7 +877,7 @@ label {
 .cactiLoginTable input.ui-button:hover {
 	color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .loginErrors, .logoutErrors {
@@ -937,7 +937,7 @@ legend {
 	outline-style: none;
 	color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .actionsDropdownButton {
@@ -959,7 +959,7 @@ legend {
 .actionsDropdownButton > input.ui-button:hover {
 	color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .actionsDropdownArrow {
@@ -1722,7 +1722,7 @@ tr>td.textInfo.right {
 	padding: 0px;
 	display: none;
 	overflow: auto;
-	color: white;
+	color: #222222;
 	background-color: #e5e5e5;
 	border: 1px solid #e5e5e5;
 }
@@ -1746,7 +1746,7 @@ tr>td.textInfo.right {
 }
 
 .textMenuHeader {
-	color: white;
+	color: #222222;
 	background-color: #9C9C9C;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
@@ -2258,59 +2258,59 @@ tr#realtime td:first-child {
 }
 
 .logEmergency {
-	background-color: rgba(255, 6, 6, 0.4);
+	background-color: #6f1212;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logCritical {
-	background-color: rgba(242, 23, 33, 0.4);
+	background-color: #591018;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logAlert {
-	background-color: rgba(242, 25, 36, 0.4);
+	background-color: #591018;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logWarning {
-	background-color: rgba(255, 122, 48, 0.4);
+	background-color: #5c2a08;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logError {
-	background-color: rgba(251, 74, 20, 0.4);
+	background-color: #621a0e;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logNotice {
-	background-color: rgba(250, 253, 158, 0.4);
+	background-color: #414619;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logInfo {
-	background-color: rgba(204, 255, 204, 0.4);
+	background-color: #204520;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logDebug {
-	background-color: rgba(205, 207, 196, 0.4);
+	background-color: #3e4038;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .darkblue {
@@ -2764,5 +2764,5 @@ circle {
 	border: 1px solid #d3d3d3;
 	background: #111 !important;
 	font-weight: normal;
-	color: #555555;
+	color: #eeeeee;
 }
