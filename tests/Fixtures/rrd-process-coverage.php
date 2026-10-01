@@ -11,6 +11,9 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+}
 if (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/rrdcleaner.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
