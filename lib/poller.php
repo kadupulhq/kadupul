@@ -2175,7 +2175,13 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'data_template_data', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'data_template_data', $remote_poller_id) === false) {
+            cacti_log('ERROR: Synchronization of Poller ' . $remote_poller_id . ' failed while replicating data-source definitions.', false, 'REPLICATE');
+            if ($config['is_web']) {
+                raise_message('poller_sync_failed', __('Synchronization failed while replicating data-source definitions. See the log for details.'), MESSAGE_LEVEL_ERROR);
+            }
+            return false;
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT dtr.*

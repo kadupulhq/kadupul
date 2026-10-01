@@ -544,7 +544,9 @@ function api_device_change_options($device_ids, $post)
 
                     // Update the local device and replicate
                     if ($old_poller !=  get_nfilter_request_var($field_name) && get_nfilter_request_var($field_name) > 1) {
-                        api_device_replicate_out($device_id, get_nfilter_request_var($field_name));
+                        if (!api_device_replicate_out($device_id, get_nfilter_request_var($field_name))) {
+                            raise_message('device_replication_failed_' . $device_id, __('Device replication failed. A FullSync is required; see the log for details.'), MESSAGE_LEVEL_ERROR);
+                        }
                     }
                 }
 
@@ -1024,7 +1026,11 @@ function api_device_replicate_out($device_id, $poller_id = 1)
     );
 
     if ($poller_id > 1) {
-        replicate_table_to_poller($rcnn_id, $data, 'data_template_data', $poller_id);
+        if (replicate_table_to_poller($rcnn_id, $data, 'data_template_data', $poller_id) === false) {
+            db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($poller_id));
+            cacti_log('ERROR: Replication of Device ' . $device_id . ' to Poller ' . $poller_id . ' failed while replicating data-source definitions.', false, 'REPLICATE');
+            return false;
+        }
     }
 
     $data = db_fetch_assoc_prepared(

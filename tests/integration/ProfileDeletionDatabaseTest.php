@@ -34,6 +34,42 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         }
     }
 
+    /** @dataProvider collectorScenarios */
+    public function testCollectorEntryPointsReportReplicationOutcome(string $mode, string $failure): void
+    {
+        $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true));
+        self::assertSame($failure === '', $state['result']);
+        if ($failure !== '') {
+            self::assertSame(array(), $state['hooks']);
+            self::assertNotContains('poller_sync', $state['messages']);
+            self::assertStringContainsString('failed while replicating data-source definitions', implode('\n', $state['log']));
+            self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
+            self::assertSame(array(), array_filter($state['calls'], static fn($call) => str_contains($call[1], 'FROM data_template_rrd') || str_contains($call[1], 'SUM(CASE')));
+            if ($mode === 'bulk') {
+                self::assertContains('poller_sync_failed', $state['messages']);
+            }
+        } else {
+            self::assertNotEmpty($state['hooks']);
+            if ($mode === 'bulk') {
+                self::assertContains('poller_sync', $state['messages']);
+            }
+        }
+    }
+
+    public function testCollectorCliRetainsFailedSynchronizationAndExitsWithFailure(): void
+    {
+        foreach (array(false, true) as $failure) {
+            $state = $this->runNative(array('collector' => 'bulk', 'cli' => true, 'failure' => $failure));
+            self::assertSame($failure ? 1 : 0, $state['status']);
+            self::assertSame('', $state['stdout']);
+            self::assertSame('', $state['stderr']);
+            self::assertTrue($state['unregistered']);
+            self::assertSame($failure ? array(3) : array(2, 3), array_column(array_column($state['calls'], 1), 0));
+            self::assertSame($failure, str_contains(implode('\n', $state['log']), 'replication failed'));
+            self::assertSame(!$failure, str_contains(implode('\n', $state['log']), 'Poller ID 2 fully Replicated'));
+        }
+    }
+
     public static function collectorScenarios(): array
     {
         $cases = array();

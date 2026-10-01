@@ -97,8 +97,13 @@ if (cacti_sizeof($pollers)) {
         exit(0);
     }
 
+    $failed = false;
     foreach ($pollers as $poller) {
-        replicate_out($poller['id'], $class);
+        if (!replicate_out($poller['id'], $class)) {
+            $failed = true;
+            cacti_log('ERROR: Poller ID ' . $poller['id'] . ' replication failed; synchronization remains required.', false, 'POLLER');
+            continue;
+        }
 
         db_execute_prepared(
             'UPDATE poller
@@ -111,6 +116,9 @@ if (cacti_sizeof($pollers)) {
     }
 
     unregister_process('psync', "POLLER:$poller_id", 0);
+    if ($failed) {
+        exit(1);
+    }
 } else {
     print 'FATAL: The poller specified ' . $poller_id . ' is either disabled, or does not exist!' . PHP_EOL;
     exit(1);
