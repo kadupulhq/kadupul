@@ -10,6 +10,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if (isset($argv[3])) {
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/admin-permission-native.php', $argv[1], array('user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+}
 $directory = $argv[2];
 chdir($directory);
 $group = $scenario['group'];
@@ -162,7 +166,9 @@ register_shutdown_function(static function () use ($db, $group, $initial_session
     $principal = $group ? 'group_id' : 'user_id';
     $realm_table = $group ? 'user_auth_group_realm' : 'user_auth_realm';
     $perm_table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
-    print json_encode(array('realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $_SESSION, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output, 'policies' => $db->query('SELECT id, policy_graphs, policy_trees, policy_hosts, policy_graph_templates FROM ' . ($group ? 'user_auth_group' : 'user_auth') . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'membership' => $GLOBALS['membership'] ?? null), JSON_THROW_ON_ERROR);
+    $state = array('realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $_SESSION, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output, 'policies' => $db->query('SELECT id, policy_graphs, policy_trees, policy_hosts, policy_graph_templates FROM ' . ($group ? 'user_auth_group' : 'user_auth') . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'membership' => $GLOBALS['membership'] ?? null);
+    $GLOBALS['nativeChildCoverageMarkers'] = array('admin-state-readback');
+    print json_encode($state, JSON_THROW_ON_ERROR);
 });
 require $root . ($group ? '/user_group_admin.php' : '/user_admin.php');
 

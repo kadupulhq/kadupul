@@ -9,6 +9,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if (isset($argv[3])) {
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/permission-request-native.php', $argv[1], array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+}
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
 file_put_contents($directory . '/include/auth.php', '<?php');
@@ -55,4 +59,5 @@ if (!empty($scenario['reject'])) {
     $function();
 }
 $output = ob_get_clean();
+$nativeChildCoverageMarkers = array('request-validation-returned', 'request-session-observed');
 fwrite(STDOUT, json_encode(array('request' => $_REQUEST, 'session' => $_SESSION, 'output' => $output, 'error' => $error), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));

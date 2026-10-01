@@ -9,6 +9,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if (isset($argv[3])) {
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/admin-list-native.php', $argv[1], array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+}
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
 file_put_contents($directory . '/include/auth.php', '<?php');
@@ -147,4 +151,6 @@ if (!empty($scenario['grid'])) {
     $group ? user_group() : user();
 }
 $html = ob_get_clean();
-print json_encode(array('html' => $html, 'queries' => $queries, 'permissions_before' => $permissions_before, 'permissions_after' => !empty($scenario['grid']) ? $db->query('SELECT * FROM ' . $table . '_perms')->fetchAll(PDO::FETCH_ASSOC) : null), JSON_THROW_ON_ERROR);
+$state = array('html' => $html, 'queries' => $queries, 'permissions_before' => $permissions_before, 'permissions_after' => !empty($scenario['grid']) ? $db->query('SELECT * FROM ' . $table . '_perms')->fetchAll(PDO::FETCH_ASSOC) : null);
+$nativeChildCoverageMarkers = array('native-list-rendered', 'list-state-readback');
+print json_encode($state, JSON_THROW_ON_ERROR);

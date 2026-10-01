@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 final class PermissionRealmsNativeTest extends TestCase
 {
+    private static bool $coverageEvidenceChecked = false;
+
     /** @dataProvider principalKinds */
     public function testRealmFormsUseFreshPrincipalSelectionsAndPreserveEverySection(bool $group): void
     {
@@ -68,11 +70,20 @@ final class PermissionRealmsNativeTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $coverage->merge(unserialize(file_get_contents($reports[0])));
+                require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/permission-realms-native.php', $group ? 'group' : 'user', array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('realm-snapshots-rendered', 'realm-state-readback'), array('src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php', 'lib/auth.php'));
+                if (!self::$coverageEvidenceChecked) {
+                    self::assertSame(29, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/permission-realms-native.php', $group ? 'group' : 'user', array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('realm-snapshots-rendered', 'realm-state-readback'), array('src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php', 'lib/auth.php'), 'lib/rrd.php'));
+                    self::$coverageEvidenceChecked = true;
+                }
+                $coverage->merge($childCoverage);
             }
             return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         } finally {
             foreach (glob($directory . '/*.coverage') as $report) {
+                if (is_file($report . '.json')) {
+                    unlink($report . '.json');
+                }
                 unlink($report);
             }
             unlink($directory . '/include/auth.php');

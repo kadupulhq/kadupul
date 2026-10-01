@@ -8,6 +8,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $group = $argv[1] === 'group';
+if (isset($argv[3])) {
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/permission-realms-native.php', $argv[1], array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+}
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
 file_put_contents($directory . '/include/auth.php', '<?php');
@@ -150,7 +154,9 @@ $snapshots = array();
 register_shutdown_function(static function () use ($db, $group, &$snapshots) {
     $snapshots[] = render_realm_snapshot(42);
     $snapshots[] = render_realm_snapshot(0);
-    print json_encode(array('snapshots' => $snapshots, 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'stored_realms' => $db->query('SELECT ' . ($group ? 'group_id' : 'user_id') . ' AS principal, realm_id FROM ' . ($group ? 'user_auth_group_realm' : 'user_auth_realm') . ' ORDER BY principal,realm_id')->fetchAll(PDO::FETCH_ASSOC)), JSON_THROW_ON_ERROR);
+    $state = array('snapshots' => $snapshots, 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'stored_realms' => $db->query('SELECT ' . ($group ? 'group_id' : 'user_id') . ' AS principal, realm_id FROM ' . ($group ? 'user_auth_group_realm' : 'user_auth_realm') . ' ORDER BY principal,realm_id')->fetchAll(PDO::FETCH_ASSOC));
+    $GLOBALS['nativeChildCoverageMarkers'] = array('realm-snapshots-rendered', 'realm-state-readback');
+    print json_encode($state, JSON_THROW_ON_ERROR);
 });
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);

@@ -9,6 +9,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if (isset($argv[3])) {
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/permission-filter-native.php', $argv[1], array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+}
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
 file_put_contents($directory . '/include/auth.php', '<?php');
@@ -133,12 +137,16 @@ if (isset($argv[3])) {
 require (getenv('PERMISSION_FILTER_CONTROLLER_ROOT') ?: $root) . '/' . $scenario['page'];
 if (!empty($scenario['no_association'])) {
     require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
-    print json_encode(array('tab' => \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php'), 'queries' => $queries), JSON_THROW_ON_ERROR);
+    $tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php');
+    $nativeChildCoverageMarkers = array('association-contract-returned');
+    print json_encode(array('tab' => $tab, 'queries' => $queries), JSON_THROW_ON_ERROR);
     exit;
 }
 if (isset($scenario['association'])) {
     register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn) {
-        print json_encode(array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']), JSON_THROW_ON_ERROR);
+        $state = array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']);
+        $GLOBALS['nativeChildCoverageMarkers'] = array('association-state-readback');
+        print json_encode($state, JSON_THROW_ON_ERROR);
     });
     form_actions();
     throw new RuntimeException('Association did not complete its controller redirect');
@@ -161,4 +169,5 @@ $scripts = array();
 foreach ($document->getElementsByTagName('script') as $script) {
     $scripts[] = $script->textContent;
 }
+$nativeChildCoverageMarkers = array('native-filter-rendered', 'script-nodes-observed');
 print json_encode(array('html' => $html, 'queries' => $queries, 'scripts' => $scripts), JSON_THROW_ON_ERROR);
