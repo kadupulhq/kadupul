@@ -29,7 +29,7 @@ $database = $mysql ? new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_T
 $database->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 $tablePrefix = $mysql ? 'CREATE TEMPORARY TABLE ' : 'CREATE TABLE ';
 $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$database->exec($tablePrefix . 'graph_templates_item (id INTEGER PRIMARY KEY, sequence INTEGER, graph_template_id INTEGER, local_graph_id INTEGER, local_graph_template_item_id INTEGER DEFAULT 0, graph_type_id INTEGER, text_format TEXT DEFAULT "", hard_return TEXT DEFAULT "", task_item_id INTEGER DEFAULT 0, hash TEXT DEFAULT "")');
+$database->exec($tablePrefix . 'graph_templates_item (id INTEGER PRIMARY KEY, sequence INTEGER, graph_template_id INTEGER, local_graph_id INTEGER, local_graph_template_item_id INTEGER DEFAULT 0, graph_type_id INTEGER, text_format VARCHAR(255) DEFAULT "", hard_return VARCHAR(2) DEFAULT "", task_item_id INTEGER DEFAULT 0, hash VARCHAR(64) DEFAULT "")');
 $database->exec($tablePrefix . 'graph_template_input (id INTEGER PRIMARY KEY, graph_template_id INTEGER, name TEXT, column_name TEXT)');
 $database->exec($tablePrefix . 'graph_template_input_defs (graph_template_input_id INTEGER, graph_template_item_id INTEGER)');
 $database->exec('INSERT INTO graph_templates_item (id,sequence,graph_template_id,local_graph_id,graph_type_id) VALUES (1,1,2,0,9),(2,2,2,0,9),(3,1,2,3,9),(4,2,2,3,9),(5,1,2,4,9),(6,50,2,4,9),(7,1,8,0,9),(8,2,8,0,9)');
