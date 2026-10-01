@@ -109,11 +109,26 @@ def verify_data_inputs(harness, session, check):
     harness.sql('DROP TRIGGER data_input_test_fail')
     check(status==502 and harness.sql("SELECT COUNT(*) FROM data_input WHERE name='"+name+" copy rollback'").strip()=='0','child insert failure rolls back newly duplicated parent')
     fields,_=page(session,edit)
-    harness.sql(f"UPDATE user_auth SET must_change_password='on' WHERE id={user}")
+    prior_password_change=harness.sql(f'SELECT password_change FROM user_auth WHERE id={user}').strip()
+    harness.sql(f"UPDATE user_auth SET must_change_password='on',password_change='on' WHERE id={user}")
     payload={'data_input_method[name]':name+' denied','data_input_method[input_string]':command,'data_input_method[type_id]':'1','data_input_method[revision]':fields['data_input_method[revision]'],'data_input_method[_token]':fields['data_input_method[_token]']}
     status,_,_=post(session,edit,payload)
-    harness.sql(f"UPDATE user_auth SET must_change_password='' WHERE id={user}")
+    harness.sql(f"UPDATE user_auth SET must_change_password='',password_change='{prior_password_change}' WHERE id={user}")
     check(status in (401,403) and harness.sql(f'SELECT name FROM data_input WHERE id={target}').strip()==name,'current forced-password policy rejects pending edit')
+    harness.sql(f"UPDATE user_auth SET must_change_password='on',password_change='' WHERE id={user}")
+    fields,_=page(session,edit)
+    payload['data_input_method[name]']=name
+    payload['data_input_method[revision]']=fields['data_input_method[revision]']; payload['data_input_method[_token]']=fields['data_input_method[_token]']
+    status,_,_=post(session,edit,payload)
+    check(status==200 and harness.sql(f'SELECT name FROM data_input WHERE id={target}').strip()==name,'builtin account without password-change permission retains Data Input reads and writes')
+    harness.sql(f"UPDATE user_auth SET password_change='on' WHERE id={user}")
+    for auth_method in (2,3,4):
+        harness.sql(f"UPDATE settings SET value='{auth_method}' WHERE name='auth_method'")
+        worker_request=json.dumps({'actor':user,'action':'find','id':target,'nonce':uuid.uuid4().hex,'payload':{}})
+        worker_probe=harness.php('-r',"require 'include/vendor/autoload.php'; $p=new Symfony\\Component\\Process\\Process([PHP_BINARY,'bin/legacy-data-input.php']); $p->setInput("+json.dumps(worker_request).replace('$','\\$')+"); $p->run(); echo str_contains($p->getOutput(),'\"status\":\"ok\"') && $p->getExitCode()===0 ? 'WORKER_ALLOWED' : $p->getOutput();")
+        check(worker_probe['stdout'].endswith('WORKER_ALLOWED'),f'worker preserves external-auth method {auth_method} despite builtin-only forced-password flag')
+    harness.sql("UPDATE settings SET value='1' WHERE name='auth_method'")
+    harness.sql(f"UPDATE user_auth SET must_change_password='',password_change='{prior_password_change}' WHERE id={user}")
     fields,_=page(session,edit)
     harness.sql('ALTER TABLE data_input_fields ENGINE=MyISAM')
     payload['data_input_method[revision]']=fields['data_input_method[revision]']; payload['data_input_method[_token]']=fields['data_input_method[_token]']

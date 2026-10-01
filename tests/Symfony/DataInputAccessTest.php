@@ -16,6 +16,37 @@ use PHPUnit\Framework\TestCase;
 
 final class DataInputAccessTest extends TestCase
 {
+    public function testForcedPasswordPolicyMatchesBuiltinChangePermission(): void
+    {
+        $db = $this->database();
+        $db->exec('INSERT INTO user_auth_realm VALUES (9,8),(9,2)');
+        $db->exec("UPDATE user_auth SET must_change_password='on' WHERE id=9");
+        $console = $this->createMock(ConsoleAccess::class);
+        $console->method('consoleActor')->willReturn(new Actor(9, 'input-operator'));
+        $connection = new readonly class ($db) implements DatabaseConnection {
+            public function __construct(private \PDO $db) {}
+            public function get(): \PDO
+            {
+                return $this->db;
+            }
+        };
+        $access = new LegacyDataInputAccess($console, $connection);
+        foreach ([[1, ''], [2, 'on'], [3, 'on'], [4, 'on']] as [$method, $permission]) {
+            $db->exec("UPDATE settings SET value='$method' WHERE name='auth_method'");
+            $db->exec("UPDATE user_auth SET password_change='$permission' WHERE id=9");
+            self::assertSame(9, $access->authorize()->id);
+            $db->beginTransaction();
+            try {
+                $access->assertCurrent(9);
+            } finally {
+                $db->rollBack();
+            }
+        }
+        $db->exec("UPDATE settings SET value='1' WHERE name='auth_method'");
+        $db->exec("UPDATE user_auth SET password_change='on' WHERE id=9");
+        $this->expectException(DataInputDenied::class);
+        $access->authorize();
+    }
     public function testRealmTwoAllowsDirectAndEnabledGroupGrantsButNotOtherRealms(): void
     {
         $db = $this->database();
@@ -163,9 +194,9 @@ final class DataInputAccessTest extends TestCase
     {
         $db = new \PDO('sqlite::memory:');
         $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)');
-        $db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, locked TEXT, must_change_password TEXT)');
+        $db->exec("CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, locked TEXT, must_change_password TEXT, password_change TEXT DEFAULT 'on')");
         $db->exec('CREATE TABLE settings (name TEXT, value TEXT)');
-        $db->exec("INSERT INTO user_auth VALUES (9,'input-operator','on','','')");
+        $db->exec("INSERT INTO user_auth (id,username,enabled,locked,must_change_password) VALUES (9,'input-operator','on','','')");
         $db->exec("INSERT INTO settings VALUES ('auth_method','1'),('guest_user','0')");
         return $db;
     }

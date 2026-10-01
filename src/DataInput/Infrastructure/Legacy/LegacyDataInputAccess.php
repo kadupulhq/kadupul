@@ -48,14 +48,17 @@ final readonly class LegacyDataInputAccess implements DataInputAccess
     {
         $db = $this->database->get();
         $suffix = $db->inTransaction() && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
-        $query = $db->prepare('SELECT id, username, enabled, locked, must_change_password FROM user_auth WHERE id = ?' . $suffix);
+        $query = $db->prepare('SELECT id, username, enabled, locked, must_change_password, password_change FROM user_auth WHERE id = ?' . $suffix);
         $query->execute([$actorId]);
         $user = $query->fetch(\PDO::FETCH_ASSOC);
-        if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on' || ($user['must_change_password'] ?? '') === 'on') {
+        if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on') {
             return false;
         }
         $auth = $db->query("SELECT value FROM settings WHERE name = 'auth_method'" . $suffix)->fetchColumn();
         if ($auth !== false && !in_array((int) $auth, [1, 2, 3, 4], true)) {
+            return false;
+        }
+        if (($user['must_change_password'] ?? '') === 'on' && ($auth === false || (int) $auth === 1) && $user['password_change'] === 'on') {
             return false;
         }
         $guest = $db->query("SELECT value FROM settings WHERE name = 'guest_user'" . $suffix)->fetchColumn();

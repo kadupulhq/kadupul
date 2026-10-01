@@ -384,7 +384,7 @@ function dataInputWorkerAuthorize(PDO $connection, int $actorId): void
     }
     $users = $read('SELECT id, username, enabled, locked, must_change_password, password_change FROM user_auth WHERE id = ? LOCK IN SHARE MODE', [$actorId]);
     if (count($users) !== 1 || $users[0]['enabled'] !== 'on' || $users[0]['locked'] === 'on'
-        || $users[0]['must_change_password'] === 'on') {
+        || ($users[0]['must_change_password'] === 'on' && (int) ($auth[0]['value'] ?? 1) === 1 && $users[0]['password_change'] === 'on')) {
         throw new DataInputWorkerDenied();
     }
     $guest = $read("SELECT value FROM settings WHERE name = 'guest_user' LOCK IN SHARE MODE");
