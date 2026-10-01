@@ -57,6 +57,9 @@ function auth_process_lockout($username, $realm) {
 	$GLOBALS['lockout_calls']++;
 }
 
+function auth_ldap_equalize_failure($started) {
+}
+
 function read_config_option($name, $force = false) {
 	return $name == 'ldap_server' ? 'ldap.example.com' : '';
 }

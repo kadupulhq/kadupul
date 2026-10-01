@@ -4,6 +4,7 @@ Cacti CHANGELOG
 -security: Show color names, data input field names, group names in permission reasons, and graph, device and site names in the tree editor as text; these places parsed the decoded names as markup
 -issue: Stop schema audits and repairs when docs/audit_schema.sql cannot be loaded, and preserve the existing audit baseline tables until a replacement loads successfully; CACTI_MYSQL_CLIENT optionally selects the database client executable
 -issue: Midwinter binds keyboard shortcuts once after a successful cached script revalidation, retaining working shortcuts across AJAX page loads
+-security: Hold a failed LDAP or Domains login until one second after it started, so an unknown username no longer answers sooner than a wrong password; successful logins do not wait
 -issue: Move an LDAP or Domains login to the next configured server only when the current one cannot be reached, so a wrong password is no longer tried against every server and counted by each directory, and bind the user on the server whose search found them
 -security: Refuse LDAP group membership of type Username when more than one directory entry matches the bound name, instead of checking whichever entry the server returned first
 -security: Leave the packet level out of the libldap debug level that Selective DEBUG sets on the login page, so libldap cannot write a bind packet and its password to the web server error log

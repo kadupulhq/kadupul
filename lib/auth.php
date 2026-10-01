@@ -3808,6 +3808,7 @@ function local_auth_login_process($username) {
 function ldap_login_process($username) {
 	global $error, $error_msg;
 
+	$started  = hrtime(true);
 	$password = get_nfilter_request_var('login_password');
 
 	if ($username == '') {
@@ -3816,12 +3817,16 @@ function ldap_login_process($username) {
 
 		cacti_log('LOGIN FAILED: Empty LDAP Username provided', false, 'AUTH');
 
+		auth_ldap_equalize_failure($started);
+
 		return array();
 	}
 
 	auth_checkclear_lockout($username, 3);
 
 	if (auth_process_lockout_check($username, 3)) {
+		auth_ldap_equalize_failure($started);
+
 		return array();
 	}
 
@@ -3888,6 +3893,10 @@ function ldap_login_process($username) {
 		auth_process_lockout($username, $realm);
 	}
 
+	if ($error) {
+		auth_ldap_equalize_failure($started);
+	}
+
 	return $user;
 }
 
@@ -3903,6 +3912,7 @@ function ldap_login_process($username) {
 function domains_login_process($username) {
 	global $realm, $error, $error_msg;
 
+	$started  = hrtime(true);
 	$realm    = get_filter_request_var('realm');
 	$password = get_nfilter_request_var('login_password');
 
@@ -3911,6 +3921,8 @@ function domains_login_process($username) {
 		$error_msg = __('Access Denied!  Login Failed.');
 
 		cacti_log('LOGIN FAILED: Empty Domains Username provided', false, 'AUTH');
+
+		auth_ldap_equalize_failure($started);
 
 		return array();
 	}
@@ -3921,12 +3933,16 @@ function domains_login_process($username) {
 
 		cacti_log(sprintf("LOGIN FAILED: Unknown Login Realm '%s' provided for user '%s' from IP address %s", $realm, $username, get_client_addr()), false, 'AUTH');
 
+		auth_ldap_equalize_failure($started);
+
 		return array();
 	}
 
 	auth_checkclear_lockout($username, $realm);
 
 	if (auth_process_lockout_check($username, $realm)) {
+		auth_ldap_equalize_failure($started);
+
 		return array();
 	}
 
@@ -4075,7 +4091,29 @@ function domains_login_process($username) {
 		cacti_log(sprintf("LOGIN FAILED: Login Realm '%s' is not an LDAP domain for user '%s' from IP address %s", $realm, $username, get_client_addr()), false, 'AUTH');
 	}
 
+	if ($error) {
+		auth_ldap_equalize_failure($started);
+	}
+
 	return $user;
+}
+
+/**
+ * auth_ldap_equalize_failure - hold a failed LDAP or Domains login until one
+ *   second after it started.  An unknown user fails at the search, before any
+ *   bind, and would otherwise answer sooner than a wrong password.  Successful
+ *   logins never wait.
+ *
+ * @param  (int)  $started - hrtime(true) when the login began
+ *
+ * @return (void)
+ */
+function auth_ldap_equalize_failure($started) {
+	$remaining = 1000000000 - (hrtime(true) - $started);
+
+	if ($remaining > 0) {
+		usleep(intdiv($remaining + 999, 1000));
+	}
 }
 
 /**

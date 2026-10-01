@@ -151,6 +151,9 @@ function auth_process_lockout($username, $realm) {
 	$GLOBALS['lockout_calls']++;
 }
 
+function auth_ldap_equalize_failure($started) {
+}
+
 function domains_ldap_servers($realm) {
 	return array('ldap.example.com');
 }

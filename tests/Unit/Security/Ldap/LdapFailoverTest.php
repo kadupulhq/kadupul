@@ -36,7 +36,7 @@ function ldap_failover_run(array $scenario, string $call, array $auth_functions 
 function ldap_failover_login(array $scenario, string $password) : array {
 	$scenario['request'] = array('login_password' => $password);
 
-	return ldap_failover_run($scenario, "ldap_login_process('alice')", array('ldap_login_process'));
+	return ldap_failover_run($scenario, "ldap_login_process('alice')", array('ldap_login_process', 'auth_ldap_equalize_failure'));
 }
 
 /**
@@ -66,7 +66,7 @@ function ldap_failover_domain_login(array $scenario, string $password) : array {
 
 	$scenario['config']['ldap_server'] = 'global.example.com';
 
-	return ldap_failover_run($scenario, "domains_login_process('alice')", array('domains_login_process', 'domains_ldap_servers', 'domains_ldap_auth', 'domains_ldap_search_dn'));
+	return ldap_failover_run($scenario, "domains_login_process('alice')", array('domains_login_process', 'domains_ldap_servers', 'domains_ldap_auth', 'domains_ldap_search_dn', 'auth_ldap_equalize_failure'));
 }
 
 /** @return array<int, string> */
