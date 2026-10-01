@@ -5,6 +5,20 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+function automation_host_status_options(): array
+{
+    return array(
+        -1 => __('Any'),
+        -3 => __('Enabled'),
+        -2 => __('Disabled'),
+        -4 => __('Not Up'),
+        3 => __('Up'),
+        1 => __('Down'),
+        2 => __('Recovering'),
+        0 => __('Unknown'),
+    );
+}
+
 function display_matching_hosts($rule, $rule_type, $url)
 {
     global $device_actions, $item_rows;
@@ -94,7 +108,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 	}
 
 	$(function() {
-		$('#refresh').on('click', function() {
+		$('#refreshd').on('click', function() {
 			applyDeviceFilter();
 		});
 
@@ -102,7 +116,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 			applyDeviceFilter();
 		});
 
-		$('#clear').on('click', function() {
+		$('#cleard').on('click', function() {
 			clearDeviceFilter();
 		});
 
@@ -149,14 +163,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 						</td>
 						<td>
 							<select id='host_status'>
-								<option value='-1'<?php if (get_request_var('host_status') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-								<option value='-3'<?php if (get_request_var('host_status') == '-3') {?> selected<?php }?>><?php print __('Enabled');?></option>
-								<option value='-2'<?php if (get_request_var('host_status') == '-2') {?> selected<?php }?>><?php print __('Disabled');?></option>
-								<option value='-4'<?php if (get_request_var('host_status') == '-4') {?> selected<?php }?>><?php print __('Not Up');?></option>
-								<option value='3'<?php if (get_request_var('host_status') == '3') {?> selected<?php }?>><?php print __('Up');?></option>
-								<option value='1'<?php if (get_request_var('host_status') == '1') {?> selected<?php }?>><?php print __('Down');?></option>
-								<option value='2'<?php if (get_request_var('host_status') == '2') {?> selected<?php }?>><?php print __('Recovering');?></option>
-								<option value='0'<?php if (get_request_var('host_status') == '0') {?> selected<?php }?>><?php print __('Unknown');?></option>
+								<?php html_create_list(automation_host_status_options(), '', '', get_request_var('host_status'));?>
 							</select>
 						</td>
 						<td>
@@ -169,8 +176,8 @@ function display_matching_hosts($rule, $rule_type, $url)
 						</td>
 						<td>
 							<span>
-								<input type='button' class='ui-button ui-corner-all ui-widget' id='refresh' value='<?php print __esc('Go');?>'>
-								<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>'>
+								<input type='button' class='ui-button ui-corner-all ui-widget' id='refreshd' value='<?php print __esc('Go');?>'>
+								<input type='button' class='ui-button ui-corner-all ui-widget' id='cleard' value='<?php print __esc('Clear');?>'>
 							</span>
 						</td>
 					</tr>
@@ -1083,14 +1090,7 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 					</td>
 					<td>
 						<select id='host_status'>
-							<option value='-1'<?php if (get_request_var('host_status') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-							<option value='-3'<?php if (get_request_var('host_status') == '-3') {?> selected<?php }?>><?php print __('Enabled');?></option>
-							<option value='-2'<?php if (get_request_var('host_status') == '-2') {?> selected<?php }?>><?php print __('Disabled');?></option>
-							<option value='-4'<?php if (get_request_var('host_status') == '-4') {?> selected<?php }?>><?php print __('Not Up');?></option>
-							<option value='3'<?php if (get_request_var('host_status') == '3') {?> selected<?php }?>><?php print __('Up');?></option>
-							<option value='1'<?php if (get_request_var('host_status') == '1') {?> selected<?php }?>><?php print __('Down');?></option>
-							<option value='2'<?php if (get_request_var('host_status') == '2') {?> selected<?php }?>><?php print __('Recovering');?></option>
-							<option value='0'<?php if (get_request_var('host_status') == '0') {?> selected<?php }?>><?php print __('Unknown');?></option>
+							<?php html_create_list(automation_host_status_options(), '', '', get_request_var('host_status'));?>
 						</select>
 					</td>
 					<td>

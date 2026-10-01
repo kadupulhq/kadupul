@@ -81,6 +81,11 @@ final class AutomationModuleNativeTest extends TestCase
         self::assertSame('Any', $xpath->query('//select[@id="host_template_id"]/option[@value="-1"]')->item(0)->textContent);
         self::assertSame('None', $xpath->query('//select[@id="host_template_id"]/option[@value="0"]')->item(0)->textContent);
         self::assertSame('Fixture template', $xpath->query('//select[@id="host_template_id"]/option[@value="9"]')->item(0)->textContent);
+        $statuses = array('-1' => 'Any', '-3' => 'Enabled', '-2' => 'Disabled', '-4' => 'Not Up', '3' => 'Up', '1' => 'Down', '2' => 'Recovering', '0' => 'Unknown');
+        foreach ($statuses as $value => $label) {
+            self::assertSame($label, $xpath->query('//select[@id="host_status"]/option[@value="' . $value . '"]')->item(0)->textContent);
+        }
+
         $cells = $xpath->query('//tr[@id="line7"]/td');
         self::assertCount(6, $cells);
         self::assertSame($expected, $cells->item(5)->textContent);
@@ -283,12 +288,24 @@ final class AutomationModuleNativeTest extends TestCase
         @$document->loadHTML($state['html']);
         $xpath = new DOMXPath($document);
         $select = $kind === 'graph' ? 'rows' : 'rowsd';
+        $refresh = $kind === 'graph' ? 'refresh' : 'refreshd';
+        $clear = $kind === 'graph' ? 'clear' : 'cleard';
+        self::assertSame(1, $xpath->query('//input[@id="' . $refresh . '"]')->length);
+        self::assertSame(1, $xpath->query('//input[@id="' . $clear . '"]')->length);
+        self::assertStringContainsString("$('#" . $refresh . "').on('click'", $state['html']);
+        self::assertStringContainsString("$('#" . $clear . "').on('click'", $state['html']);
+
         self::assertSame($kind === 'graph' ? '10' : '20', $xpath->query('//select[@id="' . $select . '"]/option[@selected]')->item(0)->getAttribute('value'));
         self::assertSame('Default', $xpath->query('//select[@id="' . $select . '"]/option[@value="-1"]')->item(0)->textContent);
         if ($kind === 'host') {
             self::assertSame('Any', $xpath->query('//select[@id="host_template_id"]/option[@value="-1"]')->item(0)->textContent);
             self::assertSame('None', $xpath->query('//select[@id="host_template_id"]/option[@value="0"]')->item(0)->textContent);
             self::assertSame('Fixture template', $xpath->query('//select[@id="host_template_id"]/option[@value="9"]')->item(0)->textContent);
+            $statuses = array('-1' => 'Any', '-3' => 'Enabled', '-2' => 'Disabled', '-4' => 'Not Up', '3' => 'Up', '1' => 'Down', '2' => 'Recovering', '0' => 'Unknown');
+            foreach ($statuses as $value => $label) {
+                self::assertSame($label, $xpath->query('//select[@id="host_status"]/option[@value="' . $value . '"]')->item(0)->textContent);
+            }
+
         }
         self::assertSame(1, $xpath->query('//tr[@id="line' . ($kind === 'graph' ? '100' : '7') . '"]')->length);
         self::assertStringContainsString($kind === 'graph' ? 'Fixture title' : 'Fixture template', $state['html']);
