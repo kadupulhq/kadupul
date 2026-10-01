@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Persistence;
@@ -11,6 +11,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Kadupul\GraphDefinition\Application\Port\CdefCatalog;
 use Kadupul\GraphDefinition\Domain\CdefFunctions;
+use Kadupul\GraphDefinition\Domain\CdefRevision;
 use Kadupul\GraphDefinition\Domain\CdefListCriteria;
 use Kadupul\GraphDefinition\Domain\CdefSummary;
 
@@ -74,7 +75,7 @@ final readonly class DoctrineCdefCatalog implements CdefCatalog
     public function find(int $id): ?array
     {
         $referenceId = $this->referenceId('i.value');
-        $cdef = $this->database->fetchAssociative("SELECT c.id, c.name,
+        $cdef = $this->database->fetchAssociative("SELECT c.id, c.hash, c.`system`, c.name,
             (SELECT COUNT(DISTINCT i.local_graph_id) FROM graph_templates_item i WHERE i.cdef_id = c.id AND i.local_graph_id > 0) AS graphs,
             (SELECT COUNT(DISTINCT i.graph_template_id) FROM graph_templates_item i WHERE i.cdef_id = c.id AND i.local_graph_id = 0) AS templates,
             (SELECT COUNT(DISTINCT i.cdef_id) FROM cdef_items i WHERE i.type = 5 AND $referenceId = c.id) AS referencing_cdefs
@@ -82,11 +83,12 @@ final readonly class DoctrineCdefCatalog implements CdefCatalog
         if ($cdef === false) {
             return null;
         }
-        $items = $this->database->fetchAllAssociative('SELECT id, sequence, type, value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence, id', [$id]);
+        $items = $this->database->fetchAllAssociative('SELECT id, hash, cdef_id, sequence, type, value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence, id', [$id]);
         $roundSupported = $this->roundSupported();
         return [
             'id' => (int) $cdef['id'],
             'name' => (string) $cdef['name'],
+            'revision' => CdefRevision::fromRows($cdef, $items),
             'graphs' => (int) $cdef['graphs'],
             'templates' => (int) $cdef['templates'],
             'referencing_cdefs' => (int) $cdef['referencing_cdefs'],

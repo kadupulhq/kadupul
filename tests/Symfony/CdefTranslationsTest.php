@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Tests;
@@ -17,7 +17,7 @@ final class CdefTranslationsTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         $messages = Yaml::parseFile($root . '/config/translations/graph_definition.fr.yaml');
-        $required = ['Title format', ...array_values(CdefFunctions::TYPES), ...array_values(CdefFunctions::DATA_SOURCES)];
+        $required = ['Title format', 'The CDEF changed. Reload the form.', ...array_values(CdefFunctions::TYPES), ...array_values(CdefFunctions::DATA_SOURCES)];
         $source = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root . '/src/GraphDefinition'));
         foreach ($source as $file) {
             if (!$file->isFile() || $file->getExtension() !== 'php') {
@@ -38,5 +38,6 @@ final class CdefTranslationsTest extends TestCase
         $source = file_get_contents(dirname(__DIR__, 2) . '/cdef.php');
         self::assertStringContainsString('SPDX-FileCopyrightText: 2004-2026 The Cacti Group', $source);
         self::assertStringContainsString('SPDX-FileCopyrightText: 2026 The Kadupul project and contributors', $source);
+        self::assertStringContainsString('SPDX-License-Identifier: GPL-2.0-or-later', $source);
     }
 }

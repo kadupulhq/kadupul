@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Form;
@@ -16,7 +16,8 @@ final class CdefReorderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('items', HiddenType::class)
+        $builder->add('revision', HiddenType::class)
+            ->add('items', HiddenType::class)
             ->add('moveUp', HiddenType::class, ['required' => false])
             ->add('moveDown', HiddenType::class, ['required' => false]);
     }

@@ -1,3 +1,8 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ cdef.id ? 'Edit CDEF'|trans({}, 'graph_definition') : 'Create CDEF'|trans({}, 'graph_definition') }}{% endblock %}
@@ -21,6 +26,7 @@
                         {% if not loop.first or not loop.last %}
                             {% set itemIds = cdef.items|map(i => i.id)|json_encode %}
                             <form method="post" action="{{ path('graph_cdef_item_reorder', {cdefId: cdef.id}) }}">
+                                <input type="hidden" name="order[revision]" value="{{ cdef.revision }}">
                                 <input type="hidden" name="order[items]" value="{{ itemIds }}">
                                 {% if not loop.first %}<button name="order[moveUp]" value="{{ item.id }}">{{ 'Move up'|trans({}, 'graph_definition') }}</button>{% endif %}
                                 {% if not loop.last %}<button name="order[moveDown]" value="{{ item.id }}">{{ 'Move down'|trans({}, 'graph_definition') }}</button>{% endif %}

@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Tests;
@@ -74,7 +74,7 @@ final class CdefHttpTest extends TestCase
             $container = $kernel->getContainer()->get('test.service_container');
             $this->authorize($container, true);
             $catalog = $this->createMock(CdefCatalog::class);
-            $catalog->method('find')->willReturn(['id' => 7, 'name' => 'Fixture', 'graphs' => 0, 'templates' => 0, 'referencing_cdefs' => 0]);
+            $catalog->method('find')->willReturn(['id' => 7, 'name' => 'Fixture', 'revision' => 'fixture', 'graphs' => 0, 'templates' => 0, 'referencing_cdefs' => 0]);
             $container->set(CdefCatalog::class, $catalog);
             foreach (['delete' => 'hidden', 'duplicate' => 'text'] as $operation => $type) {
                 $request = Request::create('/graph-definitions/cdefs/actions/' . $operation . '?ids[]=7', 'GET', [], ['Cacti' => 'fixture']);
@@ -109,7 +109,7 @@ final class CdefHttpTest extends TestCase
             $container = $kernel->getContainer()->get('test.service_container');
             $this->authorize($container, true);
             $catalog = $this->createMock(CdefCatalog::class);
-            $catalog->method('find')->willReturn(['id' => 7, 'name' => 'Fixture', 'items' => []]);
+            $catalog->method('find')->willReturn(['id' => 7, 'name' => 'Fixture', 'revision' => 'fixture', 'items' => []]);
             $catalog->method('functions')->willReturn(\Kadupul\GraphDefinition\Domain\CdefFunctions::functions(false));
             $container->set(CdefCatalog::class, $catalog);
             $request = Request::create('/graph-definitions/cdefs/7/items/0?type=4', 'GET', [], ['Cacti' => 'fixture']);
@@ -137,7 +137,7 @@ final class CdefHttpTest extends TestCase
             $this->authorize($container, true);
             $label = 'Current Graph Item Data Source';
             $catalog = $this->createMock(CdefCatalog::class);
-            $catalog->method('find')->willReturn(['id' => 7, 'name' => $label, 'items' => [
+            $catalog->method('find')->willReturn(['id' => 7, 'name' => $label, 'revision' => 'fixture', 'items' => [
                 ['id' => 11, 'type' => 4, 'label' => $label],
                 ['id' => 12, 'type' => 6, 'label' => $label],
                 ['id' => 13, 'type' => 5, 'label' => $label],
@@ -156,6 +156,16 @@ final class CdefHttpTest extends TestCase
             self::assertSame($label, $xpath->evaluate('string(//tbody/tr[3]/td[3])'));
             self::assertSame($label, $xpath->evaluate('string(//input[@name="cdef_edit[name]"]/@value)'));
             self::assertSame('cdef=CURRENT_DATA_SOURCE,2,*', $xpath->evaluate('string(//pre)'));
+            foreach ([11 => 'Source de données de l’élément de graphique actuel', 12 => $label, 13 => $label] as $itemId => $expectedLabel) {
+                $deleteRequest = Request::create('/graph-definitions/cdefs/7/items/' . $itemId . '/delete', 'GET', [], ['Cacti' => 'fixture']);
+                $deleteRequest->setLocale('fr');
+                $deleteResponse = $kernel->handle($deleteRequest);
+                self::assertSame(200, $deleteResponse->getStatusCode(), $deleteResponse->getContent());
+                $deleteDocument = new \DOMDocument();
+                @$deleteDocument->loadHTML($deleteResponse->getContent());
+                self::assertSame($expectedLabel, (new \DOMXPath($deleteDocument))->evaluate('string(//strong)'));
+            }
+
         } finally {
             $kernel->shutdown();
         }

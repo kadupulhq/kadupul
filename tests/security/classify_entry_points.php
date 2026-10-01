@@ -1970,8 +1970,8 @@ function cdef_feature_call(string $root, array $target, int $depth = 0): bool
         $authorization = $root . '/src/GraphDefinition/Application/Query/CdefAuthorization.php';
         $adapter = $root . '/src/GraphDefinition/Infrastructure/Persistence/DoctrineCdefRealmAccess.php';
         return is_file($authorization) && is_file($adapter)
-            && hash_file('sha256', $authorization) === '8a17a5370676d7357bb43d865a9bf9c4d1021bbd52f7e67bf81e8f6739467803'
-            && hash_file('sha256', $adapter) === '56fb3e652ca5350ca4208a6fb99e29f1c8587efddc643f96a0e5d6cce683de04';
+            && hash_file('sha256', $authorization) === 'fee47fe270c523de98e56d73c2259e59c80d5605f857312f0a64842d3c9a46e4'
+            && hash_file('sha256', $adapter) === '5a816d07a5931d52ec95214a8d377879c528a996e55cfc92c6b6f3c948930ac3';
     }
     if ($depth >= CALL_DEPTH) {
         return false;

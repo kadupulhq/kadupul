@@ -42,6 +42,18 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'CDEF French delete translates only special data-source labels: 4',
+        'CDEF French delete translates only special data-source labels: 6',
+        'CDEF French delete translates only special data-source labels: 5',
+        'CDEF French delete labels preserve stored names custom values and references',
+        'CDEF stale full revision returns 409 without writes: parent',
+        'CDEF stale full revision returns 409 without writes: item-create',
+        'CDEF stale full revision returns 409 without writes: item-edit',
+        'CDEF stale full revision returns 409 without writes: item-delete',
+        'CDEF stale full revision returns 409 without writes: reorder',
+        'CDEF stale full revision returns 409 without writes: duplicate',
+        'CDEF stale full revision returns 409 without writes: delete',
+
         'CDEF item deletion reaches MariaDB and preserves surviving RPN order',
         'CDEF successful reorder persists the requested RPN sequence',
         'CDEF bulk deletion removes the duplicate and its owned items',
@@ -199,6 +211,11 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bin/legacy-device-edit.php',
         'cdef.php',
         'src/GraphDefinition/Infrastructure/Legacy/LegacyCdefEditor.php',
+        'src/GraphDefinition/Domain/CdefRevision.php',
+        'src/GraphDefinition/Domain/CdefRevisionConflict.php',
+        'src/GraphDefinition/Infrastructure/Persistence/DoctrineCdefCatalog.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefEditController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Form/CdefEditType.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefListController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefActionController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefItemController.php',

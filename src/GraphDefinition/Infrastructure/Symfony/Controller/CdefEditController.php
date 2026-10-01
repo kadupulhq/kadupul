@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Controller;
@@ -36,11 +36,11 @@ final class CdefEditController
         }
         try {
             $actor = $authorization->actor();
-            $record = $id === null ? ['id' => 0, 'name' => '', 'items' => []] : $catalog->find($id);
+            $record = $id === null ? ['id' => 0, 'name' => '', 'revision' => '', 'items' => []] : $catalog->find($id);
             if ($record === null) {
                 return new Response($translator->trans('CDEF not found.', [], 'graph_definition'), 404, $headers);
             }
-            $form = $forms->create(CdefEditType::class, ['id' => $record['id'], 'name' => $record['name']], [
+            $form = $forms->create(CdefEditType::class, ['id' => $record['id'], 'name' => $record['name'], 'revision' => $record['revision']], [
                 'action' => $urls->generate($id === null ? 'graph_cdef_create' : 'graph_cdef_edit', $id === null ? [] : ['id' => $id]),
             ]);
             $form->handleRequest($request);
@@ -55,7 +55,7 @@ final class CdefEditController
                         || mb_strlen((string) $data['name']) > 255 || preg_match('/[\x00\r\n]/', (string) $data['name'])) {
                         $form->addError(new FormError($translator->trans('Enter a valid CDEF name.', [], 'graph_definition')));
                     } else {
-                        $savedId = $editor->save($actor, (int) $data['id'], (string) $data['name']);
+                        $savedId = $editor->save($actor, (int) $data['id'], (string) $data['name'], (string) ($data['revision'] ?? ''));
                         return new RedirectResponse($urls->generate('graph_cdef_edit', ['id' => $savedId]), 303, $headers);
                     }
                 }
@@ -65,6 +65,8 @@ final class CdefEditController
             ]), $status, $headers);
         } catch (CdefAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'graph_definition'), $error->unauthenticated ? 401 : 403, $headers);
+        } catch (\Kadupul\GraphDefinition\Domain\CdefRevisionConflict $error) {
+            return new Response($translator->trans($error->getMessage(), [], 'graph_definition'), 409, $headers);
         } catch (\InvalidArgumentException $error) {
             return new Response($translator->trans($error->getMessage(), [], 'graph_definition'), 400, $headers);
         } catch (\Throwable) {

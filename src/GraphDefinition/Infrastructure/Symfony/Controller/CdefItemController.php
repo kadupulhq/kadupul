@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Controller;
@@ -65,6 +65,7 @@ final class CdefItemController
                     '5' => (string) ($references[0]['id'] ?? ''), default => '',
                 };
             }
+            $item['revision'] = $cdef['revision'];
             $form = $forms->create(CdefItemForm::class, $item, [
                 'item_type' => $itemType,
                 'cdef_choices' => $references,
@@ -83,10 +84,11 @@ final class CdefItemController
                         $form->addError(new FormError($translator->trans('The CDEF item selection changed. Reload the form.', [], 'graph_definition')));
                     } else {
                         try {
-                            $editor->saveItem($actor, $cdefId, $itemId, (int) $data['type'], (string) $data['value']);
+                            $editor->saveItem($actor, $cdefId, $itemId, (int) $data['type'], (string) $data['value'], (string) ($data['revision'] ?? ''));
                             return new RedirectResponse($urls->generate('graph_cdef_edit', ['id' => $cdefId]), 303, $headers);
                         } catch (\InvalidArgumentException $error) {
                             $form->addError(new FormError($translator->trans($error->getMessage(), [], 'graph_definition')));
+                            $status = 409;
                         }
                     }
                 }
@@ -119,13 +121,15 @@ final class CdefItemController
             if ($cdef === null || $item === null) {
                 return new Response($translator->trans('CDEF item not found.', [], 'graph_definition'), 404, $headers);
             }
-            $form = $forms->createNamed('confirm', \Symfony\Component\Form\Extension\Core\Type\FormType::class, [], [
+            $builder = $forms->createNamedBuilder('confirm', \Symfony\Component\Form\Extension\Core\Type\FormType::class, ['revision' => $cdef['revision']], [
                 'action' => $urls->generate('graph_cdef_item_delete', ['cdefId' => $cdefId, 'itemId' => $itemId]),
                 'method' => 'POST', 'csrf_protection' => true, 'csrf_token_id' => 'graph_cdef_edit',
             ]);
+            $builder->add('revision', \Symfony\Component\Form\Extension\Core\Type\HiddenType::class);
+            $form = $builder->getForm();
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $editor->deleteItem($actor, $cdefId, $itemId);
+                $editor->deleteItem($actor, $cdefId, $itemId, (string) ($form->getData()['revision'] ?? ''));
                 return new RedirectResponse($urls->generate('graph_cdef_edit', ['id' => $cdefId]), 303, $headers);
             }
             return new Response($twig->render('graph_definition/cdef_item_delete.html.twig', [
@@ -150,7 +154,7 @@ final class CdefItemController
         }
         try {
             $actor = $authorization->actor();
-            $form = $forms->createNamed('order', CdefReorderType::class, ['items' => ''], [
+            $form = $forms->createNamed('order', CdefReorderType::class, ['items' => '', 'revision' => ''], [
                 'action' => $urls->generate('graph_cdef_item_reorder', ['cdefId' => $cdefId]), 'method' => 'POST',
             ]);
             $form->handleRequest($request);
@@ -178,7 +182,7 @@ final class CdefItemController
                     [$ids[$position], $ids[$destination]] = [$ids[$destination], $ids[$position]];
                 }
             }
-            $editor->reorder($actor, $cdefId, $ids, $expectedIds);
+            $editor->reorder($actor, $cdefId, $ids, $expectedIds, (string) ($form->getData()['revision'] ?? ''));
             return new RedirectResponse($urls->generate('graph_cdef_edit', ['id' => $cdefId]), 303, $headers);
         } catch (CdefAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'graph_definition'), $error->unauthenticated ? 401 : 403, $headers);

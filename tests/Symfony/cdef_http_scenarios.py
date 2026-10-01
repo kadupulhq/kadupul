@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Real HTTP and MariaDB scenarios for the CDEF Symfony migration."""
 from html.parser import HTMLParser
 import json
@@ -46,6 +49,7 @@ def verify_cdefs(harness, session, check):
     created = _post(session, base + '/app.php/graph-definitions/cdefs/new', {
         'cdef_edit[id]': create_fields['cdef_edit[id]'],
         'cdef_edit[name]': name,
+        'cdef_edit[revision]': create_fields['cdef_edit[revision]'],
         'cdef_edit[_token]': create_fields['cdef_edit[_token]'],
     })
     rows = harness.rows("SELECT JSON_OBJECT('id',id,'name',name) FROM cdef WHERE name='" + name + "'")
@@ -62,13 +66,17 @@ def verify_cdefs(harness, session, check):
             'cdef_item[cdef_id]': item_fields['cdef_item[cdef_id]'],
             'cdef_item[type]': '6',
             'cdef_item[value]': value,
-            'cdef_item[_token]': item_fields['cdef_item[_token]'],
+            'cdef_item[revision]': item_fields['cdef_item[revision]'],
+        'cdef_item[_token]': item_fields['cdef_item[_token]'],
         })
         check(response.status == 200 and response.url.endswith(f'/app.php/graph-definitions/cdefs/{cdef_id}/edit'),
               'typed CDEF item save redirects through the authorized edit route')
         row = harness.rows(f"SELECT JSON_OBJECT('id',id,'value',value) FROM cdef_items WHERE cdef_id={cdef_id} AND value='{value}' ORDER BY id DESC LIMIT 1")
         check(len(row) == 1, 'typed CDEF item reaches MariaDB')
         item_ids.append(int(row[0]['id']))
+
+    _verify_stale_revisions(harness, session, check)
+    _verify_french_delete_label(harness, user_id, check)
 
     edit_response = session.opener.open(base + f'/app.php/graph-definitions/cdefs/{cdef_id}/edit')
     edit_html = edit_response.read().decode('utf-8')
@@ -84,11 +92,12 @@ def verify_cdefs(harness, session, check):
     harness.sql(f'UPDATE cdef_items SET sequence=2 WHERE id={baseline[0]}')
     stale = _post(session, base + order_path, {
         'order[items]': json.dumps(baseline),
+        'order[revision]': order_form['order[revision]'],
         'order[_token]': order_form['order[_token]'],
     })
     stale_body = stale.read().decode('utf-8')
     current = [int(value) for value in harness.sql(f'SELECT id FROM cdef_items WHERE cdef_id={cdef_id} ORDER BY sequence,id').splitlines()]
-    if stale.status != 409 or 'selection changed' not in stale_body or current != [baseline[1], baseline[0]]:
+    if stale.status != 409 or 'CDEF changed' not in stale_body or current != [baseline[1], baseline[0]]:
         raise AssertionError(f'Stale reorder mismatch: status={stale.status}, baseline={baseline}, current={current}, body={stale_body[:250]!r}')
     check(True, 'stale reorder is rejected when the same IDs have a different current sequence')
 
@@ -96,6 +105,7 @@ def verify_cdefs(harness, session, check):
     reordered = _post(session, base + order_path, {
         'order[items]': fresh_order['order[items]'],
         'order[moveUp]': str(baseline[0]),
+        'order[revision]': fresh_order['order[revision]'],
         'order[_token]': fresh_order['order[_token]'],
     })
     stored_order = [int(value) for value in harness.sql(f'SELECT id FROM cdef_items WHERE cdef_id={cdef_id} ORDER BY sequence,id').splitlines()]
@@ -115,6 +125,7 @@ def verify_cdefs(harness, session, check):
     duplicated = _post(session, duplicate_url, {
         'cdef_action[selection]': duplicate_fields['cdef_action[selection]'],
         'cdef_action[title_format]': duplicate_fields['cdef_action[title_format]'],
+        'cdef_action[revisions]': duplicate_fields['cdef_action[revisions]'],
         'cdef_action[_token]': duplicate_fields['cdef_action[_token]'],
     })
     duplicate_body = duplicated.read().decode('utf-8')
@@ -131,7 +142,7 @@ def verify_cdefs(harness, session, check):
     item_delete_fields = _page(session, delete_item_url)
     check(_post(session, delete_item_url, {'confirm[_token]': 'invalid'}).status == 422,
           'CDEF item deletion rejects an invalid CSRF token')
-    item_deleted = _post(session, delete_item_url, {'confirm[_token]': item_delete_fields['confirm[_token]']})
+    item_deleted = _post(session, delete_item_url, {'confirm[revision]': item_delete_fields['confirm[revision]'], 'confirm[_token]': item_delete_fields['confirm[_token]']})
     check(item_deleted.status == 200 and harness.sql(f'SELECT GROUP_CONCAT(value ORDER BY sequence,id) FROM cdef_items WHERE cdef_id={duplicate_id}').strip() == '8',
           'CDEF item deletion reaches MariaDB and preserves surviving RPN order')
     try:
@@ -174,6 +185,7 @@ def verify_cdefs(harness, session, check):
     denied = _post(session, delete_url, {
         'cdef_action[selection]': delete_fields['cdef_action[selection]'],
         'cdef_action[title_format]': delete_fields['cdef_action[title_format]'],
+        'cdef_action[revisions]': delete_fields['cdef_action[revisions]'],
         'cdef_action[_token]': delete_fields['cdef_action[_token]'],
     })
     source_count = int(harness.sql(f'SELECT COUNT(*) FROM cdef WHERE id={cdef_id}').strip())
@@ -187,6 +199,7 @@ def verify_cdefs(harness, session, check):
         'cdef_item[cdef_id]': str(cdef_id),
         'cdef_item[type]': '6',
         'cdef_item[value]': '999',
+        'cdef_item[revision]': locked_form['cdef_item[revision]'],
         'cdef_item[_token]': locked_form['cdef_item[_token]'],
     })
     value = harness.sql(f'SELECT value FROM cdef_items WHERE id={item_ids[0]}').strip()
@@ -205,6 +218,85 @@ def verify_cdefs(harness, session, check):
     rollback = harness.php('-r', _mariadb_rollback_probe())
     check(rollback['exit'] == 0 and 'CDEF_ROLLBACK_OK' in rollback['stdout'],
           'a MariaDB item insert failure rolls back the newly inserted duplicate CDEF')
+
+
+def _verify_french_delete_label(harness, user_id, check):
+    from harness import Session
+    language_names = "'i18n_language_support','i18n_auto_detection','i18n_default_language'"
+    settings = harness.rows(f"SELECT JSON_OBJECT('name',name,'value',value) FROM settings WHERE name IN ({language_names})")
+    preference = harness.rows(f"SELECT JSON_OBJECT('value',value) FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+    hashes = [uuid.uuid4().hex, uuid.uuid4().hex]
+    def text(value):
+        return 'CONVERT(0x' + value.encode('utf-8').hex() + ' USING utf8mb4)' if value else "''"
+    parent_ids = []
+    try:
+        for unique in hashes:
+            harness.sql(f"INSERT INTO cdef (hash,system,name) VALUES ('{unique}',0,'Current Graph Item Data Source')")
+            parent_ids.append(int(harness.sql(f"SELECT id FROM cdef WHERE hash='{unique}'").strip()))
+        parent, target = parent_ids
+        for sequence, kind, value in [(1,4,'CURRENT_DATA_SOURCE'),(2,6,'Current Graph Item Data Source'),(3,5,str(target))]:
+            harness.sql(f"INSERT INTO cdef_items (hash,cdef_id,sequence,type,value) VALUES ('{uuid.uuid4().hex}',{parent},{sequence},{kind},'{value}')")
+        harness.sql("REPLACE INTO settings (name,value) VALUES ('i18n_language_support','1'),('i18n_auto_detection','0'),('i18n_default_language','en-US')")
+        harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language','fr-FR')")
+        french = Session(harness.base)
+        check(french.login('behavior-admin')['status'] == 200, 'CDEF French fixture login succeeds')
+        before = harness.rows(f"SELECT JSON_OBJECT('id',id,'type',type,'value',value) FROM cdef_items WHERE cdef_id={parent} ORDER BY sequence,id")
+        for item in before:
+            response = french.opener.open(harness.base + f"/app.php/graph-definitions/cdefs/{parent}/items/{item['id']}/delete")
+            body = response.read().decode('utf-8')
+            expected = 'Source de données de l’élément de graphique actuel' if item['type'] == 4 else 'Current Graph Item Data Source'
+            check(response.status == 200 and '<html lang="fr">' in body and '<strong>' + expected + '</strong>' in body,
+                  'CDEF French delete translates only special data-source labels: ' + str(item['type']))
+        check(harness.rows(f"SELECT JSON_OBJECT('id',id,'type',type,'value',value) FROM cdef_items WHERE cdef_id={parent} ORDER BY sequence,id") == before,
+              'CDEF French delete labels preserve stored names custom values and references')
+    finally:
+        for parent in parent_ids:
+            harness.sql(f'DELETE FROM cdef_items WHERE cdef_id={parent}; DELETE FROM cdef WHERE id={parent}')
+        harness.sql(f'DELETE FROM settings WHERE name IN ({language_names})')
+        for setting in settings:
+            harness.sql(f"INSERT INTO settings (name,value) VALUES ({text(setting['name'])},{text(setting['value'])})")
+        harness.sql(f"DELETE FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+        for setting in preference:
+            harness.sql(f"INSERT INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language',{text(setting['value'])})")
+
+
+def _verify_stale_revisions(harness, session, check):
+    for mutation in ('parent', 'item-create', 'item-edit', 'item-delete', 'reorder', 'duplicate', 'delete'):
+        unique = uuid.uuid4().hex
+        harness.sql(f"INSERT INTO cdef (hash,system,name) VALUES ('{unique}',0,'Revision fixture')")
+        parent_id = int(harness.sql(f"SELECT id FROM cdef WHERE hash='{unique}'").strip())
+        harness.sql(f"INSERT INTO cdef_items (hash,cdef_id,sequence,type,value) VALUES ('{uuid.uuid4().hex}',{parent_id},1,6,'Displayed value')")
+        child_id = int(harness.sql(f'SELECT id FROM cdef_items WHERE cdef_id={parent_id}').strip())
+        path = harness.base + f'/app.php/graph-definitions/cdefs/{parent_id}'
+        group = {'parent': 'cdef_edit', 'item-create': 'cdef_item', 'item-edit': 'cdef_item',
+                 'item-delete': 'confirm', 'reorder': 'order', 'duplicate': 'cdef_action', 'delete': 'cdef_action'}[mutation]
+        url = {'parent': path + '/edit', 'item-create': path + '/items/0?type=6',
+               'item-edit': path + f'/items/{child_id}', 'item-delete': path + f'/items/{child_id}/delete',
+               'reorder': path + '/edit', 'duplicate': harness.base + f'/app.php/graph-definitions/cdefs/actions/duplicate?ids[]={parent_id}',
+               'delete': harness.base + f'/app.php/graph-definitions/cdefs/actions/delete?ids[]={parent_id}'}[mutation]
+        try:
+            rendered = _page(session, url)
+            submitted = {key: value for key, value in rendered.items() if key.startswith(group + '[')}
+            field = 'revisions' if group == 'cdef_action' else 'revision'
+            check(bool(submitted.get(group + '[' + field + ']')), 'CDEF rendered full revision: ' + mutation)
+            if mutation == 'parent':
+                submitted['cdef_edit[name]'] = 'Stale rename'
+            elif mutation in ('item-create', 'item-edit'):
+                submitted['cdef_item[type]'] = '6'
+                submitted['cdef_item[value]'] = 'Stale replacement'
+            harness.sql(f"UPDATE cdef_items SET value='First writer' WHERE id={child_id}")
+            parent = harness.rows(f"SELECT JSON_OBJECT('id',id,'hash',hash,'system',system,'name',name) FROM cdef WHERE id={parent_id}")
+            children = harness.rows(f"SELECT JSON_OBJECT('id',id,'hash',hash,'cdef_id',cdef_id,'sequence',sequence,'type',type,'value',value) FROM cdef_items WHERE cdef_id={parent_id} ORDER BY sequence,id")
+            counts = harness.sql("SELECT CONCAT((SELECT COUNT(*) FROM cdef),':',(SELECT COUNT(*) FROM cdef_items))").strip()
+            response = _post(session, path + '/items/reorder' if mutation == 'reorder' else url, submitted)
+            body = response.read().decode('utf-8')
+            check(response.status == 409 and 'The CDEF changed. Reload the form.' in body
+                  and harness.rows(f"SELECT JSON_OBJECT('id',id,'hash',hash,'system',system,'name',name) FROM cdef WHERE id={parent_id}") == parent
+                  and harness.rows(f"SELECT JSON_OBJECT('id',id,'hash',hash,'cdef_id',cdef_id,'sequence',sequence,'type',type,'value',value) FROM cdef_items WHERE cdef_id={parent_id} ORDER BY sequence,id") == children
+                  and harness.sql("SELECT CONCAT((SELECT COUNT(*) FROM cdef),':',(SELECT COUNT(*) FROM cdef_items))").strip() == counts,
+                  'CDEF stale full revision returns 409 without writes: ' + mutation)
+        finally:
+            harness.sql(f'DELETE FROM cdef_items WHERE cdef_id={parent_id}; DELETE FROM cdef WHERE id={parent_id}')
 
 
 def _page(session, url):
@@ -251,7 +343,7 @@ $database->executeStatement("INSERT INTO cdef VALUES (1,'source-hash',0,'Source'
 $database->executeStatement("INSERT INTO cdef_items VALUES (1,'source-item-hash',1,1,6,'7')");
 $database->executeStatement('ALTER TABLE cdef AUTO_INCREMENT=99');
 $failed = false;
-try { (new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($database, new Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration(__DIR__)))->act(42,'duplicate',[1]); }
+try { (new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($database, new Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration(__DIR__)))->act(42,'duplicate',[1],'<cdef_title> (1)',[1 => (new Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog($database))->find(1)['revision']]); }
 catch (Throwable $error) { $failed = str_contains($error->getMessage(), 'cdef_test_check'); }
 if (!$failed || (int)$database->fetchOne('SELECT COUNT(*) FROM cdef') !== 1 || (int)$database->fetchOne('SELECT COUNT(*) FROM cdef_items') !== 1) {
     throw new RuntimeException('CDEF duplicate rollback contract failed.');
@@ -273,7 +365,7 @@ $locker->beginTransaction();
 $locker->fetchOne('SELECT id FROM cdef WHERE id = ? FOR UPDATE', [{target_id}]);
 $blocked = false;
 try {{
-    (new Kadupul\\GraphDefinition\\Infrastructure\\Legacy\\LegacyCdefEditor($writer, new Kadupul\\Platform\\Infrastructure\\Legacy\\InstallationConfiguration(__DIR__)))->saveItem({actor_id}, {source_id}, 0, 5, '{target_id}');
+    (new Kadupul\\GraphDefinition\\Infrastructure\\Legacy\\LegacyCdefEditor($writer, new Kadupul\\Platform\\Infrastructure\\Legacy\\InstallationConfiguration(__DIR__)))->saveItem({actor_id}, {source_id}, 0, 5, '{target_id}', (new Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DoctrineCdefCatalog($writer))->find({source_id})['revision']);
 }} catch (Throwable) {{
     $blocked = true;
 }}
@@ -283,7 +375,7 @@ if (!$blocked || $count !== 0) {{
     throw new RuntimeException('The writer did not wait for the target CDEF row lock.');
 }}
 $locker->commit();
-(new Kadupul\\GraphDefinition\\Infrastructure\\Legacy\\LegacyCdefEditor($writer, new Kadupul\\Platform\\Infrastructure\\Legacy\\InstallationConfiguration(__DIR__)))->saveItem({actor_id}, {source_id}, 0, 5, '{target_id}');
+(new Kadupul\\GraphDefinition\\Infrastructure\\Legacy\\LegacyCdefEditor($writer, new Kadupul\\Platform\\Infrastructure\\Legacy\\InstallationConfiguration(__DIR__)))->saveItem({actor_id}, {source_id}, 0, 5, '{target_id}', (new Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DoctrineCdefCatalog($writer))->find({source_id})['revision']);
 $count = (int) $writer->fetchOne('SELECT COUNT(*) FROM cdef_items WHERE cdef_id = {source_id} AND type = 5 AND value = "{target_id}"');
 if ($count !== 1) {{
     throw new RuntimeException('The valid CDEF reference was not saved after releasing the lock.');
@@ -333,7 +425,7 @@ foreach ([false, true] as $nativeTransaction) {
     if ((int)$database->fetchOne('SELECT COUNT(*) FROM cdef') !== 1) { throw new RuntimeException('Caller rollback lost ownership.'); }
 }
 $database->executeStatement('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED');
-$editor->save(42, 1, 'Owned successful mutation');
+$editor->save(42, 1, 'Owned successful mutation',(new Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog($database))->find(1)['revision']);
 if ($database->isTransactionActive() || $database->fetchOne('SELECT name FROM cdef WHERE id=1') !== 'Owned successful mutation') {
     throw new RuntimeException('CDEF mutation failed with an alternate session isolation.');
 }
@@ -392,7 +484,7 @@ $config = $installation->values();
 $connection = Doctrine\DBAL\DriverManager::getConnection(['driver'=>'pdo_mysql','host'=>$config['host'],'port'=>$config['port'],
     'dbname'=>$config['database'],'user'=>$config['username'],'password'=>$config['password'],'wrapperClass'=>PausedCdefCommit::class]);
 $connection->executeStatement('SET SESSION TRANSACTION ISOLATION LEVEL '.CDEF_ISOLATION);
-(new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($connection,$installation))->saveItem(CDEF_FIRST_ACTOR,CDEF_SOURCE,0,5,(string)CDEF_TARGET);
+(new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($connection,$installation))->saveItem(CDEF_FIRST_ACTOR,CDEF_SOURCE,0,5,(string)CDEF_TARGET,(new Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog($connection))->find(CDEF_SOURCE)['revision']);
 echo 'CDEF_FIRST_WRITER_OK';
 PHP;
     $process = proc_open([PHP_BINARY,'-r',$child],[0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],$pipes);
@@ -407,7 +499,7 @@ PHP;
         $writer->executeStatement('SET SESSION innodb_lock_wait_timeout=1');
         $editor = new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($writer,$installation);
         $blocked = false;
-        try { $editor->saveItem($secondActor,$c,0,5,(string)$d); }
+        try { $editor->saveItem($secondActor,$c,0,5,(string)$d,(new Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog($writer))->find($c)['revision']); }
         catch (Doctrine\DBAL\Exception\LockWaitTimeoutException) { $blocked = true; }
         if (!$blocked || $writer->isTransactionActive()) { throw new RuntimeException('Disjoint endpoints bypassed the shared policy mutex.'); }
         $control->fetchOne('SELECT RELEASE_LOCK(?)',[$pause]);
@@ -417,7 +509,7 @@ PHP;
         $exit = proc_close($process); $process = null;
         if ($exit !== 0 || $stdout !== 'CDEF_FIRST_WRITER_OK' || $stderr !== '') { throw new RuntimeException('First cycle writer did not commit successfully.'); }
         $denied = false;
-        try { $editor->saveItem($secondActor,$c,0,5,(string)$d); }
+        try { $editor->saveItem($secondActor,$c,0,5,(string)$d,(new Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog($writer))->find($c)['revision']); }
         catch (InvalidArgumentException $error) { $denied = $error->getMessage() === 'Choose a valid CDEF that does not create a reference cycle.'; }
         if (!$denied || (int)$writer->fetchOne('SELECT COUNT(*) FROM cdef_items WHERE cdef_id=? AND type=5',[$c]) !== 0
             || (int)$writer->fetchOne('SELECT COUNT(*) FROM cdef_items WHERE cdef_id=? AND type=5 AND value=?',[$a,(string)$b]) !== 1) {

@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Controller;
@@ -38,14 +38,17 @@ final class CdefActionController
             $actor = $authorization->actor();
             $ids = self::ids($request->query->all()['ids'] ?? null);
             $rows = [];
+            $revisions = [];
             foreach ($ids as $id) {
                 $record = $catalog->find($id);
                 if ($record === null) {
                     return new Response($translator->trans('CDEF not found.', [], 'graph_definition'), 404, $headers);
                 }
+                $revisions[$id] = $record['revision'];
                 $rows[] = new CdefSummary($id, $record['name'], $record['graphs'], $record['templates'], $record['referencing_cdefs']);
             }
             $form = $forms->create(CdefActionType::class, [
+                'revisions' => json_encode($revisions, JSON_THROW_ON_ERROR),
                 'selection' => json_encode($ids, JSON_THROW_ON_ERROR), 'title_format' => '<cdef_title> (1)',
             ], ['operation' => $operation, 'action' => $urls->generate('graph_cdef_action', ['operation' => $operation, 'ids' => $ids])]);
             $form->handleRequest($request);
@@ -61,8 +64,15 @@ final class CdefActionController
                         if (self::ids($selected) !== $ids) {
                             throw new \InvalidArgumentException('The selected CDEFs changed. Reload the confirmation.');
                         }
-                        $editor->act($actor, $operation, $ids, (string) $data['title_format']);
+                        $submittedRevisions = json_decode((string) ($data['revisions'] ?? ''), false, 8, JSON_THROW_ON_ERROR);
+                        if (!$submittedRevisions instanceof \stdClass) {
+                            throw new \Kadupul\GraphDefinition\Domain\CdefRevisionConflict();
+                        }
+                        $editor->act($actor, $operation, $ids, (string) $data['title_format'], get_object_vars($submittedRevisions));
                         return new RedirectResponse($urls->generate('graph_cdefs'), 303, $headers);
+                    } catch (\JsonException) {
+                        $form->addError(new FormError($translator->trans('The CDEF changed. Reload the form.', [], 'graph_definition')));
+                        $status = 409;
                     } catch (\InvalidArgumentException $error) {
                         $form->addError(new FormError($translator->trans($error->getMessage(), [], 'graph_definition')));
                         $status = 409;

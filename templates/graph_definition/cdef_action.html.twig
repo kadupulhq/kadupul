@@ -1,3 +1,8 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ operation|capitalize|trans({}, 'graph_definition') }}{% endblock %}
@@ -6,7 +11,7 @@
 <main>
     <h1>{{ operation == 'delete' ? 'Delete CDEFs'|trans({}, 'graph_definition') : 'Duplicate CDEFs'|trans({}, 'graph_definition') }}</h1>
     <ul>{% for cdef in rows %}<li>{{ cdef.name }}{% if operation == 'delete' and cdef.inUse %} — {{ 'In use by %graphs% graphs, %templates% templates, and %references% CDEFs; deletion will be rejected.'|trans({'%graphs%': cdef.graphs, '%templates%': cdef.templates, '%references%': cdef.referencingCdefs}, 'graph_definition') }}{% endif %}</li>{% endfor %}</ul>
-    {{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.selection) }}
+    {{ form_start(form) }}{{ form_errors(form) }}{{ form_row(form.selection) }}{{ form_row(form.revisions) }}
     {% if operation == 'duplicate' %}{{ form_row(form.title_format) }}{% else %}{{ form_widget(form.title_format) }}{% endif %}
     <button type="submit">{{ 'Confirm'|trans({}, 'graph_definition') }}</button>{{ form_end(form) }}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}

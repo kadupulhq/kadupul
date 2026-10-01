@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Tests;
@@ -31,7 +31,7 @@ final class CdefMariaDbTest extends TestCase
 
             $failure = null;
             try {
-                (new LegacyCdefEditor($database, $this->primaryConfiguration()))->act(42, 'duplicate', [1]);
+                (new LegacyCdefEditor($database, $this->primaryConfiguration()))->act(42, 'duplicate', [1], '<cdef_title> (1)', [1 => (new \Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog($database))->find(1)['revision']]);
             } catch (\Throwable $error) {
                 $failure = $error;
             }

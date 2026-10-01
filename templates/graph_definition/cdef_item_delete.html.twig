@@ -1,3 +1,8 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'Delete CDEF item'|trans({}, 'graph_definition') }}{% endblock %}
@@ -6,7 +11,7 @@
 <main>
     <h1>{{ 'Delete CDEF item'|trans({}, 'graph_definition') }}</h1>
     <p>{{ 'Delete this item from %name%?'|trans({'%name%': cdef.name}, 'graph_definition') }}</p>
-    <p>{{ ('type.' ~ item.type)|trans({}, 'graph_definition') }}: <strong>{{ item.label }}</strong></p>
+    <p>{{ ('type.' ~ item.type)|trans({}, 'graph_definition') }}: <strong>{{ item.type == 4 ? item.label|trans({}, 'graph_definition') : item.label }}</strong></p>
     {{ form_start(form) }}{{ form_errors(form) }}<button type="submit">{{ 'Confirm delete'|trans({}, 'graph_definition') }}</button>{{ form_end(form) }}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
     <p><a href="{{ path('graph_cdef_edit', {id: cdef.id}) }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>

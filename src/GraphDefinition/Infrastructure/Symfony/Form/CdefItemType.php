@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Form;
@@ -27,7 +27,8 @@ final class CdefItemType extends AbstractType
             '5' => array_combine(array_map(static fn(array $cdef): string => $cdef['name'] . ' (#' . $cdef['id'] . ')', $options['cdef_choices']), array_map('strval', array_column($options['cdef_choices'], 'id'))),
             default => [],
         };
-        $builder->add('id', HiddenType::class)
+        $builder->add('revision', HiddenType::class)
+            ->add('id', HiddenType::class)
             ->add('cdef_id', HiddenType::class)
             ->add('type', ChoiceType::class, [
                 'label' => 'Item type',

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Run the CDEF HTTP contract against a fresh isolated MariaDB stack.
 
 Run with: mise exec -- python tests/Symfony/cdef_review_http.py

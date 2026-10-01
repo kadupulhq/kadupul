@@ -24,6 +24,11 @@ def main():
         'bin/legacy-device-edit.php',
         'cdef.php',
         'src/GraphDefinition/Infrastructure/Legacy/LegacyCdefEditor.php',
+        'src/GraphDefinition/Domain/CdefRevision.php',
+        'src/GraphDefinition/Domain/CdefRevisionConflict.php',
+        'src/GraphDefinition/Infrastructure/Persistence/DoctrineCdefCatalog.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefEditController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Form/CdefEditType.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefListController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefActionController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefItemController.php',
@@ -174,7 +179,18 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
-    cdef_checks = ['CDEF item deletion reaches MariaDB and preserves surviving RPN order', 'CDEF successful reorder persists the requested RPN sequence', 'CDEF bulk deletion removes the duplicate and its owned items', 'CDEF duplicate preserves the ordered RPN values consumed by graph generation', 'CDEF item deletion rejects an invalid CSRF token', 'locking an actor after form retrieval prevents the pending CDEF mutation', 'a MariaDB item insert failure rolls back the newly inserted duplicate CDEF', 'CDEF writes reject nontransactional tables, remote collectors and caller transactions without losing caller work', 'different actors with disjoint CDEF endpoints serialize graph writes and cannot commit a four-node cycle', 'CDEF delete confirmation hides the duplicate-only title format']
+    cdef_checks = [
+        'CDEF French delete translates only special data-source labels: 4',
+        'CDEF French delete translates only special data-source labels: 6',
+        'CDEF French delete translates only special data-source labels: 5',
+        'CDEF French delete labels preserve stored names custom values and references',
+        'CDEF stale full revision returns 409 without writes: parent',
+        'CDEF stale full revision returns 409 without writes: item-create',
+        'CDEF stale full revision returns 409 without writes: item-edit',
+        'CDEF stale full revision returns 409 without writes: item-delete',
+        'CDEF stale full revision returns 409 without writes: reorder',
+        'CDEF stale full revision returns 409 without writes: duplicate',
+        'CDEF stale full revision returns 409 without writes: delete','CDEF item deletion reaches MariaDB and preserves surviving RPN order', 'CDEF successful reorder persists the requested RPN sequence', 'CDEF bulk deletion removes the duplicate and its owned items', 'CDEF duplicate preserves the ordered RPN values consumed by graph generation', 'CDEF item deletion rejects an invalid CSRF token', 'locking an actor after form retrieval prevents the pending CDEF mutation', 'a MariaDB item insert failure rolls back the newly inserted duplicate CDEF', 'CDEF writes reject nontransactional tables, remote collectors and caller transactions without losing caller work', 'different actors with disjoint CDEF endpoints serialize graph writes and cannot commit a four-node cycle', 'CDEF delete confirmation hides the duplicate-only title format']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
         'source-hash': 'Covered source differs',

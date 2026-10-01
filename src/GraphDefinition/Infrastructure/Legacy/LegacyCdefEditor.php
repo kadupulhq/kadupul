@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Legacy;
@@ -12,20 +12,23 @@ use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Kadupul\GraphDefinition\Application\Port\CdefEditor;
 use Kadupul\GraphDefinition\Application\Query\CdefAccessDenied;
 use Kadupul\GraphDefinition\Domain\CdefFunctions;
+use Kadupul\GraphDefinition\Domain\CdefRevision;
+use Kadupul\GraphDefinition\Domain\CdefRevisionConflict;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 
 final readonly class LegacyCdefEditor implements CdefEditor
 {
     public function __construct(private Connection $database, private LegacyConfiguration $configuration) {}
 
-    public function save(int $actorId, int $id, string $name): int
+    public function save(int $actorId, int $id, string $name, string $expectedRevision = ''): int
     {
         if ($id < 0 || trim($name) === '' || mb_strlen($name) > 255 || preg_match('/[\x00\r\n]/', $name)) {
             throw new \InvalidArgumentException('Enter a valid CDEF name.');
         }
-        return $this->transaction($actorId, function () use ($id, $name): int {
+        return $this->transaction($actorId, function () use ($id, $name, $expectedRevision): int {
             if ($id > 0) {
                 $this->lockCdef($id);
+                $this->assertRevision($id, $expectedRevision);
                 $this->database->update('cdef', ['name' => $name], ['id' => $id]);
                 return $id;
             }
@@ -34,12 +37,12 @@ final readonly class LegacyCdefEditor implements CdefEditor
         });
     }
 
-    public function saveItem(int $actorId, int $cdefId, int $itemId, int $type, string $value): void
+    public function saveItem(int $actorId, int $cdefId, int $itemId, int $type, string $value, string $expectedRevision = ''): void
     {
         if ($cdefId < 1 || $itemId < 0 || mb_strlen($value) > 150 || preg_match('/[\x00\r\n]/', $value)) {
             throw new \InvalidArgumentException('Invalid CDEF item selection or value.');
         }
-        $this->transaction($actorId, function () use ($cdefId, $itemId, $type, $value): void {
+        $this->transaction($actorId, function () use ($cdefId, $itemId, $type, $value, $expectedRevision): void {
             $lockIds = [$cdefId];
             if ($type === 5 && preg_match('/^[1-9][0-9]{0,7}$/D', $value)) {
                 $lockIds[] = (int) $value;
@@ -49,6 +52,7 @@ final readonly class LegacyCdefEditor implements CdefEditor
             foreach ($lockIds as $lockId) {
                 $this->lockCdef($lockId);
             }
+            $this->assertRevision($cdefId, $expectedRevision);
             $this->validateItem($type, $value, $cdefId);
             if ($itemId > 0) {
                 if ($this->database->fetchOne('SELECT id FROM cdef_items WHERE id = ? AND cdef_id = ?' . $this->forUpdate(), [$itemId, $cdefId]) === false) {
@@ -64,13 +68,14 @@ final readonly class LegacyCdefEditor implements CdefEditor
         });
     }
 
-    public function deleteItem(int $actorId, int $cdefId, int $itemId): void
+    public function deleteItem(int $actorId, int $cdefId, int $itemId, string $expectedRevision = ''): void
     {
         if ($cdefId < 1 || $itemId < 1) {
             throw new \InvalidArgumentException('Invalid CDEF item selection.');
         }
-        $this->transaction($actorId, function () use ($cdefId, $itemId): void {
+        $this->transaction($actorId, function () use ($cdefId, $itemId, $expectedRevision): void {
             $this->lockCdef($cdefId);
+            $this->assertRevision($cdefId, $expectedRevision);
             if ($this->database->fetchOne('SELECT id FROM cdef_items WHERE id = ? AND cdef_id = ?' . $this->forUpdate(), [$itemId, $cdefId]) === false) {
                 throw new \InvalidArgumentException('CDEF item not found.');
             }
@@ -79,15 +84,16 @@ final readonly class LegacyCdefEditor implements CdefEditor
         });
     }
 
-    public function reorder(int $actorId, int $cdefId, array $orderedItemIds, array $expectedItemIds): void
+    public function reorder(int $actorId, int $cdefId, array $orderedItemIds, array $expectedItemIds, string $expectedRevision = ''): void
     {
         if ($cdefId < 1 || count($orderedItemIds) > 500 || count($expectedItemIds) > 500
             || array_filter($orderedItemIds, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 16777215) !== []
             || array_filter($expectedItemIds, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 16777215) !== []) {
             throw new \InvalidArgumentException('The CDEF item order is invalid.');
         }
-        $this->transaction($actorId, function () use ($cdefId, $orderedItemIds, $expectedItemIds): void {
+        $this->transaction($actorId, function () use ($cdefId, $orderedItemIds, $expectedItemIds, $expectedRevision): void {
             $this->lockCdef($cdefId);
+            $this->assertRevision($cdefId, $expectedRevision);
             $rows = $this->database->fetchFirstColumn('SELECT id FROM cdef_items WHERE cdef_id = ? ORDER BY sequence, id' . $this->forUpdate(), [$cdefId]);
             $expected = array_map('intval', $rows);
             if ($expected !== $expectedItemIds) {
@@ -107,7 +113,7 @@ final readonly class LegacyCdefEditor implements CdefEditor
         });
     }
 
-    public function act(int $actorId, string $action, array $ids, string $titleFormat = '<cdef_title> (1)'): void
+    public function act(int $actorId, string $action, array $ids, string $titleFormat = '<cdef_title> (1)', array $expectedRevisions = []): void
     {
         if (!in_array($action, ['delete', 'duplicate'], true) || $ids === [] || count($ids) > 500
             || count(array_unique($ids)) !== count($ids)
@@ -117,7 +123,7 @@ final readonly class LegacyCdefEditor implements CdefEditor
         if (mb_strlen($titleFormat) > 255 || preg_match('/[\x00\r\n]/', $titleFormat)) {
             throw new \InvalidArgumentException('Enter a valid CDEF duplicate title format.');
         }
-        $this->transaction($actorId, function () use ($action, $ids, $titleFormat): void {
+        $this->transaction($actorId, function () use ($action, $ids, $titleFormat, $expectedRevisions): void {
             $lockIds = $ids;
             if ($action === 'duplicate') {
                 $marks = implode(',', array_fill(0, count($ids), '?'));
@@ -131,6 +137,16 @@ final readonly class LegacyCdefEditor implements CdefEditor
             sort($lockIds, SORT_NUMERIC);
             foreach ($lockIds as $id) {
                 $this->lockCdef($id);
+            }
+            $keys = array_keys($expectedRevisions);
+            $selected = $ids;
+            sort($keys, SORT_NUMERIC);
+            sort($selected, SORT_NUMERIC);
+            if ($keys !== $selected) {
+                throw new CdefRevisionConflict();
+            }
+            foreach ($ids as $id) {
+                $this->assertRevision($id, $expectedRevisions[$id]);
             }
             if ($action === 'delete') {
                 $inside = implode(',', array_fill(0, count($ids), '?'));
@@ -150,21 +166,21 @@ final readonly class LegacyCdefEditor implements CdefEditor
             }
 
             $marks = implode(',', array_fill(0, count($ids), '?'));
-            foreach ($this->database->fetchFirstColumn("SELECT value FROM cdef_items WHERE type = 5 AND cdef_id IN ($marks)", $ids) as $reference) {
+            foreach ($this->database->fetchFirstColumn("SELECT value FROM cdef_items WHERE type = 5 AND cdef_id IN ($marks)" . $this->forUpdate(), $ids) as $reference) {
                 if (is_string($reference) && preg_match('/^[1-9][0-9]{0,7}$/D', $reference) && !in_array((int) $reference, $lockIds, true)) {
                     throw new \InvalidArgumentException('CDEF changed during duplication. Reload the list and try again.');
                 }
             }
 
             foreach ($ids as $id) {
-                $source = $this->database->fetchAssociative('SELECT name FROM cdef WHERE id = ? AND `system` = 0', [$id]);
+                $source = $this->database->fetchAssociative('SELECT name FROM cdef WHERE id = ? AND `system` = 0' . $this->forUpdate(), [$id]);
                 if ($source === false) {
                     throw new \InvalidArgumentException('CDEF not found.');
                 }
                 $name = mb_substr(str_replace('<cdef_title>', (string) $source['name'], $titleFormat), 0, 255);
                 $this->database->insert('cdef', ['hash' => bin2hex(random_bytes(16)), 'system' => 0, 'name' => $name]);
                 $copyId = (int) $this->database->lastInsertId();
-                $items = $this->database->fetchAllAssociative('SELECT sequence, type, value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence, id', [$id]);
+                $items = $this->database->fetchAllAssociative('SELECT sequence, type, value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence, id' . $this->forUpdate(), [$id]);
                 foreach ($items as $item) {
                     $this->database->insert('cdef_items', ['hash' => bin2hex(random_bytes(16)), 'cdef_id' => $copyId] + $item);
                 }
@@ -218,6 +234,16 @@ final readonly class LegacyCdefEditor implements CdefEditor
     {
         if ($this->database->fetchOne('SELECT id FROM cdef WHERE id = ? AND `system` = 0' . $this->forUpdate(), [$id]) === false) {
             throw new \InvalidArgumentException('CDEF not found.');
+        }
+    }
+
+    private function assertRevision(int $id, mixed $expected): void
+    {
+        $parent = $this->database->fetchAssociative('SELECT id, hash, `system`, name FROM cdef WHERE id = ?' . $this->forUpdate(), [$id]);
+        $items = $this->database->fetchAllAssociative('SELECT id, hash, cdef_id, sequence, type, value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence, id' . $this->forUpdate(), [$id]);
+        if (!is_string($expected) || !preg_match('/^[a-f0-9]{64}$/D', $expected) || $parent === false
+            || !hash_equals(CdefRevision::fromRows($parent, $items), $expected)) {
+            throw new CdefRevisionConflict();
         }
     }
 

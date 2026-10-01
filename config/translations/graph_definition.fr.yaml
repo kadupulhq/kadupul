@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 Access denied.: Accès refusé.
 Add item: Ajouter un élément
 Actions: Actions
@@ -104,3 +107,5 @@ type.6: Chaîne personnalisée
 "Count of All Similar Data Sources (Include Duplicates)": "Nombre de toutes les sources de données similaires (avec doublons)"
 The CDEF item order is invalid.: L’ordre des éléments CDEF est invalide.
 Invalid CDEF list options.: Options de liste CDEF invalides.
+
+The CDEF changed. Reload the form.: La définition CDEF a changé. Rechargez le formulaire.
