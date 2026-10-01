@@ -36,7 +36,7 @@ final class CdefItemType extends AbstractType
             ])
             ->add('value', $itemType === '6' ? TextType::class : ChoiceType::class, $itemType === '6'
                 ? ['label' => 'Value', 'trim' => false, 'attr' => ['maxlength' => 150]]
-                : ['label' => 'Value', 'choices' => $values, 'choice_translation_domain' => false]);
+                : ['label' => 'Value', 'choices' => $values, 'choice_translation_domain' => $itemType === '4' ? 'graph_definition' : false]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

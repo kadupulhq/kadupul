@@ -16,7 +16,7 @@
         <table><thead><tr><th>{{ 'Sequence'|trans({}, 'graph_definition') }}</th><th>{{ 'Item type'|trans({}, 'graph_definition') }}</th><th>{{ 'Value'|trans({}, 'graph_definition') }}</th><th>{{ 'Order'|trans({}, 'graph_definition') }}</th><th>{{ 'Actions'|trans({}, 'graph_definition') }}</th></tr></thead>
             <tbody>
             {% for item in cdef.items %}
-                <tr><td>{{ loop.index }}</td><td>{{ ('type.' ~ item.type)|trans({}, 'graph_definition') }}</td><td>{{ item.label }}</td>
+                <tr><td>{{ loop.index }}</td><td>{{ ('type.' ~ item.type)|trans({}, 'graph_definition') }}</td><td>{{ item.type == 4 ? item.label|trans({}, 'graph_definition') : item.label }}</td>
                     <td>
                         {% if not loop.first or not loop.last %}
                             {% set itemIds = cdef.items|map(i => i.id)|json_encode %}

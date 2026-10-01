@@ -66,6 +66,101 @@ final class CdefHttpTest extends TestCase
         }
     }
 
+    public function testActionFormsHideDuplicateOnlyInputOnDeleteAndTranslateItsLabel(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $this->authorize($container, true);
+            $catalog = $this->createMock(CdefCatalog::class);
+            $catalog->method('find')->willReturn(['id' => 7, 'name' => 'Fixture', 'graphs' => 0, 'templates' => 0, 'referencing_cdefs' => 0]);
+            $container->set(CdefCatalog::class, $catalog);
+            foreach (['delete' => 'hidden', 'duplicate' => 'text'] as $operation => $type) {
+                $request = Request::create('/graph-definitions/cdefs/actions/' . $operation . '?ids[]=7', 'GET', [], ['Cacti' => 'fixture']);
+                $request->setLocale('fr');
+                $response = $kernel->handle($request);
+                self::assertSame(200, $response->getStatusCode());
+                $document = new \DOMDocument();
+                @$document->loadHTML($response->getContent());
+                $xpath = new \DOMXPath($document);
+                self::assertSame($type, $xpath->evaluate('string(//input[@name="cdef_action[title_format]"]/@type)'));
+                self::assertSame($operation === 'duplicate' ? 1 : 0, $xpath->query('//label[@for="cdef_action_title_format"]')->length);
+                if ($operation === 'duplicate') {
+                    self::assertStringContainsString('Format du titre', $response->getContent());
+                }
+                self::assertNotSame('', $xpath->evaluate('string(//input[@name="cdef_action[_token]"]/@value)'));
+            }
+            $request = Request::create('/graph-definitions/cdefs/actions/delete?ids[]=bad', 'GET', [], ['Cacti' => 'fixture']);
+            $request->setLocale('fr');
+            $response = $kernel->handle($request);
+            self::assertSame(400, $response->getStatusCode());
+            self::assertSame('Sélection de CDEF invalide.', $response->getContent());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testItemFormTranslatesTypesAndSpecialDataSourcesWithoutChangingValues(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $this->authorize($container, true);
+            $catalog = $this->createMock(CdefCatalog::class);
+            $catalog->method('find')->willReturn(['id' => 7, 'name' => 'Fixture', 'items' => []]);
+            $catalog->method('functions')->willReturn(\Kadupul\GraphDefinition\Domain\CdefFunctions::functions(false));
+            $container->set(CdefCatalog::class, $catalog);
+            $request = Request::create('/graph-definitions/cdefs/7/items/0?type=4', 'GET', [], ['Cacti' => 'fixture']);
+            $request->setLocale('fr');
+            $response = $kernel->handle($request);
+            self::assertSame(200, $response->getStatusCode());
+            $document = new \DOMDocument();
+            @$document->loadHTML($response->getContent());
+            $xpath = new \DOMXPath($document);
+            self::assertSame('Fonction', $xpath->evaluate('string(//select[@name="cdef_item[type]"]/option[@value="1"])'));
+            self::assertSame('Opérateur', $xpath->evaluate('string(//select[@name="cdef_item[type]"]/option[@value="2"])'));
+            self::assertSame('Source de données de l’élément de graphique actuel', $xpath->evaluate('string(//select[@name="cdef_item[value]"]/option[@value="CURRENT_DATA_SOURCE"])'));
+            self::assertSame('CURRENT_DATA_SOURCE', $xpath->evaluate('string(//select[@name="cdef_item[value]"]/option[@selected]/@value)'));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testFrenchItemTableTranslatesSpecialLabelsAndPreservesCustomDataAndPreview(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $this->authorize($container, true);
+            $label = 'Current Graph Item Data Source';
+            $catalog = $this->createMock(CdefCatalog::class);
+            $catalog->method('find')->willReturn(['id' => 7, 'name' => $label, 'items' => [
+                ['id' => 11, 'type' => 4, 'label' => $label],
+                ['id' => 12, 'type' => 6, 'label' => $label],
+                ['id' => 13, 'type' => 5, 'label' => $label],
+            ]]);
+            $catalog->method('preview')->willReturn('CURRENT_DATA_SOURCE,2,*');
+            $container->set(CdefCatalog::class, $catalog);
+            $request = Request::create('/graph-definitions/cdefs/7/edit', 'GET', [], ['Cacti' => 'fixture']);
+            $request->setLocale('fr');
+            $response = $kernel->handle($request);
+            self::assertSame(200, $response->getStatusCode());
+            $document = new \DOMDocument();
+            @$document->loadHTML($response->getContent());
+            $xpath = new \DOMXPath($document);
+            self::assertSame('Source de données de l’élément de graphique actuel', $xpath->evaluate('string(//tbody/tr[1]/td[3])'));
+            self::assertSame($label, $xpath->evaluate('string(//tbody/tr[2]/td[3])'));
+            self::assertSame($label, $xpath->evaluate('string(//tbody/tr[3]/td[3])'));
+            self::assertSame($label, $xpath->evaluate('string(//input[@name="cdef_edit[name]"]/@value)'));
+            self::assertSame('cdef=CURRENT_DATA_SOURCE,2,*', $xpath->evaluate('string(//pre)'));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     public function testCreateRouteRejectsMissingCsrfAndDoesNotHandOffMutation(): void
     {
         $kernel = new Kernel('test', true);

@@ -50,6 +50,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'locking an actor after form retrieval prevents the pending CDEF mutation',
         'a MariaDB item insert failure rolls back the newly inserted duplicate CDEF',
         'CDEF writes reject nontransactional tables, remote collectors and caller transactions without losing caller work',
+        'different actors with disjoint CDEF endpoints serialize graph writes and cannot commit a four-node cycle',
+        'CDEF delete confirmation hides the duplicate-only title format',
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',
         'site counts exclude hidden and deleted devices', 'site persistence rechecks actor and revision and rolls back rejected saves',

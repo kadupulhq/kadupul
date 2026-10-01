@@ -1045,6 +1045,85 @@ def main():
         if rows.get('app.php/aliased', ('missing',))[0] != 'unknown' or rows.get('app.php', ('missing',))[0] != 'unknown':
             failures.append('aliased #[Route]: expected unknown rows, got %s' % {k: v for k, v in rows.items() if 'aliased' in k or k == 'app.php'})
 
+    project = Path(__file__).resolve().parents[2]
+    feature_cases = {
+        'direct': ("$access->actor();", True),
+        'delegated': ("$find(1);", True),
+        'conditional': ("if ($request->query->has('check')) { $access->actor(); }", False),
+        'input first': ("$query = $request->query->all(); $access->actor();", False),
+        'effect first': ("unlink('/tmp/x'); $access->actor();", False),
+        'swallowed': ("try { $access->actor(); } catch (\\Throwable) {}", False),
+        'refused exception': ("try { $access->actor(); } catch (\\Throwable) { return new Response('', 403); }", True),
+        'missing': ("$query = $request->query->all();", False),
+        'wrong guard': ("$console->consoleActor();", False),
+        'early return': ("if (true) { return new Response('feature data'); } $access->actor();", False),
+    }
+    for label, (body, admitted) in feature_cases.items():
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-cdef-') as directory:
+            root = tree(directory)
+            files = ['src/GraphDefinition/Infrastructure/Persistence/DoctrineCdefRealmAccess.php',
+                     'src/GraphDefinition/Application/Query/CdefAuthorization.php']
+            for path in files:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text((project / path).read_text())
+            delegated = root / 'src/GraphDefinition/Application/Query/FindCdef.php'
+            delegated.write_text('''<?php namespace Kadupul\\GraphDefinition\\Application\\Query;
+final class FindCdef {
+    public function __construct(private CdefAuthorization $authorization) {}
+    public function __invoke(int $id): int { return $this->authorization->actor(); }
+}''')
+            session = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+            session.parent.mkdir(parents=True, exist_ok=True)
+            session.write_text(SESSION)
+            controller = root / 'src/Fixture/CdefAction.php'
+            controller.parent.mkdir(parents=True, exist_ok=True)
+            controller.write_text('''<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Kadupul\\GraphDefinition\\Application\\Query\\CdefAuthorization;
+use Kadupul\\GraphDefinition\\Application\\Query\\FindCdef;
+use Symfony\\Component\\HttpFoundation\\Request;
+use Symfony\\Component\\HttpFoundation\\Response;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+final class CdefAction {
+    #[Route('/graph-definitions/cdefs', name: 'cdef_fixture')]
+    public function run(Request $request, ConsoleAccess $console, CdefAuthorization $access, FindCdef $find): Response {
+        $actor = $console->consoleActor();
+        if ($actor === null) { return new Response('', 401); }
+        %s
+        return new Response();
+    }
+}
+''' % body)
+            row = run(root, []).get('app.php/graph-definitions/cdefs', ('missing', ''))
+            count += 1
+            if (row[0] == 'symfony:cdef_fixture' and row[1].endswith(' + realm 14')) != admitted:
+                failures.append('CDEF feature %s: unexpected classification %s' % (label, row))
+            if admitted:
+                adapter = root / files[0]
+                adapter.write_text(adapter.read_text().replace('realm_id = 14', 'realm_id = 15'))
+                count += 1
+                if run(root, []).get('app.php/graph-definitions/cdefs', ('missing',))[0] != 'unknown':
+                    failures.append('CDEF changed authorization adapter was still certified')
+                adapter.write_text((project / files[0]).read_text())
+                authorization = root / files[1]
+                authorization.write_text(authorization.read_text().replace('if (!$this->realm->canManageDefinitions($actor->id))', 'if (false)'))
+                count += 1
+                if run(root, []).get('app.php/graph-definitions/cdefs', ('missing',))[0] != 'unknown':
+                    failures.append('CDEF changed authorizer was still certified')
+                authorization.write_text((project / files[1]).read_text())
+                if label == 'delegated':
+                    delegated.write_text(delegated.read_text().replace('final class', 'class'))
+                    count += 1
+                    if run(root, []).get('app.php/graph-definitions/cdefs', ('missing',))[0] != 'unknown':
+                        failures.append('CDEF overridable delegated authorization was still certified')
+                    delegated.write_text(delegated.read_text().replace('class FindCdef', 'final class FindCdef'))
+                alternative = root / 'src/Fixture/OtherCdefAccess.php'
+                alternative.write_text('<?php namespace Kadupul\\Fixture; final class OtherCdefAccess implements \\Kadupul\\GraphDefinition\\Application\\Port\\CdefRealmAccess {}')
+                count += 1
+                if run(root, []).get('app.php/graph-definitions/cdefs', ('missing',))[0] != 'unknown':
+                    failures.append('CDEF alternative authorization implementation was still certified')
+
     for failure in failures:
         print('FAIL: ' + failure)
     if failures:

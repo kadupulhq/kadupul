@@ -275,11 +275,13 @@ final readonly class LegacyCdefEditor implements CdefEditor
             throw new CdefAccessDenied();
         }
         $lock = $this->forUpdate();
+        // This shared policy row serializes every reference-graph mutation,
+        // including writers with different actors and disjoint endpoints.
         $authMethod = $this->database->fetchOne("SELECT value FROM settings WHERE name = 'auth_method'" . $lock);
         $user = $this->database->fetchAssociative('SELECT id, username, enabled, locked, must_change_password FROM user_auth WHERE id = ?' . $lock, [$actorId]);
         $guest = $this->database->fetchOne("SELECT value FROM settings WHERE name = 'guest_user'" . $lock);
         if ($user === false || $user['enabled'] !== 'on' || $user['locked'] === 'on' || $user['must_change_password'] === 'on'
-            || ($authMethod !== false && !in_array((int) $authMethod, [1, 2, 3, 4], true))
+            || ($authMethod === false || !in_array((int) $authMethod, [1, 2, 3, 4], true))
             || $actorId === (int) $guest || $user['username'] === $guest
             || !$this->hasRealm($actorId, 8) || !$this->hasRealm($actorId, 14)) {
             throw new CdefAccessDenied();

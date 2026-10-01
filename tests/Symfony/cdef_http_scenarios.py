@@ -11,11 +11,13 @@ class Fields(HTMLParser):
     def __init__(self):
         super().__init__()
         self.values = {}
+        self.types = {}
 
     def handle_starttag(self, tag, attrs):
         attributes = dict(attrs)
         if tag == 'input' and 'name' in attributes:
             self.values.setdefault(attributes['name'], []).append(attributes.get('value', ''))
+            self.types[attributes['name']] = attributes.get('type', 'text')
 
 
 def verify_cdefs(harness, session, check):
@@ -108,6 +110,8 @@ def verify_cdefs(harness, session, check):
     action_query = urllib.parse.urlencode([('ids[]', str(cdef_id))])
     duplicate_url = base + '/app.php/graph-definitions/cdefs/actions/duplicate?' + action_query
     duplicate_fields = _page(session, duplicate_url)
+    check(duplicate_fields['__types__']['cdef_action[title_format]'] == 'text',
+          'CDEF duplicate confirmation exposes its editable title format')
     duplicated = _post(session, duplicate_url, {
         'cdef_action[selection]': duplicate_fields['cdef_action[selection]'],
         'cdef_action[title_format]': duplicate_fields['cdef_action[title_format]'],
@@ -140,6 +144,8 @@ def verify_cdefs(harness, session, check):
 
     duplicate_delete_url = base + '/app.php/graph-definitions/cdefs/actions/delete?' + urllib.parse.urlencode([('ids[]', str(duplicate_id))])
     duplicate_delete_fields = _page(session, duplicate_delete_url)
+    check(duplicate_delete_fields['__types__']['cdef_action[title_format]'] == 'hidden',
+          'CDEF delete confirmation hides the duplicate-only title format')
     duplicate_deleted = _post(session, duplicate_delete_url, {key: value for key, value in duplicate_delete_fields.items() if key.startswith('cdef_action[')})
     check(duplicate_deleted.status == 200
           and harness.sql(f'SELECT COUNT(*) FROM cdef WHERE id={duplicate_id}').strip() == '0'
@@ -188,6 +194,10 @@ def verify_cdefs(harness, session, check):
     check(response.status in (401, 403) and value == '42',
           'locking an actor after form retrieval prevents the pending CDEF mutation')
 
+    cycles = harness.php('-r', _mariadb_disjoint_cycle_probe(user_id))
+    check(cycles['exit'] == 0 and 'CDEF_DISJOINT_CYCLE_OK' in cycles['stdout'],
+          'different actors with disjoint CDEF endpoints serialize graph writes and cannot commit a four-node cycle')
+
     guards = harness.php('-r', _mariadb_guard_probe())
     check(guards['exit'] == 0 and 'CDEF_WRITE_GUARDS_OK' in guards['stdout'],
           'CDEF writes reject nontransactional tables, remote collectors and caller transactions without losing caller work')
@@ -204,6 +214,7 @@ def _page(session, url):
     parser.feed(body)
     result = {name: values[-1] for name, values in parser.values.items()}
     result['__all__'] = parser.values
+    result['__types__'] = parser.types
     return result
 
 
@@ -326,4 +337,95 @@ $editor->save(42, 1, 'Owned successful mutation');
 if ($database->isTransactionActive() || $database->fetchOne('SELECT name FROM cdef WHERE id=1') !== 'Owned successful mutation') {
     throw new RuntimeException('CDEF mutation failed with an alternate session isolation.');
 }
+$database->executeStatement("DELETE FROM settings WHERE name='auth_method'");
+$denied = false;
+try { $editor->save(42,0,'Missing graph policy mutation'); }
+catch (Kadupul\GraphDefinition\Application\Query\CdefAccessDenied) { $denied = true; }
+if (!$denied || $database->isTransactionActive() || (int)$database->fetchOne('SELECT COUNT(*) FROM cdef') !== 1) {
+    throw new RuntimeException('A missing shared policy row did not refuse CDEF mutation.');
+}
 echo 'CDEF_WRITE_GUARDS_OK';'''
+
+
+def _mariadb_disjoint_cycle_probe(actor_id):
+    return '$firstActor = ' + str(actor_id) + ';' + r'''require "include/vendor/autoload.php";
+$installation = new Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration(__DIR__);
+$configuration = $installation->values();
+$options = ['driver'=>'pdo_mysql','host'=>$configuration['host'],'port'=>$configuration['port'],
+    'dbname'=>$configuration['database'],'user'=>$configuration['username'],'password'=>$configuration['password']];
+$control = Doctrine\DBAL\DriverManager::getConnection($options);
+$control->insert('user_auth', ['username'=>'cdef-cycle-'.bin2hex(random_bytes(6)), 'enabled'=>'on', 'locked'=>'', 'must_change_password'=>'']);
+$secondActor = (int)$control->lastInsertId();
+$control->insert('user_auth_realm', ['user_id'=>$secondActor,'realm_id'=>8]);
+$control->insert('user_auth_realm', ['user_id'=>$secondActor,'realm_id'=>14]);
+foreach (['REPEATABLE READ','READ COMMITTED'] as $isolation) {
+    $ids = [];
+    foreach (range(1,4) as $number) {
+        $control->insert('cdef',['hash'=>bin2hex(random_bytes(16)),'system'=>0,'name'=>'Concurrent CDEF '.$number.' '.bin2hex(random_bytes(6))]);
+        $ids[] = (int)$control->lastInsertId();
+    }
+    [$a,$b,$c,$d] = $ids;
+    foreach ([[$b,$c],[$d,$a]] as [$source,$target]) {
+        $control->insert('cdef_items',['hash'=>bin2hex(random_bytes(16)),'cdef_id'=>$source,'sequence'=>1,'type'=>5,'value'=>(string)$target]);
+    }
+    $pause = 'cdef-pause-'.bin2hex(random_bytes(10));
+    $ready = 'cdef-ready-'.bin2hex(random_bytes(10));
+    if ((int)$control->fetchOne('SELECT GET_LOCK(?,0)',[$pause]) !== 1) { throw new RuntimeException('Cannot establish cycle barrier.'); }
+    $child = 'const CDEF_PAUSE = '.json_encode($pause).'; const CDEF_READY = '.json_encode($ready).';'
+        .'const CDEF_FIRST_ACTOR = '.$firstActor.'; const CDEF_SOURCE = '.$a.'; const CDEF_TARGET = '.$b.';'
+        .'const CDEF_ISOLATION = '.json_encode($isolation).';'.<<<'PHP'
+require "include/vendor/autoload.php";
+class PausedCdefCommit extends Doctrine\DBAL\Connection {
+    public function commit(): void {
+        if ((int)$this->fetchOne('SELECT GET_LOCK(?,0)',[CDEF_READY]) !== 1) { throw new RuntimeException('Cannot signal cycle barrier.'); }
+        try {
+            if ((int)$this->fetchOne('SELECT GET_LOCK(?,20)',[CDEF_PAUSE]) !== 1) { throw new RuntimeException('Cycle barrier timed out.'); }
+            parent::commit();
+        } finally {
+            $this->fetchOne('SELECT RELEASE_LOCK(?)',[CDEF_PAUSE]);
+            $this->fetchOne('SELECT RELEASE_LOCK(?)',[CDEF_READY]);
+        }
+    }
+}
+$installation = new Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration(__DIR__);
+$config = $installation->values();
+$connection = Doctrine\DBAL\DriverManager::getConnection(['driver'=>'pdo_mysql','host'=>$config['host'],'port'=>$config['port'],
+    'dbname'=>$config['database'],'user'=>$config['username'],'password'=>$config['password'],'wrapperClass'=>PausedCdefCommit::class]);
+$connection->executeStatement('SET SESSION TRANSACTION ISOLATION LEVEL '.CDEF_ISOLATION);
+(new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($connection,$installation))->saveItem(CDEF_FIRST_ACTOR,CDEF_SOURCE,0,5,(string)CDEF_TARGET);
+echo 'CDEF_FIRST_WRITER_OK';
+PHP;
+    $process = proc_open([PHP_BINARY,'-r',$child],[0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],$pipes);
+    if (!is_resource($process)) { throw new RuntimeException('Cannot start independent cycle writer.'); }
+    fclose($pipes[0]);
+    try {
+        $deadline = microtime(true)+10;
+        while ($control->fetchOne('SELECT IS_USED_LOCK(?)',[$ready]) === null && microtime(true)<$deadline) { usleep(10000); }
+        if ($control->fetchOne('SELECT IS_USED_LOCK(?)',[$ready]) === null) { throw new RuntimeException('The real first writer never reached its uncommitted barrier.'); }
+        $writer = Doctrine\DBAL\DriverManager::getConnection($options);
+        $writer->executeStatement('SET SESSION TRANSACTION ISOLATION LEVEL '.$isolation);
+        $writer->executeStatement('SET SESSION innodb_lock_wait_timeout=1');
+        $editor = new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($writer,$installation);
+        $blocked = false;
+        try { $editor->saveItem($secondActor,$c,0,5,(string)$d); }
+        catch (Doctrine\DBAL\Exception\LockWaitTimeoutException) { $blocked = true; }
+        if (!$blocked || $writer->isTransactionActive()) { throw new RuntimeException('Disjoint endpoints bypassed the shared policy mutex.'); }
+        $control->fetchOne('SELECT RELEASE_LOCK(?)',[$pause]);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]); fclose($pipes[2]);
+        $exit = proc_close($process); $process = null;
+        if ($exit !== 0 || $stdout !== 'CDEF_FIRST_WRITER_OK' || $stderr !== '') { throw new RuntimeException('First cycle writer did not commit successfully.'); }
+        $denied = false;
+        try { $editor->saveItem($secondActor,$c,0,5,(string)$d); }
+        catch (InvalidArgumentException $error) { $denied = $error->getMessage() === 'Choose a valid CDEF that does not create a reference cycle.'; }
+        if (!$denied || (int)$writer->fetchOne('SELECT COUNT(*) FROM cdef_items WHERE cdef_id=? AND type=5',[$c]) !== 0
+            || (int)$writer->fetchOne('SELECT COUNT(*) FROM cdef_items WHERE cdef_id=? AND type=5 AND value=?',[$a,(string)$b]) !== 1) {
+            throw new RuntimeException('The committed first edge was not visible to the later cycle validator.');
+        }
+    } finally {
+        $control->fetchOne('SELECT RELEASE_LOCK(?)',[$pause]);
+        if (is_resource($process)) { proc_terminate($process); foreach ($pipes as $pipe) { if (is_resource($pipe)) { fclose($pipe); } } proc_close($process); }
+    }
+}
+echo 'CDEF_DISJOINT_CYCLE_OK';'''

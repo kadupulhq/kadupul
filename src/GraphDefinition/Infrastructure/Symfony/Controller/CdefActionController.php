@@ -47,7 +47,7 @@ final class CdefActionController
             }
             $form = $forms->create(CdefActionType::class, [
                 'selection' => json_encode($ids, JSON_THROW_ON_ERROR), 'title_format' => '<cdef_title> (1)',
-            ], ['action' => $urls->generate('graph_cdef_action', ['operation' => $operation, 'ids' => $ids])]);
+            ], ['operation' => $operation, 'action' => $urls->generate('graph_cdef_action', ['operation' => $operation, 'ids' => $ids])]);
             $form->handleRequest($request);
             $status = $request->isMethod('POST') ? 422 : 200;
             if ($form->isSubmitted()) {

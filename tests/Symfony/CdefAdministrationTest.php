@@ -85,6 +85,18 @@ final class CdefAdministrationTest extends TestCase
         self::assertSame('Unused', $this->database->fetchOne('SELECT name FROM cdef WHERE id = 2'));
     }
 
+    public function testMissingSharedPolicyRowRefusesReferenceGraphMutations(): void
+    {
+        $this->database->executeStatement("DELETE FROM settings WHERE name = 'auth_method'");
+        try {
+            $this->editor->saveItem(42, 2, 0, 5, '3');
+            self::fail('Reference-graph mutations need the shared policy lock.');
+        } catch (\Kadupul\GraphDefinition\Application\Query\CdefAccessDenied) {
+            self::assertSame(0, (int) $this->database->fetchOne('SELECT COUNT(*) FROM cdef_items WHERE cdef_id = 2 AND type = 5'));
+            self::assertFalse($this->database->isTransactionActive());
+        }
+    }
+
     public function testListCountsGraphTemplateAndNestedCdefUsageAndEscapesSearch(): void
     {
         $rows = $this->catalog->list(new CdefListCriteria('Traffic <', 1, 30));
