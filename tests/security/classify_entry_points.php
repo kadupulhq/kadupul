@@ -118,9 +118,6 @@ const BOOTSTRAP = [
 const REVIEWED_INCLUDES = [
     'include/global_languages.php' => 'providerFull',
 ];
-// Fragment requires that end a direct request, traced by hand: the path is
-// built from $config, which only the bootstrap defines, so without it the
-// require names a file under / and PHP stops. Nothing after it runs.
 // Globals a file writes at its top level, traced by hand, each with why the
 // write cannot change what an includer trusts.
 const REVIEWED_GLOBALS = [
@@ -128,6 +125,9 @@ const REVIEWED_GLOBALS = [
         'original_memory_limit' => 'saves ini_get(\'memory_limit\') for the memory report in lib/utility.php; no gate reads it',
     ],
 ];
+// Fragment requires that end a direct request, traced by hand: the path is
+// built from $config, which only the bootstrap defines, so without it the
+// require names a file under / and PHP stops. Nothing after it runs.
 const HALTING_REQUIRES = [
     'include/csrf.php' => 'include/vendor/csrf/csrf-conf.php',
 ];

@@ -13,6 +13,9 @@ follows [Semantic Versioning](VERSIONING.md).
 - Scope remote-agent host operations to the requesting main poller and the receiver's assigned devices; require an authenticated session user for remote graph rendering.
 - Make `plugin_manage.php --allperms` grant existing plugin realms to the configured administrator and report failed grants. Fixes #224.
 - Reject plugin installs whose `INFO` compatibility floor is missing, malformed, or newer than the running core. Enforce the gate before install callbacks and return failure from the CLI. Related to #223.
+- Escape dynamic form ids and actions for their HTML attribute and JavaScript string contexts. Fixes #582.
+- Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
+- Remove the inert Poller Refresh Output Table setting; the queue is required to use InnoDB. Fixes #282.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
@@ -30,6 +33,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
 - Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
 - Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.
 
@@ -45,16 +49,25 @@ Targeting `v1.3.0`, the first planned application release. See
 - Fix theme script defects on page reloads: window resize handlers no longer pile up, the classic theme no longer removes the handler that closes open menus on an outside click, and filter search icons are added once. Select menus are sized through the widget, so a plugin field id with `.` or `:` no longer stops the theme setup.
 
 - Replace Font Awesome 4 icon names that render blank: the paper-plane scroll-to-top button and the sunrise logo now show their icons, and paper-plane and paw no longer turn delete icons into an undefined class. The paw theme also shows its logo on the logout page.
+- Make the offline bundle check fail when a font named in the Font Awesome stylesheet is missing. It checked only that `all.css` existed, so a bundle whose icons all drew as missing glyphs passed.
+
+- Install only the Font Awesome stylesheet, its WOFF2 fonts and licence into a cleared `include/fa` with directory guards, instead of the whole 25 MB npm package. Font URLs now carry the package version, so a browser that cached Font Awesome 5 fonts under the same names fetches the new ones.
 - Disable network access while parsing imported package XML. Fixes #578.
 - Keep SNMP agent cache values on one `pass_persist` protocol line by removing embedded carriage returns and line feeds before storage and output.
+- Normalize Graph View graph-list values before storing them in the session, escape them in HTML, and encode them for JavaScript. Removing the last selected graph now clears the stored selection, while paging preserves it. Fixes #574.
+- Escape and type-check the posted local graph ID before rendering Aggregate Graphs bulk-action confirmation markup. Fixes #586.
+- Escape color-dropdown values and enclosing form row IDs in their HTML contexts; render color option identifiers as integers. Fixes #576.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.
+- Retain buffered Boost samples until remote acknowledgement, refuse missing database connections, and stop recovery when an acknowledged sample changed before cleanup. Fixes #268.
 
 - Keep the recursive RRD tuning report printer local to each `rrdtool_tune()` call, so repeated calls in one process do not redeclare a global function. Fixes #445.
+- Report missing stored graph data accurately when a zoom request has no usable RRA. Fixes #369.
 
 - Keep graph-group lookups scoped to the local graph ID, preserve the configuration cache map when setting an option, keep invalid structured filters from becoming unrestricted, and scope user-setting existence cache entries to the user. Public helper signatures and valid filter behavior are unchanged. Fixes #479.
+- Build forced HTTPS redirects from a validated server name or the administrator-configured Base URL for catch-all virtual hosts. Preserve raw encoded request targets and remove HTTP listener ports. Configure a canonical server name (Apache UseCanonicalName On); invalid authorities return HTTP 400. Fixes #584.
 
 - Accept only a number or `U` as a data source minimum, and only a number, `U` or an interface speed token as a maximum, refuse to create an RRD file whose stored minimum is anything else, and create realtime graph RRD files through the RRDtool pipe instead of a shell. A data source item that fails validation is no longer saved.
 
