@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Measure VDEF forms, ordering, duplicate/delete and rollback through HTTP."""
 from pathlib import Path
 from types import SimpleNamespace

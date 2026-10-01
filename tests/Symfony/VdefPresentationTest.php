@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Tests;
@@ -10,9 +10,13 @@ namespace Kadupul\Tests;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Kadupul\GraphDefinition\Application\Port\VdefCatalog;
+use Kadupul\GraphDefinition\Application\Port\VdefRealmAccess;
+use Kadupul\GraphDefinition\Domain\VdefSummary;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Kernel;
+use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineVdefCatalog;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +24,129 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class VdefPresentationTest extends TestCase
 {
+    public function testExternalHandlerUsesConfiguredAssetBaseAcrossFrontControllers(): void
+    {
+        foreach ([
+            ['/app.php', '/', 200], ['/public/index.php', '/', 200],
+            ['/cacti/app.php', '/cacti/', 200], ['/cacti/public/index.php', '/cacti/', 200],
+            ['/app.php', '//outside.invalid/', 502], ['/app.php', 'https://outside.invalid/', 502],
+            ['/app.php', '/bad\\prefix/', 502], ['/app.php', '/bad?query/', 502],
+            ['/app.php', '/bad#fragment/', 502], ['/app.php', "/bad\nprefix/", 502],
+        ] as [$front, $prefix, $expectedStatus]) {
+            $kernel = new Kernel('test', true);
+            try {
+                $kernel->boot();
+                $container = $kernel->getContainer()->get('test.service_container');
+                $configuration = $this->createMock(LegacyConfiguration::class);
+                $configuration->method('values')->willReturn(['url_path' => $prefix]);
+                $container->set(LegacyConfiguration::class, $configuration);
+                $console = $this->createMock(ConsoleAccess::class);
+                $console->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+                $container->set(ConsoleAccess::class, $console);
+                $realm = $this->createMock(VdefRealmAccess::class);
+                $realm->method('canManageDefinitions')->willReturn(true);
+                $container->set(VdefRealmAccess::class, $realm);
+                $catalog = $this->createMock(VdefCatalog::class);
+                $catalog->method('find')->willReturn(['id' => 1, 'name' => 'Asset fixture', 'revision' => 'fixture', 'items' => []]);
+                $catalog->method('preview')->willReturn('CURRENT_DATA_SOURCE');
+                $container->set(VdefCatalog::class, $catalog);
+                $request = Request::create($front . '/graph-definitions/vdefs/1/items/0', 'GET', [], [], [], [
+                    'SCRIPT_NAME' => $front,
+                    'SCRIPT_FILENAME' => dirname(__DIR__, 2) . (str_ends_with($front, '/public/index.php') ? '/public/index.php' : '/app.php'),
+                    'PHP_SELF' => $front . '/graph-definitions/vdefs/1/items/0',
+                ]);
+                self::assertSame(dirname($front) === '/' ? '' : dirname($front), $request->getBasePath());
+                $response = $kernel->handle($request);
+                self::assertSame($expectedStatus, $response->getStatusCode(), $front . $response->getContent());
+                if ($expectedStatus === 200) {
+                    self::assertStringContainsString('src="' . rtrim($prefix, '/') . '/public/js/vdef-item.js" defer', $response->getContent(), $front);
+                } else {
+                    self::assertStringNotContainsString('<script', $response->getContent());
+                }
+            } finally {
+                $kernel->shutdown();
+            }
+        }
+    }
+
+    public function testLegacyRedirectsUseExactRouteIdentityBounds(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $console = $this->createMock(ConsoleAccess::class);
+            $console->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+            $container->set(ConsoleAccess::class, $console);
+            $realm = $this->createMock(VdefRealmAccess::class);
+            $realm->method('canManageDefinitions')->willReturn(true);
+            $container->set(VdefRealmAccess::class, $realm);
+            foreach (['100000000', '99999999999999999999999999', '01', '-1', "1\n", ['1']] as $invalid) {
+                foreach ([['action' => 'edit', 'id' => $invalid], ['action' => 'item_edit', 'vdef_id' => $invalid, 'id' => '1'], ['action' => 'item_edit', 'vdef_id' => '1', 'id' => $invalid]] as $query) {
+                    $response = $kernel->handle(Request::create('/graph-definitions/vdefs/legacy', 'GET', $query));
+                    self::assertSame(302, $response->getStatusCode());
+                    self::assertSame('/graph-definitions/vdefs', $response->headers->get('Location'));
+                }
+            }
+            foreach ([
+                [['action' => 'edit', 'id' => '0'], '/graph-definitions/vdefs/new'],
+                [['action' => 'edit', 'id' => '99999999'], '/graph-definitions/vdefs/99999999/edit'],
+                [['action' => 'item_edit', 'vdef_id' => '99999999', 'id' => '99999999'], '/graph-definitions/vdefs/99999999/items/99999999'],
+                [['action' => 'item_edit', 'vdef_id' => '1', 'id' => '0'], '/graph-definitions/vdefs/1/items/0'],
+            ] as [$query, $location]) {
+                $response = $kernel->handle(Request::create('/graph-definitions/vdefs/legacy', 'GET', $query));
+                self::assertSame(302, $response->getStatusCode());
+                self::assertSame($location, $response->headers->get('Location'));
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testFrenchPagesTranslateControlsAndPreserveRpnAndStoredNames(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+            $container->set(LegacyConfiguration::class, $configuration);
+            $pdo = new \PDO('sqlite::memory:');
+            $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+            $database = $this->createMock(DatabaseConnection::class);
+            $database->method('get')->willReturn($pdo);
+            $container->set(DatabaseConnection::class, $database);
+            $console = $this->createMock(ConsoleAccess::class);
+            $console->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+            $container->set(ConsoleAccess::class, $console);
+            $realm = $this->createMock(VdefRealmAccess::class);
+            $realm->method('canManageDefinitions')->willReturn(true);
+            $container->set(VdefRealmAccess::class, $realm);
+            $catalog = $this->createMock(VdefCatalog::class);
+            $catalog->method('list')->willReturn([new VdefSummary(1, '<router-Ø>', 2, 3)]);
+            $catalog->method('count')->willReturn(1);
+            $catalog->method('find')->willReturn(['id' => 1, 'name' => '<router-Ø>', 'revision' => 'fixture', 'items' => []]);
+            $catalog->method('preview')->willReturn('CURRENT_DATA_SOURCE,MAXIMUM');
+            $container->set(VdefCatalog::class, $catalog);
+            $list = $kernel->handle(Request::create('/graph-definitions/vdefs', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $list->getStatusCode());
+            self::assertStringContainsString('<html lang="fr">', $list->getContent());
+            self::assertStringContainsString('Définitions VDEF', $list->getContent());
+            self::assertStringContainsString('Graphiques utilisant', $list->getContent());
+            self::assertStringNotContainsString('Graphs using', $list->getContent());
+            self::assertStringContainsString('&lt;router-Ø&gt;', $list->getContent());
+            $item = $kernel->handle(Request::create('/graph-definitions/vdefs/1/items/0', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $item->getStatusCode(), $item->getContent());
+            self::assertStringContainsString('Type d’élément', $item->getContent());
+            self::assertStringContainsString('Enregistrer l’élément', $item->getContent());
+            self::assertStringContainsString('CURRENT_DATA_SOURCE,MAXIMUM', $item->getContent());
+            self::assertStringContainsString('>MAXIMUM</option>', $item->getContent());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     public function testLegacyEntryRejectsPostedActionsInsteadOfReplayingThem(): void
     {
         $previousServer = $_SERVER;
@@ -111,6 +238,26 @@ final class VdefPresentationTest extends TestCase
             $database->executeStatement('INSERT INTO user_auth_realm VALUES (42, 14)');
 
             $token = $container->get(CsrfTokenManagerInterface::class)->getToken('graph_vdef_edit')->getValue();
+            $database->executeStatement("INSERT INTO vdef_items VALUES (901, 'nested-reference', 1, 2, 5, '1')");
+            $referenceRevision = $catalog->find(1)['revision'];
+            $reference = $kernel->handle(Request::create('/graph-definitions/vdefs/1/items/901?type=1'));
+            self::assertSame(200, $reference->getStatusCode());
+            self::assertStringContainsString('Its stored reference is preserved.', $reference->getContent());
+            self::assertStringContainsString('<dd>1</dd>', $reference->getContent());
+            self::assertStringNotContainsString('<form', $reference->getContent());
+            $rewriteReference = Request::create('/graph-definitions/vdefs/1/items/901', 'POST', [
+                'vdef_item' => ['id' => '901', 'vdef_id' => '1', 'revision' => $referenceRevision, 'type' => '1', 'value' => '1', '_token' => $token],
+            ]);
+            $rewriteReference->headers->set('Origin', 'http://localhost');
+            self::assertSame(409, $kernel->handle($rewriteReference)->getStatusCode());
+            self::assertSame(5, (int) $database->fetchOne('SELECT type FROM vdef_items WHERE id=901'));
+            self::assertSame('1', $database->fetchOne('SELECT value FROM vdef_items WHERE id=901'));
+            self::assertSame($referenceRevision, $catalog->find(1)['revision']);
+            $database->executeStatement('DELETE FROM vdef_items WHERE id=901');
+            $itemPage = $kernel->handle(Request::create('/graph-definitions/vdefs/1/items/0'));
+            self::assertSame(200, $itemPage->getStatusCode(), $itemPage->getContent());
+            self::assertStringContainsString('src="/public/js/vdef-item.js" defer', $itemPage->getContent());
+            self::assertStringNotContainsString('addEventListener', $itemPage->getContent());
             $post = Request::create('/graph-definitions/vdefs/new', 'POST', [
                 'vdef_edit' => ['id' => '0', 'name' => 'New VDEF', '_token' => $token],
             ]);

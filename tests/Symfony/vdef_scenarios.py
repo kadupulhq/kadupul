@@ -1,7 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """VDEF workflow through real Symfony forms and primary MariaDB transactions."""
 import json
 from pathlib import Path
 import re
+import subprocess
 import urllib.parse
 import urllib.request
 import urllib.error
@@ -89,6 +93,73 @@ def verify_vdefs(harness, session, user_id, check):
     check(match is not None, f"VDEF save did not redirect to its editor: {url}")
     vdef_id = int(match.group(1))
 
+    for action, parent, child, label in (
+        ('edit', '', '100000000', 'VDEF oversized legacy edit ID falls back'),
+        ('item_edit', '100000000', '1', 'VDEF oversized legacy parent ID falls back'),
+        ('item_edit', str(vdef_id), '100000000', 'VDEF oversized legacy child ID falls back'),
+        ('item_edit', '01', '1', 'VDEF noncanonical legacy parent ID falls back'),
+    ):
+        query = urllib.parse.urlencode({'action': action, 'vdef_id': parent, 'id': child})
+        status, url, _ = scenario.request('/graph-definitions/vdefs/legacy?' + query)
+        check(status == 200 and urllib.parse.urlparse(url).path.endswith('/graph-definitions/vdefs'), label)
+
+    reference_hash = uuid.uuid4().hex
+    harness.sql(f"INSERT INTO vdef_items (hash,vdef_id,sequence,type,value) VALUES ('{reference_hash}',{vdef_id},1,5,'{vdef_id}')")
+    reference_id = int(harness.sql(f"SELECT id FROM vdef_items WHERE hash='{reference_hash}'").strip())
+    try:
+        status, _, html = scenario.request(f'/graph-definitions/vdefs/{vdef_id}/items/{reference_id}?type=1')
+        check(status == 200 and 'Its stored reference is preserved.' in html and '<form' not in html, 'VDEF nested reference renders read-only without function coercion')
+        _, _, html = scenario.request(f'/graph-definitions/vdefs/{vdef_id}/edit')
+        reference_form = scenario.form(html, lambda form: 'vdef_edit[revision]' in form['fields'])
+        status, _, _ = scenario.request(f'/graph-definitions/vdefs/{vdef_id}/items/{reference_id}', {
+            'vdef_item[id]': str(reference_id), 'vdef_item[vdef_id]': str(vdef_id),
+            'vdef_item[type]': '1', 'vdef_item[value]': '1',
+            'vdef_item[revision]': reference_form['fields']['vdef_edit[revision]'],
+            'vdef_item[_token]': reference_form['fields']['vdef_edit[_token]'],
+        })
+        check(status == 409 and harness.sql(f"SELECT CONCAT(type,':',value) FROM vdef_items WHERE id={reference_id}").strip() == f'5:{vdef_id}', 'VDEF nested reference refuses function overwrite')
+    finally:
+        harness.sql(f'DELETE FROM vdef_items WHERE id={reference_id}')
+
+    cookies = [{'name': cookie.name, 'value': cookie.value, 'url': harness.base + '/'}
+               for handler in session.opener.handlers if isinstance(handler, urllib.request.HTTPCookieProcessor)
+               for cookie in handler.cookiejar]
+    browser_fronts = []
+
+    def verify_browser_front(front):
+        try:
+            browser = subprocess.run(['mise', 'exec', 'node@22.22.2', '--', 'node', str(Path(__file__).with_name('vdef_browser_probe.cjs'))],
+                                     input=json.dumps({'base': harness.base, 'vdefId': vdef_id, 'front': front, 'cookies': cookies}),
+                                     capture_output=True, text=True, timeout=90)
+        except subprocess.TimeoutExpired as error:
+            diagnostic = error.stderr.decode('utf8', 'replace') if isinstance(error.stderr, bytes) else error.stderr
+            raise RuntimeError(f'VDEF browser fixture timed out for {front}: {diagnostic}') from error
+        if browser.returncode != 0:
+            raise RuntimeError(f'VDEF browser fixture failed for {front}: {browser.stderr}')
+        check(json.loads(browser.stdout) == {'csp_handler_executed': True, 'custom_item_saved': True, 'script_measured': True, 'no_control_branch_measured': True},
+              'VDEF browser CSP asset/type/save verified: ' + front)
+        browser_value_hex = 'browser snowman ☃ 😁'.encode('utf8').hex()
+        browser_id = int(harness.sql(f"SELECT id FROM vdef_items WHERE vdef_id={vdef_id} AND BINARY value=0x{browser_value_hex}").strip())
+        check(browser_id > 0, 'VDEF browser preserves four-byte custom item in MariaDB: ' + front)
+        _, _, html = scenario.request(harness.base + front + f'/graph-definitions/vdefs/{vdef_id}/items/{browser_id}/delete')
+        browser_delete = scenario.form(html, lambda form: 'confirm[revision]' in form['fields'])
+        check(scenario.submit(browser_delete, {})[0] == 200 and harness.sql(f'SELECT COUNT(*) FROM vdef_items WHERE id={browser_id}').strip() == '0',
+              'VDEF browser fixture is removed through the guarded form: ' + front)
+        browser_fronts.append(front)
+
+    verify_browser_front('/app.php')
+    verify_browser_front('/public/index.php')
+    harness.command('php', '-r', 'if (!copy("include/config.php", "/tmp/vdef-prefix-config.php")) { throw new RuntimeException("Cannot back up prefix fixture configuration."); }', check=True)
+    try:
+        harness.command('php', '-r', 'if (file_put_contents("include/config.php", PHP_EOL . chr(36) . "url_path = " . var_export("/cacti/", true) . ";" . PHP_EOL, FILE_APPEND) === false) { throw new RuntimeException("Cannot write prefix fixture configuration."); }', check=True)
+        harness.compose('exec', '-T', 'web', 'sh', '-ec', "printf 'Alias /cacti/ /var/www/html/\\n' > /etc/apache2/conf-available/vdef-prefix.conf; a2enconf vdef-prefix; apachectl -k graceful", check=True)
+        verify_browser_front('/cacti/app.php')
+        verify_browser_front('/cacti/public/index.php')
+    finally:
+        harness.command('php', '-r', 'if (!copy("/tmp/vdef-prefix-config.php", "include/config.php") || !unlink("/tmp/vdef-prefix-config.php")) { throw new RuntimeException("Cannot restore prefix fixture configuration."); }', check=True)
+        harness.compose('exec', '-T', 'web', 'sh', '-ec', 'a2disconf vdef-prefix; apachectl -k graceful', check=True)
+    check(browser_fronts == ['/app.php', '/public/index.php', '/cacti/app.php', '/cacti/public/index.php'], 'VDEF browser type change and save pass under CSP')
+
     # Two editor tabs with the same initial revision: the first update saves,
     # and the stale tab must not overwrite it.
     status, _, html = scenario.request(f"/graph-definitions/vdefs/{vdef_id}/edit")
@@ -110,7 +181,6 @@ def verify_vdefs(harness, session, user_id, check):
     status, _, html = scenario.request(f"/graph-definitions/vdefs/{vdef_id}/edit")
     order_form = scenario.form(html, lambda form: "order[items]" in form["fields"])
     old_order = order_form["fields"]["order[items]"]
-    import json
     old_ids = json.loads(old_order)
     same_set_reorder = dict(order_form)
     same_set_reorder["fields"] = dict(order_form["fields"])

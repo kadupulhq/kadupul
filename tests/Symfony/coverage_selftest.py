@@ -174,6 +174,11 @@ def main():
         'test-hash': 'Integration test source differs',
         'vdef-test-hash': 'Integration test source differs',
         'vdef-probe-hash': 'Integration test source differs',
+        'vdef-browser-probe-hash': 'Integration test source differs',
+        'vdef-browser-handler-hash': 'Integration test source differs',
+        'missing-vdef-reference-check': 'Incomplete Symfony integration',
+        'missing-vdef-browser-check': 'Incomplete Symfony integration',
+        'missing-vdef-legacy-bound-check': 'Incomplete Symfony integration',
         'missing-vdef-engine-check': 'Incomplete Symfony integration',
         'missing-vdef-handoff': 'Incomplete Symfony integration',
         'details-test-hash': 'Integration test source differs',
@@ -240,6 +245,15 @@ def main():
                 worker['sha256'] = '0' * 64
             elif case == 'vdef-probe-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
+            elif case == 'vdef-browser-probe-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_browser_probe.cjs'] = '0' * 64
+            elif case == 'vdef-browser-handler-hash':
+                evidence['source_sha256']['public/js/vdef-item.js'] = '0' * 64
+            elif case.startswith('missing-vdef-') and case in ['missing-vdef-reference-check', 'missing-vdef-browser-check', 'missing-vdef-legacy-bound-check']:
+                omitted = {'missing-vdef-reference-check': 'VDEF nested reference refuses function overwrite',
+                           'missing-vdef-browser-check': 'VDEF browser type change and save pass under CSP',
+                           'missing-vdef-legacy-bound-check': 'VDEF oversized legacy parent ID falls back'}[case]
+                evidence['checks'].remove(omitted)
             elif case == 'missing-vdef-engine-check':
                 evidence['checks'].remove('VDEF nontransactional table refused: vdef')
             elif case == 'vdef-test-hash':

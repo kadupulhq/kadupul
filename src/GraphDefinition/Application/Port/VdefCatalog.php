@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Application\Port;
@@ -17,7 +17,7 @@ interface VdefCatalog
 
     public function count(VdefListCriteria $criteria): int;
 
-    /** @return array{id:int,name:string,items:list<array{id:int,sequence:int,type:int,value:string,label:string}>}|null */
+    /** @return array{id:int,name:string,revision:string,items:list<array{id:int,sequence:int,type:int,value:string,label:string}>}|null */
     public function find(int $id): ?array;
 
     public function preview(int $id): string;

@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Controller;
@@ -33,7 +33,7 @@ final class LegacyVdefController
             $id = $query['id'] ?? null;
             $vdefId = $query['vdef_id'] ?? null;
 
-            if ($action === 'edit' && ($id === null || (is_string($id) && ctype_digit($id)))) {
+            if ($action === 'edit' && ($id === null || (is_string($id) && preg_match('/^(?:0|[1-9][0-9]{0,7})$/D', $id)))) {
                 if ($id === null || $id === '' || $id === '0') {
                     return new RedirectResponse($urls->generate('graph_vdef_create'), 302, ['Cache-Control' => 'private, no-store']);
                 }
@@ -41,8 +41,8 @@ final class LegacyVdefController
                     return new RedirectResponse($urls->generate('graph_vdef_edit', ['id' => (int) $id]), 302, ['Cache-Control' => 'private, no-store']);
                 }
             }
-            if ($action === 'item_edit' && is_string($vdefId) && ctype_digit($vdefId) && (int) $vdefId > 0
-                && ($id === null || (is_string($id) && ctype_digit($id)))) {
+            if ($action === 'item_edit' && is_string($vdefId) && preg_match('/^[1-9][0-9]{0,7}$/D', $vdefId)
+                && ($id === null || (is_string($id) && preg_match('/^(?:0|[1-9][0-9]{0,7})$/D', $id)))) {
                 $parameters = ['vdefId' => (int) $vdefId, 'itemId' => ($id === null || $id === '' || $id === '0') ? 0 : (int) $id];
                 if (isset($query['type_select']) && is_string($query['type_select']) && in_array($query['type_select'], ['1', '4', '6'], true)) {
                     $parameters['type'] = $query['type_select'];

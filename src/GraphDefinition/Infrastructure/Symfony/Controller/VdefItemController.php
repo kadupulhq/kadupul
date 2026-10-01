@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\GraphDefinition\Infrastructure\Symfony\Controller;
@@ -15,6 +15,7 @@ use Kadupul\GraphDefinition\Domain\VdefFunctions;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\VdefItemType as VdefItemForm;
 use Kadupul\GraphDefinition\Infrastructure\Symfony\Form\VdefReorderType;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,7 +29,7 @@ use Twig\Environment;
 final class VdefItemController
 {
     #[Route('/graph-definitions/vdefs/{vdefId<\d+>}/items/{itemId<\d+>}', name: 'graph_vdef_item_edit', requirements: ['vdefId' => '[1-9][0-9]{0,7}', 'itemId' => '0|[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function edit(int $vdefId, int $itemId, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
+    public function edit(int $vdefId, int $itemId, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess, LegacyConfiguration $configuration): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $consoleAccess->consoleActor();
@@ -52,6 +53,14 @@ final class VdefItemController
                 if ($item['id'] === 0) {
                     return new Response($translator->trans('VDEF item not found.', [], 'graph_definition'), 404, $headers);
                 }
+            }
+            if (!in_array($item['type'], [1, 4, 6], true)) {
+                if ($request->isMethod('POST')) {
+                    return new Response($translator->trans('This legacy VDEF item is read-only. Its stored reference is preserved.', [], 'graph_definition'), 409, $headers);
+                }
+                return new Response($twig->render('graph_definition/vdef_item_readonly.html.twig', [
+                    'vdef' => $vdef, 'item' => $item, 'preview' => $catalog->preview($vdefId),
+                ]), 200, $headers);
             }
             $rawSubmit = $request->request->all();
             $submittedItem = $rawSubmit['vdef_item'] ?? null;
@@ -104,6 +113,7 @@ final class VdefItemController
                 'form' => $form->createView(), 'vdef' => $vdef,
                 'preview' => $catalog->preview($vdefId),
                 'item_type' => $itemType,
+                'type_handler_url' => self::typeHandlerUrl($configuration),
             ]), $status, $headers);
         } catch (VdefAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'graph_definition'), $error->unauthenticated ? 401 : 403, $headers);
@@ -112,6 +122,16 @@ final class VdefItemController
         } catch (\Throwable) {
             return new Response($translator->trans('VDEF item save failed. Check the VDEF before retrying.', [], 'graph_definition'), 502, $headers);
         }
+    }
+
+    private static function typeHandlerUrl(LegacyConfiguration $configuration): string
+    {
+        $path = $configuration->values()['url_path'] ?? '/';
+        if (!is_string($path) || !str_starts_with($path, '/') || str_starts_with($path, '//')
+            || str_contains($path, '\\') || preg_match('/[\x00-\x20?#]/', $path)) {
+            throw new \RuntimeException('Invalid installation asset path.');
+        }
+        return rtrim($path, '/') . '/public/js/vdef-item.js';
     }
 
     #[Route('/graph-definitions/vdefs/{vdefId<\d+>}/items/{itemId<\d+>}/delete', name: 'graph_vdef_item_delete', requirements: ['vdefId' => '[1-9][0-9]{0,7}', 'itemId' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]

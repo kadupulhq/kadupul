@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Exercise VDEF admin over nginx/PHP-FPM with the Compose MariaDB schema.
 
 Start a dedicated tests/e2e stack first, then run this from the repository
