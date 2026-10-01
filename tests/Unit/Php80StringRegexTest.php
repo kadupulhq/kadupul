@@ -20,7 +20,7 @@ function cacti_log($message, $output = false) { $GLOBALS['php80_state']['logs'][
 function cacti_debug_backtrace($message) { $GLOBALS['php80_state']['traces'][] = $message; }
 function raise_message($message) { $GLOBALS['php80_state']['messages'][] = $message; }
 function __esc($message) { return $message; }
-function cacti_sizeof($value) { return \count($value); }
+function cacti_sizeof($value) { return \is_array($value) ? \count($value) : 0; }
 function api_plugin_is_enabled($name) { return false; }
 function rrdtool_clock_now() { return new \DateTimeImmutable('2026-01-02T03:04:05+00:00'); }
 ADAPTERS);

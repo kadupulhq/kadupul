@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "node tools/dependencies/build.mjs",
-    "test": "node --test tests/Unit/vendor-sync.test.mjs",
+    "test": "node --test tests/Unit/vendor-sync.test.mjs tests/Unit/css-import-versions.test.mjs",
     "lint": "node --check tools/dependencies/build.mjs"
   },
   "dependencies": {

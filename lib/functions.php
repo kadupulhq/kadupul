@@ -5217,7 +5217,7 @@ function general_header()
 function appendHeaderSuppression($url)
 {
     if (!str_contains($url, 'header=false')) {
-        return $url . (strpos($url, '?') ? '&' : '?') . 'header=false';
+        return $url . (str_contains($url, '?') ? '&' : '?') . 'header=false';
     }
 
     return $url;
@@ -7148,7 +7148,7 @@ function date_time_format()
 
     $datecharacter = $datechar[$dateCharSetting];
 
-    // Keep the switch comparisons: settings and message levels can be strings.
+    // Preserve loose comparisons because date format settings can be numeric strings.
     return match (true) {
         $date_fmt == GD_MO_D_Y => 'm' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s',
         $date_fmt == GD_MN_D_Y => 'M' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s',

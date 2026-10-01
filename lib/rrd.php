@@ -3357,7 +3357,7 @@ function rrdtool_function_format_graph_date(&$graph_data_array, ?\DateTimeImmuta
     $dateCharSetting = read_user_setting('default_datechar', read_config_option('default_datechar'));
     $datecharacter = $datechar[$dateCharSetting];
 
-    // Keep the switch comparisons: settings and message levels can be strings.
+    // Preserve loose comparisons because date format settings can be numeric strings.
     $graph_date = match (true) {
         $date_fmt == GD_MO_D_Y => 'm' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s',
         $date_fmt == GD_MN_D_Y => 'M' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s',

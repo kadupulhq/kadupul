@@ -51,3 +51,8 @@ test('appendHeaderSuppression is idempotent on repeated calls', function () {
     /* Already present and no querystring delimiter swap. */
     expect(_test_appendHeaderSuppression('graph.php?header=false'))->toBe('graph.php?header=false');
 });
+
+
+test('appendHeaderSuppression retains a query delimiter at byte zero', function () {
+    expect(_test_appendHeaderSuppression('?action=edit'))->toBe('?action=edit&header=false');
+});
