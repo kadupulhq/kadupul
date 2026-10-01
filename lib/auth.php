@@ -448,14 +448,6 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
 
     /* Create/Update permissions and settings */
     if (cacti_sizeof($user_exist) && $overwrite) {
-        $existing_groups = db_fetch_assoc_prepared(
-            'SELECT group_id FROM user_auth_group_members WHERE user_id = ?',
-            array($user_exist['id'])
-        );
-        foreach ($existing_groups as $group) {
-            user_group_update_membership($group['group_id'], $user_exist['id'], false);
-        }
-
         db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($user_exist['id']));
         db_execute_prepared('DELETE FROM user_auth_realm WHERE user_id = ?', array($user_exist['id']));
         db_execute_prepared('DELETE FROM settings_user WHERE user_id = ? AND name != \'auth_credential_generation\'', array($user_exist['id']));
@@ -518,19 +510,8 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
         }
     }
 
-    /* apply group permissions for the user */
-    $groups = db_fetch_assoc_prepared(
-        'SELECT group_id
-		FROM user_auth_group_members
-		WHERE user_id = ?',
-        array($template_id)
-    );
-
-    if (cacti_sizeof($groups)) {
-        foreach ($groups as $g) {
-            user_group_update_membership($g['group_id'], $new_id, true);
-        }
-    }
+    /* Replace the complete destination set from one serialized source snapshot. */
+    user_group_replace_memberships($new_id, $template_id);
 
     api_plugin_hook_function('copy_user', array('template_id' => $template_id, 'new_id' => $new_id));
 
@@ -558,15 +539,25 @@ function user_remove($user_id)
         return;
     }
 
-    db_execute_prepared('DELETE FROM user_auth WHERE id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_realm WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_row_cache WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_group_members WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM settings_user WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM settings_tree WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($user_id));
+    $unit = auth_membership_begin();
+    try {
+        auth_membership_lock_users(array($user_id));
+        $groups = db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id = ? FOR UPDATE', array($user_id));
+        auth_membership_lock_groups(array_column($groups, 'group_id'));
+        if (!db_execute_prepared('DELETE FROM user_auth WHERE id = ?', array($user_id))) {
+            throw new RuntimeException('Unable to remove user');
+        }
+        foreach (array('user_auth_realm', 'user_auth_cache', 'user_auth_perms', 'user_auth_row_cache', 'user_auth_group_members', 'settings_user', 'settings_tree', 'sessions') as $table) {
+            if (!db_execute_prepared('DELETE FROM ' . $table . ' WHERE user_id = ?', array($user_id))) {
+                throw new RuntimeException('Unable to remove user data');
+            }
+        }
+
+        auth_membership_finish($unit, true);
+    } catch (Throwable $error) {
+        auth_membership_finish($unit, false);
+        throw $error;
+    }
 
     api_plugin_hook_function('user_remove', $user_id);
 }
@@ -621,31 +612,116 @@ function user_group_execute_child($group_id, $sql, $params)
     }
 }
 
-/** Serialize membership changes with removal of their parent group. */
-function user_group_update_membership($group_id, $user_id, $add)
+/** Begin an isolated membership unit without taking ownership of a caller transaction. */
+function auth_membership_begin()
 {
-    if (!db_begin_transaction()) {
-        throw new RuntimeException('Unable to begin group membership transaction');
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    if (!$db instanceof PDO) {
+        throw new RuntimeException('Membership changes require a database connection');
     }
+    $owned = !$db->inTransaction();
+    $savepoint = 'kadupul_membership_' . bin2hex(random_bytes(8));
+    if ($owned) {
+        if (!db_begin_transaction($db)) {
+            throw new RuntimeException('Unable to begin membership transaction');
+        }
+    } else {
+        if ($db->exec('SAVEPOINT ' . $savepoint) === false) {
+            throw new RuntimeException('Unable to isolate membership changes');
+        }
+    }
+    return array('db' => $db, 'owned' => $owned, 'savepoint' => $savepoint);
+}
 
-    try {
-        $group = db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($group_id));
-        if ($group || !$add) {
-            $sql = $add ? 'REPLACE INTO user_auth_group_members (group_id, user_id) VALUES (?, ?)' :
-                'DELETE FROM user_auth_group_members WHERE group_id = ? AND user_id = ?';
-            if (!db_execute_prepared($sql, array($group_id, $user_id))) {
-                throw new RuntimeException('Unable to change group membership');
+/** Complete only this unit; caller-owned changes remain pending. */
+function auth_membership_finish($unit, $commit)
+{
+    if ($unit['owned']) {
+        if ($commit ? !db_commit_transaction($unit['db']) : !db_rollback_transaction($unit['db'])) {
+            throw new RuntimeException('Unable to finish membership transaction');
+        }
+    } else {
+        if (!$commit) {
+            if ($unit['db']->exec('ROLLBACK TO SAVEPOINT ' . $unit['savepoint']) === false) {
+                throw new RuntimeException('Unable to roll back membership changes');
             }
-            reset_user_perms($user_id);
         }
+        if ($unit['db']->exec('RELEASE SAVEPOINT ' . $unit['savepoint']) === false) {
+            throw new RuntimeException('Unable to release membership changes');
+        }
+    }
+}
 
-        if (!db_commit_transaction()) {
-            throw new RuntimeException('Unable to commit group membership transaction');
+/** Lock users before any group, with a deterministic order shared by all membership writers. */
+function auth_membership_lock_users($ids, $required = true)
+{
+    $ids = array_unique(array_map('intval', $ids));
+    sort($ids, SORT_NUMERIC);
+    foreach ($ids as $id) {
+        if (!db_fetch_cell_prepared('SELECT id FROM user_auth WHERE id = ? FOR UPDATE', array($id)) && $required) {
+            throw new RuntimeException('Membership user no longer exists');
         }
+    }
+}
+
+function auth_membership_lock_groups($ids)
+{
+    $ids = array_unique(array_map('intval', $ids));
+    sort($ids, SORT_NUMERIC);
+    $existing = array();
+    foreach ($ids as $id) {
+        if (db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($id))) {
+            $existing[$id] = true;
+        }
+    }
+    return $existing;
+}
+
+/** Replace from a locked source snapshot, or apply explicit changes, atomically. */
+function user_group_change_memberships($user_id, $changes, $template_id = false)
+{
+    $unit = auth_membership_begin();
+    try {
+        auth_membership_lock_users($template_id === false ? array($user_id) : array($user_id, $template_id));
+        if ($template_id !== false) {
+            $previous = db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id = ? FOR UPDATE', array($user_id));
+            $source = db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id = ? FOR UPDATE', array($template_id));
+            $changes = array();
+            foreach ($previous as $group) {
+                $changes[(int) $group['group_id']] = false;
+            }
+            foreach ($source as $group) {
+                $changes[(int) $group['group_id']] = true;
+            }
+        }
+        $existing = auth_membership_lock_groups(array_keys($changes));
+        ksort($changes, SORT_NUMERIC);
+        foreach ($changes as $group_id => $add) {
+            if (!$add || isset($existing[$group_id])) {
+                $sql = $add ? 'REPLACE INTO user_auth_group_members (group_id, user_id) VALUES (?, ?)' :
+                    'DELETE FROM user_auth_group_members WHERE group_id = ? AND user_id = ?';
+                if (!db_execute_prepared($sql, array($group_id, $user_id))) {
+                    throw new RuntimeException('Unable to change group membership');
+                }
+            }
+        }
+        reset_user_perms($user_id);
+        auth_membership_finish($unit, true);
     } catch (Throwable $error) {
-        db_rollback_transaction();
+        auth_membership_finish($unit, false);
         throw $error;
     }
+}
+
+function user_group_update_membership($group_id, $user_id, $add)
+{
+    user_group_change_memberships($user_id, array((int) $group_id => (bool) $add));
+}
+
+function user_group_replace_memberships($user_id, $template_id)
+{
+    user_group_change_memberships($user_id, array(), $template_id);
 }
 
 /**

@@ -20,12 +20,14 @@ test('group removal captures committed concurrent members and blocks subsequent 
     $scenario = array('dsn' => $dsn, 'user' => getenv('KADUPUL_TEST_MYSQL_USER'), 'password' => getenv('KADUPUL_TEST_MYSQL_PASSWORD'), 'prefix' => 'auth_group_' . bin2hex(random_bytes(5)), 'action' => 'remove');
     $pdo = new PDO($dsn, $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     $prefix = $scenario['prefix'];
-    $tables = array('user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms');
+    $tables = array('user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms', 'user_auth');
     try {
         $pdo->exec("CREATE TABLE {$prefix}_user_auth_group (id INT PRIMARY KEY) ENGINE=InnoDB");
-        foreach (array_slice($tables, 1) as $table) {
+        foreach (array_slice($tables, 1, 3) as $table) {
             $pdo->exec("CREATE TABLE {$prefix}_{$table} (group_id INT, user_id INT, UNIQUE KEY membership(group_id,user_id)) ENGINE=InnoDB");
         }
+        $pdo->exec("CREATE TABLE {$prefix}_user_auth (id INT PRIMARY KEY, reset_perms BIGINT DEFAULT 0) ENGINE=InnoDB");
+        $pdo->exec("INSERT INTO {$prefix}_user_auth (id) VALUES (42),(43),(44)");
         $pdo->exec("INSERT INTO {$prefix}_user_auth_group VALUES (5)");
         $pdo->exec("INSERT INTO {$prefix}_user_auth_group_members VALUES (5,42)");
         $pdo->beginTransaction();

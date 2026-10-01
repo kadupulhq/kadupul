@@ -3,14 +3,17 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-require __DIR__ . '/PhpSource.php';
 $scenario = json_decode($argv[1], true);
 $pdo = new PDO($scenario['dsn'], $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $prefix = $scenario['prefix'];
-$resets = array();
+$database_hostname = 'native';
+$database_port = 0;
+$database_default = 'auth';
+$database_sessions = array('native:0:auth' => $pdo);
+$_SESSION = array('sess_user_id' => 1);
 function group_probe_sql($sql)
 {
-    return preg_replace('/\b(user_auth_group(?:_members|_realm|_perms)?)\b/', $GLOBALS['prefix'] . '_$1', $sql);
+    return preg_replace('/\b(user_auth(?:_group_members|_group_realm|_group_perms|_group)?)\b/', $GLOBALS['prefix'] . '_$1', $sql);
 }
 function db_begin_transaction()
 {
@@ -50,14 +53,40 @@ function array_rekey($rows, $key, $value)
 {
     return array_column($rows, $value, $key);
 }
-function reset_user_perms($id)
+function __($text, ...$args)
 {
-    $GLOBALS['resets'][] = (int) $id;
+    return vsprintf($text, $args);
+}
+function cacti_require_post_actions($actions) {}
+function isset_request_var($name)
+{
+    return false;
+}
+function set_default_action() {}
+function get_request_var($name)
+{
+    return 'native-test';
+}
+function api_plugin_hook_function($name, $value = null)
+{
+    return true;
+}
+function kill_session_var($name)
+{
+    unset($_SESSION[$name]);
 }
 $root = dirname(__DIR__, 2);
-$source = file_get_contents($root . '/' . ($scenario['action'] === 'remove' ? 'user_group_admin.php' : 'lib/auth.php'));
-$function = $scenario['action'] === 'remove' ? 'user_group_remove' : 'user_group_update_membership';
-eval(test_php_function_source($source, $function));
+require $root . '/lib/auth.php';
+$directory = sys_get_temp_dir() . '/group-native-' . bin2hex(random_bytes(8));
+mkdir($directory . '/include', 0700, true);
+file_put_contents($directory . '/include/auth.php', '<?php');
+chdir($directory);
+require $root . '/user_group_admin.php';
+register_shutdown_function(function () use ($directory) {
+    unlink($directory . '/include/auth.php');
+    rmdir($directory . '/include');
+    rmdir($directory);
+});
 print "READY\n";
 flush();
 if ($scenario['action'] === 'remove') {
@@ -65,4 +94,5 @@ if ($scenario['action'] === 'remove') {
 } else {
     user_group_update_membership(5, 44, true);
 }
-print json_encode($resets) . "\n";
+$q = $pdo->query('SELECT id FROM ' . $prefix . '_user_auth WHERE reset_perms > 0 ORDER BY id');
+print json_encode(array_map('intval', $q->fetchAll(PDO::FETCH_COLUMN))) . "\n";

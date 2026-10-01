@@ -201,45 +201,51 @@ function user_group_enable($id)
 
 function user_group_remove($id)
 {
-    if (!db_begin_transaction()) {
-        throw new RuntimeException('Unable to begin group removal transaction');
-    }
-
-    try {
-        // Membership writers lock this same parent before inserting. The
-        // locking member read sees their committed rows after acquiring it.
-        if (!db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($id))) {
-            db_rollback_transaction();
+    // A new member can commit between discovery and the group lock. Retry
+    // outside the rolled-back unit rather than acquiring a user out of order.
+    $known = array();
+    for ($attempt = 0; $attempt < 8; $attempt++) {
+        $unit = auth_membership_begin();
+        $finished = false;
+        try {
+            $discovered = db_fetch_assoc_prepared('SELECT user_id FROM user_auth_group_members WHERE group_id = ?', array($id));
+            $known = array_unique(array_merge($known, array_column($discovered, 'user_id')));
+            auth_membership_lock_users($known, false);
+            if (!isset(auth_membership_lock_groups(array($id))[$id])) {
+                auth_membership_finish($unit, false);
+                return;
+            }
+            $users = array_column(db_fetch_assoc_prepared('SELECT user_id FROM user_auth_group_members WHERE group_id = ? FOR UPDATE', array($id)), 'user_id');
+            if (array_diff($users, $known)) {
+                $known = array_unique(array_merge($known, $users));
+                auth_membership_finish($unit, false);
+                $finished = true;
+                if (!$unit['owned']) {
+                    throw new RuntimeException('Concurrent membership change requires retry outside caller transaction');
+                }
+                continue;
+            }
+            foreach (array('user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms') as $table) {
+                if (!db_execute_prepared('DELETE FROM ' . $table . ' WHERE group_id = ?', array($id))) {
+                    throw new RuntimeException('Unable to remove group children');
+                }
+            }
+            if (!db_execute_prepared('DELETE FROM user_auth_group WHERE id = ?', array($id))) {
+                throw new RuntimeException('Unable to remove group');
+            }
+            foreach ($users as $user_id) {
+                reset_user_perms($user_id);
+            }
+            auth_membership_finish($unit, true);
             return;
+        } catch (Throwable $error) {
+            if (!$finished && $unit['db']->inTransaction()) {
+                auth_membership_finish($unit, false);
+            }
+            throw $error;
         }
-        $users = array_rekey(
-            db_fetch_assoc_prepared(
-                'SELECT user_id
-			FROM user_auth_group_members
-			WHERE group_id = ? FOR UPDATE',
-                array($id)
-            ),
-            'user_id',
-            'user_id'
-        );
-
-        if (!db_execute_prepared('DELETE FROM user_auth_group WHERE id = ?', array($id)) ||
-            !db_execute_prepared('DELETE FROM user_auth_group_members WHERE group_id = ?', array($id)) ||
-            !db_execute_prepared('DELETE FROM user_auth_group_realm WHERE group_id = ?', array($id)) ||
-            !db_execute_prepared('DELETE FROM user_auth_group_perms WHERE group_id = ?', array($id))) {
-            throw new RuntimeException('Unable to remove group');
-        }
-
-        foreach ($users as $user_id) {
-            reset_user_perms($user_id);
-        }
-        if (!db_commit_transaction()) {
-            throw new RuntimeException('Unable to commit group removal transaction');
-        }
-    } catch (Throwable $error) {
-        db_rollback_transaction();
-        throw $error;
     }
+    throw new RuntimeException('Group membership changed repeatedly during removal');
 }
 
 function user_group_copy($id, $prefix = 'New Group')

@@ -105,7 +105,10 @@ function sanitize_unserialize_selected_items($items) {
 }
 function read_config_option($name, $force = false) { return $GLOBALS['config_options'][$name] ?? ''; }
 function read_user_setting($name, $default = false, $force = false, $user = 0) { return $GLOBALS['user_settings'][$name] ?? $default; }
-function db_fetch_cell_prepared($sql, $params = array(), $col = '', $log = true) { return probe_answer('cell', $sql, $params, false); }
+function db_fetch_cell_prepared($sql, $params = array(), $col = '', $log = true) {
+    if (preg_match('/^SELECT id FROM user_auth WHERE id = \? FOR UPDATE$/', probe_normalize($sql))) { return (int) $params[0]; }
+    return probe_answer('cell', $sql, $params, false);
+}
 function db_fetch_cell($sql, $col = '', $log = true) { return probe_answer('cell', $sql, array(), false); }
 function db_fetch_row_prepared($sql, $params = array(), $log = true) { return probe_answer('row', $sql, $params, array()); }
 function db_fetch_assoc_prepared($sql, $params = array(), $log = true) { return probe_answer('assoc', $sql, $params, array()); }
@@ -118,9 +121,10 @@ function db_execute($sql, $log = true) {
     $GLOBALS['executed'][] = array('sql' => probe_normalize($sql), 'params' => array());
     return true;
 }
-function db_begin_transaction() { $GLOBALS['executed'][] = array('sql' => 'BEGIN', 'params' => array()); return true; }
-function db_commit_transaction() { $GLOBALS['executed'][] = array('sql' => 'COMMIT', 'params' => array()); return true; }
-function db_rollback_transaction() { $GLOBALS['executed'][] = array('sql' => 'ROLLBACK', 'params' => array()); return true; }
+$database_hostname='probe';$database_port=0;$database_default='auth';$database_sessions=array('probe:0:auth'=>new PDO('sqlite::memory:'));
+function db_begin_transaction() { $GLOBALS['executed'][] = array('sql' => 'BEGIN', 'params' => array()); return $GLOBALS['database_sessions']['probe:0:auth']->beginTransaction(); }
+function db_commit_transaction() { $GLOBALS['executed'][] = array('sql' => 'COMMIT', 'params' => array()); return $GLOBALS['database_sessions']['probe:0:auth']->commit(); }
+function db_rollback_transaction() { $GLOBALS['executed'][] = array('sql' => 'ROLLBACK', 'params' => array()); return $GLOBALS['database_sessions']['probe:0:auth']->rollBack(); }
 function db_fetch_insert_id() { return $GLOBALS['insert_id']; }
 function db_qstr($value) { return "'" . addslashes($value) . "'"; }
 function sql_save($save, $table) {
@@ -157,7 +161,7 @@ PHP;
 
         $program .= "\n" . ($scenario['stubs'] ?? '') . "\n";
 
-        $sources = array('lib/auth.php' => array_merge(array('user_group_update_membership', 'user_group_execute_child'), $scenario['auth_functions'] ?? array()));
+        $sources = array('lib/auth.php' => array_merge(array('auth_membership_begin', 'auth_membership_finish', 'auth_membership_lock_users', 'auth_membership_lock_groups', 'user_group_change_memberships', 'user_group_replace_memberships', 'user_group_update_membership', 'user_group_execute_child'), $scenario['auth_functions'] ?? array()));
         $sources[$scenario['page']] = array_merge($sources[$scenario['page']] ?? array(), $scenario['functions'] ?? array());
 
         foreach ($sources as $file => $functions) {
