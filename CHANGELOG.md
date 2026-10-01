@@ -6,7 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Index RRD input-field references on fresh installations and through a registered schema upgrade from an already installed 1.2.31, keeping reference locks scoped to the selected fields.
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
 
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 

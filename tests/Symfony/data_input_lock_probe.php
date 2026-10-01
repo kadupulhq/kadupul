@@ -80,11 +80,24 @@ function db_fetch_cell_prepared($sql, $parameters = [], ...$arguments)
     $statement->execute($parameters);
     return $statement->fetchColumn();
 }
+function populate_reference_fixture(PDO $database): void
+{
+    for ($id = 1; $id <= 1000; ++$id) {
+        $database->exec("INSERT INTO data_input_fields (id,data_input_id) VALUES ($id," . intdiv($id, 10) . ')');
+    }
+    for ($first = 1; $first <= 10000; $first += 1000) {
+        $rows = [];
+        for ($id = $first; $id < $first + 1000; ++$id) {
+            $rows[] = "($id,$id," . (intdiv($id - 1, 10) + 1) . ",'fixture')";
+        }
+        $database->exec('INSERT INTO data_template_rrd (id,local_data_id,data_input_field_id,data_source_name) VALUES ' . implode(',', $rows));
+    }
+}
 $config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_web' => false, 'url_path' => '/', 'cacti_server_os' => 'unix'];
 require $root . '/include/global_constants.php';
 require $root . '/include/global_arrays.php';
 require $root . '/lib/installer.php';
-$tables = ['data_template_rrd', 'data_input_fields', 'version', 'poller_output'];
+$tables = ['data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output'];
 foreach ($tables as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);
@@ -117,35 +130,54 @@ try {
         $created[] = $table;
     }
     $owner->exec("INSERT INTO version VALUES ('1.2.31')");
-    for ($id = 1; $id <= 1000; ++$id) {
-        $owner->exec("INSERT INTO data_input_fields (id,data_input_id) VALUES ($id," . intdiv($id, 10) . ')');
-    }
-    for ($first = 1; $first <= 10000; $first += 1000) {
-        $rows = [];
-        for ($id = $first; $id < $first + 1000; ++$id) {
-            $rows[] = "($id,$id," . (intdiv($id - 1, 10) + 1) . ",'fixture')";
-        }
-        $owner->exec('INSERT INTO data_template_rrd (id,local_data_id,data_input_field_id,data_source_name) VALUES ' . implode(',', $rows));
-    }
-    foreach (['fresh', 'upgrade'] as $mode) {
-        if ($mode === 'upgrade') {
-            $owner->exec('ALTER TABLE data_template_rrd DROP INDEX data_input_field_id');
+    populate_reference_fixture($owner);
+    $modes = ($argv[1] ?? '') === '--from-lts-only' ? ['upgrade-lts-1.2.32'] : ['fresh', 'upgrade-1.2.31', 'upgrade-lts-1.2.32'];
+    foreach ($modes as $mode) {
+        if ($mode !== 'fresh') {
+            $installedVersion = $mode === 'upgrade-1.2.31' ? '1.2.31' : '1.2.32';
+            if ($installedVersion === '1.2.32') {
+                // Snapshot of the actual LTS definitions and provenance, rather
+                // than assuming its already-recorded version implies our index.
+                $ltsSchema = file_get_contents($root . '/tests/Fixtures/lts-1.2.32-input-schema.sql');
+                foreach (['data_template_rrd', 'data_input_fields', 'settings_user'] as $table) {
+                    $owner->exec("DROP TABLE `$table`");
+                    if (!preg_match('/CREATE TABLE `?' . $table . '`? \(.*?;\s/s', $ltsSchema, $definition)) {
+                        throw new RuntimeException('LTS fixture schema unavailable: ' . $table);
+                    }
+                    $owner->exec($definition[0]);
+                }
+                populate_reference_fixture($owner);
+            } else {
+                $owner->exec('ALTER TABLE data_template_rrd DROP INDEX data_input_field_id');
+                $owner->exec('DELETE FROM settings_user WHERE user_id > 65535');
+                $owner->exec("ALTER TABLE settings_user MODIFY user_id smallint(8) unsigned NOT NULL default '0'");
+            }
+            $owner->exec("UPDATE version SET cacti = '$installedVersion'");
             // Execute the real installer's version gate using the real registry,
             // starting at an already installed 1.2.31, rather than calling the
             // migration directly and concealing a skipped version.
             $reflection = new ReflectionClass(Installer::class);
             $installer = $reflection->newInstanceWithoutConstructor();
-            $reflection->getProperty('old_cacti_version')->setValue($installer, '1.2.31');
+            $reflection->getProperty('old_cacti_version')->setValue($installer, $installedVersion);
             ob_start();
             try {
                 $result = $reflection->getMethod('upgradeDatabase')->invoke($installer);
             } finally {
                 ob_end_clean();
             }
-            if ($result !== false || get_cacti_cli_version() === '1.2.31' || get_cacti_cli_version() !== trim(file_get_contents($root . '/include/cacti_version'))) {
-                throw new RuntimeException('Native version-gated upgrade did not advance the installed 1.2.31 database.');
+            if ($result !== false || get_cacti_cli_version() === $installedVersion || get_cacti_cli_version() !== trim(file_get_contents($root . '/include/cacti_version'))) {
+                throw new RuntimeException('Native version-gated upgrade did not advance the installed ' . $installedVersion . ' database.');
             }
-            upgrade_to_1_2_32(); // An already upgraded installation must remain valid.
+            upgrade_to_1_2_33(); // An already upgraded installation must remain valid.
+        }
+        foreach ([65536, 16777215] as $userId) {
+            $statement = $owner->prepare('REPLACE INTO settings_user (user_id, name, value) VALUES (?, ?, ?)');
+            $statement->execute([$userId, 'auth_credential_generation', 'fixture-generation']);
+            $statement = $owner->prepare('SELECT value FROM settings_user WHERE user_id=? AND name=?');
+            $statement->execute([$userId, 'auth_credential_generation']);
+            if ($statement->fetchColumn() !== 'fixture-generation') {
+                throw new RuntimeException('Credential metadata does not support the full unsigned mediumint user ID range.');
+            }
         }
         $owner->query('ANALYZE TABLE data_template_rrd,data_input_fields')->fetchAll();
         $actual = $owner->query("SHOW INDEX FROM data_template_rrd WHERE Key_name='data_input_field_id'")->fetch(PDO::FETCH_ASSOC);
@@ -188,7 +220,7 @@ try {
             }
             $owner->rollBack();
         }
-        echo 'PASS: ' . $mode . " indexed field/method checks permit unrelated writes and retain selected-row locks.\n";
+        echo 'PASS: ' . $mode . " preserves full-range user IDs and indexed reference locks permit unrelated writes.\n";
     }
 } finally {
     foreach ([$owner, $writer] as $db) {
