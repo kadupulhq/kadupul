@@ -1,0 +1,17 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "form_settings",
+        "graph_auth_method",
+        "i18n_auto_detection",
+        "i18n_default_language",
+        "i18n_language_support",
+        "selective_debug",
+        "selective_plugin_debug",
+        "tab"
+    ],
+    "script_names": []
+}
