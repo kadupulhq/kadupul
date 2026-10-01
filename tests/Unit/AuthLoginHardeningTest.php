@@ -104,6 +104,8 @@ test('auth_login_redirect validates referer starts with slash', function () use 
 });
 
 test('auth_login performs auth transition hardening on successful login', function () use ($authLoginSource) {
-    expect(str_contains($authLoginSource, "cacti_auth_transition((int) \$user['id'], 'login')"))
+    $tokens = array_filter(token_get_all($authLoginSource), static fn($token) => !is_array($token) || !in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT), true));
+    $normalized = implode('', array_map(static fn($token) => is_array($token) ? $token[1] : $token, $tokens));
+    expect(str_contains($normalized, "cacti_auth_transition((int)\$user['id'],'login')"))
         ->toBeTrue();
 });
