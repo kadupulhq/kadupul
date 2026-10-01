@@ -302,7 +302,7 @@ msgid "Place Graph(s) on Tree"
 msgstr "Colocar gráfico(s) en Arbol"
 
 #: aggregate_graphs.php:607 data_sources.php:1131 lib/html_reports.php:1576
-#: user_admin.php:1778
+#: user_admin.php:1752
 #, php-format
 msgid "[edit: %s]"
 msgstr "[editar: %s]"
@@ -421,8 +421,8 @@ msgstr "Coincidencia de gráficos"
 #: managers.php:729 plugins.php:491 pollers.php:869 rrdcheck.php:210
 #: rrdcleaner.php:511 settings.php:539 settings.php:556 settings.php:615
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
-#: tree.php:878 tree.php:913 tree.php:948 tree.php:2150 user_admin.php:2079
-#: user_domains.php:643 user_group_admin.php:1854 utilities.php:1074
+#: tree.php:878 tree.php:913 tree.php:948 tree.php:2150 user_admin.php:2053
+#: user_domains.php:643 user_group_admin.php:1827 utilities.php:1074
 #: utilities.php:1470 utilities.php:1765 utilities.php:2052 utilities.php:2997
 #: utilities.php:3255 vdef.php:713
 msgid "Search"
@@ -436,8 +436,8 @@ msgstr "Buscar"
 #: include/global_arrays.php:2010 lib/api_automation.php:283 lib/html.php:1801
 #: lib/html.php:1803 lib/html.php:1881 lib/html_graph.php:191
 #: lib/html_tree.php:1022 lib/html_tree.php:1378 tree.php:857 tree.php:2296
-#: user_admin.php:775 user_admin.php:1046 user_admin.php:2489
-#: user_group_admin.php:770 user_group_admin.php:924 user_group_admin.php:2144
+#: user_admin.php:775 user_admin.php:1046 user_admin.php:2463
+#: user_group_admin.php:770 user_group_admin.php:924 user_group_admin.php:2117
 #: utilities.php:303
 msgid "Graphs"
 msgstr "Gráficos"
@@ -458,8 +458,8 @@ msgstr "Gráficos"
 #: managers.php:147 managers.php:497 plugins.php:515 pollers.php:879
 #: rrdcheck.php:233 rrdcleaner.php:537
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
-#: tree.php:2160 user_admin.php:2140 user_domains.php:18 user_domains.php:653
-#: user_domains.php:739 user_group_admin.php:1864 utilities.php:1052
+#: tree.php:2160 user_admin.php:2114 user_domains.php:18 user_domains.php:653
+#: user_domains.php:739 user_group_admin.php:1837 utilities.php:1052
 #: utilities.php:1775 utilities.php:2083 utilities.php:3022 utilities.php:3291
 #: vdef.php:723
 msgid "Default"
@@ -483,9 +483,9 @@ msgstr "Parte de Agregados"
 #: lib/clog_webapi.php:516 lib/html.php:1649 lib/html_filter.php:63
 #: lib/html_graph.php:172 lib/html_reports.php:1977 lib/html_tree.php:1009
 #: links.php:328 managers.php:159 managers.php:509 managers.php:749
-#: plugins.php:530 pollers.php:914 tree.php:2172 user_admin.php:2155
-#: user_admin.php:2489 user_admin.php:2495 user_admin.php:2501
-#: user_admin.php:2507 user_admin.php:2513 user_admin.php:2519
+#: plugins.php:530 pollers.php:914 tree.php:2172 user_admin.php:2129
+#: user_admin.php:2463 user_admin.php:2469 user_admin.php:2475
+#: user_admin.php:2481 user_admin.php:2487 user_admin.php:2493
 msgid "Go"
 msgstr "Ir"
 
@@ -499,8 +499,8 @@ msgstr "Ir"
 #: lib/html_graph.php:172 managers.php:159 managers.php:509 managers.php:749
 #: plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
-#: tree.php:2172 user_admin.php:2155 user_domains.php:665
-#: user_group_admin.php:1879 utilities.php:1064 utilities.php:1422
+#: tree.php:2172 user_admin.php:2129 user_domains.php:665
+#: user_group_admin.php:1852 utilities.php:1064 utilities.php:1422
 #: utilities.php:1756 utilities.php:2043 utilities.php:3034 utilities.php:3303
 msgid "Set/Refresh Filters"
 msgstr "Definir/Refrescar Filtros"
@@ -520,9 +520,9 @@ msgstr "Definir/Refrescar Filtros"
 #: lib/html_graph.php:290 lib/html_reports.php:1978 lib/html_tree.php:1010
 #: lib/html_tree.php:1121 links.php:329 managers.php:160 managers.php:510
 #: managers.php:750 plugins.php:531 pollers.php:915 tree.php:2173
-#: user_admin.php:2156 user_admin.php:2489 user_admin.php:2495
-#: user_admin.php:2501 user_admin.php:2507 user_admin.php:2513
-#: user_admin.php:2519 user_domains.php:666
+#: user_admin.php:2130 user_admin.php:2463 user_admin.php:2469
+#: user_admin.php:2475 user_admin.php:2481 user_admin.php:2487
+#: user_admin.php:2493 user_domains.php:666
 msgid "Clear"
 msgstr "Restablecer"
 
@@ -535,8 +535,8 @@ msgstr "Restablecer"
 #: lib/html_graph.php:173 lib/html_tree.php:1010 managers.php:160
 #: managers.php:510 managers.php:750 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
-#: tree.php:2173 user_admin.php:2156 user_domains.php:666
-#: user_group_admin.php:1880 utilities.php:1065 utilities.php:1423
+#: tree.php:2173 user_admin.php:2130 user_domains.php:666
+#: user_group_admin.php:1853 utilities.php:1065 utilities.php:1423
 #: utilities.php:1757 utilities.php:2044 utilities.php:3035 utilities.php:3304
 msgid "Clear Filters"
 msgstr "Restablecer filtros"
@@ -552,9 +552,9 @@ msgstr "Título de gráfico"
 #: data_sources.php:1707 data_templates.php:1254 graph_templates.php:838
 #: graphs.php:2260 host.php:1786 host_templates.php:917
 #: lib/api_automation.php:282 pollers.php:995 tree.php:2236 user_admin.php:783
-#: user_admin.php:897 user_admin.php:1046 user_admin.php:1195
-#: user_admin.php:1334 user_group_admin.php:571 user_group_admin.php:778
-#: user_group_admin.php:924 user_group_admin.php:1071 user_group_admin.php:1203
+#: user_admin.php:897 user_admin.php:1046 user_admin.php:1190
+#: user_admin.php:1329 user_group_admin.php:571 user_group_admin.php:778
+#: user_group_admin.php:924 user_group_admin.php:1065 user_group_admin.php:1197
 msgid "ID"
 msgstr "ID"
 
@@ -575,7 +575,7 @@ msgstr "Tamaño"
 #: gprint_presets.php:430 graph_templates.php:895 host_templates.php:965
 #: include/global_settings.php:876 include/global_settings.php:1909
 #: lib/api_automation.php:1438 links.php:402 tree.php:2329 tree.php:2330
-#: user_admin.php:2271 user_domains.php:758 user_group_admin.php:1947
+#: user_admin.php:2245 user_domains.php:758 user_group_admin.php:1920
 #: vdef.php:918
 msgid "No"
 msgstr "No"
@@ -590,8 +590,8 @@ msgstr "No"
 #: host_templates.php:965 include/global_settings.php:875
 #: include/global_settings.php:1908 lib/api_automation.php:1438
 #: lib/installer.php:2118 lib/installer.php:2146 lib/installer.php:3847
-#: links.php:402 tree.php:2329 tree.php:2330 user_admin.php:2269
-#: user_domains.php:754 user_domains.php:758 user_group_admin.php:1945
+#: links.php:402 tree.php:2329 tree.php:2330 user_admin.php:2243
+#: user_domains.php:754 user_domains.php:758 user_group_admin.php:1918
 #: vdef.php:918
 msgid "Yes"
 msgstr "Sí"
@@ -723,7 +723,7 @@ msgstr "Plantillas de Agregados"
 #: aggregate_templates.php:597 automation_templates.php:383
 #: automation_templates.php:470 color_templates.php:647
 #: include/global_arrays.php:1001 include/global_arrays.php:1064
-#: lib/installer.php:2732 user_admin.php:2507 user_group_admin.php:2156
+#: lib/installer.php:2732 user_admin.php:2481 user_group_admin.php:2129
 msgid "Templates"
 msgstr "Plantillas"
 
@@ -857,19 +857,19 @@ msgstr "Guardar"
 msgid "Version %s | %s"
 msgstr "Versión %s %s"
 
-#: auth_changepassword.php:386 user_admin.php:1844
+#: auth_changepassword.php:386 user_admin.php:1818
 msgid "Password Too Short"
 msgstr "La contraseña es demasiado corta"
 
-#: auth_changepassword.php:392 user_admin.php:1849
+#: auth_changepassword.php:392 user_admin.php:1823
 msgid "Password Validation Passes"
 msgstr "Validación de contraseña satisfactoria"
 
-#: auth_changepassword.php:408 user_admin.php:1863
+#: auth_changepassword.php:408 user_admin.php:1837
 msgid "Passwords do Not Match"
 msgstr "Las contraseñas no coinciden"
 
-#: auth_changepassword.php:412 user_admin.php:1866
+#: auth_changepassword.php:412 user_admin.php:1840
 msgid "Passwords Match"
 msgstr "Las contraseñas coinciden"
 
@@ -920,7 +920,7 @@ msgid "Password"
 msgstr "Contraseña"
 
 #: auth_login.php:336 include/global_settings.php:2306 lib/auth.php:564
-#: lib/auth.php:586 lib/auth.php:596 lib/auth.php:601 user_admin.php:2129
+#: lib/auth.php:586 lib/auth.php:596 lib/auth.php:601 user_admin.php:2103
 msgid "Local"
 msgstr "local"
 
@@ -929,7 +929,7 @@ msgstr "local"
 msgid "LDAP"
 msgstr "LDAP"
 
-#: auth_login.php:358 user_admin.php:2124 user_admin.php:2251
+#: auth_login.php:358 user_admin.php:2098 user_admin.php:2225
 #: user_group_admin.php:571
 msgid "Realm"
 msgstr "Permisos"
@@ -944,8 +944,8 @@ msgstr "Ingresar"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1184 include/global_settings.php:1501
-#: lib/html.php:2571 managers.php:23 user_admin.php:1745
-#: user_group_admin.php:1624
+#: lib/html.php:2571 managers.php:23 user_admin.php:1719
+#: user_group_admin.php:1597
 msgid "General"
 msgstr "General"
 
@@ -969,7 +969,7 @@ msgstr "Vista de lista"
 msgid "Preview View"
 msgstr "Vista previa"
 
-#: auth_profile.php:302 include/global_form.php:1495 user_admin.php:2247
+#: auth_profile.php:302 include/global_form.php:1495 user_admin.php:2221
 msgid "User Name"
 msgstr "Nombre de Usuario"
 
@@ -978,7 +978,7 @@ msgid "The login name for this user."
 msgstr "El nombre de inicio de sesión para este usuario."
 
 #: auth_profile.php:310 include/global_form.php:1503
-#: include/global_settings.php:1853 user_admin.php:2249 user_domains.php:482
+#: include/global_settings.php:1853 user_admin.php:2223 user_domains.php:482
 #: user_group_admin.php:571 utilities.php:1141
 msgid "Full Name"
 msgstr "Nombre completo"
@@ -1019,7 +1019,7 @@ msgstr "Cerrar sesión en todas partes"
 msgid "Clear all your Login Session Tokens."
 msgstr "Borrar todos tus tokens de inicio de sesión."
 
-#: auth_profile.php:366 user_admin.php:1752 user_group_admin.php:1631
+#: auth_profile.php:366 user_admin.php:1726 user_group_admin.php:1604
 msgid "User Settings"
 msgstr "Configuraciones de Usuario"
 
@@ -1118,8 +1118,8 @@ msgstr "Eliminar Dispositivo(s)"
 #: lib/api_automation.php:178 lib/api_automation.php:271
 #: lib/api_automation.php:486 lib/api_automation.php:563
 #: lib/api_automation.php:1189 pollers.php:1031 tree.php:856 tree.php:2290
-#: user_admin.php:1038 user_admin.php:2501 user_group_admin.php:916
-#: user_group_admin.php:2150 utilities.php:298
+#: user_admin.php:1038 user_admin.php:2475 user_group_admin.php:916
+#: user_group_admin.php:2123 utilities.php:298
 msgid "Devices"
 msgstr "Dispositivos"
 
@@ -1149,7 +1149,7 @@ msgstr "Contacto"
 #: include/global_form.php:1739 lib/api_automation.php:278
 #: lib/api_automation.php:1196 lib/installer.php:2038 lib/installer.php:2733
 #: managers.php:204 user_admin.php:897 user_admin.php:1046
-#: user_group_admin.php:924 user_group_admin.php:1933
+#: user_group_admin.php:924 user_group_admin.php:1906
 msgid "Description"
 msgstr "Descripción"
 
@@ -1235,7 +1235,7 @@ msgstr "Purgar dispositivos descubiertos"
 #: lib/spikekill.php:1716 lib/spikekill.php:1717 lib/spikekill.php:1718
 #: lib/spikekill.php:1719 lib/spikekill.php:1720 lib/spikekill.php:1721
 #: lib/spikekill.php:1722 lib/spikekill.php:1723 plugins.php:780
-#: pollers.php:1115 user_admin.php:2263 utilities.php:721 utilities.php:1170
+#: pollers.php:1115 user_admin.php:2237 utilities.php:721 utilities.php:1170
 #: utilities.php:2638 utilities.php:2766 utilities.php:2774 utilities.php:2785
 #: utilities.php:2796 utilities.php:2819 utilities.php:2865 utilities.php:3099
 msgid "N/A"
@@ -1369,9 +1369,9 @@ msgstr "Consulta de datos"
 #: lib/api_automation.php:27 lib/html_reports.php:1957
 #: lib/html_reports.php:2062 lib/html_reports.php:2073
 #: lib/html_reports.php:2109 links.php:381 links.php:559 managers.php:231
-#: managers.php:592 user_admin.php:897 user_admin.php:909 user_admin.php:2250
+#: managers.php:592 user_admin.php:897 user_admin.php:909 user_admin.php:2224
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:75
-#: user_group_admin.php:571 user_group_admin.php:586 user_group_admin.php:1937
+#: user_group_admin.php:571 user_group_admin.php:586 user_group_admin.php:1910
 #: utilities.php:2063 utilities.php:2883
 msgid "Enabled"
 msgstr "Habilitado"
@@ -2076,7 +2076,7 @@ msgstr "Ocioso"
 
 #: automation_networks.php:1150 include/global_arrays.php:890
 #: include/global_arrays.php:1208 include/global_settings.php:2558
-#: lib/html_reports.php:2104 user_admin.php:2120
+#: lib/html_reports.php:2104 user_admin.php:2094
 msgid "Never"
 msgstr "Nunca"
 
@@ -2396,7 +2396,7 @@ msgid "Device Automation Templates"
 msgstr "Plantilla de automatización de Dispositivos"
 
 #: automation_templates.php:479 data_sources.php:1737 package_import.php:624
-#: templates_import.php:242 user_admin.php:1195 user_group_admin.php:1071
+#: templates_import.php:242 user_admin.php:1190 user_group_admin.php:1065
 msgid "Template Name"
 msgstr "Nombre de Plantilla"
 
@@ -3263,7 +3263,7 @@ msgstr "Perfil"
 #: host_templates.php:707 lib/clog_webapi.php:532 lib/html.php:208
 #: lib/html_reports.php:1077 lib/html_reports.php:2200 plugins.php:501
 #: settings.php:531 settings.php:553 settings.php:584 tree.php:854
-#: user_admin.php:2089 user_admin.php:2114 user_admin.php:2128
+#: user_admin.php:2063 user_admin.php:2088 user_admin.php:2102
 #: utilities.php:1022 utilities.php:1436
 msgid "All"
 msgstr "Todos"
@@ -4632,8 +4632,8 @@ msgstr "Activa esta casilla si deseas permitir que el usuario reemplazar el valo
 
 #: graph_templates.php:695 graph_templates.php:710 graph_templates.php:874
 #: graphs_new.php:548 include/global_arrays.php:1234
-#: include/global_arrays.php:2234 lib/html_tree.php:541 user_admin.php:1187
-#: user_group_admin.php:1063
+#: include/global_arrays.php:2234 lib/html_tree.php:541 user_admin.php:1182
+#: user_group_admin.php:1057
 msgid "Graph Templates"
 msgstr "Plantilla de gráficos"
 
@@ -5159,8 +5159,8 @@ msgstr "(Selecciona un tipo de gráfico a crear)"
 msgid "Create"
 msgstr "Crear"
 
-#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1090 user_admin.php:1407
-#: user_group_admin.php:1284
+#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1090 user_admin.php:1405
+#: user_group_admin.php:1281
 msgid "Select All"
 msgstr "Seleccionar todo"
 
@@ -6654,8 +6654,8 @@ msgid "Sites"
 msgstr "Sitios"
 
 #: include/global_arrays.php:991 include/global_arrays.php:1228 tree.php:2141
-#: tree.php:2156 tree.php:2220 user_admin.php:1326 user_admin.php:2513
-#: user_admin.php:2519 user_group_admin.php:1195 user_group_admin.php:2162
+#: tree.php:2156 tree.php:2220 user_admin.php:1321 user_admin.php:2487
+#: user_admin.php:2493 user_group_admin.php:1189 user_group_admin.php:2135
 msgid "Trees"
 msgstr "Arboles"
 
@@ -6730,8 +6730,8 @@ msgid "Settings"
 msgstr "Opciones"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:2576
-#: user_admin.php:2136 user_admin.php:2238 user_group_admin.php:563
-#: user_group_admin.php:2168
+#: user_admin.php:2110 user_admin.php:2212 user_group_admin.php:563
+#: user_group_admin.php:2141
 msgid "Users"
 msgstr "Usuarios"
 
@@ -6756,7 +6756,7 @@ msgstr "Utilitarios de sistema"
 #: include/global_arrays.php:1036 include/global_arrays.php:1070
 #: include/global_arrays.php:1113 include/global_arrays.php:1216
 #: include/global_arrays.php:2210 links.php:81 links.php:300 links.php:370
-#: links.php:401 links.php:483 user_admin.php:1489 user_group_admin.php:1368
+#: links.php:401 links.php:483 user_admin.php:1475 user_group_admin.php:1353
 msgid "External Links"
 msgstr "Vínculos externos"
 
@@ -7747,7 +7747,7 @@ msgstr "Modo de lista"
 
 #: include/global_arrays.php:2060 include/global_arrays.php:2066
 #: lib/functions.php:4239 lib/html.php:1792 lib/html.php:1869 lib/html.php:2568
-#: links.php:342 user_admin.php:1458 user_group_admin.php:1337
+#: links.php:342 user_admin.php:1450 user_group_admin.php:1328
 msgid "Console"
 msgstr "Consola"
 
@@ -14491,7 +14491,7 @@ msgstr "Eventos"
 msgid "Send Report"
 msgstr "Enviar Reporte"
 
-#: lib/html_reports.php:1579 lib/import.php:2845 user_admin.php:1780
+#: lib/html_reports.php:1579 lib/import.php:2845 user_admin.php:1754
 msgid "[new]"
 msgstr "[nuevo]"
 
@@ -16925,15 +16925,15 @@ msgstr "Aplicar filtro"
 msgid "Reset filters"
 msgstr "Resetear filtros"
 
-#: links.php:343 links.php:511 user_admin.php:1459 user_group_admin.php:1338
+#: links.php:343 links.php:511 user_admin.php:1451 user_group_admin.php:1329
 msgid "Top Tab"
 msgstr "Pestaña Superior"
 
-#: links.php:344 user_admin.php:1460 user_group_admin.php:1339
+#: links.php:344 user_admin.php:1452 user_group_admin.php:1330
 msgid "Bottom Console"
 msgstr "Consola Inferior"
 
-#: links.php:345 user_admin.php:1461 user_group_admin.php:1340
+#: links.php:345 user_admin.php:1453 user_group_admin.php:1331
 msgid "Top Console"
 msgstr "Consola Superior"
 
@@ -17976,16 +17976,16 @@ msgid "Messages"
 msgstr "Mensajes"
 
 #: rrdcheck.php:245 rrdcleaner.php:549 user_domains.php:665
-#: user_group_admin.php:1879 user_group_admin.php:2144
-#: user_group_admin.php:2150 user_group_admin.php:2156
-#: user_group_admin.php:2162 user_group_admin.php:2168
+#: user_group_admin.php:1852 user_group_admin.php:2117
+#: user_group_admin.php:2123 user_group_admin.php:2129
+#: user_group_admin.php:2135 user_group_admin.php:2141
 msgctxt "filter: use"
 msgid "Go"
 msgstr "Ir"
 
-#: rrdcheck.php:246 rrdcleaner.php:550 user_group_admin.php:1880
-#: user_group_admin.php:2144 user_group_admin.php:2150
-#: user_group_admin.php:2156 user_group_admin.php:2162
+#: rrdcheck.php:246 rrdcleaner.php:550 user_group_admin.php:1853
+#: user_group_admin.php:2117 user_group_admin.php:2123
+#: user_group_admin.php:2129 user_group_admin.php:2135
 msgctxt "filter: reset"
 msgid "Clear"
 msgstr "Restablecer"
@@ -18451,7 +18451,7 @@ msgstr "Ordenar árboles ascendentes"
 msgid "Sort Trees Descending"
 msgstr "Ordenar árboles descendentes"
 
-#: tree.php:2230 user_admin.php:1334 user_group_admin.php:1203
+#: tree.php:2230 user_admin.php:1329 user_group_admin.php:1197
 msgid "Tree Name"
 msgstr "Nombre de Arbol"
 
@@ -18628,14 +18628,14 @@ msgid "Default Graph Policy for this User"
 msgstr "Politica de gráficos predeterminada para este usuario"
 
 #: user_admin.php:679 user_admin.php:959 user_admin.php:1128
-#: user_admin.php:1274 user_group_admin.php:669 user_group_admin.php:854
-#: user_group_admin.php:1002 user_group_admin.php:1147
+#: user_admin.php:1269 user_group_admin.php:669 user_group_admin.php:854
+#: user_group_admin.php:1002 user_group_admin.php:1141
 msgid "Update"
 msgstr "Actualizar"
 
-#: user_admin.php:783 user_admin.php:1046 user_admin.php:1195
-#: user_admin.php:1334 user_group_admin.php:778 user_group_admin.php:924
-#: user_group_admin.php:1071 user_group_admin.php:1203
+#: user_admin.php:783 user_admin.php:1046 user_admin.php:1190
+#: user_admin.php:1329 user_group_admin.php:778 user_group_admin.php:924
+#: user_group_admin.php:1065 user_group_admin.php:1197
 msgid "Effective Policy"
 msgstr "Política en uso"
 
@@ -18644,25 +18644,25 @@ msgid "No Matching Graphs Found"
 msgstr "Ninguna coincidencia de gráficos encontrada"
 
 #: user_admin.php:812 user_admin.php:818 user_admin.php:1091
-#: user_admin.php:1097 user_admin.php:1237 user_admin.php:1243
-#: user_admin.php:1375 user_admin.php:1381 user_group_admin.php:807
+#: user_admin.php:1097 user_admin.php:1232 user_admin.php:1238
+#: user_admin.php:1370 user_admin.php:1376 user_group_admin.php:807
 #: user_group_admin.php:813 user_group_admin.php:968 user_group_admin.php:974
-#: user_group_admin.php:1113 user_group_admin.php:1119
-#: user_group_admin.php:1243 user_group_admin.php:1249
+#: user_group_admin.php:1107 user_group_admin.php:1113
+#: user_group_admin.php:1237 user_group_admin.php:1243
 msgid "Revoke Access"
 msgstr "Revocar acceso"
 
 #: user_admin.php:813 user_admin.php:817 user_admin.php:1092
-#: user_admin.php:1096 user_admin.php:1238 user_admin.php:1242
-#: user_admin.php:1376 user_admin.php:1380 user_group_admin.php:50
+#: user_admin.php:1096 user_admin.php:1233 user_admin.php:1237
+#: user_admin.php:1371 user_admin.php:1375 user_group_admin.php:50
 #: user_group_admin.php:808 user_group_admin.php:812 user_group_admin.php:969
-#: user_group_admin.php:973 user_group_admin.php:1114 user_group_admin.php:1118
-#: user_group_admin.php:1244 user_group_admin.php:1248
+#: user_group_admin.php:973 user_group_admin.php:1108 user_group_admin.php:1112
+#: user_group_admin.php:1238 user_group_admin.php:1242
 msgid "Grant Access"
 msgstr "Conceder acceso"
 
-#: user_admin.php:889 user_admin.php:2495 user_group_admin.php:1860
-#: user_group_admin.php:1922
+#: user_admin.php:889 user_admin.php:2469 user_group_admin.php:1833
+#: user_group_admin.php:1895
 msgid "Groups"
 msgstr "Grupos"
 
@@ -18678,15 +18678,15 @@ msgstr "Políticas (Gráficos/Dispositivos/Plantillas)"
 msgid "Non Member"
 msgstr "No miembro"
 
-#: user_admin.php:908 user_admin.php:2293 user_admin.php:2294
-#: user_admin.php:2295 user_group_admin.php:1954 user_group_admin.php:1955
-#: user_group_admin.php:1956
+#: user_admin.php:908 user_admin.php:2267 user_admin.php:2268
+#: user_admin.php:2269 user_group_admin.php:1927 user_group_admin.php:1928
+#: user_group_admin.php:1929
 msgid "ALLOW"
 msgstr "PERMITIR"
 
-#: user_admin.php:908 user_admin.php:2293 user_admin.php:2294
-#: user_admin.php:2295 user_group_admin.php:1954 user_group_admin.php:1955
-#: user_group_admin.php:1956
+#: user_admin.php:908 user_admin.php:2267 user_admin.php:2268
+#: user_admin.php:2269 user_group_admin.php:1927 user_group_admin.php:1928
+#: user_group_admin.php:1929
 msgid "DENY"
 msgstr "DENEGAR"
 
@@ -18710,19 +18710,19 @@ msgstr "Politica de dispositivos por defecto"
 msgid "Default Device Policy for this User"
 msgstr "Política de dispositivo predeterminada para este usuario"
 
-#: user_admin.php:1057 user_admin.php:1065 user_admin.php:1206
-#: user_admin.php:1214 user_admin.php:1345 user_admin.php:1353
-#: user_group_admin.php:935 user_group_admin.php:943 user_group_admin.php:1082
-#: user_group_admin.php:1090 user_group_admin.php:1214
-#: user_group_admin.php:1222
+#: user_admin.php:1057 user_admin.php:1065 user_admin.php:1201
+#: user_admin.php:1209 user_admin.php:1340 user_admin.php:1348
+#: user_group_admin.php:935 user_group_admin.php:943 user_group_admin.php:1076
+#: user_group_admin.php:1084 user_group_admin.php:1208
+#: user_group_admin.php:1216
 msgid "Access Granted"
 msgstr "Acceso concedido"
 
-#: user_admin.php:1059 user_admin.php:1063 user_admin.php:1208
-#: user_admin.php:1212 user_admin.php:1347 user_admin.php:1351
-#: user_group_admin.php:937 user_group_admin.php:941 user_group_admin.php:1084
-#: user_group_admin.php:1088 user_group_admin.php:1216
-#: user_group_admin.php:1220
+#: user_admin.php:1059 user_admin.php:1063 user_admin.php:1203
+#: user_admin.php:1207 user_admin.php:1342 user_admin.php:1346
+#: user_group_admin.php:937 user_group_admin.php:941 user_group_admin.php:1078
+#: user_group_admin.php:1082 user_group_admin.php:1210
+#: user_group_admin.php:1214
 msgid "Access Restricted"
 msgstr "Acceso restringido"
 
@@ -18738,184 +18738,184 @@ msgstr "Política de Plantilla de gráficos predeterminada"
 msgid "Default Graph Template Policy for this User"
 msgstr "Política de Plantilla de gráficos predeterminada para este usuario"
 
-#: user_admin.php:1195 user_group_admin.php:1071
+#: user_admin.php:1190 user_group_admin.php:1065
 msgid "Total Graphs"
 msgstr "Total de gráficos"
 
-#: user_admin.php:1222 user_group_admin.php:1098
+#: user_admin.php:1217 user_group_admin.php:1092
 msgid "No Matching Graph Templates Found"
 msgstr "Ninguna coincidencia de Plantilla de gráficos encontrada"
 
-#: user_admin.php:1264 user_group_admin.php:1137
+#: user_admin.php:1259 user_group_admin.php:1131
 msgid "Default Tree Policy"
 msgstr "Politica de Arbol por defecto"
 
-#: user_admin.php:1269
+#: user_admin.php:1264
 msgid "Default Tree Policy for this User"
 msgstr "Política de árbol predeterminada para este usuario"
 
-#: user_admin.php:1360 user_group_admin.php:1229
+#: user_admin.php:1355 user_group_admin.php:1223
 msgid "No Matching Trees Found"
 msgstr "Ninguna coincidencia de Arboles encontrada"
 
-#: user_admin.php:1406 user_group_admin.php:1283
+#: user_admin.php:1404 user_group_admin.php:1280
 msgid "User Permissions"
 msgstr "Permisos de Usuario"
 
-#: user_admin.php:1465 user_group_admin.php:1344
+#: user_admin.php:1457 user_group_admin.php:1335
 msgid "External Link Permissions"
 msgstr "Permisos de vínculos externos"
 
-#: user_admin.php:1548 user_group_admin.php:1425
+#: user_admin.php:1528 user_group_admin.php:1404
 msgid "Plugin Permissions"
 msgstr "Permisos de Plugin"
 
-#: user_admin.php:1565 user_group_admin.php:1442
+#: user_admin.php:1545 user_group_admin.php:1421
 msgid "Legacy Permissions"
 msgstr "Revisar permisos"
 
-#: user_admin.php:1630 user_group_admin.php:1509
+#: user_admin.php:1604 user_group_admin.php:1482
 #, php-format
 msgid "User Settings %s"
 msgstr "Configuraciones de Usuario %s"
 
-#: user_admin.php:1746 user_group_admin.php:1626
+#: user_admin.php:1720 user_group_admin.php:1599
 msgid "Permissions"
 msgstr "Permisos"
 
-#: user_admin.php:1747
+#: user_admin.php:1721
 msgid "Group Membership"
 msgstr "Miembro de grupo"
 
-#: user_admin.php:1748 user_group_admin.php:1627
+#: user_admin.php:1722 user_group_admin.php:1600
 msgid "Graph Perms"
 msgstr "Permisos de gráfico"
 
-#: user_admin.php:1749 user_group_admin.php:1628
+#: user_admin.php:1723 user_group_admin.php:1601
 msgid "Device Perms"
 msgstr "Permisos de Dispositivos"
 
-#: user_admin.php:1750 user_group_admin.php:1629
+#: user_admin.php:1724 user_group_admin.php:1602
 msgid "Template Perms"
 msgstr "Permisos de Plantillas"
 
-#: user_admin.php:1751 user_group_admin.php:1630
+#: user_admin.php:1725 user_group_admin.php:1603
 msgid "Tree Perms"
 msgstr "Permisos de Arboles"
 
-#: user_admin.php:1771
+#: user_admin.php:1745
 #, fuzzy
 msgid "User not found."
 msgstr "Archivo no encontrado"
 
-#: user_admin.php:1810
+#: user_admin.php:1784
 #, php-format
 msgid "User Management %s"
 msgstr "Administración de usuario %s"
 
-#: user_admin.php:2064
+#: user_admin.php:2038
 msgid "User Management"
 msgstr "Administración de usuario"
 
-#: user_admin.php:2085
+#: user_admin.php:2059
 #, fuzzy
 msgid "Group"
 msgstr "Grupos"
 
-#: user_admin.php:2110 user_admin.php:2255
+#: user_admin.php:2084 user_admin.php:2229
 msgid "Last Login"
 msgstr "Ultimo acceso"
 
-#: user_admin.php:2115
+#: user_admin.php:2089
 #, fuzzy
 msgid "< 1 Week Ago"
 msgstr "1 Semana"
 
-#: user_admin.php:2116
+#: user_admin.php:2090
 msgid "< 1 Month Ago"
 msgstr ""
 
-#: user_admin.php:2117
+#: user_admin.php:2091
 msgid "> 1 Month Ago"
 msgstr ""
 
-#: user_admin.php:2118
+#: user_admin.php:2092
 #, fuzzy
 msgid "> 2 Months Ago"
 msgstr "%d Meses"
 
-#: user_admin.php:2119
+#: user_admin.php:2093
 #, fuzzy
 msgid "> 4 Months Ago"
 msgstr "%d Meses"
 
-#: user_admin.php:2130
+#: user_admin.php:2104
 msgid "Basic"
 msgstr "Básico"
 
-#: user_admin.php:2131
+#: user_admin.php:2105
 msgid "LDAP/AD"
 msgstr "LDAP"
 
-#: user_admin.php:2132
+#: user_admin.php:2106
 msgid "Domain"
 msgstr "Dominio"
 
-#: user_admin.php:2248
+#: user_admin.php:2222
 msgid "User ID"
 msgstr "ID de Usuario"
 
-#: user_admin.php:2252 user_group_admin.php:1934
+#: user_admin.php:2226 user_group_admin.php:1907
 msgid "Graph Policy"
 msgstr "Política de gráficos"
 
-#: user_admin.php:2253 user_group_admin.php:1935
+#: user_admin.php:2227 user_group_admin.php:1908
 msgid "Device Policy"
 msgstr "Politica de Dispositivos"
 
-#: user_admin.php:2254 user_group_admin.php:1936
+#: user_admin.php:2228 user_group_admin.php:1909
 msgid "Template Policy"
 msgstr "Politica de Plantillas"
 
-#: user_admin.php:2277
+#: user_admin.php:2251
 msgid "Unavailable"
 msgstr "No disponible"
 
-#: user_admin.php:2302
+#: user_admin.php:2276
 msgid "No Users Found"
 msgstr "Ningún usuario encontrado"
 
-#: user_admin.php:2489 user_group_admin.php:2144
+#: user_admin.php:2463 user_group_admin.php:2117
 #, php-format
 msgid "Graph Permissions %s"
 msgstr "Permisos de gráficos %s"
 
-#: user_admin.php:2489 user_admin.php:2495
+#: user_admin.php:2463 user_admin.php:2469
 msgid "Show All"
 msgstr "Mostrar todo"
 
-#: user_admin.php:2495
+#: user_admin.php:2469
 #, php-format
 msgid "Group Membership %s"
 msgstr "Miembro del grupo %s"
 
-#: user_admin.php:2501 user_group_admin.php:2150
+#: user_admin.php:2475 user_group_admin.php:2123
 #, php-format
 msgid "Devices Permission %s"
 msgstr "Permisos de Dispositivos %s"
 
-#: user_admin.php:2501 user_admin.php:2507 user_admin.php:2513
-#: user_admin.php:2519 user_group_admin.php:2144 user_group_admin.php:2150
-#: user_group_admin.php:2156 user_group_admin.php:2162
+#: user_admin.php:2475 user_admin.php:2481 user_admin.php:2487
+#: user_admin.php:2493 user_group_admin.php:2117 user_group_admin.php:2123
+#: user_group_admin.php:2129 user_group_admin.php:2135
 msgid "Only Show Exceptions"
 msgstr "Solo Mostrar Excepciones"
 
-#: user_admin.php:2507 user_group_admin.php:2156
+#: user_admin.php:2481 user_group_admin.php:2129
 #, php-format
 msgid "Template Permission %s"
 msgstr "Permisos de Plantillas %s"
 
-#: user_admin.php:2513 user_admin.php:2519 user_group_admin.php:2162
+#: user_admin.php:2487 user_admin.php:2493 user_group_admin.php:2135
 #, php-format
 msgid "Tree Permission %s"
 msgstr "Permisos deArboles %s"
@@ -19083,7 +19083,7 @@ msgstr "Mostrar la pantalla de gráficos por defecto"
 msgid "Restrict Access"
 msgstr "Restringir accesso"
 
-#: user_group_admin.php:61 user_group_admin.php:1931
+#: user_group_admin.php:61 user_group_admin.php:1904
 msgid "Group Name"
 msgstr "Nombre de grupo"
 
@@ -19227,37 +19227,37 @@ msgstr "Politica de gráficos por defecto para este grupo de usuarios"
 msgid "Default Graph Template Policy for this User Group"
 msgstr "Política de Plantilla de gráficos por defecto para este Grupo de Usuarios"
 
-#: user_group_admin.php:1142
+#: user_group_admin.php:1136
 msgid "Default Tree Policy for this User Group"
 msgstr "Política de árbol por defecto para este Grupo de Usuarios"
 
-#: user_group_admin.php:1625 user_group_admin.php:1932
+#: user_group_admin.php:1598 user_group_admin.php:1905
 msgid "Members"
 msgstr "Miembros"
 
-#: user_group_admin.php:1644
+#: user_group_admin.php:1617
 #, php-format
 msgid "User Group Management [edit: %s]"
 msgstr "Administración de Grupo de Usuarios [modificar: %s]"
 
-#: user_group_admin.php:1646
+#: user_group_admin.php:1619
 msgid "User Group Management [new]"
 msgstr "Administración de Grupo de Usuarios [nuevo]"
 
-#: user_group_admin.php:1839
+#: user_group_admin.php:1812
 msgid "User Group Management"
 msgstr "Administración de Grupo de Usuarios"
 
-#: user_group_admin.php:1962
+#: user_group_admin.php:1935
 msgid "No User Groups Found"
 msgstr "Ningun Grupo de Usuarios encontrado"
 
-#: user_group_admin.php:2168
+#: user_group_admin.php:2141
 msgctxt "filter reset"
 msgid "Clear"
 msgstr "Restablecer"
 
-#: user_group_admin.php:2168
+#: user_group_admin.php:2141
 msgid "Show Members"
 msgstr "Mostrar Miembros"
 

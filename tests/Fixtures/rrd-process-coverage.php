@@ -26,6 +26,14 @@ if (defined('ADMIN_LIST_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php');
 }
+if (defined('REALM_RENDER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
 if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');

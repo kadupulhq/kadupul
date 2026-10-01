@@ -1272,6 +1272,9 @@ function user_group_realms_edit($header_label)
     get_filter_request_var('id');
     /* ==================================================== */
 
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php';
+    $selected_realms = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRealms::selected(true, (int) get_request_var('id', 0));
+
     print "<div class='cactiTable' style='width:100%;text-align:left;'>
 		<div>
 			<div class='cactiTableTitle'><span style='padding:3px;'>" . __('User Permissions') . ' ' . html_escape($header_label) . "</span></div>
@@ -1292,13 +1295,7 @@ function user_group_realms_edit($header_label)
 
         foreach ($perms as $realm) {
             if (isset($user_auth_realms[$realm])) {
-                $set = db_fetch_cell_prepared(
-                    'SELECT realm_id
-					FROM user_auth_group_realm
-					WHERE group_id = ?
-					AND realm_id = ?',
-                    array(get_request_var('id', 0), $realm)
-                );
+                $set = isset($selected_realms[$realm]);
 
                 if ($set) {
                     $old_value = 'on';
@@ -1341,13 +1338,7 @@ function user_group_realms_edit($header_label)
         foreach ($links as $r) {
             $realm = $r['id'] + 10000;
 
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_group_realm
-				WHERE group_id = ?
-				AND realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';
@@ -1397,13 +1388,7 @@ function user_group_realms_edit($header_label)
                 }
             }
 
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_group_realm
-				WHERE group_id = ?
-				AND realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';
@@ -1437,13 +1422,7 @@ function user_group_realms_edit($header_label)
         print "<tr class='odd'><td colspan='2'><div class='flexContainer'>";
 
         foreach ($all_realms as $realm => $name) {
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_group_realm
-				WHERE group_id = ? AND
-				realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';

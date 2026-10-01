@@ -1394,6 +1394,9 @@ function user_realms_edit($header_label)
     get_filter_request_var('id');
     /* ==================================================== */
 
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php';
+    $selected_realms = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRealms::selected(false, (int) get_request_var('id', 0));
+
     $all_realms = $user_auth_realms;
 
     print "<div class='cactiTable' style='width:100%;text-align:left;'>
@@ -1414,13 +1417,7 @@ function user_realms_edit($header_label)
 
         foreach ($perms as $realm) {
             if (isset($user_auth_realms[$realm])) {
-                $set = db_fetch_cell_prepared(
-                    'SELECT realm_id
-					FROM user_auth_realm
-					WHERE user_id = ?
-					AND realm_id = ?',
-                    array(get_request_var('id', 0), $realm)
-                );
+                $set = isset($selected_realms[$realm]);
 
                 if ($set) {
                     $old_value = 'on';
@@ -1463,13 +1460,7 @@ function user_realms_edit($header_label)
         foreach ($links as $r) {
             $realm = $r['id'] + 10000;
 
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_realm
-				WHERE user_id = ?
-				AND realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';
@@ -1519,13 +1510,7 @@ function user_realms_edit($header_label)
                 }
             }
 
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_realm
-				WHERE user_id = ?
-				AND realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';
@@ -1560,13 +1545,7 @@ function user_realms_edit($header_label)
         print "<tr class='tableHeader'><th class='left' colspan='2'>" . __('Legacy Permissions') . "</th></tr>";
 
         foreach ($all_realms as $realm => $name) {
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_realm
-				WHERE user_id = ?
-				AND realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';
