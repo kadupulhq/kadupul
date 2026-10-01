@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
+- Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
