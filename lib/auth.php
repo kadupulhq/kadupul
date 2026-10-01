@@ -3941,13 +3941,10 @@ function local_auth_login_process($username)
                 if (!$error && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
                     $password = compat_password_hash($password, PASSWORD_DEFAULT);
                     db_check_password_length();
-                    db_execute_prepared(
-                        'UPDATE user_auth
-						SET password = ?
-						WHERE id = ?
-						AND realm = 0',
-                        array($password, $user['id'])
-                    );
+                    if (!auth_rehash_password_preserving_sessions($user['id'], $stored_pass, $password)) {
+                        $error = true;
+                        $user = array();
+                    }
                 }
             }
         } else {
@@ -5386,10 +5383,9 @@ function cacti_auth_transition($user_id, $reason = 'login')
 /**
  * auth_session_credential_key - digest of an account's stored password hash.
  *
- * A session keeps the digest from its login, so a password change or reset
- * ends every session opened before it. Deleting rows from the sessions table
- * only does that for database sessions, and the default storage is PHP's
- * file handler. The digest keeps the hash itself out of session storage.
+ * The digest identifies the stored representation without exposing it in
+ * session storage. Credential generations preserve bindings through a hash
+ * upgrade while a replacement password invalidates prior bindings.
  *
  * @param  (string|null) $password The account's stored password hash
  *
@@ -5398,6 +5394,83 @@ function cacti_auth_transition($user_id, $reason = 'login')
 function auth_session_credential_key($password)
 {
     return hash('sha256', (string) $password);
+}
+
+/**
+ * Read the credential generation only when it belongs to this password representation.
+ * A real password replacement naturally invalidates the mapping.
+ */
+function auth_session_credential_generation($user_id, $password, $db = false)
+{
+    $fingerprint = auth_session_credential_key($password);
+    if ($db instanceof PDO) {
+        $query = $db->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'auth_credential_generation'");
+        $query->execute(array($user_id));
+        $mapping = $query->fetchColumn();
+    } else {
+        $mapping = db_fetch_cell_prepared("SELECT value FROM settings_user WHERE user_id = ? AND name = 'auth_credential_generation'", array($user_id));
+    }
+    if (is_string($mapping) && preg_match('/^[a-f0-9]{64}:[a-f0-9]{64}$/D', $mapping)
+        && hash_equals($fingerprint, substr($mapping, 0, 64))) {
+        return substr($mapping, 65);
+    }
+    return $fingerprint;
+}
+
+/**
+ * Upgrade a verified local hash without changing its credential generation.
+ * The account row serializes upgrades and password resets. Never commit or roll
+ * back a caller's transaction, and never upgrade a password replaced since verification.
+ */
+function auth_rehash_password_preserving_sessions($user_id, $verified_hash, $new_hash, $db = false)
+{
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    if (!is_string($verified_hash) || $verified_hash === '' || !is_string($new_hash) || $new_hash === '') {
+        return false;
+    }
+    if (!$db instanceof PDO) {
+        $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    }
+    if (!$db instanceof PDO || $db->inTransaction()) {
+        return false;
+    }
+    try {
+        $mysql = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql';
+        if ($mysql) {
+            $engines = $db->prepare('SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?');
+            foreach (array('user_auth', 'settings_user') as $table) {
+                $engines->execute(array($table));
+                if (strcasecmp((string) $engines->fetchColumn(), 'InnoDB') !== 0) {
+                    return false;
+                }
+            }
+        }
+        if (!$db->beginTransaction()) {
+            return false;
+        }
+        $query = $db->prepare('SELECT password FROM user_auth WHERE id = ? AND realm = 0 AND enabled = ? AND locked != ?' . ($mysql ? ' FOR UPDATE' : ''));
+        $query->execute(array($user_id, 'on', 'on'));
+        $current = $query->fetchColumn();
+        if (!is_string($current) || !hash_equals($verified_hash, $current)) {
+            $db->rollBack();
+            return false;
+        }
+        $generation = auth_session_credential_generation($user_id, $current, $db);
+        $query = $db->prepare("REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'auth_credential_generation', ?)");
+        $query->execute(array($user_id, auth_session_credential_key($new_hash) . ':' . $generation));
+        $query = $db->prepare('UPDATE user_auth SET password = ? WHERE id = ? AND realm = 0 AND password = ?');
+        $query->execute(array($new_hash, $user_id, $verified_hash));
+        if ($query->rowCount() !== 1) {
+            $db->rollBack();
+            return false;
+        }
+        return $db->commit();
+    } catch (Throwable $error) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+        return false;
+    }
 }
 
 /**
@@ -5420,7 +5493,7 @@ function auth_session_bind_credentials($user_id)
     );
 
     if ($password !== false) {
-        $_SESSION['sess_user_credential'] = auth_session_credential_key($password);
+        $_SESSION['sess_user_credential'] = auth_session_credential_generation($user_id, $password);
     }
 }
 
@@ -5437,11 +5510,10 @@ function auth_session_bind_credentials($user_id)
  */
 function auth_session_credentials_valid($password)
 {
-    $key = auth_session_credential_key($password);
-
     if (!array_key_exists('sess_user_credential', $_SESSION)) {
         return false;
     }
+    $key = auth_session_credential_generation($_SESSION['sess_user_id'] ?? 0, $password);
 
     return is_string($_SESSION['sess_user_credential']) && hash_equals($_SESSION['sess_user_credential'], $key);
 }

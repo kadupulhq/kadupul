@@ -23,7 +23,7 @@ function admin_password_save(array $request, array $config = array(), string $hi
             array('id' => 42, 'username' => 'alice', 'realm' => 0, 'password' => 'hash:Old-pass1', 'password_history' => $history, 'enabled' => $enabled),
         ),
         'config' => $config + array('secpass_minlen' => 8, 'secpass_reqnum' => 'on', 'secpass_reqmixcase' => 'on'),
-        'auth_functions' => array('auth_session_credential_key', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
+        'auth_functions' => array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
     ));
 }
 
@@ -127,7 +127,7 @@ function admin_realm_save(array $request, array $alice, array $templates = array
         ),
         'template_accounts' => $templates,
         'config' => $config + array('secpass_minlen' => 8, 'secpass_reqnum' => 'on', 'secpass_reqmixcase' => 'on'),
-        'auth_functions' => array('auth_session_credential_key', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
+        'auth_functions' => array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
     ));
 }
 

@@ -21,7 +21,7 @@ test('a rehash writes only the local row that logged in', function () {
 
     expect($writes)->toHaveCount(1)
         ->and($writes[0]['sql'])->toContain('WHERE id = ? AND realm = 0')
-        ->and($writes[0]['params'])->toBe(array('rehash:weak', 42));
+        ->and($writes[0]['params'])->toBe(array('rehash:weak', 42, 'hash:weak'));
 });
 
 test('a refused login does not rehash', function () {

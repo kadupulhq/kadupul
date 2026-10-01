@@ -60,6 +60,7 @@
       <file>./Unit/Security/Auth/PasswordChangeEndsSessionsTest.php</file>
       <file>./Unit/Security/Auth/LocalLoginPolicyTest.php</file>
       <file>./Unit/Security/Auth/LocalPasswordRehashTest.php</file>
+      <file>./Unit/Security/Auth/CredentialGenerationRehashTest.php</file>
       <file>./Unit/Security/Auth/GroupChangeResetsPermsTest.php</file>
       <file>./Unit/Security/Auth/GroupCopyTest.php</file>
       <file>./Unit/Security/Auth/GroupMissingIdTest.php</file>

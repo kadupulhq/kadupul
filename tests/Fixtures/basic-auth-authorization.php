@@ -26,6 +26,7 @@ $db->sqliteCreateFunction('FLOOR', 'floor');
 $db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, hostname TEXT, last_update TEXT, token TEXT)');
 $db->exec('CREATE TABLE user_auth_row_cache (user_id INTEGER)');
 $db->exec('CREATE TABLE sessions (user_id INTEGER)');
+$db->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT, PRIMARY KEY(user_id,name))');
 $db->exec('CREATE TABLE user_domains (user_id INTEGER)');
 foreach (array(42, 43) as $id) {
     $query = $db->prepare('INSERT INTO user_auth_cache VALUES (?, ?, ?, ?)');

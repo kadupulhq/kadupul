@@ -139,12 +139,13 @@ function cacti_header($location) { $GLOBALS['calls']['redirect'] = $location; }
 function raise_message($id, $message = '', $level = 0) {}
 function get_cacti_version() { return '1.2.31'; }
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
+function db_fetch_cell_prepared($sql, $params = array()) { return false; }
 function db_fetch_row_prepared($sql, $params = array()) {
     return array('id' => 42, 'username' => 'alice', 'realm' => $GLOBALS['scenario']['realm'], 'enabled' => 'on', 'password' => 'new-hash', 'password_change' => 'on', 'locked' => '');
 }
 PHP;
 
-    foreach (array('auth_session_credential_key', 'auth_session_credentials_valid') as $name) {
+    foreach (array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_credentials_valid') as $name) {
         $global .= "\n" . test_php_function_source($auth, $name) . "\n";
     }
 
@@ -209,7 +210,7 @@ function password_change_admin_save(string $session_user, string $target): array
             array('id' => 42, 'username' => 'alice', 'realm' => 0, 'password' => 'hash:old', 'password_history' => ''),
             array('id' => 43, 'username' => 'bob', 'realm' => 0, 'password' => 'hash:other', 'password_history' => ''),
         ),
-        'auth_functions' => array('auth_session_credential_key', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
+        'auth_functions' => array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
     ));
 }
 

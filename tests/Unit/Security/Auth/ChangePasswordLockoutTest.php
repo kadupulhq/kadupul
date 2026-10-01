@@ -77,7 +77,7 @@ function db_execute_prepared($sql, $params = array()) {
 }
 PHP;
 
-    foreach (array('auth_session_credential_key', 'auth_session_credentials_valid', 'auth_process_lockout', 'secpass_check_pass', 'secpass_check_history') as $name) {
+    foreach (array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_credentials_valid', 'auth_process_lockout', 'secpass_check_pass', 'secpass_check_history') as $name) {
         $global .= "\n" . test_php_function_source($auth, $name) . "\n";
     }
 
