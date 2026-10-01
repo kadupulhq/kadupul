@@ -3529,15 +3529,17 @@ function auth_get_username() {
 
 /**
  * auth_log_username - a login name as it may appear in a log line.  The name
- *   comes from the request, so control characters are removed and it is cut
- *   to 64 characters to keep one attempt from forging or flooding log lines.
+ *   comes from the request, so invalid UTF-8 is replaced, control, format and
+ *   line separator characters are removed, and it is cut to 64 characters to
+ *   keep one attempt from forging, reordering or flooding log lines.
  *
  * @param  (string) $username - the login name as submitted
  *
  * @return (string) the name to log
  */
 function auth_log_username($username) {
-	$username = preg_replace('/[\x00-\x1F\x7F]/', '', (string) $username);
+	$username = mb_convert_encoding((string) $username, 'UTF-8', 'UTF-8');
+	$username = preg_replace('/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u', '', $username);
 
 	return mb_substr($username, 0, 64, 'UTF-8');
 }

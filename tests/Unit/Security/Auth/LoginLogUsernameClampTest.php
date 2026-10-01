@@ -95,6 +95,22 @@ test('an unknown login name is logged without control characters', function () {
 	expect($result['logged'])->toBe(array('LOGIN FAILED: Invalid user mallory[2Jadmin specified.'));
 });
 
+test('an unknown login name is logged without Unicode controls', function () {
+	$result = login_log_clamp_run("mallory\u{0085}\u{2028}\u{202E}nimda");
+
+	expect($result['logged'])->toBe(array('LOGIN FAILED: Invalid user mallorynimda specified.'));
+});
+
+test('invalid UTF-8 in a login name is replaced before it is logged', function () {
+	$source  = "<?php\n" . cacti_test_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php'), 'auth_log_username') . "\n\n";
+	$source .= "\$name = auth_log_username(base64_decode(json_decode(stream_get_contents(STDIN), true)['name']));\n";
+	$source .= "print json_encode(array('name' => \$name, 'valid' => mb_check_encoding(\$name, 'UTF-8')));\n";
+
+	$result = cacti_test_run_php_source($source, array('name' => base64_encode("alice\xC3\x28\x1b")));
+
+	expect($result)->toBe(array('name' => 'alice?(', 'valid' => true));
+});
+
 test('a long login name is logged cut to 64 characters', function () {
 	$result = login_log_clamp_run(str_repeat('é', 70) . 'tail');
 
