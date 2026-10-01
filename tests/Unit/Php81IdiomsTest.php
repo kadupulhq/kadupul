@@ -5,37 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/** Extract production bodies, including nested blocks, for isolated boundary tests. */
-function php81_function_source(string $source, string $name): string
-{
-    $tokens = token_get_all($source);
-    foreach ($tokens as $start => $token) {
-        if (!is_array($token) || $token[0] !== T_FUNCTION) {
-            continue;
-        }
-        $cursor = $start + 1;
-        while (isset($tokens[$cursor]) && is_array($tokens[$cursor]) && $tokens[$cursor][0] === T_WHITESPACE) {
-            $cursor++;
-        }
-        if (!isset($tokens[$cursor]) || !is_array($tokens[$cursor]) || $tokens[$cursor][1] !== $name) {
-            continue;
-        }
-        $result = '';
-        $depth = 0;
-        $opened = false;
-        for ($i = $start; $i < count($tokens); $i++) {
-            $part = $tokens[$i];
-            $result .= is_array($part) ? $part[1] : $part;
-            if ($part === '{' || (is_array($part) && in_array($part[0], [T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES], true))) {
-                $depth++;
-                $opened = true;
-            } elseif ($part === '}' && --$depth === 0 && $opened) {
-                return $result;
-            }
-        }
-    }
-    throw new RuntimeException('Production function not found: ' . $name);
-}
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
 // Namespace adapters isolate external I/O without changing the production bodies.
 eval(<<<'HARNESS'
@@ -64,11 +34,11 @@ HARNESS);
 
 $root = dirname(__DIR__, 2);
 foreach (['validate_is_regex' => 'lib/html_utility.php', 'automation_get_dns_from_ip' => 'lib/api_automation.php'] as $function => $file) {
-    eval('namespace KadupulPhp81Tests; ' . php81_function_source(file_get_contents($root . '/' . $file), $function));
+    eval('namespace KadupulPhp81Tests; ' . test_php_function_source(file_get_contents($root . '/' . $file), $function));
 }
 foreach ([['Ping', 'lib/ping.php', 'set_ping_error_handler', 'ping_error_handler'], ['Ldap', 'lib/ldap.php', 'SetLdapHandler', 'ErrorHandler']] as [$class, $file, $register, $handler]) {
     $source = file_get_contents($root . '/' . $file);
-    eval('namespace KadupulPhp81Tests; class ' . $class . ' {' . php81_function_source($source, $register) . php81_function_source($source, $handler) . '}');
+    eval('namespace KadupulPhp81Tests; class ' . $class . ' {' . test_php_function_source($source, $register) . test_php_function_source($source, $handler) . '}');
 }
 
 afterEach(function () {
