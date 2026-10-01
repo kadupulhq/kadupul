@@ -123,3 +123,67 @@ done
 bash "$root/.githooks/pre-commit-checks"
 git commit --no-edit > "$fixture/resolved-commit-success.log" 2>&1
 printf 'OK: exact incoming conflict resolutions checked; clean incoming exemption retained\n'
+
+# Fixture branch construction remains independent of the hook under test.
+mkdir setup-hooks
+git config core.hooksPath "$fixture/setup-hooks"
+edge_failed=0
+magic_files=(':(exclude)*' ':(exclude)authored.txt' ':(glob)wildcard[abc].txt')
+printf 'clean wildcard neighbour\n' > wildcarda.txt
+magic_failed=0
+for file in "${magic_files[@]}"; do
+    printf 'authored literal path trailing space \n' > "$file"
+    git --literal-pathspecs add -- "$file"
+    if bash "$root/.githooks/pre-commit-checks" > "$fixture/magic-failure.log" 2>&1; then
+        echo "ERROR: pathspec-magic authored whitespace was accepted: $file" >&2
+        magic_failed=1
+        edge_failed=1
+    else
+        if ! grep -Fq "$file:1: trailing whitespace" "$fixture/magic-failure.log"; then
+            echo "ERROR: authored literal path was not checked: $file" >&2
+            magic_failed=1
+            edge_failed=1
+        fi
+    fi
+    git --literal-pathspecs restore --staged -- "$file"
+done
+if [ "$magic_failed" -eq 0 ]; then
+    printf 'OK: authored pathspec-magic filenames checked literally\n'
+fi
+
+octopus_base=$(git rev-parse HEAD)
+git checkout -qb octopus-one
+printf 'first incoming trailing space \n' > octopus-one.txt
+git add octopus-one.txt
+git commit -qm 'first octopus incoming'
+git checkout -qb octopus-two "$octopus_base"
+printf 'second incoming trailing space \n' > octopus-two.txt
+git add octopus-two.txt
+git commit -qm 'second octopus incoming'
+git checkout -qb octopus-local "$octopus_base"
+printf 'local octopus content\n' > octopus-local.txt
+git add octopus-local.txt
+git commit -qm 'octopus local'
+git merge --no-commit --no-ff octopus-one octopus-two > "$fixture/octopus-merge.log" 2>&1
+if [ "$(wc -l < "$(git rev-parse --git-path MERGE_HEAD)")" -ne 2 ]; then
+    echo 'ERROR: expected a genuine two-incoming-parent merge' >&2
+    exit 1
+fi
+if bash "$root/.githooks/pre-commit-checks" > "$fixture/octopus-check.log" 2>&1; then
+    printf 'OK: both unchanged octopus parents retain their exemption\n'
+else
+    echo 'ERROR: unchanged octopus incoming whitespace was rejected' >&2
+    cat "$fixture/octopus-check.log"
+    edge_failed=1
+fi
+printf 'locally authored octopus trailing space \n' > octopus-local.txt
+git add octopus-local.txt
+if bash "$root/.githooks/pre-commit-checks" > "$fixture/octopus-authored.log" 2>&1; then
+    echo 'ERROR: locally authored octopus whitespace was accepted' >&2
+    exit 1
+fi
+if ! grep -Fq 'octopus-local.txt:1: trailing whitespace' "$fixture/octopus-authored.log"; then
+    cat "$fixture/octopus-authored.log"
+    exit 1
+fi
+exit "$edge_failed"

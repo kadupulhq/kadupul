@@ -9,13 +9,21 @@ set -euo pipefail
 root=$(git rev-parse --show-toplevel)
 cd "$root"
 
-merge_head=$(git rev-parse -q --verify MERGE_HEAD 2>/dev/null || true)
+merge_heads=()
+merge_head_file=$(git rev-parse --git-path MERGE_HEAD)
+if [ -f "$merge_head_file" ]; then
+	while IFS= read -r incoming_head; do
+		if [ -n "$incoming_head" ]; then
+			merge_heads+=("$incoming_head")
+		fi
+	done < "$merge_head_file"
+fi
 files=()
 php_files=()
 php_base_files=()
 resolved_paths=()
 
-if [ -n "$merge_head" ]; then
+if [ "${#merge_heads[@]}" -gt 0 ]; then
 	# Staging a conflict resolution retains its original index stages as
 	# resolve-undo records, even when the selected blob is exactly --theirs.
 	while IFS= read -r -d '' record; do
@@ -37,6 +45,23 @@ was_conflicted() {
 	return 1
 }
 
+matches_incoming() {
+	local file=$1
+	local staged_oid
+	local incoming_head
+	local incoming_oid
+	staged_oid=$(git rev-parse ":$file")
+	for incoming_head in "${merge_heads[@]}"; do
+		if git cat-file -e "$incoming_head:$file" 2>/dev/null; then
+			incoming_oid=$(git rev-parse "$incoming_head:$file")
+			if [ "$staged_oid" = "$incoming_oid" ]; then
+				return 0
+			fi
+		fi
+	done
+	return 1
+}
+
 while IFS= read -r -d '' status; do
 	IFS= read -r -d '' first
 	case "$status" in
@@ -50,16 +75,12 @@ while IFS= read -r -d '' status; do
 			;;
 	esac
 
-	# During a merge, an incoming file whose staged blob exactly matches the
-	# second parent was already validated on that branch. Check only content
+	# During a merge, an incoming file whose staged blob exactly matches any
+	# incoming parent was already validated on that branch. Check content
 	# authored here or produced while resolving a conflict.
-	if [ -n "$merge_head" ] && ! was_conflicted "$file" && ! was_conflicted "$base_file" \
-		&& git cat-file -e "$merge_head:$file" 2>/dev/null; then
-		staged_oid=$(git rev-parse ":$file")
-		incoming_oid=$(git rev-parse "$merge_head:$file")
-		if [ "$staged_oid" = "$incoming_oid" ]; then
-			continue
-		fi
+	if [ "${#merge_heads[@]}" -gt 0 ] && ! was_conflicted "$file" && ! was_conflicted "$base_file" \
+		&& matches_incoming "$file"; then
+		continue
 	fi
 
 	files+=("$file")
@@ -80,7 +101,7 @@ if [ "${#files[@]}" -eq 0 ]; then
 fi
 
 # Check authored and conflict-resolved paths; incoming blobs are handled above.
-git diff --cached --check -- "${files[@]}"
+git --literal-pathspecs diff --cached --check -- "${files[@]}"
 
 if [ "${#php_files[@]}" -eq 0 ]; then
 	exit 0
