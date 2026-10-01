@@ -6,7 +6,6 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Migrate GPRINT preset administration to Symfony forms and Twig with current account and realm authorization, stale edit protection, and guarded deletion.
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
@@ -22,6 +21,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
 - Resolve ordered graph-item consolidation references in a Graphing collaborator while preserving GPRINT association behavior. Part of #502.
+- Migrate GPRINT preset administration to Symfony forms and Twig with current account and realm authorization, stale edit protection, and guarded deletion.
 - Reuse one RRDtool proxy session for the commands in a graph render, including consolidation-function lookups. Part of #502.
 - Preserve negative integer `--units-exponent` values accepted by graph forms. Fixes #228.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
