@@ -51,7 +51,11 @@ command-specific `LANG`, and `RRD_DEFAULT_FONT`. Local children receive those
 values through an explicit process environment. Proxy font settings use its
 existing supported `setenv` contract; remote graph rendering stays blocked
 until the existing interoperability and remote environment gates pass. R7
-requires real-child environment and sequential-viewer isolation checks. Other classes get no interface unless a
+requires real-child environment and sequential-viewer isolation checks. Its
+one-off local method owns session release through the legacy web-context
+adapter after context capture, including metadata executions and the existing
+missing-binary path. Denial, cache hits, persistent-pipe and proxy commands
+retain zero additional releases; concurrent session-lock behavior is a gate. Other classes get no interface unless a
 second implementation or a module boundary needs one.
 
 ## Slices
@@ -232,7 +236,7 @@ evidence, the order of the moves and the callers outside `lib/`.
 
 ## RenderContext
 
-A render reads viewer and site state from 49 places: session values, cookies,
+A render reads viewer and site state from 50 places: session values, cookies,
 environment variables, globals and settings, listed with their lines in
 [Graph rendering pipeline](graphing-render-pipeline.md#inputs-read-today).
 `RenderContext` gathers them once per request: theme and palette, colour mode,
@@ -243,7 +247,9 @@ format and mode. The legacy factory reads the session and cookies; nothing
 inside the pipeline does. The factory applies the browser zone only when both
 site and user `client_timezone_support` settings permit it; otherwise it keeps
 the existing PHP zone and `TZ`. Cached `sess_user_config_array` values retain
-precedence over stored viewer settings. Interface-speed facts preserve SNMP
+precedence over stored viewer settings. Web `sess_config_array` and CLI
+`config_options_array` retain the existing site-cache precedence and forced-read
+bypass; R0 covers values that differ from storage. Interface-speed facts preserve SNMP
 ifHighSpeed/ifSpeed precedence and the site `default_interface_speed` fallback;
 empty data-source paths retain the extended-path naming settings and persistence
 boundary described above. R0 characterizes each of these paths.
