@@ -40,7 +40,7 @@ final class StoredUnitExponentNativeTest extends TestCase
     {
         $cases = array();
         foreach (array(7, 8) as $graphId) {
-            foreach (array('-6', '0', '3', '+3', ' 3', '-', '3--foo', "-6\n") as $value) {
+            foreach (array('-6', '0', '3', '+3', ' 3', '-', '', '3--foo', '3 --foo', "-6\n") as $value) {
                 $cases[] = array($value, in_array($value, array('-6', '0', '3'), true), $graphId);
             }
         }
