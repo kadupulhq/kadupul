@@ -10,7 +10,10 @@ require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 // Namespace adapters isolate external I/O without changing the production bodies.
 eval(<<<'HARNESS'
 namespace KadupulPhp81Tests;
-function __($message) { return 'translated: ' . $message; }
+function __($message) {
+    if (!empty($GLOBALS['php81_translation_pcre'])) { \preg_match('/translation/', 'translation'); }
+    return 'translated: ' . $message;
+}
 function restore_error_handler() { return true; }
 function set_error_handler($handler) { $GLOBALS['php81_handler'] = $handler; return null; }
 function cacti_session_close() { $GLOBALS['php81_session_closed'] = true; }
@@ -42,7 +45,7 @@ foreach ([['Ping', 'lib/ping.php', 'set_ping_error_handler', 'ping_error_handler
 }
 
 afterEach(function () {
-    foreach (['handler', 'session_closed', 'pcre_error', 'pcre_message', 'socket_opened', 'dns_packet'] as $key) {
+    foreach (['handler', 'session_closed', 'pcre_error', 'pcre_message', 'socket_opened', 'dns_packet', 'translation_pcre'] as $key) {
         unset($GLOBALS['php81_' . $key]);
     }
 });
@@ -87,3 +90,8 @@ test('regex diagnostics preserve translations and cover unmapped PCRE failures',
     [PREG_BACKTRACK_LIMIT_ERROR, 'Backtrack limit exhausted', 'translated: Backtrack limit was exhausted!'],
     [PREG_JIT_STACKLIMIT_ERROR, 'JIT stack limit exhausted', 'JIT stack limit exhausted'],
 ]);
+
+test('regex diagnostics are captured before translation can change PCRE state', function () {
+    $GLOBALS['php81_translation_pcre'] = true;
+    expect(KadupulPhp81Tests\validate_is_regex('('))->toBe('translated: There was an internal error!');
+});

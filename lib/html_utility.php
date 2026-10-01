@@ -1256,6 +1256,9 @@ function validate_is_regex($regex): bool|string
         return true;
     }
 
+    $error = preg_last_error();
+    $error_message = preg_last_error_msg();
+
     $last_error = error_get_last();
 
     $php_error = trim(str_replace('preg_match():', '', $last_error['message']));
@@ -1269,9 +1272,6 @@ function validate_is_regex($regex): bool|string
         PREG_BAD_UTF8_ERROR         => __('Bad UTF-8 error!'),
         PREG_BAD_UTF8_OFFSET_ERROR  => __('Bad UTF-8 offset error!'),
     );
-
-    $error = preg_last_error();
-    $error_message = preg_last_error_msg();
 
     if (!defined('IN_CACTI_INSTALL')) {
         set_error_handler('CactiErrorHandler');
