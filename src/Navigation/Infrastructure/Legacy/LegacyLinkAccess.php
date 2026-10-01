@@ -47,7 +47,9 @@ final readonly class LegacyLinkAccess implements LinkAccess
     private function accountAllows(int $actorId): bool
     {
         $db = $this->database->get();
-        $suffix = $db->inTransaction() && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+        // Match the console adapter's locking reads: policy remains current
+        // and protected through commit without upgrading its shared locks.
+        $suffix = $this->readLock($db->inTransaction());
         $query = $db->prepare('SELECT id, username, enabled, locked, must_change_password FROM user_auth WHERE id = ?' . $suffix);
         $query->execute([$actorId]);
         $user = $query->fetch(\PDO::FETCH_ASSOC);
@@ -68,7 +70,7 @@ final readonly class LegacyLinkAccess implements LinkAccess
             return false;
         }
         $db = $this->database->get();
-        $suffix = $lock && $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+        $suffix = $this->readLock($lock);
         $query = $db->prepare('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?' . $suffix);
         $query->execute([$actorId, $realmId]);
         if ($query->fetchColumn() !== false) {
@@ -83,6 +85,11 @@ final readonly class LegacyLinkAccess implements LinkAccess
             WHERE g.enabled = 'on' AND m.user_id = ? AND r.realm_id = ? LIMIT 1" . $suffix);
         $query->execute([$actorId, $realmId]);
         return $query->fetchColumn() !== false;
+    }
+
+    private function readLock(bool $lock): string
+    {
+        return $lock && $this->database->get()->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
     }
 
     private function groupTablesExist(\PDO $db): bool
