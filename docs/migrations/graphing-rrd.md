@@ -19,7 +19,7 @@ src/Graphing/
                      RrdCommand (an argument list, not a string); GraphDefinition
     Font/            GraphFont, GraphFontProfile, GraphFontResolver (PR #710)
     Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow
-    Command/         GraphCommandBuilder and its parts: DefNames, CdefMagic,
+    Command/         GraphCommandBuilder, GraphCommandSections and parts: DefNames, CdefMagic,
                      LegendText, GradientArea, DateLegend, ThemeArguments,
                      LegacySerializedGraphCommand (hook compatibility),
                      BusinessHours, GraphOptions, ArchiveChoice
@@ -71,8 +71,8 @@ second implementation or a module boundary needs one.
 | R3: `GraphDefinition` read through a port, first on `db_*` | Planned |
 | R4: DBAL reader for Symfony routes | Planned; legacy pages only if the timing gate allows |
 | R5: window, archive choice and graph options from the definition, request and context | Planned |
-| R6: `GraphCommandBuilder` for `DEF`, `CDEF`, `VDEF`, legend, items and export columns | Planned |
-| R7: `RenderGraph`, explicit user/trusted-legacy authorization subject, IdentityAccess `GraphAccess` and its legacy adapter, `RrdTransport`, the mode-guarded plugin hook adapter, and initial image-cache/pending-samples ports and legacy Boost adapters | Planned |
+| R6: `GraphCommandBuilder` for `DEF`, `CDEF`, `VDEF`, legend, items and export columns, preserving options/definitions/items in `GraphCommandSections` until after the hook | Planned |
+| R7: `RenderGraph`, explicit user/trusted-legacy authorization subject, IdentityAccess `GraphAccess` and its legacy adapter, `RrdTransport`, the mode-guarded plugin hook adapter, and initial image-cache/pending-samples ports and legacy Boost adapters | Planned; after PR #661 |
 | R8: unify cache naming, eligibility, reading and writing in R7's adapters, keeping PR #705; refine failure handling and performance | Planned |
 | R9: `graph_image.php` and `graph_json.php` as thin adapters | Planned; after PR #661 |
 | R10: Symfony graph routes with a voter reusing R7's access contract | Planned |
@@ -195,16 +195,21 @@ reads the graph, builds the command and runs it in one function
   consolidation functions in each file, which files exist, substituted host and
   query values, Nth percentile and summation values, and the time.
 - `GraphCommandBuilder` is a pure function from the definition, the request,
-  the context and the facts to an `RrdCommand`.
+  the context and the facts to `GraphCommandSections`, preserving separate
+  options, definitions and item/export argument lists until after the hook.
 - `RenderGraph` receives an explicit authorization subject and asks R7's
   IdentityAccess `GraphAccess` contract before the cache, the builder, the
   mode-guarded `rrd_graph_graph_options` hook and the transport in today's order.
   The wrapper's trusted nonpositive user argument maps to an explicit legacy
   bypass; request adapters accept positive identities only. CSV skips the hook
-  and business hours, as it does today.
+  and business hours, as it does today. Print-source returns the existing
+  formatted source output without executing a final render or writing the
+  cache. All eligible rendered formats, including SVG and `graphv`, retain
+  cache reads/writes with #705's distinct format-aware key.
 
 The hook receives and returns three strings that plugins parse, so through 1.3
-an adapter renders the command into those strings exactly as today. Post-hook
+an adapter serializes the builder's explicit sections into those strings exactly
+as today, without inferring boundaries from a flat command. Post-hook
 command strings keep their bytes in the tagged
 `LegacySerializedGraphCommand` compatibility value; transport framing and
 rejection checks remain. The image cache is a port that `RenderGraph` calls before reading anything, not a
