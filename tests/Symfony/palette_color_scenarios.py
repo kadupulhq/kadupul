@@ -190,6 +190,10 @@ def verify_palette_colors(h, s, uid, check):
     finally:
         h.sql('ALTER TABLE colors ENGINE=InnoDB')
     sql_probe = h.command('php', 'tests/Symfony/palette_sql_failure_probe.php')
+    if sql_probe['exit'] != 0 or sql_probe['stdout'] != 'PALETTE_SILENT_SQL_OK' or sql_probe['stderr'] != '':
+        # This probe uses only fixed in-memory SQLite fixtures and mocks; its
+        # failure output contains no installation configuration or credentials.
+        print('Palette silent SQL diagnostic: ' + repr({key: sql_probe[key] for key in ('exit', 'stdout', 'stderr')}), flush=True)
     check(sql_probe['exit'] == 0 and sql_probe['stdout'] == 'PALETTE_SILENT_SQL_OK' and sql_probe['stderr'] == '',
           'silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes')
     guard_probe = h.command('php', '-r', _mariadb_palette_write_guard_probe(uid))
