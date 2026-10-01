@@ -76,13 +76,16 @@ function data_source_profile_reference_guards_available(
     string $data = 'data_template_data',
     string $prefix = 'kadupul_profile_reference',
     string $rra = 'data_source_profiles_rra',
-    string $cf = 'data_source_profiles_cf'
+    string $cf = 'data_source_profiles_cf',
+    PDO|false $connection = false
 ): bool {
     $definitions = data_source_profile_reference_triggers($profiles, $data, $prefix, $rra, $cf);
     $engines = db_fetch_assoc_prepared(
         'SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES
         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?, ?, ?, ?)',
-        [$profiles, $data, $rra, $cf]
+        [$profiles, $data, $rra, $cf],
+        true,
+        $connection
     );
     if (!is_array($engines) || count($engines) !== 4) {
         return false;
@@ -97,7 +100,9 @@ function data_source_profile_reference_guards_available(
         FROM information_schema.TRIGGERS
         WHERE TRIGGER_SCHEMA = DATABASE() AND EVENT_OBJECT_TABLE IN (?,?,?)
         AND TRIGGER_NAME IN (?,?,?,?,?,?,?,?)',
-        array_merge([$data, $rra, $cf], array_keys($definitions))
+        array_merge([$data, $rra, $cf], array_keys($definitions)),
+        true,
+        $connection
     );
     if (!is_array($rows) || count($rows) !== count($definitions)) {
         return false;
@@ -244,7 +249,7 @@ function replicate_data_source_profile_children(PDO $connection, array $data, bo
 {
     $started = false;
     try {
-        if ($connection->inTransaction() || !replicate_data_source_profile_parents($connection, $data)) {
+        if ($connection->inTransaction() || !data_source_profile_reference_guards_available(connection: $connection) || !replicate_data_source_profile_parents($connection, $data)) {
             throw new RuntimeException('Profile catalog delivery failed');
         }
         if (!db_table_exists('data_template_data', false, $connection)) {

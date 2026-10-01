@@ -7969,7 +7969,7 @@ msgid "Tree Rule Items"
 msgstr "ツリールール項目"
 
 #: include/global_arrays.php:2850 include/global_arrays.php:2866
-#: lib/api_device.php:1587
+#: lib/api_device.php:1931
 msgid "days"
 msgstr "日"
 
@@ -7985,11 +7985,13 @@ msgstr "分"
 msgid "secs"
 msgstr "秒"
 
-#: include/global_arrays.php:2867 lib/api_device.php:1587
+#: lib/api_device.php:1931
+#: include/global_arrays.php:2867
 msgid "hours"
 msgstr "時間"
 
-#: include/global_arrays.php:2868 lib/api_device.php:1587
+#: lib/api_device.php:1931
+#: include/global_arrays.php:2868
 msgid "minutes"
 msgstr "分"
 
@@ -10487,7 +10489,8 @@ msgstr "フォント選択方法"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "フォントをデフォルトでどのように処理しますか。"
 
-#: include/global_settings.php:1060 lib/api_device.php:1542
+#: lib/api_device.php:1886
+#: include/global_settings.php:1060
 msgid "System"
 msgstr "システム"
 
@@ -12561,17 +12564,7 @@ msgstr "Kadupul Automationが追加しました"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "エラー：range1-range2の形式のIP範囲はサポートされなくなりました。"
 
-#: lib/api_device.php:107 lib/api_device.php:110 lib/api_device.php:276
-#: lib/api_device.php:280 lib/api_device.php:326 lib/api_device.php:331
-#: lib/api_device.php:372 lib/api_device.php:376 lib/api_device.php:441
-#: lib/api_device.php:445 lib/api_device.php:493 lib/api_device.php:497
-#: lib/api_device.php:553 lib/api_device.php:556 lib/api_device.php:610
-#: lib/api_device.php:613 lib/api_device.php:655 lib/api_device.php:658
-#: lib/api_device.php:692 lib/api_device.php:695 lib/api_device.php:1028
-#: lib/api_device.php:1041 lib/api_device.php:1045 lib/api_device.php:1078
-#: lib/api_device.php:1081 lib/api_device.php:1250 lib/api_device.php:1254
-#: lib/api_device.php:1281 lib/api_device.php:1285 lib/api_device.php:1317
-#: lib/api_device.php:1321 lib/api_device.php:1373 lib/api_device.php:1377
+#: lib/api_device.php:154 lib/api_device.php:157 lib/api_device.php:384 lib/api_device.php:388 lib/api_device.php:450 lib/api_device.php:455 lib/api_device.php:500 lib/api_device.php:504 lib/api_device.php:580 lib/api_device.php:584 lib/api_device.php:639 lib/api_device.php:643 lib/api_device.php:709 lib/api_device.php:712 lib/api_device.php:785 lib/api_device.php:788 lib/api_device.php:837 lib/api_device.php:840 lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1297 lib/api_device.php:1310 lib/api_device.php:1314 lib/api_device.php:1359 lib/api_device.php:1362 lib/api_device.php:1549 lib/api_device.php:1553 lib/api_device.php:1588 lib/api_device.php:1592 lib/api_device.php:1632 lib/api_device.php:1636 lib/api_device.php:1697 lib/api_device.php:1701
 #: lib/utility.php:663 lib/utility.php:667 lib/utility.php:743
 #: lib/utility.php:747 lib/utility.php:769 lib/utility.php:773
 #: lib/utility.php:796 lib/utility.php:799
@@ -12579,72 +12572,73 @@ msgstr "エラー：range1-range2の形式のIP範囲はサポートされなく
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "リモートポーラー%sがダウンしています。再度アップしたら、フル同期を実行する必要があります"
 
-#: lib/api_device.php:1477
+#: lib/api_device.php:1807
 msgid "ERROR: Device ID is Blank"
 msgstr "エラー：デバイスIDが空白です"
 
-#: lib/api_device.php:1488 lib/api_device.php:1490
+#: lib/api_device.php:1820 lib/api_device.php:1822
 msgid "ERROR: Device["
 msgstr "エラー：デバイス["
 
-#: lib/api_device.php:1506
+#: lib/api_device.php:1838
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "エラー：リモートコレクタへの接続に失敗しました。"
 
-#: lib/api_device.php:1513
+#: lib/api_device.php:1845
 msgid "Device is Disabled"
 msgstr "デバイスは無効です"
 
-#: lib/api_device.php:1514
+#: lib/api_device.php:1846
 msgid "Device Availability Check Bypassed"
 msgstr "デバイスの利用可能性チェックのバイパス"
 
-#: lib/api_device.php:1521
+#: lib/api_device.php:1853
 msgid "SNMP Information"
 msgstr "SNMP情報"
 
-#: lib/api_device.php:1525
+#: lib/api_device.php:1857
 msgid "SNMP not in use"
 msgstr "SNMPが使用されていません"
 
-#: lib/api_device.php:1534 lib/api_device.php:1542 lib/api_device.php:1561
+#: lib/api_device.php:1878 lib/api_device.php:1886 lib/api_device.php:1905
 msgid "SNMP error"
 msgstr "SNMPエラー"
 
-#: lib/api_device.php:1534
+#: lib/api_device.php:1878
 msgid "Session"
 msgstr "セッション"
 
-#: lib/api_device.php:1561
+#: lib/api_device.php:1905
 msgid "Host"
 msgstr "ホスト"
 
-#: lib/api_device.php:1579
+#: lib/api_device.php:1923
 msgid "System:"
 msgstr "システム："
 
-#: lib/api_device.php:1586
+#: lib/api_device.php:1930
 msgid "Uptime:"
 msgstr "あなたのアップタイムロボットAPIキー："
 
-#: lib/api_device.php:1588
+#: lib/api_device.php:1932
 msgid "Hostname:"
 msgstr "ホスト："
 
-#: lib/api_device.php:1589
+#: lib/api_device.php:1933
 msgid "Location:"
 msgstr "位置:"
 
-#: lib/api_device.php:1590
+#: lib/api_device.php:1934
 msgid "Contact:"
 msgstr "連絡先:"
 
-#: lib/api_device.php:1621 lib/functions.php:5604 lib/functions.php:5606
+#: lib/api_device.php:1965
+#: lib/functions.php:5604 lib/functions.php:5606
 #: lib/functions.php:5610
 msgid "Ping Results"
 msgstr "pingの結果"
 
-#: lib/api_device.php:1626
+#: lib/api_device.php:1970
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "PingまたはSNMP可用性チェックインが使用されていない"
 
@@ -20409,7 +20403,7 @@ msgstr ""
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
 msgstr ""
 
-#: lib/poller.php:2181
+#: lib/poller.php:2187
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 

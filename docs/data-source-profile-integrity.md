@@ -34,6 +34,8 @@ DDL implicitly commits. A missing parent or rejected definition copy stops that 
 existing rows are changed. This keeps guards active on collectors without losing
 their existing data-source definitions when custom profiles are introduced.
 
+Before catalog delivery, both collector paths inspect all eight expected guard bodies, tables, timing and events through the collector connection. Missing tables or missing/changed/inaccessible guards refuse delivery and preserve references; schema creation alone does not install triggers. Provision or rerun the registered migration on the collector before retrying.
+
 Reference delivery then opens a separate InnoDB transaction and locks every
 referenced parent in ID order, rechecking that all parents remain present. Bulk
 replacement uses DELETE inside that transaction instead of TRUNCATE. Both
@@ -43,7 +45,7 @@ back the whole reference delivery, preserving previous rows and preventing
 success messages, dependent table replication and sync-flag clearing. Schema
 creation is checked before the transaction; schema mismatches fail closed rather
 than dropping existing collector tables. An existing caller transaction is
-preserved and the operation is refused.
+preserved and the operation is refused. Bulk and device entry points acknowledge setting the retry flag before any delivery; a rejected retry-state update aborts before collector mutations. Successful full synchronization callers own clearing that flag after all work succeeds.
 
 The installation account must have TRIGGER privileges on the database, and the
 trigger definer must retain permission to read and lock `data_source_profiles`.

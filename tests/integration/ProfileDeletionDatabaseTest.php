@@ -24,7 +24,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure));
         if ($failure !== '') {
             self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
-            if (str_starts_with($failure, 'child-')) {
+            if (str_starts_with($failure, 'child-') && $failure !== 'child-engine') {
                 self::assertSame(77, (int) $state['parent']);
             } else {
                 self::assertFalse($state['parent']);
@@ -42,12 +42,22 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         }
     }
 
-    /** @dataProvider collectorScenarios */
-    public function testCollectorEntryPointsReportReplicationOutcome(string $mode, string $failure): void
+    /** @dataProvider collectorEntryPointScenarios */
+    public function testCollectorEntryPointsReportReplicationOutcome(string $mode, string $failure, string $class = 'all'): void
     {
-        $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true));
+        $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
         self::assertSame($failure === '', $state['result']);
-        self::assertSame(array($failure === '' ? '' : 'on', 'on'), $state['sync']);
+        if ($failure !== 'retry-state') {
+            self::assertSame(array('on', 'on'), $state['sync']);
+        }
+        if ($failure === 'retry-state') {
+            self::assertSame(array('', 'on'), $state['sync']);
+            self::assertSame(array(), $state['hooks']);
+            self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
+            self::assertStringContainsString('Unable to mark Poller', implode('\n', $state['log']));
+            self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote'));
+            return;
+        }
         if ($failure !== '') {
             self::assertSame(array(), $state['hooks']);
             self::assertNotContains('poller_sync', $state['messages']);
@@ -58,7 +68,9 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
                 self::assertContains('poller_sync_failed', $state['messages']);
             }
         } else {
-            self::assertNotEmpty($state['hooks']);
+            if ($class === 'all') {
+                self::assertNotEmpty($state['hooks']);
+            }
             if ($mode === 'bulk') {
                 self::assertContains('poller_sync', $state['messages']);
             }
@@ -83,12 +95,17 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     {
         $cases = array();
         foreach (array('bulk', 'device') as $mode) {
-            foreach (array('', 'copy', 'missing', 'rra', 'cf', 'corrupt', 'missing-rra', 'missing-cf', 'collision', 'engine', 'child-write', 'child-late', 'child-schema', 'child-engine', 'child-corrupt') as $failure) {
+            foreach (array('', 'copy', 'missing', 'rra', 'cf', 'corrupt', 'missing-rra', 'missing-cf', 'collision', 'engine', 'child-write', 'child-late', 'child-schema', 'child-engine', 'child-corrupt', 'guard-missing', 'guard-modified') as $failure) {
                 $cases[$mode . ' ' . ($failure ?: 'custom profile')] = array($mode, $failure);
             }
         }
         $cases['bulk child-delete'] = array('bulk', 'child-delete');
         return $cases;
+    }
+
+    public static function collectorEntryPointScenarios(): array
+    {
+        return array_merge(self::collectorScenarios(), array('bulk retry-state' => array('bulk', 'retry-state'), 'device retry-state' => array('device', 'retry-state'), 'bulk-data retry-state' => array('bulk', 'retry-state', 'data'), 'bulk-data success' => array('bulk', '', 'data')));
     }
 
     /** @dataProvider deletionOutcomes */
