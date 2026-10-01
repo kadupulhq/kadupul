@@ -21,6 +21,11 @@ if (($argv[1] ?? '') === '--writer') {
     flush();
     try {
         $query = match ($argv[3] ?? 'insert') {
+            'rra-insert' => "INSERT INTO `$data` (id,data_source_profile_id) VALUES (2,3)",
+            'rra-update' => "UPDATE `$data` SET data_source_profile_id=3 WHERE id=2",
+            'rra-upsert' => "INSERT INTO `$data` (id,data_source_profile_id) VALUES (2,3) ON DUPLICATE KEY UPDATE data_source_profile_id=VALUES(data_source_profile_id)",
+            'cf-insert', 'cf-upsert' => "INSERT INTO `$data` VALUES (3,1) ON DUPLICATE KEY UPDATE consolidation_function_id=VALUES(consolidation_function_id)",
+            'cf-update' => "UPDATE `$data` SET data_source_profile_id=3 WHERE data_source_profile_id=0",
             'update' => "UPDATE `$data` SET data_source_profile_id=3 WHERE id=2",
             'upsert' => "INSERT INTO `$data` VALUES (2,3,'new') ON DUPLICATE KEY UPDATE data_source_profile_id=VALUES(data_source_profile_id)",
             default => "INSERT INTO `$data` VALUES (2,3,'new')",
@@ -51,14 +56,14 @@ function db_fetch_assoc_prepared($sql, $params = [])
 $process = null;
 $pipes = [];
 try {
-    $db->exec("CREATE TABLE `$rra` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32)) ENGINE=InnoDB");
-    $db->exec("CREATE TABLE `$cf` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32)) ENGINE=InnoDB");
-    $db->exec("CREATE TABLE `$profiles` (id INTEGER PRIMARY KEY) ENGINE=InnoDB");
+    $db->exec("CREATE TABLE `$rra` (id INTEGER PRIMARY KEY AUTO_INCREMENT, data_source_profile_id INTEGER, name VARCHAR(255) DEFAULT '', steps INTEGER DEFAULT 1, `rows` INTEGER DEFAULT 100, timespan INTEGER DEFAULT 30000) ENGINE=InnoDB");
+    $db->exec("CREATE TABLE `$cf` (data_source_profile_id INTEGER, consolidation_function_id INTEGER, PRIMARY KEY(data_source_profile_id,consolidation_function_id)) ENGINE=InnoDB");
+    $db->exec("CREATE TABLE `$profiles` (id INTEGER PRIMARY KEY, name VARCHAR(255) DEFAULT '', hash VARCHAR(64) DEFAULT '', step INTEGER DEFAULT 300, heartbeat INTEGER DEFAULT 300, x_files_factor DOUBLE DEFAULT 0.5, `default` VARCHAR(4) DEFAULT '') ENGINE=InnoDB");
     $db->exec("CREATE TABLE `$data` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32), INDEX(data_source_profile_id)) ENGINE=InnoDB");
-    $db->exec("INSERT INTO `$profiles` VALUES (3)");
+    $db->exec("INSERT INTO `$profiles` (id) VALUES (3)");
     // Historical orphan retained from before the upgrade.
     $db->exec("INSERT INTO `$data` VALUES (1,99,'old')");
-    $definitions = array_merge(data_source_profile_reference_triggers($profiles, $data, $prefix), data_source_profile_definition_triggers($profiles, $rra, $cf, $prefix));
+    $definitions = data_source_profile_reference_triggers($profiles, $data, $prefix, $rra, $cf);
     // Installation may require binary-log administrator privileges. Exercise
     // runtime inspection and all mutations through the ordinary account.
     $installer = profile_guard_connection(true);
@@ -78,19 +83,42 @@ try {
             $rejected[] = $error->getCode() === '45000';
         }
     }
-    $writerTable = match ($scenario['definition'] ?? 'data') {
-        'rra' => $rra, 'cf' => $cf, default => $data
-    };
     $operation = $scenario['writer'] ?? 'insert';
     if ($operation !== 'insert') {
-        $db->exec("INSERT INTO `$writerTable` VALUES (2,0,'existing')");
+        $db->exec("INSERT INTO `$data` VALUES (2,0,'existing')");
     }
     $parentId = (int) $db->query('SELECT CONNECTION_ID()')->fetchColumn();
+    if (!empty($scenario['editor'])) {
+        $db->exec("INSERT INTO `$rra` (id,data_source_profile_id) VALUES (13,3)");
+        $db->exec("INSERT INTO `$cf` VALUES (3,1)");
+    }
+    if (in_array($operation, ['rra-update', 'rra-upsert'], true)) {
+        $db->exec("INSERT INTO `$rra` (id,data_source_profile_id) VALUES (2,0)");
+    }
+    if ($operation === 'cf-update') {
+        $db->exec("INSERT INTO `$cf` VALUES (0,1)");
+    }
     $db->beginTransaction();
     $db->query("SELECT id FROM `$profiles` WHERE id=3 FOR UPDATE")->fetchAll();
     $db->query("SELECT data_source_profile_id FROM `$data` WHERE data_source_profile_id=3 FOR UPDATE")->fetchAll();
     $db->exec("DELETE FROM `$profiles` WHERE id=3");
-    $process = proc_open([PHP_BINARY, __FILE__, '--writer', $writerTable, $operation], [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
+    $target = str_starts_with($operation, 'rra-') ? $rra : (str_starts_with($operation, 'cf-') ? $cf : $data);
+    $command = [PHP_BINARY, __FILE__, '--writer', $target, $operation];
+    if (!empty($scenario['editor'])) {
+        $request = match ($scenario['editor']) {
+            'profile' => ['action' => 'save', 'save_component_profile' => '1', 'id' => 3, 'name' => 'changed', 'step' => 300, 'heartbeat' => 300, 'x_files_factor' => 0.5, 'consolidation_function_id' => [1,3]],
+            'rra' => ['action' => 'save', 'save_component_rra' => '1', 'id' => 0, 'profile_id' => 3, 'name' => 'new', 'steps' => 1, 'rows' => 100, 'timespan' => 30000],
+            'remove' => ['action' => 'item_remove', 'id' => 13],
+            default => ['action' => 'actions', 'drp_action' => '2', 'title_format' => '<profile_title> copy'],
+        };
+        $editor = ['editor_tables' => ['data_source_profiles' => $profiles, 'data_template_data' => $data, 'data_source_profiles_rra' => $rra, 'data_source_profiles_cf' => $cf], 'request' => $request];
+        mkdir($directory . '/editor');
+        putenv('PROFILE_DELETE_MYSQL=1');
+        $db->exec("DELETE FROM `$rra` WHERE data_source_profile_id=3");
+        $db->exec("DELETE FROM `$cf` WHERE data_source_profile_id=3");
+        $command = [PHP_BINARY, '-d', 'error_reporting=24575', __DIR__ . '/profile-deletion-native.php', json_encode($editor, JSON_THROW_ON_ERROR), $directory . '/editor'];
+    }
+    $process = proc_open($command, [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
     if (!is_resource($process)) {
         throw new RuntimeException('Unable to launch concurrent reference writer');
     }
@@ -140,24 +168,33 @@ try {
     } else {
         $db->commit();
     }
-    $writer = json_decode(stream_get_contents($pipes[1]), true, flags: JSON_THROW_ON_ERROR);
+    $output = stream_get_contents($pipes[1]);
+    $writer = !empty($scenario['editor']) ? json_decode(file_get_contents($directory . '/editor/result.json'), true, flags: JSON_THROW_ON_ERROR) : json_decode($output, true, flags: JSON_THROW_ON_ERROR);
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
     $status = proc_close($process);
     $process = null;
     if ($status !== 0 || $stderr !== '') {
-        throw new RuntimeException('Concurrent writer failed: ' . $stderr);
+        throw new RuntimeException('Concurrent writer failed: ' . $stderr . ' status=' . $status . ' output=' . $output . ' html=' . ($writer['html'] ?? ''));
     }
-    $orphans = (int) $db->query("SELECT COUNT(*) FROM `$writerTable` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.id=2 AND d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn();
+    $orphans = (int) $db->query("SELECT COUNT(*) FROM `$data` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.id=2 AND d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn();
     // Removing or modifying either guard must stop physical deletion.
     $name = array_key_first($definitions);
     $installer->exec("DROP TRIGGER `$name`");
     $missingRejected = !data_source_profile_reference_guards_available($profiles, $data, $prefix, $rra, $cf);
     $installer->exec("CREATE TRIGGER `$name` BEFORE INSERT ON `$data` FOR EACH ROW SET NEW.name=NEW.name");
     $modifiedRejected = !data_source_profile_reference_guards_available($profiles, $data, $prefix, $rra, $cf);
-    file_put_contents($directory . '/result.json', json_encode(['available' => $available, 'waiting' => $waiting, 'writer' => $writer, 'orphans' => $orphans, 'legacyName' => $db->query("SELECT name FROM `$data` WHERE id=1")->fetchColumn(), 'zero' => (int) $db->query("SELECT data_source_profile_id FROM `$data` WHERE id=4")->fetchColumn(), 'rejected' => $rejected, 'missingRejected' => $missingRejected, 'modifiedRejected' => $modifiedRejected], JSON_THROW_ON_ERROR));
+    $definitionOrphans = (int) $db->query("SELECT COUNT(*) FROM `$rra` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn() + (int) $db->query("SELECT COUNT(*) FROM `$cf` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn();
+    file_put_contents($directory . '/result.json', json_encode(['definitionOrphans' => $definitionOrphans, 'available' => $available, 'waiting' => $waiting, 'writer' => $writer, 'orphans' => $orphans, 'legacyName' => $db->query("SELECT name FROM `$data` WHERE id=1")->fetchColumn(), 'zero' => (int) $db->query("SELECT data_source_profile_id FROM `$data` WHERE id=4")->fetchColumn(), 'rejected' => $rejected, 'missingRejected' => $missingRejected, 'modifiedRejected' => $modifiedRejected], JSON_THROW_ON_ERROR));
 } finally {
+    if (is_dir($directory . '/editor')) {
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory . '/editor', FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($files as $file) {
+            $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
+        }
+        rmdir($directory . '/editor');
+    }
     if ($db->inTransaction()) {
         $db->rollBack();
     }

@@ -240,6 +240,13 @@ function form_save_profile_components()
         get_filter_request_var('profile_id');
         /* ==================================================== */
 
+        if (get_request_var('id') > 0) {
+            $existing = db_fetch_assoc_prepared('SELECT id FROM data_source_profiles_rra WHERE id=? AND data_source_profile_id=? FOR UPDATE', array(get_request_var('id'), get_request_var('profile_id')));
+            if (!is_array($existing) || count($existing) !== 1) {
+                throw new RuntimeException('Profile RRA was deleted or belongs to another profile');
+            }
+        }
+
         $sampling_interval = db_fetch_cell_prepared(
             'SELECT step
 			FROM data_source_profiles
@@ -481,6 +488,10 @@ function duplicate_data_source_profile($source_profile, $title_format)
     }
 
     foreach ($source_profile as $id) {
+        if (!begin_data_source_profile_mutation((int) $id)) {
+            raise_message('profile_error', __('Unable to duplicate Data Source Profile.  Check Kadupul Log for errors.'), MESSAGE_LEVEL_ERROR);
+            continue;
+        }
         $profile = db_fetch_row_prepared(
             'SELECT *
 			FROM data_source_profiles
@@ -510,7 +521,7 @@ function duplicate_data_source_profile($source_profile, $title_format)
             $newid = sql_save($save, 'data_source_profiles');
 
             if ($newid > 0) {
-                db_execute_prepared(
+                $copied = db_execute_prepared(
                     "INSERT INTO data_source_profiles_cf
 					SELECT '$newid' AS data_source_profile_id, consolidation_function_id
 					FROM data_source_profiles_cf
@@ -518,7 +529,7 @@ function duplicate_data_source_profile($source_profile, $title_format)
                     array($id)
                 );
 
-                db_execute_prepared(
+                $copied = $copied && db_execute_prepared(
                     "INSERT INTO data_source_profiles_rra
 					(`data_source_profile_id`, `name`, `steps`, `rows`, `timespan`)
 					SELECT '$newid', `name`, `steps`, `rows`, `timespan`
@@ -527,11 +538,18 @@ function duplicate_data_source_profile($source_profile, $title_format)
                     array($id)
                 );
 
-                raise_message(1);
+                if ($copied && finish_data_source_profile_mutation(true)) {
+                    raise_message(1);
+                } else {
+                    finish_data_source_profile_mutation(false);
+                    raise_message(2);
+                }
             } else {
+                finish_data_source_profile_mutation(false);
                 raise_message(2);
             }
         } else {
+            finish_data_source_profile_mutation(false);
             raise_message('profile_error', __('Unable to duplicate Data Source Profile.  Check Kadupul Log for errors.'), MESSAGE_LEVEL_ERROR);
         }
     }

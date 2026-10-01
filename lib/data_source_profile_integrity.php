@@ -11,9 +11,11 @@
 function data_source_profile_reference_triggers(
     string $profiles = 'data_source_profiles',
     string $data = 'data_template_data',
-    string $prefix = 'kadupul_profile_reference'
+    string $prefix = 'kadupul_profile_reference',
+    string $rra = 'data_source_profiles_rra',
+    string $cf = 'data_source_profiles_cf'
 ): array {
-    foreach ([$profiles, $data, $prefix] as $identifier) {
+    foreach ([$profiles, $data, $prefix, $rra, $cf] as $identifier) {
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]{0,50}$/', $identifier)) {
             throw new InvalidArgumentException('Invalid profile guard identifier.');
         }
@@ -43,6 +45,7 @@ END";
         $name = $prefix . '_' . strtolower($event);
         $timing = $event === 'INSERT' ? 'AFTER' : 'BEFORE';
         $definitions[$name] = [
+            'table' => $data,
             'event' => $event,
             'timing' => $timing,
             'body' => $body,
@@ -50,20 +53,21 @@ END";
         ];
     }
 
-    return $definitions;
-}
+    foreach (['rra' => $rra, 'cf' => $cf] as $kind => $table) {
+        foreach (['INSERT' => $insert, 'UPDATE' => $update, 'DELETE' => str_replace('NEW.', 'OLD.', preg_replace('/    IF parent_profile IS NULL THEN.*?    END IF;\n/s', '', $insert))] as $event => $body) {
+            $name = $prefix . '_' . $kind . '_' . strtolower($event);
+            $timing = $event === 'INSERT' ? 'AFTER' : 'BEFORE';
+            $definitions[$name] = [
+                'table' => $table,
+                'event' => $event,
+                'timing' => $timing,
+                'body' => $body,
+                'sql' => "CREATE TRIGGER `$name` $timing $event ON `$table` FOR EACH ROW $body",
+            ];
+        }
+    }
 
-/** Definition writers obey the same locking parent contract as data references. */
-function data_source_profile_definition_triggers(
-    string $profiles = 'data_source_profiles',
-    string $rra = 'data_source_profiles_rra',
-    string $cf = 'data_source_profiles_cf',
-    string $prefix = 'kadupul_profile_reference'
-): array {
-    return array_merge(
-        data_source_profile_reference_triggers($profiles, $rra, $prefix . '_rra'),
-        data_source_profile_reference_triggers($profiles, $cf, $prefix . '_cf')
-    );
+    return $definitions;
 }
 
 /** A missing or modified guard makes physical profile deletion unsafe. */
@@ -74,7 +78,7 @@ function data_source_profile_reference_guards_available(
     string $rra = 'data_source_profiles_rra',
     string $cf = 'data_source_profiles_cf'
 ): bool {
-    $definitions = array_merge(data_source_profile_reference_triggers($profiles, $data, $prefix), data_source_profile_definition_triggers($profiles, $rra, $cf, $prefix));
+    $definitions = data_source_profile_reference_triggers($profiles, $data, $prefix, $rra, $cf);
     $engines = db_fetch_assoc_prepared(
         'SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES
         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?, ?, ?, ?)',
@@ -89,10 +93,10 @@ function data_source_profile_reference_guards_available(
         }
     }
     $rows = db_fetch_assoc_prepared(
-        'SELECT TRIGGER_NAME, ACTION_TIMING, EVENT_MANIPULATION, ACTION_STATEMENT
+        'SELECT TRIGGER_NAME, EVENT_OBJECT_TABLE, ACTION_TIMING, EVENT_MANIPULATION, ACTION_STATEMENT
         FROM information_schema.TRIGGERS
-        WHERE TRIGGER_SCHEMA = DATABASE() AND EVENT_OBJECT_TABLE IN (?, ?, ?)
-        AND TRIGGER_NAME IN (?, ?, ?, ?, ?, ?)',
+        WHERE TRIGGER_SCHEMA = DATABASE() AND EVENT_OBJECT_TABLE IN (?,?,?)
+        AND TRIGGER_NAME IN (?,?,?,?,?,?,?,?)',
         array_merge([$data, $rra, $cf], array_keys($definitions))
     );
     if (!is_array($rows) || count($rows) !== count($definitions)) {
@@ -100,7 +104,8 @@ function data_source_profile_reference_guards_available(
     }
     foreach ($rows as $row) {
         $definition = $definitions[$row['TRIGGER_NAME'] ?? ''] ?? null;
-        if (!$definition || ($row['ACTION_TIMING'] ?? '') !== $definition['timing']
+        if (!$definition || ($row['EVENT_OBJECT_TABLE'] ?? '') !== $definition['table']
+            || ($row['ACTION_TIMING'] ?? '') !== $definition['timing']
             || ($row['EVENT_MANIPULATION'] ?? '') !== $definition['event']
             || preg_replace('/\s+/', ' ', trim($row['ACTION_STATEMENT'] ?? ''))
                 !== preg_replace('/\s+/', ' ', trim($definition['body']))) {
@@ -109,6 +114,13 @@ function data_source_profile_reference_guards_available(
     }
 
     return true;
+}
+
+/** Definition writers use the same audited guard catalog. */
+function data_source_profile_definition_triggers(string $profiles = 'data_source_profiles', string $rra = 'data_source_profiles_rra', string $cf = 'data_source_profiles_cf', string $prefix = 'kadupul_profile_reference'): array
+{
+    $all = data_source_profile_reference_triggers($profiles, 'data_template_data', $prefix, $rra, $cf);
+    return array_filter($all, static fn($definition) => $definition['table'] !== 'data_template_data');
 }
 
 /** Copy the parent catalog before either collector replication path writes children. */
@@ -296,6 +308,17 @@ function replicate_data_source_profile_children(PDO $connection, array $data, bo
             if (!db_execute_prepared($sql, array_values($row), false, $connection)) {
                 throw new RuntimeException('Collector reference write was not acknowledged');
             }
+            $actual = db_fetch_assoc_prepared('SELECT * FROM data_template_data WHERE id=?', [$row['id']], true, $connection);
+            $checked = $replace ? $row : array_diff_key($row, array_flip($excluded));
+            if (!is_array($actual) || count($actual) !== 1) {
+                throw new RuntimeException('Collector reference verification failed');
+            }
+            foreach ($checked as $column => $value) {
+                if (!array_key_exists($column, $actual[0]) || ($value === null ? $actual[0][$column] !== null : (string) $actual[0][$column] !== (string) $value)) {
+                    throw new RuntimeException('Collector reference differs from source');
+                }
+            }
+
         }
         if (!$connection->commit()) {
             throw new RuntimeException('Collector reference commit was not acknowledged');
@@ -312,4 +335,45 @@ function replicate_data_source_profile_children(PDO $connection, array $data, bo
         cacti_log('ERROR: Profile delivery failed; existing collector data-source definitions were retained. ' . $error->getMessage(), false, 'REPLICATE');
         return false;
     }
+}
+
+/** Serialize an editor's existing-parent mutation with physical deletion. */
+function begin_data_source_profile_mutation(int $id): bool
+{
+    if (!db_begin_transaction()) {
+        return false;
+    }
+    try {
+        if ($id > 0) {
+            $rows = db_fetch_assoc_prepared('SELECT id FROM data_source_profiles WHERE id=? FOR UPDATE', [$id]);
+            if (!is_array($rows) || count($rows) !== 1 || (int) $rows[0]['id'] !== $id) {
+                throw new RuntimeException('Data Source Profile no longer exists.');
+            }
+        }
+        return true;
+    } catch (Throwable $error) {
+        finish_data_source_profile_mutation(false);
+        cacti_log('ERROR: Profile mutation refused: ' . $error->getMessage(), false, 'WEBUI');
+        return false;
+    }
+}
+
+/** Report success only after commit; tolerate server-aborted transactions. */
+function finish_data_source_profile_mutation(bool $successful): bool
+{
+    if ($successful) {
+        try {
+            if (db_commit_transaction()) {
+                return true;
+            }
+        } catch (Throwable $error) {
+            cacti_log('ERROR: Profile mutation commit failed: ' . $error->getMessage(), false, 'WEBUI');
+        }
+    }
+    try {
+        db_rollback_transaction();
+    } catch (Throwable $error) {
+        cacti_log('ERROR: Profile mutation rollback unavailable: ' . $error->getMessage(), false, 'WEBUI');
+    }
+    return false;
 }

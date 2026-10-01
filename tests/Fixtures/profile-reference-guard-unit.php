@@ -33,7 +33,7 @@ $fresh = true;
 $rows = [];
 foreach ($definitions as $name => $definition) {
     $fresh = $fresh && str_contains($schema, $definition['sql'] . '$$');
-    $rows[] = ['TRIGGER_NAME' => $name, 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']];
+    $rows[] = ['TRIGGER_NAME' => $name, 'EVENT_OBJECT_TABLE' => $definition['table'], 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $definition['body']];
 }
 $engines[] = ['TABLE_NAME' => 'data_source_profiles_rra', 'ENGINE' => 'InnoDB'];
 $engines[] = ['TABLE_NAME' => 'data_source_profiles_cf', 'ENGINE' => 'InnoDB'];
@@ -44,7 +44,7 @@ foreach ([null, [], [$rows[0]], [[], $rows[1]]] as $invalid) {
     $rows = $invalid;
     $refusals[] = !data_source_profile_reference_guards_available();
 }
-foreach (['TRIGGER_NAME' => 'unknown', 'ACTION_TIMING' => 'BEFORE', 'EVENT_MANIPULATION' => 'DELETE', 'ACTION_STATEMENT' => 'BEGIN END'] as $key => $value) {
+foreach (['EVENT_OBJECT_TABLE' => 'wrong_table', 'TRIGGER_NAME' => 'unknown', 'ACTION_TIMING' => 'BEFORE', 'EVENT_MANIPULATION' => 'DELETE', 'ACTION_STATEMENT' => 'BEGIN END'] as $key => $value) {
     $rows = $baseline;
     $rows[0][$key] = $value;
     $refusals[] = !data_source_profile_reference_guards_available();

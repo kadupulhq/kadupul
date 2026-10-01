@@ -3163,6 +3163,13 @@ IF NEW.data_source_profile_id <> 0 AND NEW.data_source_profile_id <> OLD.data_so
     END IF;
 END IF;
 END$$
+CREATE TRIGGER `kadupul_profile_reference_rra_delete` BEFORE DELETE ON `data_source_profiles_rra` FOR EACH ROW BEGIN
+DECLARE parent_profile BIGINT DEFAULT NULL;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET parent_profile = NULL;
+IF OLD.data_source_profile_id <> 0 THEN
+    SELECT id INTO parent_profile FROM `data_source_profiles` WHERE id = OLD.data_source_profile_id FOR UPDATE;
+END IF;
+END$$
 CREATE TRIGGER `kadupul_profile_reference_cf_insert` AFTER INSERT ON `data_source_profiles_cf` FOR EACH ROW BEGIN
 DECLARE parent_profile BIGINT DEFAULT NULL;
 DECLARE CONTINUE HANDLER FOR NOT FOUND SET parent_profile = NULL;
@@ -3181,6 +3188,13 @@ IF NEW.data_source_profile_id <> 0 AND NEW.data_source_profile_id <> OLD.data_so
     IF parent_profile IS NULL THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Data Source Profile no longer exists';
     END IF;
+END IF;
+END$$
+CREATE TRIGGER `kadupul_profile_reference_cf_delete` BEFORE DELETE ON `data_source_profiles_cf` FOR EACH ROW BEGIN
+DECLARE parent_profile BIGINT DEFAULT NULL;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET parent_profile = NULL;
+IF OLD.data_source_profile_id <> 0 THEN
+    SELECT id INTO parent_profile FROM `data_source_profiles` WHERE id = OLD.data_source_profile_id FOR UPDATE;
 END IF;
 END$$
 DELIMITER ;

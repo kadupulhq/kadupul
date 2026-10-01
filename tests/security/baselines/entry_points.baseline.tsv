@@ -1,4 +1,3 @@
-entry	gate	detail
 .php-cs-fixer.php	web-server-denied	nginx; apache: opt-in via .htaccess.dist
 about.php	authenticated	include/auth.php realm -1
 aggregate_graphs.php	realm:5	include/auth.php
@@ -53,6 +52,7 @@ data_source_profiles.php	realm:9	include/auth.php
 data_sources.php	realm:3	include/auth.php
 data_templates.php	realm:11	include/auth.php
 docs/	web-server-denied	nginx; apache .htaccess
+entry	gate	detail
 formats/index.php	anonymous-allowed	redirect-only
 gprint_presets.php	realm:5	include/auth.php
 graph.php	guest-or-realm:7	include/auth.php; guest_account
@@ -189,6 +189,7 @@ install/upgrades/1_2_27.php	anonymous-allowed	inert: declarations and literal as
 install/upgrades/1_2_3.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_31.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_32.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_34.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only

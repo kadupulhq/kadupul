@@ -74,6 +74,12 @@ function db_execute($sql)
     $GLOBALS['owner']->exec($sql);
     return true;
 }
+function db_fetch_assoc_prepared($sql, $parameters = [], ...$arguments)
+{
+    $statement = $GLOBALS['owner']->prepare($sql);
+    $statement->execute($parameters);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
 function db_fetch_cell_prepared($sql, $parameters = [], ...$arguments)
 {
     $statement = $GLOBALS['owner']->prepare($sql);
@@ -84,7 +90,7 @@ $config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_
 require $root . '/include/global_constants.php';
 require $root . '/include/global_arrays.php';
 require $root . '/lib/installer.php';
-$tables = ['data_template_rrd', 'data_input_fields', 'version', 'poller_output'];
+$tables = ['data_template_rrd', 'data_input_fields', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf'];
 foreach ($tables as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);
@@ -103,6 +109,13 @@ try {
         }
     }
     foreach ($tables as $table) {
+        if (in_array($table, ['data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf'], true)) {
+            // Real transactional prerequisites for the later registered profile migration.
+            $columns = $table === 'data_source_profiles' ? 'id INT PRIMARY KEY' : 'id INT PRIMARY KEY, data_source_profile_id INT NOT NULL DEFAULT 0';
+            $owner->exec("CREATE TABLE `$table` ($columns) ENGINE=InnoDB");
+            $created[] = $table;
+            continue;
+        }
         if ($table === 'poller_output') {
             // The unrelated final installer preflight inspects only its engine.
             // Avoid legacy zero-date defaults in this index-specific fixture.
@@ -127,25 +140,38 @@ try {
         }
         $owner->exec('INSERT INTO data_template_rrd (id,local_data_id,data_input_field_id,data_source_name) VALUES ' . implode(',', $rows));
     }
-    foreach (['fresh', 'upgrade'] as $mode) {
-        if ($mode === 'upgrade') {
-            $owner->exec('ALTER TABLE data_template_rrd DROP INDEX data_input_field_id');
+    foreach (['fresh', 'upgrade31', 'upgrade32'] as $mode) {
+        if ($mode !== 'fresh') {
+            $installed = $mode === 'upgrade31' ? '1.2.31' : '1.2.32';
+            $owner->exec("UPDATE version SET cacti='$installed'");
+            if ($mode === 'upgrade31') {
+                $owner->exec('ALTER TABLE data_template_rrd DROP INDEX data_input_field_id');
+            }
+            require_once $root . '/lib/data_source_profile_integrity.php';
+            foreach (data_source_profile_reference_triggers() as $name => $definition) {
+                $owner->exec("DROP TRIGGER IF EXISTS `$name`");
+            }
+
             // Execute the real installer's version gate using the real registry,
             // starting at an already installed 1.2.31, rather than calling the
             // migration directly and concealing a skipped version.
             $reflection = new ReflectionClass(Installer::class);
             $installer = $reflection->newInstanceWithoutConstructor();
-            $reflection->getProperty('old_cacti_version')->setValue($installer, '1.2.31');
+            $reflection->getProperty('old_cacti_version')->setValue($installer, $installed);
             ob_start();
             try {
                 $result = $reflection->getMethod('upgradeDatabase')->invoke($installer);
             } finally {
                 ob_end_clean();
             }
-            if ($result !== false || get_cacti_cli_version() === '1.2.31' || get_cacti_cli_version() !== trim(file_get_contents($root . '/include/cacti_version'))) {
+            if ($result !== false || get_cacti_cli_version() === $installed || get_cacti_cli_version() !== trim(file_get_contents($root . '/include/cacti_version'))) {
                 throw new RuntimeException('Native version-gated upgrade did not advance the installed 1.2.31 database.');
             }
             upgrade_to_1_2_32(); // An already upgraded installation must remain valid.
+            if (!data_source_profile_reference_guards_available() || !db_index_exists('data_template_data', 'data_source_profile_id')) {
+                throw new RuntimeException('Registered profile migration was skipped for installed ' . $installed);
+            }
+            upgrade_to_1_2_34(); // Profile migration is idempotent too.
         }
         $owner->query('ANALYZE TABLE data_template_rrd,data_input_fields')->fetchAll();
         $actual = $owner->query("SHOW INDEX FROM data_template_rrd WHERE Key_name='data_input_field_id'")->fetch(PDO::FETCH_ASSOC);

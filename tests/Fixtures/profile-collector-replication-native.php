@@ -121,7 +121,7 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
             $GLOBALS['calls'][] = ['source', $sql];
             return $GLOBALS['data'];
         }
-        if (!preg_match('/data_source_profiles|information_schema.TABLES|SHOW COLUMNS FROM data_template_data/', $sql)) {
+        if (!preg_match('/data_source_profiles|information_schema.TABLES|SHOW COLUMNS FROM data_template_data|FROM data_template_data WHERE/', $sql)) {
             $GLOBALS['calls'][] = ['source', $sql];
             return [];
         }
@@ -158,8 +158,15 @@ function db_execute($sql, $log = true, $connection = false)
         $GLOBALS['calls'][] = ['source', $sql];
         return true;
     }
-    collector_statement($sql, [], $connection);
-    return true;
+    try {
+        collector_statement($sql, [], $connection);
+        return true;
+    } catch (PDOException $error) {
+        if (str_contains($sql, 'data_template_data')) {
+            return false;
+        }
+        throw $error;
+    }
 }
 function db_table_exists($table, $log = true, $connection = false)
 {
@@ -202,18 +209,16 @@ function array_rekey($rows, $key, $value)
 }
 function db_execute_prepared($sql, $params = [], $log = true, $connection = false)
 {
-    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-delete' && str_starts_with($sql, 'DELETE FROM data_template_data')) {
-        return false;
-    }
-    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-partial' && str_starts_with($sql, 'INSERT INTO data_template_data') && ($params[0] ?? 0) === 3) {
-        return false;
-    }
-    if (($GLOBALS['scenario']['failure'] ?? '') === 'child-write' && str_starts_with($sql, 'INSERT INTO data_template_data')) {
-        return false;
-    }
-    if ((str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data'))) {
-        collector_statement($sql, $params, $connection);
-        return true;
+    if (str_contains($sql, 'data_source_profiles') || str_contains($sql, 'data_template_data')) {
+        try {
+            collector_statement($sql, $params, $connection);
+            return true;
+        } catch (PDOException $error) {
+            if (str_contains($sql, 'data_template_data')) {
+                return false;
+            }
+            throw $error;
+        }
     }
     $GLOBALS['calls'][] = ['source', $sql];
     return true;
@@ -259,7 +264,7 @@ try {
     // Stale collector definitions must be replaced, not accumulated.
     $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_rra'] . '` VALUES (79,77,24,900)');
     $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_cf'] . '` VALUES (77,4)');
-    foreach (array_merge(data_source_profile_reference_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_template_data'], 'collector_guard_' . $suffix), data_source_profile_definition_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_source_profiles_rra'], $maps['remote']['data_source_profiles_cf'], 'collector_guard_' . $suffix)) as $definition) {
+    foreach (data_source_profile_reference_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_template_data'], 'collector_guard_' . $suffix, $maps['remote']['data_source_profiles_rra'], $maps['remote']['data_source_profiles_cf']) as $definition) {
         $installer->exec($definition['sql']);
     }
     if (($scenario['failure'] ?? '') === 'copy') {
@@ -284,10 +289,27 @@ try {
     if (($scenario['failure'] ?? '') === 'engine') {
         $remote->exec('ALTER TABLE `' . $maps['remote']['data_source_profiles_cf'] . '` ENGINE=MyISAM');
     }
+    if (in_array($scenario['failure'] ?? '', ['child-write','child-late','child-delete'], true)) {
+        $event = $scenario['failure'] === 'child-delete' ? 'DELETE' : 'INSERT';
+        $body = $scenario['failure'] === 'child-late' ? "BEGIN IF NEW.id=502 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Reference rejected'; END IF; END" : "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Reference rejected'";
+        $installer->exec('CREATE TRIGGER `collector_child_reject_' . $suffix . '` BEFORE ' . $event . ' ON `' . $maps['remote']['data_template_data'] . '` FOR EACH ROW ' . $body);
+    }
+    if (($scenario['failure'] ?? '') === 'child-corrupt') {
+        $installer->exec('CREATE TRIGGER `collector_child_alter_' . $suffix . '` BEFORE INSERT ON `' . $maps['remote']['data_template_data'] . '` FOR EACH ROW SET NEW.name=\'changed\'');
+    }
+    if (($scenario['failure'] ?? '') === 'child-engine') {
+        $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` ENGINE=MyISAM');
+    }
+    if (($scenario['failure'] ?? '') === 'child-schema') {
+        $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` DROP COLUMN name');
+    }
     $id = ($scenario['failure'] ?? '') === 'missing' ? 98 : 77;
     $data = [['id' => 2, 'data_source_profile_id' => $id, 'name' => 'replicated']];
-    if (($scenario['failure'] ?? '') === 'child-partial') {
-        $data[] = ['id' => 3, 'data_source_profile_id' => $id, 'name' => 'later reference'];
+    if (($scenario['failure'] ?? '') === 'child-late') {
+        $data = [];
+        foreach (range(2, 502) as $childId) {
+            $data[] = ['id' => $childId, 'data_source_profile_id' => 77, 'name' => 'replicated'];
+        }
     }
     if (!empty($scenario['entrypoint'])) {
         $result = $scenario['collector'] === 'bulk' ? replicate_out(2) : api_device_replicate_out(1, 2);
