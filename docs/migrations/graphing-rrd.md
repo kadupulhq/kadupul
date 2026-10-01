@@ -261,7 +261,11 @@ when no URL override is supplied; other legacy callers resolve equivalent
 metadata at that adapter boundary. Cache keys and response content types use
 the same resolved format; the full graph definition remains a miss-only read. The detailed
 plan records render-triggered Boost system-zone changes as prerequisite P0
-corrections before R0/R1. Explicit PNG is already initialized at the top of
+corrections before R0/R1, implemented at the current procedural cache/update
+boundaries in `lib/boost.php` and metadata boundaries in `lib/rrd.php`, with
+native fixtures in `tests/Fixtures/rrd-characterization.php` and
+`tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`. P0 needs no R7 adapter;
+R7 later preserves that verified behavior. Explicit PNG is already initialized at the top of
 the frozen JSON adapter and remains a compatibility characterization case. Native
 regressions must demonstrate the defects and separately reviewed fixes before
 updating only their affected goldens; later migration slices preserve the
@@ -280,7 +284,10 @@ this PR changes documentation only.
 
 `RenderGraph` invokes an Application `GraphOptionsHook` port implemented by the
 legacy hook adapter. It returns Domain `RenderResult` outcomes for source HTML,
-real-time output and error images; infrastructure output adapters retain the
+real-time output, CSV payload plus export metadata, and error images. The legacy
+wrapper returns the parsed CSV payload and copies percentile/summation metadata
+back into the caller-owned by-reference `$xport_meta`, with native parity gates
+for both values and the `graph_xport.php` consumers. Infrastructure output adapters retain the
 existing filesystem permissions/failure handling and GD/theme behavior.
 Application imports none of those implementations. R7 adds Graphing's
 `Application/Port/RenderClock` and `Infrastructure/Legacy/LegacyRenderClock`;
