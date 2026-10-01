@@ -8,6 +8,7 @@
 namespace Kadupul\GraphDefinition\Infrastructure\Legacy;
 
 use Doctrine\DBAL\Connection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Kadupul\GraphDefinition\Application\Query\VdefAccessDenied;
 use Kadupul\GraphDefinition\Application\Port\VdefEditor;
@@ -16,7 +17,7 @@ use Kadupul\GraphDefinition\Domain\VdefRevision;
 
 final readonly class LegacyVdefEditor implements VdefEditor
 {
-    public function __construct(private Connection $database) {}
+    public function __construct(private Connection $database, private LegacyConfiguration $configuration) {}
 
     public function save(int $actorId, int $id, string $name, string $revision = ''): int
     {
@@ -169,6 +170,27 @@ final readonly class LegacyVdefEditor implements VdefEditor
 
     private function transaction(int $actorId, callable $operation): mixed
     {
+        if ($this->database->isTransactionActive()) {
+            throw new \RuntimeException('VDEF writes require their own transaction.');
+        }
+        $native = $this->database->getNativeConnection();
+        if ($native instanceof \PDO && $native->inTransaction()) {
+            throw new \RuntimeException('VDEF writes require their own transaction.');
+        }
+        if ($this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
+            if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
+                throw new \RuntimeException('VDEF writes require the primary collector.');
+            }
+            foreach (['vdef', 'vdef_items', 'graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
+                // Inspect the table this connection uses, including temporary
+                // tables that shadow otherwise transactional persistent tables.
+                $definition = $this->database->fetchNumeric('SHOW CREATE TABLE ' . $this->database->quoteIdentifier($table));
+                if ($definition === false || !preg_match('/\n\) ENGINE=InnoDB\b/i', (string) $definition[1])) {
+                    throw new \RuntimeException('VDEF writes require transactional tables.');
+                }
+            }
+            $this->database->executeStatement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        }
         $this->database->beginTransaction();
         try {
             $this->assertCanMutate($actorId);

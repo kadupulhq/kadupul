@@ -8,6 +8,7 @@
 namespace Kadupul\Tests;
 
 use Doctrine\DBAL\DriverManager;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\GraphDefinition\Domain\VdefListCriteria;
 use Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyVdefEditor;
 use Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineVdefCatalog;
@@ -41,8 +42,47 @@ final class VdefAdministrationTest extends TestCase
         ] as $sql) {
             $this->database->executeStatement($sql);
         }
-        $this->editor = new LegacyVdefEditor($this->database);
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
+        $this->editor = new LegacyVdefEditor($this->database, $configuration);
         $this->catalog = new DoctrineVdefCatalog($this->database);
+    }
+
+    public function testCallerOwnedTransactionIsPreservedWhenMutationIsRefused(): void
+    {
+        $this->database->beginTransaction();
+        $this->database->executeStatement("UPDATE vdef SET name='caller-private' WHERE id=2");
+        try {
+            $this->editor->save(42, 2, 'should-not-save', $this->revision(2));
+            self::fail('Caller-owned transaction was accepted.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('VDEF writes require their own transaction.', $error->getMessage());
+        }
+        self::assertTrue($this->database->isTransactionActive());
+        self::assertSame('caller-private', $this->database->fetchOne('SELECT name FROM vdef WHERE id=2'));
+        $this->database->rollBack();
+        self::assertSame('Unused', $this->database->fetchOne('SELECT name FROM vdef WHERE id=2'));
+    }
+
+    public function testNativeCallerTransactionAndDoctrineNestingRemainUntouched(): void
+    {
+        $native = $this->database->getNativeConnection();
+        self::assertInstanceOf(\PDO::class, $native);
+        $native->beginTransaction();
+        $this->database->executeStatement("UPDATE vdef SET name='caller-native' WHERE id=2");
+        $nesting = $this->database->getTransactionNestingLevel();
+        self::assertSame(0, $nesting);
+        try {
+            $this->editor->save(42, 2, 'should-not-save', $this->revision(2));
+            self::fail('Native caller-owned transaction was accepted.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('VDEF writes require their own transaction.', $error->getMessage());
+        }
+        self::assertTrue($native->inTransaction());
+        self::assertSame($nesting, $this->database->getTransactionNestingLevel());
+        self::assertSame('caller-native', $this->database->fetchOne('SELECT name FROM vdef WHERE id=2'));
+        $native->rollBack();
+        self::assertSame('Unused', $this->database->fetchOne('SELECT name FROM vdef WHERE id=2'));
     }
 
     public function testListCountsGraphAndTemplateReferencesAndEscapesSearchWildcards(): void

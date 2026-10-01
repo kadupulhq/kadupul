@@ -173,6 +173,8 @@ def main():
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'vdef-test-hash': 'Integration test source differs',
+        'vdef-probe-hash': 'Integration test source differs',
+        'missing-vdef-engine-check': 'Incomplete Symfony integration',
         'missing-vdef-handoff': 'Incomplete Symfony integration',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
@@ -236,6 +238,10 @@ def main():
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'vdef-probe-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
+            elif case == 'missing-vdef-engine-check':
+                evidence['checks'].remove('VDEF nontransactional table refused: vdef')
             elif case == 'vdef-test-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_scenarios.py'] = '0' * 64
             elif case == 'missing-vdef-handoff':

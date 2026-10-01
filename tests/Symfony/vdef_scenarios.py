@@ -1,5 +1,6 @@
 """VDEF workflow through real Symfony forms and primary MariaDB transactions."""
 import json
+from pathlib import Path
 import re
 import urllib.parse
 import urllib.request
@@ -189,6 +190,22 @@ def verify_vdefs(harness, session, user_id, check):
         harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},14)')
         for group in original_groups:
             harness.sql(f'INSERT IGNORE INTO user_auth_group_members (group_id,user_id) VALUES ({int(group)},{user_id})')
+    status, _, html = scenario.request(f'/graph-definitions/vdefs/{vdef_id}/edit')
+    editor_form = scenario.form(html, lambda form: 'vdef_edit[name]' in form['fields'])
+    before_name = harness.sql(f'SELECT name FROM vdef WHERE id={vdef_id}').strip()
+    for table in ('vdef', 'vdef_items', 'graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'):
+        # Settings has a utf8mb4 key wider than MyISAM supports. Aria is
+        # another non-InnoDB engine and preserves that schema for this probe.
+        engine = 'Aria' if table == 'settings' else 'MyISAM'
+        harness.sql(f'ALTER TABLE {table} ENGINE={engine}')
+        try:
+            check(scenario.submit(editor_form, {'vdef_edit[name]': 'must-not-save'})[0] == 502, 'VDEF nontransactional table refused: ' + table)
+            check(harness.sql(f'SELECT name FROM vdef WHERE id={vdef_id}').strip() == before_name, 'VDEF nontransactional refusal preserves name: ' + table)
+        finally:
+            harness.sql(f'ALTER TABLE {table} ENGINE=InnoDB')
+    harness.compose('cp', str(Path(__file__).with_name('vdef_transaction_probe.php')), 'web:/tmp/vdef_transaction_probe.php')
+    probe = harness.command('php', '-d', 'auto_prepend_file=/harness/errors.php', '/tmp/vdef_transaction_probe.php', str(user_id), str(vdef_id), check=True)
+    check(json.loads(probe['stdout']) == {'caller_preserved': True, 'native_preserved': True, 'remote_refused': True, 'primary_confirmed': True, 'temporary_shadow_refused': True}, 'VDEF caller transaction and remote collector guards verified on MariaDB')
     harness.sql(f'DELETE FROM vdef_items WHERE vdef_id={vdef_id}; DELETE FROM vdef WHERE id={vdef_id}')
     if not original_direct:
         harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=14')
