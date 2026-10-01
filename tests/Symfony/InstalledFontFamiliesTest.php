@@ -15,8 +15,9 @@ use Symfony\Component\Filesystem\Filesystem;
 final class InstalledFontFamiliesTest extends TestCase
 {
     // What fc-list --format '%{family}\n' prints: one line per face, and every
-    // name of a family with more than one, separated by commas.
-    private const LISTING = "DejaVu Sans\nDejaVu Sans Mono\nDejaVu Sans\nNoto Sans CJK JP,Noto Sans CJK JP Regular\nCaf\u{e9} Sans\n";
+    // name of a family with more than one, separated by commas. A comma inside a
+    // name is escaped with a backslash.
+    private const LISTING = "DejaVu Sans\nDejaVu Sans Mono\nDejaVu Sans\nNoto Sans CJK JP,Noto Sans CJK JP Regular\nCaf\u{e9} Sans\nAcme\\, Inc Sans\n";
 
     private string $root;
 
@@ -55,6 +56,7 @@ final class InstalledFontFamiliesTest extends TestCase
         yield 'a family that is not installed' => ['Roboto Mono', false];
         yield 'a longer name that starts like one' => ['DejaVuSansCondensed', false];
         yield 'a style alone' => ['Bold', false];
+        yield 'the end of a name that holds a comma' => ['Inc Sans', false];
     }
 
     #[DataProvider('descriptions')]

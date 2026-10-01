@@ -365,11 +365,12 @@ test('user and group graph settings keep a font that is not installed unsaved', 
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/user_group_admin.php'), 'form_save'), true) . ');'
         . $settings_user . $request . '
         $writes = array();
+        $messages = array();
         function db_execute_prepared($sql, $params) { $GLOBALS["writes"][] = $params; }
         function kill_session_var($name) {}
         function reset_group_perms($id) {}
-        function raise_message($id) {}
-        register_shutdown_function(function () { echo json_encode($GLOBALS["writes"]); });
+        function raise_message($id) { $GLOBALS["messages"][] = $id; }
+        register_shutdown_function(function () { echo json_encode(array($GLOBALS["writes"], $GLOBALS["messages"], $_SESSION["sess_error_fields"] ?? array())); });
         form_save();';
     $user = rrd_font_settings_name_filter($root)
         . 'eval(' . var_export(test_php_function_source($functions, 'settings_value_passes_filter'), true) . ');'
@@ -389,6 +390,7 @@ test('user and group graph settings keep a font that is not installed unsaved', 
         rmdir($directory);
     }
 
-    expect($group_writes)->toBe(array(array('3', 'legend_font', 'DejaVu Sans Mono')))
+    // The group page reports the refusal as System settings do, not as a successful save.
+    expect($group_writes)->toBe(array(array(array('3', 'legend_font', 'DejaVu Sans Mono')), array(35, 3), array('title_font' => 'title_font')))
         ->and($user_writes)->toBe(array(array(5, 'legend_font', 'DejaVu Sans Mono')));
 });

@@ -597,6 +597,8 @@ function form_save()
         header('Location: user_group_admin.php?action=edit&header=false&tab=realms&id=' . get_request_var('id'));
         exit;
     } elseif (isset_request_var('save_component_graph_settings')) {
+        $refused = false;
+
         foreach ($settings_user as $tab_short_name => $tab_fields) {
             foreach ($tab_fields as $field_name => $field_array) {
                 if ((isset($field_array['items'])) && (is_array($field_array['items']))) {
@@ -611,6 +613,10 @@ function form_save()
                     if (isset($field_array['default']) && is_numeric($field_array['default']) && !settings_value_passes_filter($field_name, $value, true)) {
                         $value = $field_array['default'];
                     } elseif (!settings_value_passes_filter($field_name, $value, true)) {
+                        $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                        $_SESSION['sess_field_values'][$field_name] = $value;
+                        $refused = true;
+
                         continue;
                     }
 
@@ -623,7 +629,13 @@ function form_save()
 
         reset_group_perms(get_request_var('id'));
 
-        raise_message(1);
+        // Same messages as settings.php when a value its filter refuses is left unsaved.
+        if ($refused) {
+            raise_message(35);
+            raise_message(3);
+        } else {
+            raise_message(1);
+        }
 
         header('Location: user_group_admin.php?action=edit&header=false&tab=settings&id=' . get_nfilter_request_var('id'));
         exit;

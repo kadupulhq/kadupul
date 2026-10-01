@@ -107,6 +107,7 @@ final class GraphFontResolver
 
         $font = (string) $font;
 
-        return self::acceptsFamily($font) ? $font : '';
+        // A blank value is an empty setting, as graph_font_name_filter() treats it.
+        return trim($font) !== '' && self::acceptsFamily($font) ? $font : '';
     }
 }

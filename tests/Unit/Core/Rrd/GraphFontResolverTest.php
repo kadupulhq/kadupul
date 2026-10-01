@@ -95,6 +95,7 @@ test('a font value that is not text is no font', function ($font, $family) {
     'null' => array(null, ''),
     'an array' => array(array('Sans'), ''),
     'an integer' => array(0, '0'),
+    'blanks, which the save filter treats as empty' => array('   ', ''),
 ));
 
 test('only characters fontconfig family names use are accepted', function ($description, $accepted) {

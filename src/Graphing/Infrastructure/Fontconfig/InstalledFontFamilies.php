@@ -82,8 +82,11 @@ final class InstalledFontFamilies
         $families = array();
         foreach (preg_split('/\R/', $process->getOutput(), -1, PREG_SPLIT_NO_EMPTY) ?: array() as $line) {
             // A family with more than one name lists them all, separated by commas.
-            foreach (explode(',', str_replace('\\', '', $line)) as $name) {
-                $key = self::key($name);
+            // fontconfig puts a backslash before special characters inside a name,
+            // so only an unescaped comma separates two names.
+            preg_match_all('/(?:\\\\.|[^,\\\\])+/s', $line, $names);
+            foreach ($names[0] as $name) {
+                $key = self::key(preg_replace('/\\\\(.)/s', '$1', $name) ?? '');
                 if ($key !== '') {
                     $families[$key] = true;
                 }
