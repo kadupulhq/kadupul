@@ -204,6 +204,32 @@ test('relative XHR URLs resolve against the document base', () => {
   assert.equal(request.sent, 'action=save');
 });
 
+test('an element named baseURI does not hide the document base', () => {
+  const send = scope => {
+    class Request {
+      open() {}
+      send(data) { this.sent = data; }
+      setRequestHeader() {}
+    }
+    load({ XMLHttpRequest: Request, ...scope });
+    const request = new Request();
+    request.open('POST', 'graphs.php', true);
+    request.send('action=save');
+    return request.sent;
+  };
+  // A page containing <img name="baseURI"> makes document.baseURI return the element.
+  const clobbered = base => {
+    class Node { get baseURI() { return base; } }
+    const document = Object.create(Node.prototype);
+    Object.defineProperty(document, 'baseURI', { value: { tagName: 'IMG' } });
+    return { Node, document };
+  };
+  assert.equal(send(clobbered(page)), withToken);
+  assert.equal(send(clobbered('https://evil.example/')), 'action=save');
+  // Without the prototype getter a shadowed value is not trusted.
+  assert.equal(send({ document: { baseURI: { tagName: 'IMG' } } }), 'action=save');
+});
+
 test('the jQuery fallback adds the token to same-origin posts only', () => {
   const calls = [];
   const jQuery = {
