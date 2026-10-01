@@ -335,11 +335,11 @@ dynamic_include	./lib/aggregate.php:817		include_once($config['base_path'] . '/l
 dynamic_include	./lib/api_aggregate.php:1660		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/api_aggregate.php:185		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_aggregate.php:654		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_automation.php:2490	    include_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./lib/api_automation.php:2491	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./lib/api_automation.php:2492	    include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./lib/api_automation.php:3291	                include_once($config['base_path'] . '/plugins/thold/thold-functions.php');
-dynamic_include	./lib/api_automation.php:3294	                include_once($config['base_path'] . '/plugins/thold/thold_functions.php');
+dynamic_include	./lib/api_automation.php:2493	    include_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./lib/api_automation.php:2494	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
+dynamic_include	./lib/api_automation.php:2495	    include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_automation.php:3294	                include_once($config['base_path'] . '/plugins/thold/thold-functions.php');
+dynamic_include	./lib/api_automation.php:3297	                include_once($config['base_path'] . '/plugins/thold/thold_functions.php');
 dynamic_include	./lib/api_device.php:1175	    include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:1176	    include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:1177	    include_once($config['base_path'] . '/lib/data_query.php');

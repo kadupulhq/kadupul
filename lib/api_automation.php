@@ -2033,13 +2033,16 @@ function automation_string_replace($search, $replace, $target)
                 } elseif ($character === '#' && $extended) {
                     $line_comment = true;
                 } elseif ($character === '(') {
-                    if (preg_match('/\G\(\?([a-zA-Z]*)(?:-([a-zA-Z]*))?([:)])/', $search, $modifiers, 0, $offset)) {
-                        if ($modifiers[3] === ':') {
+                    if (preg_match('/\G\(\?(\^?)([a-zA-Z]*)(?:-([a-zA-Z]*))?([:)])/', $search, $modifiers, 0, $offset)) {
+                        if ($modifiers[4] === ':') {
                             $modes[] = $extended;
                         }
-                        if (strpos($modifiers[2] ?? '', 'x') !== false) {
+                        if ($modifiers[1] === '^') {
                             $extended = false;
-                        } elseif (strpos($modifiers[1], 'x') !== false) {
+                        }
+                        if (strpos($modifiers[3] ?? '', 'x') !== false) {
+                            $extended = false;
+                        } elseif (strpos($modifiers[2], 'x') !== false) {
                             $extended = true;
                         }
                         $delimited_search .= $modifiers[0];
