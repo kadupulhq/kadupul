@@ -13,6 +13,29 @@ merge_head=$(git rev-parse -q --verify MERGE_HEAD 2>/dev/null || true)
 files=()
 php_files=()
 php_base_files=()
+resolved_paths=()
+
+if [ -n "$merge_head" ]; then
+	# Staging a conflict resolution retains its original index stages as
+	# resolve-undo records, even when the selected blob is exactly --theirs.
+	while IFS= read -r -d '' record; do
+		resolved_paths+=("${record#*$'\t'}")
+	done < <(git ls-files --resolve-undo -z)
+fi
+
+was_conflicted() {
+	local path=$1
+	local resolved
+	if [ "${#resolved_paths[@]}" -eq 0 ]; then
+		return 1
+	fi
+	for resolved in "${resolved_paths[@]}"; do
+		if [ "$resolved" = "$path" ]; then
+			return 0
+		fi
+	done
+	return 1
+}
 
 while IFS= read -r -d '' status; do
 	IFS= read -r -d '' first
@@ -30,7 +53,8 @@ while IFS= read -r -d '' status; do
 	# During a merge, an incoming file whose staged blob exactly matches the
 	# second parent was already validated on that branch. Check only content
 	# authored here or produced while resolving a conflict.
-	if [ -n "$merge_head" ] && git cat-file -e "$merge_head:$file" 2>/dev/null; then
+	if [ -n "$merge_head" ] && ! was_conflicted "$file" && ! was_conflicted "$base_file" \
+		&& git cat-file -e "$merge_head:$file" 2>/dev/null; then
 		staged_oid=$(git rev-parse ":$file")
 		incoming_oid=$(git rev-parse "$merge_head:$file")
 		if [ "$staged_oid" = "$incoming_oid" ]; then
