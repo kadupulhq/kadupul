@@ -122,7 +122,7 @@ function api_auth_clear_user_settings()
         if (isset_request_var('tab') && get_nfilter_request_var('tab') == 'general') {
             db_execute_prepared(
                 'DELETE FROM settings_user
-				WHERE user_id = ?',
+				WHERE user_id = ? AND name != \'auth_credential_generation\'',
                 array($user)
             );
 
@@ -138,6 +138,10 @@ function api_auth_clear_user_settings()
 function api_auth_clear_user_setting($name)
 {
     global $settings_user;
+
+    if ($name === 'auth_credential_generation') {
+        return;
+    }
 
     $user = $_SESSION['sess_user_id'];
 
@@ -181,6 +185,10 @@ function api_auth_clear_user_setting($name)
 function api_auth_update_user_setting($name, $value)
 {
     global $settings_user;
+
+    if ($name === 'auth_credential_generation') {
+        return;
+    }
 
     $user = $_SESSION['sess_user_id'];
 

@@ -249,6 +249,11 @@ function set_user_setting($config_name, $value, $user = -1)
 {
     global $settings_user;
 
+    // Authentication metadata is maintained atomically by the rehash helper.
+    if ($config_name === 'auth_credential_generation') {
+        return;
+    }
+
     if ($user == -1 && isset($_SESSION['sess_user_id'])) {
         $user = $_SESSION['sess_user_id'];
     }
@@ -323,6 +328,10 @@ function user_setting_exists($config_name, $user_id)
 function clear_user_setting($config_name, $user = -1)
 {
     global $settings_user;
+
+    if ($config_name === 'auth_credential_generation') {
+        return;
+    }
 
     if ($user == -1) {
         $user = $_SESSION['sess_user_id'];
