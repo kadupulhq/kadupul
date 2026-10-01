@@ -127,6 +127,8 @@ jobs:
         KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=cacti_boost_contract;charset=utf8mb4
         KADUPUL_TEST_MYSQL_USER: cactiuser
         KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
+        KADUPUL_TEST_MYSQL_ADMIN_USER: root
+        KADUPUL_TEST_MYSQL_ADMIN_PASSWORD: cactiroot
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'

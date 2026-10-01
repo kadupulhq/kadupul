@@ -8,9 +8,10 @@ if (PHP_SAPI !== 'cli') {
     exit;
 }
 require dirname(__DIR__, 2) . '/lib/data_source_profile_integrity.php';
-function profile_guard_connection(): PDO
+function profile_guard_connection(bool $installer = false): PDO
 {
-    return new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false]);
+    $prefix = $installer && getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ? 'KADUPUL_TEST_MYSQL_ADMIN_' : 'KADUPUL_TEST_MYSQL_';
+    return new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv($prefix . 'USER') ?: 'root', getenv($prefix . 'PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false]);
 }
 if (($argv[1] ?? '') === '--writer') {
     $db = profile_guard_connection();
@@ -53,8 +54,11 @@ try {
     // Historical orphan retained from before the upgrade.
     $db->exec("INSERT INTO `$data` VALUES (1,99,'old')");
     $definitions = data_source_profile_reference_triggers($profiles, $data, $prefix);
+    // Installation may require binary-log administrator privileges. Exercise
+    // runtime inspection and all mutations through the ordinary account.
+    $installer = profile_guard_connection(true);
     foreach ($definitions as $definition) {
-        $db->exec($definition['sql']);
+        $installer->exec($definition['sql']);
     }
     $available = data_source_profile_reference_guards_available($profiles, $data, $prefix);
     $db->exec("UPDATE `$data` SET name='edited' WHERE id=1");
