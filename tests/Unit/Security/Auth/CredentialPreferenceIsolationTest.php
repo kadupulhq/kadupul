@@ -10,7 +10,7 @@ function credential_preference_probe(string $action): array
     $root = dirname(__DIR__, 4);
     $program = '';
     foreach (array(
-        'lib/auth.php' => array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_rehash_password_preserving_sessions', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'user_copy'),
+        'lib/auth.php' => array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_rehash_password_preserving_sessions', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'user_copy', 'user_group_update_membership'),
         'auth_profile.php' => array('api_auth_clear_user_settings', 'api_auth_clear_user_setting', 'api_auth_update_user_setting'),
         'lib/functions.php' => array('set_user_setting', 'clear_user_setting'),
     ) as $file => $functions) {
@@ -22,12 +22,23 @@ function credential_preference_probe(string $action): array
     $program .= <<<'PHP'
 $db = new PDO('sqlite::memory:', options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, full_name TEXT, email_address TEXT, must_change_password TEXT)');
+$db->exec('CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY)');
+$db->exec('CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER,PRIMARY KEY(group_id,user_id))');
+$db->exec('CREATE TABLE user_auth_perms(user_id INTEGER,item_id INTEGER,type INTEGER)');
+$db->exec('CREATE TABLE user_auth_realm(user_id INTEGER,realm_id INTEGER)');
+$db->exec('CREATE TABLE settings_tree(user_id INTEGER,graph_tree_item_id INTEGER)');
+$db->exec('INSERT INTO user_auth_group VALUES(1),(2)');
+$db->exec('INSERT INTO user_auth_group_members VALUES(1,42),(2,7)');
 $db->exec('CREATE TABLE settings_user(user_id INTEGER,name TEXT,value TEXT,PRIMARY KEY(user_id,name))');
 $db->exec("INSERT INTO user_auth VALUES(42,'alice',0,'on','','old-hash','','',''),(7,'template',0,'on','','new-hash','','','')");
 function db_fetch_row_prepared($sql,$params=array()) { $q=$GLOBALS['db']->prepare($sql);$q->execute($params);return $q->fetch(PDO::FETCH_ASSOC) ?: array(); }
-function db_fetch_cell_prepared($sql,$params=array()) { $q=$GLOBALS['db']->prepare($sql);$q->execute($params);return $q->fetchColumn(); }
-function db_fetch_assoc_prepared($sql,$params=array()) { if(!str_contains($sql,'FROM settings_user'))return array();$q=$GLOBALS['db']->prepare($sql);$q->execute($params);return $q->fetchAll(PDO::FETCH_ASSOC); }
-function db_execute_prepared($sql,$params=array()) { if(!str_contains($sql,'settings_user'))return true;$sql=preg_replace('/ON DUPLICATE KEY UPDATE.*$/s','',$sql);$sql=str_replace('INSERT INTO settings_user','REPLACE INTO settings_user',$sql);$q=$GLOBALS['db']->prepare($sql);return $q->execute($params); }
+function db_fetch_cell_prepared($sql,$params=array()) { $q=$GLOBALS['db']->prepare(str_replace(' FOR UPDATE','',$sql));$q->execute($params);return $q->fetchColumn(); }
+function db_fetch_assoc_prepared($sql,$params=array()) { $q=$GLOBALS['db']->prepare($sql);$q->execute($params);return $q->fetchAll(PDO::FETCH_ASSOC); }
+function db_execute_prepared($sql,$params=array()) { $sql=preg_replace('/ON DUPLICATE KEY UPDATE.*$/s','',$sql);$sql=str_replace('INSERT INTO settings_user','REPLACE INTO settings_user',$sql);$q=$GLOBALS['db']->prepare($sql);return $q->execute($params); }
+function db_begin_transaction() { return $GLOBALS['db']->beginTransaction(); }
+function db_commit_transaction() { return $GLOBALS['db']->commit(); }
+function db_rollback_transaction() { return $GLOBALS['db']->rollBack(); }
+function reset_user_perms($user_id) { unset($_SESSION['cached_group_grant']);$GLOBALS['reset_users'][]=$user_id; }
 function sql_save($row,$table,...$args) { if($table==='user_auth'){$keys=array_keys($row);$sql='UPDATE user_auth SET '.implode(',',array_map(fn($key)=>$key.'=?',$keys)).' WHERE id=?';$params=array_values($row);$params[]=$row['id'];}else{$sql='REPLACE INTO '.$table.' ('.implode(',',array_keys($row)).') VALUES('.implode(',',array_fill(0,count($row),'?')).')';$params=array_values($row);} $q=$GLOBALS['db']->prepare($sql);$q->execute($params);return $row['id']??true; }
 function isset_request_var($name) { return $name==='tab'; }
 function get_nfilter_request_var($name) { return 'general'; }
@@ -41,7 +52,7 @@ function input_validate_input_number($value) {}
 function cacti_sizeof($rows) { return count($rows); }
 function api_plugin_hook_function($name,$value) { return $value; }
 $settings_user=array('general'=>array('auth_credential_generation'=>array('default'=>'forged')));
-$_SESSION=array('sess_user_id'=>42);
+$_SESSION=array('sess_user_id'=>42,'cached_group_grant'=>1);
 auth_session_bind_credentials(42);
 $rehash=auth_rehash_password_preserving_sessions(42,'old-hash','new-hash',$db);
 $db->exec("INSERT INTO settings_user VALUES(42,'page_refresh','60')");
@@ -60,7 +71,7 @@ switch($argv[1]) {
 ob_end_clean();
 $mapping=db_fetch_cell_prepared("SELECT value FROM settings_user WHERE user_id=42 AND name='auth_credential_generation'");
 $preference=db_fetch_cell_prepared("SELECT value FROM settings_user WHERE user_id=42 AND name='page_refresh'");
-print json_encode(array('rehash'=>$rehash,'mapping_preserved'=>$mapping===$original,'valid'=>auth_session_credentials_valid('new-hash'),'preference'=>$preference,'not_template'=>$mapping!==$template_mapping));
+print json_encode(array('rehash'=>$rehash,'mapping_preserved'=>$mapping===$original,'valid'=>auth_session_credentials_valid('new-hash'),'preference'=>$preference,'not_template'=>$mapping!==$template_mapping,'groups'=>db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id=42 ORDER BY group_id'),'cache_cleared'=>!isset($_SESSION['cached_group_grant']),'reset_users'=>$GLOBALS['reset_users']??array()));
 PHP;
     $worker = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $action), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $output = stream_get_contents($pipes[1]);
@@ -80,3 +91,10 @@ test('preference operations preserve the credential generation of a rehashed ses
         expect($result['preference'])->toBe('300');
     }
 })->with(array('reset', 'overwrite', 'reset_one', 'update_one', 'generic_reset', 'generic_update'));
+
+test('batch copy replaces destination groups and invalidates the previous group grant', function () {
+    $result = credential_preference_probe('overwrite');
+    expect($result['groups'])->toBe(array(array('group_id' => 2)))
+        ->and($result['cache_cleared'])->toBeTrue()
+        ->and($result['reset_users'])->toBe(array(42, 42));
+});

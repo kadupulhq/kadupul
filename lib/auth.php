@@ -428,6 +428,14 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
 
     /* Create/Update permissions and settings */
     if (cacti_sizeof($user_exist) && $overwrite) {
+        $existing_groups = db_fetch_assoc_prepared(
+            'SELECT group_id FROM user_auth_group_members WHERE user_id = ?',
+            array($user_exist['id'])
+        );
+        foreach ($existing_groups as $group) {
+            user_group_update_membership($group['group_id'], $user_exist['id'], false);
+        }
+
         db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($user_exist['id']));
         db_execute_prepared('DELETE FROM user_auth_realm WHERE user_id = ?', array($user_exist['id']));
         db_execute_prepared('DELETE FROM settings_user WHERE user_id = ? AND name != \'auth_credential_generation\'', array($user_exist['id']));
