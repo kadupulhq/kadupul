@@ -101,8 +101,9 @@ kind of link, row, button and control is hovered and keyboard-focused. It
 checks text at 4.5:1 (3:1 when large), icon glyphs, focus indicators and the
 edges of inputs and switches at 3:1. Colours come from computed style;
 backgrounds come from every element painted under the measured point, with
-alpha composited and each gradient stop tried. Disabled controls and text over
-an image are reported but not failed.
+alpha composited and each gradient stop tried. A focused control that stays
+outside the viewport fails, since Tab would leave its ring off-screen. Disabled
+controls and text over an image are reported but not failed.
 
 ```bash
 cd tests/e2e
