@@ -176,7 +176,20 @@ CsrfMagic.guard = function(form, submitter) {
 	}
 }
 CsrfMagic.submit = function(event) {
-	CsrfMagic.guard(event.target, event.submitter);
+	var form = event.target;
+	if ('submitter' in event) {
+		CsrfMagic.guard(form, event.submitter);
+		return;
+	}
+	// Without SubmitEvent.submitter the button used is unknown, so a form with
+	// a button that posts elsewhere sends no token at all.
+	CsrfMagic.guard(form, null);
+	if (CsrfMagic.hasForeignSubmitter(form)) {
+		var fields = CsrfMagic.tokenFields(form);
+		for (var i = 0; i < fields.length; i++) {
+			fields[i].disabled = true;
+		}
+	}
 }
 // callback function for when everything on the page has loaded
 CsrfMagic.end = function() {
@@ -197,10 +210,6 @@ CsrfMagic.end = function() {
 		input.setAttribute('type',  'hidden');
 		CsrfMagic.invoke('Node', form, 'appendChild', [input]);
 	}
-	if (checksSubmitter && !CsrfMagic.listening) {
-		CsrfMagic.listening = true;
-		document.addEventListener('submit', CsrfMagic.submit, true);
-	}
 }
 
 // form.submit() fires no submit event, so it is checked here instead.
@@ -210,6 +219,13 @@ if (window.HTMLFormElement && HTMLFormElement.prototype.submit && !HTMLFormEleme
 		CsrfMagic.guard(this, null);
 		return HTMLFormElement.prototype.csrf_submit.apply(this, arguments);
 	}
+}
+
+// The submit check is installed when this script loads in the page head, so
+// markup that keeps the parser from reaching CsrfMagic.end() cannot switch it
+// off.
+if (window.document && (window.EventTarget || document.addEventListener)) {
+	CsrfMagic.invoke('EventTarget', document, 'addEventListener', ['submit', CsrfMagic.submit, true]);
 }
 
 // Sets things up for Mozilla/Opera/nice browsers

