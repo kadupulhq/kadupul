@@ -20,19 +20,34 @@ if (!empty(json_decode($argv[1], true)['cli'])) {
 $config = ['base_path' => dirname(__DIR__), 'poller_id' => 1];
 $calls = [];
 $log = [];
+$database = new PDO('sqlite::memory:');
+$database->exec('CREATE TABLE poller (id INTEGER PRIMARY KEY, disabled TEXT, requires_sync TEXT, last_sync TEXT)');
+$database->exec("INSERT INTO poller VALUES (2,'','on',''),(3,'','on','')");
 function cacti_sizeof($value) { return count($value); }
-function db_fetch_assoc($sql) { return [['id' => 2], ['id' => 3]]; }
+function db_fetch_assoc($sql) { return $GLOBALS['database']->query($sql)->fetchAll(PDO::FETCH_ASSOC); }
+function db_fetch_assoc_prepared($sql, $params) { $query = $GLOBALS['database']->prepare($sql); $query->execute($params); return $query->fetchAll(PDO::FETCH_ASSOC); }
 function register_process_start(...$args) { return true; }
 function replicate_out($id, $class) { return $id !== 2 || getenv('COLLECTOR_CLI_FAILURE') !== '1'; }
-function db_execute_prepared($sql, $params) { $GLOBALS['calls'][] = [$sql, $params]; }
+function db_execute_prepared($sql, $params) { $GLOBALS['calls'][] = [$sql, $params]; $query = $GLOBALS['database']->prepare(str_replace('NOW()', "datetime('now')", $sql)); return $query->execute($params); }
 function cacti_log($message, ...$args) { $GLOBALS['log'][] = $message; }
 function unregister_process(...$args) { $GLOBALS['unregistered'] = true; }
 register_shutdown_function(function () {
-    file_put_contents(dirname(__DIR__) . '/cli-state.json', json_encode(['calls' => $GLOBALS['calls'], 'log' => $GLOBALS['log'], 'unregistered' => $GLOBALS['unregistered'] ?? false], JSON_THROW_ON_ERROR));
+    file_put_contents(dirname(__DIR__) . '/cli-state.json', json_encode(['calls' => $GLOBALS['calls'], 'log' => $GLOBALS['log'], 'unregistered' => $GLOBALS['unregistered'] ?? false, 'pollers' => $GLOBALS['database']->query('SELECT * FROM poller ORDER BY id')->fetchAll(PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR));
 });
 PHP);
     putenv('COLLECTOR_CLI_FAILURE=' . (!empty($scenario['failure']) ? '1' : '0'));
-    $process = proc_open([PHP_BINARY, $directory . '/cli/poller_replicate.php'], [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
+    $command = [PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'error_reporting=24575', '-d', 'pcov.directory=/'];
+    if (isset($argv[3])) {
+        $bootstrap = '<?php define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($directory . '/cli/poller_replicate.php', true) . '); define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export(dirname(__DIR__, 2) . '/cli/poller_replicate.php', true) . '); require ' . var_export(__DIR__ . '/rrd-process-coverage.php', true) . ';';
+        file_put_contents($directory . '/coverage.php', $bootstrap);
+        $command[] = '-d';
+        $command[] = 'auto_prepend_file=' . $directory . '/coverage.php';
+    }
+    $command[] = $directory . '/cli/poller_replicate.php';
+    if (!empty($scenario['selected'])) {
+        $command[] = '--poller=2';
+    }
+    $process = proc_open($command, [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
     fclose($pipes[0]);
     $stdout = stream_get_contents($pipes[1]);
     $stderr = stream_get_contents($pipes[2]);
