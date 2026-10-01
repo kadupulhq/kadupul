@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -42,6 +42,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'system page size fixture restores original absence and value',
+        'profile deletion confirmation page renders',
+        'unused profile is normally removable',
         'collector retry builds real poller item from the saved command',
         'offline collector yields explicit partial handoff without undoing local definition',
         'whitelist update publishes the exact saved command and verifies it',

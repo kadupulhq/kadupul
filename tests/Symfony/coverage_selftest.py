@@ -167,13 +167,14 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
-    data_input_checks = ['collector retry builds real poller item from the saved command', 'offline collector yields explicit partial handoff without undoing local definition', 'whitelist update publishes the exact saved command and verifies it', 'worker independently rechecks feature grants before executing the handoff', 'French session authenticates through legacy login', 'French editor translates presentation without changing raw command definition', 'English field deletion confirmation uses a readable action label', 'French field deletion confirmation honors the authenticated preference']
+    data_input_checks = ['system page size fixture restores original absence and value', 'profile deletion confirmation page renders', 'unused profile is normally removable', 'collector retry builds real poller item from the saved command', 'offline collector yields explicit partial handoff without undoing local definition', 'whitelist update publishes the exact saved command and verifies it', 'worker independently rechecks feature grants before executing the handoff', 'French session authenticates through legacy login', 'French editor translates presentation without changing raw command definition', 'English field deletion confirmation uses a readable action label', 'French field deletion confirmation honors the authenticated preference']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'data-input-test-hash': 'Integration test source differs',
         'data-input-review-test-hash': 'Integration test source differs',
+        'data-source-profile-test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -244,6 +245,8 @@ def main():
                 evidence['source_sha256']['tests/Symfony/data_input_scenarios.py'] = '0' * 64
             elif case == 'data-input-review-test-hash':
                 evidence['source_sha256']['tests/Symfony/data_input_review_http.py'] = '0' * 64
+            elif case == 'data-source-profile-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
             elif case.startswith('missing-data-input-check-'):
                 omitted = data_input_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
