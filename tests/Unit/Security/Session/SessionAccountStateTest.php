@@ -263,3 +263,109 @@ test('clearing the profile settings keeps the logout-everywhere counter', functi
 	expect(account_state_profile('clear_all', $rows)['rows'])->toBe(array(array(42, 'session_epoch', '3'), array(7, 'show_graph_title', 'on')))
 		->and(account_state_profile('clear_epoch', $rows)['rows'])->toBe(array(array(42, 'session_epoch', '3'), array(7, 'show_graph_title', 'on'), array(42, 'show_graph_title', 'on')));
 })->skip(!extension_loaded('pdo_sqlite'), 'pdo_sqlite is not loaded');
+
+/*
+ * user_copy() runs against SQLite copies of the tables it touches, so the
+ * settings_user filters are evaluated by a SQL engine.
+ */
+function account_state_user_copy(bool $overwrite) : array {
+	$root   = dirname(__DIR__, 4);
+	$source = cacti_test_function_source(file_get_contents($root . '/lib/auth.php'), 'user_copy');
+
+	$prelude = <<<'PHP'
+<?php
+$scenario = json_decode(stream_get_contents(STDIN), true);
+
+$pdo = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+$pdo->exec("CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, password TEXT, full_name TEXT, email_address TEXT, must_change_password TEXT, enabled TEXT)");
+$pdo->exec("CREATE TABLE user_auth_perms (user_id INTEGER, item_id INTEGER, type INTEGER)");
+$pdo->exec("CREATE TABLE user_auth_realm (realm_id INTEGER, user_id INTEGER)");
+$pdo->exec("CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT, PRIMARY KEY (user_id, name))");
+$pdo->exec("CREATE TABLE settings_tree (user_id INTEGER, graph_tree_item_id INTEGER, status INTEGER)");
+$pdo->exec("CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER)");
+$pdo->exec("INSERT INTO user_auth VALUES (10, 'template', 0, 't', 'Template', '', '', 'on'), (42, 'bob', 0, 'b', 'Bob', '', '', 'on')");
+$pdo->exec("INSERT INTO settings_user VALUES (10, 'session_epoch', '7'), (10, 'show_graph_title', 'on'), (42, 'session_epoch', '3'), (42, 'default_view_mode', '2')");
+
+function input_validate_input_number($value) {}
+function raise_message($id, $message = '', $level = 0) {}
+function cacti_log($message, $output = false, $environ = '', $level = 0) {}
+function api_plugin_hook_function($name, $args = null) { return $args; }
+function compat_password_hash($password, $algo) { return 'placeholder'; }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+
+function db_fetch_row_prepared($sql, $params = array()) {
+	global $pdo;
+
+	$statement = $pdo->prepare($sql);
+	$statement->execute($params);
+	$row = $statement->fetch(PDO::FETCH_ASSOC);
+
+	return $row === false ? array() : $row;
+}
+
+function db_fetch_assoc_prepared($sql, $params = array()) {
+	global $pdo;
+
+	$statement = $pdo->prepare($sql);
+	$statement->execute($params);
+
+	return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function db_execute_prepared($sql, $params = array()) {
+	global $pdo;
+
+	return $pdo->prepare($sql)->execute($params);
+}
+
+function sql_save($row, $table, $keys = 'id', $autoinc = true) {
+	global $pdo;
+
+	if ($table == 'user_auth' && empty($row['id'])) {
+		unset($row['id']);
+	}
+
+	$pdo->prepare('INSERT OR REPLACE INTO ' . $table . ' (' . implode(', ', array_keys($row)) . ') VALUES (' . implode(', ', array_fill(0, count($row), '?')) . ')')->execute(array_values($row));
+
+	return $row['id'] ?? (int) $pdo->lastInsertId();
+}
+
+PHP;
+
+	$tail = <<<'PHP'
+
+$id = user_copy('template', $scenario['target'], 0, 0, $scenario['overwrite']);
+
+print json_encode(array(
+	'id'   => $id,
+	'rows' => $pdo->query('SELECT user_id, name, value FROM settings_user ORDER BY user_id, name')->fetchAll(PDO::FETCH_NUM),
+));
+PHP;
+
+	return cacti_test_run_php_source($prelude . $source . $tail, array('target' => $overwrite ? 'bob' : 'carol', 'overwrite' => $overwrite));
+}
+
+test('copying a template over a user keeps that user\'s logout-everywhere counter', function () {
+	$result = account_state_user_copy(true);
+
+	expect($result['id'])->toBe(42)
+		->and($result['rows'])->toBe(array(
+			array(10, 'session_epoch', '7'),
+			array(10, 'show_graph_title', 'on'),
+			array(42, 'session_epoch', '3'),
+			array(42, 'show_graph_title', 'on'),
+		));
+})->skip(!extension_loaded('pdo_sqlite'), 'pdo_sqlite is not loaded');
+
+test('a user copied from a template does not inherit its logout-everywhere counter', function () {
+	$result = account_state_user_copy(false);
+
+	expect($result['id'])->toBe(43)
+		->and($result['rows'])->toBe(array(
+			array(10, 'session_epoch', '7'),
+			array(10, 'show_graph_title', 'on'),
+			array(42, 'default_view_mode', '2'),
+			array(42, 'session_epoch', '3'),
+			array(43, 'show_graph_title', 'on'),
+		));
+})->skip(!extension_loaded('pdo_sqlite'), 'pdo_sqlite is not loaded');

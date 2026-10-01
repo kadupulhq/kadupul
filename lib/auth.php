@@ -423,7 +423,7 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
 	if (cacti_sizeof($user_exist) && $overwrite) {
 		db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($user_exist['id']));
 		db_execute_prepared('DELETE FROM user_auth_realm WHERE user_id = ?', array($user_exist['id']));
-		db_execute_prepared('DELETE FROM settings_user WHERE user_id = ?', array($user_exist['id']));
+		db_execute_prepared("DELETE FROM settings_user WHERE user_id = ? AND name != 'session_epoch'", array($user_exist['id']));
 		db_execute_prepared('DELETE FROM settings_tree WHERE user_id = ?', array($user_exist['id']));
 	}
 
@@ -451,9 +451,11 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
 		}
 	}
 
-	$settings_user = db_fetch_assoc_prepared('SELECT *
+	/* the "logout everywhere" counter belongs to the account, not the template */
+	$settings_user = db_fetch_assoc_prepared("SELECT *
 		FROM settings_user
-		WHERE user_id = ?',
+		WHERE user_id = ?
+		AND name != 'session_epoch'",
 		array($template_id));
 
 	if (cacti_sizeof($settings_user)) {
