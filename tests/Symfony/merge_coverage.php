@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'palette_color_review_http.py', 'palette_color_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -43,6 +43,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'quoted newline CSV upload succeeds', 'CSV exact name data handoff',
+        'silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes',
         'palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work',
         'two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect',
         'duplicate hex creation is a known validation failure after rollback',
@@ -201,6 +202,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'color.php',
         'src/Graphing/Domain/PaletteCsv.php',
         'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorStore.php',
+        'src/Graphing/Infrastructure/Legacy/PaletteSql.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorPreferences.php',
         'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorCsvController.php',
         'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorEditController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',

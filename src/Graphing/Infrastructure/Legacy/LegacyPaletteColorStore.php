@@ -22,18 +22,17 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
     public function __construct(private DatabaseConnection $database, private PaletteColorAccess $access, private AuditTrail $audit, private LegacyConfiguration $configuration) {}
     public function defaultRows(): int
     {
-        $rows = filter_var($this->database->get()->query("SELECT value FROM settings WHERE name = 'num_rows_table'")->fetchColumn(), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5000]]);
+        $rows = filter_var(PaletteSql::column(PaletteSql::execute($this->database->get(), "SELECT value FROM settings WHERE name = 'num_rows_table'")), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5000]]);
         return $rows === false ? 25 : $rows;
     }
     public function defaultHasGraphs(): bool
     {
-        return $this->database->get()->query("SELECT value FROM settings WHERE name = 'default_has'")->fetchColumn() === 'on';
+        return PaletteSql::column(PaletteSql::execute($this->database->get(), "SELECT value FROM settings WHERE name = 'default_has'")) === 'on';
     }
     public function find(int $id): ?PaletteColor
     {
-        $query = $this->database->get()->prepare($this->query() . ' WHERE c.id = ?');
-        $query->execute([$id]);
-        $row = $query->fetch(\PDO::FETCH_ASSOC);
+        $query = PaletteSql::execute($this->database->get(), $this->query() . ' WHERE c.id = ?', [$id]);
+        $row = PaletteSql::one($query);
         return $row ? $this->hydrate($row) : null;
     }
     public function findMany(array $ids): array
@@ -41,9 +40,8 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
         if ($ids === []) {
             return [];
         }
-        $query = $this->database->get()->prepare($this->query() . ' WHERE c.id IN (' . implode(',', array_fill(0, count($ids), '?')) . ') ORDER BY c.id');
-        $query->execute($ids);
-        return array_map($this->hydrate(...), $query->fetchAll(\PDO::FETCH_ASSOC));
+        $query = PaletteSql::execute($this->database->get(), $this->query() . ' WHERE c.id IN (' . implode(',', array_fill(0, count($ids), '?')) . ') ORDER BY c.id', $ids);
+        return array_map($this->hydrate(...), PaletteSql::all($query));
     }
     public function list(PaletteColorFilters $filters): PaletteColorPage
     {
@@ -52,18 +50,15 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
             'hex' => 'c.hex', 'read_only' => 'c.read_only', 'graphs' => 'graphs', 'templates' => 'templates', default => 'c.name',
         };
         $db = $this->database->get();
-        $count = $db->prepare('SELECT COUNT(*) FROM (' . $this->query() . $where . ') palette');
-        $count->execute($params);
-        $query = $db->prepare($this->query() . $where . ' ORDER BY ' . $sort . ' ' . $filters->sortDirection . ', c.id ASC LIMIT ? OFFSET ?');
-        $query->execute([...$params, $filters->rows, ($filters->page - 1) * $filters->rows]);
-        return new PaletteColorPage(array_map($this->hydrate(...), $query->fetchAll(\PDO::FETCH_ASSOC)), (int) $count->fetchColumn(), $filters);
+        $count = PaletteSql::execute($db, 'SELECT COUNT(*) FROM (' . $this->query() . $where . ') palette', $params);
+        $query = PaletteSql::execute($db, $this->query() . $where . ' ORDER BY ' . $sort . ' ' . $filters->sortDirection . ', c.id ASC LIMIT ? OFFSET ?', [...$params, $filters->rows, ($filters->page - 1) * $filters->rows]);
+        return new PaletteColorPage(array_map($this->hydrate(...), PaletteSql::all($query)), (int) PaletteSql::column($count), $filters);
     }
     public function export(PaletteColorFilters $filters): array
     {
         [$where, $params] = $this->where($filters);
-        $query = $this->database->get()->prepare($this->query() . $where . ' ORDER BY c.id');
-        $query->execute($params);
-        return array_map($this->hydrate(...), $query->fetchAll(\PDO::FETCH_ASSOC));
+        $query = PaletteSql::execute($this->database->get(), $this->query() . $where . ' ORDER BY c.id', $params);
+        return array_map($this->hydrate(...), PaletteSql::all($query));
     }
     public function snapshot(): string
     {
@@ -75,9 +70,8 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
         try {
             return $this->write($actorId, $id === null ? 'create' : 'edit', function (\PDO $db) use ($id, $name, $hex, $revision): int {
                 if ($id !== null) {
-                    $query = $db->prepare('SELECT * FROM colors WHERE id = ?' . $this->lock());
-                    $query->execute([$id]);
-                    $row = $query->fetch(\PDO::FETCH_ASSOC);
+                    $query = PaletteSql::execute($db, 'SELECT * FROM colors WHERE id = ?' . $this->lock(), [$id]);
+                    $row = PaletteSql::one($query);
                     if (!$row) {
                         throw new \InvalidArgumentException('Color not found.');
                     }
@@ -88,10 +82,10 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
                     if ($color->readOnly) {
                         throw new \InvalidArgumentException('Named colors are read only.');
                     }
-                    $db->prepare('UPDATE colors SET name = ?, hex = ? WHERE id = ?')->execute([$name, $hex, $id]);
+                    PaletteSql::execute($db, 'UPDATE colors SET name = ?, hex = ? WHERE id = ?', [$name, $hex, $id]);
                     return $id;
                 }
-                $db->prepare("INSERT INTO colors (name, hex, read_only) VALUES (?, ?, '')")->execute([$name, $hex]);
+                PaletteSql::execute($db, "INSERT INTO colors (name, hex, read_only) VALUES (?, ?, '')", [$name, $hex]);
                 $newId = (int) $db->lastInsertId();
                 if ($newId < 1) {
                     throw new \RuntimeException('Color creation was not confirmed.');
@@ -107,9 +101,8 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
                 : ($driver === 'sqlite' && ($error->errorInfo[1] ?? null) === 19
                     && ($error->errorInfo[2] ?? '') === 'UNIQUE constraint failed: colors.hex');
             if ($unique && !$db->inTransaction()) {
-                $query = $db->prepare('SELECT id FROM colors WHERE hex = ? AND (? IS NULL OR id <> ?)');
-                $query->execute([$hex, $id, $id]);
-                if ($query->fetchColumn() !== false) {
+                $query = PaletteSql::execute($db, 'SELECT id FROM colors WHERE hex = ? AND (? IS NULL OR id <> ?)', [$hex, $id, $id]);
+                if (PaletteSql::column($query) !== false) {
                     throw new \InvalidArgumentException('A Color with this hex value already exists.', 0, $error);
                 }
             }
@@ -125,9 +118,8 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
         sort($ids, SORT_NUMERIC);
         $this->write($actorId, 'delete', function (\PDO $db) use ($ids, $revisions): void {
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
-            $query = $db->prepare('SELECT * FROM colors WHERE id IN (' . $placeholders . ') ORDER BY id' . $this->lock());
-            $query->execute($ids);
-            $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $query = PaletteSql::execute($db, 'SELECT * FROM colors WHERE id IN (' . $placeholders . ') ORDER BY id' . $this->lock(), $ids);
+            $rows = PaletteSql::all($query);
             if (count($rows) !== count($ids)) {
                 throw new \InvalidArgumentException('One or more selected Colors no longer exist.');
             }
@@ -141,14 +133,12 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
                 }
             }
             foreach (['graph_templates_item', 'color_template_items'] as $table) {
-                $query = $db->prepare('SELECT color_id FROM ' . $table . ' WHERE color_id IN (' . $placeholders . ')' . $this->lock());
-                $query->execute($ids);
-                if ($query->fetchColumn() !== false) {
+                $query = PaletteSql::execute($db, 'SELECT color_id FROM ' . $table . ' WHERE color_id IN (' . $placeholders . ')' . $this->lock(), $ids);
+                if (PaletteSql::column($query) !== false) {
                     throw new \InvalidArgumentException('Colors in use cannot be deleted.');
                 }
             }
-            $query = $db->prepare('DELETE FROM colors WHERE id IN (' . $placeholders . ')');
-            $query->execute($ids);
+            $query = PaletteSql::execute($db, 'DELETE FROM colors WHERE id IN (' . $placeholders . ')', $ids);
             if ($query->rowCount() !== count($ids)) {
                 throw new \RuntimeException('Color deletion was not confirmed.');
             }
@@ -189,10 +179,10 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
                         $counts['skipped']++;
                         continue;
                     }
-                    $db->prepare('UPDATE colors SET name = ?, hex = ? WHERE id = ?')->execute([$row['name'], $row['hex'], $current['id']]);
+                    PaletteSql::execute($db, 'UPDATE colors SET name = ?, hex = ? WHERE id = ?', [$row['name'], $row['hex'], $current['id']]);
                     $counts['updated']++;
                 } else {
-                    $db->prepare("INSERT INTO colors (name, hex, read_only) VALUES (?, ?, '')")->execute([$row['name'], $row['hex']]);
+                    PaletteSql::execute($db, "INSERT INTO colors (name, hex, read_only) VALUES (?, ?, '')", [$row['name'], $row['hex']]);
                     $counts['inserted']++;
                 }
             }
@@ -254,7 +244,7 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
         foreach (['colors', 'graph_templates_item', 'color_template_items', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
             // Check the actual connection table, including temporary shadows.
             $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
-            $definition = $query === false ? false : $query->fetch(\PDO::FETCH_NUM);
+            $definition = $query === false ? false : PaletteSql::one($query, \PDO::FETCH_NUM);
             if ($definition === false || !preg_match('/\n\) ENGINE=InnoDB\b/i', (string) $definition[1])) {
                 throw new \RuntimeException('Color writes require transactional tables.');
             }
@@ -270,7 +260,7 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
     }
     private function lockedRows(bool $lock): array
     {
-        return $this->database->get()->query('SELECT id, name, hex, read_only FROM colors ORDER BY id' . ($lock ? $this->lock() : ''))->fetchAll(\PDO::FETCH_ASSOC);
+        return PaletteSql::all(PaletteSql::execute($this->database->get(), 'SELECT id, name, hex, read_only FROM colors ORDER BY id' . ($lock ? $this->lock() : '')));
     }
     private function snapshotRows(array $rows): string
     {

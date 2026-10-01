@@ -1967,7 +1967,9 @@ function palette_feature_call(string $root, array $target, int $depth = 0): bool
     if ($target === ['Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess', 'authorize']) {
         // Exact reviewed current-account and realm-5 authorization contract.
         $adapter = $root . '/src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php';
-        return is_file($adapter) && hash_file('sha256', $adapter) === '6e8dda47940d6961fc40d78af76ea28ad5bf8c50c630f4cc5dd98f14f907aaf3';
+        $sql = $root . '/src/Graphing/Infrastructure/Legacy/PaletteSql.php';
+        return is_file($adapter) && hash_file('sha256', $adapter) === '833cb1e7506f07c4a2a4fbec7b9417b5a9e95ee97a8f629787d8749ba09ee27b'
+            && is_file($sql) && hash_file('sha256', $sql) === '85a0ca001343d01c7e611d5fc93a3bac1379e6b9a103f6c5dce3908de9b7b689';
     }
     if ($depth >= CALL_DEPTH) {
         return false;

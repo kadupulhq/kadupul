@@ -1126,7 +1126,7 @@ def main():
     for label, (body, admitted) in feature_cases.items():
         with tempfile.TemporaryDirectory(prefix='entry-classifier-palette-') as directory:
             root = tree(directory)
-            files = ['src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php']
+            files = ['src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php', 'src/Graphing/Infrastructure/Legacy/PaletteSql.php']
             for path in files:
                 (root / path).parent.mkdir(parents=True, exist_ok=True)
                 (root / path).write_text((project / path).read_text())
@@ -1171,6 +1171,12 @@ final class PaletteAction {
                 if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
                     failures.append('Palette changed authorization adapter was still certified')
                 adapter.write_text((project / files[0]).read_text())
+                sql = root / files[1]
+                sql.write_text(sql.read_text().replace("!== '00000'", "=== '00000'"))
+                count += 1
+                if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                    failures.append('Palette changed SQL confirmation helper was still certified')
+                sql.write_text((project / files[1]).read_text())
                 if label == 'delegated':
                     delegated.write_text(delegated.read_text().replace('final class', 'class'))
                     count += 1

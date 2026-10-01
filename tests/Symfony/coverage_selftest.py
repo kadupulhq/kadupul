@@ -24,6 +24,9 @@ def main():
         'color.php',
         'src/Graphing/Domain/PaletteCsv.php',
         'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorStore.php',
+        'src/Graphing/Infrastructure/Legacy/PaletteSql.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorPreferences.php',
         'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorCsvController.php',
         'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorEditController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
@@ -184,6 +187,8 @@ def main():
         'missing-palette-review-check-5': 'Incomplete Symfony integration',
         'missing-palette-review-check-6': 'Incomplete Symfony integration',
         'missing-palette-review-check-7': 'Incomplete Symfony integration',
+        'missing-palette-review-check-8': 'Incomplete Symfony integration',
+        'palette-sql-probe-hash': 'Integration test source differs',
 
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
@@ -250,13 +255,15 @@ def main():
             elif case == 'missing-palette-handoff-check':
                 evidence['checks'].remove('CSV exact name data handoff')
             elif case.startswith('missing-palette-review-check-'):
-                required_palette_checks = ['duplicate hex creation is a known validation failure after rollback', 'duplicate hex edit is a known validation failure after rollback', 'duplicate hex edit preserves the original name and hex', 'unnamed palette color has a visible edit link and accessible hex label', 'palette exports neutralize formulas and preserve exact versioned roundtrip names', 'unsupported or malformed palette literal marker rejects the whole import', 'ordinary legacy CSV import preserves its leading apostrophe literally', 'console-only palette account cannot parse or mutate any route']
+                required_palette_checks = ['silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes', 'duplicate hex creation is a known validation failure after rollback', 'duplicate hex edit is a known validation failure after rollback', 'duplicate hex edit preserves the original name and hex', 'unnamed palette color has a visible edit link and accessible hex label', 'palette exports neutralize formulas and preserve exact versioned roundtrip names', 'unsupported or malformed palette literal marker rejects the whole import', 'ordinary legacy CSV import preserves its leading apostrophe literally', 'console-only palette account cannot parse or mutate any route']
                 missing = required_palette_checks[int(case.removeprefix('missing-palette-review-check-'))]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-palette-write-guards':
                 evidence['checks'].remove('palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
             elif case == 'missing-palette-concurrent-auth':
                 evidence['checks'].remove('two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
+            elif case == 'palette-sql-probe-hash':
+                evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
             elif case == 'palette-test-hash':
                 evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
             elif case == 'test-hash':

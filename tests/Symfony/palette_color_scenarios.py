@@ -184,6 +184,9 @@ def verify_palette_colors(h, s, uid, check):
         check(h.sql("SELECT COUNT(*) FROM colors WHERE hex='123'").strip() == '0', 'MyISAM rejection leaves database unchanged')
     finally:
         h.sql('ALTER TABLE colors ENGINE=InnoDB')
+    sql_probe = h.command('php', 'tests/Symfony/palette_sql_failure_probe.php')
+    check(sql_probe['exit'] == 0 and sql_probe['stdout'] == 'PALETTE_SILENT_SQL_OK' and sql_probe['stderr'] == '',
+          'silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes')
     guard_probe = h.command('php', '-r', _mariadb_palette_write_guard_probe(uid))
     check(guard_probe['exit'] == 0 and guard_probe['stdout'] == 'PALETTE_WRITE_GUARDS_OK' and guard_probe['stderr'] == '',
           'palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')

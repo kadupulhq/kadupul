@@ -18,9 +18,8 @@ final readonly class LegacyPaletteColorPreferences implements PaletteColorPrefer
     public function load(): ?array
     {
         $actor = $this->access->authorize();
-        $query = $this->database->get()->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'palette_colors_filters'");
-        $query->execute([$actor->id]);
-        $json = $query->fetchColumn();
+        $query = PaletteSql::execute($this->database->get(), "SELECT value FROM settings_user WHERE user_id = ? AND name = 'palette_colors_filters'", [$actor->id]);
+        $json = PaletteSql::column($query);
         if (!is_string($json) || $json === '') {
             return null;
         }
@@ -50,12 +49,20 @@ final readonly class LegacyPaletteColorPreferences implements PaletteColorPrefer
         try {
             $actor = $this->access->authorize();
             $this->access->assertCurrent($actor->id);
-            $query = $db->prepare("REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'palette_colors_filters', ?)");
-            $query->execute([$actor->id, json_encode($filters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)]);
-            $db->commit();
+            PaletteSql::execute($db, "REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'palette_colors_filters', ?)", [$actor->id, json_encode($filters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)]);
+            if (!$db->commit()) {
+                throw new \RuntimeException('Filter preference commit was not confirmed.');
+            }
         } catch (\Throwable $error) {
             if ($db->inTransaction()) {
-                $db->rollBack();
+                try {
+                    $rolledBack = $db->rollBack();
+                } catch (\Throwable $rollbackError) {
+                    throw new \RuntimeException('Filter preference rollback was not confirmed.', 0, $rollbackError);
+                }
+                if (!$rolledBack) {
+                    throw new \RuntimeException('Filter preference rollback was not confirmed.', 0, $error);
+                }
             }
             throw $error;
         }
