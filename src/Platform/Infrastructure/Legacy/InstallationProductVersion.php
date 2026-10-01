@@ -42,6 +42,7 @@ final readonly class InstallationProductVersion implements ProductVersion
         }
         return new ProductRelease($version, $beta);
     }
+
     private static function literal(string $value): string
     {
         $text = substr($value, 1, -1);
