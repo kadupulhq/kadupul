@@ -264,7 +264,7 @@ try {
             throw new RuntimeException('Whitelist is not writable.');
         }
         $output = [];
-        $code = cacti_exec(read_config_option('path_php_binary'), ['-q', $config['base_path'] . '/cli/input_whitelist.php', '--update', '--push', '--id=' . $id], $output, false);
+        $code = cacti_exec(read_config_option('path_php_binary'), ['-q', $config['base_path'] . '/cli/input_whitelist.php', '--update', '--id=' . $id], $output, false);
         if ($code !== 0 || !is_file($config['input_whitelist']) || !is_readable($config['input_whitelist']) || verify_data_input_whitelist($state['method']['hash'], $state['method']['input_string']) !== true) {
             $status = 'partial';
         } else {

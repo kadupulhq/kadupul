@@ -38,6 +38,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
+- Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
+
 - Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
 
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.

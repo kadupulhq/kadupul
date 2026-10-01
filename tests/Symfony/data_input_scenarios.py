@@ -237,12 +237,40 @@ def verify_data_inputs(harness, session, check):
         update_request = dict(find_request, action='whitelist', payload={'revision': state['result']['revision']})
         outcome = worker_result(update_request)
         check(outcome['status'] == 'invalid', f'worker refuses forged empty type {input_type} whitelist operation')
+    # A stale existing entry exercises the CLI's optional propagation path.
+    # The earlier offline handoff moves cache ownership; restore this fixture's
+    # main-poller ownership before counting both possible rebuilds.
+    harness.sql(f'UPDATE poller_item SET poller_id=1 WHERE local_data_id={local}')
+    harness.sql(f"UPDATE data_input SET input_string='/usr/bin/printf 2' WHERE id={target}")
+    harness.php('-r', f"require 'include/cli_check.php'; $hash=db_fetch_cell_prepared('SELECT hash FROM data_input WHERE id=?',[{target}]); file_put_contents('/tmp/data-input-review-whitelist.json',json_encode([$hash=>'/usr/bin/printf 0']));")
+    harness.sql('CREATE TABLE data_input_review_push_count (calls INT NOT NULL)')
+    harness.sql('INSERT INTO data_input_review_push_count VALUES (0)')
+    expected_push_updates = int(harness.sql(f'SELECT COUNT(*) FROM poller_item WHERE local_data_id={local}').strip())
+    check(expected_push_updates > 0, 'whitelist propagation has a real dependent poller cache')
+    harness.sql(f'CREATE TRIGGER data_input_review_push_count AFTER UPDATE ON poller_item FOR EACH ROW UPDATE data_input_review_push_count SET calls=calls+(NEW.local_data_id={local} AND NEW.present=0)')
+    original_php = harness.sql("SELECT value FROM settings WHERE name='path_php_binary'").strip()
+    original_php_exists = int(harness.sql("SELECT COUNT(*) FROM settings WHERE name='path_php_binary'").strip())
+    php_binary = harness.command('php', '-r', 'echo PHP_BINARY;')['stdout'].strip()
+    shim = '#!/bin/sh\ncase "$*" in *"/cli/input_whitelist.php"*) printf "%s\\n" "$@" >> /tmp/data-input-cli-args ;; esac\nexec ' + php_binary + ' "$@"\n'
+    harness.command('php', '-r', "file_put_contents('/tmp/data-input-php-probe', " + json.dumps(shim).replace('$', '\\$') + "); chmod('/tmp/data-input-php-probe',0755);", check=True)
+    harness.sql("REPLACE INTO settings(name,value) VALUES ('path_php_binary','/tmp/data-input-php-probe')")
     whitelist=f'/app.php/data-inputs/{target}/whitelist'
     fields,_=page(session,whitelist)
     payload={'data_input_action[revision]':fields['data_input_action[revision]'],'data_input_action[_token]':fields['data_input_action[_token]']}
     status,body,_=post(session,whitelist,payload)
-    probe=harness.php('-r',f"require 'include/cli_check.php'; $hash=db_fetch_cell_prepared('SELECT hash FROM data_input WHERE id=?',[{target}]); $values=json_decode(file_get_contents('/tmp/data-input-review-whitelist.json'),true); echo ($values[$hash]??'') === '/usr/bin/printf 1' ? 'WHITELIST_OK' : 'FAILED';")
+    probe=harness.php('-r',f"require 'include/cli_check.php'; $hash=db_fetch_cell_prepared('SELECT hash FROM data_input WHERE id=?',[{target}]); $values=json_decode(file_get_contents('/tmp/data-input-review-whitelist.json'),true); echo ($values[$hash]??'') === '/usr/bin/printf 2' ? 'WHITELIST_OK' : 'FAILED';")
     check(status==200 and 'Whitelist verification succeeded.' in body and probe['stdout'].endswith('WHITELIST_OK'),'whitelist update publishes the exact saved command and verifies it')
+    push_updates = int(harness.sql('SELECT calls FROM data_input_review_push_count').strip())
+    check(push_updates == expected_push_updates, 'stale whitelist update rebuilds each dependent poller cache once')
+    check('/usr/bin/printf 2' in harness.sql(f'SELECT arg1 FROM poller_item WHERE local_data_id={local}'), 'whitelist propagation rebuilds the cache from the changed saved command')
+    cli_arguments = harness.command('cat', '/tmp/data-input-cli-args', check=True)['stdout'].splitlines()
+    check('--update' in cli_arguments and '--push' not in cli_arguments, 'whitelist CLI updates the file while worker owns propagation')
+    if original_php_exists:
+        harness.sql("REPLACE INTO settings(name,value) VALUES ('path_php_binary','" + original_php.replace("'", "''") + "')")
+    else:
+        harness.sql("DELETE FROM settings WHERE name='path_php_binary'")
+    harness.sql('DROP TRIGGER data_input_review_push_count')
+    harness.sql('DROP TABLE data_input_review_push_count')
     harness.command('php','-r',"chmod('/tmp/data-input-review-whitelist.json',0444);")
     fields,_=page(session,whitelist)
     payload={'data_input_action[revision]':fields['data_input_action[revision]'],'data_input_action[_token]':fields['data_input_action[_token]']}
