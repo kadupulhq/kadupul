@@ -1545,24 +1545,7 @@ function aggregate_graph()
 					</td>
 					<td>
 						<select id='template_id' name='template_id'>
-							<option value='-1'<?php if (get_request_var('template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-							<option value='0'<?php if (get_request_var('template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
-							<?php
-                            $templates = db_fetch_assoc('SELECT DISTINCT at.id, at.name
-								FROM aggregate_graph_templates AS at
-								INNER JOIN aggregate_graphs AS ag
-								ON ag.aggregate_template_id=at.id
-								ORDER BY name');
-
-    if (cacti_sizeof($templates) > 0) {
-        foreach ($templates as $template) {
-            print "<option value='" . $template['id'] . "'";
-            if (get_request_var('template_id') == $template['id']) {
-                print ' selected';
-            } print '>' . html_escape($template['name']) . "</option>";
-        }
-    }
-    ?>
+							<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows')); ?>
 						</select>
 					</td>
 					<td>
