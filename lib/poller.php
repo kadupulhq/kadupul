@@ -1945,8 +1945,8 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 
     if ($class == 'all' || $class == 'settings' || $class == 'data') {
         require_once __DIR__ . '/data_source_profile_integrity.php';
-        if (!data_source_profile_reference_guards_available(connection: $rcnn_id)) {
-            cacti_log('ERROR: Synchronization of Poller ' . $remote_poller_id . ' failed while replicating data-source definitions. Collector profile guards must be upgraded before replication; its schema version was retained.', false, 'REPLICATE');
+        if (!data_source_profile_reference_guards_available(connection: $rcnn_id) || !data_source_profile_reference_index_available($rcnn_id)) {
+            cacti_log('ERROR: Synchronization of Poller ' . $remote_poller_id . ' failed while replicating data-source definitions. Collector profile guards and reference index must be upgraded before replication; its schema version was retained.', false, 'REPLICATE');
             raise_message('poller_sync_failed', __('Synchronization failed while replicating data-source definitions. See the log for details.'), MESSAGE_LEVEL_ERROR);
             return false;
         }

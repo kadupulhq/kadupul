@@ -115,7 +115,7 @@ function collector_statement(string $sql, array $params = [], $connection = fals
     $connection = $connection ?: $GLOBALS['source'];
     $side = $connection === $GLOBALS['source'] ? 'source' : 'remote';
     $GLOBALS['calls'][] = [$side, $sql];
-    if (str_contains($sql, 'information_schema.TABLES') || str_contains($sql, 'information_schema.TRIGGERS')) {
+    if (str_contains($sql, 'information_schema.TABLES') || str_contains($sql, 'information_schema.TRIGGERS') || str_contains($sql, 'information_schema.STATISTICS')) {
         $params = array_map(static fn($name) => $GLOBALS['maps'][$side][$name] ?? str_replace('kadupul_profile_reference', ($side === 'source' ? 'collector_source_guard_' : 'collector_guard_') . $GLOBALS['suffix'], $name), $params);
     }
     foreach ($GLOBALS['maps'][$side] as $logical => $physical) {
@@ -145,7 +145,7 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
             $GLOBALS['calls'][] = ['source', $sql];
             return $GLOBALS['data'];
         }
-        if (!preg_match('/data_source_profiles|\bversion\b|information_schema.TABLES|information_schema.TRIGGERS|SHOW COLUMNS FROM data_template_data|FROM data_template_data WHERE/', $sql)) {
+        if (!preg_match('/data_source_profiles|\bversion\b|information_schema.TABLES|information_schema.TRIGGERS|information_schema.STATISTICS|SHOW COLUMNS FROM data_template_data|FROM data_template_data WHERE/', $sql)) {
             $GLOBALS['calls'][] = ['source', $sql];
             return [];
         }
@@ -311,12 +311,27 @@ try {
     foreach ($maps as $side => $map) {
         $connection = $side === 'source' ? $source : $remote;
         $connection->exec('CREATE TABLE `' . $map['data_source_profiles'] . '` (id INTEGER PRIMARY KEY, name VARCHAR(32), step INTEGER) ENGINE=InnoDB');
-        $connection->exec('CREATE TABLE `' . $map['data_template_data'] . '` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32)) ENGINE=InnoDB');
+        $connection->exec('CREATE TABLE `' . $map['data_template_data'] . '` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32), KEY data_source_profile_id (data_source_profile_id)) ENGINE=InnoDB');
         $connection->exec('CREATE TABLE `' . $map['data_source_profiles_rra'] . '` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, steps INTEGER, `rows` INTEGER) ENGINE=InnoDB');
         $connection->exec('CREATE TABLE `' . $map['data_source_profiles_cf'] . '` (data_source_profile_id INTEGER, consolidation_function_id INTEGER, PRIMARY KEY(data_source_profile_id,consolidation_function_id)) ENGINE=InnoDB');
         $connection->exec('INSERT INTO `' . $map['data_source_profiles_rra'] . '` VALUES (1,1,1,600)');
         $connection->exec('INSERT INTO `' . $map['data_source_profiles_cf'] . '` VALUES (1,1)');
         $connection->exec('INSERT INTO `' . $map['data_source_profiles'] . "` VALUES (1,'default',300)");
+    }
+    if (in_array($scenario['failure'] ?? '', ['index-missing', 'index-wrong-column', 'index-composite', 'index-equivalent'], true)) {
+        $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` DROP INDEX data_source_profile_id');
+        if ($scenario['failure'] !== 'index-missing') {
+            $columns = match ($scenario['failure']) {
+                'index-wrong-column' => 'id',
+                'index-composite' => 'id, data_source_profile_id',
+                default => 'data_source_profile_id, id',
+            };
+            $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` ADD INDEX data_source_profile_id (' . $columns . ')');
+        }
+    }
+    if (($scenario['failure'] ?? '') === 'index-hidden') {
+        $visibility = str_contains($remote->getAttribute(PDO::ATTR_SERVER_VERSION), 'MariaDB') ? 'IGNORED' : 'INVISIBLE';
+        $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` ALTER INDEX data_source_profile_id ' . $visibility);
     }
     foreach (array('source' => $source, 'remote' => $remote) as $side => $connection) {
         $connection->exec('CREATE TABLE `' . $maps[$side]['version'] . '` (cacti VARCHAR(16) PRIMARY KEY) ENGINE=InnoDB');

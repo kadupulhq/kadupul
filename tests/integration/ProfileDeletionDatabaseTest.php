@@ -22,18 +22,32 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     public function testGuardPreflightPreservesCollectorVersionBeforeEveryMutation(string $class, string $failure): void
     {
         $state = $this->runNative(array('collector' => 'bulk', 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
-        self::assertFalse($state['result']);
         self::assertSame('1.2.33', $state['remote_version']);
+        self::assertFalse($state['result']);
         self::assertSame(array($class === 'settings' ? '' : 'on', 'on'), $state['sync']);
         self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote' && preg_match('/^\s*(INSERT|REPLACE|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE)\b/i', $call[1])));
         self::assertStringContainsString('schema version was retained', implode('\n', $state['log']));
+    }
+
+    /** @dataProvider equivalentIndexClasses */
+    public function testCollectorAcceptsAnEquivalentFullLeadingColumnIndex(string $class): void
+    {
+        $state = $this->runNative(array('collector' => 'bulk', 'failure' => 'index-equivalent', 'entrypoint' => true, 'class' => $class));
+        self::assertTrue($state['result']);
+        self::assertSame($class === 'all' ? '1.2.34' : '1.2.33', $state['remote_version']);
+        self::assertSame(array('', 'on'), $state['sync']);
+    }
+
+    public static function equivalentIndexClasses(): array
+    {
+        return array('all' => array('all'), 'settings' => array('settings'), 'data' => array('data'));
     }
 
     public static function remoteGuardPreflightScenarios(): array
     {
         $cases = array();
         foreach (array('all', 'settings', 'data') as $class) {
-            foreach (array('guard-missing', 'guard-modified') as $failure) {
+            foreach (array('guard-missing', 'guard-modified', 'index-missing', 'index-wrong-column', 'index-composite', 'index-hidden') as $failure) {
                 $cases[$class . ' ' . $failure] = array($class, $failure);
             }
         }

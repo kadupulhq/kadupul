@@ -121,6 +121,26 @@ function data_source_profile_reference_guards_available(
     return true;
 }
 
+/** Collector version publication requires the complete registered profile upgrade. */
+function data_source_profile_reference_index_available(PDO|false $connection = false): bool
+{
+    $rows = db_fetch_assoc_prepared(
+        'SELECT * FROM information_schema.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ? AND SEQ_IN_INDEX = 1',
+        ['data_template_data', 'data_source_profile_id'],
+        true,
+        $connection
+    );
+
+    return is_array($rows) && count($rows) === 1
+        && (int) ($rows[0]['SEQ_IN_INDEX'] ?? 0) === 1
+        && ($rows[0]['COLUMN_NAME'] ?? '') === 'data_source_profile_id'
+        && array_key_exists('SUB_PART', $rows[0]) && $rows[0]['SUB_PART'] === null
+        && (int) ($rows[0]['NON_UNIQUE'] ?? 0) === 1
+        && (!isset($rows[0]['IS_VISIBLE']) || $rows[0]['IS_VISIBLE'] === 'YES')
+        && (!isset($rows[0]['IGNORED']) || $rows[0]['IGNORED'] === 'NO');
+}
+
 /** Definition writers use the same audited guard catalog. */
 function data_source_profile_definition_triggers(string $profiles = 'data_source_profiles', string $rra = 'data_source_profiles_rra', string $cf = 'data_source_profiles_cf', string $prefix = 'kadupul_profile_reference'): array
 {

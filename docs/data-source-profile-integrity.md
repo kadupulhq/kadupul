@@ -34,7 +34,7 @@ DDL implicitly commits. A missing parent or rejected definition copy stops that 
 existing rows are changed. This keeps guards active on collectors without losing
 their existing data-source definitions when custom profiles are introduced.
 
-Bulk all/settings/data synchronization validates collector guards immediately after connecting, before any table writes, including the schema version. A collector without intact guards retains its recorded version so the required upgrade remains eligible. Data delivery repeats the guard check before replacing definitions.
+Bulk all/settings/data synchronization validates collector guards and the required reference index immediately after connecting, before any table writes, including the schema version. A collector without intact guards or an available, full leading-column `data_source_profile_id` index retains its recorded version so the required upgrade remains eligible. A visible nonunique composite index with that full leading column is equivalent for the lookup; wrong leading columns and ignored/invisible indexes are refused. Data delivery repeats the guard check before replacing definitions.
 
 Source catalogs must also use InnoDB and expose all eight intact guards. This prevents child insert phantoms while a caller-owned READ COMMITTED transaction holds selected parent rows. Missing or changed source guards refuse copying without committing or rolling back the caller. Their locking reads share a transaction, preventing an interleaved source edit from producing a mixed catalog. A transaction opened by replication is acknowledged and released before remote delivery; a caller-owned transaction remains open and retains its pending writes and locks for the caller to commit or roll back.
 
