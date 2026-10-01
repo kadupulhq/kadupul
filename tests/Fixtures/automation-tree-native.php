@@ -27,6 +27,8 @@ if (isset($argv[3])) {
 require $root . '/include/vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php';
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db->sqliteCreateFunction('UNIX_TIMESTAMP', static fn($value) => strtotime($value));
+$db->sqliteCreateFunction('FROM_UNIXTIME', static fn($value) => date('Y-m-d H:i:s', $value));
 $definitions = array(
     'graph_tree' => 'id INTEGER PRIMARY KEY, sort_type INTEGER',
     'graph_tree_items' => 'id INTEGER PRIMARY KEY, graph_tree_id INTEGER, title TEXT, parent INTEGER, local_graph_id INTEGER DEFAULT 0, host_id INTEGER DEFAULT 0, site_id INTEGER DEFAULT 0, host_grouping_type INTEGER DEFAULT 0, sort_children_type INTEGER DEFAULT 1, position INTEGER DEFAULT 1',
@@ -35,7 +37,7 @@ $definitions = array(
     'host_template' => 'id INTEGER PRIMARY KEY, name TEXT',
     'graph_local' => 'id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER, snmp_query_graph_id INTEGER, snmp_query_id INTEGER, snmp_index TEXT',
     'graph_templates' => 'id INTEGER PRIMARY KEY, name TEXT, test_source TEXT',
-    'graph_templates_graph' => 'local_graph_id INTEGER, graph_template_id INTEGER, title_cache TEXT, t_title TEXT, title TEXT',
+    'graph_templates_graph' => 'local_graph_id INTEGER, graph_template_id INTEGER, title_cache TEXT, t_title TEXT, title TEXT, id INTEGER, height INTEGER, width INTEGER',
     'data_template_data' => 'id INTEGER PRIMARY KEY, data_template_id INTEGER, local_data_id INTEGER, t_name TEXT, name TEXT',
     'data_template_rrd' => 'id INTEGER PRIMARY KEY, data_template_id INTEGER, local_data_id INTEGER',
     'graph_templates_item' => 'id INTEGER PRIMARY KEY, graph_template_id INTEGER, task_item_id INTEGER, hash TEXT, local_graph_id INTEGER',
@@ -56,12 +58,16 @@ $definitions = array(
     'automation_match_rule_items' => 'id INTEGER PRIMARY KEY, rule_id INTEGER, rule_type INTEGER, sequence INTEGER, operation INTEGER, field TEXT, operator INTEGER, pattern TEXT',
     'settings' => 'name TEXT PRIMARY KEY, value TEXT',
     'settings_user' => 'name TEXT,user_id INTEGER,value TEXT',
-    'user_auth' => 'id INTEGER PRIMARY KEY,username TEXT,reset_perms INTEGER',
+    'user_auth' => 'id INTEGER PRIMARY KEY,username TEXT,reset_perms INTEGER, policy_hosts INTEGER, policy_graphs INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER',
+    'user_auth_perms' => 'user_id INTEGER, type INTEGER, item_id INTEGER',
+    'user_auth_group' => 'id INTEGER, name TEXT, enabled TEXT, policy_hosts INTEGER, policy_graphs INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER',
+    'user_auth_group_members' => 'user_id INTEGER, group_id INTEGER',
+    'user_auth_row_cache' => 'user_id INTEGER, class TEXT, hash TEXT, total_rows INTEGER, time TEXT',
 );
 foreach ($definitions as $table => $columns) {
     $db->exec('CREATE TABLE ' . $table . ' (' . $columns . ')');
 }
-$db->exec("INSERT INTO user_auth VALUES (7,'fixture-admin',0)");
+$db->exec("INSERT INTO user_auth VALUES (7,'fixture-admin',0,1,1,1,1)");
 $db->exec('INSERT INTO graph_tree VALUES (8,1),(9,1)');
 $db->exec("INSERT INTO graph_tree_items (id,graph_tree_id,parent,title) VALUES (77,8,0,'Parent'),(88,9,0,'Unrelated')");
 $db->exec("INSERT INTO host_template VALUES (9,'Fixture template')");
@@ -191,6 +197,9 @@ $_SERVER['SCRIPT_NAME'] = '/api_automation.php';
 $_SERVER['REQUEST_URI'] = '/api_automation.php';
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_REQUEST = $_POST = array('id' => 8, 'header' => 'false', 'rows' => 10, 'page' => 1, 'host_status' => -1, 'host_template_id' => -1, 'sort_column' => 'description', 'sort_direction' => 'ASC', 'filter' => '');
+$_REQUEST['rowsd'] = 10;
+$_REQUEST['paged'] = 1;
+$_REQUEST['filterd'] = '';
 $_CACTI_REQUEST = array();
 $config = array('base_path' => $root, 'cacti_server_os' => 'unix', 'connection' => 'online', 'cacti_db_version' => '1.3.0', 'poller_id' => 1, 'is_web' => false, 'url_path' => '/', 'config_options_array' => array('log_validation' => '', 'selected_theme' => 'classic', 'log_destination' => 1, 'path_cactilog' => $directory . '/native.log', 'selective_debug' => '', 'selective_plugin_debug' => '', 'log_verbosity' => POLLER_VERBOSITY_LOW, 'date' => 'Y-m-d', 'time' => 'H:i:s', 'auth_method' => 1, 'default_graphs_per_page' => 10, 'num_rows_table' => 10));
 $no_session_write = array('api_automation.php');
@@ -294,7 +303,16 @@ function cacti_snmp_session_get($session, $oid)
 require $directory . '/api_automation.php';
 $rule = array('id' => 8, 'tree_id' => 8, 'host_grouping_type' => 1);
 $item = array('field' => 'h.description', 'search_pattern' => ($scenario['search'] ?? ''), 'replace_pattern' => ($scenario['replace'] ?? ''), 'propagate_changes' => '', 'sort_type' => 1);
-if (in_array($scenario['mode'], array('dq','objects','edit'), true)) {
+if ($scenario['mode'] === 'matches') {
+    $graph = $scenario['kind'] === 'graph';
+    $db->exec("INSERT INTO graph_templates VALUES (9,'Fixture graph','')");
+    $db->exec("INSERT INTO graph_local VALUES (100,7,9,6,5,'1')");
+    $db->exec("INSERT INTO graph_templates_graph VALUES (100,9,'Fixture title','on','Title',100,100,200)");
+    $db->exec("INSERT INTO automation_match_rule_items VALUES (1,8,3,1,0,'h.id'," . AUTOMATION_OP_MATCHES . ",'7')");
+    set_request_var('sort_column', $graph ? 'title_cache' : 'description');
+    $function = $graph ? 'display_matching_graphs' : 'display_matching_hosts';
+    $function($rule, AUTOMATION_RULE_TYPE_TREE_MATCH, 'automation_tree_rules.php?action=edit&id=8');
+} elseif (in_array($scenario['mode'], array('dq','objects','edit'), true)) {
     $db->exec("INSERT INTO automation_graph_rules VALUES (8,'Fixture rule',5,6)");
     $db->exec("INSERT INTO snmp_query VALUES (5,'Fixture query','fixture.xml')");
     $db->exec('INSERT INTO snmp_query_graph VALUES (6,5,9)');
@@ -342,7 +360,7 @@ if (in_array($scenario['mode'], array('dq','objects','edit'), true)) {
     $GLOBALS['contracts']['device'] = $device;
 } elseif ($scenario['mode'] === 'eligible') {
     $case = $scenario['case'];
-    $db->exec("INSERT INTO graph_templates_graph VALUES (0,9,'Title','on','Title')");
+    $db->exec("INSERT INTO graph_templates_graph VALUES (0,9,'Title','on','Title',0,100,200)");
     $db->exec("INSERT INTO data_template_data VALUES (1,2,0,'on','Data')");
     $db->exec("INSERT INTO data_template_rrd VALUES (4,2,0)");
     $db->exec("INSERT INTO graph_templates_item VALUES (1,9,4,'fixture-hash',0)");

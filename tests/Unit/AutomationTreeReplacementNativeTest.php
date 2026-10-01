@@ -266,6 +266,26 @@ final class AutomationTreeReplacementNativeTest extends TestCase
         return array(array(1,3,'Device Match Rule'),array(2,3,'Create Graph Rule'),array(3,3,'Device Match Rule'),array(3,2,'Graph Match Rule'),array(4,3,'Create Tree Rule (Device)'),array(4,2,'Create Tree Rule (Graph)'));
     }
 
+    /** @dataProvider matchingLists */
+    public function testNativeMatchingListPreservesSelectedRowsAndObjectIdentity(string $kind): void
+    {
+        $state = $this->runNative(array('mode' => 'matches','kind' => $kind));
+        $document = new DOMDocument();
+        @$document->loadHTML($state['html']);
+        $xpath = new DOMXPath($document);
+        $select = $kind === 'graph' ? 'rows' : 'rowsd';
+        self::assertSame('10', $xpath->query('//select[@id="' . $select . '"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertSame('Default', $xpath->query('//select[@id="' . $select . '"]/option[@value="-1"]')->item(0)->textContent);
+        self::assertSame(1, $xpath->query('//tr[@id="line' . ($kind === 'graph' ? '100' : '7') . '"]')->length);
+        self::assertStringContainsString($kind === 'graph' ? 'Fixture title' : 'Fixture template', $state['html']);
+        self::assertStringNotContainsString('Warning:', $state['html']);
+    }
+
+    public static function matchingLists(): array
+    {
+        return array(array('host'),array('graph'));
+    }
+
     protected function runNative(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
