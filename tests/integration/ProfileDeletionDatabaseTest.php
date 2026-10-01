@@ -102,6 +102,21 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         self::assertStringContainsString('Source profile catalogs require InnoDB and intact definition guards', implode('\n', $state['log']));
     }
 
+    public function testUnupgradedCollectorVersionIsPreservedBeforeAnyBulkReplication(): void
+    {
+        foreach (array('engine', 'guard-missing', 'guard-modified') as $failure) {
+            $state = $this->runNative(array('collector' => 'bulk', 'failure' => $failure, 'entrypoint' => true, 'class' => 'all'));
+            self::assertFalse($state['result']);
+            self::assertSame('1.2.33', $state['remote_version']);
+            self::assertSame(array('on', 'on'), $state['sync']);
+            self::assertNotContains('poller_sync', $state['messages']);
+            self::assertContains('poller_sync_failed', $state['messages']);
+            self::assertStringContainsString('schema version was retained', implode('\n', $state['log']));
+            self::assertSame(array(), array_filter($state['calls'], static fn($call) => str_contains($call[1], 'FROM version')
+                || ($call[0] === 'remote' && preg_match('/^(?:INSERT|REPLACE|TRUNCATE|UPDATE|DELETE|DROP|CREATE|ALTER)\b/i', trim($call[1])))));
+        }
+    }
+
     public function testCollectorCompletionRefusalRetainsRetryOwnership(): void
     {
         foreach (array('all', 'data') as $class) {
@@ -145,7 +160,8 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
         self::assertSame($failure === '', $state['result']);
         if ($mode === 'bulk' && $failure === '' && $class === 'all') {
-            self::assertSame('1.2.34', $state['remote_version']);
+            self::assertSame('1.2.33', $state['remote_version']);
+            self::assertSame(array(), array_filter($state['calls'], static fn($call) => preg_match('/\bversion\b/', $call[1])));
         }
         if ($failure !== 'retry-state') {
             self::assertSame(array($mode === 'bulk' && $failure === '' ? '' : 'on', 'on'), $state['sync']);

@@ -2020,8 +2020,7 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
         $data = db_fetch_assoc('SELECT * FROM poller');
         replicate_out_table($rcnn_id, $data, 'poller', $remote_poller_id);
 
-        $data = db_fetch_assoc('SELECT * FROM version');
-        replicate_out_table($rcnn_id, $data, 'version', $remote_poller_id);
+        // Collector schema versions belong to its installer, never data synchronization.
     }
 
     // Plugin tables

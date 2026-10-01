@@ -84,3 +84,5 @@ and [MariaDB trigger overview](https://mariadb.com/docs/server/server-usage/trig
 Backup defaults:
 [mysqldump](https://dev.mysql.com/doc/refman/8.4/en/mysqldump.html) and
 [mariadb-dump](https://mariadb.com/docs/server/clients-and-utilities/backup-restore-and-import-clients/mariadb-dump).
+
+Collector schema versions are owned by the collector installer. Synchronization never copies the `version` table, even after successful data delivery: intact profile guards do not prove every migration step (including indexes) completed. A partial upgrade remains eligible for installer recovery.
