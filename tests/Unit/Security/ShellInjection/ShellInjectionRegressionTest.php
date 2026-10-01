@@ -75,7 +75,7 @@ test('GHSA-g9c7: cacti_exec rejects binary strings that begin with dash', functi
 	$end  = strpos($functionsSource, "\n}\n", $start);
 	$body = substr($functionsSource, $start, $end - $start);
 
-	$guard = "if (strpos(trim(\$binary), '-') === 0) {\n"
+	$guard = "if (str_starts_with(trim(\$binary), '-')) {\n"
 		. "\t\tcacti_log('ERROR: cacti_exec() rejected binary starting with dash: ' . \$binary, false, 'SYSTEM');\n"
 		. "\t\treturn 255;\n"
 		. "\t}";
