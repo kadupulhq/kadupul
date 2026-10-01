@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 final class HtmlReportRenderNativeCoverageTest extends TestCase
 {
+    private static bool $coverageEvidenceChecked = false;
+
     /** @dataProvider filterCases */
     public function testFilterOptionsPreserveSelectionAndLiteralLabels(string $theme, bool $restricted): void
     {
@@ -130,11 +132,20 @@ final class HtmlReportRenderNativeCoverageTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $coverage->merge(unserialize(file_get_contents($reports[0])));
+                require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/html-report-render-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/html.php', 'lib/reports.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-render-operation-returned', 'buffered-html-observed'), array($scenario['operation'] === 'report' ? 'lib/reports.php' : 'lib/html.php'));
+                if (!self::$coverageEvidenceChecked) {
+                    self::assertSame(26, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/html-report-render-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/html.php', 'lib/reports.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-render-operation-returned', 'buffered-html-observed'), array($scenario['operation'] === 'report' ? 'lib/reports.php' : 'lib/html.php'), 'lib/rrd.php'));
+                    self::$coverageEvidenceChecked = true;
+                }
+                $coverage->merge($childCoverage);
             }
             return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         } finally {
             foreach (glob($directory . '/*.coverage') as $report) {
+                if (is_file($report . '.json')) {
+                    unlink($report . '.json');
+                }
                 unlink($report);
             }
             rmdir($directory);

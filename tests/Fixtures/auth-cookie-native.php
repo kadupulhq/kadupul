@@ -11,6 +11,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if (isset($argv[3])) {
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-cookie-native.php', $argv[1], array('lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+}
 $config = array();
 $db = new PDO('sqlite::memory:', options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $db->sqliteCreateFunction('NOW', static fn() => date('Y-m-d H:i:s'));
@@ -135,4 +139,6 @@ if (($scenario['operation'] ?? '') === 'domain') {
     $result = ($scenario['operation'] ?? 'check') === 'clear' ? clear_auth_cookie() : check_auth_cookie();
 }
 $rows = db_table_exists('user_auth_cache') ? $db->query('SELECT user_id,token FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_ASSOC) : array();
-fwrite(STDOUT, json_encode(array('result' => $result, 'rows' => $rows, 'events' => $events, 'issued' => $issued, 'old_hash' => $hash, 'error' => $error ?? false, 'failed_attempts' => $db->query('SELECT id,failed_attempts FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR), 'audit' => $db->query('SELECT user_id,result FROM user_log')->fetchAll(PDO::FETCH_ASSOC)), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+$state = array('result' => $result, 'rows' => $rows, 'events' => $events, 'issued' => $issued, 'old_hash' => $hash, 'error' => $error ?? false, 'failed_attempts' => $db->query('SELECT id,failed_attempts FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR), 'audit' => $db->query('SELECT user_id,result FROM user_log')->fetchAll(PDO::FETCH_ASSOC));
+$nativeChildCoverageMarkers = array('native-auth-operation-returned', 'credential-and-audit-readback');
+fwrite(STDOUT, json_encode($state, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));

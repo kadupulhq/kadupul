@@ -9,6 +9,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if (isset($argv[3])) {
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/html-report-render-native.php', $argv[1], array('lib/html.php', 'lib/reports.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+}
 $config = ['base_path' => $root, 'url_path' => '/kadupul/'];
 $alignment = [0 => 'left', 1 => 'center', 2 => 'right'];
 $db = new PDO('sqlite::memory:');
@@ -136,4 +140,5 @@ switch ($scenario['operation']) {
         throw new InvalidArgumentException('Unknown render operation.');
 }
 $html = ob_get_clean();
+$nativeChildCoverageMarkers = array('native-render-operation-returned', 'buffered-html-observed');
 print json_encode(['html' => $html, 'custom' => $_SESSION['custom'] ?? null, 'hook' => $hook ?? null], JSON_THROW_ON_ERROR);
