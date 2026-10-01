@@ -50,9 +50,9 @@ $statements = [];
 require $root . '/include/global_constants.php';
 require $root . '/include/global_arrays.php';
 $target = trim(file_get_contents($root . '/include/cacti_version'));
-if (!version_compare($target, '1.2.32', '>=') || !array_key_exists('1.2.32', $cacti_version_codes)) {
+if (!version_compare($target, '1.2.33', '>=') || !array_key_exists('1.2.33', $cacti_version_codes)) {
     throw new RuntimeException('Canonical metadata does not register the index migration after 1.2.31.');
 }
-require $root . '/install/upgrades/1_2_32.php';
-upgrade_to_1_2_32();
+require $root . '/install/upgrades/1_2_33.php';
+upgrade_to_1_2_33();
 echo json_encode($statements, JSON_THROW_ON_ERROR);

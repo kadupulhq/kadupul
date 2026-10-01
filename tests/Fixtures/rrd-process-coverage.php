@@ -15,7 +15,7 @@ if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_32.php');
+    $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_33.php');
     $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
 }
 if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
