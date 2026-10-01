@@ -116,6 +116,11 @@ if (!empty($scenario['writer']['check_first'])) {
 } else {
     boost_graph_set_file($image, 7, 1);
 }
+if (!empty($scenario['truncate'])) {
+    foreach (glob($cacheDirectory . '/*') as $file) {
+        file_put_contents($file, '');
+    }
+}
 if (isset($scenario['age'])) {
     foreach (glob($cacheDirectory . '/*') as $file) {
         touch($file, time() - $scenario['age']);
@@ -126,5 +131,5 @@ boost_fixture_enter($scenario['reader']);
 $graph = $GLOBALS['graph_data_array'];
 $served = boost_graph_cache_check(7, 1, false, $graph, false);
 
-echo json_encode(array('files' => $files, 'written' => array_map('basename', glob($cacheDirectory . '/*')),
+echo json_encode(array('cache' => $cacheDirectory, 'files' => $files, 'written' => array_map('basename', glob($cacheDirectory . '/*')),
     'served' => $served), JSON_THROW_ON_ERROR);

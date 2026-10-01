@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -9,25 +10,29 @@ $boostSource  = file_get_contents(__DIR__ . '/../../lib/boost.php');
 $pollerSource = file_get_contents(__DIR__ . '/../../lib/poller.php');
 $funcSource   = file_get_contents(__DIR__ . '/../../lib/functions.php');
 
-test('boost_graph_set_file uses umask instead of chmod', function () use ($boostSource) {
+// tempnam() creates a new file, never a link, and rename() replaces the cache name without following it.
+test('boost_graph_set_file writes a temporary file in the cache directory and renames it into place', function () use ($boostSource) {
     $start = strpos($boostSource, 'function boost_graph_set_file(');
-    $body = substr($boostSource, $start, 1500);
-    expect($body)->toContain('umask(');
-    expect($body)->not->toContain('chmod($cache_file');
+    $body = substr($boostSource, $start, strpos($boostSource, "\nfunction ", $start) - $start);
+    expect($body)->toContain('tempnam($cache_directory, ')
+        ->and($body)->toContain('rename($temp_file, $cache_file)')
+        ->and($body)->not->toContain('umask(')
+        ->and($body)->not->toContain('chmod($cache_file')
+        ->and($body)->not->toContain('fopen($cache_file');
 });
 
 test('boost_graph_cache_check casts IDs to int', function () use ($boostSource) {
     $start = strpos($boostSource, 'function boost_graph_cache_check(');
     $body = substr($boostSource, $start, 500);
-    expect($body)->toContain('$local_graph_id = (int)$local_graph_id');
-    expect($body)->toContain('$rra_id         = (int)$rra_id');
+    expect($body)->toContain('$local_graph_id = (int) $local_graph_id');
+    expect($body)->toContain('$rra_id         = (int) $rra_id');
 });
 
 test('boost_graph_set_file casts IDs to int', function () use ($boostSource) {
     $start = strpos($boostSource, 'function boost_graph_set_file(');
-    $body = substr($boostSource, $start, 500);
-    expect($body)->toContain('(int)$local_graph_id');
-    expect($body)->toContain('(int)$rra_id');
+    $body = substr($boostSource, $start, 1500);
+    expect($body)->toContain('(int) $local_graph_id');
+    expect($body)->toContain('(int) $rra_id');
 });
 
 test('boost GET_LOCK has retry limit', function () use ($boostSource) {

@@ -458,11 +458,11 @@ function boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, 
     }
 
     if (isset($graph_data_array['graph_height'])) {
-        $cache_file .= '_height_' . $graph_data_array['graph_height'];
+        $cache_file .= '_height_' . (int) $graph_data_array['graph_height'];
     }
 
     if (isset($graph_data_array['graph_width'])) {
-        $cache_file .= '_width_' . $graph_data_array['graph_width'];
+        $cache_file .= '_width_' . (int) $graph_data_array['graph_width'];
     }
 
     $cache_file .= '_rk_' . boost_graph_cache_render_key($graph_data_array);
@@ -592,10 +592,18 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
                         }
 
                         if (($mod_time + $poller_interval) > time()) {
+                            $output = false;
                             if ($fileptr = fopen($cache_file, 'rb')) {
-                                $output = fread($fileptr, filesize($cache_file));
+                                /* the size of the file opened, not of whatever the name points to now;
+                                 * fread() refuses a length of 0 */
+                                $stat = fstat($fileptr);
+                                if ($stat !== false && $stat['size'] > 0) {
+                                    $output = fread($fileptr, $stat['size']);
+                                }
                                 fclose($fileptr);
+                            }
 
+                            if ($output !== false && $output !== '') {
                                 /* restore original error handler */
                                 restore_error_handler();
 
@@ -606,7 +614,7 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
 
                                 return $output;
                             } else {
-                                cacti_log("Attempting to open cache file '$cache_file' failed", false, 'BOOST', POLLER_VERBOSITY_DEBUG);
+                                cacti_log("Attempting to read cache file '$cache_file' failed", false, 'BOOST', POLLER_VERBOSITY_DEBUG);
                             }
                         } else {
                             cacti_log("Boost Cache PNG Expired.  Image '$cache_file' will be recreated", false, 'BOOST', POLLER_VERBOSITY_DEBUG);
@@ -708,20 +716,23 @@ function boost_graph_set_file(&$output, $local_graph_id, $rra_id, $graph_data_ar
                 if (is_writable($cache_directory)) {
                     /* if the cache file was created in a prior step, save it */
                     if (strlen($output) > 10) {
-                        /* SECURITY: Use umask to set permissions at creation time,
-                           preventing symlink TOCTOU privilege escalation */
-                        $old_umask = umask(0111);
+                        /* SECURITY: tempnam() creates a new file, never a link, and rename()
+                         * replaces the name without following it. Readers see the old image
+                         * or the whole new one, never a partial write */
+                        $temp_file = tempnam($cache_directory, 'boost_');
 
-                        if ($fileptr = fopen($cache_file, 'w')) {
-                            fwrite($fileptr, $output, strlen($output));
-                            fclose($fileptr);
-
-                            /* count the number of images that had to be cached */
-                            $mc->object('boostStatsTotalsImagesCacheWrites')->count();
-                            $mc->object('boostStatsLastUpdate')->set(time());
+                        if ($temp_file !== false && realpath(dirname($temp_file)) === realpath($cache_directory)) {
+                            if (file_put_contents($temp_file, $output) === strlen($output) && chmod($temp_file, 0644) && rename($temp_file, $cache_file)) {
+                                /* count the number of images that had to be cached */
+                                $mc->object('boostStatsTotalsImagesCacheWrites')->count();
+                                $mc->object('boostStatsLastUpdate')->set(time());
+                            } elseif (file_exists($temp_file)) {
+                                unlink($temp_file);
+                            }
+                        } elseif ($temp_file !== false) {
+                            /* tempnam() fell back to the system directory, where rename() is not atomic */
+                            unlink($temp_file);
                         }
-
-                        umask($old_umask);
                     }
                 } else {
                     cacti_log('ERROR: Boost Cache Directory is not writable!  Can not cache images', false, 'BOOST');

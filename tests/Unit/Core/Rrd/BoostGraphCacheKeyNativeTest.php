@@ -123,6 +123,19 @@ test('viewers that render the same graph share one cache file', function ($write
         array_merge($browserZone, array('cookie_offset' => 300))),
 ));
 
+test('an empty cache file is not served', function () {
+    $observed = boost_cache_key_run(array('writer' => array(), 'reader' => array(), 'truncate' => true), $this->getTestResultObject()->getCodeCoverage());
+    expect($observed['served'])->toBeFalse()->and($observed['written'])->toHaveCount(1);
+});
+
+test('a graph size that is not a number cannot move the cache file out of its directory', function () {
+    $graph = array('graph_height' => '1/../../../escaped', 'graph_width' => '600px');
+    $observed = boost_cache_key_run(array('writer' => array('graph' => $graph), 'reader' => array('graph' => $graph)), $this->getTestResultObject()->getCodeCoverage());
+    expect(dirname($observed['files']['writer']))->toBe($observed['cache'])
+        ->and(basename($observed['files']['writer']))->toStartWith('modern_lgi_7_rrai_1_height_1_width_600_rk_')
+        ->and($observed['served'])->toBe('PNG rendered for the writer');
+});
+
 test('the cache file name keeps its layout and appends a fixed-length render key', function () {
     $full = boost_cache_key_run(array('writer' => array(), 'reader' => array('graph' => array('graph_nolegend' => true))), $this->getTestResultObject()->getCodeCoverage());
     expect(basename($full['files']['writer']))->toMatch('/^modern_lgi_7_rrai_1_height_150_width_600_rk_[0-9a-f]{64}\.png$/')
