@@ -599,15 +599,15 @@ fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'r
 fs_write	./tools/dependencies/install-legacy.php:53	    $destination = fopen($archivePath, 'wb');
 fs_write	./tools/dependencies/install-legacy.php:86	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
 fs_write	./utilities.php:1633	            $log_fh = fopen($logfile, 'w');
-header_redirect	./aggregate_graphs.php:105			header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
-header_redirect	./aggregate_graphs.php:232		header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
-header_redirect	./aggregate_graphs.php:277					header('Location: aggregate_graphs.php?header=false');
-header_redirect	./aggregate_graphs.php:283					header('Location: aggregate_graphs.php?header=false&action=edit&tab=items&id=' . $local_graph_id);
-header_redirect	./aggregate_graphs.php:289					header('Location: aggregate_graphs.php?header=false&action=edit&tab=items&id=' . $local_graph_id);
-header_redirect	./aggregate_graphs.php:300			header('Location: aggregate_graphs.php?header=false');
-header_redirect	./aggregate_graphs.php:514			header('Location: aggregate_graphs.php?header=false');
-header_redirect	./aggregate_graphs.php:75			header('Location: aggregate_graphs.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
-header_redirect	./aggregate_graphs.php:86			header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
+header_redirect	./aggregate_graphs.php:108	        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
+header_redirect	./aggregate_graphs.php:241	    header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
+header_redirect	./aggregate_graphs.php:287	                header('Location: aggregate_graphs.php?header=false');
+header_redirect	./aggregate_graphs.php:293	                header('Location: aggregate_graphs.php?header=false&action=edit&tab=items&id=' . $local_graph_id);
+header_redirect	./aggregate_graphs.php:299	                header('Location: aggregate_graphs.php?header=false&action=edit&tab=items&id=' . $local_graph_id);
+header_redirect	./aggregate_graphs.php:310	        header('Location: aggregate_graphs.php?header=false');
+header_redirect	./aggregate_graphs.php:531	        header('Location: aggregate_graphs.php?header=false');
+header_redirect	./aggregate_graphs.php:78	        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
+header_redirect	./aggregate_graphs.php:89	        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_templates.php:142			header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
 header_redirect	./aggregate_templates.php:239		header('Location: aggregate_templates.php?header=false&action=edit&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
 header_redirect	./aggregate_templates.php:274			header('Location: aggregate_templates.php?header=false');
