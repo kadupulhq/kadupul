@@ -111,7 +111,7 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
     }
     public function delete(int $actorId, array $ids, array $revisions = []): void
     {
-        if ($ids === [] || count($ids) > 100 || array_filter($ids, static fn($id): bool => !is_int($id) || $id < 1) !== []) {
+        if ($ids === [] || count($ids) > PaletteColorStore::MAX_DELETE_SELECTION || array_filter($ids, static fn($id): bool => !is_int($id) || $id < 1) !== []) {
             throw new \InvalidArgumentException('Invalid color selection.');
         }
         $ids = array_values(array_unique($ids));

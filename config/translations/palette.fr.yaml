@@ -84,3 +84,4 @@
 "CSV requires name and hex columns, with only the supported literal-text marker.": "Le CSV nécessite les colonnes name et hex, avec uniquement le marqueur de texte littéral pris en charge."
 "CSV contains an invalid literal-text marker.": "Le CSV contient un marqueur de texte littéral invalide."
 "Use a downloaded Colors CSV or a CSV with name and hex columns.": "Utilisez un CSV de couleurs téléchargé ou un CSV avec les colonnes name et hex."
+"Select up to %count% colors from the first %count% rows. Use %count% rows per page or search to select other colors.": "Sélectionnez au maximum %count% couleurs parmi les %count% premières lignes. Affichez %count% lignes par page ou utilisez la recherche pour sélectionner les autres couleurs."

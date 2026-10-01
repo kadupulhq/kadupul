@@ -229,6 +229,41 @@ final class PaletteColorSqlFailureTest extends TestCase
         return [['commit'], ['rollback-false'], ['rollback-throw']];
     }
 
+    #[DataProvider('selectionSizes')]
+    public function testDeleteSelectionBoundaryUsesActualRowsAndPreservesRejectedSelection(int $count): void
+    {
+        $database = $this->database();
+        $store = new LegacyPaletteColorStore($this->connection($database), $this->access(), $this->createMock(AuditTrail::class), $this->createMock(LegacyConfiguration::class));
+        $ids = [];
+        for ($index = 0; $index < $count; $index++) {
+            PaletteSql::execute($database, "INSERT INTO colors(name,hex,read_only) VALUES(?,?,'')", ['selection-' . $index, sprintf('%06x', $index)]);
+            $ids[] = (int) $database->lastInsertId();
+        }
+        $revisions = [];
+        foreach ($store->findMany($ids) as $color) {
+            $revisions[$color->id] = $color->revision;
+        }
+        $before = $database->query('SELECT * FROM colors ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC);
+        if ($count === 101) {
+            try {
+                $store->delete(9, $ids, $revisions);
+                self::fail('Oversized selection was deleted.');
+            } catch (\InvalidArgumentException $error) {
+                self::assertSame('Invalid color selection.', $error->getMessage());
+            }
+            self::assertSame($before, $database->query('SELECT * FROM colors ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC));
+        } else {
+            $store->delete(9, array_reverse($ids), $revisions);
+            self::assertSame([['id' => 7, 'name' => 'original', 'hex' => 'abc', 'read_only' => '']], $database->query('SELECT * FROM colors')->fetchAll(\PDO::FETCH_ASSOC));
+        }
+        self::assertFalse($database->inTransaction());
+    }
+
+    public static function selectionSizes(): array
+    {
+        return [[100], [101]];
+    }
+
     private function database(): \PDO
     {
         $database = new \PDO('sqlite::memory:', null, null, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);

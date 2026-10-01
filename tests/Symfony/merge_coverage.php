@@ -43,6 +43,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'quoted newline CSV upload succeeds', 'CSV exact name data handoff',
+        'palette large pages keep all rows readable but enable at most 100 deletable choices',
+        'palette 100-color confirmation preserves every selected identity and revision',
+        'palette forged 101-color selection is refused before mutation',
         'silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes',
         'palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work',
         'two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect',

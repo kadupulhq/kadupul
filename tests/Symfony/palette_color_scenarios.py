@@ -5,6 +5,8 @@
 from pathlib import Path
 import csv
 import io
+import json
+import hashlib
 import sys
 import secrets
 from html.parser import HTMLParser
@@ -23,6 +25,7 @@ class PaletteLabels(HTMLParser):
         super().__init__()
         self.links = {}
         self.labels = {}
+        self.enabled = []
         self.href = None
 
     def handle_starttag(self, tag, attrs):
@@ -31,6 +34,8 @@ class PaletteLabels(HTMLParser):
             self.href = attrs.get('href')
         if tag == 'input' and attrs.get('name') == 'ids[]':
             self.labels[attrs.get('value')] = attrs.get('aria-label')
+            if 'disabled' not in attrs:
+                self.enabled.append(attrs.get('value'))
 
     def handle_data(self, data):
         if self.href is not None:
@@ -193,6 +198,44 @@ def verify_palette_colors(h, s, uid, check):
     auth_probe = h.command('php', '-r', _mariadb_palette_authorization_probe(uid))
     check(auth_probe['exit'] == 0 and auth_probe['stdout'] == 'PALETTE_CONCURRENT_AUTHORIZATION_OK' and auth_probe['stderr'] == '',
           'two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
+    limit_name = 'palette-limit-' + secrets.token_hex(6)
+    existing_hex = {value.lower() for value in h.sql('SELECT hex FROM colors').split()}
+    limit_values = []
+    limit_hexes = []
+    for index in range(101):
+        while True:
+            hex_value = f'{secrets.randbelow(0x1000000):06x}'
+            if hex_value not in existing_hex:
+                existing_hex.add(hex_value)
+                break
+        limit_hexes.append(hex_value)
+        limit_values.append(f"('{limit_name}-{index:03d}','{hex_value}','')")
+    h.sql('INSERT INTO colors (name,hex,read_only) VALUES ' + ','.join(limit_values))
+    limit_ids = [int(value) for value in h.sql(f"SELECT id FROM colors WHERE name LIKE '{limit_name}-%' ORDER BY id").split()]
+    try:
+        limit_path = '/app.php/graphing/colors?' + urlencode({'filter': limit_name, 'rows': '5000'})
+        status, body, _ = fetch(limit_path)
+        labels = PaletteLabels(); labels.feed(body)
+        check(status == 200 and len(limit_ids) == 101 and len(labels.labels) == 101
+              and labels.enabled == [str(value) for value in limit_ids[:100]]
+              and 'aria-describedby="palette-selection-help"' in body and 'Select up to 100 colors' in body,
+              'palette large pages keep all rows readable but enable at most 100 deletable choices')
+        confirmation = '/app.php/graphing/colors/actions/delete?' + urlencode({'ids[]': limit_ids[:100]}, doseq=True)
+        status, body, _ = fetch(confirmation)
+        inputs = Inputs(); inputs.feed(body)
+        expected_revisions = {str(identity): hashlib.sha256(json.dumps(
+            [identity, f'{limit_name}-{index:03d}', limit_hexes[index], False], separators=(',', ':')).encode()).hexdigest()
+            for index, identity in enumerate(limit_ids[:100])}
+        check(status == 200 and json.loads(inputs.fields.get('palette_color_delete[selection]', 'null')) == limit_ids[:100]
+              and json.loads(inputs.fields.get('palette_color_delete[revisions]', '{}')) == expected_revisions,
+              'palette 100-color confirmation preserves every selected identity and revision')
+        forged = '/app.php/graphing/colors/actions/delete?' + urlencode({'ids[]': limit_ids}, doseq=True)
+        before = h.sql(f"SELECT id,HEX(name),hex FROM colors WHERE name LIKE '{limit_name}-%' ORDER BY id")
+        check(fetch(forged)[0] == 400
+              and h.sql(f"SELECT id,HEX(name),hex FROM colors WHERE name LIKE '{limit_name}-%' ORDER BY id") == before,
+              'palette forged 101-color selection is refused before mutation')
+    finally:
+        h.sql(f"DELETE FROM colors WHERE name LIKE '{limit_name}-%'")
     h.sql("REPLACE INTO settings (name,value) VALUES ('i18n_language_support','1'),('i18n_default_language','fr')")
     status, body, _ = fetch('/app.php/graphing/colors/import')
     check(status == 200 and 'Importer des couleurs' in body, 'French locale reaches CSV route')

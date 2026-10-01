@@ -31,8 +31,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
         <a href="{{ path('palette_color_list', {reset: 1}) }}">{{ 'Clear'|trans({}, 'palette') }}</a>
     <input type="hidden" name="named" value="false"><label><input type="checkbox" name="named" value="true"{% if filters.named == 'true' %} checked{% endif %}> {{ 'Named Colors'|trans({}, 'palette') }}</label>
     </form>
+    {% set selectionLimit = constant('Kadupul\\Graphing\\Application\\Port\\PaletteColorStore::MAX_DELETE_SELECTION') %}
+    <p id="palette-selection-help">{{ 'Select up to %count% colors from the first %count% rows. Use %count% rows per page or search to select other colors.'|trans({'%count%': selectionLimit}, 'palette') }}</p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
-    <form method="get" action="{{ path('palette_color_delete', filters) }}">
+    <form method="get" action="{{ path('palette_color_delete', filters) }}" aria-describedby="palette-selection-help">
         <table>
             <caption>{{ 'Colors'|trans({}, 'palette') }}</caption>
             <thead><tr>
@@ -52,7 +54,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             {% for preset in page.presets %}
                 {% set displayName = preset.name|trim is not empty ? preset.name : preset.hex %}
                 <tr>
-                    <td><input type="checkbox" name="ids[]" value="{{ preset.id }}"{% if not preset.deletable %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': displayName}, 'palette') }}"></td>
+                    <td><input type="checkbox" name="ids[]" value="{{ preset.id }}"{% if not preset.deletable or loop.index > selectionLimit %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': displayName}, 'palette') }}"></td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                     <td><a href="{{ path('palette_color_edit', filters|merge({id: preset.id})) }}">{{ displayName }}</a></td>
                     <td>{{ preset.hex }} <input type="color" value="#{{ preset.previewHex }}" disabled aria-label="{{ 'Color preview'|trans({}, 'palette') }}"></td><td>{{ (preset.readOnly ? 'Yes' : 'No')|trans({}, 'palette') }}</td><td>{{ preset.otherReferences }}</td>

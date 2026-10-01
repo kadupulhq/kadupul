@@ -237,6 +237,8 @@ def main():
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
     }
+    for index in range(3):
+        failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -258,6 +260,9 @@ def main():
                 required_palette_checks = ['silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes', 'duplicate hex creation is a known validation failure after rollback', 'duplicate hex edit is a known validation failure after rollback', 'duplicate hex edit preserves the original name and hex', 'unnamed palette color has a visible edit link and accessible hex label', 'palette exports neutralize formulas and preserve exact versioned roundtrip names', 'unsupported or malformed palette literal marker rejects the whole import', 'ordinary legacy CSV import preserves its leading apostrophe literally', 'console-only palette account cannot parse or mutate any route']
                 missing = required_palette_checks[int(case.removeprefix('missing-palette-review-check-'))]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-palette-selection-check-'):
+                checks = ['palette large pages keep all rows readable but enable at most 100 deletable choices', 'palette 100-color confirmation preserves every selected identity and revision', 'palette forged 101-color selection is refused before mutation']
+                evidence['checks'].remove(checks[int(case.removeprefix('missing-palette-selection-check-'))])
             elif case == 'missing-palette-write-guards':
                 evidence['checks'].remove('palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
             elif case == 'missing-palette-concurrent-auth':

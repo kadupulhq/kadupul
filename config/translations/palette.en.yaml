@@ -84,3 +84,4 @@
 "CSV requires name and hex columns, with only the supported literal-text marker.": "CSV requires name and hex columns, with only the supported literal-text marker."
 "CSV contains an invalid literal-text marker.": "CSV contains an invalid literal-text marker."
 "Use a downloaded Colors CSV or a CSV with name and hex columns.": "Use a downloaded Colors CSV or a CSV with name and hex columns."
+"Select up to %count% colors from the first %count% rows. Use %count% rows per page or search to select other colors.": "Select up to %count% colors from the first %count% rows. Use %count% rows per page or search to select other colors."

@@ -99,7 +99,7 @@ final class PaletteColorDeleteController
 
     private function ids(mixed $raw): array
     {
-        if (!is_array($raw) || $raw === [] || count($raw) > 100) {
+        if (!is_array($raw) || $raw === [] || count($raw) > PaletteColorStore::MAX_DELETE_SELECTION) {
             throw new \InvalidArgumentException('Invalid color selection.');
         }
         $ids = [];
