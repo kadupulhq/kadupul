@@ -36,7 +36,7 @@ def main():
             bundle.extractall(directory, filter='data')
         stage = Path(directory) / 'kadupul'
 
-        def execute(script, network='none', error=None):
+        def execute(script, network='none', error=None, arguments=()):
             command = ['docker', 'run', '--rm', '--network', network, '--entrypoint', 'php',
                        '--user', f'{os.getuid()}:{os.getgid()}',
                        '--volume', f'{stage}:/var/www/html', '--volume', f'{raw}:/coverage',
@@ -45,7 +45,7 @@ def main():
                        '--workdir', '/var/www/html', args.image,
                        '-d', 'pcov.directory=/var/www/html',
                        '-d', 'pcov.exclude=~/(include/vendor|tests)/|^/var/www/html/var/~',
-                       '-d', 'auto_prepend_file=/harness/coverage.php', script]
+                       '-d', 'auto_prepend_file=/harness/coverage.php', script, *arguments]
             result = subprocess.run(command, capture_output=True, text=True, timeout=180)
             if error is None:
                 if result.returncode:
@@ -53,19 +53,27 @@ def main():
             elif result.returncode == 0 or error not in result.stdout + result.stderr:
                 raise RuntimeError('Expected failure was not observed: ' + error + '\n' + result.stdout + result.stderr)
 
+        def remove_fixture(relative):
+            # Remove fixtures through the verifier's filesystem view. Host
+            # unlink can leave stale bind-mount metadata on Docker Desktop.
+            execute('-r', arguments=[
+                'if (!unlink($argv[1])) { throw new RuntimeException("Cannot remove offline fixture"); }',
+                relative,
+            ])
+
         execute('tools/verify-offline.php')
         execute('tools/dependencies/install-legacy.php')
         manifest_path = stage / 'tools/dependencies/legacy-files.json'
         manifest = json.loads(manifest_path.read_text())
         selected = next(iter(manifest['files']))
-        (stage / selected).unlink()
+        remove_fixture(selected)
         execute('tools/dependencies/install-legacy.php', network='bridge')
         if hashlib.sha256((stage / selected).read_bytes()).hexdigest() != manifest['files'][selected]:
             raise RuntimeError('Dependency repair produced incorrect bytes')
         execute('tools/verify-offline.php')
         font = stage / 'include/fa/webfonts/fa-solid-900.woff2'
         font_bytes = font.read_bytes()
-        font.unlink()
+        remove_fixture('include/fa/webfonts/fa-solid-900.woff2')
         execute('tools/verify-offline.php', error='Missing offline asset: include/fa/webfonts/fa-solid-900.woff2')
         font.write_bytes(font_bytes)
         icon_css = stage / 'include/fa/css/all.css'
