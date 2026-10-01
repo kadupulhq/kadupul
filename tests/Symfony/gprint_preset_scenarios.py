@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """GPRINT preset form, authorization, reference and legacy route checks over HTTP."""
 import re
 from urllib.error import HTTPError
@@ -43,6 +46,10 @@ def verify_gprint_presets(harness, session, user_id, check):
         if realm_row == '0':
             harness.sql(f'INSERT INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},5)')
             grant_added = True
+        concurrent_auth = harness.compose('exec', '-T', '-u', 'www-data', 'web', 'php', '/dev/stdin',
+                                        data='<?php ' + _mariadb_gprint_authorization_probe(user_id), check=False)
+        check(concurrent_auth['exit'] == 0 and concurrent_auth['stdout'].strip() == 'GPRINT_CONCURRENT_AUTHORIZATION_OK',
+              'two GPRINT actors authorize concurrently while policy account and realm revocations serialize')
         status, body, _, _ = fetch('/app.php/graphing/gprint-presets')
         check(status == 200 and 'GPRINT Presets' in body, f'GPRINT realm holder can view Symfony preset list (HTTP {status}: {body[:300]!r})')
 
@@ -91,6 +98,12 @@ def verify_gprint_presets(harness, session, user_id, check):
         check(status == 200 and 'fresh &lt;name&gt;' in remembered,
               'validated GPRINT filters persist in the authenticated user preferences')
         status, reset, _, _ = fetch('/app.php/graphing/gprint-presets?reset=1')
+        unicode_filter = 'é' * 200
+        unicode_status, unicode_body, _, _ = fetch('/app.php/graphing/gprint-presets?' + urlencode({'filter': unicode_filter}))
+        check(unicode_status == 200 and 'value="' + unicode_filter + '"' in unicode_body
+              and fetch('/app.php/graphing/gprint-presets?' + urlencode({'filter': 'é' * 201}))[0] == 400,
+              'GPRINT search accepts 200 Unicode characters and rejects 201')
+        fetch('/app.php/graphing/gprint-presets?reset=1')
         status, explicit_rows, _, _ = fetch('/app.php/graphing/gprint-presets?rows=10')
         check(status == 200 and re.search(r'<option value="10" selected>', explicit_rows) is not None,
               'GPRINT explicit page size stays selected in Twig')
@@ -112,6 +125,16 @@ def verify_gprint_presets(harness, session, user_id, check):
               'server rechecks references and refuses a forged deletion')
 
         unused_path = '/app.php/graphing/gprint-presets/actions/delete?' + urlencode([('ids[]', str(created_id))])
+        parser, _ = form(unused_path, 'gprint_preset_delete[_token]')
+        check('gprint_preset_delete[revisions]' in parser.fields, 'GPRINT deletion carries expected preset revisions')
+        harness.sql(f"UPDATE graph_templates_gprint SET gprint_text='%6.1lf' WHERE id={created_id}")
+        check(fetch(unused_path, parser.fields)[0] == 409
+              and harness.sql(f'SELECT gprint_text FROM graph_templates_gprint WHERE id={created_id}').strip() == '%6.1lf',
+              'stale GPRINT deletion rejects changed preset format without deleting it')
+        parser, _ = form(unused_path, 'gprint_preset_delete[_token]')
+        check(fetch(unused_path, parser.fields | {'gprint_preset_delete[revisions]': '{}'})[0] == 422
+              and harness.sql(f'SELECT COUNT(*) FROM graph_templates_gprint WHERE id={created_id}').strip() == '1',
+              'GPRINT deletion rejects missing revision identities without deleting presets')
         parser, _ = form(unused_path, 'gprint_preset_delete[_token]')
         status, _, location, _ = fetch(unused_path, parser.fields)
         check(status == 200 and harness.sql(f'SELECT COUNT(*) FROM graph_templates_gprint WHERE id={created_id}').strip() == '0',
@@ -152,3 +175,82 @@ def verify_gprint_presets(harness, session, user_id, check):
             escaped_preference = prior_preference.replace("'", "''")
             harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'gprint_presets_filters','{escaped_preference}')")
     print('GPRINT preset HTTP checks passed.', flush=True)
+
+
+def _mariadb_gprint_authorization_probe(actor_id):
+    return '$firstActor = ' + str(actor_id) + ';' + r'''require "include/vendor/autoload.php";
+$installation = new Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration(getcwd());
+$config = $installation->values();
+$connect = static fn():PDO => new PDO('mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['database'],
+    $config['username'],$config['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+$control = $connect();
+$originalEnabled = $control->query('SELECT enabled FROM user_auth WHERE id='.$firstActor)->fetchColumn();
+$policy = $control->query("SELECT value FROM settings WHERE name='auth_method'")->fetchColumn();
+$control->prepare("INSERT INTO user_auth(username,enabled,locked,must_change_password) VALUES (?,'on','','')")
+    ->execute(['gprint-concurrent-'.bin2hex(random_bytes(6))]);
+$secondActor = (int)$control->lastInsertId();
+$control->prepare('INSERT INTO user_auth_realm(user_id,realm_id) VALUES (?,8),(?,5)')->execute([$secondActor,$secondActor]);
+$first = $connect(); $second = $connect(); $revoker = $connect();
+$revoker->exec('SET SESSION innodb_lock_wait_timeout=1');
+$accesses = [];
+try {
+    foreach ([[$first,$firstActor],[$second,$secondActor]] as [$db,$actor]) {
+        $db->beginTransaction();
+        // Both actors already hold the shared policy lock acquired by
+        // LegacyAuthenticatedSession before the feature adapter rechecks them.
+        $db->query("SELECT value FROM settings WHERE name='auth_method' LOCK IN SHARE MODE")->fetchColumn();
+        $connection = new class($db) implements Kadupul\Platform\Contract\DatabaseConnection {
+            public function __construct(private PDO $db) {}
+            public function get(): PDO { return $this->db; }
+        };
+        $console = new class($db,$actor) implements Kadupul\IdentityAccess\Contract\ConsoleAccess {
+            public function __construct(private PDO $db,private int $actor) {}
+            public function consoleActor(): ?Kadupul\IdentityAccess\Contract\Actor {
+                $this->db->query("SELECT value FROM settings WHERE name='auth_method' LOCK IN SHARE MODE")->fetchColumn();
+                return new Kadupul\IdentityAccess\Contract\Actor($this->actor,'concurrent-fixture');
+            }
+            public function canManageDevices(Kadupul\IdentityAccess\Contract\Actor $actor): bool { return false; }
+        };
+        $accesses[] = new Kadupul\Graphing\Infrastructure\Legacy\LegacyGprintPresetAccess($console,$connection);
+    }
+    // An exclusive upgrade here would block against the other actor's
+    // existing shared policy read. Both real feature checks must complete.
+    $first->exec('SET SESSION innodb_lock_wait_timeout=1');
+    $second->exec('SET SESSION innodb_lock_wait_timeout=1');
+    $accesses[0]->assertCurrent($firstActor);
+    $accesses[1]->assertCurrent($secondActor);
+    if (!$first->inTransaction() || !$second->inTransaction()) { throw new RuntimeException('Concurrent authorization lost transaction ownership.'); }
+    foreach (["UPDATE settings SET value='0' WHERE name='auth_method'",
+        "UPDATE user_auth SET enabled='' WHERE id=".$firstActor,
+        'DELETE FROM user_auth_realm WHERE user_id='.$secondActor.' AND realm_id=5'] as $statement) {
+        $blocked = false;
+        try { $revoker->exec($statement); }
+        catch (PDOException $error) { $blocked = ($error->errorInfo[1] ?? null) === 1205; }
+        if (!$blocked) { throw new RuntimeException('A policy, account or realm revoker bypassed the authorization lock.'); }
+    }
+    $first->rollBack(); $second->rollBack();
+    $revoker->exec("UPDATE settings SET value='0' WHERE name='auth_method'");
+    $denied = false;
+    try { $accesses[0]->authorize(); }
+    catch (Kadupul\Graphing\Application\Query\GprintPresetAccessDenied) { $denied = true; }
+    if (!$denied) { throw new RuntimeException('Committed policy revocation was ignored.'); }
+    $control->prepare("UPDATE settings SET value=? WHERE name='auth_method'")->execute([$policy]);
+    $revoker->exec("UPDATE user_auth SET enabled='' WHERE id=".$firstActor);
+    $denied = false;
+    try { $accesses[0]->authorize(); }
+    catch (Kadupul\Graphing\Application\Query\GprintPresetAccessDenied) { $denied = true; }
+    if (!$denied) { throw new RuntimeException('Committed account revocation was ignored.'); }
+    $control->prepare('UPDATE user_auth SET enabled=? WHERE id=?')->execute([$originalEnabled,$firstActor]);
+    $revoker->exec('DELETE FROM user_auth_realm WHERE user_id='.$secondActor.' AND realm_id=5');
+    $denied = false;
+    try { $accesses[1]->authorize(); }
+    catch (Kadupul\Graphing\Application\Query\GprintPresetAccessDenied) { $denied = true; }
+    if (!$denied) { throw new RuntimeException('Committed realm revocation was ignored.'); }
+} finally {
+    foreach ([$first,$second] as $db) { if ($db->inTransaction()) { $db->rollBack(); } }
+    $control->prepare("UPDATE settings SET value=? WHERE name='auth_method'")->execute([$policy]);
+    $control->prepare('UPDATE user_auth SET enabled=? WHERE id=?')->execute([$originalEnabled,$firstActor]);
+    $control->prepare('DELETE FROM user_auth_realm WHERE user_id=?')->execute([$secondActor]);
+    $control->prepare('DELETE FROM user_auth WHERE id=?')->execute([$secondActor]);
+}
+echo 'GPRINT_CONCURRENT_AUTHORIZATION_OK';'''

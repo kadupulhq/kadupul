@@ -28,6 +28,14 @@ final class GprintPresetFiltersTest extends TestCase
         self::assertSame('fresh <name>', GprintPresetFilters::fromQuery(['filter' => 'fresh <name>'], 25)->filter);
     }
 
+    public function testSearchLimitCountsUnicodeCharacters(): void
+    {
+        $filter = str_repeat('é', 200);
+        self::assertSame($filter, GprintPresetFilters::fromQuery(['filter' => $filter], 25)->filter);
+        $this->expectException(\InvalidArgumentException::class);
+        GprintPresetFilters::fromQuery(['filter' => str_repeat('é', 201)], 25);
+    }
+
     public function testItRejectsNestedValuesUnsupportedSortAndUnboundedPageSizes(): void
     {
         foreach ([

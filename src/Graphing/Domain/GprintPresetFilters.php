@@ -39,7 +39,7 @@ final readonly class GprintPresetFilters
         $sort = $query['sort_column'] ?? 'name';
         $direction = strtoupper($query['sort_direction'] ?? 'ASC');
         $hasGraphs = $query['has_graphs'] ?? ($defaultHasGraphs ? 'true' : 'false');
-        if (strlen($filter) > 200 || preg_match('//u', $filter) !== 1 || str_contains($filter, "\0")
+        if (mb_strlen($filter, 'UTF-8') > 200 || preg_match('//u', $filter) !== 1 || str_contains($filter, "\0")
             || !in_array($sort, self::SORTS, true) || !in_array($direction, ['ASC', 'DESC'], true)
             || !in_array($hasGraphs, ['true', 'false'], true) || $rows < 1) {
             throw new \InvalidArgumentException('Invalid GPRINT preset filters.');

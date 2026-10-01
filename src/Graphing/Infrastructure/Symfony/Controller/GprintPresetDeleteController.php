@@ -54,7 +54,10 @@ final class GprintPresetDeleteController
             return new Response($translator->trans('One or more selected GPRINT Presets no longer exist.', [], 'gprint'), 404, $headers);
         }
         $used = array_values(array_filter($presets, static fn(GprintPreset $preset): bool => !$preset->isDeletable()));
-        $form = $forms->create(GprintPresetDeletionType::class, ['selection' => json_encode($ids, JSON_THROW_ON_ERROR)], [
+        $form = $forms->create(GprintPresetDeletionType::class, [
+            'selection' => json_encode($ids, JSON_THROW_ON_ERROR),
+            'revisions' => json_encode(array_column($presets, 'revision', 'id'), JSON_THROW_ON_ERROR),
+        ], [
             'action' => $urls->generate('gprint_preset_delete', ['ids' => $ids] + $filters),
         ]);
         $form->handleRequest($request);
@@ -67,16 +70,26 @@ final class GprintPresetDeleteController
             if (!is_array($selected) || $selected !== $ids) {
                 $form->addError(new FormError($translator->trans('The selected GPRINT Presets changed. Reload before continuing.', [], 'gprint')));
             }
+            $revisions = json_decode((string) $form->get('revisions')->getData(), true);
+            if (is_array($revisions)) {
+                ksort($revisions, SORT_NUMERIC);
+            }
+            if (!is_array($revisions) || array_keys($revisions) !== $ids || array_filter($revisions, static fn(mixed $revision): bool => !is_string($revision) || preg_match('/\A[a-f0-9]{64}\z/D', $revision) !== 1) !== []) {
+                $form->addError(new FormError($translator->trans('The selected GPRINT Presets changed. Reload before continuing.', [], 'gprint')));
+            }
             if ($used !== []) {
                 $form->addError(new FormError($translator->trans('GPRINT Presets in use by a graph or graph template cannot be deleted.', [], 'gprint')));
             }
             if ($form->isValid()) {
                 try {
-                    $delete($ids);
+                    $delete($ids, $revisions);
                     return new RedirectResponse($urls->generate('gprint_preset_list', ['deleted' => 1] + $filters), 303, $headers);
                 } catch (GprintPresetAccessDenied $error) {
                     return new Response($translator->trans('Access denied.', [], 'gprint'), $error->unauthenticated ? 401 : 403, $headers);
                 } catch (\InvalidArgumentException $error) {
+                    if ($error->getMessage() === 'A GPRINT Preset changed. Reload before deleting.') {
+                        $status = 409;
+                    }
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'gprint')));
                 } catch (\Throwable) {
                     $status = 502;

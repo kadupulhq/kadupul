@@ -49,7 +49,7 @@ final class GprintPresetMariaDbTest extends TestCase
             $configuration = $this->createMock(LegacyConfiguration::class);
             $configuration->method('values')->willReturn(['collector_id' => 1]);
             $store = new LegacyGprintPresetStore($database, $access, $this->createMock(AuditTrail::class), $configuration);
-            foreach ([fn() => $store->save(42, null, 'New', '%5.2lf', null), fn() => $store->delete(42, [1])] as $mutation) {
+            foreach ([fn() => $store->save(42, null, 'New', '%5.2lf', null), fn() => $store->delete(42, [1], [1 => str_repeat('0', 64)])] as $mutation) {
                 try {
                     $mutation();
                     self::fail('Nontransactional table was accepted.');
@@ -115,7 +115,9 @@ final class GprintPresetMariaDbTest extends TestCase
             $configuration = $this->createMock(LegacyConfiguration::class);
             $configuration->method('values')->willReturn(['collector_id' => 1]);
             $store = new LegacyGprintPresetStore($database, $this->createMock(GprintPresetAccess::class), $this->createMock(AuditTrail::class), $configuration);
-            $store->delete(42, [1]);
+            $preset = $store->find(1);
+            self::assertNotNull($preset);
+            $store->delete(42, [1], [1 => $preset->revision]);
             self::assertTrue($attempted);
             self::assertFalse($db->inTransaction());
             self::assertSame(0, (int) $db->query('SELECT COUNT(*) FROM graph_templates_gprint')->fetchColumn());

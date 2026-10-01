@@ -21,6 +21,6 @@ interface GprintPresetStore
     public function list(GprintPresetFilters $filters): GprintPresetPage;
     public function save(int $actorId, ?int $id, string $name, string $gprintText, ?string $revision): int;
 
-    /** @param list<int> $ids */
-    public function delete(int $actorId, array $ids): void;
+    /** @param list<int> $ids @param array<int, string> $revisions */
+    public function delete(int $actorId, array $ids, array $revisions): void;
 }

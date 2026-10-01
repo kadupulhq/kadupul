@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A GPRINT Preset changed. Reload before deleting.": "Un préréglage GPRINT a changé. Rechargez la page avant de le supprimer."
+
 "GPRINT Presets": "Préréglages GPRINT"
 "Add GPRINT Preset": "Ajouter un préréglage GPRINT"
 "Edit GPRINT Preset": "Modifier le préréglage GPRINT"

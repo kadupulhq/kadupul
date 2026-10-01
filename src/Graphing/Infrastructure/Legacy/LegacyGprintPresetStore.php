@@ -146,7 +146,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             return $savedId;
         } catch (\Throwable $error) {
             if ($ownsTransaction && $db->inTransaction()) {
-                $db->rollBack();
+                $this->rollbackOwned($db, $error);
             }
             throw $error;
         } finally {
@@ -154,11 +154,15 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
         }
     }
 
-    public function delete(int $actorId, array $ids): void
+    public function delete(int $actorId, array $ids, array $revisions): void
     {
         $ids = array_values(array_unique($ids));
         sort($ids, SORT_NUMERIC);
         if ($ids === [] || count($ids) > 100 || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1) !== []) {
+            throw new \InvalidArgumentException('Invalid GPRINT preset selection.');
+        }
+        ksort($revisions, SORT_NUMERIC);
+        if (array_keys($revisions) !== $ids || array_filter($revisions, static fn(mixed $revision): bool => !is_string($revision) || preg_match('/\A[a-f0-9]{64}\z/D', $revision) !== 1) !== []) {
             throw new \InvalidArgumentException('Invalid GPRINT preset selection.');
         }
         $db = $this->database->get();
@@ -178,11 +182,18 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             $outcome = AuditEvent::FAILED;
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
             $suffix = $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
-            $query = $db->prepare('SELECT id FROM graph_templates_gprint WHERE id IN (' . $placeholders . ') ORDER BY id' . $suffix);
+            $query = $db->prepare('SELECT id, name, gprint_text, hash FROM graph_templates_gprint WHERE id IN (' . $placeholders . ') ORDER BY id' . $suffix);
             $query->execute($ids);
-            $found = array_map('intval', $query->fetchAll(\PDO::FETCH_COLUMN));
+            $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $found = array_map('intval', array_column($rows, 'id'));
             if ($found !== $ids) {
                 throw new \InvalidArgumentException('One or more selected GPRINT Presets no longer exist.');
+            }
+            foreach ($rows as $row) {
+                $id = (int) $row['id'];
+                if (!hash_equals($this->revision($id, (string) $row['name'], (string) $row['gprint_text'], (string) $row['hash']), $revisions[$id])) {
+                    throw new \InvalidArgumentException('A GPRINT Preset changed. Reload before deleting.');
+                }
             }
             $refs = $db->prepare('SELECT gprint_id, local_graph_id, graph_template_id FROM graph_templates_item WHERE gprint_id IN (' . $placeholders . ') ORDER BY gprint_id, graph_template_id, local_graph_id' . $suffix);
             $refs->execute($ids);
@@ -200,11 +211,23 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             $outcome = AuditEvent::SUCCEEDED;
         } catch (\Throwable $error) {
             if ($ownsTransaction && $db->inTransaction()) {
-                $db->rollBack();
+                $this->rollbackOwned($db, $error);
             }
             throw $error;
         } finally {
             $this->record($actorId, 'graphing.gprint.delete', $target, $decision, $outcome);
+        }
+    }
+
+    private function rollbackOwned(\PDO $db, \Throwable $error): void
+    {
+        try {
+            $confirmed = $db->rollBack();
+        } catch (\Throwable $rollbackError) {
+            throw new \RuntimeException('GPRINT rollback could not be confirmed.', 0, $rollbackError);
+        }
+        if (!$confirmed) {
+            throw new \RuntimeException('GPRINT rollback could not be confirmed.', 0, $error);
         }
     }
 
@@ -233,7 +256,8 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
             try {
                 // Inspect the table this connection will actually mutate,
                 // including a temporary table that shadows a permanent one.
-                $definition = $db->query('SHOW CREATE TABLE `' . $table . '`')->fetch(\PDO::FETCH_NUM);
+                $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
+                $definition = $query === false ? false : $query->fetch(\PDO::FETCH_NUM);
             } catch (\PDOException $error) {
                 if (in_array($table, $optional, true) && ($error->errorInfo[1] ?? null) === 1146) {
                     continue;
@@ -246,7 +270,9 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
         }
         // Dependency and authorization gap locks must also work when the
         // session default was configured as READ COMMITTED.
-        $db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false) {
+            throw new \RuntimeException('GPRINT transaction isolation could not be confirmed.');
+        }
     }
 
     private function validate(string $value, string $field): void

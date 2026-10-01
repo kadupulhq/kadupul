@@ -22,6 +22,8 @@ def main():
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
         'gprint_presets.php',
+        'src/Graphing/Application/Command/DeleteGprintPresets.php',
+        'src/Graphing/Domain/GprintPresetFilters.php',
         'src/Graphing/Infrastructure/Legacy/LegacyGprintPresetStore.php',
         'src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php',
         'src/Graphing/Infrastructure/Symfony/Controller/GprintPresetController.php',
@@ -179,6 +181,11 @@ def main():
         'missing-gprint-handoff': 'Incomplete Symfony integration checks',
         'missing-gprint-saved': 'Incomplete Symfony integration checks',
         'missing-gprint-rows': 'Incomplete Symfony integration checks',
+        'missing-gprint-concurrent-auth': 'Incomplete Symfony integration checks',
+        'missing-gprint-expected-revisions': 'Incomplete Symfony integration checks',
+        'missing-gprint-stale-delete': 'Incomplete Symfony integration checks',
+        'missing-gprint-malformed-revisions': 'Incomplete Symfony integration checks',
+        'missing-gprint-unicode-filter': 'Incomplete Symfony integration checks',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
@@ -248,7 +255,12 @@ def main():
             elif case.startswith('missing-gprint-'):
                 checks = {'handoff': 'preset format handoff preserves literal RRD format text',
                           'saved': 'nested GPRINT saved flag cannot trigger an uncontrolled error',
-                          'rows': 'GPRINT explicit page size stays selected in Twig'}
+                          'rows': 'GPRINT explicit page size stays selected in Twig',
+                          'concurrent-auth': 'two GPRINT actors authorize concurrently while policy account and realm revocations serialize',
+                          'expected-revisions': 'GPRINT deletion carries expected preset revisions',
+                          'stale-delete': 'stale GPRINT deletion rejects changed preset format without deleting it',
+                          'malformed-revisions': 'GPRINT deletion rejects missing revision identities without deleting presets',
+                          'unicode-filter': 'GPRINT search accepts 200 Unicode characters and rejects 201'}
                 evidence['checks'].remove(checks[case.removeprefix('missing-gprint-')])
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64

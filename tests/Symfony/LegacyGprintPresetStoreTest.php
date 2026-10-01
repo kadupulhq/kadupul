@@ -18,6 +18,7 @@ use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class LegacyGprintPresetStoreTest extends TestCase
 {
@@ -115,24 +116,88 @@ final class LegacyGprintPresetStoreTest extends TestCase
     public function testItDeletesOnlyUnreferencedPresetsAndRollsBackDeniedMutations(): void
     {
         try {
-            $this->store->delete(42, [1, 3]);
+            $this->store->delete(42, [1, 3], $this->revisions([1, 3]));
             self::fail('An in-use preset was deleted.');
         } catch (\InvalidArgumentException $error) {
             self::assertStringContainsString('cannot be deleted', $error->getMessage());
         }
         self::assertSame(3, (int) $this->pdo->query('SELECT COUNT(*) FROM graph_templates_gprint')->fetchColumn());
-        $this->store->delete(42, [3]);
+        $this->store->delete(42, [3], $this->revisions([3]));
         self::assertSame(2, (int) $this->pdo->query('SELECT COUNT(*) FROM graph_templates_gprint')->fetchColumn());
 
         $this->sessionAccess->actor = null;
         try {
-            $this->store->delete(42, [2]);
+            $this->store->delete(42, [2], $this->revisions([2]));
             self::fail('An expired actor performed a deletion.');
         } catch (GprintPresetAccessDenied $error) {
             self::assertTrue($error->unauthenticated);
         }
         self::assertFalse($this->pdo->inTransaction());
         self::assertSame(2, (int) $this->pdo->query('SELECT COUNT(*) FROM graph_templates_gprint')->fetchColumn());
+    }
+
+    private function revisions(array $ids): array
+    {
+        $revisions = [];
+        foreach ($ids as $id) {
+            $preset = $this->store->find($id);
+            self::assertNotNull($preset);
+            $revisions[$id] = $preset->revision;
+        }
+        return $revisions;
+    }
+
+    #[DataProvider('changedPresetFields')]
+    public function testDeletionRejectsEveryChangedPresetField(string $field): void
+    {
+        $expected = $this->revisions([3]);
+        $this->pdo->exec("UPDATE graph_templates_gprint SET " . $field . "='changed' WHERE id=3");
+        try {
+            $this->store->delete(42, [3], $expected);
+            self::fail('A changed preset was deleted.');
+        } catch (\InvalidArgumentException $error) {
+            self::assertSame('A GPRINT Preset changed. Reload before deleting.', $error->getMessage());
+        }
+        self::assertFalse($this->pdo->inTransaction());
+        self::assertSame(3, (int) $this->pdo->query('SELECT COUNT(*) FROM graph_templates_gprint')->fetchColumn());
+    }
+
+    public static function changedPresetFields(): array
+    {
+        return [['name'], ['gprint_text'], ['hash']];
+    }
+
+    public function testBulkDeletionValidatesAllSnapshotsBeforeDeletingAnyPreset(): void
+    {
+        $id = $this->store->save(42, null, 'Second unused', '%7.1lf', null);
+        $expected = $this->revisions([3, $id]);
+        $this->pdo->exec('UPDATE graph_templates_gprint SET name=\'Changed second\' WHERE id=' . $id);
+        try {
+            $this->store->delete(42, [3, $id], $expected);
+            self::fail('A partially stale selection was deleted.');
+        } catch (\InvalidArgumentException $error) {
+            self::assertStringContainsString('changed', $error->getMessage());
+        }
+        self::assertSame(4, (int) $this->pdo->query('SELECT COUNT(*) FROM graph_templates_gprint')->fetchColumn());
+        self::assertFalse($this->pdo->inTransaction());
+    }
+
+    #[DataProvider('invalidRevisionMaps')]
+    public function testMalformedDeletionSnapshotsCannotMutate(array $expected): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        try {
+            $this->store->delete(42, [3], $expected);
+        } finally {
+            self::assertFalse($this->pdo->inTransaction());
+            self::assertSame(3, (int) $this->pdo->query('SELECT COUNT(*) FROM graph_templates_gprint')->fetchColumn());
+        }
+    }
+
+    public static function invalidRevisionMaps(): array
+    {
+        return [[[]], [[2 => str_repeat('0', 64)]], [[3 => 42]], [[3 => 'short']],
+            [[3 => str_repeat('0', 64), 4 => str_repeat('0', 64)]], [['03' => str_repeat('0', 64)]]];
     }
 
     public function testAuditEventsContainOutcomeButNoPresetContents(): void
@@ -150,7 +215,7 @@ final class LegacyGprintPresetStoreTest extends TestCase
     {
         $this->pdo->beginTransaction();
         $this->pdo->exec("UPDATE graph_templates_gprint SET name='Caller change' WHERE id=3");
-        foreach ([fn() => $this->store->save(42, null, 'New', '%5.2lf', null), fn() => $this->store->delete(42, [3])] as $mutation) {
+        foreach ([fn() => $this->store->save(42, null, 'New', '%5.2lf', null), fn() => $this->store->delete(42, [3], $this->revisions([3]))] as $mutation) {
             try {
                 $mutation();
                 self::fail('Caller-owned transaction was accepted.');
@@ -167,7 +232,7 @@ final class LegacyGprintPresetStoreTest extends TestCase
     public function testRemoteCollectorCannotMutateEvenWithAnAccessibleDatabase(): void
     {
         $this->configuration->collectorId = 2;
-        foreach ([fn() => $this->store->save(42, null, 'New', '%5.2lf', null), fn() => $this->store->delete(42, [3])] as $mutation) {
+        foreach ([fn() => $this->store->save(42, null, 'New', '%5.2lf', null), fn() => $this->store->delete(42, [3], $this->revisions([3]))] as $mutation) {
             try {
                 $mutation();
                 self::fail('Collector mutation was accepted.');

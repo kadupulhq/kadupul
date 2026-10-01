@@ -14,10 +14,10 @@ final readonly class DeleteGprintPresets
 {
     public function __construct(private GprintPresetAccess $access, private GprintPresetStore $presets) {}
 
-    /** @param list<int> $ids */
-    public function __invoke(array $ids): void
+    /** @param list<int> $ids @param array<int, string> $revisions */
+    public function __invoke(array $ids, array $revisions): void
     {
         $actor = $this->access->authorize();
-        $this->presets->delete($actor->id, $ids);
+        $this->presets->delete($actor->id, $ids, $revisions);
     }
 }

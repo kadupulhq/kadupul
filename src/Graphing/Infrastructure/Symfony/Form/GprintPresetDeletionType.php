@@ -17,6 +17,7 @@ final class GprintPresetDeletionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('selection', HiddenType::class);
+        $builder->add('revisions', HiddenType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

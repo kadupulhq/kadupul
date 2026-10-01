@@ -1969,7 +1969,7 @@ function gprint_feature_call(string $root, array $target, int $depth = 0): bool
         // needs a fresh review before its calls can certify feature access.
         $path = $root . '/src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php';
         return is_file($path) && hash_file('sha256', $path)
-            === '987a4076da5ec7a8802e21030bfe83bee660df258f697849a1d7d5a6780b26ca';
+            === 'f19a1508e84c3cc2fa4cfaa0f224d07f5036a4b3effa16fa58eab7bbe902b8dc';
     }
     if ($depth >= CALL_DEPTH) {
         return false;
