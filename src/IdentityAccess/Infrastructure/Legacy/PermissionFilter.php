@@ -29,7 +29,7 @@ final class PermissionFilter
         strURL += <?php print json_encode('&' . $template_field . '=', $json_flags); ?> + $(<?php print json_encode('#' . $template_field, $json_flags); ?>).val();
         <?php } ?>
         strURL += '&associated=' + $('#associated').is(':checked');
-        strURL += '&filter=' + $('#filter').val();
+        strURL += '&filter=' + encodeURIComponent($('#filter').val());
         strURL += '&header=false';
         loadPageNoHeader(strURL);
     }

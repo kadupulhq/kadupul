@@ -94,6 +94,9 @@ function input_validate_input_number($value)
 }
 function db_execute_prepared($sql, $params = [])
 {
+    if (($GLOBALS['scenario']['write_error'] ?? false) && (str_starts_with($sql, 'REPLACE INTO user_auth_perms') || str_starts_with($sql, 'UPDATE `user_auth` SET `policy_') || str_starts_with($sql, 'UPDATE `user_auth_group` SET `policy_'))) {
+        return false;
+    }
     return $GLOBALS['db']->prepare($sql)->execute($params);
 }
 function db_execute($sql)
@@ -191,7 +194,7 @@ register_shutdown_function(static function () use ($db, $group, $initial_session
     // marker through the native validity helper after the controller writes.
     $perms_valid = is_user_perms_valid($session['sess_user_id']);
     $next_valid = null;
-    if ($operation === 'bulk' || ($operation === 'membership' && isset($scenario['replace']))) {
+    if (in_array($operation, array('add', 'policy', 'bulk'), true) || ($operation === 'membership' && isset($scenario['replace']))) {
         $program = <<<'PHP'
 $config = array('cacti_db_version' => '1.2.33');
 $_SESSION = array('sess_user_id' => 42, 'sess_user_perms_key' => 0);
@@ -214,9 +217,11 @@ PHP;
     $principal = $group ? 'group_id' : 'user_id';
     $realm_table = $group ? 'user_auth_group_realm' : 'user_auth_realm';
     $perm_table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
-    print json_encode(['next_valid' => $next_valid, 'memberships' => $db->query('SELECT * FROM user_auth_group_members ORDER BY group_id, user_id')->fetchAll(PDO::FETCH_ASSOC), 'realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $session, 'perms_valid' => $perms_valid, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output, 'policies' => $db->query('SELECT id, policy_graphs, policy_trees, policy_hosts, policy_graph_templates FROM ' . ($group ? 'user_auth_group' : 'user_auth') . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'membership' => $GLOBALS['membership'] ?? null], JSON_THROW_ON_ERROR);
+    print json_encode(['controller_returned' => $GLOBALS['controller_returned'] ?? false, 'next_valid' => $next_valid, 'memberships' => $db->query('SELECT * FROM user_auth_group_members ORDER BY group_id, user_id')->fetchAll(PDO::FETCH_ASSOC), 'realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $session, 'perms_valid' => $perms_valid, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output, 'policies' => $db->query('SELECT id, policy_graphs, policy_trees, policy_hosts, policy_graph_templates FROM ' . ($group ? 'user_auth_group' : 'user_auth') . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'membership' => $GLOBALS['membership'] ?? null], JSON_THROW_ON_ERROR);
 });
+$controller_returned = false;
 require $root . ($group ? '/user_group_admin.php' : '/user_admin.php');
+$controller_returned = true;
 
 if ($operation === 'membership' && !isset($scenario['replace'])) {
     $membership = array(

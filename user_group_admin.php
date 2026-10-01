@@ -251,10 +251,17 @@ function update_policies()
 {
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
+    $updated = false;
     foreach ($policies as $p) {
         if (isset_request_var($p)) {
-            db_execute_prepared("UPDATE `user_auth_group` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')));
+            if (db_execute_prepared("UPDATE `user_auth_group` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')))) {
+                $updated = true;
+            }
         }
+    }
+
+    if ($updated) {
+        reset_group_perms(get_filter_request_var('id'));
     }
 
     header('Location: user_group_admin.php?action=edit&header=false&tab=' . get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));

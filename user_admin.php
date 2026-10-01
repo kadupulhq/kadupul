@@ -73,10 +73,17 @@ function update_policies()
 {
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
+    $updated = false;
     foreach ($policies as $p) {
         if (isset_request_var($p)) {
-            db_execute_prepared("UPDATE `user_auth` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')));
+            if (db_execute_prepared("UPDATE `user_auth` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')))) {
+                $updated = true;
+            }
         }
+    }
+
+    if ($updated) {
+        reset_user_perms(get_filter_request_var('id'));
     }
 
     header('Location: user_admin.php?action=user_edit&header=false&tab=' . get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));
@@ -360,9 +367,10 @@ function form_save()
         /* ==================================================== */
 
         $add_button_clicked = false;
+        $permission_saved = false;
 
         if (isset_request_var('add_graph_x')) {
-            db_execute_prepared(
+            $permission_saved = db_execute_prepared(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 1)',
@@ -371,7 +379,7 @@ function form_save()
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_tree_x')) {
-            db_execute_prepared(
+            $permission_saved = db_execute_prepared(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 2)',
@@ -380,7 +388,7 @@ function form_save()
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_host_x')) {
-            db_execute_prepared(
+            $permission_saved = db_execute_prepared(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 3)',
@@ -389,7 +397,7 @@ function form_save()
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_graph_template_x')) {
-            db_execute_prepared(
+            $permission_saved = db_execute_prepared(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 4)',
@@ -400,6 +408,9 @@ function form_save()
         }
 
         if ($add_button_clicked == true) {
+            if ($permission_saved) {
+                reset_user_perms(get_filter_request_var('id'));
+            }
             header('Location: user_admin.php?action=user_edit&header=false&tab=graph_perms_edit&id=' . get_nfilter_request_var('id'));
             exit;
         }
