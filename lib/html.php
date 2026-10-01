@@ -1671,7 +1671,7 @@ function draw_menu($user_menu = '')
 
             $glyph = '<i class="menu_glyph ' . html_escape($glyph) . '"></i>';
 
-            print "<li class='menuitem' role='menuitem' aria-haspopup='true' id='$id'><a class='menu_parent active' href='#'>$glyph<span>$header_name</span></a>";
+            print "<li class='menuitem' role='menuitem' aria-haspopup='menu' id='$id'><a class='menu_parent active' href='#'>$glyph<span>$header_name</span></a>";
             print "<ul role='menu' id='{$id}_div' style='display:block;'>";
 
             /* pass 2: loop through each top level item and render it */
@@ -2169,10 +2169,10 @@ function html_show_tabs_left()
                 $i++;
             }
 
-            print "<li><a id='$id' role='tab' class='lefttab" . (isset($tab['selected']) ? " selected' aria-selected='true'" : "' aria-selected='false'") . " href='" . html_escape($tab['url']) . "' aria-label='" . html_escape($tab['title']) . "'><span class='fa glyph_$id' aria-hidden='true'></span><span class='text_$id'>" . html_escape($tab['title']) . "</span></a><a id='menu-$id' class='maintabs-submenu' href='#' aria-label='" . html_escape($tab['title']) . "' aria-haspopup='true'>" . html_icon('submenu', '', array('aria-hidden' => 'true')) . "</a></li>";
+            print "<li><a id='$id' role='tab' class='lefttab" . (isset($tab['selected']) ? " selected' aria-selected='true'" : "' aria-selected='false'") . " href='" . html_escape($tab['url']) . "' aria-label='" . html_escape($tab['title']) . "'><span class='fa glyph_$id' aria-hidden='true'></span><span class='text_$id'>" . html_escape($tab['title']) . "</span></a><a id='menu-$id' class='maintabs-submenu' href='#' aria-label='" . html_escape($tab['title']) . "' aria-haspopup='menu'>" . html_icon('submenu', '', array('aria-hidden' => 'true')) . "</a></li>";
         }
 
-        print "<li class='ellipsis maintabs-submenu-ellipsis'><a id='menu-ellipsis' role='tab' aria-selected='false' class='submenu-ellipsis' href='#' aria-label='" . __esc('Show All') . "' aria-haspopup='true'>" . html_icon('submenu', '', array('aria-hidden' => 'true')) . "</a></li>";
+        print "<li class='ellipsis maintabs-submenu-ellipsis'><a id='menu-ellipsis' role='tab' aria-selected='false' class='submenu-ellipsis' href='#' aria-label='" . __esc('Show All') . "' aria-haspopup='menu'>" . html_icon('submenu', '', array('aria-hidden' => 'true')) . "</a></li>";
 
         print '</ul></nav></div>';
     }
