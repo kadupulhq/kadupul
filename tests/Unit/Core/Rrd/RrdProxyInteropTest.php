@@ -237,7 +237,8 @@ test('a proxy session exchanges keys, checks the fingerprint and carries command
         'rsa_public_key' => $client['public'], 'rsa_private_key' => $client['private'],
         // Stored by hand, so case and blanks around it do not matter.
         'rrdp_fingerprint' => ' ' . strtoupper($proxy['fingerprint']) . ' ',
-        'path_rrdtool_default_font' => '/usr/share/fonts/DejaVuSans.ttf',
+        // fontconfig ignores blanks in a family name, which is how a proxy gets one.
+        'path_rrdtool_default_font' => 'DejaVuSans',
     ), array(
         'proxy_private_key' => $proxy['private'], 'proxy_public_key' => $proxy['public'], 'client_fingerprint' => $client['fingerprint'],
         'replies' => array('info' => array($long, "last_update = 1700000060\nOK u:0.00 s:0.00 r:0.00\n")),
@@ -246,7 +247,7 @@ test('a proxy session exchanges keys, checks the fingerprint and carries command
         'connected' => true,
         'output' => $long . 'last_update = 1700000060',
         'problems' => array(),
-        'proxy_received' => array('setenv RRD_DEFAULT_FONT /usr/share/fonts/DejaVuSans.ttf', 'setcnn encryption off', 'info ./sample.rrd', 'quit'),
+        'proxy_received' => array('setenv RRD_DEFAULT_FONT DejaVuSans', 'setcnn encryption off', 'info ./sample.rrd', 'quit'),
     ));
 })->with(array('kadupul', 'rrdproxy'));
 
@@ -391,12 +392,12 @@ PHP;
         ->toBe(array(false, array('CACTI2RRDP ERROR: Public RSA Key Exchange - The proxy reply exceeds 16384 bytes.'), 16384 + 7));
 });
 
-test('a font path the proxy would split or keep quotes in is not sent', function () {
+test('a font name the proxy would split or keep quotes in is not sent', function () {
     $client = rrd_proxy_interop_key();
     $proxy = rrd_proxy_interop_key();
     $result = rrd_proxy_interop_session($this, null, array(
         'rsa_public_key' => $client['public'], 'rsa_private_key' => $client['private'], 'rrdp_fingerprint' => $proxy['fingerprint'],
-        'path_rrdtool_default_font' => "/usr/share/fonts/Deja Vu's.ttf",
+        'path_rrdtool_default_font' => "Deja Vu's Sans",
     ), array('proxy_private_key' => $proxy['private'], 'proxy_public_key' => $proxy['public'], 'client_fingerprint' => $client['fingerprint']));
     expect($result)->toBe(array(
         'connected' => true,
@@ -405,6 +406,25 @@ test('a font path the proxy would split or keep quotes in is not sent', function
         'proxy_received' => array('setcnn encryption off', 'info ./sample.rrd', 'quit'),
     ));
 });
+
+// RRDtool hands the value to Pango, which cannot load a font file by its path.
+test('a Default Font that names no font is not sent', function ($font) {
+    $client = rrd_proxy_interop_key();
+    $proxy = rrd_proxy_interop_key();
+    $result = rrd_proxy_interop_session($this, null, array(
+        'rsa_public_key' => $client['public'], 'rsa_private_key' => $client['private'], 'rrdp_fingerprint' => $proxy['fingerprint'],
+        'path_rrdtool_default_font' => $font,
+    ), array('proxy_private_key' => $proxy['private'], 'proxy_public_key' => $proxy['public'], 'client_fingerprint' => $client['fingerprint']));
+    expect($result)->toBe(array(
+        'connected' => true,
+        'output' => '',
+        'problems' => array(),
+        'proxy_received' => array('setcnn encryption off', 'info ./sample.rrd', 'quit'),
+    ));
+})->with(array(
+    'a font file path' => array('/usr/share/fonts/DejaVuSans.ttf'),
+    'a fontconfig pattern' => array('DejaVuSans:bold'),
+));
 
 test('a silent proxy is given up on when the key exchange times out', function () {
     if (!function_exists('socket_create_pair')) {

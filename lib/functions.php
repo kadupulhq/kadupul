@@ -6,6 +6,7 @@
  */
 
 require_once __DIR__ . '/path_helpers.php';
+require_once __DIR__ . '/graph_fonts.php';
 
 /**
  * title_trim - takes a string of text, truncates it to $max_length and appends
@@ -133,17 +134,9 @@ function read_graph_config_option($config_name, $force = false)
  */
 function graph_font_size_filter($size)
 {
-    if (!is_numeric($size)) {
-        return false;
-    }
+    graph_font_resolver();
 
-    $points = (float) $size;
-
-    if (!is_finite($points) || $points <= 4 || $points > 72) {
-        return false;
-    }
-
-    return $size;
+    return \Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsSize($size) ? $size : false;
 }
 
 /**
@@ -159,15 +152,9 @@ function graph_font_size_filter($size)
  */
 function graph_font_size($size, $default)
 {
-    if (is_numeric($size) && is_finite((float) $size) && (float) $size > 72) {
-        return 72;
-    }
+    graph_font_resolver();
 
-    if (graph_font_size_filter($size) === false) {
-        return $default;
-    }
-
-    return (float) $size;
+    return \Kadupul\Graphing\Domain\Font\GraphFontResolver::size($size, (float) $default);
 }
 
 /**

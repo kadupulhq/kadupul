@@ -201,6 +201,10 @@ require $root . '/lib/html_utility.php';
 require $root . '/lib/mib_cache.php';
 require $root . '/lib/variables.php';
 require $root . '/lib/rrd.php';
+// A parity scenario also loads a frozen copy of the code it replaced.
+foreach ($scenario['require'] ?? array() as $file) {
+    require $root . '/' . $file;
+}
 
 $plugins_integrated = array();
 $_COOKIE = $scenario['cookies'] ?? array();

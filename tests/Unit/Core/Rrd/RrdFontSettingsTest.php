@@ -6,6 +6,13 @@
 require_once dirname(__DIR__, 3) . '/Helpers/RrdCharacterization.php';
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
+/** Script lines that define the font setting filters and the resolver they call. */
+function rrd_font_settings_filters(string $root): string
+{
+    return 'require_once ' . var_export($root . '/lib/graph_fonts.php', true) . ';'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');';
+}
+
 test('every graph font size setting refuses sizes RRDtool cannot draw', function () {
     $names = array('title_size', 'legend_size', 'axis_size', 'unit_size');
     $values = array('', 'abc', '4', '4.5', '12', '72', '72.5', '1e400', '-8');
@@ -42,7 +49,7 @@ test('settings without a filter accept any value', function () {
 test('the profile page leaves a font size it refuses unsaved', function () {
     $root = dirname(__DIR__, 4);
     $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
-        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');'
+        . rrd_font_settings_filters($root)
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/auth_profile.php'), 'api_auth_update_user_setting'), true) . ');'
         . <<<'PHP'
         $writes = array();
@@ -92,7 +99,7 @@ test('font setting labels keep their translations', function () {
 test('group graph settings store the default for a font size they refuse', function ($submitted, $stored) {
     $root = dirname(__DIR__, 4);
     $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
-        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');'
+        . rrd_font_settings_filters($root)
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/user_group_admin.php'), 'form_save'), true) . ');'
         . <<<'PHP'
         $writes = array();
@@ -136,7 +143,7 @@ test('group graph settings store the default for a font size they refuse', funct
 test('saving all user settings stores the default for a font size they refuse', function ($submitted, $stored) {
     $root = dirname(__DIR__, 4);
     $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
-        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');'
+        . rrd_font_settings_filters($root)
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'save_user_settings'), true) . ');'
         . <<<'PHP'
         $writes = array();
