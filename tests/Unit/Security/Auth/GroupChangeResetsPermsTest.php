@@ -60,13 +60,16 @@ test('deleting a group resets the members it had', function () {
     $result = admin_action_probe_run(array(
         'page' => 'user_group_admin.php',
         'functions' => array('user_group_remove'),
-        'answers' => array(array('assoc', '/SELECT user_id FROM user_auth_group_members WHERE group_id = \?/', array(array('user_id' => 42), array('user_id' => 43)), array(5))),
+        'answers' => array(array('assoc', '/SELECT user_id FROM user_auth_group_members WHERE group_id = \? FOR UPDATE/', array(array('user_id' => 42), array('user_id' => 43)), array(5))),
         'call' => 'user_group_remove(5)',
     ));
 
     $deleted = admin_action_probe_writes($result, '/^DELETE FROM user_auth_group_members/');
 
-    expect($deleted)->toHaveCount(1)
+    expect(array_column($result['executed'], 'sql')[0])->toBe('BEGIN')
+        ->and(array_column($result['executed'], 'sql')[count($result['executed']) - 1])->toBe('COMMIT')
+        ->and($result['reads'][0]['sql'])->toBe('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE')
+        ->and($deleted)->toHaveCount(1)
         ->and($result['resets'])->toBe(array('user:42', 'user:43'));
 });
 

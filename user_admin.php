@@ -196,29 +196,11 @@ function form_actions()
                 input_validate_input_number($matches[1]);
                 /* ==================================================== */
 
-                if (get_nfilter_request_var('drp_action') == '1') {
-                    // Selecting the parent writes nothing once the group is
-                    // gone, so a delete racing the check above adds no row.
-                    db_execute_prepared(
-                        'REPLACE INTO user_auth_group_members
-						(user_id, group_id)
-						SELECT ?, id
-						FROM user_auth_group
-						WHERE id = ?',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                } else {
-                    db_execute_prepared(
-                        'DELETE FROM user_auth_group_members
-						WHERE user_id = ?
-						AND group_id = ?',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                }
+                user_group_update_membership($matches[1], get_nfilter_request_var('id'), get_nfilter_request_var('drp_action') == '1');
+
             }
         }
 
-        reset_user_perms(get_nfilter_request_var('id'));
 
         header('Location: user_admin.php?action=user_edit&header=false&tab=permsgr&id=' . get_nfilter_request_var('id'));
         exit;

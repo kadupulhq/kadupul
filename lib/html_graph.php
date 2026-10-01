@@ -387,7 +387,7 @@ function html_graph_preview_filter($page, $action, $devices_where = '', $templat
 		$(function() {
 			refreshIsLogout = false;
 			refreshIsLogout = false;
-			refreshMSeconds = <?php print read_user_setting('page_refresh')*1000;?>;
+			refreshMSeconds = <?php print (int) read_user_setting('page_refresh')*1000;?>;
 
 			setupPageTimeout();
 

@@ -16,6 +16,7 @@ function user_group_membership_run(array $request, array $existing = array(5)): 
     $answers = array();
 
     foreach ($existing as $id) {
+        $answers[] = array('cell', '/^SELECT id FROM user_auth_group WHERE id = \? FOR UPDATE$/', $id, array($id));
         $answers[] = array('cell', '/^SELECT COUNT\(\*\) FROM user_auth_group WHERE id = \?$/', 1, array($id));
     }
 
@@ -51,8 +52,8 @@ test('adding a user to an existing group writes through the parent group', funct
 
     expect($result['messages'])->toBe(array())
         ->and($write)->toHaveCount(1)
-        ->and($write[0]['sql'])->toContain('SELECT ?, id FROM user_auth_group WHERE id = ?')
-        ->and($write[0]['params'])->toBe(array(7, '5'))
+        ->and($write[0]['sql'])->toContain('VALUES (?, ?)')
+        ->and($write[0]['params'])->toBe(array('5', 7))
         ->and($result['resets'])->toBe(array('user:7'));
 });
 
@@ -62,5 +63,5 @@ test('removing a membership of a missing group still clears the row', function (
 
     expect($result['messages'])->toBe(array())
         ->and($delete)->toHaveCount(1)
-        ->and($delete[0]['params'])->toBe(array(7, '999'));
+        ->and($delete[0]['params'])->toBe(array('999', 7));
 });

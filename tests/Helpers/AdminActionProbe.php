@@ -118,6 +118,9 @@ function db_execute($sql, $log = true) {
     $GLOBALS['executed'][] = array('sql' => probe_normalize($sql), 'params' => array());
     return true;
 }
+function db_begin_transaction() { $GLOBALS['executed'][] = array('sql' => 'BEGIN', 'params' => array()); return true; }
+function db_commit_transaction() { $GLOBALS['executed'][] = array('sql' => 'COMMIT', 'params' => array()); return true; }
+function db_rollback_transaction() { $GLOBALS['executed'][] = array('sql' => 'ROLLBACK', 'params' => array()); return true; }
 function db_fetch_insert_id() { return $GLOBALS['insert_id']; }
 function db_qstr($value) { return "'" . addslashes($value) . "'"; }
 function sql_save($save, $table) {
@@ -154,7 +157,7 @@ PHP;
 
         $program .= "\n" . ($scenario['stubs'] ?? '') . "\n";
 
-        $sources = array('lib/auth.php' => $scenario['auth_functions'] ?? array());
+        $sources = array('lib/auth.php' => array_merge(array('user_group_update_membership'), $scenario['auth_functions'] ?? array()));
         $sources[$scenario['page']] = array_merge($sources[$scenario['page']] ?? array(), $scenario['functions'] ?? array());
 
         foreach ($sources as $file => $functions) {

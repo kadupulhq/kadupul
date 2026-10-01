@@ -76,7 +76,7 @@ function ldap_tls_upgrade(array $settings, int $encrypted_domains): array
 $scenario = json_decode($argv[1], true);
 $GLOBALS['scenario'] = $scenario;
 $GLOBALS['writes'] = array();
-define('LDAP_OPT_X_TLS_NEVER', 0);
+if (!defined('LDAP_OPT_X_TLS_NEVER')) { define('LDAP_OPT_X_TLS_NEVER', 0); }
 function db_install_fetch_cell($sql, $params = array(), $log = true) {
     if (strpos($sql, 'user_domains_ldap') !== false) {
         return array('status' => 1, 'data' => (string) $GLOBALS['scenario']['domains']);
@@ -86,6 +86,8 @@ function db_install_fetch_cell($sql, $params = array(), $log = true) {
 function db_install_execute($sql, $params = array(), $log = true) { $GLOBALS['writes'][] = array($sql, $params); return 1; }
 PHP;
 
+    // Reproduce extension-provided constants even on a runtime without LDAP.
+    $program = "if (!defined('LDAP_OPT_X_TLS_NEVER')) { define('LDAP_OPT_X_TLS_NEVER', 0); }\n" . $program;
     $program .= "\n" . test_php_function_source($source, 'upgrade_ldap_tls_requirement') . "\n";
     $program .= 'upgrade_ldap_tls_requirement(); print json_encode($GLOBALS[\'writes\']);';
 

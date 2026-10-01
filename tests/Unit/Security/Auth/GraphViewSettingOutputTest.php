@@ -10,14 +10,14 @@
  * statements with stored values chosen to break out of the assignment.
  */
 
-function graph_view_setting_output(string $setting, string $stored): string
+function graph_view_setting_output(string $setting, string $stored, string $file = 'graph_view.php'): string
 {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/graph_view.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
     $pattern = '/<\?php (print [^?]*read_user_setting\(\'' . preg_quote($setting, '/') . '\'\)[^?]*;)\?>/';
 
-    expect(preg_match_all($pattern, $source, $matches))->toBe(1);
+    expect(preg_match_all($pattern, $source, $matches))->toBeGreaterThan(0);
 
-    $program = 'function read_user_setting($name, $default = false, $force = false, $user = 0) { return $GLOBALS["argv"][1]; }' . "\n" . $matches[1][0];
+    $program = 'function read_user_setting($name, $default = false, $force = false, $user = 0) { return $GLOBALS["argv"][1]; }' . "\n" . implode("\n", $matches[1]);
 
     $pipes = array();
     $process = proc_open(
@@ -46,3 +46,7 @@ test('a stored page refresh is printed only as a number', function () {
     expect(graph_view_setting_output('page_refresh', '300'))->toBe('300000')
         ->and(graph_view_setting_output('page_refresh', 'x;alert(1)'))->toBe('0');
 });
+
+test('all graph refresh outputs tolerate a nonnumeric stored value', function (string $file) {
+    expect(graph_view_setting_output('page_refresh', 'invalid', $file))->toBe($file === 'lib/html.php' ? '00' : '0');
+})->with(array('graph.php', 'graph_view.php', 'lib/html.php', 'lib/html_graph.php'));

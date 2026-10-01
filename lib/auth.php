@@ -500,11 +500,8 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
 
     if (cacti_sizeof($groups)) {
         foreach ($groups as $g) {
-            $sql[] = '(' . $new_id . ', ' . $g['group_id'] . ')';
+            user_group_update_membership($g['group_id'], $new_id, true);
         }
-
-        db_execute('INSERT IGNORE INTO user_auth_group_members
-			(user_id, group_id) VALUES ' . implode(',', $sql));
     }
 
     api_plugin_hook_function('copy_user', array('template_id' => $template_id, 'new_id' => $new_id));
@@ -571,6 +568,33 @@ function cacti_auth_revoke_user_credentials($user_id)
     db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user_id));
     db_execute_prepared('DELETE FROM user_auth_row_cache WHERE user_id = ?', array($user_id));
     db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($user_id));
+}
+
+/** Serialize membership changes with removal of their parent group. */
+function user_group_update_membership($group_id, $user_id, $add)
+{
+    if (!db_begin_transaction()) {
+        throw new RuntimeException('Unable to begin group membership transaction');
+    }
+
+    try {
+        $group = db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($group_id));
+        if ($group || !$add) {
+            $sql = $add ? 'REPLACE INTO user_auth_group_members (group_id, user_id) VALUES (?, ?)' :
+                'DELETE FROM user_auth_group_members WHERE group_id = ? AND user_id = ?';
+            if (!db_execute_prepared($sql, array($group_id, $user_id))) {
+                throw new RuntimeException('Unable to change group membership');
+            }
+            reset_user_perms($user_id);
+        }
+
+        if (!db_commit_transaction()) {
+            throw new RuntimeException('Unable to commit group membership transaction');
+        }
+    } catch (Throwable $error) {
+        db_rollback_transaction();
+        throw $error;
+    }
 }
 
 /**
@@ -4479,7 +4503,7 @@ function secpass_login_process($username)
         if (trim($password) == '') {
             /* error */
             $error     = true;
-            $error_msg = __('Access Denied!  No password provided by user.');
+            $error_msg = __('Access Denied!  Login Failed.');
 
             cacti_log(sprintf('LOGIN FAILED: No password provided for user %s', $username), false, 'AUTH');
 

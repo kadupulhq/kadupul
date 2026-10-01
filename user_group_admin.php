@@ -201,26 +201,41 @@ function user_group_enable($id)
 
 function user_group_remove($id)
 {
-    // Read the members first: once their rows are gone nothing links them to
-    // this group, and their sessions would keep its realms until logout.
-    $users = array_rekey(
-        db_fetch_assoc_prepared(
-            'SELECT user_id
+    if (!db_begin_transaction()) {
+        throw new RuntimeException('Unable to begin group removal transaction');
+    }
+
+    try {
+        // Membership writers lock this same parent before inserting. The
+        // locking member read sees their committed rows after acquiring it.
+        db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($id));
+        $users = array_rekey(
+            db_fetch_assoc_prepared(
+                'SELECT user_id
 			FROM user_auth_group_members
-			WHERE group_id = ?',
-            array($id)
-        ),
-        'user_id',
-        'user_id'
-    );
+			WHERE group_id = ? FOR UPDATE',
+                array($id)
+            ),
+            'user_id',
+            'user_id'
+        );
 
-    db_execute_prepared('DELETE FROM user_auth_group WHERE id = ?', array($id));
-    db_execute_prepared('DELETE FROM user_auth_group_members WHERE group_id = ?', array($id));
-    db_execute_prepared('DELETE FROM user_auth_group_realm WHERE group_id = ?', array($id));
-    db_execute_prepared('DELETE FROM user_auth_group_perms WHERE group_id = ?', array($id));
+        if (!db_execute_prepared('DELETE FROM user_auth_group WHERE id = ?', array($id)) ||
+            !db_execute_prepared('DELETE FROM user_auth_group_members WHERE group_id = ?', array($id)) ||
+            !db_execute_prepared('DELETE FROM user_auth_group_realm WHERE group_id = ?', array($id)) ||
+            !db_execute_prepared('DELETE FROM user_auth_group_perms WHERE group_id = ?', array($id))) {
+            throw new RuntimeException('Unable to remove group');
+        }
 
-    foreach ($users as $user_id) {
-        reset_user_perms($user_id);
+        foreach ($users as $user_id) {
+            reset_user_perms($user_id);
+        }
+        if (!db_commit_transaction()) {
+            throw new RuntimeException('Unable to commit group removal transaction');
+        }
+    } catch (Throwable $error) {
+        db_rollback_transaction();
+        throw $error;
     }
 }
 
@@ -457,25 +472,8 @@ function form_actions()
                 input_validate_input_number($matches[1]);
                 /* ==================================================== */
 
-                if (get_nfilter_request_var('drp_action') == '1') {
-                    db_execute_prepared(
-                        'REPLACE INTO user_auth_group_members
-						(group_id, user_id)
-						SELECT id, ?
-						FROM user_auth_group
-						WHERE id = ?',
-                        array($matches[1], get_nfilter_request_var('id'))
-                    );
-                } else {
-                    db_execute_prepared(
-                        'DELETE FROM user_auth_group_members
-						WHERE group_id = ?
-						AND user_id = ?',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                }
+                user_group_update_membership(get_nfilter_request_var('id'), $matches[1], get_nfilter_request_var('drp_action') == '1');
 
-                reset_user_perms($matches[1]);
             }
         }
 

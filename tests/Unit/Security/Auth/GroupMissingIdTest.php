@@ -16,6 +16,7 @@ function group_guard_run(string $function, array $request, array $existing = arr
     $answers = array();
 
     foreach ($existing as $id) {
+        $answers[] = array('cell', '/^SELECT id FROM user_auth_group WHERE id = \? FOR UPDATE$/', $id, array($id));
         $answers[] = array('cell', '/^SELECT COUNT\(\*\) FROM user_auth_group WHERE id = \?$/', 1, array($id));
     }
 
@@ -69,8 +70,8 @@ test('a membership or grant row is written only through the parent group', funct
 
     $write = admin_action_probe_writes($result, '/^REPLACE INTO user_auth_group_members/');
 
-    expect($write[0]['sql'])->toContain('SELECT id, ? FROM user_auth_group WHERE id = ?')
-        ->and($write[0]['params'])->toBe(array('42', 5));
+    expect($write[0]['sql'])->toContain('VALUES (?, ?)')
+        ->and($write[0]['params'])->toBe(array(5, '42'));
 });
 
 test('removing a permission from a missing group is refused', function () {

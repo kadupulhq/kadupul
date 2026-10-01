@@ -95,7 +95,10 @@ function time()
     return $GLOBALS['help_now'];
 }
 
-function cacti_debug_backtrace($message) {}
+function cacti_debug_backtrace($message)
+{
+    // This probe records notification output without logging a backtrace.
+}
 
 /* the settings table debounce_run_notification() reads and writes */
 function read_config_option($name)

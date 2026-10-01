@@ -63,7 +63,7 @@ PHP;
     }
 
     $program .= '$user = local_auth_login_process($scenario[\'username\']);';
-    $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'hashes\' => $GLOBALS[\'hashes\']));';
+    $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'error_msg\' => $error_msg, \'hashes\' => $GLOBALS[\'hashes\']));';
 
     $process = proc_open(
         array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state, 'legacy_hash' => $legacy_hash))),
@@ -89,6 +89,7 @@ test('an unknown username runs as many password verifications as a known one', f
         ->and($unknown['user'])->toBe(array())
         ->and($known['error'])->toBeTrue()
         ->and($unknown['error'])->toBeTrue()
+        ->and($known['error_msg'])->toBe($unknown['error_msg'])
         ->and($known['hashes'])->not->toBe(array())
         ->and(count($unknown['hashes']))->toBe(count($known['hashes']));
 })->with(array('wrong password' => 'guess', 'blank password' => ''));
