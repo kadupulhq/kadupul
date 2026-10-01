@@ -84,8 +84,10 @@ collects them through ports before the command is built.
 The settings user and the access user can differ. `read_user_setting()` reads
 the session user (`lib/functions.php:317-323`), not the `$user` argument of
 `rrdtool_function_graph()`, so a report rendered by the poller for a report
-owner (`lib/reports.php:449`) uses site defaults for fonts and dates while the
-access check uses the owner (*inferred*). `RenderContext` keeps that split: the
+owner (`lib/reports.php:417`, `449`) can use the configured guest settings
+when there is no session and `auth_method == 0`; otherwise it follows the
+existing defaults and fallback resolution (`lib/functions.php:324-357`). The
+access check still uses the report owner (*inferred*). `RenderContext` keeps that split: the
 legacy factory reads the session, and `GraphRequest` carries no user.
 A separate `GraphAuthorizationSubject` carries the access identity explicitly
 to `RenderGraph`, so report and remote callers do not inherit session access.
@@ -143,6 +145,8 @@ and where each goes. Database rows that describe the graph go to
 | 42 | `$graph_data_array` mode keys: `print_source`, `get_error`, `export`, `export_filename`, `output_filename`, `export_csv`, `export_realtime`, `graphv`, `output_flag`, `image_format` | `lib/rrd.php:3172-3236`; `GraphOptionsGenerator.php:119-131` | `GraphRequest` |
 | 43 | `$graph_data_array['graph_theme']`, `disable_cache` | `lib/rrd.php:3407-3408`; `lib/boost.php:376` | `GraphRequest` |
 | 44 | `rand()` for gradient variable names | `lib/rrd.php:4960-4961` | `RenderFacts` (name source); the fixture seeds it at `tests/Fixtures/rrd-characterization.php:209` |
+
+| 45 | `auth_method` and configured `guest_user` when there is no session settings user | `lib/functions.php:324-357` | Legacy context factory resolves the guest/settings user; resolved fonts and dates enter `RenderContext` and its fingerprint |
 
 Two findings from this inventory shape the slices:
 
@@ -219,9 +223,23 @@ remote collectors only for plugins with the view capabilities
 (`lib/plugins.php:254`).
 
 So through the 1.3 series an adapter renders `RrdCommand` into those three
-strings exactly as today, runs the hook, adds business hours after it as today
-(`lib/rrd.php:3175`), and sends the result. A golden test pins the strings, and
-a contract test runs a parser written to Thold's rules over them.
+strings exactly as today, runs the hook, and adds business hours after it as
+today (`lib/rrd.php:3175`). The legacy adapter then assembles the final command
+with today's mode and output-path rules into a
+`Domain/Command/LegacySerializedGraphCommand` value. `RrdTransport` accepts
+`RrdCommand|LegacySerializedGraphCommand`: argument lists use the normal
+encoder, while the explicitly tagged legacy value retains the serialized bytes
+and today's local/proxy framing and rejection checks. It is never treated as a
+single argument or tokenized and re-quoted. Only the legacy hook adapter creates
+this compatibility value; URL fields still pass through the existing builder
+and encoders, and no transport gains a shell execution path.
+
+R0 pins the pre-hook strings and post-hook transport bytes for unchanged and
+mutated hooks, including spaces, quoted titles, escaped colons, DEF paths,
+CDEF/VDEF expressions and `RRD_NL`; R7 must keep that round trip passing.
+A separate contract test runs a parser written to Thold's rules over the hook
+strings. The tagged legacy representation remains through 1.3 rather than
+assuming arbitrary plugin output has a lossless argument-list parser.
 
 ### Moves, in dependency order
 
@@ -261,17 +279,23 @@ behaviour and drops the dead branch in the same slice, which then says so.
    cache reads, pending samples, definition queries or transport work
    (`lib/rrd.php:2252`). A denial keeps `GRAPH ACCESS DENIED` and performs
    none of those operations.
-2. Ask the image cache. Today the cache file is named before pending Boost
-   samples are applied, because applying them moves PHP to the server's time
-   zone (PR #705, `ba2bbf521`). If samples were applied, the cache is skipped
-   (`lib/boost.php:459-464`).
-3. Read the definition, collect `RenderFacts`, build the command.
-4. Run the hook adapter and business hours.
-5. Send the command through `RrdTransport` and map the result:
+2. Resolve the candidate cache key from the captured request/context before
+   applying pending samples. This retains #705's name-before-timezone-change
+   behavior (`ba2bbf521`); resolving a key does not read an image.
+3. Invoke `PendingSamples` under the existing Boost/poller/mode conditions
+   (`lib/boost.php:437-465`). Applied updates or a refused update prohibit the
+   cache read for this render. With no updates, consult `RenderedGraphCache`
+   only when the existing caching rules permit it.
+4. On a cache miss or prohibited read, load the definition, collect
+   `RenderFacts` and build the command. Fact collection retains any separate
+   per-source updates required by percentile and summation calls.
+5. Run the hook adapter and business hours, producing the tagged legacy
+   command described above when the compatibility hook boundary is used.
+6. Send the command through `RrdTransport` and map the result:
    `UnrepresentableArgument` to the error image (`lib/rrd.php:2138-2149`), a
    missing RRD file to the error image or error text (`lib/rrd.php:2506-2519`),
    a deleted graph to `false` (`lib/rrd.php:2392-2394`).
-6. Store a PNG in the cache when the mode allows it.
+7. Store a PNG in the cache when the mode allows it.
 
 `RrdTransport` has two implementations, `LocalRrdtool` and `ProxyRrdtool`, as
 the existing plan says. `RenderGraph` owns the proxy session for the whole
@@ -279,11 +303,13 @@ render, as `rrdtool_function_graph()` does now (Issue #502).
 
 ### Authorization in R7
 
-R7 introduces `GraphAuthorizationSubject` in Graphing's render inputs and
-`src/IdentityAccess/Contract/GraphAccess.php`, with an
+R7 introduces both `src/IdentityAccess/Contract/GraphAuthorizationSubject.php`
+and `src/IdentityAccess/Contract/GraphAccess.php`, with an
 `Infrastructure/Legacy/LegacyGraphAccess` adapter. `RenderGraph` receives the
 subject explicitly and depends on `GraphAccess`; the contract takes the graph
-id and that subject. Its legacy adapter calls `is_graph_allowed()` with the
+id and that IdentityAccess contract value. Graphing imports only the published
+IdentityAccess Contract layer, as required by `ArchitectureTest.php:54-55`;
+IdentityAccess never depends on Graphing Domain types. Its legacy adapter calls `is_graph_allowed()` with the
 subject's user id and preserves the per-user cache behavior from #661.
 
 The existing wrapper maps its `$user` argument to that subject. Reports use
@@ -319,12 +345,14 @@ code argues against it:
   result (`lib/boost.php:437-465`). That ordering is use-case logic.
 
 So the cache is a port, `RenderedGraphCache`, that `RenderGraph` calls at
-steps 2 and 6, with one adapter that keeps #705's behaviour: name before the
+steps 2, 3 and 7, with one adapter that keeps #705's behaviour: name before the
 on-demand update, read the opened file's size, write through `tempnam()` and
 `rename()` in the cache directory, skip empty output, purge by directory
 permission (`0c45a6ff5`, `ac5c67539`). Applying pending samples is a second
 port, `PendingSamples`, whose adapter calls `boost_process_poller_output()` on
-`lib/database.php`.
+`lib/database.php`. R8 gates the ordering explicitly: key resolution, pending
+updates, then an optional cache read; updates and refusals yield zero cache
+reads, while unchanged samples retain the eligible cache hit.
 
 ## Entry points and access
 
@@ -443,15 +471,15 @@ and R13 is "Callers moved to Graphing services; wrappers marked
 
 | Slice | Change | Files | Gate | Risk | Rollback |
 | --- | --- | --- | --- | --- | --- |
-| R0 | Characterization: goldens per `RenderContext` field (dark mode, a browser zone, each date format, a non-English locale, theme and viewer fonts) and per mode (thumbnail, SVG, `graphv`, export, CSV, real-time, print source, error text); an input census that records every setting, user setting, cookie and session key a render reads and compares it with the table above; the hook string contract; a render timing script | `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`, `tests/Fixtures/rrd-characterization.php`, new `tests/Fixtures/rrd-characterization/graph-context-*.json`, new `RenderInputCensusTest.php`, `GraphOptionsHookContractTest.php`, `tests/tools/graph_render_timing.php` | The new tests pass against unchanged code | Low; tests only | Revert |
+| R0 | Characterization: goldens per `RenderContext` field (dark mode, a browser zone, each date format, a non-English locale, theme and viewer fonts, no-session guest fonts/dates with `auth_method == 0`) and per mode (thumbnail, SVG, `graphv`, export, CSV, real-time, print source, error text); an input census that records every setting, user setting, cookie and session key a render reads and compares it with the table above; the hook string contract; a render timing script | `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`, `tests/Fixtures/rrd-characterization.php`, new `tests/Fixtures/rrd-characterization/graph-context-*.json`, new `RenderInputCensusTest.php`, `GraphOptionsHookContractTest.php`, `tests/tools/graph_render_timing.php` | The new tests pass against unchanged code | Low; tests only | Revert |
 | R1 | `RenderContext`, `GraphRequest` and `LegacyRenderContextFactory`; built once in `rrdtool_function_graph()`; the Boost key from `RenderContext::fingerprint()` | `src/Graphing/Domain/Render/*`, `src/Graphing/Infrastructure/Legacy/LegacyRenderContextFactory.php`, `lib/rrd.php`, `lib/boost.php` | R0 goldens unchanged; `BoostGraphCacheKeyNativeTest` from #705; the census | Medium: a missed input serves one viewer's image to another | Revert; renamed cache files age out |
 | R2 | Pure helpers to `Domain/Command` (moves 1 to 7); wrappers delegate | `src/Graphing/Domain/Command/*`, `lib/rrd.php`, `lib/functions.php` | `helpers.json`, `graph-gradient*.json`, `graph-business-hours.json`, `graph-cdef-magic.json`, `tests/Unit/Core/Rrd/RrdFontArgumentsTest.php` (#710), `ColourBrightnessTest` | Low | Revert |
 | R3 | `GraphDefinition`, the `GraphDefinitions` port and `LegacyGraphDefinitions` on `db_*`, running today's queries; the render consumes it | `src/Graphing/Domain/GraphDefinition*.php`, `src/Graphing/Application/Port/GraphDefinitions.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphDefinitions.php`, `lib/rrd.php` | All `graph-*.json`; a reader test against the characterization database; per-image timing | Medium | Revert |
 | R4 | `DoctrineGraphDefinitions` on `doctrine.dbal.web_connection` for Symfony routes; read grants added to the read-user list | `src/Graphing/Infrastructure/Persistence/DoctrineGraphDefinitions.php`, `config/services.yaml`, `docs/symfony-migration.md` | Both adapters return equal definitions on the behavior database; the second-connection cost measured on `graph_image.php` | Medium: an extra connection per image if used from a legacy page | Remove the service; R3 remains |
 | R5 | Window, archive choice and options from `GraphDefinition`, `GraphRequest` and `RenderContext` (moves 8 to 11) | `src/Graphing/Domain/Command/GraphOptions.php`, `ArchiveChoice.php`, `src/Graphing/Domain/Render/GraphWindow.php`, `GraphOptionsGenerator.php` (wrapper), `lib/rrd.php` | `graph-options*.json`, `graph-relative-window.json`, `GraphOptionsGeneratorCoverageTest` | Medium | Revert |
 | R6 | `GraphCommandBuilder`: `DEF`, `CDEF`, `VDEF`, legend, items and export columns; `RenderFacts` collected through ports (moves 12 to 19). Split into R6a (definitions) and R6b (legend, items, export) if the diff passes about 1,500 lines | `src/Graphing/Domain/Command/*`, `src/Graphing/Application/CollectRenderFacts.php`, ports and Legacy adapters, `lib/rrd.php` | All `graph-*.json`; `RrdGraphCfFallbackTest`, `RrdEmptyCdefGuardTest`, the VDEF export tests and the RRDtool round trip (`RrdGraphCharacterizationTest.php:334`, `377`, `449`, `471`) | High: the largest block; ordering of `DEF` names and caches | Revert; wrappers still hold the old code until R13 |
-| R7 | `RenderGraph`, explicit `GraphAuthorizationSubject`, `GraphAccess` and its legacy adapter, `RrdTransport` (`LocalRrdtool`, `ProxyRrdtool`), `LegacyGraphOptionsHook`; `rrdtool_function_graph()` delegates | `src/Graphing/Application/RenderGraph.php`, `Port/RrdTransport.php`, `src/Graphing/Domain/Render/GraphAuthorizationSubject.php`, `src/IdentityAccess/Contract/GraphAccess.php`, its legacy adapter, `src/Graphing/Infrastructure/Rrd/ProxyRrdtool.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphOptionsHook.php`, `lib/rrd.php` | Explicit report/remote/guest subjects, per-user isolation and zero work on denied cache hits; hook contract; `RrdProxyInteropTest`; `graph-proxy*.json`; the behavior harness graph scenarios | High: authorization identity, plugin hook and proxy session lifetime | Revert |
-| R8 | `RenderedGraphCache` and `PendingSamples` ports with Boost adapters keeping #705 | `src/Graphing/Application/Port/*`, `src/Graphing/Infrastructure/Legacy/BoostImageCache.php`, `LegacyPendingSamples.php`, `lib/boost.php` | `BoostGraphCacheKeyNativeTest`, `BoostGraphCacheFailureTest`, `BoostPngPurgeTest`; cache hit and miss timing | Medium | Revert |
+| R7 | `RenderGraph`, explicit `GraphAuthorizationSubject`, `GraphAccess` and its legacy adapter, `RrdTransport` (`LocalRrdtool`, `ProxyRrdtool`), `LegacyGraphOptionsHook`; `rrdtool_function_graph()` delegates | `src/Graphing/Application/RenderGraph.php`, `Port/RrdTransport.php`, `src/IdentityAccess/Contract/GraphAuthorizationSubject.php`, `src/IdentityAccess/Contract/GraphAccess.php`, its legacy adapter, `src/Graphing/Infrastructure/Rrd/ProxyRrdtool.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphOptionsHook.php`, `lib/rrd.php` | Explicit report/remote/guest subjects, per-user isolation and zero work on denied cache hits; post-hook legacy byte round trip; hook contract; `RrdProxyInteropTest`; `graph-proxy*.json`; the behavior harness graph scenarios | High: authorization identity, plugin hook and proxy session lifetime | Revert |
+| R8 | `RenderedGraphCache` and `PendingSamples` ports with Boost adapters keeping #705 | `src/Graphing/Application/Port/*`, `src/Graphing/Infrastructure/Legacy/BoostImageCache.php`, `LegacyPendingSamples.php`, `lib/boost.php` | `BoostGraphCacheKeyNativeTest`, `BoostGraphCacheFailureTest`, `BoostPngPurgeTest`; key-before-update/read ordering, zero cache reads after updates or refusal; cache hit and miss timing | Medium | Revert |
 | R9 | `graph_image.php` and `graph_json.php` as thin adapters | `graph_image.php`, `graph_json.php`, `src/Graphing/Infrastructure/Legacy/GraphRequestFromLegacyRequest.php` | `entry_points.baseline.tsv` unchanged; `RemoteGraphPermissionTest` (#661); page crawl | Medium | Revert |
 | R10 | Symfony image and JSON routes and a voter reusing R7's `GraphAccess`, per-route cutover flag; legacy URLs kept | `src/Graphing/Infrastructure/Symfony/*`, R7 access contract wiring, `config/services.yaml`, `docs/architecture-alignment.md` | #661 permission tests through the route; guest account; route baseline entry | Medium | Turn the flag off; legacy pages remain |
 | R11 | Template propagation services after their characterization | `src/Graphing/Application/*`, ports, `lib/template.php` (formatting-only PER-CS change first, in its own PR) | New propagation goldens; behavior harness graph creation | High: writes to many graphs | Revert |

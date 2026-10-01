@@ -18,10 +18,10 @@ src/Graphing/
   Domain/            GraphItemType, ConsolidationFunction, DataSourceType enums;
                      RrdCommand (an argument list, not a string); GraphDefinition
     Font/            GraphFont, GraphFontProfile, GraphFontResolver (PR #710)
-    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow;
-                     GraphAuthorizationSubject (explicit access identity)
+    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow
     Command/         GraphCommandBuilder and its parts: DefNames, CdefMagic,
                      LegendText, GradientArea, DateLegend, ThemeArguments,
+                     LegacySerializedGraphCommand (hook compatibility),
                      BusinessHours, GraphOptions, ArchiveChoice
   Application/       RenderGraph, CollectRenderFacts, ExportGraph,
                      CreateDataSourceFile, TuneDataSource
@@ -36,8 +36,9 @@ src/Graphing/
     Symfony/         Graph image and JSON controllers; the graph voter
 ```
 
-R7 also adds the `GraphAccess` contract and legacy adapter in IdentityAccess;
-Graphing passes its explicit authorization subject to that boundary.
+R7 also adds `GraphAuthorizationSubject` and `GraphAccess` in IdentityAccess
+Contract, plus the legacy access adapter. Graphing imports those published
+contract types; IdentityAccess does not import Graphing Domain types.
 
 PR #314 creates the module with the `DeviceTreePlacement` contract. The RRD
 slices add to that module and do not change the contract.
@@ -200,7 +201,9 @@ reads the graph, builds the command and runs it in one function
   `rrd_graph_graph_options` hook and the transport in today's order.
 
 The hook receives and returns three strings that plugins parse, so through 1.3
-an adapter renders the command into those strings exactly as today. The image
+an adapter renders the command into those strings exactly as today. Post-hook command strings keep their bytes in the tagged
+`LegacySerializedGraphCommand` compatibility value; transport framing and
+rejection checks remain. The image
 cache is a port that `RenderGraph` calls before reading anything, not a
 decorator around `RrdTransport`: a hit today skips the definition queries,
 `rrdtool info` and percentile fetches, and the transport never sees the
