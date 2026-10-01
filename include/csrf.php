@@ -221,7 +221,7 @@ function cacti_csrf_external_path_is_safe($path)
     $roots = array($config['base_path']);
     if (!empty($config['path_csrf_web_root'])) {
         $roots[] = $config['path_csrf_web_root'];
-    } elseif (empty($config['is_web']) && empty($_SERVER['DOCUMENT_ROOT'])) {
+    } elseif (empty($_SERVER['DOCUMENT_ROOT'])) {
         return false;
     }
     if (!empty($_SERVER['DOCUMENT_ROOT'])) {
