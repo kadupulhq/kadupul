@@ -1058,7 +1058,9 @@ function classify(string $root, string $path, array $realms, array $early, array
         foreach (walk($stmt) as $node) {
             if ($node instanceof Expr\Include_) {
                 $target = resolve($node->expr, $root, $path);
-                $kind ??= BOOTSTRAP[$target] ?? null;
+                if ($target !== null) {
+                    $kind ??= BOOTSTRAP[$target] ?? null;
+                }
             }
         }
         // auth.php is the gate itself; its own bootstrap include starts it.
