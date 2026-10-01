@@ -171,10 +171,14 @@ input[type="text"] {
     box-sizing: border-box;
 }
 
+/*
+ * The label draws the box. The native control stays where it sits so focus
+ * scrolls the drawn box into view, and lets clicks through to the label.
+ */
 input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name^="reindex"]) {
     opacity: 0;
-    top: -50px;
-    position: fixed;
+    position: absolute;
+    pointer-events: none;
 }
 
 /*
@@ -268,7 +272,7 @@ input[type="checkbox"]:checked + label, input[type="radio"]:not([name^="reindex"
     vertical-align: middle;
 }
 
-.checkboxSwitch input {
+.checkboxSwitch input[type="checkbox"] {
     /* Hidden without display:none, which would take the control out of the tab order. */
     position: absolute;
     width: 1px;
@@ -2480,7 +2484,7 @@ input:checked + .checkboxSlider:before {
     vertical-align: middle;
 }
 
-.radioSwitch input {
+.radioSwitch input[type="radio"] {
     /* Hidden without display:none, which would take the control out of the tab order. */
     position: absolute;
     width: 1px;
