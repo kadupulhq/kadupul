@@ -170,3 +170,14 @@ test('form tags are read only where the browser parses markup', function (string
     'svg' => array('<svg></svg><form method="post"></form>'),
     'cdata' => array('<![CDATA[x]]><form method="post"></form>'),
 ));
+
+test('only a base element the browser parses decides where relative actions go', function (string $expected) {
+    $result = rewriteCsrfMagicPages(array(str_replace('{F}', '', $expected)));
+
+    expect($result['pages'][0])->toBe(str_replace('{F}', $result['field'], $expected));
+})->with(array(
+    'base hidden in textarea before a real one' => array("<textarea><base x='</textarea><base href='https://evil.example/'><a x='>'></a><form method=post action=x.php></form><form method=post>{F}</form>"),
+    'base hidden in comment before a real one' => array("<!-- <base x=' --><base href='https://evil.example/'><b x='' --><form method=post action=x.php></form><form method=post>{F}</form>"),
+    'unclosed base' => array("<form method=post action=x.php></form><form method=post>{F}</form><base href='/kadupul/"),
+    'base text in textarea only' => array("<textarea><base href='https://evil.example/'></textarea><form method=post action=x.php>{F}</form>"),
+));
