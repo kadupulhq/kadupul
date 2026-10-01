@@ -1927,7 +1927,7 @@ function update_host_status($status, $host_id, &$ping, $ping_availability, $prin
 		total_polls = ?,
 		failed_polls = ?,
 		availability = ?
-		WHERE hostname = ?
+		WHERE id = ?
 		AND deleted = ""',
         array(
             $host['status'],
@@ -1942,7 +1942,7 @@ function update_host_status($status, $host_id, &$ping, $ping_availability, $prin
             $host['total_polls'],
             $host['failed_polls'],
             $host['availability'],
-            $host['hostname']
+            $host_id
         )
     );
 }
@@ -7423,6 +7423,34 @@ function get_include_relpath($path)
     return $npath;
 }
 
+/**
+ * get_compiled_asset_path - the web-root-relative path of the copy that
+ * asset-map:compile wrote for an include, such as
+ * public/assets/include/js/jquery-3Xa9fQ1.js
+ *
+ * @param $relpath - the include path relative to the web root
+ *
+ * @return - the compiled path, or an empty string when there is no manifest
+ *   or the manifest does not map $relpath
+ */
+function get_compiled_asset_path($relpath)
+{
+    global $config;
+
+    static $manifest = null;
+
+    if ($manifest === null) {
+        // The installer can emit includes before Composer's autoloader loads.
+        if (!class_exists(\Kadupul\Platform\Infrastructure\Asset\CompiledAssetManifest::class)) {
+            return '';
+        }
+
+        $manifest = new \Kadupul\Platform\Infrastructure\Asset\CompiledAssetManifest(rtrim($config['base_path'], '/') . '/public/assets/manifest.json', 'public');
+    }
+
+    return $manifest->publicPath($relpath) ?? '';
+}
+
 function get_md5_include_js($path, $async = false)
 {
     global $config;
@@ -7432,10 +7460,16 @@ function get_md5_include_js($path, $async = false)
         return '';
     }
 
+    // A compiled file carries its digest in the name, so it needs no query.
+    $src = get_compiled_asset_path($relpath);
+    if ($src === '') {
+        $src = $relpath . '?' . get_md5_hash($path);
+    }
+
     if ($async) {
-        return '<script type=\'text/javascript\' ' . CactiSecureHeaders::getNonceAttribute() . ' src=\'' . $config['url_path'] . $relpath . '?' . get_md5_hash($path) . '\' async></script>' . PHP_EOL;
+        return '<script type=\'text/javascript\' ' . CactiSecureHeaders::getNonceAttribute() . ' src=\'' . $config['url_path'] . $src . '\' async></script>' . PHP_EOL;
     } else {
-        return '<script type=\'text/javascript\' ' . CactiSecureHeaders::getNonceAttribute() . ' src=\'' . $config['url_path'] . $relpath . '?' . get_md5_hash($path) . '\'></script>' . PHP_EOL;
+        return '<script type=\'text/javascript\' ' . CactiSecureHeaders::getNonceAttribute() . ' src=\'' . $config['url_path'] . $src . '\'></script>' . PHP_EOL;
     }
 }
 
@@ -7448,7 +7482,12 @@ function get_md5_include_css($path)
         return '';
     }
 
-    return '<link href=\'' . $config['url_path'] . $relpath . '?' . get_md5_hash($relpath) . '\' type=\'text/css\' rel=\'stylesheet\'>' . PHP_EOL;
+    $href = get_compiled_asset_path($relpath);
+    if ($href === '') {
+        $href = $relpath . '?' . get_md5_hash($relpath);
+    }
+
+    return '<link href=\'' . $config['url_path'] . $href . '\' type=\'text/css\' rel=\'stylesheet\'>' . PHP_EOL;
 }
 
 function is_resource_writable($path)

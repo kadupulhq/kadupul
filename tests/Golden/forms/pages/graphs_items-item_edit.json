@@ -1,0 +1,42 @@
+{
+    "session": {
+        "form_change_actions": {
+            "color_id": "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;changeColorId()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [
+        "div id=\"graphs_items_item_edit1\"",
+        "table id=\"graphs_items_item_edit1_child\""
+    ],
+    "script_ids": [
+        "alpha",
+        "cdef_id",
+        "color_id",
+        "data_template_id",
+        "graph_edit",
+        "graph_type_id",
+        "host_id",
+        "row_alpha",
+        "row_cdef_id",
+        "row_color_id",
+        "row_consolidation_function_id",
+        "row_dash_offset",
+        "row_dashes",
+        "row_gprint_id",
+        "row_hard_return",
+        "row_line_width",
+        "row_shift",
+        "row_task_item_id",
+        "row_text_format",
+        "row_textalign",
+        "row_value",
+        "row_vdef_id",
+        "shift",
+        "task_item_id",
+        "task_item_id_input",
+        "task_item_id_wrap"
+    ],
+    "script_names": []
+}
