@@ -173,6 +173,30 @@ test('a cross-origin formaction submitter does not carry the token', () => {
   assert.equal(dom.submit(form), true);
 });
 
+test('a local POST override of a foreign action receives a token only when submitted locally', () => {
+  const dom = pageDom();
+  const form = dom.form({ action: 'https://evil.example/collect' });
+  const local = dom.button(form, { formaction: '/kadupul/save' });
+  dom.load().CsrfMagic.end();
+  assert.equal(dom.submit(form), false);
+  assert.equal(dom.submit(form, local), true);
+  assert.equal(dom.submit(form), false);
+});
+
+test('fallback forms disable existing tokens when a foreign submission is possible', () => {
+  const dom = pageDom({ submitter: false });
+  const foreign = dom.form({ action: 'https://evil.example/collect' }, [{ name: field, value: token }]);
+  const ambiguous = dom.form({ action: 'graphs.php' }, [{ name: field, value: token }]);
+  dom.button(ambiguous, { formaction: 'https://evil.example/collect' });
+  const local = dom.form({ action: 'graphs.php' }, [{ name: field, value: token }]);
+  const script = dom.load();
+  script.CsrfMagic.end();
+  script.CsrfMagic.end();
+  assert.equal(dom.submit(foreign), false);
+  assert.equal(dom.submit(ambiguous), false);
+  assert.equal(dom.submit(local), true);
+});
+
 test('without SubmitEvent.submitter a form with a cross-origin formaction gets no token', () => {
   const dom = pageDom({ submitter: false });
   const form = dom.form({ action: 'graphs.php' });
@@ -217,4 +241,21 @@ test('the jQuery fallback adds the token to same-origin posts only', () => {
   window.jQuery.ajax({ type: 'POST', url: 'https://other.example/', data: 'action=save' });
   window.jQuery.ajax({ type: 'GET', url: '/kadupul/graphs.php', data: 'action=save' });
   assert.deepEqual(calls, [withToken, 'action=save', 'action=save']);
+});
+
+test('jQuery origin and method checks use effective defaults and overrides', () => {
+  const calls = [];
+  const jQuery = {
+    ajax: settings => calls.push(settings),
+    ajaxSettings: { url: 'https://other.example/', type: 'POST' },
+    extend: (_deep, target, ...rest) => Object.assign(target, ...rest),
+    param: data => new URLSearchParams(data).toString(),
+  };
+  const script = load({ jQuery });
+  script.jQuery.ajax({ type: 'POST', data: 'action=save' });
+  script.jQuery.ajax({ url: '/kadupul/save', data: 'action=save' });
+  script.jQuery.ajax({ url: '/kadupul/save', method: 'GET', data: 'action=save' });
+  assert.equal(calls[0].data, 'action=save');
+  assert.equal(calls[1].data, withToken);
+  assert.equal(calls[2].data, 'action=save');
 });

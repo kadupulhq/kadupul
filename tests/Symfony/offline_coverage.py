@@ -86,8 +86,9 @@ def main():
         execute('tools/verify-offline.php')
         for fields, message in [
             ({'revision': 'invalid'}, 'Invalid legacy dependency revision'),
-            ({'files': {'include/vendor/../escape.php': '0' * 64}}, 'Invalid legacy dependency path'),
-            ({'files': {selected: 'invalid'}}, 'Invalid legacy dependency checksum'),
+            ({'files': {'include/vendor/../escape.php': '0' * 64}, 'patches': {}}, 'Invalid legacy dependency path'),
+            ({'files': {selected: 'invalid'}, 'patches': {}}, 'Invalid legacy dependency checksum'),
+            ({'files': {}}, 'Invalid legacy dependency patch'),
             ({'patches': {patched: 'invalid'}}, 'Invalid legacy dependency patch'),
             ({'patches': {patched: patch | {'replacements': ['invalid']}}}, 'Invalid legacy dependency patch'),
         ]:
