@@ -208,15 +208,21 @@ jobs:
     - name: Check PHP version
       run: php -v
       
-    # Upstream plugin default branches move without notice; pin each to a
-    # revision this branch's page crawl passes with.
-    - name: Checkout Thold Plugin
+    # Intropage's LTS integration requires thold_functions.php and get_allowed_thresholds().
+    # Thold develop has removed that API; use its compatible published 1.8.2 release.
+    - name: Checkout compatible Thold Plugin
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         repository: Cacti/plugin_thold
-        ref: 5d08f0d2d35de6f69f85d34722942771651a3e5a
+        ref: 1eb406bd0f81f3204358cce7bd43c8bb5adc8e4a # v1.8.2, Cacti >= 1.2.25
         path: plugin_thold
         persist-credentials: false
+
+    - name: Verify Thold's LTS integration API
+      run: |
+        test -s plugin_thold/thold_functions.php
+        php -l plugin_thold/thold_functions.php
+        grep -q '^function get_allowed_thresholds(' plugin_thold/thold_functions.php
 
     - name: Checkout Monitor Plugin
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
