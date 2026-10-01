@@ -11,6 +11,13 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('INPUT_WHITELIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/input_whitelist.php');
+    if (in_array('--audit', $_SERVER['argv'], true)) {
+        $coverageFilter->includeFile($coverageRoot . '/lib/template.php');
+        $coverageFilter->includeFile($coverageRoot . '/lib/graph_template_input.php');
+    }
+}
 if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
@@ -171,6 +178,15 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('INPUT_WHITELIST_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $whitelistSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Unit/InputWhitelistNativeTest.php');
+    foreach ($coverageFilter->files() as $file) {
+        $source = $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
+        $whitelistSources[] = substr($source, strlen($coverageRoot) + 1);
+    }
+    $whitelistCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/input-whitelist-native.php', INPUT_WHITELIST_NATIVE_SCENARIO, $whitelistSources);
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
@@ -198,6 +214,12 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
         }
         if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
             throw new RuntimeException('Unable to preserve child process coverage');
+        }
+        if (isset($GLOBALS['whitelistCoverageEvidence'])) {
+            if (!defined('INPUT_WHITELIST_NATIVE_COMPLETED')) {
+                throw new RuntimeException('Whitelist CLI completion evidence missing');
+            }
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['whitelistCoverageEvidence'], INPUT_WHITELIST_NATIVE_COMPLETED);
         }
     });
 });

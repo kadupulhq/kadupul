@@ -8,6 +8,7 @@
  */
 
 require(__DIR__ . '/../include/cli_check.php');
+require_once(__DIR__ . '/../lib/input_whitelist.php');
 require_once($config['base_path'] . '/lib/utility.php');
 require_once($config['base_path'] . '/lib/poller.php');
 require_once($config['base_path'] . '/lib/template.php');
@@ -119,68 +120,43 @@ if ($audit) {
         exit(1);
     }
 
-    if ($id !== false) {
-        if ($id <= 0) {
-            print 'ERROR: Data Input id \'' . $id . '\' is invalid. Please provide a positive integer.' . PHP_EOL;
-            exit(1);
-        }
-
-        $id_hash = db_fetch_cell_prepared('SELECT hash FROM data_input WHERE id = ?', [$id]);
-
-        if (empty($id_hash)) {
-            print 'ERROR: Data Input id \'' . $id . '\' was not found or has an empty hash.' . PHP_EOL;
-
-            exit(1);
-        }
-    } else {
-        $id_hash = false;
-    }
-
-    $input_db = db_fetch_assoc('SELECT id, name, hash, input_string
-		FROM data_input
-		WHERE input_string != ""');
-
-    if (file_exists($config['input_whitelist'])) {
-        $input_ws = json_decode(file_get_contents($config['input_whitelist']), true);
-    } else {
-        $input_ws = array();
-    }
-
-    $pushes = array();
-
-    if (cacti_sizeof($input_db)) {
-        // format data for easier consumption
-        $input = array();
-        foreach ($input_db as $value) {
-            if ($id_hash === false || $id_hash == $value['hash']) {
-                if ($push && isset($input_ws[$value['hash']])) {
-                    if ($value['input_string'] != $input_ws[$value['hash']]) {
-                        $pushes[$value['id']] = $value['name'];
-                    }
-                }
-
-                $input[$value['hash']] = $value['input_string'];
-            } else {
-                if (isset($input_ws[$value['hash']])) {
-                    $input[$value['hash']] = $input_ws[$value['hash']];
-                } else {
-                    $input[$value['hash']] = $value['input_string'];
-                }
-            }
-        }
-
-        file_put_contents($config['input_whitelist'], json_encode($input));
-        print 'SUCCESS: Data Input Whitelist file \'' . $config['input_whitelist'] . '\' successfully updated.' . PHP_EOL;
-
-        if (cacti_sizeof($pushes)) {
-            foreach ($pushes as $data_input_method => $name) {
-                print 'NOTE: Pushing Out Data Input Method: ' . $name . ' (' . $data_input_method . ')' . PHP_EOL;
-                push_out_data_input_method($data_input_method);
-            }
-        }
-    } else {
-        print 'ERROR: No Data Input records found.' . PHP_EOL;
+    if ($id !== false && $id <= 0) {
+        print 'ERROR: Data Input id \'' . $id . '\' is invalid. Please provide a positive integer.' . PHP_EOL;
         exit(1);
+    }
+    $empty = $missing = false;
+    try {
+        // The leaf is supervised for at most 30 seconds; leave time to return
+        // its outcome. The lock covers local snapshot/replacement, never collector I/O.
+        $pushes = data_input_whitelist_update($config['input_whitelist'], static function () use ($id, &$empty, &$missing): array {
+            $id_hash = false;
+            if ($id !== false) {
+                $id_hash = db_fetch_cell_prepared('SELECT hash FROM data_input WHERE id = ?', [$id]);
+                if (empty($id_hash)) {
+                    $missing = true;
+                    throw new RuntimeException('Data Input id \'' . $id . '\' was not found or has an empty hash.');
+                }
+            }
+            $input_db = db_fetch_assoc('SELECT id, name, hash, input_string
+                FROM data_input
+                WHERE input_string != ""');
+            if (!cacti_sizeof($input_db)) {
+                $empty = true;
+                throw new RuntimeException('No Data Input records found.');
+            }
+            return [$input_db, $id_hash];
+        }, $push, hrtime(true) / 1e9 + 25);
+    } catch (Throwable $error) {
+        print ($empty ? 'ERROR: No Data Input records found.' : ($missing ? 'ERROR: ' : 'ERROR: Data Input Whitelist update failed: ') . $error->getMessage()) . PHP_EOL;
+        exit(1);
+    }
+    print 'SUCCESS: Data Input Whitelist file \'' . $config['input_whitelist'] . '\' successfully updated.' . PHP_EOL;
+
+    if (cacti_sizeof($pushes)) {
+        foreach ($pushes as $data_input_method => $name) {
+            print 'NOTE: Pushing Out Data Input Method: ' . $name . ' (' . $data_input_method . ')' . PHP_EOL;
+            push_out_data_input_method($data_input_method);
+        }
     }
 } else {
     display_help();
