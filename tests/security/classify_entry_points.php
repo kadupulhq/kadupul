@@ -190,6 +190,21 @@ const SUPERGLOBALS = ['GLOBALS', '_SERVER', '_GET', '_POST', '_FILES', '_COOKIE'
 const ROUTE_ATTRIBUTES = ['Symfony\Component\Routing\Attribute\Route', 'Symfony\Component\Routing\Annotation\Route'];
 const ACCESS_CHECKS = ['consoleActor', 'canManageDevices'];
 const SESSION_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession';
+const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess';
+// Complete reviewed native-identity and persistence handoff, plus its scoped
+// service binding. A changed helper or binding must be reviewed again.
+const ABOUT_AUTHENTICATION_SOURCES = [
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => '6be265184fd79ab202dc361df6353d996cda44531648613fcf08e8f30c31bd96',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => 'f0b7ea43c87184ef542f753be934e2a83c761a2c888b7915bf90dd3d312ed84c',
+    'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '116486046577cec9817ef7413c103f54c9636cc755c2bb4d46a727e002767869',
+    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '7bc1cd5d3b3b0453e32f7a83ef77d569d351baa1bd1d4ce54e02fff9023835eb',
+    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '10dbd02c68320ad3c0e0c2885e1c353e6da23830b1f519092b5499802b566292',
+    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => '1745bbda81910dad3cfc4ad4a890a7260e2a471a65d9321954c914284eb4b6e9',
+    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b6a7a0e78791fe7afb40c2702e76232654ae941349db9c95c4c6d579c2e8ef91',
+    'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
+    'config/services.yaml' => 'b16be8b2f8e818c3ba61c4c8e149dfa185e9e23b1348c249b91a6490772a3c7a',
+];
+
 // The IdentityAccess types whose check methods count as a gate. The adapter
 // is the only implementation, and the realms it checks label the route.
 const ACCESS_TYPES = [
@@ -1974,16 +1989,41 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     return method_checks($root, $type, $callee, $depth + 1, $seen, $handed, $refuses);
 }
 
+/** Select only the exact reviewed About authentication implementation. */
+function authenticated_access_adapter(string $root): string
+{
+    $about = $root . '/src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php';
+    $services = $root . '/config/services.yaml';
+    if (!is_file($about)) {
+        if (is_file($services) && str_contains(file_get_contents($services), ABOUT_ACCESS_ADAPTER)) {
+            fail('About authentication service binding has no reviewed adapter');
+        }
+        return SESSION_ADAPTER;
+    }
+    foreach (ABOUT_AUTHENTICATION_SOURCES as $relative => $hash) {
+        $path = $root . '/' . $relative;
+        if (!is_file($path) || hash_file('sha256', $path) !== $hash) {
+            fail('About authentication handoff is not reviewed: ' . $relative);
+        }
+    }
+    if (glob($root . '/config/services_*.yaml') !== []) {
+        fail('About authentication environment service overrides are not reviewed');
+    }
+    return ABOUT_ACCESS_ADAPTER;
+}
+
 /**
  * @return array<string, int> check method => realm it requires
  */
 function session_realms(string $root, array $files): array
 {
-    // The realm labels are only true while the adapter is the one
-    // implementation of the access contracts.
+    // Console contracts retain their sole implementation. Authenticated-only
+    // About has a separate source-bound implementation with no console realm.
+    $authenticatedAdapter = authenticated_access_adapter($root);
     foreach ($files as $path) {
         foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
-            if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== SESSION_ADAPTER) {
+            if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== SESSION_ADAPTER
+                && !($authenticatedAdapter === ABOUT_ACCESS_ADAPTER && $node->namespacedName?->toString() === ABOUT_ACCESS_ADAPTER)) {
                 foreach ($node->implements as $interface) {
                     if (in_array($interface->toString(), [...ACCESS_TYPES, 'Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess'], true)) {
                         fail($path . ' also implements ' . $interface->toString());
@@ -2134,7 +2174,8 @@ function symfony_routes(string $root, array $files): array
                             }
                         }
                         if (isset($checks['authenticatedActor'])) {
-                            $adapter = load_class($root, SESSION_ADAPTER);
+                            $adapterName = authenticated_access_adapter($root);
+                            $adapter = load_class($root, $adapterName);
                             $contracts = array_map(static fn(Name $name): string => $name->toString(), $adapter?->implements ?? []);
                             if (!in_array('Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess', $contracts, true) || find_method($adapter, 'authenticatedActor') === null) {
                                 fail('AuthenticatedAccess adapter binding is missing');

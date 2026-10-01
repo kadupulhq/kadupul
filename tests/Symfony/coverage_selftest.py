@@ -21,6 +21,11 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php',
+        'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php',
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php',
+        'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php',
         'about.php', 'src/Platform/Infrastructure/Symfony/Controller/AboutController.php',
         'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
@@ -167,8 +172,11 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
+    about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
+    about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
+        'about-authentication-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
@@ -227,12 +235,19 @@ def main():
         output = scratch / 'result.xml'
         for index in range(len(statistics_checks)):
             failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
+        for index in range(len(about_authentication_checks)):
+            failures['missing-about-authentication-check-' + str(index)] = 'Incomplete Symfony integration'
         for case, expected in failures.items():
             data = copy.deepcopy(measured)
             evidence = copy.deepcopy(manifest)
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'about-authentication-test-hash':
+                evidence['source_sha256']['tests/Symfony/about_authentication_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-about-authentication-check-'):
+                missing = about_authentication_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'details-test-hash':
@@ -322,6 +337,52 @@ def main():
             if output.read_text() != 'previous report':
                 raise RuntimeError(f'{case}: invalid measurements replaced the previous report')
             print('PASS ' + case, flush=True)
+
+    database_manifest = json.loads((args.database / 'observations.json').read_text())
+    database_measured = {'php': '', 'files': {}}
+    for path in (args.database / 'raw').glob('coverage-*.json'):
+        report = json.loads(path.read_text())
+        database_measured['php'] = report['php']
+        for source, observation in (report['files'] or {}).items():
+            if source not in database_measured['files']:
+                database_measured['files'][source] = copy.deepcopy(observation)
+            else:
+                existing = database_measured['files'][source]
+                if existing['sha256'] != observation['sha256']:
+                    raise RuntimeError('Conflicting real database source measurements')
+                for line, hit in observation['lines'].items():
+                    existing['lines'][line] = max(existing['lines'].get(line, -1), hit)
+    database_paths = [prefix + 'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
+                      for name in ('AuthenticationDatabaseSessionHandler', 'ReadOnlyDatabaseSessionHandler')]
+    for source in database_paths:
+        if 1 not in database_measured['files'].get(source, {}).get('lines', {}).values():
+            raise RuntimeError('Self-test requires real database-session authentication measurements')
+    with tempfile.TemporaryDirectory(prefix='symfony-database-authentication-negative-') as directory:
+        scratch = Path(directory)
+        (scratch / 'raw').mkdir()
+        output = scratch / 'result.xml'
+        (scratch / 'observations.json').write_text(json.dumps(database_manifest))
+        for source in database_paths:
+            for mutation in ('unmeasured', 'stale'):
+                data = copy.deepcopy(database_measured)
+                observation = data['files'][source]
+                if mutation == 'unmeasured':
+                    observation['lines'] = {line: -1 for line in observation['lines']}
+                    expected = 'Missing measured execution: ' + source.removeprefix(prefix)
+                else:
+                    observation['sha256'] = '0' * 64
+                    expected = 'Covered source differs'
+                (scratch / 'raw/coverage-probe.json').write_text(json.dumps(data))
+                output.write_text('previous report')
+                result = subprocess.run([args.php, str(ROOT / 'tests/Symfony/merge_coverage.php'),
+                                         str(args.unit.resolve()), str(args.files.resolve()),
+                                         str(scratch), str(args.offline.resolve()), str(output)],
+                                        capture_output=True, text=True, timeout=60)
+                if result.returncode == 0 or expected not in result.stdout + result.stderr:
+                    raise RuntimeError(f'{mutation} {source}: unexpected merge result: {result.stdout} {result.stderr}')
+                if output.read_text() != 'previous report':
+                    raise RuntimeError('Invalid database measurements replaced the previous report')
+                print('PASS database-' + mutation + '-' + source.rsplit('/', 1)[-1], flush=True)
 
 
 if __name__ == '__main__':

@@ -1152,6 +1152,96 @@ final class AuthenticatedOnly {
             pass
         (root / 'src/Fixture/OtherAccess.php').unlink()
 
+        # The About-specific adapter is accepted only with the exact reviewed
+        # principal/persistence bundle and actual service binding. Changes to
+        # one delegated helper must invalidate the authentication declaration.
+        checkout = Path(__file__).resolve().parents[2]
+        about_bundle = [
+            'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
+            for name in ('LegacyAboutAccess', 'LegacyBrowserAuthentication',
+                         'BrowserAuthenticationSql', 'NativeAuthenticationSession',
+                         'AuthenticationFileSessionHandler',
+                         'AuthenticationDatabaseSessionHandler', 'SharedSession',
+                         'ReadOnlyDatabaseSessionHandler')
+        ] + ['config/services.yaml']
+        originals = {}
+        for relative in about_bundle:
+            target = root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            originals[relative] = (checkout / relative).read_text()
+            target.write_text(originals[relative])
+        rows = run(root, [])
+        for path, expected in [('app.php/authenticated', 'symfony:authenticated'),
+                               ('app.php/authenticated-unguarded', 'unknown'),
+                               ('app.php/authenticated-late', 'unknown')]:
+            count += 1
+            if rows.get(path, ('missing',))[0] != expected:
+                failures.append('About authenticated first-effect guard: ' + path)
+        for relative in about_bundle:
+            target = root / relative
+            for mutation in ('changed', 'missing'):
+                count += 1
+                if mutation == 'changed':
+                    target.write_text(originals[relative] + '\n// Unreviewed fixture change.\n')
+                else:
+                    target.unlink()
+                try:
+                    run(root, [])
+                    failures.append('About ' + mutation + ' handoff must stop classification: ' + relative)
+                except SystemExit:
+                    pass
+                finally:
+                    target.write_text(originals[relative])
+        changed_guards = [
+            ('LegacyAboutAccess', '$snapshot = $this->session->read();',
+             '$snapshot = []; return new Actor(9, "unverified");'),
+            ('LegacyBrowserAuthentication', "['REMOTE_USER', 'REDIRECT_REMOTE_USER']",
+             "['PHP_AUTH_USER']"),
+            ('LegacyBrowserAuthentication', "$request->attributes->get('_route')",
+             "'platform_about'"),
+            ('NativeAuthenticationSession', "'use_cookies' => false",
+             "'use_cookies' => true"),
+            ('AuthenticationDatabaseSessionHandler', '$statement->rowCount() !== 1', 'false'),
+            ('BrowserAuthenticationSql', "$state !== '00000'", "false"),
+        ]
+        for name, before, after in changed_guards:
+            relative = 'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
+            target = root / relative
+            count += 1
+            if before not in originals[relative]:
+                failures.append('About negative fixture does not change its intended guard: ' + name)
+                continue
+            target.write_text(originals[relative].replace(before, after, 1))
+            try:
+                run(root, [])
+                failures.append('About unreviewed guard must stop classification: ' + name)
+            except SystemExit:
+                pass
+            finally:
+                target.write_text(originals[relative])
+        overrides = root / 'config/services_test.yaml'
+        overrides.write_text('services: {}\n')
+        count += 1
+        try:
+            run(root, [])
+            failures.append('About unreviewed environment service binding must stop classification')
+        except SystemExit:
+            pass
+        finally:
+            overrides.unlink()
+        alternate = root / 'src/Fixture/OtherAccess.php'
+        alternate.write_text("<?php namespace Kadupul\\Fixture; final class OtherAccess implements \\Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess { public function authenticatedActor(): ?Actor { return new Actor(); } }")
+        count += 1
+        try:
+            run(root, [])
+            failures.append('About alternate AuthenticatedAccess implementation must stop classification')
+        except SystemExit:
+            pass
+        finally:
+            alternate.unlink()
+        for relative in about_bundle:
+            (root / relative).unlink()
+
         # A route under an alias is not missed.
         count += 1
         (root / 'src/Fixture/Aliased.php').write_text(ALIASED_CONTROLLER)

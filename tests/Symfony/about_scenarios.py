@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Authenticated-only About page parity against real HTTP and MariaDB."""
 import base64
 import time

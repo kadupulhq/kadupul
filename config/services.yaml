@@ -254,7 +254,7 @@ services:
 
     # About requires an eligible login without a console/object realm.
     Kadupul\IdentityAccess\Contract\AuthenticatedAccess:
-        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess
 
     Kadupul\Platform\Application\Port\ProductVersion:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationProductVersion

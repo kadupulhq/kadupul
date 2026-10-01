@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'about_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -42,6 +42,19 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'About unprotected Basic headers cannot establish a web-server principal',
+        'About Basic identity is verified by Apache before PHP',
+        'About first Basic request restores native identity through the legacy forwarder',
+        'About Basic restoration resumes About without granting console realm 8',
+        'About restored Basic session refuses a revoked account',
+        'About Basic transition publishes a native credential cookie',
+        'About remembered transition publishes protected session and replacement cookies',
+        'About first remembered request restores the native cookie identity',
+        'About remembered restoration resumes About without granting console realm 8',
+        'About remembered restoration consumes and rotates the exact native token',
+        'About consumed remembered token cannot be replayed',
+        'About replacement remembered token establishes a fresh native session',
+        'About restored remembered session refuses a disabled account',
         'About requires login without console realm 8', 'About version and beta are escaped without legacy bootstrap',
         'links deletion cleans direct and group realms', 'links stale reorder rejected', 'links grant deletion failure rolls back link deletion',
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
@@ -187,6 +200,11 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php',
+        'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php',
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php',
+        ($handler === 'database' ? 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' : 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php'),
         'about.php', 'src/Platform/Infrastructure/Symfony/Controller/AboutController.php',
         'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
@@ -325,6 +343,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php'];
+    if ($handler === 'database') {
+        $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
+    }
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);
