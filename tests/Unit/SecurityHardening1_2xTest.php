@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+
 $authProfileSource  = file_get_contents(__DIR__ . '/../../auth_profile.php');
 $functionsSource    = file_get_contents(__DIR__ . '/../../lib/functions.php');
 $htmlUtilitySource  = file_get_contents(__DIR__ . '/../../lib/html_utility.php');
@@ -51,9 +53,8 @@ test('validate_redirect_url prefers SERVER_NAME over HTTP_HOST', function () use
 });
 
 test('validate_redirect_url rejects protocol-relative URLs after sanitize_uri', function () use ($htmlUtilitySource) {
-    $start = strpos($htmlUtilitySource, 'function validate_redirect_url(');
-    $body = substr($htmlUtilitySource, $start, 3000);
-    expect($body)->toContain("strpos(\$safe, '//') === 0");
+    $body = test_php_function_source($htmlUtilitySource, 'validate_redirect_url');
+    expect($body)->toContain("str_starts_with(\$safe, '//')");
 });
 
 // H-4: db_dump_data wraps credential values with cacti_escapeshellarg
