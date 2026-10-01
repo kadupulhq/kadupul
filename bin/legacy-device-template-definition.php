@@ -49,7 +49,7 @@ try {
         throw new InvalidArgumentException();
     }
     $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
-    if (!$db instanceof PDO || (int) ($config['poller_id'] ?? 0) !== 1) {
+    if (!$db instanceof PDO || !in_array($config['poller_id'] ?? null, [1, '1'], true)) {
         throw new RuntimeException();
     }
     $tables = ['host_template', 'host_template_graph', 'host_template_snmp_query', 'graph_templates', 'snmp_query', 'snmp_query_graph'];
@@ -59,7 +59,7 @@ try {
     if ($action === 'sync') {
         $tables = [...$tables, 'settings', 'host', 'host_graph', 'host_snmp_query', 'host_snmp_cache', 'poller_item', 'poller_reindex', 'graph_local', 'graph_templates_graph', 'graph_templates_item', 'data_local', 'data_template_data', 'data_template_rrd'];
     }
-    DeviceTemplateTransaction::begin($db, $config, $tables);
+    DeviceTemplateTransaction::begin($db, ['collector_id' => $config['poller_id']], $tables);
     $started = true;
     DeviceTemplateAuthorization::authorize($db, $actor, true);
     $_SESSION['sess_user_id'] = $actor;
@@ -195,7 +195,7 @@ try {
                 DeviceTemplateTransaction::commit($db);
                 $claimOwned = true;
                 $started = false;
-                DeviceTemplateTransaction::begin($db, $config, $tables);
+                DeviceTemplateTransaction::begin($db, ['collector_id' => $config['poller_id']], $tables);
                 $started = true;
                 DeviceTemplateAuthorization::authorize($db, $actor, true);
                 foreach ($ids as $id) {

@@ -80,7 +80,7 @@ foreach ([...\Kadupul\Inventory\Infrastructure\Legacy\DeviceTemplateTransaction:
     }
 }
 try {
-    \Kadupul\Inventory\Infrastructure\Legacy\DeviceTemplateTransaction::begin($db, ['poller_id' => 2], ['settings_user']);
+    \Kadupul\Inventory\Infrastructure\Legacy\DeviceTemplateTransaction::begin($db, ['collector_id' => 2], ['settings_user']);
     $results['primary collector'] = false;
 } catch (RuntimeException $error) {
     $results['primary collector'] = !$db->inTransaction();

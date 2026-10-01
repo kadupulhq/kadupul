@@ -12,6 +12,48 @@ use PHPUnit\Framework\TestCase;
 
 final class DeviceTemplateTransactionTest extends TestCase
 {
+    public function testActualInstallationConfigurationUsesNormalizedCollectorIdentity(): void
+    {
+        $directory = sys_get_temp_dir() . '/device-template-configuration-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/include', 0700, true);
+        file_put_contents($directory . '/include/config.php', '<?php $poller_id = 1; $database_default = "fixture";');
+        try {
+            $configuration = new \Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration($directory);
+            $values = $configuration->values();
+            self::assertSame(1, $values['collector_id']);
+            self::assertArrayNotHasKey('poller_id', $values);
+            $db = $this->createMock(\PDO::class);
+            $db->method('inTransaction')->willReturn(false);
+            $db->method('getAttribute')->willReturn('mysql');
+            $statement = $this->createMock(\PDOStatement::class);
+            $statement->method('fetch')->willReturn(['table', "CREATE TABLE `table` (\n`id` int\n) ENGINE=InnoDB"]);
+            $db->expects(self::exactly(count(DeviceTemplateTransaction::AUTHORIZATION_TABLES)))->method('query')->willReturn($statement);
+            $db->expects(self::once())->method('exec')->with('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ')->willReturn(0);
+            $db->expects(self::once())->method('beginTransaction')->willReturn(true);
+            DeviceTemplateTransaction::begin($db, $values, []);
+        } finally {
+            unlink($directory . '/include/config.php');
+            rmdir($directory . '/include');
+            rmdir($directory);
+        }
+    }
+    public function testInvalidNormalizedCollectorIdentitiesNeverInspectOrBegin(): void
+    {
+        foreach ([[], ['poller_id' => 1], ['collector_id' => false], ['collector_id' => '1x'], ['collector_id' => 2]] as $configuration) {
+            $db = $this->createMock(\PDO::class);
+            $db->method('inTransaction')->willReturn(false);
+            $db->method('getAttribute')->willReturn('mysql');
+            foreach (['query', 'exec', 'beginTransaction'] as $method) {
+                $db->expects(self::never())->method($method);
+            }
+            try {
+                DeviceTemplateTransaction::begin($db, $configuration, []);
+                self::fail('Invalid normalized collector accepted.');
+            } catch (\RuntimeException $error) {
+                self::assertSame('Device templates require the primary collector.', $error->getMessage());
+            }
+        }
+    }
     public function testCallerTransactionRemainsActiveAndItsWritesSurviveRejection(): void
     {
         $db = new \PDO('sqlite::memory:');
@@ -19,7 +61,7 @@ final class DeviceTemplateTransactionTest extends TestCase
         $db->beginTransaction();
         $db->exec("INSERT INTO preserved VALUES ('caller')");
         try {
-            DeviceTemplateTransaction::begin($db, ['poller_id' => 1], ['settings_user']);
+            DeviceTemplateTransaction::begin($db, ['collector_id' => 1], ['settings_user']);
             self::fail('Caller transaction accepted.');
         } catch (\RuntimeException $error) {
             self::assertSame('Caller-owned transaction.', $error->getMessage());
@@ -38,7 +80,7 @@ final class DeviceTemplateTransactionTest extends TestCase
         $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
         $database->method('get')->willReturn($db);
         $configuration = $this->createMock(\Kadupul\Platform\Contract\LegacyConfiguration::class);
-        $configuration->method('values')->willReturn(['poller_id' => 1]);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
         $adapter = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions($database, dirname(__DIR__, 2), $configuration);
         try {
             $adapter->remember(42, []);
@@ -106,7 +148,7 @@ final class DeviceTemplateTransactionTest extends TestCase
             $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
             $database->method('get')->willReturn($db);
             $configuration = $this->createMock(\Kadupul\Platform\Contract\LegacyConfiguration::class);
-            $configuration->method('values')->willReturn(['poller_id' => 1]);
+            $configuration->method('values')->willReturn(['collector_id' => 1]);
             $adapter = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateDefinitions($database, dirname(__DIR__, 2), $configuration);
             try {
                 $adapter->remember(42, []);
@@ -126,7 +168,7 @@ final class DeviceTemplateTransactionTest extends TestCase
         $db->expects(self::never())->method('exec');
         $db->expects(self::never())->method('beginTransaction');
         $this->expectExceptionMessage('Device templates require the primary collector.');
-        DeviceTemplateTransaction::begin($db, ['poller_id' => 2], ['settings_user']);
+        DeviceTemplateTransaction::begin($db, ['collector_id' => 2], ['settings_user']);
     }
 
     public function testStorageChecksTheActualConnectionTableAndAllAuthorizationDependencies(): void
@@ -143,7 +185,7 @@ final class DeviceTemplateTransactionTest extends TestCase
         });
         $db->expects(self::once())->method('exec')->with('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ')->willReturn(0);
         $db->expects(self::once())->method('beginTransaction')->willReturn(true);
-        DeviceTemplateTransaction::begin($db, ['poller_id' => 1], ['settings_user']);
+        DeviceTemplateTransaction::begin($db, ['collector_id' => 1], ['settings_user']);
         self::assertSame(array_map(static fn(string $table): string => 'SHOW CREATE TABLE `' . $table . '`', [...DeviceTemplateTransaction::AUTHORIZATION_TABLES, 'settings_user']), $inspected);
     }
 
@@ -159,7 +201,7 @@ final class DeviceTemplateTransactionTest extends TestCase
             $db->expects(self::never())->method('exec');
             $db->expects(self::never())->method('beginTransaction');
             try {
-                DeviceTemplateTransaction::begin($db, ['poller_id' => 1], ['settings_user']);
+                DeviceTemplateTransaction::begin($db, ['collector_id' => 1], ['settings_user']);
                 self::fail('Nontransactional storage accepted.');
             } catch (\RuntimeException $error) {
                 self::assertSame('Nontransactional storage.', $error->getMessage());

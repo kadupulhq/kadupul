@@ -17,7 +17,7 @@ final class DeviceTemplateTransaction
             throw new \RuntimeException('Caller-owned transaction.');
         }
         if ($db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql') {
-            if (!in_array($configuration['poller_id'] ?? null, [1, '1'], true)) {
+            if (!in_array($configuration['collector_id'] ?? null, [1, '1'], true)) {
                 throw new \RuntimeException('Device templates require the primary collector.');
             }
             foreach (array_unique([...self::AUTHORIZATION_TABLES, ...$tables]) as $table) {

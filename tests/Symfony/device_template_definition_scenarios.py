@@ -39,6 +39,8 @@ def verify_device_template_definitions(harness, session, user_id, check):
     probe = Path(__file__).with_name('device_template_definition_authorization_probe.php').read_text().removeprefix('<?php')
     evidence = harness.php('-r', probe, str(user_id))
     results = json.loads(evidence['stdout']) if evidence['exit'] == 0 else {}
+    if len(results) != 16 or not all(value is True for value in results.values()):
+        print('Device template storage probe failed:', json.dumps(evidence), flush=True)
     check(len(results) == 16 and all(value is True for value in results.values()), 'device template storage and authorization guards verified')
     uid = uuid.uuid4().hex[:12]
     name = 'Twig Device ' + uid

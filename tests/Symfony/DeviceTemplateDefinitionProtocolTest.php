@@ -24,7 +24,7 @@ final class DeviceTemplateDefinitionProtocolTest extends TestCase
         $database = $this->createMock(DatabaseConnection::class);
         $database->method('get')->willReturn($db);
         $configuration = $this->createMock(LegacyConfiguration::class);
-        $configuration->method('values')->willReturn(['poller_id' => 1]);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
         $adapter = new LegacyDeviceTemplateDefinitions($database, $directory, $configuration);
         try {
             foreach (['malformed', 'actor', 'correlation', 'target', 'partial', 'map', 'float', 'numeric', 'zero', 'oversized', 'repeated', 'new-zero', 'duplicate-marker', 'malformed-extra-marker', 'numeric-object'] as $case) {
