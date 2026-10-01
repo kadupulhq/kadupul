@@ -116,7 +116,7 @@ try {
         putenv('PROFILE_DELETE_MYSQL=1');
         $db->exec("DELETE FROM `$rra` WHERE data_source_profile_id=3");
         $db->exec("DELETE FROM `$cf` WHERE data_source_profile_id=3");
-        $command = [PHP_BINARY, '-d', 'error_reporting=24575', __DIR__ . '/profile-deletion-native.php', json_encode($editor, JSON_THROW_ON_ERROR), $directory . '/editor'];
+        $command = [PHP_BINARY, '-d', 'display_errors=1', '-d', 'error_reporting=24575', __DIR__ . '/profile-deletion-native.php', json_encode($editor, JSON_THROW_ON_ERROR), $directory . '/editor'];
     }
     $process = proc_open($command, [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
     if (!is_resource($process)) {

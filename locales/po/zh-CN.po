@@ -7959,7 +7959,7 @@ msgid "Tree Rule Items"
 msgstr "树规则项目"
 
 #: include/global_arrays.php:2850 include/global_arrays.php:2866
-#: lib/api_device.php:1931
+#: lib/api_device.php:1935
 msgid "days"
 msgstr "天"
 
@@ -7975,12 +7975,12 @@ msgstr "分"
 msgid "secs"
 msgstr "秒"
 
-#: lib/api_device.php:1931
+#: lib/api_device.php:1935
 #: include/global_arrays.php:2867
 msgid "hours"
 msgstr "小时"
 
-#: lib/api_device.php:1931
+#: lib/api_device.php:1935
 #: include/global_arrays.php:2868
 msgid "minutes"
 msgstr "分钟"
@@ -10475,7 +10475,7 @@ msgstr "字体选择方法"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "您希望如何默认处理字体?"
 
-#: lib/api_device.php:1886
+#: lib/api_device.php:1890
 #: include/global_settings.php:1060
 msgid "System"
 msgstr "系统"
@@ -12554,7 +12554,7 @@ msgstr "由Kadupul 自动化添加"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "错误：不再支持采用 range1-range2 形式的 IP 范围。"
 
-#: lib/api_device.php:154 lib/api_device.php:157 lib/api_device.php:384 lib/api_device.php:388 lib/api_device.php:450 lib/api_device.php:455 lib/api_device.php:500 lib/api_device.php:504 lib/api_device.php:580 lib/api_device.php:584 lib/api_device.php:639 lib/api_device.php:643 lib/api_device.php:709 lib/api_device.php:712 lib/api_device.php:785 lib/api_device.php:788 lib/api_device.php:837 lib/api_device.php:840 lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1297 lib/api_device.php:1310 lib/api_device.php:1314 lib/api_device.php:1359 lib/api_device.php:1362 lib/api_device.php:1549 lib/api_device.php:1553 lib/api_device.php:1588 lib/api_device.php:1592 lib/api_device.php:1632 lib/api_device.php:1636 lib/api_device.php:1697 lib/api_device.php:1701
+#: lib/api_device.php:154 lib/api_device.php:157 lib/api_device.php:384 lib/api_device.php:388 lib/api_device.php:450 lib/api_device.php:455 lib/api_device.php:500 lib/api_device.php:504 lib/api_device.php:580 lib/api_device.php:584 lib/api_device.php:639 lib/api_device.php:643 lib/api_device.php:709 lib/api_device.php:712 lib/api_device.php:785 lib/api_device.php:788 lib/api_device.php:837 lib/api_device.php:840 lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1301 lib/api_device.php:1314 lib/api_device.php:1318 lib/api_device.php:1363 lib/api_device.php:1366 lib/api_device.php:1553 lib/api_device.php:1557 lib/api_device.php:1592 lib/api_device.php:1596 lib/api_device.php:1636 lib/api_device.php:1640 lib/api_device.php:1701 lib/api_device.php:1705
 #: lib/utility.php:663 lib/utility.php:667 lib/utility.php:743
 #: lib/utility.php:747 lib/utility.php:769 lib/utility.php:773
 #: lib/utility.php:796 lib/utility.php:799
@@ -12562,73 +12562,73 @@ msgstr "错误：不再支持采用 range1-range2 形式的 IP 范围。"
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "远程轮询器%s关闭，则需要在再次启动后执行 FullSync"
 
-#: lib/api_device.php:1807
+#: lib/api_device.php:1811
 msgid "ERROR: Device ID is Blank"
 msgstr "ERROR: 设备ID 为空"
 
-#: lib/api_device.php:1820 lib/api_device.php:1822
+#: lib/api_device.php:1824 lib/api_device.php:1826
 msgid "ERROR: Device["
 msgstr "ERROR: 设备["
 
-#: lib/api_device.php:1838
+#: lib/api_device.php:1842
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "ERROR: 无法连接到远程采集器."
 
-#: lib/api_device.php:1845
+#: lib/api_device.php:1849
 msgid "Device is Disabled"
 msgstr "设备已禁用"
 
-#: lib/api_device.php:1846
+#: lib/api_device.php:1850
 msgid "Device Availability Check Bypassed"
 msgstr "设备可用性检测旁路"
 
-#: lib/api_device.php:1853
+#: lib/api_device.php:1857
 msgid "SNMP Information"
 msgstr "SNMP 信息"
 
-#: lib/api_device.php:1857
+#: lib/api_device.php:1861
 msgid "SNMP not in use"
 msgstr "SNMP 未被使用"
 
-#: lib/api_device.php:1878 lib/api_device.php:1886 lib/api_device.php:1905
+#: lib/api_device.php:1882 lib/api_device.php:1890 lib/api_device.php:1909
 msgid "SNMP error"
 msgstr "SNMP 出错"
 
-#: lib/api_device.php:1878
+#: lib/api_device.php:1882
 msgid "Session"
 msgstr "会话"
 
-#: lib/api_device.php:1905
+#: lib/api_device.php:1909
 msgid "Host"
 msgstr "主机"
 
-#: lib/api_device.php:1923
+#: lib/api_device.php:1927
 msgid "System:"
 msgstr "系统:"
 
-#: lib/api_device.php:1930
+#: lib/api_device.php:1934
 msgid "Uptime:"
 msgstr "运行时间:"
 
-#: lib/api_device.php:1932
+#: lib/api_device.php:1936
 msgid "Hostname:"
 msgstr "主机名:"
 
-#: lib/api_device.php:1933
+#: lib/api_device.php:1937
 msgid "Location:"
 msgstr "位置:"
 
-#: lib/api_device.php:1934
+#: lib/api_device.php:1938
 msgid "Contact:"
 msgstr "联系人:"
 
-#: lib/api_device.php:1965
+#: lib/api_device.php:1969
 #: lib/functions.php:5604 lib/functions.php:5606
 #: lib/functions.php:5610
 msgid "Ping Results"
 msgstr "Ping 结果"
 
-#: lib/api_device.php:1970
+#: lib/api_device.php:1974
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "没有使用Ping 或SNMP 可用性检查"
 

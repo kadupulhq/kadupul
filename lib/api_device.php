@@ -898,6 +898,15 @@ function api_device_replicate_out($device_id, $poller_id = 1)
 {
     global $config;
 
+    if ($poller_id <= 1) {
+        return false;
+    }
+
+    if (!db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($poller_id))) {
+        cacti_log('ERROR: Unable to mark Poller ' . $poller_id . ' synchronization required. Device replication was not started.', false, 'REPLICATE');
+        return false;
+    }
+
     $rcnn_id = false;
 
     if ($poller_id > 1) {
@@ -907,11 +916,6 @@ function api_device_replicate_out($device_id, $poller_id = 1)
     }
 
     if ($rcnn_id === false) {
-        return false;
-    }
-
-    if (!db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($poller_id))) {
-        cacti_log('ERROR: Unable to mark Poller ' . $poller_id . ' synchronization required. Device replication was not started.', false, 'REPLICATE');
         return false;
     }
 

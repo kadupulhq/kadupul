@@ -283,7 +283,8 @@ require $root . '/include/global_settings.php';
 require $root . '/include/global_form.php';
 $config['base_path'] = $directory;
 if (!empty($scenario['editor_tables'])) {
-    echo $db->query('SELECT CONNECTION_ID()')->fetchColumn() . "\n";
+    // Bypass PHP HTTP output so the readiness signal does not send headers.
+    fwrite(STDOUT, $db->query('SELECT CONNECTION_ID()')->fetchColumn() . "\n");
     flush();
 }
 ob_start();

@@ -7995,7 +7995,7 @@ msgid "Tree Rule Items"
 msgstr "Boomregelpunten"
 
 #: include/global_arrays.php:2850 include/global_arrays.php:2866
-#: lib/api_device.php:1931
+#: lib/api_device.php:1935
 msgid "days"
 msgstr "dagen"
 
@@ -8011,12 +8011,12 @@ msgstr "minuten"
 msgid "secs"
 msgstr "seconden"
 
-#: lib/api_device.php:1931
+#: lib/api_device.php:1935
 #: include/global_arrays.php:2867
 msgid "hours"
 msgstr "uren"
 
-#: lib/api_device.php:1931
+#: lib/api_device.php:1935
 #: include/global_arrays.php:2868
 msgid "minutes"
 msgstr "minuten"
@@ -10516,7 +10516,7 @@ msgstr "Lettertype selectiemethode"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Hoe wilt u dat lettertypen standaard worden behandeld?"
 
-#: lib/api_device.php:1886
+#: lib/api_device.php:1890
 #: include/global_settings.php:1060
 msgid "System"
 msgstr "Systeem"
@@ -12597,7 +12597,7 @@ msgstr "Toegevoegd door Kadupul automation"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "FOUT: IP-bereiken in de vorm van bereik1-bereik2 worden niet langer ondersteund."
 
-#: lib/api_device.php:154 lib/api_device.php:157 lib/api_device.php:384 lib/api_device.php:388 lib/api_device.php:450 lib/api_device.php:455 lib/api_device.php:500 lib/api_device.php:504 lib/api_device.php:580 lib/api_device.php:584 lib/api_device.php:639 lib/api_device.php:643 lib/api_device.php:709 lib/api_device.php:712 lib/api_device.php:785 lib/api_device.php:788 lib/api_device.php:837 lib/api_device.php:840 lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1297 lib/api_device.php:1310 lib/api_device.php:1314 lib/api_device.php:1359 lib/api_device.php:1362 lib/api_device.php:1549 lib/api_device.php:1553 lib/api_device.php:1588 lib/api_device.php:1592 lib/api_device.php:1632 lib/api_device.php:1636 lib/api_device.php:1697 lib/api_device.php:1701
+#: lib/api_device.php:154 lib/api_device.php:157 lib/api_device.php:384 lib/api_device.php:388 lib/api_device.php:450 lib/api_device.php:455 lib/api_device.php:500 lib/api_device.php:504 lib/api_device.php:580 lib/api_device.php:584 lib/api_device.php:639 lib/api_device.php:643 lib/api_device.php:709 lib/api_device.php:712 lib/api_device.php:785 lib/api_device.php:788 lib/api_device.php:837 lib/api_device.php:840 lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1301 lib/api_device.php:1314 lib/api_device.php:1318 lib/api_device.php:1363 lib/api_device.php:1366 lib/api_device.php:1553 lib/api_device.php:1557 lib/api_device.php:1592 lib/api_device.php:1596 lib/api_device.php:1636 lib/api_device.php:1640 lib/api_device.php:1701 lib/api_device.php:1705
 #: lib/utility.php:663 lib/utility.php:667 lib/utility.php:743
 #: lib/utility.php:747 lib/utility.php:769 lib/utility.php:773
 #: lib/utility.php:796 lib/utility.php:799
@@ -12605,73 +12605,73 @@ msgstr "FOUT: IP-bereiken in de vorm van bereik1-bereik2 worden niet langer onde
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Poller op afstand %s is uitgeschakeld, u moet een FullSync uitvoeren zodra deze weer actief is"
 
-#: lib/api_device.php:1807
+#: lib/api_device.php:1811
 msgid "ERROR: Device ID is Blank"
 msgstr "ERROR: Apparaat-ID is blanco"
 
-#: lib/api_device.php:1820 lib/api_device.php:1822
+#: lib/api_device.php:1824 lib/api_device.php:1826
 msgid "ERROR: Device["
 msgstr "ERROR: Apparaat["
 
-#: lib/api_device.php:1838
+#: lib/api_device.php:1842
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "FOUT: Kon geen verbinding maken met de remote poller."
 
-#: lib/api_device.php:1845
+#: lib/api_device.php:1849
 msgid "Device is Disabled"
 msgstr "Apparaat is uitgeschakeld"
 
-#: lib/api_device.php:1846
+#: lib/api_device.php:1850
 msgid "Device Availability Check Bypassed"
 msgstr "Controle op beschikbaarheid is overgeslagen"
 
-#: lib/api_device.php:1853
+#: lib/api_device.php:1857
 msgid "SNMP Information"
 msgstr "SNMP informatie"
 
-#: lib/api_device.php:1857
+#: lib/api_device.php:1861
 msgid "SNMP not in use"
 msgstr "SNMP niet in gebruik"
 
-#: lib/api_device.php:1878 lib/api_device.php:1886 lib/api_device.php:1905
+#: lib/api_device.php:1882 lib/api_device.php:1890 lib/api_device.php:1909
 msgid "SNMP error"
 msgstr "SNMP fout"
 
-#: lib/api_device.php:1878
+#: lib/api_device.php:1882
 msgid "Session"
 msgstr "Sessie"
 
-#: lib/api_device.php:1905
+#: lib/api_device.php:1909
 msgid "Host"
 msgstr "Host"
 
-#: lib/api_device.php:1923
+#: lib/api_device.php:1927
 msgid "System:"
 msgstr "Systeem:"
 
-#: lib/api_device.php:1930
+#: lib/api_device.php:1934
 msgid "Uptime:"
 msgstr "Uptime:"
 
-#: lib/api_device.php:1932
+#: lib/api_device.php:1936
 msgid "Hostname:"
 msgstr "Hostname:"
 
-#: lib/api_device.php:1933
+#: lib/api_device.php:1937
 msgid "Location:"
 msgstr "Locatie:"
 
-#: lib/api_device.php:1934
+#: lib/api_device.php:1938
 msgid "Contact:"
 msgstr "Contactpersoon:"
 
-#: lib/api_device.php:1965
+#: lib/api_device.php:1969
 #: lib/functions.php:5604 lib/functions.php:5606
 #: lib/functions.php:5610
 msgid "Ping Results"
 msgstr "Ping resultaten"
 
-#: lib/api_device.php:1970
+#: lib/api_device.php:1974
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Geen ping of SNMP beschikbaarheidscontrole in gebruik"
 

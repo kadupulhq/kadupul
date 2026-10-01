@@ -1930,16 +1930,16 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 
     replicate_log('Attempting to replicate to Poller ' . $remote_poller_id);
 
+    // Record retry ownership before checking collector availability.
+    if (($class == 'all' || $class == 'data') && !db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($remote_poller_id))) {
+        cacti_log('ERROR: Unable to mark Poller ' . $remote_poller_id . ' synchronization required. No replication was started.', false, 'REPLICATE');
+        return false;
+    }
+
     $rcnn_id = poller_connect_to_remote($remote_poller_id);
 
     if ($rcnn_id === false) {
         replicate_log('Failed to connect to Poller ' . $remote_poller_id . ' Database');
-        return false;
-    }
-
-    // Record retry ownership before touching any collector definitions.
-    if (($class == 'all' || $class == 'data') && !db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($remote_poller_id))) {
-        cacti_log('ERROR: Unable to mark Poller ' . $remote_poller_id . ' synchronization required. No replication was started.', false, 'REPLICATE');
         return false;
     }
 

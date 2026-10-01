@@ -95,7 +95,7 @@ $maps['source']['poller'] = 'src_poller_' . $suffix;
 $calls = [];
 $log = [];
 $affected = 0;
-$config = ['poller_id' => 2, 'is_web' => true];
+$config = ['poller_id' => in_array($scenario['failure'] ?? '', ['connect', 'retry-state'], true) ? 1 : 2, 'is_web' => true];
 $local_db_cnn_id = $remote;
 $hooks = [];
 $messages = [];
@@ -238,11 +238,12 @@ function db_execute_prepared($sql, $params = [], $log = true, $connection = fals
 }
 function db_fetch_cell_prepared($sql, $params = [], ...$options)
 {
-    return 1;
+    $GLOBALS['calls'][] = ['availability', $sql];
+    return ($GLOBALS['scenario']['failure'] ?? '') === 'unavailable' ? 0 : 1;
 }
 function db_fetch_row_prepared($sql, $params = [], ...$options)
 {
-    $GLOBALS['calls'][] = ['source', $sql];
+    $GLOBALS['calls'][] = [str_contains($sql, 'FROM poller') ? 'connect' : 'source', $sql];
     return [];
 }
 function read_config_option($name)
