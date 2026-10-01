@@ -17,7 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class LegacyDataInputController
 {
-    #[Route('/data-inputs/legacy', name: 'data_input_legacy', methods: ['GET','HEAD','POST'])]
+    #[Route('/data-inputs/legacy', name: 'data_input_legacy', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, ConsoleAccess $console, DataInputAccess $access, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
@@ -46,18 +46,18 @@ final class LegacyDataInputController
             if ($action === 'edit') {
                 return new RedirectResponse($urls->generate((int) $id > 0 ? 'data_input_edit' : 'data_input_create', (int) $id > 0 ? ['id' => (int) $id] : []), 302, $headers);
             }
-            if (in_array($action, ['field_edit','field_remove_confirm'], true)) {
+            if (in_array($action, ['field_edit', 'field_remove_confirm'], true)) {
                 $parent = $query['data_input_id'] ?? null;
                 if (!is_string($parent) || !preg_match('/\A[1-9][0-9]{0,7}\z/D', $parent)) {
                     throw new \InvalidArgumentException();
                 }
                 $route = $action === 'field_edit' ? 'data_input_field' : 'data_input_action';
-                $params = ['id' => (int) $parent,'field' => (int) $id];
+                $params = ['id' => (int) $parent, 'field' => (int) $id];
                 if ($action === 'field_remove_confirm') {
                     $params['operation'] = 'field_delete';
                 } else {
                     $type = $query['type'] ?? 'in';
-                    if (!is_string($type) || !in_array($type, ['in','out'], true)) {
+                    if (!is_string($type) || !in_array($type, ['in', 'out'], true)) {
                         throw new \InvalidArgumentException();
                     } $params['direction'] = $type;
                 }
@@ -67,7 +67,7 @@ final class LegacyDataInputController
                 return new Response($translator->trans('Use the current Data Input Methods forms.', [], 'data_input'), 405, $headers + ['Allow' => 'GET, HEAD']);
             }
             $params = [];
-            foreach (['filter' => 'filter','rows' => 'rows','page' => 'page','sort_column' => 'sort','sort_direction' => 'direction'] as $old => $new) {
+            foreach (['filter' => 'filter', 'rows' => 'rows', 'page' => 'page', 'sort_column' => 'sort', 'sort_direction' => 'direction'] as $old => $new) {
                 if (isset($query[$old])) {
                     if (!is_string($query[$old])) {
                         throw new \InvalidArgumentException();

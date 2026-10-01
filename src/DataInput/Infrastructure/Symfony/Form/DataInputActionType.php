@@ -17,11 +17,11 @@ final class DataInputActionType extends AbstractType
     {
         $builder->add('revision', HiddenType::class);
         if ($options['duplicate']) {
-            $builder->add('title', TextType::class, ['label' => 'Name format','trim' => false,'attr' => ['maxlength' => 200]]);
+            $builder->add('title', TextType::class, ['label' => 'Name format', 'trim' => false, 'attr' => ['maxlength' => 200]]);
         }
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['csrf_token_id' => 'data_input_action','translation_domain' => 'data_input','duplicate' => false]);
+        $resolver->setDefaults(['csrf_token_id' => 'data_input_action', 'translation_domain' => 'data_input', 'duplicate' => false]);
     }
 }

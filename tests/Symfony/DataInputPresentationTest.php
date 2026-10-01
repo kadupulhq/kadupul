@@ -34,7 +34,7 @@ final class DataInputPresentationTest extends TestCase
             $access->method('authorize')->willReturn($actor);
             $container->set(DataInputAccess::class, $access);
             $gateway = $this->createMock(DataInputGateway::class);
-            $gateway->expects(self::once())->method('execute')->with(9, 'find', 3, [])->willReturn(['method' => ['id' => 3,'name' => '<script>method</script>','type_id' => 1,'input_string' => '  perl <path_cacti>/script.pl <argument>  '],'fields' => [],'counts' => ['templates' => 0,'data_sources' => 0],'revision' => str_repeat('a', 64),'whitelist' => 'disabled']);
+            $gateway->expects(self::once())->method('execute')->with(9, 'find', 3, [])->willReturn(['method' => ['id' => 3, 'name' => '<script>method</script>', 'type_id' => 1, 'input_string' => '  perl <path_cacti>/script.pl <argument>  '], 'fields' => [], 'counts' => ['templates' => 0, 'data_sources' => 0], 'revision' => str_repeat('a', 64), 'whitelist' => 'disabled']);
             $container->set(DataInputGateway::class, $gateway);
             $config = $this->createMock(LegacyConfiguration::class);
             $config->method('values')->willReturn(['forced_locale' => 'fr']);

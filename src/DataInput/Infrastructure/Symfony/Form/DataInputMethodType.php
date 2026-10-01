@@ -17,16 +17,16 @@ final class DataInputMethodType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $types = ['Script/Command' => 1,'Script Server' => 5];
-        $labels = [2 => 'SNMP Get',3 => 'SNMP Query',4 => 'Script Query',6 => 'Script Server Query'];
+        $types = ['Script/Command' => 1, 'Script Server' => 5];
+        $labels = [2 => 'SNMP Get', 3 => 'SNMP Query', 4 => 'Script Query', 6 => 'Script Server Query'];
         if (isset($labels[$options['existing_type']])) {
             $types[$labels[$options['existing_type']]] = $options['existing_type'];
         }
-        $builder->add('name', TextType::class, ['label' => 'Name','trim' => false,'attr' => ['maxlength' => 200]])->add('input_string', TextareaType::class, ['label' => 'Input string','required' => false,'trim' => false,'empty_data' => '','attr' => ['maxlength' => 512]])->add('type_id', ChoiceType::class, ['label' => 'Input type','choices' => $types])->add('revision', HiddenType::class, ['required' => false]);
+        $builder->add('name', TextType::class, ['label' => 'Name', 'trim' => false, 'attr' => ['maxlength' => 200]])->add('input_string', TextareaType::class, ['label' => 'Input string', 'required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['maxlength' => 512]])->add('type_id', ChoiceType::class, ['label' => 'Input type', 'choices' => $types])->add('revision', HiddenType::class, ['required' => false]);
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['csrf_token_id' => 'data_input_method','translation_domain' => 'data_input','existing_type' => 1]);
+        $resolver->setDefaults(['csrf_token_id' => 'data_input_method', 'translation_domain' => 'data_input', 'existing_type' => 1]);
         $resolver->setAllowedTypes('existing_type', 'int');
     }
 }
