@@ -249,7 +249,7 @@ try {
     // Network collectors and whitelist files are outside the primary transaction.
     // Failures leave the confirmed local edit intact and expose an explicit retry.
     if (in_array($action, ['save', 'field_save', 'field_delete', 'duplicate', 'propagate', 'bulk_duplicate', 'whitelist'], true)) {
-        $handoff = new DataInputHandoff(PHP_BINARY, $config['base_path'], $command['actor'], $handoffDeadline);
+        $handoff = new DataInputHandoff(PHP_BINARY, $config['base_path'], $command['actor'], $handoffDeadline, whitelistBinary: read_config_option('path_php_binary'));
     }
     if (in_array($action, ['save', 'field_save', 'field_delete', 'duplicate', 'propagate'], true)) {
         if (!$handoff->propagate($id)) {

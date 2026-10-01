@@ -73,6 +73,30 @@ PROGRAM);
         self::assertSame(['--update', '--id=3'], json_decode(file_get_contents($this->directory . '/whitelist-arguments'), true));
     }
 
+    public function testConfiguredWhitelistBinaryReceivesArgvWithoutChangingCollectorRuntime(): void
+    {
+        file_put_contents($this->directory . '/mode', 'ok');
+        $wrapper = $this->directory . '/configured php';
+        file_put_contents($wrapper, "#!/bin/sh\nprintf '%s\\n' \"\$@\" >> configured-arguments\nexec " . escapeshellarg(PHP_BINARY) . " \"\$@\"\n");
+        chmod($wrapper, 0700);
+        $handoff = new DataInputHandoff(PHP_BINARY, $this->directory, 9, hrtime(true) / 1e9 + 2, whitelistBinary: $wrapper);
+
+        self::assertTrue($handoff->whitelist(3));
+        self::assertTrue($handoff->propagate(3));
+        self::assertSame([$this->directory . '/cli/input_whitelist.php', '--update', '--id=3'], file($this->directory . '/configured-arguments', FILE_IGNORE_NEW_LINES));
+        self::assertSame(['--update', '--id=3'], json_decode(file_get_contents($this->directory . '/whitelist-arguments'), true));
+    }
+
+    public function testUnavailableConfiguredWhitelistBinaryFailsWithoutChangingCollectorRuntime(): void
+    {
+        file_put_contents($this->directory . '/mode', 'ok');
+        $handoff = new DataInputHandoff(PHP_BINARY, $this->directory, 9, hrtime(true) / 1e9 + 2, whitelistBinary: $this->directory . '/missing php');
+
+        self::assertFalse($handoff->whitelist(3));
+        self::assertFileDoesNotExist($this->directory . '/whitelist-arguments');
+        self::assertTrue($handoff->propagate(3));
+    }
+
     #[DataProvider('slowPhases')]
     public function testTimedOutLeafCannotWriteAfterItsPhaseReturns(string $phase, string $artifact): void
     {

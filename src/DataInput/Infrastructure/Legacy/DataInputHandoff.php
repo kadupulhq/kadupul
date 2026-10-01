@@ -12,7 +12,7 @@ final readonly class DataInputHandoff
 {
     private const float DRAIN_RESERVE = 0.25;
 
-    public function __construct(private string $binary, private string $projectDir, private int $actorId, private float $deadline, private float $phaseLimit = 30)
+    public function __construct(private string $binary, private string $projectDir, private int $actorId, private float $deadline, private float $phaseLimit = 30, private ?string $whitelistBinary = null)
     {
         if (!is_finite($deadline) || !is_finite($phaseLimit) || $phaseLimit <= 0 || $phaseLimit > 30) {
             throw new \InvalidArgumentException('Invalid handoff deadline.');
@@ -21,7 +21,7 @@ final readonly class DataInputHandoff
 
     public function whitelist(int $id): bool
     {
-        $process = new Process([$this->binary, $this->projectDir . '/cli/input_whitelist.php', '--update', '--id=' . $id], $this->projectDir);
+        $process = new Process([$this->whitelistBinary ?? $this->binary, $this->projectDir . '/cli/input_whitelist.php', '--update', '--id=' . $id], $this->projectDir);
         return $this->run($process);
     }
 
