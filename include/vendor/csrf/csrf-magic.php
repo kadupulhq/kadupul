@@ -33,13 +33,7 @@ function csrf_ob_handler($buffer, $flags) {
 		$name = $GLOBALS['csrf']['input-name'];
 		$endslash = $GLOBALS['csrf']['xhtml'] ? ' /' : '';
 		$input = "<input type='hidden' name='$name' value=\"$tokens\"$endslash>";
-		$buffer = preg_replace_callback(
-			'#(<form[^>]*method\s*=\s*["\']post["\'][^>]*>)#i',
-			function($matches) use ($input) {
-				return csrf_form_action_is_local($matches[1]) ? $matches[1] . $input : $matches[1];
-			},
-			$buffer
-		);
+		$buffer = csrf_rewrite_forms($buffer, $input);
 
 		if ($GLOBALS['csrf']['frame-breaker']) {
 			$buffer = str_ireplace('</head>', '<script type="text/javascript" ' . CactiSecureHeaders::getNonceAttribute() . '>if (top != self) {top.location.href = self.location.href;}</script></head>', $buffer);
@@ -72,25 +66,156 @@ function csrf_ob_handler($buffer, $flags) {
 }
 
 /**
+ * Adds the token field after each POST form start tag whose action stays on
+ * this origin. Absolute and protocol-relative actions are left to the browser
+ * script, which checks their origin, so this server-side decision never
+ * depends on an attacker-controlled Host header.
+ */
+function csrf_rewrite_forms($buffer, $input) {
+	$relative_is_local = csrf_base_is_local($buffer);
+	$output = '';
+	$offset = 0;
+
+	while (preg_match('#<form(?=[\t\n\f\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
+		$tag = csrf_parse_tag($buffer, $match[0][1] + 5);
+		$output .= substr($buffer, $offset, $tag['end'] - $offset);
+		$offset = $tag['end'];
+
+		if ($tag['closed'] && csrf_form_is_local_post($tag['attributes'], $relative_is_local)) {
+			$output .= $input;
+		}
+	}
+
+	return $output . substr($buffer, $offset);
+}
+
+/**
+ * Reads a start tag's attributes the way an HTML parser does, so a quoted
+ * value containing ">" or "action=" cannot move the tag end or hide the
+ * real action. The first of two attributes with the same name wins.
+ */
+function csrf_parse_tag($html, $position) {
+	$length = strlen($html);
+	$space = "\t\n\f\r ";
+	$attributes = array();
+
+	while ($position < $length) {
+		$position += strspn($html, $space . '/', $position);
+		if ($position >= $length) {
+			break;
+		}
+
+		if ($html[$position] === '>') {
+			return array('attributes' => $attributes, 'end' => $position + 1, 'closed' => true);
+		}
+
+		// A name may start with "=" and runs to whitespace, "/", ">" or "=".
+		$name_length = 1 + strcspn($html, $space . '/>=', $position + 1);
+		$name = strtolower(substr($html, $position, $name_length));
+		$position += $name_length;
+		$position += strspn($html, $space, $position);
+		$value = '';
+
+		if ($position < $length && $html[$position] === '=') {
+			$position++;
+			$position += strspn($html, $space, $position);
+			$quote = $position < $length ? $html[$position] : '';
+
+			if ($quote === '"' || $quote === "'") {
+				$close = strpos($html, $quote, $position + 1);
+				if ($close === false) {
+					break;
+				}
+
+				$value = substr($html, $position + 1, $close - $position - 1);
+				$position = $close + 1;
+			} else {
+				$value_length = strcspn($html, $space . '>', $position);
+				$value = substr($html, $position, $value_length);
+				$position += $value_length;
+			}
+		}
+
+		if (!array_key_exists($name, $attributes)) {
+			$attributes[$name] = csrf_decode_attribute($value);
+		}
+	}
+
+	return array('attributes' => $attributes, 'end' => $length, 'closed' => false);
+}
+
+/**
+ * Decodes character references once, as the browser does for an attribute
+ * value, including numeric references without a semicolon and HTML5 names
+ * such as &NewLine;. Numeric references outside ASCII cannot form a scheme,
+ * a slash or a control character, so they become U+FFFD.
+ */
+function csrf_decode_attribute($value) {
+	return preg_replace_callback('/&(#[xX][0-9a-fA-F]+;?|#[0-9]+;?|[A-Za-z][A-Za-z0-9]*;)/', function($matches) {
+		$reference = $matches[1];
+		if ($reference[0] !== '#') {
+			return html_entity_decode('&' . $reference, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		}
+
+		$digits = rtrim(substr($reference, 1), ';');
+		$code = ($digits[0] === 'x' || $digits[0] === 'X') ? hexdec(substr($digits, 1)) : (float) $digits;
+
+		return $code > 0 && $code < 0x80 ? chr((int) $code) : "\u{FFFD}";
+	}, $value);
+}
+
+function csrf_form_is_local_post($attributes, $relative_is_local) {
+	if (!isset($attributes['method']) || strtolower($attributes['method']) !== 'post') {
+		return false;
+	}
+
+	// A missing or empty action submits to the document's own URL.
+	if (!isset($attributes['action']) || $attributes['action'] === '') {
+		return true;
+	}
+
+	return csrf_url_is_relative($attributes['action']) && $relative_is_local;
+}
+
+/**
  * Return false for forms which could hand the CSRF token to another origin.
- * Absolute same-origin forms are left to the browser-side rewriter so this
- * server-side decision never depends on an attacker-controlled Host header.
  */
 function csrf_form_action_is_local($form_tag) {
-	if (!preg_match('#\saction\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s>]+))#i', $form_tag, $matches)) {
-		return true;
+	$tag = csrf_parse_tag($form_tag, strcspn($form_tag, "\t\n\f\r />"));
+
+	return !isset($tag['attributes']['action']) || $tag['attributes']['action'] === '' ||
+		csrf_url_is_relative($tag['attributes']['action']);
+}
+
+/**
+ * Accepts only a URL that resolves against the base URL without naming a
+ * scheme or host. Browsers drop tabs and newlines inside a URL and read "\"
+ * as "/", so any control character, space or backslash is refused.
+ */
+function csrf_url_is_relative($url) {
+	$url = trim($url, "\t\n\f\r ");
+
+	return strpos($url, '\\') === false &&
+		!preg_match('/[\x00-\x20\x7f]/', $url) &&
+		!preg_match('#^(?:[a-z][a-z0-9+.-]*:|//)#i', $url);
+}
+
+/**
+ * A <base href> naming another origin would carry relative actions with it.
+ */
+function csrf_base_is_local($buffer) {
+	$offset = 0;
+
+	while (preg_match('#<base(?=[\t\n\f\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
+		$tag = csrf_parse_tag($buffer, $match[0][1] + 5);
+		$offset = $tag['end'];
+
+		if (isset($tag['attributes']['href']) && $tag['attributes']['href'] !== '' && !csrf_url_is_relative($tag['attributes']['href'])) {
+			return false;
+		}
 	}
 
-	$action = isset($matches[1]) && $matches[1] !== '' ? $matches[1] :
-		(isset($matches[2]) && $matches[2] !== '' ? $matches[2] : (isset($matches[3]) ? $matches[3] : ''));
-	$action = trim(html_entity_decode($action, ENT_QUOTES, 'UTF-8'));
-	if ($action === '') {
-		return true;
-	}
-
-	return strpos($action, '\\') === false &&
-		!preg_match('/[\x00-\x20\x7f]/', $action) &&
-		!preg_match('#^(?:[a-z][a-z0-9+.-]*:|//)#i', $action);
+	return true;
 }
 
 /**
