@@ -37,6 +37,11 @@ function set_config_option($name, $value, $remote = false) {
     $GLOBALS['scenario']['settings'][$name] = $value;
     $GLOBALS['writes'][] = $name;
 }
+function db_execute_prepared($sql,$params) {
+    if(str_starts_with($sql,'INSERT IGNORE')) { if(!isset($GLOBALS['scenario']['settings'][$params[0]])) { $GLOBALS['scenario']['settings'][$params[0]]=$params[1];$GLOBALS['writes'][]=$params[0]; } }
+    elseif(($GLOBALS['scenario']['settings'][$params[1]]??null)===$params[2]) { $GLOBALS['scenario']['settings'][$params[1]]=$params[0];$GLOBALS['writes'][]=$params[1]; }
+    return true;
+}
 function cacti_log($message, $output = false, $environ = 'CMDPHP', $level = '') { $GLOBALS['logs'][] = $message; }
 $GLOBALS['scenario'] = $scenario;
 register_shutdown_function(function () {

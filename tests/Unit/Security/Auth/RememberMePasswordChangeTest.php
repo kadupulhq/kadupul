@@ -36,7 +36,9 @@ test('a remember-me login without a pending change continues to the page', funct
 
     expect($result['session']['sess_user_id'] ?? null)->toBe(42)
         ->and($result['session'])->not->toHaveKey('sess_change_password')
-        ->and($result['page_continued'])->toBeTrue();
+        ->and($result['page_continued'])->toBeTrue()
+        ->and($result['session']['sess_remember_token']['user_id'])->toBe(42)
+        ->and($result['session']['sess_remember_token']['hash'])->toMatch('/^[0-9a-f]{128}$/');
 });
 
 test('the change is only required where a password login would require it', function (int $realm, string $allowed) {

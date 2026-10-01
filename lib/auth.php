@@ -17,6 +17,16 @@ function clear_auth_cookie()
 {
     global $config;
 
+    $revoked = $_SESSION['sess_remember_token'] ?? null;
+    if (!is_array($revoked) || !isset($revoked['user_id'], $revoked['hash'])) {
+        $revoked = null;
+    }
+    unset($_SESSION['sess_remember_token']);
+    if (is_array($revoked) && isset($revoked['user_id'], $revoked['hash']) && db_table_exists('user_auth_cache')) {
+        db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ? AND token = ?', array($revoked['user_id'], $revoked['hash']));
+        cacti_cookie_session_logout();
+    }
+
     if (isset($_COOKIE['cacti_remembers']) && db_table_exists('user_auth_cache')) {
         if (!is_string($_COOKIE['cacti_remembers'])) {
             cacti_cookie_session_logout();
@@ -67,12 +77,14 @@ function clear_auth_cookie()
 
             cacti_cookie_session_logout();
 
-            db_execute_prepared(
-                'DELETE FROM user_auth_cache
+            if (!is_array($revoked) || $revoked['user_id'] != $user_id || $revoked['hash'] !== $secret) {
+                db_execute_prepared(
+                    'DELETE FROM user_auth_cache
 				WHERE user_id = ?
 				AND token = ?',
-                array($user_id, $secret)
-            );
+                    array($user_id, $secret)
+                );
+            }
         }
     }
 }
@@ -101,13 +113,17 @@ function set_auth_cookie($user)
 
         $secret = hash('sha512', $nssecret, false);
 
-        db_execute_prepared(
+        if (!db_execute_prepared(
             'INSERT INTO user_auth_cache
 			(user_id, hostname, last_update, token)
 			VALUES
 			(?, ?, NOW(), ?);',
             array($user['id'], get_client_addr(), $secret)
-        );
+        )) {
+            return false;
+        }
+
+        $_SESSION['sess_remember_token'] = array('user_id' => $user['id'], 'hash' => $secret);
 
         cacti_cookie_session_set($user['id'], $user['realm'], $nssecret);
     }
