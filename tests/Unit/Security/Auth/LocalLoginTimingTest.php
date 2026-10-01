@@ -112,12 +112,14 @@ test('disabled and locked usernames do the same password work as unknown names',
 })->with(array(array('disabled', 'guess'), array('locked', 'guess'), array('disabled', ''), array('locked', '')));
 
 
+// Precomputed legacy MD5 for the documented fixture password 'right'.
+// This exercises verification only; tests never create or persist MD5 passwords.
 test('legacy MD5 and empty hashes run the same fixed-cost password work as an unknown account', function (string $hash, string $password, string $state) {
     $known = local_login_timing_run('alice', $password, $state, $hash);
     $unknown = local_login_timing_run('nobody', $password, $state, $hash);
     expect($known['error'])->toBeTrue()->and($known['hashes'])->toBe($unknown['hashes']);
 })->with(array(
-    array(md5('right'), 'guess', 'enabled'), array('', 'guess', 'enabled'),
-    array(md5('right'), 'guess', 'disabled'), array(md5('right'), 'guess', 'locked'),
-    array(md5('right'), '', 'enabled'), array('', '', 'enabled'),
+    array('7c4f29407893c334a6cb7a87bf045c0d', 'guess', 'enabled'), array('', 'guess', 'enabled'),
+    array('7c4f29407893c334a6cb7a87bf045c0d', 'guess', 'disabled'), array('7c4f29407893c334a6cb7a87bf045c0d', 'guess', 'locked'),
+    array('7c4f29407893c334a6cb7a87bf045c0d', '', 'enabled'), array('', '', 'enabled'),
 ));
