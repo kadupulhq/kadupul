@@ -96,7 +96,9 @@ if (cacti_sizeof($parms)) {
         print 'WARNING: Kadupul must be upgraded first.  Use the --upgrade option to perform that upgrade' . PHP_EOL;
         exit(1);
     } elseif ($db_version != CACTI_VERSION && $upgrade) {
-        upgrade_database();
+        if (!upgrade_database()) {
+            exit(1);
+        }
     }
 
     $success = true;
@@ -120,7 +122,7 @@ if (cacti_sizeof($parms)) {
     exit(1);
 }
 
-function upgrade_database()
+function upgrade_database(): bool
 {
     global $config;
 
@@ -142,8 +144,10 @@ function upgrade_database()
         print '---------------------------------------------------------------------------------------------' . PHP_EOL;
         print implode(PHP_EOL, $output) . PHP_EOL;
         print '---------------------------------------------------------------------------------------------' . PHP_EOL;
+        return false;
     }
 
+    $success = true;
     $pistart = microtime(true);
 
     // Upgrade plugins now
@@ -211,10 +215,18 @@ function upgrade_database()
 
                         if (function_exists($ufunc2)) {
                             cacti_log("NOTE: Upgrading Plugin $pname from $old to $version using alternate upgrade path.", true, 'UPGRADE');
-                            $ufunc2(true);
+                            if ($ufunc2(true) === false) {
+                                $success = false;
+                                cacti_log("WARNING: Plugin $pname upgrade callback failed.", true, 'UPGRADE');
+                                continue;
+                            }
                         } elseif (function_exists($ufunc1)) {
                             cacti_log("NOTE: Upgrading Plugin $pname from $old to $version using standard upgrade path.", true, 'UPGRADE');
-                            $ufunc1();
+                            if ($ufunc1() === false) {
+                                $success = false;
+                                cacti_log("WARNING: Plugin $pname upgrade callback failed.", true, 'UPGRADE');
+                                continue;
+                            }
                         } else {
                             cacti_log("WARNING: Plugin $pname lacks an upgrade function.", true, 'UPGRADE');
                         }
@@ -233,6 +245,7 @@ function upgrade_database()
                                 print implode(PHP_EOL, $output) . PHP_EOL;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                             } else {
+                                $success = false;
                                 cacti_log("WARNING: Kadupul Plugin $pname Upgrade Encountered Errors.", true, 'UPGRADE');
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                                 print implode(PHP_EOL, $output) . PHP_EOL;
@@ -285,6 +298,7 @@ function upgrade_database()
     cacti_log(sprintf('NOTE: Kadupul Plugin Upgrades completed in %.2f seconds', $end - $pistart), true, 'UPGRADE');
 
     cacti_log(sprintf('NOTE: Audit Upgrade completed in %.2f seconds.', $end - $start), true, 'UPGRADE');
+    return $success;
 }
 
 function plugin_installed($plugin)
