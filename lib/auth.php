@@ -17,7 +17,7 @@ function clear_auth_cookie()
 {
     global $config;
 
-    if (isset($_COOKIE['cacti_remembers']) && read_config_option('auth_cache_enabled') == 'on') {
+    if (isset($_COOKIE['cacti_remembers']) && db_table_exists('user_auth_cache')) {
         if (!is_string($_COOKIE['cacti_remembers'])) {
             cacti_cookie_session_logout();
 
@@ -4445,6 +4445,10 @@ function secpass_login_process($username)
     auth_checkclear_lockout($username, 0);
 
     if (auth_process_lockout_check($username, 0)) {
+        if (trim($password) != '') {
+            auth_unknown_user_password_verify($password);
+        }
+
         return array();
     }
 
@@ -4468,6 +4472,10 @@ function secpass_login_process($username)
 
     if (cacti_sizeof($user)) {
         if ($user['enabled'] != 'on') {
+            if (trim($password) != '') {
+                auth_unknown_user_password_verify($password);
+            }
+
             $error     = true;
             $error_msg = __('Access Denied!  Login Failed.');
 
@@ -5201,7 +5209,8 @@ function check_reset_no_authentication($auth_method)
             "SELECT id
 			FROM user_auth
 			WHERE id = ?
-			AND enabled = 'on'",
+			AND enabled = 'on'
+            AND realm = 0",
             array(read_config_option('admin_user'))
         );
 
@@ -5213,7 +5222,7 @@ function check_reset_no_authentication($auth_method)
 				FROM user_auth AS ua
 				INNER JOIN user_auth_realm AS uar
 				ON uar.user_id = ua.id
-				WHERE ua.enabled="on"
+				WHERE ua.enabled="on" AND ua.realm = 0
 				AND uar.realm_id = ?';
 
             $admin_sql_params = array(15);
@@ -5229,7 +5238,7 @@ function check_reset_no_authentication($auth_method)
 				ON uag.id = uagm.group_id
 				INNER JOIN user_auth_group_realm AS uagr
 				ON uagr.group_id = uag.id
-				WHERE uag.enabled="on" AND ua.enabled="on"
+				WHERE uag.enabled="on" AND ua.enabled="on" AND ua.realm = 0
 				AND uagr.realm_id = ?';
 
                 $admin_sql_params[] = 15;
@@ -5249,7 +5258,7 @@ function check_reset_no_authentication($auth_method)
         }
 
         if (!$admin_id) {
-            $admin_id = db_fetch_cell('SELECT id FROM user_auth WHERE username = \'admin\'');
+            $admin_id = db_fetch_cell('SELECT id FROM user_auth WHERE username = \'admin\' AND enabled = \'on\' AND realm = 0');
 
             cacti_log('Final attempt ' . $admin_id, true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
         }

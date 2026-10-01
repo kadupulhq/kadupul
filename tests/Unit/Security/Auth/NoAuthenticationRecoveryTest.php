@@ -119,3 +119,26 @@ test('an install already on local authentication is left alone', function () {
         ->and(no_auth_updates($result))->toBe(array())
         ->and($result['page_continued'])->toBeTrue();
 });
+
+
+test('recovery skips non-local configured and realm administrators', function () {
+    $directory = no_auth_admin(5);
+    $directory['realm'] = 1;
+    $result = auth_entry_probe_run(array('config' => array('auth_method' => 0, 'admin_user' => 5), 'users' => array($directory, no_auth_admin(7)), 'realms' => array(array(5, 15), array(7, 15))));
+    expect(array_map('strval', no_auth_updates($result)[0]['params']))->toBe(array('7'));
+});
+
+test('recovery skips a non-local group administrator', function () {
+    $directory = no_auth_admin(5);
+    $directory['realm'] = 2;
+    $result = auth_entry_probe_run(array('config' => array('auth_method' => 0, 'admin_user' => 99), 'users' => array($directory, no_auth_admin(7)), 'realms' => array(array(7, 15)), 'groups' => array(array(4, 'on')), 'group_members' => array(array(4, 5)), 'group_realms' => array(array(4, 15))));
+    expect(array_map('strval', no_auth_updates($result)[0]['params']))->toBe(array('7'));
+});
+
+test('the final admin-name fallback rejects an ineligible account', function (string $enabled, int $realm) {
+    $admin = no_auth_admin(5, $enabled);
+    $admin['username'] = 'admin';
+    $admin['realm'] = $realm;
+    $result = auth_entry_probe_run(array('config' => array('auth_method' => 0, 'admin_user' => 99), 'users' => array($admin), 'realms' => array()));
+    expect(no_auth_updates($result))->toBe(array());
+})->with(array(array('', 0), array('on', 1)));
