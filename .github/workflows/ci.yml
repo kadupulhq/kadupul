@@ -212,7 +212,7 @@ jobs:
 
       - name: Verify helper union return contracts
         working-directory: tests
-        run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/HelperUnionReturnTypeTest.php --colors=never
+        run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
 
       - name: Exercise production CSV paths
         working-directory: tests
