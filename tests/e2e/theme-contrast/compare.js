@@ -39,7 +39,14 @@ const before = load(base);
 const after = load(head);
 let regressions = 0;
 
-for (const theme of Object.keys({ ...before, ...after }).sort()) {
+// A theme missing from either run is an incomplete measurement, not a clean one.
+const themes = Object.keys(before).sort();
+if (themes.length === 0 || themes.join() !== Object.keys(after).sort().join()) {
+	console.error(`${base} measured [${themes.join(', ')}] but ${head} measured [${Object.keys(after).sort().join(', ')}]`);
+	process.exit(2);
+}
+
+for (const theme of themes) {
 	const was = new Map((before[theme] || []).map((f) => [id(f), f]));
 	const now = after[theme] || [];
 	const failed = now.filter(failing);

@@ -17,22 +17,32 @@ sql() {
         -p"${CACTI_DB_PASS:-cactipass}" "${CACTI_DB_NAME:-cacti}" -N -e "$1"
 }
 
-if [ "$(sql "SELECT COUNT(*) FROM host WHERE description = 'Device 1'")" != "0" ]; then
-    exit 0
+# Each step checks for its own result, so a run that stopped part way is
+# finished by the next one rather than skipped.
+template="$(sql "SELECT id FROM host_template WHERE name = 'Local Linux Machine'")"
+if [ -z "$template" ]; then
+    php cli/import_package.php --filename=install/templates/Local_Linux_Machine.xml.gz >/dev/null
+    template="$(sql "SELECT id FROM host_template WHERE name = 'Local Linux Machine'")"
 fi
 
-php cli/import_package.php --filename=install/templates/Local_Linux_Machine.xml.gz >/dev/null
-template="$(sql "SELECT id FROM host_template WHERE name = 'Local Linux Machine'")"
-
 for n in 1 2 3 4 5 6; do
-    php cli/add_device.php --description="Device $n" --ip="10.0.0.$n" --template="$template" \
-        --avail=none --version=0 >/dev/null
+    if [ "$(sql "SELECT COUNT(*) FROM host WHERE description = 'Device $n'")" = "0" ]; then
+        php cli/add_device.php --description="Device $n" --ip="10.0.0.$n" --template="$template" \
+            --avail=none --version=0 >/dev/null
+    fi
 done
 
-php cli/add_tree.php --type=tree --name=Network --sort-method=manual >/dev/null
-tree="$(sql "SELECT MIN(id) FROM graph_tree")"
+# cacti.sql already holds Default Tree, so the tree is found by its name.
+tree="$(sql "SELECT MIN(id) FROM graph_tree WHERE name = 'Network'")"
+if [ "$tree" = "NULL" ] || [ -z "$tree" ]; then
+    php cli/add_tree.php --type=tree --name=Network --sort-method=manual >/dev/null
+    tree="$(sql "SELECT MIN(id) FROM graph_tree WHERE name = 'Network'")"
+fi
+
 for host in $(sql "SELECT id FROM host WHERE description IN ('Device 1', 'Device 2', 'Device 3', 'Device 4')"); do
-    php cli/add_tree.php --type=node --node-type=host --tree-id="$tree" --host-id="$host" >/dev/null
+    if [ "$(sql "SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id = $tree AND host_id = $host")" = "0" ]; then
+        php cli/add_tree.php --type=node --node-type=host --tree-id="$tree" --host-id="$host" >/dev/null
+    fi
 done
 
 # One device per status the list pages colour: up, down, recovering, unknown
