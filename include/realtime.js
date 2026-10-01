@@ -20,6 +20,7 @@ var prevTotalGraphs = null;
 var url;
 var local_graph_id  = null;
 var realtimeSaved   = '';
+var realtimePosting = null;
 
 function realtimeDetectBrowser() {
 	if (navigator.userAgent.indexOf('MSIE') >= 0) {
@@ -40,12 +41,26 @@ function realtimeDetectBrowser() {
 /* graph_realtime.php saves the interval, window, size and thumbnail choice
  * only from a POST, which csrf-magic checks. Post when the choice changes and
  * keep the periodic refresh a GET, so a token that expires while the page
- * stays open does not stop the graph. */
+ * stays open does not stop the graph. A choice counts as saved only once its
+ * POST succeeds, so a rejected save is posted again on the next refresh. */
 function realtimeRequest(url, options, dataType) {
-	if (options != realtimeSaved) {
-		realtimeSaved = options;
+	if (options !== realtimeSaved && options !== realtimePosting) {
+		realtimePosting = options;
 
-		return $.ajax({ url: url, type: 'POST', data: { __csrf_magic: csrfMagicToken }, dataType: dataType });
+		return $.ajax({
+			url: url,
+			type: 'POST',
+			data: { __csrf_magic: csrfMagicToken },
+			dataType: dataType,
+			success: function() {
+				realtimeSaved = options;
+			},
+			complete: function() {
+				if (realtimePosting === options) {
+					realtimePosting = null;
+				}
+			}
+		});
 	}
 
 	return $.ajax({ url: url, type: 'GET', dataType: dataType });

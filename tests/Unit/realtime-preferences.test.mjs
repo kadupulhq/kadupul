@@ -29,7 +29,17 @@ function loadRealtime(controls) {
 	const $ = (selector) => element(selector);
 
 	$.ajax = (options) => {
-		requests.push({ type: options.type, url: options.url, data: options.data, dataType: options.dataType });
+		requests.push({
+			type: options.type,
+			url: options.url,
+			data: options.data,
+			dataType: options.dataType,
+			// Settles the request through the callbacks realtimeRequest() passed.
+			settle: (succeeded) => {
+				if (succeeded && options.success) options.success();
+				if (options.complete) options.complete();
+			},
+		});
 
 		return chain;
 	};
@@ -77,6 +87,7 @@ test('an unchanged refresh stays a GET and a changed choice posts again', () => 
 	const { context, requests } = loadRealtime(controls);
 
 	context.imageOptionsChanged('init');
+	requests[0].settle(true);
 	context.imageOptionsChanged('countdown');
 	controls['#ds_step'] = '60';
 	context.imageOptionsChanged('interval');
@@ -84,4 +95,26 @@ test('an unchanged refresh stays a GET and a changed choice posts again', () => 
 
 	assert.deepEqual(requests.map((request) => request.type), ['POST', 'GET', 'POST']);
 	assert.equal(requests[1].data, undefined);
+});
+
+test('a refresh during the save stays a GET', () => {
+	const { context, requests } = loadRealtime(controls);
+
+	context.imageOptionsChanged('init');
+	context.imageOptionsChanged('countdown');
+
+	assert.deepEqual(requests.map((request) => request.type), ['POST', 'GET']);
+});
+
+test('a rejected save is posted again on the next refresh', () => {
+	const { context, requests } = loadRealtime(controls);
+
+	context.imageOptionsChanged('init');
+	requests[0].settle(false);
+	context.imageOptionsChanged('countdown');
+	requests[1].settle(true);
+	context.imageOptionsChanged('countdown');
+
+	assert.deepEqual(requests.map((request) => request.type), ['POST', 'POST', 'GET']);
+	assert.deepEqual({ ...requests[1].data }, { __csrf_magic: 'sid:token' });
 });
