@@ -117,7 +117,7 @@ class Client:
 
 
 def cli_refused(response):
-    # mod_php echoes a shebang line ahead of the guard.
+    # Some PHP CLI entry points use a shebang that mod_php emits before the guard.
     body = response['body'].strip()
     return (response['status'] == 404 and body in ('', '#!/usr/bin/env php')) \
         or 'only meant to run at the command line' in body

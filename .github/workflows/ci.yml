@@ -107,7 +107,7 @@ jobs:
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: '8.4'
-        extensions: gd, gmp, intl, ldap, mbstring, pdo_mysql, sockets, sqlite3, xml
+        extensions: dom, gd, gmp, intl, ldap, mbstring, mysqlnd, pdo_mysql, sockets, sqlite3, xml
         coverage: none
 
     - name: Install application dependencies
@@ -127,6 +127,8 @@ jobs:
         KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=cacti_boost_contract;charset=utf8mb4
         KADUPUL_TEST_MYSQL_USER: cactiuser
         KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
+        KADUPUL_TEST_MYSQL_ADMIN_USER: root
+        KADUPUL_TEST_MYSQL_ADMIN_PASSWORD: cactiroot
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
@@ -262,6 +264,8 @@ jobs:
         env:
           PHP_VERSION: '8.4'
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+      - name: Verify External Links through HTTP and MariaDB
+        run: mise exec python@3.12.12 -- python tests/Symfony/link_review_http.py
       - name: Verify the actual CLI upgrades an installed LTS database version
         run: mise exec python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
       - name: Refuse forbidden access at every entry point

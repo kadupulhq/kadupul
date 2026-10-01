@@ -23,7 +23,12 @@ def main():
     required = [prefix + path for path in (
         'src/AggregateTemplate/Domain/AggregateTemplateItemPolicy.php',
         'src/AggregateTemplate/Domain/AggregateTemplateLegacyPath.php',
-        'bin/legacy-device-edit.php', 'bin/legacy-aggregate-template.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'bin/legacy-device-edit.php',
+        'bin/legacy-aggregate-template.php',
+        'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'links.php',
+        'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',

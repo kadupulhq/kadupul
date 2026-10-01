@@ -71,8 +71,8 @@ PHP;
     }
 }
 
-// Migrated entries are covered by their authenticated Symfony HTTP scenarios;
-// retain only legacy controllers that still execute through this stub harness.
+// Sites, Navigation and Aggregate Templates use Symfony bridges; their framework tests
+// and HTTP scenarios verify POST and CSRF rejection.
 test('bulk controllers reject unprotected confirmation requests before dispatch', function ($controller, $method, $token, $action, $status) {
     expect(runBulkMutationRequest($this, $controller, $method, $token, $action))->toBe('STATUS:' . $status);
 })->with(array(
@@ -81,7 +81,7 @@ test('bulk controllers reject unprotected confirmation requests before dispatch'
     'automation_templates.php', 'automation_tree_rules.php', 'cdef.php', 'color.php',
     'color_templates.php', 'data_debug.php', 'data_input.php', 'data_queries.php',
     'data_source_profiles.php', 'data_sources.php', 'data_templates.php', 'gprint_presets.php',
-    'graphs.php', 'host.php', 'host_templates.php', 'links.php', 'managers.php',
+    'graphs.php', 'host.php', 'host_templates.php', 'managers.php',
     'pollers.php', 'tree.php', 'user_domains.php', 'vdef.php',
 ))->with(array(
     array('GET', 'missing', 'actions', 405),
