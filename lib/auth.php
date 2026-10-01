@@ -3879,7 +3879,7 @@ function ldap_login_process($username) {
 
 			if ($ldap_auth_response['error_num'] == '0') {
 				/* Locate user in database */
-				cacti_log("LOGIN: LDAP User '" . $username . "' Authenticated", false, 'AUTH');
+				cacti_log("LOGIN: LDAP User '" . auth_log_username($username) . "' Authenticated", false, 'AUTH');
 
 				$user = db_fetch_row_prepared('SELECT *
 					FROM user_auth
@@ -3903,7 +3903,7 @@ function ldap_login_process($username) {
 		$error     = true;
 		$error_msg = __('Access Denied!  No password provided by user.');
 
-		cacti_log(sprintf('LOGIN FAILED: LDAP No password provided for user %s', $username), false, 'AUTH');
+		cacti_log(sprintf('LOGIN FAILED: LDAP No password provided for user %s', auth_log_username($username)), false, 'AUTH');
 
 		auth_process_lockout($username, $realm);
 	}
@@ -3939,7 +3939,7 @@ function domains_login_process($username) {
 		$error     = true;
 		$error_msg = __('Access Denied!  Login Failed.');
 
-		cacti_log(sprintf("LOGIN FAILED: Unknown Login Realm '%s' provided for user '%s' from IP address %s", $realm, $username, get_client_addr()), false, 'AUTH');
+		cacti_log(sprintf("LOGIN FAILED: Unknown Login Realm '%s' provided for user '%s' from IP address %s", $realm, auth_log_username($username), get_client_addr()), false, 'AUTH');
 
 		return array();
 	}
@@ -3976,7 +3976,7 @@ function domains_login_process($username) {
 					array($realm-1000));
 
 				/* Locate user in database */
-				cacti_log("LOGIN: LDAP User '$username' Authenticated from Domain '$domain_name'", false, 'AUTH');
+				cacti_log("LOGIN: LDAP User '" . auth_log_username($username) . "' Authenticated from Domain '$domain_name'", false, 'AUTH');
 
 				$user = db_fetch_row_prepared('SELECT *
 					FROM user_auth
@@ -3996,7 +3996,7 @@ function domains_login_process($username) {
 					array($template_user));
 
 				if (!cacti_sizeof($user) && $template_user > 0 && $username != '') {
-					cacti_log("NOTE: User '" . $username . "' does not exist, copying template user", false, 'AUTH');
+					cacti_log("NOTE: User '" . auth_log_username($username) . "' does not exist, copying template user", false, 'AUTH');
 
 					/* check that template user exists */
 					$user_template = db_fetch_row_prepared('SELECT *
@@ -4073,14 +4073,14 @@ function domains_login_process($username) {
 		$error     = true;
 		$error_msg = __('Access Denied!  No password provided by user.');
 
-		cacti_log(sprintf('LOGIN FAILED: LDAP No password provided for user %s', $username), false, 'AUTH');
+		cacti_log(sprintf('LOGIN FAILED: LDAP No password provided for user %s', auth_log_username($username)), false, 'AUTH');
 
 		auth_process_lockout($username, $realm);
 	} else {
 		$error     = true;
 		$error_msg = __('Access Denied!  Login Failed.');
 
-		cacti_log(sprintf("LOGIN FAILED: Login Realm '%s' is not an LDAP domain for user '%s' from IP address %s", $realm, $username, get_client_addr()), false, 'AUTH');
+		cacti_log(sprintf("LOGIN FAILED: Login Realm '%s' is not an LDAP domain for user '%s' from IP address %s", $realm, auth_log_username($username), get_client_addr()), false, 'AUTH');
 	}
 
 	return $user;
