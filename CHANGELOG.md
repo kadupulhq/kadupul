@@ -7,6 +7,11 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
+- Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
+- Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
+
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
 - Move External Links into the Navigation Symfony module with Twig forms, transactional viewing grants, stale-order protection and safe legacy redirects.
 
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
@@ -71,6 +76,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Normalize Graph View graph-list values before storing them in the session, escape them in HTML, and encode them for JavaScript. Removing the last selected graph now clears the stored selection, while paging preserves it. Fixes #574.
 - Escape and type-check the posted local graph ID before rendering Aggregate Graphs bulk-action confirmation markup. Fixes #586.
 - Escape color-dropdown values and enclosing form row IDs in their HTML contexts; render color option identifiers as integers. Fixes #576.
+- Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
 
 - Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
@@ -136,9 +142,6 @@ Targeting `v1.3.0`, the first planned application release. See
 - Check every changed PHP file in the style check; a large file list could make it skip some.
 
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
-
-- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
-- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
 
 ### Changed
 

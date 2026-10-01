@@ -59,17 +59,17 @@ msgstr "This program is distributed in the hope that it will be useful, but WITH
 #: color_templates.php:12 color_templates.php:107 data_input.php:17
 #: data_input.php:639 data_input.php:681 data_queries.php:15
 #: data_queries.php:807 data_queries.php:914 data_queries.php:1174
-#: data_source_profiles.php:15 data_source_profiles.php:655 data_sources.php:21
-#: data_sources.php:1145 data_templates.php:18 data_templates.php:790
-#: gprint_presets.php:12 graph_templates.php:22 graph_templates.php:500
-#: graphs.php:31 host.php:26 host_templates.php:19 host_templates.php:462
-#: host_templates.php:519 include/global_arrays.php:1650
-#: include/global_settings.php:232 lib/api_automation.php:1323
-#: lib/api_automation.php:1386 lib/api_automation.php:1457 lib/html.php:1373
-#: lib/html_form.php:1397 lib/html_reports.php:1861 links.php:13
-#: managers.php:12 pollers.php:18 tree.php:1627 tree.php:1780 tree.php:1840
-#: tree.php:1861 user_admin.php:16 user_domains.php:15 user_group_admin.php:18
-#: vdef.php:13
+#: data_sources.php:21 data_sources.php:1145 data_templates.php:18
+#: data_templates.php:790 gprint_presets.php:12 graph_templates.php:22
+#: graph_templates.php:500 graphs.php:31 host.php:26 host_templates.php:19
+#: host_templates.php:462 host_templates.php:519
+#: include/global_arrays.php:1650 include/global_settings.php:232
+#: lib/api_automation.php:1323 lib/api_automation.php:1386
+#: lib/api_automation.php:1457 lib/html.php:1373 lib/html_form.php:1397
+#: lib/html_reports.php:1861 links.php:13 managers.php:12 pollers.php:18
+#: tree.php:1627 tree.php:1780 tree.php:1840 tree.php:1861 user_admin.php:16
+#: user_domains.php:15 user_group_admin.php:18 vdef.php:13
+#: data_source_profiles.php:16 data_source_profiles.php:856
 msgid "Delete"
 msgstr "हटाएं"
 
@@ -111,14 +111,13 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 #: aggregate_graphs.php:514 aggregate_graphs.php:527
 #: aggregate_templates.php:307 automation_devices.php:208
 #: automation_devices.php:217 automation_graph_rules.php:320
-#: automation_networks.php:386 automation_snmp.php:239 automation_snmp.php:353
-#: automation_templates.php:151 automation_tree_rules.php:303 cdef.php:260
-#: cdef.php:271 cdef.php:327 color.php:177 color_templates.php:227
-#: color_templates.php:239 color_templates.php:248
-#: color_templates_items.php:281 data_input.php:280 data_input.php:332
-#: data_queries.php:396 data_queries.php:410 data_queries.php:574
-#: data_source_profiles.php:290 data_source_profiles.php:300
-#: data_source_profiles.php:408 data_sources.php:541 data_sources.php:553
+#: automation_networks.php:386 automation_snmp.php:239
+#: automation_snmp.php:353 automation_templates.php:151
+#: automation_tree_rules.php:303 cdef.php:260 cdef.php:271 cdef.php:327
+#: color.php:177 color_templates.php:227 color_templates.php:239
+#: color_templates.php:248 color_templates_items.php:281 data_input.php:280
+#: data_input.php:332 data_queries.php:396 data_queries.php:410
+#: data_queries.php:574 data_sources.php:541 data_sources.php:553
 #: data_sources.php:562 data_sources.php:571 data_sources.php:580
 #: data_sources.php:586 data_templates.php:485 data_templates.php:497
 #: data_templates.php:513 gprint_presets.php:137 graph_templates.php:361
@@ -139,8 +138,9 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 #: user_admin.php:276 user_admin.php:287 user_admin.php:310
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
 #: user_domains.php:247 user_group_admin.php:337 user_group_admin.php:356
-#: user_group_admin.php:367 user_group_admin.php:378 vdef.php:263 vdef.php:273
-#: vdef.php:337
+#: user_group_admin.php:367 user_group_admin.php:378 vdef.php:263
+#: vdef.php:273 vdef.php:337 data_source_profiles.php:380
+#: data_source_profiles.php:392 data_source_profiles.php:585
 msgid "Cancel"
 msgstr "कैंसिल करें"
 
@@ -149,34 +149,35 @@ msgstr "कैंसिल करें"
 #: aggregate_graphs.php:514 aggregate_graphs.php:527
 #: aggregate_templates.php:307 automation_devices.php:208
 #: automation_devices.php:217 automation_graph_rules.php:320
-#: automation_networks.php:378 automation_snmp.php:214 automation_snmp.php:354
-#: automation_templates.php:151 automation_tree_rules.php:303 cdef.php:260
-#: cdef.php:271 cdef.php:328 color.php:177 color_templates.php:227
-#: color_templates.php:239 color_templates.php:248
-#: color_templates_items.php:282 data_input.php:280 data_input.php:333
-#: data_queries.php:396 data_queries.php:410 data_queries.php:575
-#: data_source_profiles.php:290 data_source_profiles.php:300
-#: data_source_profiles.php:409 data_sources.php:541 data_sources.php:553
+#: automation_networks.php:378 automation_snmp.php:214
+#: automation_snmp.php:354 automation_templates.php:151
+#: automation_tree_rules.php:303 cdef.php:260 cdef.php:271 cdef.php:328
+#: color.php:177 color_templates.php:227 color_templates.php:239
+#: color_templates.php:248 color_templates_items.php:282 data_input.php:280
+#: data_input.php:333 data_queries.php:396 data_queries.php:410
+#: data_queries.php:575 data_sources.php:541 data_sources.php:553
 #: data_sources.php:562 data_sources.php:571 data_sources.php:580
 #: data_sources.php:586 data_templates.php:485 data_templates.php:497
 #: data_templates.php:513 gprint_presets.php:137 graph_templates.php:361
 #: graph_templates.php:371 graph_templates.php:393 graph_templates.php:402
 #: graph_templates.php:411 graphs.php:913 graphs.php:929 graphs.php:940
-#: graphs.php:951 graphs.php:966 graphs.php:980 graphs.php:989 graphs.php:1189
-#: graphs.php:1232 graphs.php:1254 graphs.php:1283 graphs.php:1295 host.php:405
-#: host.php:414 host.php:461 host.php:470 host.php:479 host.php:493
-#: host.php:507 host.php:516 host.php:545 host.php:557 host_templates.php:212
-#: host_templates.php:226 host_templates.php:237 host_templates.php:290
-#: host_templates.php:359 lib/clog_webapi.php:216 lib/html.php:2622
-#: lib/html_reports.php:556 links.php:187 links.php:196 links.php:205
-#: managers.php:1020 managers.php:1081 pollers.php:549 pollers.php:558
-#: pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705 tree.php:714
-#: tree.php:723 tree.php:732 user_admin.php:225 user_admin.php:265
-#: user_admin.php:276 user_admin.php:287 user_admin.php:310
-#: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:337 user_group_admin.php:356
-#: user_group_admin.php:367 user_group_admin.php:378 vdef.php:263 vdef.php:273
-#: vdef.php:338
+#: graphs.php:951 graphs.php:966 graphs.php:980 graphs.php:989
+#: graphs.php:1189 graphs.php:1232 graphs.php:1254 graphs.php:1283
+#: graphs.php:1295 host.php:405 host.php:414 host.php:461 host.php:470
+#: host.php:479 host.php:493 host.php:507 host.php:516 host.php:545
+#: host.php:557 host_templates.php:212 host_templates.php:226
+#: host_templates.php:237 host_templates.php:290 host_templates.php:359
+#: lib/clog_webapi.php:216 lib/html.php:2622 lib/html_reports.php:556
+#: links.php:187 links.php:196 links.php:205 managers.php:1020
+#: managers.php:1081 pollers.php:549 pollers.php:558 pollers.php:567
+#: pollers.php:576 pollers.php:585 tree.php:705 tree.php:714 tree.php:723
+#: tree.php:732 user_admin.php:225 user_admin.php:265 user_admin.php:276
+#: user_admin.php:287 user_admin.php:310 user_domains.php:220
+#: user_domains.php:229 user_domains.php:238 user_domains.php:247
+#: user_group_admin.php:337 user_group_admin.php:356 user_group_admin.php:367
+#: user_group_admin.php:378 vdef.php:263 vdef.php:273 vdef.php:338
+#: data_source_profiles.php:380 data_source_profiles.php:392
+#: data_source_profiles.php:586
 msgid "Continue"
 msgstr "जारी रखें"
 
@@ -194,12 +195,12 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "टेम्पलेट आधारित एग्रीगेट के नीचे दिए गए एग्रीगेट ग्राफ़ को माइग्रेट करने के लिए, उन्हें केवल एक ग्राफ़ टेम्प्लेट का उपयोग करना चाहिए। कृपया &#39;रिटर्न&#39; दबाएं और फिर केवल एग्रीगेट ग्राफ़ चुनें जो उसी ग्राफ़ टेम्पलेट का उपयोग करें।"
 
 #: aggregate_graphs.php:388 aggregate_graphs.php:438 aggregate_graphs.php:486
-#: auth_changepassword.php:364 auth_profile.php:428 automation_networks.php:387
-#: automation_snmp.php:239 graphs.php:1191 graphs.php:1241 graphs.php:1244
-#: graphs.php:1286 graphs.php:1847 host.php:548 include/auth.php:287
-#: lib/api_aggregate.php:1618 lib/api_aggregate.php:1633 lib/html_form.php:1422
-#: lib/html_reports.php:614 managers.php:1084 permission_denied.php:14
-#: permission_denied.php:16
+#: auth_changepassword.php:364 auth_profile.php:428
+#: automation_networks.php:387 automation_snmp.php:239 graphs.php:1191
+#: graphs.php:1241 graphs.php:1244 graphs.php:1286 graphs.php:1847
+#: host.php:548 include/auth.php:287 lib/api_aggregate.php:1618
+#: lib/api_aggregate.php:1633 lib/html_form.php:1422 lib/html_reports.php:614
+#: managers.php:1084 permission_denied.php:14 permission_denied.php:16
 msgid "Return"
 msgstr "वापसी"
 
@@ -316,8 +317,8 @@ msgstr "[संपादित करें: %s]"
 msgid "Aggregate Graph does not Exist"
 msgstr "ग्राफ़ सेटिंग्स को अलग करें"
 
-#: aggregate_graphs.php:626 aggregate_graphs.php:633 lib/html_reports.php:1481
-#: lib/html_reports.php:1483 utilities.php:2204
+#: aggregate_graphs.php:626 aggregate_graphs.php:633
+#: lib/html_reports.php:1481 lib/html_reports.php:1483 utilities.php:2204
 msgid "Details"
 msgstr "विवरण"
 
@@ -414,8 +415,8 @@ msgstr "मिलान रेखांकन"
 #: automation_graph_rules.php:773 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:684
 #: automation_templates.php:377 automation_tree_rules.php:821 cdef.php:731
-#: color.php:514 color_templates.php:522 data_debug.php:1108 data_input.php:797
-#: data_queries.php:1292 data_source_profiles.php:898 data_sources.php:1529
+#: color.php:514 color_templates.php:522 data_debug.php:1108
+#: data_input.php:797 data_queries.php:1292 data_sources.php:1529
 #: data_templates.php:1095 gprint_presets.php:255 graph_templates.php:704
 #: graph_view.php:664 graphs.php:2062 graphs_new.php:443 host.php:1681
 #: host_templates.php:766 lib/api_automation.php:42 lib/api_automation.php:43
@@ -428,8 +429,9 @@ msgstr "मिलान रेखांकन"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:878 tree.php:913 tree.php:948 tree.php:2150 user_admin.php:2053
 #: user_domains.php:643 user_group_admin.php:1827 utilities.php:1074
-#: utilities.php:1470 utilities.php:1765 utilities.php:2052 utilities.php:2997
-#: utilities.php:3255 vdef.php:713
+#: utilities.php:1470 utilities.php:1765 utilities.php:2052
+#: utilities.php:2997 utilities.php:3255 vdef.php:713
+#: data_source_profiles.php:1108
 msgid "Search"
 msgstr "खोजें"
 
@@ -438,12 +440,12 @@ msgstr "खोजें"
 #: data_sources.php:1852 graph_view.php:485 graph_view.php:736
 #: graph_view.php:800 graphs.php:2079 graphs.php:2244 host.php:1792
 #: include/global_arrays.php:992 include/global_arrays.php:1227
-#: include/global_arrays.php:2010 lib/api_automation.php:283 lib/html.php:1801
-#: lib/html.php:1803 lib/html.php:1881 lib/html_graph.php:191
-#: lib/html_tree.php:1022 lib/html_tree.php:1378 tree.php:857 tree.php:2296
-#: user_admin.php:775 user_admin.php:1046 user_admin.php:2323
-#: user_group_admin.php:770 user_group_admin.php:924 user_group_admin.php:1982
-#: utilities.php:303
+#: include/global_arrays.php:2010 lib/api_automation.php:283
+#: lib/html.php:1801 lib/html.php:1803 lib/html.php:1881
+#: lib/html_graph.php:191 lib/html_tree.php:1022 lib/html_tree.php:1378
+#: tree.php:857 tree.php:2296 user_admin.php:775 user_admin.php:1046
+#: user_admin.php:2323 user_group_admin.php:770 user_group_admin.php:924
+#: user_group_admin.php:1982 utilities.php:303
 msgid "Graphs"
 msgstr "रेखांकन"
 
@@ -453,8 +455,7 @@ msgstr "रेखांकन"
 #: automation_snmp.php:694 automation_templates.php:387
 #: automation_tree_rules.php:841 cdef.php:741 color.php:524
 #: color_templates.php:538 data_debug.php:1118 data_input.php:807
-#: data_queries.php:1302 data_source_profiles.php:908
-#: data_source_profiles.php:1027 data_sources.php:1539 data_templates.php:1124
+#: data_queries.php:1302 data_sources.php:1539 data_templates.php:1124
 #: gprint_presets.php:265 graph_templates.php:714 graph_view.php:740
 #: graphs.php:2083 graphs_new.php:453 host.php:1706 host_templates.php:776
 #: include/global_form.php:242 lib/api_automation.php:182
@@ -465,8 +466,9 @@ msgstr "रेखांकन"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2160 user_admin.php:2114 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:1837 utilities.php:1052
-#: utilities.php:1775 utilities.php:2083 utilities.php:3022 utilities.php:3291
-#: vdef.php:723
+#: utilities.php:1775 utilities.php:2083 utilities.php:3022
+#: utilities.php:3291 vdef.php:723 data_source_profiles.php:1118
+#: data_source_profiles.php:1240
 msgid "Default"
 msgstr "डिफ़ॉल्ट"
 
@@ -480,10 +482,10 @@ msgstr "एग्रीगेट का हिस्सा"
 #: automation_snmp.php:706 automation_templates.php:399
 #: automation_tree_rules.php:853 cdef.php:759 color.php:548
 #: color_templates.php:560 data_debug.php:1036 data_input.php:819
-#: data_queries.php:1314 data_source_profiles.php:926 data_sources.php:1479
-#: data_templates.php:1145 gprint_presets.php:283 graph_templates.php:732
-#: graph_view.php:672 graphs.php:2053 graphs_new.php:432 host.php:1671
-#: host_templates.php:757 lib/api_automation.php:187 lib/api_automation.php:471
+#: data_queries.php:1314 data_sources.php:1479 data_templates.php:1145
+#: gprint_presets.php:283 graph_templates.php:732 graph_view.php:672
+#: graphs.php:2053 graphs_new.php:432 host.php:1671 host_templates.php:757
+#: lib/api_automation.php:187 lib/api_automation.php:471
 #: lib/api_automation.php:723 lib/api_automation.php:1087
 #: lib/clog_webapi.php:516 lib/html.php:1649 lib/html_filter.php:63
 #: lib/html_graph.php:172 lib/html_reports.php:1977 lib/html_tree.php:1009
@@ -491,13 +493,14 @@ msgstr "एग्रीगेट का हिस्सा"
 #: plugins.php:530 pollers.php:914 tree.php:2172 user_admin.php:2129
 #: user_admin.php:2323 user_admin.php:2329 user_admin.php:2335
 #: user_admin.php:2341 user_admin.php:2347 user_admin.php:2353
+#: data_source_profiles.php:1139
 msgid "Go"
 msgstr "जाएं"
 
 #: aggregate_graphs.php:1285 aggregate_graphs.php:1578
 #: automation_devices.php:495 automation_snmp.php:706
-#: automation_templates.php:399 cdef.php:759 color.php:548 data_debug.php:1036
-#: data_input.php:819 data_queries.php:1314 data_source_profiles.php:926
+#: automation_templates.php:399 cdef.php:759 color.php:548
+#: data_debug.php:1036 data_input.php:819 data_queries.php:1314
 #: data_sources.php:1479 data_templates.php:1145 gprint_presets.php:283
 #: graph_templates.php:732 graph_view.php:672 graphs.php:2053
 #: graphs_new.php:432 host.php:1671 host_templates.php:757
@@ -506,7 +509,8 @@ msgstr "जाएं"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2172 user_admin.php:2129 user_domains.php:665
 #: user_group_admin.php:1852 utilities.php:1064 utilities.php:1422
-#: utilities.php:1756 utilities.php:2043 utilities.php:3034 utilities.php:3303
+#: utilities.php:1756 utilities.php:2043 utilities.php:3034
+#: utilities.php:3303 data_source_profiles.php:1139
 msgid "Set/Refresh Filters"
 msgstr "सेट / फ़िल्टर ताज़ा करें"
 
@@ -516,10 +520,10 @@ msgstr "सेट / फ़िल्टर ताज़ा करें"
 #: automation_snmp.php:707 automation_templates.php:400
 #: automation_tree_rules.php:854 cdef.php:760 color.php:549
 #: color_templates.php:561 data_debug.php:1037 data_input.php:820
-#: data_queries.php:1315 data_source_profiles.php:927 data_sources.php:1480
-#: data_templates.php:1146 gprint_presets.php:284 graph_templates.php:733
-#: graph_view.php:673 graphs.php:2054 graphs_new.php:433 host.php:1672
-#: host_templates.php:758 lib/api_automation.php:188 lib/api_automation.php:472
+#: data_queries.php:1315 data_sources.php:1480 data_templates.php:1146
+#: gprint_presets.php:284 graph_templates.php:733 graph_view.php:673
+#: graphs.php:2054 graphs_new.php:433 host.php:1672 host_templates.php:758
+#: lib/api_automation.php:188 lib/api_automation.php:472
 #: lib/api_automation.php:724 lib/api_automation.php:1088
 #: lib/clog_webapi.php:517 lib/html_filter.php:68 lib/html_graph.php:173
 #: lib/html_graph.php:290 lib/html_reports.php:1978 lib/html_tree.php:1010
@@ -527,13 +531,13 @@ msgstr "सेट / फ़िल्टर ताज़ा करें"
 #: managers.php:750 plugins.php:531 pollers.php:915 tree.php:2173
 #: user_admin.php:2130 user_admin.php:2323 user_admin.php:2329
 #: user_admin.php:2335 user_admin.php:2341 user_admin.php:2347
-#: user_admin.php:2353 user_domains.php:666
+#: user_admin.php:2353 user_domains.php:666 data_source_profiles.php:1140
 msgid "Clear"
 msgstr "明确"
 
-#: aggregate_graphs.php:1286 aggregate_graphs.php:1579 automation_snmp.php:707
-#: automation_templates.php:400 cdef.php:760 color.php:549 data_debug.php:1037
-#: data_input.php:820 data_queries.php:1315 data_source_profiles.php:927
+#: aggregate_graphs.php:1286 aggregate_graphs.php:1579
+#: automation_snmp.php:707 automation_templates.php:400 cdef.php:760
+#: color.php:549 data_debug.php:1037 data_input.php:820 data_queries.php:1315
 #: data_sources.php:1480 data_templates.php:1146 gprint_presets.php:284
 #: graph_templates.php:733 graph_view.php:673 graphs.php:2054
 #: graphs_new.php:433 host.php:1672 host_templates.php:758
@@ -542,7 +546,8 @@ msgstr "明确"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2173 user_admin.php:2130 user_domains.php:666
 #: user_group_admin.php:1853 utilities.php:1065 utilities.php:1423
-#: utilities.php:1757 utilities.php:2044 utilities.php:3035 utilities.php:3304
+#: utilities.php:1757 utilities.php:2044 utilities.php:3035
+#: utilities.php:3304 data_source_profiles.php:1140
 msgid "Clear Filters"
 msgstr "साफ फिल्टर"
 
@@ -556,10 +561,11 @@ msgstr "ग्राफ शीर्षक"
 #: data_debug.php:444 data_input.php:906 data_queries.php:1400
 #: data_sources.php:1707 data_templates.php:1254 graph_templates.php:838
 #: graphs.php:2260 host.php:1786 host_templates.php:917
-#: lib/api_automation.php:282 pollers.php:995 tree.php:2236 user_admin.php:783
-#: user_admin.php:897 user_admin.php:1046 user_admin.php:1190
-#: user_admin.php:1329 user_group_admin.php:571 user_group_admin.php:778
-#: user_group_admin.php:924 user_group_admin.php:1065 user_group_admin.php:1197
+#: lib/api_automation.php:282 pollers.php:995 tree.php:2236
+#: user_admin.php:783 user_admin.php:897 user_admin.php:1046
+#: user_admin.php:1190 user_admin.php:1329 user_group_admin.php:571
+#: user_group_admin.php:778 user_group_admin.php:924
+#: user_group_admin.php:1065 user_group_admin.php:1197
 msgid "ID"
 msgstr "ID"
 
@@ -567,21 +573,21 @@ msgstr "ID"
 msgid "Included in Aggregate"
 msgstr "एग्रीगेट में शामिल"
 
-#: aggregate_graphs.php:1314 aggregate_graphs.php:1647 graph_templates.php:855
-#: graph_view.php:829 graph_view.php:842 graphs.php:2278 lib/spikekill.php:1674
+#: aggregate_graphs.php:1314 aggregate_graphs.php:1647
+#: graph_templates.php:855 graph_view.php:829 graph_view.php:842
+#: graphs.php:2278 lib/spikekill.php:1674
 msgid "Size"
 msgstr "आकार"
 
 #: aggregate_graphs.php:1330 aggregate_templates.php:709
 #: automation_tree_rules.php:700 cdef.php:886 color.php:707 color.php:709
 #: color_templates.php:666 data_input.php:951 data_queries.php:1452
-#: data_source_profiles.php:1107 data_source_profiles.php:1108
 #: data_sources.php:1794 data_sources.php:1795 data_templates.php:1315
 #: gprint_presets.php:430 graph_templates.php:895 host_templates.php:965
 #: include/global_settings.php:876 include/global_settings.php:1909
 #: lib/api_automation.php:1438 links.php:402 tree.php:2329 tree.php:2330
 #: user_admin.php:2245 user_domains.php:758 user_group_admin.php:1920
-#: vdef.php:918
+#: vdef.php:918 data_source_profiles.php:1320 data_source_profiles.php:1321
 msgid "No"
 msgstr "नहीं"
 
@@ -589,15 +595,14 @@ msgstr "नहीं"
 #: automation_tree_rules.php:693 cdef.php:886 color.php:707 color.php:709
 #: color_templates.php:666 data_debug.php:684 data_debug.php:689
 #: data_debug.php:694 data_input.php:951 data_queries.php:1452
-#: data_source_profiles.php:1106 data_source_profiles.php:1107
-#: data_source_profiles.php:1108 data_sources.php:1794 data_sources.php:1795
-#: data_templates.php:1315 gprint_presets.php:430 graph_templates.php:895
-#: host_templates.php:965 include/global_settings.php:875
-#: include/global_settings.php:1908 lib/api_automation.php:1438
-#: lib/installer.php:2118 lib/installer.php:2146 lib/installer.php:3847
-#: links.php:402 tree.php:2329 tree.php:2330 user_admin.php:2243
-#: user_domains.php:754 user_domains.php:758 user_group_admin.php:1918
-#: vdef.php:918
+#: data_sources.php:1794 data_sources.php:1795 data_templates.php:1315
+#: gprint_presets.php:430 graph_templates.php:895 host_templates.php:965
+#: include/global_settings.php:875 include/global_settings.php:1908
+#: lib/api_automation.php:1438 lib/installer.php:2118 lib/installer.php:2146
+#: lib/installer.php:3847 links.php:402 tree.php:2329 tree.php:2330
+#: user_admin.php:2243 user_domains.php:754 user_domains.php:758
+#: user_group_admin.php:1918 vdef.php:918 data_source_profiles.php:1319
+#: data_source_profiles.php:1320 data_source_profiles.php:1321
 msgid "Yes"
 msgstr "हाँ"
 
@@ -634,12 +639,13 @@ msgstr "खाका"
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3250 lib/auth.php:3298
 #: lib/html.php:2165 lib/html.php:2188 lib/html.php:2226 lib/html.php:2256
-#: lib/html_reports.php:977 lib/html_reports.php:981 lib/html_reports.php:1096
-#: lib/html_reports.php:1106 lib/html_reports.php:1956 managers.php:476
-#: managers.php:739
+#: lib/html_reports.php:977 lib/html_reports.php:981
+#: lib/html_reports.php:1096 lib/html_reports.php:1106
+#: lib/html_reports.php:1956 managers.php:476 managers.php:739
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
-#: utilities.php:1040 utilities.php:1724 utilities.php:2017 utilities.php:2062
-#: utilities.php:2072 utilities.php:3007 utilities.php:3265 utilities.php:3278
+#: utilities.php:1040 utilities.php:1724 utilities.php:2017
+#: utilities.php:2062 utilities.php:2072 utilities.php:3007
+#: utilities.php:3265 utilities.php:3278
 msgid "Any"
 msgstr "कोई भी@ label"
 
@@ -649,30 +655,31 @@ msgstr "कोई भी@ label"
 #: data_debug.php:1015 data_sources.php:999 data_sources.php:1455
 #: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:51
 #: graphs.php:1584 graphs.php:1593 graphs.php:2023 graphs_items.php:289
-#: graphs_items.php:409 host.php:255 host.php:1172 host.php:1183 host.php:1593
-#: host.php:1628 include/global_arrays.php:522 include/global_arrays.php:580
-#: include/global_arrays.php:672 include/global_arrays.php:884
-#: include/global_arrays.php:1739 include/global_form.php:574
-#: include/global_form.php:883 include/global_form.php:891
-#: include/global_form.php:899 include/global_form.php:938
-#: include/global_form.php:945 include/global_form.php:971
-#: include/global_form.php:1000 include/global_form.php:1008
-#: include/global_form.php:1186 include/global_form.php:1205
-#: include/global_form.php:1214 include/global_form.php:2128
-#: include/global_form.php:2170 include/global_settings.php:614
-#: include/global_settings.php:622 include/global_settings.php:630
-#: include/global_settings.php:1320 include/global_settings.php:1983
-#: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3253
-#: lib/auth.php:3301 lib/auth.php:3346 lib/html.php:209 lib/html.php:2166
-#: lib/html.php:2186 lib/html.php:2227 lib/html.php:2257 lib/html_form.php:392
-#: lib/html_reports.php:988 lib/html_reports.php:992 lib/html_reports.php:1022
-#: lib/html_reports.php:1096 lib/html_reports.php:1102
-#: lib/html_reports.php:1106 lib/html_reports.php:1114
-#: lib/html_reports.php:1125 lib/html_reports.php:1145
-#: lib/html_reports.php:1399 lib/html_reports.php:1404
-#: lib/html_reports.php:1409 package_import.php:686 settings.php:532
-#: settings.php:554 settings.php:585
+#: graphs_items.php:409 host.php:255 host.php:1172 host.php:1183
+#: host.php:1593 host.php:1628 include/global_arrays.php:522
+#: include/global_arrays.php:580 include/global_arrays.php:672
+#: include/global_arrays.php:884 include/global_arrays.php:1739
+#: include/global_form.php:574 include/global_form.php:883
+#: include/global_form.php:891 include/global_form.php:899
+#: include/global_form.php:938 include/global_form.php:945
+#: include/global_form.php:971 include/global_form.php:1000
+#: include/global_form.php:1008 include/global_form.php:1186
+#: include/global_form.php:1205 include/global_form.php:1214
+#: include/global_form.php:2128 include/global_form.php:2170
+#: include/global_settings.php:614 include/global_settings.php:622
+#: include/global_settings.php:630 include/global_settings.php:1320
+#: include/global_settings.php:1983 lib/api_automation.php:48
+#: lib/api_automation.php:431 lib/api_automation.php:451
+#: lib/api_automation.php:589 lib/auth.php:3253 lib/auth.php:3301
+#: lib/auth.php:3346 lib/html.php:209 lib/html.php:2166 lib/html.php:2186
+#: lib/html.php:2227 lib/html.php:2257 lib/html_form.php:392
+#: lib/html_reports.php:988 lib/html_reports.php:992
+#: lib/html_reports.php:1022 lib/html_reports.php:1096
+#: lib/html_reports.php:1102 lib/html_reports.php:1106
+#: lib/html_reports.php:1114 lib/html_reports.php:1125
+#: lib/html_reports.php:1145 lib/html_reports.php:1399
+#: lib/html_reports.php:1404 lib/html_reports.php:1409 package_import.php:686
+#: settings.php:532 settings.php:554 settings.php:585
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
 #: templates_import.php:298 templates_import.php:330 utilities.php:2018
 msgid "None"
@@ -748,15 +755,15 @@ msgstr "अलग-अलग टेम्प्लेट जो उपयोग �
 
 #: aggregate_templates.php:692 cdef.php:869 color.php:684
 #: color_templates.php:637 data_input.php:912 data_queries.php:1406
-#: data_source_profiles.php:1032 data_sources.php:1725 data_templates.php:1260
-#: gprint_presets.php:390 graph_templates.php:844 host_templates.php:923
-#: vdef.php:900
+#: data_sources.php:1725 data_templates.php:1260 gprint_presets.php:390
+#: graph_templates.php:844 host_templates.php:923 vdef.php:900
+#: data_source_profiles.php:1245
 msgid "Deletable"
 msgstr "हटाने-योग्य"
 
-#: aggregate_templates.php:693 cdef.php:870 color.php:685 data_queries.php:1135
-#: data_queries.php:1411 gprint_presets.php:395 graph_templates.php:849
-#: vdef.php:901
+#: aggregate_templates.php:693 cdef.php:870 color.php:685
+#: data_queries.php:1135 data_queries.php:1411 gprint_presets.php:395
+#: graph_templates.php:849 vdef.php:901
 msgid "Graphs Using"
 msgstr "रेखांकन का उपयोग करना"
 
@@ -1237,9 +1244,9 @@ msgstr "खोजे गए उपकरण"
 #: automation_devices.php:674 automation_networks.php:1149
 #: automation_snmp.php:552 automation_snmp.php:553 automation_snmp.php:554
 #: automation_snmp.php:555 automation_snmp.php:556 automation_snmp.php:557
-#: data_debug.php:609 data_source_profiles.php:58 host.php:1879
-#: lib/functions.php:6310 lib/functions.php:6315 lib/html.php:1261
-#: lib/html.php:1333 lib/html_reports.php:1742 lib/html_reports.php:1768
+#: data_debug.php:609 host.php:1879 lib/functions.php:6310
+#: lib/functions.php:6315 lib/html.php:1261 lib/html.php:1333
+#: lib/html_reports.php:1742 lib/html_reports.php:1768
 #: lib/html_reports.php:1839 lib/html_reports.php:1840
 #: lib/html_reports.php:1841 lib/spikekill.php:1665 lib/spikekill.php:1666
 #: lib/spikekill.php:1713 lib/spikekill.php:1714 lib/spikekill.php:1715
@@ -1247,23 +1254,24 @@ msgstr "खोजे गए उपकरण"
 #: lib/spikekill.php:1719 lib/spikekill.php:1720 lib/spikekill.php:1721
 #: lib/spikekill.php:1722 lib/spikekill.php:1723 plugins.php:780
 #: pollers.php:1115 user_admin.php:2237 utilities.php:721 utilities.php:1170
-#: utilities.php:2638 utilities.php:2766 utilities.php:2774 utilities.php:2785
-#: utilities.php:2796 utilities.php:2819 utilities.php:2865 utilities.php:3099
+#: utilities.php:2638 utilities.php:2766 utilities.php:2774
+#: utilities.php:2785 utilities.php:2796 utilities.php:2819
+#: utilities.php:2865 utilities.php:3099 data_source_profiles.php:61
 msgid "N/A"
 msgstr "लागू नहीं"
 
 #: automation_graph_rules.php:13 automation_snmp.php:14
 #: automation_tree_rules.php:13 cdef.php:14 color_templates.php:13
-#: data_input.php:18 data_queries.php:16 data_source_profiles.php:16
-#: data_templates.php:19 graph_templates.php:23 graphs.php:51
-#: host_templates.php:20 include/global_arrays.php:1647 vdef.php:14
+#: data_input.php:18 data_queries.php:16 data_templates.php:19
+#: graph_templates.php:23 graphs.php:51 host_templates.php:20
+#: include/global_arrays.php:1647 vdef.php:14 data_source_profiles.php:17
 msgid "Duplicate"
 msgstr "डुप्लीकेट"
 
 #: automation_graph_rules.php:14 automation_networks.php:18
 #: automation_tree_rules.php:14 data_sources.php:24 host.php:27
-#: include/global_arrays.php:1648 include/global_settings.php:1769 links.php:14
-#: managers.php:13 managers.php:19 plugins.php:24 pollers.php:20
+#: include/global_arrays.php:1648 include/global_settings.php:1769
+#: links.php:14 managers.php:13 managers.php:19 plugins.php:24 pollers.php:20
 #: user_admin.php:18 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:20
 msgid "Enable"
@@ -1271,9 +1279,9 @@ msgstr "सक्षम करें"
 
 #: automation_graph_rules.php:15 automation_networks.php:17
 #: automation_tree_rules.php:15 data_sources.php:25 host.php:28
-#: include/global_arrays.php:1649 links.php:15 managers.php:14 managers.php:18
-#: plugins.php:25 pollers.php:19 user_admin.php:19 user_domains.php:16
-#: user_group_admin.php:21
+#: include/global_arrays.php:1649 links.php:15 managers.php:14
+#: managers.php:18 plugins.php:25 pollers.php:19 user_admin.php:19
+#: user_domains.php:16 user_group_admin.php:21
 msgid "Disable"
 msgstr "अक्षम करें"
 
@@ -1289,8 +1297,8 @@ msgstr "निम्नलिखित ग्राफ़ नियमों क
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "निम्नलिखित नियम (ओं) की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप नए ग्राफ नियमों के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
 
-#: automation_graph_rules.php:295 automation_tree_rules.php:278 graphs.php:935
-#: graphs.php:946
+#: automation_graph_rules.php:295 automation_tree_rules.php:278
+#: graphs.php:935 graphs.php:946
 msgid "Title Format"
 msgstr "शीर्षक प्रारूप"
 
@@ -1382,8 +1390,8 @@ msgstr "डेटा क्वेरी"
 #: lib/html_reports.php:2109 links.php:381 links.php:559 managers.php:231
 #: managers.php:592 user_admin.php:897 user_admin.php:909 user_admin.php:2224
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:75
-#: user_group_admin.php:571 user_group_admin.php:586 user_group_admin.php:1910
-#: utilities.php:2063 utilities.php:2883
+#: user_group_admin.php:571 user_group_admin.php:586
+#: user_group_admin.php:1910 utilities.php:2063 utilities.php:2883
 msgid "Enabled"
 msgstr "सक्षम"
 
@@ -1489,7 +1497,8 @@ msgstr "डिबग मोड में खोज चलाएँ"
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
 msgstr "नेटवर्क डिस्कवरी को रद्द करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: automation_networks.php:401 data_input.php:537 include/global_arrays.php:508
+#: automation_networks.php:401 data_input.php:537
+#: include/global_arrays.php:508
 msgid "SNMP Get"
 msgstr "SNMP मिलता है"
 
@@ -1538,19 +1547,19 @@ msgstr "सामान्य सेटिंग्स"
 
 #: automation_networks.php:439 automation_snmp.php:493 data_input.php:590
 #: data_input.php:651 data_queries.php:761 data_queries.php:866
-#: data_queries.php:1133 data_source_profiles.php:620 graph_templates.php:483
-#: include/global_form.php:201 include/global_form.php:267
-#: include/global_form.php:324 include/global_form.php:344
-#: include/global_form.php:385 include/global_form.php:515
-#: include/global_form.php:552 include/global_form.php:659
-#: include/global_form.php:1085 include/global_form.php:1125
-#: include/global_form.php:1327 include/global_form.php:1355
-#: include/global_form.php:1428 include/global_form.php:1456
-#: include/global_form.php:2101 include/global_form.php:2199
-#: include/global_form.php:2244 lib/installer.php:2038 lib/installer.php:2111
-#: lib/installer.php:2141 lib/installer.php:2733 lib/installer.php:2821
-#: lib/vdef.php:56 managers.php:556 pollers.php:46 user_admin.php:897
-#: user_domains.php:311 utilities.php:847 utilities.php:3079
+#: data_queries.php:1133 graph_templates.php:483 include/global_form.php:201
+#: include/global_form.php:267 include/global_form.php:324
+#: include/global_form.php:344 include/global_form.php:385
+#: include/global_form.php:515 include/global_form.php:552
+#: include/global_form.php:659 include/global_form.php:1085
+#: include/global_form.php:1125 include/global_form.php:1327
+#: include/global_form.php:1355 include/global_form.php:1428
+#: include/global_form.php:1456 include/global_form.php:2101
+#: include/global_form.php:2199 include/global_form.php:2244
+#: lib/installer.php:2038 lib/installer.php:2111 lib/installer.php:2141
+#: lib/installer.php:2733 lib/installer.php:2821 lib/vdef.php:56
+#: managers.php:556 pollers.php:46 user_admin.php:897 user_domains.php:311
+#: utilities.php:847 utilities.php:3079 data_source_profiles.php:818
 msgid "Name"
 msgstr "नाम"
 
@@ -1688,25 +1697,25 @@ msgid "%d Hour"
 msgstr "% d घंटा"
 
 #: automation_networks.php:527 automation_networks.php:528
-#: automation_networks.php:529 data_source_profiles.php:836
-#: include/global_arrays.php:715 include/global_arrays.php:716
-#: include/global_arrays.php:717 include/global_arrays.php:718
-#: include/global_arrays.php:719 include/global_arrays.php:760
-#: include/global_arrays.php:761 include/global_arrays.php:762
-#: include/global_arrays.php:763 include/global_arrays.php:770
-#: include/global_arrays.php:771 include/global_arrays.php:772
-#: include/global_arrays.php:773 include/global_arrays.php:1453
-#: include/global_arrays.php:1454 include/global_arrays.php:1455
-#: include/global_arrays.php:1456 include/global_arrays.php:1523
-#: include/global_arrays.php:1524 include/global_arrays.php:1525
-#: include/global_arrays.php:1526 include/global_arrays.php:1527
-#: include/global_arrays.php:1544 include/global_arrays.php:1545
-#: include/global_arrays.php:1546 include/global_arrays.php:1547
-#: include/global_arrays.php:1548 include/global_arrays.php:1554
-#: include/global_arrays.php:1555 include/global_settings.php:1686
-#: include/global_settings.php:1687 include/global_settings.php:1688
-#: include/global_settings.php:1689 include/global_settings.php:2908
-#: include/global_settings.php:2909
+#: automation_networks.php:529 include/global_arrays.php:715
+#: include/global_arrays.php:716 include/global_arrays.php:717
+#: include/global_arrays.php:718 include/global_arrays.php:719
+#: include/global_arrays.php:760 include/global_arrays.php:761
+#: include/global_arrays.php:762 include/global_arrays.php:763
+#: include/global_arrays.php:770 include/global_arrays.php:771
+#: include/global_arrays.php:772 include/global_arrays.php:773
+#: include/global_arrays.php:1453 include/global_arrays.php:1454
+#: include/global_arrays.php:1455 include/global_arrays.php:1456
+#: include/global_arrays.php:1523 include/global_arrays.php:1524
+#: include/global_arrays.php:1525 include/global_arrays.php:1526
+#: include/global_arrays.php:1527 include/global_arrays.php:1544
+#: include/global_arrays.php:1545 include/global_arrays.php:1546
+#: include/global_arrays.php:1547 include/global_arrays.php:1548
+#: include/global_arrays.php:1554 include/global_arrays.php:1555
+#: include/global_settings.php:1686 include/global_settings.php:1687
+#: include/global_settings.php:1688 include/global_settings.php:1689
+#: include/global_settings.php:2908 include/global_settings.php:2909
+#: data_source_profiles.php:1045
 #, php-format
 msgid "%d Hours"
 msgstr "% d घंटे"
@@ -2223,8 +2232,9 @@ msgstr "स्वचालन SNMP विकल्प"
 msgid "Item"
 msgstr "मद"
 
-#: automation_snmp.php:523 include/auth.php:319 include/global_settings.php:679
-#: package_import.php:504 permission_denied.php:43 plugins.php:641
+#: automation_snmp.php:523 include/auth.php:319
+#: include/global_settings.php:679 package_import.php:504
+#: permission_denied.php:43 plugins.php:641
 msgid "Version"
 msgstr "सरूप"
 
@@ -2530,9 +2540,9 @@ msgid "No Tree Rules Found"
 msgstr "कोई ट्री नियम नहीं मिला"
 
 #: cactid.php:27 help.php:28 lib/functions.php:6598 lib/functions.php:6668
-#: lib/functions.php:6764 lib/functions.php:7420 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
-#: poller_automation.php:37 poller_boost.php:387
+#: lib/functions.php:6764 lib/functions.php:7420 poller.php:417
+#: poller.php:584 poller.php:666 poller.php:719 poller.php:880
+#: poller.php:1001 poller_automation.php:37 poller_boost.php:387
 #, fuzzy
 msgid "Kadupul System Warning"
 msgstr "Kadupul सिस्टम वार्निंग"
@@ -2570,9 +2580,9 @@ msgid_plural "Click 'Continue' to duplicate the following CDEFs. You can optiona
 msgstr[0] "निम्नलिखित CDEF की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए CDEF के लिए शीर्षक प्रारूप बदल सकते हैं।"
 msgstr[1] "निम्नलिखित CDEFs की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए CDEFs के लिए शीर्षक प्रारूप बदल सकते हैं।"
 
-#: cdef.php:266 color_templates.php:233 data_source_profiles.php:296
-#: data_templates.php:491 graph_templates.php:367 host_templates.php:218
-#: vdef.php:269
+#: cdef.php:266 color_templates.php:233 data_templates.php:491
+#: graph_templates.php:367 host_templates.php:218 vdef.php:269
+#: data_source_profiles.php:386
 msgid "Title Format:"
 msgstr "शीर्षक प्रारूप:"
 
@@ -2655,7 +2665,7 @@ msgstr "CDEFs"
 msgid "CDEF Name"
 msgstr "सीडीईएफ नाम"
 
-#: cdef.php:868 data_source_profiles.php:1024
+#: cdef.php:868 data_source_profiles.php:1237
 msgid "The name of this CDEF."
 msgstr "इस सीडीईएफ का नाम।"
 
@@ -2668,7 +2678,7 @@ msgid "The number of Graphs using this CDEF."
 msgstr "इस CDEF का उपयोग करके ग्राफ़ की संख्या।"
 
 #: cdef.php:871 color.php:686 data_input.php:923 data_queries.php:1417
-#: data_source_profiles.php:1060 gprint_presets.php:401 vdef.php:902
+#: gprint_presets.php:401 vdef.php:902 data_source_profiles.php:1273
 msgid "Templates Using"
 msgstr "टेम्पलेट्स का उपयोग करना"
 
@@ -2827,9 +2837,9 @@ msgstr "समुच्चय"
 msgid "Color Item"
 msgstr "रंग की वस्तु"
 
-#: color_templates.php:78 lib/api_aggregate.php:1827 lib/api_aggregate.php:1830
-#: lib/api_aggregate.php:1834 lib/html.php:1286 lib/html.php:1288
-#: lib/html_reports.php:1845
+#: color_templates.php:78 lib/api_aggregate.php:1827
+#: lib/api_aggregate.php:1830 lib/api_aggregate.php:1834 lib/html.php:1286
+#: lib/html.php:1288 lib/html_reports.php:1845
 #, php-format
 msgid "Item # %d"
 msgstr "आइटम #% d"
@@ -3469,7 +3479,7 @@ msgstr "इस डेटा टेम्प्लेट के लिए आं�
 msgid "Data Inputs that are in use cannot be Deleted. In use is defined as being referenced either by a Data Source or a Data Template."
 msgstr "उपयोग में आने वाले डेटा इनपुट को हटाया नहीं जा सकता। उपयोग में डेटा स्रोत या डेटा टेम्पलेट द्वारा संदर्भित होने के रूप में परिभाषित किया गया है।"
 
-#: data_input.php:917 data_source_profiles.php:1054 data_templates.php:1265
+#: data_input.php:917 data_templates.php:1265 data_source_profiles.php:1267
 msgid "Data Sources Using"
 msgstr "डेटा स्रोत का उपयोग करना"
 
@@ -3490,11 +3500,12 @@ msgstr "डेटा इनपुट विधि"
 msgid "The method used to gather information for this Data Input Method."
 msgstr "इस डेटा इनपुट विधि के लिए जानकारी इकट्ठा करने के लिए उपयोग की जाने वाली विधि।"
 
-#: data_input.php:954 host.php:1698 lib/api_automation.php:33 lib/auth.php:2449
-#: lib/clog_webapi.php:829 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4120 lib/rrd.php:4132
-#: lib/spikekill.php:284 package_import.php:522 package_import.php:600
-#: utilities.php:194 utilities.php:195 utilities.php:2634
+#: data_input.php:954 host.php:1698 lib/api_automation.php:33
+#: lib/auth.php:2449 lib/clog_webapi.php:829 lib/html_utility.php:1339
+#: lib/import.php:342 lib/plugins.php:1499 lib/plugins.php:1500
+#: lib/rrd.php:4120 lib/rrd.php:4132 lib/spikekill.php:284
+#: package_import.php:522 package_import.php:600 utilities.php:194
+#: utilities.php:195 utilities.php:2634
 msgid "Unknown"
 msgstr "अज्ञात"
 
@@ -3578,7 +3589,8 @@ msgid "No Suggested Values Found"
 msgstr "कोई सुझाव नहीं मिला"
 
 #: data_queries.php:825 data_queries.php:933 include/global_form.php:2124
-#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1862
+#: include/global_form.php:2166 lib/api_automation.php:1417
+#: utilities.php:1862
 msgid "Field Name"
 msgstr "क्षेत्र नाम"
 
@@ -3694,255 +3706,255 @@ msgstr "डेटा इनपुट विधि इस डेटा क्व�
 msgid "No Data Queries Found"
 msgstr "कोई डेटा क्वेरी नहीं मिली"
 
-#: data_source_profiles.php:172
+#: data_source_profiles.php:229
 msgid "Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool's 'tune' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct.<br>"
 msgstr "इस पृष्ठ से दिल की धड़कन को बदलना, आपके मौजूदा डेटा स्रोतों के लिए दिल की धड़कन को नहीं बदलता है। अपने मौजूदा RRDfiles दिल की धड़कन में बदलाव करने के लिए RRDtool के 'ट्यून' फ़ंक्शन का उपयोग करें, या सही करने के लिए CLI उपयोगिता update_heartbeat.php चलाएं।<br>"
 
-#: data_source_profiles.php:285
+#: data_source_profiles.php:375
 msgid "Click 'Continue' to delete the following Data Source Profile"
 msgid_plural "Click 'Continue' to delete following Data Source Profiles"
 msgstr[0] "निम्न डेटा स्रोत प्रोफ़ाइल को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
 msgstr[1] "डेटा स्रोत प्रोफ़ाइलों को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
 
-#: data_source_profiles.php:290
+#: data_source_profiles.php:380
 msgid "Delete Data Source Profile"
 msgid_plural "Delete Data Source Profiles"
 msgstr[0] "डेटा स्रोत प्रोफ़ाइल हटाएं"
 msgstr[1] "डेटा स्रोत प्रोफ़ाइल हटाएं"
 
-#: data_source_profiles.php:294
+#: data_source_profiles.php:384
 msgid "Click 'Continue' to duplicate the following Data Source Profile. You can optionally change the title format for the new Data Source Profile"
 msgid_plural "Click 'Continue' to duplicate following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles."
 msgstr[0] "निम्न डेटा स्रोत प्रोफ़ाइल को डुप्लिकेट करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए डेटा स्रोत प्रोफ़ाइल के शीर्षक शीर्षक को बदल सकते हैं"
 msgstr[1] "डेटा स्रोत प्रोफ़ाइल का अनुसरण करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए डेटा स्रोत प्रोफ़ाइल के शीर्षक शीर्षक को बदल सकते हैं।"
 
-#: data_source_profiles.php:300
+#: data_source_profiles.php:392
 msgid "Duplicate Data Source Profile"
 msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "डुप्लिकेट डेटा स्रोत प्रोफ़ाइल"
 msgstr[1] "डुप्लिकेट दिनांक स्रोत प्रोफ़ाइल"
 
-#: data_source_profiles.php:379
+#: data_source_profiles.php:492 data_source_profiles.php:553
 #, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr "एक या अधिक RRDfile मरम्मत विफल। त्रुटियों के लिए Kadupul लॉग देखें।"
 
-#: data_source_profiles.php:402
+#: data_source_profiles.php:579
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
 msgstr "निम्न डेटा स्रोत प्रोफ़ाइल RRA को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: data_source_profiles.php:403
+#: data_source_profiles.php:580
 #, php-format
 msgid "Profile Name: %s"
 msgstr "प्रोफाइल नाम: %s"
 
-#: data_source_profiles.php:409
+#: data_source_profiles.php:586
 msgid "Remove Data Source Profile RRA"
 msgstr "डेटा स्रोत प्रोफ़ाइल RRA निकालें"
 
-#: data_source_profiles.php:456 data_source_profiles.php:475
+#: data_source_profiles.php:641 data_source_profiles.php:662
 msgid "Each Insert is New Row"
 msgstr "प्रत्येक इंसर्ट नई पंक्ति है"
 
-#: data_source_profiles.php:499
+#: data_source_profiles.php:690
 msgid "(Some Elements Read Only)"
 msgstr "(कुछ तत्व केवल पढ़ें)"
 
-#: data_source_profiles.php:499
+#: data_source_profiles.php:690
 #, php-format
 msgid "RRA [edit: %s %s]"
 msgstr "RRA [संपादित करें: %s %s]"
 
-#: data_source_profiles.php:594
+#: data_source_profiles.php:791
 #, php-format
 msgid "Data Source Profile [edit: %s]"
 msgstr "डेटा स्रोत प्रोफ़ाइल [संपादित करें: %s]"
 
-#: data_source_profiles.php:596
+#: data_source_profiles.php:793
 msgid "Data Source Profile [new]"
 msgstr "डेटा स्रोत प्रोफ़ाइल [नया]"
 
-#: data_source_profiles.php:614
+#: data_source_profiles.php:812
 msgid "Data Source Profile RRAs (press save to update timespans)"
 msgstr "डेटा स्रोत प्रोफ़ाइल आरआरए (टाइमपास को अपडेट करने के लिए प्रेस सहेजें)"
 
-#: data_source_profiles.php:616
+#: data_source_profiles.php:814
 msgid "Data Source Profile RRAs (Read Only)"
 msgstr "डेटा स्रोत प्रोफ़ाइल RRAs (केवल पढ़ें)"
 
-#: data_source_profiles.php:621 include/global_form.php:300
+#: include/global_form.php:300 data_source_profiles.php:819
 msgid "Data Retention"
 msgstr "डेटा प्रतिधारण"
 
-#: data_source_profiles.php:622 include/global_settings.php:1006
-#: lib/html_reports.php:1151
+#: include/global_settings.php:1006 lib/html_reports.php:1151
+#: data_source_profiles.php:820
 msgid "Graph Timespan"
 msgstr "ग्राफ टाइमपेन"
 
-#: data_source_profiles.php:623
+#: data_source_profiles.php:821
 msgid "Steps"
 msgstr "चरण"
 
-#: data_source_profiles.php:624 graphs_new.php:449 include/global_form.php:284
-#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2821
-#: lib/rrd.php:4144 utilities.php:849 utilities.php:1771
+#: graphs_new.php:449 include/global_form.php:284 lib/html.php:566
+#: lib/html_filter.php:55 lib/installer.php:2821 lib/rrd.php:4144
+#: utilities.php:849 utilities.php:1771 data_source_profiles.php:822
 msgid "Rows"
 msgstr "पंक्तियाँ"
 
-#: data_source_profiles.php:678
+#: data_source_profiles.php:879
 msgid "Select Consolidation Function(s)"
 msgstr "समेकन फ़ंक्शन का चयन करें"
 
-#: data_source_profiles.php:718
+#: data_source_profiles.php:919
 msgid "Delete Data Source Profile Item"
 msgstr "डेटा स्रोत प्रोफ़ाइल आइटम हटाएं"
 
-#: data_source_profiles.php:778
+#: data_source_profiles.php:984
 #, php-format
 msgid "%s KBytes per Data Sources and %s Bytes for the Header"
 msgstr "%s KBytes प्रति डेटा स्रोत और %s बाइट्स हेडर के लिए"
 
-#: data_source_profiles.php:785
+#: data_source_profiles.php:993
 #, php-format
 msgid "%s KBytes per Data Source"
 msgstr "डेटा स्रोत प्रति %s KBytes"
 
-#: data_source_profiles.php:787
+#: data_source_profiles.php:995
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr "RRA आकार प्राप्त करने के लिए पंक्तियों की एक मान्य संख्या दर्ज करें।"
 
-#: data_source_profiles.php:801 include/global_arrays.php:786
-#: include/global_arrays.php:787 include/global_arrays.php:788
-#: include/global_arrays.php:789 include/global_arrays.php:790
-#: include/global_arrays.php:791 include/global_arrays.php:792
-#: include/global_arrays.php:793 include/global_arrays.php:794
-#: include/global_arrays.php:1469 include/global_settings.php:1618
+#: include/global_arrays.php:786 include/global_arrays.php:787
+#: include/global_arrays.php:788 include/global_arrays.php:789
+#: include/global_arrays.php:790 include/global_arrays.php:791
+#: include/global_arrays.php:792 include/global_arrays.php:793
+#: include/global_arrays.php:794 include/global_arrays.php:1469
+#: include/global_settings.php:1618 data_source_profiles.php:1010
 #, php-format
 msgid "%d Years"
 msgstr "% d वष"
 
-#: data_source_profiles.php:801
+#: data_source_profiles.php:1010
 msgid "1 Year"
 msgstr "1 वर्ष"
 
-#: data_source_profiles.php:810 include/global_arrays.php:780
-#: include/global_arrays.php:1463 rrdcleaner.php:525
+#: include/global_arrays.php:780 include/global_arrays.php:1463
+#: rrdcleaner.php:525 data_source_profiles.php:1019
 #, php-format
 msgid "%d Month"
 msgstr "% d महीना"
 
-#: data_source_profiles.php:810 include/global_arrays.php:781
-#: include/global_arrays.php:782 include/global_arrays.php:783
-#: include/global_arrays.php:784 include/global_arrays.php:1464
-#: include/global_arrays.php:1465 include/global_arrays.php:1466
-#: include/global_arrays.php:1467 rrdcleaner.php:526 rrdcleaner.php:527
-#: rrdcleaner.php:528
+#: include/global_arrays.php:781 include/global_arrays.php:782
+#: include/global_arrays.php:783 include/global_arrays.php:784
+#: include/global_arrays.php:1464 include/global_arrays.php:1465
+#: include/global_arrays.php:1466 include/global_arrays.php:1467
+#: rrdcleaner.php:526 rrdcleaner.php:527 rrdcleaner.php:528
+#: data_source_profiles.php:1019
 #, php-format
 msgid "%d Months"
 msgstr "% d माह"
 
-#: data_source_profiles.php:819 include/global_arrays.php:721
-#: include/global_arrays.php:777 include/global_arrays.php:1461
-#: rrdcleaner.php:521 rrdcleaner.php:522
+#: include/global_arrays.php:721 include/global_arrays.php:777
+#: include/global_arrays.php:1461 rrdcleaner.php:521 rrdcleaner.php:522
+#: data_source_profiles.php:1028
 #, php-format
 msgid "%d Week"
 msgstr "% d वीक"
 
-#: data_source_profiles.php:819 include/global_arrays.php:778
-#: include/global_arrays.php:779 include/global_arrays.php:1462
-#: include/global_settings.php:2912 include/global_settings.php:2913
-#: include/global_settings.php:2914 rrdcleaner.php:523 rrdcleaner.php:524
+#: include/global_arrays.php:778 include/global_arrays.php:779
+#: include/global_arrays.php:1462 include/global_settings.php:2912
+#: include/global_settings.php:2913 include/global_settings.php:2914
+#: rrdcleaner.php:523 rrdcleaner.php:524 data_source_profiles.php:1028
 #, php-format
 msgid "%d Weeks"
 msgstr "%d सप्ताह"
 
-#: data_source_profiles.php:828 include/global_arrays.php:720
-#: include/global_arrays.php:764 include/global_arrays.php:774
-#: include/global_arrays.php:1457
+#: include/global_arrays.php:720 include/global_arrays.php:764
+#: include/global_arrays.php:774 include/global_arrays.php:1457
+#: data_source_profiles.php:1037
 #, php-format
 msgid "%d Day"
 msgstr "%d दिन"
 
-#: data_source_profiles.php:828 include/global_arrays.php:765
-#: include/global_arrays.php:775 include/global_arrays.php:776
-#: include/global_arrays.php:1458 include/global_arrays.php:1459
-#: include/global_arrays.php:1460 include/global_settings.php:1613
-#: include/global_settings.php:1614 include/global_settings.php:1615
-#: include/global_settings.php:1616 include/global_settings.php:1627
-#: include/global_settings.php:1628 include/global_settings.php:1629
-#: include/global_settings.php:1630
+#: include/global_arrays.php:765 include/global_arrays.php:775
+#: include/global_arrays.php:776 include/global_arrays.php:1458
+#: include/global_arrays.php:1459 include/global_arrays.php:1460
+#: include/global_settings.php:1613 include/global_settings.php:1614
+#: include/global_settings.php:1615 include/global_settings.php:1616
+#: include/global_settings.php:1627 include/global_settings.php:1628
+#: include/global_settings.php:1629 include/global_settings.php:1630
+#: data_source_profiles.php:1037
 #, php-format
 msgid "%d Days"
 msgstr "%d दिन"
 
-#: data_source_profiles.php:836 include/global_arrays.php:714
-#: include/global_arrays.php:1522 include/global_arrays.php:1543
-#: include/global_arrays.php:1553 include/global_arrays.php:1583
-#: include/global_arrays.php:1592 include/global_arrays.php:1620
-#: include/global_settings.php:1388 include/global_settings.php:1685
-#: include/global_settings.php:2907
+#: include/global_arrays.php:714 include/global_arrays.php:1522
+#: include/global_arrays.php:1543 include/global_arrays.php:1553
+#: include/global_arrays.php:1583 include/global_arrays.php:1592
+#: include/global_arrays.php:1620 include/global_settings.php:1388
+#: include/global_settings.php:1685 include/global_settings.php:2907
+#: data_source_profiles.php:1045
 msgid "1 Hour"
 msgstr "1 घंटा"
 
-#: data_source_profiles.php:889 include/global_arrays.php:1231
+#: include/global_arrays.php:1231 data_source_profiles.php:1099
 msgid "Data Source Profiles"
 msgstr "डेटा स्रोत प्रोफ़ाइल"
 
-#: data_source_profiles.php:904 data_source_profiles.php:1067
+#: data_source_profiles.php:1114 data_source_profiles.php:1280
 msgid "Profiles"
 msgstr "प्रोफाइलें"
 
-#: data_source_profiles.php:921 data_templates.php:1140
+#: data_templates.php:1140 data_source_profiles.php:1134
 msgid "Has Data Sources"
 msgstr "डेटा स्रोत है"
 
-#: data_source_profiles.php:1021
+#: data_source_profiles.php:1234
 msgid "Data Source Profile Name"
 msgstr "डेटा स्रोत प्रोफ़ाइल नाम"
 
-#: data_source_profiles.php:1029
+#: data_source_profiles.php:1242
 msgid "Is this the default Profile for all new Data Templates?"
 msgstr "क्या यह सभी नए डेटा टेम्प्लेट के लिए डिफ़ॉल्ट प्रोफ़ाइल है?"
 
-#: data_source_profiles.php:1034
+#: data_source_profiles.php:1247
 msgid "Profiles that are in use cannot be Deleted. In use is defined as being referenced by a Data Source or a Data Template."
 msgstr "उपयोग में आने वाले प्रोफ़ाइल हटाए नहीं जा सकते हैं। उपयोग में डेटा स्रोत या डेटा टेम्पलेट द्वारा संदर्भित के रूप में परिभाषित किया गया है।"
 
-#: data_source_profiles.php:1037 include/global_form.php:360
+#: include/global_form.php:360 data_source_profiles.php:1250
 msgid "Read Only"
 msgstr "सिर्फ पढ़ने के लिए"
 
-#: data_source_profiles.php:1039
+#: data_source_profiles.php:1252
 msgid "Profiles that are in use by Data Sources become read only for now."
 msgstr "डेटा स्रोतों द्वारा उपयोग की जाने वाली प्रोफ़ाइल केवल अब के लिए पढ़ी जाती हैं।"
 
-#: data_source_profiles.php:1042 data_sources.php:1719
-#: include/global_settings.php:1216
+#: data_sources.php:1719 include/global_settings.php:1216
+#: data_source_profiles.php:1255
 msgid "Poller Interval"
 msgstr "पोलर इंटरवल"
 
-#: data_source_profiles.php:1045
+#: data_source_profiles.php:1258
 msgid "The Polling Frequency for the Profile"
 msgstr "प्रोफाइल के लिए मतदान आवृत्ति"
 
-#: data_source_profiles.php:1048 include/global_form.php:218
-#: include/global_form.php:639 pollers.php:35
+#: include/global_form.php:218 include/global_form.php:639 pollers.php:35
+#: data_source_profiles.php:1261
 msgid "Heartbeat"
 msgstr "दिल की धड़कन"
 
-#: data_source_profiles.php:1051
+#: data_source_profiles.php:1264
 msgid "The Amount of Time, in seconds, without good data before Data is stored as Unknown"
 msgstr "समय की मात्रा, सेकंड में, डेटा से पहले अच्छे डेटा के बिना अज्ञात के रूप में संग्रहीत किया जाता है"
 
-#: data_source_profiles.php:1057
+#: data_source_profiles.php:1270
 msgid "The number of Data Sources using this Profile."
 msgstr "इस प्रोफ़ाइल का उपयोग करके डेटा स्रोत की संख्या।"
 
-#: data_source_profiles.php:1063
+#: data_source_profiles.php:1276
 msgid "The number of Data Templates using this Profile."
 msgstr "इस प्रोफ़ाइल का उपयोग करके डेटा टेम्प्लेट की संख्या।"
 
-#: data_source_profiles.php:1117
+#: data_source_profiles.php:1330
 msgid "No Data Source Profiles Found"
 msgstr "कोई डेटा स्रोत प्रोफ़ाइल नहीं मिली"
 
@@ -4420,7 +4432,8 @@ msgstr "GPRINT प्रीसेट [नया]"
 msgid "GPRINT Presets"
 msgstr "GPRINT प्रीसेट"
 
-#: gprint_presets.php:261 gprint_presets.php:408 include/global_arrays.php:1021
+#: gprint_presets.php:261 gprint_presets.php:408
+#: include/global_arrays.php:1021
 msgid "GPRINTs"
 msgstr "GPRINTs"
 
@@ -4761,8 +4774,8 @@ msgstr "एक रिपोर्ट में जोड़ें"
 msgid "Report"
 msgstr "रिपोर्ट"
 
-#: graph_view.php:700 lib/html.php:194 lib/html.php:199 lib/html_graph.php:139
-#: lib/html_tree.php:977
+#: graph_view.php:700 lib/html.php:194 lib/html.php:199
+#: lib/html_graph.php:139 lib/html_tree.php:977
 msgid "All Graphs & Templates"
 msgstr "सभी रेखांकन और टेम्पलेट"
 
@@ -5175,13 +5188,13 @@ msgid "(Select a graph type to create)"
 msgstr "(बनाने के लिए एक ग्राफ प्रकार का चयन करें)"
 
 #: graphs_new.php:542 include/global_arrays.php:984
-#: include/global_arrays.php:1061 lib/html_form.php:1417 lib/html_form.php:1430
-#: tree.php:1601
+#: include/global_arrays.php:1061 lib/html_form.php:1417
+#: lib/html_form.php:1430 tree.php:1601
 msgid "Create"
 msgstr "बनाएं"
 
-#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1090 user_admin.php:1405
-#: user_group_admin.php:1281
+#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1090
+#: user_admin.php:1405 user_group_admin.php:1281
 msgid "Select All"
 msgstr "सभी का चयन करें"
 
@@ -5753,8 +5766,8 @@ msgstr "प्रतिष्टित"
 msgid "Has Devices"
 msgstr "डिवाइस है"
 
-#: host_templates.php:905 lib/api_automation.php:281 lib/api_automation.php:572
-#: lib/api_automation.php:1198
+#: host_templates.php:905 lib/api_automation.php:281
+#: lib/api_automation.php:572 lib/api_automation.php:1198
 msgid "Device Template Name"
 msgstr "डिवाइस टेम्पलेट नाम"
 
@@ -7771,8 +7784,9 @@ msgid "List Mode"
 msgstr "सूची मोड"
 
 #: include/global_arrays.php:2060 include/global_arrays.php:2066
-#: lib/functions.php:4239 lib/html.php:1792 lib/html.php:1869 lib/html.php:2568
-#: links.php:342 user_admin.php:1450 user_group_admin.php:1328
+#: lib/functions.php:4239 lib/html.php:1792 lib/html.php:1869
+#: lib/html.php:2568 links.php:342 user_admin.php:1450
+#: user_group_admin.php:1328
 msgid "Console"
 msgstr "कंसोल"
 
@@ -7949,7 +7963,7 @@ msgid "Tree Rule Items"
 msgstr "ट्री नियम आइटम"
 
 #: include/global_arrays.php:2853 include/global_arrays.php:2869
-#: lib/api_device.php:1921
+#: lib/api_device.php:1935
 msgid "days"
 msgstr "दिन"
 
@@ -7965,11 +7979,11 @@ msgstr "मिंट"
 msgid "secs"
 msgstr "सकिंट"
 
-#: include/global_arrays.php:2870 lib/api_device.php:1921
+#: include/global_arrays.php:2870 lib/api_device.php:1935
 msgid "hours"
 msgstr "घंटे"
 
-#: include/global_arrays.php:2871 lib/api_device.php:1921
+#: include/global_arrays.php:2871 lib/api_device.php:1935
 msgid "minutes"
 msgstr "मिनट"
 
@@ -9419,7 +9433,8 @@ msgstr "डाटा"
 msgid "Visual"
 msgstr "विज़ुअल"
 
-#: include/global_settings.php:28 lib/functions.php:5950 lib/functions.php:5955
+#: include/global_settings.php:28 lib/functions.php:5950
+#: lib/functions.php:5955
 msgid "Authentication"
 msgstr "प्रमाणीकरण"
 
@@ -10470,7 +10485,7 @@ msgstr "फ़ॉन्ट चयन विधि"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "आप फोंट को डिफ़ॉल्ट रूप से कैसे नियंत्रित करना चाहते हैं?"
 
-#: include/global_settings.php:1060 lib/api_device.php:1876
+#: include/global_settings.php:1060 lib/api_device.php:1890
 msgid "System"
 msgstr "प्रणाली"
 
@@ -12436,10 +12451,11 @@ msgstr "सकल आइटम संपादन योग्य नहीं �
 msgid "Override this Value"
 msgstr "इस मान को ओवरराइड करें"
 
-#: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:526
-#: lib/html_reports.php:1056 lib/html_reports.php:1721
-#: lib/html_reports.php:2061 lib/html_reports.php:2072 lib/rrd.php:4097
-#: utilities.php:339 utilities.php:1432 utilities.php:3079
+#: lib/api_automation.php:44 lib/api_automation.php:46
+#: lib/clog_webapi.php:526 lib/html_reports.php:1056
+#: lib/html_reports.php:1721 lib/html_reports.php:2061
+#: lib/html_reports.php:2072 lib/rrd.php:4097 utilities.php:339
+#: utilities.php:1432 utilities.php:3079
 msgid "Type"
 msgstr "प्रकार"
 
@@ -12563,90 +12579,90 @@ msgstr "Kadupul स्वचालन द्वारा जोड़ा गय�
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "त्रुटि: श्रेणी1-श्रेणी2 के रूप में IP श्रेणियां अब समर्थित नहीं हैं।"
 
-#: lib/api_device.php:154 lib/api_device.php:157 lib/api_device.php:384
-#: lib/api_device.php:388 lib/api_device.php:450 lib/api_device.php:455
-#: lib/api_device.php:500 lib/api_device.php:504 lib/api_device.php:578
-#: lib/api_device.php:582 lib/api_device.php:637 lib/api_device.php:641
-#: lib/api_device.php:707 lib/api_device.php:710 lib/api_device.php:783
-#: lib/api_device.php:786 lib/api_device.php:835 lib/api_device.php:838
-#: lib/api_device.php:879 lib/api_device.php:882 lib/api_device.php:1287
-#: lib/api_device.php:1300 lib/api_device.php:1304 lib/api_device.php:1349
-#: lib/api_device.php:1352 lib/api_device.php:1539 lib/api_device.php:1543
-#: lib/api_device.php:1578 lib/api_device.php:1582 lib/api_device.php:1622
-#: lib/api_device.php:1626 lib/api_device.php:1687 lib/api_device.php:1691
 #: lib/utility.php:663 lib/utility.php:667 lib/utility.php:743
 #: lib/utility.php:747 lib/utility.php:769 lib/utility.php:773
-#: lib/utility.php:796 lib/utility.php:799
+#: lib/utility.php:796 lib/utility.php:799 lib/api_device.php:154
+#: lib/api_device.php:157 lib/api_device.php:384 lib/api_device.php:388
+#: lib/api_device.php:450 lib/api_device.php:455 lib/api_device.php:500
+#: lib/api_device.php:504 lib/api_device.php:580 lib/api_device.php:584
+#: lib/api_device.php:639 lib/api_device.php:643 lib/api_device.php:709
+#: lib/api_device.php:712 lib/api_device.php:785 lib/api_device.php:788
+#: lib/api_device.php:837 lib/api_device.php:840 lib/api_device.php:881
+#: lib/api_device.php:884 lib/api_device.php:1301 lib/api_device.php:1314
+#: lib/api_device.php:1318 lib/api_device.php:1363 lib/api_device.php:1366
+#: lib/api_device.php:1553 lib/api_device.php:1557 lib/api_device.php:1592
+#: lib/api_device.php:1596 lib/api_device.php:1636 lib/api_device.php:1640
+#: lib/api_device.php:1701 lib/api_device.php:1705
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "रिमोट पोलर %s नीचे है, आपको एक बार फिर से ऊपर होने के बाद फुलसिंक करना होगा"
 
-#: lib/api_device.php:1797
+#: lib/api_device.php:1811
 msgid "ERROR: Device ID is Blank"
 msgstr "त्रुटि: डिवाइस आईडी रिक्त है"
 
-#: lib/api_device.php:1810 lib/api_device.php:1812
+#: lib/api_device.php:1824 lib/api_device.php:1826
 msgid "ERROR: Device["
 msgstr "त्रुटि: डिवाइस ["
 
-#: lib/api_device.php:1828
+#: lib/api_device.php:1842
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "त्रुटि: दूरस्थ कलेक्टर से कनेक्ट करने में विफल।"
 
-#: lib/api_device.php:1835
+#: lib/api_device.php:1849
 msgid "Device is Disabled"
 msgstr "डिवाइस अक्षम है"
 
-#: lib/api_device.php:1836
+#: lib/api_device.php:1850
 msgid "Device Availability Check Bypassed"
 msgstr "डिवाइस की उपलब्धता की जाँच बाईपास"
 
-#: lib/api_device.php:1843
+#: lib/api_device.php:1857
 msgid "SNMP Information"
 msgstr "एसएनएमपी सूचना"
 
-#: lib/api_device.php:1847
+#: lib/api_device.php:1861
 msgid "SNMP not in use"
 msgstr "SNMP उपयोग में नहीं है"
 
-#: lib/api_device.php:1868 lib/api_device.php:1876 lib/api_device.php:1895
+#: lib/api_device.php:1882 lib/api_device.php:1890 lib/api_device.php:1909
 msgid "SNMP error"
 msgstr "SNMP त्रुटि"
 
-#: lib/api_device.php:1868
+#: lib/api_device.php:1882
 msgid "Session"
 msgstr "सैशन"
 
-#: lib/api_device.php:1895
+#: lib/api_device.php:1909
 msgid "Host"
 msgstr "होस्ट"
 
-#: lib/api_device.php:1913
+#: lib/api_device.php:1927
 msgid "System:"
 msgstr "तंत्रः"
 
-#: lib/api_device.php:1920
+#: lib/api_device.php:1934
 msgid "Uptime:"
 msgstr "चालू रहने का समय"
 
-#: lib/api_device.php:1922
+#: lib/api_device.php:1936
 msgid "Hostname:"
 msgstr "#-#-#-#-# balsa.HEAD.hi.po (Balsa 2.x) #-#-#-#-# उपयोगकर्ता का नाम #-#-#-#-# eel.HEAD.hi.po (eel VERSION) #-#-#-#-# उपयोगकर्ता का नाम: (_U)"
 
-#: lib/api_device.php:1923
+#: lib/api_device.php:1937
 msgid "Location:"
 msgstr "स्थान:"
 
-#: lib/api_device.php:1924
+#: lib/api_device.php:1938
 msgid "Contact:"
 msgstr "संपर्क:"
 
-#: lib/api_device.php:1955 lib/functions.php:5964 lib/functions.php:5966
-#: lib/functions.php:5970
+#: lib/functions.php:5964 lib/functions.php:5966 lib/functions.php:5970
+#: lib/api_device.php:1969
 msgid "Ping Results"
 msgstr "पिंग परिणाम"
 
-#: lib/api_device.php:1960
+#: lib/api_device.php:1974
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "कोई पिंग या SNMP उपलब्धता उपयोग में जाँच करें"
 
@@ -12845,7 +12861,8 @@ msgid "Log [Total Lines: %d %s - Unfiltered]"
 msgstr "लॉग [कुल पंक्तियाँ:% d %s - अनफ़िल्टर्ड]"
 
 #: lib/clog_webapi.php:279 utilities.php:1508 utilities.php:1856
-#: utilities.php:2079 utilities.php:2195 utilities.php:3073 utilities.php:3287
+#: utilities.php:2079 utilities.php:2195 utilities.php:3073
+#: utilities.php:3287
 msgid "Entries"
 msgstr "प्रविश्टयां"
 
@@ -15187,7 +15204,8 @@ msgstr "निम्नलिखित PHP एक्सटेंशन अनि
 msgid "Required PHP Modules"
 msgstr "आवश्यक PHP मॉड्यूल"
 
-#: lib/installer.php:2111 lib/installer.php:2141 plugins.php:35 plugins.php:504
+#: lib/installer.php:2111 lib/installer.php:2141 plugins.php:35
+#: plugins.php:504
 msgid "Installed"
 msgstr "इंस्‍टॉल हो गया"
 
@@ -18775,8 +18793,9 @@ msgstr "अनुमति समाप्त करना"
 #: user_admin.php:1096 user_admin.php:1233 user_admin.php:1237
 #: user_admin.php:1371 user_admin.php:1375 user_group_admin.php:50
 #: user_group_admin.php:808 user_group_admin.php:812 user_group_admin.php:969
-#: user_group_admin.php:973 user_group_admin.php:1108 user_group_admin.php:1112
-#: user_group_admin.php:1238 user_group_admin.php:1242
+#: user_group_admin.php:973 user_group_admin.php:1108
+#: user_group_admin.php:1112 user_group_admin.php:1238
+#: user_group_admin.php:1242
 msgid "Grant Access"
 msgstr "अनुदान पहुँच"
 
@@ -18831,17 +18850,17 @@ msgstr "इस उपयोगकर्ता के लिए डिफ़ॉ�
 
 #: user_admin.php:1057 user_admin.php:1065 user_admin.php:1201
 #: user_admin.php:1209 user_admin.php:1340 user_admin.php:1348
-#: user_group_admin.php:935 user_group_admin.php:943 user_group_admin.php:1076
-#: user_group_admin.php:1084 user_group_admin.php:1208
-#: user_group_admin.php:1216
+#: user_group_admin.php:935 user_group_admin.php:943
+#: user_group_admin.php:1076 user_group_admin.php:1084
+#: user_group_admin.php:1208 user_group_admin.php:1216
 msgid "Access Granted"
 msgstr "प्रवेश करने की अनुमति है"
 
 #: user_admin.php:1059 user_admin.php:1063 user_admin.php:1203
 #: user_admin.php:1207 user_admin.php:1342 user_admin.php:1346
-#: user_group_admin.php:937 user_group_admin.php:941 user_group_admin.php:1078
-#: user_group_admin.php:1082 user_group_admin.php:1210
-#: user_group_admin.php:1214
+#: user_group_admin.php:937 user_group_admin.php:941
+#: user_group_admin.php:1078 user_group_admin.php:1082
+#: user_group_admin.php:1210 user_group_admin.php:1214
 msgid "Access Restricted"
 msgstr "प्रवेश प्रतिबंधित"
 
@@ -19677,14 +19696,14 @@ msgstr "सफलता - Pswd"
 msgid "Attempts"
 msgstr "प्रयास"
 
-#: utilities.php:1064 utilities.php:1422 utilities.php:1756 utilities.php:2043
-#: utilities.php:3034 utilities.php:3303 vdef.php:741
+#: utilities.php:1064 utilities.php:1422 utilities.php:1756
+#: utilities.php:2043 utilities.php:3034 utilities.php:3303 vdef.php:741
 msgctxt "Button: use filter settings"
 msgid "Go"
 msgstr "जाएं"
 
-#: utilities.php:1065 utilities.php:1423 utilities.php:1757 utilities.php:2044
-#: utilities.php:3035 utilities.php:3304 vdef.php:742
+#: utilities.php:1065 utilities.php:1423 utilities.php:1757
+#: utilities.php:2044 utilities.php:3035 utilities.php:3304 vdef.php:742
 msgctxt "Button: reset filter settings"
 msgid "Clear"
 msgstr "明确"
@@ -20280,3 +20299,289 @@ msgstr "इस VDEF का उपयोग करके ग्राफ टे�
 #: vdef.php:925
 msgid "No VDEFs"
 msgstr "कोई VDEFs नहीं"
+
+
+#: graph_templates_items.php:117 graph_templates_items.php:143
+#: graphs_items.php:123
+msgid "Cur:"
+msgstr "CUR:"
+
+#: graph_templates_items.php:124 graph_templates_items.php:150
+#: graphs_items.php:130
+msgid "Avg:"
+msgstr "औसत:"
+
+#: graph_templates_items.php:131 graph_templates_items.php:164
+#: graphs_items.php:144
+msgid "Max:"
+msgstr "अधि.:"
+
+#: graph_templates_items.php:157 graphs_items.php:137
+msgid "Min:"
+msgstr "न्यून.:"
+
+#: include/global_form.php:1052
+msgid "Line Width (decimal)"
+msgstr "लाइन चौड़ाई (दशमलव)"
+
+#: include/global_form.php:1057
+msgid "In case LINE was chosen, specify width of line here.  You must include a decimal precision, for example 2.00"
+msgstr "यदि लाइन को चुना गया था, तो यहां लाइन की चौड़ाई निर्दिष्ट करें। आपको एक दशमलव परिशुद्धता शामिल करनी होगी, उदाहरण के लिए 2.00"
+
+#: include/global_settings.php:1304
+msgid "Refresh Poller Table Per Cycle"
+msgstr "प्रति चक्र पोलर टेबल रीफ्रेश करें"
+
+#: include/global_settings.php:1305
+msgid "This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap."
+msgstr "यह सेटिंग केवल एक एकल परागकण प्रणाली के लिए है ताकि प्रत्येक मतदान चक्र पर परागकण आउटपुट तालिका का पुनर्निर्माण किया जा सके ताकि स्मृति तालिका को बड़े डेटाबेस के साथ बहुत बड़ी प्रणालियों पर स्वैप करने से रोका जा सके जो स्वैप का उपयोग कर सकते हैं।"
+
+#: lib/plugins.php:1310
+msgid "Legacy Plugin"
+msgstr "लिगेसी प्लगिन"
+
+#: plugins.php:818
+#, php-format
+msgid "Unable to Install Plugin.  The following Plugins must be installed first: %s"
+msgstr "प्लगइन स्थापित करने में असमर्थ। निम्न प्लगइन्स को पहले स्थापित किया जाना चाहिए: %s"
+
+#: sites.php:18
+msgid "Site Information"
+msgstr "साइट जानकारी"
+
+#: sites.php:24
+msgid "The primary name for the Site."
+msgstr "साइट का प्राथमिक नाम।"
+
+#: sites.php:27
+msgid "New Site"
+msgstr "नयी जगह"
+
+#: sites.php:32
+msgid "Address Information"
+msgstr "पते की जानकारी"
+
+#: sites.php:37
+msgid "Address1"
+msgstr "पता 1"
+
+#: sites.php:38
+msgid "The primary address for the Site."
+msgstr "साइट के लिए प्राथमिक पता।"
+
+#: sites.php:40
+msgid "Enter the Site Address"
+msgstr "साइट का पता दर्ज करें"
+
+#: sites.php:46
+msgid "Address2"
+msgstr "पता द्वितीय"
+
+#: sites.php:47
+msgid "Additional address information for the Site."
+msgstr "साइट के लिए अतिरिक्त पता जानकारी।"
+
+#: sites.php:49
+msgid "Additional Site Address information"
+msgstr "अतिरिक्त साइट पता जानकारी"
+
+#: sites.php:55 sites.php:595
+msgid "City"
+msgstr "शहर"
+
+#: sites.php:56
+msgid "The city or locality for the Site."
+msgstr "साइट के लिए शहर या इलाका।"
+
+#: sites.php:58
+msgid "Enter the City or Locality"
+msgstr "शहर या इलाके में प्रवेश करें"
+
+#: sites.php:64 sites.php:596
+msgid "State"
+msgstr "राज्य"
+
+#: sites.php:65
+msgid "The state for the Site."
+msgstr "साइट के लिए राज्य।"
+
+#: sites.php:67
+msgid "Enter the state"
+msgstr "राज्य दर्ज करें"
+
+#: sites.php:73
+msgid "Postal/Zip Code"
+msgstr "डाक का / ज़िप कोड"
+
+#: sites.php:74
+msgid "The postal or zip code for the Site."
+msgstr "साइट के लिए पोस्टल या ज़िप कोड।"
+
+#: sites.php:76
+msgid "Enter the postal code"
+msgstr "पोस्टल कोड दर्ज करें"
+
+#: sites.php:82 sites.php:597
+msgid "Country"
+msgstr "देश"
+
+#: sites.php:83
+msgid "The country for the Site."
+msgstr "साइट के लिए देश।"
+
+#: sites.php:85
+msgid "Enter the country"
+msgstr "देश में प्रवेश करें"
+
+#: sites.php:92
+msgid "The TimeZone for the Site."
+msgstr "साइट के लिए TimeZone।"
+
+#: sites.php:100
+msgid "Geolocation Information"
+msgstr "जियोलोकेशन की जानकारी"
+
+#: sites.php:105
+msgid "Latitude"
+msgstr "अक्षांश रेखाएँ"
+
+#: sites.php:106
+msgid "The Latitude for this Site."
+msgstr "इस साइट के लिए अक्षांश।"
+
+#: sites.php:108
+msgid "example 38.889488"
+msgstr "उदाहरण 38.889488"
+
+#: sites.php:114
+msgid "Longitude"
+msgstr "रेखांश"
+
+#: sites.php:115
+msgid "The Longitude for this Site."
+msgstr "इस साइट के लिए देशांतर।"
+
+#: sites.php:117
+msgid "example -77.0374678"
+msgstr "उदाहरण -77.0374678"
+
+#: sites.php:123
+msgid "Zoom"
+msgstr "ज़ूम करो"
+
+#: sites.php:124
+msgid "The default Map Zoom for this Site.  Values can be from 0 to 23. Note that some regions of the planet have a max Zoom of 15."
+msgstr "इस साइट के लिए डिफ़ॉल्ट मैप ज़ूम। मान 0 से 23 तक हो सकते हैं। ध्यान दें कि ग्रह के कुछ क्षेत्रों में अधिकतम ज़ूम 15 है।"
+
+#: sites.php:126
+msgid "0 - 23"
+msgstr "० - २३"
+
+#: sites.php:133
+msgid "Additional Information"
+msgstr "अतिरिक्त जानकारी"
+
+#: sites.php:141
+msgid "Additional area use for random notes related to this Site."
+msgstr "इस साइट से संबंधित यादृच्छिक नोट्स के लिए अतिरिक्त क्षेत्र का उपयोग करें।"
+
+#: sites.php:144
+msgid "Enter some useful information about the Site."
+msgstr "साइट के बारे में कुछ उपयोगी जानकारी दर्ज करें।"
+
+#: sites.php:149
+msgid "Alternate Name"
+msgstr "वैकल्पिक नाम"
+
+#: sites.php:150
+msgid "Used for cases where a Site has an alternate named used to describe it"
+msgstr "उन मामलों के लिए उपयोग किया जाता है जहां एक साइट का एक वैकल्पिक नाम होता है जिसका वर्णन करने के लिए इसका उपयोग किया जाता है"
+
+#: sites.php:152
+msgid "If the Site is known by another name enter it here."
+msgstr "यदि साइट को किसी अन्य नाम से जाना जाता है, तो इसे यहां दर्ज करें।"
+
+#: sites.php:286
+msgid "Template Site was not found! Unable to duplicate."
+msgstr "टेम्पलेट साइट नहीं मिली! डुप्लिकेट करने में असमर्थ।"
+
+#: sites.php:360
+msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
+msgid_plural "Click 'Continue' to delete all following Sites.  Note, all devices will be disassociated from this site."
+msgstr[0] "निम्नलिखित साइट को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। ध्यान दें, सभी उपकरण इस साइट से अलग कर दिए जाएंगे।"
+msgstr[1] "सभी निम्नलिखित साइटों को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। ध्यान दें, सभी उपकरण इस साइट से अलग कर दिए जाएंगे।"
+
+#: sites.php:365
+msgid "Delete Site"
+msgid_plural "Delete Sites"
+msgstr[0] "साइट हटाएं"
+msgstr[1] "साइटें हटाएं"
+
+#: sites.php:369
+msgid "Click 'Continue' to Duplicate the following Site."
+msgid_plural "Click 'Continue' to Duplicate all following Sites."
+msgstr[0] "निम्नलिखित ट्री को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[1] "निम्नलिखित पेड़ों को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+
+#: sites.php:371
+msgid "Site Name:"
+msgstr "साइट नाम"
+
+#: sites.php:375
+msgid "Duplicate Site"
+msgid_plural "Duplicate Sites"
+msgstr[0] "प्रतिलिपि"
+msgstr[1] "प्रतिलिपि"
+
+#: sites.php:414
+#, fuzzy
+msgid "Site not found."
+msgstr "फाइल नहीं मिली"
+
+#: sites.php:592
+msgid "The name of this Site."
+msgstr "इस साइट का नाम।"
+
+#: sites.php:593
+msgid "The unique id associated with this Site."
+msgstr "इस साइट से जुड़ी अनोखी आईडी।"
+
+#: sites.php:594
+msgid "The number of Devices associated with this Site."
+msgstr "इस साइट से जुड़े उपकरणों की संख्या।"
+
+#: sites.php:595
+msgid "The City associated with this Site."
+msgstr "इस साइट से जुड़ा शहर।"
+
+#: sites.php:596
+msgid "The State associated with this Site."
+msgstr "इस साइट से संबद्ध राज्य।"
+
+#: sites.php:597
+msgid "The Country associated with this Site."
+msgstr "इस साइट से जुड़ा देश।"
+
+#: sites.php:616
+msgid "No Sites Found"
+msgstr "कोई साइट नहीं मिली"
+
+#: data_source_profiles.php:310 data_source_profiles.php:463
+msgid "Unable to verify Data Source Profile usage. No profiles were deleted."
+msgstr ""
+
+#: data_source_profiles.php:335
+msgid "Unable to safely delete the selected Data Source Profiles. No profiles were deleted."
+msgstr ""
+
+#: data_source_profiles.php:471
+msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
+msgstr ""
+
+#: lib/poller.php:2196 lib/poller.php:1950
+msgid "Synchronization failed while replicating data-source definitions. See the log for details."
+msgstr ""
+
+#: lib/api_device.php:548
+msgid "Device replication failed. A FullSync is required; see the log for details."
+msgstr ""
