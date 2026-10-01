@@ -6,6 +6,10 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+/* boost_graph_set_file() writes images under this prefix before renaming them;
+ * boost_purge_cached_png_files() removes old ones a dead writer left behind */
+define('BOOST_PNG_TEMP_PREFIX', 'boost_png_tmp_');
+
 /** Failed workers may leave samples even when other children succeeded. */
 function boost_archive_is_empty($table)
 {
@@ -719,7 +723,7 @@ function boost_graph_set_file(&$output, $local_graph_id, $rra_id, $graph_data_ar
                         /* SECURITY: tempnam() creates a new file, never a link, and rename()
                          * replaces the name without following it. Readers see the old image
                          * or the whole new one, never a partial write */
-                        $temp_file = tempnam($cache_directory, 'boost_');
+                        $temp_file = tempnam($cache_directory, BOOST_PNG_TEMP_PREFIX);
 
                         if ($temp_file !== false && realpath(dirname($temp_file)) === realpath($cache_directory)) {
                             if (file_put_contents($temp_file, $output) === strlen($output) && chmod($temp_file, 0644) && rename($temp_file, $cache_file)) {

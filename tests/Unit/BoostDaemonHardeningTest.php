@@ -14,7 +14,7 @@ $funcSource   = file_get_contents(__DIR__ . '/../../lib/functions.php');
 test('boost_graph_set_file writes a temporary file in the cache directory and renames it into place', function () use ($boostSource) {
     $start = strpos($boostSource, 'function boost_graph_set_file(');
     $body = substr($boostSource, $start, strpos($boostSource, "\nfunction ", $start) - $start);
-    expect($body)->toContain('tempnam($cache_directory, ')
+    expect($body)->toContain('tempnam($cache_directory, BOOST_PNG_TEMP_PREFIX)')
         ->and($body)->toContain('rename($temp_file, $cache_file)')
         ->and($body)->not->toContain('umask(')
         ->and($body)->not->toContain('chmod($cache_file')
