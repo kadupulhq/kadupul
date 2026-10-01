@@ -29,7 +29,7 @@
     "include/vendor/csrf/README.md": "5f79ce32b88ad174563d80c7bfd0c89865fc26cdc8f0fb11d52a98d178f30f15",
     "include/vendor/csrf/csrf-conf.php": "61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514",
     "include/vendor/csrf/csrf-magic.js": "a6598bd518186eef3d9be73ac0ceafa4acad051e1b192812da55094a0c35a9a2",
-    "include/vendor/csrf/csrf-magic.php": "a44218aae3b06d62f71b50bd4f54b4a61cae7ae1fd10bade818cce6240b9ac4b",
+    "include/vendor/csrf/csrf-magic.php": "d7a93cce3d1085c1f30d395c51121be00e376387f3bcf9911ebbc618437de640",
     "include/vendor/csrf/index.php": "ab4a930fc908f8b59d7c6638572534c23d7899b77a092c3b5b7012a053753f4c",
     "include/vendor/flag-icons/country.json": "f5e99aee5051868b391b9f42e110cb104b7fcd6269807b2dc5e2c80b1e6c9436",
     "include/vendor/flag-icons/flag-ids.py": "af64921efb425f80ab17bea3cae78405d7e725f353fb2bed29d781b9cae08119",
@@ -458,6 +458,10 @@
         {
           "before": "\t\t\t$ret = array_merge($ret, csrf_flattenpost2($level+1, $nk, $v));\n\t\t}\n\t}\n\n\tcsrf_log(__FUNCTION__, 'returns: ' . var_export($ret, true));\n\n",
           "after": "\t\t\t$ret = array_merge($ret, csrf_flattenpost2($level+1, $nk, $v));\n\t\t}\n\t}\n\n"
+        },
+        {
+          "before": "\t$data = '';\n\tforeach (csrf_flattenpost($_POST) as $key => $value) {\n\t\tif ($key != $GLOBALS['csrf']['input-name']) {\n\t\t\t$data .= '<input type=\"hidden\" name=\"'.htmlspecialchars($key).'\" value=\"'.htmlspecialchars($value).'\" />';\n\t\t}\n\t}\n",
+          "after": "\t// Submitted values, passwords included, are not echoed back into the page.\n\t$data = '';\n"
         },
         {
           "before": "\t\t<p>Debug: $tokens</p></body></html>\n",

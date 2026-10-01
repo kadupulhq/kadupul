@@ -116,5 +116,6 @@ PHP);
         ->and($log)->not->toContain('probe-post-value')
         ->and($log)->not->toContain('probe-get-value')
         ->and($log)->not->toContain('probe-query-value')
-        ->and($result['page'])->not->toContain($result['hash']);
+        ->and($result['page'])->not->toContain($result['hash'])
+        ->and($result['page'])->not->toContain('probe-post-value');
 });

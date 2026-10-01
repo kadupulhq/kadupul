@@ -111,6 +111,13 @@ function pageDom({ submitter = true } = {}) {
     addEventListener: (type, listener) => listeners.push([type, listener]),
   };
   const scope = { document, Element };
+  // What a submission would carry: associated, enabled token fields.
+  const dispatchSubmit = (form, event) => {
+    for (const [type, listener] of listeners) {
+      if (type === 'submit') listener(event);
+    }
+    return nodes.some(node => node.form === form && attribute(node, 'name') === field && !node.disabled);
+  };
   if (submitter) {
     scope.SubmitEvent = class { get submitter() { return null; } };
   }
@@ -125,20 +132,9 @@ function pageDom({ submitter = true } = {}) {
       }
       return form;
     },
-    // What a submission would carry: associated, enabled token fields.
-    submit(form, button = null) {
-      for (const [type, listener] of listeners) {
-        if (type === 'submit') listener({ target: form, submitter: button });
-      }
-      return nodes.some(node => node.form === form && attribute(node, 'name') === field && !node.disabled);
-    },
+    submit: (form, button = null) => dispatchSubmit(form, { target: form, submitter: button }),
     // A submit event from a browser without SubmitEvent.submitter.
-    submitUnknown(form) {
-      for (const [type, listener] of listeners) {
-        if (type === 'submit') listener({ target: form });
-      }
-      return nodes.some(node => node.form === form && attribute(node, 'name') === field && !node.disabled);
-    },
+    submitUnknown: form => dispatchSubmit(form, { target: form }),
     button: (form, attributes) => new Element('button', { type: 'submit', ...attributes }, form),
   };
 }
