@@ -169,6 +169,36 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('PERMISSION_FILTER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+}
+if (defined('PERMISSION_REQUEST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php');
+}
+if (defined('ADMIN_LIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php');
+}
+if (defined('REALM_RENDER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
