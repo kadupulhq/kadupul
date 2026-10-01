@@ -93,6 +93,9 @@ test('LTS schema import preserves the actual baseline until verified publication
             $this->assertSame($old ? 'old baseline' : 'other', $db->query('SELECT idx_table_name FROM table_indexes')->fetchColumn());
         }
         $mutations = is_file($directory . '/db-mutations') ? file_get_contents($directory . '/db-mutations') : '';
+        if (in_array($case, ['missing', 'unreadable'], true)) {
+            $this->assertSame('', $mutations);
+        }
         $this->assertStringNotContainsString('TRUNCATE', $mutations);
         $this->assertStringNotContainsString('ALTER TABLE', $mutations);
         if ($expected !== 0 && $case !== 'swap-failure') {
@@ -117,6 +120,9 @@ test('LTS schema import preserves the actual baseline until verified publication
         $remove($directory);
     }
 })->with([
+    'missing report' => ['missing', '--report', 1],
+    'missing repair' => ['missing', '--repair', 1],
+    'missing alter plan' => ['missing', '--alters', 1],
     'missing' => ['missing', '--create', 1],
     'unreadable' => ['unreadable', '--create', 1],
     'truncated-import' => ['truncated-import', '--create', 1],
