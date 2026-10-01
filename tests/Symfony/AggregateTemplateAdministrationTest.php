@@ -205,6 +205,38 @@ final class AggregateTemplateAdministrationTest extends TestCase
         }
     }
 
+    public function testNewEditorKeepsRouteDataOutsideJavascript(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $session = $this->createMock(AuthenticatedSession::class);
+            $session->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+            $container->set(AuthenticatedSession::class, $session);
+            $permissions = $this->createMock(AggregateTemplatePermissions::class);
+            $permissions->method('canManage')->willReturn(true);
+            $container->set(AggregateTemplatePermissions::class, $permissions);
+            $catalog = $this->createMock(AggregateTemplateCatalog::class);
+            $catalog->method('editData')->willReturn($this->newTemplateData());
+            $container->set(AggregateTemplateCatalog::class, $catalog);
+            $response = $kernel->handle(Request::create('/aggregate-templates/0/edit'));
+            self::assertSame(200, $response->getStatusCode());
+            $document = new \DOMDocument();
+            self::assertTrue(@$document->loadHTML($response->getContent()));
+            $select = $document->getElementById('aggregate_template_graph_template_id');
+            self::assertNotNull($select);
+            self::assertSame('/aggregate-templates/0/edit', $select->getAttribute('data-editor-url'));
+            self::assertStringContainsString('this.dataset.editorUrl', $response->getContent());
+            self::assertStringContainsString('encodeURIComponent(this.value)', $response->getContent());
+            foreach ($document->getElementsByTagName('script') as $script) {
+                self::assertStringNotContainsString('/aggregate-templates/0/edit', $script->textContent);
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     private function newTemplateData(): array
     {
         return [

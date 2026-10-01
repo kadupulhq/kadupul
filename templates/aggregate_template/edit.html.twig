@@ -10,7 +10,7 @@
     {{ form_start(form) }}
         {{ form_errors(form) }}
         {{ form_row(form.name) }}
-        {{ form_row(form.graph_template_id) }}
+        {{ form_row(form.graph_template_id, {attr: {'data-editor-url': path('aggregate_template_edit', {id: 0})}}) }}
         <fieldset>
             <legend>{{ 'Aggregate options'|trans({}, 'aggregate_template') }}</legend>
             {{ form_row(form.gprint_prefix) }}{{ form_row(form.gprint_format) }}
@@ -40,7 +40,7 @@
 {% if template.id == 0 %}
 <script>
     document.getElementById('aggregate_template_graph_template_id')?.addEventListener('change', function () {
-        window.location.assign('{{ path('aggregate_template_edit', {id: 0}) }}?source=' + this.value);
+        window.location.assign(this.dataset.editorUrl + '?source=' + encodeURIComponent(this.value));
     });
 </script>
 {% endif %}
