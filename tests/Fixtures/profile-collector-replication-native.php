@@ -256,7 +256,10 @@ try {
     }
     $source->exec('INSERT INTO `' . $maps['source']['data_source_profiles'] . "` VALUES (77,'custom',60)");
     $remote->exec('INSERT INTO `' . $maps['remote']['data_template_data'] . "` VALUES (1,1,'existing')");
-    foreach (data_source_profile_reference_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_template_data'], 'collector_guard_' . $suffix) as $definition) {
+    // Stale collector definitions must be replaced, not accumulated.
+    $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_rra'] . '` VALUES (79,77,24,900)');
+    $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_cf'] . '` VALUES (77,4)');
+    foreach (array_merge(data_source_profile_reference_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_template_data'], 'collector_guard_' . $suffix), data_source_profile_definition_triggers($maps['remote']['data_source_profiles'], $maps['remote']['data_source_profiles_rra'], $maps['remote']['data_source_profiles_cf'], 'collector_guard_' . $suffix)) as $definition) {
         $installer->exec($definition['sql']);
     }
     if (($scenario['failure'] ?? '') === 'copy') {
@@ -264,9 +267,6 @@ try {
     }
     $source->exec('INSERT INTO `' . $maps['source']['data_source_profiles_rra'] . '` VALUES (77,77,1,600),(78,77,6,700)');
     $source->exec('INSERT INTO `' . $maps['source']['data_source_profiles_cf'] . '` VALUES (77,1),(77,3)');
-    // Stale collector definitions must be replaced, not accumulated.
-    $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_rra'] . '` VALUES (79,77,24,900)');
-    $remote->exec('INSERT INTO `' . $maps['remote']['data_source_profiles_cf'] . '` VALUES (77,4)');
     if (in_array($scenario['failure'] ?? '', ['rra', 'cf', 'corrupt'], true)) {
         $table = ($scenario['failure'] ?? '') === 'rra' ? 'data_source_profiles_rra' : 'data_source_profiles_cf';
         $body = ($scenario['failure'] ?? '') === 'corrupt' ? 'SET NEW.consolidation_function_id=4' : "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Definition copy rejected'";

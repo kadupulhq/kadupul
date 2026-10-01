@@ -33,7 +33,7 @@ $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 $tableMap = array();
 if ($mysql) {
     $ownedPrefix = 'pr_profile_' . bin2hex(random_bytes(8)) . '_';
-    foreach (array('data_source_profiles','data_source_profiles_rra','data_source_profiles_cf','data_template_data') as $table) {
+    foreach (array('data_source_profiles', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_template_data') as $table) {
         $tableMap[$table] = $ownedPrefix . $table;
     }
 }
@@ -61,7 +61,7 @@ $profilePrefix = $tableMap ? 'CREATE TABLE ' : $prefix;
 $idColumn = $mysql ? 'INTEGER PRIMARY KEY AUTO_INCREMENT' : 'INTEGER PRIMARY KEY';
 $db->exec($profilePrefix . profile_native_sql('data_source_profiles (id INTEGER PRIMARY KEY, name VARCHAR(255), hash VARCHAR(64), step INTEGER, heartbeat INTEGER, x_files_factor DOUBLE, `default` VARCHAR(4))'));
 $db->exec($profilePrefix . profile_native_sql('data_source_profiles_rra (id ' . $idColumn . ', data_source_profile_id INTEGER, name VARCHAR(255), steps INTEGER, `rows` INTEGER, timespan INTEGER)'));
-$db->exec($profilePrefix . profile_native_sql('data_source_profiles_cf (data_source_profile_id INTEGER, consolidation_function_id INTEGER)'));
+$db->exec($profilePrefix . profile_native_sql('data_source_profiles_cf (data_source_profile_id INTEGER, consolidation_function_id INTEGER, PRIMARY KEY (data_source_profile_id, consolidation_function_id))'));
 $db->exec($profilePrefix . profile_native_sql('data_template_data (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, local_data_id INTEGER)'));
 $db->exec(profile_native_sql('CREATE INDEX data_source_profile_id ON data_template_data (data_source_profile_id)'));
 $db->exec($prefix . 'settings (name VARCHAR(64) PRIMARY KEY, value VARCHAR(255))');
@@ -117,7 +117,7 @@ function db_fetch_assoc_prepared($sql, $params = array())
             return array();
         }
         $rows = array();
-        foreach (data_source_profile_reference_triggers() as $name => $definition) {
+        foreach (array_merge(data_source_profile_reference_triggers(), data_source_profile_definition_triggers()) as $name => $definition) {
             $rows[] = array('TRIGGER_NAME' => $name, 'ACTION_TIMING' => $definition['timing'], 'EVENT_MANIPULATION' => $definition['event'], 'ACTION_STATEMENT' => $GLOBALS['failure'] === 'guard-modified' ? 'BEGIN END' : $definition['body']);
         }
         return $rows;
@@ -148,6 +148,9 @@ function db_fetch_assoc($sql)
 }
 function sql_save($values, $table)
 {
+    if (($GLOBALS['failure'] === 'save-parent' && $table === 'data_source_profiles') || ($GLOBALS['failure'] === 'save-rra' && $table === 'data_source_profiles_rra')) {
+        return false;
+    }
     $values['id'] = $values['id'] ?: 4;
     $columns = array_keys($values);
     profile_native_statement('REPLACE INTO ' . $table . ' (`' . implode('`,`', $columns) . '`) VALUES (' . implode(',', array_fill(0, count($columns), '?')) . ')', array_values($values));
@@ -155,6 +158,9 @@ function sql_save($values, $table)
 }
 function db_execute_prepared($sql, $params = array())
 {
+    if ($GLOBALS['failure'] === 'save-cf' && str_contains($sql, 'REPLACE INTO data_source_profiles_cf')) {
+        return false;
+    }
     profile_native_statement($sql, $params);
     return true;
 }

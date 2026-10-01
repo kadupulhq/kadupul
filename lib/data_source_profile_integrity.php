@@ -53,6 +53,19 @@ END";
     return $definitions;
 }
 
+/** Definition writers obey the same locking parent contract as data references. */
+function data_source_profile_definition_triggers(
+    string $profiles = 'data_source_profiles',
+    string $rra = 'data_source_profiles_rra',
+    string $cf = 'data_source_profiles_cf',
+    string $prefix = 'kadupul_profile_reference'
+): array {
+    return array_merge(
+        data_source_profile_reference_triggers($profiles, $rra, $prefix . '_rra'),
+        data_source_profile_reference_triggers($profiles, $cf, $prefix . '_cf')
+    );
+}
+
 /** A missing or modified guard makes physical profile deletion unsafe. */
 function data_source_profile_reference_guards_available(
     string $profiles = 'data_source_profiles',
@@ -61,7 +74,7 @@ function data_source_profile_reference_guards_available(
     string $rra = 'data_source_profiles_rra',
     string $cf = 'data_source_profiles_cf'
 ): bool {
-    $definitions = data_source_profile_reference_triggers($profiles, $data, $prefix);
+    $definitions = array_merge(data_source_profile_reference_triggers($profiles, $data, $prefix), data_source_profile_definition_triggers($profiles, $rra, $cf, $prefix));
     $engines = db_fetch_assoc_prepared(
         'SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES
         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?, ?, ?, ?)',
@@ -78,9 +91,9 @@ function data_source_profile_reference_guards_available(
     $rows = db_fetch_assoc_prepared(
         'SELECT TRIGGER_NAME, ACTION_TIMING, EVENT_MANIPULATION, ACTION_STATEMENT
         FROM information_schema.TRIGGERS
-        WHERE TRIGGER_SCHEMA = DATABASE() AND EVENT_OBJECT_TABLE = ?
-        AND TRIGGER_NAME IN (?, ?)',
-        array_merge([$data], array_keys($definitions))
+        WHERE TRIGGER_SCHEMA = DATABASE() AND EVENT_OBJECT_TABLE IN (?, ?, ?)
+        AND TRIGGER_NAME IN (?, ?, ?, ?, ?, ?)',
+        array_merge([$data, $rra, $cf], array_keys($definitions))
     );
     if (!is_array($rows) || count($rows) !== count($definitions)) {
         return false;

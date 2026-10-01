@@ -94,6 +94,42 @@ switch (get_request_var('action')) {
 
 function form_save()
 {
+    $started = false;
+    try {
+        $id = isset_request_var('save_component_rra') ? get_filter_request_var('profile_id') : get_filter_request_var('id');
+        if (!data_source_profile_reference_guards_available() || !db_begin_transaction()) {
+            throw new RuntimeException('Profile definition write cannot start safely');
+        }
+        $started = true;
+        if ($id > 0) {
+            $parent = db_fetch_assoc_prepared('SELECT id FROM data_source_profiles WHERE id=? FOR UPDATE', array($id));
+            if (!is_array($parent) || count($parent) !== 1 || (int) $parent[0]['id'] !== (int) $id) {
+                throw new RuntimeException('Profile was deleted before its definition could be saved');
+            }
+        }
+        form_save_profile_components();
+        if (!db_commit_transaction()) {
+            throw new RuntimeException('Profile definition write commit failed');
+        }
+        if (!is_error_message()) {
+            raise_message(1);
+        }
+    } catch (Throwable $error) {
+        if ($started) {
+            try {
+                db_rollback_transaction();
+            } catch (Throwable $rollbackError) {
+                cacti_log('ERROR: Unable to roll back profile definition write: ' . $rollbackError->getMessage(), false, 'WEBUI');
+            }
+        }
+        cacti_log('ERROR: Unable to save profile definition: ' . $error->getMessage(), false, 'WEBUI');
+        raise_message(2);
+        header('Location: data_source_profiles.php?header=false');
+    }
+}
+
+function form_save_profile_components()
+{
     // make sure ids are numeric
     if (isset_request_var('id') && ! is_numeric(get_filter_request_var('id'))) {
         set_request_var('id', 0);
@@ -128,11 +164,16 @@ function form_save()
 
         if (isset_request_var('default')) {
             $save['default'] = (isset_request_var('default') ? 'on' : '');
-            db_execute('UPDATE data_source_profiles SET `default` = ""');
+            if (!db_execute('UPDATE data_source_profiles SET `default` = ""')) {
+                throw new RuntimeException('Default profile update failed');
+            }
         }
 
         if (!is_error_message()) {
             $profile_id = sql_save($save, 'data_source_profiles');
+            if (!$profile_id) {
+                throw new RuntimeException('Profile definition save failed');
+            }
 
             if ($profile_id) {
                 if (isset_request_var('step')) {
@@ -143,9 +184,11 @@ function form_save()
                             input_validate_input_number($cf);
                         }
 
-                        db_execute_prepared('DELETE FROM data_source_profiles_cf
+                        if (!db_execute_prepared('DELETE FROM data_source_profiles_cf
 							WHERE data_source_profile_id = ?
-							AND consolidation_function_id NOT IN (' . implode(',', $cfs) . ')', array($profile_id));
+							AND consolidation_function_id NOT IN (' . implode(',', $cfs) . ')', array($profile_id))) {
+                            throw new RuntimeException('Profile consolidation cleanup failed');
+                        }
                     }
 
 
@@ -153,9 +196,11 @@ function form_save()
                     $cfs = get_nfilter_request_var('consolidation_function_id');
                     if (cacti_sizeof($cfs) && !empty($cfs)) {
                         foreach ($cfs as $cf) {
-                            db_execute_prepared('REPLACE INTO data_source_profiles_cf
+                            if (!db_execute_prepared('REPLACE INTO data_source_profiles_cf
 								(data_source_profile_id, consolidation_function_id)
-								VALUES (?, ?)', array($profile_id, $cf));
+								VALUES (?, ?)', array($profile_id, $cf))) {
+                                throw new RuntimeException('Profile consolidation write failed');
+                            }
                         }
                     }
                 }
@@ -170,22 +215,21 @@ function form_save()
                     );
 
                     if ($existing) {
-                        db_execute_prepared(
+                        if (!db_execute_prepared(
                             'UPDATE data_template_rrd AS dtr
 							INNER JOIN data_template_data AS dtd
 							ON dtd.local_data_id = dtr.local_data_id
 							SET dtr.rrd_heartbeat = ?
 							WHERE dtd.data_source_profile_id = ?',
                             array(get_request_var('heartbeat'), get_request_var('id'))
-                        );
+                        )) {
+                            throw new RuntimeException('Data source heartbeat update failed');
+                        }
 
                         raise_message('heartbeat_change', __('Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool\'s \'tune\' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct.<br>'), MESSAGE_LEVEL_WARN);
                     }
                 }
 
-                raise_message(1);
-            } else {
-                raise_message(2);
             }
         }
 
@@ -222,12 +266,10 @@ function form_save()
 
         if (!is_error_message()) {
             $profile_rra_id = sql_save($save, 'data_source_profiles_rra');
-
-            if ($profile_rra_id) {
-                raise_message(1);
-            } else {
-                raise_message(2);
+            if (!$profile_rra_id) {
+                throw new RuntimeException('Profile RRA save failed');
             }
+
         }
 
         if (is_error_message()) {

@@ -51,14 +51,14 @@ function db_fetch_assoc_prepared($sql, $params = [])
 $process = null;
 $pipes = [];
 try {
-    $db->exec("CREATE TABLE `$rra` (id INTEGER PRIMARY KEY) ENGINE=InnoDB");
-    $db->exec("CREATE TABLE `$cf` (id INTEGER PRIMARY KEY) ENGINE=InnoDB");
+    $db->exec("CREATE TABLE `$rra` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32)) ENGINE=InnoDB");
+    $db->exec("CREATE TABLE `$cf` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32)) ENGINE=InnoDB");
     $db->exec("CREATE TABLE `$profiles` (id INTEGER PRIMARY KEY) ENGINE=InnoDB");
     $db->exec("CREATE TABLE `$data` (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER NOT NULL, name VARCHAR(32), INDEX(data_source_profile_id)) ENGINE=InnoDB");
     $db->exec("INSERT INTO `$profiles` VALUES (3)");
     // Historical orphan retained from before the upgrade.
     $db->exec("INSERT INTO `$data` VALUES (1,99,'old')");
-    $definitions = data_source_profile_reference_triggers($profiles, $data, $prefix);
+    $definitions = array_merge(data_source_profile_reference_triggers($profiles, $data, $prefix), data_source_profile_definition_triggers($profiles, $rra, $cf, $prefix));
     // Installation may require binary-log administrator privileges. Exercise
     // runtime inspection and all mutations through the ordinary account.
     $installer = profile_guard_connection(true);
@@ -78,16 +78,19 @@ try {
             $rejected[] = $error->getCode() === '45000';
         }
     }
+    $writerTable = match ($scenario['definition'] ?? 'data') {
+        'rra' => $rra, 'cf' => $cf, default => $data
+    };
     $operation = $scenario['writer'] ?? 'insert';
     if ($operation !== 'insert') {
-        $db->exec("INSERT INTO `$data` VALUES (2,0,'existing')");
+        $db->exec("INSERT INTO `$writerTable` VALUES (2,0,'existing')");
     }
     $parentId = (int) $db->query('SELECT CONNECTION_ID()')->fetchColumn();
     $db->beginTransaction();
     $db->query("SELECT id FROM `$profiles` WHERE id=3 FOR UPDATE")->fetchAll();
     $db->query("SELECT data_source_profile_id FROM `$data` WHERE data_source_profile_id=3 FOR UPDATE")->fetchAll();
     $db->exec("DELETE FROM `$profiles` WHERE id=3");
-    $process = proc_open([PHP_BINARY, __FILE__, '--writer', $data, $operation], [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
+    $process = proc_open([PHP_BINARY, __FILE__, '--writer', $writerTable, $operation], [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
     if (!is_resource($process)) {
         throw new RuntimeException('Unable to launch concurrent reference writer');
     }
@@ -146,7 +149,7 @@ try {
     if ($status !== 0 || $stderr !== '') {
         throw new RuntimeException('Concurrent writer failed: ' . $stderr);
     }
-    $orphans = (int) $db->query("SELECT COUNT(*) FROM `$data` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.id=2 AND d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn();
+    $orphans = (int) $db->query("SELECT COUNT(*) FROM `$writerTable` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.id=2 AND d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn();
     // Removing or modifying either guard must stop physical deletion.
     $name = array_key_first($definitions);
     $installer->exec("DROP TRIGGER `$name`");

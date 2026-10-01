@@ -26,7 +26,7 @@ function db_fetch_assoc_prepared($sql, $params = [])
     }
     return $GLOBALS['rows'];
 }
-$definitions = data_source_profile_reference_triggers();
+$definitions = array_merge(data_source_profile_reference_triggers(), data_source_profile_definition_triggers());
 $engines = [['TABLE_NAME' => 'data_source_profiles', 'ENGINE' => 'InnoDB'], ['TABLE_NAME' => 'data_template_data', 'ENGINE' => 'InnoDB']];
 $schema = file_get_contents($root . '/cacti.sql');
 $fresh = true;

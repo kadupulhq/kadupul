@@ -11,7 +11,7 @@ function upgrade_to_1_2_31()
     global $config;
 
     require_once dirname(__DIR__, 2) . '/lib/data_source_profile_integrity.php';
-    foreach (data_source_profile_reference_triggers() as $name => $definition) {
+    foreach (array_merge(data_source_profile_reference_triggers(), data_source_profile_definition_triggers()) as $name => $definition) {
         $existing = db_fetch_assoc_prepared(
             'SELECT TRIGGER_NAME FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA = DATABASE() AND TRIGGER_NAME = ?',
             array($name)

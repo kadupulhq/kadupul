@@ -87,9 +87,9 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     }
 
     /** @dataProvider deletionOutcomes */
-    public function testConcurrentWriterChecksParentAfterDeletionFinishes(string $outcome, string $writer): void
+    public function testConcurrentWriterChecksParentAfterDeletionFinishes(string $outcome, string $writer, string $definition): void
     {
-        $state = $this->runNative(array('reference_guard' => $outcome, 'writer' => $writer));
+        $state = $this->runNative(array('reference_guard' => $outcome, 'writer' => $writer, 'definition' => $definition));
         self::assertTrue($state['available']);
         self::assertTrue($state['waiting']);
         self::assertSame(0, $state['orphans']);
@@ -110,7 +110,9 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         $cases = array();
         foreach (array('commit', 'rollback') as $outcome) {
             foreach (array('insert', 'update', 'upsert') as $writer) {
-                $cases[$outcome . ' ' . $writer] = array($outcome, $writer);
+                foreach (['data', 'rra', 'cf'] as $definition) {
+                    $cases[$outcome . ' ' . $writer . ' ' . $definition] = [$outcome, $writer, $definition];
+                }
             }
         }
         return $cases;

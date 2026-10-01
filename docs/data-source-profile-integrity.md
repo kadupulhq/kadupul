@@ -4,10 +4,17 @@ Deleting a profile locks its parent row before checking template and local-data
 usage. A range lock alone cannot protect a writer that resumes after deletion
 commits, so the database guards every newly assigned nonzero profile reference.
 
+Profile and RRA form saves run within a transaction, lock and revalidate the
+posted parent ID before saving, acknowledge all mutations and raise success only
+after commit. A queued save that resumes after deletion cannot recreate the
+deleted parent. Failed child writes roll back the parent change.
+
 Fresh `cacti.sql` imports and the `1_2_31` upgrade install
 `kadupul_profile_reference_insert` (AFTER INSERT) and
 `kadupul_profile_reference_update` (BEFORE UPDATE) on `data_template_data`.
-They perform a locking parent lookup and reject a missing profile with SQLSTATE
+The same insert/update guards, with `_rra` and `_cf` in their names, protect
+`data_source_profiles_rra` and `data_source_profiles_cf`. All six guards
+perform a locking parent lookup and reject a missing profile with SQLSTATE
 45000. InnoDB rolls back the rejected statement. This covers form saves, imports,
 duplication, installer writes, suggested-value updates, and direct SQL writers.
 The insert guard runs after insertion so existing-row upserts use the update
@@ -43,8 +50,8 @@ The application account also needs TRIGGER privileges to inspect the guard
 metadata before deletion; an account that cannot inspect it fails closed.
 Binary-log policies may impose additional server privileges during installation.
 A denied creation or an existing modified guard stops the upgrade explicitly.
-Physical profile deletion checks both trigger bodies, timing, and events and
-fails closed if either guard is missing, modified, or inaccessible, or if any of `data_source_profiles`, `data_template_data`,
+Physical profile deletion and form saves check all six trigger bodies, timing, and events and
+fail closed if any guard is missing, modified, or inaccessible, or if any of `data_source_profiles`, `data_template_data`,
 `data_source_profiles_rra`, or `data_source_profiles_cf` uses a non-InnoDB engine. Run the
 upgrade after restoring the required privileges; do not remove this check.
 
@@ -57,7 +64,8 @@ check do that. A restore or a tool that recreates `data_template_data` must reta
 or reinstall the guards. The default schema keeps its semicolon delimiter until
 the explicit trigger section, which temporarily uses `$$`.
 
-The database contracts exercise a writer waiting on deletion: after commit it
+The database contracts exercise data-reference, RRA and consolidation writers
+waiting on deletion: after commit it
 is rejected without an orphan, and after rollback it succeeds. They also cover
 unchanged orphan upserts, zero references, invalid reassignment, and missing or
 modified guards. Tests use unique InnoDB tables and observe the writer's actual

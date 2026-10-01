@@ -59,7 +59,7 @@ msgstr "This program is distributed in the hope that it will be useful, but WITH
 #: color_templates.php:10 color_templates.php:105 data_input.php:14
 #: data_input.php:639 data_input.php:681 data_queries.php:13
 #: data_queries.php:805 data_queries.php:912 data_queries.php:1172
-#: data_source_profiles.php:13 data_source_profiles.php:653 data_sources.php:19
+#: data_sources.php:19 data_source_profiles.php:16 data_source_profiles.php:846
 #: data_sources.php:1070 data_templates.php:16 data_templates.php:730
 #: gprint_presets.php:10 graph_templates.php:22 graph_templates.php:500
 #: graphs.php:29 host.php:24 host_templates.php:17 host_templates.php:460
@@ -117,8 +117,8 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 #: color_templates.php:237 color_templates.php:246
 #: color_templates_items.php:281 data_input.php:280 data_input.php:332
 #: data_queries.php:394 data_queries.php:408 data_queries.php:572
-#: data_source_profiles.php:288 data_source_profiles.php:298
-#: data_source_profiles.php:406 data_sources.php:517 data_sources.php:527
+#: data_source_profiles.php:381 data_source_profiles.php:393 data_source_profiles.php:575
+#: data_sources.php:517 data_sources.php:527
 #: data_sources.php:536 data_sources.php:545 data_sources.php:554
 #: data_sources.php:560 data_templates.php:449 data_templates.php:459
 #: data_templates.php:475 gprint_presets.php:135 graph_templates.php:361
@@ -155,8 +155,8 @@ msgstr "कैंसिल करें"
 #: color_templates.php:237 color_templates.php:246
 #: color_templates_items.php:282 data_input.php:280 data_input.php:333
 #: data_queries.php:394 data_queries.php:408 data_queries.php:573
-#: data_source_profiles.php:288 data_source_profiles.php:298
-#: data_source_profiles.php:407 data_sources.php:517 data_sources.php:527
+#: data_source_profiles.php:381 data_source_profiles.php:393 data_source_profiles.php:576
+#: data_sources.php:517 data_sources.php:527
 #: data_sources.php:536 data_sources.php:545 data_sources.php:554
 #: data_sources.php:560 data_templates.php:449 data_templates.php:459
 #: data_templates.php:475 gprint_presets.php:135 graph_templates.php:361
@@ -415,7 +415,7 @@ msgstr "मिलान रेखांकन"
 #: automation_networks.php:1222 automation_snmp.php:682
 #: automation_templates.php:375 automation_tree_rules.php:819 cdef.php:729
 #: color.php:512 color_templates.php:520 data_debug.php:1106 data_input.php:797
-#: data_queries.php:1290 data_source_profiles.php:896 data_sources.php:1443
+#: data_queries.php:1290 data_sources.php:1443 data_source_profiles.php:1098
 #: data_templates.php:1024 gprint_presets.php:253 graph_templates.php:698
 #: graph_view.php:636 graphs.php:2049 graphs_new.php:443 host.php:1665
 #: host_templates.php:764 lib/api_automation.php:127 lib/api_automation.php:468
@@ -457,8 +457,8 @@ msgstr "रेखांकन"
 #: automation_snmp.php:692 automation_templates.php:385
 #: automation_tree_rules.php:839 cdef.php:739 color.php:522
 #: color_templates.php:536 data_debug.php:1116 data_input.php:807
-#: data_queries.php:1300 data_source_profiles.php:906
-#: data_source_profiles.php:1025 data_sources.php:1453 data_templates.php:1050
+#: data_queries.php:1300 data_source_profiles.php:1108 data_source_profiles.php:1230
+#: data_sources.php:1453 data_templates.php:1050
 #: gprint_presets.php:263 graph_templates.php:708 graph_view.php:710
 #: graphs.php:2070 graphs_new.php:453 host.php:1690 host_templates.php:774
 #: include/global_form.php:239 lib/api_automation.php:170
@@ -487,7 +487,7 @@ msgstr "एग्रीगेट का हिस्सा"
 #: automation_snmp.php:704 automation_templates.php:397
 #: automation_tree_rules.php:851 cdef.php:757 color.php:546
 #: color_templates.php:558 data_debug.php:1034 data_input.php:819
-#: data_queries.php:1312 data_source_profiles.php:924 data_sources.php:1396
+#: data_queries.php:1312 data_sources.php:1396 data_source_profiles.php:1129
 #: data_templates.php:1068 gprint_presets.php:281 graph_templates.php:726
 #: graph_view.php:644 graphs.php:2040 graphs_new.php:432 host.php:1655
 #: host_templates.php:755 lib/api_automation.php:182 lib/api_automation.php:459
@@ -505,7 +505,7 @@ msgstr "जाएं"
 #: aggregate_graphs.php:1249 aggregate_graphs.php:1543
 #: automation_devices.php:493 automation_snmp.php:704
 #: automation_templates.php:397 cdef.php:757 color.php:546 data_debug.php:1034
-#: data_input.php:819 data_queries.php:1312 data_source_profiles.php:924
+#: data_input.php:819 data_queries.php:1312 data_source_profiles.php:1129
 #: data_sources.php:1396 data_templates.php:1068 gprint_presets.php:281
 #: graph_templates.php:726 graph_view.php:644 graphs.php:2040
 #: graphs_new.php:432 host.php:1655 host_templates.php:755
@@ -527,7 +527,7 @@ msgstr "सेट / फ़िल्टर ताज़ा करें"
 #: automation_snmp.php:705 automation_templates.php:398
 #: automation_tree_rules.php:852 cdef.php:758 color.php:547
 #: color_templates.php:559 data_debug.php:1035 data_input.php:820
-#: data_queries.php:1313 data_source_profiles.php:925 data_sources.php:1397
+#: data_queries.php:1313 data_sources.php:1397 data_source_profiles.php:1130
 #: data_templates.php:1069 gprint_presets.php:282 graph_templates.php:727
 #: graph_view.php:645 graphs.php:2041 graphs_new.php:433 host.php:1656
 #: host_templates.php:756 lib/api_automation.php:183 lib/api_automation.php:460
@@ -544,7 +544,7 @@ msgstr "明确"
 
 #: aggregate_graphs.php:1250 aggregate_graphs.php:1544 automation_snmp.php:705
 #: automation_templates.php:398 cdef.php:758 color.php:547 data_debug.php:1035
-#: data_input.php:820 data_queries.php:1313 data_source_profiles.php:925
+#: data_input.php:820 data_queries.php:1313 data_source_profiles.php:1130
 #: data_sources.php:1397 data_templates.php:1069 gprint_presets.php:282
 #: graph_templates.php:727 graph_view.php:645 graphs.php:2041
 #: graphs_new.php:433 host.php:1656 host_templates.php:756
@@ -591,7 +591,7 @@ msgstr "आकार"
 #: aggregate_graphs.php:1294 aggregate_templates.php:707
 #: automation_tree_rules.php:698 cdef.php:884 color.php:705 color.php:707
 #: color_templates.php:664 data_input.php:951 data_queries.php:1450
-#: data_source_profiles.php:1105 data_source_profiles.php:1106
+#: data_source_profiles.php:1310 data_source_profiles.php:1311
 #: data_sources.php:1705 data_sources.php:1706 data_templates.php:1238
 #: gprint_presets.php:428 graph_templates.php:889 host_templates.php:963
 #: include/global_settings.php:876 include/global_settings.php:1915
@@ -605,8 +605,8 @@ msgstr "नहीं"
 #: automation_tree_rules.php:691 cdef.php:884 color.php:705 color.php:707
 #: color_templates.php:664 data_debug.php:682 data_debug.php:687
 #: data_debug.php:692 data_input.php:951 data_queries.php:1450
-#: data_source_profiles.php:1104 data_source_profiles.php:1105
-#: data_source_profiles.php:1106 data_sources.php:1705 data_sources.php:1706
+#: data_source_profiles.php:1309 data_source_profiles.php:1310 data_source_profiles.php:1311
+#: data_sources.php:1705 data_sources.php:1706
 #: data_templates.php:1238 gprint_presets.php:428 graph_templates.php:889
 #: host_templates.php:963 include/global_settings.php:875
 #: include/global_settings.php:1914 lib/api_automation.php:1463
@@ -765,7 +765,7 @@ msgstr "अलग-अलग टेम्प्लेट जो उपयोग �
 
 #: aggregate_templates.php:690 cdef.php:867 color.php:682
 #: color_templates.php:635 data_input.php:912 data_queries.php:1404
-#: data_source_profiles.php:1030 data_sources.php:1636 data_templates.php:1183
+#: data_sources.php:1636 data_templates.php:1183 data_source_profiles.php:1235
 #: gprint_presets.php:388 graph_templates.php:838 host_templates.php:921
 #: vdef.php:898
 msgid "Deletable"
@@ -1256,7 +1256,7 @@ msgstr "खोजे गए उपकरण"
 #: automation_devices.php:672 automation_networks.php:1147
 #: automation_snmp.php:550 automation_snmp.php:551 automation_snmp.php:552
 #: automation_snmp.php:553 automation_snmp.php:554 automation_snmp.php:555
-#: data_debug.php:607 data_source_profiles.php:56 host.php:1863
+#: data_debug.php:607 host.php:1863 data_source_profiles.php:61
 #: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1742 lib/html_reports.php:1768
 #: lib/html_reports.php:1839 lib/html_reports.php:1840
@@ -1273,7 +1273,7 @@ msgstr "लागू नहीं"
 
 #: automation_graph_rules.php:11 automation_snmp.php:12
 #: automation_tree_rules.php:11 cdef.php:12 color_templates.php:11
-#: data_input.php:15 data_queries.php:14 data_source_profiles.php:14
+#: data_input.php:15 data_queries.php:14 data_source_profiles.php:17
 #: data_templates.php:17 graph_templates.php:23 graphs.php:49
 #: host_templates.php:18 include/global_arrays.php:1644 sites.php:11
 #: vdef.php:12
@@ -1560,7 +1560,7 @@ msgstr "सामान्य सेटिंग्स"
 
 #: automation_networks.php:437 automation_snmp.php:491 data_input.php:590
 #: data_input.php:651 data_queries.php:759 data_queries.php:864
-#: data_queries.php:1131 data_source_profiles.php:618 graph_templates.php:483
+#: data_queries.php:1131 graph_templates.php:483 data_source_profiles.php:808
 #: include/global_form.php:198 include/global_form.php:264
 #: include/global_form.php:321 include/global_form.php:341
 #: include/global_form.php:382 include/global_form.php:512
@@ -1710,7 +1710,7 @@ msgid "%d Hour"
 msgstr "% d घंटा"
 
 #: automation_networks.php:525 automation_networks.php:526
-#: automation_networks.php:527 data_source_profiles.php:834
+#: automation_networks.php:527 data_source_profiles.php:1035
 #: include/global_arrays.php:712 include/global_arrays.php:713
 #: include/global_arrays.php:714 include/global_arrays.php:715
 #: include/global_arrays.php:716 include/global_arrays.php:757
@@ -2592,7 +2592,7 @@ msgid_plural "Click 'Continue' to duplicate the following CDEFs. You can optiona
 msgstr[0] "निम्नलिखित CDEF की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए CDEF के लिए शीर्षक प्रारूप बदल सकते हैं।"
 msgstr[1] "निम्नलिखित CDEFs की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए CDEFs के लिए शीर्षक प्रारूप बदल सकते हैं।"
 
-#: cdef.php:264 color_templates.php:231 data_source_profiles.php:294
+#: cdef.php:264 color_templates.php:231 data_source_profiles.php:387
 #: data_templates.php:455 graph_templates.php:367 host_templates.php:216
 #: vdef.php:267
 msgid "Title Format:"
@@ -2677,7 +2677,7 @@ msgstr "CDEFs"
 msgid "CDEF Name"
 msgstr "सीडीईएफ नाम"
 
-#: cdef.php:866 data_source_profiles.php:1022
+#: cdef.php:866 data_source_profiles.php:1227
 msgid "The name of this CDEF."
 msgstr "इस सीडीईएफ का नाम।"
 
@@ -2690,7 +2690,7 @@ msgid "The number of Graphs using this CDEF."
 msgstr "इस CDEF का उपयोग करके ग्राफ़ की संख्या।"
 
 #: cdef.php:869 color.php:684 data_input.php:923 data_queries.php:1415
-#: data_source_profiles.php:1058 gprint_presets.php:399 vdef.php:900
+#: gprint_presets.php:399 vdef.php:900 data_source_profiles.php:1263
 msgid "Templates Using"
 msgstr "टेम्पलेट्स का उपयोग करना"
 
@@ -3487,7 +3487,7 @@ msgstr "इस डेटा टेम्प्लेट के लिए आं�
 msgid "Data Inputs that are in use cannot be Deleted. In use is defined as being referenced either by a Data Source or a Data Template."
 msgstr "उपयोग में आने वाले डेटा इनपुट को हटाया नहीं जा सकता। उपयोग में डेटा स्रोत या डेटा टेम्पलेट द्वारा संदर्भित होने के रूप में परिभाषित किया गया है।"
 
-#: data_input.php:917 data_source_profiles.php:1052 data_templates.php:1188
+#: data_input.php:917 data_templates.php:1188 data_source_profiles.php:1257
 msgid "Data Sources Using"
 msgstr "डेटा स्रोत का उपयोग करना"
 
@@ -3713,124 +3713,124 @@ msgstr "डेटा इनपुट विधि इस डेटा क्व�
 msgid "No Data Queries Found"
 msgstr "कोई डेटा क्वेरी नहीं मिली"
 
-#: data_source_profiles.php:170
+#: data_source_profiles.php:229
 msgid "Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool's 'tune' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct.<br>"
 msgstr "इस पृष्ठ से दिल की धड़कन को बदलना, आपके मौजूदा डेटा स्रोतों के लिए दिल की धड़कन को नहीं बदलता है। अपने मौजूदा RRDfiles दिल की धड़कन में बदलाव करने के लिए RRDtool के 'ट्यून' फ़ंक्शन का उपयोग करें, या सही करने के लिए CLI उपयोगिता update_heartbeat.php चलाएं।<br>"
 
-#: data_source_profiles.php:283
+#: data_source_profiles.php:376
 msgid "Click 'Continue' to delete the following Data Source Profile"
 msgid_plural "Click 'Continue' to delete following Data Source Profiles"
 msgstr[0] "निम्न डेटा स्रोत प्रोफ़ाइल को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
 msgstr[1] "डेटा स्रोत प्रोफ़ाइलों को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
 
-#: data_source_profiles.php:288
+#: data_source_profiles.php:381
 msgid "Delete Data Source Profile"
 msgid_plural "Delete Data Source Profiles"
 msgstr[0] "डेटा स्रोत प्रोफ़ाइल हटाएं"
 msgstr[1] "डेटा स्रोत प्रोफ़ाइल हटाएं"
 
-#: data_source_profiles.php:292
+#: data_source_profiles.php:385
 msgid "Click 'Continue' to duplicate the following Data Source Profile. You can optionally change the title format for the new Data Source Profile"
 msgid_plural "Click 'Continue' to duplicate following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles."
 msgstr[0] "निम्न डेटा स्रोत प्रोफ़ाइल को डुप्लिकेट करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए डेटा स्रोत प्रोफ़ाइल के शीर्षक शीर्षक को बदल सकते हैं"
 msgstr[1] "डेटा स्रोत प्रोफ़ाइल का अनुसरण करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए डेटा स्रोत प्रोफ़ाइल के शीर्षक शीर्षक को बदल सकते हैं।"
 
-#: data_source_profiles.php:298
+#: data_source_profiles.php:393
 msgid "Duplicate Data Source Profile"
 msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "डुप्लिकेट डेटा स्रोत प्रोफ़ाइल"
 msgstr[1] "डुप्लिकेट दिनांक स्रोत प्रोफ़ाइल"
 
-#: data_source_profiles.php:377
+#: data_source_profiles.php:543
 #, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr "एक या अधिक RRDfile मरम्मत विफल। त्रुटियों के लिए Kadupul लॉग देखें।"
 
-#: data_source_profiles.php:400
+#: data_source_profiles.php:569
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
 msgstr "निम्न डेटा स्रोत प्रोफ़ाइल RRA को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: data_source_profiles.php:401
+#: data_source_profiles.php:570
 #, php-format
 msgid "Profile Name: %s"
 msgstr "प्रोफाइल नाम: %s"
 
-#: data_source_profiles.php:407
+#: data_source_profiles.php:576
 msgid "Remove Data Source Profile RRA"
 msgstr "डेटा स्रोत प्रोफ़ाइल RRA निकालें"
 
-#: data_source_profiles.php:454 data_source_profiles.php:473
+#: data_source_profiles.php:631 data_source_profiles.php:652
 msgid "Each Insert is New Row"
 msgstr "प्रत्येक इंसर्ट नई पंक्ति है"
 
-#: data_source_profiles.php:497
+#: data_source_profiles.php:680
 msgid "(Some Elements Read Only)"
 msgstr "(कुछ तत्व केवल पढ़ें)"
 
-#: data_source_profiles.php:497
+#: data_source_profiles.php:680
 #, php-format
 msgid "RRA [edit: %s %s]"
 msgstr "RRA [संपादित करें: %s %s]"
 
-#: data_source_profiles.php:592
+#: data_source_profiles.php:781
 #, php-format
 msgid "Data Source Profile [edit: %s]"
 msgstr "डेटा स्रोत प्रोफ़ाइल [संपादित करें: %s]"
 
-#: data_source_profiles.php:594
+#: data_source_profiles.php:783
 msgid "Data Source Profile [new]"
 msgstr "डेटा स्रोत प्रोफ़ाइल [नया]"
 
-#: data_source_profiles.php:612
+#: data_source_profiles.php:802
 msgid "Data Source Profile RRAs (press save to update timespans)"
 msgstr "डेटा स्रोत प्रोफ़ाइल आरआरए (टाइमपास को अपडेट करने के लिए प्रेस सहेजें)"
 
-#: data_source_profiles.php:614
+#: data_source_profiles.php:804
 msgid "Data Source Profile RRAs (Read Only)"
 msgstr "डेटा स्रोत प्रोफ़ाइल RRAs (केवल पढ़ें)"
 
-#: data_source_profiles.php:619 include/global_form.php:297
+#: include/global_form.php:297 data_source_profiles.php:809
 msgid "Data Retention"
 msgstr "डेटा प्रतिधारण"
 
-#: data_source_profiles.php:620 include/global_settings.php:1006
+#: include/global_settings.php:1006 data_source_profiles.php:810
 #: lib/html_reports.php:1151
 msgid "Graph Timespan"
 msgstr "ग्राफ टाइमपेन"
 
-#: data_source_profiles.php:621
+#: data_source_profiles.php:811
 msgid "Steps"
 msgstr "चरण"
 
-#: data_source_profiles.php:622 graphs_new.php:449 include/global_form.php:281
+#: graphs_new.php:449 include/global_form.php:281 data_source_profiles.php:812
 #: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2818
 #: lib/rrd.php:3816 utilities.php:849 utilities.php:1771
 msgid "Rows"
 msgstr "पंक्तियाँ"
 
-#: data_source_profiles.php:676
+#: data_source_profiles.php:869
 msgid "Select Consolidation Function(s)"
 msgstr "समेकन फ़ंक्शन का चयन करें"
 
-#: data_source_profiles.php:716
+#: data_source_profiles.php:909
 msgid "Delete Data Source Profile Item"
 msgstr "डेटा स्रोत प्रोफ़ाइल आइटम हटाएं"
 
-#: data_source_profiles.php:776
+#: data_source_profiles.php:974
 #, php-format
 msgid "%s KBytes per Data Sources and %s Bytes for the Header"
 msgstr "%s KBytes प्रति डेटा स्रोत और %s बाइट्स हेडर के लिए"
 
-#: data_source_profiles.php:783
+#: data_source_profiles.php:983
 #, php-format
 msgid "%s KBytes per Data Source"
 msgstr "डेटा स्रोत प्रति %s KBytes"
 
-#: data_source_profiles.php:785
+#: data_source_profiles.php:985
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr "RRA आकार प्राप्त करने के लिए पंक्तियों की एक मान्य संख्या दर्ज करें।"
 
-#: data_source_profiles.php:799 include/global_arrays.php:783
+#: include/global_arrays.php:783 data_source_profiles.php:1000
 #: include/global_arrays.php:784 include/global_arrays.php:785
 #: include/global_arrays.php:786 include/global_arrays.php:787
 #: include/global_arrays.php:788 include/global_arrays.php:789
@@ -3840,17 +3840,17 @@ msgstr "RRA आकार प्राप्त करने के लिए प
 msgid "%d Years"
 msgstr "% d वष"
 
-#: data_source_profiles.php:799
+#: data_source_profiles.php:1000
 msgid "1 Year"
 msgstr "1 वर्ष"
 
-#: data_source_profiles.php:808 include/global_arrays.php:777
+#: include/global_arrays.php:777 data_source_profiles.php:1009
 #: include/global_arrays.php:1460 rrdcleaner.php:525
 #, php-format
 msgid "%d Month"
 msgstr "% d महीना"
 
-#: data_source_profiles.php:808 include/global_arrays.php:778
+#: include/global_arrays.php:778 data_source_profiles.php:1009
 #: include/global_arrays.php:779 include/global_arrays.php:780
 #: include/global_arrays.php:781 include/global_arrays.php:1461
 #: include/global_arrays.php:1462 include/global_arrays.php:1463
@@ -3860,14 +3860,14 @@ msgstr "% d महीना"
 msgid "%d Months"
 msgstr "% d माह"
 
-#: data_source_profiles.php:817 include/global_arrays.php:718
+#: include/global_arrays.php:718 data_source_profiles.php:1018
 #: include/global_arrays.php:774 include/global_arrays.php:1458
 #: rrdcleaner.php:521 rrdcleaner.php:522
 #, php-format
 msgid "%d Week"
 msgstr "% d वीक"
 
-#: data_source_profiles.php:817 include/global_arrays.php:775
+#: include/global_arrays.php:775 data_source_profiles.php:1018
 #: include/global_arrays.php:776 include/global_arrays.php:1459
 #: include/global_settings.php:2918 include/global_settings.php:2919
 #: include/global_settings.php:2920 rrdcleaner.php:523 rrdcleaner.php:524
@@ -3875,14 +3875,14 @@ msgstr "% d वीक"
 msgid "%d Weeks"
 msgstr "%d सप्ताह"
 
-#: data_source_profiles.php:826 include/global_arrays.php:717
+#: include/global_arrays.php:717 data_source_profiles.php:1027
 #: include/global_arrays.php:761 include/global_arrays.php:771
 #: include/global_arrays.php:1454
 #, php-format
 msgid "%d Day"
 msgstr "%d दिन"
 
-#: data_source_profiles.php:826 include/global_arrays.php:762
+#: include/global_arrays.php:762 data_source_profiles.php:1027
 #: include/global_arrays.php:772 include/global_arrays.php:773
 #: include/global_arrays.php:1455 include/global_arrays.php:1456
 #: include/global_arrays.php:1457 include/global_settings.php:1619
@@ -3894,7 +3894,7 @@ msgstr "%d दिन"
 msgid "%d Days"
 msgstr "%d दिन"
 
-#: data_source_profiles.php:834 include/global_arrays.php:711
+#: include/global_arrays.php:711 data_source_profiles.php:1035
 #: include/global_arrays.php:1519 include/global_arrays.php:1540
 #: include/global_arrays.php:1550 include/global_arrays.php:1580
 #: include/global_arrays.php:1589 include/global_arrays.php:1617
@@ -3903,65 +3903,65 @@ msgstr "%d दिन"
 msgid "1 Hour"
 msgstr "1 घंटा"
 
-#: data_source_profiles.php:887 include/global_arrays.php:1228
+#: include/global_arrays.php:1228 data_source_profiles.php:1089
 msgid "Data Source Profiles"
 msgstr "डेटा स्रोत प्रोफ़ाइल"
 
-#: data_source_profiles.php:902 data_source_profiles.php:1065
+#: data_source_profiles.php:1104 data_source_profiles.php:1270
 msgid "Profiles"
 msgstr "प्रोफाइलें"
 
-#: data_source_profiles.php:919 data_templates.php:1063
+#: data_templates.php:1063 data_source_profiles.php:1124
 msgid "Has Data Sources"
 msgstr "डेटा स्रोत है"
 
-#: data_source_profiles.php:1019
+#: data_source_profiles.php:1224
 msgid "Data Source Profile Name"
 msgstr "डेटा स्रोत प्रोफ़ाइल नाम"
 
-#: data_source_profiles.php:1027
+#: data_source_profiles.php:1232
 msgid "Is this the default Profile for all new Data Templates?"
 msgstr "क्या यह सभी नए डेटा टेम्प्लेट के लिए डिफ़ॉल्ट प्रोफ़ाइल है?"
 
-#: data_source_profiles.php:1032
+#: data_source_profiles.php:1237
 msgid "Profiles that are in use cannot be Deleted. In use is defined as being referenced by a Data Source or a Data Template."
 msgstr "उपयोग में आने वाले प्रोफ़ाइल हटाए नहीं जा सकते हैं। उपयोग में डेटा स्रोत या डेटा टेम्पलेट द्वारा संदर्भित के रूप में परिभाषित किया गया है।"
 
-#: data_source_profiles.php:1035 include/global_form.php:357
+#: include/global_form.php:357 data_source_profiles.php:1240
 msgid "Read Only"
 msgstr "सिर्फ पढ़ने के लिए"
 
-#: data_source_profiles.php:1037
+#: data_source_profiles.php:1242
 msgid "Profiles that are in use by Data Sources become read only for now."
 msgstr "डेटा स्रोतों द्वारा उपयोग की जाने वाली प्रोफ़ाइल केवल अब के लिए पढ़ी जाती हैं।"
 
-#: data_source_profiles.php:1040 data_sources.php:1630
+#: data_sources.php:1630 data_source_profiles.php:1245
 #: include/global_settings.php:1216
 msgid "Poller Interval"
 msgstr "पोलर इंटरवल"
 
-#: data_source_profiles.php:1043
+#: data_source_profiles.php:1248
 msgid "The Polling Frequency for the Profile"
 msgstr "प्रोफाइल के लिए मतदान आवृत्ति"
 
-#: data_source_profiles.php:1046 include/global_form.php:215
+#: include/global_form.php:215 data_source_profiles.php:1251
 #: include/global_form.php:636 pollers.php:33
 msgid "Heartbeat"
 msgstr "दिल की धड़कन"
 
-#: data_source_profiles.php:1049
+#: data_source_profiles.php:1254
 msgid "The Amount of Time, in seconds, without good data before Data is stored as Unknown"
 msgstr "समय की मात्रा, सेकंड में, डेटा से पहले अच्छे डेटा के बिना अज्ञात के रूप में संग्रहीत किया जाता है"
 
-#: data_source_profiles.php:1055
+#: data_source_profiles.php:1260
 msgid "The number of Data Sources using this Profile."
 msgstr "इस प्रोफ़ाइल का उपयोग करके डेटा स्रोत की संख्या।"
 
-#: data_source_profiles.php:1061
+#: data_source_profiles.php:1266
 msgid "The number of Data Templates using this Profile."
 msgstr "इस प्रोफ़ाइल का उपयोग करके डेटा टेम्प्लेट की संख्या।"
 
-#: data_source_profiles.php:1115
+#: data_source_profiles.php:1320
 msgid "No Data Source Profiles Found"
 msgstr "कोई डेटा स्रोत प्रोफ़ाइल नहीं मिली"
 
@@ -20529,15 +20529,15 @@ msgstr "इस VDEF का उपयोग करके ग्राफ टे�
 msgid "No VDEFs"
 msgstr "कोई VDEFs नहीं"
 
-#: data_source_profiles.php:261 data_source_profiles.php:414
+#: data_source_profiles.php:311 data_source_profiles.php:464
 msgid "Unable to verify Data Source Profile usage. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:286
+#: data_source_profiles.php:336
 msgid "Unable to safely delete the selected Data Source Profiles. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:422
+#: data_source_profiles.php:472
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
 msgstr ""
 

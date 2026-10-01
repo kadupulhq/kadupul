@@ -12,7 +12,7 @@ abstract class ProfileDeletionContract extends TestCase
     {
         $state = $this->runNative($scenario);
         $failure = $scenario['failure'] ?? '';
-        $expected = $failure !== '' || ($scenario['selected'] ?? array(3)) === array(1,2) ? array(1,2,3) : array(1,2);
+        $expected = $failure !== '' || ($scenario['selected'] ?? array(3)) === array(1, 2) ? array(1, 2, 3) : array(1, 2);
         self::assertSame($expected, array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
         self::assertSame($expected, array_map('intval', array_column($state['tables']['data_source_profiles_rra'], 'data_source_profile_id')));
         self::assertSame($expected, array_map('intval', array_column($state['tables']['data_source_profiles_cf'], 'data_source_profile_id')));
@@ -27,7 +27,7 @@ abstract class ProfileDeletionContract extends TestCase
         if ($failure !== '') {
             self::assertStringContainsString('profile_delete_failed', $messages);
         }
-        if ($failure === '' && $expected === array(1,2,3)) {
+        if ($failure === '' && $expected === array(1, 2, 3)) {
             self::assertSame(array(), array_filter($state['calls'], static fn($call) => str_starts_with($call[0], 'DELETE')));
         }
         if ($failure === 'lookup-aborted' || $failure === 'commit' || str_starts_with($failure, 'data_source_profiles')) {
@@ -46,7 +46,7 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertStringNotContainsString('Warning:', $state['html']);
         self::assertStringNotContainsString('Fatal error:', $state['html']);
         self::assertStringContainsString($needle, $state['html']);
-        self::assertSame(array(1,2,3), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
+        self::assertSame(array(1, 2, 3), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
     }
 
     public static function pages(): array
@@ -70,13 +70,13 @@ abstract class ProfileDeletionContract extends TestCase
     public function testNativeDuplicateCopiesProfileAndItsChildren(): void
     {
         $state = $this->runNative(array('request' => array('drp_action' => '2', 'title_format' => '<profile_title> copy')));
-        self::assertSame(array(1,2,3,4), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
+        self::assertSame(array(1, 2, 3, 4), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
         $profile = $state['tables']['data_source_profiles'][3];
         self::assertSame('Unused profile copy', $profile['name']);
         self::assertSame(300, (int) $profile['step']);
         self::assertNotSame('ghi', $profile['hash']);
         foreach (array('data_source_profiles_rra', 'data_source_profiles_cf') as $table) {
-            self::assertSame(array(1,2,3,4), array_map('intval', array_column($state['tables'][$table], 'data_source_profile_id')));
+            self::assertSame(array(1, 2, 3, 4), array_map('intval', array_column($state['tables'][$table], 'data_source_profile_id')));
         }
         self::assertSame('Hourly', $state['tables']['data_source_profiles_rra'][3]['name']);
         self::assertSame(1, (int) $state['tables']['data_source_profiles_cf'][3]['consolidation_function_id']);
@@ -85,14 +85,40 @@ abstract class ProfileDeletionContract extends TestCase
     public function testMissingDuplicateSourceReportsFailureWithoutChanges(): void
     {
         $state = $this->runNative(array('selected' => array(99), 'request' => array('drp_action' => '2', 'title_format' => '<profile_title> copy')));
-        self::assertSame(array(1,2,3), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
+        self::assertSame(array(1, 2, 3), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
         self::assertStringContainsString('profile_error', json_encode($state['messages']));
+    }
+
+    /** @dataProvider definitionSaves */
+    public function testProfileDefinitionSavesLockParentsAndFailClosed(string $kind, string $failure): void
+    {
+        $request = $kind === 'rra' ? ['action' => 'save', 'save_component_rra' => '1', 'id' => 13, 'profile_id' => 3, 'name' => 'Saved RRA', 'steps' => 300, 'rows' => 48, 'timespan' => 86400] : ['action' => 'save', 'save_component_profile' => '1', 'id' => $failure === 'save-missing' ? 99 : 3, 'name' => 'Saved profile', 'step' => 300, 'heartbeat' => 600, 'x_files_factor' => 0.5, 'consolidation_function_id' => [1, 3]];
+        $state = $this->runNative(['request' => $request, 'failure' => $failure]);
+        self::assertStringNotContainsString('Warning:', $state['html']);
+        self::assertStringNotContainsString('Fatal error:', $state['html']);
+        self::assertSame([1, 2, 3], array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
+        $profile = array_values(array_filter($state['tables']['data_source_profiles'], static fn($row) => (int) $row['id'] === 3))[0];
+        $rra = array_values(array_filter($state['tables']['data_source_profiles_rra'], static fn($row) => (int) $row['id'] === 13))[0];
+        self::assertSame($failure === '' && $kind === 'profile' ? 'Saved profile' : 'Unused profile', $profile['name']);
+        self::assertSame($failure === '' && $kind === 'rra' ? 'Saved RRA' : 'Hourly', $rra['name']);
+        self::assertSame($failure === '' ? 0 : 1, $state['rollbacks']);
+        self::assertArrayHasKey($failure === '' ? 1 : 2, $state['messages']);
+        if ($failure !== '') {
+            self::assertArrayNotHasKey(1, $state['messages']);
+        }
+        self::assertCount(1, array_filter($state['calls'], static fn($call) => str_contains($call[0], 'SELECT id FROM data_source_profiles WHERE id=? FOR UPDATE')));
+        self::assertSame($failure === '' && $kind === 'profile' ? [1, 3] : [1], array_map('intval', array_column(array_values(array_filter($state['tables']['data_source_profiles_cf'], static fn($row) => (int) $row['data_source_profile_id'] === 3)), 'consolidation_function_id')));
+    }
+
+    public static function definitionSaves(): array
+    {
+        return [['profile', ''], ['profile', 'save-missing'], ['profile', 'save-parent'], ['profile', 'save-cf'], ['profile', 'commit'], ['rra', ''], ['rra', 'save-rra']];
     }
 
     public static function scenarios(): array
     {
-        $cases = array('unused' => array(array()), 'mixed' => array(array('selected' => array(1,2,3))), 'all referenced' => array(array('selected' => array(1,2))));
-        foreach (array('guard-engine', 'guard-rra-engine', 'guard-cf-engine','guard-missing','guard-modified','lookup-aborted','lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
+        $cases = array('unused' => array(array()), 'mixed' => array(array('selected' => array(1, 2, 3))), 'all referenced' => array(array('selected' => array(1, 2))));
+        foreach (array('guard-engine', 'guard-rra-engine', 'guard-cf-engine', 'guard-missing', 'guard-modified', 'lookup-aborted', 'lookup-false', 'lookup-invalid', 'lookup-invalid-row', 'lookup-throw', 'isolation', 'begin', 'commit', 'data_source_profiles', 'data_source_profiles_rra', 'data_source_profiles_cf') as $failure) {
             $cases[$failure] = array(array('failure' => $failure));
         }
         return $cases;
@@ -109,7 +135,7 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertContains('data_source_profile_id', $state['indexes']);
         self::assertCount(1, array_filter($state['calls'], static fn($sql) => $sql === 'ALTER TABLE data_template_data ADD INDEX data_source_profile_id (data_source_profile_id)'));
         self::assertSame(2, $state['runs']);
-        self::assertCount(2, array_filter($state['calls'], static fn($sql) => str_starts_with($sql, 'CREATE TRIGGER')));
+        self::assertCount(6, array_filter($state['calls'], static fn($sql) => str_starts_with($sql, 'CREATE TRIGGER')));
         if ($this->useMysql()) {
             self::assertSame('MUL', $state['audit']['liveKey']);
             self::assertSame($state['audit']['liveKey'], $state['audit']['baselineKey']);
@@ -171,7 +197,7 @@ abstract class ProfileDeletionContract extends TestCase
             }
             $environment = getenv();
             $environment['PROFILE_DELETE_MYSQL'] = $this->useMysql() ? '1' : '0';
-            $process = proc_open($command, array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, $directory, $environment);
+            $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
             self::assertIsResource($process);
             $stdout = stream_get_contents($pipes[1]);
             $stderr = stream_get_contents($pipes[2]);
