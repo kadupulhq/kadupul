@@ -1026,11 +1026,6 @@ legend, .loginHeading {
 	color: snow;
 }
 
-/* The login and logout panels are light grey. */
-.loginCenter .versionInfo, .logoutCenter .versionInfo {
-	color: #555555;
-}
-
 .actionsDropdown {
 	vertical-align: middle;
 	padding: 3px;

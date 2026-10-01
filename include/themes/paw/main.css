@@ -2024,11 +2024,6 @@ tr.selected .verbosequery {
 	border-color: #838383;
 }
 
-/* The login panel is light grey. */
-.loginCenter .versionInfo, .logoutCenter .versionInfo {
-	color: #555555;
-}
-
 tr td:last-child .checkbox {
 	margin-right: 10px !important;
 }
