@@ -1,6 +1,7 @@
 """Color template list, forms, item order, actions and graph-color handoff over HTTP."""
 import json
 import re
+from pathlib import Path
 from html.parser import HTMLParser
 from urllib.error import HTTPError
 from urllib.parse import urlencode
@@ -79,6 +80,9 @@ def verify_color_templates(harness, session, user_id, check):
         locale_status, localized_body, _, _ = fetch('/app.php/graphing/color-templates')
         check(locale_status == 200 and 'Modèles de couleurs' in localized_body,
               'color-template route selects the authenticated user’s French locale')
+        invalid_action_status, invalid_action_body, _, _ = fetch('/app.php/graphing/color-templates/actions?action=invalid')
+        check(invalid_action_status == 400 and 'Sélectionnez une action valide' in invalid_action_body,
+              'French color-template action errors use the feature catalog')
         harness.sql(f"DELETE FROM settings_user WHERE user_id={user_id} AND name='user_language'")
         if locale_rows != '0':
             escaped_locale = locale_pref.replace("'", "''")
@@ -88,6 +92,14 @@ def verify_color_templates(harness, session, user_id, check):
         parser, _ = parse_form(create_path)
         check('color_template[revision]' in parser.fields, 'template editor carries opaque revision')
         create_fields = parser.fields | {'color_template[name]': marker + ' <template>'}
+        before_storage_refusal = harness.sql('SELECT COUNT(*) FROM color_templates').strip()
+        harness.sql('ALTER TABLE color_template_items ENGINE=MyISAM')
+        try:
+            storage_status, _, _, _ = fetch(create_path, create_fields)
+            check(storage_status == 502 and harness.sql('SELECT COUNT(*) FROM color_templates').strip() == before_storage_refusal,
+                  'nontransactional color-template storage refuses HTTP creation before any parent write')
+        finally:
+            harness.sql('ALTER TABLE color_template_items ENGINE=InnoDB')
         check(fetch(create_path, {key: value for key, value in create_fields.items() if key != 'color_template[_token]'})[0] == 422,
               'template creation requires a CSRF token')
         check(fetch(create_path, create_fields, origin=False)[0] == 422,
@@ -181,18 +193,19 @@ def verify_color_templates(harness, session, user_id, check):
         refreshed_order.feed(refreshed_editor)
         refreshed_order_name = next(name.split('[', 1)[0] for name in refreshed_order.fields if name.endswith('[revision]'))
         stale_revision = refreshed_order.fields[f'{refreshed_order_name}[revision]']
-        harness.sql(f'UPDATE color_template_items SET sequence=3 WHERE color_template_item_id={first_item}; UPDATE color_template_items SET sequence=1 WHERE color_template_item_id={second_item}; UPDATE color_template_items SET sequence=2 WHERE color_template_item_id={first_item}')
+        harness.sql(f'UPDATE color_template_items SET sequence=3 WHERE color_template_item_id={second_item}; UPDATE color_template_items SET sequence=1 WHERE color_template_item_id={first_item}; UPDATE color_template_items SET sequence=2 WHERE color_template_item_id={second_item}')
         stale_fields = order_fields | {f'{order_name}[order]': json.dumps([second_item, first_item]), f'{order_name}[revision]': stale_revision}
         stale_status, _, _, _ = fetch(order_path, stale_fields)
         concurrently_ordered = [int(value) for value in harness.sql(f'SELECT color_template_item_id FROM color_template_items WHERE color_template_id={template_id} ORDER BY sequence').splitlines()]
-        check(refreshed_editor_status == 200 and stale_status == 409 and concurrently_ordered == [second_item, first_item],
+        check(refreshed_editor_status == 200 and stale_status == 409 and concurrently_ordered == [first_item, second_item],
               'stale reorder with identical item IDs cannot overwrite a concurrent sequence change')
+        harness.sql(f'UPDATE color_template_items SET sequence=3 WHERE color_template_item_id={first_item}; UPDATE color_template_items SET sequence=1 WHERE color_template_item_id={second_item}; UPDATE color_template_items SET sequence=2 WHERE color_template_item_id={first_item}')
 
         duplicate_path, duplicate_form, _ = save_action('duplicate', [template_id])
         duplicate_fields = duplicate_form.fields | {'color_template_action[title_format]': '<template_title> Copy'}
         status, _, location, _ = fetch(duplicate_path, duplicate_fields)
         check(status == 200 and 'duplicated=1' in location, 'duplicate action preserves the legacy title-format substitution')
-        duplicate_id = int(harness.sql(f"SELECT color_template_id FROM color_templates WHERE name='{marker} &lt;template&gt; Copy' ORDER BY color_template_id DESC LIMIT 1").strip()) if False else int(harness.sql(f"SELECT MAX(color_template_id) FROM color_templates WHERE name LIKE '{marker}%' AND color_template_id<>{template_id}").strip())
+        duplicate_id = int(harness.sql(f"SELECT MAX(color_template_id) FROM color_templates WHERE name LIKE '{marker}%' AND color_template_id<>{template_id}").strip())
         template_ids.append(duplicate_id)
         copied_colors = [int(value) for value in harness.sql(f'SELECT color_id FROM color_template_items WHERE color_template_id={duplicate_id} ORDER BY sequence').splitlines()]
         check(copied_colors == [color_two, color_one], 'duplicate copies palette data and exact item order')
@@ -228,6 +241,18 @@ def verify_color_templates(harness, session, user_id, check):
             result = re.search(r'KADUPUL_COLOR_SYNC_RESULT=(\{[^\r\n]+\})', worker['stdout'])
             check(worker['exit'] != 0 and result is not None and json.loads(result.group(1))['status'] == expected,
                   'color sync worker rejects ' + expected + ' command before any graph handoff')
+
+        reference_probe = Path(__file__).with_name('color_template_reference_probe.php').read_text()
+        # Executing a file honors the existing errors/PCOV auto_prepend INI;
+        # PHP -r bypasses that instrumentation. Keep the tracked probe unchanged.
+        reference_result = harness.compose('exec', '-T', '-u', 'www-data', 'web', 'php', '/dev/stdin',
+                                           data=reference_probe, check=False)
+        references = json.loads(reference_result['stdout']) if reference_result['exit'] == 0 else {}
+        check(reference_result['exit'] == 0 and len(references) == 12 and all(references.values()),
+              'aggregate production writers validate color parents and preserve atomic replacement and caller transactions: ' + reference_result['stderr'])
+        for reference_page in ['aggregate_templates.php', 'aggregate_graphs.php', 'graphs.php']:
+            check(session.request('/' + reference_page)['status'] == 200,
+                  'aggregate color reference caller renders ' + reference_page)
 
         graph_template_id = int(harness.sql('SELECT graph_template_id FROM graph_templates_graph WHERE local_graph_id=0 AND graph_template_id>0 AND graph_template_id IN (SELECT graph_template_id FROM graph_templates_item WHERE local_graph_id=0) ORDER BY graph_template_id LIMIT 1').strip())
         source_template_item_id = int(harness.sql(f'SELECT id FROM graph_templates_item WHERE local_graph_id=0 AND graph_template_id={graph_template_id} ORDER BY sequence LIMIT 1').strip())
@@ -316,6 +341,10 @@ def verify_color_templates(harness, session, user_id, check):
         legacy_before = harness.sql(f'SELECT COUNT(*) FROM color_template_items WHERE color_template_id={template_id}').strip()
         check(fetch('/color_templates_items.php?color_template_id=' + str(template_id), {'action':'item_remove', 'color_id': str(first_item)})[0] == 409, 'legacy item POST expires without dispatching deletion')
         check(harness.sql(f'SELECT COUNT(*) FROM color_template_items WHERE color_template_id={template_id}').strip() == legacy_before, 'legacy item POST changes no palette rows')
+        selectable_status, selectable_body, _, _ = fetch('/app.php/graphing/color-templates?' + urlencode({'filter': marker}))
+        selectable = re.search(r'<input\b[^>]*type="checkbox"[^>]*name="ids\[\]"[^>]*value="' + str(template_id) + r'"[^>]*>', selectable_body)
+        check(selectable_status == 200 and selectable is not None and 'disabled' not in selectable.group(0),
+              'referenced color templates remain selectable for duplicate and synchronization')
         check(fetch('/color_templates.php', {'action': 'actions'})[0] == 409,
               'legacy POST mutation is expired without replay')
 

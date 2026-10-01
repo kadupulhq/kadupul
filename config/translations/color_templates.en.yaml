@@ -102,3 +102,9 @@ Action outcome is uncertain. Reload the color template list before retrying.: Ac
 Default (%count%): Default (%count%)
 Select %name%: Select %name%
 Next: Next
+Choose a valid color template and color.: Choose a valid color template and color.
+Color template order changed. Reload before reordering.: Color template order changed. Reload before reordering.
+Color templates referenced by aggregate graphs or templates cannot be deleted.: Color templates referenced by aggregate graphs or templates cannot be deleted.
+Invalid color template preferences.: Invalid color template preferences.
+Select a valid color template action.: Select a valid color template action.
+Title Format: Title Format

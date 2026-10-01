@@ -488,6 +488,13 @@ function aggregate_graphs_insert_graph_items(
  */
 function aggregate_graph_items_save($items, $table)
 {
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+
+    $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    if (!$db instanceof PDO || !$items) {
+        return false;
+    }
+
     $defaults = array();
     if ($table == 'aggregate_graphs_graph_item') {
         $defaults['aggregate_graph_id'] = null;
@@ -511,6 +518,9 @@ function aggregate_graph_items_save($items, $table)
 
     $items_sql = array();
     $parameters = array();
+    $colors = array();
+    $graph_item_ids = array();
+    $aggregate_id = (int) ($items[0][$id_field] ?? 0);
     foreach ($items as $item) {
         // substitute any missing fields with defaults
         $item = array_merge($defaults, $item);
@@ -521,6 +531,15 @@ function aggregate_graph_items_save($items, $table)
         // without these graph item makes no sense
         if (!isset($item[$id_field]) || !isset($item['graph_templates_item_id'])) {
             return false;
+        }
+
+        if ((int) $item[$id_field] !== $aggregate_id || (int) $item['color_template'] < 0
+            || isset($graph_item_ids[(int) $item['graph_templates_item_id']])) {
+            return false;
+        }
+        $graph_item_ids[(int) $item['graph_templates_item_id']] = true;
+        if ((int) $item['color_template'] > 0) {
+            $colors[(int) $item['color_template']] = (int) $item['color_template'];
         }
 
         // Keep values out of SQL while preserving the existing integer fields.
@@ -546,14 +565,65 @@ function aggregate_graph_items_save($items, $table)
 
     cacti_log(__FUNCTION__ . ' called. SQL: ' . $sql, true, 'AGGREGATE', POLLER_VERBOSITY_DEBUG);
 
-    /* remove all old items */
-    if (isset($items[0][$id_field])) {
-        db_execute_prepared("DELETE FROM $table WHERE " . $id_field . ' = ?', array((int) $items[0][$id_field]));
-    }
-
-    if (db_execute_prepared($sql, $parameters) == 1) {
+    // A parent lock makes a writer waiting for deletion recheck the committed
+    // parent before replacing any existing aggregate items. Keep these locks
+    // until all reference writes commit, in the same order as template deletion.
+    $started = false;
+    $savepoint = null;
+    try {
+        $driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'mysql') {
+            foreach (array('color_templates', $table) as $target) {
+                $metadata = $db->query('SHOW CREATE TABLE `' . $target . '`');
+                $row = $metadata ? $metadata->fetch(PDO::FETCH_NUM) : false;
+                if (!$row || !preg_match('/\n\) ENGINE=InnoDB\b/i', $row[1])) {
+                    return false;
+                }
+            }
+        } elseif ($driver !== 'sqlite') {
+            return false;
+        }
+        if ($db->inTransaction()) {
+            $candidate = 'kadupul_aggregate_colors_' . bin2hex(random_bytes(8));
+            if ($db->exec('SAVEPOINT ' . $candidate) === false) {
+                throw new RuntimeException('Cannot protect aggregate item replacement.');
+            }
+            $savepoint = $candidate;
+        } else {
+            if (!$db->beginTransaction()) {
+                throw new RuntimeException('Cannot start aggregate item replacement.');
+            }
+            $started = true;
+        }
+        ksort($colors, SORT_NUMERIC);
+        foreach ($colors as $color) {
+            $parent = $db->prepare('SELECT color_template_id FROM color_templates WHERE color_template_id=?' . ($driver === 'mysql' ? ' FOR UPDATE' : ''));
+            if (!$parent || !$parent->execute(array($color)) || $parent->fetchColumn() === false) {
+                throw new RuntimeException('A selected color template no longer exists.');
+            }
+        }
+        if (!db_execute_prepared("DELETE FROM $table WHERE " . $id_field . ' = ?', array($aggregate_id), true, $db)
+            || !db_execute_prepared($sql, $parameters, true, $db)) {
+            throw new RuntimeException('Cannot replace aggregate graph items.');
+        }
+        if ($started) {
+            if (!$db->commit()) {
+                throw new RuntimeException('Cannot commit aggregate item replacement.');
+            }
+        } elseif ($db->exec('RELEASE SAVEPOINT ' . $savepoint) === false) {
+            throw new RuntimeException('Cannot finish aggregate item replacement.');
+        }
         return true;
-    } else {
+    } catch (Throwable $error) {
+        if ($db->inTransaction()) {
+            if ($started) {
+                $db->rollBack();
+            } elseif ($savepoint !== null) {
+                $db->exec('ROLLBACK TO SAVEPOINT ' . $savepoint);
+                $db->exec('RELEASE SAVEPOINT ' . $savepoint);
+            }
+        }
+        cacti_log('ERROR: Aggregate item replacement failed: ' . $error->getMessage(), true, 'AGGREGATE', POLLER_VERBOSITY_DEBUG);
         return false;
     }
 }

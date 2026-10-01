@@ -742,7 +742,11 @@ function form_actions()
                         $aggregate_graph_items[]             = $item_new;
                     }
 
-                    aggregate_graph_items_save($aggregate_graph_items, 'aggregate_graphs_graph_item');
+                    if (!aggregate_graph_items_save($aggregate_graph_items, 'aggregate_graphs_graph_item')) {
+                        raise_message('aggregate_colors_changed', __('An aggregate graph may have been created, but graph item replacement could not be confirmed. Reload and select existing color templates.'), MESSAGE_LEVEL_ERROR);
+                        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
+                        return;
+                    }
                 } else {
                     $aggregate_graph_items = db_fetch_assoc_prepared(
                         'SELECT *

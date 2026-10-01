@@ -16,6 +16,10 @@ $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->exec("CREATE TABLE $table ($id INTEGER, graph_templates_item_id INTEGER, sequence INTEGER, color_template INTEGER, t_graph_type_id TEXT, graph_type_id INTEGER, t_cdef_id TEXT, cdef_id INTEGER, item_skip TEXT, item_total TEXT)");
 $db->exec("INSERT INTO $table ($id, graph_templates_item_id) VALUES (1, 10), (2, 20)");
+$db->exec("CREATE TABLE color_templates (color_template_id INTEGER PRIMARY KEY)");
+$db->exec("INSERT INTO color_templates VALUES (4)");
+$database_hostname = 'fixture'; $database_port = 0; $database_default = 'fixture';
+$database_sessions = array('fixture:0:fixture' => $db);
 $queries = array();
 function cacti_log(...$args) {}
 function db_execute_prepared($sql, $parameters) {

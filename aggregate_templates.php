@@ -226,8 +226,10 @@ function aggregate_form_save() {
 		$items_to_save[] = $item_new;
 	}
 
-	if ($items_changed) {
-		aggregate_graph_items_save($items_to_save, 'aggregate_graph_templates_item');
+	if ($items_changed && !aggregate_graph_items_save($items_to_save, 'aggregate_graph_templates_item')) {
+		raise_message('aggregate_colors_changed', __('Aggregate settings may have been saved, but graph item replacement could not be confirmed. Reload and select existing color templates.'), MESSAGE_LEVEL_ERROR);
+		header('Location: aggregate_templates.php?header=false&action=edit&id=' . $id);
+		return;
 	}
 
 	if ($save_me || $params_changed || $items_changed) {

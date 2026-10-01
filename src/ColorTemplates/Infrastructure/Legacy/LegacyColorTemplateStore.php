@@ -16,11 +16,12 @@ use Kadupul\ColorTemplates\Domain\ColorTemplatePage;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use PDO;
 
 final readonly class LegacyColorTemplateStore implements ColorTemplateStore
 {
-    public function __construct(private DatabaseConnection $database, private ColorTemplateAccess $access, private AuditTrail $audit) {}
+    public function __construct(private DatabaseConnection $database, private ColorTemplateAccess $access, private AuditTrail $audit, private LegacyConfiguration $configuration) {}
 
     public function defaultRows(): int
     {
@@ -123,7 +124,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         }
         return $this->transaction($actorId, 'color.item.' . ($itemId === null ? 'create' : 'edit'), $itemId === null ? (string) $templateId : (string) $itemId, function (PDO $db) use ($templateId, $itemId, $colorId, $revision): int {
             $this->requireTemplate($db, $templateId, true);
-            $color = $db->prepare('SELECT id FROM colors WHERE id=?');
+            $color = $db->prepare('SELECT id FROM colors WHERE id=?' . $this->lockSuffix($db));
             $color->execute([$colorId]);
             if ($color->fetchColumn() === false) {
                 throw new \InvalidArgumentException('Selected color is unavailable.');
@@ -208,10 +209,12 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
                 throw new \InvalidArgumentException('One or more color templates no longer exist.');
             }
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
-            $references = $db->prepare("SELECT color_template FROM aggregate_graph_templates_item WHERE color_template IN ($placeholders) UNION ALL SELECT color_template FROM aggregate_graphs_graph_item WHERE color_template IN ($placeholders) LIMIT 1");
-            $references->execute([...$ids, ...$ids]);
-            if ($references->fetchColumn() !== false) {
-                throw new \InvalidArgumentException('Color templates referenced by aggregate graphs or templates cannot be deleted.');
+            foreach (['aggregate_graph_templates_item', 'aggregate_graphs_graph_item'] as $table) {
+                $references = $db->prepare("SELECT color_template FROM $table WHERE color_template IN ($placeholders) ORDER BY color_template" . $this->lockSuffix($db));
+                $references->execute($ids);
+                if ($references->fetchColumn() !== false) {
+                    throw new \InvalidArgumentException('Color templates referenced by aggregate graphs or templates cannot be deleted.');
+                }
             }
             $items = $db->prepare("DELETE FROM color_template_items WHERE color_template_id IN ($placeholders)");
             $items->execute($ids);
@@ -223,7 +226,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
     public function duplicate(int $actorId, array $ids, string $titleFormat): void
     {
         $ids = $this->normalizeIds($ids);
-        if ($titleFormat === '' || strlen($titleFormat) > 255 || preg_match('//u', $titleFormat) !== 1 || str_contains($titleFormat, "\0")) {
+        if ($titleFormat === '' || mb_strlen($titleFormat, 'UTF-8') > 255 || preg_match('//u', $titleFormat) !== 1 || str_contains($titleFormat, "\0")) {
             throw new \InvalidArgumentException('Enter a valid title format.');
         }
         $this->transaction($actorId, 'color.template.duplicate', $this->selectionTarget($ids), function (PDO $db) use ($ids, $titleFormat): void {
@@ -252,10 +255,16 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         $db = $this->database->get();
         $decision = AuditEvent::DENIED;
         $outcome = AuditEvent::DENIED;
-        if ($db->inTransaction() || !$db->beginTransaction()) {
-            throw new \RuntimeException('Color template transaction unavailable.');
-        }
+        $started = false;
         try {
+            if ($db->inTransaction()) {
+                throw new \RuntimeException('Color template transaction unavailable.');
+            }
+            $this->assertTransactional($db);
+            if (!$db->beginTransaction()) {
+                throw new \RuntimeException('Color template transaction unavailable.');
+            }
+            $started = true;
             $this->access->assertCurrent($actorId);
             $decision = AuditEvent::ALLOWED;
             $outcome = AuditEvent::FAILED;
@@ -266,7 +275,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             $outcome = AuditEvent::SUCCEEDED;
             return $result;
         } catch (\Throwable $error) {
-            if ($db->inTransaction()) {
+            if ($started && $db->inTransaction()) {
                 $db->rollBack();
             }
             if ($error instanceof \InvalidArgumentException) {
@@ -279,6 +288,34 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             } catch (\Throwable) {
                 // Audit sink failure must not change a committed template operation.
             }
+        }
+    }
+
+    private function assertTransactional(PDO $db): void
+    {
+        $driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'sqlite') {
+            return;
+        }
+        if ($driver !== 'mysql') {
+            throw new \RuntimeException('Unsupported color template mutation database.');
+        }
+        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
+            throw new \RuntimeException('Color templates must be changed on the primary collector.');
+        }
+        foreach (['color_templates', 'color_template_items', 'colors', 'aggregate_graphs_graph_item', 'aggregate_graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
+            // Inspect this connection's actual table, including temporary shadows.
+            $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
+            if ($query === false) {
+                throw new \RuntimeException('Color template storage could not be verified.');
+            }
+            $definition = $query->fetch(PDO::FETCH_NUM);
+            if (!is_array($definition) || preg_match('/\n\) ENGINE=InnoDB\b/i', (string) ($definition[1] ?? '')) !== 1) {
+                throw new \RuntimeException('Color template writes require transactional tables.');
+            }
+        }
+        if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false) {
+            throw new \RuntimeException('Color template transaction isolation could not be confirmed.');
         }
     }
 
@@ -310,7 +347,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
 
     private function validateName(string $name): void
     {
-        if ($name === '' || strlen($name) > 255 || preg_match('//u', $name) !== 1 || str_contains($name, "\0")) {
+        if ($name === '' || mb_strlen($name, 'UTF-8') > 255 || preg_match('//u', $name) !== 1 || str_contains($name, "\0")) {
             throw new \InvalidArgumentException('Color template name must contain 1 to 255 valid characters.');
         }
     }

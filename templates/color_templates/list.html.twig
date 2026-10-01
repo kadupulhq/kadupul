@@ -43,7 +43,7 @@
             <tbody>
             {% for template in page.templates %}
                 <tr>
-                    <td><input type="checkbox" name="ids[]" value="{{ template.id }}"{% if not template.deletable %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': template.name}, 'color_templates') }}"></td>
+                    <td><input type="checkbox" name="ids[]" value="{{ template.id }}" aria-label="{{ 'Select %name%'|trans({'%name%': template.name}, 'color_templates') }}"></td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                     <td><a href="{{ path('color_template_edit', filters|merge({id: template.id})) }}">{{ template.name }}</a></td>
                     <td>{{ (template.deletable ? 'Yes' : 'No')|trans({}, 'color_templates') }}</td>

@@ -22,9 +22,21 @@ def main():
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
         'bin/legacy-color-template-sync.php', 'color_templates.php', 'color_templates_items.php',
+        'lib/api_aggregate.php', 'aggregate_templates.php', 'aggregate_graphs.php', 'graphs.php',
         'src/Platform/Infrastructure/Symfony/LegacyPageForwarder.php',
         'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateDeleteType.php',
         'src/ColorTemplates/Application/Command/RemoveColorTemplateItem.php',
+        'src/ColorTemplates/Infrastructure/Legacy/LegacyColorTemplateStore.php',
+        'src/ColorTemplates/Infrastructure/Legacy/LegacyColorTemplateAccess.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Controller/ColorTemplateListController.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Controller/ColorTemplateEditController.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Controller/ColorTemplateItemController.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Controller/ColorTemplateActionController.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Controller/LegacyColorTemplateController.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateType.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateItemType.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateActionType.php',
+        'src/ColorTemplates/Infrastructure/Symfony/Form/ColorTemplateOrderType.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -169,6 +181,20 @@ def main():
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
+    color_checks = ['nontransactional color-template storage refuses HTTP creation before any parent write',
+                    'database sequence is the ordered color handoff consumed by aggregate graph generation',
+                    'reorder updates all item sequences atomically',
+                    'duplicate copies palette data and exact item order',
+                    'color item deletion requires a CSRF token',
+                    'unused color template and its items are deleted together',
+                    'session without color template realm is denied',
+                    'French color-template action errors use the feature catalog',
+                    'aggregate production writers validate color parents and preserve atomic replacement and caller transactions: ',
+                    'aggregate color reference caller renders aggregate_templates.php',
+                    'aggregate color reference caller renders aggregate_graphs.php',
+                    'aggregate color reference caller renders graphs.php',
+                    'referenced color templates remain selectable for duplicate and synchronization',
+                    'stale reorder with identical item IDs cannot overwrite a concurrent sequence change']
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
@@ -229,6 +255,8 @@ def main():
         output = scratch / 'result.xml'
         for index in range(len(statistics_checks)):
             failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
+        for index in range(len(color_checks)):
+            failures['missing-color-check-' + str(index)] = 'Incomplete Symfony integration'
         for case, expected in failures.items():
             data = copy.deepcopy(measured)
             evidence = copy.deepcopy(manifest)
@@ -294,6 +322,8 @@ def main():
             elif case.startswith('missing-statistics-check-'):
                 missing = statistics_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-color-check-'):
+                evidence['checks'].remove(color_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':

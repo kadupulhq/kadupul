@@ -100,3 +100,11 @@ Action outcome is uncertain. Reload the color template list before retrying.: Le
 Default (%count%): Par défaut (%count%)
 Select %name%: Sélectionner %name%
 Next: Suivant
+Add Color Template Item: Ajouter une couleur au modèle
+Color template or item not found.: Modèle de couleurs ou couleur introuvable.
+Choose a valid color template and color.: Choisissez un modèle et une couleur valides.
+Color template order changed. Reload before reordering.: L’ordre des couleurs a changé. Rechargez avant de le modifier.
+Color templates referenced by aggregate graphs or templates cannot be deleted.: Les modèles utilisés par des graphiques ou des modèles agrégés ne peuvent pas être supprimés.
+Invalid color template preferences.: Préférences de modèles de couleurs invalides.
+Select a valid color template action.: Sélectionnez une action valide pour les modèles de couleurs.
+Title Format: Format du titre

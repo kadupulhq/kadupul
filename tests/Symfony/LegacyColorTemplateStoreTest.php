@@ -16,6 +16,7 @@ use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
 
 final class LegacyColorTemplateStoreTest extends TestCase
@@ -72,7 +73,49 @@ final class LegacyColorTemplateStoreTest extends TestCase
             }
         };
         $access = new LegacyColorTemplateAccess($this->console, $connection);
-        $this->store = new LegacyColorTemplateStore($connection, $access, $this->audit);
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
+        $this->store = new LegacyColorTemplateStore($connection, $access, $this->audit, $configuration);
+    }
+
+    public function testCallerTransactionAndItsWritesSurviveRefusedMutation(): void
+    {
+        $this->db->beginTransaction();
+        try {
+            $this->db->exec("INSERT INTO color_templates VALUES (99,'Caller owns this')");
+            try {
+                $this->store->saveTemplate(42, null, 'Must not write', null);
+                self::fail('Nested write must be refused.');
+            } catch (\RuntimeException $error) {
+                self::assertStringContainsString('transaction unavailable', $error->getMessage());
+            }
+            self::assertTrue($this->db->inTransaction());
+            self::assertSame('Caller owns this', $this->db->query('SELECT name FROM color_templates WHERE color_template_id=99')->fetchColumn());
+            self::assertSame(0, (int) $this->db->query("SELECT COUNT(*) FROM color_templates WHERE name='Must not write'")->fetchColumn());
+        } finally {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+        }
+        self::assertSame(0, (int) $this->db->query('SELECT COUNT(*) FROM color_templates WHERE color_template_id=99')->fetchColumn());
+    }
+
+    public function testMultibyteNamesAndTitleFormatsUseCharacterLimits(): void
+    {
+        $name = str_repeat('界', 255);
+        $id = $this->store->saveTemplate(42, null, $name, null);
+        self::assertSame($name, $this->store->find($id)?->name);
+        $title = str_repeat('é', 255);
+        $this->store->duplicate(42, [$id], $title);
+        self::assertSame($title, $this->db->query('SELECT name FROM color_templates ORDER BY color_template_id DESC LIMIT 1')->fetchColumn());
+        foreach ([fn() => $this->store->saveTemplate(42, null, str_repeat('界', 256), null), fn() => $this->store->duplicate(42, [$id], str_repeat('é', 256))] as $mutation) {
+            try {
+                $mutation();
+                self::fail('An overlong character value was accepted.');
+            } catch (\InvalidArgumentException) {
+                self::assertFalse($this->db->inTransaction());
+            }
+        }
     }
 
     public function testListCountsReferencesAndFiltersTheLegacyHasGraphsMeaning(): void
