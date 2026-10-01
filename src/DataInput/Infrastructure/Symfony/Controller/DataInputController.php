@@ -11,6 +11,7 @@ use Kadupul\DataInput\Application\Port\DataInputAccess;
 use Kadupul\DataInput\Application\DataInputDenied;
 use Kadupul\DataInput\Application\DataInputConflict;
 use Kadupul\DataInput\Domain\DataInputState;
+use Kadupul\DataInput\Domain\DataInputNotFound;
 use Kadupul\DataInput\Infrastructure\Symfony\Form\DataInputMethodType;
 use Kadupul\DataInput\Infrastructure\Symfony\Form\DataInputFieldType;
 use Kadupul\DataInput\Infrastructure\Symfony\Form\DataInputActionType;
@@ -110,7 +111,7 @@ final class DataInputController
                 }
             }
             if ($field > 0 && $data === null) {
-                return new Response($translator->trans('Field not found.', [], 'data_input'), 404, self::HEADERS);
+                throw new DataInputNotFound('Field not found.');
             }
             $direction = $data['input_output'] ?? $this->queryString($request, 'direction', 'in');
             if (!in_array($direction, ['in', 'out'], true)) {
@@ -173,7 +174,7 @@ final class DataInputController
                     }
                 }
                 if ($selectedField === null) {
-                    throw new \InvalidArgumentException('Field does not belong to this input.');
+                    throw new DataInputNotFound('Field does not belong to this input.');
                 }
             }
             $form = $forms->create(DataInputActionType::class, ['revision' => $state['revision'], 'title' => '<input_title> (1)'], ['duplicate' => $operation === 'duplicate']);
@@ -269,7 +270,7 @@ final class DataInputController
     private function failure(\Throwable $error, TranslatorInterface $translator): Response
     {
         $status = match (true) {
-            $error instanceof DataInputDenied => $error->anonymous ? 401 : 403,$error instanceof DataInputConflict => 409,$error instanceof \InvalidArgumentException => 400,default => 502
+            $error instanceof DataInputDenied => $error->anonymous ? 401 : 403,$error instanceof DataInputConflict => 409,$error instanceof DataInputNotFound => 404,$error instanceof \InvalidArgumentException => 400,default => 502
         };
         $message = $status === 502 ? 'Operation outcome is unknown. Reload before retrying.' : $error->getMessage();
         return new Response($translator->trans($message, [], 'data_input'), $status, self::HEADERS);

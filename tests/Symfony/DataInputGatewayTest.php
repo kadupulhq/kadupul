@@ -46,6 +46,8 @@ final class DataInputGatewayTest extends TestCase
         yield 'worker exit' => ['exit', \RuntimeException::class, 'Operation failed'];
         yield 'grant denied' => ['denied', DataInputDenied::class, 'Access denied'];
         yield 'stale revision' => ['conflict', DataInputConflict::class, 'changed'];
+        yield 'missing input' => ['not_found', \Kadupul\DataInput\Domain\DataInputNotFound::class, 'Data input not found.'];
+        yield 'missing field' => ['field_not_found', \Kadupul\DataInput\Domain\DataInputNotFound::class, 'Field does not belong to this input.'];
         yield 'validation rejected' => ['invalid', \InvalidArgumentException::class, 'Invalid input fixture'];
     }
     #[DataProvider('acceptedResponses')]
@@ -189,8 +191,10 @@ if (str_starts_with($mode, 'bulk_')) {
 
 if (in_array($mode,['actor','action','request_id','nonce','result'],true)) $r[$mode]='mismatch';
 if ($mode==='target'||$mode==='duplicate') $r['result']['id']=4;
-if (in_array($mode,['denied','conflict','invalid','failed','partial'],true)) $r['status']=$mode;
+if (in_array($mode,['denied','conflict','invalid','failed','partial','not_found'],true)) $r['status']=$mode;
 if ($mode==='invalid') $r['result']['message']='Invalid input fixture';
+if ($mode==='not_found') $r['result']['message']='Data input not found.';
+if ($mode==='field_not_found') { $r['status']='not_found'; $r['result']['message']='Field does not belong to this input.'; }
 if ($mode==='missing') { echo 'NO_RESULT'; exit; }
 if ($mode==='malformed') { echo 'KADUPUL_DATA_INPUT_RESULT={broken}',PHP_EOL; exit; }
 echo 'KADUPUL_DATA_INPUT_RESULT=',json_encode($r),PHP_EOL;

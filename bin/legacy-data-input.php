@@ -3,6 +3,7 @@
 /* SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later */
 use Kadupul\DataInput\Domain\DataInputState;
+use Kadupul\DataInput\Domain\DataInputNotFound;
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(404);
@@ -177,7 +178,7 @@ try {
                 }
             }
             if ($fieldId > 0 && $existing === null) {
-                throw new InvalidArgumentException('Field does not belong to this input.');
+                throw new DataInputNotFound('Field does not belong to this input.');
             }
             if ($existing && $existing['input_output'] !== $data['input_output']) {
                 throw new InvalidArgumentException('Field direction cannot change.');
@@ -211,7 +212,7 @@ try {
                 }
             }
             if ($field === null) {
-                throw new InvalidArgumentException('Field does not belong to this input.');
+                throw new DataInputNotFound('Field does not belong to this input.');
             }
             if ($field['input_output'] === 'out') {
                 dataInputWorkerFieldUnused($db, $id, $fieldId);
@@ -278,6 +279,9 @@ try {
     $status = 'denied';
 } catch (DataInputWorkerConflict) {
     $status = 'conflict';
+} catch (DataInputNotFound $error) {
+    $status = 'not_found';
+    $result = ['message' => $error->getMessage()];
 } catch (InvalidArgumentException $error) {
     $status = 'invalid';
     $result = ['message' => $error->getMessage()];
@@ -318,7 +322,7 @@ function dataInputWorkerSelection(PDO $db, mixed $ids): array
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
     $methods = dataInputWorkerRead($db, "SELECT * FROM data_input WHERE id IN ($placeholders) ORDER BY id", $ids);
     if (count($methods) !== count($ids)) {
-        throw new InvalidArgumentException('Data input not found.');
+        throw new DataInputNotFound('Data input not found.');
     }
     $fields = dataInputWorkerRead($db, "SELECT * FROM data_input_fields WHERE data_input_id IN ($placeholders) ORDER BY data_input_id,id", $ids);
     $children = [];
@@ -329,7 +333,7 @@ function dataInputWorkerSelection(PDO $db, mixed $ids): array
     $names = [];
     foreach ($methods as $method) {
         if (in_array($method['hash'], DataInputState::SYSTEM, true)) {
-            throw new InvalidArgumentException('Data input not found.');
+            throw new DataInputNotFound('Data input not found.');
         }
         $id = (int) $method['id'];
         $selection[$id] = DataInputState::revision($method, $children[$id] ?? []);
@@ -342,7 +346,7 @@ function dataInputWorkerState(PDO $db, int $id, bool $lock = false): array
     $suffix = $lock ? ' FOR UPDATE' : '';
     $method = dataInputWorkerRead($db, 'SELECT * FROM data_input WHERE id=?' . $suffix, [$id])[0] ?? null;
     if ($method === null || in_array($method['hash'], DataInputState::SYSTEM, true)) {
-        throw new InvalidArgumentException('Data input not found.');
+        throw new DataInputNotFound('Data input not found.');
     }
     $fields = dataInputWorkerRead($db, 'SELECT * FROM data_input_fields WHERE data_input_id=? ORDER BY id' . $suffix, [$id]);
     $counts = dataInputWorkerRead($db, 'SELECT SUM(CASE WHEN local_data_id=0 THEN 1 ELSE 0 END) AS templates,SUM(CASE WHEN local_data_id>0 THEN 1 ELSE 0 END) AS data_sources FROM data_template_data WHERE data_input_id=?', [$id])[0];

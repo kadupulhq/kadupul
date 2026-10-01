@@ -8,6 +8,7 @@ namespace Kadupul\DataInput\Infrastructure\Legacy;
 use Kadupul\DataInput\Application\Port\DataInputGateway;
 use Kadupul\DataInput\Application\DataInputDenied;
 use Kadupul\DataInput\Application\DataInputConflict;
+use Kadupul\DataInput\Domain\DataInputNotFound;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
@@ -56,6 +57,9 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
             }
             if ($status === 'conflict') {
                 throw new DataInputConflict('Data input changed. Reload before saving.');
+            }
+            if ($status === 'not_found') {
+                throw new DataInputNotFound($response['result']['message'] ?? 'Data input not found.');
             }
             if ($status === 'invalid') {
                 throw new \InvalidArgumentException($response['result']['message'] ?? 'Invalid data input.');
