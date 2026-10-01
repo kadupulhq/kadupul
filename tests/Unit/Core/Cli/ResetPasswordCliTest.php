@@ -73,7 +73,7 @@ function reset_password_cli_run(array $args, string $stdin = '', array $scenario
 		$auth    = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 		$helpers = '';
 
-		foreach (array('compat_password_hash', 'compat_password_verify', 'compat_hash_equals', 'secpass_check_pass', 'secpass_check_history') as $function) {
+		foreach (array('compat_password_hash', 'compat_password_verify', 'compat_hash_equals', 'auth_password_too_long', 'secpass_check_pass', 'secpass_check_history') as $function) {
 			$helpers .= cacti_test_function_source($auth, $function) . "\n\n";
 		}
 	}

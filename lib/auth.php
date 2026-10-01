@@ -3748,9 +3748,21 @@ function basic_auth_login_process($username) {
  * @return (array)  $user - The valid user information, or empty array if user must be created
  */
 function local_auth_login_process($username) {
+	global $error, $error_msg;
+
 	$user = array();
 
 	if (!api_plugin_hook_function('login_process', false)) {
+		/* refuse before any hashing; legitimate passwords are far shorter */
+		if (auth_password_too_long(get_nfilter_request_var('login_password'))) {
+			$error     = true;
+			$error_msg = __('Access Denied!  Login Failed.');
+
+			cacti_log(sprintf('LOGIN FAILED: Password longer than 4096 bytes for user %s', $username), false, 'AUTH');
+
+			return array();
+		}
+
 		$user = secpass_login_process($username);
 
 		/* a locked or disabled account that still knows its password was not authenticated */
@@ -4409,6 +4421,10 @@ function secpass_login_process($username) {
  * @return (string) Either 'ok', or an error message to present to the user
  */
 function secpass_check_pass($password) {
+	if (auth_password_too_long($password)) {
+		return __('Password must be no longer than %d bytes!', 4096);
+	}
+
 	$minlen = read_config_option('secpass_minlen');
 	if (strlen($password) < $minlen) {
 		return __('Password must be at least %d characters!', $minlen);
@@ -4614,6 +4630,19 @@ function auth_perm_cache_check_reset($user_id) {
 	}
 
 	$_SESSION['sess_perms_reset_key'][$user_id] = $key;
+}
+
+/**
+ * auth_password_too_long - whether a password is over the length any login
+ *   or password change accepts.  bcrypt reads only the first 72 bytes, so
+ *   the cap only bounds the work an oversized request causes.
+ *
+ * @param  (string) $password - the password as submitted
+ *
+ * @return (bool)   true when the password is too long
+ */
+function auth_password_too_long($password) {
+	return strlen((string) $password) > 4096;
 }
 
 /**
