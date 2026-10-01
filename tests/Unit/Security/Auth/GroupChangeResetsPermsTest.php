@@ -60,7 +60,10 @@ test('deleting a group resets the members it had', function () {
     $result = admin_action_probe_run(array(
         'page' => 'user_group_admin.php',
         'functions' => array('user_group_remove'),
-        'answers' => array(array('assoc', '/SELECT user_id FROM user_auth_group_members WHERE group_id = \? FOR UPDATE/', array(array('user_id' => 42), array('user_id' => 43)), array(5))),
+        'answers' => array(
+            array('cell', '/SELECT id FROM user_auth_group WHERE id = \? FOR UPDATE/', 5, array(5)),
+            array('assoc', '/SELECT user_id FROM user_auth_group_members WHERE group_id = \? FOR UPDATE/', array(array('user_id' => 42), array('user_id' => 43)), array(5)),
+        ),
         'call' => 'user_group_remove(5)',
     ));
 

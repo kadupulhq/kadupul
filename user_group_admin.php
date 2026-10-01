@@ -208,7 +208,10 @@ function user_group_remove($id)
     try {
         // Membership writers lock this same parent before inserting. The
         // locking member read sees their committed rows after acquiring it.
-        db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($id));
+        if (!db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($id))) {
+            db_rollback_transaction();
+            return;
+        }
         $users = array_rekey(
             db_fetch_assoc_prepared(
                 'SELECT user_id
