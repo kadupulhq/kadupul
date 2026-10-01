@@ -1,0 +1,9 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Rewrites tests/Golden/forms from the current legacy form renderer. Review
+# the diff before committing it: every change is a change in what users get.
+set -eu
+cd "$(dirname "$0")/.."
+FORMS_GOLDEN_UPDATE=1 exec "${PHP:-php}" -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never "$@"
