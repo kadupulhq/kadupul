@@ -5,6 +5,55 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+function automation_template_options($templates, $selected): void
+{
+    if (!cacti_sizeof($templates)) {
+        return;
+    }
+    foreach ($templates as $template) {
+        printf(
+            '<option value="%s"%s>%s</option>',
+            html_escape($template['id']),
+            $template['id'] == $selected ? ' selected' : '',
+            html_escape($template['name'])
+        );
+    }
+}
+
+function automation_host_status_options(): array
+{
+    return array(
+        -1 => __('Any'),
+        -3 => __('Enabled'),
+        -2 => __('Disabled'),
+        -4 => __('Not Up'),
+        3 => __('Up'),
+        1 => __('Down'),
+        2 => __('Recovering'),
+        0 => __('Unknown'),
+    );
+}
+
+/** Shared device selectors preserve literal template names and accessible labels. */
+function automation_device_filter_controls(string $filter): void
+{
+    $filter = $filter === 'filterd' ? 'filterd' : 'filter';
+    ?>
+    <td><label for='<?php print html_escape($filter);?>'><?php print __('Search');?></label></td>
+    <td><input type='text' aria-label='<?php print __esc('Search');?>' class='ui-state-default ui-corner-all' id='<?php print html_escape($filter);?>' size='25' value='<?php print htmlspecialchars((string) html_escape_request_var($filter), ENT_QUOTES | ENT_HTML5, ini_get('default_charset') ?: 'UTF-8', false);?>'></td>
+    <td><label for='host_template_id'><?php print __('Type');?></label></td>
+    <td>
+        <select id='host_template_id' aria-label='<?php print __esc('Type');?>'>
+            <option value='-1'<?php if (get_request_var('host_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
+            <option value='0'<?php if (get_request_var('host_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
+            <?php automation_template_options(db_fetch_assoc('SELECT id,name FROM host_template ORDER BY name'), get_request_var('host_template_id'));?>
+        </select>
+    </td>
+    <td><label for='host_status'><?php print __('Status');?></label></td>
+    <td><select id='host_status' aria-label='<?php print __esc('Status');?>'><?php html_create_list(automation_host_status_options(), '', '', get_request_var('host_status'));?></select></td>
+    <?php
+}
+
 function display_matching_hosts($rule, $rule_type, $url)
 {
     global $device_actions, $item_rows;
@@ -94,7 +143,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 	}
 
 	$(function() {
-		$('#refresh').on('click', function() {
+		$('#refreshd').on('click', function() {
 			applyDeviceFilter();
 		});
 
@@ -102,7 +151,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 			applyDeviceFilter();
 		});
 
-		$('#clear').on('click', function() {
+		$('#cleard').on('click', function() {
 			clearDeviceFilter();
 		});
 
@@ -124,70 +173,19 @@ function display_matching_hosts($rule, $rule_type, $url)
 			<form method='post' id='form_automation_host' action='<?php print html_escape($url);?>'>
 				<table class='filterTable'>
 					<tr>
+                        <?php automation_device_filter_controls('filterd');?>
 						<td>
-							<?php print __('Search');?>
-						</td>
-						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filterd' size='25' value='<?php print html_escape_request_var('filterd');?>'>
-						</td>
-						<td>
-							<?php print __('Type');?>
-						</td>
-						<td>
-							<select id='host_template_id'>
-								<option value='-1'<?php if (get_request_var('host_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-								<option value='0'<?php if (get_request_var('host_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
-								<?php
-                                $host_templates = db_fetch_assoc('SELECT id,name FROM host_template ORDER BY name');
-
-    if (cacti_sizeof($host_templates)) {
-        foreach ($host_templates as $host_template) {
-            print "<option value='" . $host_template['id'] . "'";
-            if (get_request_var('host_template_id') == $host_template['id']) {
-                print ' selected';
-            } print '>' . html_escape($host_template['name']) . '</option>';
-        }
-    }
-    ?>
-							</select>
-						</td>
-						<td>
-							<?php print __('Status');?>
-						</td>
-						<td>
-							<select id='host_status'>
-								<option value='-1'<?php if (get_request_var('host_status') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-								<option value='-3'<?php if (get_request_var('host_status') == '-3') {?> selected<?php }?>><?php print __('Enabled');?></option>
-								<option value='-2'<?php if (get_request_var('host_status') == '-2') {?> selected<?php }?>><?php print __('Disabled');?></option>
-								<option value='-4'<?php if (get_request_var('host_status') == '-4') {?> selected<?php }?>><?php print __('Not Up');?></option>
-								<option value='3'<?php if (get_request_var('host_status') == '3') {?> selected<?php }?>><?php print __('Up');?></option>
-								<option value='1'<?php if (get_request_var('host_status') == '1') {?> selected<?php }?>><?php print __('Down');?></option>
-								<option value='2'<?php if (get_request_var('host_status') == '2') {?> selected<?php }?>><?php print __('Recovering');?></option>
-								<option value='0'<?php if (get_request_var('host_status') == '0') {?> selected<?php }?>><?php print __('Unknown');?></option>
-							</select>
-						</td>
-						<td>
-							<?php print __('Devices');?>
+							<label for='rowsd'><?php print __('Devices');?></label>
 						</td>
 						<td>
 							<select id='rowsd'>
-								<option value='-1'<?php if (get_request_var('rowsd') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
-								<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rowsd') == $key) {
-                print ' selected';
-            } print '>' . $value . '</option>';
-        }
-    }
-    ?>
+								<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rowsd'));?>
 							</select>
 						</td>
 						<td>
 							<span>
-								<input type='button' class='ui-button ui-corner-all ui-widget' id='refresh' value='<?php print __esc('Go');?>'>
-								<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>'>
+								<input type='button' class='ui-button ui-corner-all ui-widget' id='refreshd' value='<?php print __esc('Go');?>'>
+								<input type='button' class='ui-button ui-corner-all ui-widget' id='cleard' value='<?php print __esc('Clear');?>'>
 							</span>
 						</td>
 					</tr>
@@ -485,21 +483,11 @@ function display_matching_graphs($rule, $rule_type, $url)
 							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
 						</td>
 						<td>
-							<?php print __('Devices');?>
+							<label for='rows'><?php print __('Devices');?></label>
 						</td>
 						<td>
 							<select id='rows'>
-								<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
-								<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . $value . '</option>';
-        }
-    }
-    ?>
+								<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
 							</select>
 						</td>
 					</tr>
@@ -723,21 +711,11 @@ function display_new_graphs($rule, $url)
 							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
 						</td>
 						<td>
-							<?php print __('Objects');?>
+							<label for='orows'><?php print __('Objects');?></label>
 						</td>
 						<td>
 							<select id='orows'>
-								<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
-								<?php
-                                if (cacti_sizeof($item_rows)) {
-                                    foreach ($item_rows as $key => $value) {
-                                        print "<option value='" . $key . "'";
-                                        if (get_request_var('rows') == $key) {
-                                            print ' selected';
-                                        } print '>' . $value . '</option>';
-                                    }
-                                }
-    ?>
+								<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
 							</select>
 						</td>
 						<td>
@@ -1095,65 +1073,14 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 		<td>
 			<table class='filterTable'>
 				<tr>
+                        <?php automation_device_filter_controls('filter');?>
 					<td>
-						<?php print __('Search');?>
-					</td>
-					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
-					</td>
-					<td>
-						<?php print __('Type');?>
-					</td>
-					<td>
-						<select id='host_template_id'>
-							<option value='-1'<?php if (get_request_var('host_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-							<option value='0'<?php if (get_request_var('host_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
-							<?php
-                            $host_templates = db_fetch_assoc('select id,name from host_template order by name');
-
-    if (cacti_sizeof($host_templates)) {
-        foreach ($host_templates as $host_template) {
-            print "<option value='" . $host_template['id'] . "'";
-            if (get_request_var('host_template_id') == $host_template['id']) {
-                print ' selected';
-            } print '>' . html_escape($host_template['name']) . '</option>';
-        }
-    }
-    ?>
-						</select>
-					</td>
-					<td>
-						<?php print __('Status');?>
-					</td>
-					<td>
-						<select id='host_status'>
-							<option value='-1'<?php if (get_request_var('host_status') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-							<option value='-3'<?php if (get_request_var('host_status') == '-3') {?> selected<?php }?>><?php print __('Enabled');?></option>
-							<option value='-2'<?php if (get_request_var('host_status') == '-2') {?> selected<?php }?>><?php print __('Disabled');?></option>
-							<option value='-4'<?php if (get_request_var('host_status') == '-4') {?> selected<?php }?>><?php print __('Not Up');?></option>
-							<option value='3'<?php if (get_request_var('host_status') == '3') {?> selected<?php }?>><?php print __('Up');?></option>
-							<option value='1'<?php if (get_request_var('host_status') == '1') {?> selected<?php }?>><?php print __('Down');?></option>
-							<option value='2'<?php if (get_request_var('host_status') == '2') {?> selected<?php }?>><?php print __('Recovering');?></option>
-							<option value='0'<?php if (get_request_var('host_status') == '0') {?> selected<?php }?>><?php print __('Unknown');?></option>
-						</select>
-					</td>
-					<td>
-						<?php print __('Data Queries');?>
+						<label for='rows'><?php print __('Data Queries');?></label>
 					</td>
 					<td>
 						<select id='rows'>
-							<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
-							<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . $value . '</option>';
-        }
-    }
-    ?>
-						</select>
+								<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
+							</select>
 					</td>
 					<td>
 						<span>
