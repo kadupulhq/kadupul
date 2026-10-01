@@ -24,7 +24,6 @@ body, table, tr, td, textarea {
 
 body {
 	margin: 0px;
-	background-color: white;
 	background-repeat: repeat-y;
 	overflow: hidden;
 	background-color: #000000;
@@ -32,7 +31,6 @@ body {
 	background-image: -moz-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -o-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -ms-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
-	background-image: radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
 table {
@@ -55,6 +53,7 @@ th {
 	-ms-user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
+	border-right: 1px groove #9d9d9d;
 }
 
 p {
@@ -179,7 +178,7 @@ input[type="checkbox"] + label:before {
 }
 
 input[type="checkbox"]:checked + label:before {
-	background: #3C8A3C;
+	background: #2c722c;
 	color: #FFFFFF;
 	content: "\2713";
 	text-align: center;
@@ -212,10 +211,6 @@ input[type="radio"]:not([name^="reindex"]):checked + label:before {
 
 input[type="radio"]:not([name^="reindex"]) + label.ui-state-hover:before {
 	border: 1px solid #FFFFFF;
-}
-
-label {
-	white-space: nowrap;
 }
 
 label > span {
@@ -382,7 +377,6 @@ label.ui-state-hover > span {
 
 .graphDrillDown {
 	vertical-align: top;
-	align-self: left;
 	z-index: 4;
 	padding: 3px;
 	height: 100%;
@@ -490,7 +484,7 @@ label.ui-state-hover > span {
 }
 
 .deviceUnknownBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #0000ff;
@@ -511,7 +505,7 @@ label.ui-state-hover > span {
 }
 
 .deviceErrorBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #750F7D;
@@ -546,7 +540,7 @@ label.ui-state-hover > span {
 }
 
 .deviceAlertBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #660000;
@@ -585,7 +579,7 @@ label.ui-state-hover > span {
 .submenuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #3C8A3C;
+	background: #2c722c;
 }
 
 .menuoptions {
@@ -617,7 +611,7 @@ label.ui-state-hover > span {
 .menuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #3C8A3C;
+	background: #2c722c;
 }
 
 .import_label {
@@ -686,7 +680,6 @@ label.ui-state-hover > span {
 
 .odd.tableRow {
 	color: #9d9d9d;
-	#background: none repeat scroll 0 0 #fbfdff;
 }
 
 .even {
@@ -695,18 +688,10 @@ label.ui-state-hover > span {
 
 .even.tableRow {
 	color: #9d9d9d;
-	#background: none repeat scroll 0 0 #FFFFFF;
-}
-
-.even-alternate {
-	#background: none repeat scroll 0 0 #E7E9F2;
-	#background-color: #E7E9F2;
-	#box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .even-alternate.tableRow {
 	color: #9d9d9d;
-	#background: none repeat scroll 0 0 #FFFFFF;
 }
 
 .tableRow {
@@ -744,10 +729,6 @@ label.ui-state-hover > span {
 
 .graphItemGr1Alt2 {
 	background-color: #EEEEEE;
-}
-
-.graphItemGr1Cust {
-	background-color: #D5D5D5;
 }
 
 .graphItemGr2Alt1 {
@@ -793,12 +774,6 @@ label.ui-state-hover > span {
 	width: 100%;
 	padding: 0px;
 	border-color: rgba(255,255,255,0.2);
-	*/
-	box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
-	*/
-	background-color: #000000;
-	*/
-	background-image: -webkit-gradient(linear, left 0%, left 100%, from(#3a3b3c), to(#000000));
 	background-image: -webkit-linear-gradient(top, #3a3b3c 0%, #000000 100%);
 	background-image: -moz-linear-gradient(top, #3a3b3c 0%, #000000 100%);
 	background-image: linear-gradient(to bottom, #3a3b3c 0%, #000000 100%);
@@ -1040,10 +1015,6 @@ legend {
 	padding: 0px !important;
 }
 
-.spikekillData, .spikekillData td {
-	#border: 1px solid #999;
-}
-
 .spikekillNote {
 	padding: 1px;
 	margin: 0px;
@@ -1053,7 +1024,6 @@ legend {
 	color: #93CEFF;
 	background: #100000;
 	border: 1px solid #3a3b3c;
-	;
 	margin: 0px;
 	padding: 10px 0px 10px 0px !important;
 	line-height: 1.5em;
@@ -1476,12 +1446,6 @@ table.cactiTable {
 	color: white;
 }
 
-.formHeader.collapsible {
-}
-
-.formHeader.collapsed {
-}
-
 .formHeaderAnchor {
 	float: right;
 	padding-right: 12px;
@@ -1489,6 +1453,7 @@ table.cactiTable {
 
 .hostInfoHeader {
 	width: 100%;
+	color: lightgray;
 }
 
 @media screen and (max-width: 640px) {
@@ -1639,9 +1604,6 @@ table.cactiTable {
 	text-align: right;
 }
 
-.tablesorter-headerRow {
-}
-
 .tablesorter-headerRow th {
 	border-bottom: 1px solid rgba(255,255,255,0.1);
 }
@@ -1742,7 +1704,6 @@ table.cactiTable {
 	white-space: nowrap;
 	display: block;
 	width: 10%;
-	#padding: 2px 0px;
 	height: 20px;
 	vertical-align: middle;
 	border-top: 1px solid rgba(25,255,255,0.1);
@@ -1779,12 +1740,11 @@ table.cactiTable {
 }
 
 .popupBox {
-	#z-index: 2;
 	position: absolute;
 	padding: 0px;
 	display: none;
 	overflow: auto;
-	color: white;
+	color: #222222;
 	background-color: #e5e5e5;
 	border: 1px solid #e5e5e5;
 }
@@ -1804,7 +1764,7 @@ table.cactiTable {
 }
 
 .textMenuHeader {
-	color: white;
+	color: #222222;
 	background-color: #9C9C9C;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
@@ -2136,10 +2096,6 @@ tr th:last-child .formCheckboxLabel {
 	color: white !important;
 }
 
-th {
-	border-right: 1px groove #9d9d9d;
-}
-
 th:last-child {
 	border-right: none !important;
 }
@@ -2240,7 +2196,7 @@ ul#nav {
 
 .ui-tooltip {
 	max-width: 500px;
-	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .ui-tooltip-content div.header {
@@ -2305,64 +2261,63 @@ tr#realtime td:first-child {
 }
 
 .logEmergency {
-	background-color: rgba(255, 6, 6, 0.4);
+	background-color: #6f1212;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logCritical {
-	background-color: rgba(242, 23, 33, 0.2);
+	background-color: #591018;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logAlert {
-	background-color: rgba(242, 25, 36, 0.2);
+	background-color: #591018;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logWarning {
-	background-color: rgba(255, 122, 48, 0.2);
+	background-color: #5c2a08;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logError {
-	background-color: rgba(251, 74, 20, 0.2);
+	background-color: #621a0e;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logNotice {
-	background-color: rgba(250, 253, 158, 0.2);
+	background-color: #414619;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logInfo {
-	background-color: rgba(204, 255, 204, 0.2);
+	background-color: #204520;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logDebug {
-	background-color: rgba(205, 207, 196, 0.2);
+	background-color: #3e4038;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .darkblue {
 	background: #2d4ca8;
- /* Old browsers */;
 }
 
 .ui-corner-all {
@@ -2393,10 +2348,6 @@ tr#realtime td:first-child {
 	font-family: Verdana,Arial,sans-serif;
 }
 
-.hostInfoHeader {
-	color: lightgray;
-}
-
 .ui-widget-header {
 	border: 1px solid transparent;
 	background: transparent;
@@ -2408,22 +2359,12 @@ tr#realtime td:first-child {
 	color: #93CEFF;
 }
 
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-	background: transparent;
-	color: rgb(150, 155, 163);
-	border: 1px solid rgba(255,255,255,0.2);
-}
-
 .ui-widget-header .ui-icon {
 	background-image: url(images/ui-icons_888888_256x240.png);
 }
 
 .ui-icon, .ui-widget-content .ui-icon {
 	background-image: url(images/ui-icons_888888_256x240.png);
-}
-
-.ui-multiselect-filter {
-	font-weight: normal;
 }
 
 .ui-multiselect-all, .ui-multiselect-none {
@@ -2472,6 +2413,7 @@ tr#realtime td:first-child {
 }
 
 .ui-multiselect-filter {
+	font-weight: normal;
 	margin-bottom: 4px;
 }
 
@@ -2589,12 +2531,11 @@ tr#realtime td:first-child {
 	color: #fff;
 	background-repeat: repeat-y;
 	overflow: hidden;
-	background-color: #ffffff;
+	background-color: #04335b;
 	background-image: -webkit-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -moz-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -o-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -ms-radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
-	background-image: radial-gradient(85% 145%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
 /* New Checkbox Stuff */
@@ -2623,7 +2564,6 @@ tr#realtime td:first-child {
 	background-image: -moz-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	background-image: -o-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	background-image: -ms-linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
-	background-image: linear-gradient(left, rgba(147, 206, 255, 0.2) 0%, rgba(147, 206, 255, 0.2) 60%, black 100%) !important;
 	-webkit-transition: .4s;
 	transition: .4s;
 	border: 1px solid #7F83A2;
@@ -2647,10 +2587,6 @@ tr#realtime td:first-child {
 
 input:checked + .checkboxSlider {
 	background-color: rgba(255, 170, 0, 0.5) !important;
-	background-image: -webkit-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
-	background-image: -moz-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
-	background-image: -o-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
-	background-image: -ms-linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
 	background-image: linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
 }
 
@@ -2675,10 +2611,6 @@ input:checked + .checkboxSlider:before {
 
 .checkboxSlider.checkboxRound:before {
 	border-radius: 50%;
-}
-
-.right {
-	text-align: right;
 }
 
 .radioSwitch {
@@ -2712,7 +2644,6 @@ input:checked + .checkboxSlider:before {
 	background-image: -moz-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -o-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -ms-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
-	background-image: radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
 .radioSlider:before {
@@ -2737,7 +2668,6 @@ input:checked + .radioSlider {
 	background-image: -moz-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -o-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 	background-image: -ms-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
-	background-image: radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
 input:focus + .radioSlider {
@@ -2781,18 +2711,9 @@ td.center > table {
 	color: #FFFFFF !important;
 }
 
-.bb-chart {
-}
-
-.bb-chart-arc path {
-	fill: #A8A8A8;
-}
-
-.bb-tooltip {
-}
-
 .bb-legend-item {
 	fill: #A8A8A8;
+	font-size: 12px;
 }
 
 .bb-grid {
@@ -2954,10 +2875,6 @@ td.center > table {
 
 /*-- Select - Drag --*/
 /*-- Legend --*/
-.bb-legend-item {
-  font-size: 12px;
-}
-
 .bb-legend-item-hidden {
   opacity: 0.15;
 }
@@ -3006,7 +2923,6 @@ td.center > table {
 
 .bb-chart-arc .bb-gauge-value {
   fill: #000;
-  /*  font-size: 28px !important;*/
 }
 
 circle {
