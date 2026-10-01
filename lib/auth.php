@@ -4783,6 +4783,12 @@ function auth_unknown_user_password_verify($password)
  */
 function compat_password_verify($password, $hash)
 {
+    // Legacy MD5, empty and malformed hashes otherwise return immediately,
+    // exposing those accounts against the fixed-cost unknown-user path.
+    if (password_get_info((string) $hash)['algo'] === null) {
+        compat_password_hash((string) $password, PASSWORD_DEFAULT);
+    }
+
     if (function_exists('password_verify')) {
         if (password_verify($password, $hash)) {
             return true;
