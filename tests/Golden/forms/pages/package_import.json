@@ -1,0 +1,16 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "contents",
+        "import",
+        "import_file",
+        "preview_only",
+        "remove_orphans",
+        "replace_svalues",
+        "trust_signer"
+    ],
+    "script_names": []
+}
