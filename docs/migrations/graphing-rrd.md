@@ -18,7 +18,8 @@ src/Graphing/
   Domain/            GraphItemType, ConsolidationFunction, DataSourceType enums;
                      RrdCommand (an argument list, not a string); GraphDefinition
     Font/            GraphFont, GraphFontProfile, GraphFontResolver (PR #710)
-    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow
+    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow;
+                     GraphAuthorizationSubject (explicit access identity)
     Command/         GraphCommandBuilder and its parts: DefNames, CdefMagic,
                      LegendText, GradientArea, DateLegend, ThemeArguments,
                      BusinessHours, GraphOptions, ArchiveChoice
@@ -34,6 +35,9 @@ src/Graphing/
                      LegacyGraphOptionsHook, BoostImageCache, LegacyPendingSamples
     Symfony/         Graph image and JSON controllers; the graph voter
 ```
+
+R7 also adds the `GraphAccess` contract and legacy adapter in IdentityAccess;
+Graphing passes its explicit authorization subject to that boundary.
 
 PR #314 creates the module with the `DeviceTreePlacement` contract. The RRD
 slices add to that module and do not change the contract.
@@ -67,10 +71,10 @@ second implementation or a module boundary needs one.
 | R4: DBAL reader for Symfony routes | Planned; legacy pages only if the timing gate allows |
 | R5: window, archive choice and graph options from the definition, request and context | Planned |
 | R6: `GraphCommandBuilder` for `DEF`, `CDEF`, `VDEF`, legend, items and export columns | Planned |
-| R7: `RenderGraph`, `RrdTransport` and the plugin hook adapter | Planned |
+| R7: `RenderGraph`, explicit authorization subject, IdentityAccess `GraphAccess` and its legacy adapter, `RrdTransport` and the plugin hook adapter | Planned |
 | R8: image cache and pending Boost samples as ports, keeping PR #705 | Planned |
 | R9: `graph_image.php` and `graph_json.php` as thin adapters | Planned; after PR #661 |
-| R10: Symfony graph routes with a graph voter | Planned |
+| R10: Symfony graph routes with a voter reusing R7's access contract | Planned |
 | R11: template propagation services | Planned; after characterization |
 | R12: aggregate services | Planned; after characterization |
 | R13: wrapper deprecation | Planned |
@@ -191,7 +195,8 @@ reads the graph, builds the command and runs it in one function
   query values, Nth percentile and summation values, and the time.
 - `GraphCommandBuilder` is a pure function from the definition, the request,
   the context and the facts to an `RrdCommand`.
-- `RenderGraph` runs the access check, the cache, the builder, the
+- `RenderGraph` receives an explicit authorization subject and asks R7's
+  IdentityAccess `GraphAccess` contract before the cache, the builder, the
   `rrd_graph_graph_options` hook and the transport in today's order.
 
 The hook receives and returns three strings that plugins parse, so through 1.3
