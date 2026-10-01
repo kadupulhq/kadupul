@@ -26,9 +26,9 @@
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         <a href="{{ path('gprint_preset_list', {reset: 1}) }}">{{ 'Clear'|trans({}, 'gprint') }}</a>
     </form>
-    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
     {% set selectionLimit = constant('Kadupul\\Graphing\\Application\\Port\\GprintPresetStore::MAX_DELETE_SELECTION') %}
     <p id="gprint-selection-help">{{ 'Select up to %count% presets from the first %count% rows. Use %count% rows per page or search to select other presets.'|trans({'%count%': selectionLimit}, 'gprint') }}</p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
     <form method="get" action="{{ path('gprint_preset_delete', filters) }}" aria-describedby="gprint-selection-help">
         <table>
             <caption>{{ 'GPRINT Presets'|trans({}, 'gprint') }}</caption>
