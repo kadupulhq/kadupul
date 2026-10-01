@@ -720,22 +720,25 @@ function boost_graph_set_file(&$output, $local_graph_id, $rra_id, $graph_data_ar
                 if (is_writable($cache_directory)) {
                     /* if the cache file was created in a prior step, save it */
                     if (strlen($output) > 10) {
-                        /* SECURITY: tempnam() creates a new file, never a link, and rename()
-                         * replaces the name without following it. Readers see the old image
-                         * or the whole new one, never a partial write */
-                        $temp_file = tempnam($cache_directory, BOOST_PNG_TEMP_PREFIX);
+                        /* SECURITY: the cache directory may be writable by other users and
+                         * need not be sticky, so a name can be swapped for a link at any time.
+                         * Mode 'x' creates the file exclusively and refuses an existing name or
+                         * link, the image is written through that descriptor rather than by
+                         * name, and rename() and unlink() act on the name without following
+                         * it. Readers see the old image or the whole new one */
+                        $temp_file = $cache_directory . '/' . BOOST_PNG_TEMP_PREFIX . bin2hex(random_bytes(8));
+                        $handle    = @fopen($temp_file, 'xb');
 
-                        if ($temp_file !== false && realpath(dirname($temp_file)) === realpath($cache_directory)) {
-                            if (file_put_contents($temp_file, $output) === strlen($output) && chmod($temp_file, 0644) && rename($temp_file, $cache_file)) {
+                        if ($handle !== false) {
+                            $written = fwrite($handle, $output);
+
+                            if (fclose($handle) && $written === strlen($output) && rename($temp_file, $cache_file)) {
                                 /* count the number of images that had to be cached */
                                 $mc->object('boostStatsTotalsImagesCacheWrites')->count();
                                 $mc->object('boostStatsLastUpdate')->set(time());
-                            } elseif (file_exists($temp_file)) {
-                                unlink($temp_file);
+                            } else {
+                                @unlink($temp_file);
                             }
-                        } elseif ($temp_file !== false) {
-                            /* tempnam() fell back to the system directory, where rename() is not atomic */
-                            unlink($temp_file);
                         }
                     }
                 } else {

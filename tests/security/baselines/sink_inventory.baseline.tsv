@@ -342,11 +342,11 @@ dynamic_include	./lib/api_device.php:1175	    include_once($config['base_path'] 
 dynamic_include	./lib/api_device.php:1176	    include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:1177	    include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./lib/api_device.php:1178	    include_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./lib/boost.php:1468	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/boost.php:1727	        include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:1471	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/boost.php:1730	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:331	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:496	    include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/boost.php:859	    include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./lib/boost.php:862	    include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./lib/data_query.php:1946		include_once($config['library_path'] . '/sort.php');
 dynamic_include	./lib/data_query.php:2355		include_once($config['library_path'] . '/variables.php');
 dynamic_include	./lib/data_query.php:585		include_once($config['library_path'] . '/xml.php');
@@ -552,7 +552,7 @@ fs_write	./install/functions.php:66	            $fh = fopen($file, 'w');
 fs_write	./install/functions.php:899	                    $fp = fopen($config_file, 'w');
 fs_write	./lib/api_device.php:3032	                        file_put_contents($new_xmlfile, $data);
 fs_write	./lib/boost.php:600	                            if ($fileptr = fopen($cache_file, 'rb')) {
-fs_write	./lib/boost.php:729	                            if (file_put_contents($temp_file, $output) === strlen($output) && chmod($temp_file, 0644) && rename($temp_file, $cache_file)) {
+fs_write	./lib/boost.php:730	                        $handle    = @fopen($temp_file, 'xb');
 fs_write	./lib/clog_webapi.php:108	                $log_fh = fopen($logfile, 'w');
 fs_write	./lib/csp_report_endpoint.php:145		/* Bucket names are predictable, and fopen() follows symlinks, so a bucket in
 fs_write	./lib/csp_report_endpoint.php:162		$fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename

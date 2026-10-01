@@ -10,12 +10,18 @@ $boostSource  = file_get_contents(__DIR__ . '/../../lib/boost.php');
 $pollerSource = file_get_contents(__DIR__ . '/../../lib/poller.php');
 $funcSource   = file_get_contents(__DIR__ . '/../../lib/functions.php');
 
-// tempnam() creates a new file, never a link, and rename() replaces the cache name without following it.
+// Mode 'x' refuses an existing name or link, the image is written through the
+// descriptor, and rename() replaces the cache name without following it.
 test('boost_graph_set_file writes a temporary file in the cache directory and renames it into place', function () use ($boostSource) {
     $start = strpos($boostSource, 'function boost_graph_set_file(');
     $body = substr($boostSource, $start, strpos($boostSource, "\nfunction ", $start) - $start);
-    expect($body)->toContain('tempnam($cache_directory, BOOST_PNG_TEMP_PREFIX)')
+    expect($body)->toContain("\$temp_file = \$cache_directory . '/' . BOOST_PNG_TEMP_PREFIX")
+        ->and($body)->toContain("fopen(\$temp_file, 'xb')")
+        ->and($body)->toContain('fwrite($handle, $output)')
         ->and($body)->toContain('rename($temp_file, $cache_file)')
+        ->and($body)->not->toContain('file_put_contents($temp_file')
+        ->and($body)->not->toContain('chmod(')
+        ->and($body)->not->toContain('tempnam(')
         ->and($body)->not->toContain('umask(')
         ->and($body)->not->toContain('chmod($cache_file')
         ->and($body)->not->toContain('fopen($cache_file');
