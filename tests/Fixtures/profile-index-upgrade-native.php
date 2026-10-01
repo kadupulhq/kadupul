@@ -48,8 +48,32 @@ foreach (array(
 }
 $calls = array();
 $guards = array();
+if (isset($scenario['index_failure']) && $scenario['index_failure'] !== 'create-failure') {
+    $column = $scenario['index_failure'] === 'wrong-column' ? 'id' : 'data_source_profile_id';
+    $unique = $scenario['index_failure'] === 'unique' ? 'UNIQUE ' : '';
+    $db->exec('CREATE ' . $unique . 'INDEX data_source_profile_id ON data_template_data (' . $column . ')');
+    if ($scenario['index_failure'] === 'hidden' && $mysql) {
+        $version = $db->query('SELECT VERSION()')->fetchColumn();
+        $db->exec('ALTER TABLE data_template_data ALTER INDEX data_source_profile_id ' . (str_contains($version, 'MariaDB') ? 'IGNORED' : 'INVISIBLE'));
+    }
+}
 function db_fetch_assoc_prepared($sql, $params = array())
 {
+    if (str_contains($sql, 'information_schema.STATISTICS')) {
+        // Temporary MySQL tables have SHOW INDEX metadata but no STATISTICS rows.
+        if ($GLOBALS['mysql']) {
+            $rows = $GLOBALS['db']->query('SHOW INDEX FROM data_template_data')->fetchAll(PDO::FETCH_ASSOC);
+            return array_values(array_map(static fn($row) => array_merge($row, ['SEQ_IN_INDEX' => $row['Seq_in_index'], 'COLUMN_NAME' => $row['Column_name'], 'SUB_PART' => $row['Sub_part'], 'NON_UNIQUE' => $row['Non_unique'], 'IS_VISIBLE' => $row['Visible'] ?? 'YES', 'IGNORED' => $row['Ignored'] ?? 'NO']), array_filter($rows, static fn($row) => $row['Key_name'] === 'data_source_profile_id' && (int) $row['Seq_in_index'] === 1)));
+        }
+        $rows = $GLOBALS['db']->query('PRAGMA index_list(data_template_data)')->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+            if ($row['name'] === 'data_source_profile_id') {
+                $columns = $GLOBALS['db']->query('PRAGMA index_info(data_source_profile_id)')->fetchAll(PDO::FETCH_ASSOC);
+                return [['SEQ_IN_INDEX' => 1, 'COLUMN_NAME' => $columns[0]['name'], 'SUB_PART' => null, 'NON_UNIQUE' => $row['unique'] ? 0 : 1, 'IS_VISIBLE' => ($GLOBALS['scenario']['index_failure'] ?? '') === 'hidden' ? 'NO' : 'YES']];
+            }
+        }
+        return [];
+    }
     if (str_contains($sql, 'information_schema.TABLES')) {
         return array(array('TABLE_NAME' => 'data_source_profiles_rra', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_source_profiles_cf', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_source_profiles', 'ENGINE' => 'InnoDB'), array('TABLE_NAME' => 'data_template_data', 'ENGINE' => 'InnoDB'));
     }
@@ -70,6 +94,9 @@ function db_index_exists($table, $index)
 function db_install_execute($sql)
 {
     $GLOBALS['calls'][] = $sql;
+    if (($GLOBALS['scenario']['index_failure'] ?? '') === 'create-failure' && $sql === 'ALTER TABLE data_template_data ADD INDEX data_source_profile_id (data_source_profile_id)') {
+        return false;
+    }
     foreach (array_merge(data_source_profile_reference_triggers(), data_source_profile_definition_triggers()) as $name => $definition) {
         if ($sql === $definition['sql']) {
             if (($GLOBALS['scenario']['guard_failure'] ?? false)) {

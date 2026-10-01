@@ -25,5 +25,7 @@ function upgrade_to_1_2_34()
     if (!db_index_exists('data_template_data', 'data_source_profile_id')) {
         db_install_execute('ALTER TABLE data_template_data ADD INDEX data_source_profile_id (data_source_profile_id)');
     }
-
+    if (!data_source_profile_reference_index_available()) {
+        throw new \RuntimeException('Data Source Profile reference index is missing or incompatible. Verify a full, nonunique, visible leading data_source_profile_id index and rerun the upgrade.');
+    }
 }

@@ -156,6 +156,15 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertStringContainsString('TRIGGER privileges', $state['upgrade_error']);
     }
 
+    public function testIncompleteReferenceIndexStopsUpgrade(): void
+    {
+        foreach (array('wrong-column', 'unique', 'hidden', 'create-failure') as $failure) {
+            $state = $this->runNative(array('upgrade' => true, 'index_failure' => $failure));
+            self::assertStringContainsString('reference index is missing or incompatible', $state['upgrade_error']);
+            self::assertStringContainsString('rerun the upgrade', $state['upgrade_error']);
+        }
+    }
+
     public function testReferenceGuardsMatchFreshSchemaAndFailClosed(): void
     {
         $state = $this->runNative(array('guard_unit' => true));
