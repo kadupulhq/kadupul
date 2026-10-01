@@ -239,6 +239,14 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Command\ClearDeviceStatistics: ~
 
+    Kadupul\DataInput\Infrastructure\:
+        resource: '../src/DataInput/Infrastructure/'
+    Kadupul\DataInput\Application\DataInputMethods: ~
+    Kadupul\DataInput\Application\Port\DataInputAccess:
+        alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputAccess
+    Kadupul\DataInput\Application\Port\DataInputGateway:
+        alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputGateway
+
 when@test:
     services:
         # A when@ block parses its own "services" key independently of the main

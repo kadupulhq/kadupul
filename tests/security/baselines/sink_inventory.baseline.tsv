@@ -712,15 +712,6 @@ header_redirect	./data_debug.php:221					header('Location: data_debug.php?header
 header_redirect	./data_debug.php:224					header('Location: data_debug.php?header=false&debug=1');
 header_redirect	./data_debug.php:38				header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
 header_redirect	./data_debug.php:61				header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
-header_redirect	./data_input.php:106					header('Location: data_input.php?action=edit&id=' . (empty($save['id']) ? '' : $save['id']));
-header_redirect	./data_input.php:138			header('Location: data_input.php?header=false&action=edit&id=' . (empty($data_input_id) ? get_nfilter_request_var('id') : $data_input_id));
-header_redirect	./data_input.php:176				header('Location: data_input.php?header=false&action=field_edit&data_input_id=' . get_request_var('data_input_id') . '&id=' . (empty($data_input_field_id) ? get_request_var('id') : $data_input_field_id) . (!isempty_request_var('input_output') ? '&type=' . get_request_var('input_output') : ''));
-header_redirect	./data_input.php:178				header('Location: data_input.php?header=false&action=edit&id=' . get_request_var('data_input_id'));
-header_redirect	./data_input.php:233			header('Location: data_input.php?header=false');
-header_redirect	./data_input.php:283			header('Location: data_input.php?header=none');
-header_redirect	./data_input.php:40			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('data_input_id'));
-header_redirect	./data_input.php:445			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('data_input_id'));
-header_redirect	./data_input.php:508				header('Location: data_input.php');
 header_redirect	./data_queries.php:1091				header('Location: data_queries.php');
 header_redirect	./data_queries.php:138			header('Location: data_queries.php?header=false&action=edit&id=' . (empty($snmp_query_id) ? get_request_var('id') : $snmp_query_id));
 header_redirect	./data_queries.php:222			header('Location: data_queries.php?header=false&action=item_edit' . $header . '&id=' . (empty($snmp_query_graph_id) ? get_request_var('id') : $snmp_query_graph_id) . '&snmp_query_id=' . get_request_var('snmp_query_id'));

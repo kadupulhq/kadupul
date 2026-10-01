@@ -32,7 +32,7 @@ def main():
             bundle.extractall(directory, filter='data')
         stage = Path(directory) / 'kadupul'
 
-        def execute(script, network='none', error=None):
+        def execute(script, network='none', error=None, arguments=()):
             command = ['docker', 'run', '--rm', '--network', network, '--entrypoint', 'php',
                        '--user', f'{os.getuid()}:{os.getgid()}',
                        '--volume', f'{stage}:/var/www/html', '--volume', f'{raw}:/coverage',
@@ -41,7 +41,7 @@ def main():
                        '--workdir', '/var/www/html', args.image,
                        '-d', 'pcov.directory=/var/www/html',
                        '-d', 'pcov.exclude=~/(include/vendor|tests)/|^/var/www/html/var/~',
-                       '-d', 'auto_prepend_file=/harness/coverage.php', script]
+                       '-d', 'auto_prepend_file=/harness/coverage.php', script, *arguments]
             result = subprocess.run(command, capture_output=True, text=True, timeout=180)
             if error is None:
                 if result.returncode:
@@ -54,7 +54,9 @@ def main():
         manifest_path = stage / 'tools/dependencies/legacy-files.json'
         manifest = json.loads(manifest_path.read_text())
         selected = next(iter(manifest['files']))
-        (stage / selected).unlink()
+        # Mutate the repair fixture through the same Docker filesystem as the
+        # verifier, avoiding stale host-unlink metadata on Docker Desktop.
+        execute('-r', arguments=[f'if (!unlink({json.dumps(selected)})) {{ throw new RuntimeException("Cannot remove dependency repair fixture"); }}'])
         execute('tools/dependencies/install-legacy.php', network='bridge')
         if hashlib.sha256((stage / selected).read_bytes()).hexdigest() != manifest['files'][selected]:
             raise RuntimeError('Dependency repair produced incorrect bytes')

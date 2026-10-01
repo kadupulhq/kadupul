@@ -15,3 +15,9 @@ inventory:
         path: '../src/Inventory/Infrastructure/Symfony/Controller/'
         namespace: Kadupul\Inventory\Infrastructure\Symfony\Controller
     type: attribute
+
+data_input:
+    resource:
+        path: '../src/DataInput/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\DataInput\Infrastructure\Symfony\Controller
+    type: attribute

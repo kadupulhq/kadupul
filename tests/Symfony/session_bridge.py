@@ -26,9 +26,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--database-sessions', action='store_true')
     parser.add_argument('--coverage-output', type=Path)
+    parser.add_argument('--project', default='kadupul-symfony-auth')
     args = parser.parse_args()
     database_sessions = args.database_sessions
-    harness = Harness(SimpleNamespace(project='kadupul-symfony-auth', target='symfony-auth'))
+    harness = Harness(SimpleNamespace(project=args.project, target='symfony-auth'))
+    command = harness.command
+    def installer_allowance(*arguments, check=False):
+        if 'cli/install_cacti.php' in arguments:
+            return harness.compose('exec', '-T', '-u', 'www-data', 'web', *arguments, check=check, timeout=600)
+        return command(*arguments, check=check)
+    harness.command = installer_allowance
     if args.coverage_output:
         from coverage_support import configure_coverage
         configure_coverage(harness, args.coverage_output)
@@ -101,6 +108,8 @@ def main():
                   'legacy database session handler owns the authenticated session')
         check(session.request('/public/index.php/session').get('json') == expected,
               'Symfony public entry owns authentication for the same session')
+        from data_input_scenarios import verify_data_inputs
+        verify_data_inputs(harness, session, check)
         from inventory_scenarios import verify_inventory
         verify_inventory(harness, session, user_id, check)
         from site_edit_scenarios import verify_site_edit

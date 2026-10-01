@@ -132,6 +132,9 @@ jobs:
           mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --coverage-output "$RUNNER_TEMP/symfony-files"
           mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions --coverage-output "$RUNNER_TEMP/symfony-database"
 
+      - name: Data input HTTP and MariaDB contract
+        run: mise exec python@3.12.12 -- python tests/Symfony/data_input_review_http.py
+
       - name: Offline builder and compatibility-tool coverage
         run: |
           set -euo pipefail

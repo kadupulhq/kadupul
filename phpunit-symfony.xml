@@ -22,6 +22,8 @@
             <file>bin/legacy-assignment-bootstrap.php</file>
             <file>include/admin_notifications.php</file>
             <file>sites.php</file>
+            <file>data_input.php</file>
+            <file>bin/legacy-data-input.php</file>
             <file>lib/database.php</file>
         </include>
     </source>

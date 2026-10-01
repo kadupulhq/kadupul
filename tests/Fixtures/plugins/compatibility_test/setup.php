@@ -86,3 +86,9 @@ function compatibility_statistics_action($value) {
     compatibility_test_record('statistics_action', [$value]);
     return $value;
 }
+
+function compatibility_data_input_where($where) {
+    compatibility_test_record('data_input_actor', [$_SESSION['sess_user_id'] ?? 0]);
+    $hidden = (int) read_config_option('data_input_test_hidden');
+    return $hidden > 0 ? $where . ' AND di.id <> ' . $hidden : $where;
+}
