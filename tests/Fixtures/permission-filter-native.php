@@ -29,6 +29,37 @@ if (!empty($scenario['empty'])) {
     $item_rows = false;
 }
 $queries = array();
+if (isset($scenario['association'])) {
+    $request[$scenario['association']] = '1';
+    $request['drp_action'] = $scenario['add'] ? '1' : '2';
+    $_POST = array('chk_41' => 'on', 'chk_43' => '', 'chk_invalid' => 'on', 'chk_42_extra' => 'on');
+    $db->exec('CREATE TABLE user_auth_perms(user_id INTEGER, item_id INTEGER, type INTEGER, UNIQUE(user_id,item_id,type));
+        CREATE TABLE user_auth_group_perms(group_id INTEGER, item_id INTEGER, type INTEGER, UNIQUE(group_id,item_id,type));
+        CREATE TABLE user_auth_group_members(group_id INTEGER, user_id INTEGER, UNIQUE(group_id,user_id));');
+    $group = $scenario['page'] === 'user_group_admin.php';
+    $subjectColumn = $group ? 'group_id' : 'user_id';
+    $table = $scenario['type'] === 0 ? 'user_auth_group_members' : ($group ? 'user_auth_group_perms' : 'user_auth_perms');
+    $itemColumn = $scenario['type'] === 0 ? ($group ? 'user_id' : 'group_id') : 'item_id';
+    $columns = $subjectColumn . ',' . $itemColumn . ($scenario['type'] === 0 ? '' : ',type');
+    foreach (array(array(7, 41), array(7, 42), array(77, 41)) as $row) {
+        if ($scenario['type'] !== 0) {
+            $row[] = $scenario['type'];
+        }
+        $statement = $db->prepare('INSERT INTO ' . $table . ' (' . $columns . ') VALUES (' . implode(',', array_fill(0, count($row), '?')) . ')');
+        $statement->execute($row);
+    }
+}
+function db_execute_prepared($sql, $parameters)
+{
+    $GLOBALS['queries'][] = array($sql, $parameters);
+    return $GLOBALS['db']->prepare($sql)->execute($parameters);
+}
+function input_validate_input_number($number)
+{
+    if (!ctype_digit((string) $number)) {
+        throw new InvalidArgumentException('Expected a numeric selection');
+    }
+}
 function db_fetch_assoc($sql)
 {
     $GLOBALS['queries'][] = $sql;
@@ -100,6 +131,13 @@ if (isset($argv[3])) {
     require __DIR__ . '/rrd-process-coverage.php';
 }
 require (getenv('PERMISSION_FILTER_CONTROLLER_ROOT') ?: $root) . '/' . $scenario['page'];
+if (isset($scenario['association'])) {
+    register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn) {
+        print json_encode(array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']), JSON_THROW_ON_ERROR);
+    });
+    form_actions();
+    throw new RuntimeException('Association did not complete its controller redirect');
+}
 ob_start();
 ($scenario['function'] . '_filter')('Example');
 $html = ob_get_clean();

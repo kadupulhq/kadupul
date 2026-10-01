@@ -94,6 +94,30 @@ final class PermissionFilterRendererTest extends TestCase
         self::assertCount(1, $xpath->query('//label[@for="graph_template_id"]'));
     }
 
+    /** @dataProvider associations */
+    public function testNativeAssociationWritesPreserveOtherItemsAndSubjects(string $page, string $flag, int $type, bool $add): void
+    {
+        $result = $this->render(array('page' => $page, 'association' => $flag, 'type' => $type, 'add' => $add));
+        $expected = $add ? array(array('subject' => 7, 'item' => 41), array('subject' => 7, 'item' => 42), array('subject' => 7, 'item' => 43), array('subject' => 77, 'item' => 41))
+            : array(array('subject' => 7, 'item' => 42), array('subject' => 77, 'item' => 41));
+        self::assertSame($expected, $result['rows']);
+        self::assertCount(2, $result['queries']);
+    }
+
+    public function associations(): array
+    {
+        $cases = array();
+        foreach (array('user_admin.php', 'user_group_admin.php') as $page) {
+            $flags = array('associate_host' => 3, 'associate_graph' => 1, 'associate_template' => 4, 'associate_tree' => 2, $page === 'user_admin.php' ? 'associate_groups' : 'associate_member' => 0);
+            foreach ($flags as $flag => $type) {
+                foreach (array(false, true) as $add) {
+                    $cases[$page . ' ' . $flag . ($add ? ' add' : ' remove')] = array($page, $flag, $type, $add);
+                }
+            }
+        }
+        return $cases;
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);

@@ -15,6 +15,7 @@ if (defined('PERMISSION_FILTER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
 }
 if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
