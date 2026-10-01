@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
 } else {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
@@ -30,6 +30,11 @@ if (defined('AUTH_CONTROLLER_TEST_COVERAGE')) {
 if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_33.php');
     $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
+}
+if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
+    foreach (['lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php'] as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
 }
 if (defined('AUDIT_TRAIL_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php');
@@ -167,6 +172,11 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $sessionSources = array_merge(['tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php'], array_map(static fn($file) => substr($file, strlen($coverageRoot) + 1), $coverageFilter->files()));
+    $sessionCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/symfony-credential-session-native.php', $argv[1] . ':' . $argv[3], $sessionSources);
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
@@ -194,6 +204,12 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
         }
         if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
             throw new RuntimeException('Unable to preserve child process coverage');
+        }
+        if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
+            if (!defined('SYMFONY_SESSION_NATIVE_COMPLETED')) {
+                throw new RuntimeException('Native session scenario did not complete.');
+            }
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['sessionCoverageEvidence'], SYMFONY_SESSION_NATIVE_COMPLETED);
         }
     });
 });

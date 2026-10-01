@@ -13,39 +13,59 @@ use phpseclib4\Crypt\RSA;
  *
  * @return (void)
  */
-function clear_auth_cookie()
+function clear_auth_cookie($db = false, $expire = null, $remembered = null)
 {
     global $config;
 
-    $revoked = $_SESSION['sess_remember_token'] ?? null;
+    $tableExists = $db instanceof PDO ? static function ($name) use ($db) {
+        if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+            $query = $db->prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?");
+            $query->execute(array($name));
+        } else {
+            $query = $db->query('SHOW TABLES LIKE ' . $db->quote($name));
+        }
+        return $query->fetchColumn() !== false;
+    } : 'db_table_exists';
+    $execute = $db instanceof PDO ? static function ($sql, $parameters) use ($db) {
+        return $db->prepare($sql)->execute($parameters);
+    } : 'db_execute_prepared';
+    $fetchCell = $db instanceof PDO ? static function ($sql, $parameters) use ($db) {
+        $query = $db->prepare($sql);
+        $query->execute($parameters);
+        return $query->fetchColumn();
+    } : 'db_fetch_cell_prepared';
+    $expire ??= 'cacti_cookie_session_logout';
+
+    $revoked = is_array($remembered) ? ($remembered['session_token'] ?? null) : ($_SESSION['sess_remember_token'] ?? null);
+    $cookie = is_array($remembered) ? ($remembered['cookie'] ?? null) : ($_COOKIE['cacti_remembers'] ?? null);
     if (!is_array($revoked) || !isset($revoked['user_id'], $revoked['hash'])) {
         $revoked = null;
     }
     unset($_SESSION['sess_remember_token']);
-    if (is_array($revoked) && isset($revoked['user_id'], $revoked['hash']) && db_table_exists('user_auth_cache')) {
-        db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ? AND token = ?', array($revoked['user_id'], $revoked['hash']));
-        cacti_cookie_session_logout();
+    if (is_array($revoked) && isset($revoked['user_id'], $revoked['hash']) && $tableExists('user_auth_cache')) {
+        $execute('DELETE FROM user_auth_cache WHERE user_id = ? AND token = ?', array($revoked['user_id'], $revoked['hash']));
+        $expire();
     }
 
-    if (isset($_COOKIE['cacti_remembers']) && db_table_exists('user_auth_cache')) {
-        if (!is_string($_COOKIE['cacti_remembers'])) {
-            cacti_cookie_session_logout();
+    if ($cookie !== null && $tableExists('user_auth_cache')) {
+        if (!is_string($cookie)) {
+            $expire();
 
             return;
         }
 
-        $parts = explode(',', $_COOKIE['cacti_remembers']);
+        $parts = explode(',', $cookie);
 
-        if (cacti_sizeof($parts) == 2) {
+        if (count($parts) == 2) {
             $user_id  = $parts[0];
             $realm_id = -1;
             $token    = $parts[1];
-        } elseif (cacti_sizeof($parts) == 3) {
+        } elseif (count($parts) == 3) {
             $user_id  = $parts[0];
             $realm_id = $parts[1];
             $token    = $parts[2];
         } else {
-            cacti_cookie_session_logout();
+            $expire();
 
             return;
         }
@@ -54,7 +74,7 @@ function clear_auth_cookie()
         if (!is_numeric($user_id)) {
             if ($realm_id == -1) {
                 // Assume local realm for tokens without a realm_id
-                $user_id = db_fetch_cell_prepared(
+                $user_id = $fetchCell(
                     'SELECT id
 					FROM user_auth
 					WHERE username = ?
@@ -62,7 +82,7 @@ function clear_auth_cookie()
                     array($user_id)
                 );
             } else {
-                $user_id = db_fetch_cell_prepared(
+                $user_id = $fetchCell(
                     'SELECT id
 					FROM user_auth
 					WHERE username = ?
@@ -75,10 +95,10 @@ function clear_auth_cookie()
         if ($user_id > 0) {
             $secret = hash('sha512', $token, false);
 
-            cacti_cookie_session_logout();
+            $expire();
 
             if (!is_array($revoked) || $revoked['user_id'] != $user_id || $revoked['hash'] !== $secret) {
-                db_execute_prepared(
+                $execute(
                     'DELETE FROM user_auth_cache
 				WHERE user_id = ?
 				AND token = ?',
@@ -5565,27 +5585,29 @@ function auth_session_credential_generation($user_id, $password, $db = false)
         if (hash_equals($fingerprint, substr($mapping, 0, 64))) {
             return substr($mapping, 65);
         }
-        if (!$db instanceof PDO) {
-            // The caller may have read the password before a rehash commit
-            // and the mapping after it. Read both live values together so
-            // successive upgrades do not revoke an unchanged credential.
-            $live = db_fetch_row_prepared(
-                "SELECT ua.password, su.value
+        // The caller may have read the password before a rehash commit
+        // and the mapping after it. Read both live values together so
+        // successive upgrades do not revoke an unchanged credential.
+        $sql = "SELECT ua.password, su.value
                 FROM user_auth AS ua
                 LEFT JOIN settings_user AS su ON su.user_id = ua.id
                     AND su.name = 'auth_credential_generation'
-                WHERE ua.id = ?",
-                array($user_id)
-            );
-            if (!array_key_exists('password', $live)) {
-                return '';
-            }
-            $fingerprint = auth_session_credential_key($live['password']);
-            $mapping = $live['value'] ?? '';
-            if (is_string($mapping) && preg_match('/^[a-f0-9]{64}:[a-f0-9]{64}$/D', $mapping)
-                && hash_equals($fingerprint, substr($mapping, 0, 64))) {
-                return substr($mapping, 65);
-            }
+                WHERE ua.id = ?";
+        if ($db instanceof PDO) {
+            $query = $db->prepare($sql . $lock);
+            $query->execute(array($user_id));
+            $live = $query->fetch(PDO::FETCH_ASSOC) ?: array();
+        } else {
+            $live = db_fetch_row_prepared($sql, array($user_id));
+        }
+        if (!array_key_exists('password', $live)) {
+            return '';
+        }
+        $fingerprint = auth_session_credential_key($live['password']);
+        $mapping = $live['value'] ?? '';
+        if (is_string($mapping) && preg_match('/^[a-f0-9]{64}:[a-f0-9]{64}$/D', $mapping)
+            && hash_equals($fingerprint, substr($mapping, 0, 64))) {
+            return substr($mapping, 65);
         }
     }
     return $fingerprint;
