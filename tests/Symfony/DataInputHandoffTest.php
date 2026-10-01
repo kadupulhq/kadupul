@@ -73,10 +73,11 @@ PROGRAM);
         self::assertSame(['--update', '--id=3'], json_decode(file_get_contents($this->directory . '/whitelist-arguments'), true));
     }
 
-    public function testConfiguredWhitelistBinaryReceivesArgvWithoutChangingCollectorRuntime(): void
+    #[DataProvider('configuredBinaryNames')]
+    public function testConfiguredWhitelistBinaryReceivesArgvWithoutChangingCollectorRuntime(string $name): void
     {
         file_put_contents($this->directory . '/mode', 'ok');
-        $wrapper = $this->directory . '/configured php';
+        $wrapper = $this->directory . '/' . $name;
         file_put_contents($wrapper, "#!/bin/sh\nprintf '%s\\n' \"\$@\" >> configured-arguments\nexec " . escapeshellarg(PHP_BINARY) . " \"\$@\"\n");
         chmod($wrapper, 0700);
         $handoff = new DataInputHandoff(PHP_BINARY, $this->directory, 9, hrtime(true) / 1e9 + 2, whitelistBinary: $wrapper);
@@ -85,6 +86,27 @@ PROGRAM);
         self::assertTrue($handoff->propagate(3));
         self::assertSame([$this->directory . '/cli/input_whitelist.php', '--update', '--id=3'], file($this->directory . '/configured-arguments', FILE_IGNORE_NEW_LINES));
         self::assertSame(['--update', '--id=3'], json_decode(file_get_contents($this->directory . '/whitelist-arguments'), true));
+    }
+
+    public static function configuredBinaryNames(): iterable
+    {
+        yield 'interior space' => ['configured php'];
+        yield 'pathname ending with a space' => [' configured php '];
+    }
+
+    #[DataProvider('emptyConfiguredBinaries')]
+    public function testEmptyConfiguredWhitelistBinaryFallsBackToTheWorkerRuntime(string $binary): void
+    {
+        file_put_contents($this->directory . '/mode', 'ok');
+        $handoff = new DataInputHandoff(PHP_BINARY, $this->directory, 9, hrtime(true) / 1e9 + 2, whitelistBinary: $binary);
+        self::assertTrue($handoff->whitelist(3));
+        self::assertSame(['--update', '--id=3'], json_decode(file_get_contents($this->directory . '/whitelist-arguments'), true));
+    }
+
+    public static function emptyConfiguredBinaries(): iterable
+    {
+        yield 'empty setting' => [''];
+        yield 'blank setting' => ['   '];
     }
 
     public function testUnavailableConfiguredWhitelistBinaryFailsWithoutChangingCollectorRuntime(): void

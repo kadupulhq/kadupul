@@ -21,7 +21,8 @@ final readonly class DataInputHandoff
 
     public function whitelist(int $id): bool
     {
-        $process = new Process([$this->whitelistBinary ?? $this->binary, $this->projectDir . '/cli/input_whitelist.php', '--update', '--id=' . $id], $this->projectDir);
+        $configured = trim($this->whitelistBinary ?? '');
+        $process = new Process([$configured !== '' ? $this->whitelistBinary : $this->binary, $this->projectDir . '/cli/input_whitelist.php', '--update', '--id=' . $id], $this->projectDir);
         return $this->run($process);
     }
 
