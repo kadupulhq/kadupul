@@ -100,10 +100,6 @@ function db_fetch_row_prepared($sql, $params = array())
 function db_fetch_assoc_prepared($sql, $params = array())
 {
     if (str_contains($sql, 'FROM data_template_data') && str_contains($sql, 'FOR UPDATE')) {
-        if ($GLOBALS['failure'] === 'lookup-aborted') {
-            $GLOBALS['db']->rollBack();
-            return false;
-        }
         if ($GLOBALS['failure'] === 'lookup-false') {
             return false;
         }
