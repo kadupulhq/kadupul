@@ -276,8 +276,12 @@ function form_actions()
                             throw new \RuntimeException('Unable to commit Data Source Profile deletion.');
                         }
                     } catch (\Throwable $e) {
-                        db_rollback_transaction();
-                        cacti_log('ERROR: Data Source Profile deletion was rolled back: ' . $e->getMessage(), false, 'WEBUI');
+                        try {
+                            db_rollback_transaction();
+                        } catch (\Throwable $rollback_error) {
+                            cacti_log('ERROR: Unable to roll back Data Source Profile deletion: ' . $rollback_error->getMessage(), false, 'WEBUI');
+                        }
+                        cacti_log('ERROR: Data Source Profile deletion failed: ' . $e->getMessage(), false, 'WEBUI');
                         raise_message('profile_delete_failed', __('Unable to safely delete the selected Data Source Profiles. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
                     }
                 }

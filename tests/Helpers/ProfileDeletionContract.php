@@ -30,7 +30,7 @@ abstract class ProfileDeletionContract extends TestCase
         if ($failure === '' && $expected === array(1,2,3)) {
             self::assertSame(array(), array_filter($state['calls'], static fn($call) => str_starts_with($call[0], 'DELETE')));
         }
-        if ($failure === 'commit' || str_starts_with($failure, 'data_source_profiles')) {
+        if ($failure === 'lookup-aborted' || $failure === 'commit' || str_starts_with($failure, 'data_source_profiles')) {
             self::assertSame(1, $state['rollbacks']);
         }
         if (!str_starts_with($failure, 'lookup') && !in_array($failure, array('begin', 'isolation'), true)) {
@@ -92,7 +92,7 @@ abstract class ProfileDeletionContract extends TestCase
     public static function scenarios(): array
     {
         $cases = array('unused' => array(array()), 'mixed' => array(array('selected' => array(1,2,3))), 'all referenced' => array(array('selected' => array(1,2))));
-        foreach (array('lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
+        foreach (array('lookup-aborted','lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
             $cases[$failure] = array(array('failure' => $failure));
         }
         return $cases;
@@ -109,6 +109,26 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertContains('data_source_profile_id', $state['indexes']);
         self::assertCount(1, array_filter($state['calls'], static fn($sql) => $sql === 'ALTER TABLE data_template_data ADD INDEX data_source_profile_id (data_source_profile_id)'));
         self::assertSame(2, $state['runs']);
+    }
+
+    public function testAuditBaselinePreservesProfileReferenceIndex(): void
+    {
+        $baseline = new PDO('sqlite::memory:');
+        $baseline->exec('CREATE TABLE table_indexes (idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name, idx_collation, idx_cardinality, idx_sub_part, idx_packed, idx_null, idx_index_type, idx_comment)');
+        $baseline->exec('CREATE TABLE table_columns (table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra)');
+        foreach (file(dirname(__DIR__, 2) . '/docs/audit_schema.sql') as $statement) {
+            if (str_starts_with($statement, 'INSERT INTO `table_indexes`') || str_starts_with($statement, 'INSERT INTO `table_columns`')) {
+                $baseline->exec($statement);
+            }
+        }
+        $state = $this->runNative(array('upgrade' => true));
+        self::assertContains('data_source_profile_id', $state['indexes']);
+        foreach (array_intersect($state['indexes'], array('data_source_profile_id')) as $index) {
+            $query = $baseline->prepare('SELECT idx_column_name, idx_non_unique, idx_seq_in_index, idx_index_type FROM table_indexes WHERE idx_table_name = ? AND idx_key_name = ?');
+            $query->execute(array('data_template_data', $index));
+            self::assertSame(array('idx_column_name' => 'data_source_profile_id', 'idx_non_unique' => 1, 'idx_seq_in_index' => 1, 'idx_index_type' => 'BTREE'), $query->fetch(PDO::FETCH_ASSOC));
+        }
+        self::assertSame('MUL', $baseline->query("SELECT table_key FROM table_columns WHERE table_name = 'data_template_data' AND table_field = 'data_source_profile_id'")->fetchColumn());
     }
 
     protected function runNative(array $scenario): array
