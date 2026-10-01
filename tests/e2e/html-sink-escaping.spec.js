@@ -17,6 +17,23 @@ function permissionTooltipBody(file) {
   return match[1];
 }
 
+// Returns tree.php's draggable() as the page prints it.
+function treeDraggable() {
+  const source = fs.readFileSync(path.join(root, 'tree.php'), 'utf8');
+  const start = source.indexOf('function draggable(element) {');
+  let depth = 0;
+
+  for (let offset = source.indexOf('{', start); offset < source.length; offset++) {
+    if (source[offset] === '{') {
+      depth++;
+    } else if (source[offset] === '}' && --depth === 0) {
+      return source.slice(start, offset + 1);
+    }
+  }
+
+  throw new Error('No draggable() in tree.php');
+}
+
 async function loadLayout(page) {
   await page.goto('/tests/e2e/theme-smoke.html');
   await page.waitForFunction(() => window.__themeSmokeReady);
@@ -103,3 +120,44 @@ for (const file of ['user_admin.php', 'user_group_admin.php']) {
     }
   });
 }
+
+test('rebuilding a tree list keeps escaped names as text', async ({ page }) => {
+  const names = [
+    '<span style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999"><a href="https://example.invalid/">Session expired</a></span>',
+    '<img src=x onerror=window.pwn=1>',
+    'Traffic - eth0 & lo',
+  ];
+
+  await loadLayout(page);
+  await page.addScriptTag({ url: '/include/js/purify.js' });
+  await page.addScriptTag({ url: '/include/js/jstree.js' });
+  await page.evaluate((code) => {
+    window.editable = false;
+    window.reset = false;
+    window.pwn = 0;
+    (0, eval)(code);
+  }, treeDraggable());
+
+  for (const name of names) {
+    await page.evaluate((title) => {
+      // The same markup display_graphs() prints, with the title escaped.
+      const item = $('<li id="tgraph:7" data-jstree=\'{ "type": "graph" }\'></li>').text(title);
+      $('#sandbox').empty().append($('<div id="graphs"></div>').append($('<ul></ul>').append(item)));
+      draggable('graphs');
+    }, name);
+    await expect(page.locator('#graphs .jstree-anchor')).toHaveText(name);
+
+    // Locking the tree rebuilds the list from the rendered nodes.
+    await page.evaluate(() => draggable('graphs'));
+    await expect(page.locator('#graphs .jstree-anchor')).toHaveText(name);
+    await page.waitForTimeout(50);
+
+    const state = await page.evaluate(() => ({
+      nodes: $('#graphs .jstree-node').length,
+      injected: $('#graphs .jstree-anchor').find('span, a, img').length,
+      pwn: window.pwn,
+    }));
+
+    expect(state).toEqual({ nodes: 1, injected: 0, pwn: 0 });
+  }
+});
