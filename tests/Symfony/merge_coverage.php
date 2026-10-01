@@ -44,6 +44,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'VDEF caller transaction and remote collector guards verified on MariaDB',
+        'VDEF array type query returns controlled 400 without mutation',
+        'VDEF unknown item deletion uses French catalog label',
         'VDEF nested reference refuses function overwrite', 'VDEF browser type change and save pass under CSP',
         'VDEF oversized legacy parent ID falls back',
         'VDEF nontransactional table refused: vdef', 'VDEF nontransactional table refused: graph_templates_item',

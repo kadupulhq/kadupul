@@ -93,6 +93,41 @@ def verify_vdefs(harness, session, user_id, check):
     check(match is not None, f"VDEF save did not redirect to its editor: {url}")
     vdef_id = int(match.group(1))
 
+    item_count = harness.sql(f'SELECT COUNT(*) FROM vdef_items WHERE vdef_id={vdef_id}').strip()
+    status, _, html = scenario.request(f'/graph-definitions/vdefs/{vdef_id}/items/0?type[]=6')
+    check(status == 400 and 'Invalid VDEF item type.' in html
+          and harness.sql(f'SELECT COUNT(*) FROM vdef_items WHERE vdef_id={vdef_id}').strip() == item_count,
+          'VDEF array type query returns controlled 400 without mutation')
+
+    from harness import Session
+    language_names = "'i18n_language_support','i18n_auto_detection','i18n_default_language'"
+    language_settings = harness.rows(f"SELECT JSON_OBJECT('name',name,'value',value) FROM settings WHERE name IN ({language_names})")
+    user_language = harness.rows(f"SELECT JSON_OBJECT('value',value) FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+    unknown_hash = uuid.uuid4().hex
+    def sql_text(value):
+        return "CONVERT(0x" + value.encode('utf-8').hex() + " USING utf8mb4)" if value else "''"
+    try:
+        harness.sql(f"INSERT INTO vdef_items (hash,vdef_id,sequence,type,value) VALUES ('{unknown_hash}',{vdef_id},1,99,'legacy')")
+        unknown_id = int(harness.sql(f"SELECT id FROM vdef_items WHERE hash='{unknown_hash}'").strip())
+        harness.sql("REPLACE INTO settings (name,value) VALUES ('i18n_language_support','1'),('i18n_auto_detection','0'),('i18n_default_language','en-US')")
+        harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language','fr-FR')")
+        french_session = Session(harness.base)
+        check(french_session.login('behavior-admin')['status'] == 200, 'VDEF French fixture login succeeds')
+        status, _, html = Scenario(harness, french_session).request(f'/graph-definitions/vdefs/{vdef_id}/items/{unknown_id}/delete')
+        check(status == 200 and '<html lang="fr">' in html and '<em>Élément VDEF</em>' in html
+              and '<em>VDEF item</em>' not in html,
+              'VDEF unknown item deletion uses French catalog label')
+        check(harness.sql(f'SELECT type FROM vdef_items WHERE id={unknown_id}').strip() == '99',
+              'VDEF translated confirmation preserves unsupported item')
+    finally:
+        harness.sql(f"DELETE FROM vdef_items WHERE hash='{unknown_hash}'")
+        harness.sql(f"DELETE FROM settings WHERE name IN ({language_names})")
+        for setting in language_settings:
+            harness.sql(f"INSERT INTO settings (name,value) VALUES ({sql_text(setting['name'])},{sql_text(setting['value'])})")
+        harness.sql(f"DELETE FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+        for setting in user_language:
+            harness.sql(f"INSERT INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language',{sql_text(setting['value'])})")
+
     for action, parent, child, label in (
         ('edit', '', '100000000', 'VDEF oversized legacy edit ID falls back'),
         ('item_edit', '100000000', '1', 'VDEF oversized legacy parent ID falls back'),

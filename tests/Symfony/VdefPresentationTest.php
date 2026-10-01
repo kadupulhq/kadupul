@@ -126,7 +126,7 @@ final class VdefPresentationTest extends TestCase
             $catalog = $this->createMock(VdefCatalog::class);
             $catalog->method('list')->willReturn([new VdefSummary(1, '<router-Ø>', 2, 3)]);
             $catalog->method('count')->willReturn(1);
-            $catalog->method('find')->willReturn(['id' => 1, 'name' => '<router-Ø>', 'revision' => 'fixture', 'items' => []]);
+            $catalog->method('find')->willReturn(['id' => 1, 'name' => '<router-Ø>', 'revision' => 'fixture', 'items' => [['id' => 99, 'type' => 99, 'value' => 'legacy', 'label' => 'legacy']]]);
             $catalog->method('preview')->willReturn('CURRENT_DATA_SOURCE,MAXIMUM');
             $container->set(VdefCatalog::class, $catalog);
             $list = $kernel->handle(Request::create('/graph-definitions/vdefs', 'GET', [], ['Cacti' => 'fixture']));
@@ -142,6 +142,10 @@ final class VdefPresentationTest extends TestCase
             self::assertStringContainsString('Enregistrer l’élément', $item->getContent());
             self::assertStringContainsString('CURRENT_DATA_SOURCE,MAXIMUM', $item->getContent());
             self::assertStringContainsString('>MAXIMUM</option>', $item->getContent());
+            $delete = $kernel->handle(Request::create('/graph-definitions/vdefs/1/items/99/delete', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $delete->getStatusCode(), $delete->getContent());
+            self::assertStringContainsString('Élément VDEF', $delete->getContent());
+            self::assertStringNotContainsString('VDEF item', $delete->getContent());
         } finally {
             $kernel->shutdown();
         }
@@ -257,6 +261,11 @@ final class VdefPresentationTest extends TestCase
             self::assertSame('1', $database->fetchOne('SELECT value FROM vdef_items WHERE id=901'));
             self::assertSame($referenceRevision, $catalog->find(1)['revision']);
             $database->executeStatement('DELETE FROM vdef_items WHERE id=901');
+            $queryRevision = $catalog->find(1)['revision'];
+            $malformedQuery = $kernel->handle(Request::create('/graph-definitions/vdefs/1/items/0?type[]=6'));
+            self::assertSame(400, $malformedQuery->getStatusCode(), $malformedQuery->getContent());
+            self::assertStringContainsString('Invalid VDEF item type.', $malformedQuery->getContent());
+            self::assertSame($queryRevision, $catalog->find(1)['revision']);
             $itemPage = $kernel->handle(Request::create('/graph-definitions/vdefs/1/items/0'));
             self::assertSame(200, $itemPage->getStatusCode(), $itemPage->getContent());
             self::assertStringContainsString('src="/public/js/vdef-item.js" defer', $itemPage->getContent());

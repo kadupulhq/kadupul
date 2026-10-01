@@ -176,6 +176,8 @@ def main():
         'vdef-probe-hash': 'Integration test source differs',
         'vdef-browser-probe-hash': 'Integration test source differs',
         'vdef-browser-handler-hash': 'Integration test source differs',
+        'missing-vdef-array-type-check': 'Incomplete Symfony integration',
+        'missing-vdef-french-item-check': 'Incomplete Symfony integration',
         'missing-vdef-reference-check': 'Incomplete Symfony integration',
         'missing-vdef-browser-check': 'Incomplete Symfony integration',
         'missing-vdef-legacy-bound-check': 'Incomplete Symfony integration',
@@ -249,8 +251,10 @@ def main():
                 evidence['source_sha256']['tests/Symfony/vdef_browser_probe.cjs'] = '0' * 64
             elif case == 'vdef-browser-handler-hash':
                 evidence['source_sha256']['public/js/vdef-item.js'] = '0' * 64
-            elif case.startswith('missing-vdef-') and case in ['missing-vdef-reference-check', 'missing-vdef-browser-check', 'missing-vdef-legacy-bound-check']:
-                omitted = {'missing-vdef-reference-check': 'VDEF nested reference refuses function overwrite',
+            elif case.startswith('missing-vdef-') and case in ['missing-vdef-array-type-check', 'missing-vdef-french-item-check', 'missing-vdef-reference-check', 'missing-vdef-browser-check', 'missing-vdef-legacy-bound-check']:
+                omitted = {'missing-vdef-array-type-check': 'VDEF array type query returns controlled 400 without mutation',
+                           'missing-vdef-french-item-check': 'VDEF unknown item deletion uses French catalog label',
+                           'missing-vdef-reference-check': 'VDEF nested reference refuses function overwrite',
                            'missing-vdef-browser-check': 'VDEF browser type change and save pass under CSP',
                            'missing-vdef-legacy-bound-check': 'VDEF oversized legacy parent ID falls back'}[case]
                 evidence['checks'].remove(omitted)

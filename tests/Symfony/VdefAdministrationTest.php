@@ -207,11 +207,21 @@ final class VdefAdministrationTest extends TestCase
         ];
 
         foreach ($revocations as $revoke) {
+            $this->database->executeStatement("UPDATE user_auth SET enabled = 'on', locked = '', must_change_password = '', password_change = '' WHERE id = 42");
+            $this->database->executeStatement("UPDATE settings SET value = 'guest' WHERE name = 'guest_user'");
+            $this->database->executeStatement("UPDATE settings SET value = '1' WHERE name = 'auth_method'");
+            $this->database->executeStatement('DELETE FROM user_auth_realm WHERE user_id = 42');
+            $this->database->executeStatement('INSERT INTO user_auth_realm VALUES (42, 8), (42, 14)');
+            // Prove this boundary starts from an authorized actor. Previous
+            // revocations must not mask the revocation being tested.
+            $this->editor->save(42, 2, 'Unused', $this->revision(2));
+            self::assertSame('Unused', $this->database->fetchOne('SELECT name FROM vdef WHERE id = 2'));
+            $revision = $this->revision(2);
             $this->database->executeStatement($revoke);
             try {
                 // This models a request whose ConsoleAccess snapshot was
                 // acquired before the account or console grant was revoked.
-                $this->editor->save(42, 2, 'Unauthorized change');
+                $this->editor->save(42, 2, 'Unauthorized change', $revision);
                 self::fail('A stale console actor must not retain write access.');
             } catch (\RuntimeException $error) {
                 self::assertSame('Access denied.', $error->getMessage());

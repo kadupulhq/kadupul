@@ -69,7 +69,7 @@ final class VdefItemController
             }
             $submittedType = $request->isMethod('POST')
                 ? ($submittedItem['type'] ?? null)
-                : $request->query->get('type', $item['type']);
+                : ($request->query->all()['type'] ?? $item['type']);
             if ((!is_string($submittedType) && !is_int($submittedType))
                 || ($request->isMethod('POST') && !in_array((string) $submittedType, ['1', '4', '6'], true))) {
                 return new Response($translator->trans('Invalid VDEF item type.', [], 'graph_definition'), 400, $headers);
@@ -162,7 +162,7 @@ final class VdefItemController
             }
             return new Response($twig->render('graph_definition/vdef_item_delete.html.twig', [
                 'form' => $form->createView(), 'vdef' => $vdef, 'item' => $item,
-                'item_type' => VdefFunctions::TYPES[(string) $item['type']] ?? 'VDEF item',
+                'item_type' => VdefFunctions::TYPES[(string) $item['type']] ?? 'VDEF Item',
             ]), $request->isMethod('POST') ? 422 : 200, $headers);
         } catch (VdefAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'graph_definition'), $error->unauthenticated ? 401 : 403, $headers);
