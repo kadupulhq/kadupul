@@ -88,7 +88,14 @@ $contents = '<?php $secret = "' . $new_secret . '";' . PHP_EOL;
 $written = false;
 if ($temporary !== false) {
     try {
-        $written = (!$previous || (chown($temporary, $previous['uid']) && chgrp($temporary, $previous['gid'])))
+        $preserved_ownership = !$previous || ($config['cacti_server_os'] ?? '') === 'win32' || PHP_OS_FAMILY === 'Windows';
+        if (!$preserved_ownership) {
+            $temporary_stat = stat($temporary);
+            $preserved_ownership = $temporary_stat !== false
+                && ($temporary_stat['uid'] === $previous['uid'] || chown($temporary, $previous['uid']))
+                && ($temporary_stat['gid'] === $previous['gid'] || chgrp($temporary, $previous['gid']));
+        }
+        $written = $preserved_ownership
             && chmod($temporary, $previous ? ($previous['mode'] & 0660) : 0640)
             && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
             && file_get_contents($temporary) === $contents
