@@ -14,6 +14,7 @@ if (isset($argv[3])) {
     define('RRD_TEST_CLI_COVERAGE_SOURCE', $root . '/lib/data_source_profile_integrity.php');
     require __DIR__ . '/rrd-process-coverage.php';
 }
+$reference_writes = 0;
 $source = new PDO('sqlite::memory:');
 $database_hostname = 'profile-source';
 $database_port = '0';
@@ -49,6 +50,9 @@ function db_rollback_transaction()
 }
 function db_fetch_assoc_prepared($sql, $params, $log = true, $connection = false)
 {
+    if ($GLOBALS['case'] === 'reference-batch-corrupt' && $GLOBALS['reference_writes'] === 2 && str_contains($sql, 'WHERE id IN')) {
+        return [];
+    }
     if (in_array($GLOBALS['case'], ['query-failure', 'source-active-failure'], true)) {
         return false;
     }
@@ -98,6 +102,12 @@ function sql_save($row, $table, $key, $autoincrement, $connection)
 }
 function db_execute_prepared($sql, $params, $log, $connection)
 {
+    if (str_starts_with($sql, 'INSERT INTO data_template_data')) {
+        $GLOBALS['reference_writes']++;
+        if ($GLOBALS['case'] === 'reference-batch-late' && $GLOBALS['reference_writes'] === 2) {
+            return false;
+        }
+    }
     if (($GLOBALS['case'] === 'reference-delete-failure' && $sql === 'DELETE FROM data_template_data') || ($GLOBALS['case'] === 'reference-write-failure' && str_starts_with($sql, 'INSERT INTO data_template_data'))) {
         return false;
     }
@@ -124,6 +134,23 @@ if (str_starts_with($case, 'reference-')) {
     $remote->exec('CREATE TABLE data_template_data (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, name TEXT)');
     $remote->exec("INSERT INTO data_template_data VALUES (1,1,'old reference')");
     $data = [['id' => $case === 'reference-exclude' ? 1 : 2, 'data_source_profile_id' => 77, 'name' => 'new reference']];
+    if (str_starts_with($case, 'reference-batch-')) {
+        $count = $case === 'reference-batch-payload' ? 200 : 2001;
+        $name = $case === 'reference-batch-payload' ? str_repeat('a', 6000) : 'new reference';
+        $data = array_map(static fn($id) => ['id' => $id, 'data_source_profile_id' => 77, 'name' => $name], range(2, $count + 1));
+    }
+    if ($case === 'reference-oversized') {
+        $data[0]['name'] = str_repeat('a', 600000);
+    }
+    if ($case === 'reference-duplicate') {
+        $data[] = $data[0];
+    }
+    if ($case === 'reference-nonscalar') {
+        $data[0]['name'] = [];
+    }
+    if ($case === 'reference-no-columns') {
+        $data[0]['id'] = 1;
+    }
     if ($case === 'reference-empty') {
         $data = [];
     }
@@ -133,11 +160,11 @@ if (str_starts_with($case, 'reference-')) {
     if ($case === 'reference-active') {
         $remote->beginTransaction();
     }
-    $result = replicate_data_source_profile_children($remote, $data, $case !== 'reference-device' && $case !== 'reference-exclude', $case === 'reference-exclude' ? ['name'] : false);
+    $result = replicate_data_source_profile_children($remote, $data, $case !== 'reference-device' && $case !== 'reference-exclude' && $case !== 'reference-no-columns', $case === 'reference-no-columns' ? ['id', 'data_source_profile_id', 'name'] : ($case === 'reference-exclude' ? ['name'] : false));
     $children = $remote->query('SELECT * FROM data_template_data ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
     $active = $remote->inTransaction();
 } else {
     $result = replicate_data_source_profile_parents($remote, $data);
 }
 $rows = db_table_exists('data_source_profiles', false, $remote) ? $remote->query('SELECT * FROM data_source_profiles ORDER BY id')->fetchAll(PDO::FETCH_ASSOC) : array();
-file_put_contents($directory . '/result.json', json_encode(array('source_active' => $source->inTransaction(), 'success' => $result, 'rows' => $rows, 'children' => $children ?? [], 'active' => $active ?? false), JSON_THROW_ON_ERROR));
+file_put_contents($directory . '/result.json', json_encode(array('reference_writes' => $reference_writes, 'source_active' => $source->inTransaction(), 'success' => $result, 'rows' => $rows, 'children' => $children ?? [], 'active' => $active ?? false), JSON_THROW_ON_ERROR));
