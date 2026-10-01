@@ -89,13 +89,14 @@ try {
     $writerId = (int) fgets($pipes[1]);
     $monitor = profile_guard_connection(true);
     $waiting = false;
-    $deadline = microtime(true) + 5;
+    $deadline = microtime(true) + 10;
     do {
         $statement = $monitor->prepare("SELECT trx_state FROM information_schema.INNODB_TRX WHERE trx_mysql_thread_id=?");
         $statement->execute([$writerId]);
         $waiting = $statement->fetchColumn() === 'LOCK WAIT';
         if (!$waiting) {
-            usleep(20000);
+            // Allow the InnoDB monitoring snapshot to refresh between reads.
+            usleep(250000);
         }
     } while (!$waiting && microtime(true) < $deadline);
     if (!$waiting) {
