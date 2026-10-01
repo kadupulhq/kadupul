@@ -1,8 +1,25 @@
 """Collector reassignment through actual Symfony forms and isolated workers."""
+import json
+import re
 from urllib.request import Request
 from urllib.error import HTTPError
 from urllib.parse import urlencode, urlsplit
 from device_edit_scenarios import Inputs
+
+
+def install_collector_profile_guards(harness, database):
+    """CREATE TABLE LIKE omits triggers; install the actual native guard catalog."""
+    if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', database):
+        raise ValueError('Invalid disposable collector database name')
+    result = harness.php('-r', 'require "lib/data_source_profile_integrity.php"; echo json_encode(data_source_profile_reference_triggers(), JSON_THROW_ON_ERROR);')
+    if result['exit'] != 0:
+        raise RuntimeError('Native profile guard catalog could not be loaded')
+    definitions = json.loads(result['stdout'])
+    if not definitions:
+        raise RuntimeError('Native profile guard catalog is empty')
+    harness.sql('DELIMITER $$\nUSE `' + database + '`$$\n'
+                + '\n'.join(definition['sql'] + '$$' for definition in definitions.values())
+                + '\nDELIMITER ;')
 
 
 def cache_markers(harness, collectors):
@@ -99,6 +116,7 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         if not all(re.fullmatch(r'[A-Za-z0-9_]+', table) for table in tables):
             raise RuntimeError('Unexpected fixture table name')
         harness.sql(';'.join(f'CREATE TABLE collector_second.`{table}` LIKE cacti.`{table}`' for table in tables))
+        install_collector_profile_guards(harness, 'collector_second')
         harness.sql("ALTER TABLE poller_item ADD collector_optional VARCHAR(20) DEFAULT 'primary-only'")
         primary_extra = True
         harness.sql("ALTER TABLE create_remote.poller_item ADD collector_remote VARCHAR(20) DEFAULT 'remote-only'")
