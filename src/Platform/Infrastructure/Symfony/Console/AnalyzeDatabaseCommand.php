@@ -10,6 +10,7 @@ namespace Kadupul\Platform\Infrastructure\Symfony\Console;
 use Kadupul\Platform\Application\Command\AnalyzeDatabase;
 use Kadupul\Platform\Application\Command\InstallationAccessDenied;
 use Kadupul\Platform\Application\ReadModel\AnalysisReport;
+use Kadupul\Platform\Application\ReadModel\TableAnalysis;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
 use Psr\Clock\ClockInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -53,17 +54,17 @@ final readonly class AnalyzeDatabaseCommand
         // The original says "Repairing" although it only analyzes; legacy output keeps that.
         $legacy = ['NOTE: Analyzing All Kadupul Database Tables', 'NOTE: Repairing Tables for ' . ($report->main ? 'Main' : 'Local') . ' Database'];
         foreach ($report->tables as $table) {
-            $legacy[] = "NOTE: Analyzing Table -> '" . $table['name'] . "'" . ($report->noBinlog ? ' without writing to the binlog' : '') . ($table['ok'] ? ' Successful' : ' Failed');
+            $legacy[] = "NOTE: Analyzing Table -> '" . $table->name . "'" . ($report->noBinlog ? ' without writing to the binlog' : '') . ($table->succeeded() ? ' Successful' : ' Failed');
         }
         if ($mode !== OutputMode::Human) {
-            $json = ['status' => 'ok', 'database' => $report->main ? 'main' : 'local', 'binlog_enabled' => $report->noBinlog, 'tables' => $report->tables];
+            $json = ['status' => 'ok', 'database' => $report->main ? 'main' : 'local', 'binlog_enabled' => $report->noBinlog, 'tables' => array_map(static fn(TableAnalysis $table): array => $table->toArray(), $report->tables)];
 
             return $this->renderer->render(new CommandResult($json, $legacy), $mode, $output);
         }
         if ($report->tables !== []) {
-            $io->listing(array_map(static fn(array $table): string => $table['name'] . ': ' . ($table['ok'] ? 'analyzed' : 'failed'), $report->tables));
+            $io->listing(array_map(static fn(TableAnalysis $table): string => $table->name . ': ' . ($table->succeeded() ? 'analyzed' : 'failed'), $report->tables));
         }
-        $failed = count(array_filter($report->tables, static fn(array $table): bool => !$table['ok']));
+        $failed = $report->failed();
         $summary = sprintf('Analyzed %d tables', count($report->tables));
         // The original exits 0 when a table fails; the warning says so without changing that.
         if ($failed === 0) {
