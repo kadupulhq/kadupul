@@ -102,6 +102,11 @@ const REVIEWED_ROUTES = [
     'session' => 'answers 401 with no identity when the actor is null',
 ];
 
+// Additional manually audited feature gates. Both the action and adapter
+// bodies are pinned in inventory output, so a changed call or refusal causes
+// baseline drift and requires review rather than inheriting this annotation.
+const REVIEWED_DATA_INPUT_ROUTES = ['data_inputs', 'data_input_bulk', 'data_input_legacy', 'data_input_create', 'data_input_edit', 'data_input_field', 'data_input_action'];
+
 const BOOTSTRAP = [
     'include/auth.php' => 'auth',
     'include/global.php' => 'global',
@@ -2125,6 +2130,14 @@ function symfony_routes(string $root, array $files): array
                             $grant = 'realm ' . $realms['consoleActor'];
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
+                            }
+                            if (in_array($route['name'], REVIEWED_DATA_INPUT_ROUTES, true)) {
+                                $adapter = load_class($root, 'Kadupul\\DataInput\\Infrastructure\\Legacy\\LegacyDataInputAccess');
+                                if ($adapter === null) {
+                                    fail('Reviewed DataInputAccess adapter not found');
+                                }
+                                $grant .= ' + realm 2';
+                                $reviewed .= '; reviewed DataInputAccess at ' . digest($adapter->stmts) . ' and action ' . digest($method->stmts) . ': feature realm 2';
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

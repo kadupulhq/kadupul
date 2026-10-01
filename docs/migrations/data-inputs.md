@@ -6,7 +6,10 @@ whitelist verification and retry actions. Old POST forms expire with HTTP 409.
 
 Console realm 8 and Data Input realm 2 are required, including current enabled
 group grants. The worker locks account, authentication policy and grants before
-writes, rejects forced-password accounts and requires primary InnoDB storage.
+writes and requires primary InnoDB storage. A pending forced password change
+blocks builtin-auth accounts only when password changes are enabled for that
+account; external-auth accounts and builtin accounts without that permission
+remain eligible when their account and realm checks pass.
 Method revisions include every child field and sequence. Field URLs bind the
 field to its actual parent. Referenced output fields cannot be removed or renamed.
 Protected system methods remain hidden and unavailable for mutations.
