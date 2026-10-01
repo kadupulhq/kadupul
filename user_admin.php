@@ -352,6 +352,8 @@ function form_actions()
                         if (cacti_sizeof($user)) {
                             if (user_copy($template['username'], $user['username'], $template['realm'], $user['realm'], true) === false) {
                                 $copy_error = true;
+                            } else {
+                                reset_user_perms($selected_items[$i]);
                             }
                         }
                     }
@@ -609,7 +611,9 @@ function form_save()
         // The local rules follow the realm this save stores, in the same order
         // as the save below: is_template_account() also matches the primary
         // administrator, who keeps any realm, while a template is always local.
-        if (read_config_option('admin_user') != get_nfilter_request_var('id') && is_template_account(get_nfilter_request_var('id'))) {
+        if (read_config_option('admin_user') == get_nfilter_request_var('id')) {
+            $realm = (int) $old_realm;
+        } elseif (is_template_account(get_nfilter_request_var('id'))) {
             $realm = 0;
         } elseif (get_nfilter_request_var('realm') != '') {
             $realm = get_nfilter_request_var('realm');
@@ -624,7 +628,7 @@ function form_save()
         }
 
         /* check duplicate username */
-        if (cacti_sizeof(db_fetch_row_prepared('SELECT * FROM user_auth WHERE realm = ? AND username = ? AND id != ?', array(get_nfilter_request_var('realm'), get_nfilter_request_var('username'), get_nfilter_request_var('id'))))) {
+        if (cacti_sizeof(db_fetch_row_prepared('SELECT * FROM user_auth WHERE realm = ? AND username = ? AND id != ?', array($realm, get_nfilter_request_var('username'), get_nfilter_request_var('id'))))) {
             raise_message(12);
         }
 

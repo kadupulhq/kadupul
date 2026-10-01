@@ -17,7 +17,7 @@ function ldap_tls_child(string $program, array $scenario): array
 {
     $pipes = array();
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode($scenario)), $coverage_dir),
+        child_coverage_command(array(PHP_BINARY, '-d', 'disable_functions=ldap_set_option,ldap_connect,ldap_error', '-d', 'display_errors=stderr', '-r', $program, json_encode($scenario)), $coverage_dir),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -41,8 +41,8 @@ function ldap_tls_connect(array $settings, string $encryption): array
 $scenario = json_decode($argv[1], true);
 $GLOBALS['settings'] = $scenario['settings'];
 $GLOBALS['options'] = array();
-define('LDAP_OPT_X_TLS_REQUIRE_CERT', 0x6006);
-define('LDAP_OPT_PROTOCOL_VERSION', 17);
+if (!defined('LDAP_OPT_X_TLS_REQUIRE_CERT')) { define('LDAP_OPT_X_TLS_REQUIRE_CERT', 0x6006); }
+if (!defined('LDAP_OPT_PROTOCOL_VERSION')) { define('LDAP_OPT_PROTOCOL_VERSION', 17); }
 require $root . '/include/global_constants.php';
 function read_config_option($name, $force = false) { return $GLOBALS['settings'][$name] ?? ''; }
 function get_selective_log_level() { return 0; }
@@ -133,8 +133,8 @@ $scenario = json_decode($argv[1], true);
 $GLOBALS['settings'] = $scenario['settings'];
 $GLOBALS['writes'] = array();
 $GLOBALS['options'] = array();
-define('LDAP_OPT_X_TLS_REQUIRE_CERT', 0x6006);
-define('LDAP_OPT_PROTOCOL_VERSION', 17);
+if (!defined('LDAP_OPT_X_TLS_REQUIRE_CERT')) { define('LDAP_OPT_X_TLS_REQUIRE_CERT', 0x6006); }
+if (!defined('LDAP_OPT_PROTOCOL_VERSION')) { define('LDAP_OPT_PROTOCOL_VERSION', 17); }
 require $root . '/include/global_constants.php';
 function read_config_option($name, $force = false) { return $GLOBALS['settings'][$name] ?? ''; }
 function db_fetch_cell_prepared($sql, $params = array()) { return $GLOBALS['settings'][$params[0]] ?? false; }

@@ -4621,12 +4621,11 @@ function secpass_check_history($id, $password)
             "SELECT password, password_history
 			FROM user_auth
 			WHERE id = ?
-			AND realm = 0
-			AND enabled = 'on'",
+			AND realm = 0",
             array($id)
         );
 
-        // A new or disabled account has no history to repeat.
+        // A new account has no history to repeat.
         if (!cacti_sizeof($user)) {
             return true;
         }

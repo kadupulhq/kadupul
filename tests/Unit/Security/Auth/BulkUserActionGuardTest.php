@@ -72,7 +72,8 @@ test('batch copy leaves the primary administrator and the acting account alone',
     expect($copies)->toHaveCount(1)
         ->and($copies[0]['params'])->toBe(array('template', 'alice', 0, 0, true))
         ->and($result['messages'])->toContain('attempt admin')
-        ->and($result['messages'])->toContain('attempt current');
+        ->and($result['messages'])->toContain('attempt current')
+        ->and($result['resets'])->toContain('user:9');
 });
 
 test('batch copy refuses a template that is not a local account', function () {

@@ -204,7 +204,7 @@ function password_change_admin_save(string $session_user, string $target): array
 {
     return user_admin_save_probe_run(array(
         'session' => array('sess_user_id' => $session_user, 'sess_user_credential' => hash('sha256', 'hash:old')),
-        'request' => array('save_component_user' => 1, 'id' => $target, 'username' => 'alice', 'realm' => 0, 'password' => 'N3w-password!', 'password_confirm' => 'N3w-password!', 'enabled' => 'on'),
+        'request' => array('save_component_user' => 1, 'id' => $target, 'username' => $target === '42' ? 'alice' : 'bob', 'realm' => 0, 'password' => 'N3w-password!', 'password_confirm' => 'N3w-password!', 'enabled' => 'on'),
         'users' => array(
             array('id' => 42, 'username' => 'alice', 'realm' => 0, 'password' => 'hash:old', 'password_history' => ''),
             array('id' => 43, 'username' => 'bob', 'realm' => 0, 'password' => 'hash:other', 'password_history' => ''),

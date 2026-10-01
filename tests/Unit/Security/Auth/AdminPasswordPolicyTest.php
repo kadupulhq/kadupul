@@ -13,14 +13,14 @@
 require_once dirname(__DIR__, 3) . '/Helpers/UserAdminSaveProbe.php';
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-function admin_password_save(array $request, array $config = array(), string $history = ''): array
+function admin_password_save(array $request, array $config = array(), string $history = '', string $enabled = 'on'): array
 {
     return user_admin_save_probe_run(array(
         'session' => array('sess_user_id' => 1),
         'request' => $request + array('save_component_user' => 1, 'id' => 42, 'username' => 'alice', 'realm' => 0, 'enabled' => 'on'),
         'users' => array(
             array('id' => 1, 'username' => 'admin', 'realm' => 0, 'password' => 'hash:admin', 'password_history' => '', 'enabled' => 'on'),
-            array('id' => 42, 'username' => 'alice', 'realm' => 0, 'password' => 'hash:Old-pass1', 'password_history' => $history, 'enabled' => 'on'),
+            array('id' => 42, 'username' => 'alice', 'realm' => 0, 'password' => 'hash:Old-pass1', 'password_history' => $history, 'enabled' => $enabled),
         ),
         'config' => $config + array('secpass_minlen' => 8, 'secpass_reqnum' => 'on', 'secpass_reqmixcase' => 'on'),
         'auth_functions' => array('auth_session_credential_key', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_revoke_user_credentials', 'secpass_check_pass', 'secpass_check_history'),
@@ -218,4 +218,20 @@ test('the live check reports the rule a password breaks', function () {
     expect(admin_password_checkpass('Str0ngpass'))->toBe('ok')
         ->and(admin_password_checkpass('abc'))->toBe('Password must be at least 8 characters!')
         ->and(admin_password_checkpass('abcdefghij'))->toBe('Your password must contain at least 1 numerical character!');
+});
+
+
+test('a forged realm cannot move the primary administrator', function (int $realm) {
+    $result = admin_realm_save(array('realm' => 0, 'full_name' => 'Alice Renamed'), array('realm' => $realm, 'password' => ''), array('42'), array('admin_user' => 42));
+    expect($result['saved']['realm'] ?? null)->toBe($realm);
+})->with(array(2, 3));
+
+test('a disabled local account still enforces password history', function (string $password) {
+    $result = admin_password_save(array('password' => $password, 'password_confirm' => $password), array('secpass_history' => 2), 'hash:Older-pass2', '');
+    expect($result['saved'])->toBeNull()->and($result['messages'])->toContain('password_history');
+})->with(array('Old-pass1', 'Older-pass2'));
+
+test('an omitted realm uses the stored realm in duplicate-name validation', function () {
+    $result = user_admin_save_probe_run(array('session' => array('sess_user_id' => 1), 'request' => array('save_component_user' => 1, 'id' => 42, 'username' => 'taken', 'password' => '', 'password_confirm' => ''), 'users' => array(array('id' => 42, 'username' => 'alice', 'realm' => 3, 'password' => '', 'password_history' => '', 'enabled' => 'on'), array('id' => 43, 'username' => 'taken', 'realm' => 3, 'password' => '', 'password_history' => '', 'enabled' => 'on'))));
+    expect($result['saved'])->toBeNull()->and($result['messages'])->toContain(12);
 });

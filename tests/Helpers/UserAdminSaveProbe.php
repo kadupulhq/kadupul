@@ -54,7 +54,13 @@ function db_fetch_cell_prepared($sql, $params = array(), $col = '', $log = true)
 }
 function db_fetch_row_prepared($sql, $params = array(), $log = true) {
     if (preg_match('/FROM user_auth\s+WHERE id = \?/i', $sql)) {
-        return $GLOBALS['users'][(string) end($params)] ?? array();
+        $row = $GLOBALS['users'][(string) end($params)] ?? array();
+        return str_contains($sql, "enabled = 'on'") && ($row['enabled'] ?? '') !== 'on' ? array() : $row;
+    }
+    if (str_contains($sql, 'WHERE realm = ? AND username = ? AND id != ?')) {
+        foreach ($GLOBALS['users'] as $row) {
+            if ((string) $row['realm'] === (string) $params[0] && $row['username'] === $params[1] && (string) $row['id'] !== (string) $params[2]) { return $row; }
+        }
     }
     return array();
 }
@@ -71,7 +77,7 @@ function read_config_option($name, $force = false) { return $GLOBALS['config_opt
 function is_template_account($user_id) { return in_array((string) $user_id, $GLOBALS['scenario_templates'], true); }
 function is_error_message() { return isset($_SESSION['sess_error_fields']) && cacti_sizeof($_SESSION['sess_error_fields']) > 0; }
 function api_plugin_hook_function($name, $parm = null) { return $parm; }
-function raise_message($id, $message = '', $level = 0) { $GLOBALS['messages'][] = $id; }
+function raise_message($id, $message = '', $level = 0) { $GLOBALS['messages'][] = $id; if ($id === 12) { $_SESSION['sess_error_fields']['username'] = true; } }
 function raise_message_javascript($title, $header, $message) { $GLOBALS['messages'][] = $message; }
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
 function cacti_count($array) { return is_array($array) ? count($array) : 0; }
