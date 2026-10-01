@@ -15,13 +15,17 @@ $dsn = "mysql:host=$host;port=$port;dbname=$database;charset=utf8mb4";
 $connect = static fn() => new PDO($dsn, getenv('BOOST_DB_USER'), getenv('BOOST_DB_PASSWORD'), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 $owner = $connect();
 $writer = $connect();
+// Schema installation needs a dedicated DDL account; lock owners remain ordinary users.
+$installer_connection = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER')
+    ? new PDO($dsn, getenv('KADUPUL_TEST_MYSQL_ADMIN_USER'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION])
+    : $connect();
 $writer->exec('SET SESSION innodb_lock_wait_timeout=1');
 $root = dirname(__DIR__, 2);
 $source = file_get_contents($root . '/cacti.sql');
 $created = [];
 function db_install_execute($sql)
 {
-    return $GLOBALS['owner']->exec($sql);
+    return $GLOBALS['installer_connection']->exec($sql);
 }
 function db_index_exists($table, $name)
 {
@@ -71,8 +75,14 @@ function cacti_sizeof($value)
 }
 function db_execute($sql)
 {
-    $GLOBALS['owner']->exec($sql);
+    $GLOBALS['installer_connection']->exec($sql);
     return true;
+}
+function db_fetch_assoc_prepared($sql, $parameters = [], ...$arguments)
+{
+    $statement = $GLOBALS['owner']->prepare($sql);
+    $statement->execute($parameters);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 function db_fetch_cell_prepared($sql, $parameters = [], ...$arguments)
 {
@@ -97,7 +107,7 @@ $config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_
 require $root . '/include/global_constants.php';
 require $root . '/include/global_arrays.php';
 require $root . '/lib/installer.php';
-$tables = ['data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output'];
+$tables = ['data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf'];
 foreach ($tables as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);
@@ -116,6 +126,13 @@ try {
         }
     }
     foreach ($tables as $table) {
+        if (in_array($table, ['data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf'], true)) {
+            // Real transactional prerequisites for the registered profile migration.
+            $columns = $table === 'data_source_profiles' ? 'id INT PRIMARY KEY' : 'id INT PRIMARY KEY, data_source_profile_id INT NOT NULL DEFAULT 0';
+            $owner->exec("CREATE TABLE `$table` ($columns) ENGINE=InnoDB");
+            $created[] = $table;
+            continue;
+        }
         if ($table === 'poller_output') {
             // The unrelated final installer preflight inspects only its engine.
             // Avoid legacy zero-date defaults in this index-specific fixture.
@@ -131,10 +148,19 @@ try {
     }
     $owner->exec("INSERT INTO version VALUES ('1.2.31')");
     populate_reference_fixture($owner);
-    $modes = ($argv[1] ?? '') === '--from-lts-only' ? ['upgrade-lts-1.2.32'] : ['fresh', 'upgrade-1.2.31', 'upgrade-lts-1.2.32'];
+    $modes = ($argv[1] ?? '') === '--from-lts-only' ? ['upgrade-lts-1.2.32'] : ['fresh', 'upgrade-1.2.31', 'upgrade-lts-1.2.32', 'upgrade-1.2.33'];
     foreach ($modes as $mode) {
         if ($mode !== 'fresh') {
-            $installedVersion = $mode === 'upgrade-1.2.31' ? '1.2.31' : '1.2.32';
+            $installedVersion = match ($mode) {
+                'upgrade-1.2.31' => '1.2.31', 'upgrade-1.2.33' => '1.2.33', default => '1.2.32'
+            };
+            require_once $root . '/lib/data_source_profile_integrity.php';
+            foreach (data_source_profile_reference_triggers() as $name => $definition) {
+                $owner->exec("DROP TRIGGER IF EXISTS `$name`");
+            }
+            if (db_index_exists('data_template_data', 'data_source_profile_id')) {
+                $owner->exec('ALTER TABLE data_template_data DROP INDEX data_source_profile_id');
+            }
             if ($installedVersion === '1.2.32') {
                 // Snapshot of the actual LTS definitions and provenance, rather
                 // than assuming its already-recorded version implies our index.
@@ -169,6 +195,10 @@ try {
                 throw new RuntimeException('Native version-gated upgrade did not advance the installed ' . $installedVersion . ' database.');
             }
             upgrade_to_1_2_33(); // An already upgraded installation must remain valid.
+            if (!data_source_profile_reference_guards_available() || !db_index_exists('data_template_data', 'data_source_profile_id')) {
+                throw new RuntimeException('Registered profile migration was skipped for installed ' . $installedVersion);
+            }
+            upgrade_to_1_2_34(); // Profile migration remains idempotent.
         }
         foreach ([65536, 16777215] as $userId) {
             $statement = $owner->prepare('REPLACE INTO settings_user (user_id, name, value) VALUES (?, ?, ?)');
