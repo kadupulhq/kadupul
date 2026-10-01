@@ -361,7 +361,8 @@ $selectedTheme = get_selected_theme();
                     )
                 );
             } else {
-                $realms = get_auth_realms(true);
+                // Nothing comes back when no domain is enabled.
+                $realms = get_auth_realms(true) ?? array();
             }
 
             // try and remember previously selected realm

@@ -75,10 +75,14 @@ test('GHSA-3jj2-v5ch-wmq5: domains_login_process binds only for domain realms', 
 test('GHSA-3jj2-v5ch-wmq5: domains_login_process checks the realm before lockout or bind', function () use ($authSource) {
     $body = test_php_function_source($authSource, 'domains_login_process');
     $allowlist = strpos($body, 'get_auth_realms(true)');
+    $lockout = strpos($body, 'auth_checkclear_lockout(');
+    $search = strpos($body, 'domains_ldap_search_dn(');
 
     expect($allowlist)->not->toBeFalse()
-        ->and($allowlist)->toBeLessThan(strpos($body, 'auth_checkclear_lockout('))
-        ->and($allowlist)->toBeLessThan(strpos($body, 'domains_ldap_search_dn('));
+        ->and($lockout)->not->toBeFalse()
+        ->and($search)->not->toBeFalse()
+        ->and($allowlist)->toBeLessThan($lockout)
+        ->and($allowlist)->toBeLessThan($search);
 });
 
 // --- GHSA-2px8-gvmq-85f3: LDAP lockout call-site ---

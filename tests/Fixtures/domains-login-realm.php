@@ -34,6 +34,13 @@ register_shutdown_function(function () {
 
 function read_config_option($key)
 {
+    if ($key === 'auth_cache_enabled' && !empty($GLOBALS['scenario']['render'])) {
+        // Read just after the realm list, so the form drew that far.
+        $GLOBALS['events'][] = 'REALMS_RENDERED';
+        ob_end_clean();
+        exit;
+    }
+
     return $GLOBALS['scenario']['config'][$key] ?? '';
 }
 function cacti_sizeof($value)
@@ -257,7 +264,38 @@ if ($mode === 'process') {
     }
     function api_plugin_hook_function($hook, ...$args)
     {
-        return $hook === 'custom_login' ? OPER_MODE_RESKIN : OPER_MODE_NATIVE;
+        if ($hook === 'custom_login' && empty($GLOBALS['scenario']['render'])) {
+            return OPER_MODE_RESKIN;
+        }
+
+        return OPER_MODE_NATIVE;
+    }
+
+    // "render" draws the login form up to the realm list and stops there.
+    function get_auth_realms($login = false)
+    {
+        // The real function returns nothing when no domain is enabled.
+        return $GLOBALS['scenario']['realms'] ?? null;
+    }
+    function get_selected_theme()
+    {
+        return 'modern';
+    }
+    function html_common_header($title) {}
+    function get_current_page()
+    {
+        return 'auth_login.php';
+    }
+    function html_escape($value)
+    {
+        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    }
+    function isempty_request_var($name)
+    {
+        return empty($_REQUEST[$name]);
+    }
+    if (!empty($scenario['render'])) {
+        ob_start();
     }
 
     require $root . '/auth_login.php';

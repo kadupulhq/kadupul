@@ -17,7 +17,7 @@ function domains_login_realm_run(PHPUnit\Framework\TestCase $test, string $mode,
     }
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . 'require ' . var_export($root . '/tests/Fixtures/domains-login-realm.php', true) . ';', $root, $mode, json_encode($scenario)),
+            array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . 'require ' . var_export($root . '/tests/Fixtures/domains-login-realm.php', true) . ';', $root, $mode, json_encode($scenario, JSON_THROW_ON_ERROR)),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -119,3 +119,18 @@ test('auth_login.php keeps domain logins out of the template and guest fallbacks
     'LDAP login still falls back to guest' => array(array('config' => array('auth_method' => '3'), 'request' => array('action' => 'login', 'realm' => '2', 'login_password' => 'secret'), 'template' => 0, 'guest' => 6), array('PROCESS', 'GUEST'), false),
     'Local realm in domains mode still uses the local path' => array(array('request' => array('action' => 'login', 'realm' => '0', 'login_password' => 'secret')), array('PROCESS', 'TEMPLATE'), false),
 ));
+
+test('auth_login.php redraws the login form after a domain login when no domain is enabled', function () {
+    $result = domains_login_realm_run($this, 'login', array(
+        'username' => 'alice',
+        'request' => array('action' => 'login', 'realm' => '1001', 'login_password' => 'secret'),
+        'config' => array('auth_method' => '4'),
+        'process_error' => true,
+        'template' => 0,
+        'guest' => 0,
+        'render' => true,
+    ));
+
+    expect($result['events'])->toBe(array('PROCESS', 'LOG_FAILED', 'REALMS_RENDERED'))
+        ->and($result['error'])->toBeTrue();
+});
