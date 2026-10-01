@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
-require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
-
 /**
  * get_md5_include_css()/get_md5_include_js() against an installation tree with
  * and without a compiled manifest. Each test runs alone because the manifest
@@ -35,15 +33,11 @@ final class LegacyAssetIncludeTest extends TestCase
         file_put_contents($this->base . '/include/themes/modern/main.css', self::CSS);
         file_put_contents($this->base . '/include/themes/custom.css', self::CSS);
 
-        $GLOBALS['config'] = ['base_path' => $this->base, 'url_path' => '/kadupul/'];
+        $GLOBALS['config'] = ['base_path' => $this->base, 'url_path' => '/kadupul/', 'is_web' => false];
         // get_include_relpath() and get_md5_hash() resolve relative paths from
         // the working directory first, as a web request does from the web root.
         chdir($this->base);
 
-        $source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
-        if (!is_string($source)) {
-            self::fail('Unable to read lib/functions.php.');
-        }
         eval(<<<'PHP'
             class CactiSecureHeaders
             {
@@ -57,15 +51,9 @@ final class LegacyAssetIncludeTest extends TestCase
             {
                 return false;
             }
-
-            function debounce_run_notification($id, $frequency = 7200)
-            {
-                return false;
-            }
             PHP);
-        foreach (['get_md5_hash', 'get_include_relpath', 'get_compiled_asset_path', 'get_md5_include_js', 'get_md5_include_css'] as $function) {
-            eval(test_php_function_source($source, $function));
-        }
+        // Execute the production file so coverage records its actual lines.
+        require dirname(__DIR__, 2) . '/lib/functions.php';
     }
 
     protected function tearDown(): void
@@ -151,6 +139,11 @@ final class LegacyAssetIncludeTest extends TestCase
     #[PreserveGlobalState(false)]
     public function testMissingIncludeEmitsNothingEvenWhenTheManifestMapsIt(): void
     {
+        // Keep the real notification debounce within its configured interval.
+        $GLOBALS['config']['config_options_array'] = [
+            'debounce_missing:include/js/removed.js' => time(),
+            'debounce_missing:include/themes/modern/removed.css' => time(),
+        ];
         $this->writeManifest(['include/js/removed.js' => '/assets/include/js/removed-Ab3dE9x.js']);
 
         self::assertSame('', get_md5_include_js('include/js/removed.js'));
