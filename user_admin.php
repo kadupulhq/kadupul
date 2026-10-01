@@ -1157,12 +1157,7 @@ function graph_perms_edit($tab, $header_label)
             }
 
             require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php';
-            $total_rows = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionTemplateGrid::count(
-                false,
-                (int) get_request_var('id'),
-                (string) get_request_var('filter'),
-                get_request_var('associated') != 'false'
-            );
+            $total_rows = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionTemplateGrid::countFromRequest(false);
 
             $sql_query = "SELECT gt.id, gt.name, COUNT(DISTINCT gl.id) AS totals, user_auth_perms.user_id
 			FROM graph_templates AS gt

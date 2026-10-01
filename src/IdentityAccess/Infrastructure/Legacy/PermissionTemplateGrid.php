@@ -10,6 +10,17 @@ namespace Kadupul\IdentityAccess\Infrastructure\Legacy;
 /** Counts templates with the same principal-scoped exceptions as the grid rows. */
 final class PermissionTemplateGrid
 {
+    /** Read the validated grid request once for either principal type. */
+    public static function countFromRequest(bool $group): int
+    {
+        return self::count(
+            $group,
+            (int) \get_request_var('id'),
+            (string) \get_request_var('filter'),
+            \get_request_var('associated') != 'false'
+        );
+    }
+
     public static function count(bool $group, int $principal, string $filter, bool $associated): int
     {
         $table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
