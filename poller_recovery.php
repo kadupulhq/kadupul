@@ -166,7 +166,7 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
         $records_deleted += (int) db_affected_rows($local_db_cnn_id);
     }
 
-    if ($records_deleted < count($rows)) {
+    if ($records_deleted < cacti_sizeof($rows)) {
         cacti_log('RECOVERY: Acknowledged samples changed before cleanup; remaining samples were retained for retry.', false, 'POLLER');
 
         return false;
@@ -310,7 +310,12 @@ if ($run) {
 				LIMIT $record_limit
 			) AS rs", '', true, $local_db_cnn_id);
 
-        if (empty($max_time)) {
+        if ($max_time === false) {
+            cacti_log('RECOVERY: Unable to read the local queue; recovery remains pending.', false, 'POLLER');
+            $recovery_failed = true;
+
+            break;
+        } elseif (empty($max_time)) {
             db_execute("DELETE FROM settings WHERE name='recovery_pid'", true, $local_db_cnn_id);
 
             break;
@@ -324,6 +329,13 @@ if ($run) {
 				ORDER BY time ASC, local_data_id ASC',
                 array($max_time)
             );
+
+            if (!is_array($rows) || !cacti_sizeof($rows)) {
+                cacti_log('RECOVERY: Unable to fetch the selected samples; recovery remains pending.', false, 'POLLER');
+                $recovery_failed = true;
+
+                break;
+            }
 
             if (cacti_sizeof($rows)) {
                 if (!poller_recovery_transfer_rows($rows, $max_allowed_packet, $remote_db_cnn_id, $local_db_cnn_id, $records_inserted)) {

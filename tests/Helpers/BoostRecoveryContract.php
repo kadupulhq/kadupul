@@ -13,11 +13,11 @@ abstract class BoostRecoveryContract extends TestCase
         $state = $this->runNative($scenario);
         $failures = array('final-failure', 'partial-failure', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'exact-boundary', 'changed-row', 'case-change', 'space-change', 'envelope-overflow', 'main-failure');
         if (str_starts_with($scenario, 'main-')) {
-            self::assertSame($scenario === 'main-failure' ? 1 : 0, $state['exit']);
-            self::assertSame($scenario === 'main-failure' ? 5 : 2, $state['status']);
-            self::assertCount($scenario === 'main-failure' ? 3 : 0, $state['local']);
-            self::assertCount($scenario === 'main-failure' ? 0 : 3, $state['remote']);
-            self::assertSame($scenario === 'main-failure', $state['pid'] !== false);
+            self::assertSame($scenario !== 'main-success' ? 1 : 0, $state['exit']);
+            self::assertSame($scenario !== 'main-success' ? 5 : 2, $state['status']);
+            self::assertCount($scenario !== 'main-success' ? 3 : 0, $state['local']);
+            self::assertCount($scenario !== 'main-success' ? 0 : 3, $state['remote']);
+            self::assertSame($scenario !== 'main-success', $state['pid'] !== false);
             self::assertCount($scenario === 'main-failure' ? 1 : 0, $state['rejectedPackets']);
             return;
         }
@@ -97,7 +97,7 @@ abstract class BoostRecoveryContract extends TestCase
     public static function scenarios(): array
     {
         $result = array();
-        foreach (array('final-failure', 'partial-failure', 'success', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'default-limit', 'split-boundary', 'exact-boundary', 'chunk-250', 'chunk-251', 'late-row', 'changed-row', 'retry', 'quote-output', 'main-failure', 'main-success', 'case-change', 'space-change', 'case-retry', 'space-retry', 'full-packet-exact', 'envelope-overflow') as $scenario) {
+        foreach (array('final-failure', 'partial-failure', 'success', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'default-limit', 'split-boundary', 'exact-boundary', 'chunk-250', 'chunk-251', 'late-row', 'changed-row', 'retry', 'quote-output', 'main-failure', 'main-success', 'main-max-failure', 'main-read-failure', 'case-change', 'space-change', 'case-retry', 'space-retry', 'full-packet-exact', 'envelope-overflow') as $scenario) {
             $result[$scenario] = array($scenario);
         }
         return $result;

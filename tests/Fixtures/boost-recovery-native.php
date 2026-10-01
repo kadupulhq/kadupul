@@ -153,6 +153,9 @@ function db_affected_rows($connection = false)
 }
 function db_fetch_cell($sql, $column = '', $log = true, $connection = false)
 {
+    if ($GLOBALS['scenario'] === 'main-max-failure' && str_contains($sql, 'MAX(time)')) {
+        return false;
+    }
     return recovery_native_statement($sql, array(), $connection)->fetchColumn();
 }
 function db_fetch_row($sql, $log = true, $connection = false)
@@ -164,6 +167,9 @@ function db_fetch_row($sql, $log = true, $connection = false)
 }
 function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $connection = false)
 {
+    if ($GLOBALS['scenario'] === 'main-read-failure' && str_contains($sql, 'poller_output_boost')) {
+        return false;
+    }
     return recovery_native_statement($sql, $params, $connection)->fetchAll(PDO::FETCH_ASSOC);
 }
 register_shutdown_function(function () use ($local, $remote, $directory) {
