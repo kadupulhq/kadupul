@@ -490,7 +490,10 @@ class Ldap {
 		/* Set debug if selective debug is enabled.  This places log data into the apache error_log */
 		if (get_selective_log_level() == POLLER_VERBOSITY_DEBUG) {
 			cacti_log('LDAP: Setting php-ldap into DEBUG mode.  Check your Web Server error_log for details', false, 'AUTH', $this->debug);
-			ldap_set_option(null, LDAP_OPT_DEBUG_LEVEL, 7);
+
+			/* Trace and arguments only.  0x02 is libldap's packet level, and a simple bind
+			 * packet carries the password in clear, so it must never reach error_log. */
+			ldap_set_option(null, LDAP_OPT_DEBUG_LEVEL, 0x01 | 0x04);
 		}
 
 		if (getenv('TLS_CERT') != '' && defined('LDAP_OPT_X_TLS_CERTFILE')) {
