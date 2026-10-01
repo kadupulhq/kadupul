@@ -1028,6 +1028,20 @@ def main():
 
     with tempfile.TemporaryDirectory(prefix='entry-classifier-') as directory:
         root = tree(directory)
+        for source in ("<?php\ninclude($target);\n", "<?php\nrequire($_GET['target']);\n", "<?php\ninclude($target);\n" + AUTH):
+            count += 1
+            (root / 'dynamic.php').write_text(source)
+            request = {'root': str(root), 'files': ['dynamic.php'], 'served': ['dynamic.php'], 'plugin_realms': {}}
+            result = subprocess.run(
+                [os.environ.get('PHP', 'php'), '-d', 'display_errors=1', '-d', 'error_reporting=-1', str(inventory.CLASSIFIER)],
+                input=json.dumps(request), capture_output=True, text=True, timeout=inventory.CLASSIFIER_TIMEOUT_SECONDS)
+            try:
+                rows = json.loads(result.stdout)['rows']
+            except (json.JSONDecodeError, KeyError):
+                rows = []
+            if result.returncode != 0 or result.stderr or len(rows) != 1 or rows[0][1] != 'unknown':
+                failures.append('unresolved include must emit clean JSON and remain unknown: %s' % source.strip())
+        (root / 'dynamic.php').unlink()
         for case, (source, expected) in {**CASES, **NEW_CASES}.items():
             count += 1
             got = gate(root, 'page.php', source)[0]
