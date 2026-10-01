@@ -3,10 +3,27 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Concrete route samples must preserve parent-child bindings and fail closed."""
 import unittest
-from entry_point_authorization import sample, route_fixtures
+from entry_point_authorization import sample, route_fixtures, has_feature_realm
 
 
 class RouteSamples(unittest.TestCase):
+    def test_feature_pages_are_probed_without_console_only_shortcut(self):
+        for entry in ('app.php/data-inputs/actions/delete', 'app.php/links',
+                      'app.php/graph-definitions/vdefs/{id}/items',
+                      'app.php/graph-definitions/cdefs', 'app.php/graphing/colors/import',
+                      'app.php/inventory/device-templates/action/delete',
+                      'app.php/aggregate-templates/new',
+                      'app.php/graphing/gprint-presets/new',
+                      'app.php/graphing/color-templates/new',
+                      'app.php/graphing/color-template-items/legacy',
+                      'data_input.php', 'links.php', 'host_templates.php'):
+            with self.subTest(entry=entry):
+                self.assertTrue(has_feature_realm(entry))
+        for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
+                      'app.php/inventory/devices/{id}', 'app.php/links-extra'):
+            with self.subTest(entry=entry):
+                self.assertFalse(has_feature_realm(entry))
+
     def test_parent_child_and_enum_parameters(self):
         fixtures = {'graphing/color-templates': {'id': 12, 'itemId': 31},
                     'graph-definitions/vdefs': {'vdefId': 4, 'itemId': 5},
