@@ -1,4 +1,5 @@
 """Isolated real HTTP, MariaDB, worker and collector handoff checks."""
+import re
 from pathlib import Path
 from types import SimpleNamespace
 from html.parser import HTMLParser
@@ -63,10 +64,12 @@ def verify_data_inputs(harness, session, check):
     for data_name in ('first', 'second'):
         path = f'/app.php/data-inputs/{target}/fields/0?direction=in'
         fields, _ = page(session, path)
-        payload = {'data_input_field[name]':data_name.title(), 'data_input_field[data_name]':data_name, 'data_input_field[input_output]':'in', 'data_input_field[type_code]':'', 'data_input_field[regexp_match]':'', 'data_input_field[revision]':fields['data_input_field[revision]'], 'data_input_field[_token]':fields['data_input_field[_token]']}
+        payload = {'data_input_field[name]':data_name.title(), 'data_input_field[data_name]':data_name, 'data_input_field[input_output]':'out' if data_name == 'first' else 'in', 'data_input_field[type_code]':'', 'data_input_field[regexp_match]':'', 'data_input_field[revision]':fields['data_input_field[revision]'], 'data_input_field[_token]':fields['data_input_field[_token]']}
         status, body, _ = post(session, path, payload)
         check(status == 200, 'input field saves through Symfony form and worker')
         field_ids.append(int(harness.sql(f"SELECT id FROM data_input_fields WHERE data_input_id={target} AND data_name='{data_name}'").strip()))
+        if data_name == 'first':
+            check(harness.sql(f'SELECT input_output FROM data_input_fields WHERE id={field_ids[-1]}').strip() == 'in', 'forged input-form hidden direction remains server-bound to input')
     check(harness.sql(f"SELECT GROUP_CONCAT(data_name ORDER BY sequence) FROM data_input_fields WHERE data_input_id={target}").strip() == 'second,first', 'placeholder occurrence controls input field sequence')
     edit = f'/app.php/data-inputs/{target}/edit'
     stale, _ = page(session, edit)
@@ -79,10 +82,12 @@ def verify_data_inputs(harness, session, check):
     payload['data_input_method[input_string]'] = 'perl example.pl; rm anything'
     check(post(session, edit, payload)[0] == 422 and harness.sql(f'SELECT HEX(input_string) FROM data_input WHERE id={target}').strip().lower() == command.encode().hex(), 'shell metacharacter validation preserves stored command on rejection')
     output_path=f'/app.php/data-inputs/{target}/fields/0?direction=out'
-    fields, _ = page(session, output_path)
-    payload={'data_input_field[name]':'Result','data_input_field[data_name]':'result','data_input_field[input_output]':'out','data_input_field[update_rra]':'1','data_input_field[revision]':fields['data_input_field[revision]'],'data_input_field[_token]':fields['data_input_field[_token]']}
+    fields, body = page(session, output_path)
+    check(bool(re.search(r'name="data_input_field\[update_rra\]"[^>]+checked="checked"', body)), 'new output field defaults to enabled RRA updates')
+    payload={'data_input_field[name]':'Result','data_input_field[data_name]':'result','data_input_field[input_output]':'in','data_input_field[update_rra]':'1','data_input_field[revision]':fields['data_input_field[revision]'],'data_input_field[_token]':fields['data_input_field[_token]']}
     check(post(session, output_path, payload)[0] == 200, 'output field and RRA option persist')
     output=int(harness.sql(f"SELECT id FROM data_input_fields WHERE data_input_id={target} AND data_name='result'").strip())
+    check(harness.sql(f"SELECT CONCAT(input_output,':',update_rra) FROM data_input_fields WHERE id={output}").strip() == 'out:on', 'forged output-form hidden direction preserves output and RRA controls')
     harness.sql(f"INSERT INTO data_template_rrd(hash,data_input_field_id) VALUES ('{uuid.uuid4().hex}',{output})")
     delete_path=f'/app.php/data-inputs/{target}/field_delete?field={output}'
     fields, _=page(session,delete_path)

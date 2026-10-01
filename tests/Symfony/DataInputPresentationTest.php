@@ -98,6 +98,37 @@ final class DataInputPresentationTest extends TestCase
         }
     }
 
+    public function testNewOutputFieldsDefaultToUpdatingRra(): void
+    {
+        [$kernel, $container] = $this->authorizedKernel();
+        try {
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->method('execute')->willReturn(['method' => ['id' => 3, 'name' => 'Fixture', 'type_id' => 1, 'input_string' => '<x>'], 'fields' => [], 'revision' => str_repeat('a', 64)]);
+            $container->set(DataInputGateway::class, $gateway);
+            $response = $kernel->handle(Request::create('/data-inputs/3/fields/0?direction=out'));
+            self::assertSame(200, $response->getStatusCode());
+            self::assertMatchesRegularExpression('/<input[^>]+name="data_input_field\[update_rra\]"[^>]+checked="checked"/', $response->getContent());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testBulkConfirmationUsesOneSelectionWorkerForOneHundredInputs(): void
+    {
+        [$kernel, $container] = $this->authorizedKernel();
+        try {
+            $ids = range(1, 100);
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->expects(self::once())->method('execute')->with(9, 'selection', 0, ['ids' => $ids])->willReturn(['selection' => array_fill_keys($ids, str_repeat('a', 64)), 'names' => array_map(static fn(int $id): string => 'Input ' . $id, $ids)]);
+            $container->set(DataInputGateway::class, $gateway);
+            $response = $kernel->handle(Request::create('/data-inputs/actions/duplicate?' . http_build_query(['ids' => $ids])));
+            self::assertSame(200, $response->getStatusCode());
+            self::assertStringContainsString('Input 100', $response->getContent());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     private function authorizedKernel(): array
     {
         $kernel = new Kernel('test', true);

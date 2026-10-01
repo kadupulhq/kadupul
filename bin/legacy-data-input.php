@@ -27,7 +27,7 @@ try {
         throw new InvalidArgumentException('Invalid payload.');
     }
     $command = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || !is_int($command['actor'] ?? null) || $command['actor'] < 1 || !is_int($command['id'] ?? null) || $command['id'] < 0 || !is_string($command['nonce'] ?? null) || !is_array($command['payload'] ?? null) || !in_array($command['action'] ?? null, ['list', 'find', 'save', 'field_save', 'field_delete', 'delete', 'duplicate', 'propagate', 'whitelist', 'bulk_delete', 'bulk_duplicate'], true)) {
+    if (!is_array($command) || !is_int($command['actor'] ?? null) || $command['actor'] < 1 || !is_int($command['id'] ?? null) || $command['id'] < 0 || !is_string($command['nonce'] ?? null) || !is_array($command['payload'] ?? null) || !in_array($command['action'] ?? null, ['list', 'find', 'selection', 'save', 'field_save', 'field_delete', 'delete', 'duplicate', 'propagate', 'whitelist', 'bulk_delete', 'bulk_duplicate'], true)) {
         throw new InvalidArgumentException('Invalid command.');
     }
     $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
@@ -42,7 +42,7 @@ try {
     $id = $command['id'];
     $action = $command['action'];
     $payload = $command['payload'];
-    $writes = !in_array($action, ['list', 'find'], true);
+    $writes = !in_array($action, ['list', 'find', 'selection'], true);
     if ($writes) {
         dataInputWorkerStorage($db);
     }
@@ -86,6 +86,8 @@ try {
         $total = (int) $db->query('SELECT COUNT(*) FROM data_input di ' . $where)->fetchColumn();
         $data = dataInputWorkerRead($db, 'SELECT di.*, SUM(CASE WHEN dtd.local_data_id=0 THEN 1 ELSE 0 END) AS templates, SUM(CASE WHEN dtd.local_data_id>0 THEN 1 ELSE 0 END) AS data_sources FROM data_input di LEFT JOIN data_template_data dtd ON dtd.data_input_id=di.id ' . $where . ' GROUP BY di.id ORDER BY ' . $sort . ' ' . $direction . ',di.id LIMIT ' . (int) $rows . ' OFFSET ' . (($page - 1) * $rows));
         $result = ['items' => $data, 'total' => $total, 'filter' => $filter, 'rows' => $rows, 'default_rows' => $defaultRows, 'page' => $page, 'sort' => $sort, 'direction' => $direction];
+    } elseif ($action === 'selection') {
+        $result = dataInputWorkerSelection($db, $payload['ids'] ?? null);
     } elseif ($action === 'find') {
         $result = $id === 0 ? ['method' => [], 'fields' => [], 'revision' => '', 'whitelist' => 'disabled'] : dataInputWorkerState($db, $id);
         if ($id > 0 && isset($config['input_whitelist'])) {
@@ -296,6 +298,40 @@ function dataInputWorkerRead(PDO $db, string $sql, array $params = []): array
     $query = $db->prepare($sql);
     $query->execute($params);
     return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+function dataInputWorkerSelection(PDO $db, mixed $ids): array
+{
+    if (!is_array($ids) || !array_is_list($ids) || $ids === [] || count($ids) > 100) {
+        throw new InvalidArgumentException('Invalid selection.');
+    }
+    foreach ($ids as $id) {
+        if (!is_int($id) || $id < 1 || $id > 99999999) {
+            throw new InvalidArgumentException('Invalid selection.');
+        }
+    }
+    $ids = array_values(array_unique($ids));
+    sort($ids, SORT_NUMERIC);
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+    $methods = dataInputWorkerRead($db, "SELECT * FROM data_input WHERE id IN ($placeholders) ORDER BY id", $ids);
+    if (count($methods) !== count($ids)) {
+        throw new InvalidArgumentException('Data input not found.');
+    }
+    $fields = dataInputWorkerRead($db, "SELECT * FROM data_input_fields WHERE data_input_id IN ($placeholders) ORDER BY data_input_id,id", $ids);
+    $children = [];
+    foreach ($fields as $field) {
+        $children[(int) $field['data_input_id']][] = $field;
+    }
+    $selection = [];
+    $names = [];
+    foreach ($methods as $method) {
+        if (in_array($method['hash'], DataInputState::SYSTEM, true)) {
+            throw new InvalidArgumentException('Data input not found.');
+        }
+        $id = (int) $method['id'];
+        $selection[$id] = DataInputState::revision($method, $children[$id] ?? []);
+        $names[] = $method['name'];
+    }
+    return ['selection' => $selection, 'names' => $names];
 }
 function dataInputWorkerState(PDO $db, int $id, bool $lock = false): array
 {

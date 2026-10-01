@@ -116,7 +116,7 @@ final class DataInputController
             if (!in_array($direction, ['in', 'out'], true)) {
                 throw new \InvalidArgumentException('Invalid field direction.');
             }
-            $data ??= ['name' => '', 'data_name' => '', 'input_output' => $direction, 'type_code' => '', 'regexp_match' => '', 'allow_nulls' => '', 'update_rra' => ''];
+            $data ??= ['name' => '', 'data_name' => '', 'input_output' => $direction, 'type_code' => '', 'regexp_match' => '', 'allow_nulls' => '', 'update_rra' => $direction === 'out' ? 'on' : ''];
             foreach (['allow_nulls', 'update_rra'] as $key) {
                 $data[$key] = $data[$key] === 'on';
             }
@@ -134,6 +134,7 @@ final class DataInputController
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
                 try {
+                    $data['input_output'] = $direction;
                     $result = $methods->execute('field_save', $id, ['field' => $field, 'revision' => $data['revision'], 'data' => $data]);
                     return new RedirectResponse($urls->generate('data_input_edit', ['id' => $id, 'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
@@ -212,13 +213,9 @@ final class DataInputController
                 } $selected[(int) $raw] = true;
             }
             ksort($selected, SORT_NUMERIC);
-            $selection = [];
-            $names = [];
-            foreach (array_keys($selected) as $target) {
-                $state = $methods->execute('find', $target);
-                $selection[$target] = $state['revision'];
-                $names[] = $state['method']['name'];
-            }
+            $snapshot = $methods->execute('selection', 0, ['ids' => array_keys($selected)]);
+            $selection = $snapshot['selection'];
+            $names = $snapshot['names'];
             $form = $forms->create(DataInputActionType::class, ['revision' => json_encode($selection, JSON_THROW_ON_ERROR), 'title' => '<input_title> (1)'], ['duplicate' => $operation === 'duplicate']);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->getExtraData() !== []) {

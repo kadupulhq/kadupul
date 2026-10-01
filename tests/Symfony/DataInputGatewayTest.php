@@ -70,6 +70,32 @@ final class DataInputGatewayTest extends TestCase
         yield ['duplicate', 'duplicate', false, 4];
         yield ['audit_failure', 'save', false, 3];
     }
+    #[DataProvider('selectionResponses')]
+    public function testBulkSelectionResponsesAreVerifiedBeforePresentation(string $mode, bool $valid): void
+    {
+        [$gateway, $audit, $directory] = $this->gateway($mode);
+        try {
+            if (!$valid) {
+                $this->expectException(\RuntimeException::class);
+                $this->expectExceptionMessage('target could not be verified');
+            }
+            $result = $gateway->execute(9, 'selection', 0, ['ids' => [3]]);
+            self::assertSame([3 => str_repeat('a', 64)], $result['selection']);
+            self::assertSame(['Fixture'], $result['names']);
+            self::assertSame([], $audit->events);
+        } finally {
+            $this->cleanup($directory);
+        }
+    }
+
+    public static function selectionResponses(): iterable
+    {
+        yield ['selection_ok', true];
+        yield ['selection_id', false];
+        yield ['selection_revision', false];
+        yield ['selection_name', false];
+    }
+
     private function gateway(string $mode): array
     {
         $directory = sys_get_temp_dir() . '/data-input-gateway-' . bin2hex(random_bytes(8));
@@ -79,6 +105,15 @@ final class DataInputGatewayTest extends TestCase
 <?php
 $c=json_decode(stream_get_contents(STDIN),true);
 $mode=json_decode(file_get_contents('mode.json'),true);
+if (str_starts_with($mode, 'selection_')) {
+    $result = ['selection' => [3 => str_repeat('a', 64)], 'names' => ['Fixture']];
+    if ($mode === 'selection_id') $result['selection'] = [4 => str_repeat('a', 64)];
+    if ($mode === 'selection_revision') $result['selection'][3] = 'bad';
+    if ($mode === 'selection_name') $result['names'] = [42];
+    echo 'KADUPUL_DATA_INPUT_RESULT=', json_encode(['actor' => $c['actor'], 'action' => $c['action'], 'request_id' => $c['id'], 'nonce' => $c['nonce'], 'status' => 'ok', 'result' => $result]), PHP_EOL;
+    exit;
+}
+
 $r=['actor'=>$c['actor'],'action'=>$c['action'],'request_id'=>$c['id'],'nonce'=>$c['nonce'],'status'=>'ok','result'=>['id'=>$c['id']]];
 if (in_array($mode,['actor','action','request_id','nonce','result'],true)) $r[$mode]='mismatch';
 if ($mode==='target'||$mode==='duplicate') $r['result']['id']=4;

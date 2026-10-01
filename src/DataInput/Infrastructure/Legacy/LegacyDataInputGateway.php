@@ -52,7 +52,7 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
                 throw new \RuntimeException('Operation failed. Reload before retrying.');
             }
             $result = $response['result'];
-            if (!in_array($action, ['list', 'find', 'bulk_delete', 'bulk_duplicate'], true)) {
+            if (!in_array($action, ['list', 'find', 'selection', 'bulk_delete', 'bulk_duplicate'], true)) {
                 if (!is_int($result['id'] ?? null) || $result['id'] < 1 || ($action !== 'duplicate' && $id > 0 && $result['id'] !== $id)) {
                     throw new \RuntimeException('Operation target could not be verified.');
                 }
@@ -60,10 +60,27 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
             if ($action === 'find' && $id > 0 && (int) ($result['method']['id'] ?? 0) !== $id) {
                 throw new \RuntimeException('Operation target could not be verified.');
             }
+            if ($action === 'selection') {
+                $selection = $result['selection'] ?? null;
+                $names = $result['names'] ?? null;
+                if (!is_array($selection) || !is_array($names) || array_keys($selection) !== ($payload['ids'] ?? null) || !array_is_list($names) || count($names) !== count($selection)) {
+                    throw new \RuntimeException('Operation target could not be verified.');
+                }
+                foreach ($selection as $revision) {
+                    if (!is_string($revision) || !preg_match('/\A[a-f0-9]{64}\z/D', $revision)) {
+                        throw new \RuntimeException('Operation target could not be verified.');
+                    }
+                }
+                foreach ($names as $name) {
+                    if (!is_string($name)) {
+                        throw new \RuntimeException('Operation target could not be verified.');
+                    }
+                }
+            }
             $outcome = $status === 'ok' ? AuditEvent::SUCCEEDED : AuditEvent::FAILED;
             return $response['result'] + ['partial' => $status === 'partial'];
         } finally {
-            if (!in_array($action, ['list', 'find'], true)) {
+            if (!in_array($action, ['list', 'find', 'selection'], true)) {
                 try {
                     $this->audit->record(new AuditEvent($nonce, $actorId, 'data-input.' . $action, 'data-input', (string) ($response['result']['id'] ?? $id), $decision, $outcome));
                 } catch (\Throwable) { /* Audit cannot overwrite confirmed persistence. */
