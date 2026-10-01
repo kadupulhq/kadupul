@@ -133,3 +133,40 @@ test('an unterminated form tag gets no token', function () {
 
     expect($result['pages'][0])->toBe('<form method="post" action="graphs.php" title="x');
 });
+
+// {F} marks where the handler must insert the token field.
+test('form tags are read only where the browser parses markup', function (string $expected) {
+    $result = rewriteCsrfMagicPages(array(str_replace('{F}', '', $expected)));
+
+    expect($result['pages'][0])->toBe(str_replace('{F}', $result['field'], $expected));
+})->with(array(
+    'nested in a cross-origin form' => array('<form method="post" action="https://evil.example/"><form method="post"><button>x</button></form>'),
+    'textarea in a cross-origin form' => array('<form method="post" action="https://evil.example/"><textarea name="x"><form method="post"></textarea></form>'),
+    'end tag text inside textarea' => array('<form method="post" action="//evil.example/"><textarea></form></textarea><form method="post"></form>'),
+    'end tag text inside an attribute' => array('<form method="post" action="//evil.example/"><p title="</form>"><form method="post"></form>'),
+    'end tag inside select' => array('<form method="post" action="//evil.example/"><select></form></select><form method="post"></form>'),
+    'closed forms in sequence' => array('<form method="post">{F}</form><form method="post" action="graphs.php">{F}</form>'),
+    'textarea' => array('<textarea><form method="post"></textarea><form method="post">{F}</form>'),
+    'title' => array('<title><form method="post"></title><form method="post">{F}</form>'),
+    'script' => array('<script>var f = \'<form method="post">\';</script><form method="post">{F}</form>'),
+    'style' => array('<style><form method="post"></style><form method="post">{F}</form>'),
+    'xmp' => array('<xmp><form method="post"></xmp><form method="post">{F}</form>'),
+    'iframe' => array('<iframe><form method="post"></iframe><form method="post">{F}</form>'),
+    'noembed' => array('<noembed><form method="post"></noembed><form method="post">{F}</form>'),
+    'noframes' => array('<noframes><form method="post"></noframes><form method="post">{F}</form>'),
+    'upper-case end tag with attributes' => array('<TEXTAREA rows=2><form method="post"></TEXTAREA title=">"><form method="post">{F}</form>'),
+    'end tag name prefix does not close' => array('<textarea></textareax><form method="post"></textarea><form method="post">{F}</form>'),
+    'comment' => array('<!-- <form method="post"> --><form method="post">{F}</form>'),
+    'comment closed by --!>' => array('<!-- <form method="post"> --!><form method="post">{F}</form>'),
+    'abrupt empty comment' => array('<!--><form method="post">{F}</form>'),
+    'abrupt dash comment' => array('<!---><form method="post">{F}</form>'),
+    'bogus comment' => array('<?x <form method="post">?><form method="post">{F}</form>'),
+    'doctype' => array('<!DOCTYPE html><form method="post">{F}</form>'),
+    'template forms' => array('<template><form method="post">{F}</form></template><form method="post">{F}</form>'),
+    'unterminated textarea' => array('<textarea><form method="post">'),
+    'unterminated comment' => array('<!-- <form method="post">'),
+    'escaped script' => array('<script><!--<script></script></form></script><form method="post"></form>'),
+    'noscript' => array('<noscript></noscript><form method="post"></form>'),
+    'svg' => array('<svg></svg><form method="post"></form>'),
+    'cdata' => array('<![CDATA[x]]><form method="post"></form>'),
+));
