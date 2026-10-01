@@ -28,7 +28,7 @@ function _tree_function_body(string $source, string $needle): string
 }
 
 test('get_host_sort_type guards against a missing row before the constant comparison', function () use ($source) {
-    $body = _tree_function_body($source, 'function get_host_sort_type() {');
+    $body = _tree_function_body($source, 'function get_host_sort_type()');
 
     $guardPos = strpos($body, '$sort_type === false');
     expect($guardPos)->not->toBeFalse('=== false guard must be present');
@@ -43,10 +43,11 @@ test('get_host_sort_type guards against a missing row before the constant compar
 });
 
 test('get_branch_sort_type guards against a missing row before the switch', function () use ($source) {
-    $body = _tree_function_body($source, 'function get_branch_sort_type() {');
+    $body = _tree_function_body($source, 'function get_branch_sort_type()');
 
     $guardPos  = strpos($body, '$sort_type === false');
-    $switchPos = strpos($body, 'switch($sort_type)');
+    preg_match('/switch\s*\(\$sort_type\)/', $body, $switch, PREG_OFFSET_CAPTURE);
+    $switchPos = $switch[0][1] ?? false;
 
     expect($guardPos)->not->toBeFalse('=== false guard must be present');
     expect($switchPos)->not->toBeFalse();

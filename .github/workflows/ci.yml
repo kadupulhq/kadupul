@@ -203,9 +203,13 @@ jobs:
         # on every diagnostic, including CSV default-argument deprecations.
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
 
-      - name: Verify never return contracts
+      - name: Verify never and legacy regression contracts
         working-directory: tests
-        run: php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/NeverReturnTypeTest.php --colors=never
+        run: |
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/NeverReturnTypeTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Security/Auth/ReportAdminGroupRealmTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/HardeningAuth2026RegressionTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/TreeSortFalseGuardTest.php --colors=never
 
       - name: Install RRDtool for spike-removal contracts
         run: sudo apt-get update && sudo apt-get install -y rrdtool
