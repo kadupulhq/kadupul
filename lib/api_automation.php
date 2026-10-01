@@ -140,14 +140,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 								<?php
                                 $host_templates = db_fetch_assoc('SELECT id,name FROM host_template ORDER BY name');
 
-    if (cacti_sizeof($host_templates)) {
-        foreach ($host_templates as $host_template) {
-            print "<option value='" . $host_template['id'] . "'";
-            if (get_request_var('host_template_id') == $host_template['id']) {
-                print ' selected';
-            } print '>' . html_escape($host_template['name']) . '</option>';
-        }
-    }
+    html_create_list($host_templates, 'name', 'id', get_request_var('host_template_id'));
     ?>
 							</select>
 						</td>
@@ -171,7 +164,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 						</td>
 						<td>
 							<select id='rowsd'>
-								<?php print html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rowsd'));?>
+								<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rowsd'));?>
 							</select>
 						</td>
 						<td>
@@ -479,7 +472,7 @@ function display_matching_graphs($rule, $rule_type, $url)
 						</td>
 						<td>
 							<select id='rows'>
-								<?php print html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
+								<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
 							</select>
 						</td>
 					</tr>
@@ -707,7 +700,7 @@ function display_new_graphs($rule, $url)
 						</td>
 						<td>
 							<select id='orows'>
-								<?php print html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
+								<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
 							</select>
 						</td>
 						<td>
@@ -1081,14 +1074,7 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 							<?php
                             $host_templates = db_fetch_assoc('select id,name from host_template order by name');
 
-    if (cacti_sizeof($host_templates)) {
-        foreach ($host_templates as $host_template) {
-            print "<option value='" . $host_template['id'] . "'";
-            if (get_request_var('host_template_id') == $host_template['id']) {
-                print ' selected';
-            } print '>' . html_escape($host_template['name']) . '</option>';
-        }
-    }
+    html_create_list($host_templates, 'name', 'id', get_request_var('host_template_id'));
     ?>
 						</select>
 					</td>
@@ -1112,7 +1098,7 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 					</td>
 					<td>
 						<select id='rows'>
-								<?php print html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
+								<?php html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
 							</select>
 					</td>
 					<td>
