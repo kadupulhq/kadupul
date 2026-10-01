@@ -516,6 +516,10 @@ function set_config_option($config_name, $value, $remote = false)
         array($config_name, $value)
     );
 
+    if ($success === false) {
+        return false;
+    }
+
     if ($remote && !is_remote_path_setting($config_name)) {
         $gone_time = read_config_option('poller_interval') * 2;
 
