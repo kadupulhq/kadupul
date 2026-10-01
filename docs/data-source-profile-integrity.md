@@ -15,6 +15,13 @@ rule; unchanged historical orphan IDs remain editable, and zero retains its
 legacy meaning. Assigning a new orphan reference is rejected. No existing
 references are rewritten and no foreign key conversion is performed.
 
+Both bulk collector replication and per-device replication copy every referenced
+nonzero profile parent to the collector before writing `data_template_data`.
+The copy checks the main catalog and the collector save result. A missing parent
+or rejected parent copy stops that table's replication before its schema or
+existing rows are changed. This keeps guards active on collectors without losing
+their existing data-source definitions when custom profiles are introduced.
+
 The installation account must have TRIGGER privileges on the database, and the
 trigger definer must retain permission to read and lock `data_source_profiles`.
 The application account also needs TRIGGER privileges to inspect the guard

@@ -2268,6 +2268,13 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
  */
 function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate = true, $exclude = false, $level = POLLER_VERBOSITY_NONE)
 {
+    if ($table === 'data_template_data') {
+        require_once __DIR__ . '/data_source_profile_integrity.php';
+        if (!is_array($data) || !replicate_data_source_profile_parents($conn, $data)) {
+            cacti_log('ERROR: Profile parents could not be replicated; existing collector data-source definitions were retained.', false, 'REPLICATE');
+            return false;
+        }
+    }
     // Get the create table syntax just in case
     $create_table = db_fetch_row("SHOW CREATE TABLE `$table`");
 
@@ -2561,6 +2568,13 @@ function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, 
 
 function replicate_table_to_poller($conn, &$data, $table, $exclude = false)
 {
+    if ($table === 'data_template_data') {
+        require_once __DIR__ . '/data_source_profile_integrity.php';
+        if (!is_array($data) || !replicate_data_source_profile_parents($conn, $data)) {
+            cacti_log('ERROR: Profile parents could not be replicated; existing collector data-source definitions were retained.', false, 'REPLICATE');
+            return false;
+        }
+    }
     $max_packet  = db_fetch_row("SHOW GLOBAL VARIABLES LIKE 'max_allowed_packet'", true, $conn);
 
     if (cacti_sizeof($max_packet)) {

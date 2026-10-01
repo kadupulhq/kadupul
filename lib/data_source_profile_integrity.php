@@ -95,3 +95,46 @@ function data_source_profile_reference_guards_available(
 
     return true;
 }
+
+/** Copy the parent catalog before either collector replication path writes children. */
+function replicate_data_source_profile_parents(PDO $connection, array $data): bool
+{
+    $ids = [];
+    foreach ($data as $row) {
+        $id = $row['data_source_profile_id'] ?? 0;
+        if (!is_numeric($id) || (int) $id < 0) {
+            return false;
+        }
+        if ((int) $id > 0) {
+            $ids[(int) $id] = (int) $id;
+        }
+    }
+    if (!$ids) {
+        return true;
+    }
+    try {
+        $profiles = db_fetch_assoc_prepared(
+            'SELECT * FROM data_source_profiles WHERE id IN (' . implode(',', array_fill(0, count($ids), '?')) . ')',
+            array_values($ids)
+        );
+        if (!is_array($profiles) || count($profiles) !== count($ids)) {
+            return false;
+        }
+        if (!db_table_exists('data_source_profiles', false, $connection)) {
+            $definition = db_fetch_row('SHOW CREATE TABLE data_source_profiles');
+            if (!isset($definition['Create Table']) || !db_execute($definition['Create Table'], false, $connection)) {
+                return false;
+            }
+        }
+        foreach ($profiles as $profile) {
+            if (!isset($profile['id']) || !isset($ids[(int) $profile['id']])
+                || sql_save($profile, 'data_source_profiles', 'id', true, $connection) === false) {
+                return false;
+            }
+        }
+        return true;
+    } catch (Throwable $error) {
+        cacti_log('ERROR: Unable to replicate profile parents: ' . $error->getMessage(), false, 'REPLICATE');
+        return false;
+    }
+}

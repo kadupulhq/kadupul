@@ -18,6 +18,33 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return true;
     }
 
+    /** @dataProvider collectorScenarios */
+    public function testCollectorCopiesParentsBeforeDataDefinitions(string $mode, string $failure): void
+    {
+        $state = $this->runNative(array('collector' => $mode, 'failure' => $failure));
+        if ($failure !== '') {
+            self::assertSame(array(1), array_map('intval', array_column($state['rows'], 'id')));
+            self::assertFalse($state['parent']);
+            self::assertStringContainsString('existing collector data-source definitions were retained', implode('\n', $state['log']));
+            self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote' && str_starts_with($call[1], 'TRUNCATE')));
+        } else {
+            self::assertSame(77, (int) $state['parent']);
+            self::assertSame($mode === 'bulk' ? array(2) : array(1,2), array_map('intval', array_column($state['rows'], 'id')));
+            self::assertSame(77, (int) end($state['rows'])['data_source_profile_id']);
+        }
+    }
+
+    public static function collectorScenarios(): array
+    {
+        $cases = array();
+        foreach (array('bulk', 'device') as $mode) {
+            foreach (array('', 'copy', 'missing') as $failure) {
+                $cases[$mode . ' ' . ($failure ?: 'custom profile')] = array($mode, $failure);
+            }
+        }
+        return $cases;
+    }
+
     /** @dataProvider deletionOutcomes */
     public function testConcurrentWriterChecksParentAfterDeletionFinishes(string $outcome, string $writer): void
     {

@@ -164,7 +164,7 @@ abstract class ProfileDeletionContract extends TestCase
         mkdir($directory, 0700);
         $coverage = $this->getTestResultObject()->getCodeCoverage();
         try {
-            $fixture = isset($scenario['guard_unit']) ? 'profile-reference-guard-unit.php' : (isset($scenario['reference_guard']) ? 'profile-reference-race-native.php' : (isset($scenario['upgrade']) ? 'profile-index-upgrade-native.php' : 'profile-deletion-native.php'));
+            $fixture = isset($scenario['collector']) ? 'profile-collector-replication-native.php' : (isset($scenario['guard_unit']) ? 'profile-reference-guard-unit.php' : (isset($scenario['reference_guard']) ? 'profile-reference-race-native.php' : (isset($scenario['upgrade']) ? 'profile-index-upgrade-native.php' : 'profile-deletion-native.php')));
             $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/' . $fixture, json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
             if ($coverage !== null) {
                 $command[] = $directory;
