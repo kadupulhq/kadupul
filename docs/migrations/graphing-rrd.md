@@ -78,7 +78,7 @@ second implementation or a module boundary needs one.
 | Web-side graph reads through DBAL; collector writes stay on `db_*` | Pending |
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
 | Callers moved to Graphing services; wrappers marked `#[\Deprecated]` | Pending |
-| P0: render-triggered Boost zone correction with recorded before/after goldens | Planned; before R0/R1 |
+| P0: explicit SVG override and render-triggered Boost zone corrections with recorded before/after goldens | Planned; before R0/R1 |
 | R0: render characterization per context field and mode, input census, hook string contract, timing script | Planned |
 | R1: `RenderContext` and `GraphRequest` built once per render; Boost key from the context | Planned; after PRs #705 and #710 |
 | R2: escape, `DEF` names, magic CDEF, gradient, date legend, theme and font arguments, business hours to `Domain/Command` | Planned |
@@ -262,17 +262,22 @@ is built. Existing image/JSON adapters keep their narrow graph-format query
 when no URL override is supplied; other legacy callers resolve equivalent
 metadata at that adapter boundary. Cache keys and response content types use
 the same resolved format; the full graph definition remains a miss-only read. The detailed
-plan records render-triggered Boost system-zone changes as prerequisite P0
+plan records explicit SVG override mismatch and render-triggered Boost system-zone changes as prerequisite P0
 corrections before R0/R1, implemented at the current procedural cache/update
 boundaries in `lib/boost.php` and metadata boundaries in `lib/rrd.php`, with
 native fixtures in `tests/Fixtures/rrd-characterization.php` and
 `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`. P0 needs no R7 adapter;
-R7 later preserves that verified behavior. Explicit PNG is already initialized at the top of
+The SVG correction additionally changes the existing GraphOptionsGenerator and
+image/JSON adapters, with native generator/response regressions; the current
+svg+xml override is ignored on stored PNG graphs, so only the separately
+reviewed affected goldens change. R7 later preserves that verified behavior. Explicit PNG is already initialized at the top of
 the frozen JSON adapter and remains a compatibility characterization case. Native
 regressions must demonstrate the defects and separately reviewed fixes before
 updating only their affected goldens; later migration slices preserve the
 corrected output. Boost gates include no/applied/refused samples and later
 metadata updates, with both timezone settings enabled and either disabled.
+Pending-sample configuration includes maximum records per select and update
+string length; R0/R7 pin selection/flush boundaries and retained-sample outcomes.
 R1's legacy request factory resolves validated theme overrides through
 `LegacyGraphThemeProfileResolver` into `GraphRequest.commandTheme`, an
 immutable `GraphThemeProfile`. The builder receives resolved palette/border/fonts;

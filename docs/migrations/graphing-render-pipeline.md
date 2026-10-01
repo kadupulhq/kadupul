@@ -112,11 +112,20 @@ construction or content-type selection. R9 keeps this narrow lookup outside
 The full definition is still loaded only on a miss. R0/R1 gates cover absent
 overrides on PNG and SVG graph definitions, explicit overrides and each
 entry point's existing fallback; cache-key and response format must agree
-for the existing valid explicit PNG and SVG paths. The frozen JSON adapter
+for explicit PNG and the P0-corrected explicit SVG paths. The frozen JSON adapter
 initializes `$gtype = 'png'` at line 13 before the explicit-format branch;
 explicit PNG therefore reaches the renderer and response metadata as PNG
 without an undefined-variable warning. It needs characterization, not a
 failing-before prerequisite or intentional output change.
+Explicit SVG is different: both legacy adapters pass `svg+xml`, but the frozen
+`GraphOptionsGenerator::build()` override accepts only `png` (lines 130-136).
+For a stored PNG graph, an explicit SVG request can therefore return PNG bytes
+with SVG response metadata. P0 separately corrects this existing mismatch in
+the current generator/adapters before R0/R1. Native generator and actual
+image/JSON response tests must fail before and pass after, covering stored
+PNG/SVG with absent/explicit PNG/SVG requests, command format, response MIME,
+JSON metadata, and cache identity; only affected SVG-override goldens change
+after independent review. This is a planned correction, not an existing fix.
 
 `RenderFacts` is the third input. It holds values read from storage while
 rendering: the render instant captured immediately after authorization, the last poller run, the consolidation functions
@@ -183,7 +192,7 @@ and where each goes. Database rows that describe the graph go to
 | 36 | `path_rrdtool_default_font` | `lib/rrd.php:166`, `381` | `RenderContext.fonts` |
 | 37 | `path_rrdtool` | `lib/rrd.php:1179`, `1207`, `3185` | Transport configuration |
 | 38 | `boost_png_cache_enable`, `boost_png_cache_directory` | `lib/boost.php:378`, `481`, `607-608` | Cache adapter configuration |
-| 39 | `boost_rrd_update_enable`, `boost_rrd_update_system_enable` | `boost_check_correct_enabled()` (`lib/boost.php:170-173`) | Pending-samples adapter |
+| 39 | `boost_rrd_update_enable`, `boost_rrd_update_system_enable`, `boost_rrd_update_max_records_per_select`, `boost_rrd_update_string_length` | `boost_check_correct_enabled()` (`lib/boost.php:170-173`) and `boost_process_poller_output()` (`795`, `916`, `981`) | Pending-samples adapter configuration; R0/R7 pin record-selection and update-flush boundaries, preserving retained samples and failure outcomes |
 | 40 | `storage_location`, `$config['poller_id']`, `$config['connection']` | `boost_poller_id_check()` (`lib/boost.php:302-307`) | Cache adapter configuration |
 | 41 | `$graph_data_array` window, size and thumbnail keys | `lib/rrd.php:2270-2295`, `2425-2436`; `GraphOptionsGenerator.php:98-116`, `158-177` | `GraphRequest` |
 | 42 | `$graph_data_array` mode keys: `print_source`, `get_error`, `export`, `export_filename`, `output_filename`, `export_csv`, `export_realtime`, `graphv`, `output_flag`, `image_format` | `lib/rrd.php:3172-3236`; `GraphOptionsGenerator.php:119-131` | `GraphRequest` |
@@ -709,7 +718,7 @@ and R13 is "Callers moved to Graphing services; wrappers marked
 
 | Slice | Change | Files | Gate | Risk | Rollback |
 | --- | --- | --- | --- | --- | --- |
-| P0 | Separately reviewed prerequisite correction: caller-zone restoration around all render-triggered Boost updates; preserve standalone poller policy | `lib/boost.php` render-triggered cache/update calls, `lib/rrd.php` metadata update calls, `tests/Fixtures/rrd-characterization.php`, `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php` (existing procedural boundaries; no R7 adapter dependency) | Fail before the zone fix; Boost off/on with no/applied/refused samples, later metadata updates, setting gates, restoration and cache ordering | Medium: intentional correction of recorded defects | Revert prerequisite and affected goldens together |
+| P0 | Separately reviewed prerequisite corrections: explicit SVG override command/response agreement and caller-zone restoration around render-triggered Boost updates; preserve standalone poller policy | `lib/boost.php` render-triggered cache/update calls, `lib/rrd.php` metadata update calls, `tests/Fixtures/rrd-characterization.php`, `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`, `src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php`, `graph_image.php`, `graph_json.php`, `tests/Unit/Core/Rrd/GraphOptionsGeneratorCoverageTest.php`, new native image/JSON response fixtures (existing boundaries; no R7 adapter dependency) | Fail before each correction; explicit SVG command/MIME/JSON/cache parity with stored PNG/SVG and absent/PNG overrides preserved; Boost off/on with no/applied/refused samples, later metadata updates, setting gates, restoration and cache ordering | Medium: intentional correction of recorded defects | Revert prerequisite and affected goldens together |
 | R0 | Characterization: goldens per `RenderContext` field (dark mode, browser zone with both timezone settings enabled and with either disabled, cached and uncached viewer/site settings, web/CLI site-cache precedence and forced-read bypass, interface-speed precedence/defaults, empty-path naming/persistence, each date format, a non-English locale, theme overrides and their resolved palette/border/font fallback, invalid/unavailable session/site/user selected-theme fallback using the installed allowlist and stylesheet availability, theme and viewer fonts, no-session guest fonts/dates with `auth_method == 0`) and per mode (thumbnail, SVG, `graphv`, export, CSV with zero hook/business-hours calls, real-time, print source, error text); an input census that records every setting, user setting, cookie and session key a render reads and compares it with the table above; the hook string contract; a render timing script | `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`, `tests/Fixtures/rrd-characterization.php`, new `tests/Fixtures/rrd-characterization/graph-context-*.json`, new `RenderInputCensusTest.php`, `GraphOptionsHookContractTest.php`, `tests/tools/graph_render_timing.php` | Historical defect cases are recorded; P0-corrected goldens pass against unchanged post-P0 code | Low; tests only | Revert |
 | R1 | `RenderContext`, effective-format `GraphRequest`, `LegacyGraphRequestFactory` and `LegacyRenderContextFactory`; built once in `rrdtool_function_graph()`; the Boost key from `RenderContext::fingerprint()` | `src/Graphing/Domain/Render/*`, `src/Graphing/Infrastructure/Legacy/LegacyRenderContextFactory.php`, `LegacyGraphRequestFactory.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphThemeProfileResolver.php`, `src/Graphing/Domain/Render/GraphThemeProfile.php`, `lib/rrd.php`, `lib/boost.php` | P0-corrected R0 goldens unchanged; resolved theme-override profile, fallback/font/palette and warm-cache cost gates; `BoostGraphCacheKeyNativeTest` from #705; the census | Medium: a missed input serves one viewer's image to another | Revert; renamed cache files age out |
 | R2 | Pure helpers to `Domain/Command` (moves 1 to 7); wrappers delegate | `src/Graphing/Domain/Command/*`, `lib/rrd.php`, `lib/functions.php` | `helpers.json`, `graph-gradient*.json`, `graph-business-hours.json`, `graph-cdef-magic.json`, `tests/Unit/Core/Rrd/RrdFontArgumentsTest.php` (#710), `ColourBrightnessTest` | Low | Revert |
@@ -764,7 +773,7 @@ the cost is within the gate; Symfony routes use DBAL.
 
 ## Coordination
 
-- P0 timezone correction and its native regression evidence land
+- P0 SVG-override and timezone corrections and their native regression evidence land
   before R0/R1. These are proposed prerequisites, not fixes implemented by
   this documentation PR.
 - PRs #705 and #710 land before R1. R1 builds its key from #705's parts and its
