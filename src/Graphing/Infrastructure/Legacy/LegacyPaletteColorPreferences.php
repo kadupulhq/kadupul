@@ -10,10 +10,11 @@ namespace Kadupul\Graphing\Infrastructure\Legacy;
 use Kadupul\Graphing\Application\Port\PaletteColorPreferences;
 use Kadupul\Graphing\Application\Port\PaletteColorAccess;
 use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 
 final readonly class LegacyPaletteColorPreferences implements PaletteColorPreferences
 {
-    public function __construct(private PaletteColorAccess $access, private DatabaseConnection $database) {}
+    public function __construct(private PaletteColorAccess $access, private DatabaseConnection $database, private LegacyConfiguration $configuration) {}
 
     public function load(): ?array
     {
@@ -36,6 +37,42 @@ final readonly class LegacyPaletteColorPreferences implements PaletteColorPrefer
         return array_map(static fn(int|string $value): string => (string) $value, $filters);
     }
 
+    private function prepareMutation(\PDO $db): void
+    {
+        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
+            throw new \RuntimeException('Filter preferences require the primary collector.');
+        }
+        $driver = $db->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'sqlite') {
+            return;
+        }
+        if ($driver !== 'mysql') {
+            throw new \RuntimeException('Unsupported Color preference database.');
+        }
+        $optional = ['user_auth_group', 'user_auth_group_realm', 'user_auth_group_members'];
+        foreach (['settings_user', 'settings', 'user_auth', 'user_auth_realm', ...$optional] as $table) {
+            try {
+                $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
+                if ($query === false && in_array($table, $optional, true) && ($db->errorInfo()[1] ?? null) === 1146) {
+                    continue;
+                }
+                $definition = $query === false ? false : PaletteSql::one($query, \PDO::FETCH_NUM);
+            } catch (\PDOException $error) {
+                if (in_array($table, $optional, true) && ($error->errorInfo[1] ?? null) === 1146) {
+                    continue;
+                }
+                throw $error;
+            }
+            if (!is_array($definition) || !is_string($definition[1] ?? null)
+                || preg_match('/^\) ENGINE=InnoDB(?:\s|$)/mi', $definition[1]) !== 1) {
+                throw new \RuntimeException('Filter preferences require transactional tables: ' . $table);
+            }
+        }
+        if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false || $db->errorCode() !== '00000') {
+            throw new \RuntimeException('Color preference transaction isolation could not be confirmed.');
+        }
+    }
+
     public function save(array $filters): void
     {
         $allowed = ['rows', 'page', 'filter', 'sort_column', 'sort_direction', 'has_graphs', 'named'];
@@ -43,7 +80,11 @@ final readonly class LegacyPaletteColorPreferences implements PaletteColorPrefer
             throw new \InvalidArgumentException('Invalid color filter preferences.');
         }
         $db = $this->database->get();
-        if ($db->inTransaction() || !$db->beginTransaction()) {
+        if ($db->inTransaction()) {
+            throw new \RuntimeException('Filter preference transaction unavailable.');
+        }
+        $this->prepareMutation($db);
+        if (!$db->beginTransaction()) {
             throw new \RuntimeException('Filter preference transaction unavailable.');
         }
         try {

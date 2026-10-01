@@ -145,7 +145,7 @@ final class PaletteColorSqlFailureTest extends TestCase
         $database->exec("CREATE TABLE settings_user(user_id INT,name TEXT,value TEXT,PRIMARY KEY(user_id,name));
             INSERT INTO settings_user VALUES(9,'palette_colors_filters','{\"filter\":\"before\"}');
             CREATE TRIGGER reject_preference BEFORE INSERT ON settings_user BEGIN SELECT RAISE(FAIL,'Fixture rejected preference'); END");
-        $preferences = new LegacyPaletteColorPreferences($this->access(), $this->connection($database));
+        $preferences = new LegacyPaletteColorPreferences($this->access(), $this->connection($database), $this->configuration());
         $database->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
         $failed = false;
         try {
@@ -162,7 +162,7 @@ final class PaletteColorSqlFailureTest extends TestCase
     {
         $database = $this->database();
         $database->exec("CREATE VIEW settings_user AS SELECT CAST(9 AS INTEGER) AS user_id,'palette_colors_filters' AS name,json_extract('invalid-json', '$') AS value");
-        $preferences = new LegacyPaletteColorPreferences($this->access(), $this->connection($database));
+        $preferences = new LegacyPaletteColorPreferences($this->access(), $this->connection($database), $this->configuration());
         $database->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
         $this->expectException(\PDOException::class);
         $preferences->load();
@@ -209,7 +209,7 @@ final class PaletteColorSqlFailureTest extends TestCase
         }
         $database->failure = $failure;
         $database->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
-        $preferences = new LegacyPaletteColorPreferences($this->access(), $this->connection($database));
+        $preferences = new LegacyPaletteColorPreferences($this->access(), $this->connection($database), $this->configuration());
         try {
             $preferences->save(['filter' => 'after']);
             self::fail('Unconfirmed preference operation succeeded.');
@@ -262,6 +262,13 @@ final class PaletteColorSqlFailureTest extends TestCase
     public static function selectionSizes(): array
     {
         return [[100], [101]];
+    }
+
+    private function configuration(): LegacyConfiguration
+    {
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
+        return $configuration;
     }
 
     private function database(): \PDO
