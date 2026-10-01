@@ -68,9 +68,10 @@ test('the purge removes an old image it cannot write when the directory lets it'
 });
 
 test('the purge keeps images younger than an hour and files that are not images', function () {
-    list($left) = boost_png_purge_run(array('modern_lgi_7_rrai_1.png' => array(0444, 60), 'notes.txt' => array(0644, 7200)));
+    list($left) = boost_png_purge_run(array('modern_lgi_7_rrai_1.png' => array(0444, 60), 'notes.txt' => array(0644, 7200), 'notes.png.bak' => array(0644, 7200), 'logo.JPG' => array(0644, 7200)));
+    sort($left);
 
-    expect($left)->toBe(array('modern_lgi_7_rrai_1.png', 'notes.txt'));
+    expect($left)->toBe(array('modern_lgi_7_rrai_1.png', 'notes.png.bak', 'notes.txt'));
 });
 
 test('the purge removes temporary images a dead writer left behind once they are an hour old', function () {
