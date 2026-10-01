@@ -11,9 +11,11 @@ $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
 $directory = $argv[2];
 $source = $root . '/install/upgrades/1_2_31.php';
-$copy = $directory . '/upgrade.php';
+$copy = $directory . '/install/upgrades/1_2_31.php';
+mkdir(dirname($copy), 0700, true);
+mkdir($directory . '/lib', 0700);
+copy($root . '/lib/data_source_profile_integrity.php', $directory . '/lib/data_source_profile_integrity.php');
 copy($source, $copy);
-file_put_contents($copy, str_replace('dirname(__DIR__, 2)', var_export($root, true), file_get_contents($copy)));
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('RRD_TEST_CLI_COVERAGE_COPY', $copy);
