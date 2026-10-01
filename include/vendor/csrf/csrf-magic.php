@@ -77,6 +77,11 @@ function csrf_ob_handler($buffer, $flags) {
  * drops a nested form start tag and the field would join the outer form.
  */
 function csrf_rewrite_forms($buffer, $input) {
+	// Without a form start tag there is nothing to rewrite.
+	if (!preg_match('/<form/i', $buffer)) {
+		return $buffer;
+	}
+
 	$scan = csrf_scan_tags($buffer);
 	$relative_is_local = csrf_base_is_local($buffer, $scan);
 	$form_open = false;
@@ -129,13 +134,36 @@ function csrf_scan_tags($buffer) {
 	// Their content parses differently with scripting off, in SVG or MathML,
 	// or in a frameset.
 	$unsupported = array('noscript' => true, 'plaintext' => true, 'svg' => true, 'math' => true, 'frameset' => true);
+	/* Runs of text and plain tags are skipped by a regular expression. A
+	 * plain tag has an ordinary name and attributes that are a name, or a
+	 * name, "=" and a quoted value, each after whitespace or "/".
+	 * csrf_parse_tag() ends such a tag at the same ">", so the loop below
+	 * only reads the rest. Each match takes at most 1000 tokens to stay
+	 * within the PCRE backtracking limit. */
+	$skip = '~(?(DEFINE)(?<plain>[^<]++|</?(?!(?i:f(?:orm|rameset)|base|s(?:elect|vg|tyle|cript)|' .
+		't(?:e(?:mplate|xtarea)|itle)|no(?:script|embed|frames)|plaintext|math|xmp|iframe)[\t\n\f\r />])' .
+		'[A-Za-z][^\t\n\f\r />"\'=]*+(?:[\t\n\f\r /]++(?:[^\t\n\f\r />"\'=]++' .
+		'(?:=[\t\n\f\r ]*+(?:"[^"]*+"|\'[^\']*+\'))?+)?+)*+>))\G(?&plain){0,1000}+~';
 	$tags = array();
 	$length = strlen($buffer);
-	// Nothing after the last form or base start tag can change a decision.
-	$limit = max((int) strripos($buffer, '<form'), (int) strripos($buffer, '<base'));
 	$offset = 0;
+	$fast = true;
 
-	while (($start = strpos($buffer, '<', $offset)) !== false && $start <= $limit) {
+	while (true) {
+		while ($fast && ($skipped = preg_match($skip, $buffer, $match, 0, $offset)) === 1 && $match[0] !== '') {
+			$offset += strlen($match[0]);
+		}
+
+		// Past a PCRE limit, every tag is read by the loop below.
+		if ($fast && $skipped === false) {
+			$fast = false;
+		}
+
+		$start = strpos($buffer, '<', $offset);
+		if ($start === false) {
+			break;
+		}
+
 		$next = $start + 1 < $length ? $buffer[$start + 1] : '';
 
 		if ($next === '!' && substr_compare($buffer, '!--', $start + 1, 3) === 0) {
@@ -197,7 +225,8 @@ function csrf_scan_tags($buffer) {
 
 			// "<!--" inside a script can keep a later "</script>" from ending it.
 			$close = $match[0][1];
-			if ($name === 'script' && strpos(substr($buffer, $offset, $close - $offset), '<!--') !== false) {
+			$comment = $name === 'script' ? strpos($buffer, '<!--', $offset) : false;
+			if ($comment !== false && $comment < $close) {
 				return array('tags' => $tags, 'stop' => $offset);
 			}
 
