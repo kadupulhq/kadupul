@@ -73,6 +73,28 @@ format (PNG, SVG, `graphv` metadata), a theme override, the cache opt-out, the
 mode (image, export file, CSV `xport`, real-time, print source, error text) and,
 for real-time graphs, the session's real-time hash.
 
+R1's `LegacyGraphRequestFactory` uses a new Infrastructure
+`LegacyGraphThemeProfileResolver` to validate an override with today's
+`cacti_validate_theme()` rules and resolve the effective command theme.
+Without an override it uses the captured viewer theme; empty/invalid values
+retain the configured/default installed-theme fallback. It loads that theme's
+readable `rrdtheme.php` and selects the existing colour-mode palette/border
+fallback, version-gated border/watermark and theme fonts, with the site/user
+font precedence retained through #710's `GraphFontProfile`. The result is an
+immutable `Domain/Render/GraphThemeProfile` carried by
+`GraphRequest.commandTheme`; the validated effective name and resolved
+profile enter the request fingerprint before cache-key generation. The
+viewer profile in `RenderContext` remains available for existing error-image
+and cache-filename-prefix behavior. `Domain/Command/ThemeArguments` receives
+the resolved command profile, never a raw override or a filesystem path.
+The Infrastructure resolver owns includes and filesystem reads; R2's wrapper
+uses the same resolver. R0/R1/R2 gates cover a valid override differing from
+the selected theme, absent/empty/invalid overrides, unavailable/unreadable theme
+files, colour-mode fallback, theme fonts with site/user overrides and version
+gates. Assert actual palette/border/font arguments and cache isolation; measure
+the added resolution cost against the warm-cache budget and require per-render
+memoization rather than duplicate theme includes. These are planned gates.
+
 The design brief put the output format in `RenderContext`. It belongs in
 `GraphRequest`: it comes from the URL (`graph_image.php:42-72`,
 `graph_json.php:104-138`), not from the viewer, and both values reach the cache
@@ -90,14 +112,11 @@ construction or content-type selection. R9 keeps this narrow lookup outside
 The full definition is still loaded only on a miss. R0/R1 gates cover absent
 overrides on PNG and SVG graph definitions, explicit overrides and each
 entry point's existing fallback; cache-key and response format must agree
-after the prerequisite PNG correction below. The frozen `graph_json.php`
-explicit `png` branch sets only `graph_data_array['image_format']`, then
-overwrites it from an undefined `$gtype` at lines 125-138. Preserving that
-defect cannot also satisfy format agreement. Prerequisite P0 fixes the branch
-to resolve PNG consistently, with a native explicit-PNG request regression
-that proves no undefined-variable warning, PNG render input and matching
-response metadata. Its intentional golden change lands before R0/R1; other
-format mappings and fallback behavior remain unchanged.
+for the existing valid explicit PNG and SVG paths. The frozen JSON adapter
+initializes `$gtype = 'png'` at line 13 before the explicit-format branch;
+explicit PNG therefore reaches the renderer and response metadata as PNG
+without an undefined-variable warning. It needs characterization, not a
+failing-before prerequisite or intentional output change.
 
 `RenderFacts` is the third input. It holds values read from storage while
 rendering: the render instant captured immediately after authorization, the last poller run, the consolidation functions
@@ -675,9 +694,9 @@ and R13 is "Callers moved to Graphing services; wrappers marked
 
 | Slice | Change | Files | Gate | Risk | Rollback |
 | --- | --- | --- | --- | --- | --- |
-| P0 | Separately reviewed prerequisite corrections: explicit PNG resolution in `graph_json.php`, and caller-zone restoration around all render-triggered Boost updates; preserve standalone poller policy | `graph_json.php`, render/Boost adapter boundaries, native format and timezone regression fixtures | Fail before fixes; explicit PNG input/metadata and no warning; Boost off/on with no/applied/refused samples, later metadata updates, setting gates, restoration and cache ordering | Medium: intentional correction of recorded defects | Revert prerequisite and affected goldens together |
-| R0 | Characterization: goldens per `RenderContext` field (dark mode, browser zone with both timezone settings enabled and with either disabled, cached and uncached viewer/site settings, web/CLI site-cache precedence and forced-read bypass, interface-speed precedence/defaults, empty-path naming/persistence, each date format, a non-English locale, theme and viewer fonts, no-session guest fonts/dates with `auth_method == 0`) and per mode (thumbnail, SVG, `graphv`, export, CSV with zero hook/business-hours calls, real-time, print source, error text); an input census that records every setting, user setting, cookie and session key a render reads and compares it with the table above; the hook string contract; a render timing script | `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`, `tests/Fixtures/rrd-characterization.php`, new `tests/Fixtures/rrd-characterization/graph-context-*.json`, new `RenderInputCensusTest.php`, `GraphOptionsHookContractTest.php`, `tests/tools/graph_render_timing.php` | Historical defect cases are recorded; P0-corrected goldens pass against unchanged post-P0 code | Low; tests only | Revert |
-| R1 | `RenderContext`, effective-format `GraphRequest`, `LegacyGraphRequestFactory` and `LegacyRenderContextFactory`; built once in `rrdtool_function_graph()`; the Boost key from `RenderContext::fingerprint()` | `src/Graphing/Domain/Render/*`, `src/Graphing/Infrastructure/Legacy/LegacyRenderContextFactory.php`, `LegacyGraphRequestFactory.php`, `lib/rrd.php`, `lib/boost.php` | P0-corrected R0 goldens unchanged; `BoostGraphCacheKeyNativeTest` from #705; the census | Medium: a missed input serves one viewer's image to another | Revert; renamed cache files age out |
+| P0 | Separately reviewed prerequisite correction: caller-zone restoration around all render-triggered Boost updates; preserve standalone poller policy | Render/Boost adapter boundaries and native timezone regression fixtures | Fail before the zone fix; Boost off/on with no/applied/refused samples, later metadata updates, setting gates, restoration and cache ordering | Medium: intentional correction of recorded defects | Revert prerequisite and affected goldens together |
+| R0 | Characterization: goldens per `RenderContext` field (dark mode, browser zone with both timezone settings enabled and with either disabled, cached and uncached viewer/site settings, web/CLI site-cache precedence and forced-read bypass, interface-speed precedence/defaults, empty-path naming/persistence, each date format, a non-English locale, theme overrides and their resolved palette/border/font fallback, theme and viewer fonts, no-session guest fonts/dates with `auth_method == 0`) and per mode (thumbnail, SVG, `graphv`, export, CSV with zero hook/business-hours calls, real-time, print source, error text); an input census that records every setting, user setting, cookie and session key a render reads and compares it with the table above; the hook string contract; a render timing script | `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`, `tests/Fixtures/rrd-characterization.php`, new `tests/Fixtures/rrd-characterization/graph-context-*.json`, new `RenderInputCensusTest.php`, `GraphOptionsHookContractTest.php`, `tests/tools/graph_render_timing.php` | Historical defect cases are recorded; P0-corrected goldens pass against unchanged post-P0 code | Low; tests only | Revert |
+| R1 | `RenderContext`, effective-format `GraphRequest`, `LegacyGraphRequestFactory` and `LegacyRenderContextFactory`; built once in `rrdtool_function_graph()`; the Boost key from `RenderContext::fingerprint()` | `src/Graphing/Domain/Render/*`, `src/Graphing/Infrastructure/Legacy/LegacyRenderContextFactory.php`, `LegacyGraphRequestFactory.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphThemeProfileResolver.php`, `src/Graphing/Domain/Render/GraphThemeProfile.php`, `lib/rrd.php`, `lib/boost.php` | P0-corrected R0 goldens unchanged; resolved theme-override profile, fallback/font/palette and warm-cache cost gates; `BoostGraphCacheKeyNativeTest` from #705; the census | Medium: a missed input serves one viewer's image to another | Revert; renamed cache files age out |
 | R2 | Pure helpers to `Domain/Command` (moves 1 to 7); wrappers delegate | `src/Graphing/Domain/Command/*`, `lib/rrd.php`, `lib/functions.php` | `helpers.json`, `graph-gradient*.json`, `graph-business-hours.json`, `graph-cdef-magic.json`, `tests/Unit/Core/Rrd/RrdFontArgumentsTest.php` (#710), `ColourBrightnessTest` | Low | Revert |
 | R3 | `GraphDefinition`, the `GraphDefinitions` port and `LegacyGraphDefinitions` on `db_*`, running today's queries; the render consumes it; introduce `DataSourcePaths` with its legacy persistence adapter | `src/Graphing/Domain/GraphDefinition*.php`, `src/Graphing/Application/Port/GraphDefinitions.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphDefinitions.php`, `Application/Port/DataSourcePaths.php`, `Infrastructure/Legacy/LegacyDataSourcePaths.php`, `lib/rrd.php` | All `graph-*.json`; a reader test against the characterization database including existing/empty paths and persisted naming; per-image timing | Medium | Revert |
 | R4 | `DoctrineGraphDefinitions` on `doctrine.dbal.web_connection` for Symfony routes; read grants added to the read-user list; missing paths resolve through R3's existing legacy write boundary | `src/Graphing/Infrastructure/Persistence/DoctrineGraphDefinitions.php`, `config/services.yaml`, `docs/symfony-migration.md` | Both adapters return equal definitions and persisted paths on the behavior database; read connection performs no writes; cache hit performs no path work; the second-connection cost measured on `graph_image.php` | Medium: an extra connection per image if used from a legacy page | Remove the service; R3 remains |
@@ -730,7 +749,7 @@ the cost is within the gate; Symfony routes use DBAL.
 
 ## Coordination
 
-- P0 format/timezone corrections and their native regression evidence land
+- P0 timezone correction and its native regression evidence land
   before R0/R1. These are proposed prerequisites, not fixes implemented by
   this documentation PR.
 - PRs #705 and #710 land before R1. R1 builds its key from #705's parts and its

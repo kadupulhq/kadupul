@@ -76,7 +76,7 @@ second implementation or a module boundary needs one.
 | Web-side graph reads through DBAL; collector writes stay on `db_*` | Pending |
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
 | Callers moved to Graphing services; wrappers marked `#[\Deprecated]` | Pending |
-| P0: native explicit-PNG and render-triggered Boost zone corrections with recorded before/after goldens | Planned; before R0/R1 |
+| P0: render-triggered Boost zone correction with recorded before/after goldens | Planned; before R0/R1 |
 | R0: render characterization per context field and mode, input census, hook string contract, timing script | Planned |
 | R1: `RenderContext` and `GraphRequest` built once per render; Boost key from the context | Planned; after PRs #705 and #710 |
 | R2: escape, `DEF` names, magic CDEF, gradient, date legend, theme and font arguments, business hours to `Domain/Command` | Planned |
@@ -260,12 +260,19 @@ is built. Existing image/JSON adapters keep their narrow graph-format query
 when no URL override is supplied; other legacy callers resolve equivalent
 metadata at that adapter boundary. Cache keys and response content types use
 the same resolved format; the full graph definition remains a miss-only read. The detailed
-plan records the frozen JSON explicit-PNG defect and render-triggered Boost
-system-zone changes as prerequisite P0 corrections before R0/R1. Native
+plan records render-triggered Boost system-zone changes as prerequisite P0
+corrections before R0/R1. Explicit PNG is already initialized at the top of
+the frozen JSON adapter and remains a compatibility characterization case. Native
 regressions must demonstrate the defects and separately reviewed fixes before
 updating only their affected goldens; later migration slices preserve the
 corrected output. Boost gates include no/applied/refused samples and later
 metadata updates, with both timezone settings enabled and either disabled.
+R1's legacy request factory resolves validated theme overrides through
+`LegacyGraphThemeProfileResolver` into `GraphRequest.commandTheme`, an
+immutable `GraphThemeProfile`. The builder receives resolved palette/border/fonts;
+Infrastructure owns theme-file reads and existing default, colour-mode and font
+precedence. R0/R1/R2 include override/fallback arguments, cache isolation and
+warm-cache cost gates, retaining the viewer profile for error output.
 The render instant is captured immediately after authorization, before cache
 and pending-sample work, and remains the single instant in RenderFacts even
 when that work crosses a time boundary. These fixes and tests are proposed;
