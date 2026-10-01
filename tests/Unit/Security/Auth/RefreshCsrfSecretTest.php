@@ -20,6 +20,11 @@ function refresh_csrf_run($test, array $scenario): array
     }
     mkdir($outside, 0700);
     copy($root . '/cli/refresh_csrf.php', $dir . '/cli/refresh_csrf.php');
+    if (!empty($scenario['unlink_failure'])) {
+        // Namespace only the isolated script to model a failed filesystem call.
+        $script = file_get_contents($dir . '/cli/refresh_csrf.php');
+        file_put_contents($dir . '/cli/refresh_csrf.php', preg_replace('/<\?php/', '<?php namespace RefreshCsrfUnlinkProbe; function unlink($path) { return false; }', $script, 1));
+    }
     file_put_contents($dir . '/lib/poller.php', '<?php');
     file_put_contents($dir . '/lib/utility.php', '<?php');
     file_put_contents($dir . '/include/vendor/csrf/csrf-conf.php', '<?php');
@@ -140,3 +145,11 @@ test('an external secret outside the document root is replaced', function (bool 
     'existing file' => array(true, 'Removing old csrf_secret.php file.'),
     'missing file' => array(false, 'WARNING: csrf_secret.php file does not exist!'),
 ));
+
+test('failed secret cleanup exits without reporting rotation success', function (string $path) {
+    $result = refresh_csrf_run($this, array('secret' => $path, 'legacy' => true, 'existing' => $path !== '', 'unlink_failure' => true));
+    expect($result['exit'])->toBe(1)
+        ->and($result['stdout'])->toContain('FATAL: Unable to remove')
+        ->and($result['stdout'])->not->toContain('New CSRF secret stored')
+        ->and($result['stdout'])->not->toContain('New csrf_secret.php file written');
+})->with(array('', '{outside}/csrf-secret.php'));
