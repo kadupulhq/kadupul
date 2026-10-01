@@ -3722,10 +3722,12 @@ function auth_process_lockout($username, $realm) {
  *
  *   user_auth matches names under utf8mb4_unicode_ci, which ignores case,
  *   accents and trailing spaces, so every spelling that reaches one account
- *   must land on one count.  The name is keyed on its collation weight, and
- *   trailing spaces are removed first because WEIGHT_STRING() keeps them.
- *   Directories also ignore leading spaces and runs of spaces, so LDAP and
- *   Domains names drop those too.
+ *   must land on one count.  The name is keyed on its collation weight.
+ *   WEIGHT_STRING() keeps trailing spaces while the PAD SPACE lookup ignores
+ *   them, and no-break, ideographic and other Unicode spaces weigh the same
+ *   as an ASCII space, so space weights are removed from the weight rather
+ *   than space characters from the name.  Directories also ignore leading
+ *   spaces and runs of spaces, so LDAP and Domains names drop those too.
  *
  * @param  (string) $username - the submitted login name
  * @param  (int)    $realm    - the realm the attempt is checked against
@@ -3740,16 +3742,39 @@ function auth_login_throttle_keys($username, $realm) {
 		$addr = bin2hex(substr($packed, 0, 8)) . '/64';
 	}
 
-	$name = rtrim((string) $username, ' ');
-
-	if ($realm != 0) {
-		$name = trim(preg_replace('/ {2,}/', ' ', $name), ' ');
-	}
-
+	$name   = (string) $username;
 	$weight = db_fetch_cell_prepared('SELECT HEX(WEIGHT_STRING(CONVERT(? USING utf8mb4) COLLATE utf8mb4_unicode_ci))',
 		array($name));
 
-	if ($weight == '') {
+	if ($weight != '') {
+		/* utf8mb4_unicode_ci weights come in 2 byte units; an ASCII space and
+		 * the Unicode spaces that compare equal to it all weigh 0209 */
+		$units = str_split(strtoupper($weight), 4);
+
+		while (cacti_sizeof($units) && end($units) === '0209') {
+			array_pop($units);
+		}
+
+		if ($realm != 0) {
+			$folded = array();
+
+			foreach ($units as $unit) {
+				if ($unit !== '0209' || (cacti_sizeof($folded) && end($folded) !== '0209')) {
+					$folded[] = $unit;
+				}
+			}
+
+			$units = $folded;
+		}
+
+		$weight = implode('', $units);
+	} else {
+		$name = (string) preg_replace('/\p{Zs}+$/u', '', $name);
+
+		if ($realm != 0) {
+			$name = (string) preg_replace('/^\p{Zs}+/u', '', preg_replace('/\p{Zs}+/u', ' ', $name));
+		}
+
 		$weight = mb_strtolower($name, 'UTF-8');
 	}
 

@@ -21,7 +21,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
-function login_throttle_run(array $config, array $steps) : array {
+function login_throttle_run(array $config, array $steps, bool $no_weight = false) : array {
 	$root  = dirname(__DIR__, 4);
 	$auth  = file_get_contents($root . '/lib/auth.php');
 	$maint = file_get_contents($root . '/poller_maintenance.php');
@@ -100,15 +100,31 @@ function db_column_exists($table, $column) {
 	return true;
 }
 
-/* utf8mb4_unicode_ci weights as MariaDB 13.0.2 returns them: case and
- * accents fold, but trailing spaces still count */
+/* utf8mb4_unicode_ci weights as MariaDB 13.0.2 returns them for the names
+ * used here: one 2 byte unit per character, case and accents fold, an ASCII
+ * space and the no-break, en and ideographic spaces all weigh 0209, a tab
+ * weighs 0201, and trailing spaces still count */
 function collation_weight($name) {
-	return strtoupper(bin2hex(strtolower(strtr($name, array('Á' => 'a', 'á' => 'a', 'ä' => 'a', 'Í' => 'i', 'í' => 'i')))));
+	$fold = array('Á' => 'a', 'á' => 'a', 'ä' => 'a', 'Í' => 'i', 'í' => 'i');
+	$unit = array(
+		' ' => '0209', "\u{00A0}" => '0209', "\u{2002}" => '0209', "\u{3000}" => '0209', "\t" => '0201',
+		'a' => '0E33', 'b' => '0E4A', 'c' => '0E60', 'e' => '0E8B', 'i' => '0EFB', 'l' => '0F2E', 'o' => '0F82'
+	);
+
+	$weight = '';
+
+	foreach (preg_split('//u', $name, -1, PREG_SPLIT_NO_EMPTY) as $char) {
+		$lower   = strtolower($fold[$char] ?? $char);
+		$weight .= $unit[$char] ?? $unit[$lower] ?? sprintf('%04X', ord($lower));
+	}
+
+	return $weight;
 }
 
-/* a PAD SPACE comparison, as user_auth lookups make */
+/* a PAD SPACE comparison, as user_auth lookups make: trailing space weights
+ * are ignored */
 function collation_match($name) {
-	return collation_weight(rtrim($name, ' '));
+	return preg_replace('/^((?:[0-9A-F]{4})*?)(?:0209)+$/', '$1', collation_weight($name));
 }
 
 function db_fetch_row_prepared($sql, $params = array()) {
@@ -125,7 +141,7 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 	global $pdo;
 
 	if (strpos($sql, 'WEIGHT_STRING(') !== false) {
-		return collation_weight($params[0]);
+		return empty($GLOBALS['scenario']['no_weight']) ? collation_weight($params[0]) : false;
 	}
 
 	if (strpos($sql, 'user_auth_throttle') !== false) {
@@ -228,7 +244,7 @@ print json_encode(array(
 ));
 PHP;
 
-	return cacti_test_run_php_source($source, array('config' => $config, 'steps' => $steps));
+	return cacti_test_run_php_source($source, array('config' => $config, 'steps' => $steps, 'no_weight' => $no_weight));
 }
 
 function login_throttle_on(int $login = 3, int $addr = 50) : array {
@@ -419,4 +435,58 @@ test('directory login names share one count across surrounding and repeated spac
 		->and($result['steps'][2]['ldap_calls'])->toBe(0)
 		->and($result['steps'][2]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
 		->and($result['steps'][3]['error_msg'])->toBe('Access Denied!  Login Failed.');
+});
+
+test('trailing Unicode spaces do not give one account a fresh count from each address', function () {
+	$spaces = array("\u{00A0}", "\u{3000}", "\u{2002}");
+	$steps  = array();
+
+	for ($i = 1; $i <= 20; $i++) {
+		$steps[] = array('call' => 'local', 'username' => 'alice' . str_repeat($spaces[$i % 3], $i), 'password' => $i == 20 ? 'right' : 'wrong', 'addr' => '198.51.100.' . $i);
+	}
+
+	$result  = login_throttle_run(login_throttle_on(5), $steps);
+	$checked = array_filter($result['steps'], function ($step) {
+		return $step['verify_calls'] > 0;
+	});
+	$refused = array_filter($result['steps'], function ($step) {
+		return $step['error_msg'] === 'Too many failed login attempts.  Please try again later.';
+	});
+
+	/* the first five spellings reach alice's row and her password check */
+	expect(array_keys($checked))->toBe(array(0, 1, 2, 3, 4))
+		->and(count($refused))->toBe(15)
+		->and($result['steps'][19]['user'])->toBeNull();
+});
+
+test('directory login names share one count across Unicode spaces', function () {
+	$steps = array(
+		array('call' => 'ldap', 'username' => 'bob', 'password' => 'wrong'),
+		array('call' => 'ldap', 'username' => "\u{00A0}BOB", 'password' => 'wrong'),
+		array('call' => 'ldap', 'username' => "Bob\u{3000}\u{2002}", 'password' => 'right'),
+	);
+
+	$result = login_throttle_run(login_throttle_on(2), $steps);
+
+	expect($result['steps'][1]['ldap_calls'])->toBe(2)
+		->and($result['steps'][2]['ldap_calls'])->toBe(0)
+		->and($result['steps'][2]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.');
+});
+
+test('without a collation weight the name still drops Unicode spaces and case', function () {
+	$steps = array(
+		array('call' => 'local', 'username' => 'alice', 'password' => 'wrong'),
+		array('call' => 'local', 'username' => "ALICE\u{00A0}", 'password' => 'wrong', 'addr' => '198.51.100.2'),
+		array('call' => 'local', 'username' => "Alice\u{3000} ", 'password' => 'right', 'addr' => '198.51.100.3'),
+		array('call' => 'ldap', 'username' => "\u{2002}b\u{00A0}\u{3000}ob", 'password' => 'wrong'),
+		array('call' => 'ldap', 'username' => 'B  ob ', 'password' => 'wrong', 'addr' => '198.51.100.4'),
+		array('call' => 'ldap', 'username' => 'b OB', 'password' => 'right', 'addr' => '198.51.100.5'),
+	);
+
+	$result = login_throttle_run(login_throttle_on(2), $steps, true);
+
+	expect($result['steps'][2]['verify_calls'])->toBe(0)
+		->and($result['steps'][2]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
+		->and($result['steps'][5]['ldap_calls'])->toBe(0)
+		->and($result['steps'][5]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.');
 });
