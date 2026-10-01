@@ -24,18 +24,21 @@ final class AggregateTemplateWorkerConflictTest extends TestCase
         yield 'negative identity' => [7, [-7]];
         yield 'missing identity' => [7, []];
         yield 'identity object' => [7, [1 => 7]];
+        yield 'numeric-key identity object' => [7, (object) ['0' => 7]];
+        yield 'multiple success records' => [7, [7], true];
         yield 'new success without an identity' => [0, [0]];
     }
 
     #[DataProvider('unverifiedIdentities')]
-    public function testWorkerSuccessCannotCoerceAnUnverifiedIdentity(int $id, array $ids): void
+    public function testWorkerSuccessCannotCoerceAnUnverifiedIdentity(int $id, array|\stdClass $ids, bool $duplicateRecord = false): void
     {
         $directory = sys_get_temp_dir() . '/aggregate-identity-' . bin2hex(random_bytes(8));
         mkdir($directory . '/bin', 0700, true);
         $worker = $directory . '/bin/legacy-aggregate-template.php';
         $result = ['actor' => 42, 'action' => 'save', 'ids' => $ids, 'status' => 'ok'];
+        $record = 'KADUPUL_AGGREGATE_RESULT=' . json_encode($result);
         file_put_contents($worker, '<?php stream_get_contents(STDIN); echo '
-            . var_export('KADUPUL_AGGREGATE_RESULT=' . json_encode($result), true) . ';');
+            . var_export($duplicateRecord ? $record . "\n" . $record : $record, true) . ';');
         try {
             $pdo = new \PDO('sqlite::memory:');
             $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
@@ -48,7 +51,9 @@ final class AggregateTemplateWorkerConflictTest extends TestCase
             ));
             $editor = new LegacyAggregateTemplateEditor($database, $audit, $directory);
             $this->expectException(\RuntimeException::class);
-            $this->expectExceptionMessage('Aggregate template operation outcome could not be verified.');
+            $this->expectExceptionMessage($duplicateRecord
+                ? 'Aggregate template operation outcome is unknown.'
+                : 'Aggregate template operation outcome could not be verified.');
             $editor->save(42, $id, [], $id > 0 ? 'old' : '');
         } finally {
             unlink($worker);

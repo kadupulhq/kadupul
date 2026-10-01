@@ -72,14 +72,18 @@ final readonly class LegacyAggregateTemplateEditor implements AggregateTemplateE
         $process->setTimeout(180);
         $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         $process->run();
-        if (!preg_match('/^KADUPUL_AGGREGATE_RESULT=(\{[^\r\n]+\})$/m', $process->getOutput(), $match)) {
+        if (preg_match_all('/^KADUPUL_AGGREGATE_RESULT=(\{[^\r\n]+\})$/m', $process->getOutput(), $matches) !== 1) {
             throw new \RuntimeException('Aggregate template operation outcome is unknown.');
         }
         try {
-            $result = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR);
+            $wireResult = json_decode($matches[1][0], false, 16, JSON_THROW_ON_ERROR);
         } catch (\JsonException $error) {
             throw new \RuntimeException('Aggregate template operation outcome is unknown.', 0, $error);
         }
+        if (!$wireResult instanceof \stdClass) {
+            throw new \RuntimeException('Aggregate template operation outcome could not be verified.');
+        }
+        $result = get_object_vars($wireResult);
         $actor = $command['actor'];
         $action = $command['action'];
         $resultIds = $result['ids'] ?? null;
