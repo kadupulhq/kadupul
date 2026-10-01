@@ -191,7 +191,12 @@ reads the graph, builds the command and runs it in one function
 - `GraphDefinitions` reads an immutable `GraphDefinition`: the graph, its
   ordered items, CDEF and VDEF text, data source paths and steps, and archive
   profiles. The first adapter runs today's `db_*` queries; a DBAL adapter
-  serves Symfony routes.
+  serves Symfony routes. An Application `DataSourcePaths` port retains the
+  legacy missing-path generation and persistence through `LegacyDataSourcePaths`
+  on the existing authorized `db_*` connection. The read-only DBAL reader uses
+  that bridge on definition misses; its own connection receives no write grants.
+  Existing/empty paths, stored generated paths, naming and failure behavior are
+  R3/R4 gates, and cache hits perform no path work.
 - `CollectRenderFacts` gathers what needs RRDtool or other tables: the
   consolidation functions in each file, which files exist, substituted host and
   query values, Nth percentile and summation values, and the time.
@@ -221,7 +226,7 @@ evidence, the order of the moves and the callers outside `lib/`.
 
 ## RenderContext
 
-A render reads viewer and site state from 46 places: session values, cookies,
+A render reads viewer and site state from 49 places: session values, cookies,
 environment variables, globals and settings, listed with their lines in
 [Graph rendering pipeline](graphing-render-pipeline.md#inputs-read-today).
 `RenderContext` gathers them once per request: theme and palette, colour mode,
@@ -231,7 +236,11 @@ what the caller asks for: graph, archive, window, size, thumbnail, output
 format and mode. The legacy factory reads the session and cookies; nothing
 inside the pipeline does. The factory applies the browser zone only when both
 site and user `client_timezone_support` settings permit it; otherwise it keeps
-the existing PHP zone and `TZ`.
+the existing PHP zone and `TZ`. Cached `sess_user_config_array` values retain
+precedence over stored viewer settings. Interface-speed facts preserve SNMP
+ifHighSpeed/ifSpeed precedence and the site `default_interface_speed` fallback;
+empty data-source paths retain the extended-path naming settings and persistence
+boundary described above. R0 characterizes each of these paths.
 
 The request factory captures the effective output format before the cache key
 is built. Existing image/JSON adapters keep their narrow graph-format query
