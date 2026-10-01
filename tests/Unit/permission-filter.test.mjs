@@ -26,7 +26,7 @@ for (const page of ['user_admin.php', 'user_group_admin.php']) {
       assert.equal(result.status, 0, result.stdout + result.stderr);
       assert.equal(result.stderr, '');
       const { html } = JSON.parse(result.stdout);
-      const script = html.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1];
+      const script = html.match(/<script[^>]*>([\s\S]*?)<\/script>/i)[1];
       const bindings = new Map();
       const calls = [];
       const fields = { '#rows': '25', '#filter': 'literal search', '#graph_template_id': '3', '#host_template_id': '4' };

@@ -2620,35 +2620,35 @@ function process_tree_request_vars()
 function graph_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_admin.php', 'user_edit', 'permsg', __esc('Graph Permissions %s', $header_label), __('Graphs'), __('Show All'), 'graph_template_id', __esc('Go'), __esc('Clear'), false, true);
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permsg', __esc('Graph Permissions %s', $header_label), __('Graphs'), __('Show All'), 'graph_template_id', __esc('Go'), __esc('Clear'), false, true);
 }
 
 function group_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_admin.php', 'user_edit', 'permsgr', __esc('Group Membership %s', $header_label), __('Groups'), __('Show All'), '', __esc('Go'), __esc('Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permsgr', __esc('Group Membership %s', $header_label), __('Groups'), __('Show All'), '', __esc('Go'), __esc('Clear'));
 }
 
 function device_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_admin.php', 'user_edit', 'permsd', __esc('Devices Permission %s', $header_label), __('Devices'), __('Only Show Exceptions'), 'host_template_id', __esc('Go'), __esc('Clear'), false, true);
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permsd', __esc('Devices Permission %s', $header_label), __('Devices'), __('Only Show Exceptions'), 'host_template_id', __esc('Go'), __esc('Clear'), false, true);
 }
 
 function template_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_admin.php', 'user_edit', 'permste', __esc('Template Permission %s', $header_label), __('Templates'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permste', __esc('Template Permission %s', $header_label), __('Templates'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'));
 }
 
 function tree_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_admin.php', 'user_edit', 'permstr', __esc('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permstr', __esc('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'));
 }
 
 function member_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_admin.php', 'user_edit', 'members', __esc('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'), true, true);
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'members', __esc('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'), true, true);
 }

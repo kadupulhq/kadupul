@@ -2275,29 +2275,29 @@ function process_member_request_vars()
 function graph_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_group_admin.php', 'edit', 'permsg', __('Graph Permissions %s', $header_label), __('Graphs'), __('Only Show Exceptions'), 'graph_template_id', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'permsg', __('Graph Permissions %s', $header_label), __('Graphs'), __('Only Show Exceptions'), 'graph_template_id', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
 }
 
 function device_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_group_admin.php', 'edit', 'permsd', __('Devices Permission %s', $header_label), __('Devices'), __('Only Show Exceptions'), 'host_template_id', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'permsd', __('Devices Permission %s', $header_label), __('Devices'), __('Only Show Exceptions'), 'host_template_id', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
 }
 
 function template_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_group_admin.php', 'edit', 'permste', __('Template Permission %s', $header_label), __('Templates'), __('Only Show Exceptions'), '', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'permste', __('Template Permission %s', $header_label), __('Templates'), __('Only Show Exceptions'), '', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
 }
 
 function tree_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_group_admin.php', 'edit', 'permstr', __('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'permstr', __('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
 }
 
 function member_filter($header_label)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    cacti_permission_filter('user_group_admin.php', 'edit', 'members', $header_label, __('Users'), __('Show Members'), '', __x('filter: use', 'Go'), __x('filter reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'members', $header_label, __('Users'), __('Show Members'), '', __x('filter: use', 'Go'), __x('filter reset', 'Clear'));
 }

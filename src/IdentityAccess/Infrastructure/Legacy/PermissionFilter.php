@@ -5,16 +5,22 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/** Render the shared filter controls; callers retain their route and translations. */
-function cacti_permission_filter(string $page, string $action, string $tab, string $title, string $row_label, string $associated_label, string $template_field, string $go_label, string $clear_label, bool $apply_form_argument = false, bool $clear_form_argument = false): void
-{
-    global $item_rows;
+namespace Kadupul\IdentityAccess\Infrastructure\Legacy;
 
-    $id = get_request_var('id');
-    $url = $page . '?action=' . $action . '&tab=' . $tab . '&id=' . $id;
-    $json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
-    $change_selector = '#rows' . ($template_field === '' ? '' : ', #' . $template_field);
-    ?>
+use CactiSecureHeaders;
+
+final class PermissionFilter
+{
+    /** Render the shared filter controls; callers retain their route and translations. */
+    public static function render(string $page, string $action, string $tab, string $title, string $row_label, string $associated_label, string $template_field, string $go_label, string $clear_label, bool $apply_form_argument = false, bool $clear_form_argument = false): void
+    {
+        global $item_rows;
+
+        $id = get_request_var('id');
+        $url = $page . '?action=' . $action . '&tab=' . $tab . '&id=' . $id;
+        $json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+        $change_selector = '#rows' . ($template_field === '' ? '' : ', #' . $template_field);
+        ?>
     <script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute(); ?>>
     function applyFilter(<?php print $apply_form_argument ? 'objForm' : ''; ?>) {
         strURL = <?php print json_encode($url, $json_flags); ?>;
@@ -42,8 +48,8 @@ function cacti_permission_filter(string $page, string $action, string $tab, stri
     });
     </script>
     <?php
-    html_start_box($title, '100%', '', '3', 'center', '');
-    ?>
+        html_start_box($title, '100%', '', '3', 'center', '');
+        ?>
     <tr class='even'><td>
     <form id='forms' action='<?php print html_escape($page); ?>'>
     <table class='filterTable'><tr>
@@ -55,13 +61,13 @@ function cacti_permission_filter(string $page, string $action, string $tab, stri
             <option value='-1'<?php print get_request_var($template_field) == '-1' ? ' selected' : ''; ?>><?php print __('Any'); ?></option>
             <option value='0'<?php print get_request_var($template_field) == '0' ? ' selected' : ''; ?>><?php print __('None'); ?></option>
             <?php
-            $templates = $template_field === 'graph_template_id'
-                ? db_fetch_assoc('SELECT DISTINCT gt.id, gt.name
+                $templates = $template_field === 'graph_template_id'
+                    ? db_fetch_assoc('SELECT DISTINCT gt.id, gt.name
                     FROM graph_templates AS gt
                     INNER JOIN graph_local AS gl
                     ON gl.graph_template_id = gt.id
                     ORDER BY name')
-                : db_fetch_assoc('SELECT id, name FROM host_template ORDER BY name');
+                    : db_fetch_assoc('SELECT id, name FROM host_template ORDER BY name');
             foreach ($templates ?: array() as $template) {
                 print "<option value='" . html_escape($template['id']) . "'";
                 print get_request_var($template_field) == $template['id'] ? ' selected' : '';
@@ -79,7 +85,7 @@ function cacti_permission_filter(string $page, string $action, string $tab, stri
                 print get_request_var('rows') == $key ? ' selected' : '';
                 print '>' . html_escape($value) . '</option>';
             }
-    ?>
+        ?>
         </select></td>
         <td><span>
             <input type='checkbox' id='associated' <?php print get_request_var('associated') == 'true' || get_request_var('associated') == 'on' ? 'checked' : ''; ?>>
@@ -95,5 +101,6 @@ function cacti_permission_filter(string $page, string $action, string $tab, stri
     <input type='hidden' name='id' value='<?php print html_escape($id); ?>'>
     </form></td></tr>
     <?php
-    html_end_box();
+        html_end_box();
+    }
 }
