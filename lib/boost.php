@@ -382,6 +382,100 @@ function boost_return_cached_image(&$graph_data_array)
     }
 }
 
+/**
+ * Every per-viewer or per-request input that changes rrdtool_function_graph()
+ * output must be here, or an image rendered for one user is served to another.
+ */
+function boost_graph_cache_render_key($graph_data_array)
+{
+    if (isset($graph_data_array['graph_theme'])) {
+        $theme = cacti_validate_theme($graph_data_array['graph_theme']);
+    } else {
+        $theme = get_selected_theme();
+    }
+
+    $color_mode = '';
+    if (isset($_COOKIE['CactiColorMode']) && in_array($_COOKIE['CactiColorMode'], array('dark', 'light', 'dark-dimmed'), true)) {
+        $color_mode = $_COOKIE['CactiColorMode'];
+    }
+
+    $font_method = read_config_option('font_method');
+    $parts       = array('theme' => $theme, 'color_mode' => $color_mode, 'font_method' => (string) $font_method);
+
+    /* the From/To legend comment, as rrdtool_function_format_graph_date() resolves it */
+    $parts['date_format'] = (string) read_user_setting('default_date_format', read_config_option('default_date_format'));
+    $parts['datechar']    = (string) read_user_setting('default_datechar', read_config_option('default_datechar'));
+
+    /* cacti_time_zone_set() moves both zones to the viewer's browser offset; PHP
+     * dates the legend while RRDtool dates the axis. rrdtool_set_language() sets
+     * LANG from CACTI_LOCALE before each render, so the viewer's language is
+     * keyed through the locale globals below; LANG here is the web server's */
+    $parts['php_tz'] = date_default_timezone_get();
+    $parts['tz']     = (string) getenv('TZ');
+    $parts['lang']   = (string) getenv('LANG');
+
+    /* number_format_i18n() formats |sum:| legends from these whatever LANG holds */
+    $parts['locale']  = (string) ($GLOBALS['cacti_locale'] ?? '');
+    $parts['country'] = (string) ($GLOBALS['cacti_country'] ?? '');
+
+    /* the window a preset resolves to follows the viewer's first weekday and day
+     * shift; graph pages anchor it on the last poller run, so it holds for one interval.
+     * A window the caller leaves out is keyed as absent, as the check sees it */
+    $parts['graph_start'] = (string) ($graph_data_array['graph_start'] ?? '');
+    $parts['graph_end']   = (string) ($graph_data_array['graph_end'] ?? '');
+
+    /* graph_json.php asks for graphv output, and image_format=png overrides an SVG template */
+    $parts['graphv']       = isset($graph_data_array['graphv']) ? 'on' : '';
+    $parts['image_format'] = (string) ($graph_data_array['image_format'] ?? '');
+
+    /* mirrors rrdtool_function_set_font(); theme fonts are covered by the theme */
+    if ($font_method == 0) {
+        $custom_fonts = read_user_setting('custom_fonts') == 'on';
+
+        $parts['custom_fonts'] = $custom_fonts ? 'on' : '';
+
+        foreach (array('title', 'axis', 'legend', 'unit', 'watermark') as $type) {
+            if ($custom_fonts) {
+                $parts[$type . '_font'] = (string) read_user_setting($type . '_font');
+                $parts[$type . '_size'] = (string) read_user_setting($type . '_size');
+            } else {
+                $parts[$type . '_font'] = (string) read_config_option($type . '_font');
+                $parts[$type . '_size'] = (string) read_config_option($type . '_size');
+            }
+        }
+    }
+
+    /* serialize() is binary safe; a stored font name need not be valid UTF-8 */
+    return hash('sha256', serialize($parts));
+}
+
+function boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array)
+{
+    if ($rra_id > 0) {
+        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id;
+    } else {
+        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id . '_tsi_' . $timespan;
+    }
+
+    if (isset($graph_data_array['graph_height'])) {
+        $cache_file .= '_height_' . $graph_data_array['graph_height'];
+    }
+
+    if (isset($graph_data_array['graph_width'])) {
+        $cache_file .= '_width_' . $graph_data_array['graph_width'];
+    }
+
+    $cache_file .= '_rk_' . boost_graph_cache_render_key($graph_data_array);
+
+    if (isset($graph_data_array['graph_nolegend'])) {
+        $cache_file .= '_thumb.png';
+    } else {
+        $cache_file .= '.png';
+    }
+
+    return $cache_file;
+}
+
 function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$graph_data_array, $return = true)
 {
     global $config;
@@ -483,24 +577,7 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
         if ($cache_directory != '') {
             if (is_dir($cache_directory)) {
                 if (is_writable($cache_directory)) {
-                    if ($rra_id > 0) {
-                        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id;
-                    } else {
-                        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id . '_tsi_' . $timespan;
-                    }
-
-                    if (isset($graph_data_array['graph_height'])) {
-                        $cache_file .= '_height_' . $graph_data_array['graph_height'];
-                    }
-                    if (isset($graph_data_array['graph_width'])) {
-                        $cache_file .= '_width_' . $graph_data_array['graph_width'];
-                    }
-
-                    if (isset($graph_data_array['graph_nolegend'])) {
-                        $cache_file .= '_thumb.png';
-                    } else {
-                        $cache_file .= '.png';
-                    }
+                    $cache_file = boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array);
 
                     if (file_exists($cache_file)) {
                         $mod_time = filemtime($cache_file);
@@ -574,9 +651,19 @@ function boost_prep_graph_array($graph_data_array)
     return $graph_data_array;
 }
 
-function boost_graph_set_file(&$output, $local_graph_id, $rra_id)
+/**
+ * $graph_data_array must be the array boost_graph_cache_check() was given for
+ * this render, before the render filled in any defaults, or the file is written
+ * under a name the next check for the same request will not use. The global
+ * fallback keeps older three-argument callers working.
+ */
+function boost_graph_set_file(&$output, $local_graph_id, $rra_id, $graph_data_array = null)
 {
-    global $config, $boost_sock, $graph_data_array;
+    global $config, $boost_sock;
+
+    if ($graph_data_array === null) {
+        $graph_data_array = $GLOBALS['graph_data_array'] ?? array();
+    }
 
     /* SECURITY: Cast identifiers to integers to prevent path traversal */
     $local_graph_id = (int) $local_graph_id;
@@ -609,25 +696,7 @@ function boost_graph_set_file(&$output, $local_graph_id, $rra_id)
 
         if ($cache_directory != '') {
             if (is_dir($cache_directory)) {
-                if ($rra_id > 0) {
-                    $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id;
-                } else {
-                    $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id . '_tsi_' . $timespan;
-                }
-
-                if (isset($graph_data_array['graph_height'])) {
-                    $cache_file .= '_height_' . $graph_data_array['graph_height'];
-                }
-
-                if (isset($graph_data_array['graph_width'])) {
-                    $cache_file .= '_width_' . $graph_data_array['graph_width'];
-                }
-
-                if (isset($graph_data_array['graph_nolegend'])) {
-                    $cache_file .= '_thumb.png';
-                } else {
-                    $cache_file .= '.png';
-                }
+                $cache_file = boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array);
 
                 if (is_writable($cache_directory)) {
                     /* if the cache file was created in a prior step, save it */

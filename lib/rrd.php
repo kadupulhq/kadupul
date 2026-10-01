@@ -2267,6 +2267,9 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
         return $graph_data;
     }
 
+    /* the cache write must use the key the check above used, which the window defaults below would change */
+    $boost_cache_request = $graph_data_array;
+
     if (empty($graph_data_array['graph_start'])) {
         $graph_data_array['graph_start'] = -86400;
     }
@@ -3225,7 +3228,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                 $output = rrdtool_execute("$graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrdtool_pipe);
 
-                boost_graph_set_file($output, $local_graph_id, $rra_id);
+                boost_graph_set_file($output, $local_graph_id, $rra_id, $boost_cache_request);
 
                 return $output;
             }
