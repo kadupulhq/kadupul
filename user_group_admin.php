@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -196,6 +197,11 @@ function user_group_copy($id, $prefix = 'New Group')
 
     $name = $prefix . ' ' . $count;
 
+    // The copy skips form_save(), so its name gets the same character rule here.
+    if (!preg_match('/^[A-Za-z0-9._\\\\@ -]+$/', $name)) {
+        return false;
+    }
+
     db_execute_prepared('INSERT INTO user_auth_group
 		(name, description, graph_settings, login_opts, show_tree, show_list, show_preview,
 		policy_graphs, policy_trees, policy_hosts, policy_graph_templates, enabled)
@@ -244,6 +250,8 @@ function user_group_copy($id, $prefix = 'New Group')
     }
 
     $count++;
+
+    return true;
 }
 
 function update_policies()
@@ -416,7 +424,11 @@ function form_actions()
                 }
             } elseif (get_nfilter_request_var('drp_action') == '2') { /* copy */
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
-                    user_group_copy($selected_items[$i], get_nfilter_request_var('group_prefix'));
+                    if (!user_group_copy($selected_items[$i], get_nfilter_request_var('group_prefix'))) {
+                        raise_message('group_prefix', __('The Group Prefix may only contain letters, numbers, spaces and the characters . _ \\ @ -'), MESSAGE_LEVEL_ERROR);
+
+                        break;
+                    }
                 }
             } elseif (get_nfilter_request_var('drp_action') == '3') { /* enable */
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
@@ -953,7 +965,8 @@ function user_group_graph_perms_edit($tab, $header_label)
 			$(document).tooltip({
 				items: '[data-tooltip]',
 				content: function() {
-					return $(this).attr('data-tooltip');
+					// The reason is plain text; the attribute read has already decoded it.
+					return $('<div>').text($(this).attr('data-tooltip')).html();
 				}
 			});
 		});
