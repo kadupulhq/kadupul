@@ -185,14 +185,13 @@ function form_save() {
 				$save['search_filter']     = form_input_validate(get_nfilter_request_var('search_filter'),     'search_filter',   '', true, 3);
 				$save['specific_dn']         = form_input_validate(get_nfilter_request_var('specific_dn'),         'specific_dn',       '', true, 3);
 
-				/* the edit form never shows the saved password, so a blank field keeps it */
-				$specific_password = get_nfilter_request_var('specific_password');
+				$save['specific_password']   = form_input_validate(get_nfilter_request_var('specific_password'), 'specific_password', '', true, 3);
 
-				if ($specific_password == '' && cacti_sizeof($saved_ldap)) {
-					$specific_password = $saved_ldap['specific_password'];
+				/* the edit form never shows the saved password, so a blank field keeps it;
+				 * it is assigned after validation so it is not retained for a redisplay */
+				if ($save['specific_password'] == '' && cacti_sizeof($saved_ldap)) {
+					$save['specific_password'] = $saved_ldap['specific_password'];
 				}
-
-				$save['specific_password']   = form_input_validate($specific_password,   'specific_password', '', true, 3);
                                 $save['cn_full_name']        = get_nfilter_request_var('cn_full_name');
                                 $save['cn_email']            = get_nfilter_request_var('cn_email');
 

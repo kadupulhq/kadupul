@@ -145,6 +145,18 @@ test('a server that loses the connection between search and bind moves both to t
 		->and(ldap_failover_user_binds($result))->toBe(array('ldap1', 'ldap2'));
 });
 
+test('spaces around the server list do not add an empty server that searches and binds on different servers', function () {
+	$scenario = ldap_directory_probe_replicas();
+	$scenario['config']['ldap_server'] = ' ldap1 ldap2 ';
+	$scenario['servers']['ldap1']['entries'][0]['bind_errno'] = -1;
+
+	$result = ldap_failover_login($scenario, 'secret');
+
+	expect($result['error'])->toBeFalse()
+		->and(array_column($result['calls']['searches'], 0))->toBe(array('ldap1', 'ldap2'))
+		->and(ldap_failover_user_binds($result))->toBe(array('ldap1', 'ldap2'));
+});
+
 test('a user missing from the first server is searched for and bound on the next', function () {
 	$scenario = ldap_directory_probe_replicas();
 	array_shift($scenario['servers']['ldap1']['entries']);

@@ -117,7 +117,10 @@ function is_error_message() {
 	return false;
 }
 
+/* like the real validator, every value is retained for a redisplay after an error */
 function form_input_validate($value, $name, $regex, $allow_empty, $error) {
+	$_SESSION['sess_field_values'][$name] = $value;
+
 	return $value;
 }
 
@@ -166,6 +169,7 @@ register_shutdown_function(function () {
 		'html'     => $html,
 		'writes'   => $GLOBALS['writes'],
 		'messages' => $GLOBALS['messages'],
+		'retained' => $_SESSION['sess_field_values'] ?? array(),
 	));
 });
 
@@ -495,10 +499,18 @@ test('saving a domain with a blank search password keeps the saved one', functio
 		->and($result['writes']['user_domains_ldap']['specific_password'])->toBe(LDAP_FORM_SECRET);
 });
 
+test('saving a domain with a blank search password does not retain the saved one for a redisplay', function () {
+	$result = ldap_form_domain_run('form_save()', ldap_form_domain_post(), ldap_form_domain_row());
+
+	expect($result['retained']['specific_password'] ?? '')->toBe('')
+		->and(json_encode($result['retained']))->not->toContain(LDAP_FORM_SECRET);
+});
+
 test('saving a domain with a new search password stores it', function () {
 	$result = ldap_form_domain_run('form_save()', ldap_form_domain_post(array('specific_password' => 'new-pass')), ldap_form_domain_row());
 
-	expect($result['writes']['user_domains_ldap']['specific_password'])->toBe('new-pass');
+	expect($result['writes']['user_domains_ldap']['specific_password'])->toBe('new-pass')
+		->and($result['retained']['specific_password'] ?? null)->toBe('new-pass');
 });
 
 test('changing a domain server, port or encryption needs the search password again', function () {

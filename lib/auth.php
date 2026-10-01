@@ -3835,7 +3835,7 @@ function ldap_login_process($username) {
 
 	if ($password != '') {
 		/* search and bind on one server, and move on only when that server cannot be reached */
-		foreach (preg_split('/\s+/', read_config_option('ldap_server')) as $ldap_server) {
+		foreach (preg_split('/\s+/', trim(read_config_option('ldap_server'))) as $ldap_server) {
 			$ldap_auth_response = false;
 
 			/* get user DN */
@@ -4163,7 +4163,7 @@ function domains_ldap_servers($realm) {
 		$servers = read_config_option('ldap_server');
 	}
 
-	return preg_split('/\s+/', $servers);
+	return preg_split('/\s+/', trim($servers));
 }
 
 /**
