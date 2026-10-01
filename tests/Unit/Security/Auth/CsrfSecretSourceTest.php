@@ -14,7 +14,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 function csrf_secret_run(array $scenario): array
 {
     $root = dirname(__DIR__, 4);
-    $scenario += array('settings' => array(), 'path_csrf_secret' => '', 'base_path' => $root, 'install' => false, 'document_root' => '');
+    $scenario += array('settings' => array(), 'path_csrf_secret' => '', 'base_path' => $root, 'install' => false, 'document_root' => $root);
 
     $program = <<<'PHP'
 $scenario = json_decode($argv[2], true);
@@ -28,6 +28,7 @@ $config = array(
     'url_path' => '/kadupul/',
     'is_web' => true,
     'path_csrf_secret' => $scenario['path_csrf_secret'],
+    'path_csrf_web_root' => $scenario['path_csrf_web_root'] ?? '',
 );
 $_SESSION = array();
 $GLOBALS['writes'] = array();
@@ -196,4 +197,16 @@ test('a dangling external symlink is rejected before an installer write', functi
         unlink($dir . '/secret');
         rmdir($dir);
     }
+});
+
+test('web requests without a trusted served root refuse external secrets', function () {
+    $dir = csrf_secret_directory();
+    file_put_contents($dir . '/csrf-secret.php', str_repeat('ab', 20));
+    try {
+        $result = csrf_secret_run(array('document_root' => '', 'path_csrf_secret' => $dir . '/csrf-secret.php', 'settings' => array('csrf_secret' => str_repeat('12', 20))));
+    } finally {
+        unlink($dir . '/csrf-secret.php');
+        rmdir($dir);
+    }
+    expect($result['secret'])->toBe(str_repeat('12', 20));
 });

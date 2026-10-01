@@ -126,7 +126,11 @@ function set_auth_cookie($user)
         $_SESSION['sess_remember_token'] = array('user_id' => $user['id'], 'hash' => $secret);
 
         cacti_cookie_session_set($user['id'], $user['realm'], $nssecret);
+
+        return true;
     }
+
+    return false;
 }
 
 /**

@@ -76,3 +76,12 @@ test('a malformed remember-me cookie sends the visitor to the login page without
     'one part' => '42',
     'four parts' => '42,0,remember-me-token,extra',
 ));
+
+test('remember cookie issuance returns its documented boolean outcome', function (bool $table) {
+    $result = auth_entry_probe_run(array(
+        'cache_table' => $table,
+        'call' => array('type' => 'set_auth_cookie', 'args' => array(array('id' => 42, 'realm' => 0))),
+    ));
+    expect($result['return'])->toBe($table)
+        ->and(in_array('cookie_set', $result['events'], true))->toBe($table);
+})->with(array(true, false));

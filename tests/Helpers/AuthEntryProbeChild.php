@@ -238,7 +238,7 @@ function db_execute($sql, $log = true)
 
 function db_table_exists($table, $log = true)
 {
-    return true;
+    return $GLOBALS['scenario']['cache_table'] ?? true;
 }
 
 function db_column_exists($table, $column, $log = true)
@@ -482,7 +482,7 @@ if ($call['type'] === 'include_auth') {
     require $root . '/include/auth.php';
 
     $GLOBALS['probe']['page_continued'] = true;
-} elseif (in_array($call['type'], array('check_auth_cookie', 'clear_auth_cookie', 'local_auth_login_process', 'auth_login_create_user_from_template', 'cacti_auth_transition'), true)) {
+} elseif (in_array($call['type'], array('check_auth_cookie', 'clear_auth_cookie', 'set_auth_cookie', 'local_auth_login_process', 'auth_login_create_user_from_template', 'cacti_auth_transition'), true)) {
     $started = hrtime(true);
     $GLOBALS['probe']['return'] = call_user_func_array($call['type'], $call['args'] ?? array());
     $GLOBALS['probe']['elapsed_seconds'] = (hrtime(true) - $started) / 1000000000;

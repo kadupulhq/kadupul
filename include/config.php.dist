@@ -131,7 +131,7 @@ $disable_log_rotation = false;
  * Optional parameter to define the path of the csrf_secret.php path.  This
  * variable is for packagers who wish to specify an alternate location of
  * the CSRF secret file. The file must be outside every served document root.
- * For CLI rotation or installation, configure the trusted served root below;
+ * For CLI rotation/installation or web requests without DOCUMENT_ROOT, configure the trusted served root below;
  * external file use fails closed when that root cannot be established.
  */
 
