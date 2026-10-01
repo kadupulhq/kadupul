@@ -188,6 +188,9 @@ final class VdefPresentationTest extends TestCase
         try {
             $kernel->boot();
             $container = $kernel->getContainer()->get('test.service_container');
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['collector_id' => 1, 'url_path' => '/']);
+            $container->set(LegacyConfiguration::class, $configuration);
             $database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
             foreach ([
                 'CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)',
