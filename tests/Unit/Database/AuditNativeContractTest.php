@@ -129,7 +129,7 @@ final class AuditNativeContractTest extends TestCase
             fclose($pipes[2]);
             self::assertSame($expected, proc_close($process), $error . $output);
             self::assertSame('', $error);
-            if ($option === '--create' || in_array($case, array('partial-import','import-failure','empty-import','swap-failure','missing'), true)) {
+            if ($option === '--create' || in_array($case, array('partial-import', 'import-failure', 'empty-import', 'swap-failure', 'missing'), true)) {
                 $old = $expected !== 0;
                 self::assertSame($old ? 'old baseline' : 'probe', $db->query('SELECT table_name FROM table_columns')->fetchColumn());
                 self::assertSame($old ? 'old baseline' : 'other', $db->query('SELECT idx_table_name FROM table_indexes')->fetchColumn());
@@ -193,6 +193,6 @@ final class AuditNativeContractTest extends TestCase
     public static function cases(): array
     {
         $reports = array_map(static fn($case) => array($case, '--report', 0), array('report-type', 'report-missing-column', 'report-unexpected-column', 'report-no-baseline', 'report-missing-index', 'report-unique-index', 'report-primary-index', 'report-index-reordered', 'report-unexpected-index', 'report-clean', 'report-index-clean'));
-        return array_merge($reports, array(array('valid','--create',0),array('partial-import','--repair',1),array('import-failure','--repair',1),array('empty-import','--create',1),array('swap-failure','--create',1),array('missing','--create',1),array('create-table_columns-failure','--create',1),array('create-table_indexes-failure','--create',1),array('repair-failure','--repair',1),array('repair-success','--repair',0),array('plan','--alters',0),array('dump-failure','--load',1),array('dump-success','--load',0),array('missing-docs','--load',1),array('upgrade-success','--upgrade',0),array('upgrade-failure','--upgrade',0),array('version','--version',0),array('help','--help',0)));
+        return array_merge($reports, array(array('valid', '--create', 0), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-failure', '--upgrade', 0), array('version', '--version', 0), array('help', '--help', 0)));
     }
 }
