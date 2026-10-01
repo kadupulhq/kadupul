@@ -100,6 +100,12 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'device creation serializes group authorization revocations',
         // Require actual recorded assertions, rather than the scenario's
         // console-only completion banner, which is absent from observations.
+        'aggregate extreme pages return controlled 400 responses',
+        'aggregate legacy row defaults and supported sizes reach the list',
+        'aggregate legacy graphs.graphs sort preserves graph-count ordering',
+        'aggregate forced source exclusions render checked and disabled',
+        'aggregate forged form data cannot clear a trusted forced exclusion',
+        'aggregate worker independently restores trusted forced exclusions from source rows',
         'database row does not match submitted actor and source',
         'graph override data handoff failed',
         'source graph items were not handed off',
@@ -213,6 +219,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
+        'src/AggregateTemplate/Domain/AggregateTemplateItemPolicy.php',
+        'src/AggregateTemplate/Domain/AggregateTemplateLegacyPath.php',
         'bin/legacy-device-edit.php', 'bin/legacy-aggregate-template.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',

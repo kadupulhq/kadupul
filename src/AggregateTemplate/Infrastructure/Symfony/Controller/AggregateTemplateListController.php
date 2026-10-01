@@ -58,7 +58,7 @@ final readonly class AggregateTemplateListController
         return new Response($request->isMethod('HEAD') ? '' : $twig->render('aggregate_template/list.html.twig', [
             'result' => $result, 'criteria' => $criteria,
             'pages' => max(1, (int) ceil($result['total'] / $criteria->pageSize)),
-            'legacyAggregateGraphsUrl' => rtrim($configuration->values()['url_path'] ?? '/', '/') . '/aggregate_graphs.php',
+            'legacyAggregateGraphsUrl' => \Kadupul\AggregateTemplate\Domain\AggregateTemplateLegacyPath::graphs($configuration->values()['url_path'] ?? '/'),
         ]), 200, $headers);
     }
 }

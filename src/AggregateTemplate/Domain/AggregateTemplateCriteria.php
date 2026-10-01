@@ -17,7 +17,7 @@ final readonly class AggregateTemplateCriteria
         public string $direction = 'asc',
         public bool $hasGraphs = false,
     ) {
-        if ($page < 1 || !in_array($pageSize, [30, 50, 100], true)
+        if ($page < 1 || $page > 1000000 || !in_array($pageSize, [30, 50, 100], true)
             || !in_array($sort, ['name', 'graphs', 'source'], true)
             || !in_array($direction, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException('Invalid aggregate template list options.');

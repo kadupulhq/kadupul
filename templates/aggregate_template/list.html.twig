@@ -38,6 +38,7 @@
                         <a href="{{ path('aggregate_template_edit', {id: row.id}) }}">{{ row.name }}</a>
                     </td>
                     <td>{{ row.deletable ? 'Yes'|trans({}, 'aggregate_template') : 'No'|trans({}, 'aggregate_template') }}</td>
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- AggregateTemplateLegacyPath accepts only local absolute paths; rejects schemes, protocol-relative paths, backslashes and controls. Row ID is an integer. Adversarial cases covered by AggregateTemplateReviewRegressionTest. #}
                     <td>{% if row.graphs > 0 %}<a href="{{ legacyAggregateGraphsUrl }}?reset=true&amp;template_id={{ row.id }}">{{ row.graphs }}</a>{% else %}0{% endif %}</td><td>{{ row.sourceTemplateName }}</td>
                 </tr>
             {% else %}<tr><td colspan="5">{{ 'No aggregate templates found.'|trans({}, 'aggregate_template') }}</td></tr>{% endfor %}

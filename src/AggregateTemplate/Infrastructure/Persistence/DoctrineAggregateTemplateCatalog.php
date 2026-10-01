@@ -143,7 +143,7 @@ final readonly class DoctrineAggregateTemplateCatalog implements AggregateTempla
                 $itemId = (int) $item['id'];
                 $current = $currentByItem[$itemId] ?? [];
                 $graphTypeName = self::graphTypeName((int) $item['graph_type_id']);
-                $forceSkip = self::forceSkip($graphTypeName, (string) $item['value'], (string) $item['text_format']);
+                $forceSkip = \Kadupul\AggregateTemplate\Domain\AggregateTemplateItemPolicy::forceSkip((int) $item['graph_type_id'], (string) $item['value'], (string) $item['text_format']);
                 $items[] = [
                     'id' => $itemId, 'sequence' => (int) $item['sequence'],
                     'title' => self::itemTitle($graphTypeName, (string) $item['value'], (string) $item['text_format']),
@@ -194,19 +194,6 @@ final readonly class DoctrineAggregateTemplateCatalog implements AggregateTempla
         return [1 => 'COMMENT', 2 => 'HRULE', 3 => 'VRULE', 4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 7 => 'AREA', 8 => 'AREA:STACK', 9 => 'GPRINT', 10 => 'LEGEND', 11 => 'GPRINT:LAST', 12 => 'GPRINT:MAX', 13 => 'GPRINT:MIN', 14 => 'GPRINT:AVERAGE', 15 => 'LEGEND_CAMM', 20 => 'LINE:STACK', 30 => 'TICK', 40 => 'TEXTALIGN'][$id] ?? 'ITEM';
     }
 
-    private static function forceSkip(string $type, string $value, string $text): bool
-    {
-        if ($type === 'HRULE') {
-            return preg_match('/(:bits:|:bytes:|\|sum:)/', $value) !== 1;
-        }
-        if ($type === 'VRULE' || $type === 'TICK' || $type === 'TEXTALIGN') {
-            return true;
-        }
-        if ($type === 'COMMENT') {
-            return $text === '';
-        }
-        return false;
-    }
 
     private static function itemTitle(string $type, string $value, string $text): string
     {

@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import http.cookiejar
+import json
 import os
 import re
 import subprocess
@@ -125,7 +126,7 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
         "INSERT INTO graph_templates_graph (graph_template_id,local_graph_id,title,title_cache,width,height) "
         "VALUES (@gt,0,'Source title','Source title',480,120); "
         "INSERT INTO graph_templates_item (graph_template_id,graph_type_id,consolidation_function_id,text_format,value,sequence) "
-        "VALUES (@gt,4,1,'source item one','test_value_one',0),(@gt,4,1,'source item two','test_value_two',1);")
+        "VALUES (@gt,4,1,'source item one','test_value_one',0),(@gt,4,1,'source item two','test_value_two',1),(@gt,3,1,'Vertical rule','1700000000',2);")
     source_id = int(sql(f"SELECT id FROM graph_templates WHERE name='{source_name}'"))
     sql(f"INSERT INTO graph_templates (name) VALUES ('{source_name}')")
     duplicate_source_id = int(sql(f"SELECT MAX(id) FROM graph_templates WHERE name='{source_name}'"))
@@ -146,6 +147,17 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
 
     status, _, page = scenario.request("/aggregate-templates")
     check(status == 200 and "Aggregate graph templates" in page, "aggregate list did not render")
+    extreme_pages = [scenario.request('/aggregate-templates?page=' + str(value))[0] for value in [1000001, 9223372036854775807]]
+    check(extreme_pages == [400, 400], 'aggregate extreme pages return controlled 400 responses')
+    legacy_row_results = []
+    legacy_graph_sorts = []
+    for rows in ['-1', '10', '25', '30', '50', '100']:
+        legacy_status, legacy_url, _ = scenario.request('/aggregate_templates.php?' + urllib.parse.urlencode({'rows': rows, 'filter': marker, 'sort_column': 'graphs.graphs', 'sort_direction': 'DESC'}))
+        legacy_query = urllib.parse.parse_qs(urllib.parse.urlparse(legacy_url).query)
+        legacy_row_results.append(legacy_status == 200 and (legacy_query.get('rows') == [rows] if rows in ['30', '50', '100'] else 'rows' not in legacy_query))
+        legacy_graph_sorts.append(legacy_query.get('sort') == ['graphs'] and legacy_query.get('direction') == ['desc'])
+    check(all(legacy_row_results), 'aggregate legacy row defaults and supported sizes reach the list')
+    check(all(legacy_graph_sorts), 'aggregate legacy graphs.graphs sort preserves graph-count ordering')
     if harness is not None:
         from aggregate_template_browser import verify_source_selector
         verify_source_selector(harness, scenario, source_id, check)
@@ -158,6 +170,9 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
         for identity in [source_id, duplicate_source_id]
     ), 'duplicate-name graph templates retain both selectable identities')
     check(form['fields']['aggregate_template[graph_type]'] == '8', 'new aggregate template uses the supported STACK default')
+    forced_input = re.search(r'<input\b(?=[^>]*name="aggregate_template\[items\]\[2\]\[skip\]")[^>]*>', page)
+    check(forced_input is not None and 'disabled' in forced_input.group(0) and 'checked' in forced_input.group(0),
+          'aggregate forced source exclusions render checked and disabled')
     item_controls = re.findall(r'name="(aggregate_template\[items\][^"]+)"', page)
     check(len(item_controls) >= 8, f"template item controls were not rendered as expected: {item_controls}")
     status, url, page = scenario.submit(form, {
@@ -167,6 +182,8 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
         "aggregate_template[graphSettings_width][override]": "1",
         "aggregate_template[items][0][skip]": "1",
         "aggregate_template[items][1][total]": "1",
+        "aggregate_template[items][2][forceSkip]": "0",
+        "aggregate_template[items][2][skip]": "",
     })
     check(status == 200 and marker in page, f"template create failed with HTTP {status}: {page[:500]}")
     match = re.search(r"/aggregate-templates/([1-9][0-9]*)/edit\?saved=1$", urllib.parse.urlparse(url).path + ("?" + urllib.parse.urlparse(url).query if urllib.parse.urlparse(url).query else ""))
@@ -175,9 +192,29 @@ def main(scenario: Scenario | None = None, authenticate: bool = True, authentica
     check(sql(f"SELECT CONCAT(name,':',graph_template_id,':',user_id) FROM aggregate_graph_templates WHERE id={template_id}") == f"{marker}:{source_id}:1", "database row does not match submitted actor and source")
     check(sql(f"SELECT graph_type FROM aggregate_graph_templates WHERE id={template_id}") == '8', 'supported STACK default survives the worker data handoff')
     check(sql(f"SELECT CONCAT(t_width,':',width) FROM aggregate_graph_templates_graph WHERE aggregate_template_id={template_id}") == "on:640", "graph override data handoff failed")
-    check(int(sql(f"SELECT COUNT(*) FROM aggregate_graph_templates_item WHERE aggregate_template_id={template_id}")) == 2, "source graph items were not handed off")
+    check(int(sql(f"SELECT COUNT(*) FROM aggregate_graph_templates_item WHERE aggregate_template_id={template_id}")) == 3, "source graph items were not handed off")
     item_flags = sql(f"SELECT GROUP_CONCAT(CONCAT(sequence,':',item_skip,':',item_total) ORDER BY sequence SEPARATOR ',') FROM aggregate_graph_templates_item WHERE aggregate_template_id={template_id}")
-    check(item_flags == "0:on:,1::on", f"skip and total item controls were not handed off: {item_flags}")
+    check(item_flags == "0:on:,1::on,2:on:", f"skip and total item controls were not handed off: {item_flags}")
+    forced_id = int(sql(f'SELECT id FROM graph_templates_item WHERE graph_template_id={source_id} AND local_graph_id=0 AND sequence=2'))
+    check(sql(f'SELECT item_skip FROM aggregate_graph_templates_item WHERE aggregate_template_id={template_id} AND graph_templates_item_id={forced_id}') == 'on',
+          'aggregate forged form data cannot clear a trusted forced exclusion')
+    if harness is not None:
+        source_ids = [int(value) for value in sql(f'SELECT id FROM graph_templates_item WHERE graph_template_id={source_id} AND local_graph_id=0 ORDER BY sequence,id').splitlines()]
+        command = {'actor': 1, 'action': 'save', 'id': 0, 'revision': '', 'data': {
+            'name': marker + '_direct', 'graph_template_id': source_id, 'gprint_prefix': '', 'gprint_format': False,
+            'graph_type': 8, 'total': 1, 'total_type': 1, 'total_prefix': '', 'order_type': 1,
+            'graphSettings': {'width': {'value': '640', 'override': True}},
+            'items': [{'id': identity, 'colorTemplate': 0, 'skip': False, 'total': False} for identity in source_ids],
+        }}
+        result = harness.compose('exec', '-T', '-u', 'www-data', 'web', 'php',
+                                 'bin/legacy-aggregate-template.php', data=json.dumps(command), check=False)
+        records = [line[len('KADUPUL_AGGREGATE_RESULT='):] for line in result['stdout'].splitlines() if line.startswith('KADUPUL_AGGREGATE_RESULT=')]
+        record = json.loads(records[0]) if len(records) == 1 else {}
+        direct_id = record.get('ids', [0])[0] if isinstance(record.get('ids'), list) and len(record['ids']) == 1 else 0
+        check(result['exit'] == 0 and record.get('status') == 'ok' and type(direct_id) is int and direct_id > 0
+              and sql(f'SELECT item_skip FROM aggregate_graph_templates_item WHERE aggregate_template_id={direct_id} AND graph_templates_item_id={forced_id}') == 'on',
+              'aggregate worker independently restores trusted forced exclusions from source rows')
+        sql(f'DELETE FROM aggregate_graph_templates_item WHERE aggregate_template_id={direct_id}; DELETE FROM aggregate_graph_templates_graph WHERE aggregate_template_id={direct_id}; DELETE FROM aggregate_graph_templates WHERE id={direct_id}')
     child_graph_id = seed_child_graph(template_id, source_id, marker)
 
     status, _, page = scenario.request(f"/aggregate-templates/{template_id}/edit")

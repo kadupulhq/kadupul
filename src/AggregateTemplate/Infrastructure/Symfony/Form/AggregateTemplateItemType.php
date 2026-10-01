@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class AggregateTemplateItemType extends AbstractType
@@ -24,6 +26,12 @@ final class AggregateTemplateItemType extends AbstractType
             ->add('colorTemplate', ChoiceType::class, ['label' => false, 'choices' => $options['color_templates'], 'choice_translation_domain' => false])
             ->add('skip', CheckboxType::class, ['label' => 'Skip', 'required' => false])
             ->add('total', CheckboxType::class, ['label' => 'Total', 'required' => false]);
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event): void {
+            $data = $event->getData();
+            $event->getForm()->add('skip', CheckboxType::class, [
+                'label' => 'Skip', 'required' => false, 'disabled' => is_array($data) && ($data['forceSkip'] ?? false) === true,
+            ]);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

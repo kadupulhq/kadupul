@@ -45,6 +45,9 @@ final readonly class LegacyAggregateTemplatesController
             return new Response($translator->trans('Open Aggregate Templates and use its current forms.', [], 'aggregate_template'), 400, $headers);
         }
         $filters = array_intersect_key($query, array_flip(['filter', 'page', 'rows', 'has_graphs']));
+        if (isset($filters['rows']) && !in_array($filters['rows'], ['30', '50', '100'], true)) {
+            unset($filters['rows']);
+        }
         if (isset($filters['has_graphs'])) {
             $filters['has_graphs'] = match ($filters['has_graphs']) {
                 'true' => 'on', 'false' => '', default => $filters['has_graphs'],
@@ -52,7 +55,7 @@ final readonly class LegacyAggregateTemplatesController
         }
         if (isset($query['sort_column'])) {
             $filters['sort'] = match ($query['sort_column']) {
-                'name' => 'name', 'graphs' => 'graphs', 'graph_template_name' => 'source', default => 'name',
+                'name' => 'name', 'graphs', 'graphs.graphs' => 'graphs', 'graph_template_name' => 'source', default => 'name',
             };
         }
         if (is_string($query['sort_direction'] ?? null)) {

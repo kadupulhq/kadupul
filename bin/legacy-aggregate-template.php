@@ -105,11 +105,16 @@ try {
         $settings['aggregate_template_id'] = $id;
         sql_save($settings, 'aggregate_graph_templates_graph', 'aggregate_template_id', false);
 
-        $sourceItems = aggregateWorkerRead($connection, 'SELECT id, sequence FROM graph_templates_item WHERE local_graph_id = 0 AND graph_template_id = ? ORDER BY sequence, id', [$save['graph_template_id']]);
+        $sourceItems = aggregateWorkerRead($connection, 'SELECT id, sequence, graph_type_id, value, text_format FROM graph_templates_item WHERE local_graph_id = 0 AND graph_template_id = ? ORDER BY sequence, id', [$save['graph_template_id']]);
         $phase = 'item write';
         $items = [];
         foreach ($sourceItems as $item) {
-            $items[(int) $item['id']] = ['sequence' => (int) $item['sequence']];
+            $itemId = (int) $item['id'];
+            $items[$itemId] = ['sequence' => (int) $item['sequence']];
+            // Recompute from the trusted source row, independently of hidden form data.
+            if (\Kadupul\AggregateTemplate\Domain\AggregateTemplateItemPolicy::forceSkip((int) $item['graph_type_id'], (string) $item['value'], (string) $item['text_format'])) {
+                $_POST['agg_skip_' . $itemId] = 'on';
+            }
         }
         aggregate_validate_graph_items($_POST, $items);
         $oldRows = aggregateWorkerRead($connection, 'SELECT * FROM aggregate_graph_templates_item WHERE aggregate_template_id = ?', [$id]);

@@ -21,6 +21,8 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'src/AggregateTemplate/Domain/AggregateTemplateItemPolicy.php',
+        'src/AggregateTemplate/Domain/AggregateTemplateLegacyPath.php',
         'bin/legacy-device-edit.php', 'bin/legacy-aggregate-template.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -165,6 +167,12 @@ def main():
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     aggregate_handoff_checks = [
+        'aggregate extreme pages return controlled 400 responses',
+        'aggregate legacy row defaults and supported sizes reach the list',
+        'aggregate legacy graphs.graphs sort preserves graph-count ordering',
+        'aggregate forced source exclusions render checked and disabled',
+        'aggregate forged form data cannot clear a trusted forced exclusion',
+        'aggregate worker independently restores trusted forced exclusions from source rows',
         'database row does not match submitted actor and source',
         'graph override data handoff failed',
         'source graph items were not handed off',
