@@ -287,6 +287,9 @@ jobs:
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh
 
+      - name: Check merge validation preserves incoming content
+        run: bash tests/tools/test_githooks_merge.sh
+
   javascript:
     name: JavaScript
     runs-on: ubuntu-latest
