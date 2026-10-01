@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
 eval(<<<'ADAPTERS'
 namespace KadupulUnionTests;
@@ -19,7 +19,7 @@ $unionFunctions = [
     'exec_with_timeout' => ['lib/poller.php', ['false', 'null', 'string']],
 ];
 foreach ($unionFunctions as $name => [$file, $types]) {
-    eval('namespace KadupulUnionTests; ' . test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/' . $file), $name));
+    eval('namespace KadupulUnionTests; ' . test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/' . $file), $name));
 }
 
 beforeEach(function () {
