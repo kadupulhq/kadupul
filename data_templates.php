@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -935,7 +936,7 @@ function template_edit()
                 } elseif (isset($fields_host_edit[$field['data_name']])) {
                     $help = $fields_host_edit[$field['data_name']]['description'];
                 } else {
-                    $help = $field['name'];
+                    $help = html_escape($field['name']);
                 }
 
                 print "<div class='formRow $class'>";
