@@ -275,7 +275,15 @@ this PR changes documentation only.
 legacy hook adapter. It returns Domain `RenderResult` outcomes for source HTML,
 real-time output and error images; infrastructure output adapters retain the
 existing filesystem permissions/failure handling and GD/theme behavior.
-Application imports none of those implementations.
+Application imports none of those implementations. R7 adds Graphing's
+`Application/Port/RenderClock` and `Infrastructure/Legacy/LegacyRenderClock`;
+the procedural wrapper supplies the existing clock through a Closure callback,
+so Graphing has no cross-module Platform Application import. Encoding/transport
+adapters translate their internal exception into
+`Domain/Render/UnrepresentableGraphArgument`; the use case catches only its own
+Domain failure and preserves mode-specific output outcomes. R7's file and gate
+lists include both contracts, zero/one clock calls, native rejection through
+adapters, no submission/cache write after failure and architecture checks.
 
 The Boost cache key becomes the hash of the context plus the request, which
 covers every input PR #705 keys by. The graph tables carry no revision, so a
