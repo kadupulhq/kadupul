@@ -212,7 +212,7 @@ function parse_validate_graph_template_id($variable)
     return $output_type_id;
 }
 
-function form_save()
+function form_save(): never
 {
     /* ================= input validation ================= */
     get_filter_request_var('local_graph_id');

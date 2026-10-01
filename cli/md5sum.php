@@ -298,7 +298,7 @@ function display_help()
     print "\nWhen no filename is passed, .md5sum is assumed. Only one filename allowed\n";
 }
 
-function fail($exit_value, $args = array(), $display_help = 0)
+function fail($exit_value, $args = array(), $display_help = 0): never
 {
     global $quiet,$fail_msg;
 

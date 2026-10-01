@@ -246,7 +246,7 @@ function user_group_copy($id, $prefix = 'New Group')
     $count++;
 }
 
-function update_policies()
+function update_policies(): never
 {
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 

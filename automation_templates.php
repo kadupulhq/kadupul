@@ -57,7 +57,7 @@ switch (get_request_var('action')) {
         break;
 }
 
-function automation_template_dnd()
+function automation_template_dnd(): never
 {
     /* ================= Input validation ================= */
     get_filter_request_var('id');

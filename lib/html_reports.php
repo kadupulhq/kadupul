@@ -275,7 +275,7 @@ function reports_item_dnd()
     }
 }
 
-function reports_form_save()
+function reports_form_save(): never
 {
     global $config, $messages;
 

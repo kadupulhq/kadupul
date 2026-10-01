@@ -290,7 +290,7 @@ function automation_duplicate_snmp_option($id, $new_name)
     }
 }
 
-function automation_snmp_item_dnd()
+function automation_snmp_item_dnd(): never
 {
     /* ================= Input validation ================= */
     get_filter_request_var('id');

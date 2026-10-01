@@ -1120,9 +1120,9 @@ function raise_message($message_id, $message = '', $message_level = MESSAGE_LEVE
  * @param  (string) Header section for the message
  * @param  (string) The actual error message to display
  *
- * @return (void)
+ * @return never
  */
-function raise_message_javascript($title, $header, $message)
+function raise_message_javascript($title, $header, $message): never
 {
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
@@ -8574,9 +8574,9 @@ function cacti_normalize_windows_path($path)
  *
  * @param string $default The default to redirect to unless
  *
- * @return void
+ * @return never
  */
-function cacti_header($default = 'index.php')
+function cacti_header($default = 'index.php'): never
 {
     $save_url = validate_redirect_url($_SERVER['HTTP_REFERER'] ?? $default, $default);
 
@@ -8595,9 +8595,9 @@ function cacti_header($default = 'index.php')
  * @param  string $default  Fallback URL when input is empty or invalid
  * @param  int    $status   HTTP status code for the redirect
  *
- * @return void  (exits after sending the header)
+ * @return never  (exits after sending the header)
  */
-function cacti_redirect($url = '', $default = 'index.php', $status = 302)
+function cacti_redirect($url = '', $default = 'index.php', $status = 302): never
 {
     $safe_url = validate_redirect_url(
         !empty($url) ? $url : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $default),

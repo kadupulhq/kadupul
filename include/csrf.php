@@ -35,7 +35,7 @@ function csrf_startup()
     }
 }
 
-function csrf_error_callback()
+function csrf_error_callback(): never
 {
     //Resolve session fixation for PHP 5.4
     session_regenerate_id();
