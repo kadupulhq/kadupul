@@ -51,28 +51,28 @@ final readonly class AnalyzeDatabaseCommand
 
     private function report(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, AnalysisReport $report): int
     {
-        // The original says "Repairing" although it only analyzes; legacy output keeps that.
+        // The original says "Repairing" although it only analyzes; legacy wording stays stable.
         $legacy = ['NOTE: Analyzing All Kadupul Database Tables', 'NOTE: Repairing Tables for ' . ($report->main ? 'Main' : 'Local') . ' Database'];
         foreach ($report->tables as $table) {
             $legacy[] = "NOTE: Analyzing Table -> '" . $table->name . "'" . ($report->noBinlog ? ' without writing to the binlog' : '') . ($table->succeeded() ? ' Successful' : ' Failed');
         }
+        $failed = $report->failed();
+        $exit = $failed === 0 ? Command::SUCCESS : Command::FAILURE;
         if ($mode !== OutputMode::Human) {
-            $json = ['status' => 'ok', 'database' => $report->main ? 'main' : 'local', 'binlog_enabled' => $report->noBinlog, 'tables' => array_map(static fn(TableAnalysis $table): array => $table->toArray(), $report->tables)];
+            $json = ['status' => $failed === 0 ? 'ok' : 'failed', 'database' => $report->main ? 'main' : 'local', 'binlog_enabled' => $report->noBinlog, 'tables' => array_map(static fn(TableAnalysis $table): array => $table->toArray(), $report->tables)];
 
-            return $this->renderer->render(new CommandResult($json, $legacy), $mode, $output);
+            return $this->renderer->render(new CommandResult($json, $legacy, $exit), $mode, $output);
         }
         if ($report->tables !== []) {
             $io->listing(array_map(static fn(TableAnalysis $table): string => $table->name . ': ' . ($table->succeeded() ? 'analyzed' : 'failed'), $report->tables));
         }
-        $failed = $report->failed();
         $summary = sprintf('Analyzed %d tables', count($report->tables));
-        // The original exits 0 when a table fails; the warning says so without changing that.
         if ($failed === 0) {
             $io->success($summary . '.');
         } else {
             $io->warning(sprintf('%s; %d failed.', $summary, $failed));
         }
 
-        return Command::SUCCESS;
+        return $exit;
     }
 }
