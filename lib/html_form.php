@@ -1354,7 +1354,7 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
  * @param string $title_text - the title text for this form
  * @param string $body_text - the text to prompt the user with on this form
  * @param string $cancel_url - the url to go to when the user clicks 'cancel'
- * @param string $action_url - the url to go to when the user clicks 'delete'
+ * @param string $action_url - the url to post when the user clicks 'delete'
  *
  * @return void
  */
@@ -1382,7 +1382,7 @@ function form_confirm($title_text, $body_text, $cancel_url, $action_url)
  * form_confirm_buttons - draws a cancel and delete button suitable for display
  * on a confirmation form
  *
- * @param string $action_url - the url to go to when the user clicks 'delete'
+ * @param string $action_url - the url to post when the user clicks 'delete'
  * @param string $cancel_url - the url to go to when the user clicks 'cancel'
  *
  * @return void
@@ -1394,7 +1394,7 @@ function form_confirm_buttons($action_url, $cancel_url)
 	<tr>
 		<td class='right'>
 			<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='<?php print html_escape($config['url_path'] . $cancel_url);?>' value='<?php print __esc('Cancel');?>'>
-			<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='<?php print html_escape($config['url_path'] . $action_url . '&confirm=true');?>' value='<?php print __esc('Delete');?>'>
+			<input type='button' class='ui-button ui-corner-all ui-widget cactiPostAction' data-url='<?php print html_escape($config['url_path'] . $action_url . '&confirm=true');?>' value='<?php print __esc('Delete');?>'>
 		</td>
 	</tr>
 <?php }

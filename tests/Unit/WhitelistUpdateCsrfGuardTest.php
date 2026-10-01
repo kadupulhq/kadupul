@@ -11,7 +11,7 @@
 $source = file_get_contents(__DIR__ . '/../../data_input.php');
 
 test('whitelist update is guarded before controller dispatch', function () use ($source) {
-    $guard = strpos($source, "cacti_require_post_actions(array('actions', 'whitelist_update'));");
+    $guard = preg_match("/cacti_require_post_actions\\(array\\([^)]*'whitelist_update'/", $source, $match, PREG_OFFSET_CAPTURE) ? $match[0][1] : false;
     $dispatch = strpos($source, "case 'whitelist_update':");
     expect($guard)->not->toBeFalse();
     expect($dispatch)->not->toBeFalse();

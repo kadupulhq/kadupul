@@ -86,10 +86,12 @@ test('a post action link loads its data-url by POST in the page', () => {
   assert.equal(state.bound[0].event, 'click.cactiPostAction');
 
   let prevented = false;
+  let stopped = false;
   const element = link({ url: 'cdef.php?action=item_moveup&id=4&cdef_id=2' }, { href: '#' });
-  state.bound[0].handler.call(element, { preventDefault: () => { prevented = true; } });
+  state.bound[0].handler.call(element, { preventDefault: () => { prevented = true; }, stopPropagation: () => { stopped = true; } });
 
   assert.equal(prevented, true);
+  assert.equal(stopped, true);
   assert.deepEqual(state.loads, [['cdef.php?action=item_moveup&id=4&cdef_id=2', false, true]]);
 });
 
@@ -99,7 +101,7 @@ test('a post action without data-url posts nothing', () => {
 
   for (const element of [link({}, { href: '#' }), link({}, { href: 'cdef.php?action=item_remove&id=4' }), link({ url: '' }, {})]) {
     let prevented = false;
-    state.bound[0].handler.call(element, { preventDefault: () => { prevented = true; } });
+    state.bound[0].handler.call(element, { preventDefault: () => { prevented = true; }, stopPropagation() {} });
     assert.equal(prevented, true);
   }
 

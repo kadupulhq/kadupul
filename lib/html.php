@@ -135,13 +135,21 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                             $href = '#';
                         }
 
+                        // A state changing button posts its URL from the page with the token.
+                        $post = '';
+                        if (isset($icon['post']) && $icon['post'] === true && $href !== '#') {
+                            $classo .= ' cactiPostAction';
+                            $post   = " data-url='$href'";
+                            $href   = '#';
+                        }
+
                         if (isset($icon['title'])) {
                             $title = $icon['title'];
                         } else {
                             $title = $add_label;
                         }
 
-                        print "<span class='cactiFilterAdd' title='$title'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'" : '') . " class='$classo' href='$href'><i class='$classi'></i></a></span>";
+                        print "<span class='cactiFilterAdd' title='$title'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'" : '') . " class='$classo' href='$href'$post><i class='$classi'></i></a></span>";
                     }
                 }
             } else {

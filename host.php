@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'reindex'));
+cacti_require_post_actions(array('actions', 'reindex', 'gt_add', 'gt_remove', 'query_add', 'query_remove'));
 include_once('./lib/api_automation.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_device.php');
@@ -1363,13 +1363,29 @@ function device_javascript()
 		});
 
 		$('[id^="remove"]').on('click', function(data) {
-			var strURL = 'host.php?action=query_remove&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			var scrollTop = $(window).scrollTop();
+			$.post('host.php?action=query_remove', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken }).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+				$(window).scrollTop(scrollTop);
+			});
 		});
 
 		$('[id^="gtremove"]').on('click', function(data) {
-			strURL = 'host.php?action=gt_remove&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			var scrollTop = $(window).scrollTop();
+			$.post('host.php?action=gt_remove', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken }).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+				$(window).scrollTop(scrollTop);
+			});
 		});
 
 		$('#add_dq').on('click', function() {

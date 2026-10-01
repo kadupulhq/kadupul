@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'whitelist_update'));
+cacti_require_post_actions(array('actions', 'whitelist_update', 'field_remove'));
 include_once('./lib/api_data_source.php');
 include_once('./lib/poller.php');
 include_once('./lib/template.php');

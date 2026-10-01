@@ -765,7 +765,10 @@ function handleTableNav() {
 	/* applySkin() reruns this after every refresh, so the namespaced off()
 	 * keeps one handler per link and a click posts once. */
 	$('.cactiPostAction').off('click.cactiPostAction').on('click.cactiPostAction', function(event) {
+		/* Like ajaxAnchors(), keep the click from also selecting the table row
+		 * or folding the filter header that holds the button. */
 		event.preventDefault();
+		event.stopPropagation();
 		/* Without data-url the href is '#' or a GET to the action; posting
 		 * either would send the token to the wrong place. */
 		var url = $(this).data('url');

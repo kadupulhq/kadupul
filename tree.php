@@ -7,7 +7,10 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'tree_up', 'tree_down'));
+cacti_require_post_actions(array(
+    'actions', 'tree_up', 'tree_down', 'sortasc', 'sortdesc', 'copy_node', 'create_node',
+    'delete_node', 'move_node', 'rename_node', 'set_host_sort', 'set_branch_sort'
+));
 include_once('./lib/api_tree.php');
 include_once('./lib/html_tree.php');
 include_once('./lib/data_query.php');
@@ -1152,7 +1155,7 @@ function tree_edit($partial = false)
 		}
 
 		function setBranchSortOrder(type, nodeid) {
-			$.get('tree.php?action=set_branch_sort&type='+type+'&nodeid='+nodeid)
+			$.post('tree.php', { 'action' : 'set_branch_sort', 'type' : type, 'nodeid' : nodeid, '__csrf_magic' : csrfMagicToken })
 			.done(function(data) {
 				branchSortInfo[nodeid] = type;
 			})
@@ -1162,7 +1165,7 @@ function tree_edit($partial = false)
 		}
 
 		function setHostSortOrder(type, nodeid) {
-			$.get('tree.php?action=set_host_sort&type='+type+'&nodeid='+nodeid)
+			$.post('tree.php', { 'action' : 'set_host_sort', 'type' : type, 'nodeid' : nodeid, '__csrf_magic' : csrfMagicToken })
 			.done(function(data) {
 				hostSortInfo[nodeid] = type;
 			})
@@ -1319,7 +1322,7 @@ function tree_edit($partial = false)
 				}
 			})
 			.on('delete_node.jstree', function (e, data) {
-				$.get('?action=delete_node', { 'id' : data.node.id, 'tree_id' : $('#id').val() })
+				$.post('?action=delete_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), '__csrf_magic' : csrfMagicToken })
 					.always(function() {
 						var st = data.instance.get_state();
 						data.instance.load_node(data.instance.get_parent(data.node.id), function () { this.set_state(st); });
@@ -1333,7 +1336,7 @@ function tree_edit($partial = false)
 				}
 			})
 			.on('create_node.jstree', function (e, data) {
-				$.get('?action=create_node', { 'id' : data.node.parent, 'tree_id' : $('#id').val(), 'position' : data.position, 'text' : data.node.text })
+				$.post('?action=create_node', { 'id' : data.node.parent, 'tree_id' : $('#id').val(), 'position' : data.position, 'text' : data.node.text, '__csrf_magic' : csrfMagicToken })
 					.done(function (d) {
 						data.instance.set_id(data.node, d.id);
 						data.instance.set_text(data.node, d.text);
@@ -1349,7 +1352,7 @@ function tree_edit($partial = false)
 					});
 			})
 			.on('rename_node.jstree', function (e, data) {
-				$.get('?action=rename_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), 'text' : data.text })
+				$.post('?action=rename_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), 'text' : data.text, '__csrf_magic' : csrfMagicToken })
 					.done(function (d) {
 						if (d.result == 'false') {
 							data.instance.set_text(data.node, d.text);
@@ -1364,7 +1367,7 @@ function tree_edit($partial = false)
 					});
 			})
 			.on('move_node.jstree', function (e, data) {
-				$.get('?action=move_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), 'parent' : data.parent, 'position' : data.position })
+				$.post('?action=move_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), 'parent' : data.parent, 'position' : data.position, '__csrf_magic' : csrfMagicToken })
 					.always(function () {
 						var st = data.instance.get_state();
 						data.instance.load_node(data.instance.get_parent(data.node.id), function () { this.set_state(st); });
@@ -1381,7 +1384,7 @@ function tree_edit($partial = false)
 					$('#graphs').jstree().deselect_all();
 				}
 
-				$.get('?action=copy_node', { 'id' : data.original.id, 'tree_id' : $('#id').val(), 'parent' : data.parent, 'position' : data.position })
+				$.post('?action=copy_node', { 'id' : data.original.id, 'tree_id' : $('#id').val(), 'parent' : data.parent, 'position' : data.position, '__csrf_magic' : csrfMagicToken })
 					.always(function () {
 						var st = data.instance.get_state();
 						data.instance.load_node(data.instance.get_parent(data.node.id), function () { this.set_state(st); });
@@ -2156,11 +2159,11 @@ function tree()
 		});
 
 		$('#sorta').on('click', function() {
-			loadPageNoHeader('tree.php?action=sortasc');
+			loadPage('tree.php?action=sortasc', false, true);
 		});
 
 		$('#sortd').on('click', function() {
-			loadPageNoHeader('tree.php?action=sortdesc');
+			loadPage('tree.php?action=sortdesc', false, true);
 		});
 
 		$('#form_tree').on('submit', function(event) {
@@ -2181,12 +2184,14 @@ function tree()
         ),
         array(
             'href'     => 'tree.php?action=sortasc',
+            'post'     => true,
             'callback' => true,
             'title'    => __esc('Sort Trees Ascending'),
             'class'    => 'fa fa-sort-alpha-down'
         ),
         array(
             'href'     => 'tree.php?action=sortdesc',
+            'post'     => true,
             'callback' => true,
             'title'    => __esc('Sort Trees Descending'),
             'class'    => 'fa fa-sort-alpha-up'

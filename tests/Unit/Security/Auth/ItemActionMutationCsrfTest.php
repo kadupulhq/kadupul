@@ -4,9 +4,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 /*
- * The move, delete and add links on item lists changed data from a plain GET.
- * Each controller now lists those actions in cacti_require_post_actions(), and
- * the links post from the page with the token instead.
+ * The move, delete and add links on item lists, the device template and data
+ * query buttons, the tree editor, and the utility and log maintenance links
+ * changed data from a plain GET. Each controller now lists those actions in
+ * cacti_require_post_actions(), and the pages post them with the token instead.
  */
 
 function runItemActionRequest($test, $controller, $method, $token, $action, $fields = array())
@@ -41,6 +42,9 @@ function get_graph_parent($id) { return 1; }
 function get_hash_data_template(...$args) { return 'hash'; }
 function check_changed($request, $session) { return false; }
 function sanitize_sql_column($column) { return $column; }
+function sanitize_search_string($value) { return $value; }
+function input_validate_input_number(...$args) {}
+function set_page_refresh($refresh) {}
 function top_header() { echo 'READ'; exit; }
 // The first database call or sequence change shows the action handler ran.
 function handler_reached() { echo 'HANDLER'; exit; }
@@ -54,6 +58,11 @@ function db_fetch_row(...$args) { handler_reached(); }
 function db_fetch_row_prepared(...$args) { handler_reached(); }
 function db_fetch_assoc(...$args) { handler_reached(); }
 function db_fetch_assoc_prepared(...$args) { handler_reached(); }
+function raise_message(...$args) { handler_reached(); }
+// include/global.php loads lib/snmpagent.php; color.php calls color_remove()
+// although no file defines it.
+function snmpagent_cache_rebuilt() { handler_reached(); }
+function color_remove() { handler_reached(); }
 session_id('item-csrf-test');
 $_SESSION = array('sess_user_id' => 42);
 $_SERVER['REQUEST_METHOD'] = $argv[3];
@@ -161,6 +170,33 @@ function itemActionCases()
         array('vdef.php', 'item_moveup', array()),
         array('vdef.php', 'item_movedown', array()),
         array('vdef.php', 'item_remove', array()),
+        array('host.php', 'gt_add', array('host_id' => '1')),
+        array('host.php', 'gt_remove', array('host_id' => '1')),
+        array('host.php', 'query_add', array('host_id' => '1', 'reindex_method' => '1')),
+        array('host.php', 'query_remove', array('host_id' => '1')),
+        array('tree.php', 'sortasc', array()),
+        array('tree.php', 'sortdesc', array()),
+        array('tree.php', 'copy_node', array('tree_id' => '1', 'id' => 'tbranch:2', 'parent' => 'tbranch:1', 'position' => '0')),
+        array('tree.php', 'create_node', array('tree_id' => '1', 'id' => 'tbranch:1', 'position' => '0', 'text' => 'New Node')),
+        array('tree.php', 'delete_node', array('tree_id' => '1', 'id' => 'tbranch:2')),
+        array('tree.php', 'move_node', array('tree_id' => '1', 'id' => 'tbranch:2', 'parent' => 'tbranch:1', 'position' => '0')),
+        array('tree.php', 'rename_node', array('tree_id' => '1', 'id' => 'tbranch:2', 'text' => 'Renamed')),
+        array('tree.php', 'set_host_sort', array('nodeid' => 'tbranch:1', 'type' => 'hsgt')),
+        array('tree.php', 'set_branch_sort', array('nodeid' => 'tbranch:1', 'type' => '1')),
+        array('automation_graph_rules.php', 'remove', array()),
+        array('automation_tree_rules.php', 'remove', array()),
+        array('data_sources.php', 'ds_enable', array()),
+        array('data_sources.php', 'ds_disable', array()),
+        array('data_input.php', 'field_remove', array('data_input_id' => '1')),
+        array('color.php', 'remove', array()),
+        array('utilities.php', 'clear_poller_cache', array()),
+        array('utilities.php', 'rebuild_resource_cache', array()),
+        // utilities_clear_logfile() draws the page header before it truncates the log.
+        array('utilities.php', 'clear_logfile', array(), 'READ'),
+        array('utilities.php', 'purge_logfile', array('filename' => 'cacti.log-item-csrf-test')),
+        array('utilities.php', 'clear_user_log', array()),
+        array('utilities.php', 'purge_data_source_statistics', array()),
+        array('utilities.php', 'rebuild_snmpagent_cache', array()),
     );
 }
 
@@ -172,8 +208,8 @@ test('item actions refuse a GET or an untokened POST before the handler runs', f
     }
 })->with(itemActionCases());
 
-test('item actions run from a POST that carries a valid token', function ($controller, $action, $fields) {
-    expect(runItemActionRequest($this, $controller, 'POST', 'valid', $action, $fields))->toBe('HANDLERSTATUS:200');
+test('item actions run from a POST that carries a valid token', function ($controller, $action, $fields, $reached = 'HANDLER') {
+    expect(runItemActionRequest($this, $controller, 'POST', 'valid', $action, $fields))->toBe($reached . 'STATUS:200');
 })->with(itemActionCases());
 
 test('item editors and lists still open by GET', function ($controller, $action) {
@@ -187,6 +223,8 @@ test('item editors and lists still open by GET', function ($controller, $action)
     array('graphs_items.php', 'item_edit'), array('graph_templates_items.php', 'item_edit'),
     array('host_templates.php', 'edit'), array('links.php', 'edit'), array('tree.php', 'edit'),
     array('vdef.php', 'item_edit'),
+    array('host.php', 'edit'), array('data_input.php', 'field_edit'), array('color.php', 'edit'),
+    array('utilities.php', 'view_user_log'),
 ));
 
 test('no page links an item action by GET', function () {
@@ -213,4 +251,44 @@ test('no page links an item action by GET', function () {
     }
 
     expect($offenders)->toBe(array());
+});
+
+test('pages send the device, tree, rule, data source and utility actions by POST with the token', function () {
+    $root = dirname(__DIR__, 4);
+    $source = function ($file) use ($root) {
+        return file_get_contents($root . '/' . $file);
+    };
+    $token = '[^;]*__csrf_magic\'?\s*:\s*csrfMagicToken';
+
+    foreach (array('query_add', 'gt_add', 'query_remove', 'gt_remove') as $action) {
+        expect($source('host.php'))->toMatch("/\\$\\.post\\('host\\.php\\?action=$action', \\{" . $token . '/');
+    }
+    expect($source('host.php'))->not->toMatch('/hostPageLoad\\([^)]*(?:query|gt)_remove|action=(?:query|gt)_remove&/');
+
+    foreach (array('copy_node', 'create_node', 'delete_node', 'move_node', 'rename_node') as $action) {
+        expect($source('tree.php'))->toMatch("/\\$\\.post\\('\\?action=$action', \\{" . $token . '/');
+    }
+    foreach (array('set_host_sort', 'set_branch_sort') as $action) {
+        expect($source('tree.php'))->toMatch("/\\$\\.post\\('tree\\.php', \\{ 'action' : '$action'" . $token . '/');
+    }
+    foreach (array('sortasc', 'sortdesc') as $action) {
+        expect($source('tree.php'))->toMatch("/loadPage\\('tree\\.php\\?action=$action', false, true\\)/")
+            ->toMatch("/'href'\\s+=> 'tree\\.php\\?action=$action',\\s+'post'\\s+=> true,/");
+    }
+    expect($source('tree.php'))->not->toMatch('/\\$\\.get\\([^)]*action=(?:\\w+_node|set_\\w+_sort|sort(?:asc|desc))/')
+        ->not->toMatch('/loadPageNoHeader\\([^)]*action=sort/');
+
+    expect($source('lib/html.php'))->toMatch('/\\$classo \\.= \' cactiPostAction\';\\s+\\$post\\s+= " data-url=\'\\$href\'";/');
+    expect($source('lib/html_form.php'))->toMatch('/class=\'[^\']*cactiPostAction\' data-url=\'<\\?php print html_escape\\(\\$config\\[\'url_path\'\\] \\. \\$action_url \\. \'&confirm=true\'\\)/');
+    expect($source('data_sources.php'))->toMatch('/class=\'hyperLink cactiPostAction\' href=\'#\' data-url=\'<\\?php print html_escape\\(\'data_sources\\.php\\?action=ds_\'/');
+    expect($source('data_input.php'))->toMatch("/\\$\\.post\\('data_input\\.php\\?action=field_remove', \\{" . $token . '/');
+
+    foreach (array('clear_poller_cache', 'rebuild_resource_cache', 'purge_data_source_statistics', 'rebuild_snmpagent_cache') as $action) {
+        expect($source('utilities.php'))->toMatch("/'link'\\s+=> 'utilities\\.php\\?action=$action',\\s+'post'\\s+=> true,/");
+    }
+    expect($source('utilities.php'))->toMatch('/<a class=\'hyperLink cactiPostAction\' href=\'#\' data-url=\'" \\. html_escape\\(\\$details\\[\'link\'\\]\\)/');
+    foreach (array('clear_user_log', 'purge_logfile') as $action) {
+        expect($source('utilities.php'))->toMatch("/loadPageUsingPost\\(urlPath\\+'utilities\\.php', \\{\\s+action: '$action'" . $token . '/');
+    }
+    expect($source('utilities.php'))->not->toMatch('/strURL = [^;]*action=(?:clear_user_log|purge_logfile)/');
 });

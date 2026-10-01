@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'item_moveup', 'item_movedown', 'item_remove'));
+cacti_require_post_actions(array('actions', 'item_moveup', 'item_movedown', 'item_remove', 'remove'));
 include_once('./lib/data_query.php');
 
 $automation_tree_rules_actions = array(
