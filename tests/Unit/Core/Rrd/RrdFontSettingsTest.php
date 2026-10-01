@@ -131,3 +131,43 @@ test('group graph settings store the default for a font size they refuse', funct
     'above the upper bound' => array('72.5', '12'),
     'infinite' => array('1e400', '12'),
 ));
+
+// user_admin.php and the profile Save All path both store graph settings through save_user_settings().
+test('saving all user settings stores the default for a font size they refuse', function ($submitted, $stored) {
+    $root = dirname(__DIR__, 4);
+    $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'save_user_settings'), true) . ');'
+        . <<<'PHP'
+        $writes = array();
+        function isset_request_var($name) { return isset($_REQUEST[$name]); }
+        function get_nfilter_request_var($name, $default = '') { return $_REQUEST[$name] ?? $default; }
+        function set_request_var($name, $value) { $_REQUEST[$name] = $value; }
+        function set_user_setting($name, $value, $user) { $GLOBALS['writes'][] = array($name, $value, $user); }
+        $settings = array();
+        $settings_user = array('fonts' => array(
+            'title_size' => array('method' => 'textbox', 'default' => '12', 'filter' => FILTER_CALLBACK, 'options' => array('options' => 'graph_font_size_filter')),
+            'title_font' => array('method' => 'font'),
+        ));
+        $_REQUEST = array('title_size' => $argv[1], 'title_font' => 'DejaVu Sans');
+        save_user_settings(5);
+        echo json_encode($writes);
+        PHP;
+
+    $pipes = array();
+    $process = proc_open(array(PHP_BINARY, '-r', $script, '--', $submitted), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    expect(proc_close($process))->toBe(0, $error)
+        ->and(json_decode($output, true))->toBe(array(array('title_size', $stored, 5), array('title_font', 'DejaVu Sans', 5)));
+})->with(array(
+    'empty' => array('', '12'),
+    'at the lower bound' => array('4', '12'),
+    'just above the lower bound' => array('4.5', '4.5'),
+    'at the upper bound' => array('72', '72'),
+    'above the upper bound' => array('72.5', '12'),
+    'infinite' => array('1e400', '12'),
+));
