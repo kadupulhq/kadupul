@@ -61,9 +61,6 @@ MUTATING_SEGMENTS = re.compile(r'\{operation\}')
 CANARY = 'kadupul-entry-canary'
 WEBROOT = '/var/www/html/'
 
-# update_hash.php rewrites stylesheets under here when it runs.
-THEME = 'include/themes/midwinter'
-
 # The root rules ship in .htaccess.dist and apply only once it is renamed.
 OPT_IN = 'nginx; apache: opt-in via .htaccess.dist'
 # The nested .well-known checks that the ACME exception is anchored at the root.
@@ -75,7 +72,7 @@ OPT_IN_SERVED = '.well-known/kadupul-entry-canary.txt'
 DENIED_EXTRA = ('docs/kadupul-entry-canary.html', 'include/Config.php')
 
 # CLI tools with no bootstrap of their own, so a request reaches their guard.
-CLI_TOOLS = ('include/themes/midwinter/update_hash.php', 'script_server.php')
+CLI_TOOLS = ('script_server.php',)
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -146,14 +143,6 @@ def stage_denied_paths(rig, rows):
     for path in canaries:
         rig.command('sh', '-c', 'test -e "$1" || { mkdir -p "$(dirname "$1")" && printf "%s" "$2" > "$1"; }',
                     'sh', WEBROOT + path, ('<?php print "%s";' % CANARY) if path.endswith('.php') else CANARY, check=True)
-
-
-def theme_css_digest(rig):
-    digest = rig.command('sh', '-c', 'cd "$1" && find . -name "*.css" | LC_ALL=C sort | xargs sha256sum',
-                         'sh', WEBROOT + THEME, check=True)['stdout']
-    if 'main.css' not in digest:
-        raise RuntimeError('theme stylesheets not found in ' + THEME)
-    return digest
 
 
 def page_assets(body):
@@ -331,7 +320,6 @@ def main():
 
         counted = 0
         stage_denied_paths(rig, rows)
-        css_before = theme_css_digest(rig)
 
         # Denies must not reach what the login form and the console load.
         for name, client in (('anonymous', anonymous), ('admin', admin)):
@@ -430,9 +418,6 @@ def main():
             if response['status'] != 403 or CANARY in response['body']:
                 failures.append('%s: denied path answered HTTP %d' % (path, response['status']))
             observed.setdefault('web-server-denied status:%d' % response['status'], []).append(path)
-
-        if theme_css_digest(rig) != css_before:
-            failures.append('theme CSS changed during the sweep')
 
         # Guest pass: with a guest user set as the Settings page stores it,
         # exactly the guest-or-* pages admit an anonymous caller.

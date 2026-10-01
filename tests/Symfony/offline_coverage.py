@@ -76,6 +76,15 @@ def main():
         execute('tools/verify-offline.php', error='Offline Font Awesome stylesheet references no webfonts')
         icon_css.write_text(icon_css_text)
         execute('tools/verify-offline.php')
+        compiled_manifest = json.loads((stage / 'public/assets/manifest.json').read_text())
+        compiled_font = stage / 'public' / compiled_manifest['include/fa/webfonts/fa-solid-900.woff2'].lstrip('/')
+        compiled_font_bytes = compiled_font.read_bytes()
+        compiled_font.unlink()
+        execute('tools/verify-offline.php', error='Missing offline compiled asset: ../webfonts/')
+        compiled_font.write_bytes(b'')
+        execute('tools/verify-offline.php', error='Missing offline compiled asset: ../webfonts/')
+        compiled_font.write_bytes(compiled_font_bytes)
+        execute('tools/verify-offline.php')
         for fields, message in [
             ({'revision': 'invalid'}, 'Invalid legacy dependency revision'),
             ({'files': {'include/vendor/../escape.php': '0' * 64}}, 'Invalid legacy dependency path'),
@@ -97,7 +106,7 @@ def main():
     (output / 'observations.json').write_text(json.dumps({
         'suite': 'offline-tools', 'session_handler': 'none',
         'source_sha256': {source: hashlib.sha256((ROOT / source).read_bytes()).hexdigest()},
-        'checks': ['disconnected archive verified', 'dependency repair verified', 'missing icon fonts rejected', 'invalid manifest and symlink rejected'],
+        'checks': ['disconnected archive verified', 'dependency repair verified', 'missing icon fonts rejected', 'empty compiled icon fonts rejected', 'invalid manifest and symlink rejected'],
     }, indent=2) + '\n')
     print('Offline archive, dependency repair and rejection coverage verified', flush=True)
 

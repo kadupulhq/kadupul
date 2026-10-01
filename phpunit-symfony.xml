@@ -25,6 +25,7 @@
             <file>data_input.php</file>
             <file>bin/legacy-data-input.php</file>
             <file>lib/database.php</file>
+            <file>lib/functions.php</file>
         </include>
     </source>
 </phpunit>

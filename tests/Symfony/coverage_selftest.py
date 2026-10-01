@@ -102,7 +102,6 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'script_server.php',
-        'include/themes/midwinter/update_hash.php',
         'cli/analyze_database.php',
         'src/Platform/Infrastructure/Symfony/Console/LegacyCli.php',
         'src/Platform/Infrastructure/Symfony/Console/LegacyArguments.php',
