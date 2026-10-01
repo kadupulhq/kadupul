@@ -247,3 +247,44 @@ test('markup left open after a form keeps the CsrfMagic.end() call from running'
     'unclosed xmp' => array('<xmp>', '</xmp'),
     'unclosed comment' => array('<!--', '-->'),
 ));
+
+test('pages with many scripts take time in proportion to their size', function () {
+    $program = <<<'PHP'
+function csrf_startup() {
+    csrf_conf('rewrite', false);
+    csrf_conf('defer', true);
+    csrf_conf('auto-session', false);
+    csrf_conf('secret', 'isolated-form-rewrite-test-secret');
+}
+require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
+$times = array();
+foreach (array(1000, 2000, 64000) as $scripts) {
+    $page = "<form method='post'></form>" . str_repeat('<script>var a = 1;</script>', $scripts) . "<form method='post'></form>";
+    $start = microtime(true);
+    $fields = substr_count(csrf_rewrite_forms($page, '{F}'), '{F}');
+    $times[] = array($fields, microtime(true) - $start);
+}
+echo json_encode($times);
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program, dirname(__DIR__, 3)),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes
+    );
+    expect(is_resource($process))->toBeTrue();
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)
+        ->and($stderr)->toBe('');
+
+    // The first run warms up. Thirty-two times the scripts should take about
+    // thirty-two times as long; an end-tag search that scanned to the end of
+    // the page for each script made it over a hundred times slower.
+    [, [$small_fields, $small], [$large_fields, $large]] = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+    expect($small_fields)->toBe(2)
+        ->and($large_fields)->toBe(2)
+        ->and($large / $small)->toBeLessThan(80);
+});
