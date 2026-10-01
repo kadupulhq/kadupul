@@ -92,6 +92,7 @@ def verify_data_inputs(harness, session, check):
     delete_path=f'/app.php/data-inputs/{target}/field_delete?field={output}'
     fields, confirmation=page(session,delete_path)
     check('<dd>Result</dd>' in confirmation and '<dd>result</dd>' in confirmation, 'field deletion confirmation identifies the selected friendly and field names')
+    check('<p>Delete field: ' in confirmation and '<p>field_delete:' not in confirmation, 'English field deletion confirmation uses a readable action label')
     payload={'data_input_action[revision]':fields['data_input_action[revision]'],'data_input_action[_token]':fields['data_input_action[_token]']}
     check(post(session,delete_path,payload)[0]==422 and harness.sql(f'SELECT COUNT(*) FROM data_input_fields WHERE id={output}').strip()=='1','server prevents removal of referenced output field')
     check(session.request(f'/app.php/data-inputs/3/fields/{output}')['status']==404,'field route binds actual parent ownership')
@@ -186,6 +187,8 @@ def verify_data_inputs(harness, session, check):
     check(not french.login('behavior-admin')['login_form'],'French session authenticates through legacy login')
     _,translated=page(french,edit+'?language=en')
     check('lang="fr"' in translated and 'Enregistrer' in translated and '&lt;path_cacti&gt;' in translated,'French editor translates presentation without changing raw command definition')
+    _,translated_confirmation=page(french,delete_path+'&language=en')
+    check('lang="fr"' in translated_confirmation and '<p>Supprimer le champ: ' in translated_confirmation and '<p>field_delete:' not in translated_confirmation, 'French field deletion confirmation honors the authenticated preference')
     harness.sql("REPLACE INTO settings(name,value) VALUES ('i18n_language_support','"+prior_language+"')")
     harness.sql(f"REPLACE INTO settings_user(user_id,name,value) VALUES ({user},'user_language','{prior_user_language}')")
     # A real active data source exercises the method-to-poller-item handoff.
