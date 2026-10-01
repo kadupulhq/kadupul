@@ -1269,14 +1269,15 @@ function html_icon_class(string $name): string
    @returns - the markup */
 function html_icon(string $name, string $label, array $attrs = array()): string
 {
+    $has_label = trim($label) !== '';
     $hidden = ($attrs['aria-hidden'] ?? '') === 'true';
 
     // An unlabelled glyph is announced as an empty string under Font Awesome 7.
-    if ($label === '' && !$hidden) {
+    if (!$has_label && !$hidden) {
         throw new InvalidArgumentException("Icon $name needs a label, or aria-hidden='true' if it is decorative");
     }
 
-    if ($label !== '' && $hidden) {
+    if ($has_label && $hidden) {
         throw new InvalidArgumentException("Icon $name cannot be both labelled and hidden");
     }
 
@@ -1294,12 +1295,12 @@ function html_icon(string $name, string $label, array $attrs = array()): string
 
     $markup = "<i class='" . html_escape($class) . "'";
 
-    if ($label !== '') {
+    if ($has_label) {
         $markup .= " role='img' aria-label='" . html_escape($label) . "'";
     }
 
     foreach ($attrs as $attr => $value) {
-        if (!is_string($attr) || !preg_match('/^[a-z][a-z0-9-]*$/', $attr)) {
+        if (!is_string($attr) || !preg_match('/^[a-z][a-z0-9-]*$/', $attr) || str_starts_with(strtolower($attr), 'on')) {
             throw new InvalidArgumentException("Icon $name has an invalid attribute name");
         }
 

@@ -67,6 +67,9 @@ final class HtmlIconTest extends TestCase
         yield 'aria-label passed as an attribute' => ["html_icon('add', '', array('aria-hidden' => 'true', 'aria-label' => 'Add'))", 'Icon add takes its role and aria-label from the label argument'];
         yield 'attribute name that breaks out' => ["html_icon('add', 'Add', array('x onclick' => 'y'))", 'Icon add has an invalid attribute name'];
         yield 'numeric attribute key' => ["html_icon('add', 'Add', array('title'))", 'Icon add has an invalid attribute name'];
+        yield 'blank label' => ["html_icon('add', '   ')", "Icon add needs a label, or aria-hidden='true' if it is decorative"];
+        yield 'event attribute' => ["html_icon('add', 'Add', array('onclick' => 'alert(1)'))", 'Icon add has an invalid attribute name'];
+        yield 'mixed-case event attribute' => ["html_icon('add', 'Add', array('onClick' => 'alert(1)'))", 'Icon add has an invalid attribute name'];
         yield 'unknown name' => ["html_icon('fa-plus', 'Add')", 'Unknown icon: fa-plus'];
     }
 
@@ -139,7 +142,7 @@ final class HtmlIconTest extends TestCase
         self::assertIsString($source);
 
         $script = 'require ' . var_export($root . '/include/vendor/autoload.php', true) . ';'
-            . '$config = array("base_path" => ' . var_export($root, true) . ');'
+            . '$config = array("url_path" => "/kadupul/", "base_path" => ' . var_export($root, true) . ');'
             . 'function get_selected_theme() { return ' . var_export($theme, true) . '; }'
             . $stubs;
         foreach (array_merge(array('html_escape', 'html_icon_registry', 'html_icon_class', 'html_icon'), $functions) as $function) {

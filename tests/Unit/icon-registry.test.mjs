@@ -17,7 +17,9 @@ const allCss = new URL('include/fa/css/all.css', root);
 function layoutFunction(name) {
   const start = layout.indexOf(`function ${name}(`);
   assert.ok(start >= 0, `${name}() must exist`);
-  return layout.slice(start, layout.indexOf('\n}\n', start) + 2);
+  const end = layout.indexOf('\n}\n', start);
+  assert.ok(end > start, `${name}() must have its closing boundary`);
+  return layout.slice(start, end + 2);
 }
 
 // What html_common_header() prints for a theme.
@@ -145,8 +147,8 @@ test('core files draw Font Awesome classes only from config/icons.json', () => {
 test('every icon name the code asks for is in the registry', () => {
   const names = [];
   const calls = /\b(?:iconClass|iconSelector|iconMarkup|setupThemeLogos|html_icon|html_icon_class)\(\s*['"]([a-z0-9-]+)['"]\s*[,)]/g;
-  for (const path of ['lib/html.php', 'include/layout.js', ...['classic', 'dark', 'midwinter', 'modern', 'paper-plane', 'paw', 'sunrise'].map(theme => `include/themes/${theme}/main.js`)]) {
-    for (const [, name] of read(path).matchAll(calls)) {
+  for (const [path, source] of trackedSources()) {
+    for (const [, name] of source.matchAll(calls)) {
       names.push([path, name]);
     }
   }

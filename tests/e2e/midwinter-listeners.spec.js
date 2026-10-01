@@ -12,9 +12,11 @@ const labels = [...fs.readFileSync(path.join(root, 'lib/html.php'), 'utf8').matc
 // layout.js loads before the theme and supplies the icon helpers, and the page
 // header prints the registry map they read.
 const layout = fs.readFileSync(path.join(root, 'include/layout.js'), 'utf8');
-const iconHelpers = ['iconClass', 'iconSelector', 'iconMarkup'].map(name => {
+const iconHelpers = ['iconClass', 'iconSelector', 'iconMarkup', 'basename', 'setNavigationScroll'].map(name => {
   const start = layout.indexOf(`function ${name}(`);
-  return layout.slice(start, layout.indexOf('\n}\n', start) + 2);
+  const end = layout.indexOf('\n}\n', start);
+  if (start < 0 || end <= start) throw new Error(`Missing native layout function: ${name}`);
+  return layout.slice(start, end + 2);
 }).join('\n');
 const registry = JSON.parse(fs.readFileSync(path.join(root, 'config/icons.json'), 'utf8'));
 const icons = { ...registry.icons, ...registry.themes.midwinter };
@@ -54,6 +56,7 @@ async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true } = 
   }, { auto: autoColorMode, names: labels, icons });
   await page.addScriptTag({ url: '/include/themes/midwinter/main.js' });
   await page.evaluate(stub => {
+    window.productionDefaultElements = window.setupDefaultElements;
     const steps = ['setupTree', 'setupDefaultElements', 'setMenuVisibility', 'updateNavigation', 'checkConsoleMenu'];
     for (const name of stub ? [...steps, 'setupTheme'] : steps) {
       window[name] = () => {};
@@ -193,4 +196,21 @@ test('SHIFT+k enters fullscreen on the content area and leaves it again', async 
 
   await page.keyboard.press('Shift+K');
   await page.waitForFunction(() => document.fullscreenElement === null);
+});
+
+
+test('repeated native page setup keeps one search icon per input', async ({ page }) => {
+  await loadTheme(page);
+  await page.addScriptTag({ path: path.join(root, 'include/js/jquery-ui.js') });
+  await page.evaluate(() => {
+    window.cactiConsoleAllowed = true;
+    // No colour dropdown exists in this fixture; that external widget is outside the icon contract.
+    $.fn.dropcolor = function() { return this; };
+    $('body').append('<table><tr><td><input id="filter"></td><td><input id="filterd"></td><td><input id="rfilter"></td></tr></table>');
+    for (let count = 0; count < 3; count++) productionDefaultElements();
+  });
+  for (const id of ['filter', 'filterd', 'rfilter']) {
+    await expect(page.locator(`#${id} + i.filter`)).toHaveCount(1);
+    await expect(page.locator(`#${id}`).locator('..').locator('i.filter')).toHaveCount(1);
+  }
 });

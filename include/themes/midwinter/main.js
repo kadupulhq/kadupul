@@ -496,15 +496,15 @@ function setupDefaultElements() {
 	}
 
 	// Add nice search filter to filters
-	if ($('input[id="filter"]').length > 0 && $('input[id="filter"] > i' + iconSelector('search') + '.filter').length < 1) {
+	if ($('input[id="filter"]').length > 0 && $('input[id="filter"] + i' + iconSelector('search') + '.filter').length < 1) {
 		$('input[id="filter"]').after("<i class='" + iconClass('search') + " filter'/>").attr('autocomplete', 'off').attr('placeholder', searchFilter).parent('td').css('white-space', 'nowrap');
 	}
 
-	if ($('input[id="filterd"]').length > 0 && $('input[id="filterd"] > i' + iconSelector('search') + '.filter').length < 1) {
+	if ($('input[id="filterd"]').length > 0 && $('input[id="filterd"] + i' + iconSelector('search') + '.filter').length < 1) {
 		$('input[id="filterd"]').after("<i class='" + iconClass('search') + " filter'/>").attr('autocomplete', 'off').attr('placeholder', searchFilter).parent('td').css('white-space', 'nowrap');
 	}
 
-	if ($('input[id="rfilter"]').length > 0 && $('input[id="rfilter"] > i' + iconSelector('search') + '.filter').length < 1) {
+	if ($('input[id="rfilter"]').length > 0 && $('input[id="rfilter"] + i' + iconSelector('search') + '.filter').length < 1) {
 		$('input[id="rfilter"]').after("<i class='" + iconClass('search') + " filter'/>").attr('autocomplete', 'off').attr('placeholder', searchRFilter).parent('td').css('white-space', 'nowrap');
 	}
 
