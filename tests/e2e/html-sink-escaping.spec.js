@@ -20,6 +20,28 @@ function permissionTooltipBody(file) {
   return match[1];
 }
 
+// Returns the script manager_logs() prints, with its PHP tags filled in.
+function managerLogsScript() {
+  const source = fs.readFileSync(path.join(root, 'managers.php'), 'utf8');
+  const logs = source.slice(source.indexOf('\nfunction manager_logs('));
+  const start = logs.indexOf('function applyFilter(');
+
+  return logs.slice(start, logs.indexOf('</script>', start)).replace(/<\?php[\s\S]*?\?>/g, '0');
+}
+
+// Returns the content callback of the SNMP notification log tooltip in
+// utilities.php.
+function notificationLogTooltipBody() {
+  const source = fs.readFileSync(path.join(root, 'utilities.php'), 'utf8');
+  const match = source.match(/\$\('\.tooltip'\)\.tooltip\(\{\n\t\ttrack: true,\n\t\tposition: \{ collision: 'flipfit' \},\n\t\tcontent: function\(\) \{([^}]*)\}/);
+
+  if (!match) {
+    throw new Error('No notification log tooltip in utilities.php');
+  }
+
+  return match[1];
+}
+
 // Returns tree.php's draggable() as the page prints it.
 function treeDraggable() {
   const source = fs.readFileSync(path.join(root, 'tree.php'), 'utf8');
@@ -163,4 +185,61 @@ test('rebuilding a tree list keeps escaped names as text', async ({ page }) => {
 
     expect(state).toEqual({ nodes: 1, injected: 0, pwn: 0 });
   }
+});
+
+test('SNMP notification tooltips on manager logs show names and descriptions as text', async ({ page }) => {
+  const notification = '<img src=x onerror=window.pwn=1>';
+  const description = 'Line one\n</pre><img src=x onerror=window.pwn=1>';
+
+  await loadLayout(page);
+  await page.evaluate(({ title, desc }) => {
+    window.pwn = 0;
+    const link = $('<a href="#" class="snmpagentNotification">Trap</a>').attr('data-notification', title).attr('data-description', desc);
+    $('#sandbox').empty().append(link, '<div style="display:none" id="snmpagentTooltip"></div>');
+  }, { title: notification, desc: description });
+  await page.evaluate((code) => { (0, eval)(code); }, managerLogsScript());
+
+  const tooltipState = () => page.evaluate(() => ({
+    title: $('#snmpagentTooltip b').text(),
+    description: $('#snmpagentTooltip pre').text(),
+    images: $('#snmpagentTooltip img').length,
+    pwn: window.pwn,
+  }));
+
+  await page.evaluate(({ title, desc }) => {
+    showTooltip({ clientX: 10, clientY: 10 }, document.getElementById('snmpagentTooltip'), title, desc);
+  }, { title: notification, desc: description });
+  await page.waitForTimeout(100);
+  expect(await tooltipState()).toEqual({ title: notification, description, images: 0, pwn: 0 });
+
+  await page.evaluate(() => { hideTooltip(document.getElementById('snmpagentTooltip')); $('#snmpagentTooltip').empty(); });
+  await page.locator('a.snmpagentNotification').hover();
+  await expect(page.locator('#snmpagentTooltip')).toBeVisible();
+  expect(await tooltipState()).toEqual({ title: notification, description, images: 0, pwn: 0 });
+
+  await page.mouse.move(0, 0);
+  await expect(page.locator('#snmpagentTooltip')).toBeHidden();
+});
+
+test('SNMP notification log tooltips drop script from the title markup', async ({ page }) => {
+  await loadLayout(page);
+  await page.addScriptTag({ url: '/include/js/purify.js' });
+  await page.evaluate((body) => {
+    window.pwn = 0;
+    // The title as the browser decodes it from the escaped attribute.
+    const link = $('<a href="#" class="tooltip">coldStart</a>').attr('title', "<div class='header'>coldStart</div><div class='content preformatted'><img src=x onerror=window.pwn=1>Restarted</div>");
+    $('#sandbox').empty().append(link);
+    $('.tooltip').tooltip({ track: true, position: { collision: 'flipfit' }, content: new Function(body) });
+  }, notificationLogTooltipBody());
+  await page.locator('a.tooltip').hover();
+  await expect(page.locator('.ui-tooltip .header')).toHaveText('coldStart');
+  await page.waitForTimeout(100);
+
+  const state = await page.evaluate(() => ({
+    content: $('.ui-tooltip .content').text(),
+    handlers: $('.ui-tooltip [onerror]').length,
+    pwn: window.pwn,
+  }));
+
+  expect(state).toEqual({ content: 'Restarted', handlers: 0, pwn: 0 });
 });
