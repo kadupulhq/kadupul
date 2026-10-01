@@ -171,17 +171,7 @@ function display_matching_hosts($rule, $rule_type, $url)
 						</td>
 						<td>
 							<select id='rowsd'>
-								<option value='-1'<?php if (get_request_var('rowsd') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
-								<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rowsd') == $key) {
-                print ' selected';
-            } print '>' . $value . '</option>';
-        }
-    }
-    ?>
+								<?php print html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rowsd'));?>
 							</select>
 						</td>
 						<td>
@@ -489,17 +479,7 @@ function display_matching_graphs($rule, $rule_type, $url)
 						</td>
 						<td>
 							<select id='rows'>
-								<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
-								<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . $value . '</option>';
-        }
-    }
-    ?>
+								<?php print html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
 							</select>
 						</td>
 					</tr>
@@ -727,17 +707,7 @@ function display_new_graphs($rule, $url)
 						</td>
 						<td>
 							<select id='orows'>
-								<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
-								<?php
-                                if (cacti_sizeof($item_rows)) {
-                                    foreach ($item_rows as $key => $value) {
-                                        print "<option value='" . $key . "'";
-                                        if (get_request_var('rows') == $key) {
-                                            print ' selected';
-                                        } print '>' . $value . '</option>';
-                                    }
-                                }
-    ?>
+								<?php print html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
 							</select>
 						</td>
 						<td>
@@ -1142,18 +1112,8 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 					</td>
 					<td>
 						<select id='rows'>
-							<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
-							<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . $value . '</option>';
-        }
-    }
-    ?>
-						</select>
+								<?php print html_create_list(array(-1 => __('Default')) + $item_rows, '', '', get_request_var('rows'));?>
+							</select>
 					</td>
 					<td>
 						<span>
