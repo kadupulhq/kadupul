@@ -1,0 +1,15 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "cformat",
+        "form1",
+        "mailtime",
+        "row_alignment",
+        "row_font_size",
+        "row_format_file"
+    ],
+    "script_names": []
+}
