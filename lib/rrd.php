@@ -3145,7 +3145,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                         $need_rrd_nl = false;
                 }
             } else {
-                if (preg_match('/^(AREA|AREA:STACK|LINE[123]|STACK)$/', $graph_item_types[$graph_item['graph_type_id']])) {
+                if ($graph_item['vdef_id'] == '0' && preg_match('/^(AREA|AREA:STACK|LINE[123]|STACK)$/', $graph_item_types[$graph_item['graph_type_id']])) {
                     /* give all export items a name */
                     if (trim($graph_variables['text_format'][$graph_item_id]) == '') {
                         $legend_name = 'col' . $j . '-' . $data_source_name;
