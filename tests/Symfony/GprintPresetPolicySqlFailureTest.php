@@ -92,6 +92,7 @@ final class GprintPresetPolicySqlFailureTest extends TestCase
     public function testUnconfirmedPreferenceCommitOrRollbackIsAnInfrastructureFailure(string $failure): void
     {
         $database = $this->createMock(\PDO::class);
+        $database->method('getAttribute')->with(\PDO::ATTR_DRIVER_NAME)->willReturn('sqlite');
         $database->method('inTransaction')->willReturnOnConsecutiveCalls(false, true);
         $database->expects(self::once())->method('beginTransaction')->willReturn(true);
         $statement = $this->createMock(\PDOStatement::class);
@@ -154,11 +155,41 @@ final class GprintPresetPolicySqlFailureTest extends TestCase
         (new LegacyGprintPresetAccess($console, $this->connection($database)))->authorize();
     }
 
+    public static function unsafePreferenceStorage(): iterable
+    {
+        yield 'secondary collector' => [2, 'InnoDB', '00000'];
+        yield 'nontransactional table' => [1, 'MyISAM', '00000'];
+        yield 'unconfirmed engine read' => [1, 'InnoDB', 'HY000'];
+        yield 'unknown engine read state' => [1, 'InnoDB', null];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('unsafePreferenceStorage')]
+    public function testPreferencePreflightRefusesBeforeBeginning(int $collector, string $engine, ?string $state): void
+    {
+        $pdo = $this->createMock(\PDO::class);
+        $pdo->method('getAttribute')->with(\PDO::ATTR_DRIVER_NAME)->willReturn('mysql');
+        $pdo->method('inTransaction')->willReturn(false);
+        $pdo->expects(self::never())->method('beginTransaction');
+        $statement = $this->createMock(\PDOStatement::class);
+        $statement->method('fetch')->willReturn(['settings_user', "CREATE TABLE settings_user (id int\n) ENGINE=" . $engine]);
+        $statement->method('errorCode')->willReturn($state);
+        $pdo->method('query')->willReturn($statement);
+        $configuration = $this->createMock(\Kadupul\Platform\Contract\LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => $collector]);
+        $access = $this->createMock(GprintPresetAccess::class);
+        $access->expects(self::never())->method('authorize');
+        $preferences = new LegacyGprintPresetPreferences($access, $this->connection($pdo), $configuration);
+        $this->expectException(\RuntimeException::class);
+        $preferences->save(['rows' => '30']);
+    }
+
     private function preferences(\PDO $database): LegacyGprintPresetPreferences
     {
         $access = $this->createMock(GprintPresetAccess::class);
         $access->method('authorize')->willReturn(new Actor(9, 'operator'));
-        return new LegacyGprintPresetPreferences($access, $this->connection($database));
+        $configuration = $this->createMock(\Kadupul\Platform\Contract\LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
+        return new LegacyGprintPresetPreferences($access, $this->connection($database), $configuration);
     }
 
     private function connection(\PDO $database): DatabaseConnection

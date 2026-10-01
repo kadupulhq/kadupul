@@ -129,6 +129,51 @@ final class GprintPresetMariaDbTest extends TestCase
         }
     }
 
+    public static function preferenceTables(): iterable
+    {
+        foreach (['settings_user', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'] as $table) {
+            yield $table => [$table, false];
+            yield $table . ' temporary shadow' => [$table, true];
+        }
+    }
+
+    #[DataProvider('preferenceTables')]
+    public function testPreferenceWritesRejectEveryNontransactionalParticipant(string $table, bool $temporary): void
+    {
+        $connection = $this->realMariaDb();
+        $db = $connection->getNativeConnection();
+        $schema = 'gprint_pref_' . bin2hex(random_bytes(6));
+        $db->exec('CREATE DATABASE `' . $schema . '`');
+        $db->exec('USE `' . $schema . '`');
+        try {
+            foreach (['settings_user', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'] as $name) {
+                $db->exec('CREATE TABLE `' . $name . '` (id INT PRIMARY KEY) ENGINE=InnoDB');
+            }
+            if ($temporary) {
+                $db->exec('CREATE TEMPORARY TABLE `' . $table . '` (id INT PRIMARY KEY) ENGINE=MyISAM');
+            } else {
+                $db->exec('ALTER TABLE `' . $table . '` ENGINE=MyISAM');
+            }
+            $access = $this->createMock(GprintPresetAccess::class);
+            $access->expects(self::never())->method('authorize');
+            $database = $this->createMock(DatabaseConnection::class);
+            $database->method('get')->willReturn($db);
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['collector_id' => 1]);
+            try {
+                (new \Kadupul\Graphing\Infrastructure\Legacy\LegacyGprintPresetPreferences($access, $database, $configuration))->save(['page' => '2']);
+                self::fail('Nontransactional preference table was accepted.');
+            } catch (\RuntimeException $error) {
+                self::assertSame('Filter preferences require transactional tables: ' . $table, $error->getMessage());
+            }
+            self::assertFalse($db->inTransaction());
+            self::assertSame(0, (int) $db->query('SELECT COUNT(*) FROM settings_user')->fetchColumn());
+        } finally {
+            $db->exec('DROP DATABASE `' . $schema . '`');
+            $connection->close();
+        }
+    }
+
     private static function tables(): array
     {
         return ['graph_templates_gprint', 'graph_templates_item', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'];
