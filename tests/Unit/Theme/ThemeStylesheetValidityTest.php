@@ -11,12 +11,7 @@
  */
 function theme_css_invalid_declarations(string $css): array
 {
-    $problems = [];
-    $css = preg_replace('~/\*.*?\*/~s', '', $css);
-
-    if (str_contains($css, '*/')) {
-        $problems[] = 'stray */ outside a comment';
-    }
+    [$blocks, $problems] = theme_css_blocks($css);
 
     $patterns = [
         '/^#[a-z-]+\s*:/i'                           => 'hash-prefixed property',
@@ -32,9 +27,7 @@ function theme_css_invalid_declarations(string $css): array
         '/^!important$/i'                            => 'detached !important',
     ];
 
-    preg_match_all('/\{([^{}]*)\}/', $css, $blocks);
-
-    foreach ($blocks[1] as $block) {
+    foreach ($blocks as $block) {
         foreach (theme_css_declarations($block) as [$declaration, $visible]) {
             $declaration = trim($declaration);
 
@@ -58,6 +51,58 @@ function theme_css_invalid_declarations(string $css): array
     }
 
     return $problems;
+}
+
+/** Recognize comments and block boundaries only outside strings and functions. */
+function theme_css_blocks(string $css): array
+{
+    $blocks = $stack = $problems = [];
+    $quote = null;
+    $depth = 0;
+    for ($i = 0, $length = strlen($css); $i < $length; $i++) {
+        $character = $css[$i];
+        $next = $css[$i + 1] ?? '';
+        $text = $character;
+        if ($quote !== null) {
+            if ($character === '\\' && $next !== '') {
+                $text .= $css[++$i];
+            } elseif ($character === $quote) {
+                $quote = null;
+            }
+        } elseif ($character === '"' || $character === "'") {
+            $quote = $character;
+        } elseif ($character === '\\' && $next !== '') {
+            $text .= $css[++$i];
+        } elseif ($character === '/' && $next === '*') {
+            $end = strpos($css, '*/', $i + 2);
+            if ($end === false) {
+                $problems[] = 'unclosed comment';
+                break;
+            }
+            $i = $end + 1;
+            $text = ' ';
+        } elseif ($character === '*' && $next === '/') {
+            $problems[] = 'stray */ outside a comment';
+            $i++;
+            $text = ' ';
+        } elseif ($character === '(') {
+            $depth++;
+        } elseif ($character === ')') {
+            $depth--;
+        } elseif ($character === '{' && $depth === 0) {
+            $stack[] = '';
+            continue;
+        } elseif ($character === '}' && $depth === 0) {
+            if ($stack !== []) {
+                $blocks[] = array_pop($stack);
+            }
+            $text = ' ';
+        }
+        if ($stack !== []) {
+            $stack[array_key_last($stack)] .= $text;
+        }
+    }
+    return [$blocks, $problems];
 }
 
 /** Split only top-level semicolons and expose only top-level value text. */
@@ -209,6 +254,24 @@ it('flags each discarded declaration pattern', function (string $css, string $la
     'unitless padding'    => ['.moveArrowNone { padding-left: 8.75; }', 'unitless length'],
     'unitless shorthand'  => ['.a { margin: 0 4 0 0 !important; }', 'unitless length'],
     'unitless width'      => ['.a { width: 12; }', 'unitless length'],
+]);
+
+it('accepts quoted comment markers without removing declaration text', function (string $css): void {
+    expect(theme_css_invalid_declarations($css))->toBe([]);
+})->with([
+    '.a { content: "*/"; }',
+    '.a { content: "/* text */"; }',
+    '.a { content: "escaped \\" */"; }',
+]);
+
+it('checks invalid declarations after quoted braces and comments', function (string $css): void {
+    expect(theme_css_invalid_declarations($css))->toHaveCount(1)
+        ->and(theme_css_invalid_declarations($css)[0])->toStartWith('color: show');
+})->with([
+    '.a { content: "}"; color: show; }',
+    '.a { content: "{"; color: show; }',
+    '.a { content: "/*"; color: show; } /* actual comment */',
+    '@media screen { .a { content: "}"; color: show; } }',
 ]);
 
 it('accepts valid declarations that look like the invalid ones', function (): void {
