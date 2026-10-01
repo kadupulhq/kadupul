@@ -446,8 +446,12 @@
 	}
 
 	// A point on the text that the element itself paints. Text covered by
-	// another box, clipped away or scrolled out of the viewport is skipped.
+	// another box, clipped away or scrolled out of the viewport is skipped:
+	// there the hit lands on some other box, or on an ancestor whose overflow
+	// cut the text off. Text that ignores the pointer is hit through to its
+	// ancestors, so it is accepted that way.
 	function probePoint(el, rects) {
+		const passive = getComputedStyle(el).pointerEvents === 'none';
 		for (const r of rects) {
 			const x = r.left + Math.min(r.width / 2, 4);
 			const y = r.top + r.height / 2;
@@ -455,7 +459,7 @@
 				continue;
 			}
 			const top = document.elementFromPoint(x, y);
-			if (top && (top === el || el.contains(top) || top.contains(el))) {
+			if (top && (top === el || el.contains(top) || (passive && top.contains(el)))) {
 				// The glyphs span the line box, so a gradient behind them is
 				// sampled at its top and bottom as well as the middle.
 				const inset = Math.min(2, r.height / 4);
@@ -500,7 +504,11 @@
 			const fg = parseColor(style.webkitTextFillColor && style.webkitTextFillColor !== style.color ? style.webkitTextFillColor : style.color);
 			fg.a *= cumulativeOpacity(el);
 			const bgs = backgroundsAt(point.x, point.y, el, false);
-			for (const [ax, ay] of (bgs.gradient ? point.also : [])) {
+			const shows = (x, y) => {
+				const hit = document.elementFromPoint(x, y);
+				return hit && (hit === el || el.contains(hit));
+			};
+			for (const [ax, ay] of (bgs.gradient ? point.also.filter(([x, y]) => shows(x, y)) : [])) {
 				const more = backgroundsAt(ax, ay, el, false);
 				if (more.list.length) {
 					bgs.list.push(...more.list);
