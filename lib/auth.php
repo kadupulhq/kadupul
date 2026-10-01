@@ -4792,9 +4792,9 @@ function auth_display_custom_error_message($message) {
  *
  * @param  (string|array) $login_opts - optional array of user details
  *
- * @return (void)
+ * @return never
  */
-function auth_login_redirect($login_opts = '') {
+function auth_login_redirect($login_opts = ''): never {
 	global $config;
 
 	if ($login_opts == '') {
