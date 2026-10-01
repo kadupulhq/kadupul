@@ -2,6 +2,7 @@
 from urllib.parse import urlencode
 from urllib.request import Request
 from urllib.error import HTTPError
+import json
 from device_edit_scenarios import Inputs
 from harness import Session
 
@@ -39,6 +40,22 @@ def verify_links(harness, session, user_id, check):
         check(status == 200 and '&lt;tag&gt;' in body and '<tag>' not in body, 'links escaped Twig list after save')
         link_id = int(harness.sql("SELECT id FROM external_links WHERE title='Link <tag> 東京' ORDER BY id DESC LIMIT 1").strip())
         created.append(link_id)
+        with session.opener.open(harness.base + '/public/index.php/links') as response:
+            public_body = response.read().decode()
+        viewer = f'/link.php?id={link_id}'
+        check(f'href="{viewer}"' in public_body and '/public/link.php' not in public_body, 'public Navigation entry links to the installation viewer')
+        with session.opener.open(harness.base + viewer) as response:
+            viewer_body = response.read().decode()
+        check(response.status == 200 and 'id="content"' in viewer_body, 'public Navigation viewer URL opens the authorized legacy page')
+        def preferences():
+            return json.loads(harness.sql(f"SELECT value FROM settings_user WHERE user_id={user_id} AND name='external_links_filters'").strip())
+        check(session.request(base + '?filter=Link&rows=10&page=7')['status'] == 200, 'link filters remember an explicit later page')
+        remembered = preferences()
+        check(session.request('/links.php?header=false')['status'] == 200 and preferences() == remembered, 'plain legacy link bookmark preserves remembered filters and page')
+        check(session.request(base + '?filter=Different')['status'] == 200 and preferences()['page'] == '1', 'changing link search resets the remembered page')
+        check(session.request(base + '?page=7')['status'] == 200, 'unchanged filter allows explicit link pagination')
+        check(session.request('/links.php?rows=15')['status'] == 200 and preferences()['filter'] == 'Different' and preferences()['page'] == '1', 'partial legacy row filter preserves search and resets pagination')
+        check(session.request('/links.php?clear=1&header=false')['status'] == 200 and preferences()['filter'] == '' and preferences()['page'] == '1', 'legacy clear explicitly resets remembered link filters')
         check(harness.sql(f'SELECT contentfile FROM external_links WHERE id={link_id}').strip() == 'https://example.org/?x=1&y=2', 'links URL bytes persist unchanged')
         check(harness.sql(f'SELECT COUNT(*) FROM user_auth_realm WHERE user_id={user_id} AND realm_id={link_id + 10000}').strip() == '1', 'links save grants actor its viewing realm')
         editor = get_form(base + f'/{link_id}/edit')

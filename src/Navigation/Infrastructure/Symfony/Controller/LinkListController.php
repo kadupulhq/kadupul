@@ -40,6 +40,11 @@ final class LinkListController
             $query = $request->query->all();
             $remembered = isset($query['clear']) ? [] : ($preferences->load() ?? []);
             $filters = LinkListParameters::parse(array_replace($remembered, $query), $store->defaultRows());
+            foreach (['filter', 'rows'] as $key) {
+                if (array_key_exists($key, $query) && (string) $filters[$key] !== (string) ($remembered[$key] ?? $filters[$key])) {
+                    $filters['page'] = '1';
+                }
+            }
             $saved = $filters;
             unset($saved['limit']);
             if (($configuration->values()['collector_id'] ?? null) === 1) {
@@ -51,6 +56,6 @@ final class LinkListController
         } catch (\InvalidArgumentException $error) {
             return new Response($translator->trans($error->getMessage(), [], 'navigation'), 400, $headers);
         }
-        return new Response($twig->render('navigation/links.html.twig', ['links' => $page['links'], 'filters' => $filters, 'total' => $page['total'], 'viewPath' => $request->getBasePath() . '/link.php']), 200, $headers);
+        return new Response($twig->render('navigation/links.html.twig', ['links' => $page['links'], 'filters' => $filters, 'total' => $page['total'], 'viewPath' => rtrim($configuration->values()['url_path'] ?? '/', '/') . '/link.php']), 200, $headers);
     }
 }

@@ -2,7 +2,7 @@
 
 `links.php` forwards to `/app.php/links/legacy`. The Navigation module owns the
 Symfony forms, Twig presentation and primary database writes. Main requires
-PHP 8.4.25 selected through `mise`.
+PHP 8.4 or later; development pins PHP 8.4.25 through `mise`.
 
 ## Compatibility
 

@@ -6,6 +6,7 @@ import argparse
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'Support/Behavior'))
 from harness import Harness, Session
 from link_scenarios import verify_links
+from link_collector_scenarios import verify_collector_links
 from coverage_support import configure_coverage, publish_coverage
 
 
@@ -32,6 +33,7 @@ def main():
         session.login('behavior-admin')
         user_id = int(harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip())
         verify_links(harness, session, user_id, check)
+        verify_collector_links(harness, session, user_id, check)
         if args.coverage_output:
             publish_coverage(args.coverage_output, args.database_sessions, checks)
         print(f'Links HTTP integration passed: {len(checks)} checks.', flush=True)

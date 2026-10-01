@@ -59,6 +59,10 @@ final class LegacyLinksController
             }
             $filters = LinkListParameters::parse($query);
             unset($filters['limit']);
+            $filters = array_intersect_key($query, $filters);
+            if (isset($query['clear'])) {
+                $filters['clear'] = '1';
+            }
             return new RedirectResponse($urls->generate('navigation_links', $filters), 302, $headers);
         } catch (\InvalidArgumentException $error) {
             return new Response($translator->trans($error->getMessage(), [], 'navigation'), 400, $headers);
