@@ -1,0 +1,205 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+// Run only against the disposable database used by the database-contract matrix.
+// Execute the native schema and upgrade, then observe locks on two connections.
+$host = getenv('BOOST_DB_HOST') ?: '127.0.0.1';
+$port = getenv('BOOST_DB_PORT') ?: '3306';
+$database = getenv('BOOST_DB_NAME');
+if (!$database) {
+    throw new RuntimeException('BOOST_DB_NAME must identify a disposable database.');
+}
+$dsn = "mysql:host=$host;port=$port;dbname=$database;charset=utf8mb4";
+$connect = static fn() => new PDO($dsn, getenv('BOOST_DB_USER'), getenv('BOOST_DB_PASSWORD'), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$owner = $connect();
+$writer = $connect();
+$writer->exec('SET SESSION innodb_lock_wait_timeout=1');
+$root = dirname(__DIR__, 2);
+$source = file_get_contents($root . '/cacti.sql');
+$created = [];
+function db_install_execute($sql)
+{
+    return $GLOBALS['owner']->exec($sql);
+}
+function db_index_exists($table, $name)
+{
+    $statement = $GLOBALS['owner']->prepare("SHOW INDEX FROM `$table` WHERE Key_name=?");
+    $statement->execute([$name]);
+    return $statement->fetch() !== false;
+}
+function __($text, ...$arguments)
+{
+    return $arguments ? vsprintf($text, $arguments) : $text;
+}
+function __x($context, $text, ...$arguments)
+{
+    return __($text, ...$arguments);
+}
+function cacti_version_compare($old, $new, $operator)
+{
+    return version_compare($old, $new, $operator);
+}
+function get_rrdtool_version()
+{
+    return '1.8';
+}
+function get_auth_realms()
+{
+    return [];
+}
+function read_config_option(...$arguments)
+{
+    return '';
+}
+function log_install_always(...$arguments) {}
+function api_plugin_hook(...$arguments) {}
+function set_install_config_option($name, $value)
+{
+    if ($name === 'install_cache_db') {
+        $GLOBALS['cache_file'] = $value;
+    }
+}
+function get_cacti_cli_version()
+{
+    return $GLOBALS['owner']->query('SELECT cacti FROM version')->fetchColumn();
+}
+function cacti_sizeof($value)
+{
+    return is_countable($value) ? count($value) : 0;
+}
+function db_execute($sql)
+{
+    $GLOBALS['owner']->exec($sql);
+    return true;
+}
+function db_fetch_cell_prepared($sql, $parameters = [], ...$arguments)
+{
+    $statement = $GLOBALS['owner']->prepare($sql);
+    $statement->execute($parameters);
+    return $statement->fetchColumn();
+}
+$config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_web' => false, 'url_path' => '/', 'cacti_server_os' => 'unix'];
+require $root . '/include/global_constants.php';
+require $root . '/include/global_arrays.php';
+require $root . '/lib/installer.php';
+$tables = ['data_template_rrd', 'data_input_fields', 'version', 'poller_output'];
+foreach ($tables as $table) {
+    $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
+    $check->execute([$table]);
+    if ((int) $check->fetchColumn() !== 0) {
+        throw new RuntimeException('Fixture refuses to replace existing table: ' . $table);
+    }
+}
+try {
+    $baseline = file_get_contents($root . '/docs/audit_schema.sql');
+    foreach (['table_columns', 'table_indexes'] as $table) {
+        preg_match('/CREATE TABLE `' . $table . '` \(.*?;\s/s', $baseline, $definition);
+        $owner->exec(str_replace('CREATE TABLE', 'CREATE TEMPORARY TABLE', $definition[0]));
+        preg_match_all('/INSERT INTO `' . $table . '` VALUES \(\'data_template_rrd\'.*?;/', $baseline, $rows);
+        foreach ($rows[0] as $row) {
+            $owner->exec($row);
+        }
+    }
+    foreach ($tables as $table) {
+        if ($table === 'poller_output') {
+            // The unrelated final installer preflight inspects only its engine.
+            // Avoid legacy zero-date defaults in this index-specific fixture.
+            $owner->exec('CREATE TABLE poller_output (id INT PRIMARY KEY) ENGINE=InnoDB');
+            $created[] = $table;
+            continue;
+        }
+        if (!preg_match('/CREATE TABLE `?' . $table . '`? \(.*?;\s/s', $source, $match)) {
+            throw new RuntimeException('Native fixture schema unavailable: ' . $table);
+        }
+        $owner->exec($match[0]);
+        $created[] = $table;
+    }
+    $owner->exec("INSERT INTO version VALUES ('1.2.31')");
+    for ($id = 1; $id <= 1000; ++$id) {
+        $owner->exec("INSERT INTO data_input_fields (id,data_input_id) VALUES ($id," . intdiv($id, 10) . ')');
+    }
+    for ($first = 1; $first <= 10000; $first += 1000) {
+        $rows = [];
+        for ($id = $first; $id < $first + 1000; ++$id) {
+            $rows[] = "($id,$id," . (intdiv($id - 1, 10) + 1) . ",'fixture')";
+        }
+        $owner->exec('INSERT INTO data_template_rrd (id,local_data_id,data_input_field_id,data_source_name) VALUES ' . implode(',', $rows));
+    }
+    foreach (['fresh', 'upgrade'] as $mode) {
+        if ($mode === 'upgrade') {
+            $owner->exec('ALTER TABLE data_template_rrd DROP INDEX data_input_field_id');
+            // Execute the real installer's version gate using the real registry,
+            // starting at an already installed 1.2.31, rather than calling the
+            // migration directly and concealing a skipped version.
+            $reflection = new ReflectionClass(Installer::class);
+            $installer = $reflection->newInstanceWithoutConstructor();
+            $reflection->getProperty('old_cacti_version')->setValue($installer, '1.2.31');
+            ob_start();
+            try {
+                $result = $reflection->getMethod('upgradeDatabase')->invoke($installer);
+            } finally {
+                ob_end_clean();
+            }
+            if ($result !== false || get_cacti_cli_version() === '1.2.31' || get_cacti_cli_version() !== trim(file_get_contents($root . '/include/cacti_version'))) {
+                throw new RuntimeException('Native version-gated upgrade did not advance the installed 1.2.31 database.');
+            }
+            upgrade_to_1_2_32(); // An already upgraded installation must remain valid.
+        }
+        $owner->query('ANALYZE TABLE data_template_rrd,data_input_fields')->fetchAll();
+        $actual = $owner->query("SHOW INDEX FROM data_template_rrd WHERE Key_name='data_input_field_id'")->fetch(PDO::FETCH_ASSOC);
+        $expected = $owner->query("SELECT * FROM table_indexes WHERE idx_key_name='data_input_field_id'")->fetch(PDO::FETCH_ASSOC);
+        foreach (['Non_unique' => 'idx_non_unique', 'Seq_in_index' => 'idx_seq_in_index', 'Column_name' => 'idx_column_name', 'Index_type' => 'idx_index_type'] as $live => $audit) {
+            if (!$expected || !$actual || (string) $actual[$live] !== (string) $expected[$audit]) {
+                throw new RuntimeException('RRD field index differs from the native audit baseline.');
+            }
+        }
+        $column = $owner->query("SHOW COLUMNS FROM data_template_rrd WHERE Field='data_input_field_id'")->fetch(PDO::FETCH_ASSOC);
+        if ($column['Key'] !== $owner->query("SELECT table_key FROM table_columns WHERE table_field='data_input_field_id'")->fetchColumn()) {
+            throw new RuntimeException('RRD field column differs from the native audit baseline.');
+        }
+        foreach (['SELECT id FROM data_template_rrd WHERE data_input_field_id=100 FOR UPDATE', 'SELECT r.id FROM data_template_rrd r INNER JOIN data_input_fields f ON f.id=r.data_input_field_id WHERE f.data_input_id=10 FOR UPDATE'] as $query) {
+            $plan = $owner->query('EXPLAIN FORMAT=TRADITIONAL ' . $query)->fetchAll(PDO::FETCH_ASSOC);
+            $rrd = array_values(array_filter($plan, static fn(array $row): bool => in_array($row['table'], ['data_template_rrd', 'r'], true)))[0] ?? null;
+            if (($rrd['key'] ?? null) !== 'data_input_field_id') {
+                throw new RuntimeException($mode . ': RRD reference lookup does not use the field index.');
+            }
+            $owner->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+            $owner->beginTransaction();
+            $owner->query($query)->fetchAll();
+            $writer->beginTransaction();
+            $writer->exec("UPDATE data_template_rrd SET data_source_name='unrelated' WHERE id=9000");
+            $writer->rollBack();
+            $writer->beginTransaction();
+            $blocked = false;
+            try {
+                $writer->exec("UPDATE data_template_rrd SET data_source_name='related' WHERE id=991");
+            } catch (PDOException $error) {
+                if (($error->errorInfo[1] ?? null) !== 1205) {
+                    throw $error;
+                }
+                $blocked = true;
+            } finally {
+                $writer->rollBack();
+            }
+            if (!$blocked) {
+                throw new RuntimeException($mode . ': selected RRD reference was not locked.');
+            }
+            $owner->rollBack();
+        }
+        echo 'PASS: ' . $mode . " indexed field/method checks permit unrelated writes and retain selected-row locks.\n";
+    }
+} finally {
+    foreach ([$owner, $writer] as $db) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+    }
+    foreach (array_reverse($created) as $table) {
+        $owner->exec("DROP TABLE `$table`");
+    }
+    if (isset($cache_file) && is_file($cache_file)) {
+        unlink($cache_file);
+    }
+}

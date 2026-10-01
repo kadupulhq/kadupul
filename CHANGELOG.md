@@ -6,9 +6,9 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Replicate Data Source Profile parents before collector data-source definitions, retaining existing definitions if the parent copy fails.
-
-- Guard newly assigned Data Source Profile references in the database so a waiting writer cannot create a dangling reference after profile deletion commits. Preserve zero and unchanged legacy references.
+- Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
+- Coordinate Data Source Profile definition writers with deletion and preserve unchanged legacy references.
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from an already installed 1.2.31, keeping reference locks scoped to the selected fields.
 
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
