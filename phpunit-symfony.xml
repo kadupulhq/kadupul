@@ -24,6 +24,7 @@
             <file>sites.php</file>
             <file>gprint_presets.php</file>
             <file>lib/database.php</file>
+            <file>lib/functions.php</file>
         </include>
     </source>
 </phpunit>

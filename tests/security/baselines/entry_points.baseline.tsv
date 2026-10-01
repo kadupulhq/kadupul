@@ -109,7 +109,6 @@ include/themes/midwinter/default/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/images/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
-include/themes/midwinter/update_hash.php	cli-only	guard: php_sapi_name() check
 include/themes/modern/default/index.php	anonymous-allowed	redirect-only
 include/themes/modern/images/index.php	anonymous-allowed	redirect-only
 include/themes/modern/index.php	anonymous-allowed	redirect-only
@@ -193,6 +192,7 @@ install/upgrades/1_2_26.php	anonymous-allowed	inert: declarations and literal as
 install/upgrades/1_2_27.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_3.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_31.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_33.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
