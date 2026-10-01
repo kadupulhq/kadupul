@@ -3793,7 +3793,7 @@ function local_auth_login_process($username) {
 			}
 		} else {
 			/* a known account verifies here a second time; keep unknown usernames level */
-			compat_password_verify((string) get_nfilter_request_var('login_password'), '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
+			compat_password_verify((string) get_nfilter_request_var('login_password'), auth_dummy_password_hash());
 		}
 	}
 
@@ -4299,6 +4299,11 @@ function secpass_login_process($username) {
 
 	if (cacti_sizeof($user)) {
 		if ($user['enabled'] != 'on') {
+			/* an enabled account verifies its password here; do the same work so timing does not reveal a disabled one */
+			if (trim($password) != '') {
+				compat_password_verify((string) $password, auth_dummy_password_hash());
+			}
+
 			$error     = true;
 			$error_msg = __('Access Denied!  Login Failed.');
 
@@ -4334,7 +4339,7 @@ function secpass_login_process($username) {
 	} else {
 		/* hash a fixed value exactly when a known account would, so timing does not reveal usernames */
 		if (trim($password) != '') {
-			compat_password_verify((string) $password, '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
+			compat_password_verify((string) $password, auth_dummy_password_hash());
 		}
 
 		/* error */
@@ -4609,6 +4614,20 @@ function auth_perm_cache_check_reset($user_id) {
 	}
 
 	$_SESSION['sess_perms_reset_key'][$user_id] = $key;
+}
+
+/**
+ * auth_dummy_password_hash - a bcrypt hash that no password matches, at the
+ *   cost password_hash() gives new hashes on this PHP.  PHP 8.4 raised that
+ *   cost from 10 to 12 and logins rehash to it, so a fixed cost 10 dummy
+ *   would verify faster than a real account and reveal unknown usernames.
+ *
+ * @return (string) the dummy hash
+ */
+function auth_dummy_password_hash() {
+	$cost = defined('PASSWORD_BCRYPT_DEFAULT_COST') ? PASSWORD_BCRYPT_DEFAULT_COST : 10;
+
+	return sprintf('$2y$%02d$', $cost) . 'VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.';
 }
 
 /**

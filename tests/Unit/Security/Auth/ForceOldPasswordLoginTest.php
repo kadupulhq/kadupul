@@ -158,7 +158,7 @@ function compat_password_needs_rehash($password, $algo, $options = array()) {
 
 PHP;
 
-	foreach (array('secpass_login_process', 'local_auth_login_process', 'secpass_check_pass') as $name) {
+	foreach (array('auth_dummy_password_hash', 'secpass_login_process', 'local_auth_login_process', 'secpass_check_pass') as $name) {
 		$source .= cacti_test_function_source($auth, $name) . "\n\n";
 	}
 
