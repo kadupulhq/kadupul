@@ -80,6 +80,7 @@ def main():
         run(node, str(Path(npm).resolve()), 'ci', '--ignore-scripts', '--no-audit', '--no-fund', cwd=stage)
         run(node, 'tools/dependencies/build.mjs', cwd=stage)
         run(php, 'bin/console', 'lint:container', '--env=prod', '--no-debug', cwd=stage)
+        run(php, 'bin/console', 'asset-map:compile', '--env=prod', '--no-debug', cwd=stage)
         # Cache is environment-specific; do not ship build-host paths or sessions.
         shutil.rmtree(stage / 'var', ignore_errors=True)
         (stage / 'var').mkdir()

@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
@@ -19,6 +20,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Escape dynamic form ids and actions for their HTML attribute and JavaScript string contexts. Fixes #582.
 - Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
 - Remove the inert Poller Refresh Output Table setting; the queue is required to use InnoDB. Fixes #282.
+- Honor the script server's documented `--environ`, `-v`/`-V`, and `-h`/`-H` options. Fixes #375 and #376.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
@@ -32,11 +34,15 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Exercise local login, password changes, logout, user/group realm and permission changes, and report ownership/persistence through native production files with isolated SQL fixtures. Part of #699.
+
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
 - Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
 
+- Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
+- Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
 - Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
 - Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
 - Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.
@@ -63,6 +69,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Escape color-dropdown values and enclosing form row IDs in their HTML contexts; render color option identifiers as integers. Fixes #576.
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
 
+- Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.
@@ -126,8 +133,12 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
+
 ### Changed
 
+- Serve legacy stylesheets and scripts from `public/assets/` with digested file names once `php bin/console asset-map:compile` has run, using Symfony AssetMapper 7.4. Theme `url()` and `@import` references are rewritten to the digested copies, so Midwinter no longer keeps hand-maintained import hashes and `update_hash.php` is gone. Without a compiled manifest, and for `custom.css`, plugins and the flag-icons stylesheet, pages keep the `?md5` URLs. Docker images and offline bundles ship the compiled files; source installations must rerun the compile after each upgrade.
 - Reuse common row-count option rendering in automation previews while preserving each row filter.
 
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
