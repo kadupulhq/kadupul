@@ -210,7 +210,11 @@ function upgrade_database(): bool
                         // Some plugins don't upgrade in the proper way
                         if (function_exists($ufunc3)) {
                             cacti_log("NOTE: Running Plugin $pname install function due to some plugins not upgrading properly.", true, 'UPGRADE');
-                            $ufunc3(true);
+                            if ($ufunc3(true) === false) {
+                                $success = false;
+                                cacti_log("WARNING: Plugin $pname setup callback failed.", true, 'UPGRADE');
+                                continue;
+                            }
                         }
 
                         if (function_exists($ufunc2)) {

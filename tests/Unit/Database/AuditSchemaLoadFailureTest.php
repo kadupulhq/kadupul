@@ -37,7 +37,7 @@ final class AuditSchemaLoadFailureTest extends TestCase
                 } elseif ($baseline !== 'missing') {
                     file_put_contents(
                         $directory . '/docs/audit_schema.sql',
-                        '-- Cacti Audit Schema Version: ' . $targetVersion . "\n-- fixture baseline\n",
+                        '-- Cacti Audit Schema Version: ' . $targetVersion . "\n-- fixture baseline\n-- Dump completed on 2026-09-30 00:00:00\n",
                     );
                 }
 
@@ -48,6 +48,7 @@ if [ "$1" = "--version" ]; then
     echo "mariadb Ver 10.11.8"
     exit 0
 fi
+touch "$(dirname "$0")/client-invoked"
 if [ "$AUDIT_TEST_LOAD_FAIL" = "1" ]; then
     echo "fixture import failure" >&2
     exit 1
@@ -101,6 +102,9 @@ SH);
                     self::assertStringContainsString('Audit was clean', $output);
                 }
 
+                if (in_array($baseline, ['valid', 'failed'], true)) {
+                    self::assertFileExists($directory . '/bin/client-invoked');
+                }
                 $mutations = is_file($directory . '/db-mutations') ? (string) file_get_contents($directory . '/db-mutations') : '';
                 self::assertStringNotContainsString('ALTER TABLE', $mutations);
                 if (in_array($baseline, ['missing', 'unreadable'], true)) {

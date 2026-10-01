@@ -106,6 +106,9 @@ final class AuditNativeContractTest extends TestCase
                         } elseif ($plugin === 'alternate') {
                             $setup .= ' function alternate_setup_table_new($upgrade) { $GLOBALS["db"]->exec("INSERT INTO upgrade_events VALUES (\'setup\')"); } function alternate_upgrade_database($upgrade) { $GLOBALS["db"]->exec("INSERT INTO upgrade_events VALUES (\'alternate\')"); }';
                         }
+                        if ($case === 'upgrade-setup-callback-failure' && $plugin === 'alternate') {
+                            $setup = str_replace(' } function alternate_upgrade_database', ' return false; } function alternate_upgrade_database', $setup);
+                        }
                         if ($case === 'upgrade-standard-callback-failure' && $plugin === 'standard') {
                             $setup = substr($setup, 0, strrpos($setup, '}')) . ' return false; }';
                         }
@@ -180,7 +183,7 @@ final class AuditNativeContractTest extends TestCase
                 self::assertFileDoesNotExist($directory . '/db-mutations');
                 self::assertStringContainsString('Kadupul Upgrade Encountered Errors', file_get_contents($directory . '/upgrade-log'));
             } elseif (str_starts_with($case, 'upgrade-')) {
-                self::assertSame(array('alternate', 'setup', 'standard'), $db->query('SELECT name FROM upgrade_events ORDER BY name')->fetchAll(PDO::FETCH_COLUMN));
+                self::assertSame($case === 'upgrade-setup-callback-failure' ? array('setup', 'standard') : array('alternate', 'setup', 'standard'), $db->query('SELECT name FROM upgrade_events ORDER BY name')->fetchAll(PDO::FETCH_COLUMN));
                 self::assertSame(0, (int) $db->query("SELECT COUNT(*) FROM plugin_config WHERE directory='ghost'")->fetchColumn());
                 foreach (array('plugin_hooks' => 'name', 'plugin_realms' => 'plugin', 'plugin_db_changes' => 'plugin') as $table => $column) {
                     self::assertSame(0, (int) $db->query("SELECT COUNT(*) FROM $table WHERE $column='ghost'")->fetchColumn());
@@ -197,6 +200,10 @@ final class AuditNativeContractTest extends TestCase
                 self::assertStringContainsString($case === 'upgrade-standard-callback-failure' ? 'Plugin standard upgrade callback failed' : ($case === 'upgrade-plugin-failure' ? 'Plugin standard Upgrade Encountered Errors' : 'Plugin standard Upgrade Succeeded'), $log);
                 if ($case === 'upgrade-alternate-callback-failure') {
                     self::assertStringContainsString('Plugin alternate upgrade callback failed', $log);
+                }
+                if ($case === 'upgrade-setup-callback-failure') {
+                    self::assertStringContainsString('Plugin alternate setup callback failed', $log);
+                    self::assertStringNotContainsString('Plugin alternate from 1 to 2 using alternate upgrade path', $log);
                 }
                 self::assertStringContainsString('lacks a setup file', $log);
                 self::assertStringContainsString('Does not Require Upgrade', $log);
@@ -226,6 +233,6 @@ final class AuditNativeContractTest extends TestCase
     public static function cases(): array
     {
         $reports = array_map(static fn($case) => array($case, '--report', 0), array('report-type', 'report-missing-column', 'report-unexpected-column', 'report-no-baseline', 'report-missing-index', 'report-unique-index', 'report-primary-index', 'report-index-reordered', 'report-unexpected-index', 'report-clean', 'report-index-clean'));
-        return array_merge($reports, array(array('valid', '--create', 0), array('truncated-import', '--create', 1), array('partial-success', '--create', 1), array('load-truncate-columns', '--load', 1), array('load-truncate-indexes', '--load', 1), array('load-column-failure', '--load', 1), array('load-index-failure', '--load', 1), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-failure', '--upgrade', 1), array('upgrade-plugin-failure', '--upgrade', 1), array('upgrade-standard-callback-failure', '--upgrade', 1), array('upgrade-alternate-callback-failure', '--upgrade', 1), array('version', '--version', 0), array('help', '--help', 0)));
+        return array_merge($reports, array(array('valid', '--create', 0), array('truncated-import', '--create', 1), array('partial-success', '--create', 1), array('load-truncate-columns', '--load', 1), array('load-truncate-indexes', '--load', 1), array('load-column-failure', '--load', 1), array('load-index-failure', '--load', 1), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-failure', '--upgrade', 1), array('upgrade-plugin-failure', '--upgrade', 1), array('upgrade-standard-callback-failure', '--upgrade', 1), array('upgrade-alternate-callback-failure', '--upgrade', 1), array('upgrade-setup-callback-failure', '--upgrade', 1), array('version', '--version', 0), array('help', '--help', 0)));
     }
 }
