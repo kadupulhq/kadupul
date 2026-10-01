@@ -11,6 +11,10 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_33.php');
+    $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
+}
 if (defined('AUDIT_TRAIL_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php');
 }
