@@ -29,8 +29,8 @@ final readonly class LegacyLinkStore implements LinkStore
     {
         $directory = $this->projectDir . '/include/content';
         $files = [];
-        foreach (glob($directory . '/*') ?: [] as $path) {
-            $name = basename($path);
+        foreach (is_dir($directory) ? scandir($directory) ?: [] : [] as $name) {
+            $path = $directory . '/' . $name;
             if (is_file($path) && !is_link($path) && !in_array($name, ['README', 'index.php'], true)
                 && preg_match('/^[A-Za-z0-9_.-]+$/D', $name) === 1) {
                 $files[] = $name;

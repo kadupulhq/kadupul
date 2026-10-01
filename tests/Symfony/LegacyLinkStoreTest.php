@@ -46,6 +46,44 @@ final class LegacyLinkStoreTest extends TestCase
         $fields['title'] = $title;
         return $this->store->save(1, null, $fields, $this->store->snapshot()['revision']);
     }
+    public function testInstalledHiddenFileRemainsSelectableAndEditable(): void
+    {
+        $directory = sys_get_temp_dir() . '/link-content-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/include/content', 0700, true);
+        $content = $directory . '/include/content';
+        file_put_contents($content . '/.status', 'installed status');
+        file_put_contents($content . '/status.html', 'ordinary status');
+        file_put_contents($content . '/README', 'excluded');
+        file_put_contents($content . '/index.php', 'excluded');
+        file_put_contents($content . '/bad name.html', 'excluded');
+        symlink($content . '/.status', $content . '/.linked');
+        mkdir($content . '/.directory');
+        $database = new readonly class ($this->db) implements DatabaseConnection {
+            public function __construct(private \PDO $db) {}
+            public function get(): \PDO
+            {
+                return $this->db;
+            }
+        };
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
+        $store = new LegacyLinkStore($database, $this->access, $this->createMock(AuditTrail::class), $configuration, $directory);
+        try {
+            self::assertSame(['.status', 'status.html'], $store->files());
+            $fields = array_replace(ExternalLinkTest::fields(), ['filename' => '.status', 'fileurl' => '']);
+            $id = $store->save(1, null, $fields, $store->snapshot()['revision']);
+            $store->save(1, $id, $fields, $store->snapshot()['revision']);
+            self::assertSame('.status', $store->snapshot()['links'][0]->contentfile);
+        } finally {
+            foreach (['.status', 'status.html', 'README', 'index.php', 'bad name.html', '.linked'] as $file) {
+                unlink($content . '/' . $file);
+            }
+            rmdir($content . '/.directory');
+            rmdir($content);
+            rmdir($directory . '/include');
+            rmdir($directory);
+        }
+    }
     public function testSavePreservesBytesAppendsAndGrantsActor(): void
     {
         $a = $this->create('A');

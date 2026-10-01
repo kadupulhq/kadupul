@@ -16,6 +16,38 @@ use PHPUnit\Framework\TestCase;
 
 final class LinkPreferencesTest extends TestCase
 {
+    public function testUnconfirmedCommitRollsBackPreferenceWrite(): void
+    {
+        $db = new class ('sqlite::memory:') extends \PDO {
+            public function commit(): bool
+            {
+                return false;
+            }
+        };
+        $db->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT, PRIMARY KEY(user_id,name))');
+        $db->exec("INSERT INTO settings_user VALUES (9, 'external_links_filters', '{\"filter\":\"before\"}')");
+        $connection = new readonly class ($db) implements DatabaseConnection {
+            public function __construct(private \PDO $db) {}
+            public function get(): \PDO
+            {
+                return $this->db;
+            }
+        };
+        $access = $this->createMock(LinkAccess::class);
+        $access->method('authorize')->willReturn(new Actor(9, 'operator'));
+        $preferences = new LegacyLinkPreferences($access, $connection, $this->createMock(LegacyConfiguration::class));
+        $failure = null;
+        try {
+            $preferences->save(['filter' => 'after']);
+        } catch (\RuntimeException $error) {
+            $failure = $error;
+        }
+        self::assertInstanceOf(\RuntimeException::class, $failure);
+        self::assertStringContainsString('commit', $failure->getMessage());
+        self::assertFalse($db->inTransaction());
+        self::assertSame(['filter' => 'before'], $preferences->load());
+    }
+
     public function testPreferencesStayWithTheCurrentActorAndRejectCorruptData(): void
     {
         $db = new \PDO('sqlite::memory:', options: [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);

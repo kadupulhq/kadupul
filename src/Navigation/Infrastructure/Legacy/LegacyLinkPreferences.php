@@ -65,7 +65,9 @@ final readonly class LegacyLinkPreferences implements LinkPreferences
             $this->access->assertCurrent($actor->id);
             $query = $db->prepare("REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'external_links_filters', ?)");
             $query->execute([$actor->id, json_encode($filters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)]);
-            $db->commit();
+            if (!$db->commit()) {
+                throw new \RuntimeException('Filter preference commit was not confirmed.');
+            }
         } catch (\Throwable $error) {
             if ($db->inTransaction()) {
                 $db->rollBack();
