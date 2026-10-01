@@ -91,6 +91,41 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         ];
     }
 
+    /** @dataProvider treeCases */
+    public function testTreesRespectDirectPolicyAndEnabledMembershipAndReuseCurrentCache(array $scenario, bool $expected): void
+    {
+        $state = $this->runPolicy(array_merge(['operation' => 'tree'], $scenario));
+        self::assertSame($expected, $state['result']);
+        self::assertSame($expected, $state['cached']);
+        self::assertSame($expected, $state['session']['sess_tree_perms'][100]);
+        self::assertSame(0, $state['extra_queries']);
+    }
+
+    public static function treeCases(): array
+    {
+        return [
+            'default allow' => [[], true],
+            'default deny' => [['tree_policy' => 2], false],
+            'direct allow exception' => [['tree_policy' => 2, 'exceptions' => [2]], true],
+            'direct deny exception' => [['exceptions' => [2]], false],
+            'group default grant' => [['tree_policy' => 2, 'groups' => [[]]], true],
+            'group exception grant' => [['tree_policy' => 2, 'groups' => [['tree_policy' => 2, 'exceptions' => [2]]]], true],
+            'disabled group ignored' => [['tree_policy' => 2, 'groups' => [['enabled' => '']]], false],
+            'foreign membership ignored' => [['tree_policy' => 2, 'groups' => [['user' => 43]]], false],
+            'anonymous denied' => [['anonymous' => true], false],
+            'authentication disabled' => [['auth_method' => 0], true],
+        ];
+    }
+
+    public function testPolicyRowsKeepOnlyEnabledGroupsOfTheRequestedPrincipal(): void
+    {
+        $state = $this->runPolicy(['operation' => 'policies', 'tree_policy' => 2, 'groups' => [[], ['enabled' => ''], ['user' => 43]]]);
+        self::assertCount(2, $state['result']);
+        self::assertSame([1, 42], array_column($state['result'], 'id'));
+        self::assertSame(['group', 'user'], array_column($state['result'], 'type'));
+        self::assertSame([1, 2], array_column($state['result'], 'policy_trees'));
+    }
+
     private function runPolicy(array $scenario): array
     {
         $root = dirname(__DIR__, 4);
