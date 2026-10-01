@@ -18,6 +18,65 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return true;
     }
 
+    /** @dataProvider migrationIndexCases */
+    public function testActualInstallerRecordsVersionOnlyForAUsableReferenceIndex(string $failure, bool $ready): void
+    {
+        $state = $this->runNative(['collector' => 'bulk', 'upgrade_entry' => true, 'failure' => $failure]);
+        self::assertSame($ready ? '1.2.34' : '1.2.33', $state['remote_version']);
+        if ($ready) {
+            self::assertNull($state['upgrade_error']);
+        } else {
+            self::assertStringContainsString('reference index is missing or incompatible', $state['upgrade_error']);
+            self::assertSame([], array_filter($state['calls'], static fn($call) => str_starts_with($call[1], 'UPDATE version')));
+        }
+    }
+
+    public static function migrationIndexCases(): array
+    {
+        return ['creates missing index' => ['index-missing', true], 'existing full index' => ['', true], 'equivalent composite' => ['index-equivalent', true], 'wrong column' => ['index-wrong-column', false], 'wrong leading column' => ['index-composite', false], 'prefix' => ['index-prefix', false], 'unique' => ['index-unique', false], 'hidden' => ['index-hidden', false]];
+    }
+
+    /** @dataProvider boundedBatchCases */
+    public function testReferenceDeliveryUsesBoundedBatchesAndRetainsOldRowsOnRefusal(array $scenario, int $expectedRows, bool $success): void
+    {
+        $state = $this->runNative($scenario + ['collector' => 'bulk']);
+        self::assertSame($success, $state['result']);
+        self::assertCount($expectedRows, $state['rows']);
+        $writes = array_values(array_filter($state['calls'], static fn($call) => $call[0] === 'remote' && str_starts_with($call[1], 'INSERT INTO data_template_data')));
+        $reads = array_values(array_filter($state['calls'], static fn($call) => $call[0] === 'remote' && str_starts_with($call[1], 'SELECT * FROM data_template_data WHERE id')));
+        if (!$success) {
+            self::assertSame([['id' => 1, 'data_source_profile_id' => 1, 'name' => 'existing']], $state['rows']);
+            if (in_array($scenario['failure'], ['batch-late', 'batch-corrupt'], true)) {
+                self::assertCount(2, $writes, 'The refusal occurs after an earlier batch was delivered');
+            }
+        } elseif (($scenario['failure'] ?? '') === 'batch-excluded') {
+            self::assertSame('existing', $state['rows'][0]['name']);
+            self::assertSame(77, $state['rows'][0]['data_source_profile_id']);
+        } elseif ($expectedRows > 0) {
+            self::assertSame(range(2, $expectedRows + 1), array_column($state['rows'], 'id'));
+            self::assertSame([77], array_values(array_unique(array_column($state['rows'], 'data_source_profile_id'))));
+        }
+        if ($success && $scenario['batch_rows'] === 2001) {
+            self::assertCount(3, $writes);
+            self::assertCount(3, $reads);
+        }
+        foreach ($writes as $write) {
+            self::assertLessThanOrEqual(60000, $write[2]);
+            self::assertLessThanOrEqual(1048576, $write[3] + strlen($write[1]));
+        }
+        foreach ($reads as $read) {
+            self::assertLessThanOrEqual(1000, $read[2]);
+        }
+        if (!empty($scenario['name_bytes']) && $success) {
+            self::assertGreaterThan(1, count($writes), 'Payload size splits batches before the row limit');
+        }
+    }
+
+    public static function boundedBatchCases(): array
+    {
+        return ['2001 rows' => [['batch_rows' => 2001], 2001, true], 'payload limit' => [['batch_rows' => 200, 'name_bytes' => 6000], 200, true], 'parameter limit' => [['batch_rows' => 1000, 'extra_columns' => 64], 1000, true], 'late write' => [['batch_rows' => 2001, 'failure' => 'batch-late'], 1, false], 'late corruption' => [['batch_rows' => 2001, 'failure' => 'batch-corrupt'], 1, false], 'oversized row' => [['batch_rows' => 1, 'name_bytes' => 600000, 'failure' => 'batch-oversized'], 1, false], 'duplicate key' => [['batch_rows' => 1, 'failure' => 'batch-duplicate'], 1, false], 'empty replacement' => [['batch_rows' => 0], 0, true], 'excluded update field' => [['collector' => 'device', 'batch_rows' => 1, 'failure' => 'batch-excluded', 'exclude' => ['name']], 1, true]];
+    }
+
     /** @dataProvider remoteGuardPreflightScenarios */
     public function testGuardPreflightPreservesCollectorVersionBeforeEveryMutation(string $class, string $failure): void
     {

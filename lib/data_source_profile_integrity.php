@@ -316,10 +316,13 @@ function replicate_data_source_profile_children(PDO $connection, array $data, bo
         $allowed = array_column($columns, 'Field');
         $excluded = $exclude === false ? [] : (is_array($exclude) ? $exclude : [$exclude]);
         $ids = [];
+        $names = $data ? array_keys(reset($data)) : [];
+        $keys = [];
         foreach ($data as $row) {
-            if (!is_array($row) || !$row || array_diff(array_keys($row), $allowed)) {
+            if (!is_array($row) || !$row || array_keys($row) !== $names || array_diff($names, $allowed) || array_filter($row, static fn($value) => $value !== null && !is_scalar($value)) || !isset($row['id']) || filter_var($row['id'], FILTER_VALIDATE_INT) === false || (int) $row['id'] <= 0 || isset($keys[(int) $row['id']])) {
                 throw new RuntimeException('Collector reference schema differs from source');
             }
+            $keys[(int) $row['id']] = true;
             $id = (int) ($row['data_source_profile_id'] ?? 0);
             if ($id > 0) {
                 $ids[$id] = $id;
@@ -339,38 +342,71 @@ function replicate_data_source_profile_children(PDO $connection, array $data, bo
         if ($replace && !db_execute_prepared('DELETE FROM data_template_data', [], false, $connection)) {
             throw new RuntimeException('Collector reference replacement failed');
         }
-        foreach ($data as $row) {
-            $names = array_keys($row);
-            $updates = [];
-            foreach ($names as $name) {
-                if (!preg_match('/^[a-zA-Z0-9_]+$/D', $name)) {
-                    throw new RuntimeException('Invalid collector reference column');
-                }
-                if (!in_array($name, $excluded, true)) {
-                    $updates[] = '`' . $name . '`=VALUES(`' . $name . '`)';
-                }
+        $updates = [];
+        foreach ($names as $name) {
+            if (!preg_match('/^[a-zA-Z0-9_]+$/D', $name)) {
+                throw new RuntimeException('Invalid collector reference column');
             }
-            $sql = 'INSERT INTO data_template_data (`' . implode('`,`', $names) . '`) VALUES (' . implode(',', array_fill(0, count($names), '?')) . ')';
+            if (!in_array($name, $excluded, true)) {
+                $updates[] = '`' . $name . '`=VALUES(`' . $name . '`)';
+            }
+        }
+        if ($data && !$replace && !$updates) {
+            throw new RuntimeException('Collector reference update has no permitted columns');
+        }
+        $deliver = static function (array $batch) use ($connection, $names, $updates, $replace, $excluded): void {
+            $tuple = '(' . implode(',', array_fill(0, count($names), '?')) . ')';
+            $sql = 'INSERT INTO data_template_data (`' . implode('`,`', $names) . '`) VALUES ' . implode(',', array_fill(0, count($batch), $tuple));
             if (!$replace) {
-                if (!$updates) {
-                    throw new RuntimeException('Collector reference update has no permitted columns');
-                }
                 $sql .= ' ON DUPLICATE KEY UPDATE ' . implode(',', $updates);
             }
-            if (!db_execute_prepared($sql, array_values($row), false, $connection)) {
+            $values = [];
+            $expected = [];
+            foreach ($batch as $row) {
+                array_push($values, ...array_values($row));
+                $expected[(int) $row['id']] = $replace ? $row : array_diff_key($row, array_flip($excluded));
+            }
+            if (!db_execute_prepared($sql, $values, false, $connection)) {
                 throw new RuntimeException('Collector reference write was not acknowledged');
             }
-            $actual = db_fetch_assoc_prepared('SELECT * FROM data_template_data WHERE id=?', [$row['id']], true, $connection);
-            $checked = $replace ? $row : array_diff_key($row, array_flip($excluded));
-            if (!is_array($actual) || count($actual) !== 1) {
+            $actual = db_fetch_assoc_prepared('SELECT * FROM data_template_data WHERE id IN (' . implode(',', array_fill(0, count($expected), '?')) . ')', array_keys($expected), true, $connection);
+            if (!is_array($actual) || count($actual) !== count($expected)) {
                 throw new RuntimeException('Collector reference verification failed');
             }
-            foreach ($checked as $column => $value) {
-                if (!array_key_exists($column, $actual[0]) || ($value === null ? $actual[0][$column] !== null : (string) $actual[0][$column] !== (string) $value)) {
-                    throw new RuntimeException('Collector reference differs from source');
+            foreach ($actual as $row) {
+                $key = (int) ($row['id'] ?? 0);
+                if (!isset($expected[$key])) {
+                    throw new RuntimeException('Collector reference verification returned an unexpected key');
                 }
+                foreach ($expected[$key] as $column => $value) {
+                    if (!array_key_exists($column, $row) || ($value === null ? $row[$column] !== null : (string) $row[$column] !== (string) $value)) {
+                        throw new RuntimeException('Collector reference differs from source');
+                    }
+                }
+                unset($expected[$key]);
             }
-
+        };
+        $batch = [];
+        $bytes = 0;
+        $payloadLimit = 1048576 - 3 * strlen(implode('`,`', $names)) - 128;
+        $rowLimit = $names ? min(1000, intdiv(60000, count($names))) : 1000;
+        foreach ($data as $row) {
+            // Bound values as well as rows/parameters; allow encoding/protocol
+            // overhead without building a potentially huge SQL payload.
+            $rowBytes = array_sum(array_map(static fn($value) => 32 + 2 * strlen((string) $value), $row));
+            if ($rowLimit < 1 || $rowBytes > $payloadLimit) {
+                throw new RuntimeException('Collector reference row exceeds the batch payload limit');
+            }
+            if ($batch && (count($batch) >= $rowLimit || $bytes + $rowBytes > $payloadLimit)) {
+                $deliver($batch);
+                $batch = [];
+                $bytes = 0;
+            }
+            $batch[] = $row;
+            $bytes += $rowBytes;
+        }
+        if ($batch) {
+            $deliver($batch);
         }
         if (!$connection->commit()) {
             throw new RuntimeException('Collector reference commit was not acknowledged');

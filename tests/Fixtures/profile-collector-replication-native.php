@@ -71,7 +71,7 @@ PHP);
 $root = dirname(__DIR__, 2);
 $directory = $argv[2];
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
-require $root . '/include/global_constants.php';
+require_once $root . '/include/global_constants.php';
 require $root . '/lib/poller.php';
 require $root . '/lib/api_device.php';
 require $root . '/lib/data_source_profile_integrity.php';
@@ -114,7 +114,7 @@ function collector_statement(string $sql, array $params = [], $connection = fals
 {
     $connection = $connection ?: $GLOBALS['source'];
     $side = $connection === $GLOBALS['source'] ? 'source' : 'remote';
-    $GLOBALS['calls'][] = [$side, $sql];
+    $GLOBALS['calls'][] = [$side, $sql, count($params), array_sum(array_map(static fn($value) => strlen((string) $value), $params))];
     if (str_contains($sql, 'information_schema.TABLES') || str_contains($sql, 'information_schema.TRIGGERS') || str_contains($sql, 'information_schema.STATISTICS')) {
         $params = array_map(static fn($name) => $GLOBALS['maps'][$side][$name] ?? str_replace('kadupul_profile_reference', ($side === 'source' ? 'collector_source_guard_' : 'collector_guard_') . $GLOBALS['suffix'], $name), $params);
     }
@@ -140,6 +140,9 @@ function db_rollback_transaction()
 }
 function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = false)
 {
+    if (!empty($GLOBALS['upgrade_active'])) {
+        $connection = $GLOBALS['remote'];
+    }
     if (!empty($GLOBALS['scenario']['entrypoint'])) {
         if (str_contains($sql, 'SELECT dtd.*')) {
             $GLOBALS['calls'][] = ['source', $sql];
@@ -176,8 +179,11 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
         foreach ($rows as &$row) {
             $row['TRIGGER_NAME'] = str_replace(($side === 'source' ? 'collector_source_guard_' : 'collector_guard_') . $GLOBALS['suffix'], 'kadupul_profile_reference', $row['TRIGGER_NAME']);
             foreach ($GLOBALS['maps'][$side] as $logical => $physical) {
-                $row['EVENT_OBJECT_TABLE'] = str_replace($physical, $logical, $row['EVENT_OBJECT_TABLE']);
-                $row['ACTION_STATEMENT'] = str_replace($physical, $logical, $row['ACTION_STATEMENT']);
+                foreach (['EVENT_OBJECT_TABLE', 'ACTION_STATEMENT'] as $field) {
+                    if (isset($row[$field])) {
+                        $row[$field] = str_replace($physical, $logical, $row[$field]);
+                    }
+                }
             }
         }
         unset($row);
@@ -210,6 +216,9 @@ function db_fetch_row($sql, $log = true, $connection = false)
 }
 function db_execute($sql, $log = true, $connection = false)
 {
+    if (!empty($GLOBALS['upgrade_active'])) {
+        $connection = $GLOBALS['remote'];
+    }
     if (!empty($GLOBALS['scenario']['entrypoint']) && !str_contains($sql, 'data_template_data') && !str_contains($sql, 'data_source_profiles') && !str_contains($sql, 'version')) {
         $GLOBALS['calls'][] = ['source', $sql];
         return true;
@@ -289,10 +298,48 @@ function db_fetch_row_prepared($sql, $params = [], ...$options)
     $GLOBALS['calls'][] = [str_contains($sql, 'FROM poller') ? 'connect' : 'source', $sql];
     return [];
 }
+function db_index_exists($table, $index)
+{
+    $rows = collector_statement('SHOW INDEX FROM ' . $table, [], $GLOBALS['remote'])->fetchAll(PDO::FETCH_ASSOC);
+    return in_array($index, array_column($rows, 'Key_name'), true);
+}
+function db_install_execute($sql)
+{
+    collector_statement($sql, [], $GLOBALS['installer']);
+}
+function get_auth_realms()
+{
+    return [];
+}
+function get_rrdtool_version()
+{
+    return '1.8';
+}
+function __x($context, $message, ...$arguments)
+{
+    return $message;
+}
+function cacti_version_compare($a, $b, $operator)
+{
+    return version_compare($a, $b, $operator);
+}
+function get_cacti_cli_version()
+{
+    return $GLOBALS['remote']->query('SELECT cacti FROM `' . $GLOBALS['maps']['remote']['version'] . '`')->fetchColumn();
+}
+function log_install_always(...$arguments) {}
+function log_install_debug(...$arguments) {}
+function set_install_config_option($key, $value)
+{
+    if ($key === 'install_cache_db') {
+        $GLOBALS['upgrade_cache_file'] = $value;
+    }
+}
 function read_config_option($name)
 {
     return 300;
 }
+function api_plugin_hook(...$arguments) {}
 function api_plugin_hook_function($name, $arguments)
 {
     $GLOBALS['hooks'][] = $name;
@@ -318,16 +365,20 @@ try {
         $connection->exec('INSERT INTO `' . $map['data_source_profiles_cf'] . '` VALUES (1,1)');
         $connection->exec('INSERT INTO `' . $map['data_source_profiles'] . "` VALUES (1,'default',300)");
     }
-    if (in_array($scenario['failure'] ?? '', ['index-missing', 'index-wrong-column', 'index-composite', 'index-equivalent'], true)) {
+    if (in_array($scenario['failure'] ?? '', ['index-missing', 'index-wrong-column', 'index-composite', 'index-equivalent', 'index-unique'], true)) {
         $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` DROP INDEX data_source_profile_id');
         if ($scenario['failure'] !== 'index-missing') {
             $columns = match ($scenario['failure']) {
                 'index-wrong-column' => 'id',
                 'index-composite' => 'id, data_source_profile_id',
+                'index-unique' => 'data_source_profile_id',
                 default => 'data_source_profile_id, id',
             };
-            $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` ADD INDEX data_source_profile_id (' . $columns . ')');
+            $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` ADD ' . ($scenario['failure'] === 'index-unique' ? 'UNIQUE ' : '') . 'INDEX data_source_profile_id (' . $columns . ')');
         }
+    }
+    if (($scenario['failure'] ?? '') === 'index-prefix') {
+        $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` DROP INDEX data_source_profile_id, MODIFY data_source_profile_id VARCHAR(16), ADD INDEX data_source_profile_id (data_source_profile_id(1))');
     }
     if (($scenario['failure'] ?? '') === 'index-hidden') {
         $visibility = str_contains($remote->getAttribute(PDO::ATTR_SERVER_VERSION), 'MariaDB') ? 'IGNORED' : 'INVISIBLE';
@@ -407,6 +458,10 @@ try {
     if (($scenario['failure'] ?? '') === 'child-schema') {
         $remote->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` DROP COLUMN name');
     }
+    if (in_array($scenario['failure'] ?? '', ['batch-late', 'batch-corrupt'], true)) {
+        $mutation = $scenario['failure'] === 'batch-late' ? "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Late batch rejected'" : "SET NEW.name='changed'";
+        $installer->exec('CREATE TRIGGER `collector_batch_' . $suffix . '` BEFORE INSERT ON `' . $maps['remote']['data_template_data'] . '` FOR EACH ROW BEGIN IF NEW.id=1002 THEN ' . $mutation . '; END IF; END');
+    }
     $id = ($scenario['failure'] ?? '') === 'missing' ? 98 : 77;
     $data = [['id' => 2, 'data_source_profile_id' => $id, 'name' => 'replicated']];
     if (($scenario['failure'] ?? '') === 'child-late') {
@@ -415,11 +470,63 @@ try {
             $data[] = ['id' => $childId, 'data_source_profile_id' => 77, 'name' => 'replicated'];
         }
     }
+    if (isset($scenario['batch_rows'])) {
+        $data = [];
+        $name = str_repeat('x', $scenario['name_bytes'] ?? 8);
+        if (strlen($name) > 32) {
+            foreach ($maps as $map) {
+                $remote->exec('ALTER TABLE `' . $map['data_template_data'] . '` MODIFY name LONGTEXT');
+            }
+        }
+        for ($column = 0; $column < ($scenario['extra_columns'] ?? 0); $column++) {
+            foreach ($maps as $map) {
+                $remote->exec('ALTER TABLE `' . $map['data_template_data'] . '` ADD extra_' . $column . ' INTEGER DEFAULT 0');
+            }
+        }
+        for ($offset = 0; $offset < $scenario['batch_rows']; $offset++) {
+            $row = ['id' => $offset + 2, 'data_source_profile_id' => 77, 'name' => $name];
+            for ($column = 0; $column < ($scenario['extra_columns'] ?? 0); $column++) {
+                $row['extra_' . $column] = $column;
+            }
+            $data[] = $row;
+        }
+        if (($scenario['failure'] ?? '') === 'batch-duplicate') {
+            $data[] = $data[0];
+        }
+        if (($scenario['failure'] ?? '') === 'batch-excluded') {
+            $data[0]['id'] = 1;
+        }
+    }
     if (!empty($scenario['source_active'])) {
         $source->beginTransaction();
         $source->exec('UPDATE `' . $maps['source']['data_source_profiles'] . '` SET step=301 WHERE id=1');
     }
-    if (!empty($scenario['entrypoint'])) {
+    $upgrade_error = null;
+    if (!empty($scenario['upgrade_entry'])) {
+        $upgrade_active = true;
+        $config = ['base_path' => $root, 'poller_id' => 2, 'connection' => 'recovery', 'is_web' => false, 'url_path' => '/', 'cacti_server_os' => 'unix'];
+        require_once $root . '/include/global_constants.php';
+        require $root . '/include/global_arrays.php';
+        require $root . '/lib/installer.php';
+        $class = new ReflectionClass(Installer::class);
+        $upgrade = $class->newInstanceWithoutConstructor();
+        $class->getProperty('old_cacti_version')->setValue($upgrade, '1.2.33');
+        ob_start();
+        try {
+            $result = $class->getMethod('upgradeDatabase')->invoke($upgrade);
+        } catch (RuntimeException $error) {
+            $upgrade_error = $error->getMessage();
+            $result = false;
+        } finally {
+            ob_end_clean();
+            if (isset($upgrade_cache_file)) {
+                unlink($upgrade_cache_file);
+            }
+            $upgrade_active = false;
+        }
+    } elseif (isset($scenario['batch_rows'])) {
+        $result = replicate_data_source_profile_children($remote, $data, $scenario['collector'] === 'bulk', $scenario['exclude'] ?? false);
+    } elseif (!empty($scenario['entrypoint'])) {
         $result = $scenario['collector'] === 'bulk' ? replicate_out(2, $scenario['class'] ?? 'all') : api_device_replicate_out(1, 2);
     } elseif (($scenario['collector'] ?? '') === 'bulk') {
         replicate_out_table($remote, $data, 'data_template_data', 2);
@@ -435,7 +542,7 @@ try {
         $source->rollBack();
     }
     $callerAfter = $source->query('SELECT step FROM `' . $maps['source']['data_source_profiles'] . '` WHERE id=1')->fetchColumn();
-    file_put_contents($directory . '/result.json', json_encode(['remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    file_put_contents($directory . '/result.json', json_encode(['upgrade_error' => $upgrade_error, 'remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
 } finally {
     $source->exec('DROP TABLE IF EXISTS `' . $maps['source']['poller'] . '`');
     foreach ($maps as $map) {
