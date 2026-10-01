@@ -9,7 +9,7 @@ function installer_csrf_probe(string $path): array
 {
     $root = dirname(__DIR__, 4);
     $source = file_get_contents($root . '/lib/installer.php');
-    $program = '$config = ' . var_export(array('base_path' => $root, 'path_csrf_secret' => $path), true) . ';';
+    $program = '$config = ' . var_export(array('base_path' => $root, 'path_csrf_web_root' => $root, 'path_csrf_secret' => $path), true) . ';';
     $program .= <<<'CODE'
 $GLOBALS['writes'] = array();
 function log_install_debug(...$args) {}

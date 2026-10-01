@@ -130,10 +130,13 @@ $disable_log_rotation = false;
 /**
  * Optional parameter to define the path of the csrf_secret.php path.  This
  * variable is for packagers who wish to specify an alternate location of
- * the CRSF secret file.
+ * the CSRF secret file. The file must be outside every served document root.
+ * For CLI rotation or installation, configure the trusted served root below;
+ * external file use fails closed when that root cannot be established.
  */
 
-//$path_csrf_secret = '/usr/share/cacti/resource/csrf-secret.php';
+//$path_csrf_secret = '/etc/kadupul/csrf-secret.php';
+//$path_csrf_web_root = '/var/www/html';
 
 /**
  * The following are optional variables for debugging low level system

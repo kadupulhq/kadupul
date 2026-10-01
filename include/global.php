@@ -186,6 +186,10 @@ if (!empty($path_csrf_secret)) {
     $config['path_csrf_secret'] = $path_csrf_secret;
 }
 
+if (!empty($path_csrf_web_root)) {
+    $config['path_csrf_web_root'] = $path_csrf_web_root;
+}
+
 /* built-in snmp support */
 if ((isset($php_snmp_support) && $php_snmp_support == false) || !function_exists('snmpget')) {
     $config['php_snmp_support'] = false;
