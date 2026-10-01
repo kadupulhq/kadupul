@@ -1099,7 +1099,7 @@ function utilities_view_user_log()
 
     /* filter by username */
     if (get_request_var('username') == '-2') {
-        $sql_where = 'WHERE ul.username NOT IN (SELECT DISTINCT username FROM user_auth)';
+        $sql_where = 'WHERE NOT EXISTS (SELECT 1 FROM user_auth WHERE user_auth.id = ul.user_id AND user_auth.username = ul.username)';
     } elseif (get_request_var('username') != '-1') {
         $sql_where = 'WHERE ul.username = ?';
         $params[] = get_request_var('username');

@@ -109,6 +109,41 @@ final class UtilityViewNativeCoverageTest extends TestCase
         );
     }
 
+    /** @dataProvider invalidPrincipalCases */
+    public function testDeletedFilterMatchesTheRecordedUserIdAndUsername(array $request, array $names, array $dates, int $total): void
+    {
+        $state = $this->render(array('view' => 'user', 'request' => array_merge(array('username' => '-2'), $request), 'same_name_realms' => true, 'mismatched_log_principals' => true));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $actualNames = $actualDates = array();
+        foreach ($xpath->query('//tr[starts-with(@id,"line")]') as $row) {
+            $cells = $xpath->query('./td', $row);
+            $actualNames[] = trim($cells->item(0)->textContent);
+            $actualDates[] = trim($cells->item(3)->textContent);
+            self::assertStringContainsString('(User Removed)', $cells->item(1)->textContent);
+        }
+        self::assertSame(array($total), $state['total_rows']);
+        self::assertSame($names, $actualNames);
+        self::assertSame($dates, $actualDates);
+        self::assertSame($state['before'], $state['after']);
+        if (($request['page'] ?? 1) === 2) {
+            self::assertGreaterThan(0, $xpath->query('//a[contains(@data-url,"page=1")]')->length);
+        }
+    }
+
+    public static function invalidPrincipalCases(): array
+    {
+        return array(
+            'deleted first page' => array(array(), array('Beta', 'Alpha & <script>'), array('2026-09-10', '2026-09-09'), 4),
+            'deleted second page' => array(array('page' => 2), array('Shared Name', 'Removed'), array('2026-09-08', '2026-09-04'), 4),
+            'same name invalid principal' => array(array('filter' => 'Shared Name'), array('Shared Name'), array('2026-09-08'), 1),
+            'deleted result filter' => array(array('result' => 2), array('Alpha & <script>'), array('2026-09-09'), 1),
+            'deleted combined filters' => array(array('result' => 0, 'filter' => 'Beta'), array('Beta'), array('2026-09-10'), 1),
+            'valid full name excluded' => array(array('filter' => 'Foreign Account'), array(), array(), 0),
+        );
+    }
+
     public static function viewCases(): array
     {
         return array(

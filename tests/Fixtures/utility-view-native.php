@@ -75,6 +75,9 @@ if ($scenario['same_name_realms'] ?? false) {
     $db->exec("INSERT INTO user_auth VALUES(3, 'Shared Name', 'Original Account', 0),(4, 'Shared Name', 'Foreign Account', 9);
 INSERT INTO user_log VALUES(3, 'Shared Name', '2026-09-05', 1, '192.0.2.5'),(3, 'Shared Name', '2026-09-06', 1, '192.0.2.6'),(4, 'Shared Name', '2026-09-07', 1, '192.0.2.7');");
 }
+if ($scenario['mismatched_log_principals'] ?? false) {
+    $db->exec("INSERT INTO user_log VALUES(1, 'Shared Name', '2026-09-08', 1, '192.0.2.8'),(2, 'Alpha & <script>', '2026-09-09', 2, '192.0.2.9'),(1, 'Beta', '2026-09-10', 0, '192.0.2.10');");
+}
 $db->exec("CREATE TABLE snmpagent_cache(oid TEXT, name TEXT, mib TEXT, `max-access` TEXT, kind TEXT, value TEXT, description TEXT);
 CREATE TABLE snmpagent_managers(id INTEGER, hostname TEXT);
 CREATE TABLE snmpagent_notifications_log(id INTEGER, manager_id INTEGER, notification TEXT, severity INTEGER, time INTEGER, varbinds TEXT);
