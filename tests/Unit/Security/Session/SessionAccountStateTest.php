@@ -13,8 +13,9 @@
 /*
  * An open session outlived the account state it was opened under. Disabling
  * or deleting a user left their session working, and "logout everywhere"
- * deleted remember-me rows but no session. A remember-me cookie also restored
- * a session for a locked account whenever the failed-login lockout was off.
+ * deleted remember-me rows but no session. With the failed-login lockout off,
+ * a remember-me cookie for a locked account was refused only after it had
+ * logged a successful cookie login and issued a new remember-me token.
  *
  * include/auth.php now rechecks the account on every request. A locked
  * account keeps its open sessions, as in 1.2.31: the failed-login lockout sets
@@ -141,7 +142,7 @@ test('a remember-me cookie restores an unlocked account', function () {
 		->and($result['events'])->toContain('cookie_set');
 });
 
-test('a remember-me cookie does not restore a locked account when the lockout is off', function () {
+test('a remember-me cookie for a locked account logs no login and issues no token when the lockout is off', function () {
 	$result = account_state_cookie(account_state_user(array('locked' => 'on')), 1);
 
 	expect($result['return'])->toBeFalse()
