@@ -99,7 +99,7 @@ if (cacti_sizeof($tables)) {
 
 		if (db_binlog_enabled()) {
 			print ' without writing to the binlog';
-			$status = db_execute('ANALYZE TABLE NO_WRITE_TO_BINLOG ' . $quoted_table . $form);
+			$status = db_execute('ANALYZE NO_WRITE_TO_BINLOG TABLE ' . $quoted_table . $form);
 		} else {
 			$status = db_execute('ANALYZE TABLE ' . $quoted_table . $form);
 		}
