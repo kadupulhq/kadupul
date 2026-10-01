@@ -289,7 +289,7 @@ test('pages send the device, tree, rule, data source and utility actions by POST
     foreach (array('enable_debug', 'disable_debug', 'repopulate') as $action) {
         expect($source('host.php'))->toMatch("/class='hyperLink cactiPostAction' href='#' data-url='\" \\. html_escape\\('host\\.php\\?action=$action&/");
     }
-    expect($source('graphs_new.php'))->toMatch("/class='cactiPostAction' href='#' data-url='\" \\. html_escape\\('host\\.php\\?action=query_verbose&/");
+    expect($source('graphs_new.php'))->toMatch("/class='cactiPostAction' href='#' data-navigation='fullpage' data-url='\" \\. html_escape\\('host\\.php\\?action=query_verbose&/");
 
     foreach (array('copy_node', 'create_node', 'delete_node', 'move_node', 'rename_node') as $action) {
         expect($source('tree.php'))->toMatch("/\\$\\.post\\('\\?action=$action', \\{" . $token . '/');

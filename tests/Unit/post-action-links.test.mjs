@@ -27,7 +27,7 @@ function chain() {
 }
 
 function harness() {
-  const state = { posts: [], gets: [], pushed: [], redirects: [], errors: [], formStatus: [], loads: [], bound: [], offs: [] };
+  const state = { posts: [], gets: [], pushed: [], redirects: [], errors: [], formStatus: [], loads: [], bound: [], offs: [], forms: [] };
   const request = { done: null, fail: null };
   const pending = {
     done(callback) { request.done = callback; return pending; },
@@ -53,7 +53,13 @@ function harness() {
 
   const location = { href: 'https://example.test/kadupul/cdef.php?action=edit&id=2', origin: 'https://example.test' };
   const scope = {
-    $, URL, window: { location, scrollTo() {} }, document: { location },
+    $, URL, URLSearchParams, window: { location, scrollTo() {} },
+    document: {
+      location,
+      createElement: tag => tag === 'form' ? { fields: [], appendChild(input) { this.fields.push(input); } } : {},
+      body: { appendChild(form) { state.forms.push(form); } },
+    },
+    HTMLFormElement: { prototype: { submit() { this.submitted = true; } } },
     csrfMagicToken: 'sid:token,123',
     checkFormStatus: (href, type) => { state.formStatus.push(type); return true; },
     closeDateFilters() {}, clearAllTimeouts() {}, applySkin() {}, handleConsole() {}, cleanHeader: href => href,
@@ -63,7 +69,7 @@ function harness() {
     getPresentHTTPErrorOrRedirect: (html, href) => state.errors.push(href),
     myTitle: 'Kadupul', DOMPurify: { sanitize: value => value }, isMobile: { any: () => null }, Pace: { stop() {} },
   };
-  runInNewContext(['navigateToSymfonySites', 'cactiPreparePostRequestFromUrl', 'loadPage'].map(implementation).join('\n'), scope);
+  runInNewContext(['navigateToSymfonySites', 'cactiPreparePostRequestFromUrl', 'navigateUsingPost', 'loadPage'].map(implementation).join('\n'), scope);
   return { scope, state, request };
 }
 
@@ -204,4 +210,54 @@ test('a posted reorder or device action is sent at once when no form has changed
 test('continuing past the unsaved form warning sends a checked POST', () => {
   const form = readFileSync(new URL('../../lib/html_form.php', import.meta.url), 'utf8');
   assert.match(form, /\} else if \(type == 'postdata'\) \{\s*scroll_or_id\(\);/);
+});
+
+test('cross-page action links use browser POST navigation instead of an AJAX fragment', () => {
+  const { scope, state } = tableNavHarness();
+  const navigations = [];
+  scope.navigateUsingPost = href => navigations.push(href);
+  scope.handleTableNav();
+  const href = 'host.php?action=query_verbose&header=true&id=4&host_id=2';
+  state.bound[0].handler.call(link({ url: href, navigation: 'fullpage' }), { preventDefault() {}, stopPropagation() {} });
+  assert.deepEqual(navigations, [href]);
+  assert.deepEqual(state.loads, []);
+});
+
+test('browser POST navigation submits action fields and a current token outside the URL', () => {
+  const { scope, state } = harness();
+  scope.navigateUsingPost('host.php?action=query_verbose&header=true&id=4&host_id=2&__csrf_magic=stale');
+  assert.equal(state.forms.length, 1);
+  const form = state.forms[0];
+  assert.equal(form.method, 'post');
+  assert.equal(form.action, 'https://example.test/kadupul/host.php');
+  assert.equal(form.submitted, true);
+  assert.deepEqual(form.fields.map(input => [input.name, input.value]), [
+    ['__csrf_magic', 'sid:token,123'], ['action', 'query_verbose'], ['header', 'true'], ['id', '4'], ['host_id', '2'],
+  ]);
+  assert.ok(form.fields.every(input => input.type === 'hidden'));
+  assert.deepEqual(state.posts, []);
+  assert.deepEqual(state.gets, []);
+  assert.deepEqual(state.pushed, []);
+});
+
+test('browser POST navigation waits for confirmation and keeps the original payload', () => {
+  const { scope, state } = harness();
+  let proceed;
+  scope.checkFormStatus = (href, type, callback) => {
+    assert.equal(type, 'postdata');
+    proceed = callback;
+    return false;
+  };
+  scope.navigateUsingPost('host.php?action=query_verbose&header=true&id=4&host_id=2');
+  assert.equal(state.forms.length, 0, 'cancelling the warning must submit nothing');
+  proceed();
+  assert.equal(state.forms.length, 1);
+  assert.equal(state.forms[0].submitted, true);
+  assert.equal(state.forms[0].fields.find(input => input.name === 'host_id').value, '2');
+});
+
+test('browser POST navigation refuses another origin before creating a form', () => {
+  const { scope, state } = harness();
+  assert.throws(() => scope.navigateUsingPost('https://other.test/host.php?action=query_verbose'), /different origin/);
+  assert.equal(state.forms.length, 0);
 });

@@ -773,7 +773,11 @@ function handleTableNav() {
 		 * either would send the token to the wrong place. */
 		var url = $(this).data('url');
 		if (url) {
-			loadPage(url, false, true);
+			if ($(this).data('navigation') === 'fullpage') {
+				navigateUsingPost(url);
+			} else {
+				loadPage(url, false, true);
+			}
 		}
 	});
 }
@@ -2383,6 +2387,28 @@ function loadPageUsingPostChecked(href, postData) {
 		loadPageUsingPost(href, postData);
 	};
 
+	if (checkFormStatus(href, 'postdata', send)) {
+		send();
+	}
+}
+
+/* Let the browser follow a cross-page POST redirect and retain its safe GET URL. */
+function navigateUsingPost(href) {
+	var request = cactiPreparePostRequestFromUrl(href);
+	var send = function() {
+		var form = document.createElement('form');
+		form.method = 'post';
+		form.action = request.url;
+		new URLSearchParams(request.data).forEach(function(value, name) {
+			var input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = name;
+			input.value = value;
+			form.appendChild(input);
+		});
+		document.body.appendChild(form);
+		HTMLFormElement.prototype.submit.call(form);
+	};
 	if (checkFormStatus(href, 'postdata', send)) {
 		send();
 	}
