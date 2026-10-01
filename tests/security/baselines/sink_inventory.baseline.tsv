@@ -600,7 +600,7 @@ fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_na
 fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
 fs_write	./tools/dependencies/install-legacy.php:53	    $destination = fopen($archivePath, 'wb');
 fs_write	./tools/dependencies/install-legacy.php:86	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
-fs_write	./utilities.php:1634	            $log_fh = fopen($logfile, 'w');
+fs_write	./utilities.php:1642	            $log_fh = fopen($logfile, 'w');
 header_redirect	./aggregate_graphs.php:108	        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_graphs.php:241	    header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_graphs.php:287	                header('Location: aggregate_graphs.php?header=false');
@@ -973,7 +973,7 @@ header_redirect	./user_group_admin.php:561			header('Location: user_group_admin.
 header_redirect	./user_group_admin.php:582			header('Location: user_group_admin.php?action=edit&header=false&tab=settings&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:589		header('Location: user_group_admin.php?action=edit&header=false&tab=general&id=' .  get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:612		header('Location: user_group_admin.php?action=edit&header=false&tab=gperms&id=' . get_request_var('group_id'));
-header_redirect	./utilities.php:1293	        header('Location: utilities.php?action=view_logfile&filename=' . $logbase);
+header_redirect	./utilities.php:1301	        header('Location: utilities.php?action=view_logfile&filename=' . $logbase);
 header_redirect	./utilities.php:26	        header('Location: utilities.php?action=view_poller_cache');
 header_redirect	./utilities.php:31	        header('Location: utilities.php?header=false');
 header_redirect	./utilities.php:80	        header('Location: utilities.php');

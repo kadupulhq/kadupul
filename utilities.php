@@ -1208,7 +1208,7 @@ function utilities_view_user_log()
 
 function utilities_clear_user_log()
 {
-    $users = db_fetch_assoc('SELECT DISTINCT username FROM user_auth');
+    $users = db_fetch_assoc('SELECT id, username FROM user_auth');
 
     if (cacti_sizeof($users)) {
         /* remove active users */
@@ -1216,27 +1216,30 @@ function utilities_clear_user_log()
             $total_login_rows = db_fetch_cell_prepared(
                 'SELECT COUNT(username)
 				FROM user_log
-				WHERE username = ?
+				WHERE user_id = ?
+				AND username = ?
 				AND result IN (1)',
-                array($user['username'])
+                array($user['id'], $user['username'])
             );
 
             $total_token_rows = db_fetch_cell_prepared(
                 'SELECT COUNT(username)
 				FROM user_log
-				WHERE username = ?
+				WHERE user_id = ?
+				AND username = ?
 				AND result IN (2)',
-                array($user['username'])
+                array($user['id'], $user['username'])
             );
 
             if ($total_login_rows > 1) {
                 db_execute_prepared(
                     'DELETE
 					FROM user_log
-					WHERE username = ?
+					WHERE user_id = ?
+					AND username = ?
 					AND result IN(1)
 					ORDER BY time LIMIT ' . ($total_login_rows - 1),
-                    array($user['username'])
+                    array($user['id'], $user['username'])
                 );
             }
 
@@ -1244,20 +1247,22 @@ function utilities_clear_user_log()
                 db_execute_prepared(
                     'DELETE
 					FROM user_log
-					WHERE username = ?
+					WHERE user_id = ?
+					AND username = ?
 					AND result IN(2)
 					ORDER BY time
 					LIMIT ' . ($total_token_rows - 1),
-                    array($user['username'])
+                    array($user['id'], $user['username'])
                 );
             }
 
             db_execute_prepared(
                 'DELETE
 				FROM user_log
-				WHERE username = ?
+				WHERE user_id = ?
+				AND username = ?
 				AND result = 0',
-                array($user['username'])
+                array($user['id'], $user['username'])
             );
         }
 
@@ -1266,8 +1271,11 @@ function utilities_clear_user_log()
     /* delete inactive users, including when no accounts remain */
     db_execute('DELETE
 			FROM user_log
-			WHERE user_id NOT IN (SELECT id FROM user_auth)
-			OR username NOT IN (SELECT username FROM user_auth)');
+			WHERE NOT EXISTS (
+				SELECT 1 FROM user_auth
+				WHERE user_auth.id = user_log.user_id
+				AND user_auth.username = user_log.username
+			)');
 }
 
 function utilities_view_logfile()

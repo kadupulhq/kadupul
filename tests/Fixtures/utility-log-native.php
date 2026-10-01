@@ -56,14 +56,16 @@ function api_plugin_hook_function($name, $value)
     return true;
 }
 try {
-    $db->exec('CREATE TABLE `' . $tables['user_auth'] . '` (id INTEGER PRIMARY KEY, username VARCHAR(100)) ENGINE=InnoDB');
+    $db->exec('CREATE TABLE `' . $tables['user_auth'] . '` (id INTEGER PRIMARY KEY, username VARCHAR(100), realm INTEGER, UNIQUE (realm, username)) ENGINE=InnoDB');
     $db->exec('CREATE TABLE `' . $tables['user_log'] . '` (id INTEGER PRIMARY KEY, user_id INTEGER, username VARCHAR(100), result INTEGER, time DATETIME) ENGINE=InnoDB');
-    $insertUser = $db->prepare('INSERT INTO `' . $tables['user_auth'] . '` VALUES (?, ?)');
+    $insertUser = $db->prepare('INSERT INTO `' . $tables['user_auth'] . '` VALUES (?, ?, ?)');
     $insertLog = $db->prepare('INSERT INTO `' . $tables['user_log'] . '` VALUES (?, ?, ?, ?, ?)');
     $rowId = 0;
-    foreach ([1 => "quote' principal", 2 => 'other principal'] as $userId => $username) {
+    $identity = $scenario['identity'] ?? 'distinct';
+    $principals = $identity === 'same-name' ? [1 => 'shared principal', 2 => 'shared principal'] : ($identity === 'mismatched-pair' ? [1 => 'bob', 2 => 'sam'] : [1 => "quote' principal", 2 => 'other principal']);
+    foreach ($principals as $userId => $username) {
         if ($scenario['current']) {
-            $insertUser->execute([$userId, $username]);
+            $insertUser->execute([$userId, $username, $userId === 1 ? 0 : 2]);
         }
         foreach ([0, 1, 2] as $result) {
             foreach (range(1, $scenario['rows']) as $ordinal) {
@@ -74,6 +76,11 @@ try {
     }
     $insertLog->execute([++$rowId, 99, 'removed principal', 1, '2026-09-30 12:00:00']);
     $insertLog->execute([++$rowId, 1, 'renamed principal', 2, '2026-09-30 12:00:00']);
+    if ($identity === 'mismatched-pair') {
+        // Both components exist, but belong to different current accounts.
+        // Password-change logs are outside login/token retention, isolating orphan cleanup.
+        $insertLog->execute([++$rowId, 1, 'sam', 3, '2026-09-30 12:00:00']);
+    }
     if (isset($argv[3])) {
         define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
         define('UTILITY_LOG_TEST_COVERAGE', true);
