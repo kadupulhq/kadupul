@@ -24,11 +24,12 @@ def check(condition, message):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--project', default='kadupul-symfony-auth')
     parser.add_argument('--database-sessions', action='store_true')
     parser.add_argument('--coverage-output', type=Path)
     args = parser.parse_args()
     database_sessions = args.database_sessions
-    harness = Harness(SimpleNamespace(project='kadupul-symfony-auth', target='symfony-auth'))
+    harness = Harness(SimpleNamespace(project=args.project, target=args.project))
     if args.coverage_output:
         from coverage_support import configure_coverage
         configure_coverage(harness, args.coverage_output)
@@ -111,6 +112,9 @@ def main():
         verify_site_lifecycle(harness, session, user_id, check)
         from device_create_scenarios import verify_device_create
         verify_device_create(harness, session, user_id, check)
+        from cdef_http_scenarios import verify_cdefs
+        verify_cdefs(harness, session, check)
+        session = login()  # The CDEF locked-account scenario revokes its native session.
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()

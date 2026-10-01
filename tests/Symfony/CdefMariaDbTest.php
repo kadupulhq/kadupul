@@ -10,6 +10,7 @@ namespace Kadupul\Tests;
 use Doctrine\DBAL\Connection;
 use Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor;
 use Kadupul\Tests\Fixtures\RealMariaDb;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
 
 final class CdefMariaDbTest extends TestCase
@@ -30,11 +31,12 @@ final class CdefMariaDbTest extends TestCase
 
             $failure = null;
             try {
-                (new LegacyCdefEditor($database))->act(42, 'duplicate', [1]);
+                (new LegacyCdefEditor($database, $this->primaryConfiguration()))->act(42, 'duplicate', [1]);
             } catch (\Throwable $error) {
                 $failure = $error;
             }
             self::assertNotNull($failure, 'The forced item constraint must fail after inserting the duplicate CDEF row.');
+            self::assertStringContainsString('cdef_item_test_check', $failure->getMessage());
             self::assertSame(1, (int) $database->fetchOne('SELECT COUNT(*) FROM cdef'));
             self::assertSame(1, (int) $database->fetchOne('SELECT COUNT(*) FROM cdef_items'));
             self::assertSame('Source', $database->fetchOne('SELECT name FROM cdef WHERE id = 1'));
@@ -42,6 +44,13 @@ final class CdefMariaDbTest extends TestCase
             $this->dropTemporaryTables($database);
             $database->close();
         }
+    }
+
+    private function primaryConfiguration(): LegacyConfiguration
+    {
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
+        return $configuration;
     }
 
     private function createTemporaryTables(Connection $database): void

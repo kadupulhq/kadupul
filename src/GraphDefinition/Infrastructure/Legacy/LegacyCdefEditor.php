@@ -12,10 +12,11 @@ use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Kadupul\GraphDefinition\Application\Port\CdefEditor;
 use Kadupul\GraphDefinition\Application\Query\CdefAccessDenied;
 use Kadupul\GraphDefinition\Domain\CdefFunctions;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 
 final readonly class LegacyCdefEditor implements CdefEditor
 {
-    public function __construct(private Connection $database) {}
+    public function __construct(private Connection $database, private LegacyConfiguration $configuration) {}
 
     public function save(int $actorId, int $id, string $name): int
     {
@@ -230,6 +231,30 @@ final readonly class LegacyCdefEditor implements CdefEditor
 
     private function transaction(int $actorId, callable $operation): mixed
     {
+        if ($this->database->isTransactionActive()) {
+            throw new \RuntimeException('CDEF mutations cannot join an existing transaction.');
+        }
+        $native = $this->database->getNativeConnection();
+        if ($native instanceof \PDO && $native->inTransaction()) {
+            throw new \RuntimeException('CDEF mutations cannot join an existing transaction.');
+        }
+        if ($this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
+            if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
+                throw new \RuntimeException('CDEF mutations require the primary collector.');
+            }
+            foreach (['cdef', 'cdef_items', 'graph_templates_item', 'settings', 'user_auth', 'user_auth_realm',
+                'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'] as $table) {
+                // SHOW CREATE checks the table this connection actually uses,
+                // including temporary fixtures that may shadow persistent tables.
+                $definition = $this->database->fetchNumeric('SHOW CREATE TABLE ' . $this->database->quoteIdentifier($table));
+                if ($definition === false || !preg_match('/\n\) ENGINE=InnoDB\b/i', (string) $definition[1])) {
+                    throw new \RuntimeException('CDEF mutations require InnoDB tables.');
+                }
+            }
+            // Dependency range locks must remain effective when the session's
+            // default isolation was changed by another database user.
+            $this->database->executeStatement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        }
         $this->database->beginTransaction();
         try {
             $this->assertCanMutate($actorId);

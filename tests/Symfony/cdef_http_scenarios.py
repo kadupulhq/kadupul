@@ -90,6 +90,21 @@ def verify_cdefs(harness, session, check):
         raise AssertionError(f'Stale reorder mismatch: status={stale.status}, baseline={baseline}, current={current}, body={stale_body[:250]!r}')
     check(True, 'stale reorder is rejected when the same IDs have a different current sequence')
 
+    fresh_order = _page(session, base + f'/app.php/graph-definitions/cdefs/{cdef_id}/edit')
+    reordered = _post(session, base + order_path, {
+        'order[items]': fresh_order['order[items]'],
+        'order[moveUp]': str(baseline[0]),
+        'order[_token]': fresh_order['order[_token]'],
+    })
+    stored_order = [int(value) for value in harness.sql(f'SELECT id FROM cdef_items WHERE cdef_id={cdef_id} ORDER BY sequence,id').splitlines()]
+    check(reordered.status == 200 and stored_order == baseline,
+          'CDEF successful reorder persists the requested RPN sequence')
+    csrf_order = _page(session, base + f'/app.php/graph-definitions/cdefs/{cdef_id}/edit')
+    invalid_order = _post(session, base + order_path, {'order[items]': csrf_order['order[items]'], 'order[moveDown]': str(baseline[0])})
+    unchanged_order = [int(value) for value in harness.sql(f'SELECT id FROM cdef_items WHERE cdef_id={cdef_id} ORDER BY sequence,id').splitlines()]
+    check(invalid_order.status == 422 and unchanged_order == baseline,
+          'CDEF reorder without CSRF cannot hand off a mutation')
+
     action_query = urllib.parse.urlencode([('ids[]', str(cdef_id))])
     duplicate_url = base + '/app.php/graph-definitions/cdefs/actions/duplicate?' + action_query
     duplicate_fields = _page(session, duplicate_url)
@@ -103,6 +118,43 @@ def verify_cdefs(harness, session, check):
     if duplicated.status != 200 or len(copies) != 1:
         raise AssertionError(f'Duplicate flow mismatch: status={duplicated.status}, fields={duplicate_fields}, copies={copies}, body={duplicate_body[-1200:]!r}')
     check(True, 'bulk duplicate copies the CDEF and its selected item state')
+
+    duplicate_id = int(copies[0]['id'])
+    duplicate_items = [int(value) for value in harness.sql(f'SELECT id FROM cdef_items WHERE cdef_id={duplicate_id} ORDER BY sequence,id').splitlines()]
+    check(len(duplicate_items) == 2 and harness.sql(f'SELECT GROUP_CONCAT(value ORDER BY sequence,id) FROM cdef_items WHERE cdef_id={duplicate_id}').strip() == '42,8',
+          'CDEF duplicate preserves the ordered RPN values consumed by graph generation')
+    delete_item_url = base + f'/app.php/graph-definitions/cdefs/{duplicate_id}/items/{duplicate_items[0]}/delete'
+    item_delete_fields = _page(session, delete_item_url)
+    check(_post(session, delete_item_url, {'confirm[_token]': 'invalid'}).status == 422,
+          'CDEF item deletion rejects an invalid CSRF token')
+    item_deleted = _post(session, delete_item_url, {'confirm[_token]': item_delete_fields['confirm[_token]']})
+    check(item_deleted.status == 200 and harness.sql(f'SELECT GROUP_CONCAT(value ORDER BY sequence,id) FROM cdef_items WHERE cdef_id={duplicate_id}').strip() == '8',
+          'CDEF item deletion reaches MariaDB and preserves surviving RPN order')
+    try:
+        session.opener.open(delete_item_url)
+        missing_status = 200
+    except HTTPError as error:
+        missing_status = error.code
+        error.close()
+    check(missing_status == 404, 'CDEF removed item cannot be loaded again')
+
+    duplicate_delete_url = base + '/app.php/graph-definitions/cdefs/actions/delete?' + urllib.parse.urlencode([('ids[]', str(duplicate_id))])
+    duplicate_delete_fields = _page(session, duplicate_delete_url)
+    duplicate_deleted = _post(session, duplicate_delete_url, {key: value for key, value in duplicate_delete_fields.items() if key.startswith('cdef_action[')})
+    check(duplicate_deleted.status == 200
+          and harness.sql(f'SELECT COUNT(*) FROM cdef WHERE id={duplicate_id}').strip() == '0'
+          and harness.sql(f'SELECT COUNT(*) FROM cdef_items WHERE cdef_id={duplicate_id}').strip() == '0',
+          'CDEF bulk deletion removes the duplicate and its owned items')
+
+    for legacy_path, expected_suffix in [
+        ('/cdef.php?action=edit', '/cdefs/new'),
+        (f'/cdef.php?action=edit&id={cdef_id}', f'/cdefs/{cdef_id}/edit'),
+        (f'/cdef.php?action=item_edit&cdef_id={cdef_id}&id={item_ids[0]}', f'/cdefs/{cdef_id}/items/{item_ids[0]}'),
+        ('/cdef.php?filter=CDEF&rows=30&sort_column=graphs&sort_direction=desc&has_graphs=true', '/cdefs'),
+    ]:
+        with session.opener.open(base + legacy_path) as response:
+            check(response.status == 200 and urllib.parse.urlparse(response.url).path.endswith(expected_suffix),
+                  'legacy CDEF GET forwards to its fixed Symfony route: ' + legacy_path)
 
     referrer_name = name + ' reference'
     harness.sql(f"INSERT INTO cdef (hash,`system`,name) VALUES ('{uuid.uuid4().hex}',0,'{referrer_name}')")
@@ -135,6 +187,10 @@ def verify_cdefs(harness, session, check):
     harness.sql(f"UPDATE user_auth SET locked='' WHERE id={user_id}")
     check(response.status in (401, 403) and value == '42',
           'locking an actor after form retrieval prevents the pending CDEF mutation')
+
+    guards = harness.php('-r', _mariadb_guard_probe())
+    check(guards['exit'] == 0 and 'CDEF_WRITE_GUARDS_OK' in guards['stdout'],
+          'CDEF writes reject nontransactional tables, remote collectors and caller transactions without losing caller work')
 
     rollback = harness.php('-r', _mariadb_rollback_probe())
     check(rollback['exit'] == 0 and 'CDEF_ROLLBACK_OK' in rollback['stdout'],
@@ -184,8 +240,8 @@ $database->executeStatement("INSERT INTO cdef VALUES (1,'source-hash',0,'Source'
 $database->executeStatement("INSERT INTO cdef_items VALUES (1,'source-item-hash',1,1,6,'7')");
 $database->executeStatement('ALTER TABLE cdef AUTO_INCREMENT=99');
 $failed = false;
-try { (new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($database))->act(42,'duplicate',[1]); }
-catch (Throwable) { $failed = true; }
+try { (new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($database, new Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration(__DIR__)))->act(42,'duplicate',[1]); }
+catch (Throwable $error) { $failed = str_contains($error->getMessage(), 'cdef_test_check'); }
 if (!$failed || (int)$database->fetchOne('SELECT COUNT(*) FROM cdef') !== 1 || (int)$database->fetchOne('SELECT COUNT(*) FROM cdef_items') !== 1) {
     throw new RuntimeException('CDEF duplicate rollback contract failed.');
 }
@@ -206,7 +262,7 @@ $locker->beginTransaction();
 $locker->fetchOne('SELECT id FROM cdef WHERE id = ? FOR UPDATE', [{target_id}]);
 $blocked = false;
 try {{
-    (new Kadupul\\GraphDefinition\\Infrastructure\\Legacy\\LegacyCdefEditor($writer))->saveItem({actor_id}, {source_id}, 0, 5, '{target_id}');
+    (new Kadupul\\GraphDefinition\\Infrastructure\\Legacy\\LegacyCdefEditor($writer, new Kadupul\\Platform\\Infrastructure\\Legacy\\InstallationConfiguration(__DIR__)))->saveItem({actor_id}, {source_id}, 0, 5, '{target_id}');
 }} catch (Throwable) {{
     $blocked = true;
 }}
@@ -216,9 +272,58 @@ if (!$blocked || $count !== 0) {{
     throw new RuntimeException('The writer did not wait for the target CDEF row lock.');
 }}
 $locker->commit();
-(new Kadupul\\GraphDefinition\\Infrastructure\\Legacy\\LegacyCdefEditor($writer))->saveItem({actor_id}, {source_id}, 0, 5, '{target_id}');
+(new Kadupul\\GraphDefinition\\Infrastructure\\Legacy\\LegacyCdefEditor($writer, new Kadupul\\Platform\\Infrastructure\\Legacy\\InstallationConfiguration(__DIR__)))->saveItem({actor_id}, {source_id}, 0, 5, '{target_id}');
 $count = (int) $writer->fetchOne('SELECT COUNT(*) FROM cdef_items WHERE cdef_id = {source_id} AND type = 5 AND value = "{target_id}"');
 if ($count !== 1) {{
     throw new RuntimeException('The valid CDEF reference was not saved after releasing the lock.');
 }}
 echo 'CDEF_REFERENCE_LOCK_OK';'''
+
+
+def _mariadb_guard_probe():
+    fixture = _mariadb_rollback_probe().split("$database->executeStatement('ALTER TABLE cdef AUTO_INCREMENT=99');", 1)[0]
+    return fixture + r'''$primary = new Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration(__DIR__);
+$editor = new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($database, $primary);
+foreach (['cdef','cdef_items','graph_templates_item','settings','user_auth','user_auth_realm',
+          'user_auth_group','user_auth_group_members','user_auth_group_realm'] as $table) {
+    $database->executeStatement('ALTER TABLE '.$database->quoteIdentifier($table).' ENGINE=MyISAM');
+    $rejected = false;
+    try { $editor->save(42, 0, 'Forbidden MyISAM mutation'); }
+    catch (RuntimeException $error) { $rejected = $error->getMessage() === 'CDEF mutations require InnoDB tables.'; }
+    finally { $database->executeStatement('ALTER TABLE '.$database->quoteIdentifier($table).' ENGINE=InnoDB'); }
+    if (!$rejected || (int)$database->fetchOne('SELECT COUNT(*) FROM cdef') !== 1 || $database->isTransactionActive()) {
+        throw new RuntimeException('Nontransactional CDEF table was not rejected before writing: '.$table);
+    }
+}
+foreach ([2, '1', null] as $collector) {
+    $remote = new class($collector) implements Kadupul\Platform\Contract\LegacyConfiguration {
+        public function __construct(private mixed $collector) {}
+        public function values(): array { return ['collector_id' => $this->collector]; }
+    };
+    $rejected = false;
+    try { (new Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor($database, $remote))->save(42, 0, 'Remote write'); }
+    catch (RuntimeException $error) { $rejected = $error->getMessage() === 'CDEF mutations require the primary collector.'; }
+    if (!$rejected || $database->isTransactionActive() || (int)$database->fetchOne('SELECT COUNT(*) FROM cdef') !== 1) {
+        throw new RuntimeException('CDEF primary collector precondition failed.');
+    }
+}
+foreach ([false, true] as $nativeTransaction) {
+    $native = $database->getNativeConnection();
+    if ($nativeTransaction) { $native->beginTransaction(); } else { $database->beginTransaction(); }
+    $database->executeStatement("INSERT INTO cdef VALUES (77,'caller-owned',0,'Caller work')");
+    $rejected = false;
+    try { $editor->save(42, 0, 'Forbidden nested mutation'); }
+    catch (RuntimeException $error) { $rejected = $error->getMessage() === 'CDEF mutations cannot join an existing transaction.'; }
+    if (!$rejected || !$native->inTransaction() || $database->getTransactionNestingLevel() !== ($nativeTransaction ? 0 : 1)
+        || (int)$database->fetchOne('SELECT COUNT(*) FROM cdef') !== 2) {
+        throw new RuntimeException('CDEF adapter altered caller transaction ownership or rows.');
+    }
+    if ($nativeTransaction) { $native->rollBack(); } else { $database->rollBack(); }
+    if ((int)$database->fetchOne('SELECT COUNT(*) FROM cdef') !== 1) { throw new RuntimeException('Caller rollback lost ownership.'); }
+}
+$database->executeStatement('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED');
+$editor->save(42, 1, 'Owned successful mutation');
+if ($database->isTransactionActive() || $database->fetchOne('SELECT name FROM cdef WHERE id=1') !== 'Owned successful mutation') {
+    throw new RuntimeException('CDEF mutation failed with an alternate session isolation.');
+}
+echo 'CDEF_WRITE_GUARDS_OK';'''

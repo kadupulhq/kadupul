@@ -14,6 +14,7 @@ use Kadupul\GraphDefinition\Domain\CdefListCriteria;
 use Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefRealmAccess;
 use Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyCdefEditor;
 use Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineCdefCatalog;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
 
 final class CdefAdministrationTest extends TestCase
@@ -44,8 +45,44 @@ final class CdefAdministrationTest extends TestCase
         ] as $sql) {
             $this->database->executeStatement($sql);
         }
-        $this->editor = new LegacyCdefEditor($this->database);
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => 1]);
+        $this->editor = new LegacyCdefEditor($this->database, $configuration);
         $this->catalog = new DoctrineCdefCatalog($this->database);
+    }
+
+    public function testRejectsCallerOwnedDbalTransactionWithoutRollingItBack(): void
+    {
+        $this->database->beginTransaction();
+        $this->assertCallerTransactionPreserved();
+        self::assertSame(1, $this->database->getTransactionNestingLevel());
+        $this->database->rollBack();
+        self::assertSame(0, (int) $this->database->fetchOne('SELECT COUNT(*) FROM cdef WHERE id = 99'));
+    }
+
+    public function testRejectsCallerOwnedNativeTransactionWithoutChangingDbalNesting(): void
+    {
+        $native = $this->database->getNativeConnection();
+        self::assertInstanceOf(\PDO::class, $native);
+        $native->beginTransaction();
+        $this->assertCallerTransactionPreserved();
+        self::assertSame(0, $this->database->getTransactionNestingLevel());
+        self::assertTrue($native->inTransaction());
+        $native->rollBack();
+        self::assertSame(0, (int) $this->database->fetchOne('SELECT COUNT(*) FROM cdef WHERE id = 99'));
+    }
+
+    private function assertCallerTransactionPreserved(): void
+    {
+        $this->database->executeStatement("INSERT INTO cdef VALUES (99, 'caller-hash', 0, 'Caller work')");
+        try {
+            $this->editor->save(42, 2, 'Unrequested caller mutation');
+            self::fail('An existing caller transaction must be rejected.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('CDEF mutations cannot join an existing transaction.', $error->getMessage());
+        }
+        self::assertSame('Caller work', $this->database->fetchOne('SELECT name FROM cdef WHERE id = 99'));
+        self::assertSame('Unused', $this->database->fetchOne('SELECT name FROM cdef WHERE id = 2'));
     }
 
     public function testListCountsGraphTemplateAndNestedCdefUsageAndEscapesSearch(): void

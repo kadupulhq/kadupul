@@ -21,7 +21,17 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
-        'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'bin/legacy-device-edit.php',
+        'cdef.php',
+        'src/GraphDefinition/Infrastructure/Legacy/LegacyCdefEditor.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefListController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefActionController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/CdefItemController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/LegacyCdefController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Form/CdefActionType.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Form/CdefItemType.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Form/CdefReorderType.php',
+        'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
@@ -164,10 +174,12 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
+    cdef_checks = ['CDEF item deletion reaches MariaDB and preserves surviving RPN order', 'CDEF successful reorder persists the requested RPN sequence', 'CDEF bulk deletion removes the duplicate and its owned items', 'CDEF duplicate preserves the ordered RPN values consumed by graph generation', 'CDEF item deletion rejects an invalid CSRF token', 'locking an actor after form retrieval prevents the pending CDEF mutation', 'a MariaDB item insert failure rolls back the newly inserted duplicate CDEF', 'CDEF writes reject nontransactional tables, remote collectors and caller transactions without losing caller work']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'cdef-test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -224,6 +236,8 @@ def main():
         output = scratch / 'result.xml'
         for index in range(len(statistics_checks)):
             failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
+        for index in range(len(cdef_checks)):
+            failures['missing-cdef-check-' + str(index)] = 'Incomplete Symfony integration'
         for case, expected in failures.items():
             data = copy.deepcopy(measured)
             evidence = copy.deepcopy(manifest)
@@ -232,6 +246,8 @@ def main():
                 worker['sha256'] = '0' * 64
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
+            elif case == 'cdef-test-hash':
+                evidence['source_sha256']['tests/Symfony/cdef_http_scenarios.py'] = '0' * 64
             elif case == 'details-test-hash':
                 evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'sites-test-hash':
@@ -287,6 +303,8 @@ def main():
             elif case.startswith('missing-statistics-check-'):
                 missing = statistics_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-cdef-check-'):
+                evidence['checks'].remove(cdef_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':

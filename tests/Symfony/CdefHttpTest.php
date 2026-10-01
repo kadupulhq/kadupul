@@ -15,6 +15,7 @@ use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Kernel;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 final class CdefHttpTest extends TestCase
@@ -139,6 +140,49 @@ final class CdefHttpTest extends TestCase
         } finally {
             $kernel->shutdown();
         }
+    }
+
+    #[DataProvider('featureProtectedRoutes')]
+    public function testConsoleAccountWithoutDefinitionRealmIsDeniedBeforeParsingOrHandoff(string $path, string $method): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $access = $this->createMock(ConsoleAccess::class);
+            $access->method('consoleActor')->willReturn(new Actor(42, 'console-only'));
+            $container->set(ConsoleAccess::class, $access);
+            $realm = $this->createMock(CdefRealmAccess::class);
+            $realm->expects(self::once())->method('canManageDefinitions')->with(42)->willReturn(false);
+            $container->set(CdefRealmAccess::class, $realm);
+            foreach ([CdefCatalog::class, CdefEditor::class] as $port) {
+                $handoff = $this->createMock($port);
+                foreach (get_class_methods($port) as $operation) {
+                    $handoff->expects(self::never())->method($operation);
+                }
+                $container->set($port, $handoff);
+            }
+
+            $response = $kernel->handle(Request::create($path, $method));
+            self::assertSame(403, $response->getStatusCode());
+            self::assertTrue($response->headers->hasCacheControlDirective('no-store'));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public static function featureProtectedRoutes(): array
+    {
+        return [
+            'malformed list' => ['/graph-definitions/cdefs?page[]=invalid', 'GET'],
+            'missing create form' => ['/graph-definitions/cdefs/new', 'POST'],
+            'malformed edit query' => ['/graph-definitions/cdefs/1/edit?page[]=invalid', 'GET'],
+            'malformed item type' => ['/graph-definitions/cdefs/1/items/1?type[]=invalid', 'GET'],
+            'missing item confirmation' => ['/graph-definitions/cdefs/1/items/1/delete', 'POST'],
+            'missing reorder selection' => ['/graph-definitions/cdefs/1/items/reorder', 'POST'],
+            'missing action selection' => ['/graph-definitions/cdefs/actions/delete', 'GET'],
+            'malformed legacy query' => ['/graph-definitions/cdefs/legacy?action=edit&id[]=invalid', 'GET'],
+        ];
     }
 
     private function authorize(object $container, bool $authenticated): void
