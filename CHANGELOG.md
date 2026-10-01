@@ -10,6 +10,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 
 - Add the CSRF token only to same-origin XMLHttpRequest, jQuery and form posts in the installed CSRF Magic browser script. Form targets are read from the `action` attribute, so a control named `action` cannot hide them; relative URLs resolve against the document base; and token fields are withheld when a submit button's `formaction` points to another origin. The legacy dependency installer now applies checksum-verified patches recorded in `legacy-files.json`.
+- Stop the CSRF Magic output handler from adding the token to forms that post to another origin. Only forms with no action or a relative action get the field from the server; absolute and protocol-relative actions are left to the browser script, which checks their origin. Attributes are read as the browser reads them, so a quoted `>`, a second `action`, character references, backslashes, control characters or a `<base href>` on another origin cannot hide the target, and GET forms no longer receive the token when another attribute contains `method="post"`.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
