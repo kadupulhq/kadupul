@@ -578,6 +578,29 @@ function cacti_auth_revoke_user_credentials($user_id)
     db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($user_id));
 }
 
+/** Serialize a realm, permission or preference write with parent removal. */
+function user_group_execute_child($group_id, $sql, $params)
+{
+    if (!db_begin_transaction()) {
+        throw new RuntimeException('Unable to begin group policy transaction');
+    }
+    try {
+        if (!db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($group_id))) {
+            throw new RuntimeException('Group removed before policy mutation');
+        }
+        if (!db_execute_prepared($sql, $params)) {
+            throw new RuntimeException('Unable to change group policy');
+        }
+        if (!db_commit_transaction()) {
+            throw new RuntimeException('Unable to commit group policy transaction');
+        }
+        return true;
+    } catch (Throwable $error) {
+        db_rollback_transaction();
+        throw $error;
+    }
+}
+
 /** Serialize membership changes with removal of their parent group. */
 function user_group_update_membership($group_id, $user_id, $add)
 {

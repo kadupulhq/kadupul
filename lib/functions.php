@@ -140,11 +140,6 @@ function save_user_settings($user = -1)
 
     foreach ($settings_user as $tab_short_name => $tab_fields) {
         foreach ($tab_fields as $field_name => $field_array) {
-            /* Check every field with a numeric default value and reset it to default if the inputted value is not numeric  */
-            if (isset($field_array['default']) && is_numeric($field_array['default']) && !is_numeric(get_nfilter_request_var($field_name))) {
-                set_request_var($field_name, $field_array['default']);
-            }
-
             if (isset($field_array['method'])) {
                 if ($field_array['method'] == 'checkbox') {
                     set_user_setting($field_name, (isset_request_var($field_name) ? 'on' : ''), $user);
@@ -175,6 +170,7 @@ function save_user_settings($user = -1)
                         set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
                     } else {
                         $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                        $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
                     }
                 }
             }

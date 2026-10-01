@@ -142,6 +142,10 @@ function __($value) { return $value; }
 function read_config_option($name) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function db_execute_prepared(...$args) { echo 'WRITE'; exit; }
+function db_begin_transaction() { return true; }
+function db_commit_transaction() { return true; }
+function db_rollback_transaction() { return true; }
+require $argv[1] . '/lib/auth.php';
 function sanitize_unserialize_selected_items($value) { echo 'WRITE'; exit; }
 function db_fetch_assoc($sql) { return array(array('directory' => '2')); }
 function db_fetch_cell_prepared(...$args) { return 1; }

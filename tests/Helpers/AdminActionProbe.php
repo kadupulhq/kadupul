@@ -157,7 +157,7 @@ PHP;
 
         $program .= "\n" . ($scenario['stubs'] ?? '') . "\n";
 
-        $sources = array('lib/auth.php' => array_merge(array('user_group_update_membership'), $scenario['auth_functions'] ?? array()));
+        $sources = array('lib/auth.php' => array_merge(array('user_group_update_membership', 'user_group_execute_child'), $scenario['auth_functions'] ?? array()));
         $sources[$scenario['page']] = array_merge($sources[$scenario['page']] ?? array(), $scenario['functions'] ?? array());
 
         foreach ($sources as $file => $functions) {

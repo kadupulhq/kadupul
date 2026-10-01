@@ -18,6 +18,7 @@ function group_copy_run(int $insert_id, array $perms, array $realms): array
         'functions' => array('user_group_copy'),
         'insert_id' => $insert_id,
         'answers' => array(
+            array('cell', '/SELECT id FROM user_auth_group WHERE id = \? FOR UPDATE/', 9),
             array('assoc', '/FROM user_auth_group_perms WHERE group_id = \?/', $perms, array(5)),
             array('assoc', '/FROM user_auth_group_realm WHERE group_id = \?/', $realms, array(5)),
         ),

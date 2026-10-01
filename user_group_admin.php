@@ -268,7 +268,8 @@ function user_group_copy($id, $prefix = 'New Group')
 
         if (cacti_sizeof($perms)) {
             foreach ($perms as $p) {
-                db_execute_prepared(
+                user_group_execute_child(
+                    $group_id,
                     'INSERT INTO user_auth_group_perms
 					(group_id, item_id, type)
 					VALUES (?, ?, ?)',
@@ -286,7 +287,8 @@ function user_group_copy($id, $prefix = 'New Group')
 
         if (cacti_sizeof($realms)) {
             foreach ($realms as $r) {
-                db_execute_prepared(
+                user_group_execute_child(
+                    $group_id,
                     'INSERT INTO user_auth_group_realm
 					(group_id, realm_id)
 					VALUES (?, ?)',
@@ -342,7 +344,8 @@ function form_actions()
                 if (get_nfilter_request_var('drp_action') == '1') {
                     // Selecting the parent writes nothing once the group is
                     // gone, so a delete racing the check above adds no row.
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'REPLACE INTO user_auth_group_perms
 						(group_id, item_id, type)
 						SELECT id, ?, 3
@@ -351,7 +354,8 @@ function form_actions()
                         array($matches[1], get_nfilter_request_var('id'))
                     );
                 } else {
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'DELETE FROM user_auth_group_perms
 						WHERE group_id = ?
 						AND item_id = ?
@@ -376,7 +380,8 @@ function form_actions()
                 if (get_nfilter_request_var('drp_action') == '1') {
                     // Selecting the parent writes nothing once the group is
                     // gone, so a delete racing the check above adds no row.
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'REPLACE INTO user_auth_group_perms
 						(group_id, item_id, type)
 						SELECT id, ?, 1
@@ -385,7 +390,8 @@ function form_actions()
                         array($matches[1], get_nfilter_request_var('id'))
                     );
                 } else {
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'DELETE FROM user_auth_group_perms
 						WHERE group_id = ?
 						AND item_id = ?
@@ -410,7 +416,8 @@ function form_actions()
                 if (get_nfilter_request_var('drp_action') == '1') {
                     // Selecting the parent writes nothing once the group is
                     // gone, so a delete racing the check above adds no row.
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'REPLACE INTO user_auth_group_perms
 						(group_id, item_id, type)
 						SELECT id, ?, 4
@@ -419,7 +426,8 @@ function form_actions()
                         array($matches[1], get_nfilter_request_var('id'))
                     );
                 } else {
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'DELETE FROM user_auth_group_perms
 						WHERE group_id = ?
 						AND item_id = ?
@@ -444,7 +452,8 @@ function form_actions()
                 if (get_nfilter_request_var('drp_action') == '1') {
                     // Selecting the parent writes nothing once the group is
                     // gone, so a delete racing the check above adds no row.
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'REPLACE INTO user_auth_group_perms
 						(group_id, item_id, type)
 						SELECT id, ?, 2
@@ -453,7 +462,8 @@ function form_actions()
                         array($matches[1], get_nfilter_request_var('id'))
                     );
                 } else {
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'DELETE FROM user_auth_group_perms
 						WHERE group_id = ?
 						AND item_id = ?
@@ -672,12 +682,13 @@ function form_save()
             user_group_refuse(get_filter_request_var('id'));
         }
 
-        db_execute_prepared('DELETE FROM user_auth_group_realm WHERE group_id = ?', array(get_filter_request_var('id')));
+        user_group_execute_child(get_filter_request_var('id'), 'DELETE FROM user_auth_group_realm WHERE group_id = ?', array(get_filter_request_var('id')));
 
         foreach ($_POST as $var => $val) {
             if (preg_match('/^[section]/i', $var)) {
                 if (substr($var, 0, 7) == 'section') {
-                    db_execute_prepared(
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
                         'REPLACE INTO user_auth_group_realm
 						(group_id, realm_id)
 						SELECT id, ?
@@ -704,10 +715,10 @@ function form_save()
             foreach ($tab_fields as $field_name => $field_array) {
                 if ((isset($field_array['items'])) && (is_array($field_array['items']))) {
                     foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
-                        db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_filter_request_var('id'), $sub_field_name, get_nfilter_request_var($sub_field_name, '')));
+                        user_group_execute_child(get_filter_request_var('id'), 'REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_filter_request_var('id'), $sub_field_name, get_nfilter_request_var($sub_field_name, '')));
                     }
                 } else {
-                    db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, get_nfilter_request_var($field_name)));
+                    user_group_execute_child(get_filter_request_var('id'), 'REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, get_nfilter_request_var($field_name)));
                 }
             }
         }
@@ -744,13 +755,13 @@ function perm_remove()
     }
 
     if (get_request_var('type') == 'graph') {
-        db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=1 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        user_group_execute_child(get_filter_request_var('group_id'), 'DELETE FROM user_auth_group_perms WHERE type=1 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     } elseif (get_request_var('type') == 'tree') {
-        db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=2 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        user_group_execute_child(get_filter_request_var('group_id'), 'DELETE FROM user_auth_group_perms WHERE type=2 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     } elseif (get_request_var('type') == 'host') {
-        db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=3 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        user_group_execute_child(get_filter_request_var('group_id'), 'DELETE FROM user_auth_group_perms WHERE type=3 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     } elseif (get_request_var('type') == 'graph_template') {
-        db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        user_group_execute_child(get_filter_request_var('group_id'), 'DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     }
 
     reset_group_perms(get_request_var('group_id'));

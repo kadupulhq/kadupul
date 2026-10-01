@@ -116,3 +116,12 @@ test('the form save stores allowed values and flags the rest', function () {
         ->and($result['messages'])->toContain(35)
         ->and($result['messages'])->not->toContain(1);
 });
+
+test('the form save rejects malformed numeric defaults without replacing the submitted value', function () {
+    $result = profile_setting_run('form_save', array('tab' => 'general', 'min_tree_width' => 'invalid-number'));
+    $stored = array_column(array_column(admin_action_probe_writes($result, '/^set_user_setting$/'), 'params'), 1, 0);
+    expect($stored)->not->toHaveKey('min_tree_width')
+        ->and($result['session']['sess_error_fields'])->toHaveKey('min_tree_width')
+        ->and($result['session']['sess_field_values']['min_tree_width'])->toBe('invalid-number')
+        ->and($result['messages'])->toContain(35)->not->toContain(1);
+});
