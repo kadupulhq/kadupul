@@ -21,6 +21,11 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'color.php',
+        'src/Graphing/Domain/PaletteCsv.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorStore.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorCsvController.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorEditController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -168,6 +173,8 @@ def main():
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'palette-test-hash': 'Integration test source differs',
+        'missing-palette-handoff-check': 'Incomplete Symfony integration',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -230,6 +237,10 @@ def main():
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'missing-palette-handoff-check':
+                evidence['checks'].remove('CSV exact name data handoff')
+            elif case == 'palette-test-hash':
+                evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'details-test-hash':
