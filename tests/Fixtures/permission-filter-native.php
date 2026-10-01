@@ -1,0 +1,106 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+$root = dirname(__DIR__, 2);
+$scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+$directory = $argv[2];
+mkdir($directory . '/include', 0700, true);
+file_put_contents($directory . '/include/auth.php', '<?php');
+chdir($directory);
+$config = array('poller_id' => 1, 'connection' => 'online', 'url_path' => '/');
+$item_rows = array(10 => 'Ten', 25 => 'Twenty & five');
+$request = array_merge(array('id' => 7, 'rows' => 25, 'associated' => 'true', 'filter' => 'A & B', 'graph_template_id' => 3, 'host_template_id' => 4), $scenario);
+$request['action'] = 'fixture';
+$db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+$db->exec("CREATE TABLE graph_templates(id INTEGER, name TEXT);
+    CREATE TABLE graph_local(graph_template_id INTEGER);
+    CREATE TABLE host_template(id INTEGER, name TEXT);
+    INSERT INTO graph_templates VALUES(3, 'Z & graph'), (8, 'Unused'), (9, 'A graph');
+    INSERT INTO graph_local VALUES(3),(3),(9);
+    INSERT INTO host_template VALUES(4,'Z & host'),(5,'A host');");
+if (!empty($scenario['empty'])) {
+    $db->exec('DELETE FROM graph_templates; DELETE FROM graph_local; DELETE FROM host_template');
+    $item_rows = false;
+}
+$queries = array();
+function db_fetch_assoc($sql)
+{
+    $GLOBALS['queries'][] = $sql;
+    return $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+function cacti_sizeof($value)
+{
+    return is_countable($value) ? count($value) : 0;
+}
+function __($text, ...$arguments)
+{
+    return $arguments ? vsprintf($text, $arguments) : $text;
+}
+function __esc($text, ...$arguments)
+{
+    return html_escape(__($text, ...$arguments));
+}
+function __x($context, $text)
+{
+    return $context . ':' . $text;
+}
+function get_request_var($name)
+{
+    return $GLOBALS['request'][$name] ?? '';
+}
+function get_nfilter_request_var($name)
+{
+    return get_request_var($name);
+}
+function isset_request_var($name)
+{
+    return array_key_exists($name, $GLOBALS['request']);
+}
+function isempty_request_var($name)
+{
+    return get_request_var($name) === '';
+}
+function get_current_page()
+{
+    return $GLOBALS['request']['page'];
+}
+function clean_up_name($name)
+{
+    return $name;
+}
+function is_realm_allowed($realm)
+{
+    return false;
+}
+function api_plugin_hook($name) {}
+function cacti_require_post_actions($actions) {}
+function set_default_action() {}
+// Stop unrelated dispatch using the controller's native plugin boundary.
+function api_plugin_hook_function($name, $value)
+{
+    return true;
+}
+final class CactiSecureHeaders
+{
+    public static function getNonceAttribute()
+    {
+        return "nonce='permission-fixture'";
+    }
+}
+require $root . '/lib/html.php';
+if (isset($argv[3])) {
+    define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
+    define('PERMISSION_FILTER_TEST_COVERAGE', true);
+    require __DIR__ . '/rrd-process-coverage.php';
+}
+require (getenv('PERMISSION_FILTER_CONTROLLER_ROOT') ?: $root) . '/' . $scenario['page'];
+ob_start();
+($scenario['function'] . '_filter')('Example');
+$html = ob_get_clean();
+print json_encode(array('html' => $html, 'queries' => $queries), JSON_THROW_ON_ERROR);

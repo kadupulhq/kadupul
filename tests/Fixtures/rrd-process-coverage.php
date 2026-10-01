@@ -11,6 +11,12 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('PERMISSION_FILTER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+}
 if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyRequestContext.php');
