@@ -29,7 +29,7 @@
     "include/vendor/csrf/README.md": "5f79ce32b88ad174563d80c7bfd0c89865fc26cdc8f0fb11d52a98d178f30f15",
     "include/vendor/csrf/csrf-conf.php": "61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514",
     "include/vendor/csrf/csrf-magic.js": "b1f86864c72241a602b2a5b3b3e9f584e4620f7d1f034bd5c698c12966e681eb",
-    "include/vendor/csrf/csrf-magic.php": "3710f47e29d9c8311d9e5e13e5a341f3850fcb2d384640b9926c14674ee70567",
+    "include/vendor/csrf/csrf-magic.php": "ea17d5b54d48f19d3949c4615a069babd23b6402f4be9ed628f865e71f4d495b",
     "include/vendor/csrf/index.php": "ab4a930fc908f8b59d7c6638572534c23d7899b77a092c3b5b7012a053753f4c",
     "include/vendor/flag-icons/country.json": "f5e99aee5051868b391b9f42e110cb104b7fcd6269807b2dc5e2c80b1e6c9436",
     "include/vendor/flag-icons/flag-ids.py": "af64921efb425f80ab17bea3cae78405d7e725f353fb2bed29d781b9cae08119",
@@ -438,6 +438,62 @@
         {
           "before": "/**\n * Checks if this is a post request, and if it is, checks if the nonce is valid.\n",
           "after": "/**\n * Adds the token field after each POST form start tag whose action stays on\n * this origin. Absolute and protocol-relative actions are left alone because\n * the Host header does not reliably name this origin; the browser script adds\n * the field to those forms when they are same-origin.\n */\nfunction csrf_rewrite_forms($buffer, $input) {\n\t$relative_is_local = csrf_base_is_local($buffer);\n\t$output = '';\n\t$offset = 0;\n\n\twhile (preg_match('#<form(?=[\\t\\n\\f\\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {\n\t\t$tag = csrf_parse_tag($buffer, $match[0][1] + 5);\n\t\t$output .= substr($buffer, $offset, $tag['end'] - $offset);\n\t\t$offset = $tag['end'];\n\n\t\tif ($tag['closed'] && csrf_form_is_local_post($tag['attributes'], $relative_is_local)) {\n\t\t\t$output .= $input;\n\t\t}\n\t}\n\n\treturn $output . substr($buffer, $offset);\n}\n\n/**\n * Reads a start tag's attributes the way an HTML parser does, so a quoted\n * value containing \">\" or \"action=\" cannot move the tag end or hide the\n * real action. The first of two attributes with the same name wins.\n */\nfunction csrf_parse_tag($html, $position) {\n\t$length = strlen($html);\n\t$space = \"\\t\\n\\f\\r \";\n\t$attributes = array();\n\n\twhile ($position < $length) {\n\t\t$position += strspn($html, $space . '/', $position);\n\t\tif ($position >= $length) {\n\t\t\tbreak;\n\t\t}\n\n\t\tif ($html[$position] === '>') {\n\t\t\treturn array('attributes' => $attributes, 'end' => $position + 1, 'closed' => true);\n\t\t}\n\n\t\t// A name may start with \"=\" and runs to whitespace, \"/\", \">\" or \"=\".\n\t\t$name_length = 1 + strcspn($html, $space . '/>=', $position + 1);\n\t\t$name = strtolower(substr($html, $position, $name_length));\n\t\t$position += $name_length;\n\t\t$position += strspn($html, $space, $position);\n\t\t$value = '';\n\n\t\tif ($position < $length && $html[$position] === '=') {\n\t\t\t$position++;\n\t\t\t$position += strspn($html, $space, $position);\n\t\t\t$quote = $position < $length ? $html[$position] : '';\n\n\t\t\tif ($quote === '\"' || $quote === \"'\") {\n\t\t\t\t$close = strpos($html, $quote, $position + 1);\n\t\t\t\tif ($close === false) {\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\n\t\t\t\t$value = substr($html, $position + 1, $close - $position - 1);\n\t\t\t\t$position = $close + 1;\n\t\t\t} else {\n\t\t\t\t$value_length = strcspn($html, $space . '>', $position);\n\t\t\t\t$value = substr($html, $position, $value_length);\n\t\t\t\t$position += $value_length;\n\t\t\t}\n\t\t}\n\n\t\tif (!array_key_exists($name, $attributes)) {\n\t\t\t$attributes[$name] = csrf_decode_attribute($value);\n\t\t}\n\t}\n\n\treturn array('attributes' => $attributes, 'end' => $length, 'closed' => false);\n}\n\n/**\n * Decodes character references once, as the browser does for an attribute\n * value. Numeric references outside ASCII cannot form a scheme, a slash or a\n * control character, so they become U+FFFD.\n */\nfunction csrf_decode_attribute($value) {\n\treturn preg_replace_callback('/&(#[xX][0-9a-fA-F]+;?|#[0-9]+;?|[A-Za-z][A-Za-z0-9]*;)/', function($matches) {\n\t\t$reference = $matches[1];\n\t\tif ($reference[0] !== '#') {\n\t\t\treturn html_entity_decode('&' . $reference, ENT_QUOTES | ENT_HTML5, 'UTF-8');\n\t\t}\n\n\t\t$digits = rtrim(substr($reference, 1), ';');\n\t\t$code = ($digits[0] === 'x' || $digits[0] === 'X') ? hexdec(substr($digits, 1)) : (float) $digits;\n\n\t\treturn $code > 0 && $code < 0x80 ? chr((int) $code) : \"\\u{FFFD}\";\n\t}, $value);\n}\n\nfunction csrf_form_is_local_post($attributes, $relative_is_local) {\n\tif (!isset($attributes['method']) || strtolower($attributes['method']) !== 'post') {\n\t\treturn false;\n\t}\n\n\t// A missing or empty action submits to the document's own URL.\n\tif (!isset($attributes['action']) || $attributes['action'] === '') {\n\t\treturn true;\n\t}\n\n\treturn csrf_url_is_relative($attributes['action']) && $relative_is_local;\n}\n\n/**\n * Accepts only a URL that resolves against the base URL without naming a\n * scheme or host. Browsers drop tabs and newlines inside a URL and read \"\\\"\n * as \"/\", so any control character, space or backslash is refused.\n */\nfunction csrf_url_is_relative($url) {\n\t$url = trim($url, \"\\t\\n\\f\\r \");\n\n\treturn strpos($url, '\\\\') === false &&\n\t\t!preg_match('/[\\x00-\\x20\\x7f]/', $url) &&\n\t\t!preg_match('#^(?:[a-z][a-z0-9+.-]*:|//)#i', $url);\n}\n\n/**\n * A <base href> naming another origin would carry relative actions with it.\n */\nfunction csrf_base_is_local($buffer) {\n\t$offset = 0;\n\n\twhile (preg_match('#<base(?=[\\t\\n\\f\\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {\n\t\t$tag = csrf_parse_tag($buffer, $match[0][1] + 5);\n\t\t$offset = $tag['end'];\n\n\t\tif (isset($tag['attributes']['href']) && $tag['attributes']['href'] !== '' && !csrf_url_is_relative($tag['attributes']['href'])) {\n\t\t\treturn false;\n\t\t}\n\t}\n\n\treturn true;\n}\n\n/**\n * Checks if this is a post request, and if it is, checks if the nonce is valid.\n"
+        },
+        {
+          "before": "\tcsrf_log(__FUNCTION__, 'returns: ' . var_export($buffer, true));\n",
+          "after": "\tcsrf_log(__FUNCTION__, 'processed response bytes=' . strlen($buffer));\n"
+        },
+        {
+          "before": "\t\t\tcsrf_log(__FUNCTION__, \"check_tokens($name, $tokens) returned $result\");\n",
+          "after": "\t\t\tcsrf_log(__FUNCTION__, 'token validation returned ' . ($result ? 'true' : 'false'));\n"
+        },
+        {
+          "before": "\tcsrf_log(__FUNCTION__, 'returns: ' . var_export($token, true));\n",
+          "after": "\tcsrf_log(__FUNCTION__, 'issued token type: ' . strtok($token, ':'));\n"
+        },
+        {
+          "before": "\t\t$ret = array_merge($ret, csrf_flattenpost2(1, $n, $v));\n\t}\n\n\tcsrf_log(__FUNCTION__, 'returns: ' . var_export($ret, true));\n\n",
+          "after": "\t\t$ret = array_merge($ret, csrf_flattenpost2(1, $n, $v));\n\t}\n\n"
+        },
+        {
+          "before": "\t\t\t$ret = array_merge($ret, csrf_flattenpost2($level+1, $nk, $v));\n\t\t}\n\t}\n\n\tcsrf_log(__FUNCTION__, 'returns: ' . var_export($ret, true));\n\n",
+          "after": "\t\t\t$ret = array_merge($ret, csrf_flattenpost2($level+1, $nk, $v));\n\t\t}\n\t}\n\n"
+        },
+        {
+          "before": "\t\t<p>Debug: $tokens</p></body></html>\n",
+          "after": ""
+        },
+        {
+          "before": "/**\n * Generates a random string as the hash of time, microtime, and mt_rand.\n */\nfunction csrf_generate_secret($len = 32) {\n\t$r = '';\n\tfor ($i = 0; $i < $len; $i++) {\n\t\t$r .= chr(mt_rand(0, 255));\n\t}\n\t$r .= time() . microtime();\n\n\t$secret = csrf_internal_hash('',$r);\n\n\tcsrf_log(__FUNCTION__, 'returns: ' . var_export($secret, true));\n\n\treturn $secret;\n}\n",
+          "after": "/**\n * Generates a cryptographically secure random secret.\n */\nfunction csrf_generate_secret($len = 32) {\n\tif (!is_int($len) || $len < 16) {\n\t\tthrow new InvalidArgumentException('CSRF secrets require at least 16 random bytes');\n\t}\n\n\treturn bin2hex(random_bytes($len));\n}\n"
+        },
+        {
+          "before": "\tcsrf_log(__FUNCTION__, 'returns: ' . var_export($secret, true));\n",
+          "after": "\tcsrf_log(__FUNCTION__, 'CSRF secret is ' . (empty($secret) ? 'unavailable' : 'available'));\n"
+        },
+        {
+          "before": "\t$result = csrf_internal_hash($secret, csrf_internal_hash($secret, $time . ':' . $value)) . ',' . $time;\n\n\tcsrf_log(__FUNCTION__, 'returns: ' . var_export($result, true));\n\n",
+          "after": "\t$result = csrf_internal_hash($secret, csrf_internal_hash($secret, $time . ':' . $value)) . ',' . $time;\n\n"
+        },
+        {
+          "before": "\t\tif (!empty($_SERVER['REQUEST_URI'])) {\n\t\t\t$caller = $_SERVER['REQUEST_URI'];\n",
+          "after": "\t\tif (!empty($_SERVER['REQUEST_URI'])) {\n\t\t\t$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);\n\t\t\t$caller = is_string($path) ? $path : '';\n"
+        },
+        {
+          "before": "if (!empty($_POST)) {\n\tcsrf_log('<post>', var_export($_POST, true));\n}\n\nif (!empty($_GET)) {\n\tcsrf_log('<get>', var_export($_GET, true));\n}\n",
+          "after": "if (!empty($_POST) || !empty($_GET)) {\n\tcsrf_log(\n\t\t'<request>',\n\t\t'method=' . (isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'unknown') .\n\t\t'; post_fields=' . count($_POST) .\n\t\t'; get_fields=' . count($_GET)\n\t);\n}\n"
+        },
+        {
+          "before": "\t$valid_token = false;\n\tforeach ($tokens as $token) {\n\t\tif (csrf_check_token($token)) {\n",
+          "after": "\tif (!is_array($tokens) || count($tokens) > 8) {\n\t\tcsrf_log(__FUNCTION__, 'rejected malformed token collection');\n\n\t\treturn false;\n\t}\n\n\t$valid_token = false;\n\tforeach ($tokens as $token) {\n\t\tif (!is_string($token) || strlen($token) > 256) {\n\t\t\tcontinue;\n\t\t}\n\n\t\tif (csrf_check_token($token)) {\n"
+        },
+        {
+          "before": "\t\t\tlist($x, $time) = explode(',', $token, 2);\n",
+          "after": "\t\t\tlist($hash, $time) = explode(',', $value, 2);\n\t\t\tif (!ctype_digit($time)) {\n\t\t\t\treturn false;\n\t\t\t}\n\n\t\t\t$time = (int) $time;\n\t\t\t$value = $hash . ',' . $time;\n"
+        },
+        {
+          "before": "\t\t\t\t$check_token = ($expiry_time < $expiry_csrf);\n",
+          "after": "\t\t\t\t$check_token = ($time <= $expiry_time + 300 && $expiry_time < $expiry_csrf);\n"
         }
       ]
     }
