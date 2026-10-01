@@ -306,41 +306,9 @@ if (isset_request_var('ref')) {
 
 	if (isset($ref_parts['user']) || isset($ref_parts['pass'])) {
 		$valid = false;
-	} elseif (!isset($ref_parts['host'])) {
-		$value = true;
 	} elseif (isset($ref_parts['host'])) {
-		$server_addr = $_SERVER['SERVER_ADDR'];
-		if (!filter_var($_SERVER['SERVER_NAME'], FILTER_VALIDATE_IP)) {
-			$server_info = dns_get_record($_SERVER['SERVER_NAME'], DNS_ANY);
-			$server_ref  = gethostbyname($ref_parts['host']);
-
-			if ($server_ref != $server_addr) {
-				$valid = false;
-			}
-
-			if (!$valid && cacti_sizeof($server_info)) {
-				foreach($server_info as $record) {
-					if (isset($record['host']) && $record['host'] == $server_ref) {
-						$valid = true;
-						break;
-					} elseif (isset($record['target']) && $record['target'] == $server_ref) {
-						$valid = true;
-						break;
-					} elseif (isset($record['ip']) && $record['ip'] == $server_addr) {
-						$valid = true;
-						break;
-					}
-				}
-			}
-		} else {
-			$server_ip   = gethostbyname($_SERVER['SERVER_NAME']);
-			$server_ref  = gethostbyname($ref_parts['host']);
-			if ($server_ip == $server_ref) {
-				$valid = true;
-			}
-		}
-	} else {
-		$valid = false;
+		/* compare names only; resolving a host the client chose sent DNS queries from the server */
+		$valid = validate_redirect_url(get_nfilter_request_var('ref'), '') !== '';
 	}
 
 	if (!$valid) {
