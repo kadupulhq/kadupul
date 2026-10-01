@@ -43,6 +43,7 @@ function compat_password_verify($password, $hash) {
 }
 function compat_password_needs_rehash($password, $algo, $options = array()) { return false; }
 function compat_password_hash($password, $algo, $options = array()) {
+    if (str_contains($password, chr(0))) { throw new ValueError('Bcrypt password must not contain NUL'); }
     $GLOBALS['hashes'][] = 'hash:' . $algo;
     return 'new-hash';
 }
@@ -122,4 +123,5 @@ test('legacy MD5 and empty hashes run the same fixed-cost password work as an un
     array('7c4f29407893c334a6cb7a87bf045c0d', 'guess', 'enabled'), array('', 'guess', 'enabled'),
     array('7c4f29407893c334a6cb7a87bf045c0d', 'guess', 'disabled'), array('7c4f29407893c334a6cb7a87bf045c0d', 'guess', 'locked'),
     array('7c4f29407893c334a6cb7a87bf045c0d', '', 'enabled'), array('', '', 'enabled'),
+    array('7c4f29407893c334a6cb7a87bf045c0d', chr(0), 'enabled'),
 ));

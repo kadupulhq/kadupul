@@ -20,7 +20,7 @@ function csrf_token_is_well_formed($tokens)
     }
 
     foreach (explode(';', $tokens) as $token) {
-        $value = explode(':', $token, 2)[1] ?? '';
+        $value = explode(':', $token, 2)[1] ?? $token;
 
         if (strpos($value, ',') === false) {
             continue;
@@ -259,7 +259,7 @@ function csrf_error_callback()
  *
  * csrf-magic validates the token before page dispatch for every POST. These
  * actions change data, and the pages and plugins that use them still send
- * them as GET links or same-origin XHR, so a same-site GET stays allowed.
+ * them as GET links or same-origin XHR, so a same-origin GET stays allowed.
  * Actions a page lists in cacti_require_post_actions() stay POST-only there.
  */
 function csrf_refuse_cross_site_actions()

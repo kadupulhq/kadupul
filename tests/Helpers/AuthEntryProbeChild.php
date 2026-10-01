@@ -107,15 +107,15 @@ function probe_realm_cell(string $sql, array $params)
     if ($pdo === null) {
         $pdo = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 
-        $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, realm INTEGER)');
+        $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, realm INTEGER, locked TEXT, password TEXT)');
         $pdo->exec('CREATE TABLE user_auth_realm (realm_id INTEGER, user_id INTEGER)');
         $pdo->exec('CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY, enabled TEXT)');
         $pdo->exec('CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER)');
         $pdo->exec('CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)');
 
         $seed = array(
-            'INSERT INTO user_auth (id, username, enabled, realm) VALUES (?, ?, ?, ?)' => array_map(function (array $row): array {
-                return array($row['id'], $row['username'], $row['enabled'], $row['realm']);
+            'INSERT INTO user_auth (id, username, enabled, realm, locked, password) VALUES (?, ?, ?, ?, ?, ?)' => array_map(function (array $row): array {
+                return array($row['id'], $row['username'], $row['enabled'], $row['realm'], $row['locked'], $row['password']);
             }, $GLOBALS['probe']['users']),
             'INSERT INTO user_auth_realm (user_id, realm_id) VALUES (?, ?)' => $GLOBALS['probe']['realms'],
             'INSERT INTO user_auth_group (id, enabled) VALUES (?, ?)' => $GLOBALS['probe']['groups'],

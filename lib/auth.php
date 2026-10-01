@@ -4772,7 +4772,8 @@ function is_user_perms_valid($user_id)
  * Hashing with PASSWORD_DEFAULT runs one bcrypt pass at the cost local logins
  * rehash stored passwords to, which is the work verifying such a hash takes.
  * Hashing rather than verifying against a fixed hash keeps the cost in step
- * with PASSWORD_DEFAULT and keeps a hash literal out of the source.
+ * with PASSWORD_DEFAULT and keeps a hash literal out of the source. A fixed
+ * public padding input also avoids bcrypt rejecting NUL bytes in client input.
  *
  * @param  (string) $password - the password the client sent
  *
@@ -4780,7 +4781,7 @@ function is_user_perms_valid($user_id)
  */
 function auth_unknown_user_password_verify($password)
 {
-    compat_password_hash((string) $password, PASSWORD_DEFAULT);
+    compat_password_hash("kadupul-login-timing-padding", PASSWORD_DEFAULT);
 }
 
 /**
@@ -4798,7 +4799,7 @@ function compat_password_verify($password, $hash)
     // Legacy MD5, empty and malformed hashes otherwise return immediately,
     // exposing those accounts against the fixed-cost unknown-user path.
     if (password_get_info((string) $hash)['algo'] === null) {
-        compat_password_hash((string) $password, PASSWORD_DEFAULT);
+        compat_password_hash("kadupul-login-timing-padding", PASSWORD_DEFAULT);
     }
 
     if (function_exists('password_verify')) {
@@ -5228,7 +5229,7 @@ function check_reset_no_authentication($auth_method)
 			FROM user_auth
 			WHERE id = ?
 			AND enabled = 'on'
-            AND realm = 0",
+            AND realm = 0 AND password != '' AND locked != 'on'",
             array(read_config_option('admin_user'))
         );
 
@@ -5240,7 +5241,7 @@ function check_reset_no_authentication($auth_method)
 				FROM user_auth AS ua
 				INNER JOIN user_auth_realm AS uar
 				ON uar.user_id = ua.id
-				WHERE ua.enabled="on" AND ua.realm = 0
+				WHERE ua.enabled="on" AND ua.realm = 0 AND ua.password != "" AND ua.locked != "on"
 				AND uar.realm_id = ?';
 
             $admin_sql_params = array(15);
@@ -5256,7 +5257,7 @@ function check_reset_no_authentication($auth_method)
 				ON uag.id = uagm.group_id
 				INNER JOIN user_auth_group_realm AS uagr
 				ON uagr.group_id = uag.id
-				WHERE uag.enabled="on" AND ua.enabled="on" AND ua.realm = 0
+				WHERE uag.enabled="on" AND ua.enabled="on" AND ua.realm = 0 AND ua.password != "" AND ua.locked != "on"
 				AND uagr.realm_id = ?';
 
                 $admin_sql_params[] = 15;
@@ -5276,7 +5277,7 @@ function check_reset_no_authentication($auth_method)
         }
 
         if (!$admin_id) {
-            $admin_id = db_fetch_cell('SELECT id FROM user_auth WHERE username = \'admin\' AND enabled = \'on\' AND realm = 0');
+            $admin_id = db_fetch_cell('SELECT id FROM user_auth WHERE username = \'admin\' AND enabled = \'on\' AND realm = 0 AND password != \'\' AND locked != \'on\'');
 
             cacti_log('Final attempt ' . $admin_id, true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
         }
