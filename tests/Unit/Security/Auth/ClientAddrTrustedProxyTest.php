@@ -89,6 +89,11 @@ function resolve_client_addr(array $server, $proxy_headers, $trusted_proxies = n
 	});
 }
 
+/* the evaluated block also reads force_https, which these cases leave off */
+function read_config_option($name) {
+	return '';
+}
+
 function forwarded_https(array $server, $proxy_headers, $trusted_proxies = null) {
 	static $block;
 

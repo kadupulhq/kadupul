@@ -8312,7 +8312,8 @@ function cacti_cookie_session_set($user, $realm, $nssecret) {
 		$domain = '';
 	}
 
-	if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+	/* match the session cookie, which is also Secure behind a trusted TLS proxy and with force_https */
+	if (!empty($config['cookie_options']['cookie_secure']) || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
 		$secure = true;
 	} else {
 		$secure = false;

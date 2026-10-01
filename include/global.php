@@ -490,6 +490,11 @@ if ($config['is_web']) {
 		}
 	}
 
+	/* force_https redirects every plain request, so no page is served where Secure would hide the cookie */
+	if (!$https && read_config_option('force_https') == 'on') {
+		$https = true;
+	}
+
 	if ($https) {
 		ini_set('session.cookie_secure', true);
 		$options['cookie_secure'] = true;
