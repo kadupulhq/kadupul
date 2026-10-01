@@ -449,6 +449,17 @@ test('changing the LDAP server, a port or the encryption needs the search passwo
 	}
 });
 
+test('a search password whose confirmation differs does not count as entered again', function () {
+	$result = ldap_form_settings_run(array(
+		'request'  => ldap_form_settings_post(array('ldap_server' => 'rogue.example.net', 'ldap_specific_password' => 'x', 'ldap_specific_password_confirm' => 'y')),
+		'settings' => ldap_form_saved_settings(),
+	));
+
+	/* nothing is written, so the old password is never paired with the new server */
+	expect($result['messages'])->toBe(array('ldap_password_reentry'))
+		->and($result['writes'])->toBe(array());
+});
+
 test('settings without a saved search password save a new server as before', function () {
 	$settings = ldap_form_saved_settings();
 	$settings['ldap_specific_password'] = '';

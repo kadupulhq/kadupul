@@ -53,7 +53,15 @@ case 'save':
 			'encryption' => get_nfilter_request_var('ldap_encryption', $ldap_saved['encryption'])
 		);
 
-		if (ldap_bind_password_reentry_required($ldap_saved, $ldap_submitted, read_config_option('ldap_specific_password', true), get_nfilter_request_var('ldap_specific_password'))) {
+		/* a password only counts as entered again when its confirmation matches;
+		 * otherwise the loop below would save the new server and then stop */
+		$ldap_password = get_nfilter_request_var('ldap_specific_password');
+
+		if ($ldap_password != get_nfilter_request_var('ldap_specific_password_confirm')) {
+			$ldap_password = '';
+		}
+
+		if (ldap_bind_password_reentry_required($ldap_saved, $ldap_submitted, read_config_option('ldap_specific_password', true), $ldap_password)) {
 			$_SESSION['sess_error_fields']['ldap_specific_password'] = 'ldap_specific_password';
 
 			raise_message('ldap_password_reentry', __('Enter the Search Password again to change the LDAP Server, Port or Encryption.  Nothing was saved.'), MESSAGE_LEVEL_ERROR);
