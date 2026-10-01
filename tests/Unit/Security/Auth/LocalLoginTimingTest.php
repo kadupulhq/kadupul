@@ -12,14 +12,14 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-function local_login_timing_run(string $username, string $password, string $state = "enabled"): array
+function local_login_timing_run(string $username, string $password, string $state = "enabled", ?string $legacy_hash = null): array
 {
     $auth = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 
     $program = <<<'PHP'
 $scenario = json_decode($argv[1], true);
 define('POLLER_VERBOSITY_DEBUG', 5);
-$GLOBALS['users'] = array('alice' => array('id' => 42, 'username' => 'alice', 'enabled' => 'on', 'locked' => '', 'password' => 'known-hash'));
+$GLOBALS['users'] = array('alice' => array('id' => 42, 'username' => 'alice', 'enabled' => 'on', 'locked' => '', 'password' => $scenario['legacy_hash'] ?? 'known-hash'));
 $GLOBALS['users']['alice']['enabled'] = $scenario['state'] === 'disabled' ? '' : 'on';
 $GLOBALS['hashes'] = array();
 $error = false;
@@ -55,11 +55,17 @@ PHP;
         }
     }
 
+    if ($legacy_hash !== null) {
+        $program = preg_replace('/function compat_password_verify\(\$password, \$hash\) \{.*?\n\}/s', '', $program);
+        $program .= test_php_function_source($auth, 'compat_password_verify');
+        $program .= test_php_function_source($auth, 'compat_hash_equals');
+    }
+
     $program .= '$user = local_auth_login_process($scenario[\'username\']);';
     $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'hashes\' => $GLOBALS[\'hashes\']));';
 
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state))),
+        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state, 'legacy_hash' => $legacy_hash))),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -104,3 +110,14 @@ test('disabled and locked usernames do the same password work as unknown names',
     $unknown = local_login_timing_run('nobody', $password, $state);
     expect($known['error'])->toBeTrue()->and(count($known['hashes']))->toBe(count($unknown['hashes']));
 })->with(array(array('disabled', 'guess'), array('locked', 'guess'), array('disabled', ''), array('locked', '')));
+
+
+test('legacy MD5 and empty hashes run the same fixed-cost password work as an unknown account', function (string $hash, string $password, string $state) {
+    $known = local_login_timing_run('alice', $password, $state, $hash);
+    $unknown = local_login_timing_run('nobody', $password, $state, $hash);
+    expect($known['error'])->toBeTrue()->and($known['hashes'])->toBe($unknown['hashes']);
+})->with(array(
+    array(md5('right'), 'guess', 'enabled'), array('', 'guess', 'enabled'),
+    array(md5('right'), 'guess', 'disabled'), array(md5('right'), 'guess', 'locked'),
+    array(md5('right'), '', 'enabled'), array('', '', 'enabled'),
+));

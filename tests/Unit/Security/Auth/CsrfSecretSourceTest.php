@@ -169,3 +169,26 @@ test('an external symlink into the actual document root is refused', function ()
         rmdir($base);
     }
 });
+
+
+test('a dangling external symlink is rejected before an installer write', function () {
+    $dir = csrf_secret_directory();
+    symlink($dir . '/missing-target', $dir . '/secret');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/include/csrf.php');
+    require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+    $program = '$config = ' . var_export(array('base_path' => dirname(__DIR__, 4)), true) . ';';
+    $program .= test_php_function_source($source, 'cacti_csrf_external_secret_path') . test_php_function_source($source, 'cacti_csrf_external_path_is_safe');
+    $program .= 'print json_encode(cacti_csrf_external_path_is_safe($argv[1]));';
+    try {
+        $process = proc_open(array(PHP_BINARY, '-r', $program, $dir . '/secret'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $out = stream_get_contents($pipes[1]);
+        $err = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        proc_close($process);
+        expect($err)->toBe('')->and(json_decode($out))->toBeFalse();
+    } finally {
+        unlink($dir . '/secret');
+        rmdir($dir);
+    }
+});

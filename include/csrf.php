@@ -220,7 +220,7 @@ function cacti_csrf_external_path_is_safe($path)
     }
 
     $secret_dir = realpath(dirname($path));
-    $secret_path = file_exists($path) ? realpath($path) : null;
+    $secret_path = (file_exists($path) || is_link($path)) ? realpath($path) : null;
     if ($secret_dir === false || $secret_path === false) {
         return false;
     }
