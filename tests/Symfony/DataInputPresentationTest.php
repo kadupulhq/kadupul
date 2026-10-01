@@ -223,6 +223,65 @@ final class DataInputPresentationTest extends TestCase
         yield ['whitelist', true, 'La vérification de la liste blanche ou la propagation aux collecteurs est incomplète.'];
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('bulkResults')]
+    public function testBulkResultsPreserveOperationAndLocalizedCompletionMessage(string $operation, bool $partial, string $language, string $message): void
+    {
+        [$kernel, $container] = $this->authorizedKernel();
+        try {
+            $locale = $this->createMock(LocalePreference::class);
+            $locale->method('preferredLocale')->willReturn($language);
+            $container->set(LocalePreference::class, $locale);
+            $config = $this->createMock(LegacyConfiguration::class);
+            $config->method('values')->willReturn(['forced_locale' => $language]);
+            $container->set(LegacyConfiguration::class, $config);
+            $selection = [3 => str_repeat('a', 64)];
+            $gateway = $this->createMock(DataInputGateway::class);
+            $gateway->expects(self::exactly(3))->method('execute')->willReturnCallback(static function (int $actor, string $action, int $id, array $payload) use ($selection, $operation, $partial): array {
+                self::assertSame(9, $actor);
+                self::assertSame(0, $id);
+                if ($action === 'selection') {
+                    self::assertSame([3], $payload['ids']);
+                    return ['selection' => $selection, 'names' => ['Fixture']];
+                }
+                if ($action === 'list') {
+                    return ['items' => [], 'total' => 0, 'filter' => '', 'rows' => 10, 'default_rows' => false, 'page' => 1, 'sort' => 'name', 'direction' => 'ASC'];
+                }
+                self::assertSame('bulk_' . $operation, $action);
+                self::assertSame($selection, $payload['selection']);
+                return ['ids' => $operation === 'duplicate' ? [37] : [3], 'partial' => $partial];
+            });
+            $container->set(DataInputGateway::class, $gateway);
+            $response = $kernel->handle(Request::create('/data-inputs/actions/' . $operation . '?ids[]=3', 'POST', ['data_input_action' => ['revision' => json_encode($selection, JSON_THROW_ON_ERROR), '_token' => 'csrf-token'] + ($operation === 'duplicate' ? ['title' => '<input_title> (1)'] : [])], ['Cacti' => 'fixture'], server: ['HTTP_ORIGIN' => 'http://localhost']));
+            self::assertSame(303, $response->getStatusCode(), $response->getContent());
+            $location = $response->headers->get('Location');
+            parse_str(parse_url($location, PHP_URL_QUERY), $query);
+            self::assertSame('bulk_' . $operation, $query['operation'] ?? null);
+            self::assertSame($partial ? 'partial' : '1', $query['saved']);
+            $page = $kernel->handle(Request::create($location, 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $page->getStatusCode());
+            self::assertStringContainsString('<html lang="' . $language . '">', $page->getContent());
+            self::assertStringContainsString($message, $page->getContent());
+            self::assertStringNotContainsString('Data input saved.', $page->getContent());
+            self::assertStringNotContainsString('Entrée de données enregistrée.', $page->getContent());
+            self::assertSame($partial, str_contains($page->getContent(), 'role="alert"'));
+            if ($partial) {
+                self::assertStringContainsString('/data-inputs/37/propagate', $page->getContent());
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public static function bulkResults(): iterable
+    {
+        yield ['delete', false, 'en', 'Selected data input methods deleted.'];
+        yield ['duplicate', false, 'en', 'Selected data input methods duplicated.'];
+        yield ['duplicate', true, 'en', 'Selected data input methods duplicated. Collector or whitelist propagation is incomplete.'];
+        yield ['delete', false, 'fr', 'Méthodes d’entrée de données sélectionnées supprimées.'];
+        yield ['duplicate', false, 'fr', 'Méthodes d’entrée de données sélectionnées dupliquées.'];
+        yield ['duplicate', true, 'fr', 'Méthodes d’entrée de données sélectionnées dupliquées. La propagation aux collecteurs ou à la liste blanche est incomplète.'];
+    }
+
     private function authorizedKernel(): array
     {
         $kernel = new Kernel('test', true);

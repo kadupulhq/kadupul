@@ -95,3 +95,6 @@
 "Collector propagation is incomplete. Retry propagation; remote collectors may need a FullSync.": "La propagation aux collecteurs est incomplète. Réessayez ; les collecteurs distants peuvent nécessiter une synchronisation complète."
 "Whitelist verification and collector propagation completed.": "Vérification de la liste blanche et propagation aux collecteurs terminées."
 "Whitelist verification or collector propagation is incomplete. Retry the whitelist update; remote collectors may need a FullSync.": "La vérification de la liste blanche ou la propagation aux collecteurs est incomplète. Réessayez la mise à jour de la liste blanche ; les collecteurs distants peuvent nécessiter une synchronisation complète."
+"Selected data input methods deleted.": "Méthodes d’entrée de données sélectionnées supprimées."
+"Selected data input methods duplicated.": "Méthodes d’entrée de données sélectionnées dupliquées."
+"Selected data input methods duplicated. Collector or whitelist propagation is incomplete. Retry propagation; remote collectors may need a FullSync.": "Méthodes d’entrée de données sélectionnées dupliquées. La propagation aux collecteurs ou à la liste blanche est incomplète. Réessayez ; les collecteurs distants peuvent nécessiter une synchronisation complète."

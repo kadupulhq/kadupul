@@ -4,8 +4,8 @@ about.php	authenticated	include/auth.php realm -1
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
-app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 0581f5281744: feature realm 2
-app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action eb0d093d86de: feature realm 2
+app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 55539f0a80ef: feature realm 2
+app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 1f46fb124365: feature realm 2
 app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action af73f4343625: feature realm 2
 app.php/data-inputs/new	symfony:data_input_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 815bd496666c: feature realm 2
 app.php/data-inputs/{id}/edit	symfony:data_input_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action f5da79ca881e: feature realm 2

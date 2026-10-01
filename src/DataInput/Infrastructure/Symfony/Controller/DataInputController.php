@@ -43,7 +43,7 @@ final class DataInputController
                 }
             }
             $data = $methods->execute('list', 0, ['filter' => $query['filter'] ?? null, 'page' => $query['page'] ?? 1, 'rows' => $query['rows'] ?? null, 'sort' => $query['sort'] ?? null, 'direction' => $query['direction'] ?? null, 'clear' => ($query['clear'] ?? '') === '1']);
-            return new Response($twig->render('data_input/list.html.twig', ['data' => $data, 'saved' => $this->queryString($request, 'saved'), 'retry_ids' => $this->retryIds($request)]), 200, self::HEADERS);
+            return new Response($twig->render('data_input/list.html.twig', ['data' => $data, 'saved' => $this->queryString($request, 'saved'), 'operation' => $this->queryString($request, 'operation'), 'retry_ids' => $this->retryIds($request)]), 200, self::HEADERS);
         } catch (\Throwable $error) {
             return $this->failure($error, $translator);
         }
@@ -237,7 +237,7 @@ final class DataInputController
                         throw new \InvalidArgumentException('Invalid selection.');
                     }
                     $result = $methods->execute('bulk_' . $operation, 0, ['selection' => $snapshot, 'title' => $data['title'] ?? '<input_title> (1)']);
-                    return new RedirectResponse($urls->generate('data_inputs', ['saved' => $result['partial'] ? 'partial' : '1', 'retry_ids' => $operation === 'duplicate' && $result['partial'] ? implode(',', $result['ids']) : '']), 303, self::HEADERS);
+                    return new RedirectResponse($urls->generate('data_inputs', ['saved' => $result['partial'] ? 'partial' : '1', 'operation' => 'bulk_' . $operation, 'retry_ids' => $operation === 'duplicate' && $result['partial'] ? implode(',', $result['ids']) : '']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
