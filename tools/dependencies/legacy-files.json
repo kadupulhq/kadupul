@@ -28,7 +28,7 @@
     "include/vendor/csrf/NEWS.md": "e68a289e2cf84b20aa0401cde06921f42ef0187c20104200e01706a7f8312690",
     "include/vendor/csrf/README.md": "5f79ce32b88ad174563d80c7bfd0c89865fc26cdc8f0fb11d52a98d178f30f15",
     "include/vendor/csrf/csrf-conf.php": "61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514",
-    "include/vendor/csrf/csrf-magic.js": "19343d2679f137526c64c782d030c8b9febc8780b25a47361d504b7611f1e94e",
+    "include/vendor/csrf/csrf-magic.js": "289d8a64b7337a9eee9c038c20b0235506eff53063195f475860c7c733f97d40",
     "include/vendor/csrf/csrf-magic.php": "e20d79113aa0dc532248ee55fe4e87f689299be20ec658f8cab1120daadd71c2",
     "include/vendor/csrf/index.php": "ab4a930fc908f8b59d7c6638572534c23d7899b77a092c3b5b7012a053753f4c",
     "include/vendor/flag-icons/country.json": "f5e99aee5051868b391b9f42e110cb104b7fcd6269807b2dc5e2c80b1e6c9436",
@@ -424,7 +424,7 @@
         },
         {
           "before": "\t\tjQuery.ajax = function( s ) {\n\t\t\tif (s.type && s.type.toUpperCase() == 'POST') {\n\t\t\t\ts = jQuery.extend(true, s, jQuery.extend(true, {}, jQuery.ajaxSettings, s));\n\t\t\t\tif ( s.data && s.processData && typeof s.data != \"string\" ) {\n\t\t\t\t\ts.data = jQuery.param(s.data);\n\t\t\t\t}\n\t\t\t\ts.data = CsrfMagic.process(s.data);\n\t\t\t}\n\t\t\treturn jQuery.csrf_ajax( s );\n\t\t}",
-          "after": "\t\tjQuery.ajax = function(s, options) {\n\t\t\tif (typeof s === 'string') s = jQuery.extend(true, {}, options, { url: s });\n\t\t\ts = jQuery.extend(true, {}, jQuery.ajaxSettings, s);\n\t\t\tvar method = s.method || s.type || 'GET';\n\t\t\tvar target = s.url === undefined ? window.location.href : s.url;\n\t\t\tif (method.toUpperCase() === 'POST' && CsrfMagic.isLocalUrl(target)) {\n\t\t\t\tif (s.data && s.processData && typeof s.data !== 'string') s.data = jQuery.param(s.data);\n\t\t\t\ts.data = CsrfMagic.process(s.data);\n\t\t\t}\n\t\t\treturn jQuery.csrf_ajax(s);\n\t\t}"
+          "after": "\t\tjQuery.ajax = function(s, options) {\n\t\t\tif (typeof s === 'string') s = jQuery.extend(true, {}, options, { url: s });\n\t\t\tvar method = s && (s.method || s.type);\n\t\t\ts = jQuery.extend(true, {}, jQuery.ajaxSettings, s);\n\t\t\tmethod = method || s.method || s.type || 'GET';\n\t\t\ts.type = method;\n\t\t\tdelete s.method;\n\t\t\tvar target = s.url === undefined ? window.location.href : s.url;\n\t\t\tif (method.toUpperCase() === 'POST' && CsrfMagic.isLocalUrl(target)) {\n\t\t\t\tif (s.data && s.processData && typeof s.data !== 'string') s.data = jQuery.param(s.data);\n\t\t\t\ts.data = CsrfMagic.process(s.data);\n\t\t\t}\n\t\t\treturn jQuery.csrf_ajax(s);\n\t\t}"
         }
       ]
     }

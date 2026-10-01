@@ -56,8 +56,12 @@ for (const mode of ['', 'nonce']) {
       await send({ url: '/local-default', data: 'action=save' });
       await send('/local-string', { data: 'action=save' });
       await send({ url: '/local-get', method: 'GET', data: 'action=save' });
+      jQuery.ajaxSetup({ method: 'POST' });
+      await send({ url: '/explicit-get', type: 'GET', data: 'action=save' });
+      jQuery.ajaxSetup({ method: 'GET' });
+      await send({ url: '/explicit-post', type: 'POST', data: 'action=save' });
     });
-    expect(requests).toHaveLength(4);
+    expect(requests).toHaveLength(6);
     expect(requests[0]).toEqual({ url: 'https://other.example/foreign-default', method: 'POST', body: 'action=save' });
     for (const request of requests.slice(1, 3)) {
       expect(request.method).toBe('POST');
@@ -65,12 +69,16 @@ for (const mode of ['', 'nonce']) {
     }
     expect(requests[3].method).toBe('GET');
     expect(new URL(requests[3].url).searchParams.has('__csrf_magic')).toBe(false);
+    expect(requests[4].method).toBe('GET');
+    expect(new URL(requests[4].url).searchParams.has('__csrf_magic')).toBe(false);
+    expect(requests[5].method).toBe('POST');
+    expect(new URLSearchParams(requests[5].body).get('__csrf_magic')).toBe(token);
     expect(await page.evaluate(() => violations)).toEqual([]);
     await page.locator('#override button').click();
     await page.waitForURL(`${origin}/local-form`);
-    expect(requests).toHaveLength(5);
-    expect(requests[4].method).toBe('POST');
-    expect(new URLSearchParams(requests[4].body).get('__csrf_magic')).toBe(token);
-    expect(new URLSearchParams(requests[4].body).get('action')).toBe('save');
+    expect(requests).toHaveLength(7);
+    expect(requests[6].method).toBe('POST');
+    expect(new URLSearchParams(requests[6].body).get('__csrf_magic')).toBe(token);
+    expect(new URLSearchParams(requests[6].body).get('action')).toBe('save');
   });
 }

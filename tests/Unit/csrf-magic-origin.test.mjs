@@ -259,3 +259,21 @@ test('jQuery origin and method checks use effective defaults and overrides', () 
   assert.equal(calls[1].data, withToken);
   assert.equal(calls[2].data, 'action=save');
 });
+
+
+test('jQuery explicit type overrides a default method in either direction', () => {
+  const calls = [];
+  const jQuery = {
+    ajax: settings => calls.push(settings),
+    ajaxSettings: { url: '/kadupul/save', method: 'POST' },
+    extend: (_deep, target, ...rest) => Object.assign(target, ...rest),
+    param: data => new URLSearchParams(data).toString(),
+  };
+  load({ jQuery }).jQuery.ajax({ type: 'GET', data: 'action=save' });
+  jQuery.ajaxSettings.method = 'GET';
+  jQuery.ajax({ type: 'POST', data: 'action=save' });
+  assert.equal(calls[0].type, 'GET');
+  assert.equal(calls[0].data, 'action=save');
+  assert.equal(calls[1].type, 'POST');
+  assert.equal(calls[1].data, withToken);
+});
