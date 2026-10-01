@@ -52,9 +52,9 @@ final class LegacyFormGoldenTest extends TestCase
             }
         }
 
-        // Field arrays live in the pages and in include/ and lib/.
+        // Field arrays live in the pages and in include/, lib/ and install/.
         $root = dirname(__DIR__, 3);
-        foreach (array_merge(glob($root . '/*.php'), glob($root . '/include/*.php'), glob($root . '/lib/*.php')) as $file) {
+        foreach (array_merge(glob($root . '/*.php'), glob($root . '/include/*.php'), glob($root . '/lib/*.php'), glob($root . '/install/*.php')) as $file) {
             preg_match_all("/['\"]method['\"]\\s*=>\\s*['\"]([a-z_]+)['\"]/", file_get_contents($file), $matches);
             foreach ($matches[1] as $method) {
                 self::assertArrayHasKey($method, $covered, basename($file) . " uses field method '" . $method . "' with no golden scenario");
