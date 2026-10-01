@@ -228,7 +228,7 @@ final class AuditTrailTest extends TestCase
         }
     }
 
-    public function testReportsAuditFileOpenFailureWithItsCause(): void
+    public function testReportsAuditPublicationFailureWithItsCause(): void
     {
         $this->assertOpenFailurePreservesHandler(false);
     }
@@ -266,7 +266,7 @@ final class AuditTrailTest extends TestCase
                 self::assertSame('Audit sink is unavailable.', $error->getMessage());
                 $cause = $error->getPrevious();
                 self::assertInstanceOf(\ErrorException::class, $cause);
-                self::assertStringContainsString('Failed to open stream', $cause->getMessage());
+                self::assertStringContainsString($existing ? 'Failed to open stream' : 'link(', $cause->getMessage());
                 self::assertSame(E_WARNING, $cause->getSeverity());
             }
             $active = set_error_handler(null);
