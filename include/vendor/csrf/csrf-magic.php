@@ -70,23 +70,162 @@ function csrf_ob_handler($buffer, $flags) {
  * this origin. Absolute and protocol-relative actions are left to the browser
  * script, which checks their origin, so this server-side decision never
  * depends on an attacker-controlled Host header.
+ *
+ * Only tags the browser would parse count: form tags written in a comment or
+ * in the text of a textarea, script or other raw-text element get no field.
+ * No field is added while an earlier form is still open, because the browser
+ * drops a nested form start tag and the field would join the outer form.
  */
 function csrf_rewrite_forms($buffer, $input) {
-	$relative_is_local = csrf_base_is_local($buffer);
+	$scan = csrf_scan_tags($buffer);
+	$relative_is_local = csrf_base_is_local($buffer, $scan);
+	$form_open = false;
+	$select_open = false;
+	$templates = 0;
 	$output = '';
-	$offset = 0;
+	$copied = 0;
 
-	while (preg_match('#<form(?=[\t\n\f\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
-		$tag = csrf_parse_tag($buffer, $match[0][1] + 5);
-		$output .= substr($buffer, $offset, $tag['end'] - $offset);
-		$offset = $tag['end'];
+	foreach ($scan['tags'] as $tag) {
+		if ($tag['end_tag']) {
+			if ($tag['name'] === 'form' && $templates === 0 && !$select_open) {
+				$form_open = false;
+			} elseif ($tag['name'] === 'select') {
+				$select_open = false;
+			} elseif ($tag['name'] === 'template' && $templates > 0) {
+				$templates--;
+			}
+		} elseif ($tag['name'] === 'form') {
+			if (!$form_open && !$select_open && csrf_form_is_local_post($tag['attributes'], $relative_is_local)) {
+				$output .= substr($buffer, $copied, $tag['end'] - $copied) . $input;
+				$copied = $tag['end'];
+			}
 
-		if ($tag['closed'] && csrf_form_is_local_post($tag['attributes'], $relative_is_local)) {
-			$output .= $input;
+			// A form inside a template does not set the parser's form pointer.
+			if ($templates === 0) {
+				$form_open = true;
+			}
+		} elseif ($tag['name'] === 'select') {
+			$select_open = true;
+		} elseif ($tag['name'] === 'template') {
+			$templates++;
 		}
 	}
 
-	return $output . substr($buffer, $offset);
+	return $output . substr($buffer, $copied);
+}
+
+/**
+ * Lists the start and end tags a browser would parse, skipping comments,
+ * bogus comments and the text of raw-text elements. Markup this reader does
+ * not model ends the scan: 'stop' is then the offset where reading stopped,
+ * and no tag after it is listed.
+ */
+function csrf_scan_tags($buffer) {
+	$letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+	// Only these tags are listed; attributes are read for form and base alone.
+	$listed = array('form' => true, 'base' => true, 'select' => false, 'template' => false);
+	$raw = array('textarea' => true, 'title' => true, 'script' => true, 'style' => true,
+		'xmp' => true, 'iframe' => true, 'noembed' => true, 'noframes' => true);
+	// Their content parses differently with scripting off, in SVG or MathML,
+	// or in a frameset.
+	$unsupported = array('noscript' => true, 'plaintext' => true, 'svg' => true, 'math' => true, 'frameset' => true);
+	$tags = array();
+	$length = strlen($buffer);
+	// Nothing after the last form or base start tag can change a decision.
+	$limit = max((int) strripos($buffer, '<form'), (int) strripos($buffer, '<base'));
+	$offset = 0;
+
+	while (($start = strpos($buffer, '<', $offset)) !== false && $start <= $limit) {
+		$next = $start + 1 < $length ? $buffer[$start + 1] : '';
+
+		if ($next === '!' && substr_compare($buffer, '!--', $start + 1, 3) === 0) {
+			$offset = csrf_comment_end($buffer, $start);
+			if ($offset === false) {
+				return array('tags' => $tags, 'stop' => $start);
+			}
+
+			continue;
+		}
+
+		$end_tag = $next === '/';
+		if ($end_tag) {
+			$next = $start + 2 < $length ? $buffer[$start + 2] : '';
+			if ($next === '>') {
+				$offset = $start + 3;
+
+				continue;
+			}
+		}
+
+		if ($next === '' || ($next === '!' && substr_compare($buffer, '![CDATA[', $start + 1, 8) === 0)) {
+			return array('tags' => $tags, 'stop' => $start);
+		}
+
+		if (strspn($next, $letters) === 0) {
+			if ($end_tag || $next === '!' || $next === '?') {
+				// A bogus comment runs to the next ">".
+				$offset = strpos($buffer, '>', $start + 2);
+				if ($offset === false) {
+					return array('tags' => $tags, 'stop' => $start);
+				}
+
+				$offset++;
+			} else {
+				$offset = $start + 1;
+			}
+
+			continue;
+		}
+
+		$name_start = $start + ($end_tag ? 2 : 1);
+		$name_length = strcspn($buffer, "\t\n\f\r />", $name_start);
+		$name = strtolower(substr($buffer, $name_start, $name_length));
+		$tag = csrf_parse_tag($buffer, $name_start + $name_length, !$end_tag && !empty($listed[$name]));
+		if (!$tag['closed'] || (!$end_tag && isset($unsupported[$name]))) {
+			return array('tags' => $tags, 'stop' => $start);
+		}
+
+		$offset = $tag['end'];
+		if (isset($listed[$name])) {
+			$tags[] = array('name' => $name, 'end_tag' => $end_tag, 'attributes' => $tag['attributes'], 'end' => $offset);
+		}
+
+		if (!$end_tag && isset($raw[$name])) {
+			if (!preg_match('#</' . $name . '(?=[\t\n\f\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
+				return array('tags' => $tags, 'stop' => $offset);
+			}
+
+			// "<!--" inside a script can keep a later "</script>" from ending it.
+			$close = $match[0][1];
+			if ($name === 'script' && strpos(substr($buffer, $offset, $close - $offset), '<!--') !== false) {
+				return array('tags' => $tags, 'stop' => $offset);
+			}
+
+			$offset = $close;
+		}
+	}
+
+	return array('tags' => $tags, 'stop' => false);
+}
+
+/**
+ * Returns the offset after a comment starting at $start, or false when the
+ * comment runs to the end of the buffer.
+ */
+function csrf_comment_end($buffer, $start) {
+	if (substr($buffer, $start + 4, 1) === '>') {
+		return $start + 5;
+	}
+
+	if (substr($buffer, $start + 4, 2) === '->') {
+		return $start + 6;
+	}
+
+	if (!preg_match('/--!?>/', $buffer, $match, PREG_OFFSET_CAPTURE, $start + 4)) {
+		return false;
+	}
+
+	return $match[0][1] + strlen($match[0][0]);
 }
 
 /**
@@ -94,7 +233,7 @@ function csrf_rewrite_forms($buffer, $input) {
  * value containing ">" or "action=" cannot move the tag end or hide the
  * real action. The first of two attributes with the same name wins.
  */
-function csrf_parse_tag($html, $position) {
+function csrf_parse_tag($html, $position, $read = true) {
 	$length = strlen($html);
 	$space = "\t\n\f\r ";
 	$attributes = array();
@@ -111,7 +250,7 @@ function csrf_parse_tag($html, $position) {
 
 		// A name may start with "=" and runs to whitespace, "/", ">" or "=".
 		$name_length = 1 + strcspn($html, $space . '/>=', $position + 1);
-		$name = strtolower(substr($html, $position, $name_length));
+		$name = $read ? strtolower(substr($html, $position, $name_length)) : '';
 		$position += $name_length;
 		$position += strspn($html, $space, $position);
 		$value = '';
@@ -127,16 +266,16 @@ function csrf_parse_tag($html, $position) {
 					break;
 				}
 
-				$value = substr($html, $position + 1, $close - $position - 1);
+				$value = $read ? substr($html, $position + 1, $close - $position - 1) : '';
 				$position = $close + 1;
 			} else {
 				$value_length = strcspn($html, $space . '>', $position);
-				$value = substr($html, $position, $value_length);
+				$value = $read ? substr($html, $position, $value_length) : '';
 				$position += $value_length;
 			}
 		}
 
-		if (!array_key_exists($name, $attributes)) {
+		if ($read && !array_key_exists($name, $attributes)) {
 			$attributes[$name] = csrf_decode_attribute($value);
 		}
 	}
@@ -202,20 +341,22 @@ function csrf_url_is_relative($url) {
 
 /**
  * A <base href> naming another origin would carry relative actions with it.
+ * Only a base element the browser parses counts, but when the scan stopped
+ * early, any "<base" after that point, closed or not, counts as one.
  */
-function csrf_base_is_local($buffer) {
-	$offset = 0;
+function csrf_base_is_local($buffer, $scan = null) {
+	if ($scan === null) {
+		$scan = csrf_scan_tags($buffer);
+	}
 
-	while (preg_match('#<base(?=[\t\n\f\r />])#i', $buffer, $match, PREG_OFFSET_CAPTURE, $offset)) {
-		$tag = csrf_parse_tag($buffer, $match[0][1] + 5);
-		$offset = $tag['end'];
-
-		if (isset($tag['attributes']['href']) && $tag['attributes']['href'] !== '' && !csrf_url_is_relative($tag['attributes']['href'])) {
+	foreach ($scan['tags'] as $tag) {
+		if (!$tag['end_tag'] && $tag['name'] === 'base' && isset($tag['attributes']['href']) &&
+			$tag['attributes']['href'] !== '' && !csrf_url_is_relative($tag['attributes']['href'])) {
 			return false;
 		}
 	}
 
-	return true;
+	return $scan['stop'] === false || !preg_match('#<base(?=[\t\n\f\r />]|$)#i', $buffer, $match, 0, $scan['stop']);
 }
 
 /**

@@ -154,3 +154,70 @@ test('an unterminated form tag gets no token and the page is kept', function () 
 	expect($result['pages'][0])->toBe("<form method='post' action='graphs.php' title='x")
 		->and($result['pages'][1])->toBe('<form ' . str_repeat('a', 2000000));
 });
+
+/*
+ * {F} marks where the handler must insert the token field. A form tag in a
+ * comment or in raw text is not a form, and a form start tag inside an open
+ * form is dropped by the browser, so its controls, and any field added after
+ * it, join the outer form.
+ */
+test('form tags are read only where the browser parses markup', function ($expected) {
+	$result = csrf_rewrite_pages(array(str_replace('{F}', '', $expected)));
+
+	expect($result['pages'][0])->toBe(str_replace('{F}', $result['field'], $expected));
+})->with(array(
+	'nested in a cross-origin form'      => array("<form method='post' action='https://evil.example/'><form method='post'><button>x</button></form>"),
+	'textarea in a cross-origin form'    => array("<form method='post' action='https://evil.example/'><textarea name='x'><form method='post'></textarea></form>"),
+	'unclosed textarea'                  => array("<form method='post' action='https://evil.example/'><textarea name='x'><p>page</p><form method='post' action='host.php'><input name='z'></form>"),
+	'end tag text inside textarea'       => array("<form method='post' action='//evil.example/'><textarea></form></textarea><form method='post'></form>"),
+	'end tag text inside an attribute'   => array("<form method='post' action='//evil.example/'><p title='</form>'><form method='post'></form>"),
+	'end tag inside select'              => array("<form method='post' action='//evil.example/'><select></form></select><form method='post'></form>"),
+	'form tag text inside an attribute'  => array("<p title=\"<form method='post' action='//evil.example/'>\"></p><form method='post'>{F}</form>"),
+	'closed forms in sequence'           => array("<form method='post'>{F}</form><form method='post' action='graphs.php'>{F}</form>"),
+	'textarea'                           => array("<textarea><form method='post'></textarea><form method='post'>{F}</form>"),
+	'title'                              => array("<title><form method='post'></title><form method='post'>{F}</form>"),
+	'script'                             => array("<script>var f = '<form method=\"post\">';</script><form method='post'>{F}</form>"),
+	'style'                              => array("<style><form method='post'></style><form method='post'>{F}</form>"),
+	'xmp'                                => array("<xmp><form method='post'></xmp><form method='post'>{F}</form>"),
+	'iframe'                             => array("<iframe><form method='post'></iframe><form method='post'>{F}</form>"),
+	'noembed'                            => array("<noembed><form method='post'></noembed><form method='post'>{F}</form>"),
+	'noframes'                           => array("<noframes><form method='post'></noframes><form method='post'>{F}</form>"),
+	'upper-case end tag with attributes' => array("<TEXTAREA rows=2><form method='post'></TEXTAREA title='>'><form method='post'>{F}</form>"),
+	'end tag name prefix does not close' => array("<textarea></textareax><form method='post'></textarea><form method='post'>{F}</form>"),
+	'comment'                            => array("<!-- <form method='post'> --><form method='post'>{F}</form>"),
+	'comment closed by --!>'             => array("<!-- <form method='post'> --!><form method='post'>{F}</form>"),
+	'abrupt empty comment'               => array("<!--><form method='post'>{F}</form>"),
+	'abrupt dash comment'                => array("<!---><form method='post'>{F}</form>"),
+	'bogus comment'                      => array("<?x <form method='post'>?><form method='post'>{F}</form>"),
+	'doctype'                            => array("<!DOCTYPE html><form method='post'>{F}</form>"),
+	'template forms'                     => array("<template><form method='post'>{F}</form></template><form method='post'>{F}</form>"),
+	'unterminated textarea'              => array("<textarea><form method='post'>"),
+	'unterminated comment'               => array("<!-- <form method='post'>"),
+	'escaped script'                     => array("<script><!--<script></script></form></script><form method='post'></form>"),
+	'noscript'                           => array("<noscript></noscript><form method='post'></form>"),
+	'svg'                                => array("<svg></svg><form method='post'></form>"),
+	'cdata'                              => array("<![CDATA[x]]><form method='post'></form>"),
+));
+
+test('only a base element the browser parses decides where relative actions go', function ($expected) {
+	$result = csrf_rewrite_pages(array(str_replace('{F}', '', $expected)));
+
+	expect($result['pages'][0])->toBe(str_replace('{F}', $result['field'], $expected));
+})->with(array(
+	'base hidden in textarea before a real one' => array("<textarea><base x='</textarea><base href='https://evil.example/'><a x='>'></a><form method=post action=x.php></form><form method=post>{F}</form>"),
+	'base hidden in comment before a real one'  => array("<!-- <base x=' --><base href='https://evil.example/'><b x='' --><form method=post action=x.php></form><form method=post>{F}</form>"),
+	'unclosed base counts as another origin'    => array("<form method=post action=x.php></form><form method=post>{F}</form><base href='/cacti/"),
+	'base after the scan stops'                 => array("<form method=post action=x.php></form><svg></svg><base href='/cacti/'>"),
+	'base text in textarea only'                => array("<textarea><base href='https://evil.example/'></textarea><form method=post action=x.php>{F}</form>"),
+	'base text in a comment only'               => array("<!-- <base href='https://evil.example/'> --><form method=post action=x.php>{F}</form>"),
+	'local base'                                => array("<base href='/cacti/'><form method=post action=x.php>{F}</form>"),
+));
+
+test('inline scripts that build a POST form are left intact', function () {
+	// utilities.php builds its POST form in an inline script; a field added
+	// inside the quoted string ended the string and broke the script.
+	$script = "<script type='text/javascript'>\n\$('<form method=\"post\"></form>')\n\t.attr('action', \$(this).data('link'));\n</script>";
+	$result = csrf_rewrite_pages(array($script));
+
+	expect($result['pages'][0])->toBe($script);
+});
