@@ -93,6 +93,179 @@ final class AutomationTreeReplacementNativeTest extends TestCase
         );
     }
 
+    /** @dataProvider eligibility */
+    public function testNativeEligibilityRequiresAllMandatoryTemplateInputs(string $case, bool $expected): void
+    {
+        $state = $this->runNative(array('mode' => 'eligible', 'case' => $case));
+        self::assertSame($expected, $state['result']);
+        self::assertNotEmpty(array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FROM graph_templates_graph') && $call[1] === array(9)));
+    }
+
+    public static function eligibility(): array
+    {
+        return array('complete' => array('complete',true), 'graph required' => array('graph',false), 'data required' => array('data',false), 'input required' => array('input',false), 'optional input' => array('optional',true));
+    }
+
+    /** @dataProvider leaves */
+    public function testNativeLeafChangePrunesOnlyIncompatibleFieldsForSelectedRule(int $leaf, array $expected): void
+    {
+        $state = $this->runNative(array('mode' => 'leaf', 'leaf' => $leaf));
+        self::assertSame($expected, array_map('intval', $state['contracts']['items']));
+        self::assertSame($expected, array_map('intval', $state['contracts']['matches']));
+        self::assertSame($leaf, (int) $state['contracts']['rules'][0]['leaf_type']);
+        self::assertSame(2, (int) $state['contracts']['rules'][1]['leaf_type']);
+    }
+
+    public static function leaves(): array
+    {
+        return array('device' => array(3,array(3,4)), 'unchanged' => array(2,array(1,2,3,4)), 'graph' => array(1,array(1,2,3,4)));
+    }
+
+    /** @dataProvider schedules */
+    public function testNativeSchedulerHonoursManualAndFutureTimes(array $scenario, bool $expected): void
+    {
+        $state = $this->runNative($scenario + array('mode' => 'schedule'));
+        self::assertSame($expected, $state['result']);
+        if ($expected && $scenario['type'] === 2) {
+            self::assertGreaterThan(time() - 60, strtotime($state['contracts']['next_start']));
+        }
+        self::assertSame(8, (int) $state['contracts']['id']);
+    }
+
+    public static function schedules(): array
+    {
+        $cases = array();
+        foreach (array(1,2,3,4,5) as $type) {
+            foreach (array(false,true) as $future) {
+                foreach (array(false,true) as $next) {
+                    $cases[$type . '-' . (int) $future . '-' . (int) $next] = array(array('type' => $type, 'future' => $future, 'next' => $next), $type !== 1 && !$future);
+                }
+            }
+        }
+        return $cases;
+    }
+
+    /** @dataProvider nodeKinds */
+    public function testNativeNodeCallerPreservesOwnershipAndReusesExistingNode(string $kind, bool $reject): void
+    {
+        $state = $this->runNative(array('mode' => 'node','kind' => $kind,'reject' => $reject));
+        self::assertCount(1, $state['contracts']['save']);
+        $args = $state['contracts']['save'][0];
+        self::assertSame(8, $args[1]);
+        self::assertSame(77, $args[3]);
+        self::assertSame(7, $args[array('host' => 6,'site' => 7,'graph' => 5)[$kind]]);
+        self::assertSame(false, $args[10]);
+        if ($reject) {
+            self::assertSame(0, $state['result']);
+            self::assertCount(2, $state['nodes']);
+            self::assertStringContainsString('Not Added', $state['log']);
+        } else {
+            self::assertSame($state['result'], $state['contracts']['repeat']);
+            self::assertCount(3, $state['nodes']);
+            self::assertStringContainsString('Added', $state['log']);
+        }
+    }
+
+    public static function nodeKinds(): array
+    {
+        return array(array('host',false),array('site',false),array('graph',false),array('host',true),array('site',true),array('graph',true));
+    }
+
+    /** @dataProvider devices */
+    public function testNativeDeviceCallerPassesDefaultsAndRemovesOnlyAcknowledgedQueueEntry(array $scenario, string $description): void
+    {
+        $state = $this->runNative($scenario + array('mode' => 'device'));
+        $args = $state['contracts']['device_save'];
+        self::assertCount(29, $args);
+        self::assertSame($description, $args[2]);
+        self::assertSame('192.0.2.7', $args[3]);
+        self::assertSame(9, $args[1]);
+        self::assertSame($scenario['overrides'] ? 20 : 10, $args[22]);
+        self::assertSame($scenario['overrides'] ? 3 : 1, $args[24]);
+        self::assertSame($scenario['overrides'] ? 4 : 2, $args[25]);
+        self::assertSame($scenario['reject'] ? 0 : 17, $state['result']);
+        self::assertSame($scenario['reject'] ? array('192.0.2.7','192.0.2.8') : array('192.0.2.8'), $state['contracts']['queued']);
+    }
+
+    public static function devices(): array
+    {
+        return array(array(array('name' => 'System','hostname' => 'dns','overrides' => false,'reject' => false),'System'),array(array('name' => '','hostname' => 'dns','overrides' => true,'reject' => false),'dns'),array(array('name' => '','hostname' => '','overrides' => false,'reject' => true),'192.0.2.7'));
+    }
+
+    /** @dataProvider snmpCases */
+    public function testNativeSnmpCredentialFallbackPreservesStatusAndClosesSuccessfulSession(string $case, bool $expected): void
+    {
+        $state = $this->runNative(array('mode' => 'snmp','case' => $case));
+        self::assertSame($expected, $state['result']);
+        self::assertSame($expected ? 3 : 1, $state['contracts']['device']['snmp_status']);
+        if ($expected) {
+            self::assertTrue($state['contracts']['closed']);
+            self::assertSame('.1.3.6.1.4.1.9', $state['contracts']['device']['snmp_sysObjectID']);
+            self::assertSame('Fixture system', $state['contracts']['device']['snmp_sysName']);
+            self::assertSame($case === 'fallback' ? 3 : 2, (int) $state['contracts']['device']['snmp_version']);
+        }
+    }
+
+    public static function snmpCases(): array
+    {
+        return array(array('valid',true),array('fallback',true),array('unknown',false),array('session-failed',false),array('empty',false));
+    }
+
+    /** @dataProvider graphQueries */
+    public function testNativeDataQueryCreatesOnlyMissingGraphsForSelectedDevice(string $case): void
+    {
+        $state = $this->runNative(array('mode' => 'dq','case' => $case));
+        if ($case === 'missing') {
+            self::assertSame(false, $state['result']);
+            self::assertStringContainsString('not found for the Device', $state['log']);
+            self::assertArrayNotHasKey('created', $state['contracts']);
+        } else {
+            self::assertCount(1, $state['contracts']['created']);
+            self::assertSame(array(9,7), array_slice($state['contracts']['created'][0], 0, 2));
+            self::assertSame('2', $state['contracts']['created'][0][2]['snmp_index']);
+            if ($case === 'created') {
+                self::assertSame(array(array(7,201)), $state['contracts']['pushed']);
+                self::assertStringContainsString('Graph Added', $state['log']);
+            } else {
+                self::assertArrayNotHasKey('pushed', $state['contracts']);
+                self::assertStringContainsString('Graph not added', $state['log']);
+            }
+        }
+    }
+
+    public static function graphQueries(): array
+    {
+        return array(array('created'),array('rejected'),array('empty'),array('missing'));
+    }
+
+    public function testNativeObjectPreviewRetainsRowFilterAndReportsUnavailableQuery(): void
+    {
+        $state = $this->runNative(array('mode' => 'objects'));
+        $document = new DOMDocument();
+        @$document->loadHTML($state['html']);
+        $xpath = new DOMXPath($document);
+        self::assertSame('10', $xpath->query('//select[@id="orows"]/option[@selected]')->item(0)->getAttribute('value'));
+        self::assertStringContainsString('Error in data query', $state['html']);
+        self::assertStringNotContainsString('Warning:', $state['html']);
+    }
+
+    /** @dataProvider editors */
+    public function testNativeRuleEditorOffersFieldsForEachRuleType(int $type, int $leaf, string $title): void
+    {
+        $state = $this->runNative(array('mode' => 'edit','type' => $type,'leaf' => $leaf));
+        self::assertStringContainsString($title, $state['html']);
+        self::assertStringContainsString('form_automation_global_item_edit', $state['html']);
+        self::assertStringNotContainsString('Warning:', $state['html']);
+        if ($type === 2) {
+            self::assertStringContainsString('ifName', $state['html']);
+        }
+    }
+
+    public static function editors(): array
+    {
+        return array(array(1,3,'Device Match Rule'),array(2,3,'Create Graph Rule'),array(3,3,'Device Match Rule'),array(3,2,'Graph Match Rule'),array(4,3,'Create Tree Rule (Device)'),array(4,2,'Create Tree Rule (Graph)'));
+    }
+
     protected function runNative(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
