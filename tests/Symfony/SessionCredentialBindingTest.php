@@ -40,7 +40,7 @@ final class SessionCredentialBindingTest extends TestCase
                 }
                 $childCoverage = \NativeChildCoverageEvidence::load($reports[0], dirname(__DIR__, 2), 'tests/Fixtures/symfony-credential-session-native.php', $scenario . ':' . $storage, self::coverageSources(), $requiredMarkers, $hitSources);
                 if ($scenario === 'current' && $storage === 'file') {
-                    self::assertSame(28, \NativeChildCoverageEvidence::verifyRejections($reports[0], dirname(__DIR__, 2), 'tests/Fixtures/symfony-credential-session-native.php', 'current:file', self::coverageSources(), $requiredMarkers, $hitSources, 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php'));
+                    self::assertSame(29, \NativeChildCoverageEvidence::verifyRejections($reports[0], dirname(__DIR__, 2), 'tests/Fixtures/symfony-credential-session-native.php', 'current:file', self::coverageSources(), $requiredMarkers, $hitSources, 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php'));
                 }
                 $coverage->merge($childCoverage);
             }
@@ -67,7 +67,7 @@ final class SessionCredentialBindingTest extends TestCase
 
     private static function coverageSources(): array
     {
-        return ['lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php'];
+        return ['composer.lock', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php'];
     }
 
     public static function cases(): iterable

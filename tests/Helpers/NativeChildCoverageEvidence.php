@@ -102,7 +102,7 @@ final class NativeChildCoverageEvidence
         try {
             foreach (['producer', 'scenario', 'report', 'markers', ...$sources, $producer] as $missing) {
                 $changed = $evidence;
-                if (str_contains($missing, '/')) {
+                if (in_array($missing, array_merge($sources, [$producer]), true)) {
                     unset($changed['sources'][$missing]);
                 } else {
                     unset($changed[$missing]);

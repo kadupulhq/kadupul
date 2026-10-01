@@ -174,7 +174,7 @@ if (defined('MAILER_TEST_COVERAGE')) {
 }
 if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $sessionSources = array_merge(['tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php'], array_map(static fn($file) => substr($file, strlen($coverageRoot) + 1), $coverageFilter->files()));
+    $sessionSources = array_merge(['composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php'], array_map(static fn($file) => substr($file, strlen($coverageRoot) + 1), $coverageFilter->files()));
     $sessionCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/symfony-credential-session-native.php', $argv[1] . ':' . $argv[3], $sessionSources);
 }
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
