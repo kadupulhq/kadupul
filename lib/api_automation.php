@@ -1978,6 +1978,7 @@ function automation_string_replace($search, $replace, $target)
     $replace = (string) $replace;
     $target = (string) $target;
     $delimiter = null;
+    $pattern_search = $search;
 
     foreach (array('~', '#', '%', '!', '@', ';', '`', '/') as $candidate) {
         if (strpos($search, $candidate) === false) {
@@ -1990,13 +1991,22 @@ function automation_string_replace($search, $replace, $target)
     if ($delimiter === null) {
         $delimiter = chr(127);
 
-        if (strpos($search, $delimiter) !== false) {
-            if (function_exists('cacti_log')) {
-                cacti_log('WARNING: Tree automation regex has no available delimiter. Pattern: ' . json_encode($search, JSON_INVALID_UTF8_SUBSTITUTE), false, 'AUTOM8');
+        // Escape only unescaped fallback delimiters; preserve backslash parity.
+        $escaped = false;
+        $delimited_search = '';
+
+        for ($offset = 0, $length = strlen($search); $offset < $length; $offset++) {
+            $character = $search[$offset];
+
+            if ($character === $delimiter && !$escaped) {
+                $delimited_search .= '\\';
             }
 
-            return array();
+            $delimited_search .= $character;
+            $escaped = $character === '\\' ? !$escaped : false;
         }
+
+        $pattern_search = $delimited_search;
     }
 
     /*
@@ -2004,7 +2014,7 @@ function automation_string_replace($search, $replace, $target)
      * near-match. Keep each tree header replacement within a fixed PCRE budget;
      * PCRE2 permits this directive to lower, but not raise, the runtime limit.
      */
-    $pattern = $delimiter . '(*LIMIT_MATCH=10000)' . $search . $delimiter . 'i';
+    $pattern = $delimiter . '(*LIMIT_MATCH=10000)' . $pattern_search . $delimiter . 'i';
     $repl = @preg_replace($pattern, $replace, $target);
 
     if ($repl === null || preg_last_error() !== PREG_NO_ERROR) {
