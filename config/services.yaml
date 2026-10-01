@@ -246,6 +246,18 @@ services:
         alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputAccess
     Kadupul\DataInput\Application\Port\DataInputGateway:
         alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputGateway
+    Kadupul\Navigation\Infrastructure\:
+        resource: '../src/Navigation/Infrastructure/'
+    Kadupul\Navigation\Application\Command\SaveLink: ~
+    Kadupul\Navigation\Application\Command\ChangeLinks: ~
+    Kadupul\Navigation\Application\Query\ListLinks: ~
+    Kadupul\Navigation\Application\Port\LinkAccess:
+        alias: Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkAccess
+    Kadupul\Navigation\Application\Port\LinkStore:
+        alias: Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkStore
+
+    Kadupul\Navigation\Application\Port\LinkPreferences:
+        alias: Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkPreferences
 
 when@test:
     services:

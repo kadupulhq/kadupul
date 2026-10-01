@@ -27,7 +27,7 @@ final readonly class InventoryLocaleSubscriber implements EventSubscriberInterfa
     public function onRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if (!$event->isMainRequest() || !in_array($request->attributes->get('_route'), ['data_input_bulk', 'data_inputs', 'data_input_edit', 'data_input_create', 'data_input_field', 'data_input_action', 'data_input_legacy', 'inventory_sites', 'inventory_site_edit', 'inventory_site_create', 'inventory_device_create', 'inventory_site_action', 'inventory_sites_legacy', 'inventory_devices', 'inventory_device_details', 'inventory_device_edit', 'inventory_device_template', 'inventory_device_collector', 'inventory_device_state', 'inventory_device_remove'], true)) {
+        if (!$event->isMainRequest() || !in_array($request->attributes->get('_route'), ['data_input_bulk', 'data_inputs', 'data_input_edit', 'data_input_create', 'data_input_field', 'data_input_action', 'data_input_legacy', 'inventory_sites', 'inventory_site_edit', 'inventory_site_create', 'inventory_device_create', 'inventory_site_action', 'inventory_sites_legacy', 'inventory_devices', 'inventory_device_details', 'inventory_device_edit', 'inventory_device_template', 'inventory_device_collector', 'inventory_device_state', 'inventory_device_remove', 'navigation_links', 'navigation_links_legacy', 'navigation_link_action', 'navigation_link_create', 'navigation_link_edit'], true)) {
             return;
         }
         // Anonymous requests do not need installation/session access for locale.

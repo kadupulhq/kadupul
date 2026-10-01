@@ -260,6 +260,8 @@ jobs:
         env:
           PHP_VERSION: '8.4'
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+      - name: Verify External Links through HTTP and MariaDB
+        run: mise exec python@3.12.12 -- python tests/Symfony/link_review_http.py
       - name: Verify the actual CLI upgrades an installed LTS database version
         run: mise exec python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
       - name: Refuse forbidden access at every entry point

@@ -7,6 +7,8 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Migrate Data Input Methods and fields to Symfony/PHP 8.4 and Twig, with current authorization, revision checks, transaction rollback and explicit collector/whitelist retry outcomes.
+- Move External Links into the Navigation Symfony module with Twig forms, transactional viewing grants, stale-order protection and safe legacy redirects.
+
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 
@@ -19,6 +21,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Escape dynamic form ids and actions for their HTML attribute and JavaScript string contexts. Fixes #582.
 - Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
 - Remove the inert Poller Refresh Output Table setting; the queue is required to use InnoDB. Fixes #282.
+- Bound PCRE work when tree automation applies saved replacement patterns. Fixes #591.
+- Return a clean 404 for HTTP requests to the PHP Script Server under PHP-FPM. Fixes #377.
 - Honor the script server's documented `--environ`, `-v`/`-V`, and `-h`/`-H` options. Fixes #375 and #376.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
@@ -40,6 +44,7 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
+- Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
 - Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
 
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.

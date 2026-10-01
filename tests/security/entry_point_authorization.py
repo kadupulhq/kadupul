@@ -117,7 +117,7 @@ class Client:
 
 
 def cli_refused(response):
-    # mod_php echoes a shebang line ahead of the guard.
+    # Some PHP CLI entry points use a shebang that mod_php emits before the guard.
     body = response['body'].strip()
     return (response['status'] == 404 and body in ('', '#!/usr/bin/env php')) \
         or 'only meant to run at the command line' in body
@@ -219,6 +219,8 @@ def route_fixtures(rig, rows, ids):
         ids['data-inputs'] = {'id': method, 'field': field}
     if present('graphing/colors'):
         ids['graphing/colors'] = {'id': int(rig.sql('SELECT MIN(id) FROM colors').strip())}
+    if present('links'):
+        ids['links'] = {'id': 1}
 
 
 def entries():
