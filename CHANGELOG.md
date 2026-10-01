@@ -60,6 +60,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.
+- Retain buffered Boost samples until remote acknowledgement, refuse missing database connections, and stop recovery when an acknowledged sample changed before cleanup. Fixes #268.
 
 - Keep the recursive RRD tuning report printer local to each `rrdtool_tune()` call, so repeated calls in one process do not redeclare a global function. Fixes #445.
 - Report missing stored graph data accurately when a zoom request has no usable RRA. Fixes #369.
