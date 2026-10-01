@@ -101,6 +101,8 @@ foreach ($maps as $side => &$map) {
 }
 unset($map);
 $maps['source']['poller'] = 'src_poller_' . $suffix;
+$maps['source']['version'] = 'src_version_' . $suffix;
+$maps['remote']['version'] = 'rc_version_' . $suffix;
 $calls = [];
 $log = [];
 $affected = 0;
@@ -143,7 +145,7 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
             $GLOBALS['calls'][] = ['source', $sql];
             return $GLOBALS['data'];
         }
-        if (!preg_match('/data_source_profiles|information_schema.TABLES|information_schema.TRIGGERS|SHOW COLUMNS FROM data_template_data|FROM data_template_data WHERE/', $sql)) {
+        if (!preg_match('/data_source_profiles|\bversion\b|information_schema.TABLES|information_schema.TRIGGERS|SHOW COLUMNS FROM data_template_data|FROM data_template_data WHERE/', $sql)) {
             $GLOBALS['calls'][] = ['source', $sql];
             return [];
         }
@@ -188,14 +190,14 @@ function db_fetch_assoc($sql, $log = true, $connection = false)
 }
 function db_fetch_cell($sql, $default = '', $log = true, $connection = false)
 {
-    if (!empty($GLOBALS['scenario']['entrypoint']) && !str_contains($sql, 'data_template_data')) {
+    if (!empty($GLOBALS['scenario']['entrypoint']) && !str_contains($sql, 'data_template_data') && !str_contains($sql, 'version')) {
         return 0;
     }
     return collector_statement($sql, [], $connection)->fetchColumn();
 }
 function db_fetch_row($sql, $log = true, $connection = false)
 {
-    if (!empty($GLOBALS['scenario']['entrypoint']) && str_starts_with($sql, 'SHOW CREATE TABLE') && !str_contains($sql, 'data_template_data') && !str_contains($sql, 'data_source_profiles')) {
+    if (!empty($GLOBALS['scenario']['entrypoint']) && str_starts_with($sql, 'SHOW CREATE TABLE') && !str_contains($sql, 'data_template_data') && !str_contains($sql, 'data_source_profiles') && !str_contains($sql, 'version')) {
         return [];
     }
     $row = collector_statement($sql, [], $connection)->fetch(PDO::FETCH_ASSOC) ?: [];
@@ -208,7 +210,7 @@ function db_fetch_row($sql, $log = true, $connection = false)
 }
 function db_execute($sql, $log = true, $connection = false)
 {
-    if (!empty($GLOBALS['scenario']['entrypoint']) && !str_contains($sql, 'data_template_data') && !str_contains($sql, 'data_source_profiles')) {
+    if (!empty($GLOBALS['scenario']['entrypoint']) && !str_contains($sql, 'data_template_data') && !str_contains($sql, 'data_source_profiles') && !str_contains($sql, 'version')) {
         $GLOBALS['calls'][] = ['source', $sql];
         return true;
     }
@@ -316,6 +318,10 @@ try {
         $connection->exec('INSERT INTO `' . $map['data_source_profiles_cf'] . '` VALUES (1,1)');
         $connection->exec('INSERT INTO `' . $map['data_source_profiles'] . "` VALUES (1,'default',300)");
     }
+    foreach (array('source' => $source, 'remote' => $remote) as $side => $connection) {
+        $connection->exec('CREATE TABLE `' . $maps[$side]['version'] . '` (cacti VARCHAR(16) PRIMARY KEY) ENGINE=InnoDB');
+        $connection->exec('INSERT INTO `' . $maps[$side]['version'] . "` VALUES ('" . ($side === 'source' ? '1.2.34' : '1.2.33') . "')");
+    }
     $source->exec('INSERT INTO `' . $maps['source']['data_source_profiles'] . "` VALUES (77,'custom',60)");
     $remote->exec('INSERT INTO `' . $maps['remote']['data_template_data'] . "` VALUES (1,1,'existing')");
     // Stale collector definitions must be replaced, not accumulated.
@@ -414,10 +420,11 @@ try {
         $source->rollBack();
     }
     $callerAfter = $source->query('SELECT step FROM `' . $maps['source']['data_source_profiles'] . '` WHERE id=1')->fetchColumn();
-    file_put_contents($directory . '/result.json', json_encode(['caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    file_put_contents($directory . '/result.json', json_encode(['remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
 } finally {
     $source->exec('DROP TABLE IF EXISTS `' . $maps['source']['poller'] . '`');
     foreach ($maps as $map) {
+        $remote->exec('DROP TABLE IF EXISTS `' . $map['version'] . '`');
         $remote->exec('DROP TABLE IF EXISTS `' . $map['data_template_data'] . '`');
         $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_rra'] . '`');
         $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_cf'] . '`');

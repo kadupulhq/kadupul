@@ -20511,7 +20511,7 @@ msgstr ""
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
 msgstr ""
 
-#: lib/poller.php:2187
+#: lib/poller.php:2196 lib/poller.php:1950
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 

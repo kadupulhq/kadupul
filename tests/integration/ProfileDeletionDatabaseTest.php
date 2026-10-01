@@ -18,6 +18,28 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return true;
     }
 
+    /** @dataProvider remoteGuardPreflightScenarios */
+    public function testGuardPreflightPreservesCollectorVersionBeforeEveryMutation(string $class, string $failure): void
+    {
+        $state = $this->runNative(array('collector' => 'bulk', 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
+        self::assertFalse($state['result']);
+        self::assertSame('1.2.33', $state['remote_version']);
+        self::assertSame(array($class === 'settings' ? '' : 'on', 'on'), $state['sync']);
+        self::assertSame(array(), array_filter($state['calls'], static fn($call) => $call[0] === 'remote' && preg_match('/^\s*(INSERT|REPLACE|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE)\b/i', $call[1])));
+        self::assertStringContainsString('schema version was retained', implode('\n', $state['log']));
+    }
+
+    public static function remoteGuardPreflightScenarios(): array
+    {
+        $cases = array();
+        foreach (array('all', 'settings', 'data') as $class) {
+            foreach (array('guard-missing', 'guard-modified') as $failure) {
+                $cases[$class . ' ' . $failure] = array($class, $failure);
+            }
+        }
+        return $cases;
+    }
+
     public function testCollectorCapturesOneLockedSourceDefinitionSnapshot(): void
     {
         $state = $this->runNative(array('collector' => 'bulk', 'failure' => '', 'snapshot_edit' => true));
@@ -108,6 +130,9 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     {
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
         self::assertSame($failure === '', $state['result']);
+        if ($mode === 'bulk' && $failure === '' && $class === 'all') {
+            self::assertSame('1.2.34', $state['remote_version']);
+        }
         if ($failure !== 'retry-state') {
             self::assertSame(array($mode === 'bulk' && $failure === '' ? '' : 'on', 'on'), $state['sync']);
         }
