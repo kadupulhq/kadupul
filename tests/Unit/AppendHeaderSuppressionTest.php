@@ -13,36 +13,32 @@
  * because false < 0 is also false. The guard never fired and the function
  * appended &header=false on every call, eventually producing URLs like
  *   ?action=edit&header=false&header=false&header=false
- * The fix is the canonical `=== false` strpos idiom.
+ * The guard uses an explicit substring-presence check.
  */
 
 $source = file_get_contents(__DIR__ . '/../../lib/functions.php');
 
-test('lib/functions.php uses === false in appendHeaderSuppression', function () use ($source) {
+test('appendHeaderSuppression checks whether the flag is absent', function () use ($source) {
     $start = strpos($source, 'function appendHeaderSuppression(');
     expect($start)->not->toBeFalse();
 
     $end  = strpos($source, "\nfunction ", $start + 1);
     $body = substr($source, $start, $end !== false ? $end - $start : 400);
 
-    expect($body)->toContain("strpos(\$url, 'header=false') === false");
+    expect($body)->toContain("!str_contains(\$url, 'header=false')");
     expect(strpos($body, "strpos(\$url, 'header=false') < 0"))
         ->toBeFalse('the old "< 0" guard must be gone');
 });
 
-/* Local copy of the fixed function. We avoid loading lib/functions.php
- * here because that file requires the full Kadupul bootstrap. The shape
- * mirrors the production definition; the source-pattern test above
- * pins the production code to this same shape. */
-if (!function_exists('_test_appendHeaderSuppression')) {
-    function _test_appendHeaderSuppression($url)
-    {
-        if (strpos($url, 'header=false') === false) {
-            return $url . (strpos($url, '?') ? '&' : '?') . 'header=false';
-        }
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
-        return $url;
-    }
+// Execute the production definition without bootstrapping the application.
+if (!function_exists('_test_appendHeaderSuppression')) {
+    eval(str_replace(
+        'function appendHeaderSuppression(',
+        'function _test_appendHeaderSuppression(',
+        test_php_function_source($source, 'appendHeaderSuppression')
+    ));
 }
 
 test('appendHeaderSuppression is idempotent on repeated calls', function () {

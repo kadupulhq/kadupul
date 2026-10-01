@@ -407,7 +407,7 @@ function is_remote_path_setting($config_name)
 {
     global $config;
 
-    if ($config['poller_id'] > 1 && (strpos($config_name, 'path_') !== false || strpos($config_name, '_path') !== false)) {
+    if ($config['poller_id'] > 1 && (str_contains($config_name, 'path_') || str_contains($config_name, '_path'))) {
         return true;
     } else {
         return false;
@@ -908,9 +908,11 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
         raise_message($custom_message);
 
         $_SESSION['sess_error_fields'][$field_name] = $field_name;
-    } elseif ($regexp_match != '' && !preg_match('/' . $regexp_match . '/', $field_value)) {
+    } elseif ($regexp_match != '' && !($regex_result = preg_match('/' . $regexp_match . '/', $field_value))) {
+        // Capture PCRE state before configuration or logging performs another regex.
+        $regex_error = $regex_result === false ? preg_last_error_msg() : '';
         if (read_config_option('log_validation') == 'on') {
-            cacti_log("Form Validation Failed: Variable '$field_name' with Value '$field_value' Failed REGEX '$regexp_match'", false);
+            cacti_log("Form Validation Failed: Variable '$field_name' with Value '$field_value' Failed REGEX '$regexp_match'" . ($regex_error !== '' ? ' (PCRE: ' . $regex_error . ')' : ''), false);
             cacti_debug_backtrace('REGEX FAILURE');
         }
 
@@ -1005,26 +1007,15 @@ function get_format_message_instance($current_message)
 
     $level = get_message_level($current_message);
 
-    switch ($level) {
-        case MESSAGE_LEVEL_NONE:
-            $message = '<span>' . $fmessage . '</span>';
-            break;
-        case MESSAGE_LEVEL_INFO:
-            $message = '<span class="deviceUp">' . $fmessage . '</span>';
-            break;
-        case MESSAGE_LEVEL_WARN:
-            $message = '<span class="deviceWarning">' . $fmessage . '</span>';
-            break;
-        case MESSAGE_LEVEL_ERROR:
-            $message = '<span class="deviceDown">' . $fmessage . '</span>';
-            break;
-        case MESSAGE_LEVEL_CSRF:
-            $message = '<span class="deviceDown">' . $fmessage . '</span>';
-            break;
-        default:
-            $message = '<span class="deviceUnknown">' . $fmessage . '</span>';
-            break;
-    }
+    // Keep the switch comparisons: settings and message levels can be strings.
+    $message = match (true) {
+        $level == MESSAGE_LEVEL_NONE => '<span>' . $fmessage . '</span>',
+        $level == MESSAGE_LEVEL_INFO => '<span class="deviceUp">' . $fmessage . '</span>',
+        $level == MESSAGE_LEVEL_WARN => '<span class="deviceWarning">' . $fmessage . '</span>',
+        $level == MESSAGE_LEVEL_ERROR => '<span class="deviceDown">' . $fmessage . '</span>',
+        $level == MESSAGE_LEVEL_CSRF => '<span class="deviceDown">' . $fmessage . '</span>',
+        default => '<span class="deviceUnknown">' . $fmessage . '</span>',
+    };
 
     return $message;
 }
@@ -1326,13 +1317,13 @@ function get_selective_log_level()
         }
     }
 
-    if (strpos($dir_name, 'plugins') !== false) {
+    if (str_contains($dir_name, 'plugins')) {
         $debug_plugins = read_config_option('selective_plugin_debug');
         if ($debug_plugins != '') {
             $debug_plugins = explode(',', $debug_plugins);
 
             foreach ($debug_plugins as $myplugin) {
-                if (strpos($dir_name, DIRECTORY_SEPARATOR . $myplugin) !== false) {
+                if (str_contains($dir_name, DIRECTORY_SEPARATOR . $myplugin)) {
                     $force_level = POLLER_VERBOSITY_DEBUG;
                     break;
                 }
@@ -1448,13 +1439,13 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '')
     /* Syslog is currently Unstable in Win32 */
     if ($logdestination == 2 || $logdestination == 3) {
         $log_type = '';
-        if (strpos($string, 'ERROR:') !== false) {
+        if (str_contains($string, 'ERROR:')) {
             $log_type = 'err';
-        } elseif (strpos($string, 'WARNING:') !== false) {
+        } elseif (str_contains($string, 'WARNING:')) {
             $log_type = 'warn';
-        } elseif (strpos($string, 'STATS:') !== false) {
+        } elseif (str_contains($string, 'STATS:')) {
             $log_type = 'stat';
-        } elseif (strpos($string, 'NOTICE:') !== false) {
+        } elseif (str_contains($string, 'NOTICE:')) {
             $log_type = 'note';
         }
 
@@ -1586,82 +1577,82 @@ function determine_display_log_entry($message_type, $line, $filter, $matches = t
     /* determine if we are to display the line */
     switch ($message_type) {
         case 1: /* stats only */
-            $display = (strpos($line, 'STATS') !== false);
+            $display = (str_contains($line, 'STATS'));
 
             break;
         case 2: /* warnings only */
-            $display = (strpos($line, 'WARN') !== false);
+            $display = (str_contains($line, 'WARN'));
 
             break;
         case 3: /* warnings + */
-            $display = (strpos($line, 'WARN') !== false);
+            $display = (str_contains($line, 'WARN'));
 
             if (!$display) {
-                $display = (strpos($line, 'ERROR') !== false);
+                $display = (str_contains($line, 'ERROR'));
             }
 
             if (!$display) {
-                $display = (strpos($line, 'DEBUG') !== false);
+                $display = (str_contains($line, 'DEBUG'));
             }
 
             if (!$display) {
-                $display = (strpos($line, ' SQL') !== false);
+                $display = (str_contains($line, ' SQL'));
             }
 
             break;
         case 4: /* errors only */
-            $display = (strpos($line, 'ERROR') !== false);
+            $display = (str_contains($line, 'ERROR'));
 
             break;
         case 5: /* errors + */
-            $display = (strpos($line, 'ERROR') !== false);
+            $display = (str_contains($line, 'ERROR'));
 
             if (!$display) {
-                $display = (strpos($line, 'DEBUG') !== false);
+                $display = (str_contains($line, 'DEBUG'));
             }
 
             if (!$display) {
-                $display = (strpos($line, ' SQL') !== false);
+                $display = (str_contains($line, ' SQL'));
             }
 
             break;
         case 6: /* debug only */
-            $display = (strpos($line, 'DEBUG') !== false && strpos($line, ' SQL ') === false);
+            $display = (str_contains($line, 'DEBUG') && !str_contains($line, ' SQL '));
 
             break;
         case 7: /* sql calls only */
-            $display = (strpos($line, ' SQL ') !== false);
+            $display = (str_contains($line, ' SQL '));
 
             break;
         case 8: /* AutoM8 Only */
-            $display = (strpos($line, 'AUTOM8') !== false);
+            $display = (str_contains($line, 'AUTOM8'));
 
             break;
         case 9: /* Non Stats */
-            $display = (strpos($line, 'STATS') === false);
+            $display = (!str_contains($line, 'STATS'));
 
             break;
         case 10: /* Boost Only*/
-            $display = (strpos($line, 'BOOST') !== false);
+            $display = (str_contains($line, 'BOOST'));
 
             break;
         case 11: /* device events + */
-            $display = (strpos($line, 'HOST EVENT') !== false);
+            $display = (str_contains($line, 'HOST EVENT'));
 
             if (!$display) {
-                $display = (strpos($line, '] is recovering!') !== false);
+                $display = (str_contains($line, '] is recovering!'));
             }
 
             if (!$display) {
-                $display = (strpos($line, '] is down!') !== false);
+                $display = (str_contains($line, '] is down!'));
             }
 
             break;
         case 12: /* Assertions */
-            $display = (strpos($line, 'ASSERT FAILED') !== false);
+            $display = (str_contains($line, 'ASSERT FAILED'));
 
             if (!$display) {
-                $display = (strpos($line, 'Recache Event') !== false);
+                $display = (str_contains($line, 'Recache Event'));
             }
 
             break;
@@ -1672,7 +1663,7 @@ function determine_display_log_entry($message_type, $line, $filter, $matches = t
         default: /* all other lines */
             if ($thold_enabled) {
                 if ($message_type == 99) {
-                    $display = (strpos($line, 'THOLD: Threshold') !== false);
+                    $display = (str_contains($line, 'THOLD: Threshold'));
                 }
             } else {
                 $display = true;
@@ -2024,9 +2015,9 @@ function is_hex_string(&$result)
      * Hex- is considered due to the stripping of 'String:' in
      * lib/snmp.php
      */
-    if (substr($compare, 0, 4) == 'hex-') {
+    if (str_starts_with($compare, 'hex-')) {
         $check = trim(str_ireplace('hex-', '', $result));
-    } elseif (substr($compare, 0, 11) == 'hex-string:') {
+    } elseif (str_starts_with($compare, 'hex-string:')) {
         $check = trim(str_ireplace('hex-string:', '', $result));
     } else {
         return false;
@@ -2372,7 +2363,7 @@ function test_data_source($data_template_id, $host_id, $snmp_query_id = 0, $snmp
             if (!is_numeric($output)) {
                 if ($output == 'U') {
                     return false;
-                } elseif (strpos($output, ':U') !== false) {
+                } elseif (str_contains($output, ':U')) {
                     return false;
                 } elseif (prepare_validate_result($output) === false) {
                     return false;
@@ -4135,10 +4126,10 @@ function draw_navigation_text($type = 'url')
             $parts = explode('-', get_request_var('node'));
 
             // Check for tree anchor
-            if (strpos(get_request_var('node'), 'tree_anchor') !== false) {
+            if (str_contains(get_request_var('node'), 'tree_anchor')) {
                 $tree_id = $parts[1];
                 $leaf_id = 0;
-            } elseif (strpos(get_request_var('node'), 'tbranch') !== false) {
+            } elseif (str_contains(get_request_var('node'), 'tbranch')) {
                 // Check for branch
                 $leaf_id = $parts[1];
                 $tree_id = db_fetch_cell_prepared(
@@ -4971,7 +4962,7 @@ function validate_path_within($filename, $base_dir)
  */
 function validate_relative_path_within($path, $base_dir)
 {
-    if (!is_string($path) || $path === '' || strpos($path, "\0") !== false) {
+    if (!is_string($path) || $path === '' || str_contains($path, "\0")) {
         return false;
     }
 
@@ -5221,7 +5212,7 @@ function general_header()
 
 function appendHeaderSuppression($url)
 {
-    if (strpos($url, 'header=false') === false) {
+    if (!str_contains($url, 'header=false')) {
         return $url . (strpos($url, '?') ? '&' : '?') . 'header=false';
     }
 
@@ -5250,7 +5241,7 @@ function send_mail($to, $from, $subject, $body, $attachments = '', $headers = ''
             }
         }
 
-        if ($from != '' && strpos($from, '<') === false) {
+        if ($from != '' && !str_contains($from, '<')) {
             if ($name == '') {
                 $full_name = db_fetch_cell_prepared(
                     'SELECT full_name
@@ -5419,7 +5410,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
     }
 
     /* perform data substitution */
-    if (strpos($subject, '|date_time|') !== false) {
+    if (str_contains($subject, '|date_time|')) {
         $date = read_config_option('date');
         if (!empty($date)) {
             $time = strtotime($date);
@@ -5801,7 +5792,7 @@ function split_emaildetail($email)
      * Handle the special case where sendmail is being used
      * without an email domain
      */
-    if (!is_array($email) && strpos($email, '@') === false) {
+    if (!is_array($email) && !str_contains($email, '@')) {
         return array('name' => '', 'email' => $email);
     }
 
@@ -5809,8 +5800,8 @@ function split_emaildetail($email)
      * Handle the case where the Email is a string, but may
      * include the name at the beginning of the Email.
      */
-    if (!is_array($email) && strpos($email, '@') !== false) {
-        if (strpos($email, '<') !== false) {
+    if (!is_array($email) && str_contains($email, '@')) {
+        if (str_contains($email, '<')) {
             $parts = explode('<', $email);
             $name  = str_replace(array('"', "'"), array('', ''), $parts[0]);
             $email = str_replace('>', '', $parts[1]);
@@ -6429,7 +6420,7 @@ function get_classic_tabimage($text, $down = false)
                 $lines = array();
 
                 // if no wrapping is requested, or no wrapping is possible...
-                if ((!$variation[2]) || ($variation[2] && strpos($text, ' ') === false)) {
+                if ((!$variation[2]) || ($variation[2] && !str_contains($text, ' '))) {
                     $bounds  = imagettfbbox($fontsize, 0, $font, $text);
                     $w       = $bounds[4] - $bounds[0];
                     $h       = $bounds[1] - $bounds[5];
@@ -6769,7 +6760,7 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI')
     }
 
     // Validate URL is a relative path to prevent SSRF
-    if (strpos($url, '://') !== false || strpos($url, '@') !== false || strpos($url, '../') !== false || (strlen($url) > 0 && $url[0] !== '/')) {
+    if (str_contains($url, '://') || str_contains($url, '@') || str_contains($url, '../') || (strlen($url) > 0 && $url[0] !== '/')) {
         cacti_log('ERROR: Invalid URL passed to call_remote_data_collector: ' . $url, false, 'SECURITY');
         return '';
     }
@@ -7107,7 +7098,7 @@ function is_ipaddress($ip_address = '')
     /* Strip IPv6 Scope ID (Zone Index) for validation, as
        filter_var rejects valid link-local addresses like fe80::1%eth0 */
     $clean_ip = $ip_address;
-    if (strpos($clean_ip, '%') !== false) {
+    if (str_contains($clean_ip, '%')) {
         $parts = explode('%', $clean_ip, 2);
         $clean_ip = $parts[0];
     }
@@ -7149,22 +7140,16 @@ function date_time_format()
 
     $datecharacter = $datechar[$dateCharSetting];
 
-    switch ($date_fmt) {
-        case GD_MO_D_Y:
-            return 'm' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s';
-        case GD_MN_D_Y:
-            return 'M' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s';
-        case GD_D_MO_Y:
-            return 'd' . $datecharacter . 'm' . $datecharacter . 'Y H:i:s';
-        case GD_D_MN_Y:
-            return 'd' . $datecharacter . 'M' . $datecharacter . 'Y H:i:s';
-        case GD_Y_MO_D:
-            return 'Y' . $datecharacter . 'm' . $datecharacter . 'd H:i:s';
-        case GD_Y_MN_D:
-            return 'Y' . $datecharacter . 'M' . $datecharacter . 'd H:i:s';
-        default:
-            return 'Y' . $datecharacter . 'm' . $datecharacter . 'd H:i:s';
-    }
+    // Keep the switch comparisons: settings and message levels can be strings.
+    return match (true) {
+        $date_fmt == GD_MO_D_Y => 'm' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s',
+        $date_fmt == GD_MN_D_Y => 'M' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s',
+        $date_fmt == GD_D_MO_Y => 'd' . $datecharacter . 'm' . $datecharacter . 'Y H:i:s',
+        $date_fmt == GD_D_MN_Y => 'd' . $datecharacter . 'M' . $datecharacter . 'Y H:i:s',
+        $date_fmt == GD_Y_MO_D => 'Y' . $datecharacter . 'm' . $datecharacter . 'd H:i:s',
+        $date_fmt == GD_Y_MN_D => 'Y' . $datecharacter . 'M' . $datecharacter . 'd H:i:s',
+        default => 'Y' . $datecharacter . 'm' . $datecharacter . 'd H:i:s',
+    };
 }
 
 /**
@@ -7723,7 +7708,7 @@ function get_cacti_base_tables()
 
     if (cacti_sizeof($schema)) {
         foreach ($schema as $line) {
-            if (strpos($line, 'CREATE TABLE') !== false) {
+            if (str_contains($line, 'CREATE TABLE')) {
                 $table = str_replace(array('CREATE TABLE', '`', '(', ' '), '', $line);
                 $base_tables[] = trim($table);
             }
@@ -7954,7 +7939,7 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
         return 255;
     }
 
-    if (strpos(trim($binary), '-') === 0) {
+    if (str_starts_with(trim($binary), '-')) {
         cacti_log('ERROR: cacti_exec() rejected binary starting with dash: ' . $binary, false, 'SYSTEM');
         return 255;
     }
@@ -8519,11 +8504,11 @@ function cacti_format_ipv6_colon($address)
         return $address;
     }
 
-    if (strpos($address, '[') !== false) {
+    if (str_contains($address, '[')) {
         return $address;
     }
 
-    if (strpos($address, ':') !== false) {
+    if (str_contains($address, ':')) {
         return '[' . $address . ']';
     }
 
@@ -8572,7 +8557,7 @@ function cacti_path_is_within($candidate, $base)
         $base_resolved = cacti_normalize_windows_path($base_resolved);
     }
 
-    return strpos($resolved, $base_resolved . '/') === 0 || $resolved === $base_resolved;
+    return str_starts_with($resolved, $base_resolved . '/') || $resolved === $base_resolved;
 }
 
 /**
@@ -8592,9 +8577,9 @@ function cacti_normalize_windows_path($path)
     /* Long-path prefixes. Strip \\?\UNC\ first so the remaining \\ is
      * preserved for UNC share comparison; then strip bare \\?\ (which
      * only wraps drive-letter paths for filesystem APIs). */
-    if (strpos($lower, '\\\\?\\unc\\') === 0) {
+    if (str_starts_with($lower, '\\\\?\\unc\\')) {
         $lower = '\\\\' . substr($lower, 8);
-    } elseif (strpos($lower, '\\\\?\\') === 0) {
+    } elseif (str_starts_with($lower, '\\\\?\\')) {
         $lower = substr($lower, 4);
     }
 
@@ -8695,7 +8680,7 @@ function cacti_is_sensitive_key($key)
     $lower = strtolower((string) $key);
 
     foreach ($sensitive_keys as $sk) {
-        if ($lower === $sk || strpos($lower, $sk) !== false) {
+        if ($lower === $sk || str_contains($lower, $sk)) {
             return true;
         }
     }
