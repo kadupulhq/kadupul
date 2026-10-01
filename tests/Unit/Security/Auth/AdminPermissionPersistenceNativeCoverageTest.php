@@ -95,6 +95,58 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return $cases;
     }
 
+    /** @dataProvider bulkCases */
+    public function testBulkWritesInvalidateOnlyAffectedPrincipalsAndExistingSessions(bool $group, string $kind, int $type, bool $replace, bool $self): void
+    {
+        $membership = $kind === 'membership';
+        $state = $this->runController(['group' => $group, 'operation' => $membership ? 'membership' : 'bulk', 'kind' => $kind, 'type_id' => $type, 'replace' => $replace, 'self' => $self]);
+        foreach ($state['reset'] as $account) {
+            $affected = $account['id'] === 42 || ($group && !$membership && $account['id'] === 44);
+            if ($affected) {
+                self::assertGreaterThan(0, $account['reset_perms']);
+            } else {
+                self::assertSame(0, $account['reset_perms']);
+            }
+        }
+        self::assertFalse($state['next_valid'], 'The target existing session must invalidate on its next request.');
+        self::assertSame(!$self, $state['perms_valid']);
+        self::assertSame($self && !$group || $self && $membership ? ['sess_user_id' => 42, 'sess_user_perms_key' => 0] : $state['initial_session'], $state['session']);
+        $principal = $group ? 'group_id' : 'user_id';
+        $expected = [];
+        foreach ([42 => [100, 101], 43 => [100]] as $id => $items) {
+            foreach ($items as $item) {
+                foreach (range(1, 4) as $permission) {
+                    if (!$membership && !$replace && $id === 42 && $item === 100 && $permission === $type) {
+                        continue;
+                    }
+                    $expected[] = [$principal => $id, 'item_id' => $item, 'type' => $permission];
+                }
+            }
+        }
+        self::assertSame($expected, $state['permissions']);
+        $members = [['group_id' => 42, 'user_id' => 42], ['group_id' => 42, 'user_id' => 44], ['group_id' => 43, 'user_id' => 43]];
+        if ($membership && !$replace) {
+            array_shift($members);
+        }
+        self::assertSame($members, $state['memberships']);
+        self::assertSame('', $state['output']);
+    }
+
+    public static function bulkCases(): array
+    {
+        $cases = [];
+        foreach ([false, true] as $group) {
+            foreach (['graph' => 1, 'tree' => 2, 'host' => 3, 'template' => 4, 'membership' => 0] as $kind => $type) {
+                foreach ([false, true] as $replace) {
+                    foreach ([false, true] as $self) {
+                        $cases[] = [$group, $kind, $type, $replace, $self];
+                    }
+                }
+            }
+        }
+        return $cases;
+    }
+
     private function runController(array $scenario): array
     {
         $root = dirname(__DIR__, 4);
@@ -126,6 +178,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
             foreach (glob($directory . '/*.coverage') as $report) {
                 unlink($report);
             }
+            unlink($directory . '/state.sqlite');
             unlink($directory . '/include/auth.php');
             rmdir($directory . '/include');
             rmdir($directory);

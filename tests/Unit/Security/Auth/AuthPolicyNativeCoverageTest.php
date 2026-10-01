@@ -85,9 +85,9 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         return [
             'default allow without exceptions' => [[], true],
             'default deny without memberships' => [['policy' => 2], false],
-            'typed direct exceptions' => [['exceptions' => [1, 2, 4]], false],
-            'typed group exceptions do not simplify deny policy' => [['policy' => 2, 'groups' => [['exceptions' => [1, 2, 4]]]], false],
-            'foreign group exceptions ignored with direct default' => [['groups' => [['user' => 43, 'exceptions' => [1, 2, 4]]]], true],
+            'typed direct exceptions' => [['exceptions' => [1, 3, 4]], false],
+            'typed group exceptions do not simplify deny policy' => [['policy' => 2, 'groups' => [['exceptions' => [1, 3, 4]]]], false],
+            'foreign group exceptions ignored with direct default' => [['groups' => [['user' => 43, 'exceptions' => [1, 3, 4]]]], true],
         ];
     }
 

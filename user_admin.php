@@ -114,6 +114,8 @@ function form_actions()
             }
         }
 
+        reset_user_perms(get_filter_request_var('id'));
+
         header('Location: user_admin.php?action=user_edit&header=false&tab=permsd&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_graph')) {
@@ -141,6 +143,8 @@ function form_actions()
                 }
             }
         }
+
+        reset_user_perms(get_filter_request_var('id'));
 
         header('Location: user_admin.php?action=user_edit&header=false&tab=permsg&id=' . get_nfilter_request_var('id'));
         exit;
@@ -170,6 +174,8 @@ function form_actions()
             }
         }
 
+        reset_user_perms(get_filter_request_var('id'));
+
         header('Location: user_admin.php?action=user_edit&header=false&tab=permste&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_groups')) {
@@ -196,6 +202,8 @@ function form_actions()
                 }
             }
         }
+
+        reset_user_perms(get_filter_request_var('id'));
 
         header('Location: user_admin.php?action=user_edit&header=false&tab=permsgr&id=' . get_nfilter_request_var('id'));
         exit;
@@ -224,6 +232,8 @@ function form_actions()
                 }
             }
         }
+
+        reset_user_perms(get_filter_request_var('id'));
 
         header('Location: user_admin.php?action=user_edit&header=false&tab=permstr&id=' . get_nfilter_request_var('id'));
         exit;

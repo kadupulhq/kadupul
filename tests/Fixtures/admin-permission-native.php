@@ -25,18 +25,25 @@ if ($operation === 'realm') {
     }
     $_POST['unrelated_field'] = 'on';
 }
+if (in_array($operation, ['bulk', 'membership'], true)) {
+    $request['action'] = 'actions';
+    $request['id'] = $target;
+    $request['drp_action'] = $scenario['replace'] ? '1' : '2';
+    $request[$operation === 'membership' ? ($group ? 'associate_member' : 'associate_groups') : 'associate_' . $scenario['kind']] = '1';
+    $_POST['chk_' . ($operation === 'membership' ? 42 : 100)] = 'on';
+}
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_SESSION = ['sess_user_id' => ($scenario['self'] ?? false) ? $target : 41, 'sess_user_perms_key' => 0, 'sess_user_realms' => [99], 'sess_user_config_array' => ['stale'], 'sess_config_array' => ['stale'], 'sess_auth_names' => ['stale']];
 $initial_session = $_SESSION;
 $messages = [];
-$db = new PDO('sqlite::memory:');
+$db = new PDO('sqlite:' . $directory . '/state.sqlite');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 // Native SQL's random reset marker stays a marker rather than a canned UPDATE.
 $db->sqliteCreateFunction('RAND', static fn() => random_int(1, 4294967294) / 4294967295);
 $db->sqliteCreateFunction('FLOOR', static fn($value) => floor($value));
 $db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, reset_perms INTEGER DEFAULT 0)');
 $db->exec('INSERT INTO user_auth (id) VALUES (41), (42), (43), (44)');
-$db->exec('CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER)');
+$db->exec('CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER, UNIQUE(group_id, user_id))');
 $db->exec('INSERT INTO user_auth_group_members VALUES (42, 42), (42, 44), (43, 43)');
 $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER, UNIQUE(user_id, realm_id))');
 $db->exec('INSERT INTO user_auth_realm VALUES (42, 7), (43, 9)');
@@ -47,6 +54,21 @@ $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, item_id INTEGER
 foreach (range(1, 4) as $type) {
     $db->prepare('INSERT INTO user_auth_perms VALUES (42, 100, ?), (42, 101, ?), (43, 100, ?)')->execute([$type, $type, $type]);
     $db->prepare('INSERT INTO user_auth_group_perms VALUES (42, 100, ?), (42, 101, ?), (43, 100, ?)')->execute([$type, $type, $type]);
+}
+if ($scenario['replace'] ?? false) {
+    if ($operation === 'membership') {
+        $db->exec('DELETE FROM user_auth_group_members WHERE group_id = 42 AND user_id = 42');
+    } else {
+        $table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
+        $principal = $group ? 'group_id' : 'user_id';
+        $db->prepare('DELETE FROM ' . $table . ' WHERE ' . $principal . ' = 42 AND item_id = 100 AND type = ?')->execute([$scenario['type_id']]);
+    }
+}
+function input_validate_input_number($value)
+{
+    if (!ctype_digit((string) $value)) {
+        throw new InvalidArgumentException('Invalid fixture numeric input.');
+    }
 }
 function db_execute_prepared($sql, $params = [])
 {
@@ -131,15 +153,36 @@ if (isset($argv[3])) {
 }
 require $root . '/lib/auth.php';
 ob_start();
-register_shutdown_function(static function () use ($db, $group, $initial_session) {
+register_shutdown_function(static function () use ($db, $group, $initial_session, $operation, $directory, $root) {
     $output = ob_get_clean();
     $session = $_SESSION;
     // The old epoch is held by the existing session; query the actual reset
     // marker through the native validity helper after the controller writes.
     $perms_valid = is_user_perms_valid($session['sess_user_id']);
+    $next_valid = null;
+    if (in_array($operation, ['bulk', 'membership'], true)) {
+        $program = <<<'PHP'
+$config = array('cacti_db_version' => '1.2.33');
+$_SESSION = array('sess_user_id' => 42, 'sess_user_perms_key' => 0);
+$db = new PDO('sqlite:' . $argv[1]);
+function db_fetch_cell_prepared($sql, $params = array()) { $q = $GLOBALS['db']->prepare($sql); $q->execute($params); return $q->fetchColumn(); }
+function cacti_version_compare($a, $b, $op) { return version_compare($a, $b, $op); }
+require $argv[2];
+print json_encode(is_user_perms_valid(42));
+PHP;
+        $process = proc_open([PHP_BINARY, '-r', $program, $directory . '/state.sqlite', $root . '/lib/auth.php'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+        $result = stream_get_contents($pipes[1]);
+        $errors = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        if (proc_close($process) !== 0 || $errors !== '') {
+            throw new RuntimeException($errors);
+        }
+        $next_valid = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+    }
     $principal = $group ? 'group_id' : 'user_id';
     $realm_table = $group ? 'user_auth_group_realm' : 'user_auth_realm';
     $perm_table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
-    print json_encode(['realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $session, 'perms_valid' => $perms_valid, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output], JSON_THROW_ON_ERROR);
+    print json_encode(['next_valid' => $next_valid, 'memberships' => $db->query('SELECT * FROM user_auth_group_members ORDER BY group_id, user_id')->fetchAll(PDO::FETCH_ASSOC), 'realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $session, 'perms_valid' => $perms_valid, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output], JSON_THROW_ON_ERROR);
 });
 require $root . ($group ? '/user_group_admin.php' : '/user_admin.php');

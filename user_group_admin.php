@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -291,6 +292,8 @@ function form_actions()
             }
         }
 
+        reset_group_perms(get_filter_request_var('id'));
+
         header('Location: user_group_admin.php?action=edit&header=false&tab=permsd&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_graph')) {
@@ -318,6 +321,8 @@ function form_actions()
                 }
             }
         }
+
+        reset_group_perms(get_filter_request_var('id'));
 
         header('Location: user_group_admin.php?action=edit&header=false&tab=permsg&id=' . get_nfilter_request_var('id'));
         exit;
@@ -347,6 +352,8 @@ function form_actions()
             }
         }
 
+        reset_group_perms(get_filter_request_var('id'));
+
         header('Location: user_group_admin.php?action=edit&header=false&tab=permste&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_tree')) {
@@ -375,6 +382,8 @@ function form_actions()
             }
         }
 
+        reset_group_perms(get_filter_request_var('id'));
+
         header('Location: user_group_admin.php?action=edit&header=false&tab=permstr&id=' . get_nfilter_request_var('id'));
         exit;
     } elseif (isset_request_var('associate_member')) {
@@ -399,6 +408,8 @@ function form_actions()
                         array(get_nfilter_request_var('id'), $matches[1])
                     );
                 }
+
+                reset_user_perms((int) $matches[1]);
             }
         }
 
