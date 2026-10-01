@@ -42,8 +42,17 @@ final class MailTlsTest extends TestCase
             $pid = pcntl_fork();
             self::assertNotSame(-1, $pid);
             if ($pid === 0) {
-                $this->serve($server, $directory . '/transcript', $mode);
-                exit(0);
+                try {
+                    $this->serve($server, $directory . '/transcript', $mode);
+                    exit(0);
+                } catch (\Throwable $failure) {
+                    // Never resume inherited PHPUnit or unwind the parent's cleanup.
+                    try {
+                        file_put_contents($directory . '/server-error', (string) $failure);
+                    } finally {
+                        exit(2);
+                    }
+                }
             }
             fclose($server);
             $server = null;
@@ -62,7 +71,7 @@ final class MailTlsTest extends TestCase
             $status = $client->run();
             pcntl_waitpid($pid, $childStatus);
             self::assertTrue(pcntl_wifexited($childStatus));
-            self::assertSame(0, pcntl_wexitstatus($childStatus));
+            self::assertSame(0, pcntl_wexitstatus($childStatus), is_file($directory . '/server-error') ? file_get_contents($directory . '/server-error') : $client->getOutput() . $client->getErrorOutput());
             $transcript = file_get_contents($directory . '/transcript');
             $output = $client->getOutput() . $client->getErrorOutput();
             self::assertSame($certificate === 'trusted' ? 0 : 1, $status, $output);
@@ -108,11 +117,73 @@ final class MailTlsTest extends TestCase
         self::assertTrue(openssl_pkey_export_to_file($key, $directory . '/' . $name . '.key', null, $options));
     }
 
+    public function testReplyHandlesClosedPeerAndRestoresCallerHandler(): void
+    {
+        $pair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+        self::assertIsArray($pair);
+        $handler = static function (): never {
+            throw new \RuntimeException('Caller handler must not receive expected peer closure.');
+        };
+        set_error_handler($handler);
+        try {
+            self::assertTrue(self::writeReply($pair[0], "220 ready\r\n"));
+            self::assertSame("220 ready\r\n", fread($pair[1], 11));
+            fclose($pair[1]);
+            self::assertFalse(self::writeReply($pair[0], "220 ready\r\n"));
+            $active = set_error_handler(null);
+            restore_error_handler();
+            self::assertSame($handler, $active);
+        } finally {
+            restore_error_handler();
+            fclose($pair[0]);
+            if (is_resource($pair[1])) fclose($pair[1]);
+        }
+    }
+
+    public function testUnrelatedWriteFailureThrowsAndRestoresCallerHandler(): void
+    {
+        $stream = fopen(sys_get_temp_dir(), 'r');
+        $handler = static fn(): bool => true;
+        set_error_handler($handler);
+        try {
+            try {
+                self::writeReply($stream, "220 ready\r\n");
+                self::fail('An unrelated write warning must not be treated as peer EOF.');
+            } catch (\ErrorException $error) {
+                self::assertSame(E_NOTICE, $error->getSeverity());
+                self::assertStringContainsString('fwrite()', $error->getMessage());
+            }
+            $active = set_error_handler(null);
+            restore_error_handler();
+            self::assertSame($handler, $active);
+        } finally {
+            restore_error_handler();
+            fclose($stream);
+        }
+    }
+
+    private static function writeReply($connection, string $reply): bool
+    {
+        // Certificate rejection can close the peer just after the server's TLS
+        // handshake. Treat that closure as EOF, preserving all other warnings.
+        set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
+            if (preg_match('/\bfwrite\(\):.*(?:Broken pipe|Connection reset(?: by peer)?|peer closed|connection closed)/is', $message)) {
+                return true;
+            }
+            throw new \ErrorException($message, 0, $severity, $file, $line);
+        }, E_WARNING | E_NOTICE);
+        try {
+            return fwrite($connection, $reply) === strlen($reply);
+        } finally {
+            restore_error_handler();
+        }
+    }
+
     private function serve($server, string $capture, string $mode): void
     {
         $connection = stream_socket_accept($server, 10);
         if ($connection === false) {
-            exit(2);
+            throw new \RuntimeException('SMTP fixture did not accept a connection.');
         }
         stream_set_timeout($connection, 5);
         $transcript = '';
@@ -124,35 +195,54 @@ final class MailTlsTest extends TestCase
             }
         }
         if ($mode === 'tls' || $encrypted) {
-            fwrite($connection, "220 localhost TLS fixture\r\n");
+            if (!self::writeReply($connection, "220 localhost TLS fixture\r\n")) {
+                file_put_contents($capture, $transcript);
+                fclose($connection);
+                fclose($server);
+                return;
+            }
             $data = false;
             while (($line = fgets($connection)) !== false) {
                 $transcript .= $line;
                 if ($data) {
                     if ($line === ".\r\n") {
                         $data = false;
-                        fwrite($connection, "250 queued\r\n");
+                        if (!self::writeReply($connection, "250 queued\r\n")) {
+                            break;
+                        }
                     }
                 } elseif ($line === "STARTTLS\r\n") {
-                    fwrite($connection, "220 start TLS\r\n");
+                    if (!self::writeReply($connection, "220 start TLS\r\n")) {
+                        break;
+                    }
                     if (@stream_socket_enable_crypto($connection, true, STREAM_CRYPTO_METHOD_TLS_SERVER) !== true) {
                         break;
                     }
                     $encrypted = true;
                     $transcript .= "TLS established\n";
                 } elseif (str_starts_with($line, 'EHLO ')) {
-                    fwrite($connection, $encrypted ? "250-localhost\r\n250 AUTH PLAIN\r\n" : "250-localhost\r\n250 STARTTLS\r\n");
+                    if (!self::writeReply($connection, $encrypted ? "250-localhost\r\n250 AUTH PLAIN\r\n" : "250-localhost\r\n250 STARTTLS\r\n")) {
+                        break;
+                    }
                 } elseif (str_starts_with($line, 'AUTH PLAIN ')) {
                     $expected = 'AUTH PLAIN ' . base64_encode("tls-user\0tls-user\0tls-fixture-secret") . "\r\n";
-                    fwrite($connection, $encrypted && $line === $expected ? "235 authenticated\r\n" : "535 rejected\r\n");
+                    if (!self::writeReply($connection, $encrypted && $line === $expected ? "235 authenticated\r\n" : "535 rejected\r\n")) {
+                        break;
+                    }
                 } elseif ($line === "DATA\r\n") {
                     $data = true;
-                    fwrite($connection, "354 send message\r\n");
+                    if (!self::writeReply($connection, "354 send message\r\n")) {
+                        break;
+                    }
                 } elseif ($line === "QUIT\r\n") {
-                    fwrite($connection, "221 goodbye\r\n");
+                    if (!self::writeReply($connection, "221 goodbye\r\n")) {
+                        break;
+                    }
                     break;
                 } else {
-                    fwrite($connection, "250 ok\r\n");
+                    if (!self::writeReply($connection, "250 ok\r\n")) {
+                        break;
+                    }
                 }
             }
         }
