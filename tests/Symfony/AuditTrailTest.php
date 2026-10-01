@@ -88,13 +88,43 @@ final class AuditTrailTest extends TestCase
 
             self::assertSame(0600, fileperms($path) & 0777);
             self::assertSame(0, umask());
-            $source = file_get_contents((new \ReflectionClass(LegacyAuditTrail::class))->getFileName());
-            self::assertStringNotContainsString('umask(', $source);
         } finally {
             umask($mask);
             @unlink($path);
             @rmdir($root . '/log');
             @rmdir($root);
+        }
+    }
+
+    public function testPrivateInodeBeforePublicationAndConcurrentCreation(): void
+    {
+        foreach (['0', '18'] as $mask) {
+            foreach (['create', 'existing', 'concurrent', 'link-failure', 'temp-failure'] as $scenario) {
+                $root = sys_get_temp_dir() . '/kadupul-private-' . bin2hex(random_bytes(8));
+                mkdir($root . '/log', 0700, true);
+                try {
+                    $probe = new Process([PHP_BINARY, __DIR__ . '/audit_creation_probe.php', $root, $mask, $scenario]);
+                    $probe->mustRun();
+                    $result = json_decode($probe->getOutput(), true, 8, JSON_THROW_ON_ERROR);
+                    self::assertSame([], $result['violations']);
+                    self::assertSame((int) $mask, $result['mask']);
+                    self::assertSame([], glob($root . '/log/.kadupul-audit-*'));
+                    if (str_ends_with($scenario, 'failure')) {
+                        self::assertSame('Audit sink is unavailable.', $result['error']);
+                        self::assertFileDoesNotExist($root . '/log/kadupul-audit.jsonl');
+                    } else {
+                        self::assertNull($result['error']);
+                        self::assertSame(in_array($scenario, ['concurrent', 'existing'], true) ? 2 : 1, $result['lines']);
+                        self::assertSame(0600, fileperms($root . '/log/kadupul-audit.jsonl') & 07777);
+                    }
+                } finally {
+                    foreach (glob($root . '/log/*') as $file) {
+                        unlink($file);
+                    }
+                    rmdir($root . '/log');
+                    rmdir($root);
+                }
+            }
         }
     }
 
