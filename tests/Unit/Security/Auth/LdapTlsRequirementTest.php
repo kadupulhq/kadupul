@@ -236,7 +236,7 @@ test('an unreadable saved requirement falls back to checking the certificate', f
     $result = ldap_tls_connect(array('ldap_tls_certificate' => $saved), '1');
 
     expect($result['require'])->toBe(2);
-})->with(array('empty' => '', 'text' => 'never', 'out of range' => '9'));
+})->with(array('empty' => '', 'text' => 'never', 'out of range' => '9', 'fractional zero' => '0.5', 'negative fraction' => '-0.5', 'exponent' => '1e-1', 'fractional allow' => '3.9'));
 
 test('an administrator can still relax or tighten the requirement', function (string $saved, int $level, string $env) {
     $result = ldap_tls_connect(array('ldap_tls_certificate' => $saved), '1');

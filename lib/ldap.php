@@ -1051,7 +1051,7 @@ function cacti_ldap_tls_require_cert()
         LDAP_OPT_X_TLS_TRY
     );
 
-    if (is_numeric($cert) && in_array((int) $cert, $levels, true)) {
+    if ((is_int($cert) || (is_string($cert) && ctype_digit($cert))) && in_array((int) $cert, $levels, true)) {
         return (int) $cert;
     }
 
