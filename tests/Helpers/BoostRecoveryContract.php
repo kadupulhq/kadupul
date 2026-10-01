@@ -19,6 +19,11 @@ abstract class BoostRecoveryContract extends TestCase
             self::assertCount($scenario !== 'main-success' ? 0 : 3, $state['remote']);
             self::assertSame($scenario !== 'main-success', $state['pid'] !== false);
             self::assertCount($scenario === 'main-failure' ? 1 : 0, $state['rejectedPackets']);
+            if (str_starts_with($scenario, 'main-missing-')) {
+                self::assertSame(array(), $state['queries']);
+                self::assertSame(0, $state['insertCalls']);
+                self::assertSame(0, $state['deleteCalls']);
+            }
             return;
         }
         self::assertSame(0, $state['exit']);
@@ -97,7 +102,7 @@ abstract class BoostRecoveryContract extends TestCase
     public static function scenarios(): array
     {
         $result = array();
-        foreach (array('final-failure', 'partial-failure', 'success', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'default-limit', 'split-boundary', 'exact-boundary', 'chunk-250', 'chunk-251', 'late-row', 'changed-row', 'retry', 'quote-output', 'main-failure', 'main-success', 'main-max-failure', 'main-read-failure', 'case-change', 'space-change', 'case-retry', 'space-retry', 'full-packet-exact', 'envelope-overflow') as $scenario) {
+        foreach (array('final-failure', 'partial-failure', 'success', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'default-limit', 'split-boundary', 'exact-boundary', 'chunk-250', 'chunk-251', 'late-row', 'changed-row', 'retry', 'quote-output', 'main-failure', 'main-success', 'main-max-failure', 'main-read-failure', 'main-missing-local', 'main-missing-remote', 'case-change', 'space-change', 'case-retry', 'space-retry', 'full-packet-exact', 'envelope-overflow') as $scenario) {
             $result[$scenario] = array($scenario);
         }
         return $result;

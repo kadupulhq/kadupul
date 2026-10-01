@@ -177,6 +177,12 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
 
 global $local_db_cnn_id, $remote_db_cnn_id;
 
+if (!is_object($local_db_cnn_id) || !is_object($remote_db_cnn_id)) {
+    cacti_log('RECOVERY: Database connection unavailable; recovery samples were retained.', false, 'POLLER');
+
+    exit(1);
+}
+
 $recovery_pid = db_fetch_cell("SELECT value FROM settings WHERE name='recovery_pid'", '', true, $local_db_cnn_id);
 $packet_data  = db_fetch_row("SHOW GLOBAL VARIABLES LIKE 'max_allowed_packet'", true, $remote_db_cnn_id);
 

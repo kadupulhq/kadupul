@@ -178,6 +178,15 @@ register_shutdown_function(function () use ($local, $remote, $directory) {
     file_put_contents($directory . '/result.json', json_encode($result, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
 });
 if (str_starts_with($scenario, 'main-')) {
+    if ($scenario === 'main-missing-local' || $scenario === 'main-missing-remote') {
+        $local->exec("INSERT INTO settings VALUES ('recovery_pid','2147483647')");
+        $remote->exec('UPDATE poller SET status=5 WHERE id=2');
+        if ($scenario === 'main-missing-local') {
+            $local_db_cnn_id = false;
+        } else {
+            $remote_db_cnn_id = false;
+        }
+    }
     return;
 }
 $envelope = strlen('INSERT INTO poller_output_boost (local_data_id, rrd_name, time, output) VALUES ') + strlen(' ON DUPLICATE KEY UPDATE output=VALUES(output)') + 1;
