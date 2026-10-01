@@ -1,7 +1,7 @@
-"""Verify a real offline archive and measure its compatibility PHP tools."""
-
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Verify a real offline archive and measure its compatibility PHP tools."""
 
 import argparse
 import hashlib
