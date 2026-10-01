@@ -19,6 +19,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Escape dynamic form ids and actions for their HTML attribute and JavaScript string contexts. Fixes #582.
 - Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
 - Remove the inert Poller Refresh Output Table setting; the queue is required to use InnoDB. Fixes #282.
+- Honor the script server's documented `--environ`, `-v`/`-V`, and `-h`/`-H` options. Fixes #375 and #376.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
@@ -65,6 +66,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Escape color-dropdown values and enclosing form row IDs in their HTML contexts; render color option identifiers as integers. Fixes #576.
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
 
+- Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.
@@ -133,6 +135,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Serve legacy stylesheets and scripts from `public/assets/` with digested file names once `php bin/console asset-map:compile` has run, using Symfony AssetMapper 7.4. Theme `url()` and `@import` references are rewritten to the digested copies, so Midwinter no longer keeps hand-maintained import hashes and `update_hash.php` is gone. Without a compiled manifest, and for `custom.css`, plugins and the flag-icons stylesheet, pages keep the `?md5` URLs. Docker images and offline bundles ship the compiled files; source installations must rerun the compile after each upgrade.
 - Reuse common row-count option rendering in automation previews while preserving each row filter.
 
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
