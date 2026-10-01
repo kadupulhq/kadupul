@@ -9,6 +9,7 @@ namespace Kadupul\Tests;
 
 use Kadupul\Platform\Infrastructure\Legacy\CollectorIdentity;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -117,6 +118,25 @@ final class InstallationConfigurationTargetsTest extends TestCase
         } finally {
             unset($GLOBALS['kadupul_config_loads']);
         }
+    }
+
+    public static function navigationRoutes(): iterable
+    {
+        foreach (['navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action'] as $route) {
+            yield [$route];
+        }
+    }
+
+    #[DataProvider('navigationRoutes')]
+    public function testNavigationCollectorRoutesStillRequireOnlinePrimaryConfiguration(string $route): void
+    {
+        $this->config("\$poller_id = 2;\n\$conn_mode = 'offline';\n");
+        $request = new Request();
+        $request->attributes->set('_route', $route);
+        $requests = new RequestStack();
+        $requests->push($request);
+        $this->expectExceptionMessage('Online primary configuration is required for collector administration.');
+        (new InstallationConfiguration($this->root, $requests))->values();
     }
 
     public function testARefusedLoadIsRefusedAgain(): void

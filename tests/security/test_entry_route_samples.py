@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Concrete route samples must preserve parent-child bindings and fail closed."""
 import unittest
-from entry_point_authorization import has_feature_realm, sample, route_fixtures
+from entry_point_authorization import sample, route_fixtures, has_feature_realm
 
 
 class RouteSamples(unittest.TestCase):
@@ -19,11 +19,10 @@ class RouteSamples(unittest.TestCase):
                       'data_input.php', 'links.php', 'host_templates.php'):
             with self.subTest(entry=entry):
                 self.assertTrue(has_feature_realm(entry))
-        for entry in ('app.php/about', 'about.php', 'app.php/colors-other',
+        for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
                       'app.php/inventory/devices/{id}', 'app.php/links-extra'):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))
-
 
     def test_parent_child_and_enum_parameters(self):
         fixtures = {'graphing/color-templates': {'id': 12, 'itemId': 31},

@@ -106,6 +106,8 @@ def main():
         verify_inventory(harness, session, user_id, check)
         from site_edit_scenarios import verify_site_edit
         verify_site_edit(harness, session, user_id, check)
+        from link_scenarios import verify_links
+        verify_links(harness, session, user_id, check)
         from site_create_scenarios import verify_site_create
         verify_site_create(harness, session, user_id, check)
         from site_lifecycle_scenarios import verify_site_lifecycle

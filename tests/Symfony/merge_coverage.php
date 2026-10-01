@@ -51,6 +51,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'VDEF nontransactional table refused: vdef', 'VDEF nontransactional table refused: graph_templates_item',
         'VDEF duplicate preserves all item rows', 'VDEF item deletion persists',
         'VDEF failure rolls back parent deletion', 'VDEF console-only actor refused before malformed query',
+        'links deletion cleans direct and group realms', 'links stale reorder rejected', 'links grant deletion failure rolls back link deletion',
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',
         'site counts exclude hidden and deleted devices', 'site persistence rechecks actor and revision and rolls back rejected saves',
@@ -112,7 +113,6 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'script server refuses includes outside the base path',
         'script server never dispatches PHP internals',
         'script server answers 404 over HTTP',
-        'theme hash builder leaves CSS unchanged over HTTP',
         'analyze: shim analyzes every table through the kernel container',
         'analyze invalid flag: shim stdout matches the original',
         'shim analyzes every table as the operator named by --as',
@@ -169,9 +169,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             $relative = substr($path, strlen('/var/www/html/'));
             // Legacy application coverage has its own report. Never import
             // generated configuration/cache, dependencies or installed plugins.
-            // The script server, theme hash builder and cli/ shims are listed
+            // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'include/themes/midwinter/update_hash.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'vdef.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'vdef.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -195,11 +195,15 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
+        'bin/legacy-device-edit.php',
+        'links.php',
+        'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'vdef.php',
         'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
-        'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',
@@ -279,7 +283,6 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'script_server.php',
-        'include/themes/midwinter/update_hash.php',
         'cli/analyze_database.php',
         'src/Platform/Infrastructure/Symfony/Console/LegacyCli.php',
         'src/Platform/Infrastructure/Symfony/Console/LegacyArguments.php',
