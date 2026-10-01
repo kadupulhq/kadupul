@@ -5283,10 +5283,14 @@ function auth_session_epoch_advance($user_id) {
  * auth_session_end_reason - recheck, on every request, that the account
  *   behind a session may still use it.
  *
- * Login and remember-me already refuse a disabled or locked account; this
- * applies the same rule to a session that was open when an administrator
- * disabled or locked it, and ends sessions that "logout everywhere" or a
- * password change replaced, or that sat idle past session.gc_maxlifetime.
+ * Login and remember-me already refuse a disabled account; this applies the
+ * same rule to a session that was open when an administrator disabled or
+ * deleted it, and ends sessions that "logout everywhere" or a password change
+ * replaced, or that sat idle past session.gc_maxlifetime.
+ *
+ * A locked account keeps its open sessions, as in 1.2.31. The failed-login
+ * lockout sets the same flag, so anyone who knows a username could otherwise
+ * end that user's sessions. Login and remember-me still refuse it.
  * The idle limit is the one PHP's session garbage collector and the
  * client-side logout timer already use, so it does not shorten any session
  * that would have survived before; it only stops a copied session ID from
@@ -5305,7 +5309,7 @@ function auth_session_end_reason($user_id) {
 		return auth_session_credentials_valid($user_id) ? '' : 'the password changed';
 	}
 
-	$account = db_fetch_row_prepared('SELECT enabled, locked, password
+	$account = db_fetch_row_prepared('SELECT enabled, password
 		FROM user_auth
 		WHERE id = ?',
 		array($user_id));
@@ -5316,10 +5320,6 @@ function auth_session_end_reason($user_id) {
 
 	if ($account['enabled'] != 'on') {
 		return 'the account is disabled';
-	}
-
-	if ($account['locked'] == 'on') {
-		return 'the account is locked';
 	}
 
 	if (!auth_session_credentials_valid($user_id, $account['password'])) {

@@ -11,14 +11,16 @@
 */
 
 /*
- * An open session outlived the account state it was opened under. Disabling,
- * locking or deleting a user left their session working, and "logout
- * everywhere" deleted remember-me rows but no session. A remember-me cookie
- * also restored a session for a locked account whenever the failed-login
- * lockout was off.
+ * An open session outlived the account state it was opened under. Disabling
+ * or deleting a user left their session working, and "logout everywhere"
+ * deleted remember-me rows but no session. A remember-me cookie also restored
+ * a session for a locked account whenever the failed-login lockout was off.
  *
- * include/auth.php now rechecks the account on every request. The shipped
- * include/auth.php and lib/auth.php run through the auth entry probe.
+ * include/auth.php now rechecks the account on every request. A locked
+ * account keeps its open sessions, as in 1.2.31: the failed-login lockout sets
+ * the same flag, so ending them would let anyone who knows a username log
+ * that user out. The shipped include/auth.php and lib/auth.php run through the
+ * auth entry probe.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
@@ -63,8 +65,15 @@ test('a session for an account an administrator disabled ends on its next reques
 	account_state_ended(cacti_test_run_auth_entry_probe(account_state_request(account_state_user(array('enabled' => '')), account_state_session())));
 });
 
-test('a session for an account an administrator locked ends on its next request', function () {
-	account_state_ended(cacti_test_run_auth_entry_probe(account_state_request(account_state_user(array('locked' => 'on')), account_state_session())));
+test('a session keeps working after failed logins lock the account', function () {
+	$request = account_state_request(account_state_user(array('locked' => 'on', 'failed_attempts' => 5)), account_state_session());
+	$request['config']['secpass_lockfailed'] = '5';
+
+	$result = cacti_test_run_auth_entry_probe($request);
+
+	expect($result['session']['sess_user_id'] ?? null)->toBe('42')
+		->and($result['events'])->toBe(array())
+		->and($result['page_continued'])->toBeTrue();
 });
 
 test('a session for a deleted account ends on its next request', function () {
