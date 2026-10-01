@@ -22,7 +22,7 @@ set_default_action();
 
 if (isset_request_var('purge')) {
     // Purge truncates every check and carries no action name for the global
-    // guard to match; the Purge button still sends it as a same-site GET.
+    // guard to match; the Purge button still sends it as a same-origin GET.
     csrf_refuse_cross_site_get();
 }
 

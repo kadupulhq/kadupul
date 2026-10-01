@@ -14,10 +14,11 @@ require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 function csrf_secret_run(array $scenario): array
 {
     $root = dirname(__DIR__, 4);
-    $scenario += array('settings' => array(), 'path_csrf_secret' => '', 'base_path' => $root, 'install' => false);
+    $scenario += array('settings' => array(), 'path_csrf_secret' => '', 'base_path' => $root, 'install' => false, 'document_root' => '');
 
     $program = <<<'PHP'
 $scenario = json_decode($argv[2], true);
+$_SERVER['DOCUMENT_ROOT'] = $scenario['document_root'];
 if ($scenario['install']) {
     define('IN_CACTI_INSTALL', true);
 }
@@ -134,4 +135,37 @@ test('an install in progress uses a per-session secret and writes no settings', 
     expect($result['secret'])->toMatch('/\A[0-9a-f]{64}\z/')
         ->and($result['session']['cacti_bootstrap_csrf_secret'])->toBe($result['secret'])
         ->and($result['writes'])->toBe(array());
+});
+
+
+test('an aliased install refuses a secret inside the actual document root', function () {
+    $base = csrf_secret_directory();
+    $served = csrf_secret_directory();
+    file_put_contents($served . '/csrf-secret.php', str_repeat('de', 20));
+    try {
+        $result = csrf_secret_run(array('base_path' => $base, 'document_root' => $served, 'path_csrf_secret' => $served . '/csrf-secret.php', 'settings' => array('csrf_secret' => str_repeat('ab', 20))));
+        expect($result['secret'])->toBe(str_repeat('ab', 20));
+    } finally {
+        unlink($served . '/csrf-secret.php');
+        rmdir($served);
+        rmdir($base);
+    }
+});
+
+test('an external symlink into the actual document root is refused', function () {
+    $base = csrf_secret_directory();
+    $served = csrf_secret_directory();
+    $external = csrf_secret_directory();
+    file_put_contents($served . '/csrf-secret.php', str_repeat('de', 20));
+    symlink($served . '/csrf-secret.php', $external . '/secret');
+    try {
+        $result = csrf_secret_run(array('base_path' => $base, 'document_root' => $served, 'path_csrf_secret' => $external . '/secret', 'settings' => array('csrf_secret' => str_repeat('ab', 20))));
+        expect($result['secret'])->toBe(str_repeat('ab', 20));
+    } finally {
+        unlink($external . '/secret');
+        unlink($served . '/csrf-secret.php');
+        rmdir($external);
+        rmdir($served);
+        rmdir($base);
+    }
 });
