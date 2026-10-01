@@ -20,6 +20,11 @@ function refresh_csrf_run($test, array $scenario): array
     }
     mkdir($outside, 0700);
     copy($root . '/cli/refresh_csrf.php', $dir . '/cli/refresh_csrf.php');
+    if (!empty($scenario['ownership_refused'])) {
+        $script = file_get_contents($dir . '/cli/refresh_csrf.php');
+        $stub = 'function chown($path,$owner) { throw new \\RuntimeException("Unexpected ownership change"); } function chgrp($path,$group) { throw new \\RuntimeException("Unexpected group change"); }';
+        file_put_contents($dir . '/cli/refresh_csrf.php', preg_replace('/<\?php/', '<?php namespace RefreshCsrfOwnershipProbe; ' . $stub, $script, 1));
+    }
     if (!empty($scenario['filesystem_failure'])) {
         $failure = $scenario['filesystem_failure'];
         $stub = $failure === 'short_write' ? 'function file_put_contents($path,$contents,$flags=0) { return \file_put_contents($path,substr($contents,0,5),$flags); }' : ($failure === 'readback' ? 'function file_get_contents($path) { return false; }' : ($failure === 'rename' ? 'function rename($from,$to) { return false; }' : 'function tempnam($dir,$prefix) { return false; }'));
@@ -51,6 +56,7 @@ if (getenv('REFRESH_CSRF_SECRET') !== '') {
     $config['path_csrf_secret'] = getenv('REFRESH_CSRF_SECRET');
 }
 $config['path_csrf_web_root'] = getenv('REFRESH_CSRF_WEB_ROOT');
+$config['cacti_server_os'] = getenv('REFRESH_CSRF_OS');
 $GLOBALS['stored'] = array();
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function db_execute_prepared($sql,$params,$log=true,$connection=false) { if($connection){$GLOBALS['pushed']=true;if(getenv('REFRESH_CSRF_STORE')==='remote_failure')return false;}else{$GLOBALS['stored'][$params[0]]=$params[1];}return true; }
@@ -84,6 +90,7 @@ PHP;
         'REFRESH_CSRF_SECRET' => $secret,
         'REFRESH_CSRF_WEB_ROOT' => empty($scenario['unknown_root']) ? ($scenario['served_outside'] ?? false ? $outside : $dir) : '',
         'REFRESH_CSRF_STORE' => $scenario['store'] ?? 'ok',
+        'REFRESH_CSRF_OS' => $scenario['os'] ?? 'unix',
     ) + getenv();
 
     try {
@@ -165,6 +172,12 @@ test('an external secret outside the document root is replaced', function (bool 
     'existing file' => array(true, 'Removing old csrf_secret.php file.'),
     'missing file' => array(false, 'WARNING: csrf_secret.php file does not exist!'),
 ));
+
+test('rotation skips unsupported or unchanged ownership changes', function (string $os) {
+    $result = refresh_csrf_run($this, array('secret' => '{outside}/csrf-secret.php', 'existing' => true, 'ownership_refused' => true, 'os' => $os));
+    expect($result['exit'])->toBe(0)->and($result['stderr'])->toBe('')
+        ->and($result['mode'])->toBe(0640)->and($result['secret'])->not->toBe('<?php $secret = "old";');
+})->with(array('unix', 'win32'));
 
 test('failed secret cleanup exits without reporting rotation success', function (string $path) {
     $result = refresh_csrf_run($this, array('secret' => $path, 'legacy' => true, 'existing' => $path !== '', 'unlink_failure' => true));

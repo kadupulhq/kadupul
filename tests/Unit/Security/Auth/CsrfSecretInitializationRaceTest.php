@@ -37,7 +37,7 @@ register_shutdown_function(function()use($file){
 });
 require $argv[1].'/include/csrf.php';
 PHP;
-    $worker = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $initial), $coverage_dir), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $worker = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $initial), $coverage_dir), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $output = stream_get_contents($pipes[1]);
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
@@ -46,4 +46,4 @@ PHP;
     child_coverage_collect($coverage_dir);
     $result = json_decode($output, true);
     expect($result['returned'])->toBe($result['winner'])->and($result['stored'])->toBe($result['winner']);
-})->with(array('missing' => array(''),'invalid existing' => array('short')));
+})->with(array('missing' => array(''), 'invalid existing' => array('short')));
