@@ -6,6 +6,7 @@
 $scenario = json_decode($argv[1], true);
 $pdo = new PDO($scenario['dsn'], $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $prefix = $scenario['prefix'];
+$discovery_reads = 0;
 $database_hostname = 'native';
 $database_port = 0;
 $database_default = 'auth';
@@ -37,6 +38,9 @@ function db_fetch_cell_prepared($sql, $params)
 }
 function db_fetch_assoc_prepared($sql, $params)
 {
+    if (str_contains($sql, 'SELECT user_id FROM user_auth_group_members') && !str_contains($sql, 'FOR UPDATE')) {
+        $GLOBALS['discovery_reads']++;
+    }
     $query = $GLOBALS['pdo']->prepare(group_probe_sql($sql));
     $query->execute($params);
     $rows = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -87,10 +91,25 @@ register_shutdown_function(function () use ($directory) {
     rmdir($directory . '/include');
     rmdir($directory);
 });
+if ($scenario['nested'] ?? false) {
+    $pdo->beginTransaction();
+    $pdo->exec('UPDATE ' . $prefix . '_user_auth SET reset_perms=777 WHERE id=44');
+}
 print "READY\n";
 flush();
 if ($scenario['action'] === 'remove') {
-    user_group_remove(5);
+    try {
+        user_group_remove(5);
+    } catch (Throwable $error) {
+        if (!($scenario['nested'] ?? false)) {
+            throw $error;
+        }
+        print json_encode(array('discovery_reads' => $GLOBALS['discovery_reads'], 'failure' => $error->getMessage(), 'code' => $error instanceof PDOException ? ($error->errorInfo[1] ?? 0) : 0, 'status' => 'REFUSED', 'transaction' => $pdo->inTransaction(), 'caller' => (int) $pdo->query('SELECT reset_perms FROM ' . $prefix . '_user_auth WHERE id=44')->fetchColumn(), 'parent' => (int) $pdo->query('SELECT COUNT(*) FROM ' . $prefix . '_user_auth_group WHERE id=5')->fetchColumn(), 'members' => $pdo->query('SELECT user_id FROM ' . $prefix . '_user_auth_group_members ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN))) . "\n";
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        exit;
+    }
 } else {
     user_group_update_membership(5, 44, true);
 }

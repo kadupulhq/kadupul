@@ -204,6 +204,7 @@ function user_group_remove($id)
     // A new member can commit between discovery and the group lock. Retry
     // outside the rolled-back unit rather than acquiring a user out of order.
     $known = array();
+    $retry_error = null;
     for ($attempt = 0; $attempt < 8; $attempt++) {
         $unit = auth_membership_begin();
         $finished = false;
@@ -239,13 +240,28 @@ function user_group_remove($id)
             auth_membership_finish($unit, true);
             return;
         } catch (Throwable $error) {
+            if ($error instanceof PDOException && (int) ($error->errorInfo[1] ?? 0) === 1020 && $unit['db']->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
+                // A successful read refreshes PDO's server transaction status:
+                // MariaDB may have aborted the transaction on the failed read.
+                try {
+                    $unit['db']->query('SELECT 1')->closeCursor();
+                } catch (Throwable $status_error) {
+                    throw $error;
+                }
+            }
             if (!$finished && $unit['db']->inTransaction()) {
                 auth_membership_finish($unit, false);
+            }
+            // MariaDB can require a transaction restart when the locking read
+            // encounters a row inserted after the discovery snapshot.
+            if ($unit['owned'] && !$unit['db']->inTransaction() && $error instanceof PDOException && (int) ($error->errorInfo[1] ?? 0) === 1020) {
+                $retry_error = $error;
+                continue;
             }
             throw $error;
         }
     }
-    throw new RuntimeException('Group membership changed repeatedly during removal');
+    throw $retry_error ?? new RuntimeException('Group membership changed repeatedly during removal');
 }
 
 function user_group_copy($id, $prefix = 'New Group')

@@ -12,19 +12,19 @@ function group_concurrency_worker(array $scenario): array
     return array($worker, $pipes);
 }
 
-test('group removal captures committed concurrent members and blocks subsequent insertion', function () {
+test('group removal serializes concurrent members while preserving transaction ownership', function (bool $nested) {
     $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
     if (!$dsn) {
         $this->markTestSkipped('MySQL contract DSN is required');
     }
-    $scenario = array('dsn' => $dsn, 'user' => getenv('KADUPUL_TEST_MYSQL_USER'), 'password' => getenv('KADUPUL_TEST_MYSQL_PASSWORD'), 'prefix' => 'auth_group_' . bin2hex(random_bytes(5)), 'action' => 'remove');
+    $scenario = array('dsn' => $dsn, 'user' => getenv('KADUPUL_TEST_MYSQL_USER'), 'password' => getenv('KADUPUL_TEST_MYSQL_PASSWORD'), 'prefix' => 'auth_group_' . bin2hex(random_bytes(5)), 'action' => 'remove', 'nested' => $nested);
     $pdo = new PDO($dsn, $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     $prefix = $scenario['prefix'];
     $tables = array('user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms', 'user_auth');
     try {
         $pdo->exec("CREATE TABLE {$prefix}_user_auth_group (id INT PRIMARY KEY) ENGINE=InnoDB");
         foreach (array_slice($tables, 1, 3) as $table) {
-            $pdo->exec("CREATE TABLE {$prefix}_{$table} (group_id INT, user_id INT, UNIQUE KEY membership(group_id,user_id)) ENGINE=InnoDB");
+            $pdo->exec("CREATE TABLE {$prefix}_{$table} (group_id INT UNSIGNED NOT NULL, user_id INT UNSIGNED NOT NULL, PRIMARY KEY(group_id,user_id), KEY member_user(user_id)) ENGINE=InnoDB");
         }
         $pdo->exec("CREATE TABLE {$prefix}_user_auth (id INT PRIMARY KEY, reset_perms BIGINT DEFAULT 0) ENGINE=InnoDB");
         $pdo->exec("INSERT INTO {$prefix}_user_auth (id) VALUES (42),(43),(44)");
@@ -42,8 +42,26 @@ test('group removal captures committed concurrent members and blocks subsequent 
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        expect(proc_close($worker))->toBe(0)->and($error)->toBe('');
+        expect(array(proc_close($worker), $error))->toBe(array(0, ''));
         $lines = explode("\n", trim($output));
+        if ($nested) {
+            $state = json_decode(end($lines), true);
+            expect($state['status'])->toBe('REFUSED')->and($state['discovery_reads'])->toBe(1)
+                ->and($state['parent'])->toBe(1)
+                ->and($pdo->query("SELECT user_id FROM {$prefix}_user_auth_group_members ORDER BY user_id")->fetchAll(PDO::FETCH_COLUMN))->toBe(array(42,43));
+            if ($state['transaction']) {
+                // Ordinary contention rolls back only the savepoint.
+                expect($state['caller'])->toBe(777)->and($state['code'])->toBe(0)
+                    ->and($state['failure'])->toContain('retry outside caller transaction');
+            } else {
+                // An engine-aborted transaction cannot be preserved or restarted
+                // by this helper. Its original database error must escape.
+                expect($state['caller'])->toBe(0)->and((int) $state['code'])->toBe(1020)
+                    ->and($state['failure'])->toContain('SQLSTATE');
+            }
+            expect((int) $pdo->query("SELECT reset_perms FROM {$prefix}_user_auth WHERE id=44")->fetchColumn())->toBe(0);
+            return;
+        }
         expect(json_decode(end($lines), true))->toBe(array(42,43));
         $scenario['action'] = 'add';
         list($worker, $pipes) = group_concurrency_worker($scenario);
@@ -61,7 +79,7 @@ test('group removal captures committed concurrent members and blocks subsequent 
             $pdo->exec("DROP TABLE IF EXISTS {$prefix}_{$table}");
         }
     }
-});
+})->with(array(false, true));
 
 test('copying group grants cannot recreate children after concurrent parent deletion', function () {
     $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
