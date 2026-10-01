@@ -86,9 +86,9 @@ try {
             throw new RuntimeException('RRD field column differs from the native audit baseline.');
         }
         foreach (['SELECT id FROM data_template_rrd WHERE data_input_field_id=100 FOR UPDATE', 'SELECT r.id FROM data_template_rrd r INNER JOIN data_input_fields f ON f.id=r.data_input_field_id WHERE f.data_input_id=10 FOR UPDATE'] as $query) {
-            $plan = $owner->query('EXPLAIN ' . $query)->fetchAll(PDO::FETCH_ASSOC);
-            $rrd = array_values(array_filter($plan, static fn(array $row): bool => in_array($row['table'], ['data_template_rrd', 'r'], true)))[0];
-            if ($rrd['key'] !== 'data_input_field_id') {
+            $plan = $owner->query('EXPLAIN FORMAT=TRADITIONAL ' . $query)->fetchAll(PDO::FETCH_ASSOC);
+            $rrd = array_values(array_filter($plan, static fn(array $row): bool => in_array($row['table'], ['data_template_rrd', 'r'], true)))[0] ?? null;
+            if (($rrd['key'] ?? null) !== 'data_input_field_id') {
                 throw new RuntimeException($mode . ': RRD reference lookup does not use the field index.');
             }
             $owner->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
