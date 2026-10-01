@@ -231,4 +231,5 @@ $after = array();
 foreach ($tables as $table) {
     $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
 }
-echo json_encode(array('log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR);
+// This CLI-only fixture emits a JSON protocol, with HTML characters escaped.
+fwrite(STDOUT, json_encode(array('log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
