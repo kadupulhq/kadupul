@@ -216,7 +216,7 @@ dynamic_include	./cli/poller_reindex_hosts.php:18	require_once($config['base_pat
 dynamic_include	./cli/poller_reindex_hosts.php:19	require_once($config['base_path'] . '/lib/sort.php');
 dynamic_include	./cli/poller_reindex_hosts.php:20	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/poller_reindex_hosts.php:21	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/poller_replicate.php:10	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/poller_replicate.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/push_out_hosts.php:13	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/rebuild_poller_cache.php:19	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/rebuild_poller_cache.php:20	require_once($config['base_path'] . '/lib/api_data_source.php');
@@ -338,10 +338,10 @@ dynamic_include	./lib/api_aggregate.php:654		include_once($config['base_path'] .
 dynamic_include	./lib/api_automation.php:2367		include_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./lib/api_automation.php:2368		include_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./lib/api_automation.php:2369		include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./lib/api_device.php:1175	    include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./lib/api_device.php:1176	    include_once($config['base_path'] . '/lib/variables.php');
-dynamic_include	./lib/api_device.php:1177	    include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./lib/api_device.php:1178	    include_once($config['base_path'] . '/lib/rrd.php');
+dynamic_include	./lib/api_device.php:1181	    include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_device.php:1182	    include_once($config['base_path'] . '/lib/variables.php');
+dynamic_include	./lib/api_device.php:1183	    include_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./lib/api_device.php:1184	    include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/boost.php:1377	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/boost.php:1636	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:327	        include_once($config['library_path'] . '/poller.php');
@@ -550,7 +550,7 @@ fs_write	./install/functions.php:1043			file_put_contents($config['base_path'] .
 fs_write	./install/functions.php:348			file_put_contents($cacheFile, '<[version]> ' . $cacti_upgrade_version . ' <[status]> ' . $status . ' <[sql]> ' . clean_up_lines($sql) . ' <[error]> ' . $database_last_error . PHP_EOL, FILE_APPEND);
 fs_write	./install/functions.php:55				$fh = fopen($file, 'w');
 fs_write	./install/functions.php:839						$fp = fopen($config_file, 'w');
-fs_write	./lib/api_device.php:3032	                        file_put_contents($new_xmlfile, $data);
+fs_write	./lib/api_device.php:3038	                        file_put_contents($new_xmlfile, $data);
 fs_write	./lib/boost.php:514	                            if ($fileptr = fopen($cache_file, 'rb')) {
 fs_write	./lib/boost.php:639	                        if ($fileptr = fopen($cache_file, 'w')) {
 fs_write	./lib/clog_webapi.php:102					$log_fh = fopen($logfile, 'w');
