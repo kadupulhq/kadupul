@@ -1031,18 +1031,12 @@ function user_group_graph_perms_edit($tab, $header_label)
                 $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' (user_auth_group_perms.type = 4 AND user_auth_group_perms.group_id=' . get_request_var('id', 0) . ')';
             }
 
-            $total_rows = db_fetch_cell_prepared(
-                "SELECT
-			COUNT(DISTINCT gt.id)
-			FROM graph_templates AS gt
-			LEFT JOIN graph_local AS gl
-			ON gt.id = gl.graph_template_id
-			LEFT JOIN user_auth_group_perms
-			ON gt.id = user_auth_group_perms.item_id
-			AND user_auth_group_perms.type = 4
-			AND user_auth_group_perms.group_id = ?
-			$sql_where",
-                array(get_request_var('id'))
+            require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php';
+            $total_rows = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionTemplateGrid::count(
+                true,
+                (int) get_request_var('id'),
+                (string) get_request_var('filter'),
+                get_request_var('associated') != 'false'
             );
 
             $sql_query = "SELECT gt.id, gt.name, COUNT(DISTINCT gl.id) AS totals, user_auth_group_perms.group_id
