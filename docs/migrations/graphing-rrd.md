@@ -17,12 +17,22 @@ a Graphing service.
 src/Graphing/
   Domain/            GraphItemType, ConsolidationFunction, DataSourceType enums;
                      RrdCommand (an argument list, not a string); GraphDefinition
-  Application/       RenderGraph, ExportGraph, CreateDataSourceFile, TuneDataSource
-    Port/            RrdTransport, GraphDefinitions, DataSources
+    Font/            GraphFont, GraphFontProfile, GraphFontResolver (PR #710)
+    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow
+    Command/         GraphCommandBuilder and its parts: DefNames, CdefMagic,
+                     LegendText, GradientArea, DateLegend, ThemeArguments,
+                     BusinessHours, GraphOptions, ArchiveChoice
+  Application/       RenderGraph, CollectRenderFacts, ExportGraph,
+                     CreateDataSourceFile, TuneDataSource
+    Port/            RrdTransport, GraphDefinitions, DataSources,
+                     RenderedGraphCache, PendingSamples
   Infrastructure/
     Rrd/             PipeEncoder, LocalRrdtool, ProxyRrdtool, RrdXmlEditor, ErrorImage
     Persistence/     DBAL readers for the web rendering path
-    Legacy/          LegacyDataSources for the collector path; RrdBridge
+    Legacy/          LegacyDataSources for the collector path; RrdBridge;
+                     LegacyRenderContextFactory, LegacyGraphDefinitions,
+                     LegacyGraphOptionsHook, BoostImageCache, LegacyPendingSamples
+    Symfony/         Graph image and JSON controllers; the graph voter
 ```
 
 PR #314 creates the module with the `DeviceTreePlacement` contract. The RRD
@@ -50,6 +60,25 @@ second implementation or a module boundary needs one.
 | Web-side graph reads through DBAL; collector writes stay on `db_*` | Pending |
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
 | Callers moved to Graphing services; wrappers marked `#[\Deprecated]` | Pending |
+| R0: render characterization per context field and mode, input census, hook string contract, timing script | Planned |
+| R1: `RenderContext` and `GraphRequest` built once per render; Boost key from the context | Planned; after PRs #705 and #710 |
+| R2: escape, `DEF` names, magic CDEF, gradient, date legend, theme and font arguments, business hours to `Domain/Command` | Planned |
+| R3: `GraphDefinition` read through a port, first on `db_*` | Planned |
+| R4: DBAL reader for Symfony routes | Planned; legacy pages only if the timing gate allows |
+| R5: window, archive choice and graph options from the definition, request and context | Planned |
+| R6: `GraphCommandBuilder` for `DEF`, `CDEF`, `VDEF`, legend, items and export columns | Planned |
+| R7: `RenderGraph`, `RrdTransport` and the plugin hook adapter | Planned |
+| R8: image cache and pending Boost samples as ports, keeping PR #705 | Planned |
+| R9: `graph_image.php` and `graph_json.php` as thin adapters | Planned; after PR #661 |
+| R10: Symfony graph routes with a graph voter | Planned |
+| R11: template propagation services | Planned; after characterization |
+| R12: aggregate services | Planned; after characterization |
+| R13: wrapper deprecation | Planned |
+
+[Graph rendering pipeline](graphing-render-pipeline.md#slices) gives each of
+R0 to R13 its files, gating tests, risk and rollback. R3 and R4 split the
+"web-side graph reads" row above, R2 takes the colour helpers from the "RRD file repair" row,
+and R13 is the last pending row.
 
 Duplicate code in `lib/rrd.php` is shared through procedural helpers ahead of
 the split: `rrdtool_cdef_magic_variables()`, `rrdtool_cdef_magic_append()` and
@@ -147,6 +176,49 @@ RRDtool, so the characters `&`, `<` and `>` reach the image as entities. That ou
 pinned as it stands. Changing it alters existing graphs and is a separate change
 with a release note.
 
+## Rendering pipeline
+
+`__rrdtool_function_graph()` checks access, consults the Boost image cache,
+reads the graph, builds the command and runs it in one function
+(`lib/rrd.php:2230-3247`). The target splits that into four parts:
+
+- `GraphDefinitions` reads an immutable `GraphDefinition`: the graph, its
+  ordered items, CDEF and VDEF text, data source paths and steps, and archive
+  profiles. The first adapter runs today's `db_*` queries; a DBAL adapter
+  serves Symfony routes.
+- `CollectRenderFacts` gathers what needs RRDtool or other tables: the
+  consolidation functions in each file, which files exist, substituted host and
+  query values, Nth percentile and summation values, and the time.
+- `GraphCommandBuilder` is a pure function from the definition, the request,
+  the context and the facts to an `RrdCommand`.
+- `RenderGraph` runs the access check, the cache, the builder, the
+  `rrd_graph_graph_options` hook and the transport in today's order.
+
+The hook receives and returns three strings that plugins parse, so through 1.3
+an adapter renders the command into those strings exactly as today. The image
+cache is a port that `RenderGraph` calls before reading anything, not a
+decorator around `RrdTransport`: a hit today skips the definition queries,
+`rrdtool info` and percentile fetches, and the transport never sees the
+viewer. [Graph rendering pipeline](graphing-render-pipeline.md) has the
+evidence, the order of the moves and the callers outside `lib/`.
+
+## RenderContext
+
+A render reads viewer and site state from 44 places: session values, cookies,
+environment variables, globals and settings, listed with their lines in
+[Graph rendering pipeline](graphing-render-pipeline.md#inputs-read-today).
+`RenderContext` gathers them once per request: theme and palette, colour mode,
+the `GraphFontProfile` from PR #710, time zone, date format, locale, and site
+graph settings such as the watermark and business hours. `GraphRequest` holds
+what the caller asks for: graph, archive, window, size, thumbnail, output
+format and mode. The legacy factory reads the session and cookies; nothing
+inside the pipeline does.
+
+The Boost cache key becomes the hash of the context plus the request, which
+covers every input PR #705 keys by. The graph tables carry no revision, so a
+definition revision would be a hash of the loaded definition, and is adopted
+only if its cost on a cache hit passes the timing gate.
+
 ## Constraints
 
 Collector-side creation and updates run on remote collectors and depend on
@@ -165,3 +237,6 @@ has moved. Record each move below so a fix can be ported to the right class.
 
 | Legacy function | Graphing class |
 | --- | --- |
+| `rrd_function_process_graph_options()` | `GraphOptionsGenerator::build()` |
+| `encrypt()`, `decrypt()` | `ProxyCipher` |
+| `rrdtool_pipe_quote()` | `PipeEncoder::quote()` |
