@@ -9,6 +9,10 @@ from urllib.request import Request
 
 def verify_about(harness, session, user_id, check):
     from harness import Session
+    version = harness.php('-r', 'echo trim(file_get_contents("include/cacti_version"));')
+    if version["exit"] or not version["stdout"].strip():
+        raise RuntimeError("About fixture could not read the actual source release")
+    expected_version = "Version " + version["stdout"].strip()
     def page(client, path='/app.php/about', method='GET'):
         try:
             response = client.opener.open(Request(harness.base + path, method=method))
@@ -20,7 +24,7 @@ def verify_about(harness, session, user_id, check):
     for path in ('/app.php/about', '/public/index.php/about', '/about.php'):
         check(page(Session(harness.base), path)[0] == 401, 'anonymous About denied: ' + path)
         status, body, headers = page(session, path)
-        check(status == 200 and 'About Kadupul' in body and 'Version 1.2.31' in body,
+        check(status == 200 and 'About Kadupul' in body and expected_version in body,
               'authenticated About version and legacy redirect: ' + path + ' status=' + str(status))
         check('no-store' in headers.get('Cache-Control', ''), 'About is never cached: ' + path)
         check(all(marker not in body for marker in ('behavior-root', 'behavior-admin', '/var/www/html', 'database_password', 'session_id', 'DB:')),
