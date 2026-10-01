@@ -283,8 +283,12 @@ require $root . '/include/global_settings.php';
 require $root . '/include/global_form.php';
 $config['base_path'] = $directory;
 if (!empty($scenario['editor_tables'])) {
-    echo $db->query('SELECT CONNECTION_ID()')->fetchColumn() . "\n";
-    flush();
+    $control = fopen('php://fd/3', 'w');
+    if ($control === false) {
+        throw new RuntimeException('Concurrent editor control pipe is unavailable');
+    }
+    fwrite($control, $db->query('SELECT CONNECTION_ID()')->fetchColumn() . "\n");
+    fclose($control);
 }
 ob_start();
 register_shutdown_function(function () use ($db, $directory) {

@@ -118,12 +118,13 @@ try {
         $db->exec("DELETE FROM `$cf` WHERE data_source_profile_id=3");
         $command = [PHP_BINARY, '-d', 'error_reporting=24575', __DIR__ . '/profile-deletion-native.php', json_encode($editor, JSON_THROW_ON_ERROR), $directory . '/editor'];
     }
-    $process = proc_open($command, [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
+    $process = proc_open($command, [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w'], 3 => ['pipe','w']], $pipes);
     if (!is_resource($process)) {
         throw new RuntimeException('Unable to launch concurrent reference writer');
     }
     fclose($pipes[0]);
-    $writerId = (int) fgets($pipes[1]);
+    $writerId = (int) fgets($pipes[empty($scenario['editor']) ? 1 : 3]);
+    fclose($pipes[3]);
     $monitor = profile_guard_connection(true);
     $version = $monitor->query('SELECT VERSION()')->fetchColumn();
     $waitSql = str_contains($version, 'MariaDB')
