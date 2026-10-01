@@ -27,6 +27,15 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         self::assertCount(4, $state['rras']);
     }
 
+    public function testCollectorPreservesCallerOwnedSourceTransaction(): void
+    {
+        $state = $this->runNative(array('collector' => 'device', 'failure' => '', 'snapshot_edit' => true, 'source_active' => true));
+        self::assertTrue($state['snapshot_blocked']);
+        self::assertTrue($state['source_active']);
+        self::assertSame(60, (int) $state['remote_step']);
+        self::assertSame(array(1, 2), array_map('intval', array_column($state['rows'], 'id')));
+    }
+
     public function testCollectorCompletionRefusalRetainsRetryOwnership(): void
     {
         foreach (array('all', 'data') as $class) {

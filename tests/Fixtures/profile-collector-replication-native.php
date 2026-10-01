@@ -80,6 +80,10 @@ function collector_connection(bool $admin = false): PDO
     return new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv($prefix . 'USER') ?: 'root', getenv($prefix . 'PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false]);
 }
 $source = collector_connection();
+$database_hostname = 'profile-source';
+$database_port = '0';
+$database_default = 'catalog';
+$database_sessions = ['profile-source:0:catalog' => $source];
 $remote = collector_connection();
 $installer = collector_connection(true);
 $suffix = bin2hex(random_bytes(6));
@@ -365,6 +369,9 @@ try {
         foreach (range(2, 502) as $childId) {
             $data[] = ['id' => $childId, 'data_source_profile_id' => 77, 'name' => 'replicated'];
         }
+    }
+    if (!empty($scenario['source_active'])) {
+        $source->beginTransaction();
     }
     if (!empty($scenario['entrypoint'])) {
         $result = $scenario['collector'] === 'bulk' ? replicate_out(2, $scenario['class'] ?? 'all') : api_device_replicate_out(1, 2);

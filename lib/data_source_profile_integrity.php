@@ -131,6 +131,8 @@ function data_source_profile_definition_triggers(string $profiles = 'data_source
 /** Copy the parent catalog before either collector replication path writes children. */
 function replicate_data_source_profile_parents(PDO $connection, array $data): bool
 {
+    global $database_sessions, $database_default, $database_hostname, $database_port;
+
     $ids = [];
     foreach ($data as $row) {
         $id = $row['data_source_profile_id'] ?? 0;
@@ -146,10 +148,16 @@ function replicate_data_source_profile_parents(PDO $connection, array $data): bo
     }
     $source_started = false;
     try {
-        if (!db_begin_transaction()) {
-            throw new RuntimeException('Source profile snapshot could not be started.');
+        $source_connection = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+        if (!$source_connection instanceof PDO) {
+            throw new RuntimeException('Source profile connection is unavailable.');
         }
-        $source_started = true;
+        if (!$source_connection->inTransaction()) {
+            if (!db_begin_transaction()) {
+                throw new RuntimeException('Source profile snapshot could not be started.');
+            }
+            $source_started = true;
+        }
         $profiles = db_fetch_assoc_prepared(
             'SELECT * FROM data_source_profiles WHERE id IN (' . implode(',', array_fill(0, count($ids), '?')) . ') ORDER BY id FOR UPDATE',
             array_values($ids)
@@ -160,7 +168,7 @@ function replicate_data_source_profile_parents(PDO $connection, array $data): bo
         $definitions = ['data_source_profiles' => $profiles];
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         foreach (['data_source_profiles_rra', 'data_source_profiles_cf'] as $table) {
-            $rows = db_fetch_assoc_prepared("SELECT * FROM $table WHERE data_source_profile_id IN ($placeholders)", array_values($ids));
+            $rows = db_fetch_assoc_prepared("SELECT * FROM $table WHERE data_source_profile_id IN ($placeholders) FOR UPDATE", array_values($ids));
             if (!is_array($rows)) {
                 throw new RuntimeException('Source profile definitions could not be read.');
             }
@@ -170,7 +178,7 @@ function replicate_data_source_profile_parents(PDO $connection, array $data): bo
             }
             $definitions[$table] = $rows;
         }
-        if (!db_commit_transaction()) {
+        if ($source_started && !db_commit_transaction()) {
             throw new RuntimeException('Source profile snapshot completion was not acknowledged.');
         }
         $source_started = false;

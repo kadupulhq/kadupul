@@ -914,8 +914,8 @@ header_redirect	./plugins.php:69	                header('Location: plugins.php' 
 header_redirect	./plugins.php:83	            header('Location: plugins.php' . ($option != '' ? '?' . $option : ''));
 header_redirect	./plugins.php:94	            header('Location: plugins.php' . ($option != '' ? '?' . $option : ''));
 header_redirect	./pollers.php:323			header('Location: pollers.php?header=false&action=edit&id=' . (empty($poller_id) ? get_nfilter_request_var('id') : $poller_id));
-header_redirect	./pollers.php:509			header('Location: pollers.php?header=false');
-header_redirect	./pollers.php:585			header('Location: pollers.php?header=false');
+header_redirect	./pollers.php:513			header('Location: pollers.php?header=false');
+header_redirect	./pollers.php:589			header('Location: pollers.php?header=false');
 header_redirect	./reports_admin.php:122			header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 header_redirect	./reports_admin.php:129			header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 header_redirect	./reports_admin.php:136			header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');

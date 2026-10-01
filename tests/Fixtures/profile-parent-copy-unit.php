@@ -15,6 +15,10 @@ if (isset($argv[3])) {
     require __DIR__ . '/rrd-process-coverage.php';
 }
 $source = new PDO('sqlite::memory:');
+$database_hostname = 'profile-source';
+$database_port = '0';
+$database_default = 'catalog';
+$database_sessions = ['profile-source:0:catalog' => $source];
 $remote = new PDO('sqlite::memory:');
 $source->exec('CREATE TABLE data_source_profiles (id INTEGER PRIMARY KEY, name TEXT)');
 $source->exec("INSERT INTO data_source_profiles VALUES (77,'Custom profile'),(1,'Updated default')");
@@ -45,7 +49,7 @@ function db_rollback_transaction()
 }
 function db_fetch_assoc_prepared($sql, $params, $log = true, $connection = false)
 {
-    if ($GLOBALS['case'] === 'query-failure') {
+    if (in_array($GLOBALS['case'], ['query-failure', 'source-active-failure'], true)) {
         return false;
     }
     if (str_contains($sql, 'information_schema.TRIGGERS')) {
@@ -106,8 +110,11 @@ require $copy;
 $id = match ($case) {
     'missing-parent' => 98, 'negative' => -1, 'invalid' => '3 --foo', 'zero' => 0, default => 77
 };
-if ($case === 'source-active') {
+if (in_array($case, ['source-active', 'source-active-failure'], true)) {
     $source->beginTransaction();
+}
+if ($case === 'source-unavailable') {
+    $database_sessions = [];
 }
 $data = array(array('data_source_profile_id' => $id), array('data_source_profile_id' => $id));
 if ($case === 'success') {
