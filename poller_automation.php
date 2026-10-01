@@ -40,7 +40,7 @@ if ($config['poller_id'] > 1) {
 }
 
 /** Persist only reported SNMP fields, including the uptime storage-name mapping. */
-function updateDiscoveredHostFields($host_id, array $device): void
+function update_discovered_host_fields($host_id, array $device): void
 {
     $fields = array(
         'snmp_sysDescr' => 'snmp_sysDescr',
@@ -742,7 +742,7 @@ function discoverDevices($network_id, $thread)
                                     $host_id = automation_add_device($device);
 
                                     if (!empty($host_id)) {
-                                        updateDiscoveredHostFields($host_id, $device);
+                                        update_discovered_host_fields($host_id, $device);
 
                                         automation_update_device($host_id);
                                     }

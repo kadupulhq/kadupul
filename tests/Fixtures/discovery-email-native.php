@@ -169,7 +169,7 @@ register_shutdown_function(static function () use ($case, $directory) {
         $db->exec('CREATE TABLE host (id INTEGER PRIMARY KEY,' . implode(',', array_map(static fn($field) => $field . " TEXT DEFAULT 'existing'", $fields)) . ')');
         $db->exec('INSERT INTO host (id) VALUES (42),(43)');
         $device = $case === 'host-fields' ? ['snmp_sysDescr' => 'Linux <b>node</b>', 'snmp_sysObjectID' => '1.3.6.1', 'snmp_sysUptime' => 123, 'snmp_sysContact' => 'contact', 'snmp_sysName' => 'node', 'snmp_sysLocation' => 'site'] : ['snmp_sysDescr' => null, 'snmp_sysName' => '', 'snmp_sysUptime' => 0];
-        updateDiscoveredHostFields(42, $device);
+        update_discovered_host_fields(42, $device);
         file_put_contents($directory . '/state.json', json_encode(['hosts' => $db->query('SELECT * FROM host ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'error' => error_get_last()], JSON_THROW_ON_ERROR));
         ob_end_clean();
         return;
