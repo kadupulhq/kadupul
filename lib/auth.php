@@ -4776,6 +4776,23 @@ function compat_password_needs_rehash($password, $algo, $options = array()) {
 }
 
 /**
+ * auth_legacy_md5_users - local accounts whose stored password is still an
+ *   unsalted MD5 digest.  A login rehashes it, so only accounts nobody has
+ *   logged into since the upgrade keep one.
+ *
+ * @return (array) id and username of each account, ordered by username
+ */
+function auth_legacy_md5_users() {
+	$users = db_fetch_assoc("SELECT id, username
+		FROM user_auth
+		WHERE realm = 0
+		AND password REGEXP '^[0-9a-fA-F]{32}$'
+		ORDER BY username");
+
+	return is_array($users) ? $users : array();
+}
+
+/**
  * auth_user_has_access - Verify that the user account has some access to cacti
  *
  * @param  (int)  $user - The user id of the account to check

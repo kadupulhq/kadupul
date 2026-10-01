@@ -107,6 +107,8 @@ if ($config['poller_id'] == 1) {
 
 	secpass_check_expired();
 
+	secpass_report_legacy_hashes();
+
 	reindex_devices();
 }
 
@@ -567,6 +569,23 @@ function secpass_check_expired () {
 			AND enabled = 'on'
 			AND lastchange < ?",
 			array($t));
+	}
+}
+
+/**
+ * secpass_report_legacy_hashes - logs, once a day, how many local accounts
+ *   still store an MD5 password hash.  Nothing is changed; the owners would
+ *   notice a forced reset.
+ */
+function secpass_report_legacy_hashes() {
+	if (!debounce_run_notification('legacy_md5_hashes', 86400)) {
+		return;
+	}
+
+	$count = cacti_sizeof(auth_legacy_md5_users());
+
+	if ($count > 0) {
+		cacti_log(sprintf('WARNING: %d local account(s) still use a legacy MD5 password hash.  Each moves to a current hash at its next login, or when an administrator sets a new password.  User Management lists them.', $count), false, 'AUTH');
 	}
 }
 
