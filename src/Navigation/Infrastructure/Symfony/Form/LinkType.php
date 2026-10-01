@@ -23,13 +23,14 @@ final class LinkType extends AbstractType
         foreach ($options['files'] as $file) {
             $files[$file] = $file;
         }
-        $sections = ['External Links' => 'External Links'];
+        $sections = ['External Links'];
         foreach ($options['sections'] as $section) {
-            $sections[$section] = $section;
-        } $sections['New Name Below'] = '__NEW__';
+            $sections[] = $section;
+        }
+        $sections[] = '__NEW__';
         $builder->add('title', TextType::class, ['label' => 'Tab/Menu Name', 'trim' => false, 'attr' => ['maxlength' => 20]])
             ->add('style', ChoiceType::class, ['label' => 'Style', 'choices' => ['Top Tab' => 'TAB', 'Console Menu' => 'CONSOLE', 'Bottom of Console Page' => 'FRONT', 'Top of Console Page' => 'FRONTTOP']])
-            ->add('consolesection', ChoiceType::class, ['label' => 'Console Menu Section', 'choices' => $sections])
+            ->add('consolesection', ChoiceType::class, ['label' => 'Console Menu Section', 'choices' => array_unique($sections), 'choice_value' => static fn(?string $section): string => $section ?? '', 'choice_label' => static fn(string $section): string => $section === '__NEW__' ? 'New Name Below' : $section])
             ->add('consolenewsection', TextType::class, ['label' => 'New Console Section', 'required' => false, 'empty_data' => '', 'trim' => false])
             ->add('filename', ChoiceType::class, ['label' => 'Content File/URL', 'choices' => $files])
             ->add('fileurl', TextType::class, ['label' => 'Web URL Location', 'required' => false, 'empty_data' => '', 'trim' => false])

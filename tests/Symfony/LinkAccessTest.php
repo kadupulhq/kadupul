@@ -141,7 +141,7 @@ final class LinkAccessTest extends TestCase
         $db->beginTransaction();
         try {
             $access->assertCurrent(9);
-            self::fail('A still-present session actor passed after its GPRINT realm grant was revoked.');
+            self::fail('A still-present session actor passed after its External Links realm grant was revoked.');
         } catch (LinkAccessDenied $error) {
             self::assertFalse($error->unauthenticated);
         } finally {

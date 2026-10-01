@@ -59,7 +59,11 @@ final class LinkActionController
         if (in_array($operation, ['up', 'down'], true) && count($ids) !== 1) {
             return new Response($translator->trans('Invalid link selection.', [], 'navigation'), 400, $headers);
         }
-        $snapshot = $list();
+        try {
+            $snapshot = $list();
+        } catch (LinkAccessDenied $error) {
+            return new Response($translator->trans('Access denied.', [], 'navigation'), $error->unauthenticated ? 401 : 403, $headers);
+        }
         $selected = array_values(array_filter($snapshot['links'], static fn(ExternalLink $link): bool => in_array($link->id, $ids, true)));
         if (count($selected) !== count($ids)) {
             return new Response($translator->trans('Link not found.', [], 'navigation'), 404, $headers);

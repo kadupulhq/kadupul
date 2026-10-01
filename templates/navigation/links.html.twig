@@ -9,7 +9,7 @@
 <form method="get"><label>{{ 'Search'|trans }} <input name="filter" value="{{ filters.filter }}" maxlength="200"></label>
 <label>{{ 'Links'|trans }} <select name="rows">{% for size in [-1,10,15,20,25,30,40,50,100,250,500,1000,2000,5000] %}<option value="{{ size }}"{% if filters.rows == size %} selected{% endif %}>{{ size == -1 ? 'Default'|trans : size }}</option>{% endfor %}</select></label>
 <label>{{ 'Sort'|trans }} <select name="sort_column">{% for column in ['sortorder','contentfile','title','style','enabled'] %}<option value="{{ column }}"{% if filters.sort_column == column %} selected{% endif %}>{{ column|trans }}</option>{% endfor %}</select></label>
-<select name="sort_direction"><option value="ASC"{% if filters.sort_direction == 'ASC' %} selected{% endif %}>{{ 'Ascending'|trans }}</option><option value="DESC"{% if filters.sort_direction == 'DESC' %} selected{% endif %}>{{ 'Descending'|trans }}</option></select><button>{{ 'Apply Filter'|trans }}</button></form>
+<label>{{ 'Sort direction'|trans }} <select name="sort_direction"><option value="ASC"{% if filters.sort_direction == 'ASC' %} selected{% endif %}>{{ 'Ascending'|trans }}</option><option value="DESC"{% if filters.sort_direction == 'DESC' %} selected{% endif %}>{{ 'Descending'|trans }}</option></select></label><button>{{ 'Apply Filter'|trans }}</button></form>
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route name, not a supplied action URL. #}
 <form method="get" action="{{ path('navigation_link_action', {operation: 'delete'}) }}">
 <table><thead><tr>{% for heading in ['Select','Actions','Page','Title','Style','Enabled','Order'] %}<th>{{ heading|trans }}</th>{% endfor %}</tr></thead><tbody>
