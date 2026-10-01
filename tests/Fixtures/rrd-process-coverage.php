@@ -18,6 +18,22 @@ if (defined('PERMISSION_FILTER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
 }
+if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
+if (defined('REPORT_PERSISTENCE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/reports.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_reports.php');
+}
+if (defined('AUTH_CONTROLLER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_changepassword.php');
+    $coverageFilter->includeFile($coverageRoot . '/logout.php');
+}
 if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_33.php');
     $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');

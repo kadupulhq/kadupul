@@ -227,4 +227,96 @@ final class AuditTrailTest extends TestCase
             @rmdir($root);
         }
     }
+
+    public function testReportsAuditPublicationFailureWithItsCause(): void
+    {
+        $this->assertOpenFailurePreservesHandler(false);
+    }
+
+    public function testExistingFileOpenFailurePreservesItsCauseAndHandler(): void
+    {
+        if (PHP_OS_FAMILY === 'Windows' || (function_exists('posix_geteuid') && posix_geteuid() === 0)) {
+            self::markTestSkipped('This permission refusal requires an unprivileged POSIX user.');
+        }
+        $this->assertOpenFailurePreservesHandler(true);
+    }
+
+    private function assertOpenFailurePreservesHandler(bool $existing): void
+    {
+        $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));
+        mkdir($root . '/log', 0700, true);
+        $path = $root . '/log/kadupul-audit.jsonl';
+        if ($existing) {
+            file_put_contents($path, 'unchanged');
+            chmod($path, 0000);
+        } else {
+            mkdir($path, 0700);
+        }
+        $warnings = [];
+        $sentinel = static function (int $severity, string $message) use (&$warnings): bool {
+            $warnings[] = [$severity, $message];
+            return true;
+        };
+        set_error_handler($sentinel);
+        try {
+            try {
+                (new LegacyAuditTrail($root))->record($this->event());
+                self::fail('Expected opening the audit path to fail.');
+            } catch (\RuntimeException $error) {
+                self::assertSame('Audit sink is unavailable.', $error->getMessage());
+                $cause = $error->getPrevious();
+                self::assertInstanceOf(\ErrorException::class, $cause);
+                self::assertStringContainsString($existing ? 'Failed to open stream' : 'link(', $cause->getMessage());
+                self::assertSame(E_WARNING, $cause->getSeverity());
+            }
+            $active = set_error_handler(null);
+            restore_error_handler();
+            self::assertSame($sentinel, $active);
+            self::assertSame([], $warnings);
+        } finally {
+            restore_error_handler();
+            if ($existing) {
+                chmod($path, 0600);
+                self::assertSame('unchanged', file_get_contents($path));
+                unlink($path);
+            } else {
+                rmdir($path);
+            }
+            rmdir($root . '/log');
+            rmdir($root);
+        }
+    }
+
+    public function testSuccessfulCreateAndAppendRestoreTheHandlerWithoutWarnings(): void
+    {
+        $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));
+        mkdir($root . '/log', 0700, true);
+        $warnings = [];
+        $sentinel = static function (int $severity, string $message) use (&$warnings): bool {
+            $warnings[] = [$severity, $message];
+            return true;
+        };
+        set_error_handler($sentinel);
+        try {
+            $trail = new LegacyAuditTrail($root);
+            foreach ([1, 2] as $expectedLines) {
+                $trail->record($this->event());
+                $active = set_error_handler(null);
+                restore_error_handler();
+                self::assertSame($sentinel, $active);
+                self::assertSame([], $warnings);
+                self::assertCount($expectedLines, file($root . '/log/kadupul-audit.jsonl', FILE_IGNORE_NEW_LINES));
+            }
+        } finally {
+            restore_error_handler();
+            unlink($root . '/log/kadupul-audit.jsonl');
+            rmdir($root . '/log');
+            rmdir($root);
+        }
+    }
+
+    private function event(): AuditEvent
+    {
+        return new AuditEvent(bin2hex(random_bytes(16)), null, 'inventory.device.edit', 'device', 'unknown', AuditEvent::DENIED, AuditEvent::DENIED);
+    }
 }
