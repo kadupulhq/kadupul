@@ -62,7 +62,7 @@ function compat_password_verify($password, $hash) { return $hash === 'hash:' . $
 function compat_password_hash($password, $algo, $options = array()) { return 'hash:' . $password; }
 function db_check_password_length() {}
 function db_fetch_row_prepared($sql, $params = array()) {
-    return array('id' => 42, 'username' => 'alice', 'realm' => 0, 'enabled' => 'on', 'password' => 'hash:Current1pass',
+    return array('id' => 42, 'username' => 'alice', 'realm' => 0, 'enabled' => $GLOBALS['scenario']['enabled'], 'password' => 'hash:Current1pass',
         'password_change' => 'on', 'locked' => $GLOBALS['scenario']['locked'], 'password_history' => $GLOBALS['scenario']['history']);
 }
 function db_fetch_cell_prepared($sql, $params = array()) {
@@ -93,6 +93,7 @@ PHP;
         );
         fwrite($pipes[0], json_encode($scenario + array(
             'config' => array('secpass_lockfailed' => 3, 'secpass_minlen' => 8, 'secpass_history' => 2),
+            'enabled' => 'on',
             'locked' => '',
             'locked_after' => '',
             'failed_after' => 1,
@@ -175,4 +176,12 @@ test('the right current password changes the password without counting a failure
 
     expect(change_password_lockout_changed($result))->toBeTrue()
         ->and(change_password_lockout_counted($result))->toBeFalse();
+});
+
+
+test('the standalone password-change page refuses a disabled account even with a forced-change session', function () {
+    $result = change_password_lockout_run(array('enabled' => '', 'request' => array('current_password' => 'Current1pass', 'password' => 'Fresh1pass', 'password_confirm' => 'Fresh1pass')));
+    expect($result['session'])->not->toHaveKey('sess_user_id')
+        ->and($result['calls']['redirect'])->toBe('index.php')
+        ->and(change_password_lockout_changed($result))->toBeFalse();
 });

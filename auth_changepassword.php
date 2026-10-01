@@ -73,8 +73,8 @@ if (cacti_sizeof($user) && !auth_session_credentials_valid($user['password'])) {
     exit;
 }
 
-/* This page does not load include/auth.php, so it refuses a locked account itself. */
-if (cacti_sizeof($user) && $user['locked'] == 'on') {
+/* This page does not load include/auth.php, so it checks account eligibility itself. */
+if (cacti_sizeof($user) && ($user['enabled'] != 'on' || $user['locked'] == 'on')) {
     kill_session_var('sess_change_password');
     kill_session_var('sess_user_id');
 

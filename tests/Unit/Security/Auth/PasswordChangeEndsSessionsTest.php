@@ -53,13 +53,13 @@ test('a session opened after the password change continues', function () {
         ->and($result['page_continued'])->toBeTrue();
 });
 
-test('a session from before the upgrade is bound to the current password and continues', function () {
-    $result = auth_entry_probe_run(password_change_request('new-hash', array('sess_user_id' => '42')));
-
-    expect($result['session']['sess_user_id'] ?? null)->toBe('42')
-        ->and($result['session']['sess_user_credential'] ?? null)->toBe(hash('sha256', 'new-hash'))
-        ->and($result['page_continued'])->toBeTrue();
-});
+test('an unbound file-backed session must reauthenticate after upgrade or password reset', function (string $stored) {
+    $result = auth_entry_probe_run(password_change_request($stored, array('sess_user_id' => '42'), array('bind_session' => false)));
+    expect($result['session'])->not->toHaveKey('sess_user_id')
+        ->and($result['session'])->not->toHaveKey('sess_user_credential')
+        ->and($result['events'])->toContain('login_page')
+        ->and($result['page_continued'])->toBeFalse();
+})->with(array('unchanged-password', 'new-hash-after-reset'));
 
 test('a malformed binding ends the session rather than passing', function ($binding) {
     $result = auth_entry_probe_run(password_change_request('new-hash', array(
@@ -140,7 +140,7 @@ function raise_message($id, $message = '', $level = 0) {}
 function get_cacti_version() { return '1.2.31'; }
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
 function db_fetch_row_prepared($sql, $params = array()) {
-    return array('id' => 42, 'username' => 'alice', 'realm' => $GLOBALS['scenario']['realm'], 'password' => 'new-hash', 'password_change' => 'on', 'locked' => '');
+    return array('id' => 42, 'username' => 'alice', 'realm' => $GLOBALS['scenario']['realm'], 'enabled' => 'on', 'password' => 'new-hash', 'password_change' => 'on', 'locked' => '');
 }
 PHP;
 

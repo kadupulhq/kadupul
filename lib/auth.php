@@ -5403,8 +5403,8 @@ function auth_session_bind_credentials($user_id)
  * auth_session_credentials_valid - check that the account's password has not
  *   changed since the session was bound to it.
  *
- * A session opened before this check existed has no binding and is bound on
- * its first request, so the upgrade logs nobody out.
+ * A session opened before this check existed cannot prove which password
+ * authenticated it. It must sign in again instead of adopting the current hash.
  *
  * @param  (string|null) $password The account's stored password hash
  *
@@ -5415,9 +5415,7 @@ function auth_session_credentials_valid($password)
     $key = auth_session_credential_key($password);
 
     if (!array_key_exists('sess_user_credential', $_SESSION)) {
-        $_SESSION['sess_user_credential'] = $key;
-
-        return true;
+        return false;
     }
 
     return is_string($_SESSION['sess_user_credential']) && hash_equals($_SESSION['sess_user_credential'], $key);

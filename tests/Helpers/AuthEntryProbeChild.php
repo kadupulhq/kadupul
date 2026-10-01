@@ -393,6 +393,13 @@ $config = array(
 
 $_SESSION = $scenario['session'] ?? array();
 
+// Ordinary persisted-session fixtures represent a completed login. Tests of
+// pre-upgrade sessions explicitly opt out and retain their missing binding.
+if (($scenario['bind_session'] ?? true) && isset($_SESSION['sess_user_id'])
+    && !array_key_exists('sess_user_credential', $_SESSION)) {
+    auth_session_bind_credentials($_SESSION['sess_user_id']);
+}
+
 foreach (array('PHP_AUTH_USER', 'REMOTE_USER', 'REDIRECT_REMOTE_USER', 'HTTP_PHP_AUTH_USER', 'HTTP_REMOTE_USER', 'HTTP_REDIRECT_REMOTE_USER', 'HTTP_REFERER') as $key) {
     unset($_SERVER[$key]);
 }
