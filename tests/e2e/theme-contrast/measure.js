@@ -596,6 +596,13 @@
 
 	function focusIndicator(el, before) {
 		const result = { kind: 'focus', key: describe(el), text: (el.innerText || el.value || el.getAttribute('aria-label') || el.title || '').trim().replace(/\s+/g, ' ').slice(0, 40), disabled: isDisabled(el), required: 3 };
+		// Focus scrolls the control itself into view. One parked outside the
+		// viewport leaves its ring wherever the page was, so Tab gives no
+		// visible cue however well the ring would contrast.
+		const own = el.getBoundingClientRect();
+		if (own.bottom < 0 || own.right < 0 || own.top > innerHeight || own.left > innerWidth) {
+			return { ...result, via: 'off-screen', fg: 'off-screen', bg: 'viewport', ratio: 0 };
+		}
 		for (const { el: owner, pseudo } of ringOwners(el)) {
 			if (!isVisible(owner) && pseudo === null) {
 				continue;
