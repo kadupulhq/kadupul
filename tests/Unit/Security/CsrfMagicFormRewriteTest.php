@@ -144,6 +144,8 @@ test('form tags are read only where the browser parses markup', function (string
     'textarea in a cross-origin form' => array('<form method="post" action="https://evil.example/"><textarea name="x"><form method="post"></textarea></form>'),
     'end tag text inside textarea' => array('<form method="post" action="//evil.example/"><textarea></form></textarea><form method="post"></form>'),
     'end tag text inside an attribute' => array('<form method="post" action="//evil.example/"><p title="</form>"><form method="post"></form>'),
+    'form start ignored inside select' => array('<select><form method="post"></select><form method="post">{F}</form>'),
+    'doctype ends at quoted greater-than' => array('<form method="post" action="//evil.example/"><!DOCTYPE html PUBLIC "></form>" ""><form method="post">{F}<button>Save</button></form>'),
     'end tag inside select' => array('<form method="post" action="//evil.example/"><select></form></select><form method="post"></form>'),
     'closed forms in sequence' => array('<form method="post">{F}</form><form method="post" action="graphs.php">{F}</form>'),
     'textarea' => array('<textarea><form method="post"></textarea><form method="post">{F}</form>'),

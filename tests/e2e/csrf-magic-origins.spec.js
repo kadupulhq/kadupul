@@ -245,3 +245,36 @@ for (const mode of ['', 'nonce']) {
     expect(await page.evaluate(() => violations)).toEqual([]);
   });
 }
+
+test.describe('server form rewriting without scripting', () => {
+  test.use({ javaScriptEnabled: false });
+  for (const [name, markup, foreign] of [
+    ['ignored select form', '<select><form method="post"></select><form method="post"><button>Save</button></form>', false],
+    ['quoted DOCTYPE', '<form method="post" action="https://other.example/"><!DOCTYPE html PUBLIC "></form>" ""><form method="post"><button>Save</button></form>', true],
+  ]) {
+    test(name, async ({ page }) => {
+      const program = String.raw`
+        function csrf_startup() {
+          csrf_conf('rewrite', false);
+          csrf_conf('defer', true);
+          csrf_conf('auto-session', false);
+          csrf_conf('frame-breaker', false);
+          csrf_conf('secret', 'isolated-browser-parser-fixture');
+        }
+        require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
+        session_id('browser-parser-fixture');
+        echo csrf_ob_handler('<html><head></head><body>' . $argv[2] . '</body></html>', 0);
+      `;
+      const html = execFileSync('php', ['-r', program, root, markup], { encoding: 'utf8' });
+      await page.route('**/*', route => route.fulfill({ contentType: 'text/html', body: html }));
+      await page.goto(`${origin}/parser-fixture`);
+      await expect(page.locator('form')).toHaveCount(foreign ? 2 : 1);
+      await expect(page.locator('form input[name="__csrf_magic"]')).toHaveCount(1);
+      if (foreign) {
+        await expect(page.locator('form').first()).toHaveAttribute('action', 'https://other.example/');
+        await expect(page.locator('form').first().locator('input[name="__csrf_magic"]')).toHaveCount(0);
+        await expect(page.locator('form').last().locator('input[name="__csrf_magic"]')).toHaveCount(1);
+      }
+    });
+  }
+});
