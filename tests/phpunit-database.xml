@@ -9,6 +9,7 @@
       <file>./integration/ProfileDeletionDatabaseTest.php</file>
       <file>./integration/BoostRecoveryDatabaseTest.php</file>
       <file>./integration/DeviceMutationSelectionDatabaseTest.php</file>
+      <file>./integration/DeviceQueryConnectionDatabaseTest.php</file>
       <file>./integration/PlacementTransactionDatabaseTest.php</file>
     </testsuite>
   </testsuites>
