@@ -65,43 +65,95 @@ test('set_auth_cookie fails closed on CSPRNG failure', function () use ($authSou
         ->toBeTrue();
 });
 
-test('auth_display_custom_error_message escapes message with htmlspecialchars', function () use ($authSource) {
-    $start = strpos($authSource, 'function auth_display_custom_error_message(');
-    expect($start)->not->toBeFalse();
+function auth_hardening_contract_run(string $mode, array $input): array
+{
+    $program = <<<'PHP'
+namespace AuthHardeningNative;
+set_time_limit(15);
+$root = $argv[1];
+$mode = $argv[2];
+$input = json_decode($argv[3], true, 512, JSON_THROW_ON_ERROR);
+$config = array('url_path' => '/app/');
+$_SESSION = array('sess_user_id' => 42);
+$_SERVER = array('SERVER_NAME' => 'app.example', 'SERVER_PORT' => '443');
+$GLOBALS['logout_count'] = 0;
+function read_config_option($name) { return $name === 'auth_method' ? 2 : ($GLOBALS['input']['custom'] ?? ''); }
+function cacti_cookie_logout() { $GLOBALS['logout_count']++; }
+function html_common_header($title) { print '<title>Login failure</title>'; }
+function __($text) { return $text; }
+function user_setting_exists(...$args) { return false; }
+function is_realm_allowed($realm) { return true; }
+function api_user_realm_auth($page) { return true; }
+function cacti_log(...$args) {}
+function header($value) { $GLOBALS['redirect'] = $value; }
+require $root . '/include/global_constants.php';
+require $root . '/lib/auth.php';
+require $root . '/lib/functions.php';
+require $root . '/lib/html.php';
+require $root . '/lib/html_utility.php';
+require $root . '/tests/Helpers/PhpSource.php';
+$source = file_get_contents($root . '/lib/auth.php');
+if ($source === false) { throw new \RuntimeException('Cannot read authentication source.'); }
+// Isolate only cookie transport, page chrome and header emission. Escaping,
+// URL validation, basename handling and complete auth functions are production.
+$name = $mode === 'display' ? 'auth_display_custom_error_message' : 'auth_login_redirect';
+eval('namespace AuthHardeningNative; ' . \test_php_function_source($source, $name));
+if ($mode === 'display') {
+    ob_start();
+    auth_display_custom_error_message($input['message']);
+    echo json_encode(array('html' => ob_get_clean(), 'logout_count' => $GLOBALS['logout_count']), JSON_THROW_ON_ERROR);
+} else {
+    $_SERVER[$input['source']] = $input['url'];
+    register_shutdown_function(static function () {
+        echo json_encode(array('redirect' => $GLOBALS['redirect'] ?? null), JSON_THROW_ON_ERROR);
+    });
+    auth_login_redirect('1');
+}
+PHP;
+    $process = proc_open(array(PHP_BINARY, '-d', 'auto_prepend_file=', '-r', $program, dirname(__DIR__, 2), $mode, json_encode($input, JSON_THROW_ON_ERROR)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    if (!is_resource($process)) {
+        throw new RuntimeException('Cannot start authentication contract fixture.');
+    }
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
+    return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+}
 
-    $body = substr($authSource, $start, 1500);
-    expect(str_contains($body, 'htmlspecialchars($message'))
-        ->toBeTrue();
-});
+test('authentication failure renders both message fields as text', function (string $field, string $payload) {
+    $input = array('message' => 'Normal failure', 'custom' => 'Contact the administrator');
+    $input[$field] = $payload;
+    $result = auth_hardening_contract_run('display', $input);
+    $document = new DOMDocument();
+    expect($document->loadHTML($result['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET))->toBeTrue();
+    $xpath = new DOMXPath($document);
+    expect($xpath->query('//script|//img|//*[@onerror]')->length)->toBe(0)
+        ->and($xpath->query('//p')->item(0)->textContent)->toBe($input['message'])
+        ->and($xpath->query('//p')->item(1)->textContent)->toBe($input['custom'])
+        ->and($result['logout_count'])->toBe(1);
+})->with(array(
+    array('message', '<script>alert("x")</script><img src=x onerror="x"> & "quotes" `'),
+    array('custom', '<script>alert("x")</script><img src=x onerror="x"> & "quotes" `'),
+    array('message', 'A normal message'),
+    array('custom', 'A normal custom message'),
+));
 
-test('auth_display_custom_error_message escapes custom_message with htmlspecialchars', function () use ($authSource) {
-    $start = strpos($authSource, 'function auth_display_custom_error_message(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 1500);
-    expect(str_contains($body, 'htmlspecialchars($custom_message'))
-        ->toBeTrue();
-});
-
-test('auth_login_redirect blocks protocol-relative open redirect', function () use ($authSource) {
-    $start = strpos($authSource, 'function auth_login_redirect(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 3000);
-    // The fix checks that $referer[1] === '/' to block //evil.com
-    expect(str_contains($body, "\$referer[1] === '/'"))
-        ->toBeTrue();
-});
-
-test('auth_login_redirect validates referer starts with slash', function () use ($authSource) {
-    $start = strpos($authSource, 'function auth_login_redirect(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 3000);
-    // Must check $referer[0] to ensure path is relative
-    expect(str_contains($body, "\$referer[0] !== '/'"))
-        ->toBeTrue();
-});
+test('login referer and server redirect keep safe local destinations', function (string $source, string $url, string $expected) {
+    $result = auth_hardening_contract_run('redirect', array('source' => $source, 'url' => $url));
+    expect($result['redirect'])->toBe('Location: ' . $expected);
+})->with(array(
+    array('HTTP_REFERER', '//elsewhere.example/app/graph_view.php', '/app/index.php'),
+    array('REDIRECT_URL', '//elsewhere.example/app/graph_view.php', 'index.php'),
+    array('HTTP_REFERER', 'https://elsewhere.example/app/graph_view.php', '/app/index.php'),
+    array('REDIRECT_URL', 'https://elsewhere.example/app/graph_view.php', 'index.php'),
+    // The existing sanitizer retains the graph-view action context.
+    array('HTTP_REFERER', '/app/graph_view.php?id=2', '/app/graph_view.php?id=2&action='),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2', '/app/graph_view.php?id=2&action='),
+    array('HTTP_REFERER', '/app/host.php?id=2', '/app/host.php?id=2'),
+    array('REDIRECT_URL', '/app/host.php?id=2', '/app/host.php?id=2'),
+));
 
 test('auth_login performs auth transition hardening on successful login', function () use ($authLoginSource) {
     $tokens = array_filter(token_get_all($authLoginSource), static fn($token) => !is_array($token) || !in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT), true));
