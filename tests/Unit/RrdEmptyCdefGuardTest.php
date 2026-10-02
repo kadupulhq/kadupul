@@ -16,8 +16,8 @@
  * The fix adds: if ($cdef_string === '') { continue; }
  * before the CDEF name generation line in lib/rrd.php.
  *
- * A secondary fix in lib/aggregate.php converts the raw db_execute()
- * UPDATE for cdef_id to db_execute_prepared() for SQL safety.
+ * The cdef_id UPDATE in lib/aggregate.php uses the checked aggregate helper,
+ * which prepares the SQL on the selected PDO and binds its parameters.
  */
 
 // --- helpers ---
@@ -96,17 +96,55 @@ test('empty cdef guard includes debug logging', function () {
     );
 });
 
-// --- lib/aggregate.php: db_execute_prepared for cdef_id UPDATE ---
+// --- lib/aggregate.php: checked prepared cdef_id UPDATE ---
 
-test('aggregate.php uses db_execute_prepared for cdef_id UPDATE', function () {
+test('aggregate.php uses the checked prepared helper for cdef_id UPDATE', function () {
     $src = getAggregateSource();
 
-    // The cdef_id UPDATE must use db_execute_prepared, not raw db_execute
-    $pattern = "/db_execute_prepared\s*\(\s*'UPDATE graph_templates_item\s+SET cdef_id/s";
+    // Require the checked caller, both placeholders and the exact parameter order.
+    $pattern = <<<'REGEX'
+/aggregate_graph_execute\s*\(\s*'(UPDATE graph_templates_item\s+SET cdef_id\s*=\s*\?\s+WHERE id\s*=\s*\?)',\s*array\(\s*\$new_cdef_id\s*,\s*\$graph_template_item\['id'\]\s*\)\s*\)/s
+REGEX;
     expect(preg_match($pattern, $src))->toBe(
         1,
-        "lib/aggregate.php must use db_execute_prepared for the cdef_id UPDATE"
+        "lib/aggregate.php must use the checked prepared helper with ordered CDEF and item parameters"
     );
+});
+
+test('checked CDEF update binds values on the selected real PDO', function () {
+    require_once __DIR__ . '/../../lib/api_aggregate.php';
+    $source = getAggregateSource();
+    $pattern = "/aggregate_graph_execute\s*\(\s*'(UPDATE graph_templates_item\s+SET cdef_id\s*=\s*\?\s+WHERE id\s*=\s*\?)'/s";
+    expect(preg_match($pattern, $source, $matches))->toBe(1);
+    $database = new PDO('sqlite::memory:');
+    $other = new PDO('sqlite::memory:');
+    foreach ([$database, $other] as $connection) {
+        $connection->exec('CREATE TABLE graph_templates_item (id INTEGER PRIMARY KEY, cdef_id INTEGER NOT NULL)');
+        $connection->exec('INSERT INTO graph_templates_item VALUES (11, 0), (12, 0)');
+    }
+    $previous = [];
+    foreach (['database_sessions', 'database_hostname', 'database_port', 'database_default'] as $name) {
+        $previous[$name] = [array_key_exists($name, $GLOBALS), $GLOBALS[$name] ?? null];
+    }
+    try {
+        $GLOBALS['database_hostname'] = 'rrd-cdef-test';
+        $GLOBALS['database_port'] = 0;
+        $GLOBALS['database_default'] = 'rrd-cdef-test';
+        $GLOBALS['database_sessions'] = ['rrd-cdef-test:0:rrd-cdef-test' => $database, 'other' => $other];
+        expect(aggregate_graph_execute($matches[1], [167, 11]))->toBeTrue();
+        expect($database->query('SELECT cdef_id FROM graph_templates_item ORDER BY id')->fetchAll(PDO::FETCH_COLUMN))->toBe([167, 0]);
+        expect($other->query('SELECT cdef_id FROM graph_templates_item ORDER BY id')->fetchAll(PDO::FETCH_COLUMN))->toBe([0, 0]);
+        expect(aggregate_graph_execute($matches[1], [999, '11 OR 1=1']))->toBeTrue();
+        expect($database->query('SELECT cdef_id FROM graph_templates_item ORDER BY id')->fetchAll(PDO::FETCH_COLUMN))->toBe([167, 0]);
+    } finally {
+        foreach ($previous as $name => [$exists, $value]) {
+            if ($exists) {
+                $GLOBALS[$name] = $value;
+            } else {
+                unset($GLOBALS[$name]);
+            }
+        }
+    }
 });
 
 test('aggregate.php cdef_id UPDATE does not use string interpolation', function () {
