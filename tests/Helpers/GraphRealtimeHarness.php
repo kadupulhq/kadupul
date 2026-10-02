@@ -131,6 +131,12 @@ function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = 
 	return '1';
 }
 
+function is_realm_allowed($realm) {
+	$GLOBALS['calls']['realms'][] = $realm;
+
+	return in_array($realm, $GLOBALS['scenario']['realms'] ?? array(25), true);
+}
+
 function is_graph_allowed($local_graph_id, $user_id = 0) {
 	$GLOBALS['calls']['allowed'][] = $local_graph_id;
 

@@ -504,22 +504,15 @@ function user_remove($user_id) {
 	input_validate_input_number($user_id);
 	/* ==================================================== */
 
-	/* check for guest or template user */
-	$username = db_fetch_cell_prepared('SELECT username
-		FROM user_auth
-		WHERE id = ?',
-		array($user_id));
+	/* template and guest accounts are never removable, whatever the request carries */
+	if (is_template_account($user_id)) {
+		raise_message(21);
+		return;
+	}
 
-	if ($username != get_nfilter_request_var('username')) {
-		if (is_template_account($user_id)) {
-			raise_message(21);
-			return;
-		}
-
-		if ($user_id === get_guest_account()) {
-			raise_message(21);
-			return;
-		}
+	if ((string) $user_id === (string) get_guest_account()) {
+		raise_message(21);
+		return;
 	}
 
 	db_execute_prepared('DELETE FROM user_auth WHERE id = ?', array($user_id));
@@ -3754,6 +3747,9 @@ function local_auth_login_process($username) {
 	if (!api_plugin_hook_function('login_process', false)) {
 		$user = secpass_login_process($username);
 
+		/* a locked or disabled account that still knows its password was not authenticated */
+		$authenticated = cacti_sizeof($user) > 0;
+
 		/**
 		 * If the password needs to be rehashed for security purposes,
 		 * do that now.
@@ -3778,13 +3774,15 @@ function local_auth_login_process($username) {
 					AND realm = 0',
 					array($username));
 
-				if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+				/* the same username may exist in other realms; only this local row was verified */
+				if ($authenticated && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
 					$password = compat_password_hash($password, PASSWORD_DEFAULT);
 					db_check_password_length();
 					db_execute_prepared('UPDATE user_auth
 						SET password = ?
-						WHERE username = ?',
-						array($password, $username));
+						WHERE id = ?
+						AND realm = 0',
+						array($password, $user['id']));
 				}
 			}
 		} else {
@@ -4280,13 +4278,13 @@ function secpass_login_process($username) {
 	}
 
 	if (db_column_exists('user_auth', 'lastfail')) {
-		$user = db_fetch_row_prepared("SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password
+		$user = db_fetch_row_prepared("SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
 			array($username));
 	} else {
-		$user = db_fetch_row_prepared("SELECT id, username, password, enabled
+		$user = db_fetch_row_prepared("SELECT id, username, password, enabled, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
@@ -4338,29 +4336,44 @@ function secpass_login_process($username) {
 		$error_msg = __('Access Denied!  Login Failed.');
 
 		cacti_log(sprintf('LOGIN FAILED: Invalid user %s specified.', $username), false, 'AUTH');
+
+		/* an unknown username must fail exactly as a wrong password does */
+		return array();
 	}
 
 	/**
 	 * Check if old password doesn't meet specifications and must be changed
 	 * This only applies to local logins where we store the actual hashed
 	 * password.
+	 *
+	 * The login completes and auth_login.php sends the new session to the
+	 * forced change; redirecting before a session exists sent the user back
+	 * to the login page on every attempt.
 	 */
 	if (read_config_option('secpass_forceold') == 'on') {
 		$message = secpass_check_pass($password);
 
 		if ($message != 'ok') {
+			/* an account that may not change its password cannot finish the forced change */
+			if ($user['password_change'] != 'on') {
+				$error     = true;
+				$error_msg = __('Access Denied!  Login Failed.');
+
+				cacti_log(sprintf('LOGIN FAILED: User %s password does not meet the policy and the account may not change it.', $username), false, 'AUTH');
+
+				return array();
+			}
+
 			db_execute_prepared("UPDATE user_auth
 				SET must_change_password = 'on'
-				WHERE username = ?
+				WHERE id = ?
 				AND realm = 0
 				AND enabled = 'on'",
-				array($username));
+				array($user['id']));
 
-			$error_msg = __('Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now.');
+			$user['must_change_password'] = 'on';
 
-			raise_message('forced_password', $error_msg, MESSAGE_LEVEL_INFO);
-			header('Location: auth_changepassword.php?header=false');
-			exit;
+			raise_message('forced_password', __('Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now.'), MESSAGE_LEVEL_INFO);
 		}
 	}
 
@@ -4983,7 +4996,7 @@ function auth_login_create_user_from_template($username, $realm) {
 
 		cacti_log("LOGIN FAILED: Template user id '" . read_config_option('user_template') . "' does not exist.", false, 'AUTH');
 
-		if ($auth_method == 2) {
+		if (read_config_option('auth_method') == 2) {
 			auth_display_custom_error_message($error_msg);
 			exit;
 		}
@@ -5133,9 +5146,84 @@ function cacti_auth_transition($user_id, $reason = 'login') {
 	kill_session_var('sess_user_config_array');
 	kill_session_var('sess_config_array');
 
+	auth_session_bind_credentials($user_id);
+
 	cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
 
 	return true;
+}
+
+/**
+ * auth_session_credential_key - digest of the account's stored password hash.
+ *
+ * A session keeps this digest from its login, so changing or resetting the
+ * password ends every session opened before it. Deleting rows from the
+ * sessions table only does that for database sessions, and the default
+ * storage is PHP's file handler.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (string|false) The digest, or false when the account can not be read
+ */
+function auth_session_credential_key($user_id) {
+	$password = db_fetch_cell_prepared('SELECT password
+		FROM user_auth
+		WHERE id = ?',
+		array($user_id));
+
+	if ($password === false || $password === null) {
+		return false;
+	}
+
+	return hash('sha256', (string) $password);
+}
+
+/**
+ * auth_session_bind_credentials - tie the current session to the account's
+ *   current password. Call it after login and after the session's own user
+ *   changes the password, so that session is the one that stays open.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (void)
+ */
+function auth_session_bind_credentials($user_id) {
+	$key = auth_session_credential_key($user_id);
+
+	if ($key !== false) {
+		$_SESSION['sess_user_credential'] = $key;
+	}
+}
+
+/**
+ * auth_session_credentials_valid - check that the account's password has not
+ *   changed since this session was bound to it.
+ *
+ * An account that can not be read is left to the existing checks, as before.
+ * A session opened before this check existed is bound on its first request.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (bool) false when the password changed after the session was bound
+ */
+function auth_session_credentials_valid($user_id) {
+	$key = auth_session_credential_key($user_id);
+
+	if ($key === false) {
+		return true;
+	}
+
+	if (!isset($_SESSION['sess_user_credential'])) {
+		$_SESSION['sess_user_credential'] = $key;
+
+		return true;
+	}
+
+	if (!is_string($_SESSION['sess_user_credential'])) {
+		return false;
+	}
+
+	return hash_equals($_SESSION['sess_user_credential'], $key);
 }
 
 /**

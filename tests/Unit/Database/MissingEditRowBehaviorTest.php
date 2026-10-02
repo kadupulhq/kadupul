@@ -15,6 +15,7 @@ function cacti_count($value) { return is_array($value) ? count($value) : 0; }
 function sanitize_unserialize_selected_items($value) { return $GLOBALS['missing_selected'] ?? array(1); }
 function user_copy(...$args) { throw new RuntimeException('Must not copy a missing user'); }
 function raise_message($message) { $GLOBALS['missing_row_messages'][] = $message; }
+function read_config_option($name) { return $name === 'admin_user' ? '99' : ''; }
 function db_execute_prepared(...$args) { throw new RuntimeException('Must not write when the selected row is missing'); }
 function form_start(...$args) { throw new RuntimeException('Must not render when the selected row is missing'); }
 function html_start_box(...$args) { throw new RuntimeException('Must not render when the selected row is missing'); }
@@ -42,6 +43,7 @@ beforeEach(function () {
     $GLOBALS['missing_request'] = array('id' => 1, 'type' => 'in');
     $GLOBALS['missing_row_messages'] = array();
     $GLOBALS['missing_row_headers'] = array();
+    $_SESSION = array('sess_user_id' => 98);
 });
 
 test('missing edit rows report failure before rendering or mutation', function ($function) {

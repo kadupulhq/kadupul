@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -431,7 +432,7 @@ function html_graph_preview_filter($page, $action, $devices_where = '', $templat
 		$(function() {
 			refreshIsLogout = false;
 			refreshIsLogout = false;
-			refreshMSeconds = <?php print read_user_setting('page_refresh')*1000;?>;
+			refreshMSeconds = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 
 			setupPageTimeout();
 

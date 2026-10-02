@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -143,7 +144,7 @@ if (read_config_option('auth_method') == 2) {
 	var theme='<?php print get_selected_theme();?>';
 	var refreshIsLogout=<?php print $refreshIsLogout;?>;
 	var refreshPage='<?php print $myrefresh['page'];?>';
-	var refreshMSeconds=<?php print $myrefresh['seconds']*1000;?>;
+	var refreshMSeconds=<?php print (int) $myrefresh['seconds'] * 1000;?>;
 	var urlPath='<?php print $config['url_path'];?>';
 	var previousPage='';
 	var sessionMessage=<?php print display_output_messages();?>;

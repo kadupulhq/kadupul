@@ -397,7 +397,7 @@ function raise_ajax_permission_denied() {
 
 class CactiSecureHeaders {
 	public static function getNonceAttribute() {
-		return '';
+		return 'nonce="probe"';
 	}
 }
 
@@ -409,15 +409,19 @@ $probe_dir = sys_get_temp_dir() . '/cacti_auth_entry_' . getmypid() . '_' . bin2
 mkdir($probe_dir, 0700);
 file_put_contents($probe_dir . '/global.php', "<?php\n");
 file_put_contents($probe_dir . '/auth_login.php', "<?php\n\$GLOBALS['probe']['events'][] = 'login_page';\nexit;\n");
+file_put_contents($probe_dir . '/global_session.php', "<?php\n");
 set_include_path($probe_dir);
 
 register_shutdown_function(function () use ($probe_dir) : void {
+	$output = '';
+
 	while (ob_get_level() > 0) {
-		ob_end_clean();
+		$output = ob_get_clean() . $output;
 	}
 
 	unlink($probe_dir . '/global.php');
 	unlink($probe_dir . '/auth_login.php');
+	unlink($probe_dir . '/global_session.php');
 	rmdir($probe_dir);
 
 	print json_encode(array(
@@ -427,6 +431,7 @@ register_shutdown_function(function () use ($probe_dir) : void {
 		'events'         => $GLOBALS['probe']['events'],
 		'config_writes'  => $GLOBALS['probe']['config_writes'],
 		'page_continued' => $GLOBALS['probe']['page_continued'],
+		'output'         => $output,
 	));
 });
 
