@@ -1,0 +1,50 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ vdef.id ? 'Edit VDEF'|trans({}, 'graph_definition') : 'Create VDEF'|trans({}, 'graph_definition') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ vdef.id ? 'VDEFs [edit: %name%]'|trans({'%name%': vdef.name}, 'graph_definition') : 'VDEFs [new]'|trans({}, 'graph_definition') }}</h1>
+    {% if vdef.id %}
+        <section aria-labelledby="vdef-preview"><h2 id="vdef-preview">{{ 'VDEF Preview'|trans({}, 'graph_definition') }}</h2><pre>vdef={{ preview }}</pre></section>
+    {% endif %}
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">{{ 'Save'|trans({}, 'graph_definition') }}</button>
+    {{ form_end(form) }}
+    {% if vdef.id %}
+        <section aria-labelledby="vdef-items">
+            <h2 id="vdef-items">{{ 'VDEF Items'|trans({}, 'graph_definition') }}</h2>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+            <p><a href="{{ path('graph_vdef_item_edit', {vdefId: vdef.id, itemId: 0}) }}">{{ 'Add VDEF item'|trans({}, 'graph_definition') }}</a></p>
+            <form method="post" action="{{ path('graph_vdef_item_reorder', {vdefId: vdef.id}) }}">
+                <input type="hidden" name="order[items]" value="{{ vdef.items|map(item => item.id)|json_encode|e('html_attr') }}">
+                <input type="hidden" name="order[revision]" value="{{ vdef.revision|e('html_attr') }}">
+                <input type="hidden" name="order[_token]" value="{{ csrf_token('graph_vdef_edit') }}">
+                <table>
+                    <thead><tr><th scope="col">{{ 'Item'|trans({}, 'graph_definition') }}</th><th scope="col">{{ 'Item value'|trans({}, 'graph_definition') }}</th><th scope="col">{{ 'Actions'|trans({}, 'graph_definition') }}</th></tr></thead>
+                    <tbody>
+                    {% for item in vdef.items %}
+                        <tr>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                            <td><a href="{{ path('graph_vdef_item_edit', {vdefId: vdef.id, itemId: item.id}) }}">{{ 'Item #%number%'|trans({'%number%': loop.index}, 'graph_definition') }}</a></td>
+                            <td><em>{{ item.type in [1, 4, 6] ? ({1: 'Function', 4: 'Special Data Source', 6: 'Custom String'}[item.type]|trans({}, 'graph_definition')) : 'VDEF reference'|trans({}, 'graph_definition') }}</em>: <strong>{{ item.label }}</strong></td>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                            <td><a href="{{ path('graph_vdef_item_delete', {vdefId: vdef.id, itemId: item.id}) }}">{{ 'Delete'|trans({}, 'graph_definition') }}</a>
+                            {% if not loop.first %}<button type="submit" name="order[moveUp]" value="{{ item.id }}">{{ 'Move up'|trans({}, 'graph_definition') }}</button>{% endif %}
+                            {% if not loop.last %}<button type="submit" name="order[moveDown]" value="{{ item.id }}">{{ 'Move down'|trans({}, 'graph_definition') }}</button>{% endif %}</td>
+                        </tr>
+                    {% else %}<tr><td colspan="3">{{ 'No VDEF items.'|trans({}, 'graph_definition') }}</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit">{{ 'Save item order'|trans({}, 'graph_definition') }}</button>
+            </form>
+        </section>
+    {% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('graph_vdefs') }}">{{ 'Back to VDEFs'|trans({}, 'graph_definition') }}</a></p>
+</main>
+{% endblock %}
