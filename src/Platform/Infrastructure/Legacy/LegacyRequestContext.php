@@ -33,15 +33,7 @@ final readonly class LegacyRequestContext
 
     public function browserQueryString(Request $request): string
     {
-        $requestUri = $request->server->get('REQUEST_URI');
-
-        if (!empty($requestUri)) {
-            return $requestUri;
-        }
-
-        $currentPage = $this->currentPage($request);
-        $queryString = $request->server->get('QUERY_STRING');
-
-        return $currentPage . (empty($queryString) ? '' : '?' . $queryString);
+        // The legacy wrapper owns fallback selection and missing-page logging.
+        return (string) $request->server->get('REQUEST_URI', '');
     }
 }
