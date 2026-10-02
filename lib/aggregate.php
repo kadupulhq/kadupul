@@ -47,7 +47,8 @@ function aggregate_build_children_url($local_graph_id, $graph_start = -1, $graph
 
 function api_aggregate_convert_template($graphs)
 {
-    if (!is_array($graphs) || !$graphs) return false;
+    if (!is_array($graphs) || !$graphs)
+        return false;
     $saved = aggregate_graph_mutation(function () use ($graphs) {
         $aggregate_template_id = get_nfilter_request_var('aggregate_template_id');
         $aggregate_template    = aggregate_graph_fetch_row(
@@ -127,7 +128,8 @@ function api_aggregate_convert_template($graphs)
 
 function api_aggregate_associate($local_graph_id, $graphs)
 {
-    if (!is_array($graphs) || !$graphs) return false;
+    if (!is_array($graphs) || !$graphs)
+        return false;
     $saved = aggregate_graph_mutation(function () use ($local_graph_id, $graphs) {
         $aggregate_template = aggregate_graph_fetch_value(
             'SELECT aggregate_template_id
@@ -187,7 +189,8 @@ function api_aggregate_associate($local_graph_id, $graphs)
 
 function api_aggregate_disassociate($local_graph_id, $graphs)
 {
-    if (!is_array($graphs) || !$graphs) return false;
+    if (!is_array($graphs) || !$graphs)
+        return false;
     $saved = aggregate_graph_mutation(function () use ($local_graph_id, $graphs) {
         $aggregate_template = aggregate_graph_fetch_value(
             'SELECT aggregate_template_id
@@ -234,7 +237,8 @@ function api_aggregate_disassociate($local_graph_id, $graphs)
 
 function api_aggregate_create($aggregate_name, $graphs, $agg_template_id = 0)
 {
-    if (!is_array($graphs) || !$graphs) return false;
+    if (!is_array($graphs) || !$graphs)
+        return false;
     return aggregate_graph_mutation(function () use ($aggregate_name, $graphs, $agg_template_id) {
         /* get the first aggregate graph */
         if ($agg_template_id == 0) {
@@ -329,7 +333,8 @@ function aggregate_graph_validate_request_items($graph_template_id): array
 /** Create a graph from the validated legacy action 9/10 form on one connection. */
 function api_aggregate_create_from_request(array $selected_items, int &$local_graph_id): bool
 {
-    if (!is_array($selected_items) || !$selected_items) return false;
+    if (!is_array($selected_items) || !$selected_items)
+        return false;
     $previous_id = $local_graph_id;
     $saved = aggregate_graph_mutation(function () use ($selected_items, &$local_graph_id) {
         /* get common info - not dependent on template/no template*/
@@ -467,7 +472,8 @@ function api_aggregate_create_from_request(array $selected_items, int &$local_gr
         /* create actual graph items */
         return aggregate_create_update($local_graph_id, $member_graphs, $attribs) === true;
     });
-    if (!$saved) $local_graph_id = $previous_id;
+    if (!$saved)
+        $local_graph_id = $previous_id;
     return $saved;
 }
 
@@ -644,7 +650,8 @@ function aggregate_conditional_convert_graph_type($_graph_id, $_old_type, $_new_
             array($_graph_id, $_old_type)
         );
 
-        if ($_graph_item_id === false) return;
+        if ($_graph_item_id === false)
+            return;
 
         /* and update it to the new graph_type */
         aggregate_graph_execute(
@@ -871,19 +878,23 @@ function aggregate_graph_cdef_text($cdef_id, $path = array())
 {
     global $cdef_functions, $cdef_operators;
     $key = (string) $cdef_id;
-    if (isset($path[$key])) throw new RuntimeException('Aggregate CDEF recursion is cyclic.');
+    if (isset($path[$key]))
+        throw new RuntimeException('Aggregate CDEF recursion is cyclic.');
     $path[$key] = true;
-    if (!aggregate_graph_fetch_row('SELECT id FROM cdef WHERE id = ?', array($cdef_id))) throw new RuntimeException('Aggregate CDEF parent is unavailable.');
+    if (!aggregate_graph_fetch_row('SELECT id FROM cdef WHERE id = ?', array($cdef_id)))
+        throw new RuntimeException('Aggregate CDEF parent is unavailable.');
     $items = aggregate_graph_fetch_rows('SELECT id,type,value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence', array($cdef_id));
     $values = array();
     foreach ($items as $item) {
         switch ((int) $item['type']) {
             case 1:
-                if (!isset($cdef_functions[$item['value']])) throw new RuntimeException('Aggregate CDEF function is unavailable.');
+                if (!isset($cdef_functions[$item['value']]))
+                    throw new RuntimeException('Aggregate CDEF function is unavailable.');
                 $values[] = $cdef_functions[$item['value']];
                 break;
             case 2:
-                if (!isset($cdef_operators[$item['value']])) throw new RuntimeException('Aggregate CDEF operator is unavailable.');
+                if (!isset($cdef_operators[$item['value']]))
+                    throw new RuntimeException('Aggregate CDEF operator is unavailable.');
                 $values[] = $cdef_operators[$item['value']];
                 break;
             case 5:
