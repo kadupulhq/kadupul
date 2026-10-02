@@ -4,6 +4,7 @@
 import base64
 import hashlib
 import http.cookiejar
+import http.client
 import os
 from pathlib import Path
 import secrets
@@ -64,11 +65,17 @@ for storage in ('files', 'database'):
                 for attempt in range(100):
                     if process.poll() is not None:
                         raise RuntimeError('Native HTTP fixture exited early')
+                    health = http.client.HTTPConnection('127.0.0.1', port, timeout=1)
                     try:
-                        urllib.request.urlopen(base + '/__health', timeout=1).read()
-                        break
-                    except urllib.error.URLError:
-                        time.sleep(0.05)
+                        health.request('GET', '/__health')
+                        response = health.getresponse()
+                        if response.status == 200 and response.read() == b'ready':
+                            break
+                    except (OSError, http.client.HTTPException):
+                        pass
+                    finally:
+                        health.close()
+                    time.sleep(0.05)
                 else:
                     raise RuntimeError('Native HTTP fixture did not start')
                 basic = {'Authorization': 'Basic ' + base64.b64encode(('about-basic:' + password).encode()).decode()}
