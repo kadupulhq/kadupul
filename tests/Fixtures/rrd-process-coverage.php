@@ -18,6 +18,10 @@ if (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/rrdcleaner.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
 }
+if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
+}
+
 if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
@@ -219,7 +223,8 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
             $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
             $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
         }
-        if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
+        $serializedCoverage = serialize($childCoverage);
+        if (file_put_contents($childCoverageFile, $serializedCoverage) !== strlen($serializedCoverage)) {
             throw new RuntimeException('Unable to preserve child process coverage');
         }
         if (isset($GLOBALS['nativeCoverageEvidence'])) {
@@ -227,6 +232,10 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
                 throw new RuntimeException('Native coverage production scenario did not complete.');
             }
             NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeCoverageEvidence'], NATIVE_COVERAGE_COMPLETED);
+        }
+        if (defined('CSRF_ROTATION_TEST_COVERAGE')) {
+            require_once dirname(__DIR__) . '/Helpers/CsrfRotationCoverage.php';
+            CsrfRotationCoverage::record($childCoverageFile, dirname(__DIR__, 2));
         }
     });
 });
