@@ -70,7 +70,17 @@ function db_execute_prepared($sql, $parameters, $log = true, $connection = false
         throw new RuntimeException('Native filter changed mutation PDO.');
     }
     $GLOBALS['queries'][] = array($sql, $parameters);
-    return $GLOBALS['db']->prepare($sql)->execute($parameters);
+    $statement = $GLOBALS['db']->prepare($sql);
+    $result = $statement->execute($parameters);
+    $GLOBALS['permission_affected_rows'] = $statement->rowCount();
+    return $result;
+}
+function db_affected_rows($connection = false)
+{
+    if ($connection !== false && $connection !== $GLOBALS['db']) {
+        throw new RuntimeException('Native filter changed affected-row PDO.');
+    }
+    return $GLOBALS['permission_affected_rows'] ?? false;
 }
 function db_execute($sql)
 {

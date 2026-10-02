@@ -11,6 +11,75 @@ final class PermissionMutationNativeTest extends TestCase
 {
     private static bool $evidenceChecked = false;
 
+    /** @dataProvider deleteReceiptCases */
+    public function testAbsentDeletesAndUnconfirmedReceiptsPreserveState(array $scenario): void
+    {
+        $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
+        $scenario['self'] = true;
+        $state = $this->runNative($scenario);
+        self::assertSame(!array_key_exists('affected_outcome', $scenario), $state['result']);
+        self::assertNull($state['error']);
+        self::assertSame($scenario['caller'], $state['transaction_open']);
+        self::assertSame(array(0, 7, 7, 7), array_map('intval', array_column($state['epochs'], 'reset_perms')));
+        self::assertCount(3, $state['permissions']);
+        self::assertCount(3, $state['memberships']);
+        self::assertSame($state['initial_session'], $state['session']);
+        self::assertSame(array(), $state['messages']);
+        if ($scenario['caller']) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertSame(0, $state['rollback_caller_work']);
+        }
+    }
+
+    public static function deleteReceiptCases(): array
+    {
+        $cases = array();
+        foreach (array(false, true) as $group) {
+            foreach (array(false, true) as $caller) {
+                foreach (array('typed', 'membership') as $kind) {
+                    $cases[] = array(array('group' => $group, 'caller' => $caller, 'kind' => $kind, 'absent' => true));
+                }
+                foreach (array(false, -1, '1', null) as $outcome) {
+                    $cases[] = array(array('group' => $group, 'caller' => $caller, 'affected_outcome' => $outcome));
+                }
+            }
+        }
+        return $cases;
+    }
+
+    /** @dataProvider mixedDeleteCases */
+    public function testNoopSelectionsDoNotConsumeTheRealMutationsEpoch(array $scenario): void
+    {
+        $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
+        $scenario['kind'] = 'mixed';
+        $scenario['self'] = true;
+        $state = $this->runNative($scenario);
+        self::assertSame('permsg', $state['result']);
+        self::assertNull($state['error']);
+        self::assertSame($scenario['caller'], $state['transaction_open']);
+        self::assertSame(array(0, 8, 7, $scenario['group'] ? 8 : 7), array_map('intval', array_column($state['epochs'], 'reset_perms')));
+        self::assertCount(2, $state['permissions']);
+        self::assertSame($scenario['group'] ? $state['initial_session'] : array('sess_user_id' => 42), $state['session']);
+        self::assertSame(array(), $state['messages']);
+        if ($scenario['caller']) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertSame(0, $state['rollback_caller_work']);
+        }
+    }
+
+    public static function mixedDeleteCases(): array
+    {
+        $cases = array();
+        foreach (array(false, true) as $group) {
+            foreach (array(false, true) as $caller) {
+                foreach (array(array(999, 100), array(100, 999)) as $selected) {
+                    $cases[] = array(array('group' => $group, 'caller' => $caller, 'selected' => $selected));
+                }
+            }
+        }
+        return $cases;
+    }
+
     /** @dataProvider cases */
     public function testAtomicMutationAndEpochOutcomes(array $scenario): void
     {

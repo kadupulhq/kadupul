@@ -260,6 +260,26 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return $cases;
     }
 
+    /** @dataProvider absentDeleteCases */
+    public function testDeletingAnAbsentExceptionLeavesEpochsUnchanged(bool $group, string $operation): void
+    {
+        $scenario = ['group' => $group, 'operation' => $operation, 'type' => 'host', 'kind' => 'host', 'type_id' => 3, 'replace' => false, 'self' => true];
+        if ($operation === 'bulk') {
+            $scenario['selected'] = [999];
+        } else {
+            $scenario['item_id'] = 999;
+        }
+        $state = $this->runController($scenario);
+        self::assertSame([0, 0, 0, 0], array_column($state['reset'], 'reset_perms'));
+        self::assertSame($state['initial_session'], $state['session']);
+        self::assertTrue($state['perms_valid']);
+    }
+
+    public static function absentDeleteCases(): array
+    {
+        return [[false, 'remove'], [true, 'remove'], [false, 'bulk'], [true, 'bulk']];
+    }
+
     /** @dataProvider emptySelectionCases */
     public function testEmptySelectionPreservesAllEpochsAndSessions(bool $group, string $operation): void
     {
