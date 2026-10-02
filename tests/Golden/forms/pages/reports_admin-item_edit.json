@@ -1,0 +1,50 @@
+{
+    "session": {
+        "form_change_actions": {
+            "item_type": "toggle_item_type()",
+            "tree_id": "changeTree()",
+            "site_id": "changeSite()",
+            "host_template_id": "changeDeviceTemplate()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [
+        "table id=\"graphdiv\"",
+        "td id=\"graph\""
+    ],
+    "script_ids": [
+        "branch_id",
+        "chk",
+        "graph",
+        "graph_template_id",
+        "graph_template_id_input",
+        "graph_template_id_wrap",
+        "graphdiv",
+        "host_id",
+        "host_id_input",
+        "host_id_wrap",
+        "host_template_id",
+        "item_text",
+        "item_type",
+        "local_graph_id",
+        "local_graph_id_input",
+        "local_graph_id_wrap",
+        "row_align",
+        "row_branch_id",
+        "row_font_size",
+        "row_graph_name_regexp",
+        "row_graph_template_id",
+        "row_host_id",
+        "row_host_template_id",
+        "row_item_text",
+        "row_local_graph_id",
+        "row_site_id",
+        "row_timespan",
+        "row_tree_cascade",
+        "row_tree_id",
+        "site_id",
+        "tree_id"
+    ],
+    "script_names": []
+}
