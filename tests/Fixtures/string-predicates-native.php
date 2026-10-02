@@ -40,6 +40,22 @@ $_SERVER['PHP_SELF'] = '/host.php';
 $_SERVER['SERVER_NAME'] = 'example.test';
 $_SERVER['SERVER_PORT'] = 80;
 $result = [];
+// Execute the complete production wrapper on both sides of Composer startup.
+file_put_contents($directory . '/app.js', 'native asset');
+$config['config_options_array']['debounce_missing:missing.js'] = time();
+$result['include_fallback'] = [
+    class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyIncludePathResolver::class),
+    get_include_relpath($directory . '/app.js'),
+    get_include_relpath('app.js'),
+    get_include_relpath('missing.js'),
+];
+require_once $root . '/include/vendor/autoload.php';
+$result['include_resolver'] = [
+    class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyIncludePathResolver::class),
+    get_include_relpath($directory . '/app.js'),
+    get_include_relpath('app.js'),
+    get_include_relpath('missing.js'),
+];
 $result['rows'] = [];
 foreach ([12, 'row_12', 'ROW_12', ''] as $id) {
     ob_start();
