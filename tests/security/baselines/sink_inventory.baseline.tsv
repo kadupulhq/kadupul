@@ -89,9 +89,9 @@ cmd_exec	./snmpagent_persist.php:68	    exec('ps -ef | grep -v grep | grep -v "s
 cmd_exec	./snmpagent_persist.php:70	        exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./src/Graphing/Infrastructure/Rrd/LocalRrdtool.php:27	        $process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
 cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:36	            exec($commandLine, $lines, $status);
-cmd_exec	./utilities.php:202					exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
-cmd_exec	./utilities.php:220				$snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
-cmd_exec	./utilities.php:240				exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
+cmd_exec	./utilities.php:209	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
+cmd_exec	./utilities.php:227	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
+cmd_exec	./utilities.php:247	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
 deserialize	./lib/functions.php:5032	            $items = unserialize($unstripped, array('allowed_classes' => false));
 deserialize	./lib/functions.php:8502	    return @unserialize($strobj, array('allowed_classes' => false));
 dynamic_include	./automation_tree_rules.php:522		include_once($config['base_path'].'/lib/html_tree.php');
@@ -601,7 +601,7 @@ fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_na
 fs_write	./tools/dependencies/install-legacy.php:120	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
 fs_write	./tools/dependencies/install-legacy.php:68	    $source = fopen($url, 'rb', false, $context);
 fs_write	./tools/dependencies/install-legacy.php:72	    $destination = fopen($archivePath, 'wb');
-fs_write	./utilities.php:1602				$log_fh = fopen($logfile, 'w');
+fs_write	./utilities.php:1637	            $log_fh = fopen($logfile, 'w');
 header_redirect	./aggregate_graphs.php:108	        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_graphs.php:241	    header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_graphs.php:287	                header('Location: aggregate_graphs.php?header=false');
@@ -968,11 +968,11 @@ header_redirect	./user_group_admin.php:561			header('Location: user_group_admin.
 header_redirect	./user_group_admin.php:582			header('Location: user_group_admin.php?action=edit&header=false&tab=settings&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:589		header('Location: user_group_admin.php?action=edit&header=false&tab=general&id=' .  get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:612		header('Location: user_group_admin.php?action=edit&header=false&tab=gperms&id=' . get_request_var('group_id'));
-header_redirect	./utilities.php:1268			header('Location: utilities.php?action=view_logfile&filename=' . $logbase);
-header_redirect	./utilities.php:26			header('Location: utilities.php?action=view_poller_cache');exit;
-header_redirect	./utilities.php:30			header('Location: utilities.php?header=false');exit;
-header_redirect	./utilities.php:78			header('Location: utilities.php');
-header_redirect	./utilities.php:82			header('Location: utilities.php?action=view_snmpagent_cache');exit;
+header_redirect	./utilities.php:1296	        header('Location: utilities.php?action=view_logfile&filename=' . $logbase);
+header_redirect	./utilities.php:28	        header('Location: utilities.php?action=view_poller_cache');
+header_redirect	./utilities.php:33	        header('Location: utilities.php?header=false');
+header_redirect	./utilities.php:82	        header('Location: utilities.php');
+header_redirect	./utilities.php:86	        header('Location: utilities.php?action=view_snmpagent_cache');
 xml_parse	./install/functions.php:497				$xmlget = simplexml_load_string($xml);
 xml_parse	./lib/import.php:360	    $xmlget = simplexml_load_string($data, null, LIBXML_NONET);
 xml_parse	./lib/import.php:487	    $xmlget = simplexml_load_string($xml, null, LIBXML_NONET);

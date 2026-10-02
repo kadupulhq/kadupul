@@ -136,6 +136,7 @@ jobs:
         php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-database.xml --colors=never
         php Symfony/data_input_lock_probe.php
         php Support/verify_row_cache.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --cache-result-file="$RUNNER_TEMP/reference-transaction-phpunit.cache" Symfony/LegacyReferenceWriteTransactionNativeTest.php
         # Use the disposable matrix server's existing administrator identity;
         # the probe creates/drops only its own random schema in a finally block.
         KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \
@@ -285,6 +286,8 @@ jobs:
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/offline-fixture-php/bin/php"
           mise link "php@$fixture_php_version" "$RUNNER_TEMP/offline-fixture-php"
           echo "KADUPUL_OFFLINE_FIXTURE_PHP_VERSION=$fixture_php_version" >> "$GITHUB_ENV"
+      - name: Verify guest offline fixture byte handoff
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
       - name: Verify observation normalization and failure reporting
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/selftest.py
       - name: Verify offline build runtime selection
