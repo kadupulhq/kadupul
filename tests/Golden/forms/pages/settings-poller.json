@@ -1,0 +1,13 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "cron_interval",
+        "form_settings",
+        "poller_interval",
+        "tab"
+    ],
+    "script_names": []
+}

@@ -7,9 +7,13 @@ A regression here would let the baseline record a wrong gate without the
 unknown row that stops CI. The cases run through classify_entry_points.php
 the way the generator calls it, one fixture tree per case.
 """
+import json
+import os
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import build_entry_point_inventory as inventory  # noqa: E402
@@ -924,9 +928,70 @@ def gate(root, name, source):
     return run(root, [name])[name]
 
 
+def raw_classifier(request):
+    return subprocess.run([os.environ.get('PHP', 'php'), str(inventory.CLASSIFIER)],
+                          input=request if isinstance(request, str) else json.dumps(request),
+                          capture_output=True, text=True)
+
+
 def main():
     failures = []
     count = 0
+    count += 1
+    classifier_source = (Path(__file__).resolve().parent / 'classify_entry_points.php').read_text()
+    if '// Globals a file writes at its top level, traced by hand, each with why the\n// write cannot change what an includer trusts.\nconst REVIEWED_GLOBALS' not in classifier_source:
+        failures.append('REVIEWED_GLOBALS explanation is not attached to its constant')
+    if '// Fragment requires that end a direct request, traced by hand: the path is\n// built from $config, which only the bootstrap defines, so without it the\n// require names a file under / and PHP stops. Nothing after it runs.\nconst HALTING_REQUIRES' not in classifier_source:
+        failures.append('HALTING_REQUIRES explanation is not attached to its constant')
+
+    count += 1
+    timeout = subprocess.TimeoutExpired(['php', str(inventory.CLASSIFIER)], inventory.CLASSIFIER_TIMEOUT_SECONDS)
+
+    def classifier_timeout(*args, **kwargs):
+        if kwargs.get('timeout') != inventory.CLASSIFIER_TIMEOUT_SECONDS:
+            raise AssertionError('classifier subprocess has no bounded timeout')
+        raise timeout
+
+    try:
+        with patch.object(inventory.subprocess, 'run', side_effect=classifier_timeout):
+            inventory.classify(Path('/tmp'), [], [])
+        failures.append('classifier timeout: expected the inventory build to stop')
+    except SystemExit as error:
+        if 'classify_entry_points.php timed out after 120 seconds' not in str(error):
+            failures.append('classifier timeout: expected a bounded-time diagnostic, got %s' % error)
+    invalid_requests = [
+        ('missing root', {'files': [], 'served': [], 'plugin_realms': {}}, 'root'),
+        ('empty root', {'root': '  ', 'files': [], 'served': [], 'plugin_realms': {}}, 'root'),
+        ('mistyped files', {'root': '/tmp', 'files': 'page.php', 'served': [], 'plugin_realms': {}}, 'files'),
+        ('mistyped served entry', {'root': '/tmp', 'files': [], 'served': [7], 'plugin_realms': {}}, 'served[0]'),
+        ('mistyped plugin realm', {'root': '/tmp', 'files': [], 'served': [], 'plugin_realms': {'page.php': '3'}}, 'plugin_realms'),
+        ('scalar request', json.dumps('x'), 'JSON object'),
+        ('numeric request', 5, 'JSON object'),
+        ('null request', 'null', 'JSON object'),
+        ('array request', [], 'JSON object'),
+        ('files object', {'root': '/tmp', 'files': {'slot': 'page.php'}, 'served': [], 'plugin_realms': {}}, 'files'),
+        ('empty files object', {'root': '/tmp', 'files': {}, 'served': [], 'plugin_realms': {}}, 'files'),
+        ('served object', {'root': '/tmp', 'files': [], 'served': {'slot': 'page.php'}, 'plugin_realms': {}}, 'served'),
+        ('empty served object', {'root': '/tmp', 'files': [], 'served': {}, 'plugin_realms': {}}, 'served'),
+        ('files entry', {'root': '/tmp', 'files': [3], 'served': [], 'plugin_realms': {}}, 'files[0]'),
+        ('missing plugin realms', {'root': '/tmp', 'files': [], 'served': []}, 'plugin_realms'),
+        ('mistyped served', {'root': '/tmp', 'files': [], 'served': 'x', 'plugin_realms': {}}, 'served'),
+        ('realm list', {'root': '/tmp', 'files': [], 'served': [], 'plugin_realms': [5]}, 'plugin_realms'),
+        ('empty realm list', {'root': '/tmp', 'files': [], 'served': [], 'plugin_realms': []}, 'plugin_realms'),
+    ]
+    for case, request, key in invalid_requests:
+        count += 1
+        result = raw_classifier(request)
+        if result.returncode != 2 or key not in result.stderr or result.stdout:
+            failures.append('%s: expected exit 2 and an error naming %s, got %d: %s' % (
+                case, key, result.returncode, result.stderr.strip()))
+
+    count += 1
+    result = raw_classifier('{')
+    if result.returncode != 2 or 'invalid JSON request' not in result.stderr:
+        failures.append('invalid JSON: expected a clear exit 2 diagnostic, got %d: %s' % (
+            result.returncode, result.stderr.strip()))
+
     with tempfile.TemporaryDirectory(prefix='entry-classifier-') as directory:
         root = tree(directory)
         for case, (source, expected) in {**CASES, **NEW_CASES}.items():
