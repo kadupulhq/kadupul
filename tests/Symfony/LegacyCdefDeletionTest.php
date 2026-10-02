@@ -51,6 +51,26 @@ final class LegacyCdefDeletionTest extends TestCase
         (new LegacyCdefDeletion($database, 1))->delete([1]);
     }
 
+    public function testRollbackFailurePreservesTheOriginalOperationFailure(): void
+    {
+        $original = new \RuntimeException('original SQL operation failure');
+        $cleanup = new \RuntimeException('independent rollback failure');
+        $database = $this->createMock(\PDO::class);
+        $database->method('inTransaction')->willReturn(false, true);
+        $database->method('getAttribute')->with(\PDO::ATTR_DRIVER_NAME)->willReturn('sqlite');
+        $database->expects(self::once())->method('beginTransaction')->willReturn(true);
+        $database->method('errorCode')->willReturn('00000');
+        $database->expects(self::once())->method('prepare')->willThrowException($original);
+        $database->expects(self::once())->method('rollBack')->willThrowException($cleanup);
+        try {
+            (new LegacyCdefDeletion($database, 1))->delete([1]);
+            self::fail('Unconfirmed rollback was accepted.');
+        } catch (\RuntimeException $error) {
+            self::assertStringContainsString('Reload before retrying', $error->getMessage());
+            self::assertSame($original, $error->getPrevious());
+        }
+    }
+
     private function database(): \PDO
     {
         $database = new \PDO('sqlite::memory:', options: [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_SILENT]);

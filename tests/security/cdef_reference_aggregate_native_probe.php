@@ -80,6 +80,7 @@ try {
     $database->exec("CREATE DATABASE `$schema`");
     $created = true;
     $database->exec("USE `$schema`");
+    $observer->exec("USE `$schema`");
     installerSeed($database, $root);
     cdef_reference_install();
     $database->exec("SET SESSION sql_mode='STRICT_ALL_TABLES'");
@@ -227,20 +228,36 @@ try {
                 }
             }
         }
-        $database->exec("ALTER TABLE `$table` ENGINE=MyISAM");
+        $database->exec("ALTER TABLE `$table` ENGINE=MyISAM COMMENT='ENGINE=InnoDB'");
         try {
             callerAssert(
-                aggregate_graph_items_save([[$idField => 1,'graph_templates_item_id' => 101]], $table) === false,
-                "$table nontransactional actual table rejected"
+                aggregate_graph_items_save([[$idField => 1,'graph_templates_item_id' => 101], [$idField => 1,'graph_templates_item_id' => 101]], $table) === false,
+                "$table actual MyISAM with misleading engine comment refuses before duplicate-key replacement"
             );
             callerAssert(
-                $database->query("SELECT * FROM `$table` ORDER BY `$idField`, graph_templates_item_id")->fetchAll(PDO::FETCH_ASSOC) === $rows,
-                "$table nontransactional refusal preserves cache"
+                $observer->query("SELECT * FROM `$table` ORDER BY `$idField`, graph_templates_item_id")->fetchAll(PDO::FETCH_ASSOC) === $rows,
+                "$table independent observer confirms nontransactional refusal preserves cache"
             );
         } finally {
-            $database->exec("ALTER TABLE `$table` ENGINE=InnoDB");
+            $database->exec("ALTER TABLE `$table` ENGINE=InnoDB COMMENT='ENGINE=MyISAM TEMPORARY'");
         }
-
+        $database->beginTransaction();
+        $database->exec("UPDATE cdef SET name='Safe comment caller work' WHERE id=15000001");
+        callerAssert(
+            aggregate_graph_items_save([[$idField => 1,'graph_templates_item_id' => 104,'cdef_id' => 15000001]], $table)
+            && $database->inTransaction()
+            && $database->query("SELECT name FROM cdef WHERE id=15000001")->fetchColumn() === 'Safe comment caller work',
+            "$table actual InnoDB misleading comment admits replacement preserving caller work"
+        );
+        callerAssert(
+            $observer->query("SELECT * FROM `$table` ORDER BY `$idField`, graph_templates_item_id")->fetchAll(PDO::FETCH_ASSOC) === $rows,
+            "$table independent observer does not see caller uncommitted replacement"
+        );
+        $database->rollBack();
+        callerAssert(
+            $observer->query("SELECT * FROM `$table` ORDER BY `$idField`, graph_templates_item_id")->fetchAll(PDO::FETCH_ASSOC) === $rows,
+            "$table safe comment caller rollback restores old cache"
+        );
 
     }
 } finally {

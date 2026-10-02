@@ -3333,8 +3333,21 @@ class Installer implements JsonSerializable
                 }
                 $table = $metadata->fetch(PDO::FETCH_ASSOC);
                 if ($metadata->errorCode() !== '00000' || $db->errorCode() !== '00000'
-                    || !is_array($table) || !preg_match('/\bENGINE=InnoDB\b/i', $table['Create Table'] ?? '')
-                    || preg_match('/\bTEMPORARY\b/i', $table['Create Table'] ?? '')) {
+                    || !is_array($table) || !is_string($table['Create Table'] ?? null)
+                    || preg_match('/\ACREATE TABLE\s/i', $table['Create Table']) !== 1
+                    || !$metadata->closeCursor() || $metadata->errorCode() !== '00000') {
+                    return false;
+                }
+                $status = $db->query("SHOW TABLE STATUS WHERE Name = 'version'");
+                if ($status === false || $db->errorCode() !== '00000') {
+                    return false;
+                }
+                $engine = $status->fetch(PDO::FETCH_ASSOC);
+                $additional = $status->fetch(PDO::FETCH_ASSOC);
+                if ($status->errorCode() !== '00000' || $db->errorCode() !== '00000'
+                    || !is_array($engine) || ($engine['Name'] ?? null) !== 'version'
+                    || ($engine['Engine'] ?? null) !== 'InnoDB' || $additional !== false
+                    || !$status->closeCursor() || $status->errorCode() !== '00000') {
                     return false;
                 }
             } elseif ($driver !== 'sqlite') {

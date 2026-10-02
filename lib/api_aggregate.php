@@ -570,9 +570,28 @@ function aggregate_graph_items_save($items, $table)
             }
             $row = $metadata->fetch(PDO::FETCH_ASSOC);
             if ($metadata->errorCode() !== '00000' || $db->errorCode() !== '00000' || !is_array($row)
-                || !preg_match('/\bENGINE=InnoDB\b/i', $row['Create Table'] ?? '')
-                || preg_match('/\bTEMPORARY\b/i', $row['Create Table'] ?? '')) {
+                || !is_string($row['Create Table'] ?? null)
+                || preg_match('/\ACREATE TABLE\s/i', $row['Create Table']) !== 1) {
                 throw new RuntimeException('Aggregate cache requires a persistent transactional table.');
+            }
+            if (!$metadata->closeCursor() || $metadata->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache metadata close could not be confirmed.');
+            }
+            // Table comments may contain an arbitrary ENGINE=InnoDB string.
+            // Read the actual persistent engine on this selected native PDO.
+            $status = $db->query("SHOW TABLE STATUS WHERE Name = '$table'");
+            if ($status === false || $db->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache engine metadata is unavailable.');
+            }
+            $engine = $status->fetch(PDO::FETCH_ASSOC);
+            $additional = $status->fetch(PDO::FETCH_ASSOC);
+            if ($status->errorCode() !== '00000' || !is_array($engine)
+                || ($engine['Name'] ?? null) !== $table || ($engine['Engine'] ?? null) !== 'InnoDB'
+                || $additional !== false) {
+                throw new RuntimeException('Aggregate cache requires a persistent transactional table.');
+            }
+            if (!$status->closeCursor() || $status->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache engine metadata close could not be confirmed.');
             }
         } elseif ($driver !== 'sqlite') {
             return false;

@@ -98,7 +98,7 @@ final class LegacyCdefDeletion
                     }
                 }
             } catch (\Throwable $rollbackError) {
-                throw new \RuntimeException('CDEF deletion could not be confirmed. Reload before retrying.', 0, $rollbackError);
+                throw new \RuntimeException('CDEF deletion could not be confirmed. Reload before retrying.', 0, $error);
             }
             if ($commitAttempted) {
                 throw new \RuntimeException('CDEF deletion could not be confirmed. Reload before retrying.', 0, $error);

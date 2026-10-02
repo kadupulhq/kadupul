@@ -28,8 +28,8 @@ cmd_exec	./lib/functions.php:7614	            exec(sprintf('grep :%s: /etc/passw
 cmd_exec	./lib/functions.php:7917	 * shell_exec() callers that already assemble the command string.
 cmd_exec	./lib/functions.php:7959	    $process = proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/functions.php:8028	 * shell_exec() and expect a string return value.
-cmd_exec	./lib/installer.php:3624	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:3660	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:3637	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:3673	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:852	            $process = @proc_open(
 cmd_exec	./lib/ping.php:149					$result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:151					$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -332,9 +332,9 @@ dynamic_include	./install/upgrades/1_2_20.php:11		include_once($config['base_pat
 dynamic_include	./lib/aggregate.php:566		include_once($config['base_path'] . '/lib/cdef.php');
 dynamic_include	./lib/aggregate.php:621		include_once($config['base_path'] . '/lib/cdef.php');
 dynamic_include	./lib/aggregate.php:817		include_once($config['base_path'] . '/lib/api_graph.php');
-dynamic_include	./lib/api_aggregate.php:1859	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/api_aggregate.php:1878	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/api_aggregate.php:209	    include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_aggregate.php:767	    include_once($config['base_path'] . '/lib/api_aggregate.php');
+dynamic_include	./lib/api_aggregate.php:786	    include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_automation.php:2540	    include_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./lib/api_automation.php:2541	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./lib/api_automation.php:2542	    include_once($config['base_path'] . '/lib/utility.php');
@@ -379,7 +379,7 @@ dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . 
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/import.php:2153	    include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/installer.php:3770	                include_once($upgrade_file);
+dynamic_include	./lib/installer.php:3783	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:1016	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/plugins.php:145	                        include_once($plugin_include);

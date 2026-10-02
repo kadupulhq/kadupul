@@ -110,6 +110,11 @@ try {
     $database->exec(str_replace('CREATE TABLE ', 'CREATE TEMPORARY TABLE ', $create));
     versionAssert(!$confirm() && $versions() === [], 'actual temporary version shadow is refused before insertion');
     $database->exec('DROP TEMPORARY TABLE version');
+    $database->exec("ALTER TABLE version ENGINE=MyISAM COMMENT='ENGINE=InnoDB'");
+    versionAssert(!$confirm() && $versions() === ['1.2.33'], 'actual misleading engine comment refuses before nontransactional version mutation');
+    $database->exec("ALTER TABLE version ENGINE=InnoDB COMMENT='ENGINE=MyISAM TEMPORARY'");
+    versionAssert($confirm() && $versions() === [CACTI_VERSION], 'actual InnoDB version with engine and TEMPORARY comment text remains admitted');
+    $database->exec("UPDATE version SET cacti='1.2.33'");
     $database->exec('ALTER TABLE version ENGINE=MyISAM');
     versionAssert(!$confirm() && $versions() === ['1.2.33'], 'actual nontransactional version marker is refused before mutation');
 } finally {

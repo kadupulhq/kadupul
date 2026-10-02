@@ -32,7 +32,10 @@ final class CdefReferenceReadiness implements \Kadupul\Platform\Contract\CdefRef
         }
         foreach (['cdef', 'cdef_items', 'graph_templates_item', 'aggregate_graph_templates_item', 'aggregate_graphs_graph_item'] as $table) {
             $create = $this->read("SHOW CREATE TABLE `$table`")[0]['Create Table'] ?? '';
-            if (!is_string($create) || preg_match('/\bENGINE=InnoDB\b/i', $create) !== 1 || preg_match('/\bTEMPORARY\b/i', $create)) {
+            $storage = $this->read("SHOW TABLE STATUS WHERE Name=" . $this->database->quote($table));
+            if (!is_string($create) || preg_match('/\ACREATE TABLE\s/i', $create) !== 1
+                || count($storage) !== 1 || ($storage[0]['Name'] ?? null) !== $table
+                || strcasecmp($storage[0]['Engine'] ?? '', 'InnoDB') !== 0) {
                 return false;
             }
             $columns = [];

@@ -64,8 +64,10 @@ final class CdefReferenceContract
         foreach (self::TABLES as $table) {
             $rows = $this->read("SHOW CREATE TABLE `$table`");
             $create = $rows[0]['Create Table'] ?? '';
-            if (!is_string($create) || !preg_match('/\bENGINE=InnoDB\b/i', $create)
-                || preg_match('/\bTEMPORARY\b/i', $create)) {
+            $storage = $this->read("SHOW TABLE STATUS WHERE Name=" . $this->database->quote($table));
+            if (!is_string($create) || preg_match('/\ACREATE TABLE\s/i', $create) !== 1
+                || count($storage) !== 1 || ($storage[0]['Name'] ?? null) !== $table
+                || strcasecmp($storage[0]['Engine'] ?? '', 'InnoDB') !== 0) {
                 throw new \RuntimeException('The CDEF reference contract requires persistent InnoDB tables.');
             }
             $columns = [];

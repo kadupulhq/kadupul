@@ -16,6 +16,20 @@ require dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/CdefReference
 use Kadupul\Platform\Infrastructure\Legacy\CdefReferenceContract;
 use Kadupul\Platform\Infrastructure\Legacy\CdefReferenceReadiness;
 
+final class ContractProbeDatabase extends PDO
+{
+    public array $ddl = [];
+
+    public function exec(string $statement): int|false
+    {
+        if (preg_match('/\A\s*(CREATE|ALTER|DROP)\s/i', $statement) === 1) {
+            $this->ddl[] = $statement;
+        }
+
+        return parent::exec($statement);
+    }
+}
+
 function contractProbeAssert(bool $condition, string $message): void
 {
     if (!$condition) {
@@ -40,7 +54,7 @@ $dsn = getenv('KADUPUL_REFERENCE_TEST_DSN');
 if ($dsn === false || !str_starts_with($dsn, 'mysql:')) {
     throw new RuntimeException('An explicitly configured native contract probe DSN is required.');
 }
-$database = new PDO($dsn, getenv('KADUPUL_REFERENCE_TEST_USER') ?: '', getenv('KADUPUL_REFERENCE_TEST_PASSWORD') ?: '', [
+$database = new ContractProbeDatabase($dsn, getenv('KADUPUL_REFERENCE_TEST_USER') ?: '', getenv('KADUPUL_REFERENCE_TEST_PASSWORD') ?: '', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_EMULATE_PREPARES => false,
 ]);
@@ -54,6 +68,48 @@ try {
     $database->exec("CREATE DATABASE `$schema`");
     $created = true;
     $database->exec("USE `$schema`");
+    // Exercise the actual shipped persistent table definitions before the
+    // smaller fixtures below isolate the remaining contract transitions.
+    $tables = ['cdef', 'cdef_items', 'graph_templates_item', 'aggregate_graph_templates_item', 'aggregate_graphs_graph_item'];
+    $source = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+    foreach ($tables as $table) {
+        if (preg_match('/CREATE TABLE `?' . preg_quote($table, '/') . '`? \(.*?;\s*/s', $source, $definition) !== 1) {
+            throw new RuntimeException('The actual source table definition is unavailable.');
+        }
+        $database->exec($definition[0]);
+    }
+    $engineContract = new CdefReferenceContract($database, 1);
+    foreach ($tables as $table) {
+        $database->exec("ALTER TABLE `$table` ENGINE=MyISAM COMMENT='ENGINE=InnoDB'");
+        $before = [];
+        foreach ($tables as $persistent) {
+            $before[$persistent] = $database->query("SHOW CREATE TABLE `$persistent`")->fetch(PDO::FETCH_ASSOC);
+        }
+        $database->ddl = [];
+        contractProbeRefused(fn() => $engineContract->install(), 'persistent InnoDB');
+        contractProbeAssert($database->ddl === [], "$table actual PDO sees no capability/index/trigger/procedure DDL before refusal");
+        foreach ($tables as $persistent) {
+            contractProbeAssert(
+                $database->query("SHOW CREATE TABLE `$persistent`")->fetch(PDO::FETCH_ASSOC) === $before[$persistent],
+                "$table misleading comment is refused before changing $persistent metadata"
+            );
+        }
+        contractProbeAssert(
+            (int) $database->query('SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA=DATABASE()')->fetchColumn() === 0
+            && (int) $database->query('SELECT COUNT(*) FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA=DATABASE()')->fetchColumn() === 0,
+            "$table actual nontransactional engine refuses before capability/index/trigger/procedure DDL"
+        );
+        $database->exec("ALTER TABLE `$table` ENGINE=InnoDB COMMENT='ENGINE=MyISAM TEMPORARY'");
+    }
+    $engineContract->install();
+    contractProbeAssert(
+        $engineContract->ready() && (new CdefReferenceReadiness($database, 1))->ready(),
+        'actual source InnoDB tables with engine and TEMPORARY comment text remain admitted'
+    );
+    foreach ($tables as $table) {
+        $database->exec("DROP TABLE `$table`");
+    }
+    $database->exec('DROP PROCEDURE kadupul_cdef_reference_status');
     foreach ([
         'cdef' => 'id MEDIUMINT UNSIGNED PRIMARY KEY',
         'cdef_items' => 'id INT UNSIGNED PRIMARY KEY, cdef_id MEDIUMINT UNSIGNED NOT NULL, type TINYINT UNSIGNED NOT NULL, value VARCHAR(150) NOT NULL, INDEX owner (cdef_id)',

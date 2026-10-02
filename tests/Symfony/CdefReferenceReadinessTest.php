@@ -27,12 +27,14 @@ final class CdefReferenceReadinessTest extends TestCase
         $database = $this->createMock(\PDO::class);
         $database->method('getAttribute')->willReturn('mysql');
         $database->method('errorCode')->willReturn('00000');
+        $database->method('quote')->willReturnCallback(static fn(string $value): string => "'" . $value . "'");
         $database->method('query')->willReturnCallback(function (string $sql) use ($call): \PDOStatement {
             if (str_starts_with($sql, 'CALL ')) {
                 return $call;
             }
             $rows = match (true) {
-                str_starts_with($sql, 'SHOW CREATE') => [['Create Table' => 'CREATE TABLE fixture (id MEDIUMINT UNSIGNED) ENGINE=InnoDB']],
+                str_starts_with($sql, 'SHOW CREATE') => [['Create Table' => 'CREATE TABLE `fixture` (id MEDIUMINT UNSIGNED) ENGINE=InnoDB']],
+                str_starts_with($sql, 'SHOW TABLE STATUS') => [['Name' => trim(substr($sql, strlen('SHOW TABLE STATUS WHERE Name=')), "'"), 'Engine' => 'InnoDB']],
                 str_starts_with($sql, 'SHOW COLUMNS') => [
                     ['Field' => 'id', 'Type' => 'mediumint unsigned', 'Extra' => ''],
                     ['Field' => 'cdef_id', 'Type' => 'mediumint unsigned', 'Extra' => ''],
