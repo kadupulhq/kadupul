@@ -26,7 +26,9 @@
             <file>link.php</file>
             <file>lib/auth.php</file>
             <file>lib/database.php</file>
+            <file>lib/reference_write.php</file>
             <file>lib/functions.php</file>
+            <file>utilities.php</file>
         </include>
     </source>
 </phpunit>
