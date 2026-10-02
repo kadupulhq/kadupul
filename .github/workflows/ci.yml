@@ -382,11 +382,21 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: npm run --if-present build
 
-      - name: Test
+      - name: Set up PHP for controller fixtures
+        if: steps.detect.outputs.found == 'true'
+        # The permission-filter JS test executes the actual PHP controllers.
+        # Its SQLite fixture and HTML renderer need these runtime extensions.
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite, dom
+          coverage: none
+
+      - name: Test browser behavior
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/permission-filter.test.mjs
 
   changelog:
     name: Changelog
