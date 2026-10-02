@@ -563,10 +563,11 @@ function ImageString($image, $font, $x, $y, $string, $color) {}
 function imagejpeg($image) { echo 'jpeg'; }
 function imagegif($image) { echo 'gif'; }
 $source = file_get_contents(getcwd() . '/lib/reports.php');
-preg_match('/^function png2jpeg .*?^}\n/ms', $source, $jpeg);
-preg_match('/^function png2gif .*?^}\n/ms', $source, $gif);
-if (empty($jpeg) || empty($gif)) { exit(2); }
-eval('namespace ReportPngRuntime; ' . $jpeg[0] . $gif[0]);
+require_once getcwd() . '/tests/Helpers/PhpSource.php';
+if (!is_string($source)) { throw new \RuntimeException('Unable to read report image conversion source'); }
+$jpeg = \test_php_function_source($source, 'png2jpeg');
+$gif = \test_php_function_source($source, 'png2gif');
+eval('namespace ReportPngRuntime; ' . $jpeg . $gif);
 $GLOBALS['decode_ok'] = true;
 $jpegData1 = png2jpeg('png-data-1');
 $jpegData2 = png2jpeg('png-data-2');
