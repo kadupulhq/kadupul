@@ -21,6 +21,11 @@ app.php/inventory/sites/legacy	symfony:inventory_sites_legacy	methods=GET|HEAD|P
 app.php/inventory/sites/new	symfony:inventory_site_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/{id}/edit	symfony:inventory_site_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/{operation}	symfony:inventory_site_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 3
+app.php/links	symfony:navigation_links	methods=GET|HEAD; ConsoleAccess realm 8
+app.php/links/action/{operation}	symfony:navigation_link_action	methods=GET|HEAD|POST requirements=operation=delete|enable|disable|up|down; ConsoleAccess realm 8
+app.php/links/legacy	symfony:navigation_links_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
 auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 783892662d44
@@ -188,13 +193,14 @@ install/upgrades/1_2_27.php	anonymous-allowed	inert: declarations and literal as
 install/upgrades/1_2_3.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_31.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_33.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_34.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/index.php	anonymous-allowed	redirect-only
 lib/	web-server-denied	nginx; apache .htaccess
 link.php	realm:10000+id	own realm check per external link id; reviewed at 929a564cf868
-links.php	realm:15	include/auth.php
+links.php	symfony:forward	forwards to app.php/links/legacy
 locales/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 locales/index.php	anonymous-allowed	redirect-only
 locales/po/index.php	anonymous-allowed	redirect-only

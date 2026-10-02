@@ -11,6 +11,23 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+}
+if (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/rrdcleaner.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
+}
+if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
+}
+
+if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/database.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
+}
 if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
@@ -171,6 +188,25 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
+    foreach ($coverageFilter->files() as $file) {
+        // Only byte-identical copied CLI paths are attributed to the canonical producer.
+        $source = defined('RRD_TEST_CLI_COVERAGE_COPY') && $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
+        $nativeSources[] = substr($source, strlen($coverageRoot) + 1);
+    }
+    if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/HtmlRendererNativeCoverageTest.php', 'include/global_constants.php', 'lib/functions.php', 'lib/html_utility.php', 'lib/headers_secure.php'));
+        $nativeProducer = 'tests/Fixtures/html-renderer-native.php';
+        $nativeScenario = $argv[1];
+    } else {
+        $nativeSources[] = 'tests/Unit/PerCsReviewRegressionTest.php';
+        $nativeProducer = 'tests/Fixtures/per-cs-review-native.php';
+        $nativeScenario = json_encode(array($argv[1], $argv[3]), JSON_THROW_ON_ERROR);
+    }
+    $nativeCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, $nativeProducer, $nativeScenario, $nativeSources);
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
@@ -203,6 +239,16 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
         if (isset($GLOBALS['nativeChildCoverageSnapshot'])) {
             require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
             NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeChildCoverageSnapshot'], $GLOBALS['nativeChildCoverageMarkers'] ?? array());
+        }
+        if (isset($GLOBALS['nativeCoverageEvidence'])) {
+            if (!defined('NATIVE_COVERAGE_COMPLETED')) {
+                throw new RuntimeException('Native coverage production scenario did not complete.');
+            }
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeCoverageEvidence'], NATIVE_COVERAGE_COMPLETED);
+        }
+        if (defined('CSRF_ROTATION_TEST_COVERAGE')) {
+            require_once dirname(__DIR__) . '/Helpers/CsrfRotationCoverage.php';
+            CsrfRotationCoverage::record($childCoverageFile, dirname(__DIR__, 2));
         }
     });
 });

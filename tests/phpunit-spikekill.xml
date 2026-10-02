@@ -58,6 +58,9 @@
       <file>./Unit/Security/Auth/CsrfSecretInitializationRaceTest.php</file>
       <file>./Unit/Security/Auth/CsrfIpTokenTest.php</file>
       <file>./Unit/Security/Auth/RefreshCsrfSecretTest.php</file>
+      <file>./Unit/Security/CsrfMagicFormRewriteTest.php</file>
+      <file>./Unit/Security/CsrfMagicLocaleTest.php</file>
+      <file>./Unit/Security/CsrfMagicTokenCheckTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>

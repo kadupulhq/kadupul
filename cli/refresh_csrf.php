@@ -47,7 +47,13 @@ if (cacti_sizeof($parms)) {
 print "NOTE: Updating csrf_secret file with new information" . PHP_EOL;
 
 $legacy_path = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
-$new_secret = bin2hex(random_bytes(32));
+// Generate before touching the working key; entropy failure preserves it.
+try {
+    $new_secret = csrf_generate_secret();
+} catch (Throwable $error) {
+    print "FATAL: Unable to generate a new CSRF secret." . PHP_EOL;
+    exit(1);
+}
 
 // Web requests read the secret from $path_csrf_secret when it is set, and
 // otherwise from the database; they no longer read the file under include/.
@@ -84,7 +90,7 @@ if (!cacti_csrf_external_path_is_safe($path_csrf_secret)) {
 // Keep the working key until its complete replacement is ready.
 $previous = is_file($path_csrf_secret) ? stat($path_csrf_secret) : false;
 $temporary = tempnam(dirname($path_csrf_secret), '.csrf-');
-$contents = '<?php $secret = "' . $new_secret . '";' . PHP_EOL;
+$contents = '<?php $secret = ' . var_export($new_secret, true) . ';' . PHP_EOL;
 $written = false;
 if ($temporary !== false) {
     try {
@@ -119,7 +125,7 @@ exit(0);
 function display_version()
 {
     $version = get_cacti_cli_version();
-    print "Kadupul Rebuild Poller Cache Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+    print "Kadupul CSRF Refresh Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /*	display_help - displays the usage of the function */
@@ -128,7 +134,7 @@ function display_help()
     display_version();
 
     print PHP_EOL . "usage: refresh_csrf.php" . PHP_EOL . PHP_EOL;
-    print "A utility to update the csrf_secret() key on a the Kadupul system.  Updating" . PHP_EOL;
+    print "A utility to update the csrf_secret() key on the Kadupul system.  Updating" . PHP_EOL;
     print "this key should happen periodically during non-production hours as it can" . PHP_EOL;
     print "impact the user experience." . PHP_EOL . PHP_EOL;
 }

@@ -41,7 +41,8 @@ function refresh_csrf_run($test, array $scenario): array
     file_put_contents($dir . '/lib/poller.php', '<?php');
     file_put_contents($dir . '/lib/utility.php', '<?php');
     file_put_contents($dir . '/include/vendor/csrf/csrf-conf.php', '<?php');
-    file_put_contents($dir . '/include/vendor/csrf/csrf-magic.php', '<?php function csrf_writable($file) { return is_writable(file_exists($file) ? $file : dirname($file)); }');
+    require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+    file_put_contents($dir . '/include/vendor/csrf/csrf-magic.php', '<?php ' . test_php_function_source(file_get_contents($root . '/include/vendor/csrf/csrf-magic.php'), 'csrf_generate_secret') . ' function csrf_writable($file) { return is_writable(file_exists($file) ? $file : dirname($file)); }');
     if (!empty($scenario['legacy'])) {
         file_put_contents($dir . '/include/vendor/csrf/csrf-secret.php', '<?php $secret = "legacy";');
     }
@@ -169,7 +170,7 @@ test('an external secret outside the document root is replaced', function (bool 
                 ->and($result['stdout'])->toContain('New csrf_secret.php file written.')
         ->and($result['stdout'])->toEndWith('STORED:0')
         ->and($result['mode'])->toBe(0640)
-        ->and($result['secret'])->toMatch('/^<\?php \$secret = "[0-9a-f]{64}";\n$/');
+        ->and($result['secret'])->toMatch('/^<\?php \$secret = [\x22\x27][0-9a-f]{64}[\x22\x27];\n$/');
 })->with(array(
     'existing file' => array(true, 'Removing old csrf_secret.php file.'),
     'missing file' => array(false, 'WARNING: csrf_secret.php file does not exist!'),
@@ -185,7 +186,7 @@ test('atomic rotation preserves read-only secret modes after writing the replace
     $result = refresh_csrf_run($this, array('secret' => '{outside}/csrf-secret.php', 'existing' => true, 'mode' => $mode));
     expect($result['exit'])->toBe(0)->and($result['stderr'])->toBe('')
         ->and($result['mode'])->toBe($mode)
-        ->and($result['secret'])->toMatch('/^<\?php \$secret = "[0-9a-f]{64}";\n$/');
+        ->and($result['secret'])->toMatch('/^<\?php \$secret = [\x22\x27][0-9a-f]{64}[\x22\x27];\n$/');
 })->with(array(0400, 0440));
 
 test('failed local settings persistence cannot update collectors or the active configuration cache', function (string $mode) {
