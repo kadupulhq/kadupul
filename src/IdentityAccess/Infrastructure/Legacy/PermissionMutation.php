@@ -138,6 +138,23 @@ final class PermissionMutation
                 self::rollback($db, $owned, $savepoint);
                 return false;
             }
+            if (strncmp($sql, 'DELETE', 6) === 0) {
+                // Read the receipt from this exact PDO before another statement can replace it.
+                $affected = \db_affected_rows($db);
+                if (!is_int($affected) || $affected < 0) {
+                    throw new PermissionEpochFailure('Permission delete outcome was not confirmed.');
+                }
+                if ($affected === 0) {
+                    if ($owned) {
+                        if (!$db->commit()) {
+                            throw new RuntimeException('Permission mutation commit failed.');
+                        }
+                    } else {
+                        self::control($db, 'RELEASE SAVEPOINT ' . $savepoint);
+                    }
+                    return true;
+                }
+            }
             foreach (array_chunk($epochs, 1000, true) as $chunk) {
                 $ids = array_keys($chunk);
                 $placeholders = implode(',', array_fill(0, count($ids), '?'));

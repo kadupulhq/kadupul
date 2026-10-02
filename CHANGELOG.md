@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep permission writes and session epochs consistent, including failed writes and absent deletions.
+
 - Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
 
 - Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.

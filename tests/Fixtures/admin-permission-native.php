@@ -20,7 +20,7 @@ $group = $scenario['group'];
 $target = 42;
 $config = ['cacti_db_version' => '1.2.33'];
 $operation = $scenario['operation'];
-$request = ['action' => $operation === 'realm' ? 'save' : 'perm_remove', 'id' => $operation === 'realm' ? $target : 100, 'user_id' => $target, 'group_id' => $target, 'type' => $scenario['type'] ?? 'graph'];
+$request = ['action' => $operation === 'realm' ? 'save' : 'perm_remove', 'id' => $operation === 'realm' ? $target : ($scenario['item_id'] ?? 100), 'user_id' => $target, 'group_id' => $target, 'type' => $scenario['type'] ?? 'graph'];
 $_POST = [];
 if ($operation === 'add') {
     $request['action'] = 'save';
@@ -143,8 +143,11 @@ function db_execute_prepared($sql, $params = [], $log = true, $connection = fals
     if (($GLOBALS['scenario']['write_error'] ?? false) && (str_starts_with($sql, 'REPLACE INTO user_auth_perms') || str_starts_with($sql, 'UPDATE `user_auth` SET `policy_') || str_starts_with($sql, 'UPDATE `user_auth_group` SET `policy_'))) {
         return false;
     }
+    $GLOBALS['permission_affected_rows'] = 0;
     try {
-        $result = $GLOBALS['db']->prepare($sql)->execute($params);
+        $statement = $GLOBALS['db']->prepare($sql);
+        $result = $statement->execute($params);
+        $GLOBALS['permission_affected_rows'] = $statement->rowCount();
     } catch (PDOException $error) {
         if ((!isset($GLOBALS['scenario']['failed_ids']) || !str_contains($error->getMessage(), 'native permission write failure')) && !str_contains($error->getMessage(), 'native epoch rejection')) {
             throw $error;
@@ -155,6 +158,13 @@ function db_execute_prepared($sql, $params = [], $log = true, $connection = fals
         $GLOBALS['write_outcomes'][] = array('parameters' => $params, 'success' => $result);
     }
     return $result;
+}
+function db_affected_rows($db_conn = false)
+{
+    if ($db_conn !== false && $db_conn !== $GLOBALS['db']) {
+        throw new RuntimeException('Native admin changed affected-row PDO.');
+    }
+    return $GLOBALS['permission_affected_rows'] ?? false;
 }
 function db_execute($sql)
 {

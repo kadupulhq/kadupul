@@ -20,6 +20,20 @@ if (isset($argv[3])) {
     require __DIR__ . '/rrd-process-coverage.php';
 }
 $driver = $scenario['engine'];
+final class PermissionReceiptStatement extends PDOStatement
+{
+    protected function __construct() {}
+
+    public function closeCursor(): bool
+    {
+        $result = parent::closeCursor();
+        // Exercise the actual driver's receipt read after its real DELETE completes.
+        if (array_key_exists('affected_outcome', $GLOBALS['scenario']) && str_starts_with($this->queryString, 'DELETE FROM user_auth')) {
+            $GLOBALS['affected_rows'][spl_object_hash($GLOBALS['db'])] = $GLOBALS['scenario']['affected_outcome'];
+        }
+        return $result;
+    }
+}
 final class PermissionCountedPdo extends PDO
 {
     public int $calls = 0;
@@ -47,6 +61,9 @@ $db = $driver === 'sqlite'
     ? new PermissionCountedPdo('sqlite:' . $directory . '/state.sqlite')
     : new PermissionCountedPdo((string) getenv('PERMISSION_MUTATION_TEST_DSN'), (string) getenv('PERMISSION_MUTATION_TEST_USER'), (string) getenv('PERMISSION_MUTATION_TEST_PASSWORD'));
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+if (array_key_exists('affected_outcome', $scenario)) {
+    $db->setAttribute(PDO::ATTR_STATEMENT_CLASS, array(PermissionReceiptStatement::class, array()));
+}
 if ($driver !== 'sqlite') {
     $schema = $db->query('SELECT DATABASE()')->fetchColumn();
     if (!is_string($schema) || !preg_match('/^kadupul715_epoch_[a-z0-9_]+$/D', $schema)) {
@@ -59,6 +76,10 @@ $database_default = 'permission';
 $database_sessions = array('native:0:permission' => $db);
 $config = array('cacti_db_version' => '1.2.33');
 $_SESSION = array('sess_user_id' => 41);
+if ($scenario['self'] ?? false) {
+    $_SESSION = array('sess_user_id' => 42, 'sess_user_realms' => array('preserved'));
+}
+$initialSession = $_SESSION;
 $messages = array();
 function cacti_count($value)
 {
@@ -164,18 +185,30 @@ if ($kind === 'membership') {
     $sql = 'UPDATE ' . ($group ? 'user_auth_group' : 'user_auth') . ' SET policy_graphs = ? WHERE id = ?';
     $parameters = array(1,42);
 }
+if ($scenario['absent'] ?? false) {
+    $parameters[1] = 999;
+    if ($group && $kind === 'membership') {
+        $member = 999;
+    }
+}
 $error = null;
 $startQueries = $db->calls;
 $startIndex = count($db->queries);
 try {
-    if ($kind === 'batch') {
+    if ($kind === 'batch' || $kind === 'mixed') {
         $request = array('id' => 42,'associate_graph' => 1,'drp_action' => 2);
         $_POST = array();
-        $count = $scenario['size'];
-        $q = $db->prepare('REPLACE INTO ' . ($group ? 'user_auth_group_perms' : 'user_auth_perms') . ' VALUES (42,?,1)');
-        for ($i = 100; $i < 100 + $count; $i++) {
-            $q->execute(array($i));
-            $_POST['chk_' . $i] = 'on';
+        if ($kind === 'batch') {
+            $count = $scenario['size'];
+            $q = $db->prepare('REPLACE INTO ' . ($group ? 'user_auth_group_perms' : 'user_auth_perms') . ' VALUES (42,?,1)');
+            for ($i = 100; $i < 100 + $count; $i++) {
+                $q->execute(array($i));
+                $_POST['chk_' . $i] = 'on';
+            }
+        } else {
+            foreach ($scenario['selected'] as $item) {
+                $_POST['chk_' . $item] = 'on';
+            }
         }
         $startQueries = $db->calls;
         $startIndex = count($db->queries);
@@ -190,6 +223,8 @@ try {
 $queryCount = $db->calls - $startQueries;
 $mutationQueries = array_slice($db->queries, $startIndex);
 $state = array('result' => $result,'error' => $error,'transaction_open' => $db->inTransaction(),'epochs' => $db->query('SELECT id,reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC),'permissions' => $db->query('SELECT * FROM ' . ($group ? 'user_auth_group_perms' : 'user_auth_perms') . ' ORDER BY 1,2,3')->fetchAll(PDO::FETCH_ASSOC),'memberships' => $db->query('SELECT * FROM user_auth_group_members ORDER BY 1,2')->fetchAll(PDO::FETCH_ASSOC),'policy' => (int) $db->query('SELECT policy_graphs FROM ' . ($group ? 'user_auth_group' : 'user_auth') . ' WHERE id=42')->fetchColumn(),'messages' => $messages,'mutation_queries' => $queryCount,'first_mutation_queries' => array_slice($mutationQueries, 0, 18));
+$state['initial_session'] = $initialSession;
+$state['session'] = $_SESSION;
 if ($scenario['caller'] ?? false) {
     $state['caller_work'] = (int) $db->query('SELECT COUNT(*) FROM caller_work')->fetchColumn();
     $db->rollBack();

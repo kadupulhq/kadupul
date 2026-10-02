@@ -116,6 +116,13 @@ final class PermissionFilterRendererTest extends TestCase
         self::assertSame($expected, $result['rows']);
         $writes = array_values(array_filter($result['queries'], static fn(array $query): bool => str_starts_with($query[0], 'REPLACE INTO') || str_starts_with($query[0], 'DELETE FROM')));
         self::assertCount(2, $writes);
+        self::assertSame($add ? array() : array(1, 0), $result['delete_counts']);
+        if ($page === 'user_group_admin.php' && $type === 0 && !$add) {
+            self::assertGreaterThan(0, (int) $result['epochs'][41]);
+            foreach (array(7, 42, 43, 77) as $unaffected) {
+                self::assertSame(0, (int) $result['epochs'][$unaffected]);
+            }
+        }
     }
 
     public function associations(): array

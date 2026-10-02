@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -7,6 +9,7 @@
  */
 
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 $authSource = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
 
@@ -135,7 +138,17 @@ test('domain bind failures enforce the configured lockout using numeric error co
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
-            $coverage->merge(unserialize(file_get_contents($reports[0])));
+            $root = dirname(__DIR__, 2);
+            $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+            $scenario = json_encode(array('code' => (string) $code, 'text' => $text), JSON_THROW_ON_ERROR);
+            $arguments = array($reports[0], $root, 'tests/Fixtures/domain-lockout-native.php', $scenario, $sources, array('domain-lockout-persisted-state-readback'), array('lib/auth.php'));
+            $measured = NativeChildCoverageEvidence::load(...$arguments);
+            static $verifiedOmissions = false;
+            if (!$verifiedOmissions) {
+                expect(NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, array('lib/boost.php'))))->toBe(count($sources) + 11);
+                $verifiedOmissions = true;
+            }
+            $coverage->merge($measured);
         }
     } finally {
         foreach (glob($directory . '/*') as $file) {
