@@ -33,8 +33,9 @@ final class DeviceMutationSelection
             $markStatus('missing');
             throw new RuntimeException('Devices unavailable');
         }
-        $sites = array_unique(array_map(static fn($row) => (int) $row['site_id'], $associations));
+        $sites = array_unique([...array_map(static fn($row) => (int) $row['site_id'], $associations), ...array_map('intval', $additionalSiteIds)]);
         sort($sites, SORT_NUMERIC);
+        $siteLocks = [];
         foreach ($sites as $siteId) {
             if ($siteId > 0) {
                 $siteLocks[$siteId] = $read($connection, 'SELECT id FROM sites WHERE id = ? FOR UPDATE', [$siteId]);
@@ -58,8 +59,9 @@ final class DeviceMutationSelection
             $markStatus('missing');
             throw new RuntimeException('Devices unavailable');
         }
-        $pollers = array_unique(array_map(static fn($row) => (int) $row['poller_id'], $rows));
+        $pollers = array_unique([...array_map(static fn($row) => (int) $row['poller_id'], $rows), ...array_map('intval', $additionalPollerIds)]);
         sort($pollers, SORT_NUMERIC);
+        $pollerLocks = [];
         foreach ($pollers as $pollerId) {
             $pollerLocks[$pollerId] = $read($connection, 'SELECT id, disabled FROM poller WHERE id = ? FOR UPDATE', [$pollerId]);
         }
