@@ -144,7 +144,13 @@ final class AutomationModuleNativeTest extends TestCase
         $state = $this->runNative($scenario + array('mode' => 'schedule'));
         self::assertSame($expected, $state['result']);
         if ($expected && $scenario['type'] === 2) {
-            self::assertGreaterThan(time() - 60, strtotime($state['contracts']['next_start']));
+            // Production persists UTC timestamps to minute precision. Anchor the
+            // window to execution, before subprocess coverage/report cleanup.
+            $next = new DateTimeImmutable($state['contracts']['next_start'], new DateTimeZone('UTC'));
+            $earliest = intdiv($state['contracts']['observed_before'], 60) * 60;
+            $latest = intdiv($state['contracts']['observed_after'] + 86400, 60) * 60;
+            self::assertGreaterThanOrEqual($earliest, $next->getTimestamp());
+            self::assertLessThanOrEqual($latest, $next->getTimestamp());
         }
         self::assertSame(8, (int) $state['contracts']['id']);
     }
