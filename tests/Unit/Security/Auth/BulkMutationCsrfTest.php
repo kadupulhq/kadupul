@@ -71,18 +71,18 @@ PHP;
     }
 }
 
-// sites.php and links.php are now Symfony bridges; SiteLifecycleTest and the HTTP lifecycle
-// scenarios exercise POST/CSRF rejection through the actual framework.
+// sites.php, links.php and vdef.php are Symfony bridges; their presentation
+// and HTTP lifecycle scenarios exercise expired POST/CSRF rejection through Symfony.
 test('bulk controllers reject unprotected confirmation requests before dispatch', function ($controller, $method, $token, $action, $status) {
     expect(runBulkMutationRequest($this, $controller, $method, $token, $action))->toBe('STATUS:' . $status);
 })->with(array(
     'aggregate_graphs.php', 'aggregate_templates.php', 'automation_devices.php',
     'automation_graph_rules.php', 'automation_networks.php', 'automation_snmp.php',
-    'automation_templates.php', 'automation_tree_rules.php', 'cdef.php', 'color.php',
+    'automation_templates.php', 'automation_tree_rules.php', 'cdef.php',
     'color_templates.php', 'data_debug.php', 'data_input.php', 'data_queries.php',
     'data_source_profiles.php', 'data_sources.php', 'data_templates.php', 'gprint_presets.php',
     'graphs.php', 'host.php', 'host_templates.php', 'managers.php',
-    'pollers.php', 'tree.php', 'user_domains.php', 'vdef.php',
+    'pollers.php', 'tree.php', 'user_domains.php',
 ))->with(array(
     array('GET', 'missing', 'actions', 405),
     array('GET', 'valid', 'actions', 405),
@@ -97,10 +97,5 @@ test('bulk controllers reject unprotected confirmation requests before dispatch'
     array('POST', 'forged', 'actions', 403),
 ));
 
-test('valid bulk POST reaches existing selection validation', function () {
-    expect(runBulkMutationRequest($this, 'color.php', 'POST', 'valid'))->toBe('SELECTIONSTATUS:200');
-});
-
-test('ordinary color navigation remains available without POST intent', function ($action) {
-    expect(runBulkMutationRequest($this, 'color.php', 'GET', 'missing', $action))->toBe('READSTATUS:200');
-})->with(array('', 'edit'));
+// Palette selection and navigation now run through the actual Symfony forms.
+// tests/Symfony/palette_color_review_http.py checks Origin/CSRF and expired POST.
