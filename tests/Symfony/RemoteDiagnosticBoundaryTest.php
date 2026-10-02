@@ -14,7 +14,7 @@ use Symfony\Component\Process\Process;
 final class RemoteDiagnosticBoundaryTest extends TestCase
 {
     #[DataProvider('operations')]
-    public function testCollectorBoundaryNeverReturnsRawCredentials(string $operation, bool $failure, bool $skip = false): void
+    public function testCollectorBoundaryNeverReturnsRawCredentials(string $operation, bool $failure, bool $skip = false, bool $authorized = true): void
     {
         $script = <<<'SCRIPT'
 require 'include/vendor/autoload.php';
@@ -23,6 +23,7 @@ $start = strpos($source, 'function remote_inventory_diagnostics(');
 $end = strpos($source, 'function debug(', $start);
 eval(substr($source, $start, $end - $start));
 function get_filter_request_var($name) { return 7; }
+function remote_agent_host_belongs_to_authorized_poller($id) { return $id === 7 && $GLOBALS["authorized"]; }
 function diagnostic_fixture() {
     \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember(['snmp_password' => 'before-rotation']);
     \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember(['snmp_password' => 'after-rotation']);
@@ -40,16 +41,16 @@ remote_inventory_diagnostics($operation);
 $body = ob_get_clean();
 echo json_encode(['status' => http_response_code(), 'body' => json_decode($body, true, 32, JSON_THROW_ON_ERROR), 'session_clean' => !isset($_SESSION['debug_log']), 'config_clean' => !isset($config['debug_log'])], JSON_THROW_ON_ERROR);
 SCRIPT;
-        $process = new Process([PHP_BINARY, '-r', '$operation=' . var_export($operation, true) . ';$failure=' . var_export($failure, true) . ';$skip=' . var_export($skip, true) . ';' . $script], dirname(__DIR__, 2));
+        $process = new Process([PHP_BINARY, '-r', '$operation=' . var_export($operation, true) . ';$failure=' . var_export($failure, true) . ';$skip=' . var_export($skip, true) . ';$authorized=' . var_export($authorized, true) . ';' . $script], dirname(__DIR__, 2));
         $process->mustRun();
         self::assertStringNotContainsString('previous-secret', $process->getOutput());
         self::assertStringNotContainsString('before-rotation', $process->getOutput());
         self::assertStringNotContainsString('after-rotation', $process->getOutput());
         $result = json_decode($process->getOutput(), true, 32, JSON_THROW_ON_ERROR);
-        self::assertSame($failure ? 502 : 200, $result['status']);
+        self::assertSame(!$authorized ? 403 : ($failure ? 502 : 200), $result['status']);
         self::assertTrue($result['session_clean']);
         self::assertTrue($result['config_clean']);
-        if ($failure) {
+        if ($failure || !$authorized) {
             self::assertSame(['error' => 'diagnostics_unavailable'], $result['body']);
         } else {
             self::assertTrue($result['body']['diagnostics_sanitized']);
@@ -63,6 +64,8 @@ SCRIPT;
 
     public static function operations(): iterable
     {
+        yield 'foreign collector query denied before diagnostics' => ['runquery', false, false, false];
+        yield 'foreign collector ping denied before diagnostics' => ['ping', false, false, false];
         yield 'early-return query discards stale diagnostics' => ['runquery', false, true];
         foreach (['ping', 'runquery'] as $operation) {
             foreach ([false, true] as $failure) {

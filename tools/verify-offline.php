@@ -76,6 +76,34 @@ foreach (['include/js/purify.js', 'include/js/jquery-ui.js', 'include/js/d3.js',
         throw new RuntimeException('Missing offline asset: ' . $file);
     }
 }
+// A stylesheet without its fonts still loads, but every icon draws as a missing glyph.
+preg_match_all('~url\(["\']?\.\./webfonts/([\w.-]+)(?:\?[^"\')]*)?["\']?\)~', file_get_contents($root . '/include/fa/css/all.css'), $fonts);
+if ($fonts[1] === []) {
+    throw new RuntimeException('Offline Font Awesome stylesheet references no webfonts');
+}
+foreach (array_unique($fonts[1]) as $font) {
+    $file = 'include/fa/webfonts/' . $font;
+    if (!is_file($root . '/' . $file) || filesize($root . '/' . $file) === 0) {
+        throw new RuntimeException('Missing offline asset: ' . $file);
+    }
+}
+// Legacy pages fall back to the uncompiled files without a manifest, so check
+// that the release ships one and that the compiled stylesheet finds its fonts.
+$compiled = json_decode(file_get_contents($root . '/public/assets/manifest.json'), true, 2, JSON_THROW_ON_ERROR);
+$stylesheet = $compiled['include/fa/css/all.css'] ?? null;
+if (!is_string($stylesheet) || !is_file($root . '/public' . $stylesheet)) {
+    throw new RuntimeException('Offline compiled Font Awesome stylesheet missing');
+}
+preg_match_all('~url\("(\.\./webfonts/[\w.-]+)"\)~', file_get_contents($root . '/public' . $stylesheet), $fonts);
+if ($fonts[1] === []) {
+    throw new RuntimeException('Offline compiled Font Awesome stylesheet references no webfonts');
+}
+foreach (array_unique($fonts[1]) as $font) {
+    $file = dirname($root . '/public' . $stylesheet) . '/' . $font;
+    if (!is_file($file) || filesize($file) === 0) {
+        throw new RuntimeException('Missing offline compiled asset: ' . $font);
+    }
+}
 foreach (['node_modules', 'include/vendor/phpunit', 'include/config.php', 'include/vendor/csrf/csrf-secret.php'] as $path) {
     if (file_exists($root . '/' . $path)) {
         throw new RuntimeException('Development dependency or installation state in bundle: ' . $path);

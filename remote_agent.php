@@ -20,8 +20,10 @@ require_once($config['base_path'] . '/lib/snmp.php');
 require_once($config['base_path'] . '/lib/sort.php');
 require_once($config['base_path'] . '/lib/template.php');
 require_once($config['base_path'] . '/lib/utility.php');
+require_once(__DIR__ . '/lib/remote_agent_auth.php');
 
 $debug = false;
+$remote_agent_authorized_poller_id = 0;
 
 if ($config['poller_id'] > 1 && $config['connection'] == 'online') {
     if (get_nfilter_request_var('action') == 'runquery') {
@@ -53,14 +55,14 @@ switch (get_request_var('action')) {
         break;
     case 'runquery':
         debug('Start: Running Data Query');
-        remote_inventory_diagnostics('runquery');
+        remote_inventory_diagnostics("runquery");
         debug('End: Running Data Query');
 
         break;
     case 'ping':
         debug('Start: Pinging Device');
-        if (get_nfilter_request_var('safe_diagnostics') === '1') {
-            remote_inventory_diagnostics('ping');
+        if (get_nfilter_request_var("safe_diagnostics") === "1") {
+            remote_inventory_diagnostics("ping");
         } else {
             ping_device();
         }
@@ -105,6 +107,11 @@ function remote_inventory_diagnostics($operation)
     global $config;
     unset($_SESSION['debug_log'], $config['debug_log']);
     $scope = \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class;
+    if (!remote_agent_host_belongs_to_authorized_poller(get_filter_request_var("host_id"))) {
+        http_response_code(403);
+        echo json_encode(["error" => "diagnostics_unavailable"]);
+        return;
+    }
     $scope::begin();
     $level = ob_get_level();
     ob_start();
@@ -167,7 +174,7 @@ function remote_agent_auth_cache_get($key)
         $result = apcu_fetch($key, $success);
 
         if ($success) {
-            return (bool) $result;
+            return is_int($result) && $result >= 0 ? $result : null;
         }
     }
 
@@ -177,108 +184,35 @@ function remote_agent_auth_cache_get($key)
 function remote_agent_auth_cache_set($key, $value, $ttl = 30)
 {
     if (function_exists('apcu_store')) {
-        apcu_store($key, (bool) $value, $ttl);
+        apcu_store($key, (int) $value, $ttl);
     }
 }
 
 function remote_client_authorized()
 {
-    global $config, $poller_db_cnn_id;
+    global $poller_db_cnn_id, $remote_agent_authorized_poller_id;
 
-    /* don't allow to run from the command line */
+    $remote_agent_authorized_poller_id = 0;
     $client_addr = get_client_addr();
-    if ($client_addr === false) {
+    if ($client_addr === false || !filter_var($client_addr, FILTER_VALIDATE_IP)) {
         return false;
     }
-
-    if (!filter_var($client_addr, FILTER_VALIDATE_IP)) {
-        cacti_log('ERROR: Invalid remote agent client IP Address.  Exiting');
-        return false;
-    }
-
     $pollers = db_fetch_assoc('SELECT * FROM poller WHERE disabled = ""', true, $poller_db_cnn_id);
-
-    if (cacti_sizeof($pollers) <= 1) {
-        cacti_log("Unauthorized remote agent access attempt from $client_addr", false, 'SECURITY');
-
-        return false;
-    }
-
-    $allowed_hostnames = array();
-
-    foreach ($pollers as $poller) {
-        $poller_host = trim($poller['hostname']);
-
-        if ($poller_host === '') {
-            continue;
-        }
-
-        /* Fast-path: exact IP match requires no DNS lookups */
-        if ($poller_host === $client_addr) {
-            return true;
-        }
-
-        if (!filter_var($poller_host, FILTER_VALIDATE_IP)) {
-            $allowed_hostnames[] = strtolower(rtrim($poller_host, '.'));
-        }
-    }
-
-    if (!cacti_sizeof($allowed_hostnames)) {
-        cacti_log("Unauthorized remote agent access attempt from $client_addr", false, 'SECURITY');
+    $remote_agent_authorized_poller_id = remote_agent_resolve_poller(
+        $client_addr,
+        is_array($pollers) ? $pollers : array(),
+        'gethostbyaddr',
+        static function ($name) {
+            return dns_get_record($name, DNS_A | DNS_AAAA);
+        },
+        'remote_agent_auth_cache_get',
+        'remote_agent_auth_cache_set'
+    );
+    if ($remote_agent_authorized_poller_id <= 0) {
+        cacti_log("Unauthorized or ambiguous remote agent access attempt from $client_addr", false, 'SECURITY');
 
         return false;
     }
-
-    sort($allowed_hostnames);
-    $cache_key = 'remote_agent_auth:' . md5($client_addr . '|' . implode(',', $allowed_hostnames));
-    $cached = remote_agent_auth_cache_get($cache_key);
-    if ($cached !== null) {
-        return $cached;
-    }
-
-    $client_name = gethostbyaddr($client_addr);
-
-    if ($client_name === false || $client_name == $client_addr) {
-        cacti_log('NOTE: Unable to resolve hostname from address ' . $client_addr, false, 'WEBUI', POLLER_VERBOSITY_MEDIUM);
-        cacti_log("Unauthorized remote agent access attempt from $client_addr", false, 'SECURITY');
-        remote_agent_auth_cache_set($cache_key, false);
-
-        return false;
-    }
-
-    $normalized_client_name = strtolower(rtrim($client_name, '.'));
-
-    if (!in_array($normalized_client_name, $allowed_hostnames, true)) {
-        cacti_log("Unauthorized remote agent access attempt from $client_name ($client_addr)", false, 'SECURITY');
-        remote_agent_auth_cache_set($cache_key, false);
-
-        return false;
-    }
-
-    /* Forward-verify PTR result to prevent DNS spoofing */
-    $forward_records = dns_get_record($client_name, DNS_A | DNS_AAAA);
-    $forward_match   = false;
-
-    if (is_array($forward_records)) {
-        foreach ($forward_records as $record) {
-            $ip = isset($record['ip']) ? $record['ip'] : (isset($record['ipv6']) ? $record['ipv6'] : '');
-
-            if ($ip === $client_addr) {
-                $forward_match = true;
-                break;
-            }
-        }
-    }
-
-    if (!$forward_match) {
-        $safe_name = preg_replace('/[^a-zA-Z0-9.\-:]/', '', $client_name);
-        cacti_log('WARNING: PTR record for ' . $client_addr . ' resolves to ' . $safe_name . ' but forward lookup does not match. Rejecting.', false, 'SECURITY');
-        remote_agent_auth_cache_set($cache_key, false);
-
-        return false;
-    }
-
-    remote_agent_auth_cache_set($cache_key, true);
 
     return true;
 }
@@ -293,41 +227,21 @@ function get_graph_data()
     get_filter_request_var('rra_id');
     get_filter_request_var('graph_theme', FILTER_CALLBACK, array('options' => 'sanitize_search_string'));
     get_filter_request_var('graph_nolegend', FILTER_CALLBACK, array('options' => 'sanitize_search_string'));
-    get_filter_request_var('effective_user');
 
     $local_graph_id   = get_filter_request_var('local_graph_id');
     $rra_id           = get_filter_request_var('rra_id');
 
     $graph_data_array = array();
 
-    /* override: graph start time (unix time) */
-    if (!isempty_request_var('graph_start') && get_request_var('graph_start') < FILTER_VALIDATE_MAX_DATE_AS_INT) {
-        $graph_data_array['graph_start'] = get_request_var('graph_start');
+    foreach (array('graph_start' => FILTER_VALIDATE_MAX_DATE_AS_INT, 'graph_end' => FILTER_VALIDATE_MAX_DATE_AS_INT, 'graph_height' => 3000, 'graph_width' => 3000) as $field => $maximum) {
+        if (!isempty_request_var($field) && get_request_var($field) < $maximum) {
+            $graph_data_array[$field] = get_request_var($field);
+        }
     }
-
-    /* override: graph end time (unix time) */
-    if (!isempty_request_var('graph_end') && get_request_var('graph_end') < FILTER_VALIDATE_MAX_DATE_AS_INT) {
-        $graph_data_array['graph_end'] = get_request_var('graph_end');
-    }
-
-    /* override: graph height (in pixels) */
-    if (!isempty_request_var('graph_height') && get_request_var('graph_height') < 3000) {
-        $graph_data_array['graph_height'] = get_request_var('graph_height');
-    }
-
-    /* override: graph width (in pixels) */
-    if (!isempty_request_var('graph_width') && get_request_var('graph_width') < 3000) {
-        $graph_data_array['graph_width'] = get_request_var('graph_width');
-    }
-
-    /* override: skip drawing the legend? */
-    if (!isempty_request_var('graph_nolegend')) {
-        $graph_data_array['graph_nolegend'] = get_request_var('graph_nolegend');
-    }
-
-    /* print RRDtool graph source? */
-    if (!isempty_request_var('show_source')) {
-        $graph_data_array['print_source'] = get_request_var('show_source');
+    foreach (array('graph_nolegend' => 'graph_nolegend', 'show_source' => 'print_source') as $field => $option) {
+        if (!isempty_request_var($field)) {
+            $graph_data_array[$option] = get_request_var($field);
+        }
     }
 
     /* disable cache check */
@@ -340,11 +254,11 @@ function get_graph_data()
         $graph_data_array['graph_theme'] = cacti_validate_theme(get_request_var('graph_theme'));
     }
 
-    /* set the theme */
-    if (isset_request_var('effective_user')) {
-        $user = get_request_var('effective_user');
-    } else {
-        $user = 0;
+    $user = (int) get_filter_request_var('effective_user');
+    if ($user <= 0 || (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM user_auth WHERE id = ? AND enabled = "on" AND locked = ""', array($user)) !== 1 || !is_graph_allowed($local_graph_id, $user) || !remote_agent_graph_belongs_to_authorized_poller($local_graph_id)) {
+        print 'GRAPH ACCESS DENIED';
+
+        return false;
     }
 
     $graph_data_array['graphv'] = true;
@@ -356,10 +270,37 @@ function get_graph_data()
     return true;
 }
 
+/** Keep the registered device's SNMP settings identical across request types. */
+function remote_agent_snmp_session(array $host)
+{
+    return cacti_snmp_session(
+        $host['hostname'],
+        $host['snmp_community'],
+        $host['snmp_version'],
+        $host['snmp_username'],
+        $host['snmp_password'],
+        $host['snmp_auth_protocol'],
+        $host['snmp_priv_passphrase'],
+        $host['snmp_priv_protocol'],
+        $host['snmp_context'],
+        $host['snmp_engine_id'],
+        $host['snmp_port'],
+        $host['snmp_timeout'],
+        $host['ping_retries'],
+        $host['max_oids']
+    );
+}
+
 function get_snmp_data()
 {
     $host_id = get_filter_request_var('host_id');
     $oid     = get_nfilter_request_var('oid');
+
+    if (!remote_agent_host_belongs_to_authorized_poller($host_id)) {
+        print 'U';
+
+        return;
+    }
 
     if (!is_string($oid) || !preg_match('/^[0-9.]+$/', $oid)) {
         print 'U';
@@ -376,22 +317,7 @@ function get_snmp_data()
             return;
         }
 
-        $session = cacti_snmp_session(
-            $host['hostname'],
-            $host['snmp_community'],
-            $host['snmp_version'],
-            $host['snmp_username'],
-            $host['snmp_password'],
-            $host['snmp_auth_protocol'],
-            $host['snmp_priv_passphrase'],
-            $host['snmp_priv_protocol'],
-            $host['snmp_context'],
-            $host['snmp_engine_id'],
-            $host['snmp_port'],
-            $host['snmp_timeout'],
-            $host['ping_retries'],
-            $host['max_oids']
-        );
+        $session = remote_agent_snmp_session($host);
 
         if ($session === false) {
             $output = 'U';
@@ -409,6 +335,12 @@ function get_snmp_data_walk()
     $host_id = get_filter_request_var('host_id');
     $oid     = get_nfilter_request_var('oid');
 
+    if (!remote_agent_host_belongs_to_authorized_poller($host_id)) {
+        print 'U';
+
+        return;
+    }
+
     if (!is_string($oid) || !preg_match('/^[0-9.]+$/', $oid)) {
         print 'U';
         return;
@@ -424,22 +356,7 @@ function get_snmp_data_walk()
             return;
         }
 
-        $session = cacti_snmp_session(
-            $host['hostname'],
-            $host['snmp_community'],
-            $host['snmp_version'],
-            $host['snmp_username'],
-            $host['snmp_password'],
-            $host['snmp_auth_protocol'],
-            $host['snmp_priv_passphrase'],
-            $host['snmp_priv_protocol'],
-            $host['snmp_context'],
-            $host['snmp_engine_id'],
-            $host['snmp_port'],
-            $host['snmp_timeout'],
-            $host['ping_retries'],
-            $host['max_oids']
-        );
+        $session = remote_agent_snmp_session($host);
 
         if ($session === false) {
             $output = 'U';
@@ -459,6 +376,13 @@ function get_snmp_data_walk()
 function ping_device()
 {
     $host_id = get_filter_request_var('host_id');
+
+    if (!remote_agent_host_belongs_to_authorized_poller($host_id)) {
+        print 'U';
+
+        return;
+    }
+
     api_device_ping_device($host_id, true);
 }
 
@@ -470,6 +394,12 @@ function poll_for_data()
     $host_id        = get_filter_request_var('host_id');
     $poller_id      = get_nfilter_request_var('poller_id');
     $return         = array();
+
+    if (!remote_agent_host_belongs_to_authorized_poller($host_id)) {
+        print json_encode($return);
+
+        return;
+    }
 
     /* ensure we have a valid poller_id */
     if (!preg_match('/^[a-z0-9]+$/i', $poller_id)) {
@@ -507,22 +437,7 @@ function poll_for_data()
                                 $output = 'U';
                             } else {
                                 $host = db_fetch_row_prepared('SELECT ping_retries, max_oids FROM host WHERE hostname = ?', array($item['hostname']));
-                                $session = cacti_snmp_session(
-                                    $item['hostname'],
-                                    $item['snmp_community'],
-                                    $item['snmp_version'],
-                                    $item['snmp_username'],
-                                    $item['snmp_password'],
-                                    $item['snmp_auth_protocol'],
-                                    $item['snmp_priv_passphrase'],
-                                    $item['snmp_priv_protocol'],
-                                    $item['snmp_context'],
-                                    $item['snmp_engine_id'],
-                                    $item['snmp_port'],
-                                    $item['snmp_timeout'],
-                                    $host['ping_retries'],
-                                    $host['max_oids']
-                                );
+                                $session = remote_agent_snmp_session(array_replace($item, $host));
 
                                 if ($session === false) {
                                     $output = 'U';
@@ -629,14 +544,95 @@ function run_remote_data_query()
     $host_id = get_filter_request_var('host_id');
     $data_query_id = get_filter_request_var('data_query_id');
 
-    if ($host_id > 0 && $data_query_id > 0) {
+    if (remote_agent_host_belongs_to_authorized_poller($host_id) && $data_query_id > 0) {
         run_data_query($host_id, $data_query_id);
     }
+}
+
+/**
+ * Check whether a device belongs to the poller authenticated by source address.
+ *
+ * @param int $host_id Device identifier.
+ *
+ * @return bool
+ */
+function remote_agent_host_belongs_to_authorized_poller($host_id)
+{
+    global $config, $remote_agent_authorized_poller_id;
+
+    // Registered collectors can broker UI calls; targets must belong to this receiver.
+    if ($remote_agent_authorized_poller_id <= 0 || $config['poller_id'] <= 0 || $host_id <= 0) {
+        return false;
+    }
+
+    $host_poller_id = db_fetch_cell_prepared('SELECT poller_id FROM host WHERE id = ?', array($host_id));
+
+    return (int) $host_poller_id === (int) $config['poller_id'];
+}
+
+/**
+ * Require every device used by a graph to belong to the local collector.
+ *
+ * @param int $local_graph_id Graph identifier.
+ *
+ * @return bool
+ */
+function remote_agent_graph_belongs_to_authorized_poller($local_graph_id)
+{
+    global $config, $remote_agent_authorized_poller_id;
+
+    if ($local_graph_id <= 0 || $remote_agent_authorized_poller_id <= 0 || $config['poller_id'] <= 0) {
+        return false;
+    }
+    $owner = (int) ($config['poller_id'] > 1 ? $config['poller_id'] : $remote_agent_authorized_poller_id);
+    $hosts = db_fetch_assoc_prepared('SELECT DISTINCT dl.host_id, h.poller_id
+        FROM graph_templates_item AS gti
+        LEFT JOIN data_template_rrd AS dtr ON dtr.id = gti.task_item_id
+        LEFT JOIN data_local AS dl ON dl.id = dtr.local_data_id
+        LEFT JOIN host AS h ON h.id = dl.host_id
+        WHERE gti.local_graph_id = ? AND gti.task_item_id > 0', array($local_graph_id));
+    if (!is_array($hosts)) {
+        return false;
+    }
+    if (empty($hosts)) {
+        $host = db_fetch_row_prepared('SELECT gl.host_id, h.poller_id
+            FROM graph_local AS gl LEFT JOIN host AS h ON h.id = gl.host_id
+            WHERE gl.id = ?', array($local_graph_id));
+        $hosts = $host ? array($host) : array();
+    }
+    if (empty($hosts)) {
+        return false;
+    }
+    foreach ($hosts as $host) {
+        if (!isset($host['host_id'])) {
+            return false;
+        }
+        // Non-device graphs have no collector ownership: only central storage
+        // can serve them, after the explicit user permission check above.
+        if ((int) $host['host_id'] === 0 && (int) $config['poller_id'] === 1) {
+            continue;
+        }
+        if ((int) $host['host_id'] <= 0 || (int) $host['poller_id'] !== $owner) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function run_remote_discovery()
 {
     global $config;
+    global $remote_agent_authorized_poller_id;
+
+    if ($remote_agent_authorized_poller_id <= 0 || $config['poller_id'] <= 0) {
+        return false;
+    }
+
+    $network_id = (int) get_filter_request_var('network');
+    if ($network_id < 0 || ($network_id === 0 && $remote_agent_authorized_poller_id !== 1) || ($network_id > 0 && (int) db_fetch_cell_prepared('SELECT poller_id FROM automation_networks WHERE id = ?', array($network_id)) !== (int) $config['poller_id'])) {
+        return false;
+    }
 
     $poller_id = cacti_escapeshellarg($config['poller_id']);
     $network   = cacti_escapeshellarg(get_filter_request_var('network'));
