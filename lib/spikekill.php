@@ -1844,6 +1844,7 @@ class spikekill {
 	private function updateXML(&$output, &$rra) {
 		$rra_num   = 0;
 		$ds_num    = 0;
+		$kills     = 0;
 		$last_num  = array();
 		$new_array = array();
 
@@ -1868,7 +1869,6 @@ class spikekill {
 					/* initialize variables */
 					$ds_num         = 0;
 					$out_row        = '<row>';
-					$kills          = 0;
 
 					foreach($linearray as $dsvalue) {
 						/* peel off garbage */
@@ -1995,6 +1995,8 @@ class spikekill {
 												}
 
 												$dsvalue = 'NaN';
+												$this->total_kills++;
+												$kills++;
 											}
 										}
 									}
@@ -2033,6 +2035,8 @@ class spikekill {
 												}
 
 												$dsvalue = 'NaN';
+												$this->total_kills++;
+												$kills++;
 											}
 										}
 									}
