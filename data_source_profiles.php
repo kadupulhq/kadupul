@@ -410,10 +410,24 @@ function profiles_not_in_use($selected_items) {
 	$unused = array();
 
 	foreach ($selected_items as $profile_id) {
-		$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
-			FROM data_template_data
-			WHERE data_source_profile_id = ?',
-			array($profile_id));
+		try {
+			$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
+				FROM data_template_data
+				WHERE data_source_profile_id = ?',
+				array($profile_id));
+		} catch (\Throwable $e) {
+			cacti_log('ERROR: Unable to check usage of Data Source Profile ' . (int) $profile_id . ': ' . $e->getMessage(), false, 'WEBUI');
+			raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+
+			return false;
+		}
+
+		if ($in_use === false || !is_numeric($in_use)) {
+			cacti_log('ERROR: Unable to check usage of Data Source Profile ' . (int) $profile_id . '.', false, 'WEBUI');
+			raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+
+			return false;
+		}
 
 		if ($in_use > 0) {
 			cacti_log('WARNING: Refused to delete Data Source Profile ' . (int) $profile_id . ' in use by Data Templates or Data Sources for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
