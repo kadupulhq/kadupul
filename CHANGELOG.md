@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep permission writes and session epochs consistent, including failed writes and absent deletions.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
