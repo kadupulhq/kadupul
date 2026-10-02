@@ -11,6 +11,50 @@ final class PermissionMutationNativeTest extends TestCase
 {
     private static bool $evidenceChecked = false;
 
+    /** @dataProvider singleAssociationCases */
+    public function testSingleAssociationWritesRetainAtomicEpochsAndCallerOwnership(array $scenario): void
+    {
+        $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
+        $scenario['kind'] = 'single';
+        $state = $this->runNative($scenario);
+        $failed = $scenario['failure'] !== '';
+        self::assertSame(!$failed, $state['result']);
+        self::assertNull($state['error']);
+        self::assertSame($scenario['caller'], $state['transaction_open']);
+        self::assertSame(array(0, $failed ? 7 : 8, 7, !$failed && $scenario['group'] ? 8 : 7), array_map('intval', array_column($state['epochs'], 'reset_perms')));
+        $column = $scenario['group'] ? 'group_id' : 'user_id';
+        $expected = array(array($column => 42, 'item_id' => 100, 'type' => 1), array($column => 42, 'item_id' => 101, 'type' => 1), array($column => 43, 'item_id' => 100, 'type' => 1));
+        if (!$failed) {
+            if ($scenario['associate']) {
+                array_splice($expected, 2, 0, array(array($column => 42, 'item_id' => 102, 'type' => 1)));
+            } else {
+                array_shift($expected);
+            }
+        }
+        self::assertSame($expected, $state['permissions']);
+        self::assertCount(3, $state['memberships']);
+        self::assertSame($state['initial_session'], $state['session']);
+        self::assertSame(array(), $state['messages']);
+        if ($scenario['caller']) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertSame(0, $state['rollback_caller_work']);
+            self::assertSame(2, $state['rollback_permissions']);
+        }
+    }
+
+    public static function singleAssociationCases(): array
+    {
+        $cases = array();
+        foreach (array(array(false, true), array(false, false), array(true, false)) as [$group, $associate]) {
+            foreach (array(false, true) as $caller) {
+                foreach (array('', 'epoch', 'mismatch') as $failure) {
+                    $cases[] = array(array('group' => $group, 'associate' => $associate, 'caller' => $caller, 'failure' => $failure));
+                }
+            }
+        }
+        return $cases;
+    }
+
     /** @dataProvider deleteReceiptCases */
     public function testAbsentDeletesAndUnconfirmedReceiptsPreserveState(array $scenario): void
     {
@@ -217,7 +261,7 @@ final class PermissionMutationNativeTest extends TestCase
                 if (!in_array($scenario['failure'] ?? '', array('myisam', 'shadow'), true)) {
                     $hits[] = 'lib/database.php';
                 }
-                if (($scenario['kind'] ?? '') === 'batch') {
+                if (in_array($scenario['kind'] ?? '', array('batch', 'single'), true)) {
                     $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
                 }
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/permission-mutation-native.php', $encoded, $sources, $markers, $hits);
