@@ -245,7 +245,9 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
             // Check the actual connection table, including temporary shadows.
             $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
             $definition = $query === false ? false : PaletteSql::one($query, \PDO::FETCH_NUM);
-            if ($definition === false || !preg_match('/\n\) ENGINE=InnoDB\b/i', (string) $definition[1])) {
+            if ($definition === false || !is_string($definition[1] ?? null)
+                || preg_match('/\ACREATE TABLE /i', $definition[1]) !== 1
+                || preg_match('/\n\) ENGINE=InnoDB\b/i', $definition[1]) !== 1) {
                 throw new \RuntimeException('Color writes require transactional tables.');
             }
         }

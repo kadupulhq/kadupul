@@ -184,6 +184,7 @@ def main():
         'missing-palette-handoff-check': 'Incomplete Symfony integration',
         'missing-palette-concurrent-auth': 'Incomplete Symfony integration',
         'missing-palette-write-guards': 'Incomplete Symfony integration',
+        'missing-palette-persistent-storage': 'Incomplete Symfony integration',
         'missing-palette-preference-guards': 'Incomplete Symfony integration',
         'missing-links-locale-restoration': 'Incomplete Symfony integration',
         'missing-palette-unicode-labels': 'Incomplete Symfony integration',
@@ -271,6 +272,8 @@ def main():
             elif case.startswith('missing-palette-selection-check-'):
                 checks = ['palette large pages keep all rows readable but enable at most 100 deletable choices', 'palette 100-color confirmation preserves every selected identity and revision', 'palette forged 101-color selection is refused before mutation']
                 evidence['checks'].remove(checks[int(case.removeprefix('missing-palette-selection-check-'))])
+            elif case == 'missing-palette-persistent-storage':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'palette writes and preferences reject all InnoDB temporary shadows without changing persistent observer rows']
             elif case == 'missing-palette-write-guards':
                 evidence['checks'].remove('palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
             elif case == 'missing-palette-unicode-labels':

@@ -64,6 +64,7 @@ final readonly class LegacyPaletteColorPreferences implements PaletteColorPrefer
                 throw $error;
             }
             if (!is_array($definition) || !is_string($definition[1] ?? null)
+                || preg_match('/\ACREATE TABLE /i', $definition[1]) !== 1
                 || preg_match('/^\) ENGINE=InnoDB(?:\s|$)/mi', $definition[1]) !== 1) {
                 throw new \RuntimeException('Filter preferences require transactional tables: ' . $table);
             }

@@ -235,6 +235,8 @@ def verify_palette_colors(h, s, uid, check):
           'palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
     check(guard_probe['stdout'].endswith('|PALETTE_PREFERENCE_GUARDS_OK'),
           'palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
+    check('|PALETTE_PERSISTENT_STORAGE_OK|' in guard_probe['stdout'],
+          'palette writes and preferences reject all InnoDB temporary shadows without changing persistent observer rows')
     auth_probe = h.command('php', '-r', _mariadb_palette_authorization_probe(uid))
     check(auth_probe['exit'] == 0 and auth_probe['stdout'] == 'PALETTE_CONCURRENT_AUTHORIZATION_OK' and auth_probe['stderr'] == '',
           'two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
@@ -327,6 +329,8 @@ $installation = new Kadupul\Platform\Infrastructure\Legacy\InstallationConfigura
 $config = $installation->values();
 $db = new PDO('mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['database'],
     $config['username'],$config['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+$observer = new PDO('mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['database'],
+    $config['username'],$config['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
 $connection = new class($db) implements Kadupul\Platform\Contract\DatabaseConnection {
     public function __construct(private PDO $db) {}
     public function get(): PDO { return $this->db; }
@@ -347,18 +351,20 @@ function paletteProbeHex(PDO $db): string {
     return $hex;
 }
 $count = (int)$db->query('SELECT COUNT(*) FROM colors')->fetchColumn();
+foreach (['MyISAM','InnoDB'] as $shadowEngine) {
 foreach (['colors','graph_templates_item','color_template_items','settings','user_auth','user_auth_realm',
     'user_auth_group','user_auth_group_members','user_auth_group_realm'] as $table) {
     // A minimal shadow proves preflight refuses the actual table before any
     // account, policy or mutation query can use its columns.
-    $db->exec('CREATE TEMPORARY TABLE `'.$table.'` (guard_fixture INT) ENGINE=MyISAM');
+    $db->exec('CREATE TEMPORARY TABLE `'.$table.'` (guard_fixture INT) ENGINE='.$shadowEngine);
     try {
         $denied = false;
         try { $store->save($actorId,null,'nontransactional fixture','123',null); }
         catch (RuntimeException $error) { $denied = $error->getMessage() === 'Color writes require transactional tables.'; }
         if (!$denied || $db->inTransaction()) { throw new RuntimeException('The actual '.$table.' table engine was not refused.'); }
     } finally { $db->exec('DROP TEMPORARY TABLE `'.$table.'`'); }
-    if ((int)$db->query('SELECT COUNT(*) FROM colors')->fetchColumn() !== $count) { throw new RuntimeException('Temporary engine refusal changed persistent rows.'); }
+    if ((int)$observer->query('SELECT COUNT(*) FROM colors')->fetchColumn() !== $count) { throw new RuntimeException('Temporary engine refusal changed persistent rows.'); }
+}
 }
 foreach ([2,'1',null] as $collector) {
     $changed = new class($config,$collector) implements Kadupul\Platform\Contract\LegacyConfiguration {
@@ -403,17 +409,25 @@ $readPreference = static function() use ($db,$actorId): array|false {
     $query->execute([$actorId]);
     return $query->fetch(PDO::FETCH_NUM);
 };
+$observePreference = static function() use ($observer,$actorId): array|false {
+    $query = $observer->prepare("SELECT value FROM settings_user WHERE user_id=? AND name='palette_colors_filters'");
+    $query->execute([$actorId]);
+    return $query->fetch(PDO::FETCH_NUM);
+};
 $beforePreference = $readPreference();
+if ($observePreference() !== $beforePreference) { throw new RuntimeException('Independent preference observer disagrees with the persistent baseline.'); }
 try {
+    foreach (['MyISAM','InnoDB'] as $shadowEngine) {
     foreach (['settings_user','settings','user_auth','user_auth_realm','user_auth_group','user_auth_group_members','user_auth_group_realm'] as $table) {
-        $db->exec('CREATE TEMPORARY TABLE `'.$table.'` (guard_fixture INT) ENGINE=MyISAM');
+        $db->exec('CREATE TEMPORARY TABLE `'.$table.'` (guard_fixture INT) ENGINE='.$shadowEngine);
         try {
             $denied = false;
             try { $preferences->save(['filter'=>'must not write']); }
             catch (RuntimeException $error) { $denied = $error->getMessage() === 'Filter preferences require transactional tables: '.$table; }
             if (!$denied || $db->inTransaction()) { throw new RuntimeException('Preference storage shadow was accepted.'); }
         } finally { $db->exec('DROP TEMPORARY TABLE `'.$table.'`'); }
-        if ($readPreference() !== $beforePreference) { throw new RuntimeException('Preference engine refusal changed persistent values.'); }
+        if ($readPreference() !== $beforePreference || $observePreference() !== $beforePreference) { throw new RuntimeException('Preference engine refusal changed persistent values.'); }
+    }
     }
     foreach ([2,'1',null] as $collector) {
         $changed = new class($config,$collector) implements Kadupul\Platform\Contract\LegacyConfiguration {
@@ -457,7 +471,7 @@ try {
     }
 }
 if ($readPreference() !== $beforePreference) { throw new RuntimeException('Preference fixture failed to restore prior bytes.'); }
-echo 'PALETTE_WRITE_GUARDS_OK|PALETTE_PREFERENCE_GUARDS_OK';'''
+echo 'PALETTE_WRITE_GUARDS_OK|PALETTE_PERSISTENT_STORAGE_OK|PALETTE_PREFERENCE_GUARDS_OK';'''
 
 
 def _mariadb_palette_authorization_probe(actor_id):

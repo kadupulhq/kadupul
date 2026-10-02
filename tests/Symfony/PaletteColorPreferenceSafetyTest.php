@@ -131,17 +131,19 @@ final class PaletteColorPreferenceSafetyTest extends TestCase
         foreach (['settings_user', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'] as $table) {
             yield $table => [$table, false];
             yield $table . ' temporary shadow' => [$table, true];
+            yield $table . ' InnoDB temporary shadow' => [$table, true, 'InnoDB'];
         }
     }
 
     #[DataProvider('storageParticipants')]
-    public function testEveryActualNontransactionalParticipantRefusesBeforeWrite(string $table, bool $shadow): void
+    public function testEveryActualNontransactionalParticipantRefusesBeforeWrite(string $table, bool $shadow, string $shadowEngine = 'MyISAM'): void
     {
         $connection = $this->realMariaDb();
         $db = $connection->getNativeConnection();
         $schema = 'palette_pref_' . bin2hex(random_bytes(6));
         $db->exec('CREATE DATABASE `' . $schema . '`');
         $db->exec('USE `' . $schema . '`');
+        $observer = null;
         try {
             foreach (['settings_user', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'] as $name) {
                 $columns = $name === 'settings_user' ? 'user_id INT,name VARCHAR(128),value TEXT,PRIMARY KEY(user_id,name)' : 'id INT PRIMARY KEY';
@@ -149,11 +151,19 @@ final class PaletteColorPreferenceSafetyTest extends TestCase
             }
             if ($shadow) {
                 $columns = $table === 'settings_user' ? 'user_id INT,name VARCHAR(128),value TEXT,PRIMARY KEY(user_id,name)' : 'id INT PRIMARY KEY';
-                $db->exec('CREATE TEMPORARY TABLE `' . $table . '` (' . $columns . ') ENGINE=MyISAM');
+                $db->exec('CREATE TEMPORARY TABLE `' . $table . '` (' . $columns . ') ENGINE=' . $shadowEngine);
             } else {
                 $db->exec('ALTER TABLE `' . $table . '` ENGINE=MyISAM');
             }
             $db->exec("INSERT INTO settings_user VALUES(9,'palette_colors_filters','before')");
+            $observer = $this->realMariaDb();
+            $observerDb = $observer->getNativeConnection();
+            self::assertNotSame($db, $observerDb);
+            $observerDb->exec('USE `' . $schema . '`');
+            // The observer cannot see the connection-local temporary shadow.
+            if ($table === 'settings_user' && $shadow) {
+                $observerDb->exec("INSERT INTO settings_user VALUES(9,'palette_colors_filters','before')");
+            }
             try {
                 $this->preferences($db, 1)->save(['filter' => 'after']);
                 self::fail('Nontransactional preference participant accepted.');
@@ -162,8 +172,10 @@ final class PaletteColorPreferenceSafetyTest extends TestCase
             }
             self::assertFalse($db->inTransaction());
             self::assertSame('before', $db->query('SELECT value FROM settings_user')->fetchColumn());
+            self::assertSame('before', $observerDb->query('SELECT value FROM settings_user')->fetchColumn());
         } finally {
             if ($db->inTransaction()) $db->rollBack();
+            $observer?->close();
             $db->exec('DROP DATABASE `' . $schema . '`');
             $connection->close();
         }
