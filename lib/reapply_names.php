@@ -8,7 +8,7 @@
 /** Validate a host selector used by the data-source and graph rename tools. */
 function validate_reapply_host_selector($host_id)
 {
-    if (strtolower($host_id) === 'all') {
+    if ($host_id === '0' || strtolower($host_id) === 'all') {
         return true;
     }
 

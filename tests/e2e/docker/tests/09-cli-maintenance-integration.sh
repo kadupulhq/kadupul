@@ -26,6 +26,20 @@ expect_cli_failure() {
 	echo "PASS: $label rejected the invalid request"
 }
 
+expect_cli_failure_containing() {
+	local label="$1" expected="$2" output
+	shift 2
+	if output=$(run_cli "$@" 2>&1); then
+		echo "FAIL: $label unexpectedly succeeded: $output" >&2
+		exit 1
+	fi
+	if ! grep -Fq -- "$expected" <<<"$output"; then
+		echo "FAIL: $label failed before the expected validation: $output" >&2
+		exit 1
+	fi
+	echo "PASS: $label reached the expected validation"
+}
+
 echo '[09] every CLI entry point accepts --version and --help in the installed Docker app'
 "${DC[@]}" exec -T cacti-master mkdir -p /var/www/html/tests/tools
 sed 's@^SCRIPTPATH=.*@SCRIPTPATH="/var/www/html/tests/tools"@' ../../../tests/tools/check_cli_version.sh \
@@ -66,9 +80,9 @@ echo '[09] data-query reorder accepts its documented all selector'
 run_cli reorder_data_query.php --qid=all >/dev/null
 expect_cli_failure 'reorder rejects host ID zero' reorder_data_query.php --host-id=0
 expect_cli_failure 'reorder rejects malformed query ID' reorder_data_query.php --host-id=all --qid=invalid
-expect_cli_failure 'poller-cache rebuild rejects zero threads' rebuild_poller_cache.php --start=2026-01-01 --end=2026-01-02 --threads=0
-expect_cli_failure 'poller-cache rebuild rejects negative threads' rebuild_poller_cache.php --start=2026-01-01 --end=2026-01-02 --threads=-1
-expect_cli_failure 'poller-cache rebuild rejects fractional threads' rebuild_poller_cache.php --start=2026-01-01 --end=2026-01-02 --threads=1.5
+expect_cli_failure_containing 'poller-cache rebuild rejects zero threads' 'valid Number of Treads' rebuild_poller_cache.php --threads=0
+expect_cli_failure_containing 'poller-cache rebuild rejects negative threads' 'valid Number of Treads' rebuild_poller_cache.php --threads=-1
+expect_cli_failure_containing 'poller-cache rebuild rejects fractional threads' 'valid Number of Treads' rebuild_poller_cache.php --threads=1.5
 
 echo '[09] permission list succeeds and invalid grant IDs fail'
 run_cli add_perms.php --list-users --quiet >/dev/null
