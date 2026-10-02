@@ -1,0 +1,20 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "availability_method",
+        "form_settings",
+        "row_ping_method",
+        "row_ping_port",
+        "row_ping_retries",
+        "row_ping_timeout",
+        "snmp_auth_protocol",
+        "snmp_priv_protocol",
+        "snmp_security_level",
+        "snmp_version",
+        "tab"
+    ],
+    "script_names": []
+}
