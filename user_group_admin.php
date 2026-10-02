@@ -1060,7 +1060,8 @@ function user_group_graph_perms_edit($tab, $header_label) {
 			$(document).tooltip({
 				items: '[data-tooltip]',
 				content: function() {
-					return $(this).attr('data-tooltip');
+					// The reason is plain text; the attribute read has already decoded it.
+					return $('<div>').text($(this).attr('data-tooltip')).html();
 				}
 			});
 		});
