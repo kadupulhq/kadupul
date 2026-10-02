@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
 } else {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
@@ -40,6 +40,17 @@ if (defined('REALM_RENDER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
+if (defined('UTILITY_LOG_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/utilities.php');
+}
+if (defined('UTILITY_VIEW_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/utilities.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/UtilityRows.php');
 }
 if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
@@ -203,6 +214,35 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
+    foreach ($coverageFilter->files() as $file) {
+        // Preserve copied-source attribution only after the existing byte identity check.
+        $source = defined('RRD_TEST_CLI_COVERAGE_COPY') && $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
+        $nativeSources[] = substr($source, strlen($coverageRoot) + 1);
+    }
+    $nativeScenario = $argv[1];
+    if (defined('UTILITY_VIEW_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/UtilityViewNativeCoverageTest.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'lib/utility.php'));
+        $nativeProducer = 'tests/Fixtures/utility-view-native.php';
+    } elseif (defined('UTILITY_LOG_TEST_COVERAGE')) {
+        $nativeSources[] = 'tests/Symfony/UtilityLogPersistenceTest.php';
+        $nativeProducer = 'tests/Fixtures/utility-log-native.php';
+    } elseif (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/StringPredicateNativeTest.php', 'include/global_constants.php', 'lib/html.php'));
+        $nativeProducer = 'tests/Fixtures/string-predicates-native.php';
+        $nativeScenario = 'native-string-predicates';
+    } elseif (defined('PHP80_STRING_NATIVE_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/Php80StringNativeTest.php', 'include/global_constants.php'));
+        $nativeProducer = 'tests/Fixtures/php80-string-native.php';
+        $nativeScenario = 'native-string-selectors';
+    } else {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/HelperUnionNativeTest.php', 'src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php'));
+        $nativeProducer = 'tests/Fixtures/helper-union-native.php';
+    }
+    $nativeCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, $nativeProducer, $nativeScenario, $nativeSources);
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
@@ -234,6 +274,12 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
         }
         if (isset($GLOBALS['nativeChildCoverageSnapshot'])) {
             NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeChildCoverageSnapshot'], $GLOBALS['nativeChildCoverageMarkers'] ?? array());
+        }
+        if (isset($GLOBALS['nativeCoverageEvidence'])) {
+            if (!defined('NATIVE_COVERAGE_COMPLETED')) {
+                throw new RuntimeException('Native coverage production scenario did not complete.');
+            }
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeCoverageEvidence'], NATIVE_COVERAGE_COMPLETED);
         }
         if (defined('CSRF_ROTATION_TEST_COVERAGE')) {
             require_once dirname(__DIR__) . '/Helpers/CsrfRotationCoverage.php';
