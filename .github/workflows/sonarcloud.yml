@@ -115,7 +115,7 @@ jobs:
       - name: Set up integration runner
         uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
-          install_args: python@3.12.12
+          install_args: python@3.12.12 node@22.22.2
 
       - name: Poller integration coverage
         env:
@@ -126,8 +126,22 @@ jobs:
           mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration "$RUNNER_TEMP/poller-coverage"
           php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php "$RUNNER_TEMP/poller-coverage" tests/coverage.xml
 
+      - name: About authenticated-only HTTP integration
+        run: mise exec python@3.12.12 -- python tests/Symfony/about_review_http.py
+
+      - name: Coverage self-test report preservation
+        run: mise exec python@3.12.12 -- python tests/tools/test_coverage_selftest_database_reports.py
+
+      - name: Palette HTTP and MariaDB data handoff
+        run: mise exec python@3.12.12 -- python tests/Symfony/palette_color_review_http.py
+
+      - name: Install pinned browser workflow test runtime
+        run: |
+          mise exec node@22.22.2 -- npm ci --ignore-scripts --no-audit --no-fund --prefix tests/e2e
+          mise exec node@22.22.2 -- node tests/e2e/node_modules/@playwright/test/cli.js install --with-deps chromium
       - name: Symfony HTTP and worker coverage
         env:
+          KADUPUL_BROWSER_COVERAGE: ${{ runner.temp }}/browser-layout-coverage
           PHP_VERSION: '8.4'
         run: |
           set -euo pipefail
@@ -156,8 +170,6 @@ jobs:
           KADUPUL_BROWSER_COVERAGE: ${{ runner.temp }}/browser-layout-coverage
         run: |
           set -euo pipefail
-          npm ci --ignore-scripts --prefix tests/e2e
-          node tests/e2e/node_modules/@playwright/test/cli.js install --with-deps chromium
           node tests/e2e/node_modules/@playwright/test/cli.js test --config=tests/e2e/playwright.config.js selectmenu-scroll.spec.js midwinter-listeners.spec.js html-sink-escaping.spec.js
           node tests/e2e/browser-coverage.js "$KADUPUL_BROWSER_COVERAGE" var/browser-coverage.lcov
           test -s var/browser-coverage.lcov
