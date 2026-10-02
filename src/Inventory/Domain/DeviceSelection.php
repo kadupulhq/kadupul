@@ -14,13 +14,7 @@ final readonly class DeviceSelection
     public function __construct(array $revisions)
     {
         self::validateIds(array_keys($revisions));
-        foreach ($revisions as $revision) {
-            if (!is_string($revision) || !preg_match('/\A[a-f0-9]{64}\z/D', $revision)) {
-                throw new \InvalidArgumentException('Invalid device selection.');
-            }
-        }
-        ksort($revisions, SORT_NUMERIC);
-        $this->revisions = $revisions;
+        $this->revisions = SelectionIds::normalizeRevisions($revisions, 'Invalid device selection.');
     }
 
     public static function validateIds(array $ids): array

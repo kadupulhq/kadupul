@@ -10,6 +10,18 @@ namespace Kadupul\Inventory\Domain;
 /** Common batch shape and identity contract; resource-specific bounds stay with callers. */
 final class SelectionIds
 {
+    /** IDs are admitted by the resource-specific caller before revision validation. */
+    public static function normalizeRevisions(array $revisions, string $identityError): array
+    {
+        foreach ($revisions as $revision) {
+            if (!is_string($revision) || !preg_match('/\A[a-f0-9]{64}\z/D', $revision)) {
+                throw new \InvalidArgumentException($identityError);
+            }
+        }
+        ksort($revisions, SORT_NUMERIC);
+        return $revisions;
+    }
+
     public static function normalize(array $ids, int $digits, int $maximum, string $cardinalityError, string $identityError): array
     {
         if ($ids === [] || count($ids) > 100) {
