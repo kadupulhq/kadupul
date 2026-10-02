@@ -22,8 +22,8 @@ if (!function_exists('read_config_option')) {
  *
  *   1) script_server.php must validate the include path UNCONDITIONALLY,
  *      reject PHP internals via ReflectionFunction::isInternal(), and
- *      reject any function whose source file resolves outside
- *      $config['base_path']. The previous code skipped path validation
+ *      reject any function not declared by the selected script file
+ *      under the installation's scripts directory. The previous code skipped path validation
  *      whenever function_exists() was true, so any built-in (system,
  *      passthru, exec, ...) bypassed the guard and was dispatched
  *      directly via call_user_func_array().
@@ -73,11 +73,16 @@ test('script_server rejects PHP internal functions via ReflectionFunction', func
 		->not->toBeFalse('rejection must be logged so operators can see the attempt');
 });
 
-test('script_server rejects functions defined outside base_path', function () use ($scriptServerSource) {
+test('script_server confines includes to scripts and functions to the selected file', function () use ($scriptServerSource) {
+	expect($scriptServerSource)->toContain('$config[\'base_path\'] . DIRECTORY_SEPARATOR . \'scripts\'');
+	expect($scriptServerSource)->toContain('outside scripts directory');
 	expect(strpos($scriptServerSource, '$ref->getFileName()'))
 		->not->toBeFalse('the source file of the function must be checked');
-	expect(strpos($scriptServerSource, "defined outside base path"))
-		->not->toBeFalse('out-of-tree definitions must be rejected with a log line');
+	expect($scriptServerSource)->toContain("was not defined by script file");
+	expect($scriptServerSource)->toContain('$include_cmp = str_replace');
+	expect($scriptServerSource)->toContain('$fn_real === $include_cmp');
+	expect($scriptServerSource)->toContain('strcasecmp($fn_real, $include_cmp) === 0');
+	expect($scriptServerSource)->toContain('if (!is_file($include_file))');
 });
 
 test('script_server emits U on every rejection branch', function () use ($scriptServerSource) {

@@ -35,13 +35,13 @@ dataset('1.2.31 wording', array(
 	),
 	'script server file root' => array(
 		'script_server.php',
-		"cacti_log(\"WARNING: Script file '\$include_file' resolves outside base path. Rejected.\", false, 'PHPSVR');",
-		'outside the allowed script roots. Rejected.'
+		"cacti_log(\"WARNING: Script file '\$include_file' resolves outside scripts directory. Rejected.\", false, 'PHPSVR');",
+		'outside base path. Rejected.'
 	),
 	'script server function root' => array(
 		'script_server.php',
-		"cacti_log(\"WARNING: Function '\$function' defined outside base path ('\$fn_file'). Rejected.\", false, 'PHPSVR');",
-		"defined outside the allowed script roots ('"
+		"cacti_log(\"WARNING: Function '\$function' was not defined by script file '\$include_file'. Rejected.\", false, 'PHPSVR');",
+		'defined outside base path'
 	),
 	'audit repair partial summary' => array(
 		'cli/audit_database.php',
