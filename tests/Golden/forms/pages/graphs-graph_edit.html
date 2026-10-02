@@ -1,0 +1,98 @@
+<form action="graphs.php" autocomplete="off" class="cactiFormStart" id="form1" method="post" name="form1">
+  <div class="cactiTable" id="graphs_graph_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Graph [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Graphs.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="graphs_graph_edit1_child">
+      <div class="formRow odd" id="row_graph_template_id"><div class="formColumnLeft"><div class="formFieldName">Selected Graph Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100% compatible Graph Template, which means that it includes identical Data Sources.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="graph_template_id" name="graph_template_id">
+          <option selected="" value="0">None</option>
+          <option value="3">Interface - Traffic &lt;bits&gt;</option>
+          <option value="8">Unix - Load Average</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_host_id"><div class="formColumnLeft"><div class="formFieldName">Device<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Device that this Graph belongs to.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget" id="host_id_wrap"><span class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s" id="host_id_click" style="z-index:4"></span><span class="ui-select-text"><input class="ui-state-default ui-corner-all" id="host_id_input" type="text" value="None"></span></span><input id="host_id" name="host_id" type="hidden" value="0">
+        <script nonce="&lt;NONCE&gt;" type="text/javascript">
+		var host_idTimer;
+		var host_idClickTimer;
+		var host_idOpen = false;
+
+		$(function() {
+		    $('#host_id_input').autocomplete({
+				source: 'graphs.php?action=ajax_hosts_noany',
+				autoFocus: true,
+				minLength: 0,
+				select: function(event,ui) {
+					$('#host_id_input').val(ui.item.label);
+					if (ui.item.id) {
+						$('#host_id').val(ui.item.id);
+					} else {
+						$('#host_id').val(ui.item.value);
+					}
+					;
+				}
+			}).css('border', 'none').css('background-color', 'transparent');
+
+			$('#host_id_wrap').on('dblclick', function() {
+				host_idOpen = false;
+				clearTimeout(host_idTimer);
+				clearTimeout(host_idClickTimer);
+				$('#host_id_input').autocomplete('close').select();
+			}).on('click', function() {
+				if (host_idOpen) {
+					$('#host_id_input').autocomplete('close');
+					clearTimeout(host_idTimer);
+					host_idOpen = false;
+				} else {
+					host_idClickTimer = setTimeout(function() {
+						$('#host_id_input').autocomplete('search', '');
+						clearTimeout(host_idTimer);
+						host_idOpen = true;
+					}, 200);
+				}
+				$('#host_id_input').select();
+			}).on('mouseleave', function() {
+				host_idTimer = setTimeout(function() { $('#host_id_input').autocomplete('close'); }, 800);
+			});
+
+			width = $('#host_id_input').textBoxWidth();
+			if (width < 100) {
+				width = 100;
+			}
+
+			$('#host_id_wrap').css('width', width+20);
+			$('#host_id_input').css('width', width);
+
+			$('ul[id^="ui-id"]').on('mouseenter', function() {
+				clearTimeout(host_idTimer);
+			}).on('mouseleave', function() {
+				host_idTimer = setTimeout(function() { $('#host_id_input').autocomplete('close'); }, 800);
+			});
+
+			$('ul[id^="ui-id"] > li').each().on('mouseenter', function() {
+				$(this).addClass('ui-state-hover');
+			}).on('mouseleave', function() {
+				$(this).removeClass('ui-state-hover');
+			});
+
+			$('#host_id_wrap').on('mouseenter', function() {
+				$(this).addClass('ui-state-hover');
+				$('input#host_id_input').addClass('ui-state-hover');
+			}).on('mouseleave', function() {
+				$(this).removeClass('ui-state-hover');
+				$('input#host_id_input').removeClass('ui-state-hover');
+			});
+		});
+		</script>
+        </div>
+        </div>
+      </div>
+      <div class="hidden formRow"><div style="display:none;"><input id="graph_template_graph_id" name="graph_template_graph_id" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="local_graph_id" name="local_graph_id" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="local_graph_template_graph_id" name="local_graph_template_graph_id" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="graph_template_id_prev" name="graph_template_id_prev" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="host_id_prev" name="host_id_prev" style="height:0px;" type="hidden" value="0"></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="save_component_graph_new" name="save_component_graph_new" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="rrdtool_version" name="rrdtool_version" style="height:0px;" type="hidden" value="1.4.0"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="graphs.php" type="button" value="Cancel"><input class="return ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Create"></td></tr>
+    </tbody>
+  </table>
+</form>
