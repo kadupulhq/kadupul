@@ -70,6 +70,7 @@ test('native predicates preserve rendering redirects and resource replication', 
         $this->assertSame('There was an internal error!', $result['runtime_regex']);
         $this->assertSame('Backtrack limit was exhausted!', $result['bounded_regex']);
         $this->assertSame('Backtrack limit was exhausted!', $result['raised_match_limit_regex']);
+        $this->assertSame('Recursion limit was exhausted!', $result['raised_depth_limit_regex']);
         $this->assertSame([ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit')], $result['regex_limits_unchanged']);
         $this->assertSame("Unknown modifier 'z'", $result['regex_compile_after_runtime']);
         $this->assertSame('There was an internal error!', $result['regex_runtime_after_warning']);

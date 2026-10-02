@@ -72,6 +72,7 @@ error_clear_last();
 $result['runtime_regex'] = validate_is_regex('(*NO_JIT)(?R)');
 $result['bounded_regex'] = validate_is_regex('(*NO_JIT)(*NO_START_OPT)(?:a?|b?){14}c');
 $result['raised_match_limit_regex'] = validate_is_regex('(*LIMIT_MATCH=99999)(*NO_START_OPT)(?:a?|b?){14}c');
+$result['raised_depth_limit_regex'] = validate_is_regex('(*LIMIT_DEPTH=99999)(*NO_START_OPT)(a?|b?){100}c');
 $result['regex_limits_unchanged'] = [ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit')];
 $lowerMatchLimit = ini_set('pcre.backtrack_limit', '1');
 try {
