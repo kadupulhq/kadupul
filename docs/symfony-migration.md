@@ -1210,3 +1210,29 @@ Existing graph/data records are retained; legacy automation may create new graph
 Primary and remote associations are verified before primary commit. Remote changes
 may survive a later failure, which returns the existing uncertain-outcome response.
 Action 7 and template-change callbacks retain legacy semantics. LTS is unchanged.
+### Palette CSV spreadsheet safety
+
+Palette downloads mark every operator-controlled name and hex cell as literal
+spreadsheet text with a leading apostrophe, following the device exporter.
+The downloaded schema is `name,hex,kadupul_literal_v1`; each marker cell must be
+`1`, and both text cells must carry that prefix. The importer validates the
+complete recognized marker before removing exactly one apostrophe from each
+cell, preserving original apostrophes, quotes, newlines and machine values.
+Unsupported versions or malformed marked rows fail before any writes.
+
+Ordinary two-column `name,hex` imports remain literal and never lose a leading
+apostrophe. Existing external consumers of palette downloads must allow the
+new marker column and literal prefixes; plain CSV readers see the prefixes.
+The import form accepts both downloaded exports and ordinary legacy files.
+### VDEF administration
+
+VDEF listing, create/edit, item create/edit/delete/reorder, and bulk duplicate/delete
+now use Symfony routes, Forms and Twig. The catalog preserves graph/template usage
+counts and nested VDEF references; the editor preserves item type/value/sequence
+and previews nested VDEF expressions. Mutations require console access and the
+VDEF realm, recheck account/policy/console and VDEF realm grants inside the write
+transaction, and use CSRF tokens plus revision checks to reject stale forms.
+Deletion refuses definitions referenced by graphs, graph templates or other VDEFs.
+The old `vdef.php` URL redirects safe GET navigation to the Symfony routes and
+rejects posted actions; legacy procedural VDEF functions remain available to
+graph rendering.
