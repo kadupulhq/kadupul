@@ -26,6 +26,8 @@
             <file>bin/legacy-data-input.php</file>
             <file>bin/legacy-data-input-handoff.php</file>
             <file>lib/data_input_worker.php</file>
+            <file>color.php</file>
+            <file>vdef.php</file>
             <file>links.php</file>
             <file>lib/database.php</file>
             <file>lib/reference_write.php</file>
