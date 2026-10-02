@@ -267,6 +267,14 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
       - name: Verify offline build runtime selection
         run: mise exec node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
+      - name: Verify offline guest fixture mutations
+        env:
+          KADUPUL_OFFLINE_FIXTURE_PHP_VERSION: '8.4'
+        run: |
+          mkdir -p "$RUNNER_TEMP/offline-fixture-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/offline-fixture-php/bin/php"
+          mise link php@8.4 "$RUNNER_TEMP/offline-fixture-php"
+          mise exec php@8.4 python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
       - name: Restore pinned compatibility libraries
         run: php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters

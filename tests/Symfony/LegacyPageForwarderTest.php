@@ -39,10 +39,12 @@ final class LegacyPageForwarderTest extends TestCase
         self::assertSame('/srv/kadupul/app.php', $forwarded->server->get('SCRIPT_FILENAME'));
         self::assertSame('/console/' . $script, $original->getBaseUrl());
     }
+
     public static function scripts(): array
     {
         return [['about.php', '/about/legacy']];
     }
+
     public function testRootDeploymentUsesRootFrontController(): void
     {
         $request = LegacyPageForwarder::request(Request::create('/about.php'), '/srv/kadupul', '/about/legacy');
@@ -50,6 +52,7 @@ final class LegacyPageForwarderTest extends TestCase
         self::assertSame('/about/legacy', $request->getPathInfo());
         self::assertSame('GET', $request->getMethod());
     }
+
     public function testInvalidForwardUriNeverDispatchesKernel(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
@@ -57,6 +60,7 @@ final class LegacyPageForwarderTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         LegacyPageForwarder::run($kernel, '/srv/kadupul', 'https://external.invalid');
     }
+
     public function testRejectsExternalOrQueryBearingRoute(): void
     {
         $this->expectException(\InvalidArgumentException::class);
