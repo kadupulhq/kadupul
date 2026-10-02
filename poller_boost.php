@@ -1625,9 +1625,7 @@ function boost_purge_cached_png_files($forcerun)
                     }
 
                     /* only remove jpeg's and png's, and temporary images a writer left behind */
-                    if (!substr_count(strtolower($file), '.png') &&
-                        !substr_count(strtolower($file), '.jpg') &&
-                        strpos($file, BOOST_PNG_TEMP_PREFIX) !== 0) {
+                    if (!preg_match('/\.(?:png|jpg)$/iD', $file) && strpos($file, BOOST_PNG_TEMP_PREFIX) !== 0) {
                         continue;
                     }
 
