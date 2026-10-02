@@ -60,6 +60,8 @@ $observer = new PDO($dsn, getenv('KADUPUL_REFERENCE_TEST_USER') ?: '', getenv('K
 
 if (($argv[1] ?? '') === 'writer') {
     $database->exec('USE `' . $argv[2] . '`');
+    $database_default = $argv[2];
+    $database_sessions = ["$database_hostname:$database_port:$database_default" => $database];
     $database->exec('SET SESSION innodb_lock_wait_timeout=15');
     $database->exec('SET SESSION TRANSACTION ISOLATION LEVEL ' . $argv[3]);
     $table = $argv[4];
@@ -80,6 +82,8 @@ try {
     $database->exec("CREATE DATABASE `$schema`");
     $created = true;
     $database->exec("USE `$schema`");
+    $database_default = $schema;
+    $database_sessions = ["$database_hostname:$database_port:$database_default" => $database];
     $observer->exec("USE `$schema`");
     installerSeed($database, $root);
     cdef_reference_install();
