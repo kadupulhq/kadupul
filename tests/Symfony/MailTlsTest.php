@@ -42,8 +42,14 @@ final class MailTlsTest extends TestCase
             $pid = pcntl_fork();
             self::assertNotSame(-1, $pid);
             if ($pid === 0) {
-                $this->serve($server, $directory . '/transcript', $mode);
-                exit(0);
+                // Never unwind into the parent's fixture cleanup after a server error.
+                try {
+                    $this->serve($server, $directory . '/transcript', $mode);
+                    exit(0);
+                } catch (\Throwable $error) {
+                    file_put_contents($directory . '/server-error', $error->getMessage());
+                    exit(2);
+                }
             }
             fclose($server);
             $server = null;
@@ -62,7 +68,7 @@ final class MailTlsTest extends TestCase
             $status = $client->run();
             pcntl_waitpid($pid, $childStatus);
             self::assertTrue(pcntl_wifexited($childStatus));
-            self::assertSame(0, pcntl_wexitstatus($childStatus));
+            self::assertSame(0, pcntl_wexitstatus($childStatus), is_file($directory . '/server-error') ? file_get_contents($directory . '/server-error') : 'TLS server failed');
             $transcript = file_get_contents($directory . '/transcript');
             $output = $client->getOutput() . $client->getErrorOutput();
             self::assertSame($certificate === 'trusted' ? 0 : 1, $status, $output);
@@ -124,40 +130,67 @@ final class MailTlsTest extends TestCase
             }
         }
         if ($mode === 'tls' || $encrypted) {
-            fwrite($connection, "220 localhost TLS fixture\r\n");
+            $greeted = $this->writeReply($connection, "220 localhost TLS fixture\r\n");
             $data = false;
-            while (($line = fgets($connection)) !== false) {
+            // A rejected certificate can close the peer immediately after negotiation.
+            while ($greeted && ($line = @fgets($connection)) !== false) {
                 $transcript .= $line;
                 if ($data) {
                     if ($line === ".\r\n") {
                         $data = false;
-                        fwrite($connection, "250 queued\r\n");
+                        if (!$this->writeReply($connection, "250 queued\r\n")) {
+                            break;
+                        }
                     }
                 } elseif ($line === "STARTTLS\r\n") {
-                    fwrite($connection, "220 start TLS\r\n");
+                    if (!$this->writeReply($connection, "220 start TLS\r\n")) {
+                        break;
+                    }
                     if (@stream_socket_enable_crypto($connection, true, STREAM_CRYPTO_METHOD_TLS_SERVER) !== true) {
                         break;
                     }
                     $encrypted = true;
                     $transcript .= "TLS established\n";
                 } elseif (str_starts_with($line, 'EHLO ')) {
-                    fwrite($connection, $encrypted ? "250-localhost\r\n250 AUTH PLAIN\r\n" : "250-localhost\r\n250 STARTTLS\r\n");
+                    if (!$this->writeReply($connection, $encrypted ? "250-localhost\r\n250 AUTH PLAIN\r\n" : "250-localhost\r\n250 STARTTLS\r\n")) {
+                        break;
+                    }
                 } elseif (str_starts_with($line, 'AUTH PLAIN ')) {
                     $expected = 'AUTH PLAIN ' . base64_encode("tls-user\0tls-user\0tls-fixture-secret") . "\r\n";
-                    fwrite($connection, $encrypted && $line === $expected ? "235 authenticated\r\n" : "535 rejected\r\n");
+                    if (!$this->writeReply($connection, $encrypted && $line === $expected ? "235 authenticated\r\n" : "535 rejected\r\n")) {
+                        break;
+                    }
                 } elseif ($line === "DATA\r\n") {
                     $data = true;
-                    fwrite($connection, "354 send message\r\n");
+                    if (!$this->writeReply($connection, "354 send message\r\n")) {
+                        break;
+                    }
                 } elseif ($line === "QUIT\r\n") {
-                    fwrite($connection, "221 goodbye\r\n");
+                    $this->writeReply($connection, "221 goodbye\r\n");
                     break;
                 } else {
-                    fwrite($connection, "250 ok\r\n");
+                    if (!$this->writeReply($connection, "250 ok\r\n")) {
+                        break;
+                    }
                 }
             }
         }
         file_put_contents($capture, $transcript);
         fclose($connection);
         fclose($server);
+    }
+
+    private function writeReply($connection, string $reply): bool
+    {
+        while ($reply !== '') {
+            // Certificate rejection intentionally disconnects before SMTP traffic.
+            $written = @fwrite($connection, $reply);
+            if ($written === false || $written === 0) {
+                return false;
+            }
+            $reply = substr($reply, $written);
+        }
+
+        return true;
     }
 }

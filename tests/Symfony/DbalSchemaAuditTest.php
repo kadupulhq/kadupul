@@ -198,9 +198,23 @@ final class DbalSchemaAuditTest extends TestCase
         $store = $this->store(self::offline());
         self::assertNull($store->read());
         self::assertNull($store->dumpPath());
-        (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, "INSERT INTO `table_columns` VALUES ('t',1,'x','int(10)','NO','',NULL,'');\n");
+        (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, "INSERT INTO `table_columns` VALUES ('t',1,'x','int(10)','NO','',NULL,'');\nINSERT INTO `table_indexes` VALUES ('t',0,'PRIMARY',1,'x','A',1,NULL,NULL,'','BTREE','');\n-- Dump completed on 2026-10-02 00:00:00\n");
         self::assertSame('x', $store->read()?->columnRows[0]->field);
         self::assertSame($this->root . DbalAuditBaselineStore::FILE, $store->dumpPath());
+    }
+
+    public function testIncompleteCanonicalDumpsCannotBecomeABaseline(): void
+    {
+        $complete = (string) file_get_contents(dirname(__DIR__, 2) . DbalAuditBaselineStore::FILE);
+        foreach (['/^-- Dump completed on .*$/m', '/^INSERT INTO `table_columns`.*$/m', '/^INSERT INTO `table_indexes`.*$/m'] as $remove) {
+            (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, (string) preg_replace($remove, '', $complete));
+            try {
+                $this->store(self::offline())->read();
+                self::fail('An incomplete canonical baseline was accepted.');
+            } catch (\Kadupul\Platform\Domain\Schema\InvalidAuditSchema $invalid) {
+                self::assertGreaterThan(0, $invalid->lineNumber);
+            }
+        }
     }
 
     public function testTheCatalogReadsWhatShowColumnsAndShowIndexesPrintOnARealMariaDb(): void
@@ -519,7 +533,7 @@ final class DbalSchemaAuditTest extends TestCase
         }
     }
 
-    public function testResetCreatesAndEmptiesTheAuditTablesOnARealMariaDb(): void
+    public function testResetEnsuresTablesWithoutDiscardingTheirRowsOnARealMariaDb(): void
     {
         $db = $this->mariaDb();
         try {
@@ -531,7 +545,7 @@ final class DbalSchemaAuditTest extends TestCase
             $db->executeStatement("INSERT INTO table_indexes (idx_table_name, idx_key_name, idx_seq_in_index, idx_column_name) VALUES ('t', 'k', 1, 'x')");
 
             self::assertNull($store->reset(DatabaseTarget::Local));
-            self::assertSame([0, 0], [(int) $db->fetchOne('SELECT COUNT(*) FROM table_columns'), (int) $db->fetchOne('SELECT COUNT(*) FROM table_indexes')]);
+            self::assertSame([1, 1], [(int) $db->fetchOne('SELECT COUNT(*) FROM table_columns'), (int) $db->fetchOne('SELECT COUNT(*) FROM table_indexes')]);
         } finally {
             $this->dropAll($db);
         }
@@ -558,8 +572,28 @@ final class DbalSchemaAuditTest extends TestCase
             self::assertSame(1, (int) $db->fetchOne('SELECT COUNT(*) FROM table_indexes'));
             self::assertSame(1, (int) $db->fetchOne('SELECT COUNT(*) FROM settings'));
 
-            self::assertTrue($store->replace(DatabaseTarget::Local, AuditBaseline::empty()));
-            self::assertSame(0, (int) $db->fetchOne('SELECT COUNT(*) FROM table_columns'));
+            self::assertFalse($store->replace(DatabaseTarget::Local, AuditBaseline::empty()));
+            self::assertSame(2, (int) $db->fetchOne('SELECT COUNT(*) FROM table_columns'));
+        } finally {
+            $this->dropAll($db);
+        }
+    }
+
+    public function testFailedStagedWritesPreserveBothExistingBaselineTables(): void
+    {
+        $db = $this->mariaDb();
+        try {
+            $store = $this->store($db);
+            self::assertNull($store->reset(DatabaseTarget::Local));
+            $column = new BaselineColumn("host", 1, "id", "int(10)", "NO", "PRI", null, "");
+            $index = new BaselineIndex("host", 0, "PRIMARY", 1, "id", "A", 1, null, null, "", "BTREE", "");
+            self::assertTrue($store->replace(DatabaseTarget::Local, new AuditBaseline([$column], [$index])));
+            $before = [$db->fetchAllAssociative("SELECT * FROM table_columns"), $db->fetchAllAssociative("SELECT * FROM table_indexes")];
+            foreach ([new AuditBaseline([$column, $column], [$index]), new AuditBaseline([$column], [$index, $index])] as $invalid) {
+                self::assertFalse($store->replace(DatabaseTarget::Local, $invalid));
+                self::assertSame($before, [$db->fetchAllAssociative("SELECT * FROM table_columns"), $db->fetchAllAssociative("SELECT * FROM table_indexes")]);
+                self::assertSame([], $db->fetchFirstColumn("SHOW TABLES LIKE ?", ["audit_%"]));
+            }
         } finally {
             $this->dropAll($db);
         }
