@@ -5,7 +5,10 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-require_once dirname(__DIR__, 2) . '/include/vendor/autoload.php';
+$applicationLoader = require dirname(__DIR__, 2) . '/include/vendor/autoload.php';
+// Keep the database matrix's PHPUnit ahead of application dev dependencies.
+$applicationLoader->unregister();
+$applicationLoader->register(false);
 
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceMutationSelection;
 use PHPUnit\Framework\TestCase;
