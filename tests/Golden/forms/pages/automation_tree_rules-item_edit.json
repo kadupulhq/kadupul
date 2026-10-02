@@ -1,0 +1,20 @@
+{
+    "session": {
+        "form_change_actions": {
+            "operation": "toggle_operation()",
+            "operator": "toggle_operator()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "field",
+        "form_automation_global_item_edit",
+        "operator",
+        "pattern",
+        "rule_type",
+        "sequence"
+    ],
+    "script_names": []
+}
