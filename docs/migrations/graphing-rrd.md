@@ -218,7 +218,12 @@ reads the graph, builds the command and runs it in one function
   options, definitions and item/export argument lists until after the hook.
 - `RenderGraph` receives an explicit authorization subject and asks R7's
   IdentityAccess `GraphAccess` contract before the cache, the builder, the
-  mode-guarded `rrd_graph_graph_options` hook and the transport in today's order.
+  mode-guarded `rrd_graph_graph_options` hook and the transport. R7 intentionally
+  reorders owned proxy-session creation: today the outer wrapper opens it
+  before the inner access check (`lib/rrd.php:2123-2131`, `2252`). A native
+  fail-before gate must prove zero session initialization and commands on
+  denial after the change, while retaining admitted-call ownership/cleanup
+  and preserving caller-supplied sessions.
   The wrapper's trusted nonpositive user argument maps to an explicit legacy
   bypass; request adapters accept positive identities only. CSV skips the hook
   and business hours, as it does today. Print-source returns the existing
@@ -293,10 +298,14 @@ this PR changes documentation only.
 
 `RenderGraph` invokes an Application `GraphOptionsHook` port implemented by the
 legacy hook adapter. It returns Domain `RenderResult` outcomes for source HTML,
-real-time output, CSV payload plus export metadata, and error images. The legacy
-wrapper returns the parsed CSV payload and copies percentile/summation metadata
-back into the caller-owned by-reference `$xport_meta`, with native parity gates
-for both values and the `graph_xport.php` consumers. Infrastructure output adapters retain the
+real-time output, CSV payload, and error images. Every outcome that reaches
+percentile/summation fact collection carries metadata updates, since those
+assignments precede mode dispatch (`lib/rrd.php:2596-2614`, `3172`). The legacy
+wrapper applies updates to caller-owned by-reference `$xport_meta` for all
+modes, preserving unrelated entries; early returns before collection leave
+it unchanged, and later failures retain completed updates. Native parity
+gates include non-CSV print-source with existing metadata, early/failure
+outcomes, CSV payload values and the `graph_xport.php` consumers. Infrastructure output adapters retain the
 existing filesystem permissions/failure handling and GD/theme behavior.
 Application imports none of those implementations. R7 adds Graphing's
 `Application/Port/RenderClock` and `Infrastructure/Legacy/LegacyRenderClock`;
