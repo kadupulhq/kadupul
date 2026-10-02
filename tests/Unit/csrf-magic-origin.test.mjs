@@ -119,11 +119,19 @@ function pageDom({ submitter = true } = {}) {
     addEventListener: (type, listener) => listeners.push([type, listener]),
   };
   const scope = { document, Element };
+  // What a submission would carry: associated, enabled token fields.
+  const dispatchSubmit = (form, event) => {
+    for (const [type, listener] of listeners) {
+      if (type === 'submit') listener(event);
+    }
+    return nodes.some(node => node.form === form && attribute(node, 'name') === field && !node.disabled);
+  };
   if (submitter) {
     scope.SubmitEvent = class { get submitter() { return null; } };
   }
   return {
     Element,
+    listeners,
     load: () => load(scope),
     form: (attributes, controls = []) => {
       const form = new Element('form', { method: 'post', ...attributes });
@@ -132,13 +140,9 @@ function pageDom({ submitter = true } = {}) {
       }
       return form;
     },
-    // What a submission would carry: associated, enabled token fields.
-    submit(form, button = null) {
-      for (const [type, listener] of listeners) {
-        if (type === 'submit') listener({ target: form, submitter: button });
-      }
-      return nodes.some(node => node.form === form && attribute(node, 'name') === field && !node.disabled);
-    },
+    submit: (form, button = null) => dispatchSubmit(form, submitter ? { target: form, submitter: button } : { target: form }),
+    // A submit event from a browser without SubmitEvent.submitter.
+    submitUnknown: form => dispatchSubmit(form, { target: form }),
     button: (form, attributes) => new Element('button', { type: 'submit', ...attributes }, form),
   };
 }
@@ -216,6 +220,46 @@ test('without SubmitEvent.submitter a form with a cross-origin formaction gets n
   assert.equal(dom.submit(other), true);
 });
 
+test('without SubmitEvent.submitter a server-rendered token is withheld from a form with a cross-origin formaction', () => {
+  const dom = pageDom({ submitter: false });
+  const rendered = [{ name: field, value: token, type: 'hidden' }];
+  const form = dom.form({ action: 'graphs.php' }, rendered);
+  dom.button(form, { formaction: 'https://evil.example/collect' });
+  const outside = dom.form({ action: 'graphs.php', id: 'f' }, rendered);
+  dom.button(outside, { formaction: '//evil.example/collect', form: 'f' });
+  const foreign = dom.form({ action: 'https://evil.example/collect' }, rendered);
+  const other = dom.form({ action: 'graphs.php' }, rendered);
+  dom.button(other, { formaction: 'graphs.php' });
+  dom.load();
+  assert.equal(dom.submitUnknown(form), false);
+  assert.equal(dom.submitUnknown(outside), false);
+  assert.equal(dom.submitUnknown(foreign), false);
+  assert.equal(dom.submitUnknown(other), true);
+});
+
+// An unclosed <plaintext>, <textarea>, <title>, <xmp> or comment after a form
+// puts the CsrfMagic.end() call into text, so the browser never runs it while
+// the form still holds the token the server added.
+test('the submit check works when CsrfMagic.end() never runs', () => {
+  const dom = pageDom();
+  const form = dom.form({ action: 'graphs.php', id: 'f' }, [{ name: field, value: token, type: 'hidden' }]);
+  const inside = dom.button(form, { formaction: '//evil.example/collect' });
+  // <button form="f"> outside the form is associated with it the same way.
+  const outside = dom.button(form, { formaction: 'https://evil.example/collect', form: 'f' });
+  const plain = dom.button(form, {});
+  dom.load();
+  assert.equal(dom.listeners.filter(([type]) => type === 'submit').length, 1);
+  assert.equal(dom.submit(form, inside), false);
+  assert.equal(dom.submit(form, outside), false);
+  assert.equal(dom.submit(form, plain), true);
+});
+
+test('CsrfMagic.end() does not add a second submit listener', () => {
+  const dom = pageDom();
+  dom.load().CsrfMagic.end();
+  assert.equal(dom.listeners.filter(([type]) => type === 'submit').length, 1);
+});
+
 test('a server-rendered token is withheld from a cross-origin submission', () => {
   const dom = pageDom();
   const form = dom.form({ action: 'https://evil.example/collect' }, [{ name: field, value: token, type: 'hidden' }]);
@@ -234,6 +278,32 @@ test('relative XHR URLs resolve against the document base', () => {
   request.open('POST', 'graphs.php', true);
   request.send('action=save');
   assert.equal(request.sent, 'action=save');
+});
+
+test('an element named baseURI does not hide the document base', () => {
+  const send = scope => {
+    class Request {
+      open() {}
+      send(data) { this.sent = data; }
+      setRequestHeader() {}
+    }
+    load({ XMLHttpRequest: Request, ...scope });
+    const request = new Request();
+    request.open('POST', 'graphs.php', true);
+    request.send('action=save');
+    return request.sent;
+  };
+  // A page containing <img name="baseURI"> makes document.baseURI return the element.
+  const clobbered = base => {
+    class Node { get baseURI() { return base; } }
+    const document = Object.create(Node.prototype);
+    Object.defineProperty(document, 'baseURI', { value: { tagName: 'IMG' } });
+    return { Node, document };
+  };
+  assert.equal(send(clobbered(page)), withToken);
+  assert.equal(send(clobbered('https://evil.example/')), 'action=save');
+  // Without the prototype getter a shadowed value is not trusted.
+  assert.equal(send({ document: { baseURI: { tagName: 'IMG' } } }), 'action=save');
 });
 
 test('the jQuery fallback adds the token to same-origin posts only', () => {
