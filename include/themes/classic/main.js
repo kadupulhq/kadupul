@@ -1,6 +1,7 @@
 /*
   +-------------------------------------------------------------------------+
   | Copyright (C) 2004-2026 The Cacti Group                                 |
+  | Copyright (C) 2026 The Kadupul project and contributors                 |
   |                                                                         |
   | This program is free software; you can redistribute it and/or           |
   | modify it under the terms of the GNU General Public License             |
@@ -31,7 +32,11 @@ function themeReady() {
 
 	keepWindowSize();
 
-	$(window).unbind().resize(function(event) {
+	/* applySkin() binds these window events again on every page load, so
+	 * clear them here as unbind() did, but leave the menu click handler
+	 * setupEllipsis() binds once. The comma is part of the event name
+	 * setupResponsiveMenuAndTabs() binds. */
+	$(window).off('resize orientationchange, fullscreenchange').resize(function(event) {
 		if (pageName == 'graph_view.php') {
 			treeWidth    = $('#navigation').width();
 			totalWidth   = $('body').width();
