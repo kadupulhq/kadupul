@@ -46,3 +46,99 @@ function test_php_function_source(string $source, string $name): string
     }
     throw new RuntimeException("Function not found: $name");
 }
+
+/** Extract a complete brace-delimited block after an optional source anchor. */
+function test_php_block_source(string $source, string $needle, string $after = ''): string
+{
+    $offset = 0;
+    if ($after !== '') {
+        $anchor = strpos($source, $after);
+        if ($anchor === false) {
+            throw new RuntimeException('Block anchor not found: ' . $after);
+        }
+        $offset = $anchor + strlen($after);
+    }
+
+    $start = strpos($source, $needle, $offset);
+    if ($start === false) {
+        throw new RuntimeException('Block marker not found: ' . $needle);
+    }
+
+    $search = $start + strlen($needle);
+    $position = 0;
+    $open = null;
+    foreach (token_get_all($source) as $token) {
+        $text = is_array($token) ? $token[1] : $token;
+        if ($position >= $search && $token === '{') {
+            $open = $position;
+            break;
+        }
+        $position += strlen($text);
+    }
+
+    if ($open === null) {
+        throw new RuntimeException('Block opening brace not found: ' . $needle);
+    }
+
+    $depth = 0;
+    $position = 0;
+    foreach (token_get_all($source) as $token) {
+        $text = is_array($token) ? $token[1] : $token;
+        $length = strlen($text);
+        if ($position < $open) {
+            $position += $length;
+            continue;
+        }
+
+        if ($token === '{' || (is_array($token) && in_array($token[0], [T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES], true))) {
+            $depth++;
+        } elseif ($token === '}') {
+            $depth--;
+            if ($depth === 0) {
+                return substr($source, $start, $position + $length - $start);
+            }
+        }
+
+        $position += $length;
+    }
+
+    throw new RuntimeException('Block has no complete body: ' . $needle);
+}
+
+/** Run PHP source or a PHP command and return stdout, stderr, and its exit status. */
+function test_php_run($codeOrCommand): array
+{
+    $command = is_array($codeOrCommand) ? $codeOrCommand : [PHP_BINARY, '-r', $codeOrCommand];
+    $error_file = tmpfile();
+    if ($error_file === false) {
+        throw new RuntimeException('PHP test stderr capture could not be created.');
+    }
+
+    $pipes = [];
+    $process = null;
+    try {
+        // A file cannot fill a pipe buffer while the parent drains stdout.
+        $process = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => $error_file], $pipes);
+        if (!is_resource($process)) {
+            throw new RuntimeException('PHP test subprocess did not start.');
+        }
+        fclose($pipes[0]);
+        $out = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        $status = proc_close($process);
+        rewind($error_file);
+        $err = stream_get_contents($error_file);
+
+        return ['out' => $out, 'err' => $err, 'status' => $status];
+    } finally {
+        foreach ($pipes as $pipe) {
+            if (is_resource($pipe)) {
+                fclose($pipe);
+            }
+        }
+        if (is_resource($process)) {
+            proc_close($process);
+        }
+        fclose($error_file);
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "session": {
+        "form_change_actions": {
+            "choice": "choiceChanged()"
+        }
+    },
+    "diagnostics": [],
+    "log": []
+}

@@ -17,6 +17,8 @@
 
 namespace SnmpSessionTimeoutWarningTest;
 
+require_once __DIR__ . '/../Helpers/PhpSource.php';
+
 const POLLER_VERBOSITY_HIGH = 4;
 const SNMP_STRING_OUTPUT_GUESS = 1;
 
@@ -70,35 +72,6 @@ function format_snmp_string($string, $snmp_oid_included, $value_output_format = 
     return $string;
 }
 
-/**
- * Returns the source of one top-level function, found by brace matching.
- */
-function snmp_timeout_warning_function_source(string $source, string $name): string
-{
-    $start = strpos($source, 'function ' . $name . '(');
-
-    if ($start === false) {
-        throw new \RuntimeException($name . '() not found in lib/snmp.php');
-    }
-
-    $brace = strpos($source, '{', $start);
-    $depth = 1;
-    $i = $brace + 1;
-    $length = strlen($source);
-
-    while ($depth > 0 && $i < $length) {
-        if ($source[$i] === '{') {
-            $depth++;
-        } elseif ($source[$i] === '}') {
-            $depth--;
-        }
-
-        $i++;
-    }
-
-    return substr($source, $start, $i - $start);
-}
-
 $snmpSource = file_get_contents(__DIR__ . '/../../lib/snmp.php');
 
 /* eval() runs only function source read from lib/snmp.php in this repository,
@@ -106,7 +79,7 @@ $snmpSource = file_get_contents(__DIR__ . '/../../lib/snmp.php');
  * loading lib/snmp.php's include-time setup. */
 foreach (['cacti_snmp_timeout_ms', 'cacti_snmp_session_walk', 'cacti_snmp_session_get', 'cacti_snmp_session_getnext'] as $snmpFunction) {
     if (!function_exists(__NAMESPACE__ . '\\' . $snmpFunction)) {
-        eval('namespace ' . __NAMESPACE__ . '; ' . snmp_timeout_warning_function_source($snmpSource, $snmpFunction)); // nosemgrep: php.lang.security.eval-use.eval-use
+        eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source($snmpSource, $snmpFunction)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
 }
 
