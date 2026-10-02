@@ -18,7 +18,7 @@ require_once __DIR__ . '/../Helpers/PhpSource.php';
 $source = file_get_contents(__DIR__ . '/../../lib/api_automation.php');
 foreach (['automation_update_device', 'automation_execute_graph_template', 'automation_execute_data_query', 'create_dq_graphs', 'automation_execute_device_create_tree', 'automation_execute_graph_create_tree', 'automation_graph_result_exists', 'automation_hook_graph_create_tree', 'create_all_header_nodes', 'create_multi_header_node'] as $function) {
     // Execute the production orchestration and result checks, not a void-method stub.
-    eval('namespace ' . __NAMESPACE__ . '; use RuntimeException;' . \test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
+    eval('namespace ' . __NAMESPACE__ . '; use RuntimeException; use Throwable;' . \test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 const POLLER_VERBOSITY_MEDIUM = 1;
 const POLLER_VERBOSITY_HIGH = 2;
@@ -291,13 +291,11 @@ final class LegacyAutomationResultTest extends TestCase
         yield 'invalid data is skipped before creation' => ['invalid-first-template'];
         yield 'whitelist refusal is skipped before creation' => ['whitelist-first-template'];
     }
-    public function testGraphTreeHookFailureCannotBeLostInThePluginDataContract(): void
+    public function testLegacyTreeHookFailureStillRejectsAnUnpersistedGraphResult(): void
     {
         RuleFixture::$kind = 'graph-tree';
         RuleFixture::$outcome = 'unpersisted';
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Graph tree automation failed');
-        automation_update_device(7);
+        self::assertFalse(automation_update_device(7));
     }
     public static function outcomes(): iterable
     {

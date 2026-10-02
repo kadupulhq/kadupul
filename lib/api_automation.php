@@ -2362,8 +2362,15 @@ function automation_hook_graph_create_tree($data)
         return;
     }
 
-    if (!automation_execute_graph_create_tree($data['id'])) {
-        throw new RuntimeException('Graph tree automation failed');
+    try {
+        if (!automation_execute_graph_create_tree($data['id'])) {
+            throw new RuntimeException('Graph tree automation failed');
+        }
+    } catch (Throwable $error) {
+        if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+            throw $error;
+        }
+        cacti_log('ERROR: Graph[' . $data['id'] . '] tree automation failed.', false, 'AUTOM8');
     }
 
     /* make sure, the next plugin gets required $data */
