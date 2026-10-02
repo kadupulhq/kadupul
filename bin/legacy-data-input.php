@@ -47,8 +47,8 @@ try {
     $action = $command['action'];
     $payload = $command['payload'];
     $writes = !in_array($action, ['list', 'find', 'selection'], true);
-    if ($writes) {
-        dataInputWorkerStorage($db);
+    if ($writes || $action === 'list') {
+        dataInputWorkerStorage($db, $action === 'list');
     }
     if ($action === 'list') {
         $preferences = dataInputWorkerRead($db, "SELECT name,value FROM settings_user WHERE user_id=? AND name LIKE 'twig_data_input_%'", [$command['actor']]);

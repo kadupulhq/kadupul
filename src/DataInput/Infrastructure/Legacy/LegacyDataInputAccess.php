@@ -101,16 +101,13 @@ final readonly class LegacyDataInputAccess implements DataInputAccess
             return true;
         }
         try {
-            $query = $db->query("SHOW TABLES LIKE 'user_auth_group_realm'");
-            if ($query->fetchColumn() === false) {
-                return false;
+            foreach (['user_auth_group_realm', 'user_auth_group_members', 'user_auth_group'] as $table) {
+                $query = $db->query('SHOW TABLES LIKE ' . $db->quote($table));
+                if ($query->fetchColumn() === false) {
+                    return false;
+                }
             }
-            $query = $db->query("SHOW TABLES LIKE 'user_auth_group_members'");
-            if ($query->fetchColumn() === false) {
-                return false;
-            }
-            $query = $db->query("SHOW TABLES LIKE 'user_auth_group'");
-            return $query->fetchColumn() !== false;
+            return true;
         } catch (\Throwable) {
             return false;
         }

@@ -2136,8 +2136,14 @@ function symfony_routes(string $root, array $files): array
                                 if ($adapter === null) {
                                     fail('Reviewed DataInputAccess adapter not found');
                                 }
+                                $workflow = load_class($root, 'Kadupul\\DataInput\\Application\\DataInputMethods');
+                                if ($workflow === null) {
+                                    fail('Reviewed DataInputMethods workflow not found');
+                                }
                                 $grant .= ' + realm 2';
-                                $reviewed .= '; reviewed DataInputAccess at ' . digest($adapter->stmts) . ' and action ' . digest($method->stmts) . ': feature realm 2';
+                                // The private editor and application execute() enforce
+                                // this realm for create/edit; pin their actual bodies.
+                                $reviewed .= '; reviewed DataInputAccess at ' . digest($adapter->stmts) . ' and action ' . digest($method->stmts) . ' and controller ' . digest($class->stmts) . ' and workflow ' . digest($workflow->stmts) . ': feature realm 2';
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

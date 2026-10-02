@@ -91,9 +91,13 @@ function dataInputWorkerMethodUnused(PDO $db, int $id): void
         throw new InvalidArgumentException('Data inputs in use cannot be deleted.');
     }
 }
-function dataInputWorkerStorage(PDO $db): void
+function dataInputWorkerStorage(PDO $db, bool $preferences = false): void
 {
-    foreach (['data_input', 'data_input_fields', 'data_input_data', 'data_template_data', 'data_template_rrd', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'] as $table) {
+    $tables = ['data_input', 'data_input_fields', 'data_input_data', 'data_template_data', 'data_template_rrd', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'];
+    if ($preferences) {
+        $tables[] = 'settings_user';
+    }
+    foreach ($tables as $table) {
         $rows = dataInputWorkerRead($db, 'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?', [$table]);
         if (strtoupper($rows[0]['ENGINE'] ?? '') !== 'INNODB') {
             throw new RuntimeException('Transactional storage required.');

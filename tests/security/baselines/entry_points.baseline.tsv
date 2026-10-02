@@ -4,13 +4,13 @@ about.php	authenticated	include/auth.php realm -1
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
-app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 55539f0a80ef: feature realm 2
-app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 1f46fb124365: feature realm 2
-app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action af73f4343625: feature realm 2
-app.php/data-inputs/new	symfony:data_input_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 815bd496666c: feature realm 2
-app.php/data-inputs/{id}/edit	symfony:data_input_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action f5da79ca881e: feature realm 2
-app.php/data-inputs/{id}/fields/{field}	symfony:data_input_field	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},field=[0-9]{1,8}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 74a56be92e80: feature realm 2
-app.php/data-inputs/{id}/{operation}	symfony:data_input_action	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},operation=delete|duplicate|field_delete|propagate|whitelist; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at 0f5caa90ac95 and action 0326117ba140: feature realm 2
+app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 1f46fb124365 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action af73f4343625 and controller e011435a3fdf and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/new	symfony:data_input_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 815bd496666c and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/edit	symfony:data_input_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action f5da79ca881e and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/fields/{field}	symfony:data_input_field	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},field=[0-9]{1,8}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 74a56be92e80 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/{operation}	symfony:data_input_action	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},operation=delete|duplicate|field_delete|propagate|whitelist; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 0326117ba140 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3

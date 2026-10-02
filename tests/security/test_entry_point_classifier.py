@@ -12,6 +12,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import shutil
 from pathlib import Path
 from unittest.mock import patch
 
@@ -937,6 +938,42 @@ def raw_classifier(request):
 def main():
     failures = []
     count = 0
+    # Real reviewed Data Input routes must pin private/application callees too.
+    # Mutate owned copies of the actual source; unchanged action/adapter bytes
+    # must not leave the realm annotation identical after removing enforcement.
+    source_root = Path(__file__).resolve().parents[2]
+    with tempfile.TemporaryDirectory(prefix='data-input-inventory-') as directory:
+        root = tree(directory)
+        paths = ('src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php',
+                 'src/DataInput/Infrastructure/Symfony/Controller/LegacyDataInputController.php',
+                 'src/DataInput/Infrastructure/Legacy/LegacyDataInputAccess.php',
+                 'src/DataInput/Application/DataInputMethods.php')
+        for path in paths:
+            (root / path).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source_root / path, root / path)
+        session_path = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+        session_path.parent.mkdir(parents=True, exist_ok=True)
+        session_path.write_text(SESSION)
+        admitted = run(root, [])
+        for entry in ('app.php/data-inputs/new', 'app.php/data-inputs/{id}/edit'):
+            count += 1
+            if '+ realm 2' not in admitted.get(entry, ('', ''))[1]:
+                failures.append('actual reviewed Data Input route lost its admitted realm annotation: ' + entry)
+        mutations = (
+            ('src/DataInput/Application/DataInputMethods.php', '$this->access->authorize()->id', '1'),
+            ('src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', "$state = $methods->execute('find', $id);", '$state = [];'),
+        )
+        for path, before, after in mutations:
+            original = (root / path).read_text()
+            if before not in original:
+                raise AssertionError('Actual enforcing fixture call not found: ' + before)
+            (root / path).write_text(original.replace(before, after, 1))
+            changed = run(root, [])
+            for entry in ('app.php/data-inputs/new', 'app.php/data-inputs/{id}/edit'):
+                count += 1
+                if changed.get(entry) == admitted.get(entry):
+                    failures.append('Data Input enforcing callee omission left the pinned gate unchanged: ' + path + ' / ' + entry)
+            (root / path).write_text(original)
     count += 1
     classifier_source = (Path(__file__).resolve().parent / 'classify_entry_points.php').read_text()
     if '// Globals a file writes at its top level, traced by hand, each with why the\n// write cannot change what an includer trusts.\nconst REVIEWED_GLOBALS' not in classifier_source:
