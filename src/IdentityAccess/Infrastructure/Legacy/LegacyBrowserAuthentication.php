@@ -265,8 +265,26 @@ final readonly class LegacyBrowserAuthentication
             throw new \RuntimeException('Unsupported browser authentication database.');
         }
         foreach ($tables as $table) {
-            $create = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SHOW CREATE TABLE `' . $table . '`'));
-            if ($create === false || !is_string($create['Create Table'] ?? null) || !preg_match('/\)\s+ENGINE=InnoDB\b/i', $create['Create Table'])) {
+            $definition = BrowserAuthenticationSql::execute($database, 'SHOW CREATE TABLE `' . $table . '`');
+            $create = BrowserAuthenticationSql::row($definition);
+            if (!$definition->closeCursor() || $definition->errorCode() !== '00000') {
+                throw new \RuntimeException('Browser authentication metadata close was not confirmed.');
+            }
+            if ($create === false || !is_string($create['Create Table'] ?? null)
+                || preg_match('/\ACREATE TABLE\s/i', $create['Create Table']) !== 1) {
+                throw new \RuntimeException('Browser authentication requires transactional tables.');
+            }
+            // SHOW CREATE can include engine-like text inside a column or table
+            // comment. After rejecting temporary tables and views, inspect the
+            // persistent target's native engine on this same mutation session.
+            $status = BrowserAuthenticationSql::execute($database, 'SHOW TABLE STATUS WHERE Name = ?', [$table]);
+            $metadata = BrowserAuthenticationSql::row($status);
+            $extra = BrowserAuthenticationSql::row($status);
+            if (!$status->closeCursor() || $status->errorCode() !== '00000') {
+                throw new \RuntimeException('Browser authentication metadata close was not confirmed.');
+            }
+            if ($metadata === false || ($metadata['Name'] ?? null) !== $table
+                || ($metadata['Engine'] ?? null) !== 'InnoDB' || $extra !== false) {
                 throw new \RuntimeException('Browser authentication requires transactional tables.');
             }
         }

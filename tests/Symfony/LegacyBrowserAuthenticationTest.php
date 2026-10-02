@@ -329,7 +329,14 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         $statement = $this->createMock(PDOStatement::class);
         $statement->method('execute')->willReturn(true);
         $statement->method('errorCode')->willReturn('00000');
-        $statement->method('fetch')->willReturn(['Create Table' => 'CREATE TABLE fixture (id INTEGER) ENGINE=InnoDB']);
+        $statement->method('closeCursor')->willReturn(true);
+        $rows = [];
+        foreach (['settings', 'user_auth', 'user_log'] as $table) {
+            $rows[] = ['Create Table' => 'CREATE TABLE `' . $table . '` (id INTEGER) ENGINE=InnoDB'];
+            $rows[] = ['Name' => $table, 'Engine' => 'InnoDB'];
+            $rows[] = false;
+        }
+        $statement->method('fetch')->willReturnOnConsecutiveCalls(...$rows);
         $pdo = $this->createMock(PDO::class);
         $pdo->method('getAttribute')->willReturn('mysql');
         $pdo->method('inTransaction')->willReturn(false);
