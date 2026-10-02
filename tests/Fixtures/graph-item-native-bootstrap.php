@@ -22,9 +22,7 @@ $graph_item_types = array(4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 9 => 'GPRINT
 $struct_graph_item = array('task_item_id' => array('default' => 0), 'alpha' => array(), 'line_width' => graph_item_editor_line_width_field());
 $consolidation_functions = array();
 $config = array('url_path' => '/');
-define('GRAPH_ITEM_TYPE_LINE1', 4);
-define('GRAPH_ITEM_TYPE_LINE2', 5);
-define('GRAPH_ITEM_TYPE_LINE3', 6);
+require_once $root . '/include/global_constants.php';
 function get_request_var($name)
 {
     return $GLOBALS['request'][$name] ?? '';
