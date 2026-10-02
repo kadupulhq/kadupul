@@ -37,6 +37,7 @@ if (!empty($scenario['empty'])) {
     $item_rows = false;
 }
 $queries = array();
+$deleteCounts = array();
 if (isset($scenario['association'])) {
     $_SESSION = array('sess_user_id' => 99);
     $db->sqliteCreateFunction('RAND', static fn() => random_int(1, 4294967294) / 4294967295);
@@ -73,6 +74,9 @@ function db_execute_prepared($sql, $parameters, $log = true, $connection = false
     $statement = $GLOBALS['db']->prepare($sql);
     $result = $statement->execute($parameters);
     $GLOBALS['permission_affected_rows'] = $statement->rowCount();
+    if (str_starts_with($sql, 'DELETE FROM')) {
+        $GLOBALS['deleteCounts'][] = $GLOBALS['permission_affected_rows'];
+    }
     return $result;
 }
 function db_affected_rows($connection = false)
@@ -197,7 +201,7 @@ if (!empty($scenario['no_association'])) {
 }
 if (isset($scenario['association'])) {
     register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn) {
-        $state = array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']);
+        $state = array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries'], 'delete_counts' => $GLOBALS['deleteCounts'], 'epochs' => $db->query('SELECT id, reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR));
         $GLOBALS['nativeChildCoverageMarkers'] = array('association-state-readback');
         print json_encode($state, JSON_THROW_ON_ERROR);
     });
