@@ -74,6 +74,22 @@ final class TranslationTest extends TestCase
         yield 'English fallback and ignored query' => [[], null, null, 'ja', 'en'];
     }
 
+    public function testVdefRoutesUseConfiguredLocale(): void
+    {
+        $preference = $this->createMock(LocalePreference::class);
+        $preference->method('preferredLocale')->willReturn(null);
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+        $subscriber = new InventoryLocaleSubscriber($preference, $this->database([]), $configuration);
+        $request = Request::create('/graph-definitions/vdefs', 'GET', [], ['Cacti' => 'fixture']);
+        $request->attributes->set('_route', 'graph_vdefs');
+        $request->headers->set('Accept-Language', 'en');
+
+        $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+
+        self::assertSame('fr', $request->attributes->get('_locale'));
+    }
+
     #[DataProvider('installationLocales')]
     public function testActualInstallationConfigurationSelectsLocale(string $source, string $expected): void
     {
