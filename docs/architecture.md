@@ -172,6 +172,8 @@ contract usage, framework isolation and entry points. Behavioral HTTP tests cove
 the adapters against a disposable database. Both are required CI checks.
 The [architecture atlas alignment ledger](architecture-alignment.md) records
 which target gates have evidence and which remain transitional or planned.
+The Graphing plans are [Moving `lib/rrd.php` into Graphing](migrations/graphing-rrd.md)
+and the [graph rendering pipeline](migrations/graphing-render-pipeline.md).
 
 Symfony Translation is a presentation dependency. Platform resolves the Inventory HTML
 request locale using IdentityAccess's public LocalePreference contract and existing
