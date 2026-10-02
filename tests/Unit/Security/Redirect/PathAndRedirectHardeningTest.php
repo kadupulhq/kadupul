@@ -88,11 +88,11 @@ test('normalizer strips long-path prefixes and handles UNC shares', function () 
 	$body  = substr($functionsSource, $start, 900);
 
 	// \\?\UNC\ is collapsed to \\ before the slash conversion runs
-	expect($body)->toContain("strpos(\$lower, '\\\\\\\\?\\\\unc\\\\') === 0");
+	expect($body)->toContain("str_starts_with(\$lower, '\\\\\\\\?\\\\unc\\\\')");
 	expect($body)->toContain("'\\\\\\\\' . substr(\$lower, 8)");
 
 	// bare \\?\ (long-path on a drive letter) is stripped entirely
-	expect($body)->toContain("strpos(\$lower, '\\\\\\\\?\\\\') === 0");
+	expect($body)->toContain("str_starts_with(\$lower, '\\\\\\\\?\\\\')");
 	expect($body)->toContain('substr($lower, 4)');
 
 	// slashes normalised, trailing slash trimmed, case-insensitive
