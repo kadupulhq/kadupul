@@ -221,8 +221,8 @@ dynamic_include	./cli/push_out_hosts.php:13	require_once($config['base_path'] . 
 dynamic_include	./cli/rebuild_poller_cache.php:19	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/rebuild_poller_cache.php:20	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./cli/rebuild_poller_cache.php:21	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/refresh_csrf.php:10	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/refresh_csrf.php:11	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/refresh_csrf.php:11	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/refresh_csrf.php:12	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/remove_broken_graphs.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./cli/remove_broken_graphs.php:11	require_once($config['base_path'] . '/lib/api_graph.php');
 dynamic_include	./cli/remove_device.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');

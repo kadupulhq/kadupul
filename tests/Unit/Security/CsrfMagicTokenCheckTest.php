@@ -119,3 +119,132 @@ PHP);
         ->and($result['page'])->not->toContain($result['hash'])
         ->and($result['page'])->not->toContain('probe-post-value');
 });
+
+
+test('secret publication is atomic and preserves existing files on refusal', function () {
+    [$stdout] = runCsrfMagicProbe(<<<'PHP'
+$path = $argv[2] . '/secret.php';
+$prior_umask = umask();
+$old = '<?php $secret = "working-key";' . PHP_EOL;
+file_put_contents($path, $old);
+$invalid = csrf_write_secret($path, 'invalid-secret');
+$preserved = file_get_contents($path) === $old;
+$secret = csrf_generate_secret();
+$written = csrf_write_secret($path, $secret);
+$expected = '<?php $secret = ' . var_export($secret, true) . ';' . PHP_EOL;
+$bytes = file_get_contents($path) === $expected;
+$mode = fileperms($path) & 0777;
+$link = $argv[2] . '/alias.php';
+symlink($path, $link);
+$alias = csrf_write_secret($link, csrf_generate_secret());
+$unchanged = is_link($link) && file_get_contents($path) === $expected;
+$missing = csrf_write_secret($argv[2] . '/missing/secret.php', csrf_generate_secret());
+$restored_umask = umask() === $prior_umask;
+$temporary = glob($argv[2] . '/.csrf-secret-*');
+echo json_encode(array($invalid, $preserved, $written, $bytes, $mode, $alias, $unchanged, $missing, $temporary, $restored_umask));
+PHP);
+    expect(json_decode($stdout, true))->toBe(array(false, true, true, true, 0640, false, true, false, array(), true));
+});
+
+
+test('the complete rotation CLI preserves the working secret when generation throws', function () {
+    require_once dirname(__DIR__, 3) . '/tests/Helpers/PhpSource.php';
+    $root = sys_get_temp_dir() . '/csrf-rotation-cli-' . bin2hex(random_bytes(8));
+    mkdir($root, 0700);
+    mkdir($root . '/cli', 0700);
+    mkdir($root . '/include', 0700);
+    mkdir($root . '/lib', 0700);
+    $source = file_get_contents(dirname(__DIR__, 3) . '/cli/refresh_csrf.php');
+    expect($source)->toBeString();
+    $old = '<?php $secret = "working-fixture-secret";' . PHP_EOL;
+    try {
+        // Copy the complete CLI unchanged; only bootstrap dependencies supply
+        // the generation failure. No rotation logic is copied into the fixture.
+        file_put_contents($root . '/cli/refresh_csrf.php', $source);
+        file_put_contents($root . '/working.php', $old);
+        file_put_contents($root . '/lib/poller.php', '<?php');
+        file_put_contents($root . '/lib/utility.php', '<?php');
+        file_put_contents($root . '/include/cli_check.php', <<<'PHP'
+<?php
+$config = array('base_path' => dirname(__DIR__), 'path_csrf_secret' => dirname(__DIR__) . '/working.php');
+function cacti_sizeof($items) { return count($items); }
+function csrf_generate_secret() { throw new RuntimeException('Simulated entropy failure'); }
+PHP);
+        $result = test_php_run(array(PHP_BINARY, $root . '/cli/refresh_csrf.php'));
+        expect(file_exists($root . '/working.php'))->toBeTrue()
+            ->and($result['status'])->toBe(1)
+            ->and($result['err'])->toBe('')
+            ->and($result['out'])->toContain('FATAL: Unable to generate a new CSRF secret.')
+            ->and($result['out'])->not->toContain('working-fixture-secret')
+            ->and(file_get_contents($root . '/working.php'))->toBe($old)
+            ->and(hash_file('sha256', $root . '/cli/refresh_csrf.php'))->toBe(hash('sha256', $source));
+    } finally {
+        foreach (array('/cli/refresh_csrf.php', '/include/cli_check.php', '/lib/poller.php', '/lib/utility.php', '/working.php') as $file) {
+            if (file_exists($root . $file)) {
+                unlink($root . $file);
+            }
+        }
+        foreach (array('/cli', '/include', '/lib', '') as $directory) {
+            rmdir($root . $directory);
+        }
+    }
+});
+
+
+test('the complete rotation CLI uses the installed publisher and reports its result', function (bool $blocked) {
+    require_once dirname(__DIR__, 3) . '/tests/Helpers/PhpSource.php';
+    $repository = dirname(__DIR__, 3);
+    $root = sys_get_temp_dir() . '/csrf-rotation-result-' . bin2hex(random_bytes(8));
+    mkdir($root, 0700);
+    foreach (array('/cli', '/include', '/lib', '/keys') as $directory) {
+        mkdir($root . $directory, 0700);
+    }
+    $old = '<?php $secret = "working-fixture-secret";' . PHP_EOL;
+    try {
+        $source = file_get_contents($repository . '/cli/refresh_csrf.php');
+        expect($source)->toBeString();
+        file_put_contents($root . '/cli/refresh_csrf.php', $source);
+        file_put_contents($root . '/keys/working.php', $old);
+        file_put_contents($root . '/lib/poller.php', '<?php');
+        file_put_contents($root . '/lib/utility.php', '<?php');
+        $bootstrap = <<<'PHP'
+<?php
+$config = array('base_path' => dirname(__DIR__), 'path_csrf_secret' => dirname(__DIR__) . '/keys/working.php');
+function cacti_sizeof($items) { return count($items); }
+function csrf_startup() { csrf_conf('disable', true); csrf_conf('rewrite', false); }
+PHP;
+        $bootstrap .= PHP_EOL . 'require ' . var_export($repository . '/include/vendor/csrf/csrf-magic.php', true) . ';';
+        file_put_contents($root . '/include/cli_check.php', $bootstrap);
+        if ($blocked) {
+            chmod($root . '/keys', 0500);
+            if (is_writable($root . '/keys')) {
+                test()->markTestSkipped('This host bypasses directory mode restrictions; exclusive-create refusal cannot be exercised');
+            }
+        }
+        $result = test_php_run(array(PHP_BINARY, $root . '/cli/refresh_csrf.php'));
+        expect($result['status'])->toBe($blocked ? 1 : 0)
+            ->and($result['err'])->toBe('')
+            ->and($result['out'])->not->toContain('working-fixture-secret')
+            ->and(glob($root . '/keys/.csrf-secret-*'))->toBe(array());
+        $contents = file_get_contents($root . '/keys/working.php');
+        if ($blocked) {
+            expect($result['out'])->toContain('FATAL: Unable to write new csrf_secret.php file.')
+                ->and($contents)->toBe($old);
+        } else {
+            expect($result['out'])->toContain('NOTE: New csrf_secret.php file written.')
+                ->and($contents)->not->toBe($old)
+                ->and(preg_match('/\A<\?php \$secret = \'[0-9a-f]{64}\';\R\z/', $contents))->toBe(1)
+                ->and(fileperms($root . '/keys/working.php') & 0777)->toBe(0640);
+        }
+    } finally {
+        chmod($root . '/keys', 0700);
+        foreach (array('/cli/refresh_csrf.php', '/include/cli_check.php', '/lib/poller.php', '/lib/utility.php', '/keys/working.php') as $file) {
+            if (file_exists($root . $file)) {
+                unlink($root . $file);
+            }
+        }
+        foreach (array('/cli', '/include', '/lib', '/keys', '') as $directory) {
+            rmdir($root . $directory);
+        }
+    }
+})->with(array('successful rotation' => array(false), 'unwritable publication directory' => array(true)));
