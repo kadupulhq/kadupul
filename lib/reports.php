@@ -62,8 +62,13 @@ function duplicate_reports($_id, $_title)
 
 function reports_add_devices($report_id, $device_ids, $timespan, $align)
 {
-    $owns_transaction = (int) db_fetch_cell('SELECT @@in_transaction') === 0;
-    if ($owns_transaction && !db_begin_transaction()) {
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    $connection = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    if (!$connection instanceof PDO) {
+        return false;
+    }
+    $owns_transaction = !$connection->inTransaction();
+    if ($owns_transaction && !db_begin_transaction($connection)) {
         return false;
     }
     try {
@@ -72,13 +77,13 @@ function reports_add_devices($report_id, $device_ids, $timespan, $align)
         }
         $result = reports_add_devices_locked($report_id, $device_ids, $timespan, $align);
         // Legacy batches can report skipped duplicates after adding other items.
-        if ($owns_transaction && !db_commit_transaction()) {
+        if ($owns_transaction && !db_commit_transaction($connection)) {
             return false;
         }
         return $result;
     } finally {
-        if ($owns_transaction && (int) db_fetch_cell('SELECT @@in_transaction') !== 0) {
-            db_rollback_transaction();
+        if ($owns_transaction && $connection->inTransaction()) {
+            db_rollback_transaction($connection);
         }
     }
 }
