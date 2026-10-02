@@ -134,24 +134,31 @@ if (!cacti_csrf_external_path_is_safe($path_csrf_secret)) {
 }
 
 // Keep the working key until its complete replacement is ready.
-$previous = is_file($path_csrf_secret) ? stat($path_csrf_secret) : false;
-$temporary = tempnam(dirname($path_csrf_secret), '.csrf-');
+$previous = is_file($path_csrf_secret) ? @stat($path_csrf_secret) : false;
+$directory = realpath(dirname($path_csrf_secret));
+$temporary = $directory === false ? false : @tempnam($directory, '.csrf-');
 $contents = '<?php $secret = ' . var_export($new_secret, true) . ';' . PHP_EOL;
 $written = false;
 if ($temporary !== false) {
     try {
+        // tempnam may fall back to a shared directory; reject it before any mutation.
+        if (realpath(dirname($temporary)) !== $directory) {
+            throw new \RuntimeException("Unexpected temporary directory");
+        }
         $preserved_ownership = !$previous || ($config['cacti_server_os'] ?? '') === 'win32' || PHP_OS_FAMILY === 'Windows';
         if (!$preserved_ownership) {
-            $temporary_stat = stat($temporary);
+            $temporary_stat = @stat($temporary);
             $preserved_ownership = $temporary_stat !== false
-                && ($temporary_stat['uid'] === $previous['uid'] || chown($temporary, $previous['uid']))
-                && ($temporary_stat['gid'] === $previous['gid'] || chgrp($temporary, $previous['gid']));
+                && ($temporary_stat['uid'] === $previous['uid'] || @chown($temporary, $previous['uid']))
+                && ($temporary_stat['gid'] === $previous['gid'] || @chgrp($temporary, $previous['gid']));
         }
         $written = $preserved_ownership
-            && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
-            && file_get_contents($temporary) === $contents
-            && chmod($temporary, $previous ? ($previous['mode'] & 0660) : 0640)
-            && rename($temporary, $path_csrf_secret);
+            && @file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
+            && @file_get_contents($temporary) === $contents
+            && @chmod($temporary, $previous ? ($previous['mode'] & 0660) : 0640)
+            && @rename($temporary, $path_csrf_secret);
+    } catch (\Throwable $error) {
+        $written = false;
     } finally {
         if (file_exists($temporary)) {
             @unlink($temporary);

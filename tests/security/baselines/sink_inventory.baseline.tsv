@@ -537,7 +537,7 @@ fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosem
 fs_write	./cli/import_template.php:105				$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/input_whitelist.php:171			file_put_contents($config['input_whitelist'], json_encode($input));
 fs_write	./cli/md5sum.php:163		if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-fs_write	./cli/refresh_csrf.php:151	            && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
+fs_write	./cli/refresh_csrf.php:156	            && @file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
 fs_write	./cli/splice_rrd.php:268		$handle = fopen($xmlfile, 'x');
 fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:339	file_put_contents($newxmlfile, $new_xml);
