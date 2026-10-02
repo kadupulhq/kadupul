@@ -168,6 +168,69 @@ final class AuditDatabaseCommandTest extends TestCase
         }
     }
 
+    public function testBaselineFailuresHaveHumanAndJsonContracts(): void
+    {
+        foreach (['missing' => 'file_missing', 'unparsable' => 'unparsable', 'reload' => 'load_failed'] as $failure => $baseline) {
+            foreach (['--report', '--repair', '--alters'] as $action) {
+                foreach ([false, true] as $json) {
+                    $tester = $this->tester(null, $this->failedBaselineStore($failure));
+                    $arguments = [$action => true, '--force' => true];
+                    if ($json) {
+                        $arguments['--json'] = true;
+                    }
+                    self::assertSame(1, $tester->execute($arguments));
+                    if ($json) {
+                        $result = json_decode($tester->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
+                        self::assertSame(['failed', $baseline, [], []], [$result['status'], $result['baseline'], $result['tables'], $result['alters']]);
+                    } else {
+                        self::assertStringContainsString('Audit stopped because the canonical schema could not be loaded', $tester->getDisplay());
+                    }
+                }
+            }
+        }
+        $tester = $this->tester();
+        self::assertSame(0, $tester->execute(['--report' => true]));
+        self::assertStringContainsString('Audited 2 tables', $tester->getDisplay());
+    }
+
+    public function testCreateFailureRetainsItsModeSpecificOutput(): void
+    {
+        $expected = [
+            'missing' => ['FATAL: Failed to find Audit Schema', 'docs/audit_schema.sql was not found'],
+            'unparsable' => ["FATAL: Failed Load the Audit Schema\nERROR: docs/audit_schema.sql line 8 does not parse", 'docs/audit_schema.sql line 8 does not parse'],
+            'reload' => ["FATAL: Failed Load the Audit Schema\nERROR: ", 'The audit tables could not be loaded'],
+        ];
+        foreach ($expected as $failure => [$legacy, $human]) {
+            $this->presentation->forLegacy(LegacyRequest::Run);
+            $tester = $this->tester(null, $this->failedBaselineStore($failure));
+            self::assertSame(0, $tester->execute(['--create' => true]));
+            self::assertSame($legacy . "\n", $tester->getDisplay());
+            $this->presentation = new CliPresentation();
+            $tester = $this->tester(null, $this->failedBaselineStore($failure));
+            self::assertSame(1, $tester->execute(['--create' => true, '--force' => true]));
+            self::assertStringContainsString($human, $tester->getDisplay());
+            self::assertStringNotContainsString('Audit stopped', $tester->getDisplay());
+        }
+    }
+
+    public function testFailedLoadRetainsItsImportFailureSummary(): void
+    {
+        $store = $this->createMock(AuditBaselineStore::class);
+        $store->method('reset')->willReturn(null);
+        $store->method('import')->willReturn(false);
+        $store->method('dumpPath')->willReturn($this->root . '/docs/audit_schema.sql');
+        $store->expects(self::never())->method('export');
+        $store->expects(self::never())->method('read');
+        $tester = $this->tester(null, $store);
+        self::assertSame(1, $tester->execute(['--load' => true, '--force' => true]));
+        self::assertStringContainsString('Importing 2 tables into the audit tables failed', $tester->getDisplay());
+        self::assertStringNotContainsString('canonical schema', $tester->getDisplay());
+        $this->presentation->forLegacy(LegacyRequest::Run);
+        $tester = $this->tester(null, $store);
+        self::assertSame(0, $tester->execute(['--load' => true]));
+        self::assertSame(implode("\n", ['Importing Table: host - Done', 'Importing Table: settings - Done', '', 'Exporting Table Audit Table Creation Logic to ' . $this->root . '/docs/audit_schema.sql', 'Finished Creating Audit Schema with ERROR', '']) . "\n", $tester->getDisplay());
+    }
+
     private function failedBaselineStore(string $failure): AuditBaselineStore
     {
         $store = $this->createMock(AuditBaselineStore::class);

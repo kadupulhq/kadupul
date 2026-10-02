@@ -273,6 +273,7 @@ Install the selected runtimes with `mise install`, then:
 mise exec -- php "$(command -v composer)" install
 mise exec -- npm ci --ignore-scripts
 mise exec -- npm run build
+mise exec -- php bin/console asset-map:compile
 mise exec -- php bin/console about
 mise exec -- php "$(command -v composer)" test
 ```
@@ -295,12 +296,87 @@ deployment-specific `APP_SECRET` before enabling features that use it. There is
 no committed application secret. Only `public/` may be exposed by a Symfony
 web-server configuration; the existing legacy deployment is not reconfigured.
 
+## Compiled browser assets
+
+Symfony AssetMapper compiles the stylesheets, scripts, images and fonts that
+legacy pages load. `config/packages/asset_mapper.yaml` maps `include/` and
+`images/` under their repository paths, so the logical path of a file is the
+path a page already emits, such as `include/themes/modern/main.css`.
+
+```sh
+mise exec -- php bin/console asset-map:compile
+```
+
+The command writes digested copies and `manifest.json` to `public/assets/`.
+Because the repository root stays the web root, a compiled file is served as
+`<url_path>public/assets/include/themes/modern/main-<digest>.css`. Theme
+`url()` and `@import` references are rewritten to the digested copies, and an
+unresolved reference fails the compile. `get_md5_include_css()` and
+`get_md5_include_js()` read the manifest through `CompiledAssetManifest`,
+without booting the kernel, and emit the compiled path without a query.
+
+A path the manifest does not map keeps the previous `<path>?<md5>` URL. That
+covers an installation that has not compiled, `include/themes/custom.css`
+(excluded so edits apply without a compile), plugin files, and the flag-icons
+stylesheet. AssetMapper's exclusions apply to every mapped directory, so
+`include/vendor/` stays out as a whole rather than exposing Composer's files
+under a new URL. PHP files, the `include/config*`, `include/global*` and
+`include/plugins*` bootstrap names, `include/content/`, `include/fonts/` and
+`include/cacti_version` are never compiled. Midwinter source `@import` URLs retain generated per-child SHA-256 queries for
+this uncompiled fallback. `npm run build` refreshes them recursively after a
+child stylesheet edit; commit those generated source URL changes with the edit.
+AssetMapper replaces these queries with its own digested paths when compiling.
+The original files under
+`include/themes/` and `include/js/` remain in place for plugins.
+
+The compile does not remove stale output or notice later source changes. Rerun
+it after every upgrade or edit to a mapped file; to return to the `?md5` URLs,
+delete `public/assets/`. The production image and the offline bundle compile
+during their build. The kernel caches its configuration in `var/cache/`, so
+clear that directory after changing `asset_mapper.yaml`.
+
+Web servers must serve `public/assets/` as static files and never execute
+anything there. The compile skips PHP files, but a deny keeps a hand-placed
+script inert. Digested names change with their content, so long cache lifetimes
+are safe for this directory only. For Nginx, place this before the generic PHP
+location shown in `tests/e2e/nginx.conf`:
+
+```nginx
+location ^~ /public/assets/ {
+    location ~ \.php(/|$) { return 404; }
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    try_files $uri =404;
+}
+```
+
+Adjust the prefix when Kadupul is installed under a sub-path. An `add_header`
+in this block replaces those inherited from the server block, so repeat any
+security headers set there. For Apache, add the equivalent to the virtual host;
+the directives inside `<Directory>` also work in a `public/assets/.htaccess`
+where `AllowOverride` permits them:
+
+```apache
+<Directory "/var/www/html/kadupul/public/assets">
+    <FilesMatch "\.(?i:php|phar|phtml)$">
+        Require all denied
+    </FilesMatch>
+    <IfModule mod_headers.c>
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </IfModule>
+</Directory>
+```
+
+Do not add `immutable` to `include/themes/` or `include/js/`; their URLs keep
+the same name across upgrades and rely on the `?md5` query.
+
 ## Transitional dependencies
 
 `tools/dependencies/legacy-files.json` pins the exact source revision, archive SHA-256 and individual SHA-256
 of the remaining legacy compatibility files. Composer's post-install/update
 step retrieves only those files from a pinned Kadupul source archive and checks
 every selected file before writing. Existing matching files need no download.
+A file listed under `patches` is checked against its archived source digest,
+receives its recorded replacements, and is then checked against its installed digest.
 PHPMailer, CSRF Magic and some old translation/SNMP/diff helpers contain local
 behavior or security fixes; this preserves those fixes without tracking their
 entire distributions. These snapshots are **not** independently updated or
@@ -333,7 +409,8 @@ mise exec -- python tools/build-offline.py
 ```
 
 The builder installs locked production PHP dependencies into a clean staging
-directory, builds npm assets, verifies the Symfony container, and writes
+directory, builds npm assets, verifies the Symfony container, compiles
+`public/assets/`, and writes
 `dist/kadupul-offline.tar.gz` and its SHA-256 checksum. It includes dependency
 licenses, lockfiles and a source hash manifest, but no `node_modules`, development
 PHP test runner, database configuration, compiled cache or CSRF secret.

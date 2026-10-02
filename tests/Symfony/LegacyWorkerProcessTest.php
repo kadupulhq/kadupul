@@ -202,14 +202,51 @@ print "plugin says hi\n";
 
         $run = $this->upgrade()->run();
 
-        // The worker ran to the end, but the core upgrade exited 3.
+        // A failed core upgrade stops before plugin work.
         self::assertFalse($run->completed);
-        self::assertStringContainsString('NOTE: Audit Upgrade completed in', $run->stdout);
+        self::assertStringNotContainsString('NOTE: Audit Upgrade completed in', $run->stdout);
         $dashes = str_repeat('-', 93);
         // exec() kept the blank line and dropped the trailing spaces.
         self::assertStringContainsString("UPGRADE WARNING: Kadupul Upgrade Encountered Errors.  Messages below.  Details are below, but also in Kadupul upgrade log.\n"
             . $dashes . "\ncore line\n\ncore last\n" . $dashes . "\n", $run->stdout);
         self::assertSame("core warning\n", $run->stderr);
+    }
+
+    public static function upgradeFailures(): iterable
+    {
+        yield 'standard callback' => ['function plugin_thold_upgrade() { return false; }', 0, 0];
+        yield 'alternate callback' => ['function thold_upgrade_database($force) { return false; }', 0, 0];
+        yield 'setup callback' => ['function thold_setup_table_new($force) { return false; } function thold_upgrade_database($force) {}', 0, 0];
+        yield 'plugin process' => ['function thold_upgrade_database($force) {}', 0, 3];
+        yield 'core process' => ['function plugin_thold_upgrade() { file_put_contents(dirname(__DIR__, 2) . "/plugin-reached", "yes"); }', 3, 0];
+    }
+
+    #[DataProvider('upgradeFailures')]
+    public function testFailedCoreOrPluginUpgradeCannotReportCompletion(string $setup, int $coreExit, int $pluginExit): void
+    {
+        $this->install('["thold" => ["status" => 1, "version" => "1"]]', $coreExit);
+        $this->plugin('thold', '2', $setup);
+        (new Filesystem())->dumpFile($this->root . '/plugins/thold/database_upgrade.php', '<?php file_put_contents(dirname(__DIR__, 2) . "/plugin-script-reached", "yes"); exit(' . $pluginExit . ');');
+
+        $run = $this->upgrade()->run();
+
+        self::assertFalse($run->completed);
+        self::assertStringNotContainsString('NOTE: Audit Upgrade completed in', $run->stdout);
+        if ($coreExit !== 0) {
+            self::assertFileDoesNotExist($this->root . '/plugin-reached');
+            self::assertFileDoesNotExist($this->root . '/plugin-script-reached');
+        } elseif ($pluginExit === 0) {
+            self::assertFileDoesNotExist($this->root . '/plugin-script-reached');
+        }
+    }
+
+    public function testStandardPluginUpgradeCallbackIsActuallyCalled(): void
+    {
+        $this->install('["thold" => ["status" => 1, "version" => "1"]]', 0);
+        $this->plugin('thold', '2', 'function plugin_thold_upgrade() { file_put_contents(dirname(__DIR__, 2) . "/plugin-reached", "yes"); }');
+
+        self::assertTrue($this->upgrade()->run()->completed);
+        self::assertSame('yes', file_get_contents($this->root . '/plugin-reached'));
     }
 
     public function testTheRealWorkerReportsAnUpgradeThatThrewAsFailed(): void

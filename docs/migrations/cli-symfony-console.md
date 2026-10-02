@@ -382,3 +382,19 @@ them.
 - Reformatting a legacy script to PER-CS counts every line as new code for
   SonarCloud. Shims replace scripts entirely, so the new code is the shim and
   the command, both of which the parity tests cover.
+
+
+### Audit baseline safety during migration
+
+The compatibility `cli/audit_database.php` remains the hardened legacy
+entry point. The independently available `kadupul:database:audit` command
+must preserve the same import and upgrade failure protections before the
+compatibility implementation can be retired.
+
+A missing, incomplete, unparsable, or failed canonical baseline stops the
+new command before comparison or repair. Existing baseline rows are preserved;
+both replacement tables are populated privately and published together with
+an atomic rename. Failed live-schema imports do not export a new dump.
+Plugin upgrade callbacks returning false stop the worker before audit work.
+Database schema changes still require backups: atomic baseline replacement
+does not make application schema repairs reversible.

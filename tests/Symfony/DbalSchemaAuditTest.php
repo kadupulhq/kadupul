@@ -223,6 +223,20 @@ final class DbalSchemaAuditTest extends TestCase
         self::assertSame('2', (string) $parsed->indexes('probe')[0]->cardinality);
     }
 
+    public function testIncompleteCanonicalDumpsCannotBecomeABaseline(): void
+    {
+        $complete = (string) file_get_contents(dirname(__DIR__, 2) . DbalAuditBaselineStore::FILE);
+        foreach (['/^-- Dump completed on .*$/m', '/^INSERT INTO `table_columns`.*$/m', '/^INSERT INTO `table_indexes`.*$/m'] as $remove) {
+            (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, (string) preg_replace($remove, '', $complete));
+            try {
+                $this->store(self::offline())->read();
+                self::fail('An incomplete canonical baseline was accepted.');
+            } catch (\Kadupul\Platform\Domain\Schema\InvalidAuditSchema $invalid) {
+                self::assertGreaterThan(0, $invalid->lineNumber);
+            }
+        }
+    }
+
     public function testTheCatalogReadsWhatShowColumnsAndShowIndexesPrintOnARealMariaDb(): void
     {
         $db = $this->mariaDb();

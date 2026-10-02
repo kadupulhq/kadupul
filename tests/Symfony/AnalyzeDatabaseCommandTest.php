@@ -102,26 +102,39 @@ final class AnalyzeDatabaseCommandTest extends TestCase
         return new CommandTester(new Command(null, $command));
     }
 
-    public function testLegacyOutputMatchesTheOriginalScript(): void
+    public function testLegacyOutputIsPreservedAndFailsWhenATableFails(): void
     {
         $this->presentation->forLegacy(LegacyRequest::Run);
         $tester = $this->tester($this->maintenance());
-        self::assertSame(0, $tester->execute([]));
+        self::assertSame(Command::FAILURE, $tester->execute([]));
         self::assertSame("NOTE: Analyzing All Kadupul Database Tables\nNOTE: Repairing Tables for Main Database\nNOTE: Analyzing Table -> 'host' Successful\nNOTE: Analyzing Table -> 'settings' Failed\n", $tester->getDisplay());
     }
 
     public function testJsonOutput(): void
     {
         $tester = $this->tester($this->maintenance());
-        self::assertSame(0, $tester->execute(['--json' => true]));
-        self::assertSame(['status' => 'ok', 'database' => 'main', 'binlog_enabled' => false, 'tables' => [['name' => 'host', 'ok' => true], ['name' => 'settings', 'ok' => false]]], json_decode($tester->getDisplay(), true));
+        self::assertSame(Command::FAILURE, $tester->execute(['--json' => true]));
+        self::assertSame(['status' => 'failed', 'database' => 'main', 'binlog_enabled' => false, 'tables' => [['name' => 'host', 'ok' => true], ['name' => 'settings', 'ok' => false]]], json_decode($tester->getDisplay(), true));
     }
 
     public function testLocalOptionReachesTheUseCase(): void
     {
         $tester = $this->tester($this->maintenance());
-        self::assertSame(0, $tester->execute(['--json' => true, '--local' => true]));
+        self::assertSame(Command::FAILURE, $tester->execute(['--json' => true, '--local' => true]));
         self::assertSame('local', json_decode($tester->getDisplay(), true)['database']);
+    }
+
+    public function testAllTablesAnalyzedReturnsSuccess(): void
+    {
+        $maintenance = $this->createMock(DatabaseMaintenance::class);
+        $maintenance->method('isRemoteCollector')->willReturn(false);
+        $maintenance->method('binlogEnabled')->willReturn(false);
+        $maintenance->method('tables')->willReturn(['host']);
+        $maintenance->method('analyze')->willReturn(true);
+        $tester = $this->tester($maintenance);
+
+        self::assertSame(Command::SUCCESS, $tester->execute(['--json' => true]));
+        self::assertSame(['status' => 'ok', 'database' => 'local', 'binlog_enabled' => false, 'tables' => [['name' => 'host', 'ok' => true]]], json_decode($tester->getDisplay(), true));
     }
 
     public function testAccessDeniedFailsWithoutNamingTheAccount(): void
@@ -144,15 +157,15 @@ final class AnalyzeDatabaseCommandTest extends TestCase
 
     public function testMissingVersionFileFailsOnlyTheVersionLine(): void
     {
-        // The original died with "ERROR: failed to find cacti version file" and
-        // exit 0 on every path; the command reads the file only for this line.
+        // The command reads the version file only for a version request. A normal
+        // run still reaches the analyzer and reflects its per-table failures.
         (new Filesystem())->remove($this->root . '/include/cacti_version');
         $this->presentation->forLegacy(LegacyRequest::Version);
         $tester = $this->tester($this->maintenance());
         self::assertSame(Command::FAILURE, $tester->execute([]));
         self::assertSame("ERROR: Database analysis failed\n", $tester->getDisplay());
         $this->presentation->forLegacy(LegacyRequest::Run);
-        self::assertSame(Command::SUCCESS, $tester->execute([]));
+        self::assertSame(Command::FAILURE, $tester->execute([]));
         self::assertStringStartsWith("NOTE: Analyzing All Kadupul Database Tables\n", $tester->getDisplay());
     }
 
@@ -202,7 +215,7 @@ final class AnalyzeDatabaseCommandTest extends TestCase
     public function testHumanOutputWarnsWhenATableFails(): void
     {
         $tester = $this->tester($this->maintenance());
-        self::assertSame(0, $tester->execute([]));
+        self::assertSame(Command::FAILURE, $tester->execute([]));
         $display = $tester->getDisplay();
         self::assertStringContainsString('settings: failed', $display);
         self::assertStringContainsString('[WARNING] Analyzed 2 tables; 1 failed.', $display);
@@ -238,7 +251,7 @@ final class AnalyzeDatabaseCommandTest extends TestCase
         $maintenance = $this->maintenance();
         $maintenance->expects(self::once())->method('tables')->with(DatabaseTarget::Local);
         $tester = $this->tester($maintenance);
-        self::assertSame(0, $tester->execute(['--json' => true, '--local' => true]));
+        self::assertSame(Command::FAILURE, $tester->execute(['--json' => true, '--local' => true]));
         self::assertSame('local', json_decode($tester->getDisplay(), true)['database']);
         // DBAL converts only driver exceptions on connect, so the typed one
         // must arrive as itself, not wrapped in a DBAL exception.
@@ -253,7 +266,7 @@ final class AnalyzeDatabaseCommandTest extends TestCase
         $this->db->executeStatement("UPDATE user_auth SET enabled = '' WHERE id = 1");
         $this->access = new CliConsoleAccess($this->db, $this->installation());
         $tester = $this->tester($this->maintenance());
-        self::assertSame(0, $tester->execute(['--json' => true]));
+        self::assertSame(Command::FAILURE, $tester->execute(['--json' => true]));
         self::assertSame('main', json_decode($tester->getDisplay(), true)['database']);
         self::assertSame(1, $tester->execute(['--json' => true, '--local' => true]));
         self::assertSame(['status' => 'denied'], json_decode($tester->getDisplay(), true));

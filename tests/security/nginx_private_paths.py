@@ -36,11 +36,10 @@ def main():
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('PRIVATE-CONTENT')
         tools = ['tools/dependencies/install-legacy.php', 'tools/verify-offline.php',
-                 'tools/migrate/assess.php', 'bin/legacy-device-edit.php', 'bin/console']
+                 'tools/migrate/assess.php', 'bin/legacy-device-edit.php', 'bin/console',
+                 'script_server.php']
         guards = []
-        # Nginx serves the theme hash builder, so only its PHP guard stands
-        # between a request and a CSS rewrite.
-        for index, relative in enumerate(tools + ['include/themes/midwinter/update_hash.php']):
+        for index, relative in enumerate(tools):
             path = stage / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / relative, path)

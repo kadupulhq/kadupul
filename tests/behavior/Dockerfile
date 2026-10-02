@@ -10,6 +10,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY tools/dependencies ./tools/dependencies
 COPY include/js/jquery.tablesorter.pager.js ./include/js/jquery.tablesorter.pager.js
+COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 
 FROM php:${PHP_VERSION}-apache
@@ -92,6 +93,7 @@ RUN php -d auto_prepend_file= /usr/local/bin/composer install --working-dir=/var
  && php -d auto_prepend_file= /var/www/html/tools/dependencies/install-legacy.php
 COPY --from=assets /app/include/js /var/www/html/include/js
 COPY --from=assets /app/include/fa /var/www/html/include/fa
+COPY --from=assets /app/include/themes/midwinter /var/www/html/include/themes/midwinter
 COPY --from=assets /app/include/vendor/flag-icons /var/www/html/include/vendor/flag-icons
 RUN rm -f /var/www/html/include/config.php \
  && chown -R www-data:www-data /var/www/html/include/vendor/csrf

@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 /*
@@ -69,6 +68,16 @@ $longopts = array(
     'help'
 );
 
+// Track declarations because getopt omits explicitly empty optional values.
+$environment_arguments = array();
+foreach (array_slice($_SERVER['argv'], 1) as $argument) {
+    if ($argument === '--' || !str_starts_with($argument, '-')) {
+        break;
+    }
+    if ($argument === '--environ' || str_starts_with($argument, '--environ=')) {
+        $environment_arguments[] = $argument;
+    }
+}
 $options = getopt($shortopts, $longopts);
 
 if (sizeof($options)) {
@@ -76,8 +85,20 @@ if (sizeof($options)) {
         $allow_multi = false;
 
         switch ($arg) {
-            case 'enviorn':
-                $environ = $value;
+            case 'environ':
+                if (count($environment_arguments) === 1 && is_string($value) && in_array($value, array('cmd', 'spine', 'realtime', 'other'), true)) {
+                    $environ = $value;
+                }
+
+                break;
+            case 'v':
+            case 'V':
+                $version = true;
+
+                break;
+            case 'h':
+            case 'H':
+                $help = true;
 
                 break;
             case 'poller':
@@ -98,7 +119,7 @@ if (sizeof($options)) {
                 break;
         }
     }
-} elseif ($_SERVER['argc'] >= 2) {
+} elseif ($_SERVER['argc'] >= 2 && !$environment_arguments) {
     if (in_array('spine', $_SERVER['argv'])) {
         $environ = 'spine';
     } elseif (in_array('realtime', $_SERVER['argv'])) {
@@ -538,7 +559,7 @@ function display_help()
 
     print 'The modern calling method has multiple options processed by getopt.  Those options include:' . PHP_EOL . PHP_EOL;
 
-    print '  --environ=S      The default being \'cmd\', and options being \'spine\', \'cmd\', and \'realtime\'' . PHP_EOL;
+    print '  --environ=S      The default being \'cmd\', and options being \'spine\', \'cmd\', \'realtime\', and \'other\'' . PHP_EOL;
     print '  --poller=N       The poller id for the Data Collector in use' . PHP_EOL;
     print '  --force-level=N  Force the logging at the level specified.' . PHP_EOL;
     print '  --mode=S         Force a Database mode \'online\' or \'offline\'.  This is only relevant for' . PHP_EOL;
