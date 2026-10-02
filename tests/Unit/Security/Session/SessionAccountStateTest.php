@@ -112,6 +112,16 @@ test('the session that pressed logout everywhere continues', function () {
 		->and($result['page_continued'])->toBeTrue();
 });
 
+test('a failed counter read keeps the session that is already bound', function () {
+	$result = cacti_test_run_auth_entry_probe(account_state_request(account_state_user(), account_state_session(array('sess_user_epoch' => '4')), array(
+		'settings_user_fail' => true,
+	)));
+
+	expect($result['session']['sess_user_id'] ?? null)->toBe('42')
+		->and($result['session']['sess_user_epoch'] ?? null)->toBe('4')
+		->and($result['page_continued'])->toBeTrue();
+});
+
 test('a session from before the upgrade is bound to the current counter and continues', function () {
 	$session = account_state_session();
 	unset($session['sess_user_epoch']);
@@ -214,6 +224,16 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 	$statement->execute($params);
 
 	return $statement->fetchColumn();
+}
+
+function db_fetch_assoc_prepared($sql, $params = array()) {
+	global $pdo;
+
+	$statement = $pdo->prepare($sql);
+	$statement->execute($params);
+	$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+	return is_array($rows) ? $rows : false;
 }
 
 function isset_request_var($name) { return isset($_REQUEST[$name]); }

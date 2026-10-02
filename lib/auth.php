@@ -5219,7 +5219,13 @@ function cacti_auth_transition($user_id, $reason = 'login') {
 
 	auth_session_bind_credentials($user_id);
 
-	$_SESSION['sess_user_epoch'] = auth_session_epoch($user_id);
+	$epoch = auth_session_epoch($user_id);
+
+	if ($epoch === false) {
+		unset($_SESSION['sess_user_epoch']);
+	} else {
+		$_SESSION['sess_user_epoch'] = $epoch;
+	}
 
 	cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
 
@@ -5312,20 +5318,26 @@ function auth_session_credentials_valid($user_id, $password = null) {
  *
  * @param  (int) $user_id The account the session belongs to
  *
- * @return (string) The current counter
+ * @return (string|false) The current counter, or false when the read failed
  */
 function auth_session_epoch($user_id) {
-	$epoch = db_fetch_cell_prepared('SELECT value
+	$rows = db_fetch_assoc_prepared('SELECT value
 		FROM settings_user
 		WHERE user_id = ?
 		AND name = ?',
 		array($user_id, 'session_epoch'));
 
-	if ($epoch === false || $epoch === null || $epoch === '') {
+	/* false is a failed query. No row is an account that has never logged
+	 * out everywhere, and that counter is 0. */
+	if ($rows === false) {
+		return false;
+	}
+
+	if (!isset($rows[0]['value']) || $rows[0]['value'] === null || $rows[0]['value'] === '') {
 		return '0';
 	}
 
-	return (string) $epoch;
+	return (string) $rows[0]['value'];
 }
 
 /**
@@ -5343,7 +5355,18 @@ function auth_session_epoch_advance($user_id) {
 		ON DUPLICATE KEY UPDATE value = CAST(value AS UNSIGNED) + 1",
 		array($user_id));
 
-	$_SESSION['sess_user_epoch'] = auth_session_epoch($user_id);
+	$epoch = auth_session_epoch($user_id);
+
+	/* The counter moved, but this request could not read it back. Drop the
+	 * binding so the next readable request adopts the new counter instead of
+	 * treating the previous one as a logout. */
+	if ($epoch === false) {
+		unset($_SESSION['sess_user_epoch']);
+
+		return;
+	}
+
+	$_SESSION['sess_user_epoch'] = $epoch;
 }
 
 /**
@@ -5395,11 +5418,15 @@ function auth_session_end_reason($user_id) {
 
 	$epoch = auth_session_epoch($user_id);
 
-	/* a session opened before this check existed is bound on its first request, as the credential is */
-	if (!isset($_SESSION['sess_user_epoch']) || !is_string($_SESSION['sess_user_epoch'])) {
-		$_SESSION['sess_user_epoch'] = $epoch;
-	} elseif (!hash_equals($_SESSION['sess_user_epoch'], $epoch)) {
-		return 'the user logged out everywhere';
+	/* A failed read is not counter 0. Mapping it to 0 would end every session
+	 * that is bound to a real counter, as if logout everywhere had run. */
+	if ($epoch !== false) {
+		/* a session opened before this check existed is bound on its first request, as the credential is */
+		if (!isset($_SESSION['sess_user_epoch']) || !is_string($_SESSION['sess_user_epoch'])) {
+			$_SESSION['sess_user_epoch'] = $epoch;
+		} elseif (!hash_equals($_SESSION['sess_user_epoch'], $epoch)) {
+			return 'the user logged out everywhere';
+		}
 	}
 
 	$now  = time();

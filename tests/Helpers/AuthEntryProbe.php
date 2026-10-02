@@ -151,6 +151,7 @@ $GLOBALS['probe'] = array(
 	'users'          => $scenario['users'] ?? array(),
 	'cache'          => $scenario['cache'] ?? array(),
 	'settings_user'  => $scenario['settings_user'] ?? array(),
+	'settings_user_fail' => !empty($scenario['settings_user_fail']),
 	'realms'         => $scenario['realms'] ?? null,
 	'groups'         => $scenario['groups'] ?? array(),
 	'group_members'  => $scenario['group_members'] ?? array(),
@@ -264,6 +265,26 @@ function read_config_option($name, $force = false) {
 function set_config_option($name, $value, $remote = false) {
 	$GLOBALS['probe']['config'][$name]  = $value;
 	$GLOBALS['probe']['config_writes'][] = array($name, $value);
+}
+
+function db_fetch_assoc_prepared($sql, $params = array(), $log = true) {
+	if (strpos($sql, 'FROM settings_user') !== false) {
+		if (!empty($GLOBALS['probe']['settings_user_fail'])) {
+			return false;
+		}
+
+		$rows = array();
+
+		foreach ($GLOBALS['probe']['settings_user'] as $row) {
+			if ($row['user_id'] == $params[0] && $row['name'] === $params[1]) {
+				$rows[] = array('value' => $row['value']);
+			}
+		}
+
+		return $rows;
+	}
+
+	return array();
 }
 
 function db_fetch_row_prepared($sql, $params = array(), $log = true) {
