@@ -173,7 +173,15 @@ final class MailTlsTest extends TestCase
             throw new \ErrorException($message, 0, $severity, $file, $line);
         }, E_WARNING | E_NOTICE);
         try {
-            return fwrite($connection, $reply) === strlen($reply);
+            while ($reply !== '') {
+                $written = fwrite($connection, $reply);
+                if ($written === false || $written === 0) {
+                    return false;
+                }
+                $reply = substr($reply, $written);
+            }
+
+            return true;
         } finally {
             restore_error_handler();
         }
@@ -202,7 +210,8 @@ final class MailTlsTest extends TestCase
                 return;
             }
             $data = false;
-            while (($line = fgets($connection)) !== false) {
+            // A rejected certificate can close the peer immediately after negotiation.
+            while (($line = @fgets($connection)) !== false) {
                 $transcript .= $line;
                 if ($data) {
                     if ($line === ".\r\n") {
@@ -250,4 +259,5 @@ final class MailTlsTest extends TestCase
         fclose($connection);
         fclose($server);
     }
+
 }
