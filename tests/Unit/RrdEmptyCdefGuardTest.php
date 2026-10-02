@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -21,103 +22,112 @@
 
 // --- helpers ---
 
-function getRrdSource(): string {
-	$path = __DIR__ . '/../../lib/rrd.php';
-	$src  = file_get_contents($path);
-	expect($src)->not->toBeFalse('Failed to read lib/rrd.php');
+function getRrdSource(): string
+{
+    $path = __DIR__ . '/../../lib/rrd.php';
+    $src  = file_get_contents($path);
+    expect($src)->not->toBeFalse('Failed to read lib/rrd.php');
 
-	return $src;
+    return $src;
 }
 
-function getAggregateSource(): string {
-	$path = __DIR__ . '/../../lib/aggregate.php';
-	$src  = file_get_contents($path);
-	expect($src)->not->toBeFalse('Failed to read lib/aggregate.php');
+function getAggregateSource(): string
+{
+    $path = __DIR__ . '/../../lib/aggregate.php';
+    $src  = file_get_contents($path);
+    expect($src)->not->toBeFalse('Failed to read lib/aggregate.php');
 
-	return $src;
+    return $src;
 }
 
 // --- lib/rrd.php: empty cdef guard ---
 
 test('rrd.php has empty cdef_string guard before CDEF name generation', function () {
-	$src = getRrdSource();
+    $src = getRrdSource();
 
-	// The guard: if ($cdef_string === '') { ... continue; }
-	// must appear before the CDEF:cdef name generation line
-	$guardPos = strpos($src, "\$cdef_string === ''");
-	expect($guardPos)->not->toBeFalse(
-		"lib/rrd.php must contain the empty cdef_string guard"
-	);
+    // The guard: if ($cdef_string === '') { ... continue; }
+    // must appear before the CDEF:cdef name generation line
+    $guardPos = strpos($src, "\$cdef_string === ''");
+    expect($guardPos)->not->toBeFalse(
+        "lib/rrd.php must contain the empty cdef_string guard"
+    );
 
-	// The CDEF name generation line follows after the guard
-	$cdefNamePos = strpos($src, "CDEF:cdef", $guardPos);
-	expect($cdefNamePos)->not->toBeFalse(
-		"'CDEF:cdef' name generation must appear after the empty cdef guard"
-	);
-	expect($cdefNamePos)->toBeGreaterThan($guardPos,
-		"The empty cdef guard must precede the CDEF name generation"
-	);
+    // The CDEF name generation line follows after the guard
+    $cdefNamePos = strpos($src, "CDEF:cdef", $guardPos);
+    expect($cdefNamePos)->not->toBeFalse(
+        "'CDEF:cdef' name generation must appear after the empty cdef guard"
+    );
+    expect($cdefNamePos)->toBeGreaterThan(
+        $guardPos,
+        "The empty cdef guard must precede the CDEF name generation"
+    );
 });
 
 test('empty cdef guard uses strict identity comparison', function () {
-	$src = getRrdSource();
+    $src = getRrdSource();
 
-	// Must use === not == to avoid false positives on '0' or other falsy strings
-	$pattern = '/if\s*\(\s*\$cdef_string\s*===\s*\'\'\s*\)/';
-	expect(preg_match($pattern, $src))->toBe(1,
-		"The empty cdef guard must use strict === comparison"
-	);
+    // Must use === not == to avoid false positives on '0' or other falsy strings
+    $pattern = '/if\s*\(\s*\$cdef_string\s*===\s*\'\'\s*\)/';
+    expect(preg_match($pattern, $src))->toBe(
+        1,
+        "The empty cdef guard must use strict === comparison"
+    );
 });
 
 test('empty cdef guard block contains continue statement', function () {
-	$src = getRrdSource();
+    $src = getRrdSource();
 
-	// The guard block must have a continue to skip the current loop iteration
-	$pattern = '/if\s*\(\s*\$cdef_string\s*===\s*\'\'\s*\)\s*\{[^}]*continue;/s';
-	expect(preg_match($pattern, $src))->toBe(1,
-		"The empty cdef guard must contain a continue statement"
-	);
+    // The guard block must have a continue to skip the current loop iteration
+    $pattern = '/if\s*\(\s*\$cdef_string\s*===\s*\'\'\s*\)\s*\{[^}]*continue;/s';
+    expect(preg_match($pattern, $src))->toBe(
+        1,
+        "The empty cdef guard must contain a continue statement"
+    );
 });
 
 test('empty cdef guard includes debug logging', function () {
-	$src = getRrdSource();
+    $src = getRrdSource();
 
-	// The guard should log before continuing, so the skip is traceable
-	$pattern = '/if\s*\(\s*\$cdef_string\s*===\s*\'\'\s*\)\s*\{[^}]*cacti_log\([^)]*Empty CDEF/s';
-	expect(preg_match($pattern, $src))->toBe(1,
-		"The empty cdef guard should log a debug message about the empty CDEF"
-	);
+    // The guard should log before continuing, so the skip is traceable
+    $pattern = '/if\s*\(\s*\$cdef_string\s*===\s*\'\'\s*\)\s*\{[^}]*cacti_log\([^)]*Empty CDEF/s';
+    expect(preg_match($pattern, $src))->toBe(
+        1,
+        "The empty cdef guard should log a debug message about the empty CDEF"
+    );
 });
 
 // --- lib/aggregate.php: db_execute_prepared for cdef_id UPDATE ---
 
 test('aggregate.php uses db_execute_prepared for cdef_id UPDATE', function () {
-	$src = getAggregateSource();
+    $src = getAggregateSource();
 
-	// The cdef_id UPDATE must use db_execute_prepared, not raw db_execute
-	$pattern = "/db_execute_prepared\s*\(\s*'UPDATE graph_templates_item\s+SET cdef_id/s";
-	expect(preg_match($pattern, $src))->toBe(1,
-		"lib/aggregate.php must use db_execute_prepared for the cdef_id UPDATE"
-	);
+    // The cdef_id UPDATE must use db_execute_prepared, not raw db_execute
+    $pattern = "/db_execute_prepared\s*\(\s*'UPDATE graph_templates_item\s+SET cdef_id/s";
+    expect(preg_match($pattern, $src))->toBe(
+        1,
+        "lib/aggregate.php must use db_execute_prepared for the cdef_id UPDATE"
+    );
 });
 
 test('aggregate.php cdef_id UPDATE does not use string interpolation', function () {
-	$src = getAggregateSource();
+    $src = getAggregateSource();
 
-	// Old pattern: "UPDATE graph_templates_item SET cdef_id=$new_cdef_id WHERE id=" . $graph_template_item["id"]
-	// This must not exist anymore
-	$pattern = '/db_execute\s*\(\s*"UPDATE graph_templates_item\s+SET cdef_id=\$/';
-	expect(preg_match($pattern, $src))->toBe(0,
-		"lib/aggregate.php must not use string-interpolated db_execute for cdef_id UPDATE"
-	);
+    // Old pattern: "UPDATE graph_templates_item SET cdef_id=$new_cdef_id WHERE id=" . $graph_template_item["id"]
+    // This must not exist anymore
+    $pattern = '/db_execute\s*\(\s*"UPDATE graph_templates_item\s+SET cdef_id=\$/';
+    expect(preg_match($pattern, $src))->toBe(
+        0,
+        "lib/aggregate.php must not use string-interpolated db_execute for cdef_id UPDATE"
+    );
 });
 
 test('aggregate.php cdef_id UPDATE uses parameter binding', function () {
-	$src = getAggregateSource();
+    $src = getAggregateSource();
 
-	// The prepared statement should use ? placeholders and an array parameter
-	$pattern = "/UPDATE graph_templates_item\s+SET cdef_id\s*=\s*\?\s+WHERE id\s*=\s*\?/s";
-	expect(preg_match($pattern, $src))->toBe(1,
-		"cdef_id UPDATE must use ? placeholders for parameter binding"
-	);
+    // The prepared statement should use ? placeholders and an array parameter
+    $pattern = "/UPDATE graph_templates_item\s+SET cdef_id\s*=\s*\?\s+WHERE id\s*=\s*\?/s";
+    expect(preg_match($pattern, $src))->toBe(
+        1,
+        "cdef_id UPDATE must use ? placeholders for parameter binding"
+    );
 });
