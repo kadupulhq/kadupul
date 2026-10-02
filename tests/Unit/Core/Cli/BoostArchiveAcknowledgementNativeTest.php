@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 /** Runs the production archive consumer in a child and returns its recorded effects. */
-function boost_archive_run($coverage, $mode)
+function boost_archive_run($coverage, $mode, bool $renamed = false)
 {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/boost-archive-' . bin2hex(random_bytes(8));
@@ -14,11 +14,12 @@ function boost_archive_run($coverage, $mode)
     foreach (array('poller', 'boost', 'dsstats', 'rrdcheck', 'rrd') as $library) {
         file_put_contents($dir . '/lib/' . $library . '.php', '<?php');
     }
-    copy($root . '/poller_boost.php', $dir . '/poller_boost.php');
+    $entrypoint = $dir . ($renamed ? '/poller.php' : '/poller_boost.php');
+    copy($root . '/poller_boost.php', $entrypoint);
     $bootstrap = '<?php ';
     if ($coverage !== null) {
         $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($dir, true) . ');' .
-            'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($dir . '/poller_boost.php', true) . ');' .
+            'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($entrypoint, true) . ');' .
             'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/poller_boost.php', true) . ');' .
             'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
@@ -26,7 +27,7 @@ function boost_archive_run($coverage, $mode)
     file_put_contents($dir . '/include/cli_check.php', $bootstrap);
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $dir . '/poller_boost.php', '--help'),
+            array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $entrypoint, '--help'),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             null,
@@ -41,39 +42,24 @@ function boost_archive_run($coverage, $mode)
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
-            $coverage->merge(unserialize(file_get_contents($reports[0])));
+            $child = unserialize(file_get_contents($reports[0]));
+            expect($child->filter()->files())->not->toContain($entrypoint)
+                ->and($child->filter()->files())->toContain($root . '/poller_boost.php');
+            $coverage->merge($child);
+            $result['scratch_directory'] = $dir;
         }
         return $result;
     } finally {
-        // PHPUnit 12's CodeCoverage filter has no API to remove a file from
-        // its allowlist. Keep the copied source alive until the integration
-        // coverage merge has finished analyzing that allowlist.
-        if ($coverage !== null) {
-            foreach (array('/include', '/lib') as $suffix) {
-                foreach (glob($dir . $suffix . '/*') as $file) {
-                    if (is_file($file)) {
-                        unlink($file);
-                    }
-                }
-                rmdir($dir . $suffix);
-            }
-
-            foreach (glob($dir . '/*') as $file) {
-                if ($file !== $dir . '/poller_boost.php' && is_file($file)) {
+        // The merged report no longer references the copied entrypoint.
+        foreach (array('/include', '/lib', '') as $suffix) {
+            foreach (glob($dir . $suffix . '/*') as $file) {
+                if (is_file($file)) {
                     unlink($file);
                 }
             }
-
-        } else {
-            foreach (array('/include', '/lib', '') as $suffix) {
-                foreach (glob($dir . $suffix . '/*') as $file) {
-                    if (is_file($file)) {
-                        unlink($file);
-                    }
-                }
-                rmdir($dir . $suffix);
-            }
+            rmdir($dir . $suffix);
         }
+
     }
 }
 
@@ -118,4 +104,15 @@ test('unmapped MULTI and invalid Boost outputs are acknowledged without an RRD w
         ->and($invalid)->toHaveCount(2);
     $archive = array_values(array_filter($result['writes'], fn($write) => str_starts_with($write[0], 'DELETE FROM poller_output_boost_arch_')));
     expect($archive)->toHaveCount(1)->and(array_chunk($archive[0][1], 4))->toHaveCount(4);
+});
+
+
+test('a renamed Boost entrypoint reports the original source and removes its scratch directory', function () {
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $result = boost_archive_run($coverage, 'success', true);
+    expect($result['result'])->toBe(2);
+    if ($coverage !== null) {
+        expect(is_dir($result['scratch_directory']))->toBeFalse();
+        expect($coverage->filter()->files())->not->toContain($result['scratch_directory'] . '/poller.php');
+    }
 });
