@@ -85,6 +85,25 @@ services:
     Kadupul\Inventory\Infrastructure\:
         resource: '../src/Inventory/Infrastructure/'
 
+    Kadupul\GraphDefinition\:
+        resource: '../src/GraphDefinition/'
+
+    Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineVdefCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\GraphDefinition\Application\Port\VdefCatalog:
+        alias: Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineVdefCatalog
+    Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineVdefRealmAccess:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\GraphDefinition\Application\Port\VdefRealmAccess:
+        alias: Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineVdefRealmAccess
+    Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyVdefEditor:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\GraphDefinition\Application\Port\VdefEditor:
+        alias: Kadupul\GraphDefinition\Infrastructure\Legacy\LegacyVdefEditor
+
     Kadupul\Inventory\Application\Query\ListDevices: ~
 
     Kadupul\Inventory\Application\Query\FindEditableDevice: ~
@@ -249,6 +268,20 @@ services:
         alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputAccess
     Kadupul\DataInput\Application\Port\DataInputGateway:
         alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputGateway
+    Kadupul\Graphing\Infrastructure\:
+        resource: '../src/Graphing/Infrastructure/'
+        exclude: ['../src/Graphing/Infrastructure/Rrd/', '../src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php']
+    Kadupul\Graphing\Application\Query\ListPaletteColors: ~
+    Kadupul\Graphing\Application\Query\FindPaletteColor: ~
+    Kadupul\Graphing\Application\Query\FindPaletteColors: ~
+    Kadupul\Graphing\Application\Command\SavePaletteColor: ~
+    Kadupul\Graphing\Application\Command\DeletePaletteColors: ~
+    Kadupul\Graphing\Application\Port\PaletteColorStore:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyPaletteColorStore
+    Kadupul\Graphing\Application\Port\PaletteColorAccess:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyPaletteColorAccess
+    Kadupul\Graphing\Application\Port\PaletteColorPreferences:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyPaletteColorPreferences
     Kadupul\Navigation\Infrastructure\:
         resource: '../src/Navigation/Infrastructure/'
     Kadupul\Navigation\Application\Command\SaveLink: ~
@@ -261,6 +294,13 @@ services:
 
     Kadupul\Navigation\Application\Port\LinkPreferences:
         alias: Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkPreferences
+
+    # About requires an eligible login without a console/object realm.
+    Kadupul\IdentityAccess\Contract\AuthenticatedAccess:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess
+
+    Kadupul\Platform\Application\Port\ProductVersion:
+        alias: Kadupul\Platform\Infrastructure\Legacy\InstallationProductVersion
 
 when@test:
     services:

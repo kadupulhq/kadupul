@@ -158,8 +158,11 @@ SELF_GATED_SHAPES = {
 SESSION = '''<?php
 namespace Kadupul\\IdentityAccess\\Infrastructure\\Legacy;
 use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
-final class LegacyAuthenticatedSession implements ConsoleAccess
+use Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess;
+final class LegacyAuthenticatedSession implements ConsoleAccess, AuthenticatedAccess
 {
+    public function authenticatedActor(): ?Actor { return new Actor(); }
+
     public function consoleActor(): ?Actor
     {
         $id = 1;
@@ -1031,6 +1034,20 @@ def main():
 
     with tempfile.TemporaryDirectory(prefix='entry-classifier-') as directory:
         root = tree(directory)
+        for source in ("<?php\ninclude($target);\n", "<?php\nrequire($_GET['target']);\n", "<?php\ninclude($target);\n" + AUTH):
+            count += 1
+            (root / 'dynamic.php').write_text(source)
+            request = {'root': str(root), 'files': ['dynamic.php'], 'served': ['dynamic.php'], 'plugin_realms': {}}
+            result = subprocess.run(
+                [os.environ.get('PHP', 'php'), '-d', 'display_errors=1', '-d', 'error_reporting=-1', str(inventory.CLASSIFIER)],
+                input=json.dumps(request), capture_output=True, text=True, timeout=inventory.CLASSIFIER_TIMEOUT_SECONDS)
+            try:
+                rows = json.loads(result.stdout)['rows']
+            except (json.JSONDecodeError, KeyError):
+                rows = []
+            if result.returncode != 0 or result.stderr or len(rows) != 1 or rows[0][1] != 'unknown':
+                failures.append('unresolved include must emit clean JSON and remain unknown: %s' % source.strip())
+        (root / 'dynamic.php').unlink()
         for case, (source, expected) in {**CASES, **NEW_CASES}.items():
             count += 1
             got = gate(root, 'page.php', source)[0]
@@ -1140,12 +1157,301 @@ def main():
             count += 1
             if not rows.get(entry, ('', ''))[1].endswith('; ' + grant):
                 failures.append('route %s: expected %s read from the session adapter, got %s' % (entry, grant, rows.get(entry)))
+
+        authenticated = """<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+use Symfony\\Component\\HttpFoundation\\Response;
+final class AuthenticatedOnly {
+    #[Route('/authenticated', name: 'authenticated')]
+    public function guarded(AuthenticatedAccess $access): Response {
+        $actor = $access->authenticatedActor();
+        if ($actor === null) { return new Response('', 401); }
+        return new Response();
+    }
+    #[Route('/authenticated-unguarded', name: 'authenticated_unguarded')]
+    public function unguarded(AuthenticatedAccess $access): Response {
+        $actor = $access->authenticatedActor();
+        return new Response();
+    }
+    #[Route('/authenticated-late', name: 'authenticated_late')]
+    public function late(AuthenticatedAccess $access): Response {
+        file_put_contents('/tmp/side-effect', 'x');
+        $actor = $access->authenticatedActor();
+        if ($actor === null) { return new Response('', 401); }
+        return new Response();
+    }
+}
+"""
+        (root / 'src/Fixture/AuthenticatedOnly.php').write_text(authenticated)
+        rows = run(root, [])
+        for path, expected in [('app.php/authenticated', 'symfony:authenticated'), ('app.php/authenticated-unguarded', 'unknown'), ('app.php/authenticated-late', 'unknown')]:
+            count += 1
+            if rows.get(path, ('missing',))[0] != expected:
+                failures.append('authenticated-only guard: ' + path + ' ' + str(rows.get(path)))
+        count += 1
+        if not rows['app.php/authenticated'][1].endswith('; AuthenticatedAccess signed-in account; no realm required'):
+            failures.append('authenticated-only page acquired a realm')
+
+        count += 1
+        (root / 'src/Fixture/OtherAccess.php').write_text("<?php namespace Kadupul\\Fixture; final class OtherAccess implements \\Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess { public function authenticatedActor(): ?Actor { return new Actor(); } }")
+        try:
+            run(root, [])
+            failures.append('AuthenticatedAccess alternate implementation must stop classification')
+        except SystemExit:
+            pass
+        (root / 'src/Fixture/OtherAccess.php').unlink()
+
+        # The About-specific adapter is accepted only with the exact reviewed
+        # principal/persistence bundle and actual service binding. Changes to
+        # one delegated helper must invalidate the authentication declaration.
+        checkout = Path(__file__).resolve().parents[2]
+        about_bundle = [
+            'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
+            for name in ('LegacyAboutAccess', 'LegacyBrowserAuthentication',
+                         'BrowserAuthenticationSql', 'NativeAuthenticationSession',
+                         'AuthenticationFileSessionHandler',
+                         'AuthenticationDatabaseSessionHandler', 'SharedSession',
+                         'ReadOnlyDatabaseSessionHandler')
+        ] + ['config/services.yaml']
+        originals = {}
+        for relative in about_bundle:
+            target = root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            originals[relative] = (checkout / relative).read_text()
+            target.write_text(originals[relative])
+        rows = run(root, [])
+        for path, expected in [('app.php/authenticated', 'symfony:authenticated'),
+                               ('app.php/authenticated-unguarded', 'unknown'),
+                               ('app.php/authenticated-late', 'unknown')]:
+            count += 1
+            if rows.get(path, ('missing',))[0] != expected:
+                failures.append('About authenticated first-effect guard: ' + path)
+        for relative in about_bundle:
+            target = root / relative
+            for mutation in ('changed', 'missing'):
+                count += 1
+                if mutation == 'changed':
+                    target.write_text(originals[relative] + '\n// Unreviewed fixture change.\n')
+                else:
+                    target.unlink()
+                try:
+                    run(root, [])
+                    failures.append('About ' + mutation + ' handoff must stop classification: ' + relative)
+                except SystemExit:
+                    pass
+                finally:
+                    target.write_text(originals[relative])
+        changed_guards = [
+            ('LegacyAboutAccess', '$snapshot = $this->session->read();',
+             '$snapshot = []; return new Actor(9, "unverified");'),
+            ('LegacyBrowserAuthentication', "['REMOTE_USER', 'REDIRECT_REMOTE_USER']",
+             "['PHP_AUTH_USER']"),
+            ('LegacyBrowserAuthentication', "$request->attributes->get('_route')",
+             "'platform_about'"),
+            ('NativeAuthenticationSession', "'use_cookies' => false",
+             "'use_cookies' => true"),
+            ('AuthenticationDatabaseSessionHandler', '$statement->rowCount() !== 1', 'false'),
+            ('BrowserAuthenticationSql', "$state !== '00000'", "false"),
+        ]
+        for name, before, after in changed_guards:
+            relative = 'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
+            target = root / relative
+            count += 1
+            if before not in originals[relative]:
+                failures.append('About negative fixture does not change its intended guard: ' + name)
+                continue
+            target.write_text(originals[relative].replace(before, after, 1))
+            try:
+                run(root, [])
+                failures.append('About unreviewed guard must stop classification: ' + name)
+            except SystemExit:
+                pass
+            finally:
+                target.write_text(originals[relative])
+        overrides = root / 'config/services_test.yaml'
+        overrides.write_text('services: {}\n')
+        count += 1
+        try:
+            run(root, [])
+            failures.append('About unreviewed environment service binding must stop classification')
+        except SystemExit:
+            pass
+        finally:
+            overrides.unlink()
+        alternate = root / 'src/Fixture/OtherAccess.php'
+        alternate.write_text("<?php namespace Kadupul\\Fixture; final class OtherAccess implements \\Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess { public function authenticatedActor(): ?Actor { return new Actor(); } }")
+        count += 1
+        try:
+            run(root, [])
+            failures.append('About alternate AuthenticatedAccess implementation must stop classification')
+        except SystemExit:
+            pass
+        finally:
+            alternate.unlink()
+        for relative in about_bundle:
+            (root / relative).unlink()
+
         # A route under an alias is not missed.
         count += 1
         (root / 'src/Fixture/Aliased.php').write_text(ALIASED_CONTROLLER)
         rows = run(root, [])
         if rows.get('app.php/aliased', ('missing',))[0] != 'unknown' or rows.get('app.php', ('missing',))[0] != 'unknown':
             failures.append('aliased #[Route]: expected unknown rows, got %s' % {k: v for k, v in rows.items() if 'aliased' in k or k == 'app.php'})
+
+    project = Path(__file__).resolve().parents[2]
+    feature_cases = {
+        'direct': ("$access->authorize();", True),
+        'delegated': ("$find(1);", True),
+        'conditional': ("if ($request->query->has('check')) { $access->authorize(); }", False),
+        'input first': ("$query = $request->query->all(); $access->authorize();", False),
+        'effect first': ("unlink('/tmp/x'); $access->authorize();", False),
+        'swallowed': ("try { $access->authorize(); } catch (\\Throwable) {}", False),
+        'refused exception': ("try { $access->authorize(); } catch (\\Throwable) { return new Response('', 403); }", True),
+        'missing': ("$query = $request->query->all();", False),
+        'wrong guard': ("$console->consoleActor();", False),
+        'early return': ("if (true) { return new Response('feature data'); } $access->authorize();", False),
+    }
+    for label, (body, admitted) in feature_cases.items():
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-palette-') as directory:
+            root = tree(directory)
+            files = ['src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php', 'src/Graphing/Infrastructure/Legacy/PaletteSql.php']
+            for path in files:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text((project / path).read_text())
+            delegated = root / 'src/Graphing/Application/Query/FindPalette.php'
+            delegated.parent.mkdir(parents=True, exist_ok=True)
+            delegated.write_text('''<?php namespace Kadupul\\Graphing\\Application\\Query;
+final class FindPalette {
+    public function __construct(private \\Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess $authorization) {}
+    public function __invoke(int $id): int { return $this->authorization->authorize(); }
+}''')
+            session = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+            session.parent.mkdir(parents=True, exist_ok=True)
+            session.write_text(SESSION)
+            controller = root / 'src/Fixture/PaletteAction.php'
+            controller.parent.mkdir(parents=True, exist_ok=True)
+            controller.write_text('''<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess;
+use Kadupul\\Graphing\\Application\\Query\\FindPalette;
+use Symfony\\Component\\HttpFoundation\\Request;
+use Symfony\\Component\\HttpFoundation\\Response;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+final class PaletteAction {
+    #[Route('/graphing/colors', name: 'palette_fixture')]
+    public function run(Request $request, ConsoleAccess $console, PaletteColorAccess $access, FindPalette $find): Response {
+        $actor = $console->consoleActor();
+        if ($actor === null) { return new Response('', 401); }
+        %s
+        return new Response();
+    }
+}
+''' % body)
+            row = run(root, []).get('app.php/graphing/colors', ('missing', ''))
+            count += 1
+            if (row[0] == 'symfony:palette_fixture' and row[1].endswith(' + realm 5')) != admitted:
+                failures.append('Palette feature %s: unexpected classification %s' % (label, row))
+            if admitted:
+                adapter = root / files[0]
+                adapter.write_text(adapter.read_text().replace('REALM_ID = 5', 'REALM_ID = 6'))
+                count += 1
+                if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                    failures.append('Palette changed authorization adapter was still certified')
+                adapter.write_text((project / files[0]).read_text())
+                sql = root / files[1]
+                sql.write_text(sql.read_text().replace("!== '00000'", "=== '00000'"))
+                count += 1
+                if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                    failures.append('Palette changed SQL confirmation helper was still certified')
+                sql.write_text((project / files[1]).read_text())
+                if label == 'delegated':
+                    delegated.write_text(delegated.read_text().replace('final class', 'class'))
+                    count += 1
+                    if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                        failures.append('Palette overridable delegated authorization was still certified')
+                    delegated.write_text(delegated.read_text().replace('class FindPalette', 'final class FindPalette'))
+                alternative = root / 'src/Fixture/OtherPaletteAccess.php'
+                alternative.write_text('<?php namespace Kadupul\\Fixture; final class OtherPaletteAccess implements \\Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess {}')
+                count += 1
+                if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                    failures.append('Palette alternative authorization implementation was still certified')
+    # Verify realm metadata from the actual VDEF authorization path, including
+    # the checked actor identity and side-effect ordering after console admission.
+    project = Path(__file__).resolve().parents[2]
+    adapter_source = (project / 'src/GraphDefinition/Infrastructure/Persistence/DoctrineVdefRealmAccess.php').read_text()
+    authorization_source = (project / 'src/GraphDefinition/Application/Query/VdefAuthorization.php').read_text()
+    controller_source = """<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Kadupul\\GraphDefinition\\Application\\Query\\VdefAuthorization;
+use Kadupul\\GraphDefinition\\Application\\Query\\VdefAccessDenied;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+use Symfony\\Component\\HttpFoundation\\Response;
+final class DefinitionActions {
+    #[Route('/definition-review', name: 'definition_review', methods: ['GET'])]
+    public function __invoke(ConsoleAccess $access, VdefAuthorization $authorization): Response {
+        $actor = $access->consoleActor();
+        if ($actor === null) { return new Response('Denied', 401); }
+        try { $authorization->actor(); return new Response('Admitted', 200); }
+        catch (VdefAccessDenied $error) { return new Response('Denied', 403); }
+    }
+}
+"""
+    variants = [
+        ('actual realm', adapter_source, authorization_source, controller_source, ' + realm 14'),
+        ('derive changed realm', adapter_source.replace('realm_id = 14', 'realm_id = 24'), authorization_source, controller_source, ' + realm 24'),
+        ('wrong actor', adapter_source, authorization_source.replace('$actor->id)', '777)'), controller_source, ''),
+        ('ignored refusal', adapter_source, authorization_source.replace("if (!$this->realm->canManageDefinitions($actor->id)) {\n            throw new VdefAccessDenied();\n        }", '$this->realm->canManageDefinitions($actor->id);'), controller_source, ''),
+        ('write before feature', adapter_source, authorization_source, controller_source.replace('$authorization->actor();', "file_put_contents('/tmp/fixture', 'x'); $authorization->actor();"), ''),
+        ('swallowed feature refusal', adapter_source, authorization_source, controller_source.replace("return new Response('Denied', 403);", "print 'ignored';"), ''),
+    ]
+    for label, adapter, authorization, controller, feature in variants:
+        count += 1
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-vdef-') as directory:
+            root = tree(directory)
+            for path, text in [
+                ('src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', SESSION),
+                ('src/GraphDefinition/Infrastructure/Persistence/DoctrineVdefRealmAccess.php', adapter),
+                ('src/GraphDefinition/Application/Query/VdefAuthorization.php', authorization),
+                ('src/GraphDefinition/Application/Query/VdefAccessDenied.php', (project / 'src/GraphDefinition/Application/Query/VdefAccessDenied.php').read_text()),
+                ('src/Fixture/DefinitionActions.php', controller),
+            ]:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text(text)
+            row = run(root, []).get('app.php/definition-review', ('missing', ''))
+            expected = '; ConsoleAccess realm 8' + feature
+            if not row[1].endswith(expected):
+                failures.append('VDEF %s: expected %s, got %s' % (label, expected, row))
+
+    # Missing, ambiguous, or replaceable adapter metadata must stop generation.
+    invalid_adapters = [
+        ('dynamic realm', adapter_source.replace('realm_id = 14', 'realm_id = ?'), None),
+        ('conflicting realms', adapter_source.replace('r.realm_id = 14', 'r.realm_id = 24'), None),
+        ('second implementation', adapter_source, "<?php\nnamespace Kadupul\\Fixture; final class AlternateRealm implements \\Kadupul\\GraphDefinition\\Application\\Port\\VdefRealmAccess { public function canManageDefinitions(int $actorId): bool { return true; } }"),
+    ]
+    for label, adapter, additional in invalid_adapters:
+        count += 1
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-vdef-invalid-') as directory:
+            root = tree(directory)
+            for path, text in [
+                ('src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', SESSION),
+                ('src/GraphDefinition/Infrastructure/Persistence/DoctrineVdefRealmAccess.php', adapter),
+                ('src/GraphDefinition/Application/Query/VdefAuthorization.php', authorization_source),
+                ('src/GraphDefinition/Application/Query/VdefAccessDenied.php', (project / 'src/GraphDefinition/Application/Query/VdefAccessDenied.php').read_text()),
+                ('src/Fixture/DefinitionActions.php', controller_source),
+            ]:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text(text)
+            if additional:
+                (root / 'src/Fixture/AlternateRealm.php').write_text(additional)
+            try:
+                run(root, [])
+                failures.append('VDEF %s: expected generation to stop' % label)
+            except SystemExit:
+                pass
 
     for failure in failures:
         print('FAIL: ' + failure)

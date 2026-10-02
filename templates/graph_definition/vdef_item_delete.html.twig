@@ -1,0 +1,17 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Delete VDEF item'|trans({}, 'graph_definition') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Delete VDEF item'|trans({}, 'graph_definition') }}</h1>
+    <p>{{ 'Continue to remove this item from %name%?'|trans({'%name%': vdef.name}, 'graph_definition') }}</p>
+    <p><em>{{ item_type|trans({}, 'graph_definition') }}</em>: <strong>{{ item.label }}</strong></p>
+    {{ form_start(form) }}{{ form_widget(form) }}<button type="submit">{{ 'Continue'|trans({}, 'graph_definition') }}</button>{{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('graph_vdef_edit', {id: vdef.id}) }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
+</main>
+{% endblock %}
