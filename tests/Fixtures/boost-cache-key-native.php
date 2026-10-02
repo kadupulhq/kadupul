@@ -12,6 +12,15 @@ if ($argv[4] === '1') {
 }
 $cacheDirectory = $directory . '/cache';
 mkdir($cacheDirectory, 0700);
+$physicalCacheDirectory = $cacheDirectory;
+if (isset($scenario['publication'])) {
+    require __DIR__ . '/boost-cache-write-stream.php';
+    BoostCacheWriteStream::$directory = $cacheDirectory;
+    BoostCacheWriteStream::$fault = $scenario['publication'];
+    stream_wrapper_register('boostwrite', BoostCacheWriteStream::class);
+    $cacheDirectory = 'boostwrite://cache';
+}
+$GLOBALS['cacheWriteCount'] = 0;
 $config = array('library_path' => $directory, 'poller_id' => 1, 'connection' => 'online');
 $context = array();
 require $root . '/include/global_constants.php';
@@ -54,11 +63,16 @@ function cacti_log($message, ...$args)
 class MibCache
 {
     public function __construct($mib) {}
+    private string $name = '';
     public function object($name)
     {
+        $this->name = $name;
         return $this;
     }
-    public function count() {}
+    public function count()
+    {
+        if ($this->name === 'boostStatsTotalsImagesCacheWrites') $GLOBALS['cacheWriteCount']++;
+    }
     public function set($value) {}
 }
 file_put_contents($directory . '/poller.php', '<?php');
@@ -100,6 +114,15 @@ foreach (array('writer', 'reader') as $role) {
 
 boost_fixture_enter($scenario['writer']);
 $image = 'PNG rendered for the writer';
+if (isset($scenario['publication'])) {
+    $target = BoostCacheWriteStream::path($files['writer']);
+    file_put_contents($target, 'existing complete PNG');
+    boost_graph_set_file($image, 7, 1);
+    echo json_encode(array('served' => file_get_contents($target),
+        'written' => array_map('basename', glob($physicalCacheDirectory . '/*')),
+        'writes' => $GLOBALS['cacheWriteCount'], 'rename_attempts' => BoostCacheWriteStream::$renameAttempts), JSON_THROW_ON_ERROR);
+    return;
+}
 if (!empty($scenario['writer']['check_first'])) {
     // rrdtool_function_graph() order: the check names the file, on-demand Boost
     // updates move PHP to the server zone, then the render writes the image.

@@ -428,6 +428,13 @@ function boost_graph_cache_render_key($graph_data_array)
     $parts['graph_start'] = (string) ($graph_data_array['graph_start'] ?? '');
     $parts['graph_end']   = (string) ($graph_data_array['graph_end'] ?? '');
 
+    /* The filename casts dimensions and uses isset() for thumbnail names,
+     * while the renderer validates dimensions and tests the legend value.
+     * Keep the original values and omission state to avoid those collisions. */
+    foreach (array('graph_width', 'graph_height', 'graph_nolegend') as $field) {
+        $parts[$field] = array(array_key_exists($field, $graph_data_array), $graph_data_array[$field] ?? null);
+    }
+
     /* graph_json.php asks for graphv output, and image_format=png overrides an SVG template */
     $parts['graphv']       = isset($graph_data_array['graphv']) ? 'on' : '';
     $parts['image_format'] = (string) ($graph_data_array['image_format'] ?? '');
