@@ -84,3 +84,50 @@ for (const mode of ['', 'nonce']) {
     expect(new URLSearchParams(requests[6].body).get('action')).toBe('save');
   });
 }
+
+
+for (const mode of ['', 'nonce']) {
+  test(`legacy submitter fallback withholds tokens from GET overrides under ${mode || 'default'} CSP`, async ({ page }) => {
+    const policy = execFileSync('php', ['-r',
+      'require $argv[1]; echo CactiSecureHeaders::buildCspPolicy($argv[2], $argv[3], "");',
+      path.join(root, 'lib/headers_secure.php'), mode, nonce], { encoding: 'utf8' });
+    const headers = { 'Content-Security-Policy': policy };
+    const requests = [];
+    await page.route('**/*', async route => {
+      const request = route.request();
+      const url = new URL(request.url());
+      if (url.pathname === '/fallback-fixture') {
+        await route.fulfill({ contentType: 'text/html', headers, body: `
+          <!doctype html><html><body>
+          <form id="fallback" method="post" action="/fallback-submit">
+            <input name="action" value="save">
+            <input type="hidden" name="__csrf_magic" value="${token}">
+          </form>
+          <button form="fallback" formmethod="get">Submit as GET</button>
+          <script nonce="${nonce}">
+            var csrfMagicName = '__csrf_magic', csrfMagicToken = '${token}';
+            window.SubmitEvent = undefined;
+            window.violations = [];
+            document.addEventListener('securitypolicyviolation', function(event) { violations.push(event.violatedDirective); });
+          </script>
+          <script nonce="${nonce}" src="/fallback-csrf.js"></script>
+          <script nonce="${nonce}">CsrfMagic.end(); CsrfMagic.end();</script>
+          </body></html>` });
+      } else if (url.pathname === '/fallback-csrf.js') {
+        await route.fulfill({ contentType: 'application/javascript', body: readFileSync(path.join(root, 'include/vendor/csrf/csrf-magic.js')) });
+      } else {
+        requests.push({ url: request.url(), method: request.method(), body: request.postData() });
+        await route.fulfill({ contentType: 'text/html', body: '<p>Submitted</p>' });
+      }
+    });
+    await page.goto(`${origin}/fallback-fixture`);
+    expect(await page.evaluate(() => violations)).toEqual([]);
+    await page.locator('button[form="fallback"]').click();
+    await page.waitForURL(url => url.pathname === '/fallback-submit');
+    expect(requests).toHaveLength(1);
+    expect(requests[0].method).toBe('GET');
+    expect(new URL(requests[0].url).searchParams.get('action')).toBe('save');
+    expect(new URL(requests[0].url).searchParams.has('__csrf_magic')).toBe(false);
+    expect(requests[0].body).toBeNull();
+  });
+}

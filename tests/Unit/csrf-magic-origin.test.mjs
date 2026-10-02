@@ -104,8 +104,8 @@ function pageDom({ submitter = true } = {}) {
     getElementsByTagName: tag => nodes.filter(node => node.tagName === tag),
     getElementsByName: name => nodes.filter(node => attribute(node, 'name') === name),
     querySelectorAll(selector) {
-      assert.equal(selector, '[formaction]');
-      return nodes.filter(node => attribute(node, 'formaction') !== null);
+      assert.ok(['[formaction]', '[formaction], [formmethod]'].includes(selector));
+      return nodes.filter(node => attribute(node, 'formaction') !== null || (selector.includes('formmethod') && attribute(node, 'formmethod') !== null));
     },
     createElement: tag => new Element(tag),
     addEventListener: (type, listener) => listeners.push([type, listener]),
@@ -276,4 +276,22 @@ test('jQuery explicit type overrides a default method in either direction', () =
   assert.equal(calls[0].data, 'action=save');
   assert.equal(calls[1].type, 'POST');
   assert.equal(calls[1].data, withToken);
+});
+
+
+test('without submitter support, non-POST method overrides disable all associated tokens', () => {
+  for (const method of ['get', '', 'invalid', 'dialog']) {
+    const dom = pageDom({ submitter: false });
+    const form = dom.form({ action: 'graphs.php' }, [{ name: field, value: token }]);
+    dom.button(form, { formmethod: method });
+    const script = dom.load();
+    script.CsrfMagic.end();
+    script.CsrfMagic.end();
+    assert.equal(dom.submit(form), false, method);
+  }
+  const dom = pageDom({ submitter: false });
+  const form = dom.form({ action: 'graphs.php' });
+  dom.button(form, { formmethod: 'PoSt' });
+  dom.load().CsrfMagic.end();
+  assert.equal(dom.submit(form), true);
 });
