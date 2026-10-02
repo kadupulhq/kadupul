@@ -81,10 +81,10 @@ var faIcons = {
 		icon: '<i class="fas fa-undo" aria-hidden="true"></i>'
 	},
 	collapseAll: {
-		icon: '<i class="fas fa-double-angle-down" aria-hidden="true"></i>'
+		icon: '<i class="fas fa-angle-double-down" aria-hidden="true"></i>'
 	},
 	expandAll: {
-		icon: '<i class="fas fa-double-angle-right" aria-hidden="true"></i>'
+		icon: '<i class="fas fa-angle-double-right" aria-hidden="true"></i>'
 	},
 	collapse: {
 		icon: '<i class="fas fa-chevron-down" aria-hidden="true"></i>'
