@@ -86,6 +86,10 @@ function legacy_audit_upgrade_database()
         print '---------------------------------------------------------------------------------------------' . PHP_EOL;
     }
 
+    if ($core_exit !== 0) {
+        return $core_exit;
+    }
+
     $pistart = microtime(true);
 
     // Upgrade plugins now
@@ -148,17 +152,21 @@ function legacy_audit_upgrade_database()
                         // Some plugins don't upgrade in the proper way
                         if (function_exists($ufunc3)) {
                             cacti_log("NOTE: Running Plugin $pname install function due to some plugins not upgrading properly.", true, 'UPGRADE');
-                            $ufunc3(true);
+                            if ($ufunc3(true) === false) {
+                                return 1;
+                            }
                         }
 
                         if (function_exists($ufunc2)) {
                             cacti_log("NOTE: Upgrading Plugin $pname from $old to $version using alternate upgrade path.", true, 'UPGRADE');
-                            $ufunc2(true);
+                            if ($ufunc2(true) === false) {
+                                return 1;
+                            }
                         } elseif (function_exists($ufunc1)) {
                             cacti_log("NOTE: Upgrading Plugin $pname from $old to $version using standard upgrade path.", true, 'UPGRADE');
-                            // The script named the function without calling it; kept, so
-                            // an upgrade does not start running code it never ran.
-                            $ufunc1;
+                            if ($ufunc1() === false) {
+                                return 1;
+                            }
                         } else {
                             cacti_log("WARNING: Plugin $pname lacks an upgrade function.", true, 'UPGRADE');
                         }
@@ -176,6 +184,7 @@ function legacy_audit_upgrade_database()
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                             } else {
                                 cacti_log("WARNING: Kadupul Plugin $pname Upgrade Encountered Errors.", true, 'UPGRADE');
+                                return $return_var;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                                 print implode(PHP_EOL, $output) . PHP_EOL;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;

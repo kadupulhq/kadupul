@@ -1,0 +1,24 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "boost_png_cache_enable",
+        "boost_redirect",
+        "boost_rrd_update_enable",
+        "form_settings",
+        "row_boost_parallel",
+        "row_boost_png_cache_directory",
+        "row_boost_poller_mem_limit",
+        "row_boost_redirect",
+        "row_boost_rrd_update_interval",
+        "row_boost_rrd_update_max_records",
+        "row_boost_rrd_update_max_records_per_select",
+        "row_boost_rrd_update_max_runtime",
+        "row_boost_rrd_update_string_length",
+        "row_path_boost_log",
+        "tab"
+    ],
+    "script_names": []
+}
