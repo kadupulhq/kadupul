@@ -618,8 +618,13 @@ require $root . '/lib/html_validate.php';
 $database_sessions = array($database_hostname . ':' . $database_port . ':' . $database_default => new LegacyFormGoldenConnection());
 $config['cacti_db_version'] = CACTI_VERSION;
 
-// csrf-magic keeps its secret beside the scenario, not in include/vendor.
+// Use a real external secret beside the scenario, outside the served checkout.
+$config['path_csrf_web_root'] = $root;
 $config['path_csrf_secret'] = $directory . '/csrf-secret.php';
+$fixtureCsrfSecret = bin2hex(random_bytes(32));
+if (file_put_contents($config['path_csrf_secret'], $fixtureCsrfSecret) !== strlen($fixtureCsrfSecret)) {
+    throw new RuntimeException('Unable to create the form fixture CSRF secret');
+}
 session_save_path($directory);
 session_name($cacti_session_name);
 session_start();
