@@ -3738,8 +3738,18 @@ function auth_login_throttle_keys($username, $realm) {
 	$addr   = get_client_addr();
 	$packed = @inet_pton($addr);
 
-	if ($packed !== false && strlen($packed) == 16 && substr($packed, 0, 12) !== str_repeat("\0", 10) . "\xff\xff") {
-		$addr = bin2hex(substr($packed, 0, 8)) . '/64';
+	if ($packed !== false && strlen($packed) == 16) {
+		$mapped = str_repeat("\0", 10) . "\xff\xff";
+
+		/* ::ffff:192.0.2.1 and ::ffff:c000:201 are the same address. Count
+		 * them with the IPv4 form so the spelling does not split the counter. */
+		if (substr($packed, 0, 12) === $mapped) {
+			$addr = bin2hex(substr($packed, 12, 4));
+		} else {
+			$addr = bin2hex(substr($packed, 0, 8)) . '/64';
+		}
+	} elseif ($packed !== false && strlen($packed) == 4) {
+		$addr = bin2hex($packed);
 	}
 
 	$name   = (string) $username;
@@ -3819,6 +3829,12 @@ function auth_login_throttle_check($username, $realm) {
 	$refused = false;
 
 	foreach (auth_login_throttle_keys($username, $realm) as $type => $key) {
+		/* addr is first. A client already over that limit must not add a
+		 * login-name row: unique names would grow the table until maintenance. */
+		if ($type === 'login' && $refused) {
+			break;
+		}
+
 		db_execute_prepared('INSERT INTO user_auth_throttle
 			(id, failures, window_start)
 			VALUES (?, 1, ?)

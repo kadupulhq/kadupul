@@ -240,6 +240,7 @@ foreach ($scenario['steps'] as $step) {
 print json_encode(array(
 	'steps'        => $results,
 	'rows'         => $pdo->query('SELECT failures FROM user_auth_throttle ORDER BY failures')->fetchAll(PDO::FETCH_COLUMN),
+			'row_count'    => (int) $pdo->query('SELECT COUNT(*) FROM user_auth_throttle')->fetchColumn(),
 	'throttle_sql' => $GLOBALS['throttle_sql'],
 ));
 PHP;
@@ -317,6 +318,35 @@ test('a client address over its limit is refused for every login name', function
 		->and($result['steps'][3]['user'])->toBeNull()
 		->and($result['steps'][3]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
 		->and($result['steps'][4]['user'])->toBe(42);
+});
+
+test('equivalent spellings of one address share a counter', function () {
+	$steps = array(
+		array('call' => 'local', 'username' => 'u1', 'password' => 'x', 'addr' => '192.0.2.1'),
+		array('call' => 'local', 'username' => 'u2', 'password' => 'x', 'addr' => '::ffff:192.0.2.1'),
+		array('call' => 'local', 'username' => 'alice', 'password' => 'right', 'addr' => '::ffff:c000:201'),
+	);
+
+	$result = login_throttle_run(login_throttle_on(10, 1), $steps);
+
+	expect($result['steps'][1]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
+		->and($result['steps'][2]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
+		->and($result['row_count'])->toBe(2);
+});
+
+test('a blocked address does not store a row for every login name', function () {
+	$steps = array(
+		array('call' => 'local', 'username' => 'u1', 'password' => 'x', 'addr' => '192.0.2.8'),
+		array('call' => 'local', 'username' => 'u2', 'password' => 'x', 'addr' => '192.0.2.8'),
+		array('call' => 'local', 'username' => 'u3', 'password' => 'x', 'addr' => '192.0.2.8'),
+	);
+
+	$result = login_throttle_run(login_throttle_on(10, 1), $steps);
+
+	expect($result['steps'][0]['error_msg'])->toBe('Access Denied!  Login Failed.')
+		->and($result['steps'][1]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
+		->and($result['steps'][2]['error_msg'])->toBe('Too many failed login attempts.  Please try again later.')
+		->and($result['row_count'])->toBe(2);
 });
 
 test('IPv4 clients, including IPv4-mapped IPv6, are counted by their own address', function () {
