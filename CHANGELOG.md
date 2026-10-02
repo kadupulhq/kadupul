@@ -11,6 +11,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
 
 - Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
+- Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
@@ -31,6 +32,10 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
 - Draw core icons from one registry, `config/icons.json`, which maps names such as `add` and `collapse-all` to Font Awesome 7 classes. `html_icon()` refuses an icon with no accessible label unless it is marked decorative, `layout.js` reads the same map, and themes redraw icons through registry overrides instead of rewriting classes in the page. Console menu glyphs are now registry names; a plugin's Font Awesome classes in `$menu_glyphs` still render as given. Plugin icons are no longer restyled by a theme: paw, paper-plane and sunrise leave `fa-arrow-down` and `fa-arrow-up` alone, and midwinter leaves plugin menu glyphs alone.
+- Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
+
+- Render the color palette through Symfony and Twig, with protected named colors, revision-checked transactions and strict quoted CSV imports/exports.
+
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
 - Scope remote-agent host operations to the requesting main poller and the receiver's assigned devices; require an authenticated session user for remote graph rendering.
 - Make `plugin_manage.php --allperms` grant existing plugin realms to the configured administrator and report failed grants. Fixes #224.
