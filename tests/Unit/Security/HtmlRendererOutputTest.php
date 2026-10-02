@@ -9,6 +9,60 @@ use DOMDocument;
 use DOMXPath;
 use RuntimeException;
 
+require_once dirname(__DIR__, 2) . '/Helpers/NativeChildCoverageEvidence.php';
+
+function rendererCoverageSources(): array
+{
+    return array(
+        'lib/html.php', 'tests/Fixtures/rrd-process-coverage.php',
+        'tests/Helpers/NativeChildCoverageEvidence.php', 'composer.lock', 'tests/composer.lock',
+        'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php',
+        'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php',
+        'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
+    );
+}
+
+/** Mutate only the owned authentic report and a temporary source, restoring all artifacts. */
+function verifyRendererEvidenceFailures(string $report, string $root, string $scenario, array $sources, array $markers): void
+{
+    $originalReport = file_get_contents($report);
+    $originalEvidence = file_get_contents($report . '.json');
+    $load = fn() => \NativeChildCoverageEvidence::load($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'));
+    $temporarySource = dirname($report) . '/source.php';
+    try {
+        $changed = json_decode($originalEvidence, true, 512, JSON_THROW_ON_ERROR);
+        $changed['sources']['lib/html.php'] = str_repeat('0', 64);
+        file_put_contents($report . '.json', json_encode($changed, JSON_THROW_ON_ERROR));
+        expect($load)->toThrow(RuntimeException::class, 'source is missing or stale');
+        file_put_contents($report . '.json', $originalEvidence);
+
+        unlink($report . '.json');
+        expect($load)->toThrow(RuntimeException::class, 'report or evidence is missing');
+        file_put_contents($report . '.json', $originalEvidence);
+
+        file_put_contents($report, '');
+        clearstatcache(true, $report);
+        expect($load)->toThrow(RuntimeException::class, 'report or evidence is missing');
+        file_put_contents($report, $originalReport . 'changed');
+        clearstatcache(true, $report);
+        expect($load)->toThrow(RuntimeException::class, 'identity or report digest is stale');
+        file_put_contents($report, $originalReport);
+
+        // A real source change after snapshot must fail at publication, before any merge.
+        file_put_contents($temporarySource, '<?php // Original owned source.');
+        $snapshot = \NativeChildCoverageEvidence::snapshot(dirname($report), 'source.php', $scenario, array());
+        file_put_contents($temporarySource, '<?php // Changed owned source.');
+        expect(fn() => \NativeChildCoverageEvidence::write($report, dirname($report), $snapshot, $markers))
+            ->toThrow(RuntimeException::class, 'source is missing or stale');
+    } finally {
+        file_put_contents($report, $originalReport);
+        file_put_contents($report . '.json', $originalEvidence);
+        if (is_file($temporarySource)) {
+            unlink($temporarySource);
+        }
+    }
+}
+
 const PAYLOADS = array(
     'quote-breakout' => '\'" onmouseover="alert(1)" x=\'',
     'element-breakout' => '\'><img src=x onerror=alert(1)><script>alert(2)</script>',
@@ -56,19 +110,40 @@ function render(string $call, array $arguments, ?object $coverage): string
         require $argv[1] . '/lib/html.php';
         PHP;
     $program .= "\n" . $call;
+    $scenario = json_encode(array($call, $arguments), JSON_THROW_ON_ERROR);
     if ($coverage !== null) {
+        // The child registers its producer and sources before any measured execution.
         $program = 'define("HTML_RENDERER_TEST_COVERAGE",true);'
             . 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($directory, true) . ');'
-            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';' . $program;
+            . 'require ' . var_export($root . '/tests/Helpers/NativeChildCoverageEvidence.php', true) . ';'
+            . '$GLOBALS["nativeChildCoverageSnapshot"] = NativeChildCoverageEvidence::snapshot($argv[1],'
+            . '"tests/Unit/Security/HtmlRendererOutputTest.php", $argv[3], array('
+            . '"lib/html.php", "tests/Fixtures/rrd-process-coverage.php",'
+            . '"tests/Helpers/NativeChildCoverageEvidence.php", "composer.lock", "tests/composer.lock",'
+            . '"lib/rrd.php", "src/Graphing/Infrastructure/Rrd/ProxyCipher.php", "lib/dsdebug.php",'
+            . '"lib/rrd_maintenance.php", "lib/poller.php", "lib/boost.php",'
+            . '"lib/api_data_source.php", "lib/rrdcheck.php", "lib/dsstats.php"));'
+            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';'
+            . 'ob_start();' . $program
+            . '$GLOBALS["nativeChildCoverageMarkers"] = array("renderer-call-completed");'
+            . 'if (strlen(ob_get_contents()) > 0) { $GLOBALS["nativeChildCoverageMarkers"][] = "renderer-html-produced"; }'
+            . 'ob_end_flush();';
     }
 
     try {
+        if (!function_exists('proc_open')) {
+            throw new RuntimeException('Unable to start native HTML renderer: proc_open is unavailable.');
+        }
+        $pipes = array();
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, json_encode($arguments, JSON_THROW_ON_ERROR)),
+            array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, json_encode($arguments, JSON_THROW_ON_ERROR), $scenario),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $directory
         );
+        if (!is_resource($process)) {
+            throw new RuntimeException('Unable to start native HTML renderer.');
+        }
         $html = stream_get_contents($pipes[1]);
         $errors = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -77,12 +152,24 @@ function render(string $call, array $arguments, ?object $coverage): string
             throw new RuntimeException($errors . $html);
         }
         if ($coverage !== null) {
-            foreach (glob($directory . '/*.coverage') as $report) {
-                $coverage->merge(unserialize(file_get_contents($report)));
+            $reports = glob($directory . '/*.coverage');
+            if ($reports === false || count($reports) !== 1) {
+                throw new RuntimeException('Native renderer coverage report is missing or ambiguous.');
             }
+            $report = $reports[0];
+            $sources = rendererCoverageSources();
+            $markers = array('renderer-call-completed', 'renderer-html-produced');
+            $child = \NativeChildCoverageEvidence::load($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'));
+            static $evidenceChecked = false;
+            if (!$evidenceChecked) {
+                expect(\NativeChildCoverageEvidence::verifyRejections($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'), 'tests/Helpers/NativeChildCoverageEvidence.php'))->toBe(26);
+                verifyRendererEvidenceFailures($report, $root, $scenario, $sources, $markers);
+                $evidenceChecked = true;
+            }
+            $coverage->merge($child);
         }
     } finally {
-        foreach (glob($directory . '/*.coverage') as $report) {
+        foreach (glob($directory . '/*') ?: array() as $report) {
             unlink($report);
         }
         rmdir($directory);
@@ -142,6 +229,37 @@ test('graph drill-down icons keep identifiers numeric and the realtime popup ins
     expect(json_decode($arguments[2], true, 512, JSON_THROW_ON_ERROR))->toBe('popup_7');
     expect($arguments[1] . $arguments[2])->not->toContain('<', '>', '&', "'");
 })->with(PAYLOADS);
+
+test('renderer coverage rejects a child that exits before completing its rendering call', function () {
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    if ($coverage === null) {
+        $this->markTestSkipped('This regression requires actual child-process coverage.');
+    }
+    expect(fn() => render('exit(0);', array(), $coverage))
+        ->toThrow(RuntimeException::class, 'completion marker is missing');
+});
+
+test('renderer coverage rejects a completed call that produces no HTML', function () {
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    if ($coverage === null) {
+        $this->markTestSkipped('This regression requires actual child-process coverage.');
+    }
+    expect(fn() => render('html_escape("plain text");', array(), $coverage))
+        ->toThrow(RuntimeException::class, 'completion marker is missing');
+});
+
+test('renderer coverage rejects an absent child report instead of merging zero reports', function () {
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    if ($coverage === null) {
+        $this->markTestSkipped('This regression requires actual child-process coverage.');
+    }
+    $call = 'html_section_header("Rendered before report loss");'
+        . 'register_shutdown_function(function () { register_shutdown_function(function () {'
+        . 'foreach (glob(RRD_TEST_COVERAGE_DIRECTORY . "/*.coverage*") as $report) { unlink($report); }'
+        . '}); });';
+    expect(fn() => render($call, array(), $coverage))
+        ->toThrow(RuntimeException::class, 'coverage report is missing or ambiguous');
+});
 
 test('graph areas keep graph values inside their attributes and text', function ($renderer, $payload) {
     $graph = array('local_graph_id' => '9' . $payload, 'host_id' => 1, 'disabled' => '', 'width' => '500' . $payload,

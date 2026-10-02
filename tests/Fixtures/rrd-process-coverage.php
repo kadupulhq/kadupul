@@ -193,5 +193,8 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
         if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
             throw new RuntimeException('Unable to preserve child process coverage');
         }
+        if (isset($GLOBALS['nativeChildCoverageSnapshot'])) {
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeChildCoverageSnapshot'], $GLOBALS['nativeChildCoverageMarkers'] ?? array());
+        }
     });
 });
