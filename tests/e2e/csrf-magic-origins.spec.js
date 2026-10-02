@@ -163,10 +163,19 @@ for (const mode of ['', 'nonce']) {
       </form>
       <button id="outside" form="early" formaction="https://other.example/collect">Foreign outside</button>'
         . $argv[3] . 'open text</body></html>';
+      $rendered = csrf_ob_handler($page, 0);
+      if (!preg_match("~<input type='hidden' name='__csrf_magic' value=\"([^\"]*)\" />~", $rendered, $match) || !csrf_check_tokens($match[1])) {
+        throw new RuntimeException('Expected genuine rendered token field');
+      }
+      // Deliberately cross a timestamp boundary for the first native page.
+      if ($argv[3] === '<plaintext>') {
+        $started = time();
+        while (time() === $started) { usleep(1000); }
+      }
       echo json_encode(array(
-        'page' => csrf_ob_handler($page, 0),
+        'page' => $rendered,
         'policy' => CactiSecureHeaders::buildCspPolicy($argv[2], CactiSecureHeaders::getNonce(), ''),
-        'token' => csrf_get_tokens()
+        'token' => $match[1]
       ));
     `;
     let fixture;

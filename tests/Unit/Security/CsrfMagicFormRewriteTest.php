@@ -5,8 +5,9 @@
 
 // Runs the installed csrf-magic.php output handler in a child process, since
 // loading the library starts its request handling, and returns each page as
-// the handler rewrote it together with the field it inserts.
-function rewriteCsrfMagicPages(array $pages): array
+// the handler rewrote it. Genuine token fields are validated then normalized
+// for structural assertions; expected tokens are never independently generated.
+function rewriteCsrfMagicPages(array $pages, bool $crossSecond = false): array
 {
     $program = <<<'PHP'
 function csrf_startup() {
@@ -18,16 +19,27 @@ function csrf_startup() {
 }
 require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
 session_id('form-rewrite-test-session');
-$field = "<input type='hidden' name='__csrf_magic' value=\"" . csrf_get_tokens() . "\" />";
+$field = "<input type='hidden' name='__csrf_magic' value=\"native-rendered-token\" />";
+$started = time();
+if ($argv[3] === 'boundary') {
+    while (time() === $started) { usleep(1000); }
+}
 $pages = array();
 foreach (json_decode($argv[2], true) as $page) {
-    $pages[] = csrf_ob_handler('<html><head></head><body>' . $page . '</body></html>', 0);
+    $rendered = csrf_ob_handler('<html><head></head><body>' . $page . '</body></html>', 0);
+    // Normalize only genuine fields emitted on this page, validating their tokens.
+    $pages[] = preg_replace_callback("~<input type='hidden' name='__csrf_magic' value=\"([^\"]*)\" />~", function ($match) use ($field) {
+        if (!csrf_check_tokens($match[1])) {
+            throw new RuntimeException('Rendered token is invalid');
+        }
+        return $field;
+    }, $rendered);
 }
 echo json_encode(array('field' => $field, 'pages' => $pages));
 PHP;
 
     $process = proc_open(
-        array(PHP_BINARY, '-r', $program, dirname(__DIR__, 3), json_encode($pages)),
+        array(PHP_BINARY, '-r', $program, dirname(__DIR__, 3), json_encode($pages), $crossSecond ? 'boundary' : 'normal'),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -201,8 +213,11 @@ function csrf_startup() {
 }
 require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
 session_id('form-rewrite-test-session');
-$field = "<input type='hidden' name='__csrf_magic' value=\"" . csrf_get_tokens() . "\" />";
-echo json_encode(array('field' => $field, 'page' => csrf_ob_handler($argv[2], 0)));
+$rendered = csrf_ob_handler($argv[2], 0);
+if (!preg_match("/<input type='hidden' name='__csrf_magic' value=\"([^\"]*)\" \/>/", $rendered, $match) || !csrf_check_tokens($match[1])) {
+    throw new RuntimeException('Expected genuine rendered token field');
+}
+echo json_encode(array('field' => $match[0], 'page' => $rendered));
 PHP;
 
     $process = proc_open(
@@ -290,4 +305,10 @@ PHP;
     expect($small_fields)->toBe(2)
         ->and($large_fields)->toBe(2)
         ->and($large / $small)->toBeLessThan(80);
+});
+
+test('rendered token assertions remain valid after crossing a second boundary', function () {
+    $tag = '<form method="post">';
+    $result = rewriteCsrfMagicPages(array($tag . '</form>'), true);
+    expect($result['pages'][0])->toBe($tag . $result['field'] . '</form>');
 });
