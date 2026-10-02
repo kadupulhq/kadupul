@@ -393,3 +393,82 @@ test('configured callback coverage refuses omitted or stale producer and source 
         expect(fn() => verifyCsrfCallbackReceipt(array_replace($valid, $changed), $expected))->toThrow(RuntimeException::class);
     }
 });
+
+
+require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
+eval(<<<'SWAP_ADAPTER'
+namespace CsrfSecretSwap;
+use Throwable;
+function fwrite($stream, $bytes) {
+    $written = \fwrite($stream, $bytes);
+    if ($GLOBALS['csrf_swap_stage'] === 'write') {
+        swap_path(\stream_get_meta_data($stream)['uri']);
+    }
+    return $GLOBALS['csrf_swap_failure'] ? 0 : $written;
+}
+function chmod($path, $mode) {
+    $result = \chmod($path, $mode);
+    if ($GLOBALS['csrf_swap_stage'] === 'metadata') { swap_path($path); }
+    return $result;
+}
+function swap_path($temporary) {
+    \rename($temporary, $GLOBALS['csrf_swap_root'] . '/displaced-owned');
+    if ($GLOBALS['csrf_swap_kind'] === 'symlink') {
+        \symlink($GLOBALS['csrf_swap_root'] . '/foreign', $temporary);
+    } else {
+        \file_put_contents($temporary, 'foreign replacement');
+        \chmod($temporary, 0600);
+    }
+    $GLOBALS['csrf_swap_path'] = $temporary;
+}
+SWAP_ADAPTER);
+$installedCsrfSource = file_get_contents(dirname(__DIR__, 3) . '/include/vendor/csrf/csrf-magic.php');
+expect($installedCsrfSource)->toBeString();
+eval('namespace CsrfSecretSwap; use Throwable; ' . test_php_function_source($installedCsrfSource, 'csrf_write_secret'));
+
+test('secret pathname substitution preserves the key and caller-owned replacements', function (string $kind, bool $writeFailure, string $stage) {
+    $root = sys_get_temp_dir() . '/csrf-secret-swap-' . bin2hex(random_bytes(8));
+    mkdir($root, 0700);
+    $destination = $root . '/secret.php';
+    file_put_contents($destination, 'working secret');
+    file_put_contents($root . '/foreign', 'foreign target');
+    chmod($root . '/foreign', 0600);
+    $GLOBALS['csrf_swap_root'] = $root;
+    $GLOBALS['csrf_swap_kind'] = $kind;
+    $GLOBALS['csrf_swap_failure'] = $writeFailure;
+    $GLOBALS['csrf_swap_stage'] = $stage;
+    try {
+        $result = CsrfSecretSwap\csrf_write_secret($destination, str_repeat('a', 64));
+        $temporary = $GLOBALS['csrf_swap_path'];
+        expect($result)->toBeFalse()
+            ->and(file_get_contents($destination))->toBe('working secret')
+            ->and(file_get_contents($root . '/foreign'))->toBe('foreign target')
+            ->and(fileperms($root . '/foreign') & 0777)->toBe(0600)
+            ->and(file_exists($temporary))->toBeTrue();
+        if ($kind === 'symlink') {
+            expect(is_link($temporary))->toBeTrue();
+        } else {
+            expect(file_get_contents($temporary))->toBe('foreign replacement')
+                ->and(fileperms($temporary) & 0777)->toBe(0600);
+        }
+        expect(file_get_contents($root . '/displaced-owned'))->toContain(str_repeat('a', 64));
+    } finally {
+        foreach (glob($root . '/*') as $path) {
+            unlink($path);
+        }
+        foreach (glob($root . '/.csrf-secret-*') as $path) {
+            unlink($path);
+        }
+        rmdir($root);
+        foreach (['root', 'kind', 'failure', 'path', 'stage'] as $key) {
+            unset($GLOBALS['csrf_swap_' . $key]);
+        }
+    }
+})->with([
+    'file before publication' => ['file', false, 'write'],
+    'symlink before publication' => ['symlink', false, 'write'],
+    'file before failed-write cleanup' => ['file', true, 'write'],
+    'symlink before failed-write cleanup' => ['symlink', true, 'write'],
+    'file after metadata before rename' => ['file', false, 'metadata'],
+    'symlink after metadata before rename' => ['symlink', false, 'metadata'],
+]);
