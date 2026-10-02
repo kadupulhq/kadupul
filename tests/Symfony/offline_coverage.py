@@ -15,6 +15,56 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 
 
+class OfflineFixture:
+    """Execute and mutate the disposable fixture through its guest filesystem."""
+
+    def __init__(self, stage: Path, raw: Path, diagnostics: Path, image: str):
+        self.stage = stage
+        self.raw = raw
+        self.diagnostics = diagnostics
+        self.image = image
+
+    def execute(self, script, network='none', error=None, arguments=(), input_bytes=None):
+        command = ['docker', 'run', '--rm', '--network', network, '--entrypoint', 'php',
+                   '--user', f'{os.getuid()}:{os.getgid()}',
+                   '--volume', f'{self.stage}:/var/www/html', '--volume', f'{self.raw}:/coverage',
+                   '--volume', f'{self.diagnostics}:/artifacts',
+                   '--volume', f'{ROOT}/tests/Support/Behavior:/harness:ro',
+                   '--workdir', '/var/www/html', self.image,
+                   '-d', 'pcov.directory=/var/www/html',
+                   '-d', 'pcov.exclude=~/(include/vendor|tests)/|^/var/www/html/var/~',
+                   '-d', 'auto_prepend_file=/harness/coverage.php', script, *arguments]
+        if input_bytes is not None:
+            command.insert(3, '--interactive')
+        result = subprocess.run(command, input=input_bytes, capture_output=True, timeout=180)
+        output_text = (result.stdout + result.stderr).decode(errors='replace')
+        if error is None:
+            if result.returncode:
+                raise RuntimeError(output_text)
+        elif result.returncode == 0 or error not in output_text:
+            raise RuntimeError('Expected failure was not observed: ' + error + '\n' + output_text)
+
+    def remove_fixture(self, relative):
+        # Remove fixtures through the verifier's filesystem view. Host
+        # unlink can leave stale bind-mount metadata on Docker Desktop.
+        self.execute('-r', arguments=[
+            'if (!unlink($argv[1])) { throw new RuntimeException("Cannot remove offline fixture"); }',
+            relative,
+        ])
+
+    def write_fixture(self, relative, contents):
+        # Mutate through the same filesystem view as the verifier and
+        # confirm exact bytes; host writes can retain stale guest metadata.
+        self.execute('-r', arguments=[
+            '$bytes = stream_get_contents(STDIN); '
+            'if ($bytes === false || strlen($bytes) !== (int) $argv[2] '
+            '|| file_put_contents($argv[1], $bytes) !== (int) $argv[2] '
+            '|| hash_file("sha256", $argv[1]) !== $argv[3]) { '
+            'throw new RuntimeException("Offline fixture bytes were not confirmed"); }',
+            relative, str(len(contents)), hashlib.sha256(contents).hexdigest(),
+        ], input_bytes=contents)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--archive', type=Path, required=True)
@@ -36,22 +86,10 @@ def main():
             bundle.extractall(directory, filter='data')
         stage = Path(directory) / 'kadupul'
 
-        def execute(script, network='none', error=None):
-            command = ['docker', 'run', '--rm', '--network', network, '--entrypoint', 'php',
-                       '--user', f'{os.getuid()}:{os.getgid()}',
-                       '--volume', f'{stage}:/var/www/html', '--volume', f'{raw}:/coverage',
-                       '--volume', f'{diagnostics}:/artifacts',
-                       '--volume', f'{ROOT}/tests/Support/Behavior:/harness:ro',
-                       '--workdir', '/var/www/html', args.image,
-                       '-d', 'pcov.directory=/var/www/html',
-                       '-d', 'pcov.exclude=~/(include/vendor|tests)/|^/var/www/html/var/~',
-                       '-d', 'auto_prepend_file=/harness/coverage.php', script]
-            result = subprocess.run(command, capture_output=True, text=True, timeout=180)
-            if error is None:
-                if result.returncode:
-                    raise RuntimeError(result.stdout + result.stderr)
-            elif result.returncode == 0 or error not in result.stdout + result.stderr:
-                raise RuntimeError('Expected failure was not observed: ' + error + '\n' + result.stdout + result.stderr)
+        fixture = OfflineFixture(stage, raw, diagnostics, args.image)
+        execute = fixture.execute
+        remove_fixture = fixture.remove_fixture
+        write_fixture = fixture.write_fixture
 
         execute('tools/verify-offline.php')
         execute('tools/dependencies/install-legacy.php')
@@ -59,30 +97,30 @@ def main():
         manifest = json.loads(manifest_path.read_text())
         selected = next(iter(manifest['files']))
         patched, patch = next(iter(manifest['patches'].items()))
-        (stage / selected).unlink()
+        remove_fixture(selected)
         execute('tools/dependencies/install-legacy.php', network='bridge')
         if hashlib.sha256((stage / selected).read_bytes()).hexdigest() != manifest['files'][selected]:
             raise RuntimeError('Dependency repair produced incorrect bytes')
         execute('tools/verify-offline.php')
         font = stage / 'include/fa/webfonts/fa-solid-900.woff2'
         font_bytes = font.read_bytes()
-        font.unlink()
+        remove_fixture('include/fa/webfonts/fa-solid-900.woff2')
         execute('tools/verify-offline.php', error='Missing offline asset: include/fa/webfonts/fa-solid-900.woff2')
-        font.write_bytes(font_bytes)
+        write_fixture('include/fa/webfonts/fa-solid-900.woff2', font_bytes)
         icon_css = stage / 'include/fa/css/all.css'
         icon_css_text = icon_css.read_text()
-        icon_css.write_text('.fa { display: inline-block; }\n')
+        write_fixture('include/fa/css/all.css', b'.fa { display: inline-block; }\n')
         execute('tools/verify-offline.php', error='Offline Font Awesome stylesheet references no webfonts')
-        icon_css.write_text(icon_css_text)
+        write_fixture('include/fa/css/all.css', icon_css_text.encode())
         execute('tools/verify-offline.php')
         compiled_manifest = json.loads((stage / 'public/assets/manifest.json').read_text())
         compiled_font = stage / 'public' / compiled_manifest['include/fa/webfonts/fa-solid-900.woff2'].lstrip('/')
         compiled_font_bytes = compiled_font.read_bytes()
-        compiled_font.unlink()
+        remove_fixture(compiled_font.relative_to(stage).as_posix())
         execute('tools/verify-offline.php', error='Missing offline compiled asset: ../webfonts/')
-        compiled_font.write_bytes(b'')
+        write_fixture(compiled_font.relative_to(stage).as_posix(), b'')
         execute('tools/verify-offline.php', error='Missing offline compiled asset: ../webfonts/')
-        compiled_font.write_bytes(compiled_font_bytes)
+        write_fixture(compiled_font.relative_to(stage).as_posix(), compiled_font_bytes)
         execute('tools/verify-offline.php')
         for fields, message in [
             ({'revision': 'invalid'}, 'Invalid legacy dependency revision'),
@@ -92,28 +130,30 @@ def main():
             ({'patches': {patched: 'invalid'}}, 'Invalid legacy dependency patch'),
             ({'patches': {patched: patch | {'replacements': ['invalid']}}}, 'Invalid legacy dependency patch'),
         ]:
-            manifest_path.write_text(json.dumps(manifest | fields))
+            write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest | fields).encode())
             execute('tools/dependencies/install-legacy.php', error=message)
         # A patched file that fails any check must not be written.
         patched_bytes = (stage / patched).read_bytes()
-        (stage / patched).unlink()
+        remove_fixture(patched)
         for fields, message in [
             ({'patches': {patched: patch | {'source_sha256': '0' * 64}}}, 'Legacy dependency source checksum mismatch'),
             ({'patches': {patched: patch | {'replacements': [{'before': 'kadupul-absent-anchor', 'after': ''}]}}},
              'Legacy dependency patch no longer applies'),
             ({'files': manifest['files'] | {patched: '0' * 64}}, 'Legacy dependency patched checksum mismatch'),
         ]:
-            manifest_path.write_text(json.dumps(manifest | fields))
+            write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest | fields).encode())
             execute('tools/dependencies/install-legacy.php', network='bridge', error=message)
-            if (stage / patched).exists():
-                raise RuntimeError('Rejected dependency patch was written: ' + patched)
-        (stage / patched).write_bytes(patched_bytes)
-        manifest_path.write_text(json.dumps(manifest))
+            execute('-r', arguments=[
+                'if (file_exists($argv[1])) { throw new RuntimeException("Rejected dependency patch was written: " . $argv[1]); }',
+                patched,
+            ])
+        write_fixture(patched, patched_bytes)
+        write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest).encode())
         # Use a fresh path: Docker Desktop can retain regular-file metadata
         # briefly when a bind-mounted file is replaced by a symlink.
         link_path = 'include/vendor/coverage-symlink-fixture'
         dependency = stage / link_path
-        manifest_path.write_text(json.dumps(manifest | {'files': {link_path: manifest['files'][selected]}, 'patches': {}}))
+        write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest | {'files': {link_path: manifest['files'][selected]}, 'patches': {}}).encode())
         dependency.symlink_to(os.path.relpath(stage / 'composer.json', dependency.parent))
         execute('tools/dependencies/install-legacy.php', error='Refusing symlink')
     if not list(raw.glob('coverage-*.json')):
