@@ -176,7 +176,7 @@ final class AuditDatabaseTest extends TestCase
         self::assertSame([], $this->events);
     }
 
-    public function testAMissingFileStopsBeforeTheSchemaIsAudited(): void
+    public function testAMissingFileStopsBeforeResetOrComparison(): void
     {
         $store = $this->createMock(AuditBaselineStore::class);
         $store->method('read')->willReturn(null);
@@ -188,12 +188,13 @@ final class AuditDatabaseTest extends TestCase
 
         self::assertSame(BaselineOutcome::FileMissing, $report->baseline);
         self::assertSame([], $report->tables);
+        self::assertSame([], $report->alters);
         self::assertSame(1, $report->failed());
         self::assertSame([], $this->events());
     }
 
-    /** Invalid source baselines leave existing audit metadata untouched. */
-    public function testAMissingOrUnparsableFileDoesNotResetTheAuditTables(): void
+    /** Invalid input cannot mutate tables or authorize schema comparison. */
+    public function testAMissingOrUnparsableFileRecordsNoMutations(): void
     {
         foreach ([null, new InvalidAuditSchema(3)] as $problem) {
             $this->events = [];
@@ -209,7 +210,7 @@ final class AuditDatabaseTest extends TestCase
         }
     }
 
-    public function testAFailedReloadStopsBeforeTheSchemaIsAudited(): void
+    public function testAFailedReloadStopsBeforeComparisonAndRepair(): void
     {
         $store = $this->store();
         $store->method('reset')->willReturn(null);
@@ -220,7 +221,9 @@ final class AuditDatabaseTest extends TestCase
         $report = $this->audit($schema, $store)(AuditMode::Report, false, null, true);
 
         self::assertSame(BaselineOutcome::LoadFailed, $report->baseline);
+        // A failed publication cannot produce an audit result.
         self::assertSame([], $report->tables);
+        self::assertSame([], $report->alters);
         self::assertSame(1, $report->failed());
         self::assertSame([
             ['database.audit', 'database-maintenance local:audit-schema-reset', 'succeeded'],
@@ -344,11 +347,11 @@ final class AuditDatabaseTest extends TestCase
         $store->method('reset')->willReturn(null);
         $store->expects(self::once())->method('import')->willReturn(false);
         $store->method('dumpPath')->willReturn('/srv/kadupul/docs/audit_schema.sql');
-        $store->method('export')->willReturn(true);
+        $store->expects(self::never())->method('export');
 
         $report = $this->audit($this->schema(), $store)(AuditMode::Load, false, null, true);
 
-        self::assertSame([BaselineOutcome::LoadFailed, true, 1], [$report->baseline, $report->exported, $report->failed()]);
+        self::assertSame([BaselineOutcome::LoadFailed, null, 1], [$report->baseline, $report->exported, $report->failed()]);
         self::assertSame(['database.audit', 'database-table local:table_columns', 'failed'], $this->events()[1]);
     }
 

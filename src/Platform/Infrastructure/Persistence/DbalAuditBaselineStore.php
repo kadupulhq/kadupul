@@ -14,6 +14,7 @@ use Kadupul\Platform\Domain\Schema\AuditBaseline;
 use Kadupul\Platform\Domain\Schema\AuditSchemaDump;
 use Kadupul\Platform\Domain\Schema\BaselineColumn;
 use Kadupul\Platform\Domain\Schema\BaselineIndex;
+use Kadupul\Platform\Domain\Schema\InvalidAuditSchema;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -63,7 +64,6 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
         PRIMARY KEY (idx_table_name, idx_key_name, idx_seq_in_index, idx_column_name))
         ENGINE=InnoDB
         COMMENT='Holds Default Kadupul Index Definitions'";
-    private const array RESET = ['TRUNCATE table_columns', 'TRUNCATE table_indexes'];
     // docs/audit_schema.sql: what a load left in place.
     public const string DUMP_COLUMNS = "CREATE TABLE `table_columns` (
   `table_name` varchar(50) NOT NULL,
@@ -91,7 +91,6 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
   `idx_comment` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`idx_table_name`,`idx_key_name`,`idx_seq_in_index`,`idx_column_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Holds Default Cacti Index Definitions'";
-    private const array REPLACE = ['DROP TABLE IF EXISTS `table_columns`', self::DUMP_COLUMNS, 'DROP TABLE IF EXISTS `table_indexes`', self::DUMP_INDEXES];
     private const string INSERT_COLUMN = 'INSERT INTO table_columns (table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     private const string INSERT_INDEX = 'INSERT INTO table_indexes (idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name,
@@ -120,22 +119,26 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
             return null;
         }
 
-        return AuditSchemaDump::parse($dump);
+        // A success footer and nonempty rows in both tables distinguish a
+        // complete canonical dump from a truncated or empty import.
+        $baseline = AuditSchemaDump::parse($dump);
+        if (preg_match('/^-- Dump completed on .+$/m', $dump) !== 1
+            || $baseline->columnRows === [] || $baseline->indexRows === []) {
+            throw new InvalidAuditSchema(count(explode("\n", $dump)));
+        }
+
+        return $baseline;
     }
 
     #[\Override]
     public function reset(DatabaseTarget $target): ?string
     {
-        // create_tables() checked each table exists after creating it, and
-        // stopped at the first that did not. It never checked the TRUNCATEs.
+        // Ensure tables exist while preserving every existing baseline row.
         foreach ([self::CREATE_COLUMNS, self::CREATE_INDEXES] as $index => $create) {
-            $this->connections->execute($target, $create);
-            if (!$this->connections->tableCatalog($target)->has(self::TABLES[$index])) {
+            if (!$this->connections->execute($target, $create)
+                || !$this->connections->tableCatalog($target)->has(self::TABLES[$index])) {
                 return self::TABLES[$index];
             }
-        }
-        foreach (self::RESET as $truncate) {
-            $this->connections->execute($target, $truncate);
         }
 
         return null;
@@ -144,35 +147,64 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
     #[\Override]
     public function replace(DatabaseTarget $target, AuditBaseline $baseline): bool
     {
-        // DDL commits on its own, so the definitions go first, one statement
-        // at a time, and only the rows share a transaction.
-        foreach (self::REPLACE as $statement) {
-            if (!$this->connections->execute($target, $statement)) {
+        if ($baseline->columnRows === [] || $baseline->indexRows === []) {
+            return false;
+        }
+        // DDL implicitly commits in MySQL. Populate private staging tables
+        // first, then publish both with one atomic RENAME TABLE statement.
+        $suffix = bin2hex(random_bytes(12));
+        $columns = 'audit_columns_' . $suffix;
+        $indexes = 'audit_indexes_' . $suffix;
+        $oldColumns = 'audit_old_columns_' . $suffix;
+        $oldIndexes = 'audit_old_indexes_' . $suffix;
+        $cleanup = [$columns, $indexes];
+        $cleanupOk = true;
+        try {
+            foreach ([[$columns, self::DUMP_COLUMNS, 'table_columns'], [$indexes, self::DUMP_INDEXES, 'table_indexes']] as [$name, $ddl, $table]) {
+                if (!$this->connections->execute($target, str_replace('`' . $table . '`', '`' . $name . '`', $ddl))) {
+                    return false;
+                }
+            }
+            $rows = [
+                ...array_map(static fn(BaselineColumn $column): array => [str_replace('INSERT INTO table_columns ', 'INSERT INTO `' . $columns . '` ', self::INSERT_COLUMN), array_values($column->row())], $baseline->columnRows),
+                ...array_map(static fn(BaselineIndex $index): array => [str_replace('INSERT INTO table_indexes ', 'INSERT INTO `' . $indexes . '` ', self::INSERT_INDEX), array_values($index->row())], $baseline->indexRows),
+            ];
+            if ($this->connections->write($target, $rows) === null) {
                 return false;
             }
-        }
-        $rows = [
-            ...array_map(static fn(BaselineColumn $column): array => [self::INSERT_COLUMN, array_values($column->row())], $baseline->columnRows),
-            ...array_map(static fn(BaselineIndex $index): array => [self::INSERT_INDEX, array_values($index->row())], $baseline->indexRows),
-        ];
+            $rename = "RENAME TABLE `table_columns` TO `$oldColumns`, `table_indexes` TO `$oldIndexes`, `$columns` TO `table_columns`, `$indexes` TO `table_indexes`";
+            if (!$this->connections->execute($target, $rename)) {
+                return false;
+            }
+            $cleanup = [$oldColumns, $oldIndexes];
 
-        return $rows === [] || $this->connections->write($target, $rows) !== null;
+        } finally {
+            foreach ($cleanup as $table) {
+                if (!$this->connections->execute($target, 'DROP TABLE IF EXISTS `' . $table . '`')) {
+                    $cleanupOk = false;
+                    $this->connections->log($target, 'DBCALL', 'ERROR: failed to clean audit staging table ' . $table);
+                }
+            }
+        }
+
+        return $cleanupOk;
     }
 
     #[\Override]
     public function import(DatabaseTarget $target, AuditCatalog $catalog): bool
     {
-        $rows = [];
+        $columns = [];
+        $indexes = [];
         foreach ($catalog->tables() as $table) {
             foreach (array_values($table->columns) as $sequence => $column) {
-                $rows[] = [self::INSERT_COLUMN, [$table->name, $sequence + 1, $column['Field'], $column['Type'], $column['Null'], $column['Key'], $column['Default'], $column['Extra']]];
+                $columns[] = new BaselineColumn($table->name, $sequence + 1, $column['Field'], $column['Type'], $column['Null'], $column['Key'], $column['Default'], $column['Extra']);
             }
             foreach ($table->indexes as $index) {
-                $rows[] = [self::INSERT_INDEX, array_values($index)];
+                $indexes[] = new BaselineIndex($table->name, $index['Non_unique'] === null ? null : (int) $index['Non_unique'], $index['Key_name'], (int) $index['Seq_in_index'], $index['Column_name'], $index['Collation'], $index['Cardinality'] === null ? null : (int) $index['Cardinality'], $index['Sub_part'] === null ? null : (string) $index['Sub_part'], $index['Packed'], $index['Null'], $index['Index_type'], $index['Comment']);
             }
         }
 
-        return $rows === [] || $this->connections->write($target, $rows) !== null;
+        return $this->replace($target, new AuditBaseline($columns, $indexes));
     }
 
     #[\Override]
