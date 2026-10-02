@@ -18,6 +18,7 @@ copy($root . '/lib/' . $file, $copy);
 symlink($root . '/src', $directory . '/src');
 symlink($root . '/include', $directory . '/include');
 if (isset($argv[3])) {
+    define('HELPER_UNION_TEST_COVERAGE', true);
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('RRD_TEST_CLI_COVERAGE_COPY', $copy);
     define('RRD_TEST_CLI_COVERAGE_SOURCE', $root . '/lib/' . $file);
@@ -80,4 +81,5 @@ if (str_starts_with($case, 'filename-')) {
         rrd_maintenance_release($locks);
     }
 }
+define('NATIVE_COVERAGE_COMPLETED', ['helper-result-observed']);
 file_put_contents($directory . '/result.json', json_encode($state, JSON_THROW_ON_ERROR));
