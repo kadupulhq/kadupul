@@ -1,6 +1,9 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Show color names, data input field names, group names in permission reasons, and graph, device and site names in the tree editor as text; these places parsed the decoded names as markup
+-issue: Stop schema audits and repairs when docs/audit_schema.sql cannot be loaded, and preserve the existing audit baseline tables until a replacement loads successfully; CACTI_MYSQL_CLIENT optionally selects the database client executable
+-issue: Midwinter binds keyboard shortcuts once after a successful cached script revalidation, retaining working shortcuts across AJAX page loads
 -issue: Paper-plane shows its scroll-to-top icon again; it used a Font Awesome 4 name that the shipped Font Awesome 5 does not define
 -issue: Classic no longer removes every window event handler on each page load, which stopped open user and ellipsis menus from closing on a click elsewhere
 -issue: The Midwinter ESC shortcut no longer throws an error outside fullscreen, and c+F1 no longer opens an alert reading [object KeyboardEvent]
@@ -8,6 +11,7 @@ Cacti CHANGELOG
 -security: update Playwright and @playwright/test for E2E tests to 1.63.0 in package.json and the lockfile, addressing GHSA-7mvr-c777-76hp (browser download TLS verification) and the Snyk blame reporter command-injection advisory
 -issue: Preserve the system Boost setting when the active-collector count query fails, instead of treating a database error as proof that Boost can be disabled
 -issue: Render signed integer unit exponents once in graph commands. Previously stored negative unit exponents now take effect after upgrading; malformed values remain omitted
+-issue: Use the valid `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax when binary logging is enabled; the old order made every analysis fail on that path
 -security: Validate the selected UI theme against installed theme directories before constructing paths, and bind graph-template ordering filters as parameters
 -issue: Build the RRD create definition once for both creators, which kept separate copies that drifted. Boost joined the RRA and consolidation rows around the data source profile rather than through it, so a deleted profile still produced RRA lines with an empty x-files factor where the poller found no RRA and refused; it left the RRA order undetermined when two profiles tie on rows times steps; and it said nothing at all when a data source had no RRA. The poller read the device row and its interface speed on every create, which only a |query_ maximum needs
 -issue: Keep graph-group lookups scoped to the local graph ID, preserve the configuration cache map when setting an option, keep invalid structured filters from becoming unrestricted, and scope user-setting existence cache entries to the user. Public helper signatures and valid filter behavior are unchanged
