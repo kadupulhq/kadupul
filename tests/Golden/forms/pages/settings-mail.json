@@ -1,0 +1,25 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "form_settings",
+        "row_settings_email_header",
+        "row_settings_sendmail_header",
+        "row_settings_sendmail_path",
+        "row_settings_smtp_header",
+        "row_settings_smtp_host",
+        "row_settings_smtp_password",
+        "row_settings_smtp_port",
+        "row_settings_smtp_secure",
+        "row_settings_smtp_timeout",
+        "row_settings_smtp_username",
+        "settings_how",
+        "settings_sendmail_path",
+        "settings_smtp_password",
+        "settings_smtp_password_confirm",
+        "tab"
+    ],
+    "script_names": []
+}

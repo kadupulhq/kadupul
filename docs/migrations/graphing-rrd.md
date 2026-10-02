@@ -17,19 +17,47 @@ a Graphing service.
 src/Graphing/
   Domain/            GraphItemType, ConsolidationFunction, DataSourceType enums;
                      RrdCommand (an argument list, not a string); GraphDefinition
-  Application/       RenderGraph, ExportGraph, CreateDataSourceFile, TuneDataSource
-    Port/            RrdTransport, GraphDefinitions, DataSources
+    Font/            GraphFont, GraphFontProfile, GraphFontResolver (PR #710)
+    Render/          RenderContext, GraphRequest, RenderFacts, GraphWindow, RenderResult, RrdExecutionContext,
+                     GraphThemeProfile, UnrepresentableGraphArgument
+    Command/         GraphCommandBuilder, GraphCommandSections and parts: DefNames, CdefMagic,
+                     LegendText, GradientArea, DateLegend, ThemeArguments,
+                     HookedGraphSections, LegacySerializedGraphCommand (hook compatibility),
+                     BusinessHours, GraphOptions, ArchiveChoice
+  Application/       RenderGraph, CollectRenderFacts, ExportGraph,
+                     CreateDataSourceFile, TuneDataSource
+    Port/            RrdTransport, GraphDefinitions, DataSources, DataSourcePaths,
+                     RenderedGraphCache, PendingSamples, GraphOptionsHook, RenderClock
   Infrastructure/
     Rrd/             PipeEncoder, LocalRrdtool, ProxyRrdtool, RrdXmlEditor, ErrorImage
     Persistence/     DBAL readers for the web rendering path
-    Legacy/          LegacyDataSources for the collector path; RrdBridge
+    Legacy/          LegacyDataSources for the collector path; RrdBridge;
+                     LegacyRenderContextFactory, LegacyGraphDefinitions, LegacyDataSourcePaths,
+                     LegacyGraphRequestFactory, LegacyGraphThemeProfileResolver, LegacyGraphOptionsHook,
+                     LegacyRenderClock, LegacyRrdWebContext,
+                     LegacyRenderOutput, BoostImageCache, LegacyPendingSamples
+    Symfony/         Graph image and JSON controllers; the graph voter; GraphLegacyProcessBridge
 ```
+
+R7 also adds `GraphAuthorizationSubject` and `GraphAccess` in IdentityAccess
+Contract, plus the legacy access adapter. Graphing imports those published
+contract types; IdentityAccess does not import Graphing Domain types.
 
 PR #314 creates the module with the `DeviceTreePlacement` contract. The RRD
 slices add to that module and do not change the contract.
 
 `RrdTransport` is a port because it has two real implementations: the local
-`rrdtool -` pipe and the RRDtool proxy. Other classes get no interface unless a
+`rrdtool -` pipe and the RRDtool proxy. Its calls also take an explicit
+`RrdExecutionContext` derived from the captured viewer context: effective `TZ`,
+command-specific `LANG`, and `RRD_DEFAULT_FONT`. Local children receive those
+values through an explicit process environment. Proxy font settings use its
+existing supported `setenv` contract; remote graph rendering stays blocked
+until the existing interoperability and remote environment gates pass. R7
+requires real-child environment and sequential-viewer isolation checks. Its
+one-off local method owns session release through the legacy web-context
+adapter after context capture, including metadata executions and the existing
+missing-binary path. Denial, cache hits, persistent-pipe and proxy commands
+retain zero additional releases; concurrent session-lock behavior is a gate. Other classes get no interface unless a
 second implementation or a module boundary needs one.
 
 ## Slices
@@ -50,6 +78,26 @@ second implementation or a module boundary needs one.
 | Web-side graph reads through DBAL; collector writes stay on `db_*` | Pending |
 | RRD file repair, `rrdtool_info2html` to Twig, error image and colour helpers | Pending |
 | Callers moved to Graphing services; wrappers marked `#[\Deprecated]` | Pending |
+| P0: explicit SVG override and render-triggered Boost zone corrections with recorded before/after goldens | Planned; before R0/R1 |
+| R0: render characterization per context field and mode, input census, hook string contract, timing script | Planned |
+| R1: `RenderContext` and `GraphRequest` built once per render; Boost key from the context | Planned; after PRs #705 and #710 |
+| R2: escape, `DEF` names, magic CDEF, gradient, date legend, theme and font arguments, business hours to `Domain/Command` | Planned |
+| R3: `GraphDefinition` read through a port, first on `db_*` | Planned |
+| R4: DBAL reader for Symfony routes | Planned; legacy pages only if the timing gate allows |
+| R5: window, archive choice and graph options from the definition, request and context | Planned |
+| R6: `GraphCommandBuilder` for `DEF`, `CDEF`, `VDEF`, legend, items and export columns, preserving options/definitions/items in `GraphCommandSections` until after the hook | Planned |
+| R7: `RenderGraph`, explicit user/trusted-legacy authorization subject, IdentityAccess `GraphAccess` and its legacy adapter, `RrdTransport`, the mode-guarded plugin hook adapter, and initial image-cache/pending-samples ports and legacy Boost adapters | Planned; after PR #661 |
+| R8: unify cache naming, eligibility, reading and writing in R7's adapters, keeping PR #705; refine failure handling and performance | Planned |
+| R9: `graph_image.php` and `graph_json.php` as thin adapters | Planned; after PR #661 |
+| R10a: isolated CLI legacy bridge wiring the same R7 use case and R4 reader; R10b: Symfony graph routes/voter after real bridge gates | Planned; bridge before route enablement |
+| R11: template propagation services | Planned; after characterization |
+| R12: aggregate services | Planned; after characterization |
+| R13: wrapper deprecation | Planned |
+
+[Graph rendering pipeline](graphing-render-pipeline.md#slices) gives each of
+P0 and R0 to R13 their files, gating tests, risk and rollback. R3 and R4 split the
+"web-side graph reads" row above, R2 takes the colour helpers from the "RRD file repair" row,
+and R13 is the last pending row.
 
 Duplicate code in `lib/rrd.php` is shared through procedural helpers ahead of
 the split: `rrdtool_cdef_magic_variables()`, `rrdtool_cdef_magic_append()` and
@@ -59,7 +107,7 @@ the split: `rrdtool_cdef_magic_variables()`, `rrdtool_cdef_magic_append()` and
 `rrd_datasource_add()`, `rrd_rra_delete()` and `rrd_rra_clone()`. A move of
 those callers takes its helper along.
 
-Each slice keeps the characterization tests passing unchanged. A slice that
+Each migration slice keeps the P0-corrected characterization tests passing unchanged. A slice that
 has to change a pinned output says so and states why.
 
 ## Decisions
@@ -147,6 +195,162 @@ RRDtool, so the characters `&`, `<` and `>` reach the image as entities. That ou
 pinned as it stands. Changing it alters existing graphs and is a separate change
 with a release note.
 
+## Rendering pipeline
+
+`__rrdtool_function_graph()` checks access, consults the Boost image cache,
+reads the graph, builds the command and runs it in one function
+(`lib/rrd.php:2230-3247`). The target splits that into four parts:
+
+- `GraphDefinitions` reads an immutable `GraphDefinition`: the graph, its
+  ordered items, CDEF and VDEF text, data source paths and steps, and archive
+  profiles. The first adapter runs today's `db_*` queries; a DBAL adapter
+  serves Symfony routes. An Application `DataSourcePaths` port retains the
+  mode-aware `LegacyDataSourcePaths` adapter. Historical modes preserve
+  missing-path generation/persistence on the existing authorized `db_*`
+  connection; real-time mode resolves each `DEF` to the configured
+  `realtime_cache_path/user_<sess_realtime_hash>_<local_data_id>.rrd` using
+  captured session identity, without historical-helper calls or writes.
+  Missing/null hashes preserve `false` behavior; empty/zero presence semantics
+  and file-existence outcomes remain characterized. Real-time resolved paths
+  must not be shared between viewers through graph-ID-only definition caching.
+  The read-only DBAL reader uses
+  that bridge on definition misses; its own connection receives no write grants.
+  Historical existing/empty paths, stored generated paths, naming/failure
+  behavior, real-time DEF paths for distinct viewer hashes and roots, and zero
+  historical fallback/writes are R3/R4 gates. Cache hits perform no path work.
+- `CollectRenderFacts` gathers what needs RRDtool or other tables: the
+  consolidation functions in each file, which files exist, substituted host and
+  query values, Nth percentile and summation values, and the time.
+- `GraphCommandBuilder` is a pure function from the definition, the request,
+  the context and the facts to `GraphCommandSections`, preserving separate
+  options, definitions and item/export argument lists until after the hook.
+- `RenderGraph` receives an explicit authorization subject and asks R7's
+  IdentityAccess `GraphAccess` contract before the cache, the builder, the
+  mode-guarded `rrd_graph_graph_options` hook and the transport. R7 intentionally
+  reorders owned proxy-session creation: today the outer wrapper opens it
+  before the inner access check (`lib/rrd.php:2123-2131`, `2252`). A native
+  fail-before gate must prove zero session initialization and commands on
+  denial after the change, while retaining admitted-call ownership/cleanup
+  and preserving caller-supplied sessions.
+  The wrapper's trusted nonpositive user argument maps to an explicit legacy
+  bypass; request adapters accept positive identities only. CSV skips the hook
+  and business hours, as it does today. Print-source returns the existing
+  formatted source output without executing a final render or writing the
+  cache. All eligible rendered formats, including SVG and `graphv`, retain
+  cache reads/writes with #705's distinct format-aware key.
+
+The hook receives six fields: three command strings plus `graph_id`, `start`
+and `end`. Thold reads all three context fields to select thresholds and VRULE
+ranges; the port and adapter preserve their names, values and types. R0/R7
+contract gates compare the full payload and exercise a graph/window consumer.
+Through 1.3
+an adapter serializes the builder's explicit sections into those strings exactly
+as today, without inferring boundaries from a flat command. The hook returns
+`HookedGraphSections` with three post-hook strings, its returned start/end and
+an explicit empty-result state. `RenderGraph` applies captured-context Domain
+business hours to those sections; only then does the pure final assembler join
+them once into `LegacySerializedGraphCommand`. The hook adapter does neither
+shading nor final assembly. Post-hook bytes are never parsed back into arguments;
+transport framing and rejection checks remain. The image cache is a port that `RenderGraph` calls before reading anything, not a
+decorator around `RrdTransport`: a hit today skips the definition queries,
+`rrdtool info` and percentile fetches, and the transport never sees the
+viewer. [Graph rendering pipeline](graphing-render-pipeline.md) has the
+evidence, the order of the moves and the callers outside `lib/`.
+
+## RenderContext
+
+A render reads viewer and site state from 50 places: session values, cookies,
+environment variables, globals and settings, listed with their lines in
+[Graph rendering pipeline](graphing-render-pipeline.md#inputs-read-today).
+`RenderContext` gathers them once per request: theme and palette, colour mode,
+the `GraphFontProfile` from PR #710, time zone, date format, locale, and site
+graph settings such as the watermark and business hours. `GraphRequest` holds
+what the caller asks for: graph, archive, window, size, thumbnail, output
+format and mode. The legacy factory reads the session and cookies; nothing
+inside the pipeline does. The factory applies the browser zone only when both
+site and user `client_timezone_support` settings permit it; otherwise it keeps
+the existing PHP zone and `TZ`. Cached `sess_user_config_array` values retain
+precedence over stored viewer settings. Web `sess_config_array` and CLI
+`config_options_array` retain the existing site-cache precedence and forced-read
+bypass; R0 covers values that differ from storage. Interface-speed facts preserve SNMP
+ifHighSpeed/ifSpeed precedence and the site `default_interface_speed` fallback;
+empty data-source paths retain the extended-path naming settings and persistence
+boundary described above. R0 characterizes each of these paths.
+
+The request factory captures the effective output format before the cache key
+is built. Existing image/JSON adapters keep their narrow graph-format query
+when no URL override is supplied; other legacy callers resolve equivalent
+metadata at that adapter boundary. Cache keys and response content types use
+the same resolved format; the full graph definition remains a miss-only read. The detailed
+plan records explicit SVG override mismatch and render-triggered Boost system-zone changes as prerequisite P0
+corrections before R0/R1, implemented at the current procedural cache/update
+boundaries in `lib/boost.php` and metadata boundaries in `lib/rrd.php`, with
+native fixtures in `tests/Fixtures/rrd-characterization.php` and
+`tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`. P0 needs no R7 adapter;
+the SVG correction additionally changes the existing GraphOptionsGenerator and
+image/JSON adapters, with native generator/response regressions; the current
+svg+xml override is ignored on stored PNG graphs, so only the separately
+reviewed affected goldens change. R7 later preserves that verified behavior. Explicit PNG is already initialized at the top of
+the frozen JSON adapter and remains a compatibility characterization case. Native
+regressions must demonstrate the defects and separately reviewed fixes before
+updating only their affected goldens; later migration slices preserve the
+corrected output. Boost gates include no/applied/refused samples and later
+metadata updates, with both timezone settings enabled and either disabled.
+Pending-sample configuration includes maximum records per select and update
+string length; R0/R7 pin selection/flush boundaries and retained-sample outcomes.
+R1's legacy request factory resolves validated theme overrides through
+`LegacyGraphThemeProfileResolver` into `GraphRequest.commandTheme`, an
+immutable `GraphThemeProfile`. The builder receives resolved palette/border/fonts;
+Infrastructure owns theme-file reads and existing default, colour-mode and font
+precedence. R0 additionally characterizes invalid/unavailable session/site/user viewer-theme
+choices against the installed `$themes` allowlist and `main.css` availability,
+preserving fallback identity in context fingerprints. R0/R1/R2 include override/fallback arguments, cache isolation and
+warm-cache cost gates, retaining the viewer profile for error output.
+The render instant is captured immediately after authorization, before cache
+and pending-sample work, and remains the single instant in RenderFacts even
+when that work crosses a time boundary. These fixes and tests are proposed;
+this PR changes documentation only.
+
+`RenderGraph` invokes an Application `GraphOptionsHook` port implemented by the
+legacy hook adapter. It returns Domain `RenderResult` outcomes for source HTML,
+real-time output, CSV payload, error images, file-export completion, missing
+graph and access-denied outcomes. The wrapper preserves exact `0`, `false`
+and `GRAPH ACCESS DENIED` scalar mappings. After the hook, R2's Domain
+`BusinessHours` consumes the captured instant, viewer zone and six site
+settings, using the hook-returned window without rereading globals; CSV
+bypasses both operations. Every outcome that reaches
+percentile/summation fact collection carries metadata updates, since those
+assignments precede mode dispatch (`lib/rrd.php:2596-2614`, `3172`). The legacy
+wrapper applies updates to caller-owned by-reference `$xport_meta` for all
+modes, preserving unrelated entries; early returns before collection leave
+it unchanged, and later failures retain completed updates. Native parity
+gates include non-CSV print-source with existing metadata, early/failure
+outcomes, CSV payload values and the `graph_xport.php` consumers. Infrastructure output adapters retain the
+existing filesystem permissions/failure handling and GD/theme behavior.
+Application imports none of those implementations. R7 adds Graphing's
+`Application/Port/RenderClock` and `Infrastructure/Legacy/LegacyRenderClock`;
+the procedural wrapper supplies the existing clock through a Closure callback,
+so Graphing has no cross-module Platform Application import. Encoding/transport
+adapters translate their internal exception into
+`Domain/Render/UnrepresentableGraphArgument`; the use case catches only its own
+Domain failure and preserves mode-specific output outcomes. R7's file and gate
+lists include both contracts, zero/one clock calls, native rejection through
+adapters, no submission/cache write after failure and architecture checks.
+
+The Boost cache key becomes the hash of the context plus the request, which
+covers every input PR #705 keys by. The graph tables carry no revision, so a
+definition revision would be a hash of the loaded definition, and is adopted
+only if its cost on a cache hit passes the timing gate.
+
+
+Before Symfony route cutover, R10a implements the isolated CLI legacy bridge
+specified in the detailed plan: the child wires the same R7 use case and
+native access, hook, path and Boost adapters. Symfony entry points keep their
+existing bootstrap architecture. Actual-child and route gates verify current
+authorization/revocation, plugin and path persistence, context/output parity,
+and bounded process failures before R10b enables routes. These bridge classes
+and gates are planned work, not implementations in this documentation PR.
+
 ## Constraints
 
 Collector-side creation and updates run on remote collectors and depend on
@@ -165,3 +369,6 @@ has moved. Record each move below so a fix can be ported to the right class.
 
 | Legacy function | Graphing class |
 | --- | --- |
+| `rrd_function_process_graph_options()` | `GraphOptionsGenerator::build()` |
+| `encrypt()`, `decrypt()` | `ProxyCipher` |
+| `rrdtool_pipe_quote()` | `PipeEncoder::quote()` |
