@@ -64,7 +64,7 @@ final class VdefActionController
                 if ($form->isValid()) {
                     try {
                         $data = $form->getData();
-                        $submittedIds = json_decode((string) $data['selection'], true, 8, JSON_THROW_ON_ERROR);
+                        $submittedIds = json_decode((string) $data['selection'], false, 8, JSON_THROW_ON_ERROR);
                         $submittedRevisions = json_decode((string) $data['revisions'], true, 8, JSON_THROW_ON_ERROR);
                         if (self::ids($submittedIds) !== $ids || $submittedRevisions !== $revisions) {
                             throw new \InvalidArgumentException('The selected VDEFs changed. Reload the confirmation.');

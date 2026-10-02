@@ -65,7 +65,7 @@ final class PaletteColorDeleteController
             if ($form->getExtraData() !== []) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'palette')));
             }
-            $selected = json_decode((string) $form->get('selection')->getData(), true);
+            $selected = json_decode((string) $form->get('selection')->getData(), false, 8);
             if (!is_array($selected) || $selected !== $ids) {
                 $form->addError(new FormError($translator->trans('The selected Colors changed. Reload before continuing.', [], 'palette')));
             }
