@@ -184,6 +184,7 @@ def main():
         'missing-palette-handoff-check': 'Incomplete Symfony integration',
         'missing-palette-concurrent-auth': 'Incomplete Symfony integration',
         'missing-palette-write-guards': 'Incomplete Symfony integration',
+        'missing-palette-preference-guards': 'Incomplete Symfony integration',
         'missing-palette-review-check-0': 'Incomplete Symfony integration',
         'missing-palette-review-check-1': 'Incomplete Symfony integration',
         'missing-palette-review-check-2': 'Incomplete Symfony integration',
@@ -270,6 +271,8 @@ def main():
                 evidence['checks'].remove(checks[int(case.removeprefix('missing-palette-selection-check-'))])
             elif case == 'missing-palette-write-guards':
                 evidence['checks'].remove('palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
+            elif case == 'missing-palette-preference-guards':
+                evidence['checks'].remove('palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
             elif case == 'missing-palette-concurrent-auth':
                 evidence['checks'].remove('two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
             elif case == 'palette-sql-probe-hash':

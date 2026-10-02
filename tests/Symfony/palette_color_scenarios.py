@@ -197,8 +197,10 @@ def verify_palette_colors(h, s, uid, check):
     check(sql_probe['exit'] == 0 and sql_probe['stdout'] == 'PALETTE_SILENT_SQL_OK' and sql_probe['stderr'] == '',
           'silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes')
     guard_probe = h.command('php', '-r', _mariadb_palette_write_guard_probe(uid))
-    check(guard_probe['exit'] == 0 and guard_probe['stdout'] == 'PALETTE_WRITE_GUARDS_OK' and guard_probe['stderr'] == '',
+    check(guard_probe['exit'] == 0 and guard_probe['stdout'] == 'PALETTE_WRITE_GUARDS_OK|PALETTE_PREFERENCE_GUARDS_OK' and guard_probe['stderr'] == '',
           'palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
+    check(guard_probe['stdout'].endswith('|PALETTE_PREFERENCE_GUARDS_OK'),
+          'palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
     auth_probe = h.command('php', '-r', _mariadb_palette_authorization_probe(uid))
     check(auth_probe['exit'] == 0 and auth_probe['stdout'] == 'PALETTE_CONCURRENT_AUTHORIZATION_OK' and auth_probe['stderr'] == '',
           'two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
@@ -361,7 +363,67 @@ if ($db->inTransaction() || $query->fetch(PDO::FETCH_NUM) !== ['owned after read
 }
 $db->prepare('DELETE FROM colors WHERE id=?')->execute([$id]);
 if ((int)$db->query('SELECT COUNT(*) FROM colors')->fetchColumn() !== $count) { throw new RuntimeException('Caller rollback or fixture cleanup changed prior rows.'); }
-echo 'PALETTE_WRITE_GUARDS_OK';'''
+$preferences = new Kadupul\Graphing\Infrastructure\Legacy\LegacyPaletteColorPreferences($access,$connection,$installation);
+$readPreference = static function() use ($db,$actorId): array|false {
+    $query = $db->prepare("SELECT value FROM settings_user WHERE user_id=? AND name='palette_colors_filters'");
+    $query->execute([$actorId]);
+    return $query->fetch(PDO::FETCH_NUM);
+};
+$beforePreference = $readPreference();
+try {
+    foreach (['settings_user','settings','user_auth','user_auth_realm','user_auth_group','user_auth_group_members','user_auth_group_realm'] as $table) {
+        $db->exec('CREATE TEMPORARY TABLE `'.$table.'` (guard_fixture INT) ENGINE=MyISAM');
+        try {
+            $denied = false;
+            try { $preferences->save(['filter'=>'must not write']); }
+            catch (RuntimeException $error) { $denied = $error->getMessage() === 'Filter preferences require transactional tables: '.$table; }
+            if (!$denied || $db->inTransaction()) { throw new RuntimeException('Preference storage shadow was accepted.'); }
+        } finally { $db->exec('DROP TEMPORARY TABLE `'.$table.'`'); }
+        if ($readPreference() !== $beforePreference) { throw new RuntimeException('Preference engine refusal changed persistent values.'); }
+    }
+    foreach ([2,'1',null] as $collector) {
+        $changed = new class($config,$collector) implements Kadupul\Platform\Contract\LegacyConfiguration {
+            public function __construct(private array $config,private mixed $collector) {}
+            public function values(): array { return array_replace($this->config,['collector_id'=>$this->collector]); }
+        };
+        $remotePreferences = new Kadupul\Graphing\Infrastructure\Legacy\LegacyPaletteColorPreferences($access,$connection,$changed);
+        $denied = false;
+        try { $remotePreferences->save(['filter'=>'must not write']); }
+        catch (RuntimeException $error) { $denied = $error->getMessage() === 'Filter preferences require the primary collector.'; }
+        if (!$denied || $db->inTransaction() || $readPreference() !== $beforePreference) {
+            throw new RuntimeException('Remote preference save accepted or changed persistent values.');
+        }
+    }
+    foreach (['pdo','native'] as $owner) {
+        $owner === 'pdo' ? $db->beginTransaction() : $db->exec('START TRANSACTION');
+        try {
+            $db->prepare("REPLACE INTO settings_user(user_id,name,value) VALUES (?,'palette_colors_filters',?)")->execute([$actorId,'caller owned']);
+            $denied = false;
+            try { $preferences->save(['filter'=>'must not write']); }
+            catch (RuntimeException $error) { $denied = $error->getMessage() === 'Filter preference transaction unavailable.'; }
+            if (!$denied || !$db->inTransaction() || $readPreference() !== ['caller owned']) {
+                throw new RuntimeException('Preference save lost caller-owned work.');
+            }
+        } finally { $db->rollBack(); }
+        if ($readPreference() !== $beforePreference) { throw new RuntimeException('Preference caller rollback did not restore prior bytes.'); }
+    }
+    $db->exec('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED');
+    $preferences->save(['filter'=>'preference guard admitted']);
+    $saved = $readPreference();
+    if ($db->inTransaction() || !is_array($saved)
+        || json_decode($saved[0],true,flags:JSON_THROW_ON_ERROR) !== ['filter'=>'preference guard admitted']) {
+        throw new RuntimeException('Primary preference save did not commit confirmed values.');
+    }
+} finally {
+    if ($db->inTransaction()) { $db->rollBack(); }
+    if (is_array($beforePreference)) {
+        $db->prepare("REPLACE INTO settings_user(user_id,name,value) VALUES (?,'palette_colors_filters',?)")->execute([$actorId,$beforePreference[0]]);
+    } else {
+        $db->prepare("DELETE FROM settings_user WHERE user_id=? AND name='palette_colors_filters'")->execute([$actorId]);
+    }
+}
+if ($readPreference() !== $beforePreference) { throw new RuntimeException('Preference fixture failed to restore prior bytes.'); }
+echo 'PALETTE_WRITE_GUARDS_OK|PALETTE_PREFERENCE_GUARDS_OK';'''
 
 
 def _mariadb_palette_authorization_probe(actor_id):
