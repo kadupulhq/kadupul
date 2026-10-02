@@ -268,23 +268,23 @@ jobs:
       - name: Install PHP for native process-boundary self-tests
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
-          php-version: '8.4.25'
+          php-version: '8.4'
           extensions: posix
           coverage: none
-      - name: Register installed PHP with mise
+      - name: Register actual installed PHP with mise
         run: |
-          php -r 'exit(PHP_VERSION === "8.4.25" ? 0 : 1);'
+          fixture_php_version=$(php -r 'echo PHP_VERSION;')
+          php -r 'exit(PHP_MAJOR_VERSION === 8 && PHP_MINOR_VERSION === 4 ? 0 : 1);'
           mkdir -p "$RUNNER_TEMP/offline-fixture-php/bin"
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/offline-fixture-php/bin/php"
-          mise link php@8.4.25 "$RUNNER_TEMP/offline-fixture-php"
+          mise link "php@$fixture_php_version" "$RUNNER_TEMP/offline-fixture-php"
+          echo "KADUPUL_OFFLINE_FIXTURE_PHP_VERSION=$fixture_php_version" >> "$GITHUB_ENV"
       - name: Verify observation normalization and failure reporting
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
       - name: Verify offline build runtime selection
         run: mise exec node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
       - name: Verify offline guest fixture mutations
-        env:
-          KADUPUL_OFFLINE_FIXTURE_PHP_VERSION: '8.4.25'
-        run: mise exec php@8.4.25 python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
       - name: Restore pinned compatibility libraries
         run: php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters
