@@ -292,6 +292,8 @@ jobs:
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/selftest.py
       - name: Verify offline build runtime selection
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
+      - name: Verify offline guest fixture mutations
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
       - name: Restore pinned compatibility libraries
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" -- php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters
