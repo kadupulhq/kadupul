@@ -41,7 +41,16 @@ final class LegacyAggregateSaveRefusalTest extends TestCase
         self::assertSame(0, $trace['propagation']);
         self::assertSame(0, $trace['generation']);
         self::assertCount(1, $trace['messages']);
-        self::assertSame('aggregate_items_save_failed', $trace['messages'][0][0]);
-        self::assertStringContainsString('Other graph settings may already have been saved', $trace['messages'][0][1]);
+        if ($page === 'graphs.php') {
+            self::assertSame('aggregate_regeneration_failed', $trace['messages'][0][0]);
+            self::assertSame('Aggregate graph creation could not be confirmed. Review the graph settings before retrying.', $trace['messages'][0][1]);
+            self::assertSame([['selected_items' => [11], 'before' => 0, 'after' => 0, 'result' => false]], $trace['creation']);
+            self::assertSame([[0, 1, 'Aggregate', 0]], $trace['graph_creation_arguments']);
+            self::assertSame([false], $trace['mutation_results']);
+        } else {
+            self::assertSame('aggregate_items_save_failed', $trace['messages'][0][0]);
+            self::assertStringContainsString('Other graph settings may already have been saved', $trace['messages'][0][1]);
+            self::assertSame([], $trace['creation']);
+        }
     }
 }

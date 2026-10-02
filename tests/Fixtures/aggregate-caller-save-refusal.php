@@ -11,7 +11,10 @@ require $root . '/include/global_constants.php';
 $page = $argv[1];
 $source = $argv[2] ?? $root . '/' . $page;
 $function = $page === 'aggregate_templates.php' ? 'aggregate_form_save' : ($page === 'graphs.php' ? 'form_actions' : 'form_save');
-$trace = ['messages' => [], 'items' => [], 'propagation' => 0, 'generation' => 0];
+// This fixture checks response/delegation handoff. The native outer probe
+// separately verifies real SQL atomicity and rollback on both engines.
+$trace = ['messages' => [], 'items' => [], 'propagation' => 0, 'generation' => 0,
+    'creation' => [], 'graph_creation_arguments' => [], 'mutation_results' => []];
 register_shutdown_function(static function (): void {
     echo json_encode($GLOBALS['trace'], JSON_THROW_ON_ERROR);
 });
@@ -95,7 +98,30 @@ function aggregate_graph_templates_graph_save(...$arguments)
 }
 function aggregate_graph_save(...$arguments)
 {
-    return 1;
+    $GLOBALS['trace']['graph_creation_arguments'][] = $arguments;
+    return 42;
+}
+function aggregate_graph_fetch_rows($sql, $parameters = [])
+{
+    return db_fetch_assoc_prepared($sql, $parameters);
+}
+function aggregate_graph_save_row($row, $table)
+{
+    return sql_save($row, $table);
+}
+function aggregate_graph_mutation(callable $operation): bool
+{
+    $result = $operation();
+    $GLOBALS['trace']['mutation_results'][] = $result;
+    return $result === true;
+}
+function api_aggregate_create_from_request(array $selected_items, int &$local_graph_id): bool
+{
+    $before = $local_graph_id;
+    $result = fixture_actual_aggregate_create_from_request($selected_items, $local_graph_id);
+    $GLOBALS['trace']['creation'][] = ['selected_items' => $selected_items,
+        'before' => $before, 'after' => $local_graph_id, 'result' => $result];
+    return $result;
 }
 function sanitize_unserialize_selected_items($value)
 {
@@ -127,5 +153,15 @@ function snmpagent_graphs_action_bottom(...$arguments)
     throw new RuntimeException('Post-refusal SNMP propagation');
 }
 eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'array_rekey'));
+$aggregateSource = file_get_contents($root . '/lib/aggregate.php');
+if (!is_string($aggregateSource)) throw new RuntimeException('Cannot read the actual aggregate caller.');
+eval(test_php_function_source($aggregateSource, 'aggregate_graph_validate_request_items'));
+// Rename only the fixed first-party entry point to observe its by-reference
+// result without replacing its implementation or invoking it a second time.
+eval(str_replace(
+    'function api_aggregate_create_from_request(',
+    'function fixture_actual_aggregate_create_from_request(',
+    test_php_function_source($aggregateSource, 'api_aggregate_create_from_request')
+));
 eval(test_php_function_source(file_get_contents($source), $function));
 $function();
