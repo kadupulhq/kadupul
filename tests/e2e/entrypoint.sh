@@ -178,7 +178,15 @@ for plugin in thold monitor; do
     log "seeded plugin_config row for ${plugin} (status=1, installed)"
 done
 
-# 6. Make Kadupul's writable directories world-writable. CI checks out the
+# 6. Symfony builds its production container on the first FPM request. A fresh
+# checkout has no var/cache tree, and the runner's UID differs from www-data.
+# Prepare private runtime storage before FPM starts; keep it inaccessible to
+# other users rather than granting world-write access.
+mkdir -p "${CACTI_ROOT}/var/cache" "${CACTI_ROOT}/var/log"
+chown -R www-data:www-data "${CACTI_ROOT}/var"
+chmod -R u=rwX,g=rX,o= "${CACTI_ROOT}/var"
+
+# Make Kadupul's legacy writable directories world-writable. CI checks out the
 #    repo as the runner user; the php-fpm container runs as www-data. The
 #    bind mount preserves host UIDs, so without this Kadupul dies on its
 #    very first log line with "System log file is not available for
