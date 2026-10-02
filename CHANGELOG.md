@@ -8,6 +8,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Resolve JavaScript and CSS include paths through Symfony Filesystem while retaining the legacy helper's search order, relative-path rules, and missing-file notifications. Closes #489.
 - Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
+- Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
