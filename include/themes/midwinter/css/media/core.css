@@ -106,10 +106,6 @@ fieldset {
     overflow-y: hidden !important;
 }
 
-#main > *:not(iframe) {
-    #margin: 1rem 0.5rem 1rem 1rem;
-}
-
 /* icons fontawesome */
 .fa, .fas, .far, .fal, .fad, .fab {
     color: var(--text-color-highlight);
@@ -494,7 +490,6 @@ label.ui-state-hover > span {
 
 .graphDrillDown {
     vertical-align: top;
-    align-self: left;
     z-index: 4;
     padding: 3px;
     height: 100%;
@@ -776,15 +771,8 @@ label.ui-state-hover > span {
     color: var(--text-color-light);
 }
 
-.even-alternate {
-    #background: none repeat scroll 0 0 #E7E9F2;
-    #background-color: #E7E9F2;
-    #box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
-}
-
 .even-alternate.tableRow {
     color: var(--text-color-light);
-    #background: none repeat scroll 0 0 #FFFFFF;
 }
 
 .tableRow {
@@ -1178,10 +1166,6 @@ legend, .loginHeading {
     padding: 0 !important;
 }
 
-.spikekillData, .spikekillData td {
-    #border: 1px solid #999;
-}
-
 .spikekillNote {
     padding: 1px;
 	margin: 0px;
@@ -1398,7 +1382,6 @@ legend, .loginHeading {
 
 .textHeaderDark {
     font-weight: var(--fw-semibold);
-    #color: var(--text-color-lighter);
 }
 
 .templateHeader {
@@ -1816,7 +1799,6 @@ table.cactiTable {
 }
 
 .popupBox {
-    #z-index: 2;
     position: absolute;
     padding: 0;
     display: none;
@@ -1919,7 +1901,7 @@ table.cactiTable {
 }
 
 .moveArrowNone {
-    padding-left: 8.75;
+    padding-left: 8.75px;
 }
 
 .action, .shiftArrow, .calendar {
@@ -2129,10 +2111,6 @@ div.submenu span {
 
 }
 
-#nav li a.active:not(.selected), .nav li a.active:not(.selected) {
-    #color: var(--text-color-navigation)!important;
-}
-
 #nav li a.active, #nav li a.active:hover, .nav li a.active, .nav li a.active:hover {
     color: var(--text-color-navigation-highlight) !important;
 }
@@ -2162,22 +2140,6 @@ tr.selectable {
 
 tr.selectable td {
     border-bottom: 1px solid var(--border-color-lowlight);
-}
-
-tr.selectable:first-child {
-    #border-left: 1px solid #3d3d3d;
-}
-
-tr.selectable td:first-child {
-    #border-left: 1px solid #3d3d3d;
-}
-
-tr.selectable td:last-child {
-    #border-right: 1px solid #3d3d3d;
-}
-
-tr.selectable:last-child td {
-    #border-bottom: 1px solid #3d3d3d;
 }
 
 tr.selectable:hover:not(.selected) {

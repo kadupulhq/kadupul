@@ -322,7 +322,11 @@ stylesheet. AssetMapper's exclusions apply to every mapped directory, so
 `include/vendor/` stays out as a whole rather than exposing Composer's files
 under a new URL. PHP files, the `include/config*`, `include/global*` and
 `include/plugins*` bootstrap names, `include/content/`, `include/fonts/` and
-`include/cacti_version` are never compiled. The original files under
+`include/cacti_version` are never compiled. Midwinter source `@import` URLs retain generated per-child SHA-256 queries for
+this uncompiled fallback. `npm run build` refreshes them recursively after a
+child stylesheet edit; commit those generated source URL changes with the edit.
+AssetMapper replaces these queries with its own digested paths when compiling.
+The original files under
 `include/themes/` and `include/js/` remain in place for plugins.
 
 The compile does not remove stale output or notice later source changes. Rerun
@@ -371,6 +375,8 @@ the same name across upgrades and rely on the `?md5` query.
 of the remaining legacy compatibility files. Composer's post-install/update
 step retrieves only those files from a pinned Kadupul source archive and checks
 every selected file before writing. Existing matching files need no download.
+A file listed under `patches` is checked against its archived source digest,
+receives its recorded replacements, and is then checked against its installed digest.
 PHPMailer, CSRF Magic and some old translation/SNMP/diff helpers contain local
 behavior or security fixes; this preserves those fixes without tracking their
 entire distributions. These snapshots are **not** independently updated or

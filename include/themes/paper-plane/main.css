@@ -22,8 +22,6 @@ body, table, tr, td, textarea {
 
 body {
 	margin: 0px;
-	background-color: white;
-	background-repeat: repeat-y;
 	overflow: hidden;
 	background: #1D1F21;
 	background-image: linear-gradient(#1D1F21,#000000);
@@ -59,6 +57,8 @@ th {
 	-ms-user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
+	border-right: 1px groove #9d9d9d;
+	height: 18px;
 }
 
 .tableRowGraph td span {
@@ -131,9 +131,6 @@ th .fa {
 	position: absolute;
 	right: 3px;
 	top: 50%;
-}
-
-pre {
 }
 
 form#tree_edit>div {
@@ -469,7 +466,7 @@ tr.selected .deletequery {
 }
 
 .deviceUnknownBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #0000ff;
@@ -490,7 +487,7 @@ tr.selected .deletequery {
 }
 
 .deviceErrorBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #750F7D;
@@ -525,7 +522,7 @@ tr.selected .deletequery {
 }
 
 .deviceAlertBg {
-	color: rgba(22,22,22,0.8);
+	color: #ffffff;
 	font-size: 10pt;
 	font-weight: bold;
 	background-color: #660000;
@@ -556,7 +553,6 @@ tr.selected .deletequery {
 	display: block;
 	padding: 4px 15px;
 	font-size: 12px;
-	font-weight: light;
 	color: #000000;
 	text-decoration: none;
 }
@@ -564,7 +560,7 @@ tr.selected .deletequery {
 .submenuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .menuoptions {
@@ -588,7 +584,6 @@ tr.selected .deletequery {
 	padding: 4px 15px;
 	font-family: Verdana,Arial,sans-serif;
 	font-size: 12px;
-	font-weight: light;
 	color: #000000;
 	text-decoration: none;
 }
@@ -596,7 +591,7 @@ tr.selected .deletequery {
 .menuoptions li a:hover {
 	display: block;
 	color: white;
-	background: #3b863b;
+	background: #2c722c;
 }
 
 .import_label {
@@ -667,6 +662,7 @@ tr.selected .deletequery {
 .tableRow {
 	color: white;
 	line-height: 20px;
+	padding: 4px 5px !important;
 }
 
 .odd {
@@ -704,10 +700,6 @@ tr.selected .deletequery {
 	background: none repeat scroll 0 0 #222;
 }
 
-.tableRow {
-	padding: 4px 5px !important;
-}
-
 .saveRow {
 	border-color: #222;
 	text-align: right;
@@ -724,7 +716,7 @@ tr.selected .deletequery {
 .saveRow > input.ui-button:hover {
 	color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .treeArea, .treeItemsArea {
@@ -747,10 +739,6 @@ tr.selected .deletequery {
 
 .graphItemGr1Alt2 {
 	background-color: #EEEEEE;
-}
-
-.graphItemGr1Cust {
-	background-color: #D5D5D5;
 }
 
 .graphItemGr2Alt1 {
@@ -797,12 +785,6 @@ tr.selected .deletequery {
 	width: 100%;
 	padding: 0px;
 	border-color: #222;
-	*/
-	box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
-	*/
-	background-color: #100000;
-	*/
-	background-image: -webkit-gradient(linear, left 0%, left 100%, from(#3a3b3c), to(#100000));
 	background-image: -webkit-linear-gradient(top, #3a3b3c 0%, #100000 100%);
 	background-image: -moz-linear-gradient(top, #3a3b3c 0%, #100000 100%);
 	background-image: linear-gradient(to bottom, #3a3b3c 0%, #100000 100%);
@@ -830,12 +812,6 @@ tr.selected .deletequery {
 	line-height: 25px;
 	width: 100%;
 	border-color: #222;
-	*/
-	box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
-	*/
-	background-color: #100000;
-	*/
-	background-image: -webkit-gradient(linear, left 0%, left 100%, from(#3a3b3c), to(#100000));
 	background-image: -webkit-linear-gradient(top, #3a3b3c 0%, #100000 100%);
 	background-image: -moz-linear-gradient(top, #3a3b3c 0%, #100000 100%);
 	background-image: linear-gradient(to bottom, #3a3b3c 0%, #100000 100%);
@@ -977,7 +953,7 @@ tr.selected .deletequery {
 .cactiLoginTable input.ui-button:hover {
 	color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .loginErrors, .logoutErrors {
@@ -1043,7 +1019,7 @@ legend, .loginHeading {
 	outline-style: none;
 	color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .actionsDropdownButton {
@@ -1065,7 +1041,7 @@ legend, .loginHeading {
 .actionsDropdownButton > input.ui-button:hover {
 	color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	background: #5CB85C;
+	background: #2c722c;
 }
 
 .actionsDropdownArrow {
@@ -1532,6 +1508,7 @@ tr>td.textInfo.right {
 
 .hostInfoHeader {
 	width: 100%;
+	background: none repeat scroll 0 0 #fbfdff;
 }
 
 @media screen and (max-width: 640px) {
@@ -1826,7 +1803,7 @@ tr>td.textInfo.right {
 	padding: 0px;
 	display: none;
 	overflow: auto;
-	color: white;
+	color: #222222;
 	background-color: #e5e5e5;
 	border: 1px solid #e5e5e5;
 }
@@ -1850,7 +1827,7 @@ tr>td.textInfo.right {
 }
 
 .textMenuHeader {
-	color: white;
+	color: #222222;
 	background-color: #9C9C9C;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
@@ -2004,10 +1981,6 @@ div#gtabs {
 	vertical-align: bottom;
 	outline-style: none;
 	border-bottom: 3px solid transparent;
-}
-
-.usertabs {
-	float: right !important;
 }
 
 .usertabs nav ul {
@@ -2195,11 +2168,6 @@ tr th:last-child .checkbox {
 	color: white;
 }
 
-th {
-	border-right: 1px groove #9d9d9d;
-	height: 18px;
-}
-
 th:last-child {
 	border-right: none !important;
 }
@@ -2241,10 +2209,6 @@ tr.selectable:hover:not(.selected) {
 
 tr.selected a {
 	color: #0000CD;
-}
-
-#nav li a.pic:hover:not(.selected) {
-
 }
 
 #nav li a.selected {
@@ -2314,7 +2278,7 @@ ul#nav {
 
 .ui-tooltip {
 	max-width: 500px;
-	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .ui-tooltip-content div.header {
@@ -2379,59 +2343,59 @@ tr#realtime td:first-child {
 }
 
 .logEmergency {
-	background-color: rgba(255, 6, 6, 0.4);
+	background-color: #6f1212;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logCritical {
-	background-color: rgba(242, 23, 33, 0.4);
+	background-color: #591018;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logAlert {
-	background-color: rgba(242, 25, 36, 0.4);
+	background-color: #591018;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logWarning {
-	background-color: rgba(255, 122, 48, 0.4);
+	background-color: #5c2a08;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logError {
-	background-color: rgba(251, 74, 20, 0.4);
+	background-color: #621a0e;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logNotice {
-	background-color: rgba(250, 253, 158, 0.4);
+	background-color: #414619;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logInfo {
-	background-color: rgba(204, 255, 204, 0.4);
+	background-color: #204520;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .logDebug {
-	background-color: rgba(205, 207, 196, 0.4);
+	background-color: #3e4038;
 	text-align: center;
 	width: 12.5%;
-	color: rgb(211, 211, 211);
+	color: #eeeeee;
 }
 
 .darkblue {
@@ -2472,10 +2436,6 @@ tr#realtime td:first-child {
 
 .dropdownMenu {
 	font-family: Verdana,Arial,sans-serif;
-}
-
-.hostInfoHeader {
-	background: none repeat scroll 0 0 #fbfdff;
 }
 
 .ui-autocomplete {
@@ -2620,10 +2580,6 @@ input:checked + .checkboxSlider:before {
 	margin-right: 10px;
 }
 
-.right {
-	text-align: right;
-}
-
 .radioSwitch {
 	position: relative;
 	display: inline-block;
@@ -2721,18 +2677,9 @@ td.center > table {
 	color: #FFFFFF !important;
 }
 
-.bb-chart {
-}
-
-.bb-chart-arc path {
-	fill: #A8A8A8;
-}
-
-.bb-tooltip {
-}
-
 .bb-legend-item {
 	fill: #A8A8A8;
+	font-size: 12px;
 }
 
 .bb-grid {
@@ -2848,10 +2795,6 @@ td.center > table {
 
 /*-- Select - Drag --*/
 /*-- Legend --*/
-.bb-legend-item {
-  font-size: 12px;
-}
-
 .bb-legend-item-hidden {
   opacity: 0.15;
 }
@@ -2900,7 +2843,6 @@ td.center > table {
 
 .bb-chart-arc .bb-gauge-value {
   fill: #000;
-  /*  font-size: 28px !important;*/
 }
 
 circle {
@@ -2921,7 +2863,7 @@ circle {
 	border: 1px solid #d3d3d3;
 	background: #111 !important;
 	font-weight: normal;
-	color: #8e8e8e;
+	color: #eeeeee;
 }
 
 /* The fill stays #111 on hover and focus, where the #212121 jQuery UI text measures 1.2:1. */
