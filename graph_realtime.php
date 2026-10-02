@@ -238,7 +238,7 @@ switch (get_request_var('action')) {
         } else {
             switch (strtolower(get_nfilter_request_var('image_format'))) {
                 case 'png':
-                    $graph_data_array['image_format'] = 'png';
+                    $gtype = 'png';
                     break;
                 case 'svg':
                     $gtype = 'svg+xml';

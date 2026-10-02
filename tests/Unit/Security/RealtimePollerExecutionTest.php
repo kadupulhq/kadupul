@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('realtime controller validates identifiers and uses shell-free poller arguments', function ($id, $step, $hash, $status, $expected, $action = 'init', $stepSource = 'setting') {
+test('realtime controller validates identifiers and uses shell-free poller arguments', function ($id, $step, $hash, $status, $expected, $action = 'init', $stepSource = 'setting', $imageFormat = null) {
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/realtime-exec-' . bin2hex(random_bytes(8));
     mkdir($dir . '/include', 0700, true);
@@ -36,7 +36,7 @@ function cacti_exec($binary, $args, &$output, $timeout) {
     $output = array('poller diagnostic must not leak into response');
     return $GLOBALS['status'];
 }
-function rrdtool_function_graph(...$args) { $GLOBALS['rendered'] = true; exit; }
+function rrdtool_function_graph(...$args) { $GLOBALS['rendered'] = true; $GLOBALS['format'] = $GLOBALS['graph_data_array']['image_format']; exit; }
 $config = array('base_path' => '/application path');
 $step = json_decode($argv[3], true);
 $status = (int) $argv[5];
@@ -44,11 +44,12 @@ $_SESSION = array('sess_user_id' => 42, 'sess_realtime_hash' => json_decode($arg
 $_REQUEST = array('action' => $argv[6], 'local_graph_id' => json_decode($argv[2], true));
 if ($argv[7] === 'request') $_REQUEST['ds_step'] = $step;
 if ($argv[7] === 'session') $_SESSION['sess_realtime_ds_step'] = $step;
+if ($argv[8] !== 'null') $_REQUEST['image_format'] = json_decode($argv[8], true);
 $called = false;
 $rendered = false;
 register_shutdown_function(function () {
     while (ob_get_level()) ob_end_clean();
-    echo json_encode(array('status' => http_response_code() ?: 200, 'called' => $GLOBALS['called'], 'rendered' => $GLOBALS['rendered']));
+    echo json_encode(array('status' => http_response_code() ?: 200, 'called' => $GLOBALS['called'], 'rendered' => $GLOBALS['rendered']) + (isset($_REQUEST['image_format']) ? array('format' => $GLOBALS['format'] ?? null) : array()));
 });
 require $argv[1] . '/graph_realtime.php';
 PHP;
@@ -62,7 +63,7 @@ PHP;
         $process = proc_open(
             array(PHP_BINARY, '-d', 'pcov.directory=' . $root,
                 '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root,
-                json_encode($id), json_encode($step), json_encode($hash), (string) $status, $action, $stepSource),
+                json_encode($id), json_encode($step), json_encode($hash), (string) $status, $action, $stepSource, json_encode($imageFormat)),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -78,7 +79,7 @@ PHP;
             throw new RuntimeException($stderr . $stdout);
         }
         expect(json_decode($stdout, true, 512, JSON_THROW_ON_ERROR))->toBe(array(
-            'status' => $expected, 'called' => $expected !== 400 && $action !== 'view', 'rendered' => $expected === 200 && $action !== 'view'));
+            'status' => $expected, 'called' => $expected !== 400 && $action !== 'view', 'rendered' => $expected === 200 && $action !== 'view') + ($imageFormat !== null ? array('format' => strtolower($imageFormat) === 'svg' ? 'svg+xml' : 'png') : array()));
         if ($coverage !== null) {
             foreach (glob($dir . '/*.coverage') as $file) {
                 $coverage->merge(unserialize(file_get_contents($file)));
@@ -95,6 +96,10 @@ PHP;
         rmdir($dir);
     }
 })->with(array(
+    array('7', '10', 'abc123', 0, 200, 'init', 'setting', 'png'),
+    array('7', '10', 'abc123', 0, 200, 'init', 'setting', 'PNG'),
+    array('7', '10', 'abc123', 0, 200, 'init', 'setting', 'svg'),
+    array('7', '10', 'abc123', 0, 200, 'init', 'setting', 'unexpected'),
     array('7', '10', 'abc_123-DEF', 0, 200),
     array('7', '1', str_repeat('a', 64), 0, 200),
     array('7', '120', 'abc123', 0, 200),

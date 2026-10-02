@@ -1,0 +1,20 @@
+<form action="data_queries.php" autocomplete="off" class="cactiFormStart" id="data_queries" method="post" name="data_queries">
+  <div class="cactiTable" id="data_queries_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Data Queries [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Data-Queries.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="data_queries_edit1_child">
+      <div class="formRow odd" id="row_name"><div class="formColumnLeft"><div class="formFieldName">Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A name for this data query.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="name" maxlength="100" name="name" off="" size="60" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_description"><div class="formColumnLeft"><div class="formFieldName">Description<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A description for this data query.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="description" maxlength="255" name="description" off="" size="80" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_xml_path"><div class="formColumnLeft"><div class="formFieldName">XML Path<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The full path to the XML file containing definitions for this data query.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="xml_path" maxlength="255" name="xml_path" off="" size="80" type="text" value="&lt;path_cacti&gt;/resource/"></div></div></div>
+      <div class="formRow even" id="row_data_input_id"><div class="formColumnLeft"><div class="formFieldName">Data Input Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the input method for this Data Query. This input method defines how data is collected for each Device associated with the Data Query.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="data_input_id" name="data_input_id"></select>
+        </div>
+        </div>
+      </div>
+      <div class="hidden formRow"><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="save_component_snmp_query" name="save_component_snmp_query" style="height:0px;" type="hidden" value="1"></div></div>
+    </div>
+  </div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="data_queries.php" type="button" value="Cancel"><input class="return ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Create"></td></tr>
+    </tbody>
+  </table>
+</form>
