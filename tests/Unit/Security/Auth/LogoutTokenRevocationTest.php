@@ -52,6 +52,7 @@ class CactiSecureHeaders { public static function getNonceAttribute() { return '
 register_shutdown_function(function () {
     $output = ob_get_clean();
     print json_encode(array('events' => $GLOBALS['events'], 'output' => $output, 'bound' => $GLOBALS['bound'] ?? null, 'cache_users' => $GLOBALS['cache_db']->query('SELECT DISTINCT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN)));
+    $GLOBALS['nativeChildCoverageMarkers'][] = 'logout-state-readback';
 });
 ob_start();
 PHP;
@@ -70,7 +71,7 @@ PHP;
 
     try {
         $process = proc_open(
-            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $action, $cookie === null ? '' : json_encode($cookie)), $coverage_dir),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $action, $cookie === null ? '' : json_encode($cookie)), $coverage_dir, child_coverage_registration(__FILE__, 'logout-token-revocation', array($action, $cookie), array('logout-state-readback'), array('logout.php'), array())),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir

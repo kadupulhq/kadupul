@@ -431,6 +431,7 @@ register_shutdown_function(function () use ($probe_dir): void {
         'page_continued' => $GLOBALS['probe']['page_continued'],
         'output' => $output,
     ));
+    $GLOBALS['nativeChildCoverageMarkers'][] = 'auth-entry-result-readback';
 });
 
 $config = array(

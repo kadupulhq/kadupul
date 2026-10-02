@@ -27,11 +27,12 @@ while (ob_get_level() > 0) {
     ob_end_clean();
 }
 $token = $argv[2] === 'ip' ? 'ip:' . csrf_hash('10.0.0.5') : 'sid:' . csrf_hash(session_id());
-echo json_encode(array('valid' => csrf_check_tokens($token)));
+echo json_encode(array('valid' => csrf_check_tokens($token)), JSON_THROW_ON_ERROR);
+$GLOBALS['nativeChildCoverageMarkers'][] = 'token-result-readback';
 PHP;
 
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'session.save_handler=files', '-d', 'session.save_path=' . sys_get_temp_dir(), '-r', $program, $root, $kind), $coverage_dir),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'session.save_handler=files', '-d', 'session.save_path=' . sys_get_temp_dir(), '-r', $program, $root, $kind), $coverage_dir, child_coverage_registration(__FILE__, 'ip-token', array($kind), array('token-result-readback'), array('include/csrf.php'), array())),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );

@@ -318,7 +318,7 @@ if (isset_request_var('ref')) {
     if (isset($ref_parts['user']) || isset($ref_parts['pass'])) {
         $valid = false;
     } elseif (!isset($ref_parts['host'])) {
-        $value = true;
+        $valid = true;
     } elseif (isset($ref_parts['host'])) {
         $server_addr = $_SERVER['SERVER_ADDR'];
         if (!filter_var($_SERVER['SERVER_NAME'], FILTER_VALIDATE_IP)) {

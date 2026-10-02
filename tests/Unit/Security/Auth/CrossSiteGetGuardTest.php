@@ -22,7 +22,7 @@ foreach (json_decode($argv[4], true) as $name => $value) {
     $_SERVER[$name] = $value;
 }
 parse_str($argv[3], $_REQUEST);
-register_shutdown_function(function () { echo http_response_code() ?: 200; });
+register_shutdown_function(function () { echo http_response_code() ?: 200; $GLOBALS['nativeChildCoverageMarkers'][] = 'response-status-readback'; });
 require $argv[1] . '/lib/html_utility.php';
 require $argv[1] . '/include/csrf.php';
 cacti_require_post_actions(array('save', 'update_data', 'changepassword'));
@@ -33,7 +33,7 @@ echo 'DISPATCHED:';
 PHP;
 
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $method, $query, json_encode($headers)), $coverage_dir),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $method, $query, json_encode($headers)), $coverage_dir, child_coverage_registration(__FILE__, 'cross-site-dispatch', array($method, $query, $headers), array('response-status-readback'), array('include/csrf.php', 'lib/html_utility.php'), array())),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -87,11 +87,11 @@ $_SERVER['REMOTE_ADDR'] = '192.0.2.20';
 $_SERVER += json_decode($argv[3], true);
 parse_str($argv[2], $_GET);
 $_REQUEST = $_GET;
-register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
+register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); $GLOBALS['nativeChildCoverageMarkers'][] = 'bootstrap-status-readback'; });
 require $argv[1] . '/include/global.php';
 echo 'DISPATCHED:';
 PHP;
-        $worker = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'session.save_path=' . $directory, '-r', $program, $directory, $query, json_encode($headers)), $coverage_dir), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $worker = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'session.save_path=' . $directory, '-r', $program, $directory, $query, json_encode($headers)), $coverage_dir, child_coverage_registration(__FILE__, 'cross-site-bootstrap', array($headers, $query, hash_file('sha256', $directory . '/include/global.php')), array('bootstrap-status-readback'), array('include/csrf.php'), array('include/global.php', 'include/runtime.php', 'include/cacti_version', 'include/global_constants.php', 'tests/Fixtures/force-https-native-database.php'))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -160,9 +160,9 @@ test('host comparison ignores ports and keeps bare IPv6 addresses whole', functi
     $root = dirname(__DIR__, 4);
     $program = '$config = array("include_path" => $argv[1] . "/include", "is_web" => false);'
         . 'require $argv[1] . "/lib/html_utility.php"; require $argv[1] . "/include/csrf.php";'
-        . 'echo csrf_strip_host_port($argv[2]) === $argv[3] ? "same" : "different";';
+        . 'echo csrf_strip_host_port($argv[2]) === $argv[3] ? "same" : "different"; $GLOBALS["nativeChildCoverageMarkers"][] = "host-comparison-readback";';
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-r', $program, $root, $server, $host), $coverage_dir),
+        child_coverage_command(array(PHP_BINARY, '-r', $program, $root, $server, $host), $coverage_dir, child_coverage_registration(__FILE__, 'host-comparison', array($server, $host), array('host-comparison-readback'), array('include/csrf.php'), array())),
         array(1 => array('pipe', 'w')),
         $pipes
     );

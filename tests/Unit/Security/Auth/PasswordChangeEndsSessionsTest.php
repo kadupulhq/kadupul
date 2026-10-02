@@ -128,6 +128,10 @@ $config = array('url_path' => '/kadupul/');
 $_SESSION = $GLOBALS['scenario']['session'];
 $GLOBALS['calls'] = array('redirect' => null);
 register_shutdown_function(function () {
+    $error = error_get_last();
+    if ($error === null || !in_array($error['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR), true)) {
+        $GLOBALS['nativeChildCoverageMarkers'] = array('password-page-completed');
+    }
     print json_encode(array('session' => $_SESSION, 'calls' => $GLOBALS['calls'], 'remember_rows' => $GLOBALS['remember_db']->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn()));
 });
 $_COOKIE['cacti_remembers'] = '42,0,before-upgrade';
@@ -161,7 +165,7 @@ PHP;
     try {
         $pipes = array();
         $process = proc_open(
-            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require ' . var_export($root . '/auth_changepassword.php', true) . ';'), $coverage_dir),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require ' . var_export($root . '/auth_changepassword.php', true) . ';'), $coverage_dir, child_coverage_registration(__FILE__, 'password-session', array($session, $realm), array('password-page-completed'), array('auth_changepassword.php'), array('auth_changepassword.php'))),
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $work

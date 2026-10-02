@@ -18,7 +18,7 @@ $config = array('include_path' => $argv[1] . '/include', 'is_web' => false);
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST['__csrf_magic'] = $_REQUEST['__csrf_magic'] = $argv[2];
 $_REQUEST['action'] = 'save';
-register_shutdown_function(function () { echo http_response_code() ?: 200; });
+register_shutdown_function(function () { echo http_response_code() ?: 200; $GLOBALS['nativeChildCoverageMarkers'][] = 'response-status-readback'; });
 require $argv[1] . '/lib/html_utility.php';
 require $argv[1] . '/include/csrf.php';
 cacti_require_post_request();
@@ -26,7 +26,7 @@ echo 'DISPATCHED:';
 PHP;
 
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'log_errors=0', '-r', $program, $root, $token), $coverage_dir),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'log_errors=0', '-r', $program, $root, $token), $coverage_dir, child_coverage_registration(__FILE__, 'token-format', array($token), array('response-status-readback'), array('include/csrf.php'), array())),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );

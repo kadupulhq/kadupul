@@ -293,7 +293,7 @@ abstract class LdapError
     const EmptyPassword         = 17;
     const Disabled              = 99;
 
-    public static function GetErrorDetails($returnError, $ldapConn = null, $ldapServer = '', $ldapError = 0)
+    public static function getErrorDetails($returnError, $ldapConn = null, $ldapServer = '', $ldapError = 0)
     {
         $error_num  = $returnError;
         $error_text = '';
@@ -461,12 +461,12 @@ class Ldap
         return true;
     }
 
-    public function ErrorHandler($level, $message, $file, $line, $context = [])
+    public function errorHandler($level, $message, $file, $line, $context = [])
     {
         return true;
     }
 
-    public function SetLdapHandler()
+    public function setLdapHandler()
     {
         /* drop out of cactis error handler */
         restore_error_handler();
@@ -477,7 +477,7 @@ class Ldap
         cacti_session_close();
     }
 
-    public function RestoreCactiHandler()
+    public function restoreCactiHandler()
     {
         /* drop out of ldaps error handler */
         restore_error_handler();
@@ -488,14 +488,14 @@ class Ldap
         cacti_session_start();
     }
 
-    public function RecordError($output, $section = 'LDAP')
+    public function recordError($output, $section = 'LDAP')
     {
         $logDN = empty($output['dn']) ? '' : (', DN: ' . $output['dn']);
         cacti_log($section . ': ' . $output['error_text'] . $logDN, false, 'AUTH');
         cacti_log($section . ': ' . $output['stack'], false, 'AUTH', $this->debug);
     }
 
-    public function Connect()
+    public function connect()
     {
         $output    = array();
         $ldap_conn = null;
@@ -657,7 +657,7 @@ class Ldap
         }
     }
 
-    public function Authenticate()
+    public function authenticate()
     {
         $output = array();
 
@@ -776,7 +776,7 @@ class Ldap
         return $output;
     }
 
-    public function GetMask()
+    public function getMask()
     {
         if (!defined('ENT_HTML401')) {
             return ENT_COMPAT;
@@ -785,7 +785,7 @@ class Ldap
         }
     }
 
-    public function Search()
+    public function search()
     {
         $output = array();
 
@@ -896,7 +896,7 @@ class Ldap
         return $output;
     }
 
-    public function Getcn()
+    public function getcn()
     {
         $output = array();
 

@@ -36,11 +36,17 @@ class CactiSecureHeaders {
     public static function getNonceAttribute() { return ''; }
     public static function getNonce() { return ''; }
 }
+ob_start();
 require $argv[1] . '/include/global_session.php';
+$rendered = ob_get_clean();
+echo $rendered;
+if (preg_match('/var refreshIsLogout=(\\w+);/', $rendered) && str_contains($rendered, "var refreshPage='")) {
+    $GLOBALS['nativeChildCoverageMarkers'][] = 'refresh-render-readback';
+}
 PHP;
 
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $root, $uri, json_encode($session), $script ?? parse_url($uri, PHP_URL_PATH)), $coverage_dir),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $root, $uri, json_encode($session), $script ?? parse_url($uri, PHP_URL_PATH)), $coverage_dir, child_coverage_registration(__FILE__, 'login-page-refresh', array($uri, $session, $script), array('refresh-render-readback'), array('include/global_session.php'), array())),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );

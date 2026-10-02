@@ -34,6 +34,10 @@ $config = array('url_path' => '/kadupul/');
 $_SESSION = array('sess_user_id' => '42', 'sess_user_credential' => hash('sha256', 'hash:Current1pass'));
 $GLOBALS['calls'] = array('redirect' => null, 'executed' => array(), 'messages' => array());
 register_shutdown_function(function () {
+    $error = error_get_last();
+    if ($error === null || !in_array($error['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR), true)) {
+        $GLOBALS['nativeChildCoverageMarkers'] = array('password-page-completed');
+    }
     print json_encode(array(
         'session' => $_SESSION,
         'calls' => $GLOBALS['calls'],
@@ -86,7 +90,7 @@ PHP;
     try {
         $pipes = array();
         $process = proc_open(
-            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require ' . var_export($root . '/auth_changepassword.php', true) . ';'), $coverage_dir),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require ' . var_export($root . '/auth_changepassword.php', true) . ';'), $coverage_dir, child_coverage_registration(__FILE__, 'password-lockout', $scenario, array('password-page-completed'), array('auth_changepassword.php'), array('auth_changepassword.php'))),
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $work
