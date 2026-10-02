@@ -2588,6 +2588,11 @@ function automation_execute_graph_template($host_id, $graph_template_id): bool
         if (test_data_sources($graph_template_id, $host_id)) {
             cacti_log('NOTE: Data Check Succeeded for - Device[' . $host_id . '], GT[' . $graph_template_id . ']', false, 'AUTOM8');
 
+            if (!graph_template_whitelist_check($graph_template_id)) {
+                cacti_log('NOTE: Device[' . $host_id . '], GT[' . $graph_template_id . '] Graph Creation Skipped - Whitelist check failure.', false, 'AUTOM8');
+                return true;
+            }
+
             $returnArray  = create_complete_graph_from_template($graph_template_id, $host_id, array(), $suggested_values);
             if (!automation_graph_result_exists($returnArray, $host_id, $graph_template_id)) {
                 return false;
@@ -2619,6 +2624,7 @@ function automation_execute_graph_template($host_id, $graph_template_id): bool
             return true;
         } else {
             cacti_log('NOTE: Device[' . $host_id . '], GT[' . $graph_template_id . '] Graph not added due to invalid data source output.', false, 'AUTOM8');
+            return true;
         }
     } else {
         cacti_log('NOTE: Device[' . $host_id . '], GT[' . $graph_template_id . '] Graph not added due to no default value for overridable field.', false, 'AUTOM8');
@@ -2889,6 +2895,11 @@ function create_dq_graphs($host_id, $snmp_query_id, $rule): bool
 
             $suggested_values = array();
             if (test_data_sources($graph_template_id, $host_id, $rule['snmp_query_id'], $snmp_query_array['snmp_index'])) {
+                if (!graph_template_whitelist_check($graph_template_id)) {
+                    cacti_log('NOTE: Device[' . $host_id . '], GT[' . $graph_template_id . '], DQ[' . $rule['snmp_query_id'] . '], Index[' . $snmp_query_array['snmp_index'] . '], Rule[' . $rule['id'] . '] Graph Creation Skipped - Whitelist check failure.', false, 'AUTOM8');
+                    continue;
+                }
+
                 $return_array = create_complete_graph_from_template($graph_template_id, $host_id, $snmp_query_array, $suggested_values);
                 if (!automation_graph_result_exists($return_array, $host_id, $graph_template_id, $snmp_query_array)) {
                     return false;
@@ -2925,7 +2936,7 @@ function create_dq_graphs($host_id, $snmp_query_id, $rule): bool
                 }
             } else {
                 cacti_log('NOTE: Device[' . $host_id . '], GT[' . $graph_template_id . '], DQ[' . $rule['snmp_query_id'] . '], Index[' . $snmp_query_array['snmp_index'] . '], Rule[' . $rule['id'] . '] Graph not added due to invalid data returned.', false, 'AUTOM8');
-                return false;
+                continue;
             }
         }
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -32,6 +34,8 @@ final class RuleFixture
     public static PDO $db;
     public static string $kind;
     public static string $outcome;
+    /** @var list<array{template: int, query: int, index: string}> */
+    public static array $attempts = [];
 }
 function automation_function_with_pid($name)
 {
@@ -56,7 +60,17 @@ function automation_graph_automation_eligible($id)
 }
 function test_data_sources(...$args)
 {
+    if (RuleFixture::$outcome === 'invalid-first-index' && ($args[3] ?? '') === 'eth0') {
+        return false;
+    }
+    if (RuleFixture::$outcome === 'invalid-first-template' && count($args) === 2 && $args[0] === 5) {
+        return false;
+    }
     return RuleFixture::$outcome !== 'invalid-data';
+}
+function graph_template_whitelist_check($template)
+{
+    return RuleFixture::$outcome !== 'whitelist' && (RuleFixture::$outcome !== 'whitelist-first-template' || $template !== 5);
 }
 function push_out_host(...$args) {}
 function read_config_option($key)
@@ -90,11 +104,14 @@ function create_header_node(...$args)
 function db_fetch_assoc($sql, ...$args)
 {
     if (str_contains($sql, 'FROM graph_templates AS gt')) {
+        if (RuleFixture::$kind === 'mixed') {
+            return [['id' => 5], ['id' => 6]];
+        }
         return in_array(RuleFixture::$kind, ['graph', 'graph-tree'], true) ? [['id' => 5]] : [];
     }
     if (str_contains($sql, 'FROM automation_tree_rules')) {
         $graph = str_contains($sql, 'leaf_type=2');
-        if (($graph && RuleFixture::$kind === 'graph-tree') || (!$graph && RuleFixture::$kind === 'tree')) {
+        if (($graph && RuleFixture::$kind === 'graph-tree') || (!$graph && in_array(RuleFixture::$kind, ['tree', 'mixed'], true))) {
             return [['id' => 1, 'name' => 'fixture', 'tree_id' => 3, 'tree_item_id' => 0, 'leaf_type' => $graph ? 2 : 1, 'host_grouping_type' => 1]];
         }
         return [];
@@ -103,6 +120,9 @@ function db_fetch_assoc($sql, ...$args)
         return [['host_id' => 7]];
     }
     if (str_contains($sql, 'FROM (SELECT')) {
+        if (RuleFixture::$outcome === 'invalid-first-index') {
+            return [['snmp_index' => 'eth0'], ['snmp_index' => 'eth1']];
+        }
         return [['snmp_index' => 'eth0']];
     }
     throw new RuntimeException('Unexpected fixture query: ' . $sql);
@@ -110,7 +130,7 @@ function db_fetch_assoc($sql, ...$args)
 function db_fetch_assoc_prepared($sql, $parameters)
 {
     if (str_contains($sql, 'FROM snmp_query AS sq')) {
-        return RuleFixture::$kind === 'query' ? [['id' => 4]] : [];
+        return in_array(RuleFixture::$kind, ['query', 'mixed'], true) ? [['id' => 4]] : [];
     }
     if (str_contains($sql, 'FROM automation_graph_rules AS agr')) {
         return [['id' => 1, 'name' => 'fixture', 'snmp_query_id' => 4, 'graph_type_id' => 2]];
@@ -134,7 +154,7 @@ function db_fetch_cell_prepared($sql, $parameters)
         return 0;
     }
     if (str_contains($sql, 'FROM snmp_query_graph')) {
-        return 5;
+        return RuleFixture::$kind === 'mixed' ? 7 : 5;
     }
     if (str_contains($sql, 'FROM automation_graph_rules')) {
         return 'fixture';
@@ -146,33 +166,41 @@ function db_fetch_cell_prepared($sql, $parameters)
 }
 function create_complete_graph_from_template($template, $host, $query, &$suggested)
 {
+    RuleFixture::$attempts[] = ['template' => $template, 'query' => $query['snmp_query_id'] ?? 0, 'index' => $query['snmp_index'] ?? ''];
+    if (!graph_template_whitelist_check($template)) {
+        return false;
+    }
     if (RuleFixture::$outcome === 'false') {
         return false;
     }
     if (RuleFixture::$outcome === 'empty') {
         return [];
     }
+    $graphId = 8 + (int) RuleFixture::$db->query('SELECT COUNT(*) FROM graph_local')->fetchColumn();
+    $dataId = 11 + (int) RuleFixture::$db->query('SELECT COUNT(*) FROM data_local')->fetchColumn();
+    $itemId = 111 + (int) RuleFixture::$db->query('SELECT COUNT(*) FROM data_template_rrd')->fetchColumn();
     if (RuleFixture::$outcome !== 'unpersisted') {
-        RuleFixture::$db->prepare('INSERT INTO graph_local VALUES (8,?,?,?,?,?)')->execute([RuleFixture::$outcome === 'wrong-owner' ? 99 : $host, $template, $query['snmp_query_id'] ?? 0, $query['snmp_query_graph_id'] ?? 0, $query['snmp_index'] ?? '']);
+        RuleFixture::$db->prepare('INSERT INTO graph_local VALUES (?,?,?,?,?,?)')->execute([$graphId, RuleFixture::$outcome === 'wrong-owner' ? 99 : $host, $template, $query['snmp_query_id'] ?? 0, $query['snmp_query_graph_id'] ?? 0, $query['snmp_index'] ?? '']);
     }
     if (RuleFixture::$kind === 'graph-tree') {
         automation_hook_graph_create_tree(['id' => 8]);
     }
     if (RuleFixture::$outcome !== 'missing-data') {
-        RuleFixture::$db->prepare('INSERT INTO data_local VALUES (11,?,?,?)')->execute([
+        RuleFixture::$db->prepare('INSERT INTO data_local VALUES (?,?,?,?)')->execute([
+            $dataId,
             RuleFixture::$outcome === 'wrong-data-owner' ? 99 : $host,
             RuleFixture::$outcome === 'wrong-data-query' ? 999 : ($query['snmp_query_id'] ?? 0),
             RuleFixture::$outcome === 'wrong-data-index' ? 'other' : ($query['snmp_index'] ?? ''),
         ]);
     }
     if (RuleFixture::$outcome !== 'unlinked-data') {
-        RuleFixture::$db->exec('INSERT INTO data_template_rrd VALUES (111,11)');
-        RuleFixture::$db->prepare('INSERT INTO graph_templates_item VALUES (?,111)')->execute([RuleFixture::$outcome === 'other-graph-data' ? 99 : 8]);
+        RuleFixture::$db->prepare('INSERT INTO data_template_rrd VALUES (?,?)')->execute([$itemId, $dataId]);
+        RuleFixture::$db->prepare('INSERT INTO graph_templates_item VALUES (?,?)')->execute([RuleFixture::$outcome === 'other-graph-data' ? 99 : $graphId, $itemId]);
     }
     $id = match (RuleFixture::$outcome) {
-        'failed-data' => false, 'zero-data' => 0, 'negative-data' => -1, 'malformed-data' => '11oops', default => 11,
+        'failed-data' => false, 'zero-data' => 0, 'negative-data' => -1, 'malformed-data' => '11oops', default => $dataId,
     };
-    return ['local_graph_id' => 8, 'local_data_id' => [$id]];
+    return ['local_graph_id' => $graphId, 'local_data_id' => [$id]];
 }
 function fixture_tree_node($host, $graph, $parent, $rule)
 {
@@ -199,6 +227,7 @@ final class LegacyAutomationResultTest extends TestCase
     private mixed $configuration;
     protected function setUp(): void
     {
+        RuleFixture::$attempts = [];
         $this->configuration = $GLOBALS['config'] ?? null;
         $this->directory = sys_get_temp_dir() . '/automation-result-' . bin2hex(random_bytes(8));
         mkdir($this->directory . '/lib', 0700, true);
@@ -228,6 +257,39 @@ final class LegacyAutomationResultTest extends TestCase
         RuleFixture::$kind = $kind;
         RuleFixture::$outcome = $outcome;
         self::assertSame($expected, automation_update_device(7));
+        if (in_array($outcome, ['invalid-data', 'whitelist'], true)) {
+            self::assertSame([], RuleFixture::$attempts);
+            self::assertSame(0, (int) RuleFixture::$db->query('SELECT COUNT(*) FROM graph_local')->fetchColumn());
+            self::assertSame(0, (int) RuleFixture::$db->query('SELECT COUNT(*) FROM data_local')->fetchColumn());
+        }
+    }
+
+    public function testInvalidFirstQueryIndexDoesNotSuppressTheNextIndex(): void
+    {
+        RuleFixture::$kind = 'query';
+        RuleFixture::$outcome = 'invalid-first-index';
+        self::assertTrue(automation_update_device(7));
+        self::assertSame([['template' => 5, 'query' => 4, 'index' => 'eth1']], RuleFixture::$attempts);
+        self::assertSame(['eth1'], RuleFixture::$db->query('SELECT snmp_index FROM graph_local')->fetchAll(PDO::FETCH_COLUMN));
+        self::assertSame(['eth1'], RuleFixture::$db->query('SELECT snmp_index FROM data_local')->fetchAll(PDO::FETCH_COLUMN));
+    }
+
+    #[DataProvider('skippedTemplates')]
+    public function testSkippedFirstTemplatePreservesLaterGraphsQueriesAndTreeRules(string $outcome): void
+    {
+        RuleFixture::$kind = 'mixed';
+        RuleFixture::$outcome = $outcome;
+        self::assertTrue(automation_update_device(7));
+        self::assertSame([['template' => 6, 'query' => 0, 'index' => ''], ['template' => 7, 'query' => 4, 'index' => 'eth0']], RuleFixture::$attempts);
+        self::assertSame([6, 7], RuleFixture::$db->query('SELECT graph_template_id FROM graph_local ORDER BY id')->fetchAll(PDO::FETCH_COLUMN));
+        self::assertSame(2, (int) RuleFixture::$db->query('SELECT COUNT(*) FROM data_local')->fetchColumn());
+        self::assertSame(1, (int) RuleFixture::$db->query('SELECT COUNT(*) FROM graph_tree_items WHERE host_id=7')->fetchColumn());
+    }
+
+    public static function skippedTemplates(): iterable
+    {
+        yield 'invalid data is skipped before creation' => ['invalid-first-template'];
+        yield 'whitelist refusal is skipped before creation' => ['whitelist-first-template'];
     }
     public function testGraphTreeHookFailureCannotBeLostInThePluginDataContract(): void
     {
@@ -242,8 +304,8 @@ final class LegacyAutomationResultTest extends TestCase
         yield 'no applicable rules is complete' => ['none', 'valid', true];
         yield 'ineligible graph template is a successful no-op' => ['graph', 'ineligible', true];
         foreach (['graph', 'query'] as $kind) {
-            foreach (['false', 'empty', 'unpersisted', 'wrong-owner', 'invalid-data', 'failed-data', 'zero-data', 'negative-data', 'malformed-data', 'missing-data', 'wrong-data-owner', 'unlinked-data', 'other-graph-data', 'valid'] as $outcome) {
-                yield "$kind $outcome" => [$kind, $outcome, $outcome === 'valid'];
+            foreach (['false', 'empty', 'unpersisted', 'wrong-owner', 'invalid-data', 'whitelist', 'failed-data', 'zero-data', 'negative-data', 'malformed-data', 'missing-data', 'wrong-data-owner', 'unlinked-data', 'other-graph-data', 'valid'] as $outcome) {
+                yield "$kind $outcome" => [$kind, $outcome, in_array($outcome, ['valid', 'invalid-data', 'whitelist'], true)];
             }
         }
         yield 'query wrong data query' => ['query', 'wrong-data-query', false];
