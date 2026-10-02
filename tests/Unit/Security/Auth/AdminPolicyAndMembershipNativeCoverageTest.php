@@ -5,82 +5,76 @@
 
 use PHPUnit\Framework\TestCase;
 
-final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
+final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
 {
     private static bool $coverageEvidenceChecked = false;
 
-    /** @dataProvider realmCases */
-    public function testRealmSavesReplaceOnlyTheTargetPrincipalAndResetItsUsers(bool $group, array $realms, bool $self): void
+    /** @dataProvider grantCases */
+    public function testTypedGrantAddsPreserveOtherItemsTypesAndUsers(string $type, string $field, int $typeId, int $item, bool $error): void
     {
-        $state = $this->runController(array('group' => $group, 'operation' => 'realm', 'realms' => $realms, 'self' => $self));
-        $principal = $group ? 'group_id' : 'user_id';
+        $state = $this->runController(array('group' => false, 'operation' => 'add', 'type' => $type, 'field' => $field, 'item' => $item, 'error' => $error));
         $expected = array();
-        sort($realms);
-        foreach ($realms as $realm) {
-            $expected[] = array($principal => 42, 'realm_id' => $realm);
-        }
-        $expected[] = array($principal => 43, 'realm_id' => 9);
-        self::assertSame($expected, $state['realms']);
-        self::assertCount(12, $state['permissions']);
-        foreach ($state['reset'] as $account) {
-            if ($account['id'] === 42 || ($group && $account['id'] === 44)) {
-                self::assertGreaterThan(0, $account['reset_perms']);
-            } else {
-                self::assertSame(0, $account['reset_perms']);
-            }
-        }
-        if (!$group && $self) {
-            self::assertSame(array('sess_user_id' => 42), $state['session']);
-        } else {
-            self::assertSame($state['initial_session'], $state['session']);
-        }
-        self::assertSame(array(1), $state['messages']);
-        self::assertSame('', $state['output']);
-    }
-
-    public static function realmCases(): array
-    {
-        return array(
-            'user replaces realms' => array(false, array(21, 8), false),
-            'self user clears cached permissions' => array(false, array(21, 8), true),
-            'user removes all realms' => array(false, array(), false),
-            'group replaces realms' => array(true, array(21, 8), false),
-            'group removes all realms' => array(true, array(), false),
-        );
-    }
-
-    /** @dataProvider permissionCases */
-    public function testPermissionRemovalPreservesOtherTypesItemsAndPrincipals(bool $group, string $typeName, int $typeId): void
-    {
-        $state = $this->runController(array('group' => $group, 'operation' => 'remove', 'type' => $typeName));
-        $principal = $group ? 'group_id' : 'user_id';
-        $expected = array();
-        foreach (array(42 => array(100, 101), 43 => array(100)) as $id => $items) {
-            foreach ($items as $item) {
-                foreach (range(1, 4) as $type) {
-                    if ($id === 42 && $item === 100 && $type === $typeId) {
-                        continue;
-                    }
-                    $expected[] = array($principal => $id, 'item_id' => $item, 'type' => $type);
+        foreach (array(42 => array(100, 101), 43 => array(100)) as $principal => $items) {
+            foreach ($items as $existingItem) {
+                foreach (range(1, 4) as $existingType) {
+                    $expected[] = array('user_id' => $principal, 'item_id' => $existingItem, 'type' => $existingType);
                 }
             }
         }
+        if (!$error && $item === 102) {
+            array_splice($expected, 8, 0, array(array('user_id' => 42, 'item_id' => 102, 'type' => $typeId)));
+        }
         self::assertSame($expected, $state['permissions']);
-        self::assertSame(array(array($principal => 42, 'realm_id' => 7), array($principal => 43, 'realm_id' => 9)), $state['realms']);
-        self::assertSame(array(0, 0, 0, 0), array_column($state['reset'], 'reset_perms'));
-        self::assertSame($state['initial_session'], $state['session']);
+        self::assertSame(array(array('user_id' => 42, 'realm_id' => 7), array('user_id' => 43, 'realm_id' => 9)), $state['realms']);
+        foreach ($state['policies'] as $row) {
+            foreach (array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates') as $policy) {
+                self::assertSame(1, $row[$policy]);
+            }
+        }
         self::assertSame('', $state['output']);
     }
 
-    public static function permissionCases(): array
+    public static function grantCases(): array
     {
         $cases = array();
-        foreach (array(false, true) as $group) {
-            foreach (array('graph' => 1, 'tree' => 2, 'host' => 3, 'graph_template' => 4, 'unknown' => 0) as $name => $id) {
-                $cases[($group ? 'group ' : 'user ') . $name] = array($group, $name, $id);
-            }
+        foreach (array('graph' => array('graphs', 1), 'tree' => array('trees', 2), 'host' => array('hosts', 3), 'graph_template' => array('graph_templates', 4)) as $type => $details) {
+            $cases[$type . ' add'] = array($type, $details[0], $details[1], 102, false);
+            $cases[$type . ' replace'] = array($type, $details[0], $details[1], 100, false);
+            $cases[$type . ' existing error'] = array($type, $details[0], $details[1], 102, true);
         }
         return $cases;
+    }
+
+    /** @dataProvider policyCases */
+    public function testPolicyUpdateChangesOnlyPostedPoliciesForTheTarget(bool $group, array $policies): void
+    {
+        $state = $this->runController(array('group' => $group, 'operation' => 'policy', 'policies' => $policies));
+        foreach ($state['policies'] as $row) {
+            foreach (array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates') as $policy) {
+                self::assertSame($row['id'] === 42 ? ($policies[$policy] ?? 1) : 1, $row[$policy]);
+            }
+        }
+        self::assertCount(12, $state['permissions']);
+        self::assertSame('', $state['output']);
+    }
+
+    public static function policyCases(): array
+    {
+        return array(
+            'user subset' => array(false, array('policy_graphs' => 2, 'policy_hosts' => 2)),
+            'user all' => array(false, array('policy_graphs' => 2, 'policy_trees' => 2, 'policy_hosts' => 2, 'policy_graph_templates' => 2)),
+            'group subset' => array(true, array('policy_trees' => 2, 'policy_graph_templates' => 2)),
+            'group none' => array(true, array()),
+        );
+    }
+
+    public function testMembershipAndRealmQueriesUseBothPrincipalAndItem(): void
+    {
+        $state = $this->runController(array('group' => true, 'operation' => 'membership'));
+        self::assertSame(array('target_member' => 1, 'other_member' => 1, 'foreign_member' => 0, 'foreign_group' => 0, 'target_realm' => 1, 'foreign_realm' => 0, 'foreign_realm_owner' => 1, 'missing_group' => 0), $state['membership']);
+        self::assertCount(12, $state['permissions']);
+        self::assertSame(array(0, 0, 0, 0), array_column($state['reset'], 'reset_perms'));
+        self::assertSame('', $state['output']);
     }
 
     private function runController(array $scenario): array
