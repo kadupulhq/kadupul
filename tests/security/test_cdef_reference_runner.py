@@ -14,11 +14,26 @@ spec.loader.exec_module(runner)
 
 
 class CdefReferenceRunnerTest(unittest.TestCase):
-    def test_all_twenty_required_probes_exist_and_names_are_unique(self):
-        self.assertEqual(20, len(runner.CASES))
-        self.assertEqual(20, len({name for name, *_ in runner.CASES}))
+    def test_all_twenty_three_required_probes_exist_and_names_are_unique(self):
+        self.assertEqual(23, len(runner.CASES))
+        self.assertEqual(23, len({name for name, *_ in runner.CASES}))
         for _, probe, _, _ in runner.CASES:
             self.assertTrue((runner.ROOT / runner.probe_path(probe)).is_file())
+
+    def test_additive_generation_cases_preserve_all_original_native_cases(self):
+        original = {'api','callers','copy','delete','raw_waiter','production_waiter',
+                    'aggregate_replacement','version_marker','current_cli','fresh_cli',
+                    'upgrade_cli','web','failure_upgrade_web','failure_cli',
+                    'cli_collector_online','cli_collector_local','cli_collector_offline',
+                    'cli_marker_refusal','cli_marker_coercion','cli_marker_success'}
+        names = {name for name, *_ in runner.CASES}
+        self.assertEqual(original | {'aggregate_regeneration','aggregate_outer_callers','aggregate_generation_branches'}, names)
+        self.assertEqual(Path('tests/security/aggregate_generation_native_probe.php'), runner.probe_path('aggregate_generation'))
+        self.assertEqual(Path('tests/security/aggregate_generation_branches_native_probe.php'), runner.probe_path('aggregate_generation_branches'))
+        self.assertEqual(Path('tests/security/aggregate_outer_caller_native_probe.php'), runner.probe_path('aggregate_outer_callers'))
+        for name, _, _, installed in runner.CASES:
+            if name in {'aggregate_regeneration','aggregate_outer_callers','aggregate_generation_branches'}:
+                self.assertFalse(installed)
 
     def test_missing_native_dsn_refuses_before_creating_any_output(self):
         with tempfile.TemporaryDirectory() as temporary, patch.dict(runner.os.environ, {}, clear=True):
@@ -68,6 +83,7 @@ class CdefReferenceRunnerTest(unittest.TestCase):
             self.assertEqual({'fixture.php': 'actual fixture hash'}, report['source_sha256'])
             self.assertTrue((output / 'api.log').is_file())
             self.assertFalse((output / 'callers.log').exists())
+
 
 
 if __name__ == '__main__':

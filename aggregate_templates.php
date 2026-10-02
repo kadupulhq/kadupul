@@ -91,6 +91,14 @@ function aggregate_form_save()
         return null;
     }
 
+    try {
+        $graph_templates_items = aggregate_graph_validate_request_items($save1['graph_template_id']);
+    } catch (Throwable $error) {
+        raise_message('aggregate_regeneration_failed', __('Aggregate template settings could not be confirmed. Review the graph settings before retrying.'), MESSAGE_LEVEL_ERROR);
+        header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
+        return null;
+    }
+
     cacti_log('AGGREGATE GRAPH TEMPLATE Saved ID: ' . $save1['id'] . ' Name: ' . $save1['name'], false, 'AGGREGATE', POLLER_VERBOSITY_DEBUG);
 
     /* do a quick comparison to see if anything changed */
@@ -183,19 +191,6 @@ function aggregate_form_save()
     }
 
     /* save the template items now */
-    /* get existing item ids and sequences from graph template */
-    $graph_templates_items = array_rekey(
-        db_fetch_assoc_prepared(
-            'SELECT id, sequence
-			FROM graph_templates_item
-			WHERE local_graph_id=0
-			AND graph_template_id = ?',
-            array($save1['graph_template_id'])
-        ),
-        'id',
-        array('sequence')
-    );
-
     /* get existing aggregate template items */
     $aggregate_template_items_old = array_rekey(
         db_fetch_assoc_prepared('SELECT *
@@ -204,9 +199,6 @@ function aggregate_form_save()
         'graph_templates_item_id',
         array('sequence', 'color_template', 't_graph_type_id', 'graph_type_id', 't_cdef_id', 'cdef_id', 'item_skip', 'item_total')
     );
-
-    /* update graph template item values with posted values */
-    aggregate_validate_graph_items($_POST, $graph_templates_items);
 
     $items_changed = false;
     $items_to_save = array();
@@ -244,7 +236,11 @@ function aggregate_form_save()
     }
 
     if ($save_me || $params_changed || $items_changed) {
-        push_out_aggregates($id);
+        if (push_out_aggregates($id) === false) {
+            raise_message('aggregate_regeneration_failed', __('Aggregate graph regeneration failed. Template settings may already have been saved; review them before retrying.'), MESSAGE_LEVEL_ERROR);
+            header('Location: aggregate_templates.php?header=false&action=edit&id=' . $id);
+            return;
+        }
     }
 
     raise_message(1);

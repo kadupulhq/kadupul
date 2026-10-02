@@ -102,3 +102,5 @@ try {
         $database->exec("DROP DATABASE `$schema`");
     }
 }
+
+echo "PASS native production copy and cleanup complete\n";

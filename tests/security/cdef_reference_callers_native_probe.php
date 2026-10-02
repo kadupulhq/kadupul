@@ -123,3 +123,5 @@ try {
         $database->exec("DROP DATABASE `$schema`");
     }
 }
+
+echo "PASS native import callers and cleanup complete\n";

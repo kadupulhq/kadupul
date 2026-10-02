@@ -251,3 +251,5 @@ try {
         $database->exec("DROP DATABASE `$schema`");
     }
 }
+
+echo "PASS native contract and cleanup complete\n";

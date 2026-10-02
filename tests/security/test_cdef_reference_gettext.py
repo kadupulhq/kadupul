@@ -13,6 +13,13 @@ MESSAGES = (
     'The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.',
     'The installed database version could not be confirmed. Review the installer errors before retrying.',
     'Aggregate items could not be saved. Other graph settings may already have been saved; review them before retrying.',
+    'Aggregate template settings could not be confirmed. Review the graph settings before retrying.',
+    'Aggregate graph settings could not be confirmed. Other settings may already have been saved; review them before retrying.',
+    'Aggregate graph regeneration failed. Template settings may already have been saved; review them before retrying.',
+    'Aggregate graph regeneration failed. Other graph settings may already have been saved; review them before retrying.',
+    'Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying.',
+    'Aggregate graph creation could not be confirmed. Review the graph settings before retrying.',
+    'Color Template synchronization failed. Some aggregates may already have been updated; retry after reviewing the settings.',
 )
 
 

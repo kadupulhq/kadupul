@@ -126,3 +126,5 @@ try {
         $database->exec("DROP DATABASE `$schema`");
     }
 }
+
+echo "PASS native version confirmation and cleanup complete\n";

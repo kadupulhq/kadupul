@@ -23,6 +23,9 @@ CASES = (
     ('raw_waiter', 'native', (), False),
     ('production_waiter', 'production_waiter', (), False),
     ('aggregate_replacement', 'aggregate', (), False),
+    ('aggregate_regeneration', 'aggregate_generation', (), False),
+    ('aggregate_outer_callers', 'aggregate_outer_callers', (), False),
+    ('aggregate_generation_branches', 'aggregate_generation_branches', (), False),
     ('version_marker', 'version', (), False),
     ('current_cli', 'installer', (), True),
     ('fresh_cli', 'normal_installer', ('fresh',), True),
@@ -40,6 +43,12 @@ CASES = (
 
 
 def probe_path(probe):
+    if probe == 'aggregate_generation':
+        return Path('tests/security/aggregate_generation_native_probe.php')
+    if probe == 'aggregate_generation_branches':
+        return Path('tests/security/aggregate_generation_branches_native_probe.php')
+    if probe == 'aggregate_outer_callers':
+        return Path('tests/security/aggregate_outer_caller_native_probe.php')
     suffix = '_probe.php' if probe == 'native' else '_native_probe.php'
     return Path('tests/security') / ('cdef_reference_' + probe + suffix)
 

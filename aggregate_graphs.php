@@ -109,14 +109,23 @@ function form_save()
         return null;
     }
 
-    /* save graph data to cacti tables */
-    $graph_templates_graph_id = aggregate_graph_templates_graph_save(
-        $local_graph_id,
-        $graph_template_id,
-        $graph_title,
-        $aggregate_template_id,
-        $new_data
-    );
+    try {
+        if (!isset_request_var('template_propogation') && !empty($aggregate_graph_id)) {
+            $graph_templates_items = aggregate_graph_validate_request_items($graph_template_id);
+        }
+        /* save graph data to cacti tables */
+        $graph_templates_graph_id = aggregate_graph_templates_graph_save(
+            $local_graph_id,
+            $graph_template_id,
+            $graph_title,
+            $aggregate_template_id,
+            $new_data
+        );
+    } catch (Throwable $error) {
+        raise_message('aggregate_regeneration_failed', __('Aggregate graph settings could not be confirmed. Other settings may already have been saved; review them before retrying.'), MESSAGE_LEVEL_ERROR);
+        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
+        return;
+    }
 
     /* update title in aggregate graphs table */
     db_execute_prepared(
@@ -171,16 +180,6 @@ function form_save()
             }
 
             /* save the template items now */
-            /* get existing item ids and sequences from graph template */
-            $graph_templates_items = array_rekey(
-                db_fetch_assoc_prepared('SELECT id, sequence
-					FROM graph_templates_item
-					WHERE local_graph_id=0
-					AND graph_template_id = ?
-					ORDER BY sequence', array($graph_template_id)),
-                'id',
-                array('sequence')
-            );
             /* get existing aggregate template items */
             $aggregate_graph_items_old = array_rekey(
                 db_fetch_assoc_prepared('SELECT *
@@ -190,9 +189,6 @@ function form_save()
                 'graph_templates_item_id',
                 array('aggregate_graph_id', 'graph_templates_item_id', 'sequence', 'color_template', 't_graph_type_id', 'graph_type_id', 't_cdef_id', 'cdef_id', 'item_skip', 'item_total')
             );
-
-            /* update graph template item values with posted values */
-            aggregate_validate_graph_items($_POST, $graph_templates_items);
 
             $items_changed = false;
             $items_to_save = array();
@@ -233,7 +229,11 @@ function form_save()
             }
 
             if ($save_me || $items_changed) {
-                push_out_aggregates(0, $local_graph_id);
+                if (push_out_aggregates(0, $local_graph_id) === false) {
+                    raise_message('aggregate_regeneration_failed', __('Aggregate graph regeneration failed. Other graph settings may already have been saved; review them before retrying.'), MESSAGE_LEVEL_ERROR);
+                    header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
+                    return;
+                }
             }
         }
     }
@@ -266,10 +266,18 @@ function form_actions()
             if (get_request_var('drp_action') == '1') { // delete
                 api_aggregate_remove_multi($selected_items);
             } elseif (get_request_var('drp_action') == '2') { // migrate to template
-                api_aggregate_convert_template($selected_items);
+                if (api_aggregate_convert_template($selected_items) === false) {
+                    raise_message('aggregate_regeneration_failed', __('Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying.'), MESSAGE_LEVEL_ERROR);
+                    header('Location: aggregate_graphs.php?header=false');
+                    return;
+                }
             } elseif (get_request_var('drp_action') == '3') { // create aggregate from aggregate
                 $aggregate_name = get_request_var('aggregate_name');
-                api_aggregate_create($aggregate_name, $selected_items);
+                if (api_aggregate_create($aggregate_name, $selected_items) === false) {
+                    raise_message('aggregate_regeneration_failed', __('Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying.'), MESSAGE_LEVEL_ERROR);
+                    header('Location: aggregate_graphs.php?header=false');
+                    return;
+                }
             } elseif (get_request_var('drp_action') == '4') { // add graphs to report
                 $good = true;
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
@@ -290,13 +298,21 @@ function form_actions()
                 exit;
             } elseif (get_request_var('drp_action') == '10') { // associate with aggregate
                 $local_graph_id = get_filter_request_var('local_graph_id');
-                api_aggregate_associate($local_graph_id, $selected_items);
+                if (api_aggregate_associate($local_graph_id, $selected_items) === false) {
+                    raise_message('aggregate_regeneration_failed', __('Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying.'), MESSAGE_LEVEL_ERROR);
+                    header('Location: aggregate_graphs.php?header=false');
+                    return;
+                }
 
                 header('Location: aggregate_graphs.php?header=false&action=edit&tab=items&id=' . $local_graph_id);
                 exit;
             } elseif (get_request_var('drp_action') == '11') { // dis-associate with aggregate
                 $local_graph_id = get_filter_request_var('local_graph_id');
-                api_aggregate_disassociate($local_graph_id, $selected_items);
+                if (api_aggregate_disassociate($local_graph_id, $selected_items) === false) {
+                    raise_message('aggregate_regeneration_failed', __('Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying.'), MESSAGE_LEVEL_ERROR);
+                    header('Location: aggregate_graphs.php?header=false');
+                    return;
+                }
 
                 header('Location: aggregate_graphs.php?header=false&action=edit&tab=items&id=' . $local_graph_id);
                 exit;
