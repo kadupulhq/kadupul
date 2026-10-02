@@ -70,6 +70,19 @@ $result['runtime_regex_probe'] = [@preg_match("'(*NO_JIT)(?R)'", ''), preg_last_
 define('IN_CACTI_INSTALL', true);
 error_clear_last();
 $result['runtime_regex'] = validate_is_regex('(*NO_JIT)(?R)');
+// Compilation warnings belong to this probe even after a real PCRE runtime failure.
+$result['regex_compile_after_runtime'] = validate_is_regex("abc'z");
+@trigger_error('unrelated previous warning', E_USER_WARNING);
+$result['regex_runtime_after_warning'] = validate_is_regex('(*NO_JIT)(?R)');
+$priorHandler = static fn() => false;
+set_error_handler($priorHandler);
+$result['regex_valid_with_handler'] = validate_is_regex('valid');
+$result['regex_invalid_with_handler'] = validate_is_regex("abc'z");
+$afterHandler = set_error_handler(static fn() => false);
+$result['regex_handler_restored'] = $afterHandler === $priorHandler;
+restore_error_handler();
+restore_error_handler();
+
 // Native complete networking modules; these admission/packet paths need no server.
 require $root . '/lib/ping.php';
 require $root . '/lib/api_automation.php';

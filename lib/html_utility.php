@@ -1246,24 +1246,28 @@ function validate_is_regex($regex): bool|string
         return __('Kadupul regular expressions can not includes the semi-color character.');
     }
 
-    restore_error_handler();
-
-    $track_errors = ini_get('track_errors');
-    ini_set('track_errors', 1);
-
-    if (@preg_match("'" . $regex . "'", '') !== false) {
-        ini_set('track_errors', $track_errors);
+    $warning = null;
+    $previous_handler = null;
+    $previous_handler = set_error_handler(static function ($severity, $message, $file, $line) use (&$warning, &$previous_handler) {
+        if ($file === __FILE__ && str_starts_with($message, 'preg_match():')) {
+            $warning = trim(substr($message, strlen('preg_match():')));
+            return true;
+        }
+        return is_callable($previous_handler) ? $previous_handler($severity, $message, $file, $line) : false;
+    });
+    try {
+        $result = @preg_match("'" . $regex . "'", '');
+        $error = preg_last_error();
+        $error_message = preg_last_error_msg();
+    } finally {
+        restore_error_handler();
+    }
+    if ($result !== false) {
         return true;
     }
-
-    $error = preg_last_error();
-    $error_message = preg_last_error_msg();
-
-    $last_error = error_get_last();
-
-    $php_error = trim(str_replace('preg_match():', '', $last_error['message'] ?? $error_message));
-
-    ini_set('track_errors', $track_errors);
+    if ($warning !== null) {
+        return $warning;
+    }
 
     $errors = array(
         PREG_INTERNAL_ERROR         => __('There was an internal error!'),
@@ -1273,15 +1277,7 @@ function validate_is_regex($regex): bool|string
         PREG_BAD_UTF8_OFFSET_ERROR  => __('Bad UTF-8 offset error!'),
     );
 
-    if (!defined('IN_CACTI_INSTALL')) {
-        set_error_handler('CactiErrorHandler');
-    }
-
-    if (empty($error)) {
-        return $php_error;
-    } else {
-        return $errors[$error] ?? $error_message;
-    }
+    return $errors[$error] ?? $error_message;
 }
 
 /* load_current_session_value - finds the correct value of a variable that is being
