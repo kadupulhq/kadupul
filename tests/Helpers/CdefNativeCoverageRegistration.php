@@ -10,7 +10,7 @@ final class CdefNativeCoverageRegistration
     public static function cases(): array
     {
         return [
-            'regeneration' => ['aggregate_generation_native_probe.php', 'PASS native aggregate regeneration and cleanup complete', ['lib/api_aggregate.php','lib/aggregate.php','lib/reference_write.php','src/Platform/Infrastructure/Legacy/HostDataSubstitution.php']],
+            'regeneration' => ['aggregate_generation_native_probe.php', 'PASS native aggregate regeneration and cleanup complete', ['lib/api_aggregate.php','lib/aggregate.php','lib/reference_write.php','src/Platform/Infrastructure/Legacy/HostDataSubstitution.php','lib/variables.php']],
             'branches' => ['aggregate_generation_branches_native_probe.php', 'PASS native aggregate admitted branch matrix complete', ['lib/api_aggregate.php', 'lib/aggregate.php', 'lib/api_graph.php']],
             'outer' => ['aggregate_outer_caller_native_probe.php', 'PASS native aggregate outer callers and cleanup complete', ['lib/api_aggregate.php','lib/aggregate.php','lib/api_graph.php']],
             'contract' => ['cdef_reference_contract_native_probe.php', 'PASS native contract and cleanup complete', ['src/Platform/Infrastructure/Legacy/CdefReferenceContract.php']],
@@ -23,7 +23,7 @@ final class CdefNativeCoverageRegistration
 
     public static function measured(): array
     {
-        return ['src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/cdef.php', 'lib/import.php', 'lib/api_aggregate.php','lib/aggregate.php','lib/api_graph.php','lib/reference_write.php',
+        return ['lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/cdef.php', 'lib/import.php', 'lib/api_aggregate.php','lib/aggregate.php','lib/api_graph.php','lib/reference_write.php',
             'lib/installer.php','lib/cdef_reference.php','lib/functions.php',
             'src/Platform/Infrastructure/Legacy/CdefReferenceContract.php',
             'src/Platform/Infrastructure/Legacy/CdefReferenceReadiness.php',
@@ -41,7 +41,7 @@ final class CdefNativeCoverageRegistration
             'tests/Fixtures/cdef-native-coverage.php','tests/Symfony/CdefNativeProbeCoverageTest.php',
             'tests/Fixtures/aggregate-percentile-original.php','tests/security/cdef_reference_installer_native_probe.php','tests/Helpers/PhpSource.php',
             'aggregate_graphs.php','aggregate_templates.php','color_templates.php','lib/html_utility.php','lib/html_validate.php','lib/html.php','lib/html_form.php','lib/headers_secure.php',
-            'src/Platform/Contract/CdefReferenceReadiness.php','lib/database.php','lib/variables.php','lib/graph_template_input.php','lib/plugins.php','lib/auth.php',
+            'src/Platform/Contract/CdefReferenceReadiness.php','lib/database.php','lib/graph_template_input.php','lib/plugins.php','lib/auth.php',
             'include/global_constants.php','include/global_arrays.php','include/global_form.php',
             'include/global_languages.php','lib/boost.php']);
     }

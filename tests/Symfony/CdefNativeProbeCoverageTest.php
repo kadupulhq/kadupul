@@ -99,27 +99,36 @@ final class CdefNativeProbeCoverageTest extends TestCase
                     \NativeChildCoverageEvidence::verifyRejections(...[...$arguments,'lib/boost.php'])
                 );
                 if (in_array($case, ['branches', 'regeneration'], true)) {
-                    $requiredSource = $case === 'branches' ? 'lib/api_graph.php' : 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php';
+                    $requiredSources = $case === 'branches' ? ['lib/api_graph.php'] : ['src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/variables.php'];
                     $report = $directory . '/native.coverage';
                     $originalReport = file_get_contents($report);
                     $originalEvidence = file_get_contents($report . '.json');
                     try {
-                        $missing = unserialize($originalReport);
-                        $data = $missing->getData();
-                        $lines = $data->lineCoverage();
-                        unset($lines[realpath($root . '/' . $requiredSource)]);
-                        $data->setLineCoverage($lines);
-                        $missing->setData($data);
-                        $serialized = serialize($missing);
-                        self::assertSame(strlen($serialized), file_put_contents($report, $serialized));
-                        $evidence = json_decode($originalEvidence, true, 512, JSON_THROW_ON_ERROR);
-                        $evidence['report'] = hash_file('sha256', $report);
-                        file_put_contents($report . '.json', json_encode($evidence, JSON_THROW_ON_ERROR));
-                        try {
-                            \NativeChildCoverageEvidence::load(...$arguments);
-                            self::fail('Native completion was accepted without required execution: ' . $requiredSource);
-                        } catch (\RuntimeException $error) {
-                            self::assertSame('Required native source was not executed: ' . $requiredSource, $error->getMessage());
+                        foreach ($requiredSources as $requiredSource) {
+                            foreach (['removed', 'zero-hits'] as $mode) {
+                                $missing = unserialize($originalReport);
+                                $data = $missing->getData();
+                                $lines = $data->lineCoverage();
+                                $requiredPath = realpath($root . '/' . $requiredSource);
+                                if ($mode === 'removed') {
+                                    unset($lines[$requiredPath]);
+                                } else {
+                                    $lines[$requiredPath] = array_map(static fn($hits) => [], $lines[$requiredPath]);
+                                }
+                                $data->setLineCoverage($lines);
+                                $missing->setData($data);
+                                $serialized = serialize($missing);
+                                self::assertSame(strlen($serialized), file_put_contents($report, $serialized));
+                                $evidence = json_decode($originalEvidence, true, 512, JSON_THROW_ON_ERROR);
+                                $evidence['report'] = hash_file('sha256', $report);
+                                file_put_contents($report . '.json', json_encode($evidence, JSON_THROW_ON_ERROR));
+                                try {
+                                    \NativeChildCoverageEvidence::load(...$arguments);
+                                    self::fail('Native completion was accepted without required execution: ' . $requiredSource);
+                                } catch (\RuntimeException $error) {
+                                    self::assertSame('Required native source was not executed: ' . $requiredSource, $error->getMessage());
+                                }
+                            }
                         }
                     } finally {
                         file_put_contents($report, $originalReport);
