@@ -6,6 +6,7 @@
  */
 
 include('./include/auth.php');
+require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php';
 
 cacti_require_post_actions(array('save', 'actions', 'perm_remove'));
 if (isset_request_var('update_policy')) {
@@ -73,17 +74,17 @@ function update_policies()
 {
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
-    $updated = false;
+    $failed = false;
     foreach ($policies as $p) {
         if (isset_request_var($p)) {
-            if (db_execute_prepared("UPDATE `user_auth` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')))) {
-                $updated = true;
+            if (!\Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write("UPDATE `user_auth` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')), false, (int) get_filter_request_var('id'))) {
+                $failed = true;
             }
         }
     }
 
-    if ($updated) {
-        reset_user_perms(get_filter_request_var('id'));
+    if ($failed) {
+        raise_message(2);
     }
 
     header('Location: user_admin.php?action=user_edit&header=false&tab=' . get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));
@@ -367,49 +368,57 @@ function form_save()
         /* ==================================================== */
 
         $add_button_clicked = false;
-        $permission_saved = false;
+        $permission_saved = true;
 
         if (isset_request_var('add_graph_x')) {
-            $permission_saved = db_execute_prepared(
+            $permission_saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 1)',
-                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_graphs'))
+                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_graphs')),
+                false,
+                (int) get_filter_request_var('id')
             );
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_tree_x')) {
-            $permission_saved = db_execute_prepared(
+            $permission_saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 2)',
-                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_trees'))
+                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_trees')),
+                false,
+                (int) get_filter_request_var('id')
             );
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_host_x')) {
-            $permission_saved = db_execute_prepared(
+            $permission_saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 3)',
-                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_hosts'))
+                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_hosts')),
+                false,
+                (int) get_filter_request_var('id')
             );
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_graph_template_x')) {
-            $permission_saved = db_execute_prepared(
+            $permission_saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 4)',
-                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_graph_templates'))
+                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_graph_templates')),
+                false,
+                (int) get_filter_request_var('id')
             );
 
             $add_button_clicked = true;
         }
 
         if ($add_button_clicked == true) {
-            if ($permission_saved) {
-                reset_user_perms(get_filter_request_var('id'));
+            if (!$permission_saved) {
+                raise_message(2);
             }
             header('Location: user_admin.php?action=user_edit&header=false&tab=graph_perms_edit&id=' . get_nfilter_request_var('id'));
             exit;
@@ -586,43 +595,51 @@ function perm_remove()
     get_filter_request_var('user_id');
     /* ==================================================== */
 
-    $removed = false;
+    $saved = true;
     if (get_request_var('type') == 'graph') {
-        $removed = db_execute_prepared(
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
             'DELETE FROM user_auth_perms
 			WHERE type = 1
 			AND user_id = ?
 			AND item_id = ?',
-            array(get_request_var('user_id'), get_request_var('id'))
+            array(get_request_var('user_id'), get_request_var('id')),
+            false,
+            (int) get_request_var('user_id')
         );
     } elseif (get_request_var('type') == 'tree') {
-        $removed = db_execute_prepared(
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
             'DELETE FROM user_auth_perms
 			WHERE type = 2
 			AND user_id = ?
 			AND item_id = ?',
-            array(get_request_var('user_id'), get_request_var('id'))
+            array(get_request_var('user_id'), get_request_var('id')),
+            false,
+            (int) get_request_var('user_id')
         );
     } elseif (get_request_var('type') == 'host') {
-        $removed = db_execute_prepared(
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
             'DELETE FROM user_auth_perms
 			WHERE type = 3
 			AND user_id = ?
 			AND item_id = ?',
-            array(get_request_var('user_id'), get_request_var('id'))
+            array(get_request_var('user_id'), get_request_var('id')),
+            false,
+            (int) get_request_var('user_id')
         );
     } elseif (get_request_var('type') == 'graph_template') {
-        $removed = db_execute_prepared(
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
             'DELETE FROM user_auth_perms
 			WHERE type = 4
 			AND user_id = ?
 			AND item_id = ?',
-            array(get_request_var('user_id'), get_request_var('id'))
+            array(get_request_var('user_id'), get_request_var('id')),
+            false,
+            (int) get_request_var('user_id')
         );
     }
 
-    if ($removed) {
-        reset_user_perms(get_request_var('user_id'));
+    if (!$saved) {
+        raise_message(2);
     }
 
     header('Location: user_admin.php?action=user_edit&header=false&tab=graph_perms_edit&id=' . get_request_var('user_id'));

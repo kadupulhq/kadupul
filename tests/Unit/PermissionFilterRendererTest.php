@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 final class PermissionFilterRendererTest extends TestCase
 {
+    private static array $coverageEvidenceChecked = array();
     /** @dataProvider filters */
     public function testNativeControllersPreserveFilterChoicesAndRoutes(string $page, string $function, string $tab, string $label, bool $defaults): void
     {
@@ -160,11 +161,21 @@ final class PermissionFilterRendererTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $coverage->merge(unserialize(file_get_contents($reports[0])));
+                require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/permission-filter-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'lib/auth.php', 'user_admin.php', 'user_group_admin.php', 'lib/html.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), isset($scenario['association']) ? array('association-state-readback') : (!empty($scenario['no_association']) ? array('association-contract-returned') : array('native-filter-rendered', 'script-nodes-observed')), isset($scenario['association']) || !empty($scenario['no_association']) ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php') : array('src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php'));
+                $evidenceKind = isset($scenario['association']) ? 'association' : (!empty($scenario['no_association']) ? 'contract' : 'filter');
+                if (!isset(self::$coverageEvidenceChecked[$evidenceKind])) {
+                    self::assertSame($evidenceKind === 'filter' ? 30 : 29, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/permission-filter-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'lib/auth.php', 'user_admin.php', 'user_group_admin.php', 'lib/html.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), isset($scenario['association']) ? array('association-state-readback') : (!empty($scenario['no_association']) ? array('association-contract-returned') : array('native-filter-rendered', 'script-nodes-observed')), isset($scenario['association']) || !empty($scenario['no_association']) ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php') : array('src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php'), 'lib/rrd.php'));
+                    self::$coverageEvidenceChecked[$evidenceKind] = true;
+                }
+                $coverage->merge($childCoverage);
             }
             return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
         } finally {
             foreach (glob($directory . '/*.coverage') as $report) {
+                if (is_file($report . '.json')) {
+                    unlink($report . '.json');
+                }
                 unlink($report);
             }
             unlink($directory . '/include/auth.php');

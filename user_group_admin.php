@@ -6,6 +6,7 @@
  */
 
 include('./include/auth.php');
+require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php';
 
 cacti_require_post_actions(array('save', 'actions', 'perm_remove'));
 if (isset_request_var('update_policy')) {
@@ -251,17 +252,17 @@ function update_policies()
 {
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
-    $updated = false;
+    $failed = false;
     foreach ($policies as $p) {
         if (isset_request_var($p)) {
-            if (db_execute_prepared("UPDATE `user_auth_group` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')))) {
-                $updated = true;
+            if (!\Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write("UPDATE `user_auth_group` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')), true, (int) get_filter_request_var('id'))) {
+                $failed = true;
             }
         }
     }
 
-    if ($updated) {
-        reset_group_perms(get_filter_request_var('id'));
+    if ($failed) {
+        raise_message(2);
     }
 
     header('Location: user_group_admin.php?action=edit&header=false&tab=' . get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));
@@ -509,19 +510,19 @@ function perm_remove()
     get_filter_request_var('group_id');
     /* ==================================================== */
 
-    $removed = false;
+    $saved = true;
     if (get_request_var('type') == 'graph') {
-        $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=1 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write('DELETE FROM user_auth_group_perms WHERE type=1 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')), true, (int) get_request_var('group_id'));
     } elseif (get_request_var('type') == 'tree') {
-        $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=2 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write('DELETE FROM user_auth_group_perms WHERE type=2 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')), true, (int) get_request_var('group_id'));
     } elseif (get_request_var('type') == 'host') {
-        $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=3 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write('DELETE FROM user_auth_group_perms WHERE type=3 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')), true, (int) get_request_var('group_id'));
     } elseif (get_request_var('type') == 'graph_template') {
-        $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write('DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')), true, (int) get_request_var('group_id'));
     }
 
-    if ($removed) {
-        reset_group_perms(get_request_var('group_id'));
+    if (!$saved) {
+        raise_message(2);
     }
 
     header('Location: user_group_admin.php?action=edit&header=false&tab=gperms&id=' . get_request_var('group_id'));

@@ -12,7 +12,7 @@ $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/admin-permission-native.php', $argv[1], array('src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Unit/Security/Auth/AdminPermissionPersistenceNativeCoverageTest.php', 'tests/Unit/Security/Auth/AdminPolicyAndMembershipNativeCoverageTest.php', 'user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/admin-permission-native.php', $argv[1], array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Unit/Security/Auth/AdminPermissionPersistenceNativeCoverageTest.php', 'tests/Unit/Security/Auth/AdminPolicyAndMembershipNativeCoverageTest.php', 'user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
 }
 $directory = $argv[2];
 chdir($directory);
@@ -60,6 +60,10 @@ $initial_session = $_SESSION;
 $messages = [];
 $db = new PDO('sqlite:' . $directory . '/state.sqlite');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$database_hostname = 'native';
+$database_port = '0';
+$database_default = 'permission';
+$database_sessions = array('native:0:permission' => $db);
 // Native SQL's random reset marker stays a marker rather than a canned UPDATE.
 $db->sqliteCreateFunction('RAND', static fn() => random_int(1, 4294967294) / 4294967295);
 $db->sqliteCreateFunction('FLOOR', static fn($value) => floor($value));
@@ -114,21 +118,35 @@ if (isset($scenario['failed_ids'])) {
         $db->exec('CREATE TRIGGER failed_mutation_' . $index . ' BEFORE ' . $event . ' ON ' . $table . ' WHEN ' . $row . '.' . $column . ' = ' . (int) $failed . " BEGIN SELECT RAISE(ABORT, 'native permission write failure'); END");
     }
 }
+if (isset($scenario['epoch_failure'])) {
+    $db->exec('CREATE TRIGGER reject_epoch BEFORE UPDATE OF reset_perms ON user_auth WHEN OLD.id = ' . (int) $scenario['epoch_failure'] . " BEGIN SELECT RAISE(ABORT, 'native epoch rejection'); END");
+}
+if (isset($scenario['epoch_mismatch'])) {
+    $db->exec('CREATE TRIGGER restore_epoch AFTER UPDATE OF reset_perms ON user_auth WHEN OLD.id = ' . (int) $scenario['epoch_mismatch'] . ' BEGIN UPDATE user_auth SET reset_perms = OLD.reset_perms WHERE id = OLD.id; END');
+}
+if ($scenario['caller_transaction'] ?? false) {
+    $db->exec('CREATE TABLE caller_work (id INTEGER PRIMARY KEY)');
+    $db->beginTransaction();
+    $db->exec('INSERT INTO caller_work VALUES (99)');
+}
 function input_validate_input_number($value)
 {
     if (!ctype_digit((string) $value)) {
         throw new InvalidArgumentException('Invalid fixture numeric input.');
     }
 }
-function db_execute_prepared($sql, $params = [])
+function db_execute_prepared($sql, $params = [], $log = true, $connection = false)
 {
+    if ($connection !== false && $connection !== $GLOBALS['db']) {
+        throw new RuntimeException('Permission mutation changed PDO connection.');
+    }
     if (($GLOBALS['scenario']['write_error'] ?? false) && (str_starts_with($sql, 'REPLACE INTO user_auth_perms') || str_starts_with($sql, 'UPDATE `user_auth` SET `policy_') || str_starts_with($sql, 'UPDATE `user_auth_group` SET `policy_'))) {
         return false;
     }
     try {
         $result = $GLOBALS['db']->prepare($sql)->execute($params);
     } catch (PDOException $error) {
-        if (!isset($GLOBALS['scenario']['failed_ids']) || !str_contains($error->getMessage(), 'native permission write failure')) {
+        if ((!isset($GLOBALS['scenario']['failed_ids']) || !str_contains($error->getMessage(), 'native permission write failure')) && !str_contains($error->getMessage(), 'native epoch rejection')) {
             throw $error;
         }
         $result = false;
@@ -140,7 +158,14 @@ function db_execute_prepared($sql, $params = [])
 }
 function db_execute($sql)
 {
-    return $GLOBALS['db']->exec($sql);
+    try {
+        return $GLOBALS['db']->exec($sql);
+    } catch (PDOException $error) {
+        if (!str_contains($error->getMessage(), 'native epoch rejection')) {
+            throw $error;
+        }
+        return false;
+    }
 }
 function db_fetch_assoc_prepared($sql, $params = [])
 {
@@ -262,6 +287,12 @@ PHP;
     $realm_table = $group ? 'user_auth_group_realm' : 'user_auth_realm';
     $perm_table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
     $state = ['controller_returned' => $GLOBALS['controller_returned'] ?? false, 'next_valid' => $next_valid, 'memberships' => $db->query('SELECT * FROM user_auth_group_members ORDER BY group_id, user_id')->fetchAll(PDO::FETCH_ASSOC), 'realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $session, 'perms_valid' => $perms_valid, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output, 'policies' => $db->query('SELECT id, policy_graphs, policy_trees, policy_hosts, policy_graph_templates FROM ' . ($group ? 'user_auth_group' : 'user_auth') . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'membership' => $GLOBALS['membership'] ?? null];
+    $state['transaction_open'] = $db->inTransaction();
+    $state['caller_work'] = ($scenario['caller_transaction'] ?? false) ? (int) $db->query('SELECT COUNT(*) FROM caller_work')->fetchColumn() : null;
+    if ($scenario['caller_transaction'] ?? false) {
+        $db->rollBack();
+        $state['after_caller_rollback'] = array('permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT id, reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'caller_work' => (int) $db->query('SELECT COUNT(*) FROM caller_work')->fetchColumn());
+    }
     $state['next_valid_accounts'] = $next_valid_accounts;
     $state['write_outcomes'] = $GLOBALS['write_outcomes'];
     $GLOBALS['nativeChildCoverageMarkers'] = array('admin-state-readback', 'permission-epoch-checked', 'mutation-sql-outcomes-readback');
