@@ -22,7 +22,7 @@ src/Graphing/
                      GraphThemeProfile, UnrepresentableGraphArgument
     Command/         GraphCommandBuilder, GraphCommandSections and parts: DefNames, CdefMagic,
                      LegendText, GradientArea, DateLegend, ThemeArguments,
-                     LegacySerializedGraphCommand (hook compatibility),
+                     HookedGraphSections, LegacySerializedGraphCommand (hook compatibility),
                      BusinessHours, GraphOptions, ArchiveChoice
   Application/       RenderGraph, CollectRenderFacts, ExportGraph,
                      CreateDataSourceFile, TuneDataSource
@@ -36,7 +36,7 @@ src/Graphing/
                      LegacyGraphRequestFactory, LegacyGraphThemeProfileResolver, LegacyGraphOptionsHook,
                      LegacyRenderClock, LegacyRrdWebContext,
                      LegacyRenderOutput, BoostImageCache, LegacyPendingSamples
-    Symfony/         Graph image and JSON controllers; the graph voter
+    Symfony/         Graph image and JSON controllers; the graph voter; GraphLegacyProcessBridge
 ```
 
 R7 also adds `GraphAuthorizationSubject` and `GraphAccess` in IdentityAccess
@@ -245,10 +245,13 @@ ranges; the port and adapter preserve their names, values and types. R0/R7
 contract gates compare the full payload and exercise a graph/window consumer.
 Through 1.3
 an adapter serializes the builder's explicit sections into those strings exactly
-as today, without inferring boundaries from a flat command. Post-hook
-command strings keep their bytes in the tagged
-`LegacySerializedGraphCommand` compatibility value; transport framing and
-rejection checks remain. The image cache is a port that `RenderGraph` calls before reading anything, not a
+as today, without inferring boundaries from a flat command. The hook returns
+`HookedGraphSections` with three post-hook strings, its returned start/end and
+an explicit empty-result state. `RenderGraph` applies captured-context Domain
+business hours to those sections; only then does the pure final assembler join
+them once into `LegacySerializedGraphCommand`. The hook adapter does neither
+shading nor final assembly. Post-hook bytes are never parsed back into arguments;
+transport framing and rejection checks remain. The image cache is a port that `RenderGraph` calls before reading anything, not a
 decorator around `RrdTransport`: a hit today skips the definition queries,
 `rrdtool info` and percentile fetches, and the transport never sees the
 viewer. [Graph rendering pipeline](graphing-render-pipeline.md) has the
