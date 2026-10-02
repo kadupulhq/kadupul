@@ -1769,10 +1769,10 @@ function api_clone_get_unique_name($name, $table, $column = 'name') {
  *
  * @param string - The current filename
  *
- * @return string|bool - The correct name for the object, else false
+ * @return string|false - The correct name for the object, else false
  *    If more than 20 attempts are made to find a good name.
  */
-function api_clone_get_unique_filename($file_name) {
+function api_clone_get_unique_filename($file_name): string|false {
 	$i = 1;
 
 	$file_data = pathinfo($file_name);
