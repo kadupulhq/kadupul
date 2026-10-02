@@ -8,8 +8,12 @@ declare(strict_types=1);
 namespace Kadupul\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 final class AggregateGraphItemsBoundaryTest extends TestCase
 {
     private array $post;
