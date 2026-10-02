@@ -223,6 +223,11 @@ def verify_palette_colors(h, s, uid, check):
         check(h.sql("SELECT COUNT(*) FROM colors WHERE hex='123'").strip() == '0', 'MyISAM rejection leaves database unchanged')
     finally:
         h.sql('ALTER TABLE colors ENGINE=InnoDB')
+    # The image excludes tests/. Preserve the probe's relative autoload path
+    # by copying this scenario-owned helper to its expected container location.
+    probe = Path(__file__).with_name('palette_sql_failure_probe.php')
+    h.command('mkdir', '-p', '/var/www/html/tests/Symfony', check=True)
+    h.compose('cp', str(probe), 'web:/var/www/html/tests/Symfony/palette_sql_failure_probe.php')
     sql_probe = h.command('php', 'tests/Symfony/palette_sql_failure_probe.php')
     if sql_probe['exit'] != 0 or sql_probe['stdout'] != 'PALETTE_SILENT_SQL_OK' or sql_probe['stderr'] != '':
         # This probe uses only fixed in-memory SQLite fixtures and mocks; its
