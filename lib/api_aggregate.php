@@ -488,6 +488,13 @@ function aggregate_graphs_insert_graph_items(
  */
 function aggregate_graph_items_save($items, $table)
 {
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+
+    $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    if (!$db instanceof PDO || !is_array($items) || !$items) {
+        return false;
+    }
+
     $defaults = array();
     if ($table == 'aggregate_graphs_graph_item') {
         $defaults['aggregate_graph_id'] = null;
@@ -511,7 +518,11 @@ function aggregate_graph_items_save($items, $table)
 
     $items_sql = array();
     $parameters = array();
+    $aggregate_id = (int) ($items[0][$id_field] ?? 0);
     foreach ($items as $item) {
+        if (!is_array($item) || (int) ($item[$id_field] ?? -1) !== $aggregate_id) {
+            return false;
+        }
         // substitute any missing fields with defaults
         $item = array_merge($defaults, $item);
 
@@ -546,14 +557,79 @@ function aggregate_graph_items_save($items, $table)
 
     cacti_log(__FUNCTION__ . ' called. SQL: ' . $sql, true, 'AGGREGATE', POLLER_VERBOSITY_DEBUG);
 
-    /* remove all old items */
-    if (isset($items[0][$id_field])) {
-        db_execute_prepared("DELETE FROM $table WHERE " . $id_field . ' = ?', array((int) $items[0][$id_field]));
-    }
-
-    if (db_execute_prepared($sql, $parameters) == 1) {
+    // Protect the complete replacement on the same selected connection. A
+    // native reference refusal must not commit the preceding cache deletion.
+    $started = false;
+    $savepoint = null;
+    try {
+        $driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'mysql') {
+            $metadata = $db->query('SHOW CREATE TABLE `' . $table . '`');
+            if ($metadata === false) {
+                throw new RuntimeException('Aggregate cache metadata is unavailable.');
+            }
+            $row = $metadata->fetch(PDO::FETCH_ASSOC);
+            if ($metadata->errorCode() !== '00000' || $db->errorCode() !== '00000' || !is_array($row)
+                || !preg_match('/\bENGINE=InnoDB\b/i', $row['Create Table'] ?? '')
+                || preg_match('/\bTEMPORARY\b/i', $row['Create Table'] ?? '')) {
+                throw new RuntimeException('Aggregate cache requires a persistent transactional table.');
+            }
+        } elseif ($driver !== 'sqlite') {
+            return false;
+        }
+        if ($db->inTransaction()) {
+            $candidate = 'kadupul_aggregate_items_' . bin2hex(random_bytes(8));
+            if ($db->exec('SAVEPOINT ' . $candidate) === false) {
+                throw new RuntimeException('Aggregate cache savepoint could not be confirmed.');
+            }
+            $savepoint = $candidate;
+            if ($db->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache savepoint could not be confirmed.');
+            }
+        } else {
+            if (!$db->beginTransaction()) {
+                throw new RuntimeException('Aggregate cache transaction could not start.');
+            }
+            $started = true;
+            if ($db->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache transaction could not be confirmed.');
+            }
+        }
+        foreach (array(
+            array("DELETE FROM $table WHERE " . $id_field . ' = ?', array($aggregate_id)),
+            array($sql, $parameters),
+        ) as [$statement_sql, $statement_parameters]) {
+            $statement = $db->prepare($statement_sql);
+            if ($statement === false || !$statement->execute($statement_parameters)
+                || $statement->errorCode() !== '00000' || $db->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache replacement could not be confirmed.');
+            }
+        }
+        if ($started) {
+            if (!$db->commit() || $db->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache commit could not be confirmed.');
+            }
+        } elseif ($db->exec('RELEASE SAVEPOINT ' . $savepoint) === false || $db->errorCode() !== '00000') {
+            throw new RuntimeException('Aggregate cache savepoint release could not be confirmed.');
+        }
         return true;
-    } else {
+    } catch (Throwable $error) {
+        try {
+            if ($db->inTransaction()) {
+                if ($started) {
+                    if (!$db->rollBack() || $db->errorCode() !== '00000') {
+                        throw new RuntimeException('Aggregate cache rollback could not be confirmed.');
+                    }
+                } elseif ($savepoint !== null) {
+                    if ($db->exec('ROLLBACK TO SAVEPOINT ' . $savepoint) === false || $db->errorCode() !== '00000'
+                        || $db->exec('RELEASE SAVEPOINT ' . $savepoint) === false || $db->errorCode() !== '00000') {
+                        throw new RuntimeException('Aggregate cache savepoint rollback could not be confirmed.');
+                    }
+                }
+            }
+        } catch (Throwable $cleanup) {
+            // A failed cleanup must never become a successful replacement result.
+        }
         return false;
     }
 }

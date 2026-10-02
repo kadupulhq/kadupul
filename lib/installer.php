@@ -163,7 +163,14 @@ class Installer implements JsonSerializable
             }
             log_install_high('step', 'Previously complete: ' . clean_up_lines(var_export($install_version, true)));
 
-            if (!cacti_version_compare(CACTI_VERSION, $install_version, '==')) {
+            $failedPoll = $step == Installer::STEP_ERROR
+                && in_array($install_params['Step'] ?? null, array(Installer::STEP_INSTALL, (string) Installer::STEP_INSTALL), true)
+                && !empty(read_config_option('install_error', true));
+            if ($failedPoll) {
+                // The browser can poll after the background process has failed.
+                // Retain that failure; a normal reload still starts the retry wizard.
+                $install_params = array();
+            } elseif (!cacti_version_compare(CACTI_VERSION, $install_version, '==')) {
                 log_install_debug('step', 'Does not match: ' . clean_up_lines(var_export(CACTI_VERSION, true)));
                 // A new version starts a new wizard; it is not a failed validation.
                 $step = Installer::STEP_WELCOME;
@@ -3271,18 +3278,24 @@ class Installer implements JsonSerializable
             }
         }
 
+        if (empty($failure)) {
+            $this->setProgress(Installer::PROGRESS_VERSION_BEGIN);
+            // The owned transaction confirms readback before publishing the marker.
+            // A failed write retains the previous version for a normal retry.
+            if (!$this->recordInstalledVersion()) {
+                $failure = __('The installed database version could not be confirmed. Review the installer errors before retrying.');
+                $this->addError(Installer::STEP_ERROR, 'Database version', $failure);
+            } else {
+                set_install_config_option('install_version', CACTI_VERSION);
+                $this->setProgress(Installer::PROGRESS_VERSION_END);
+            }
+        }
+
         log_install_always('', __('Finished %s Process for v%s', $which, CACTI_VERSION));
 
         set_install_config_option('install_error', $failure);
 
         if (empty($failure)) {
-            // No failures so lets update the version
-            $this->setProgress(Installer::PROGRESS_VERSION_BEGIN);
-            db_execute('TRUNCATE TABLE version');
-            db_execute('INSERT INTO version (cacti) VALUES (\'' . CACTI_VERSION . '\');');
-            set_install_config_option('install_version', CACTI_VERSION);
-            $this->setProgress(Installer::PROGRESS_VERSION_END);
-
             // Sync the remote data collectors
             if ($this->mode != Installer::MODE_POLLER) {
                 $this->setProgress(Installer::PROGRESS_COLLECTOR_SYNC_START);
@@ -3296,6 +3309,77 @@ class Installer implements JsonSerializable
             log_install_always('', $failure);
             $this->setProgress(Installer::PROGRESS_COMPLETE);
             $this->setStep(Installer::STEP_ERROR);
+        }
+    }
+
+    /** Confirm the final marker without destroying a failed upgrade's retry state. */
+    private function recordInstalledVersion(): bool
+    {
+        global $database_sessions, $database_hostname, $database_port, $database_default;
+        $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+        if (!$db instanceof PDO) {
+            return false;
+        }
+        $started = false;
+        try {
+            if ($db->inTransaction()) {
+                return false;
+            }
+            $driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
+            if ($driver === 'mysql') {
+                $metadata = $db->query('SHOW CREATE TABLE `version`');
+                if ($metadata === false) {
+                    return false;
+                }
+                $table = $metadata->fetch(PDO::FETCH_ASSOC);
+                if ($metadata->errorCode() !== '00000' || $db->errorCode() !== '00000'
+                    || !is_array($table) || !preg_match('/\bENGINE=InnoDB\b/i', $table['Create Table'] ?? '')
+                    || preg_match('/\bTEMPORARY\b/i', $table['Create Table'] ?? '')) {
+                    return false;
+                }
+            } elseif ($driver !== 'sqlite') {
+                return false;
+            }
+            if (!$db->beginTransaction()) {
+                return false;
+            }
+            $started = true;
+            if ($db->errorCode() !== '00000') {
+                throw new RuntimeException('Database version transaction could not be confirmed.');
+            }
+            $previous = $db->query('SELECT cacti FROM version' . ($driver === 'mysql' ? ' FOR UPDATE' : ''));
+            if ($previous === false) {
+                throw new RuntimeException('Database version snapshot is unavailable.');
+            }
+            $rows = $previous->fetchAll(PDO::FETCH_COLUMN);
+            if ($previous->errorCode() !== '00000' || $db->errorCode() !== '00000' || count($rows) > 1) {
+                throw new RuntimeException('Database version snapshot could not be confirmed.');
+            }
+            $sql = $rows === [] ? 'INSERT INTO version (cacti) VALUES (?)' : 'UPDATE version SET cacti = ?';
+            if (($write = $db->prepare($sql)) === false || !$write->execute(array(CACTI_VERSION))
+                || $write->errorCode() !== '00000' || $db->errorCode() !== '00000') {
+                throw new RuntimeException('Database version write could not be confirmed.');
+            }
+            $confirmed = $db->query('SELECT cacti FROM version');
+            if ($confirmed === false || $confirmed->fetchAll(PDO::FETCH_COLUMN) !== array(CACTI_VERSION)
+                || $confirmed->errorCode() !== '00000' || $db->errorCode() !== '00000') {
+                throw new RuntimeException('Database version readback could not be confirmed.');
+            }
+            if (!$db->commit() || $db->errorCode() !== '00000') {
+                throw new RuntimeException('Database version commit could not be confirmed.');
+            }
+            return true;
+        } catch (Throwable $error) {
+            try {
+                if ($started && $db->inTransaction()) {
+                    if (!$db->rollBack() || $db->errorCode() !== '00000') {
+                        throw new RuntimeException('Database version rollback could not be confirmed.');
+                    }
+                }
+            } catch (Throwable $cleanup) {
+                // Never publish a successful outcome after uncertain cleanup.
+            }
+            return false;
         }
     }
 
@@ -3695,7 +3779,8 @@ class Installer implements JsonSerializable
 
                 /* Only update database version if database successfully upgraded */
                 if ($ver_status != DB_STATUS_ERROR) {
-                    if (cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
+                    if (cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')
+                        && cacti_version_compare($cacti_upgrade_version, CACTI_VERSION, '<')) {
                         db_execute("UPDATE version SET cacti = '" . $cacti_upgrade_version . "'");
                         $orig_cacti_version = $cacti_upgrade_version;
                     }
@@ -3717,9 +3802,8 @@ class Installer implements JsonSerializable
             return 'WARNING: One or more upgrades failed to install correctly';
         }
 
-        if (cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
-            db_execute("UPDATE version SET cacti = '" . $cacti_upgrade_version . "'");
-        }
+        // The current version is published only by install(), after required
+        // contracts and application defaults have completed successfully.
         require_once __DIR__ . '/rrd_maintenance.php';
         $queue_error = $this->pollerQueueConfigurationError();
         return $queue_error !== '' ? $queue_error : false;

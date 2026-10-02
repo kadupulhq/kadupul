@@ -60,7 +60,7 @@ function webRequest(string $url, string $cookies, ?array $fields = null): array
     $body = curl_exec($curl);
     $status = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
     if (!is_string($body)) {
-        throw new RuntimeException('The fixture HTTP request failed.');
+        throw new RuntimeException('The fixture HTTP request failed with curl code ' . curl_errno($curl) . '.');
     }
 
     return [$status, $body];
@@ -75,6 +75,8 @@ function webToken(string $body): string
     throw new RuntimeException('The real rendered form did not supply a CSRF token.');
 }
 
+$failureUpgrade = ($argv[1] ?? '') === 'failure-upgrade';
+$initialVersion = $failureUpgrade ? '1.2.33' : 'new_install';
 $root = dirname(__DIR__, 2);
 if (!is_file($root . '/.cdef-reference-task-owned-candidate')
     || hash_file('sha256', $root . '/include/config.php') !== hash_file('sha256', $root . '/tests/Fixtures/cdef-reference-runtime-config.php')) {
@@ -95,6 +97,12 @@ try {
     $created = true;
     $database->exec("USE `$schema`");
     installerSeed($database, $root);
+    if ($failureUpgrade) {
+        $database->exec("UPDATE version SET cacti='1.2.33'");
+        $database->exec("INSERT INTO cdef_items (hash,cdef_id,sequence,type,value) VALUES('" . str_repeat('f', 32) . "',15000001,1,1,'1')");
+    }
+    $runtimePhp = $database->prepare("REPLACE INTO settings (name,value) VALUES ('path_php_binary',?)");
+    $runtimePhp->execute([PHP_BINARY]);
     $password = bin2hex(random_bytes(24));
     $statement = $database->prepare("UPDATE user_auth SET password=?, enabled='on', locked='', must_change_password='', password_change='' WHERE id=1");
     $statement->execute([password_hash($password, PASSWORD_DEFAULT)]);
@@ -142,7 +150,7 @@ try {
     $anonymous = json_decode($anonymousBody, true);
     installerAssert(
         $status === 200 && is_array($anonymous) && ($anonymous['status'] ?? null) === '500'
-        && !isset($anonymous['Step']) && $database->query('SELECT cacti FROM version')->fetchColumn() === 'new_install',
+        && !isset($anonymous['Step']) && $database->query('SELECT cacti FROM version')->fetchColumn() === $initialVersion,
         'actual web installer refuses anonymous valid-CSRF mutation without starting installation'
     );
     [$status] = webRequest($base . 'install.php', $cookies, ['action' => 'login', 'login_username' => 'admin',
@@ -152,6 +160,7 @@ try {
     installerAssert($status === 200 && !str_contains($body, 'login_username'), 'authenticated installer page uses genuine cookie session');
     $token = webToken($body);
     $step = 1;
+    $repaired = false;
     $deadline = microtime(true) + 300;
     while (microtime(true) < $deadline) {
         [$status, $body] = webRequest($base . 'step_json.php', $cookies, ['__csrf_magic' => $token,
@@ -169,6 +178,27 @@ try {
             usleep(250000);
             continue;
         }
+        if ((int) $data['Step'] === 99 && $failureUpgrade && !$repaired) {
+            installerAssert(
+                $database->query("SELECT value FROM settings WHERE name='install_error'")->fetchColumn()
+                === 'The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.',
+                'actual web background upgrade reports native contract failure'
+            );
+            installerAssert(
+                $database->query('SELECT cacti FROM version')->fetchColumn() === '1.2.33',
+                'failed actual 1.2.33 web upgrade retains retryable previous version'
+            );
+            $database->exec("DELETE FROM cdef_items WHERE cdef_id=15000001");
+            $repaired = true;
+            [$status, $body] = webRequest($base . 'install.php', $cookies);
+            installerAssert(
+                $status === 200 && !str_contains($body, 'login_username'),
+                'repaired actual web upgrade restarts through existing authenticated installer'
+            );
+            $token = webToken($body);
+            $step = 1;
+            continue;
+        }
         if ((int) $data['Step'] === 99 || (!$data['Next']['Enabled'] && !in_array((int) $data['Step'], [6, 10], true))) {
             echo 'WEB errors=' . json_encode($data['Errors']) . "\n";
             throw new RuntimeException('The actual web installer refused progression at step ' . (int) $data['Step'] . '.');
@@ -180,6 +210,7 @@ try {
         }
         $step = (int) $data['Next']['Step'];
     }
+    installerAssert(!$failureUpgrade || $repaired, 'upgrade failure fixture reaches real failure and repaired retry');
     installerAssert(isset($data) && (int) $data['Step'] === 98, 'actual web background Installer reaches completion');
     installerAssert(
         $database->query('SELECT cacti FROM version')->fetchColumn() === trim(file_get_contents($root . '/include/cacti_version')),

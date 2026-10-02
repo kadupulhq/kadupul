@@ -14,9 +14,9 @@ spec.loader.exec_module(runner)
 
 
 class CdefReferenceRunnerTest(unittest.TestCase):
-    def test_all_eleven_required_probes_exist_and_names_are_unique(self):
-        self.assertEqual(11, len(runner.CASES))
-        self.assertEqual(11, len({name for name, *_ in runner.CASES}))
+    def test_all_fourteen_required_probes_exist_and_names_are_unique(self):
+        self.assertEqual(14, len(runner.CASES))
+        self.assertEqual(14, len({name for name, *_ in runner.CASES}))
         for _, probe, _, _ in runner.CASES:
             self.assertTrue((runner.ROOT / runner.probe_path(probe)).is_file())
 

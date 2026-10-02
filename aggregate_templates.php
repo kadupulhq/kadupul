@@ -237,8 +237,10 @@ function aggregate_form_save()
         $items_to_save[] = $item_new;
     }
 
-    if ($items_changed) {
-        aggregate_graph_items_save($items_to_save, 'aggregate_graph_templates_item');
+    if ($items_changed && !aggregate_graph_items_save($items_to_save, 'aggregate_graph_templates_item')) {
+        raise_message('aggregate_items_save_failed', __('Aggregate items could not be saved. Other graph settings may already have been saved; review them before retrying.'), MESSAGE_LEVEL_ERROR);
+        header('Location: aggregate_templates.php?header=false&action=edit&id=' . $id);
+        return;
     }
 
     if ($save_me || $params_changed || $items_changed) {

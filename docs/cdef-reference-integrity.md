@@ -47,3 +47,28 @@ The contract protects ordinary row writes. Privileged DROP/TRUNCATE operations c
 The native probes create and remove only random task-owned schemas and, where needed, random task-owned principals. They read database credentials from `KADUPUL_REFERENCE_TEST_DSN`, `KADUPUL_REFERENCE_TEST_USER` and `KADUPUL_REFERENCE_TEST_PASSWORD`; no credential values belong in source or proof reports. The installer probes require a marked copied candidate and an exact credential-free fixture configuration, preserving existing installations and source evidence.
 
 The normal upgrade probe seeds the historical 1.2.33 schema from commit `5a1c81c2dc89508052c7b54bf9db491f32f9beb7`, then invokes the actual production upgrade entrypoint. Its fixture parser removes the leading SPDX comment and recognizes that historical source's unused `DELIMITER //` declaration: the actual statements use semicolons and have no `//` terminators. This is historical source-schema parser normalization, not evidence that the old file executes unchanged through the MySQL command line. Actual SQL statements and data remain unchanged, and current source's real `END$$` trigger delimiters are honored.
+
+## Upgrade markers and cache replacement
+
+The current release marker is written only after required contracts and application defaults succeed. Lower intermediate upgrade checkpoints remain available, but `upgradeDatabase()` cannot publish the current release itself. The final writer locks the actual version snapshot, accepts an empty fresh table or one existing marker, checks the write and exact readback, and commits its owned transaction. Native write refusal or readback mismatch retains the previous marker for retry. Caller transactions, nontransactional version tables, temporary shadows and multiple markers are refused. An uncertain commit or cleanup is reported as unconfirmed rather than successful.
+
+Aggregate cache replacement checks the actual selected connection and persistent InnoDB table, then deletes and reinserts in one owned transaction or a caller savepoint. It checks native PDO prepare, execute, SQLSTATE and commit/release outcomes. The two legacy aggregate editors and graph conversion stop propagation and success reporting after refusal. Other graph settings written earlier by those workflows may remain; the error asks the operator to review them before retrying.
+
+A stale browser Step 97 poll preserves a persisted failed Step 99 and its error instead of silently starting another background upgrade. A normal authenticated reload still starts the existing retry wizard. Constructor regressions cover failed polling, healthy polling, a wizard that has not started, and an explicit new-wizard request.
+
+The runner requires fourteen native probes, including the production cache replacement and final marker writers. Its web failure/retry case starts at version 1.2.33, uses normal local authentication and rendered CSRF, reaches a genuine background contract failure, confirms the old marker, repairs only the fixture orphan, and completes the normal authenticated retry. Cache races use two real connections under READ COMMITTED and REPEATABLE READ and confirm a server lock wait before releasing the deleting actor.
+
+## Gettext compatibility generation
+
+Some legacy consumers pass dynamic labels to `__()`, including the graph editor's `Cur:` and `Avg:` legend labels. Static extraction alone cannot safely remove historical catalogue entries. This change preserves every existing key and translation while adding the new refusal messages, including compiled French translations.
+
+Generation uses the normal `locales/build_gettext.sh` flow followed by a GNU gettext compatibility union. The baseline is the reviewed source commit `9fc51ad209151d4b8f8080b704ef76c941e9a2b2`. Reproduce it with these steps in an exclusively owned temporary directory:
+
+1. Run `locales/build_gettext.sh` with GNU gettext available. Save its newly extracted `cacti.pot` as `current.pot`.
+2. Export the baseline POT with `git show 9fc51ad209151d4b8f8080b704ef76c941e9a2b2:locales/po/cacti.pot > previous.pot`.
+3. Run `msgcat --use-first --no-wrap current.pot previous.pot -o locales/po/cacti.pot`. Current source locations win; historical identities remain available.
+4. For every PO file, export its corresponding baseline file using `git show`, then run `msgcat --use-first --no-wrap current.po previous.po -o merged.po`.
+5. Run `msgmerge --backup=off --no-wrap --no-fuzzy-matching --update -F merged.po locales/po/cacti.pot`, then `msgattrib --no-obsolete --no-wrap merged.po -o locales/po/<locale>.po`.
+6. Compile each result with `msgfmt --check-format locales/po/<locale>.po -o locales/LC_MESSAGES/<locale>.mo`.
+
+The normalized result adds fourteen POT identities, removes none, and changes no translations of existing identities. Ordering and current source references may change. The catalogue regression also verifies the historical dynamic legend labels and their compiled French values.

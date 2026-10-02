@@ -22,10 +22,13 @@ CASES = (
     ('delete', 'legacy_delete', (), False),
     ('raw_waiter', 'native', (), False),
     ('production_waiter', 'production_waiter', (), False),
+    ('aggregate_replacement', 'aggregate', (), False),
+    ('version_marker', 'version', (), False),
     ('current_cli', 'installer', (), True),
     ('fresh_cli', 'normal_installer', ('fresh',), True),
     ('upgrade_cli', 'normal_installer', ('upgrade',), True),
     ('web', 'web_installer', (), True),
+    ('failure_upgrade_web', 'web_installer', ('failure-upgrade',), True),
     ('failure_cli', 'installer_failure', (), True),
 )
 
@@ -107,7 +110,7 @@ def run(output):
                 raise RuntimeError('Source changed while actual native evidence was produced.')
     finally:
         (output / 'results.json').write_text(json.dumps(report, indent=2) + '\n')
-    print('PASS all eleven actual native probes on unchanged source', flush=True)
+    print('PASS all ' + str(len(CASES)) + ' actual native probes on unchanged source', flush=True)
 
 
 if __name__ == '__main__':

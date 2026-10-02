@@ -742,7 +742,11 @@ function form_actions()
                         $aggregate_graph_items[]             = $item_new;
                     }
 
-                    aggregate_graph_items_save($aggregate_graph_items, 'aggregate_graphs_graph_item');
+                    if (!aggregate_graph_items_save($aggregate_graph_items, 'aggregate_graphs_graph_item')) {
+                        raise_message('aggregate_items_save_failed', __('Aggregate items could not be saved. Other graph settings may already have been saved; review them before retrying.'), MESSAGE_LEVEL_ERROR);
+                        header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
+                        return;
+                    }
                 } else {
                     $aggregate_graph_items = db_fetch_assoc_prepared(
                         'SELECT *
