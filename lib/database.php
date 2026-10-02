@@ -104,7 +104,7 @@ function db_connect_real(
 
     while ($i <= $retries) {
         try {
-            if (strpos($device, '/') !== false && filetype($device) == 'socket') {
+            if (str_contains($device, '/') && filetype($device) == 'socket') {
                 $cnn_id = new PDO("$db_type:unix_socket=$device;dbname=$db_name;charset=utf8", $user, $pass, $flags);
             } else {
                 $cnn_id = new PDO("$db_type:host=$device;port=$port;dbname=$db_name;charset=utf8", $user, $pass, $flags);
@@ -147,7 +147,7 @@ function db_connect_real(
 
             $ver = db_get_global_variable('version', $cnn_id);
 
-            if (strpos($ver, 'MariaDB') !== false) {
+            if (str_contains($ver, 'MariaDB')) {
                 $srv = 'MariaDB';
                 $ver  = str_replace('-MariaDB', '', $ver);
                 $required_modes[] = 'NO_ENGINE_SUBSTITUTION';
@@ -1370,7 +1370,7 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
             // FIXME: Need to still check default value
             $arr = db_fetch_row("SHOW columns FROM `$table` LIKE '" . $column['name'] . "'", $log, $db_conn);
 
-            if (strpos(strtolower($arr['Type']), ' unsigned') !== false) {
+            if (str_contains(strtolower($arr['Type']), ' unsigned')) {
                 $arr['Type'] = str_ireplace(' unsigned', '', $arr['Type']);
                 $arr['unsigned'] = true;
             }
@@ -1531,7 +1531,7 @@ function db_format_index_create($indexes)
         $outindex = '';
         foreach ($indexes as $index) {
             $index = trim($index);
-            if (substr($index, -1) == ')') {
+            if (str_ends_with($index, ')')) {
                 $outindex .= ($outindex != '' ? ',' : '') . $index;
             } else {
                 $outindex .= ($outindex != '' ? ',' : '') . '`' . $index . '`';
@@ -1541,7 +1541,7 @@ function db_format_index_create($indexes)
         return $outindex;
     } else {
         $indexes = trim($indexes);
-        if (substr($indexes, -1) == ')') {
+        if (str_ends_with($indexes, ')')) {
             return $indexes;
         } else {
             return '`' . trim($indexes, ' `') . '`';
@@ -1996,7 +1996,7 @@ function sql_save($array_items, $table_name, $key_cols = 'id', $autoinc = true, 
                 if ($cols[$key]['null'] == 'YES') {
                     // TODO: We should make 'NULL', but there are issues that need to be addressed first
                     $array_items[$key] = 0;
-                } elseif (strpos($cols[$key]['extra'], 'auto_increment') !== false) {
+                } elseif (str_contains($cols[$key]['extra'], 'auto_increment')) {
                     $array_items[$key] = 0;
                 } elseif ($cols[$key]['default'] == '') {
                     // TODO: We should make 'NULL', but there are issues that need to be addressed first

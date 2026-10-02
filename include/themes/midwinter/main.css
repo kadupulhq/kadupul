@@ -5,28 +5,28 @@
  */
 
 /* prerequisites  */
-@import url('./css/pre/fonts.css?a23648e6dc13c913f9ae2e993735631b');
-@import url('./css/pre/colors.css?6a3d4dc1567013fda818848070dd9939');
-@import url('./css/pre/keyframes.css?6d1d6a79b3c3bf783d25ff4a0cb83d59');
+@import url('./css/pre/fonts.css?v=83e1fd1d2e69be1b97f648281d108456285f7e88a75e145cd5fbf9dc4ed04cf1');
+@import url('./css/pre/colors.css?v=553f3b95f6da68c614a1100fcb5b318d1f9abd215a488da71bfc1eb6165144a4');
+@import url('./css/pre/keyframes.css?v=19c1c6828ae8704261070431637cacb17c8a3637243e7f9d62a74d079bae8529');
 
 /* Cacti core */
-@import url('./css/media/core.css?a76149aad02bc3891e793341e435a144') all;
-@import url('./css/media/core-portrait.css?1b6db673b2a1f9c4ec954843f2e76ca5') screen and (max-width: 600px);
-@import url('./css/media/core-landscape.css?e0d3497d8324f1695738d1ad40328d39') screen and (min-width: 601px);
-@import url('./css/media/print.css?f8c80271650344f45629199331592924') print;
+@import url('./css/media/core.css?v=1eeb2f6109dc12e58351c87e1a15ae70a583649d6948b3500177e23a82ee4e56') all;
+@import url('./css/media/core-portrait.css?v=72acf3f7e1a0541f72feb38970dfa9f0ecc45391c735de4ce183a2641035d416') screen and (max-width: 600px);
+@import url('./css/media/core-landscape.css?v=91c66ccf6eddda1e6e07edac0954f71b38c0134529a60cb4a85655df80b7c5ef') screen and (min-width: 601px);
+@import url('./css/media/print.css?v=c2339d8a7e8b32d655d71af788b944dac62c6c4c4653f5b9430f9b16bd3c1700') print;
 
 /* standard mode */
-@import url('./css/media/standard.css?2458dd4d97dd94d3891b48e239ff6dd8') screen;
-@import url('./css/media/standard-portrait.css?1fc97918874907735b4ed825cbfd120c') screen and (max-width: 600px);
-@import url('./css/media/standard-landscape.css?857b8dce04e7cb60a0c06942c39fb51d') screen and (min-width: 601px);
+@import url('./css/media/standard.css?v=b4a8bd57349083490f91e9155591387b65edaa85b48c1942a2667dc010c91427') screen;
+@import url('./css/media/standard-portrait.css?v=f27f423096cb855891874d75f5c58b9083d539debc91f46a6b5f5d3335fd490c') screen and (max-width: 600px);
+@import url('./css/media/standard-landscape.css?v=11ead2e383d647697c12fb10db1833985b2c05e19063ae541b35f7b4e4f04350') screen and (min-width: 601px);
 
 /* compact mode */
-@import url('./css/media/compact.css?0bda9f47e7be64d1c2709f24cd70ba00') screen;
-@import url('./css/media/compact-portrait.css?67a4686de7e995b4e737704d55144a18') screen and (max-width: 600px);
-@import url('./css/media/compact-landscape.css?9bf85b742110c3b90d7dc8f8ae897ff0') screen and (min-width: 601px);
+@import url('./css/media/compact.css?v=2f3b442e5225bffa09af9603e30ea546a1180090b9f7768c5302a2fdb1409cfc') screen;
+@import url('./css/media/compact-portrait.css?v=09d77ff208401c2d503a2edc3221694adbb394151c22e0a40511093ea80cb03f') screen and (max-width: 600px);
+@import url('./css/media/compact-landscape.css?v=6d638fd897d3d579efec211aaadb54b26c97cd98ac7f9691692926b55c2b736b') screen and (min-width: 601px);
 
 /* extensions & addons */
-@import url('billboard.midwinter.css?e442c55720734e56c33de67e26a596de');
-@import url('jquery-ui.midwinter.css?bfebc20584143af821ba418aa6b5d6c3');
+@import url('billboard.midwinter.css?v=35f3282069b3ae2b254e3a6614434f6414410a8ffb06a1851b03a987cdd9279c');
+@import url('jquery-ui.midwinter.css?v=69ea09d77affa1182dfeb5930ca47bac195b99a61d82423092648e26d37d2a64');
 
 /* End of file */

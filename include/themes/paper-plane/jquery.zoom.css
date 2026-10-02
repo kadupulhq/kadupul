@@ -235,10 +235,6 @@
 	color: #FFFFFF;
 }
 
-.zoom-menu-highlight {
-	#background: #E0EDFE;
-}
-
 .zoom-hidden {
 	z-index: -999;
 	position: fixed;

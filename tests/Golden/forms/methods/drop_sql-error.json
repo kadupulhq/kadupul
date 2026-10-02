@@ -1,0 +1,12 @@
+{
+    "session": {
+        "form_change_actions": {
+            "host_id": "hostChanged()"
+        },
+        "sess_field_values": {
+            "host_id": "7"
+        }
+    },
+    "diagnostics": [],
+    "log": []
+}
