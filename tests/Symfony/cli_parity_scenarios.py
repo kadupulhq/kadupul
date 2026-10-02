@@ -154,6 +154,40 @@ def verify_tree_cli(harness, check):
         after_invalid_site = harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id = {tree_one}").strip()
         check(invalid_site['exit'] == 1 and before_invalid_site == after_invalid_site,
               'tree CLI rejects a nonexistent site without creating a blank row')
+        invalid_tree_id = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=header', '--tree-id=not-a-number',
+                                                            '--parent-node=0', '--name=invalid-tree-id'])
+        check(invalid_tree_id['exit'] == 1 and 'existing --tree-id' in invalid_tree_id['stderr'],
+              'tree CLI rejects a malformed target tree id')
+
+        invalid_parent_id = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=header', f'--tree-id={tree_one}',
+                                                              '--parent-node=-1', '--name=invalid-parent-id'])
+        check(invalid_parent_id['exit'] == 1 and 'non-negative integer' in invalid_parent_id['stderr'],
+              'tree CLI rejects a negative parent id')
+
+        harness.sql(f'INSERT INTO graph_tree_items (graph_tree_id, parent, host_id) VALUES ({tree_one}, 0, {host_id})')
+        duplicate_host = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=host', f'--tree-id={tree_one}',
+                                                           '--parent-node=0', f'--host-id={host_id}'])
+        check(duplicate_host['exit'] == 1 and 'Failed to create the node' in duplicate_host['stderr'],
+              'tree CLI reports duplicate node rejection as a failed command')
+
+        api_probe = f'''\
+require '/var/www/html/include/cli_check.php';
+require_once '/var/www/html/lib/api_automation_tools.php';
+require_once '/var/www/html/lib/api_tree.php';
+$tree = {tree_one};
+$foreignParent = {parent_two};
+$graphParent = {graph_item};
+$rejected = [
+    api_tree_item_save(0, 999999999, 1, 0, 'missing-tree', 0, 0, 0, 1, 2, false) === false,
+    api_tree_item_save(0, $tree, 1, 999999999, 'missing-parent', 0, 0, 0, 1, 2, false) === false,
+    api_tree_item_save(0, $tree, 1, $foreignParent, 'foreign-parent', 0, 0, 0, 1, 2, false) === false,
+    api_tree_item_save(0, $tree, 1, $graphParent, 'graph-parent', 0, 0, 0, 1, 2, false) === false,
+];
+echo json_encode($rejected);
+'''
+        api_result = harness.command('php', '-r', api_probe)
+        check(api_result['exit'] == 0 and api_result['stdout'].strip() == '[true,true,true,true]',
+              'tree API rejects missing trees and non-header parents')
     finally:
         harness.sql(f"DELETE FROM graph_tree_items WHERE graph_tree_id IN (SELECT id FROM graph_tree WHERE name LIKE '{prefix}-%'); "
                     f"DELETE FROM graph_tree WHERE name LIKE '{prefix}-%';")

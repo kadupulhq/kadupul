@@ -756,7 +756,7 @@ function api_tree_item_save(
     input_validate_input_number($tree_id);
     input_validate_input_number($parent_tree_item_id);
 
-    if (!db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE id = ?', array($tree_id))) {
+    if (db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE id = ?', array($tree_id)) === false) {
         return false;
     }
 

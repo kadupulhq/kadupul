@@ -86,7 +86,7 @@ final class GraphOptionsGenerator
             $unit_value = '--y-grid=' . rrdtool_pipe_quote_substituted($graph['unit_value'], $graph) . RRD_NL;
         }
 
-        if (preg_match('/^[0-9]+$/', $graph['unit_exponent_value'])) {
+        if (preg_match('/^-?[0-9]+$/D', (string) $graph['unit_exponent_value'])) {
             $unit_exponent_value = '--units-exponent=' . rrdtool_pipe_quote($graph['unit_exponent_value']) . RRD_NL;
         }
 

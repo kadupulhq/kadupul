@@ -763,6 +763,111 @@ function handleTableNav() {
 	});
 }
 
+/** setupSelectmenuScrollClose - Close open select menus when their scroll
+ *  container moves so the detached menu cannot remain over unrelated fields. */
+function setupSelectmenuScrollClose() {
+	const containers = $('.cactiConsoleContentArea, .cactiGraphContentArea, .cactiGraphContentAreaPreview, .cactiTreeNavigationArea').add(window);
+	const positions = new Map();
+
+	// A browser may queue scroll while bringing the button into view. Capture
+	// its position when opening, so that earlier movement cannot close the menu.
+	$(document).off('selectmenuopen.cactiSelectmenu').on('selectmenuopen.cactiSelectmenu', 'select', function() {
+		positions.clear();
+		containers.each(function() {
+			positions.set(this, [$(this).scrollTop(), $(this).scrollLeft()]);
+		});
+	});
+
+	containers.off('scroll.cactiSelectmenu').on('scroll.cactiSelectmenu', function() {
+		if (!$('.ui-selectmenu-open').length) {
+			return;
+		}
+		const previous = positions.get(this);
+		if (previous && previous[0] === $(this).scrollTop() && previous[1] === $(this).scrollLeft()) {
+			return;
+		}
+		$('select').each(function() {
+			if ($(this).selectmenu('instance') !== undefined) {
+				$(this).selectmenu('close');
+			}
+		});
+	});
+}
+
+/** Shared editor controls used by the jQuery UI themes. */
+function setupThemeSearchIcons() {
+	for (const [id, label] of [['filter', searchFilter], ['filterd', searchFilter], ['rfilter', searchRFilter]]) {
+		const input = $('input[id="' + id + '"]');
+		if (input.length && input.next('i.fa-search').length < 1) {
+			input.after("<i class='fa fa-search filter'/>").attr('autocomplete', 'off').attr('placeholder', label).parent('td').css('white-space', 'nowrap');
+		}
+	}
+}
+
+function setupThemeSelectmenus() {
+	$('select.colordropdown').dropcolor();
+
+	$('select').not('.colordropdown').each(function() {
+		if ($(this).prop('multiple') != true) {
+			$(this).each(function() {
+				$(this).selectmenu({
+					open: function(event, ui) {
+						var instance = $(this).selectmenu('instance');
+						instance.menuInstance.focus(null, instance._getSelectedItem());
+					},
+					change: function(event, ui) {
+						$(this).val(ui.item.value).change();
+					},
+					position: {
+						my: "left top",
+						at: "left bottom",
+						collision: "flip"
+					},
+					width: 'auto'
+				});
+
+				$(this).selectmenu('menuWidget').css('max-height', '250px');
+			});
+		} else {
+			$(this).addClass('ui-state-default ui-corner-all');
+		}
+	});
+}
+
+function setupThemeFormControls(width) {
+	setupThemeSearchIcons();
+
+	$('input#filter, input#rfilter').addClass('ui-state-default ui-corner-all');
+
+	$('input[type="text"], input[type="password"], input[type="checkbox"], textarea').not('image').addClass('ui-state-default ui-corner-all');
+
+	$('.checkboxgroup').children('br').remove();
+	$('.checkboxgroup').buttonset();
+
+	// Turn file buttons into jQueryUI buttons
+	$('.import_label').button();
+	$('.import_button').change(function() {
+		text=this.value;
+		setImportFile(text);
+	});
+	setImportFile(noFileSelected);
+
+	function setImportFile(fileText) {
+		$('.import_text').text(fileText);
+	}
+
+	maxWidth = width;
+
+	setupThemeSelectmenus();
+
+}
+
+function setupThemeLogos(icon) {
+	const markup = "<i class='fa " + icon + "'/>";
+	$('.cactiLoginLogo').html(markup);
+	$('.cactiLogoutLogo').html(markup);
+}
+
 /** applySkin - This function re-asserts all javascript behavior to a page
  *  that can't be set using a live attribute 'on()' */
 function applySkin() {
@@ -824,6 +929,8 @@ function applySkin() {
 	if (typeof themeReady == 'function') {
 		themeReady();
 	}
+
+	setupSelectmenuScrollClose();
 
 	makeFiltersResponsive();
 
@@ -3219,7 +3326,8 @@ function setupEllipsis() {
 }
 
 function keepWindowSize() {
-	$(window).on('resize', function (event) {
+	// applySkin() and several themes call this on every page load
+	$(window).off('resize.keepWindowSize').on('resize.keepWindowSize', function (event) {
 		waitForFinalEvent(function() {
 			$('.cactiGraphContentArea').show();
 

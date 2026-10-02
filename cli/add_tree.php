@@ -242,8 +242,7 @@ if (cacti_sizeof($parms)) {
         }
 
         if (!ctype_digit((string) $parentNode)) {
-            print "ERROR: parent-node $parentNode must be a non-negative integer\n";
-            display_help();
+            fwrite(STDERR, "ERROR: parent-node $parentNode must be a non-negative integer\n");
             exit(1);
         }
 
