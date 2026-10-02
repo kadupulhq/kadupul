@@ -49,6 +49,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
+
+- Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
 - Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
 
