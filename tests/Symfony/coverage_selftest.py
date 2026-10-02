@@ -3,10 +3,37 @@ import argparse
 import copy
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def prepare_database_failure_reports(directory, scratch, source, mutation):
+    """Retain separate real reports and corrupt only the selected observation."""
+    if mutation not in ('unmeasured', 'stale'):
+        raise ValueError('Unknown database measurement mutation')
+    reports = [(path, json.loads(path.read_text()))
+               for path in sorted((directory / 'raw').glob('coverage-*.json'))]
+    names = {path.name for path, _ in reports}
+    if any(path.name not in names or path.is_symlink() or not path.is_file()
+           for path in (scratch / 'raw').iterdir()):
+        raise RuntimeError('Unexpected scratch coverage reports')
+    if not any(1 in (report['files'] or {}).get(source, {}).get('lines', {}).values()
+               for _, report in reports):
+        raise RuntimeError('Self-test requires real database-session authentication measurements')
+    for path, report in reports:
+        destination = scratch / 'raw' / path.name
+        shutil.copyfile(path, destination)
+        observation = (report['files'] or {}).get(source)
+        if observation is None:
+            continue
+        if mutation == 'unmeasured':
+            observation['lines'] = {line: -1 for line in observation['lines']}
+        else:
+            observation['sha256'] = '0' * 64
+        destination.write_text(json.dumps(report))
 
 
 def main():
@@ -21,7 +48,27 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php',
+        'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php',
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php',
+        'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php',
+        'about.php', 'src/Platform/Infrastructure/Symfony/Controller/AboutController.php',
+        'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
+        'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
+        'vdef.php',
+        'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
         'links.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'color.php',
+        'src/Graphing/Domain/PaletteCsv.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorStore.php',
+        'src/Graphing/Infrastructure/Legacy/PaletteSql.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorPreferences.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorCsvController.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorEditController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -211,10 +258,59 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
+    about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
+    about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
+        'data-source-profile-test-hash': 'Integration test source differs',
+        'about-authentication-test-hash': 'Integration test source differs',
+        'missing-data-source-profile-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'palette-test-hash': 'Integration test source differs',
+        'missing-palette-handoff-check': 'Incomplete Symfony integration',
+        'missing-palette-concurrent-auth': 'Incomplete Symfony integration',
+        'missing-palette-write-guards': 'Incomplete Symfony integration',
+        'missing-palette-persistent-storage': 'Incomplete Symfony integration',
+        'missing-palette-preference-guards': 'Incomplete Symfony integration',
+        'missing-links-locale-restoration': 'Incomplete Symfony integration',
+        'missing-palette-unicode-labels': 'Incomplete Symfony integration',
+        'missing-palette-review-check-0': 'Incomplete Symfony integration',
+        'missing-palette-review-check-1': 'Incomplete Symfony integration',
+        'missing-palette-review-check-2': 'Incomplete Symfony integration',
+        'missing-palette-review-check-3': 'Incomplete Symfony integration',
+        'missing-palette-review-check-4': 'Incomplete Symfony integration',
+        'missing-palette-review-check-5': 'Incomplete Symfony integration',
+        'missing-palette-review-check-6': 'Incomplete Symfony integration',
+        'missing-palette-review-check-7': 'Incomplete Symfony integration',
+        'missing-palette-review-check-8': 'Incomplete Symfony integration',
+        'palette-sql-probe-hash': 'Integration test source differs',
+
+        'vdef-test-hash': 'Integration test source differs',
+        'missing-vdef-persistent-storage': 'Incomplete Symfony integration',
+        'vdef-probe-hash': 'Integration test source differs',
+        'vdef-browser-probe-hash': 'Integration test source differs',
+        'vdef-browser-handler-hash': 'Integration test source differs',
+        'missing-vdef-selection-check-0': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-1': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-2': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-3': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-4': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-5': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-6': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-7': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-8': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-9': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-10': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-11': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-12': 'Incomplete Symfony integration',
+        'missing-vdef-array-type-check': 'Incomplete Symfony integration',
+        'missing-vdef-french-item-check': 'Incomplete Symfony integration',
+        'missing-vdef-reference-check': 'Incomplete Symfony integration',
+        'missing-vdef-browser-check': 'Incomplete Symfony integration',
+        'missing-vdef-legacy-bound-check': 'Incomplete Symfony integration',
+        'missing-vdef-engine-check': 'Incomplete Symfony integration',
+        'missing-vdef-handoff': 'Incomplete Symfony integration',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -265,6 +361,8 @@ def main():
         'cli-audit-original-test-hash': 'Integration test source differs',
         'missing-audit-check': 'Incomplete Symfony integration checks',
     }
+    for index in range(3):
+        failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -274,12 +372,72 @@ def main():
         output = scratch / 'result.xml'
         for index in range(len(statistics_checks)):
             failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
+        for index in range(len(about_authentication_checks)):
+            failures['missing-about-authentication-check-' + str(index)] = 'Incomplete Symfony integration'
         for case, expected in failures.items():
             data = copy.deepcopy(measured)
             evidence = copy.deepcopy(manifest)
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'data-source-profile-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
+            elif case == 'about-authentication-test-hash':
+                evidence['source_sha256']['tests/Symfony/about_authentication_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-about-authentication-check-'):
+                missing = about_authentication_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case == 'missing-palette-handoff-check':
+                evidence['checks'].remove('CSV exact name data handoff')
+            elif case.startswith('missing-palette-review-check-'):
+                required_palette_checks = ['silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes', 'duplicate hex creation is a known validation failure after rollback', 'duplicate hex edit is a known validation failure after rollback', 'duplicate hex edit preserves the original name and hex', 'unnamed palette color has a visible edit link and accessible hex label', 'palette exports neutralize formulas and preserve exact versioned roundtrip names', 'unsupported or malformed palette literal marker rejects the whole import', 'ordinary legacy CSV import preserves its leading apostrophe literally', 'console-only palette account cannot parse or mutate any route']
+                missing = required_palette_checks[int(case.removeprefix('missing-palette-review-check-'))]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-palette-selection-check-'):
+                checks = ['palette large pages keep all rows readable but enable at most 100 deletable choices', 'palette 100-color confirmation preserves every selected identity and revision', 'palette forged 101-color selection is refused before mutation']
+                evidence['checks'].remove(checks[int(case.removeprefix('missing-palette-selection-check-'))])
+            elif case == 'missing-palette-persistent-storage':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'palette writes and preferences reject all InnoDB temporary shadows without changing persistent observer rows']
+            elif case == 'missing-palette-write-guards':
+                evidence['checks'].remove('palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
+            elif case == 'missing-palette-unicode-labels':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'palette Unicode invisible names use accessible hex labels while visible names and CSV bytes remain exact']
+            elif case == 'missing-links-locale-restoration':
+                evidence['checks'].remove('links French fixture restores exact original global and actor language settings')
+            elif case == 'missing-palette-preference-guards':
+                evidence['checks'].remove('palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
+            elif case == 'missing-palette-concurrent-auth':
+                evidence['checks'].remove('two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
+            elif case == 'palette-sql-probe-hash':
+                evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
+            elif case == 'palette-test-hash':
+                evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
+            elif case == 'missing-data-source-profile-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/data_source_profile_scenarios.py')
+            elif case == 'vdef-probe-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
+            elif case == 'vdef-browser-probe-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_browser_probe.cjs'] = '0' * 64
+            elif case == 'vdef-browser-handler-hash':
+                evidence['source_sha256']['public/js/vdef-item.js'] = '0' * 64
+            elif case.startswith('missing-vdef-selection-check-'):
+                checks = ['VDEF malformed list arrays return controlled 400 before catalog reads: filter', 'VDEF malformed list arrays return controlled 400 before catalog reads: sort', 'VDEF malformed list arrays return controlled 400 before catalog reads: direction', 'VDEF malformed list arrays return controlled 400 before catalog reads: has_graphs', 'VDEF own legacy reference deletes through CSRF form: 0', 'VDEF own legacy reference deletes through CSRF form: 1', 'VDEF own legacy reference deletes through CSRF form: 2', 'VDEF own legacy reference deletes through CSRF form: 3', 'VDEF own legacy reference deletes through CSRF form: 4', 'VDEF own legacy reference deletes through CSRF form: 5', 'VDEF own legacy reference deletes through CSRF form: 6', 'VDEF own legacy reference deletes through CSRF form: 7', 'VDEF whole selected reference set deletes through CSRF form']
+                evidence['checks'].remove(checks[int(case.rsplit('-', 1)[1])])
+            elif case.startswith('missing-vdef-') and case in ['missing-vdef-array-type-check', 'missing-vdef-french-item-check', 'missing-vdef-reference-check', 'missing-vdef-browser-check', 'missing-vdef-legacy-bound-check']:
+                omitted = {'missing-vdef-array-type-check': 'VDEF array type query returns controlled 400 without mutation',
+                           'missing-vdef-french-item-check': 'VDEF unknown item deletion uses French catalog label',
+                           'missing-vdef-reference-check': 'VDEF nested reference refuses function overwrite',
+                           'missing-vdef-browser-check': 'VDEF browser type change and save pass under CSP',
+                           'missing-vdef-legacy-bound-check': 'VDEF oversized legacy parent ID falls back'}[case]
+                evidence['checks'].remove(omitted)
+            elif case == 'missing-vdef-engine-check':
+                evidence['checks'].remove('VDEF nontransactional table refused: vdef')
+            elif case == 'missing-vdef-persistent-storage':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'VDEF writes reject every InnoDB temporary participant and preserve persistent observer rows']
+            elif case == 'vdef-test-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_scenarios.py'] = '0' * 64
+            elif case == 'missing-vdef-handoff':
+                evidence['checks'].remove('VDEF duplicate preserves all item rows')
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'details-test-hash':
@@ -375,6 +533,32 @@ def main():
             if output.read_text() != 'previous report':
                 raise RuntimeError(f'{case}: invalid measurements replaced the previous report')
             print('PASS ' + case, flush=True)
+
+    database_manifest = json.loads((args.database / 'observations.json').read_text())
+    database_paths = [prefix + 'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
+                      for name in ('AuthenticationDatabaseSessionHandler', 'ReadOnlyDatabaseSessionHandler')]
+    with tempfile.TemporaryDirectory(prefix='symfony-database-authentication-negative-') as directory:
+        scratch = Path(directory)
+        (scratch / 'raw').mkdir()
+        output = scratch / 'result.xml'
+        (scratch / 'observations.json').write_text(json.dumps(database_manifest))
+        for source in database_paths:
+            for mutation in ('unmeasured', 'stale'):
+                prepare_database_failure_reports(args.database, scratch, source, mutation)
+                if mutation == 'unmeasured':
+                    expected = 'Missing measured execution: ' + source.removeprefix(prefix)
+                else:
+                    expected = 'Covered source differs'
+                output.write_text('previous report')
+                result = subprocess.run([args.php, str(ROOT / 'tests/Symfony/merge_coverage.php'),
+                                         str(args.unit.resolve()), str(args.files.resolve()),
+                                         str(scratch), str(args.offline.resolve()), str(output)],
+                                        capture_output=True, text=True, timeout=60)
+                if result.returncode == 0 or expected not in result.stdout + result.stderr:
+                    raise RuntimeError(f'{mutation} {source}: unexpected merge result: {result.stdout} {result.stderr}')
+                if output.read_text() != 'previous report':
+                    raise RuntimeError('Invalid database measurements replaced the previous report')
+                print('PASS database-' + mutation + '-' + source.rsplit('/', 1)[-1], flush=True)
 
 
 if __name__ == '__main__':
