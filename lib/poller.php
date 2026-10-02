@@ -296,13 +296,13 @@ function poller_cactid_arguments($base_path, $debug) {
  * command exits or the timeout has expired.
  *
  * @param  (string)      $cmd          Command to execute.
- * @param  (string)      $output       A return array of output.
+ * @param  (array)       $output       A return array of output.
  * @param  (int)         $return_code  The return code from the script
  * @param  (int)         $timeout      Timeout in seconds.
  *
- * @return (string|bool) Either the last line of output or false on error
+ * @return string|false|null The last output line, false on launch failure, or null without output.
  */
-function exec_with_timeout($cmd, &$output, &$return_code, $timeout = 5) {
+function exec_with_timeout($cmd, &$output, &$return_code, $timeout = 5): string|false|null {
 	// File descriptors passed to the process.
 	$descriptors = array(
 		0 => array('pipe', 'r'),  // stdin
@@ -394,7 +394,7 @@ function exec_with_timeout($cmd, &$output, &$return_code, $timeout = 5) {
 		$output = explode("\n", $buffer);
 		return(end($output));
 	} else {
-		return;
+		return null;
 	}
 }
 
