@@ -42,7 +42,9 @@ function csrf_error_callback()
     raise_message('csrf_timeout');
     ob_end_clean();
     header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
-    csrf_log(__FUNCTION__, 'Timeout, redirecting to ' . validate_redirect_url($_SERVER['REQUEST_URI']));
+    $redirect = validate_redirect_url($_SERVER['REQUEST_URI']);
+    $path = parse_url($redirect, PHP_URL_PATH);
+    csrf_log(__FUNCTION__, 'Timeout, redirecting to ' . (is_string($path) ? $path : 'index.php'));
     exit;
 }
 

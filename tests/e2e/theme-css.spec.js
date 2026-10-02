@@ -47,3 +47,66 @@ test.describe('theme jquery ui browser smoke', () => {
     });
   }
 });
+
+test.describe('theme about link logo', () => {
+  for (const theme of allThemes) {
+    test(`logo fits inside .cactiLogo for ${theme}`, async ({ page }) => {
+      await page.goto(`/tests/e2e/theme-smoke.html?theme=${theme}`);
+
+      const logo = await page.evaluate(async (name) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `/include/themes/${name}/main.css`;
+        await new Promise((resolve, reject) => {
+          link.onload = resolve;
+          link.onerror = reject;
+          document.head.appendChild(link);
+        });
+
+        const anchor = document.createElement('a');
+        anchor.className = 'cactiLogo pic';
+        document.body.appendChild(anchor);
+
+        const style = getComputedStyle(anchor);
+        if (style.display === 'none') {
+          return { hidden: true };
+        }
+
+        const image = new Image();
+        image.src = style.backgroundImage.replace(/^url\("?(.*?)"?\)$/, '$1');
+        await image.decode();
+
+        return {
+          hidden: false,
+          boxWidth: anchor.clientWidth,
+          boxHeight: anchor.clientHeight,
+          size: style.backgroundSize,
+          x: style.backgroundPositionX,
+          y: style.backgroundPositionY,
+          imageWidth: image.naturalWidth,
+          imageHeight: image.naturalHeight,
+        };
+      }, theme);
+
+      test.skip(logo.hidden, `${theme} does not show the about link logo`);
+
+      expect(logo.size, `${theme} logo should scale with contain`).toBe('contain');
+
+      const scale = Math.min(logo.boxWidth / logo.imageWidth, logo.boxHeight / logo.imageHeight);
+      const drawnWidth = logo.imageWidth * scale;
+      const drawnHeight = logo.imageHeight * scale;
+
+      // A percentage offset is relative to the space left over, a length is absolute.
+      const offset = (value, box, drawn) => (value.endsWith('%')
+        ? (box - drawn) * parseFloat(value) / 100
+        : parseFloat(value));
+      const left = offset(logo.x, logo.boxWidth, drawnWidth);
+      const top = offset(logo.y, logo.boxHeight, drawnHeight);
+
+      expect(left, `${theme} logo starts inside the box`).toBeGreaterThanOrEqual(0);
+      expect(top, `${theme} logo starts inside the box`).toBeGreaterThanOrEqual(0);
+      expect(left + drawnWidth, `${theme} logo is clipped on the right`).toBeLessThanOrEqual(logo.boxWidth + 0.5);
+      expect(top + drawnHeight, `${theme} logo is clipped at the bottom`).toBeLessThanOrEqual(logo.boxHeight + 0.5);
+    });
+  }
+});
