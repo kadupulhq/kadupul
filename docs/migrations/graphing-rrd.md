@@ -205,11 +205,19 @@ reads the graph, builds the command and runs it in one function
   ordered items, CDEF and VDEF text, data source paths and steps, and archive
   profiles. The first adapter runs today's `db_*` queries; a DBAL adapter
   serves Symfony routes. An Application `DataSourcePaths` port retains the
-  legacy missing-path generation and persistence through `LegacyDataSourcePaths`
-  on the existing authorized `db_*` connection. The read-only DBAL reader uses
+  mode-aware `LegacyDataSourcePaths` adapter. Historical modes preserve
+  missing-path generation/persistence on the existing authorized `db_*`
+  connection; real-time mode resolves each `DEF` to the configured
+  `realtime_cache_path/user_<sess_realtime_hash>_<local_data_id>.rrd` using
+  captured session identity, without historical-helper calls or writes.
+  Missing/null hashes preserve `false` behavior; empty/zero presence semantics
+  and file-existence outcomes remain characterized. Real-time resolved paths
+  must not be shared between viewers through graph-ID-only definition caching.
+  The read-only DBAL reader uses
   that bridge on definition misses; its own connection receives no write grants.
-  Existing/empty paths, stored generated paths, naming and failure behavior are
-  R3/R4 gates, and cache hits perform no path work.
+  Historical existing/empty paths, stored generated paths, naming/failure
+  behavior, real-time DEF paths for distinct viewer hashes and roots, and zero
+  historical fallback/writes are R3/R4 gates. Cache hits perform no path work.
 - `CollectRenderFacts` gathers what needs RRDtool or other tables: the
   consolidation functions in each file, which files exist, substituted host and
   query values, Nth percentile and summation values, and the time.
@@ -231,7 +239,11 @@ reads the graph, builds the command and runs it in one function
   cache. All eligible rendered formats, including SVG and `graphv`, retain
   cache reads/writes with #705's distinct format-aware key.
 
-The hook receives and returns three strings that plugins parse, so through 1.3
+The hook receives six fields: three command strings plus `graph_id`, `start`
+and `end`. Thold reads all three context fields to select thresholds and VRULE
+ranges; the port and adapter preserve their names, values and types. R0/R7
+contract gates compare the full payload and exercise a graph/window consumer.
+Through 1.3
 an adapter serializes the builder's explicit sections into those strings exactly
 as today, without inferring boundaries from a flat command. Post-hook
 command strings keep their bytes in the tagged
