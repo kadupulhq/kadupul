@@ -34,7 +34,7 @@ final readonly class LegacyDataInputGateway implements DataInputGateway
 
         $command = ['actor' => $actorId, 'action' => $action, 'id' => $id, 'payload' => $payload, 'nonce' => $nonce];
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name='path_php_binary'")->fetchColumn();
-        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
+        $binary = is_string($configured) && trim($configured) !== '' ? $configured : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $this->projectDir . '/bin/legacy-data-input.php'], $this->projectDir);
         $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         $process->setTimeout(180);

@@ -98,6 +98,54 @@ final class DataInputGatewayTest extends TestCase
         yield ['selection_name', false];
     }
 
+    #[DataProvider('configuredExecutableNames')]
+    public function testConfiguredExecutablePathReachesTheProcessUnchanged(string $name): void
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            self::markTestSkipped('POSIX executable filenames and shell wrappers.');
+        }
+        [, $audit, $directory] = $this->gateway('ok');
+        $wrapper = $directory . '/' . $name;
+        try {
+            file_put_contents($wrapper, "#!/bin/sh\nexec " . escapeshellarg(PHP_BINARY) . " \"\$@\"\n");
+            chmod($wrapper, 0700);
+            if ($name !== trim($name)) {
+                self::assertFileDoesNotExist($directory . '/' . trim($name));
+            }
+            $direct = new \Symfony\Component\Process\Process([$wrapper, '-r', 'echo "working executable";']);
+            $direct->run();
+            self::assertTrue($direct->isSuccessful(), $direct->getErrorOutput());
+            self::assertSame('working executable', $direct->getOutput());
+            $configuredGateway = $this->gatewayForDirectory($directory, $audit, $wrapper);
+            self::assertSame(['id' => 3, 'partial' => false], $configuredGateway->execute(9, 'save', 3));
+            self::assertSame(AuditEvent::SUCCEEDED, $audit->events[0]->outcome);
+        } finally {
+            if (is_file($wrapper)) {
+                unlink($wrapper);
+            }
+            $this->cleanup($directory);
+        }
+    }
+
+    public static function configuredExecutableNames(): iterable
+    {
+        yield 'normal filename' => ['php-normal'];
+        yield 'leading whitespace filename' => [' php-leading'];
+        yield 'trailing whitespace filename' => ['php-trailing '];
+    }
+
+    public function testWhitespaceOnlyConfiguredExecutableUsesTheRuntimeFallback(): void
+    {
+        [, $audit, $directory] = $this->gateway('ok');
+        try {
+            $fallbackGateway = $this->gatewayForDirectory($directory, $audit, " \t\n");
+            self::assertSame(['id' => 3, 'partial' => false], $fallbackGateway->execute(9, 'save', 3));
+            self::assertSame(AuditEvent::SUCCEEDED, $audit->events[0]->outcome);
+        } finally {
+            $this->cleanup($directory);
+        }
+    }
+
     public function testWindowsFallbackLaunchesPhpExeWhenTheSettingIsEmpty(): void
     {
         [$gateway, $audit, $directory] = $this->gateway('ok');
@@ -200,12 +248,6 @@ if ($mode==='malformed') { echo 'KADUPUL_DATA_INPUT_RESULT={broken}',PHP_EOL; ex
 echo 'KADUPUL_DATA_INPUT_RESULT=',json_encode($r),PHP_EOL;
 exit($mode==='exit'?1:0);
 PHP);
-        $pdo = new \PDO('sqlite::memory:');
-        $pdo->exec('CREATE TABLE settings(name TEXT,value TEXT)');
-        $statement = $pdo->prepare('INSERT INTO settings VALUES (?,?)');
-        $statement->execute(['path_php_binary', PHP_BINARY]);
-        $database = $this->createMock(DatabaseConnection::class);
-        $database->method('get')->willReturn($pdo);
         $audit = new class (in_array($mode, ['audit_failure', 'bulk_audit_failure'], true)) implements AuditTrail {
             public array $events = [];
             public function __construct(private readonly bool $fail) {}
@@ -217,7 +259,18 @@ PHP);
                 }
             }
         };
-        return [new LegacyDataInputGateway($database, $audit, $directory), $audit, $directory];
+        return [$this->gatewayForDirectory($directory, $audit, PHP_BINARY), $audit, $directory];
+    }
+
+    private function gatewayForDirectory(string $directory, AuditTrail $audit, string $binary): LegacyDataInputGateway
+    {
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE settings(name TEXT,value TEXT)');
+        $statement = $pdo->prepare('INSERT INTO settings VALUES (?,?)');
+        $statement->execute(['path_php_binary', $binary]);
+        $database = $this->createMock(DatabaseConnection::class);
+        $database->method('get')->willReturn($pdo);
+        return new LegacyDataInputGateway($database, $audit, $directory);
     }
     private function cleanup(string $directory): void
     {
