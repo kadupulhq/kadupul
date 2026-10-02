@@ -89,7 +89,7 @@ second implementation or a module boundary needs one.
 | R7: `RenderGraph`, explicit user/trusted-legacy authorization subject, IdentityAccess `GraphAccess` and its legacy adapter, `RrdTransport`, the mode-guarded plugin hook adapter, and initial image-cache/pending-samples ports and legacy Boost adapters | Planned; after PR #661 |
 | R8: unify cache naming, eligibility, reading and writing in R7's adapters, keeping PR #705; refine failure handling and performance | Planned |
 | R9: `graph_image.php` and `graph_json.php` as thin adapters | Planned; after PR #661 |
-| R10: Symfony graph routes with a voter reusing R7's access contract | Planned |
+| R10a: isolated CLI legacy bridge wiring the same R7 use case and R4 reader; R10b: Symfony graph routes/voter after real bridge gates | Planned; bridge before route enablement |
 | R11: template propagation services | Planned; after characterization |
 | R12: aggregate services | Planned; after characterization |
 | R13: wrapper deprecation | Planned |
@@ -284,7 +284,7 @@ corrections before R0/R1, implemented at the current procedural cache/update
 boundaries in `lib/boost.php` and metadata boundaries in `lib/rrd.php`, with
 native fixtures in `tests/Fixtures/rrd-characterization.php` and
 `tests/Unit/Core/Rrd/RrdGraphCharacterizationTest.php`. P0 needs no R7 adapter;
-The SVG correction additionally changes the existing GraphOptionsGenerator and
+the SVG correction additionally changes the existing GraphOptionsGenerator and
 image/JSON adapters, with native generator/response regressions; the current
 svg+xml override is ignored on stored PNG graphs, so only the separately
 reviewed affected goldens change. R7 later preserves that verified behavior. Explicit PNG is already initialized at the top of
@@ -310,7 +310,12 @@ this PR changes documentation only.
 
 `RenderGraph` invokes an Application `GraphOptionsHook` port implemented by the
 legacy hook adapter. It returns Domain `RenderResult` outcomes for source HTML,
-real-time output, CSV payload, and error images. Every outcome that reaches
+real-time output, CSV payload, error images, file-export completion, missing
+graph and access-denied outcomes. The wrapper preserves exact `0`, `false`
+and `GRAPH ACCESS DENIED` scalar mappings. After the hook, R2's Domain
+`BusinessHours` consumes the captured instant, viewer zone and six site
+settings, using the hook-returned window without rereading globals; CSV
+bypasses both operations. Every outcome that reaches
 percentile/summation fact collection carries metadata updates, since those
 assignments precede mode dispatch (`lib/rrd.php:2596-2614`, `3172`). The legacy
 wrapper applies updates to caller-owned by-reference `$xport_meta` for all
@@ -333,6 +338,15 @@ The Boost cache key becomes the hash of the context plus the request, which
 covers every input PR #705 keys by. The graph tables carry no revision, so a
 definition revision would be a hash of the loaded definition, and is adopted
 only if its cost on a cache hit passes the timing gate.
+
+
+Before Symfony route cutover, R10a implements the isolated CLI legacy bridge
+specified in the detailed plan: the child wires the same R7 use case and
+native access, hook, path and Boost adapters. Symfony entry points keep their
+existing bootstrap architecture. Actual-child and route gates verify current
+authorization/revocation, plugin and path persistence, context/output parity,
+and bounded process failures before R10b enables routes. These bridge classes
+and gates are planned work, not implementations in this documentation PR.
 
 ## Constraints
 

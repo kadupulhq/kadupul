@@ -259,8 +259,9 @@ R4's read-only DBAL reader obtains definition metadata, then asks this same
 mode-aware port for paths on a render miss. It does not generate an unpersisted
 replacement, write through the read connection, or add write grants to the
 read-user list. The legacy adapter retains the existing authenticated bootstrap,
-connection routing and write authority; Symfony wiring must provide that bridge
-before enabling the DBAL reader. A cache hit still skips definition/path work.
+connection routing and write authority; R10a's isolated process bridge must provide that bootstrap and write boundary
+before R10b enables a Symfony route; R4's native adapter gate runs in an
+existing legacy-bootstrap harness until then. A cache hit still skips definition/path work.
 R3/R4 require equality for existing and empty paths, the same persisted generated
 path and subsequent reuse, naming settings, and failure behavior from the legacy
 helper. Add real-time gates comparing the exact `DEF` paths for multiple data
@@ -532,10 +533,21 @@ proposed R7 work, not implementations supplied by this documentation PR.
 
 R7 also introduces the `Application/Port/GraphOptionsHook` interface, implemented
 by `Infrastructure/Legacy/LegacyGraphOptionsHook`. The use case calls that port
-for the section-preserving hook/business-hours operation; it never imports the
-legacy adapter. The port accepts Domain command sections plus graph identity
+for the section-preserving hook operation; it never imports the
+legacy adapter. After the hook, the use case applies R2's pure Domain
+`BusinessHours` operation to the returned sections, using the same captured
+`RenderFacts.renderInstant`, `RenderContext.timeZone`, and all six captured
+`RenderContext.siteGraph` business-hours settings. Neither operation rereads
+globals or asks the clock again. Preserve the hook-returned `start`/`end`
+values as the business-hours window, including relative windows, and append
+shading only to the returned `graph_defs` bytes before final serialization.
+CSV bypasses both operations. R0/R7 gates cover enabled/disabled shading,
+relative windows, day-count limits, weekends, invalid-color fallback, a
+hook-altered window, and a delayed render crossing a viewer-zone/DST boundary.
+The port accepts Domain command sections plus graph identity
 and the resolved window; its adapter forwards all six legacy payload fields and returns the
-tagged Domain command value. R0/R7 hook-contract gates compare the complete
+tagged Domain command value plus the hook-returned window fields, preserving
+empty hook-result behavior without inventing required keys. R0/R7 hook-contract gates compare the complete
 payload, use a consumer reading `graph_id`/`start`/`end`, and preserve changed
 command strings after the hook without dropping the original context. Symfony
 wiring chooses the adapter. The R7 architecture gate
@@ -547,8 +559,18 @@ message and captured render context. Application performs no filesystem, GD,
 theme-file or HTTP writes. Legacy infrastructure maps a real-time result using
 the existing dump/chmod/failure-return rules, and maps an error-image result
 through `Infrastructure/Rrd/ErrorImage`, introduced in R7; R9/R10 reuse that output adapter.
-Required R7 gates cover private real-time output, failed storage, and error
-images while enforcing the architecture rule on Application. This is the same
+Additional explicit variants are `FileExportCompleted`, `GraphMissing`, and
+`AccessDenied`. The legacy output adapter maps them to integer `0`, boolean
+`false`, and the exact string `GRAPH ACCESS DENIED`, respectively. File export
+retains today's null-output transport dispatch and scalar return contract;
+the wrapper still returns `0` after that dispatch even when the legacy
+transport supplies a failure value, and the typed outcome records that
+unconfirmed transport separately rather than claiming confirmed execution.
+R9/R10 choose their HTTP mappings explicitly without changing the procedural
+wrapper's scalar types. Required R7 gates assert these exact types and bytes,
+mode precedence, no execution for missing/denied graphs, private real-time
+output, failed storage, and error images while enforcing the architecture rule
+on Application. This is the same
 typed-outcome boundary used for print-source HTML, rather than new implicit
 infrastructure dependencies in `RenderGraph`. Every result that reaches
 percentile/summation fact collection carries the resulting metadata updates,
@@ -607,6 +629,49 @@ sample, definition and transport calls. These are required characterization
 and migration tests, not claims that new tests already exist. R10 adds routes
 and a voter that reuse this same contract; it does not introduce authorization
 for the first time.
+
+### Route-safe legacy bridge before R10 cutover
+
+R10a must implement and verify the bridge before R10b enables any Symfony
+route. `public/index.php`, `app.php`, and `sites.php` continue using only the
+Symfony bootstrap; the existing entry-point architecture rule stays intact.
+Add `Infrastructure/Symfony/GraphLegacyProcessBridge`, a bounded argument-array
+PHP process adapter using the configured executable and Windows fallback
+pattern in `DeviceAssignmentProcess.php:24-28`, and an internal CLI-only `cli/graph_render_bridge.php`.
+The child uses the existing `include/cli_check.php` legacy bootstrap and wires
+R7's same `RenderGraph`, legacy graph-access/hook/path/cache/pending-sample
+adapters, and R4's definition reader. Legacy functions are available in that
+isolated process, not assumed present in the Symfony process. Preserve the
+existing database connection routing and the missing-path helper's write
+authority; the DBAL read connection gains no write permissions.
+
+The Symfony adapter carries a bounded, validated internal envelope with the
+server-authenticated positive identity and captured viewer context/request,
+never a request-selected trusted bypass. An authorization-only operation
+serves the voter; the render operation revalidates the enabled/unlocked actor
+and graph permission before protected reads or writes, including after a
+voter result becomes stale. The child receives the captured session/settings
+snapshot needed by native permission caches, lazy plugin hooks and path
+helpers, with deliberate reconciliation against current revocation state.
+It must not silently render as the CLI bootstrap's default user or recapture
+viewer settings/time as process defaults. Return the typed result, exact
+command/output bytes and all-mode metadata through framed IPC; never put
+credentials in arguments, diagnostics or HTTP output. Ownership of proxy
+sessions and files remains inside the child; caller-owned live handles are
+not serializable and this bridge does not replace legacy caller-owned paths.
+
+R10a adds service wiring in `config/services.yaml`, a native
+`GraphLegacyProcessBridgeTest`, and route-level `GraphRouteBridgeTest` before
+R10b flips its per-route flag. Gates must execute the actual child with the
+locked runtime and prove functions resolve, lazy plugin hook parity, guest
+and positive-user isolation, revocation between voter and render, denial
+before side effects, existing/missing historical path persistence and
+real-time path isolation, Boost on/off, captured locale/zone/settings, scalar
+and byte/metadata round trips, child timeout/crash/truncated-output failures,
+and no legacy bootstrap in Symfony entry points. Measure cold/warm process
+costs. A failed or missing bridge gate leaves the route disabled; R9 remains
+the working legacy entry point. These are proposed implementation slices,
+not code supplied by this documentation PR.
 
 ### Why the cache does not wrap the transport
 
@@ -765,10 +830,10 @@ and R13 is "Callers moved to Graphing services; wrappers marked
 | R4 | `DoctrineGraphDefinitions` on `doctrine.dbal.web_connection` for Symfony routes; read grants added to the read-user list; missing paths resolve through R3's existing legacy write boundary | `src/Graphing/Infrastructure/Persistence/DoctrineGraphDefinitions.php`, `config/services.yaml`, `docs/symfony-migration.md` | Both adapters return equal definitions and persisted paths on the behavior database; read connection performs no writes; cache hit performs no path work; the second-connection cost measured on `graph_image.php` | Medium: an extra connection per image if used from a legacy page | Remove the service; R3 remains |
 | R5 | Window, archive choice and options from `GraphDefinition`, `GraphRequest` and `RenderContext` (moves 8 to 11) | `src/Graphing/Domain/Command/GraphOptions.php`, `ArchiveChoice.php`, `src/Graphing/Domain/Render/GraphWindow.php`, `GraphOptionsGenerator.php` (wrapper), `lib/rrd.php` | `graph-options*.json`, `graph-relative-window.json`, `GraphOptionsGeneratorCoverageTest` | Medium | Revert |
 | R6 | `GraphCommandBuilder` returns section-preserving `GraphCommandSections`: `DEF`, `CDEF`, `VDEF`, legend, items and export columns; `RenderFacts` collected through ports (moves 12 to 19). Split into R6a (definitions) and R6b (legend, items, export) if the diff passes about 1,500 lines | `src/Graphing/Domain/Command/*`, `src/Graphing/Application/CollectRenderFacts.php`, ports and Legacy adapters, `lib/rrd.php` | All `graph-*.json`; `RrdGraphCfFallbackTest`, `RrdEmptyCdefGuardTest`, the VDEF export tests and the RRDtool round trip (`RrdGraphCharacterizationTest.php:334`, `377`, `449`, `471`) | High: the largest block; ordering of `DEF` names and caches | Revert R6 to restore procedural command construction; wrappers remain public entry points until R13, with no duplicate fallback implementation retained |
-| R7 | `RenderGraph`, explicit `GraphAuthorizationSubject`, `GraphAccess` and its legacy adapter, `RrdTransport` (`LocalRrdtool`, `ProxyRrdtool`), `LegacyGraphOptionsHook`; introduce `RenderedGraphCache` and `PendingSamples` ports and legacy Boost adapters before `rrdtool_function_graph()` delegates | `src/Graphing/Application/RenderGraph.php`, `Port/RrdTransport.php`, `src/Graphing/Application/Port/RenderClock.php`, `src/Graphing/Infrastructure/Legacy/LegacyRenderClock.php`, `src/Graphing/Domain/Render/UnrepresentableGraphArgument.php`, `src/Graphing/Domain/Render/RrdExecutionContext.php`, `Port/RenderedGraphCache.php`, `Port/PendingSamples.php`, `Port/GraphOptionsHook.php`, `src/Graphing/Domain/Render/RenderResult.php`, `src/Graphing/Infrastructure/Legacy/LegacyRenderOutput.php`, `src/Graphing/Infrastructure/Rrd/ErrorImage.php`, `src/IdentityAccess/Contract/GraphAuthorizationSubject.php`, `src/IdentityAccess/Contract/GraphAccess.php`, its legacy adapter, `src/Graphing/Infrastructure/Rrd/ProxyRrdtool.php`, `LocalRrdtool.php`, `src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphOptionsHook.php`, `BoostImageCache.php`, `LegacyPendingSamples.php`, `lib/rrd.php` | Explicit report/remote/guest subjects, trusted legacy 0/-1 bypass with no session and zero auth calls, request rejection of bypass, per-user isolation and zero work on denied cache hits; intentional authorize-before-owned-proxy-session correction with fail-before, ownership and cleanup gates; Graphing clock port and legacy callback adapter, zero/one clock-call gates; entry-time snapshot through delayed updates; adapter translation of native encoding rejection and mode-specific outcomes with zero submissions/cache writes; Boost zone gates from P0; key-before-update/read ordering and zero cache reads after updates/refusal; All-mode by-reference percentile/summation metadata parity (including non-CSV source and caller-owned entries), CSV payload parity, early-return/failure outcomes and zero hook/business-hours calls; print-source zero final render/cache-write calls; PNG/SVG/graphv cache contracts; post-hook legacy section/byte round trip; full six-field hook payload contract and graph/window consumer gates; session release before one-off work, zero-release paths and concurrent same-session requests; real-process TZ/LANG/default-font and sequential-viewer isolation; proxy environment capability gate; output/storage/error-image contracts; Application has no Infrastructure imports; `RrdProxyInteropTest`; `graph-proxy*.json`; the behavior harness graph scenarios | High: authorization identity, plugin hook and proxy session lifetime | Revert |
+| R7 | `RenderGraph`, explicit `GraphAuthorizationSubject`, `GraphAccess` and its legacy adapter, `RrdTransport` (`LocalRrdtool`, `ProxyRrdtool`), `LegacyGraphOptionsHook`; introduce `RenderedGraphCache` and `PendingSamples` ports and legacy Boost adapters before `rrdtool_function_graph()` delegates | `src/Graphing/Application/RenderGraph.php`, `Port/RrdTransport.php`, `src/Graphing/Application/Port/RenderClock.php`, `src/Graphing/Infrastructure/Legacy/LegacyRenderClock.php`, `src/Graphing/Domain/Render/UnrepresentableGraphArgument.php`, `src/Graphing/Domain/Render/RrdExecutionContext.php`, `Port/RenderedGraphCache.php`, `Port/PendingSamples.php`, `Port/GraphOptionsHook.php`, `src/Graphing/Domain/Render/RenderResult.php`, `src/Graphing/Infrastructure/Legacy/LegacyRenderOutput.php`, `src/Graphing/Infrastructure/Rrd/ErrorImage.php`, `src/IdentityAccess/Contract/GraphAuthorizationSubject.php`, `src/IdentityAccess/Contract/GraphAccess.php`, its legacy adapter, `src/Graphing/Infrastructure/Rrd/ProxyRrdtool.php`, `LocalRrdtool.php`, `src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php`, `src/Graphing/Infrastructure/Legacy/LegacyGraphOptionsHook.php`, `BoostImageCache.php`, `LegacyPendingSamples.php`, `lib/rrd.php` | Explicit report/remote/guest subjects, trusted legacy 0/-1 bypass with no session and zero auth calls, request rejection of bypass, per-user isolation and zero work on denied cache hits; intentional authorize-before-owned-proxy-session correction with fail-before, ownership and cleanup gates; Graphing clock port and legacy callback adapter, zero/one clock-call gates; entry-time snapshot through delayed updates; adapter translation of native encoding rejection and mode-specific outcomes with zero submissions/cache writes; Boost zone gates from P0; key-before-update/read ordering and zero cache reads after updates/refusal; All-mode by-reference percentile/summation metadata parity (including non-CSV source and caller-owned entries), CSV payload parity, early-return/failure outcomes and zero hook/business-hours calls; print-source zero final render/cache-write calls; PNG/SVG/graphv cache contracts; post-hook legacy section/byte round trip; full six-field hook payload contract and graph/window consumer gates; captured-context Domain business-hours gates after the hook; exact file-export/missing/denied scalar wrapper mappings; session release before one-off work, zero-release paths and concurrent same-session requests; real-process TZ/LANG/default-font and sequential-viewer isolation; proxy environment capability gate; output/storage/error-image contracts; Application has no Infrastructure imports; `RrdProxyInteropTest`; `graph-proxy*.json`; the behavior harness graph scenarios | High: authorization identity, plugin hook and proxy session lifetime | Revert |
 | R8 | Unify cache naming, eligibility, reading and writing in R7's existing Boost adapter, keeping #705; refine failure handling and performance without introducing new R7 dependencies | `src/Graphing/Infrastructure/Legacy/BoostImageCache.php`, `LegacyPendingSamples.php`, `lib/boost.php` | `BoostGraphCacheKeyNativeTest`, `BoostGraphCacheFailureTest`, `BoostPngPurgeTest`; retain R7 ordering gates; cache hit and miss timing | Medium | Revert; R7's working adapters remain |
 | R9 | `graph_image.php` and `graph_json.php` as thin adapters | `graph_image.php`, `graph_json.php`, `src/Graphing/Infrastructure/Legacy/GraphRequestFromLegacyRequest.php` | `entry_points.baseline.tsv` unchanged; `RemoteGraphPermissionTest` (#661); page crawl | Medium | Revert |
-| R10 | Symfony image and JSON routes and a voter reusing R7's `GraphAccess`, per-route cutover flag; legacy URLs kept | `src/Graphing/Infrastructure/Symfony/*`, R7 access contract wiring, `config/services.yaml`, `docs/architecture-alignment.md` | #661 permission tests through the route; guest account; route baseline entry | Medium | Turn the flag off; legacy pages remain |
+| R10a/R10b | First implement the isolated legacy process bridge for R7's use case and adapters; only then enable Symfony image/JSON routes and voter, with per-route cutover flag and legacy URLs kept | `src/Graphing/Infrastructure/Symfony/*`, `GraphLegacyProcessBridge.php`, `cli/graph_render_bridge.php`, R7/R4 adapter wiring, `config/services.yaml`, `docs/architecture-alignment.md`, new `GraphLegacyProcessBridgeTest.php` and `GraphRouteBridgeTest.php` | Actual-child bootstrap/function resolution and lazy-hook parity; current actor/revocation and guest isolation; denied zero work, missing-path persistence, real-time path isolation, Boost and context parity, framed byte/scalar/metadata outcomes, timeout/crash/protocol failures and cold/warm timing; existing entry-point architecture rule; #661 permission tests through the route; route baseline entry | Medium | Turn the flag off; legacy pages remain |
 | R11 | Template propagation services after their characterization | `src/Graphing/Application/*`, ports, `lib/template.php` (formatting-only PER-CS change first, in its own PR) | New propagation goldens; behavior harness graph creation | High: writes to many graphs | Revert |
 | R12 | Aggregate services after their characterization | `src/Graphing/Application/*`, `lib/api_aggregate.php` (PER-CS first) | New aggregate row goldens | High | Revert |
 | R13 | Callers moved; wrappers deprecated as described above | `lib/rrd.php`, callers in the table above, `CHANGELOG.md` | Full suite; plugin page crawl with thold and monitor | Low | Revert |
