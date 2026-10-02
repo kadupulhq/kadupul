@@ -38,6 +38,7 @@ final class InstallationConfiguration implements LegacyConfiguration
             'ssl_cert' => $settings['database_ssl_cert'] ?? '', 'ssl_ca' => $settings['database_ssl_ca'] ?? '',
             'session_name' => $settings['cacti_session_name'] ?? 'Cacti', 'database_sessions' => $settings['cacti_db_session'] ?? false,
             'cookie_domain' => $settings['cacti_cookie_domain'] ?? '', 'url_path' => $settings['url_path'] ?? '/',
+            'proxy_headers' => $settings['proxy_headers'] ?? [],
         ];
         if ($values['collector_id'] < 1) {
             throw new \RuntimeException('Invalid collector identity.');
@@ -45,7 +46,7 @@ final class InstallationConfiguration implements LegacyConfiguration
         if ($values['collector_id'] !== 1) {
             $this->requireOnlinePrimaryRoute();
             if (($settings['rdatabase_type'] ?? 'mysql') !== 'mysql' || empty($settings['rdatabase_hostname']) || empty($settings['rdatabase_default']) || !isset($settings['rdatabase_username'], $settings['rdatabase_password']) || ($settings['conn_mode'] ?? '') === 'offline') {
-                throw new \RuntimeException('Online primary configuration is required for collector administration.');
+                throw new \RuntimeException('Online primary configuration is required for collector Sites, Navigation and About routes.');
             }
             $primary = array_replace($values, [
                 'host' => $settings['rdatabase_hostname'], 'database' => $settings['rdatabase_default'],
@@ -133,8 +134,8 @@ final class InstallationConfiguration implements LegacyConfiguration
     private function requireOnlinePrimaryRoute(): void
     {
         $route = $this->requests?->getCurrentRequest()?->attributes->get('_route');
-        if (!in_array($route, ['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action', 'navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action'], true)) {
-            throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside online collector Sites and Navigation routes.');
+        if (!in_array($route, ['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action', 'navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action', 'platform_about', 'platform_about_legacy'], true)) {
+            throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside online collector Sites, Navigation and About routes.');
         }
     }
 }

@@ -3,10 +3,37 @@ import argparse
 import copy
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def prepare_database_failure_reports(directory, scratch, source, mutation):
+    """Retain separate real reports and corrupt only the selected observation."""
+    if mutation not in ('unmeasured', 'stale'):
+        raise ValueError('Unknown database measurement mutation')
+    reports = [(path, json.loads(path.read_text()))
+               for path in sorted((directory / 'raw').glob('coverage-*.json'))]
+    names = {path.name for path, _ in reports}
+    if any(path.name not in names or path.is_symlink() or not path.is_file()
+           for path in (scratch / 'raw').iterdir()):
+        raise RuntimeError('Unexpected scratch coverage reports')
+    if not any(1 in (report['files'] or {}).get(source, {}).get('lines', {}).values()
+               for _, report in reports):
+        raise RuntimeError('Self-test requires real database-session authentication measurements')
+    for path, report in reports:
+        destination = scratch / 'raw' / path.name
+        shutil.copyfile(path, destination)
+        observation = (report['files'] or {}).get(source)
+        if observation is None:
+            continue
+        if mutation == 'unmeasured':
+            observation['lines'] = {line: -1 for line in observation['lines']}
+        else:
+            observation['sha256'] = '0' * 64
+        destination.write_text(json.dumps(report))
 
 
 def main():
@@ -21,6 +48,14 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php',
+        'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php',
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php',
+        'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php',
+        'about.php', 'src/Platform/Infrastructure/Symfony/Controller/AboutController.php',
+        'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
+        'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
         'links.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
@@ -164,8 +199,12 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
+    about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
+    about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
+        'data-source-profile-test-hash': 'Integration test source differs',
+        'about-authentication-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
@@ -224,12 +263,21 @@ def main():
         output = scratch / 'result.xml'
         for index in range(len(statistics_checks)):
             failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
+        for index in range(len(about_authentication_checks)):
+            failures['missing-about-authentication-check-' + str(index)] = 'Incomplete Symfony integration'
         for case, expected in failures.items():
             data = copy.deepcopy(measured)
             evidence = copy.deepcopy(manifest)
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'data-source-profile-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
+            elif case == 'about-authentication-test-hash':
+                evidence['source_sha256']['tests/Symfony/about_authentication_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-about-authentication-check-'):
+                missing = about_authentication_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'details-test-hash':
@@ -319,6 +367,32 @@ def main():
             if output.read_text() != 'previous report':
                 raise RuntimeError(f'{case}: invalid measurements replaced the previous report')
             print('PASS ' + case, flush=True)
+
+    database_manifest = json.loads((args.database / 'observations.json').read_text())
+    database_paths = [prefix + 'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
+                      for name in ('AuthenticationDatabaseSessionHandler', 'ReadOnlyDatabaseSessionHandler')]
+    with tempfile.TemporaryDirectory(prefix='symfony-database-authentication-negative-') as directory:
+        scratch = Path(directory)
+        (scratch / 'raw').mkdir()
+        output = scratch / 'result.xml'
+        (scratch / 'observations.json').write_text(json.dumps(database_manifest))
+        for source in database_paths:
+            for mutation in ('unmeasured', 'stale'):
+                prepare_database_failure_reports(args.database, scratch, source, mutation)
+                if mutation == 'unmeasured':
+                    expected = 'Missing measured execution: ' + source.removeprefix(prefix)
+                else:
+                    expected = 'Covered source differs'
+                output.write_text('previous report')
+                result = subprocess.run([args.php, str(ROOT / 'tests/Symfony/merge_coverage.php'),
+                                         str(args.unit.resolve()), str(args.files.resolve()),
+                                         str(scratch), str(args.offline.resolve()), str(output)],
+                                        capture_output=True, text=True, timeout=60)
+                if result.returncode == 0 or expected not in result.stdout + result.stderr:
+                    raise RuntimeError(f'{mutation} {source}: unexpected merge result: {result.stdout} {result.stderr}')
+                if output.read_text() != 'previous report':
+                    raise RuntimeError('Invalid database measurements replaced the previous report')
+                print('PASS database-' + mutation + '-' + source.rsplit('/', 1)[-1], flush=True)
 
 
 if __name__ == '__main__':

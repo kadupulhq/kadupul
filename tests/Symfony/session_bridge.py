@@ -102,6 +102,10 @@ def main():
                   'legacy database session handler owns the authenticated session')
         check(session.request('/public/index.php/session').get('json') == expected,
               'Symfony public entry owns authentication for the same session')
+        from about_authentication_scenarios import verify_about_authentication
+        verify_about_authentication(harness, user_id, database_sessions, check)
+        from about_scenarios import verify_about
+        verify_about(harness, session, user_id, check)
         from inventory_scenarios import verify_inventory
         verify_inventory(harness, session, user_id, check)
         from data_source_profile_scenarios import verify_data_source_profile_deletion

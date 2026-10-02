@@ -252,6 +252,13 @@ services:
     Kadupul\Navigation\Application\Port\LinkPreferences:
         alias: Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkPreferences
 
+    # About requires an eligible login without a console/object realm.
+    Kadupul\IdentityAccess\Contract\AuthenticatedAccess:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess
+
+    Kadupul\Platform\Application\Port\ProductVersion:
+        alias: Kadupul\Platform\Infrastructure\Legacy\InstallationProductVersion
+
 when@test:
     services:
         # A when@ block parses its own "services" key independently of the main
