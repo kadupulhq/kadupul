@@ -316,7 +316,6 @@ label {
 
 .graphDrillDown {
 	vertical-align: top;
-	align-self: left;
 	z-index: 4;
 	padding: 3px;
 	height: 100%;
@@ -842,7 +841,7 @@ ul#breadcrumbs {
 
 .cactiLogo {
 	padding-top: 20px;
-	background: #F5F5F5 url('./images/kadupul-logo.png') no-repeat 30px;
+	background: #F5F5F5 url('./images/kadupul-logo.png') no-repeat center;
 	display: block;
 	cursor: pointer;
 	height: 140px;
@@ -1700,7 +1699,6 @@ legend {
 }
 
 .tab {
-	border-color: #999 #666 -moz-use-text-color #999;
 	border-style: solid solid none;
 	border-width: 1px 1px medium;
 }

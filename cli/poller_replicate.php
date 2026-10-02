@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -10,8 +11,8 @@ require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
 
 if ($config['poller_id'] > 1) {
-	print "FATAL: This utility is designed for the main Data Collector only" . PHP_EOL;
-	exit(1);
+    print "FATAL: This utility is designed for the main Data Collector only" . PHP_EOL;
+    exit(1);
 }
 
 $poller_id = 0;
@@ -26,106 +27,113 @@ $parms = $_SERVER['argv'];
 array_shift($parms);
 
 if (cacti_sizeof($parms)) {
-	foreach($parms as $parameter) {
-		if (strpos($parameter, '=')) {
-			list($arg, $value) = explode('=', $parameter, 2);
-		} else {
-			$arg = $parameter;
-			$value = '';
-		}
+    foreach ($parms as $parameter) {
+        if (strpos($parameter, '=')) {
+            list($arg, $value) = explode('=', $parameter, 2);
+        } else {
+            $arg = $parameter;
+            $value = '';
+        }
 
-		switch ($arg) {
-		case '--poller':
-		case '-P':
-		case '-p':
-			$poller_id = $value;
-			break;
-		case '--class':
-		case '-C':
-		case '-c':
-			$class = $value;
-			break;
-		case '--version':
-		case '-V':
-		case '-v':
-			display_version();
-			exit(0);
-		case '--help':
-		case '-H':
-		case '-h':
-			display_help();
-			exit(0);
-		default:
-			print 'ERROR: Invalid Parameter ' . $parameter . "\n\n";
-			display_help();
-			exit(1);
-		}
-	}
+        switch ($arg) {
+            case '--poller':
+            case '-P':
+            case '-p':
+                $poller_id = $value;
+                break;
+            case '--class':
+            case '-C':
+            case '-c':
+                $class = $value;
+                break;
+            case '--version':
+            case '-V':
+            case '-v':
+                display_version();
+                exit(0);
+            case '--help':
+            case '-H':
+            case '-h':
+                display_help();
+                exit(0);
+            default:
+                print 'ERROR: Invalid Parameter ' . $parameter . "\n\n";
+                display_help();
+                exit(1);
+        }
+    }
 }
 
 if (!preg_match('/(all|data|auth|settings)/', $class)) {
-	print 'FATAL: The class ' . $class . ' is NOT valid!' . PHP_EOL;
-	exit(1);
+    print 'FATAL: The class ' . $class . ' is NOT valid!' . PHP_EOL;
+    exit(1);
 }
 
 /* record the start time */
 $start = microtime(true);
 
 if ($poller_id < 0) {
-	print 'FATAL: The poller needs to be greater than 0!' . PHP_EOL;
-	exit(1);
+    print 'FATAL: The poller needs to be greater than 0!' . PHP_EOL;
+    exit(1);
 } elseif ($poller_id == 0) {
-	$pollers = db_fetch_assoc('SELECT id
+    $pollers = db_fetch_assoc('SELECT id
 		FROM poller
 		WHERE id > 1
 		AND disabled=""');
 } else {
-	$pollers = db_fetch_assoc_prepared('SELECT id
+    $pollers = db_fetch_assoc_prepared(
+        'SELECT id
 		FROM poller
 		WHERE id != 1
 		AND id = ?
 		AND disabled=""',
-		array($poller_id));
+        array($poller_id)
+    );
 }
 
 if (cacti_sizeof($pollers)) {
-	if (!register_process_start('psync', "POLLER:$poller_id", 0, 900)) {
-		cacti_log("WARNING: Another Sync Operations is already running", true, 'POLLER');
-		exit(0);
-	}
+    if (!register_process_start('psync', "POLLER:$poller_id", 0, 900)) {
+        cacti_log("WARNING: Another Sync Operations is already running", true, 'POLLER');
+        exit(0);
+    }
 
-	foreach ($pollers as $poller) {
-		replicate_out($poller['id'], $class);
+    $failed = false;
+    foreach ($pollers as $poller) {
+        if (!replicate_out($poller['id'], $class)) {
+            $failed = true;
+            cacti_log('ERROR: Poller ID ' . $poller['id'] . ' replication failed; synchronization remains required.', false, 'POLLER');
+            continue;
+        }
 
-		db_execute_prepared('UPDATE poller
-			SET last_sync = NOW(), requires_sync=""
-			WHERE id = ?',
-			array($poller['id']));
+        cacti_log('STATS: Poller ID ' . $poller['id'] . ' fully Replicated', false, 'POLLER');
+    }
 
-		cacti_log('STATS: Poller ID ' . $poller['id'] . ' fully Replicated', false, 'POLLER');
-	}
-
-	unregister_process('psync', "POLLER:$poller_id", 0);
+    unregister_process('psync', "POLLER:$poller_id", 0);
+    if ($failed) {
+        exit(1);
+    }
 } else {
-	print 'FATAL: The poller specified ' . $poller_id . ' is either disabled, or does not exist!' . PHP_EOL;
-	exit(1);
+    print 'FATAL: The poller specified ' . $poller_id . ' is either disabled, or does not exist!' . PHP_EOL;
+    exit(1);
 }
 
 /*  display_version - displays version information */
-function display_version() {
-	$version = get_cacti_cli_version();
-	print "Kadupul Poller Full Sync Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+function display_version()
+{
+    $version = get_cacti_cli_version();
+    print "Kadupul Poller Full Sync Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /*	display_help - displays the usage of the function */
-function display_help () {
-	display_version();
+function display_help()
+{
+    display_version();
 
-	print "\nA utility to fully Synchronize Remote Data Collectors.\n\n";
-	print "usage: poller_replicate.php [--poller=N] [--class=all|data|auth|settings]\n\n";
-	print "Optional:\n";
-	print "    --poller=N  The numeric id of the poller to replicate out.  Otherwise all\n";
-	print "                pollers.  The default is all.\n";
-	print "    --class=S   The class of data to replicate.  Includes all, data, auth\n";
-	print "                settings.  The default is all.\n";
+    print "\nA utility to fully Synchronize Remote Data Collectors.\n\n";
+    print "usage: poller_replicate.php [--poller=N] [--class=all|data|auth|settings]\n\n";
+    print "Optional:\n";
+    print "    --poller=N  The numeric id of the poller to replicate out.  Otherwise all\n";
+    print "                pollers.  The default is all.\n";
+    print "    --class=S   The class of data to replicate.  Includes all, data, auth\n";
+    print "                settings.  The default is all.\n";
 }
