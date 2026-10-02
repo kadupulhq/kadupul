@@ -86,6 +86,10 @@ function legacy_audit_upgrade_database()
         print '---------------------------------------------------------------------------------------------' . PHP_EOL;
     }
 
+    if ($core_exit !== 0) {
+        return $core_exit;
+    }
+
     $pistart = microtime(true);
 
     // Upgrade plugins now
@@ -180,6 +184,7 @@ function legacy_audit_upgrade_database()
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                             } else {
                                 cacti_log("WARNING: Kadupul Plugin $pname Upgrade Encountered Errors.", true, 'UPGRADE');
+                                return $return_var;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                                 print implode(PHP_EOL, $output) . PHP_EOL;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
