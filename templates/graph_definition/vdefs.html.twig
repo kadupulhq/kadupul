@@ -1,0 +1,59 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'VDEFs'|trans({}, 'graph_definition') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'VDEFs'|trans({}, 'graph_definition') }}</h1>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('graph_vdef_create') }}">{{ 'Create VDEF'|trans({}, 'graph_definition') }}</a></p>
+    <form method="get" action="{{ path('graph_vdefs') }}" role="search">
+        <label for="vdef-filter">{{ 'Search VDEFs'|trans({}, 'graph_definition') }}</label>
+        <input id="vdef-filter" type="search" name="filter" value="{{ criteria.search }}" maxlength="255">
+        <label for="vdef-sort">{{ 'Sort by'|trans({}, 'graph_definition') }}</label>
+        <select id="vdef-sort" name="sort">
+            {% for value, label in {name: 'VDEF name', graphs: 'Graphs using', templates: 'Templates using'} %}
+                <option value="{{ value }}"{% if criteria.sort == value %} selected{% endif %}>{{ label|trans({}, 'graph_definition') }}</option>
+            {% endfor %}
+        </select>
+        <label for="vdef-direction">{{ 'Order'|trans({}, 'graph_definition') }}</label>
+        <select id="vdef-direction" name="direction">
+            <option value="asc"{% if criteria.direction == 'asc' %} selected{% endif %}>{{ 'Ascending'|trans({}, 'graph_definition') }}</option>
+            <option value="desc"{% if criteria.direction == 'desc' %} selected{% endif %}>{{ 'Descending'|trans({}, 'graph_definition') }}</option>
+        </select>
+        <label for="vdef-rows">{{ 'Rows'|trans({}, 'graph_definition') }}</label>
+        <select id="vdef-rows" name="rows">{% for size in [30, 50, 100] %}<option value="{{ size }}"{% if criteria.pageSize == size %} selected{% endif %}>{{ size }}</option>{% endfor %}</select>
+        <label><input type="checkbox" name="has_graphs" value="true"{% if criteria.hasGraphs %} checked{% endif %}>{{ 'Has graphs'|trans({}, 'graph_definition') }}</label>
+        <button type="submit">{{ 'Apply'|trans({}, 'graph_definition') }}</button>
+    </form>
+    <form method="get" action="{{ path('graph_vdef_action', {operation: 'delete'}) }}">
+        <table>
+            <caption>{{ 'Variable definitions and graph usage'|trans({}, 'graph_definition') }}</caption>
+            <thead><tr><th scope="col">{{ 'Select'|trans({}, 'graph_definition') }}</th><th scope="col">{{ 'VDEF name'|trans({}, 'graph_definition') }}</th><th scope="col">{{ 'Deletable'|trans({}, 'graph_definition') }}</th><th scope="col">{{ 'Graphs using'|trans({}, 'graph_definition') }}</th><th scope="col">{{ 'Templates using'|trans({}, 'graph_definition') }}</th><th scope="col">{{ 'Referenced by VDEFs'|trans({}, 'graph_definition') }}</th></tr></thead>
+            <tbody>
+            {% for vdef in rows %}
+                <tr>
+                    <td><input type="checkbox" name="ids[]" value="{{ vdef.id }}" aria-label="{{ 'Select %name%'|trans({'%name%': vdef.name}, 'graph_definition') }}"></td>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                    <td><a href="{{ path('graph_vdef_edit', {id: vdef.id}) }}">{{ vdef.name }}</a></td>
+                    <td>{{ vdef.inUse ? 'No'|trans({}, 'graph_definition') : 'Yes'|trans({}, 'graph_definition') }}</td>
+                    <td>{{ vdef.graphs }}</td><td>{{ vdef.templates }}</td><td>{{ vdef.referencingVdefs }}</td>
+                </tr>
+            {% else %}<tr><td colspan="6">{{ 'No VDEFs match these filters.'|trans({}, 'graph_definition') }}</td></tr>{% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">{{ 'Delete selected VDEFs'|trans({}, 'graph_definition') }}</button>
+        <button type="submit" formaction="{{ path('graph_vdef_action', {operation: 'duplicate'}) }}">{{ 'Duplicate selected VDEFs'|trans({}, 'graph_definition') }}</button>
+    </form>
+    <nav aria-label="{{ 'VDEF pages'|trans({}, 'graph_definition') }}">
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        {% if page > 1 %}<a rel="prev" href="{{ path('graph_vdefs', {filter: criteria.search, sort: criteria.sort, direction: criteria.direction, rows: criteria.pageSize, has_graphs: criteria.hasGraphs ? 'true' : 'false', page: page - 1}) }}">{{ 'Previous'|trans({}, 'graph_definition') }}</a>{% endif %}
+        <span>{{ 'Page %page% of %pages%'|trans({'%page%': page, '%pages%': pages}, 'graph_definition') }}</span>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        {% if page < pages %}<a rel="next" href="{{ path('graph_vdefs', {filter: criteria.search, sort: criteria.sort, direction: criteria.direction, rows: criteria.pageSize, has_graphs: criteria.hasGraphs ? 'true' : 'false', page: page + 1}) }}">{{ 'Next'|trans({}, 'graph_definition') }}</a>{% endif %}
+    </nav>
+</main>
+{% endblock %}
