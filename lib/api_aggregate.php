@@ -26,7 +26,8 @@ function aggregate_graph_mutation(callable $operation): bool
     try {
         $database = aggregate_graph_database();
         $schema = aggregate_graph_schema($database);
-        if (!aggregate_graph_selected_schema_matches($database, $schema)) return false;
+        if (!aggregate_graph_selected_schema_matches($database, $schema))
+            return false;
     } catch (Throwable) {
         return false;
     }
@@ -87,13 +88,17 @@ function aggregate_graph_schema(PDO $database): string
 function aggregate_graph_selected_schema_matches(PDO $database, string $schema): bool
 {
     global $database_default;
-    if (!is_string($database_default) || $database_default === '') return false;
-    if ($schema === $database_default) return true;
+    if (!is_string($database_default) || $database_default === '')
+        return false;
+    if ($schema === $database_default)
+        return true;
     $statement = $database->prepare('SELECT @@lower_case_table_names');
-    if ($statement === false || !$statement->execute() || $statement->errorCode() !== '00000') return false;
+    if ($statement === false || !$statement->execute() || $statement->errorCode() !== '00000')
+        return false;
     $mode = $statement->fetchColumn();
     $state = $statement->errorCode();
-    if (!$statement->closeCursor() || $statement->errorCode() !== '00000' || $state !== '00000') return false;
+    if (!$statement->closeCursor() || $statement->errorCode() !== '00000' || $state !== '00000')
+        return false;
     return in_array($mode, [1, 2, '1', '2'], true) && strtolower($schema) === strtolower($database_default);
 }
 
@@ -1092,8 +1097,10 @@ function aggregate_validate_graph_params($posted, $has_override = false)
 function aggregate_validate_graph_items($posted, &$graph_items)
 {
     foreach ($_POST as $field => $value) {
-        if (!is_string($field) || preg_match('/^agg_(color|skip|total)_([0-9]+)$/D', $field, $match) !== 1) continue;
-        if (!isset($graph_items[$match[2]])) continue;
+        if (!is_string($field) || preg_match('/^agg_(color|skip|total)_([0-9]+)$/D', $field, $match) !== 1)
+            continue;
+        if (!isset($graph_items[$match[2]]))
+            continue;
         if ($match[1] === 'color') {
             if ((!is_int($value) && !is_string($value)) || preg_match('/^[0-9]+$/D', (string) $value) !== 1) {
                 throw new InvalidArgumentException('Aggregate color selection must be an unsigned decimal ID.');
@@ -1108,7 +1115,8 @@ function aggregate_validate_graph_items($posted, &$graph_items)
     }
 
     foreach ($_POST as $var => $val) {
-        if (!is_string($var)) continue;
+        if (!is_string($var))
+            continue;
         /* work on color_templates */
         if (preg_match('/^agg_color_([0-9]+)$/', $var, $matches)) {
             /* ================= input validation ================= */
