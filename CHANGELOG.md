@@ -6,7 +6,13 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep permission writes and session epochs consistent, including failed writes and absent deletions.
+
+- Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
+
 - Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
+- Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
+- Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
@@ -24,6 +30,10 @@ follows [Semantic Versioning](VERSIONING.md).
 - Read the document base URL in the CSRF Magic browser script through `Node.prototype`, so an element named `baseURI` cannot make every same-origin request lose its token.
 - Port the remaining CSRF Magic library checks from 1.2: refuse more than eight submitted tokens, token times that are not digits or exceed the 300-second future clock-skew allowance, and generate fallback secrets with `random_bytes()`. The optional CSRF debug log and the default failure page no longer record tokens, the secret, form values or query strings. Secret rotation generates before modifying the working file, then exclusively writes and verifies a replacement in its directory, preserves existing UID/GID with verified ownership before applying mode 0640 and renaming atomically; generation or publication failure preserves the working key. Symlink file destinations are refused.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
+
+- Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
+
+- Render the color palette through Symfony and Twig, with protected named colors, revision-checked transactions and strict quoted CSV imports/exports.
 
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
 - Scope remote-agent host operations to the requesting main poller and the receiver's assigned devices; require an authenticated session user for remote graph rendering.
@@ -49,6 +59,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
+
 - Exercise user-log cleanup against real MySQL and MariaDB, preserving each current account's latest login and token while removing failed and orphaned entries; collect coverage from the actual controller.
 
 - Exercise local login, password changes, logout, user/group realm and permission changes, and report ownership/persistence through native production files with isolated SQL fixtures. Part of #699.
@@ -56,6 +68,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
+- Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.

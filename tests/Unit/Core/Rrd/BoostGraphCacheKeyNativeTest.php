@@ -12,7 +12,7 @@ function boost_cache_key_run(array $scenario, $coverage)
     mkdir($directory, 0700);
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root,
+            array(PHP_BINARY, '-d', 'error_reporting=' . error_reporting(), '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root,
                 '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/boost-cache-key-native.php',
                 $root, $directory, base64_encode(serialize($scenario)), $coverage !== null ? '1' : '0'),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
@@ -47,6 +47,9 @@ test('a viewer whose rendered graph differs never receives another viewer\'s cac
         ->and($observed['written'])->toHaveCount(1)
         ->and($observed['files']['writer'])->not->toBe($observed['files']['reader']);
 })->with(array(
+    'raw width with the same integer filename' => array(array('graph' => array('graph_width' => '600px')), array('graph' => array('graph_width' => '600'))),
+    'raw height with the same integer filename' => array(array('graph' => array('graph_height' => '150px')), array('graph' => array('graph_height' => '150'))),
+    'false and true no-legend values' => array(array('graph' => array('graph_nolegend' => false)), array('graph' => array('graph_nolegend' => true))),
     'custom fonts against defaults' => array(array('user' => array('custom_fonts' => 'on', 'legend_size' => '5000')), array()),
     'legend size' => array(array('user' => array_merge($custom, array('legend_size' => '5000'))), array('user' => $custom)),
     'title font' => array(array('user' => array_merge($custom, array('title_font' => 'Serif'))), array('user' => $custom)),
@@ -243,3 +246,18 @@ test('a viewer in a browser zone gets a cache hit when on-demand updates run bef
         ->and($graphs($results[5]['sent']))->toBe(0)
         ->and($results[5]['returned'])->toBe($results[2]['returned']);
 });
+
+
+test('cache publication preserves complete images and removes temporary files', function ($fault, $image, $writes, $renames) {
+    $observed = boost_cache_key_run(array('writer' => array(), 'reader' => array(), 'publication' => $fault), $this->getTestResultObject()->getCodeCoverage());
+    expect($observed['served'])->toBe($image)
+        ->and($observed['written'])->toHaveCount(1)
+        ->and($observed['written'][0])->not->toStartWith('boost_png_tmp_')
+        ->and($observed['writes'])->toBe($writes)
+        ->and($observed['rename_attempts'])->toBe($renames);
+})->with(array(
+    'complete replacement' => array('none', 'PNG rendered for the writer', 1, 1),
+    'short write' => array('short', 'existing complete PNG', 0, 0),
+    'failed rename' => array('rename', 'existing complete PNG', 0, 1),
+    'failed exclusive open' => array('open', 'existing complete PNG', 0, 0),
+));
