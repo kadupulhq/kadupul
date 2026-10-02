@@ -40,6 +40,7 @@ function refresh_csrf_run($test, array $scenario): array
     }
     file_put_contents($dir . '/lib/poller.php', '<?php');
     file_put_contents($dir . '/lib/utility.php', '<?php');
+    file_put_contents($dir . '/lib/csrf_rotation.php', '<?php require ' . var_export($root . '/lib/csrf_rotation.php', true) . ';');
     file_put_contents($dir . '/include/vendor/csrf/csrf-conf.php', '<?php');
     require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
     file_put_contents($dir . '/include/vendor/csrf/csrf-magic.php', '<?php ' . test_php_function_source(file_get_contents($root . '/include/vendor/csrf/csrf-magic.php'), 'csrf_generate_secret') . ' function csrf_writable($file) { return is_writable(file_exists($file) ? $file : dirname($file)); }');
@@ -54,7 +55,7 @@ function refresh_csrf_run($test, array $scenario): array
 
     $bootstrap = <<<'PHP'
 <?php
-$config = array('base_path' => getenv('REFRESH_CSRF_DIR'), 'include_path' => getenv('REFRESH_CSRF_DIR') . '/include', 'is_web' => false);
+$config = array('base_path' => getenv('REFRESH_CSRF_DIR'), 'include_path' => getenv('REFRESH_CSRF_DIR') . '/include', 'is_web' => false, 'poller_id' => (int) (getenv('REFRESH_CSRF_ROLE') ?: 1));
 if (getenv('REFRESH_CSRF_SECRET') !== '') {
     $config['path_csrf_secret'] = getenv('REFRESH_CSRF_SECRET');
 }
@@ -66,13 +67,20 @@ function db_execute_prepared($sql,$params,$log=true,$connection=false) { if($con
 function db_fetch_assoc($sql) { return array(array('id'=>2,'last_polled'=>0)); }
 function array_rekey($rows,$key,$value) { return array_column($rows,$value,$key); }
 function is_remote_path_setting($name) { return false; }
-function poller_connect_to_remote($id) { return 2; }
+function poller_connect_to_remote($id) { $GLOBALS['pushed']=true; return $GLOBALS['rotation_collector']; }
 function raise_message(...$args) {}
 function __($message,...$args) { return $message; }
 define('MESSAGE_LEVEL_WARN',2);define('MESSAGE_LEVEL_ERROR',3);
-function read_config_option($name, $force = false) { if($name==='poller_interval')return 300;return getenv('REFRESH_CSRF_STORE') === 'broken' ? '' : ($GLOBALS['stored'][$name] ?? ''); }
+function read_config_option($name, $force = false) { if($name==='poller_interval')return 300;return $GLOBALS['rotation_primary']->query('SELECT value FROM settings')->fetchColumn() ?: ''; }
+require getenv('REFRESH_CSRF_ROOT') . '/tests/Fixtures/csrf-rotation-sqlite.php';
+$rotation_primary = new CsrfRotationSqlite(getenv('REFRESH_CSRF_DIR').'/primary.sqlite', getenv('REFRESH_CSRF_DIR'), getenv('REFRESH_CSRF_DIR').'/rotation.lock');
+$rotation_collector = new CsrfRotationSqlite(getenv('REFRESH_CSRF_DIR').'/collector.sqlite', getenv('REFRESH_CSRF_DIR').'-collector', getenv('REFRESH_CSRF_DIR').'/collector.lock');
+$rotation_primary->exec("INSERT INTO poller VALUES(2,CURRENT_TIMESTAMP,'')");
+if(getenv('REFRESH_CSRF_STORE')==='broken')$rotation_primary->exec("CREATE TRIGGER replace_stored_key AFTER INSERT ON settings BEGIN UPDATE settings SET value='' WHERE name='csrf_secret'; END");
+if(getenv('REFRESH_CSRF_STORE')==='remote_failure')$rotation_collector->exec("CREATE TRIGGER reject_remote BEFORE INSERT ON settings BEGIN SELECT RAISE(FAIL,'fixture write rejection'); END");
+$database_hostname='fixture';$database_port=0;$database_default='fixture';$database_sessions=array('fixture:0:fixture'=>$rotation_primary);
 require getenv('REFRESH_CSRF_ROOT') . '/include/csrf.php';
-register_shutdown_function(function () { echo 'PUSHED:' . (!empty($GLOBALS['pushed']) ? 'yes' : 'no') . ':STORED:' . (isset($GLOBALS['stored']['csrf_secret']) ? strlen($GLOBALS['stored']['csrf_secret']) : 0); $secret = getenv('REFRESH_CSRF_SECRET'); if ($secret === '' || !file_exists($secret) || file_get_contents($secret) !== false) { $GLOBALS['nativeChildCoverageMarkers'][] = 'rotation-store-file-readback'; } });
+register_shutdown_function(function () { echo 'PUSHED:' . (!empty($GLOBALS['pushed']) ? 'yes' : 'no') . ':STORED:' . strlen(read_config_option('csrf_secret')); $secret = getenv('REFRESH_CSRF_SECRET'); if ($secret === '' || !file_exists($secret) || file_get_contents($secret) !== false) { $GLOBALS['nativeChildCoverageMarkers'][] = 'rotation-store-file-readback'; } });
 PHP;
     require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
     $bootstrap .= test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'set_config_option');
@@ -84,8 +92,8 @@ PHP;
         $identical ? 'canonical-csrf-rotation' : 'injected-csrf-rotation-control',
         array($scenario, hash_file('sha256', $dir . '/cli/refresh_csrf.php'), hash('sha256', $bootstrap)),
         array('rotation-store-file-readback'),
-        $identical ? array('include/csrf.php', 'cli/refresh_csrf.php') : array('include/csrf.php'),
-        array('tests/Helpers/PhpSource.php')
+        $identical ? array_merge(array('include/csrf.php', 'cli/refresh_csrf.php'), $secret === '' && empty($scenario['role']) ? array('lib/csrf_rotation.php') : array()) : array('include/csrf.php'),
+        array('tests/Helpers/PhpSource.php', 'tests/Fixtures/csrf-rotation-sqlite.php')
     );
     if ($identical) {
         $registration['collectorPrelude'] = 'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($dir . '/cli/refresh_csrf.php', true) . ');'
@@ -98,11 +106,12 @@ PHP;
         'REFRESH_CSRF_WEB_ROOT' => empty($scenario['unknown_root']) ? ($scenario['served_outside'] ?? false ? $outside : $dir) : '',
         'REFRESH_CSRF_STORE' => $scenario['store'] ?? 'ok',
         'REFRESH_CSRF_OS' => $scenario['os'] ?? 'unix',
+        'REFRESH_CSRF_ROLE' => (string) ($scenario['role'] ?? 1),
     ) + getenv();
 
     try {
         $process = proc_open(
-            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', '$_SERVER["argv"] = array("refresh_csrf.php"); require $argv[1];', $dir . '/cli/refresh_csrf.php'), $coverage_dir, $registration),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', '$GLOBALS["cacti_csrf_rotation_worker"] = true; $_SERVER["argv"] = array("refresh_csrf.php"); require $argv[1];', $dir . '/cli/refresh_csrf.php'), $coverage_dir, $registration),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir,
@@ -124,7 +133,7 @@ PHP;
             'secret' => $secret !== '' && file_exists($secret) ? file_get_contents($secret) : null,
         );
     } finally {
-        foreach (array_merge(glob($dir . '/*.coverage'), glob($dir . '/{cli,lib,include,include/vendor/csrf}/*.php', GLOB_BRACE), glob($outside . '/*'), glob($dir . '/*.php')) as $file) {
+        foreach (array_merge(glob($dir . '/*.coverage'), glob($dir . '/{cli,lib,include,include/vendor/csrf}/*.php', GLOB_BRACE), glob($outside . '/*'), glob($dir . '/*.php'), glob($dir . '/*.sqlite'), glob($dir . '/*.lock')) as $file) {
             unlink($file);
         }
         foreach (array('cli', 'lib', 'include/vendor/csrf', 'include/vendor', 'include') as $part) {
@@ -151,7 +160,21 @@ test('a secret the database does not keep is reported as a failure', function ()
     $result = refresh_csrf_run($this, array('store' => 'broken'));
 
     expect($result['exit'])->toBe(1)
-        ->and($result['stdout'])->toContain('FATAL: Unable to store the new CSRF secret in the database.');
+        ->and($result['stdout'])->toContain('FATAL: CSRF secret rotation could not be stored or propagated to every active collector.')
+        ->and($result['stdout'])->toContain('STORED:0');
+});
+
+test('collector-local database rotation is refused before writing or propagating', function () {
+    $result = refresh_csrf_run($this, array('role' => 2));
+    expect($result['exit'])->toBe(1)->and($result['stderr'])->toBe('')
+        ->and($result['stdout'])->toContain('Run database CSRF rotation on the primary Data Collector.')
+        ->and($result['stdout'])->toEndWith('PUSHED:no:STORED:0');
+});
+
+test('collector-local external-file rotation remains available', function () {
+    $result = refresh_csrf_run($this, array('role' => 2, 'secret' => '{outside}/csrf-secret.php', 'existing' => true));
+    expect($result['exit'])->toBe(0)->and($result['stderr'])->toBe('')->and($result['mode'])->toBe(0640)
+        ->and($result['secret'])->toMatch('/^<\?php \$secret = [\x22\x27][0-9a-f]{64}[\x22\x27];\n$/');
 });
 
 test('an external secret under the document root is refused', function () {

@@ -110,7 +110,7 @@ if (!function_exists('child_coverage_command')) {
             'tests/Fixtures/rrd-process-coverage.php', 'include/csrf.php', 'include/auth.php',
             'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php',
             'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php',
-            'cli/refresh_csrf.php', 'lib/html_utility.php', 'include/vendor/csrf/csrf-magic.php',
+            'cli/refresh_csrf.php', 'lib/csrf_rotation.php', 'lib/html_utility.php', 'include/vendor/csrf/csrf-magic.php',
             'include/vendor/csrf/csrf-conf.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php',
             'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php',
             'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'

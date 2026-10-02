@@ -15,6 +15,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Move External Links into the Navigation Symfony module with Twig forms, transactional viewing grants, stale-order protection and safe legacy redirects.
 - Revoke migrated-route sessions and their remember-me tokens after credential replacement, preserve caller transaction ownership during revocation and concurrent transparent hash upgrades, and retain Console section names equal to `0` in External Links.
 
+- Serialize database CSRF rotations on the primary and each collector, verify persisted keys, and bound the CLI worker to 30 seconds. Run database rotation on the primary collector; external-file rotation remains available on remote collectors.
+
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 

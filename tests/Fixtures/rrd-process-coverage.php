@@ -149,7 +149,7 @@ if (defined('PAGE_FLAG_TEST_COVERAGE_SOURCE')) {
 }
 if (defined('AUTH_HARDENING_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
-    foreach (array('include/csrf.php', 'include/auth.php', 'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php', 'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php', 'cli/refresh_csrf.php', 'auth_changepassword.php', 'lib/ldap.php', 'install/functions.php') as $coverageFile) {
+    foreach (array('include/csrf.php', 'lib/csrf_rotation.php', 'include/auth.php', 'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php', 'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php', 'cli/refresh_csrf.php', 'auth_changepassword.php', 'lib/ldap.php', 'install/functions.php') as $coverageFile) {
         $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
     }
 }
