@@ -132,6 +132,82 @@ for (const mode of ['', 'nonce']) {
   });
 }
 
+
+for (const mode of ['', 'nonce']) {
+  test(`server-rendered forms keep early submit protection when end is swallowed under ${mode || 'default'} CSP`, async ({ page }) => {
+    const program = String.raw`
+      require $argv[1] . '/lib/headers_secure.php';
+      function csrf_startup() {
+        csrf_conf('rewrite', false);
+        csrf_conf('defer', true);
+        csrf_conf('auto-session', false);
+        csrf_conf('frame-breaker', false);
+        csrf_conf('secret', 'isolated-browser-render-secret');
+        csrf_conf('rewrite-js', '/native-csrf.js');
+      }
+      session_id('browser-render-fixture');
+      require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
+      $nonce = CactiSecureHeaders::getNonceAttribute();
+      $page = '<html><head><script ' . $nonce . '>
+        window.submissions = []; window.violations = [];
+        document.addEventListener("securitypolicyviolation", function(event) { violations.push(event.violatedDirective); });
+        document.addEventListener("submit", function(event) {
+          event.preventDefault();
+          submissions.push(Array.from(new FormData(event.target).entries()));
+        });
+      </script></head><body>
+      <form id="early" method="post">
+        <input name="action" value="save">
+        <button id="inside" formaction="https://other.example/collect">Foreign inside</button>
+        <button id="local">Local</button>
+      </form>
+      <button id="outside" form="early" formaction="https://other.example/collect">Foreign outside</button>'
+        . $argv[3] . 'open text</body></html>';
+      $rendered = csrf_ob_handler($page, 0);
+      if (!preg_match("~<input type='hidden' name='__csrf_magic' value=\"([^\"]*)\" />~", $rendered, $match) || !csrf_check_tokens($match[1])) {
+        throw new RuntimeException('Expected genuine rendered token field');
+      }
+      // Deliberately cross a timestamp boundary for the first native page.
+      if ($argv[3] === '<plaintext>') {
+        $started = time();
+        while (time() === $started) { usleep(1000); }
+      }
+      echo json_encode(array(
+        'page' => $rendered,
+        'policy' => CactiSecureHeaders::buildCspPolicy($argv[2], CactiSecureHeaders::getNonce(), ''),
+        'token' => $match[1]
+      ));
+    `;
+    let fixture;
+    await page.route('**/*', async route => {
+      const url = new URL(route.request().url());
+      if (url.pathname === '/native-fixture') {
+        const headers = { 'Content-Security-Policy': fixture.policy };
+        await route.fulfill({ contentType: 'text/html', headers, body: fixture.page });
+      } else if (url.pathname === '/native-csrf.js') {
+        await route.fulfill({ contentType: 'application/javascript', body: readFileSync(path.join(root, 'include/vendor/csrf/csrf-magic.js')) });
+      } else {
+        throw new Error(`Unexpected request: ${url.pathname}`);
+      }
+    });
+    for (const open of ['<plaintext>', '<textarea>', '<title>', '<xmp>', '<!--']) {
+      fixture = JSON.parse(execFileSync('php', ['-r', program, root, mode, open], { encoding: 'utf8' }));
+      await page.goto(`${origin}/native-fixture`);
+      await expect(page.locator('#early input[name="__csrf_magic"]')).toHaveCount(1);
+      // No end() pass ran: only the server has inserted this token field.
+      await page.locator('#inside').click();
+      await page.locator('#outside').click();
+      await page.locator('#local').click();
+      const submissions = await page.evaluate(() => window.submissions);
+      expect(submissions).toHaveLength(3);
+      expect(submissions[0]).toEqual([['action', 'save']]);
+      expect(submissions[1]).toEqual([['action', 'save']]);
+      expect(submissions[2]).toEqual([['__csrf_magic', fixture.token], ['action', 'save']]);
+      expect(await page.evaluate(() => violations)).toEqual([]);
+    }
+  });
+}
+
 for (const mode of ['', 'nonce']) {
   test(`native XHR normalizes lowercase POST under ${mode || 'default'} CSP`, async ({ page }) => {
     const policy = execFileSync('php', ['-r',
@@ -178,3 +254,48 @@ for (const mode of ['', 'nonce']) {
     expect(await page.evaluate(() => violations)).toEqual([]);
   });
 }
+
+test.describe('server form rewriting without scripting', () => {
+  test.use({ javaScriptEnabled: false });
+  for (const [name, markup, expectedOwners, expectedAction] of [
+    ['select form ownership', '<select><form method="post"></select><form method="post"><button>Save</button></form>', [false]],
+    ['foreign select form ownership', '<select><form method="post" action="https://other.example/"></select><form method="post"><button>Save</button></form>', [false]],
+    ['quoted DOCTYPE', '<form method="post" action="https://other.example/"><!DOCTYPE html PUBLIC "></form>" ""><form method="post"><button>Save</button></form>', [false, true]],
+    ['inert template base', '<template><base href="https://other.example/"></template><form method="post" action="save.php"><button>Save</button></form>', [true], `${origin}/save.php`],
+    ['nested inert template base', '<template><template><base href="https://other.example/"></template></template><form method="post" action="save.php"><button>Save</button></form>', [true], `${origin}/save.php`],
+    ['real foreign base after inert template', '<template><base href="/local/"></template><base href="https://other.example/"><form method="post" action="save.php"><button>Save</button></form>', [false], 'https://other.example/save.php'],
+  ]) {
+    test(name, async ({ page }) => {
+      const program = String.raw`
+        function csrf_startup() {
+          csrf_conf('rewrite', false);
+          csrf_conf('defer', true);
+          csrf_conf('auto-session', false);
+          csrf_conf('frame-breaker', false);
+          csrf_conf('secret', 'isolated-browser-parser-fixture');
+        }
+        require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
+        session_id('browser-parser-fixture');
+        echo csrf_ob_handler('<html><head></head><body>' . $argv[2] . '</body></html>', 0);
+      `;
+      const html = execFileSync('php', ['-r', program, root, markup], { encoding: 'utf8' });
+      await page.route('**/*', route => route.fulfill({ contentType: 'text/html', body: html }));
+      await page.goto(`${origin}/parser-fixture`);
+      await expect(page.locator('form')).toHaveCount(expectedOwners.length);
+      await expect(page.locator('input[name="__csrf_magic"]')).toHaveCount(expectedOwners.filter(Boolean).length);
+      const tokenOwners = await page.locator('form').evaluateAll(forms => forms.map(form => new FormData(form).has('__csrf_magic')));
+      expect(tokenOwners).toEqual(expectedOwners);
+      if (expectedAction) { expect(await page.locator('form').evaluate(form => form.action)).toBe(expectedAction); }
+      if (name === 'foreign select form ownership') {
+        await expect(page.locator('form')).toHaveAttribute('action', 'https://other.example/');
+      }
+      // Controls outside the form subtree can still belong to its parser pointer.
+      // No token may exist anywhere in either select-form case.
+      if (name === 'quoted DOCTYPE') {
+        await expect(page.locator('form').first()).toHaveAttribute('action', 'https://other.example/');
+        await expect(page.locator('form').first().locator('input[name="__csrf_magic"]')).toHaveCount(0);
+        await expect(page.locator('form').last().locator('input[name="__csrf_magic"]')).toHaveCount(1);
+      }
+    });
+  }
+});
