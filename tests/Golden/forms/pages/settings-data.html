@@ -1,0 +1,163 @@
+<form action="settings.php" autocomplete="off" class="cactiFormStart" id="form_settings" method="post" name="form_settings">
+  <div class="cactiTable" id="settings_data1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Kadupul Settings (Data)</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Settings-Data.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="settings_data1_child">
+      <div class="spacer formHeader collapsible" id="row_dsstats_hq_header"><div class="formHeaderText">Data Sources Statistics<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_dsstats_enable"><div class="formColumnLeft"><div class="formFieldName">Enable Data Source Statistics Collection<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should Data Source Statistics be collected for this Kadupul system?</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable Data Source Statistics Collection"><input aria-checked="false" class="formCheckbox" id="dsstats_enable" name="dsstats_enable" title="Enable Data Source Statistics Collection" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="dsstats_enable">Enable Data Source Statistics Collection</label></span></div></div></div>
+      <div class="formRow even" id="row_dsstats_parallel"><div class="formColumnLeft"><div class="formFieldName">Number of DSStats Processes<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of concurrent DSStats processes to use to use to process all of the Data Sources.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="dsstats_parallel" name="dsstats_parallel">
+          <option selected="" value="1">1 Process</option>
+          <option value="2">2 Processes</option>
+          <option value="3">3 Processes</option>
+          <option value="4">4 Processes</option>
+          <option value="5">5 Processes</option>
+          <option value="6">6 Processes</option>
+          <option value="7">7 Processes</option>
+          <option value="8">8 Processes</option>
+          <option value="9">9 Processes</option>
+          <option value="10">10 Processes</option>
+          <option value="11">11 Processes</option>
+          <option value="12">12 Processes</option>
+          <option value="13">13 Processes</option>
+          <option value="14">14 Processes</option>
+          <option value="15">15 Processes</option>
+          <option value="16">16 Processes</option>
+          <option value="17">17 Processes</option>
+          <option value="18">18 Processes</option>
+          <option value="19">19 Processes</option>
+          <option value="20">20 Processes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_dsstats_daily_interval"><div class="formColumnLeft"><div class="formFieldName">Daily Update Frequency<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How frequent should Daily Stats be updated?</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="dsstats_daily_interval" name="dsstats_daily_interval">
+          <option value="boost">After Boost</option>
+          <option selected="" value="60">1 Hour</option>
+          <option value="120">2 Hours</option>
+          <option value="180">3 Hours</option>
+          <option value="240">4 Hours</option>
+          <option value="300">5 Hours</option>
+          <option value="360">6 Hours</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_dsstats_hourly_duration"><div class="formColumnLeft"><div class="formFieldName">Hourly Average Window<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of consecutive hours that represent the hourly average. Keep in mind that a setting too high can result in very large memory tables</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="dsstats_hourly_duration" name="dsstats_hourly_duration">
+          <option selected="" value="60">1 Hour</option>
+          <option value="120">2 Hours</option>
+          <option value="180">3 Hours</option>
+          <option value="240">4 Hours</option>
+          <option value="300">5 Hours</option>
+          <option value="360">6 Hours</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_dsstats_major_update_time"><div class="formColumnLeft"><div class="formFieldName">Maintenance Time<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">What time of day should Weekly, Monthly, and Yearly Data be updated? Format is HH:MM [am/pm]</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="dsstats_major_update_time" maxlength="20" name="dsstats_major_update_time" off="" size="10" type="text" value="12:00am"></div></div></div>
+      <div class="formRow even" id="row_dsstats_poller_mem_limit"><div class="formColumnLeft"><div class="formFieldName">Memory Limit for Data Source Statistics Data Collector<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of memory for the Kadupul Poller and Data Source Statistics Poller</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="dsstats_poller_mem_limit" name="dsstats_poller_mem_limit">
+          <option value="32">32 MBytes</option>
+          <option value="64">64 MBytes</option>
+          <option value="128">128 MBytes</option>
+          <option value="256">256 MBytes</option>
+          <option value="512">512 MBytes</option>
+          <option selected="" value="1024">1 GByte</option>
+          <option value="1536">1.5 GBytes</option>
+          <option value="2048">2 GBytes</option>
+          <option value="3072">3 GBytes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_rrdcheck_hq_header"><div class="formHeaderText">RRDfile Check<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_rrdcheck_enable"><div class="formColumnLeft"><div class="formFieldName">Enable RRDfile Check<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should RRDfile check be enabled for this Kadupul system?</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable RRDfile Check"><input aria-checked="false" class="formCheckbox" id="rrdcheck_enable" name="rrdcheck_enable" title="Enable RRDfile Check" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="rrdcheck_enable">Enable RRDfile Check</label></span></div></div></div>
+      <div class="formRow even" id="row_rrdcheck_parallel"><div class="formColumnLeft"><div class="formFieldName">Number of RRDfile Check Processes<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of concurrent RRDfile check processes to use to use to process all of rrd files.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="rrdcheck_parallel" name="rrdcheck_parallel">
+          <option selected="" value="1">1 Process</option>
+          <option value="2">2 Processes</option>
+          <option value="3">3 Processes</option>
+          <option value="4">4 Processes</option>
+          <option value="5">5 Processes</option>
+          <option value="6">6 Processes</option>
+          <option value="7">7 Processes</option>
+          <option value="8">8 Processes</option>
+          <option value="9">9 Processes</option>
+          <option value="10">10 Processes</option>
+          <option value="11">11 Processes</option>
+          <option value="12">12 Processes</option>
+          <option value="13">13 Processes</option>
+          <option value="14">14 Processes</option>
+          <option value="15">15 Processes</option>
+          <option value="16">16 Processes</option>
+          <option value="17">17 Processes</option>
+          <option value="18">18 Processes</option>
+          <option value="19">19 Processes</option>
+          <option value="20">20 Processes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_rrdcheck_interval"><div class="formColumnLeft"><div class="formFieldName">Check Frequency<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How frequent should RRD be checked ?</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="rrdcheck_interval" name="rrdcheck_interval">
+          <option value="boost">After Boost</option>
+          <option value="60">1 Hour</option>
+          <option selected="" value="240">4 Hours</option>
+          <option value="1440">24 Hours</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_storage_header"><div class="formHeaderText">Data Storage Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_storage_location"><div class="formColumnLeft"><div class="formFieldName">Location<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose if RRDs will be stored locally or being handled by an external RRDtool proxy server.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="storage_location" name="storage_location">
+          <option selected="" value="0">Local</option>
+          <option value="1">RRDtool Proxy Server</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_extended_paths_header"><div class="formHeaderText">Structure RRDfile Paths<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_extended_paths"><div class="formColumnLeft"><div class="formFieldName">Enable Structured Paths<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Use a separate subfolder for each hosts RRD files. The naming of the RRDfiles will be one of the following:<br>
+        <ul>
+          <li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li>
+          <li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li>
+          <li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li>
+          <li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li>
+        </ul>
+        <br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change. NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script.
+        </span>
+        </div>
+        </div>
+        </div>
+        </div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable Structured Paths"><input aria-checked="false" class="formCheckbox" id="extended_paths" name="extended_paths" title="Enable Structured Paths" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="extended_paths">Enable Structured Paths</label></span></div></div>
+      </div>
+      <div class="formRow even" id="row_extended_paths_type"><div class="formColumnLeft"><div class="formFieldName">Directory Pattern<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Which Directory Pattern do you wish to use for Structured RRD Paths. 'Device ID' is the default. The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs. After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="extended_paths_type" name="extended_paths_type">
+          <option selected="" value="device">Device ID</option>
+          <option value="device_dq">Device ID/Data Query ID</option>
+          <option value="hash_device">Device Hash/Device ID</option>
+          <option value="hash_device_dq">Device Hash/Device ID/Data Query ID</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_extended_paths_hashes"><div class="formColumnLeft"><div class="formFieldName">Max Device Hash Directories<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum number of Device Directories to be created based upon hashed Device ID's.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="extended_paths_hashes" maxlength="5" name="extended_paths_hashes" off="" size="5" type="text" value="100"></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_rrdp_header"><div class="formHeaderText">RRDtool Proxy Server<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_rrdp_server"><div class="formColumnLeft"><div class="formFieldName">Proxy Server<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The DNS hostname or IP address of the RRDtool proxy server.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="rrdp_server" maxlength="255" name="rrdp_server" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_rrdp_port"><div class="formColumnLeft"><div class="formFieldName">Proxy Port Number<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">TCP port for encrypted communication.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="rrdp_port" maxlength="5" name="rrdp_port" off="" size="5" type="text" value="40301"></div></div></div>
+      <div class="formRow even" id="row_rrdp_fingerprint"><div class="formColumnLeft"><div class="formFieldName">RSA Fingerprint<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The fingerprint of the current public RSA key the proxy is using. This is required to establish a trusted connection.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="rrdp_fingerprint" maxlength="47" name="rrdp_fingerprint" off="" size="47" type="text" value=""></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_rrdp_header2"><div class="formHeaderText">RRDtool Proxy Server - Backup<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_rrdp_load_balancing"><div class="formColumnLeft"><div class="formFieldName">Load Balancing<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If both main and backup proxy are receivable this option allows to spread all requests against RRDtool.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Load Balancing"><input aria-checked="false" class="formCheckbox" id="rrdp_load_balancing" name="rrdp_load_balancing" title="Load Balancing" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="rrdp_load_balancing">Load Balancing</label></span></div></div></div>
+      <div class="formRow even" id="row_rrdp_server_backup"><div class="formColumnLeft"><div class="formFieldName">Proxy Server<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The DNS hostname or IP address of the RRDtool backup proxy server if proxy is running in MSR mode.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="rrdp_server_backup" maxlength="255" name="rrdp_server_backup" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_rrdp_port_backup"><div class="formColumnLeft"><div class="formFieldName">Proxy Port Number<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">TCP port for encrypted communication with the backup proxy.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="rrdp_port_backup" maxlength="5" name="rrdp_port_backup" off="" size="5" type="text" value="40301"></div></div></div>
+      <div class="formRow even" id="row_rrdp_fingerprint_backup"><div class="formColumnLeft"><div class="formFieldName">RSA Fingerprint<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="rrdp_fingerprint_backup" maxlength="47" name="rrdp_fingerprint_backup" off="" size="47" type="text" value=""></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="tab" name="tab" style="height:0px;" type="hidden" value="data"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="save ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>
