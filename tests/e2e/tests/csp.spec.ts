@@ -112,14 +112,25 @@ test.describe('Pilot pages carry matching nonces', () => {
         expect(bodyMatch![1]).toBe(headerNonce);
     });
 
-    test('about.php has no inline tags so carries no nonce attributes but keeps the header', async ({ page }) => {
+    test('About compatibility redirect and rendered page enforce the Symfony CSP', async ({ page }) => {
         await loginAsAdmin(page);
 
         const resp = await page.context().request.get('/about.php', { maxRedirects: 0 });
-
-        const cspHeader = resp.headers()[EXPECTED_CSP_HEADER];
-        expect(cspHeader).toBeTruthy();
-        expect(cspHeader).toMatch(/'nonce-[A-Za-z0-9_-]+'/);
+        expect(resp.status()).toBe(302);
+        expect(new URL(resp.headers().location, resp.url()).pathname).toMatch(/\/about$/);
+        const rendered = await page.goto('/about.php');
+        expect(rendered!.status()).toBe(200);
+        for (const response of [resp, rendered!]) {
+            const policy = response.headers()['content-security-policy'];
+            expect(policy).toBeTruthy();
+            for (const directive of ["default-src 'self'", "object-src 'none'", "frame-ancestors 'none'", "base-uri 'self'", "form-action 'self'"]) {
+                expect(policy).toContain(directive);
+            }
+            expect(policy).not.toContain("'unsafe-inline'");
+            expect(response.headers()['content-security-policy-report-only']).toBeUndefined();
+        }
+        await expect(page.locator('h1')).toContainText('About Kadupul');
+        await expect(page.locator('script:not([src]), style, [onclick], [onchange], [onsubmit]')).toHaveCount(0);
     });
 });
 

@@ -185,6 +185,13 @@ final class VdefItemController
         }
         try {
             $actor = $authorization->actor();
+            $order = $request->request->all()['order'] ?? null;
+            if (!is_array($order) || array_diff(array_keys($order), ['items', 'revision', 'moveUp', 'moveDown', '_token']) !== []
+                || !is_string($order['items'] ?? null) || !is_string($order['revision'] ?? null)
+                || preg_match('/\A[a-f0-9]{64}\z/D', $order['revision']) !== 1
+                || (isset($order['moveUp']) && isset($order['moveDown']))) {
+                return new Response($translator->trans('Invalid VDEF item order.', [], 'graph_definition'), 400, $headers);
+            }
             $form = $forms->createNamed('order', VdefReorderType::class, ['items' => '', 'revision' => ''], [
                 'action' => $urls->generate('graph_vdef_item_reorder', ['vdefId' => $vdefId]),
                 'method' => 'POST',
@@ -193,14 +200,21 @@ final class VdefItemController
             if (!$form->isSubmitted() || !$form->isValid()) {
                 return new Response($translator->trans('Invalid VDEF item order.', [], 'graph_definition'), 422, $headers);
             }
-            $order = $request->request->all('order');
             $raw = $order['items'] ?? null;
-            $ids = is_string($raw) ? json_decode($raw, true, 8) : null;
-            if (!is_array($ids) || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1) !== []) {
+            // Decode without associative conversion so a JSON object with numeric
+            // keys cannot masquerade as the list emitted by the actual form.
+            $ids = json_decode($raw, false, 8);
+            if (!is_array($ids) || !array_is_list($ids) || count($ids) > 500
+                || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 2147483647) !== []
+                || count(array_unique($ids, SORT_REGULAR)) !== count($ids)) {
                 return new Response($translator->trans('Invalid VDEF item order.', [], 'graph_definition'), 400, $headers);
             }
             foreach (['moveUp' => -1, 'moveDown' => 1] as $field => $offset) {
                 if (isset($order[$field])) {
+                    if (!is_string($order[$field]) || preg_match('/\A[1-9][0-9]{0,9}\z/D', $order[$field]) !== 1
+                        || (strlen($order[$field]) === 10 && strcmp($order[$field], '2147483647') > 0)) {
+                        return new Response($translator->trans('Invalid VDEF item order.', [], 'graph_definition'), 400, $headers);
+                    }
                     $position = array_search((int) $order[$field], $ids, true);
                     $destination = is_int($position) ? $position + $offset : -1;
                     if (!is_int($position) || !isset($ids[$destination])) {

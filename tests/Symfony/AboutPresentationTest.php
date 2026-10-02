@@ -66,6 +66,8 @@ final class AboutPresentationTest extends TestCase
             $container->set(ProductVersion::class, $version);
             $response = $kernel->handle(Request::create('/about?_locale=en', 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(200, $response->getStatusCode());
+            self::assertSame("default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'", $response->headers->get('Content-Security-Policy'));
+            self::assertFalse($response->headers->has('Content-Security-Policy-Report-Only'));
             $body = $response->getContent();
             foreach (['<html lang="fr">', 'À propos de Kadupul', 'Version &lt;script&gt;version&lt;/script&gt;', '- Bêta &lt;beta&gt;', 'version 2', 'toute version ultérieure', 'SANS AUCUNE GARANTIE', 'QUALITÉ MARCHANDE', 'ADÉQUATION À UN USAGE PARTICULIER', 'https://github.com/kadupulhq/kadupul'] as $text) {
                 self::assertStringContainsString($text, $body);
@@ -78,6 +80,8 @@ final class AboutPresentationTest extends TestCase
             $response = $kernel->handle(Request::create('/about/legacy'));
             self::assertSame(302, $response->getStatusCode());
             self::assertSame('/about', $response->headers->get('Location'));
+            self::assertSame("default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'", $response->headers->get('Content-Security-Policy'));
+            self::assertFalse($response->headers->has('Content-Security-Policy-Report-Only'));
             self::assertSame(405, $kernel->handle(Request::create('/about/legacy', 'POST'))->getStatusCode());
             self::assertSame(405, $kernel->handle(Request::create('/about', 'POST'))->getStatusCode());
         } finally {

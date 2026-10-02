@@ -46,7 +46,7 @@ final class InstallationConfiguration implements LegacyConfiguration
         if ($values['collector_id'] !== 1) {
             $this->requireOnlinePrimaryRoute();
             if (($settings['rdatabase_type'] ?? 'mysql') !== 'mysql' || empty($settings['rdatabase_hostname']) || empty($settings['rdatabase_default']) || !isset($settings['rdatabase_username'], $settings['rdatabase_password']) || ($settings['conn_mode'] ?? '') === 'offline') {
-                throw new \RuntimeException('Online primary configuration is required for collector Sites, Navigation and About routes.');
+                throw new \RuntimeException('Online primary configuration is required for collector administration.');
             }
             $primary = array_replace($values, [
                 'host' => $settings['rdatabase_hostname'], 'database' => $settings['rdatabase_default'],
