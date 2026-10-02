@@ -51,6 +51,9 @@ final class PaletteColorReviewPresentationTest extends TestCase
             self::assertSame('456', $xpath->evaluate('string(//tbody/tr[3]/td[2]/a)'));
             self::assertSame('Select 456', $xpath->evaluate('string(//input[@name="ids[]" and @value="9"]/@aria-label)'));
             foreach ([7 => 'AbC', 8 => '123', 9 => '456'] as $id => $hex) {
+                $selectionId = 'palette-select-' . $id;
+                self::assertSame(1.0, $xpath->evaluate('count(//input[@type="checkbox" and @name="ids[]" and @id="' . $selectionId . '" and @value="' . $id . '"])'));
+                self::assertSame('Select', $xpath->evaluate('string(//label[@for="' . $selectionId . '"])'));
                 $previewId = 'palette-preview-' . $id;
                 self::assertSame(1.0, $xpath->evaluate('count(//input[@type="color" and @id="' . $previewId . '" and @disabled])'));
                 self::assertSame($hex, $xpath->evaluate('string(//label[@for="' . $previewId . '"])'));
