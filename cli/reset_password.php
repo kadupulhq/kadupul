@@ -145,7 +145,7 @@ function reset_password_read() {
 
 	if (function_exists('pcntl_async_signals') && function_exists('pcntl_signal')) {
 		pcntl_async_signals(true);
-		pcntl_signal(SIGINT, function () {
+		pcntl_signal(SIGINT, function (): never {
 			reset_password_echo_on();
 			print PHP_EOL;
 

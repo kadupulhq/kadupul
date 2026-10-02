@@ -1865,7 +1865,6 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
 	$rigid               = '';
 	$unit_value          = '';
 	$version             = get_rrdtool_version();
-	$unit_exponent_value = '';
 
 	if ($graph['auto_scale'] == 'on') {
 		switch ($graph['auto_scale_opts']) {
@@ -1918,10 +1917,6 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
 
 	if ($graph['unit_value'] != '') {
 		$unit_value = '--y-grid=' . rrdtool_quote_argument($graph['unit_value']) . RRD_NL;
-	}
-
-	if (preg_match('/^[0-9]+$/', $graph['unit_exponent_value'])) {
-		$unit_exponent_value = '--units-exponent=' . rrdtool_quote_argument($graph['unit_exponent_value']) . RRD_NL;
 	}
 
 	/*
@@ -1998,7 +1993,7 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
 
 			break;
 		case 'unit_exponent_value':
-			if (preg_match('/^[0-9]+$/', $value)) {
+			if (preg_match('/^-?[0-9]+$/D', (string) $value)) {
 				$graph_opts .= '--units-exponent=' . $value . RRD_NL;
 			}
 
@@ -2129,7 +2124,7 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
 		}
 	}
 
-	$graph_opts .= "$rigid" . trim("$scale$unit_value$unit_exponent_value$graph_legend", "\n\r " . RRD_NL) . RRD_NL;
+	$graph_opts .= "$rigid" . trim("$scale$unit_value$graph_legend", "\n\r " . RRD_NL) . RRD_NL;
 
 	/* add a date to the graph legend */
 	$graph_opts .= rrdtool_function_format_graph_date($graph_data_array);

@@ -202,7 +202,7 @@ function cacti_csrf_external_path_is_safe($path) {
 	return true;
 }
 
-function cacti_session_cookie_failure($write_log = true) {
+function cacti_session_cookie_failure($write_log = true): never {
 	global $config;
 
 	if ($write_log) {
@@ -221,7 +221,7 @@ function cacti_session_cookie_failure($write_log = true) {
 	exit;
 }
 
-function csrf_error_callback() {
+function csrf_error_callback(): never {
 	$session_name = session_name();
 
 	// A clean browser may return no cookies when it rejects a mis-scoped session
