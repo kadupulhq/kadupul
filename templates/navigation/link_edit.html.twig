@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}{% trans_default_domain 'navigation' %}
+{% block title %}{{ 'External Links'|trans }} · Kadupul{% endblock %}
+{% block body %}<main>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route name, no supplied URL. #}
+<p><a href="{{ path('navigation_links') }}">{{ 'Back to links'|trans }}</a></p><h1>{{ (link ? 'Edit link' : 'Add link')|trans }}</h1>
+{{ form_start(form) }}{{ form_errors(form) }}{{ form_widget(form) }}<button>{{ 'Save'|trans }}</button>{{ form_end(form) }}</main>{% endblock %}

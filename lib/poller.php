@@ -163,13 +163,13 @@ function exec_background($filename, $args = '', $redirect_args = '')
  * command exits or the timeout has expired.
  *
  * @param  (string)      $cmd          Command to execute.
- * @param  (string)      $output       A return array of output.
+ * @param  (array)       $output       A return array of output.
  * @param  (int)         $return_code  The return code from the script
  * @param  (int)         $timeout      Timeout in seconds.
  *
- * @return (string|bool) Either the last line of output or false on error
+ * @return string|false|null The last output line, false on launch failure, or null without output.
  */
-function exec_with_timeout($cmd, &$output, &$return_code, $timeout = 5)
+function exec_with_timeout($cmd, &$output, &$return_code, $timeout = 5): string|false|null
 {
     // File descriptors passed to the process.
     $descriptors = array(
@@ -262,13 +262,13 @@ function exec_with_timeout($cmd, &$output, &$return_code, $timeout = 5)
         $output = explode("\n", $buffer);
         return(end($output));
     } else {
-        return;
+        return null;
     }
 }
 
 function file_escaped($file)
 {
-    if (substr($file, 0, 1) == '"' && substr($file, -1, 1) == '"') {
+    if (str_starts_with($file, '"') && str_ends_with($file, '"')) {
         return true;
     }
 
@@ -976,7 +976,7 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
                 } else {
                     $rrd_update_array[$rrd_path]['times'][$unix_time][$rrd_name] = 'U';
                 }
-            } elseif (strpos($value, ':') !== false) {
+            } elseif (str_contains($value, ':')) {
                 /* multiple value output */
                 $values = preg_split('/\s+/', $value);
 
@@ -1342,7 +1342,7 @@ function update_resource_cache($poller_id = 1)
                             $exclude_paths = explode(',', $info['info']['nosync']);
                             if (cacti_sizeof($exclude_paths)) {
                                 foreach ($exclude_paths as $epath) {
-                                    if (strpos($epath, '*.') !== false) {
+                                    if (str_contains($epath, '*.')) {
                                         $file_exclusions[] = trim(str_replace('*.', '', $epath));
                                     } else {
                                         $dir_exclusions[]  = trim($epath);
@@ -1476,7 +1476,7 @@ function cache_in_path($path, $type, $recursive = true)
             $exclude = true;
         }
 
-        if (basename($path) == 'config.php' && strpos($path, 'plugins') !== false) {
+        if (basename($path) == 'config.php' && str_contains($path, 'plugins')) {
             // Allow replication of plugin based config.php files
             $exclude = false;
         } elseif (basename($path) == 'config_local.php') {
@@ -1494,7 +1494,7 @@ function cache_in_path($path, $type, $recursive = true)
             $curr_md5 = md5_file($path);
             $last_md5 = db_fetch_cell_prepared('SELECT md5sum FROM poller_resource_cache WHERE path = ?', array($spath));
 
-            if (substr($spath, 0, 8) == 'plugins/') {
+            if (str_starts_with($spath, 'plugins/')) {
                 $ppath = $config['base_path'] . '/' . $spath;
             } else {
                 $ppath = $spath;
@@ -1535,7 +1535,7 @@ function update_db_from_path($path, $type, $recursive = true)
                     if ($recursive) {
                         update_db_from_path($path . DIRECTORY_SEPARATOR . $entry, $type, $recursive);
                     }
-                } elseif (basename($spath) == 'config.php' && strpos($path, 'plugins') === false) {
+                } elseif (basename($spath) == 'config.php' && !str_contains($path, 'plugins')) {
                     // Don't cache Kadupul's config.php
                     continue;
                 } elseif (basename($path) == '.travis.yml') {
@@ -1685,10 +1685,10 @@ function resource_cache_out($type, $path)
                         if ($extension == 'php' && $contents != '') {
                             // Executable check
                             $executable = false;
-                            if (strpos($e['path'], 'lib/poller.php') === false) {
-                                if (strpos($contents, '#!/usr/bin/env php') !== false) {
+                            if (!str_contains($e['path'], 'lib/poller.php')) {
+                                if (str_contains($contents, '#!/usr/bin/env php')) {
                                     $executable = true;
-                                } elseif (strpos($contents, '#!/usr/bin/php') !== false) {
+                                } elseif (str_contains($contents, '#!/usr/bin/php')) {
                                     $executable = true;
                                 }
                             }
@@ -1930,11 +1930,26 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 
     replicate_log('Attempting to replicate to Poller ' . $remote_poller_id);
 
+    // Record retry ownership before checking collector availability.
+    if (($class == 'all' || $class == 'data') && !db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($remote_poller_id))) {
+        cacti_log('ERROR: Unable to mark Poller ' . $remote_poller_id . ' synchronization required. No replication was started.', false, 'REPLICATE');
+        return false;
+    }
+
     $rcnn_id = poller_connect_to_remote($remote_poller_id);
 
     if ($rcnn_id === false) {
         replicate_log('Failed to connect to Poller ' . $remote_poller_id . ' Database');
         return false;
+    }
+
+    if ($class == 'all' || $class == 'settings' || $class == 'data') {
+        require_once __DIR__ . '/data_source_profile_integrity.php';
+        if (!data_source_profile_reference_guards_available(connection: $rcnn_id) || !data_source_profile_reference_index_available($rcnn_id)) {
+            cacti_log('ERROR: Synchronization of Poller ' . $remote_poller_id . ' failed while replicating data-source definitions. Collector profile guards and reference index must be upgraded before replication; its schema version was retained.', false, 'REPLICATE');
+            raise_message('poller_sync_failed', __('Synchronization failed while replicating data-source definitions. See the log for details.'), MESSAGE_LEVEL_ERROR);
+            return false;
+        }
     }
 
     // Start Push Replication
@@ -2005,8 +2020,7 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
         $data = db_fetch_assoc('SELECT * FROM poller');
         replicate_out_table($rcnn_id, $data, 'poller', $remote_poller_id);
 
-        $data = db_fetch_assoc('SELECT * FROM version');
-        replicate_out_table($rcnn_id, $data, 'version', $remote_poller_id);
+        // Collector schema versions belong to its installer, never data synchronization.
     }
 
     // Plugin tables
@@ -2175,7 +2189,13 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'data_template_data', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'data_template_data', $remote_poller_id) === false) {
+            cacti_log('ERROR: Synchronization of Poller ' . $remote_poller_id . ' failed while replicating data-source definitions.', false, 'REPLICATE');
+            if ($config['is_web']) {
+                raise_message('poller_sync_failed', __('Synchronization failed while replicating data-source definitions. See the log for details.'), MESSAGE_LEVEL_ERROR);
+            }
+            return false;
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT dtr.*
@@ -2242,6 +2262,11 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
         );
     }
 
+    if (($class == 'all' || $class == 'data') && !db_execute_prepared('UPDATE poller SET last_sync=NOW(), requires_sync="" WHERE id=?', array($remote_poller_id))) {
+        cacti_log('ERROR: Poller ' . $remote_poller_id . ' completion-state write failed; synchronization remains required.', false, 'REPLICATE');
+        return false;
+    }
+
     if ($class != 'plugins' && $config['is_web']) {
         replicate_log('Synchronization of Poller ' . $remote_poller_id . ' completed', POLLER_VERBOSITY_LOW);
         raise_message('poller_sync');
@@ -2268,6 +2293,10 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
  */
 function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate = true, $exclude = false, $level = POLLER_VERBOSITY_NONE)
 {
+    if ($table === 'data_template_data') {
+        require_once __DIR__ . '/data_source_profile_integrity.php';
+        return is_array($data) && replicate_data_source_profile_children($conn, $data, $truncate, $exclude);
+    }
     // Get the create table syntax just in case
     $create_table = db_fetch_row("SHOW CREATE TABLE `$table`");
 
@@ -2561,6 +2590,10 @@ function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, 
 
 function replicate_table_to_poller($conn, &$data, $table, $exclude = false)
 {
+    if ($table === 'data_template_data') {
+        require_once __DIR__ . '/data_source_profile_integrity.php';
+        return is_array($data) && replicate_data_source_profile_children($conn, $data, false, $exclude);
+    }
     $max_packet  = db_fetch_row("SHOW GLOBAL VARIABLES LIKE 'max_allowed_packet'", true, $conn);
 
     if (cacti_sizeof($max_packet)) {

@@ -1,0 +1,13 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "data_source",
+        "host_id",
+        "host_id_input",
+        "host_id_wrap"
+    ],
+    "script_names": []
+}
