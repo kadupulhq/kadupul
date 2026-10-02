@@ -46,15 +46,15 @@ afterEach(function () {
 	$GLOBALS['csrf']['frame-breaker'] = true;
 });
 
-function csrf_field_output() {
+function cacti_csrf_field_output() {
 	ob_start();
-	csrf_field();
+	cacti_csrf_field();
 
 	return ob_get_clean();
 }
 
-test('csrf_field prints the field the output handler adds', function () {
-	$field = csrf_field_output();
+test('cacti_csrf_field prints the field the output handler adds', function () {
+	$field = cacti_csrf_field_output();
 	$page  = csrf_ob_handler("<html><body><form method='post' action='graphs.php'></form></body></html>", 0);
 
 	// A request without cookies also gets the address-bound part csrf-magic adds.
@@ -63,13 +63,13 @@ test('csrf_field prints the field the output handler adds', function () {
 });
 
 test('the printed token passes the check csrf-magic runs on POST', function () {
-	preg_match('/value="([^"]+)"/', csrf_field_output(), $matches);
+	preg_match('/value="([^"]+)"/', cacti_csrf_field_output(), $matches);
 
 	expect(csrf_check_tokens($matches[1]))->toBeTrue();
 });
 
-test('csrf_field prints nothing where CSRF checks are disabled', function () {
+test('cacti_csrf_field prints nothing where CSRF checks are disabled', function () {
 	$GLOBALS['csrf']['disable'] = true;
 
-	expect(csrf_field_output())->toBe('');
+	expect(cacti_csrf_field_output())->toBe('');
 });

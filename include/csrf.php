@@ -335,15 +335,17 @@ include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
  * Print the CSRF token field for a hand-written POST form. It is the field the
  * output handler adds to POST forms that stay on this site, so a form that
  * prints it works the same with or without the rewrite.
+ *
+ * The name is prefixed. Plugin hook files are included later, from
+ * api_plugin_hook(), and a plugin that declares csrf_field() would otherwise
+ * be unable to load.
  */
-if (!function_exists('csrf_field')) {
-	function csrf_field() {
-		if (!empty($GLOBALS['csrf']['disable'])) {
-			return;
-		}
-
-		print "<input type='hidden' name='" . htmlspecialchars($GLOBALS['csrf']['input-name'], ENT_QUOTES, 'UTF-8') .
-			"' value=\"" . htmlspecialchars(csrf_get_tokens(), ENT_QUOTES, 'UTF-8') . '"' .
-			($GLOBALS['csrf']['xhtml'] ? ' /' : '') . '>';
+function cacti_csrf_field() {
+	if (!empty($GLOBALS['csrf']['disable'])) {
+		return;
 	}
+
+	print "<input type='hidden' name='" . htmlspecialchars($GLOBALS['csrf']['input-name'], ENT_QUOTES, 'UTF-8') .
+		"' value=\"" . htmlspecialchars(csrf_get_tokens(), ENT_QUOTES, 'UTF-8') . '"' .
+		($GLOBALS['csrf']['xhtml'] ? ' /' : '') . '>';
 }
