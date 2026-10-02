@@ -18,6 +18,7 @@ if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/ping.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/api_automation.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/ldap.php');
 }
 if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');

@@ -53,6 +53,22 @@ test('native predicates preserve rendering redirects and resource replication', 
         $this->assertTrue($result['native_ping_error']);
         $this->assertTrue($result['native_ping_handler']);
         $this->assertSame(['ERROR', 'ERROR', 'ERROR'], $result['native_dns_rejections']);
+        $this->assertSame([true, '127.0.0.1', true], $result['native_tcp_loopback']);
+        $this->assertSame([4, false, ENT_COMPAT | ENT_HTML401], $result['native_ldap_defaults']);
+        $this->assertSame([2, true], $result['native_ldap_enabled_options']);
+        $this->assertTrue($result['native_ldap_handler']);
+        $this->assertSame(['CactiErrorHandler', true], $result['native_ldap_restore']);
+        $this->assertSame(array_fill(0, 3, [$result['native_ldap_expected_rejection'], '', true]), $result['native_ldap_rejections']);
+        $this->assertSame('Authentication Success', $result['native_ldap_errors'][0][3]);
+        $this->assertSame('Authentication Failure', $result['native_ldap_errors'][1][3]);
+        $this->assertSame('No username defined', $result['native_ldap_errors'][2][3]);
+        $this->assertSame('PHP LDAP not enabled', $result['native_ldap_errors'][18][3]);
+        $this->assertSame('Unexpected error 100 (Ldap Error: 7) on Server (owned.test)', $result['native_ldap_errors'][19][3]);
+        foreach ($result['native_ldap_errors'] as $error) {
+            $this->assertSame([7, ''], [$error[1], $error[2]]);
+            $this->assertNotSame('', $error[3]);
+        }
+
         $this->assertStringContainsString('host.php?page=1', $result['pages'][0]);
         $this->assertStringContainsString('host.php?filter=x&amp;page=1', $result['pages'][1]);
         $this->assertSame(['`name`', 'name(10)', '`name`,value(10)'], $result['indexes']);

@@ -96,6 +96,57 @@ restore_error_handler();
 $ping->restore_cacti_error_handler();
 $result['native_dns_rejections'] = array_map(static fn($ip) => automation_get_dns_from_ip($ip, 'unused'), ['1.2.3', '1.2.3.', '1234.2.3.4']);
 
+// Exercise the actual TCP socket path against an exclusively owned loopback listener.
+$listener = stream_socket_server('tcp://127.0.0.1:0', $listenerError, $listenerMessage);
+if ($listener === false) {
+    throw new RuntimeException('Could not create owned TCP listener');
+}
+try {
+    $ping->host = ['hostname' => 'tcp:127.0.0.1'];
+    $ping->port = (int) substr(strrchr(stream_socket_get_name($listener, false), ':'), 1);
+    $ping->timeout = 1000;
+    $result['native_tcp_loopback'] = [$ping->ping_tcp(), $ping->host['hostname'], str_starts_with($ping->ping_response, 'TCP Ping Success')];
+} finally {
+    fclose($listener);
+}
+
+// Complete LDAP module: real handler/session restoration and pre-network rejection.
+require $root . '/lib/ldap.php';
+$config['cacti_session_name'] = 'predicate-native';
+$config['cookie_options'] = ['save_path' => $directory, 'use_cookies' => 0, 'use_only_cookies' => 0];
+foreach (['dn', 'server', 'port', 'port_ssl', 'version', 'encryption', 'referrals', 'debug', 'group_require', 'group_dn', 'group_attrib', 'group_member_type', 'mode', 'search_base', 'search_filter', 'specific_dn', 'specific_password'] as $option) {
+    $config['config_options_array']['ldap_' . $option] = '';
+}
+$ldap = new Ldap();
+$result['native_ldap_defaults'] = [$ldap->debug, $ldap->group_require, $ldap->GetMask()];
+$config['config_options_array']['ldap_debug'] = 'on';
+$config['config_options_array']['ldap_group_require'] = 'on';
+$ldapEnabled = new Ldap();
+$result['native_ldap_enabled_options'] = [$ldapEnabled->debug, $ldapEnabled->group_require];
+$ldap->SetLdapHandler();
+$ldapHandler = set_error_handler(static fn() => false);
+$result['native_ldap_handler'] = $ldapHandler instanceof Closure
+    && (new ReflectionFunction($ldapHandler))->getClosureThis() === $ldap
+    && $ldapHandler(E_USER_WARNING, 'owned fixture warning', __FILE__, __LINE__) === true;
+restore_error_handler();
+$ldap->RestoreCactiHandler();
+$restoredHandler = set_error_handler(static fn() => false);
+$result['native_ldap_restore'] = [$restoredHandler, session_status() === PHP_SESSION_ACTIVE];
+restore_error_handler();
+$result['native_ldap_rejections'] = [];
+foreach (['Authenticate', 'Search', 'Getcn'] as $operation) {
+    $error = $ldap->$operation();
+    $result['native_ldap_rejections'][] = [$error['error_num'], $error['dn'], session_status() === PHP_SESSION_ACTIVE];
+}
+$result['native_ldap_expected_rejection'] = function_exists('ldap_connect') ? LdapError::UndefinedUsername : LdapError::Disabled;
+$result['native_ldap_errors'] = [];
+foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 99, 100] as $code) {
+    $error = LdapError::GetErrorDetails($code, null, 'owned.test', 7);
+    $result['native_ldap_errors'][] = [$error['error_num'], $error['error_ldap'], $error['dn'], $error['error_text']];
+}
+cacti_session_close();
+
+
 $result['pages'] = [get_page_list(1, 3, 10, 30, 'host.php'), get_page_list(1, 3, 10, 30, 'host.php?filter=x')];
 $result['indexes'] = [db_format_index_create('name'), db_format_index_create('name(10)'), db_format_index_create(['name', 'value(10)'])];
 $result['quoted'] = [file_escaped('"plain"'), file_escaped('plain'), file_escaped('"plain')];
