@@ -58,6 +58,7 @@ def main():
         manifest_path = stage / 'tools/dependencies/legacy-files.json'
         manifest = json.loads(manifest_path.read_text())
         selected = next(iter(manifest['files']))
+        patched, patch = next(iter(manifest['patches'].items()))
         # Mutate the repair fixture through the same Docker filesystem as the
         # verifier, avoiding stale host-unlink metadata on Docker Desktop.
         execute('-r', arguments=[f'if (!unlink({json.dumps(selected)})) {{ throw new RuntimeException("Cannot remove dependency repair fixture"); }}'])
@@ -79,7 +80,8 @@ def main():
         compiled_manifest = json.loads((stage / 'public/assets/manifest.json').read_text())
         compiled_font = stage / 'public' / compiled_manifest['include/fa/webfonts/fa-solid-900.woff2'].lstrip('/')
         compiled_font_bytes = compiled_font.read_bytes()
-        compiled_font.unlink()
+        compiled_relative = compiled_font.relative_to(stage).as_posix()
+        execute('-r', arguments=[f'if (!unlink({json.dumps(compiled_relative)})) {{ throw new RuntimeException("Cannot remove compiled font fixture"); }}'])
         execute('tools/verify-offline.php', error='Missing offline compiled asset: ../webfonts/')
         compiled_font.write_bytes(b'')
         execute('tools/verify-offline.php', error='Missing offline compiled asset: ../webfonts/')
@@ -87,17 +89,34 @@ def main():
         execute('tools/verify-offline.php')
         for fields, message in [
             ({'revision': 'invalid'}, 'Invalid legacy dependency revision'),
-            ({'files': {'include/vendor/../escape.php': '0' * 64}}, 'Invalid legacy dependency path'),
-            ({'files': {selected: 'invalid'}}, 'Invalid legacy dependency checksum'),
+            ({'files': {'include/vendor/../escape.php': '0' * 64}, 'patches': {}}, 'Invalid legacy dependency path'),
+            ({'files': {selected: 'invalid'}, 'patches': {}}, 'Invalid legacy dependency checksum'),
+            ({'files': {}}, 'Invalid legacy dependency patch'),
+            ({'patches': {patched: 'invalid'}}, 'Invalid legacy dependency patch'),
+            ({'patches': {patched: patch | {'replacements': ['invalid']}}}, 'Invalid legacy dependency patch'),
         ]:
             manifest_path.write_text(json.dumps(manifest | fields))
             execute('tools/dependencies/install-legacy.php', error=message)
+        # A patched file that fails any check must not be written.
+        patched_bytes = (stage / patched).read_bytes()
+        (stage / patched).unlink()
+        for fields, message in [
+            ({'patches': {patched: patch | {'source_sha256': '0' * 64}}}, 'Legacy dependency source checksum mismatch'),
+            ({'patches': {patched: patch | {'replacements': [{'before': 'kadupul-absent-anchor', 'after': ''}]}}},
+             'Legacy dependency patch no longer applies'),
+            ({'files': manifest['files'] | {patched: '0' * 64}}, 'Legacy dependency patched checksum mismatch'),
+        ]:
+            manifest_path.write_text(json.dumps(manifest | fields))
+            execute('tools/dependencies/install-legacy.php', network='bridge', error=message)
+            if (stage / patched).exists():
+                raise RuntimeError('Rejected dependency patch was written: ' + patched)
+        (stage / patched).write_bytes(patched_bytes)
         manifest_path.write_text(json.dumps(manifest))
         # Use a fresh path: Docker Desktop can retain regular-file metadata
         # briefly when a bind-mounted file is replaced by a symlink.
         link_path = 'include/vendor/coverage-symlink-fixture'
         dependency = stage / link_path
-        manifest_path.write_text(json.dumps(manifest | {'files': {link_path: manifest['files'][selected]}}))
+        manifest_path.write_text(json.dumps(manifest | {'files': {link_path: manifest['files'][selected]}, 'patches': {}}))
         dependency.symlink_to(os.path.relpath(stage / 'composer.json', dependency.parent))
         execute('tools/dependencies/install-legacy.php', error='Refusing symlink')
     if not list(raw.glob('coverage-*.json')):
