@@ -43,6 +43,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'quoted newline CSV upload succeeds', 'CSV exact name data handoff',
+        'links French fixture restores exact original global and actor language settings',
         'palette large pages keep all rows readable but enable at most 100 deletable choices',
         'palette 100-color confirmation preserves every selected identity and revision',
         'palette forged 101-color selection is refused before mutation',
