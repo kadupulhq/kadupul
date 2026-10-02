@@ -8,6 +8,8 @@
 namespace Kadupul\Tests;
 
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -40,5 +42,36 @@ final class InstallationConfigurationTest extends TestCase
     {
         yield 'configured' => [true];
         yield 'unset' => [false];
+    }
+
+    public function testVdefRoutesAreAllowedToUseOnlyOnlinePrimaryDatabaseOnCollectors(): void
+    {
+        $directory = sys_get_temp_dir() . '/kadupul-vdef-configuration-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/include', 0700, true);
+        file_put_contents($directory . '/include/config.php', "<?php\n\$poller_id = 2;\n\$conn_mode = 'offline';\n\$database_hostname = 'collector-db';\n\$database_default = 'cacti';\n\$database_username = 'local';\n\$database_password = 'local';\n");
+        try {
+            $requests = new RequestStack();
+            $request = Request::create('/graph-definitions/vdefs');
+            $request->attributes->set('_route', 'graph_vdefs');
+            $requests->push($request);
+            try {
+                (new InstallationConfiguration($directory, $requests))->values();
+                self::fail('Offline collectors must not silently use local storage for VDEF administration.');
+            } catch (\RuntimeException $error) {
+                self::assertSame('Online primary configuration is required for collector administration.', $error->getMessage());
+            }
+
+            $request->attributes->set('_route', 'unsupported_route');
+            try {
+                (new InstallationConfiguration($directory, $requests))->values();
+                self::fail('Unlisted collector routes must remain refused.');
+            } catch (\RuntimeException $error) {
+                self::assertSame('The Symfony application requires the primary MySQL installation outside supported online collector administration routes.', $error->getMessage());
+            }
+        } finally {
+            unlink($directory . '/include/config.php');
+            rmdir($directory . '/include');
+            rmdir($directory);
+        }
     }
 }

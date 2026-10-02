@@ -189,7 +189,25 @@ const SUPERGLOBALS = ['GLOBALS', '_SERVER', '_GET', '_POST', '_FILES', '_COOKIE'
 
 const ROUTE_ATTRIBUTES = ['Symfony\Component\Routing\Attribute\Route', 'Symfony\Component\Routing\Annotation\Route'];
 const ACCESS_CHECKS = ['consoleActor', 'canManageDevices'];
+const VDEF_AUTHORIZATION = 'Kadupul\\GraphDefinition\\Application\\Query\\VdefAuthorization';
+const VDEF_REALM_ADAPTER = 'Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DoctrineVdefRealmAccess';
+const VDEF_ACCESS_TYPES = ['Kadupul\\GraphDefinition\\Application\\Port\\VdefRealmAccess', VDEF_REALM_ADAPTER];
 const SESSION_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession';
+const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess';
+// Complete reviewed native-identity and persistence handoff, plus its scoped
+// service binding. A changed helper or binding must be reviewed again.
+const ABOUT_AUTHENTICATION_SOURCES = [
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => '4a17f2792e0a8e3d8650178ec0ee94e148a1f48263934f461fe7137669ada1ae',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '133c42b831acf8274d46ad6f6f1f6947e1bc6348ed3ac23bbb333bb1c294e9c1',
+    'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
+    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => 'a1db787d701816d8bb226aa9bc9a30d2cf9b01ab33d8d54fb5e3c411385e7ba6',
+    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
+    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
+    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b6a7a0e78791fe7afb40c2702e76232654ae941349db9c95c4c6d579c2e8ef91',
+    'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
+    'config/services.yaml' => '26d860e54a009a7b71a7c30830f997028b017d7f75fcd76950743fb143182d44',
+];
+
 // The IdentityAccess types whose check methods count as a gate. The adapter
 // is the only implementation, and the realms it checks label the route.
 const ACCESS_TYPES = [
@@ -1058,7 +1076,9 @@ function classify(string $root, string $path, array $realms, array $early, array
         foreach (walk($stmt) as $node) {
             if ($node instanceof Expr\Include_) {
                 $target = resolve($node->expr, $root, $path);
-                $kind ??= BOOTSTRAP[$target] ?? null;
+                if ($target !== null) {
+                    $kind ??= BOOTSTRAP[$target] ?? null;
+                }
             }
         }
         // auth.php is the gate itself; its own bootstrap include starts it.
@@ -1484,7 +1504,8 @@ function call_target(Node $node, Closure $type_of): ?array
 
 function is_access_call(?array $target, string $check): bool
 {
-    return $target !== null && in_array($target[0], ACCESS_TYPES, true) && $target[1] === $check;
+    $types = $check === 'canManageDefinitions' ? VDEF_ACCESS_TYPES : ACCESS_TYPES;
+    return $target !== null && in_array($target[0], $types, true) && $target[1] === $check;
 }
 
 /**
@@ -1550,6 +1571,19 @@ function is_device_denial(Expr $expr, string $var, Closure $type_of): bool
         && $args !== null && count($args) === 1 && is_variable($args[0], $var);
 }
 
+function is_definition_denial(Expr $expr, string $var, Closure $type_of): bool
+{
+    if (!$expr instanceof Expr\BooleanNot || !$expr->expr instanceof Expr\CallLike) {
+        return false;
+    }
+    $args = plain_args($expr->expr);
+    $actorId = $args[0] ?? null;
+    return is_access_call(call_target($expr->expr, $type_of), 'canManageDefinitions')
+        && $args !== null && count($args) === 1 && $actorId instanceof Expr\PropertyFetch
+        && is_variable($actorId->var, $var) && $actorId->name instanceof Node\Identifier
+        && $actorId->name->toString() === 'id';
+}
+
 /**
  * The condition of an if with no other branch whose body ends in throw, or in
  * a return $stops accepts, so a true condition stops the action.
@@ -1583,8 +1617,21 @@ function refusal_guard(string $root, ?Stmt $stmt, ?Closure $stops, Closure $type
  * @param (Closure(?Expr): bool)|null $stops
  * @return array<string, true>
  */
-function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $stops): array
+function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $stops, ?array &$after = null): array
 {
+    // Authenticated-only pages have no realm. Recognize this specific contract
+    // only when the action immediately refuses its null actor before any effect.
+    $first = isset($stmts[0]) ? expression_of($stmts[0]) : null;
+    if ($first instanceof Expr\Assign && is_variable($first->var)) {
+        $target = call_target($first->expr, $type_of);
+        if ($target === ['Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess', 'authenticatedActor']) {
+            $guard = refusal_guard($root, $stmts[1] ?? null, $stops, $type_of);
+            if ($guard !== null && is_null_check($guard, $first->var->name)) {
+                return ['authenticatedActor' => true];
+            }
+        }
+    }
+
     $list = array_values($stmts);
     foreach ($list as $i => $stmt) {
         $var = actor_assignment($root, $stmt, $type_of);
@@ -1602,24 +1649,25 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $
         if ($terms === [] || !is_null_check($terms[0], $var)) {
             return [];
         }
+        $after = array_slice($list, $i + 2);
         $checks = ['consoleActor' => true];
         $next = refusal_guard($root, $list[$i + 2] ?? null, $stops, $type_of);
         foreach ([$terms, $next === null ? [] : disjuncts($next)] as $group) {
-            $denial = false;
+            $denials = [];
             foreach ($group as $expr) {
                 if (is_device_denial($expr, $var, $type_of)) {
-                    $denial = true;
+                    $denials['canManageDevices'] = true;
+                } elseif (is_definition_denial($expr, $var, $type_of)) {
+                    $denials['canManageDefinitions'] = true;
                 } elseif (!is_null_check($expr, $var) && !pure($root, $expr, $type_of)) {
                     if ($group === $terms) {
                         return [];
                     }
-                    $denial = false;
+                    $denials = [];
                     break;
                 }
             }
-            if ($denial) {
-                $checks['canManageDevices'] = true;
-            }
+            $checks += $denials;
         }
         return $checks;
     }
@@ -1917,7 +1965,18 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     if ($depth === 0) {
         $stops = fn(?Expr $e): bool => true;
     }
-    $checks = guarded_checks($root, $method->stmts ?? [], $type_of, $stops);
+    $after = null;
+    $checks = guarded_checks($root, $method->stmts ?? [], $type_of, $stops, $after);
+    if (isset($checks['consoleActor']) && !isset($checks['canManageDefinitions']) && $after !== null && $depth < CALL_DEPTH) {
+        $feature = first_service_call($root, $after, $type_of, $stops);
+        if ($feature !== null && $feature[0] === [VDEF_AUTHORIZATION, 'actor']) {
+            $authorization = load_class($root, VDEF_AUTHORIZATION);
+            $guard = $authorization === null ? null : find_method($authorization, 'actor');
+            if ($guard !== null) {
+                $checks += method_checks($root, VDEF_AUTHORIZATION, $guard, $depth + 1, $seen);
+            }
+        }
+    }
     if ($checks !== [] || $depth >= CALL_DEPTH) {
         return $checks;
     }
@@ -1961,18 +2020,110 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     return method_checks($root, $type, $callee, $depth + 1, $seen, $handed, $refuses);
 }
 
+/** Select only the exact reviewed About authentication implementation. */
+function authenticated_access_adapter(string $root): string
+{
+    $about = $root . '/src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php';
+    $services = $root . '/config/services.yaml';
+    if (!is_file($about)) {
+        if (is_file($services) && str_contains(file_get_contents($services), ABOUT_ACCESS_ADAPTER)) {
+            fail('About authentication service binding has no reviewed adapter');
+        }
+        return SESSION_ADAPTER;
+    }
+    foreach (ABOUT_AUTHENTICATION_SOURCES as $relative => $hash) {
+        $path = $root . '/' . $relative;
+        if (!is_file($path) || hash_file('sha256', $path) !== $hash) {
+            fail('About authentication handoff is not reviewed: ' . $relative);
+        }
+    }
+    if (glob($root . '/config/services_*.yaml') !== []) {
+        fail('About authentication environment service overrides are not reviewed');
+    }
+    return ABOUT_ACCESS_ADAPTER;
+}
+
+/** Prove a direct feature check or the first check of a final delegated use case. */
+function palette_feature_call(string $root, array $target, int $depth = 0): bool
+{
+    if ($target === ['Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess', 'authorize']) {
+        // Exact reviewed current-account and realm-5 authorization contract.
+        $adapter = $root . '/src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php';
+        $sql = $root . '/src/Graphing/Infrastructure/Legacy/PaletteSql.php';
+        return is_file($adapter) && hash_file('sha256', $adapter) === '20cdc2c2051fe11429a9adcdbbf75fcb6e5e20161ad8fe73758ef73424526801'
+            && is_file($sql) && hash_file('sha256', $sql) === '87a4a7c445777c474ef28235fe5c84b718c531c57a8e73d14c550456e72c2693';
+    }
+    if ($depth >= CALL_DEPTH) {
+        return false;
+    }
+    $loaded = load_class($root, $target[0]);
+    $callee = $loaded === null ? null : find_method($loaded, $target[1]);
+    if ($callee === null || !$loaded instanceof Stmt\Class_ || !$loaded->isFinal()) {
+        return false;
+    }
+    $found = first_service_call($root, $callee->stmts ?? [], receiver_types($root, $target[0], $callee), null);
+    return $found !== null && palette_feature_call($root, $found[0], $depth + 1);
+}
+
+function palette_feature_guard(string $root, string $class, Stmt\ClassMethod $method, array $files): bool
+{
+    $contract = 'Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess';
+    $adapter = 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyPaletteColorAccess';
+    foreach ($files as $path) {
+        foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+            if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== $adapter) {
+                foreach ($node->implements as $interface) {
+                    if ($interface->toString() === $contract) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    $typeOf = receiver_types($root, $class, $method);
+    $stmts = array_values($method->stmts ?? []);
+    foreach ($stmts as $index => $stmt) {
+        if (actor_assignment($root, $stmt, $typeOf) !== null) {
+            // guarded_checks already proved the actor assignment and its
+            // immediate refusal. The next service must authorize before
+            // request parsing, database reads, or another side effect.
+            $found = first_service_call($root, array_slice($stmts, $index + 2), $typeOf, fn(?Expr $e): bool => true);
+            if ($found !== null) {
+                foreach (walk(array_slice($stmts, $index + 2), false) as $node) {
+                    if ($node instanceof Stmt\Return_ && $node->getStartFilePos() < $found[1]->getStartFilePos()) {
+                        return false;
+                    }
+                    if ($node instanceof Expr\MethodCall && $node->getStartFilePos() < $found[1]->getEndFilePos()) {
+                        $receiver = $node->var;
+                        while ($receiver instanceof Expr\PropertyFetch) {
+                            $receiver = $receiver->var;
+                        }
+                        if ($typeOf($receiver) === 'Symfony\\Component\\HttpFoundation\\Request') {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return $found !== null && palette_feature_call($root, $found[0]);
+        }
+    }
+    return false;
+}
+
 /**
  * @return array<string, int> check method => realm it requires
  */
 function session_realms(string $root, array $files): array
 {
-    // The realm labels are only true while the adapter is the one
-    // implementation of the access contracts.
+    // Console contracts retain their sole implementation. Authenticated-only
+    // About has a separate source-bound implementation with no console realm.
+    $authenticatedAdapter = authenticated_access_adapter($root);
     foreach ($files as $path) {
         foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
-            if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== SESSION_ADAPTER) {
+            if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== SESSION_ADAPTER
+                && !($authenticatedAdapter === ABOUT_ACCESS_ADAPTER && $node->namespacedName?->toString() === ABOUT_ACCESS_ADAPTER)) {
                 foreach ($node->implements as $interface) {
-                    if (in_array($interface->toString(), ACCESS_TYPES, true)) {
+                    if (in_array($interface->toString(), [...ACCESS_TYPES, 'Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess'], true)) {
                         fail($path . ' also implements ' . $interface->toString());
                     }
                 }
@@ -2000,6 +2151,34 @@ function session_realms(string $root, array $files): array
             fail('realm check for ' . $check . ' not found in LegacyAuthenticatedSession');
         }
         $realms[$check] = $found[0];
+    }
+
+    $definitions = load_class($root, VDEF_REALM_ADAPTER);
+    if ($definitions !== null) {
+        foreach ($files as $path) {
+            foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+                if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== VDEF_REALM_ADAPTER) {
+                    foreach ($node->implements as $interface) {
+                        if ($interface->toString() === VDEF_ACCESS_TYPES[0]) {
+                            fail($path . ' also implements ' . VDEF_ACCESS_TYPES[0]);
+                        }
+                    }
+                }
+            }
+        }
+        $definitionMethod = find_method($definitions, 'canManageDefinitions');
+        $found = [];
+        foreach (walk($definitionMethod?->stmts ?? []) as $node) {
+            if ($node instanceof Scalar\String_ && preg_match_all('/\b(?:[a-z]+\.)?realm_id\s*=\s*([0-9]+)\b/i', $node->value, $matches)) {
+                foreach ($matches[1] as $realm) {
+                    $found[(int) $realm] = true;
+                }
+            }
+        }
+        if (count($found) !== 1) {
+            fail('unique realm check for canManageDefinitions not found in DoctrineVdefRealmAccess');
+        }
+        $realms['canManageDefinitions'] = array_key_first($found);
     }
 
     return $realms;
@@ -2120,11 +2299,34 @@ function symfony_routes(string $root, array $files): array
                                 }
                             }
                         }
-                        if (isset($checks['consoleActor'])) {
+                        if (isset($checks['authenticatedActor'])) {
+                            $adapterName = authenticated_access_adapter($root);
+                            $adapter = load_class($root, $adapterName);
+                            $contracts = array_map(static fn(Name $name): string => $name->toString(), $adapter?->implements ?? []);
+                            if (!in_array('Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess', $contracts, true) || find_method($adapter, 'authenticatedActor') === null) {
+                                fail('AuthenticatedAccess adapter binding is missing');
+                            }
+                            // Validate sole implementation just as for console contracts.
+                            $realms ??= session_realms($root, $sources);
+                            $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; AuthenticatedAccess signed-in account; no realm required'];
+                        } elseif (isset($checks['consoleActor'])) {
                             $realms ??= session_realms($root, $sources);
                             $grant = 'realm ' . $realms['consoleActor'];
+                            if (isset($checks['canManageDefinitions'])) {
+                                if (!isset($realms['canManageDefinitions'])) {
+                                    fail('VDEF realm adapter not found');
+                                }
+                                $grant .= ' + realm ' . $realms['canManageDefinitions'];
+                            }
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
+                            }
+                            if ($route['path'] === '/graphing/colors' || str_starts_with($route['path'], '/graphing/colors/')) {
+                                if (!palette_feature_guard($root, $name, $method, $sources)) {
+                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no reviewed first-effect palette realm-5 check'];
+                                    continue;
+                                }
+                                $grant .= ' + realm 5';
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {
