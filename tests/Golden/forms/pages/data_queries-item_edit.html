@@ -1,0 +1,93 @@
+<form action="data_queries.php" autocomplete="off" class="cactiFormStart" id="data_queries" method="post" name="data_queries">
+  <div class="cactiTable" id="data_queries_item_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Associated Graph/Data Templates [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Data-Queries.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="data_queries_item_edit1_child">
+      <div class="formRow odd" id="row_graph_template_id"><div class="formColumnLeft"><div class="formFieldName">Graph Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Graph Template to use for this Data Query Graph Template item.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="graph_template_id" name="graph_template_id"></select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_name"><div class="formColumnLeft"><div class="formFieldName">Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A name for this associated graph.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="name" maxlength="100" name="name" off="" size="60" type="text" value=""></div></div></div>
+      <div class="hidden formRow"><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="snmp_query_id" name="snmp_query_id" style="height:0px;" type="hidden" value="1"></div></div><div class="hidden formRow"><div style="display:none;"><input id="graph_template_id_prev" name="graph_template_id_prev" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="save_component_snmp_query_item" name="save_component_snmp_query_item" style="height:0px;" type="hidden" value="1"></div></div>
+    </div>
+  </div>
+  <div class="break"></div>
+  <script nonce="&lt;NONCE&gt;" type="text/javascript">
+	function assignDataQueryGraphName(init) {
+		if (init == false || $('#name').val() == '') {
+			$('#name').val($('#graph_template_id').children(':selected').text());
+		}
+	}
+
+	$(function() {
+		$('form#data_queries').find('#graph_template_id').on('change', function() {
+			assignDataQueryGraphName(false);
+		});
+		assignDataQueryGraphName(true);
+	});
+
+	</script>
+  <script nonce="&lt;NONCE&gt;" type="text/javascript">
+	var graph_template_id_prev=0;
+
+	$('.remover').on('click', function(event) {
+		event.preventDefault();
+		href=$(this).attr('href');
+		$.get(href)
+			.done(function(data) {
+				$('form[action="data_queries.php"]').off();
+				$('#main').html(data);
+				applySkin();
+			})
+			.fail(function(data) {
+				getPresentHTTPError(data);
+			});
+	});
+
+	$('input[id="svg_x"]').on('click', function() {
+		$.post('data_queries.php', {
+			action: 'save',
+			save_component_svg: '1',
+			id: $('#id').val(),
+			graph_template_id: $('#graph_template_id').val(),
+			snmp_query_id: $('#snmp_query_id').val(),
+			svg_field: $('#svg_field').val(),
+			svg_text: $('#svg_text').val(),
+			header: 'false',
+			__csrf_magic: csrfMagicToken
+		}).done(function(data) {
+			$('#main').html(data);
+			applySkin();
+		});
+	});
+
+    $('.svds_x').on('click', function() {
+		// Get the dsid value
+		var id    = $(this).attr('id');
+		var parts = id.split('_');
+		var sid   = parts[1];
+
+		if (sid != '') {
+			$.post('data_queries.php', {
+				action: 'save',
+				save_component_svds: '1',
+				id: $('#id').val(),
+				graph_template_id: $('#graph_template_id').val(),
+				snmp_query_id: $('#snmp_query_id').val(),
+				'svds_field': $('#svds_'+sid+'_field').val(),
+				'svds_text': $('#svds_'+sid+'_text').val(),
+				'svds_id': sid,
+				header: 'false',
+				__csrf_magic: csrfMagicToken
+			}).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+			});
+		}
+	});
+	</script>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="data_queries.php?action=edit&amp;id=1" type="button" value="Cancel"><input class="return ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Create"></td></tr>
+    </tbody>
+  </table>
+</form>

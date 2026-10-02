@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
     // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
     // 10 stack. Child reports are serialized into that parent process, so they
@@ -29,12 +29,68 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
+}
+
+if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/database.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
+}
+if (defined('ADMIN_PERMISSION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
+if (defined('REPORT_PERSISTENCE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/reports.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_reports.php');
+}
+if (defined('AUTH_CONTROLLER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_changepassword.php');
+    $coverageFilter->includeFile($coverageRoot . '/logout.php');
+}
+if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_33.php');
+    $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
+}
+if (defined('AUDIT_TRAIL_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php');
+}
+if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyRequestContext.php');
+}
+if (defined('FORM_RENDERER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+}
+if (defined('COLOR_DROPDOWN_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+}
+if (defined('PACKAGE_XML_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
+}
+if (defined('PLUGIN_COMPAT_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/plugins.php');
+}
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
+}
+if (defined('FORCE_HTTPS_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }
 if (defined('HOST_REINDEX_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/host.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
+if (defined('GRAPH_ZOOM_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_zoom.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('REALTIME_EXEC_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
@@ -94,6 +150,9 @@ if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
 }
+if (defined('MIB_CACHE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/mib_cache.php');
+}
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd.php');
 $coverageFilter->includeFile($coverageRoot . '/src/Graphing/Infrastructure/Rrd/ProxyCipher.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/dsdebug.php');
@@ -119,8 +178,14 @@ if (defined('PROFILE_SECURITY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }
+if (defined('GRAPH_ITEM_EDITOR_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_editor.php');
+}
 if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
     $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
+}
+if (defined('THEME_SELECTION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
@@ -148,7 +213,8 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
             if ($copyHash === false || $sourceHash === false || !hash_equals($sourceHash, $copyHash)) {
                 throw new RuntimeException('Copied CLI changed while measuring coverage');
             }
-            $childCoverage->getData(true)->renameFile(RRD_TEST_CLI_COVERAGE_COPY, RRD_TEST_CLI_COVERAGE_SOURCE);
+            // Preserve canonical measured paths and support both installed filter APIs.
+            $childCoverage->getData(true)->renameFile(realpath(RRD_TEST_CLI_COVERAGE_COPY), realpath(RRD_TEST_CLI_COVERAGE_SOURCE));
             // PHPUnit 12's code-coverage filter is an allowlist and no longer
             // exposes excludeFile(); the path remapping above removes the
             // copied filename from collected coverage data.
@@ -170,12 +236,17 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
                 throw new RuntimeException('Unable to preserve child coverage source mapping');
             }
         }
-        if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
+        $serializedCoverage = serialize($childCoverage);
+        if (file_put_contents($childCoverageFile, $serializedCoverage) !== strlen($serializedCoverage)) {
             throw new RuntimeException('Unable to preserve child process coverage');
         }
         if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')
             && file_put_contents($childCoverageFile . '.version', $coveragePackageVersion . PHP_EOL) === false) {
             throw new RuntimeException('Unable to preserve child coverage version');
+        }
+        if (defined('CSRF_ROTATION_TEST_COVERAGE')) {
+            require_once dirname(__DIR__) . '/Helpers/CsrfRotationCoverage.php';
+            CsrfRotationCoverage::record($childCoverageFile, dirname(__DIR__, 2));
         }
     });
 });

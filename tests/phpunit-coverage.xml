@@ -79,7 +79,6 @@
             <exclude>./Unit/GhsaG9c7RegressionTest.php</exclude>
             <exclude>./Unit/GhsaMjvwRegressionTest.php</exclude>
             <exclude>./Unit/GhsaQ9xgRegressionTest.php</exclude>
-            <exclude>./Unit/GraphInvalidLocalGraphIdTest.php</exclude>
             <exclude>./Unit/GraphRealtimeShellTest.php</exclude>
             <exclude>./Unit/HtmlFilterXssTest.php</exclude>
             <exclude>./Unit/JsContextHardeningTest.php</exclude>

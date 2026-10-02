@@ -1195,7 +1195,7 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 
     /* an empty $rrdtool_pipe array means no fp is available */
     if (!is_resource($rrdtool_pipe)) {
-        if (substr($command_line, 0, 5) == 'fetch' || substr($command_line, 0, 4) == 'info') {
+        if (str_starts_with($command_line, 'fetch') || str_starts_with($command_line, 'info')) {
             rrdtool_set_language('en');
         } else {
             rrdtool_set_language();
@@ -1336,7 +1336,7 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
                 return 'OK';
             }
 
-            if (substr($output, 0, 5) == '<?xml') {
+            if (str_starts_with($output, '<?xml')) {
                 return 'SVG/XML Output OK';
             }
 
@@ -1469,7 +1469,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
             break;
         } else {
             $input .= $recv;
-            if (strpos($input, $end_of_sequence) !== false) {
+            if (str_contains($input, $end_of_sequence)) {
                 $input = str_replace($end_of_sequence, '', $input);
                 $transactions = explode($end_of_packet, $input);
                 foreach ($transactions as $transaction) {
@@ -1479,7 +1479,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
                         cacti_log("CACTI2RRDP ERROR: Proxy message decryption failed: ###" . $packet . '###', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
                         break 2;
                     }
-                    if (strpos($transaction, "\x1f\x8b") === 0) {
+                    if (str_starts_with($transaction, "\x1f\x8b")) {
                         $transaction = gzdecode($transaction);
                     }
                     $output .= $transaction;
@@ -1508,10 +1508,10 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
             if (substr($output, 1, 3) == 'PNG') {
                 return 'OK';
             }
-            if (substr($output, 0, 5) == 'GIF87') {
+            if (str_starts_with($output, 'GIF87')) {
                 return 'OK';
             }
-            if (substr($output, 0, 5) == '<?xml') {
+            if (str_starts_with($output, '<?xml')) {
                 return 'SVG/XML Output OK';
             }
             if ($output_flag == RRDTOOL_OUTPUT_RETURN_STDERR) {
@@ -1525,7 +1525,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
                 $rejection = & rrdtool_last_rejection();
                 $rejection = trim($error[1]);
             }
-            if (strpos($output, 'ERROR:') !== false) {
+            if (str_contains($output, 'ERROR:')) {
                 return false;
             }
             // Incomplete replies cannot authorize recreating an existing proxy RRD.
@@ -1686,7 +1686,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
             if ($data_source['rrd_maximum'] == 'U') {
                 /* in case no maximum is given, use "Undef" value */
                 $data_source['rrd_maximum'] = 'U';
-            } elseif (strpos($data_source['rrd_maximum'], '|query_') !== false) {
+            } elseif (str_contains($data_source['rrd_maximum'], '|query_')) {
                 /* in case a query variable is given, evaluate it */
                 if ($data_source['rrd_maximum'] == '|query_ifSpeed|' || $data_source['rrd_maximum'] == '|query_ifHighSpeed|') {
                     $data_source['rrd_maximum'] = $speed;
@@ -1925,7 +1925,7 @@ function rrdtool_function_tune($rrd_tune_array)
 
     // A NUL cannot be passed in an argument, and escapeshellarg() throws on one.
     foreach (array($data_source_name, $data_source_path, $rrd_tune_array['heartbeat'], $rrd_tune_array['minimum'], $rrd_tune_array['maximum'], $rrd_tune_array['data-source-rename']) as $value) {
-        if (strpos((string) $value, "\0") !== false) {
+        if (str_contains((string) $value, "\0")) {
             cacti_log('ERROR: RRD tuning refused a value containing a NUL byte; no changes were made.');
             return false;
         }
@@ -2810,8 +2810,8 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                 $cdef_string = str_replace('CURRENT_GRAPH_MINIMUM_VALUE', (empty($graph['lower_limit']) ? '0' : $graph['lower_limit']), $cdef_string);
                 $cdef_string = str_replace('CURRENT_GRAPH_MAXIMUM_VALUE', (empty($graph['upper_limit']) ? '0' : $graph['upper_limit']), $cdef_string);
 
-                if ((strpos($cdef_string, '|query_ifHighSpeed|') !== false) ||
-                    (strpos($cdef_string, '|query_ifSpeed|') !== false)) {
+                if ((str_contains($cdef_string, '|query_ifHighSpeed|')) ||
+                    (str_contains($cdef_string, '|query_ifSpeed|'))) {
                     $local_data = db_fetch_row_prepared(
                         'SELECT *
 						FROM data_local
@@ -3145,7 +3145,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                         $need_rrd_nl = false;
                 }
             } else {
-                if (preg_match('/^(AREA|AREA:STACK|LINE[123]|STACK)$/', $graph_item_types[$graph_item['graph_type_id']])) {
+                if ($graph_item['vdef_id'] == '0' && preg_match('/^(AREA|AREA:STACK|LINE[123]|STACK)$/', $graph_item_types[$graph_item['graph_type_id']])) {
                     /* give all export items a name */
                     if (trim($graph_variables['text_format'][$graph_item_id]) == '') {
                         $legend_name = 'col' . $j . '-' . $data_source_name;
@@ -3357,29 +3357,16 @@ function rrdtool_function_format_graph_date(&$graph_data_array, ?\DateTimeImmuta
     $dateCharSetting = read_user_setting('default_datechar', read_config_option('default_datechar'));
     $datecharacter = $datechar[$dateCharSetting];
 
-    switch ($date_fmt) {
-        case GD_MO_D_Y:
-            $graph_date = 'm' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s';
-            break;
-        case GD_MN_D_Y:
-            $graph_date = 'M' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s';
-            break;
-        case GD_D_MO_Y:
-            $graph_date = 'd' . $datecharacter . 'm' . $datecharacter . 'Y H:i:s';
-            break;
-        case GD_D_MN_Y:
-            $graph_date = 'd' . $datecharacter . 'M' . $datecharacter . 'Y H:i:s';
-            break;
-        case GD_Y_MO_D:
-            $graph_date = 'Y' . $datecharacter . 'm' . $datecharacter . 'd H:i:s';
-            break;
-        case GD_Y_MN_D:
-            $graph_date = 'Y' . $datecharacter . 'M' . $datecharacter . 'd H:i:s';
-            break;
-        default:
-            $graph_date = 'Y' . $datecharacter . 'm' . $datecharacter . 'd H:i:s';
-            break;
-    }
+    // Preserve loose comparisons because date format settings can be numeric strings.
+    $graph_date = match (true) {
+        $date_fmt == GD_MO_D_Y => 'm' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s',
+        $date_fmt == GD_MN_D_Y => 'M' . $datecharacter . 'd' . $datecharacter . 'Y H:i:s',
+        $date_fmt == GD_D_MO_Y => 'd' . $datecharacter . 'm' . $datecharacter . 'Y H:i:s',
+        $date_fmt == GD_D_MN_Y => 'd' . $datecharacter . 'M' . $datecharacter . 'Y H:i:s',
+        $date_fmt == GD_Y_MO_D => 'Y' . $datecharacter . 'm' . $datecharacter . 'd H:i:s',
+        $date_fmt == GD_Y_MN_D => 'Y' . $datecharacter . 'M' . $datecharacter . 'd H:i:s',
+        default => 'Y' . $datecharacter . 'm' . $datecharacter . 'd H:i:s',
+    };
 
     /* display the timespan for zoomed graphs */
     if ((isset($graph_data_array['graph_start'])) && (isset($graph_data_array['graph_end']))) {
@@ -3530,7 +3517,7 @@ function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item)
     $txt_graph_item = substitute_host_data($txt_graph_item, '|', '|', $host_id);
 
     /* replace query variables in graph elements */
-    if (strpos($txt_graph_item, '|query_') !== false) {
+    if (str_contains($txt_graph_item, '|query_')) {
         if (isset($graph_item['snmp_query_id'])) {
             $txt_graph_item = substitute_snmp_query_data($txt_graph_item, $host_id, $graph_item['snmp_query_id'], $graph_item['snmp_index']);
         } else if (isset($graph['snmp_query_id'])) {
@@ -3539,7 +3526,7 @@ function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item)
     }
 
     /* replace query variables in graph elements */
-    if (strpos($txt_graph_item, '|input_') !== false && isset($graph_item['local_data_id'])) {
+    if (str_contains($txt_graph_item, '|input_') && isset($graph_item['local_data_id'])) {
         return substitute_data_input_data($txt_graph_item, $graph, $graph_item['local_data_id']);
     } else {
         return $txt_graph_item;
@@ -3647,7 +3634,7 @@ function rrdtool_function_info($local_data_id)
     /* Hack for i18n: some locales emit a decimal comma in numeric values.
        Only normalize the value to the right of '= ' when it is numeric so we
        don't corrupt commas inside DS names, cf strings or filenames. */
-    if (strpos($output, ',') !== false) {
+    if (str_contains($output, ',')) {
         $output = preg_replace_callback('/^(\s*\S+ = )("?)(-?[0-9]+,[0-9]+(?:e[+-]?[0-9]+)?)("?)$/mi', function ($matches) {
             return $matches[1] . $matches[2] . str_replace(',', '.', $matches[3]) . $matches[4];
         }, $output);
