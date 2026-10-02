@@ -16,6 +16,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 
+- Add the CSRF token only to same-origin XMLHttpRequest, jQuery and form posts in the installed CSRF Magic browser script. Form targets are read from the `action` attribute, so a control named `action` cannot hide them; relative URLs resolve against the document base; and token fields are withheld when a submit button's `formaction` points to another origin. The legacy dependency installer now applies checksum-verified patches recorded in `legacy-files.json`.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
 - Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
@@ -71,6 +72,9 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Replace Font Awesome 4 icon names that render blank: the paper-plane scroll-to-top button and the sunrise logo now show their icons, and paper-plane and paw no longer turn delete icons into an undefined class. The paw theme also shows its logo on the logout page.
 - Make the offline bundle check fail when a font named in the Font Awesome stylesheet is missing. It checked only that `all.css` existed, so a bundle whose icons all drew as missing glyphs passed.
+
+- Center the About link logo in the classic, dark and modern themes, where it was clipped on the right. Add the missing semicolons that dropped the page-load progress bar glow in classic, paper-plane and paw and the graph zoom tooltip padding and border in midwinter, and give the midwinter `.moveArrowNone` padding its missing `px` unit. Remove theme declarations browsers already discarded, including stray comment terminators in the paper-plane and sunrise headers, and refresh the midwinter stylesheet content versions so browsers load the current CSS. Keep device states, log levels, popup/menu text and hover controls readable in dark, paper-plane and sunrise. Fixes #637.
+
 
 - Install only the Font Awesome stylesheet, its WOFF2 fonts and licence into a cleared `include/fa` with directory guards, instead of the whole 25 MB npm package. Font URLs now carry the package version, so a browser that cached Font Awesome 5 fonts under the same names fetches the new ones.
 - Disable network access while parsing imported package XML. Fixes #578.
