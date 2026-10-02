@@ -1,12 +1,166 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
+
 final class ReportPersistenceNativeCoverageTest extends TestCase
 {
+    public function testDeviceExpansionUsesRealTemplatePermissionsAndNaturalGraphOrdering(): void
+    {
+        $state = $this->runReport(array('operation' => 'expand-device', 'regexp' => '^Traffic', 'format' => false));
+        self::assertSame(array(201, 200), $this->renderedGraphs($state['result']));
+        self::assertStringContainsString('Router &lt;one&gt;', $state['result']);
+        self::assertStringContainsString('font-size: 10pt', $state['result']);
+        self::assertSame(array(70, 71, 80), array_column($state['items'], 'id'));
+    }
+
+    /** @dataProvider emptyExpansionCases */
+    public function testEmptyAndDeniedExpansionsCannotRenderGraphs(array $scenario): void
+    {
+        $state = $this->runReport($scenario);
+        self::assertSame(array(), $this->renderedGraphs($state['result'] ?? ''));
+        self::assertSame(array(70, 71, 80), array_column($state['items'], 'id'));
+    }
+
+    public static function emptyExpansionCases(): array
+    {
+        return array(
+            'missing device' => array(array('operation' => 'expand-device', 'device' => 999)),
+            'denied template' => array(array('operation' => 'expand-device', 'template' => 7)),
+            'all templates denied' => array(array('operation' => 'expand-device', 'template' => -1, 'deny_all' => true)),
+            'empty tree identity' => array(array('operation' => 'expand-tree', 'tree' => 0)),
+            'empty branch' => array(array('operation' => 'expand-tree', 'branch' => 6)),
+            'denied host leaf' => array(array('operation' => 'expand-tree', 'branch' => 7)),
+            'denied nested graph' => array(array('operation' => 'expand-tree', 'branch' => 4, 'nested' => true, 'deny_all' => true)),
+            'nonquery host grouping with no matching graphs' => array(array('operation' => 'expand-tree', 'branch' => 2, 'cascade' => 'on', 'grouping' => 2, 'regexp' => '^Absent')),
+        );
+    }
+
+    public function testNestedBranchExpansionUsesItsActualChildGraphAndEscapedTitles(): void
+    {
+        $state = $this->runReport(array('operation' => 'expand-branch', 'branch' => 4));
+        self::assertSame(array(210), $this->renderedGraphs($state['result']));
+        self::assertStringContainsString('Nested &lt;branch&gt;', $state['result']);
+        self::assertStringNotContainsString('Traffic', $state['result']);
+    }
+
+    public function testAllDeviceTemplatesRetainAllowedGraphsAndExcludeDeniedTemplate(): void
+    {
+        $state = $this->runReport(array('operation' => 'expand-device', 'template' => -1));
+        self::assertSame(array(210, 201, 200), $this->renderedGraphs($state['result']));
+    }
+
+    public function testTreeLeavesPreserveConfiguredHostAndGraphPositions(): void
+    {
+        $state = $this->runReport(array('operation' => 'expand-tree', 'regexp' => '^Traffic', 'format' => false));
+        // Host leaf expands its two permitted graphs; the distinct explicit
+        // graph leaf then includes graph200 again at its configured position.
+        self::assertSame(array(200, 201, 200), $this->renderedGraphs($state['result']));
+        self::assertStringContainsString('Root &lt;branch&gt;', $state['result']);
+        self::assertStringNotContainsString('Denied host', $state['result']);
+    }
+
+    public function testHostTemplateCascadeUsesNaturalOrderAndRootGraphsUseEscapedTreeName(): void
+    {
+        $host = $this->runReport(array('operation' => 'expand-tree', 'branch' => 2, 'cascade' => 'on'));
+        self::assertSame(array(210, 201, 200), $this->renderedGraphs($host['result']));
+        $root = $this->runReport(array('operation' => 'expand-tree', 'branch' => 0));
+        self::assertSame(array(200), $this->renderedGraphs($root['result']));
+        self::assertStringContainsString('Tree: Network &lt;tree&gt;', $root['result']);
+    }
+
+    private function renderedGraphs(string $html): array
+    {
+        $document = new DOMDocument();
+        $previous = libxml_use_internal_errors(true);
+        try {
+            self::assertTrue($document->loadHTML('<html><body><table>' . $html . '</table></body></html>'));
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+        $ids = array();
+        foreach ($document->getElementsByTagName('img') as $image) {
+            parse_str((string) parse_url($image->getAttribute('src'), PHP_URL_QUERY), $query);
+            $ids[] = (int) $query['local_graph_id'];
+            self::assertSame('classic', $query['graph_theme']);
+            self::assertGreaterThan($query['graph_start'], $query['graph_end']);
+        }
+        return $ids;
+    }
+
+    public function testRejectedGraphInsertCannotClaimTheLiveActionSucceeded(): void
+    {
+        $state = $this->runReport(array('operation' => 'add-graph', 'reject_write' => true));
+        self::assertSame(array(70, 71, 80), array_column($state['items'], 'id'));
+        self::assertFalse($state['result']);
+    }
+
+    public function testMissingGraphReturnsNormalFailureWithoutReadingMissingFields(): void
+    {
+        $state = $this->runReport(array('operation' => 'add-graph', 'graph' => 999));
+        self::assertFalse($state['result']);
+        self::assertSame(array(70, 71, 80), array_column($state['items'], 'id'));
+        self::assertContains('reports_graph_not_found', $state['messages']);
+    }
+
+    public function testLegacyPrepareListsOnlyTheActualCurrentUsersReports(): void
+    {
+        $state = $this->runReport(array('operation' => 'legacy-prepare'));
+        $document = new DOMDocument();
+        $previous = libxml_use_internal_errors(true);
+        try {
+            self::assertTrue($document->loadHTML('<table>' . $state['rendered'] . '</table>'));
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+        $options = (new DOMXPath($document))->query('//select[@name="reports_id"]/option');
+        self::assertSame(1, $options->length);
+        self::assertSame('7', $options[0]->getAttribute('value'));
+        self::assertSame('Weekly network', $options[0]->textContent);
+        $other = $this->runReport(array('operation' => 'legacy-prepare', 'user' => 55));
+        self::assertStringNotContainsString('Weekly network', $other['rendered']);
+        self::assertStringNotContainsString('Other owner', $other['rendered']);
+    }
+
+    public function testLegacyGraphExecutionPersistsSelectedOrderAndSkipsDuplicate(): void
+    {
+        $state = $this->runReport(array('operation' => 'legacy-execute', 'graphs' => array(201, 200, 200)));
+        self::assertSame(array(201, 200), array_column(array_slice($state['items'], 3), 'local_graph_id'));
+        self::assertSame(array(3, 4), array_column(array_slice($state['items'], 3), 'sequence'));
+        self::assertSame(array(0, 100), array_column(array_slice($state['items'], 3), 'host_id'));
+        self::assertSame(array(0, 3), array_column(array_slice($state['items'], 3), 'host_template_id'));
+        self::assertSame(array(7, 7), array_column(array_slice($state['items'], 3), 'report_id'));
+        self::assertStringContainsString('Skipped Report Graph Item', $state['message_details'][0][0]);
+    }
+
+    public function testLegacyGraphExecutionReportsActualFailedWritesWithoutSuccess(): void
+    {
+        $state = $this->runReport(array('operation' => 'legacy-execute', 'reject_write' => true));
+        self::assertSame(array(70, 71, 80), array_column($state['items'], 'id'));
+        self::assertStringContainsString('Failed Adding Report Graph Item', $state['message_details'][0][0]);
+        self::assertStringNotContainsString('Created Report Graph Item', $state['message_details'][0][0]);
+    }
+
+    public function testLegacyEmptySelectionsAndUnrelatedActionsPreserveRowsAndReturnContracts(): void
+    {
+        foreach (array(array('operation' => 'legacy-execute', 'graphs' => array()), array('operation' => 'legacy-execute', 'action' => 'cancel')) as $scenario) {
+            $state = $this->runReport($scenario);
+            self::assertSame(array(70, 71, 80), array_column($state['items'], 'id'));
+            self::assertSame(array(), $state['messages']);
+            self::assertSame($scenario['action'] ?? null, $state['result']);
+        }
+        $state = $this->runReport(array('operation' => 'legacy-prepare', 'action' => 'cancel'));
+        self::assertSame('cancel', $state['result']['drp_action']);
+        self::assertSame('', $state['rendered']);
+    }
     /** @dataProvider addCases */
     public function testAddingReportItemsRespectsActualSqlOwnership(array $scenario, bool $accepted, int $itemType): void
     {
@@ -128,11 +282,21 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $coverage->merge(unserialize(file_get_contents($reports[0])));
+                $sources = array('tests/Unit/Security/Auth/ReportPersistenceNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/report-persistence-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
+                    'lib/auth.php', 'lib/reports.php', 'lib/html_reports.php', 'include/global_constants.php', 'include/global_arrays.php', 'lib/time.php', 'lib/html.php', 'lib/html_form.php', 'lib/data_query.php', 'lib/sort.php', 'lib/html_tree.php', 'lib/html_utility.php',
+                    'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+                $arguments = array($reports[0], $root, 'tests/Fixtures/report-persistence-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $sources, array('report-persisted-state-readback'), array('lib/reports.php'));
+                $measured = NativeChildCoverageEvidence::load(...$arguments);
+                static $verifiedOmissions = false;
+                if (!$verifiedOmissions) {
+                    self::assertSame(count($sources) + 11, NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, array('lib/boost.php'))));
+                    $verifiedOmissions = true;
+                }
+                $coverage->merge($measured);
             }
             return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         } finally {
-            foreach (glob($directory . '/*.coverage') as $report) {
+            foreach (glob($directory . '/*') as $report) {
                 unlink($report);
             }
             rmdir($directory);
