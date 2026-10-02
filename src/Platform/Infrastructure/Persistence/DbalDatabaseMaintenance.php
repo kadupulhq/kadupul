@@ -53,7 +53,7 @@ final readonly class DbalDatabaseMaintenance implements DatabaseMaintenance
         // an unusual name cannot change the statement.
         $db = $this->connection($target);
         try {
-            $rows = $db->executeQuery('ANALYZE TABLE ' . ($noBinlog ? 'NO_WRITE_TO_BINLOG ' : '') . $db->quoteSingleIdentifier($table))->fetchAllAssociative();
+            $rows = $db->executeQuery('ANALYZE ' . ($noBinlog ? 'NO_WRITE_TO_BINLOG ' : '') . 'TABLE ' . $db->quoteSingleIdentifier($table))->fetchAllAssociative();
         } catch (Exception) {
             return false;
         }
