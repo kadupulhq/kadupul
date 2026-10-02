@@ -179,7 +179,7 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
-if (defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE')) {
+if (defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
     foreach ($coverageFilter->files() as $file) {
@@ -187,17 +187,26 @@ if (defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE'
         $source = defined('RRD_TEST_CLI_COVERAGE_COPY') && $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
         $nativeSources[] = substr($source, strlen($coverageRoot) + 1);
     }
+    $nativeScenario = $argv[1];
     if (defined('UTILITY_VIEW_TEST_COVERAGE')) {
         $nativeSources = array_merge($nativeSources, array('tests/Unit/UtilityViewNativeCoverageTest.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'lib/utility.php'));
         $nativeProducer = 'tests/Fixtures/utility-view-native.php';
     } elseif (defined('UTILITY_LOG_TEST_COVERAGE')) {
         $nativeSources[] = 'tests/Symfony/UtilityLogPersistenceTest.php';
         $nativeProducer = 'tests/Fixtures/utility-log-native.php';
+    } elseif (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/StringPredicateNativeTest.php', 'include/global_constants.php', 'lib/html.php'));
+        $nativeProducer = 'tests/Fixtures/string-predicates-native.php';
+        $nativeScenario = 'native-string-predicates';
+    } elseif (defined('PHP80_STRING_NATIVE_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/Php80StringNativeTest.php', 'include/global_constants.php'));
+        $nativeProducer = 'tests/Fixtures/php80-string-native.php';
+        $nativeScenario = 'native-string-selectors';
     } else {
         $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/HelperUnionNativeTest.php', 'src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php'));
         $nativeProducer = 'tests/Fixtures/helper-union-native.php';
     }
-    $nativeCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, $nativeProducer, $argv[1], $nativeSources);
+    $nativeCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, $nativeProducer, $nativeScenario, $nativeSources);
 }
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),

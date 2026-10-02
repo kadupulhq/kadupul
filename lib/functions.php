@@ -4671,11 +4671,7 @@ function get_hash_version($type)
  */
 function generate_hash()
 {
-    try {
-        return bin2hex(random_bytes(16));
-    } catch (Exception $e) {
-        return md5(session_id() . microtime() . rand(0, 1000));
-    }
+    return bin2hex(random_bytes(16));
 }
 
 /**
