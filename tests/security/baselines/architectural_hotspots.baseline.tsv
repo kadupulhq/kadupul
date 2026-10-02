@@ -275,9 +275,9 @@ dynamic_include	./color_templates.php:179		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:385		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:435		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:491		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./graph_realtime.php:488	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
-dynamic_include	./include/auth.php:140					require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/auth.php:200				require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./graph_realtime.php:497	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
+dynamic_include	./include/auth.php:143					require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/auth.php:203				require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:26	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/csrf.php:332	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/global.php:285	include_once($config['library_path'] . '/database.php');
@@ -380,7 +380,7 @@ dynamic_include	./lib/functions.php:5864	    require_once($config['include_path'
 dynamic_include	./lib/functions.php:5865	    require_once($config['include_path'] . '/vendor/phpmailer/src/PHPMailer.php');
 dynamic_include	./lib/functions.php:5866	    require_once($config['include_path'] . '/vendor/phpmailer/src/SMTP.php');
 dynamic_include	./lib/graph_variables.php:68		include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./lib/html.php:1527		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/html.php:1528		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/html_tree.php:479		include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./lib/html_tree.php:823		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/html_tree.php:824		include_once($config['library_path'] . '/data_query.php');
@@ -441,7 +441,7 @@ dynamic_include	./lib/utility.php:181		include_once($config['library_path'] . '/
 dynamic_include	./lib/utility.php:182		include_once($config['library_path'] . '/api_poller.php');
 dynamic_include	./lib/utility.php:46		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:837		include_once($config['library_path'] . '/api_data_source.php');
-dynamic_include	./link.php:75					include_once($file);
+dynamic_include	./link.php:79					include_once($file);
 dynamic_include	./poller.php:1124	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:1275	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:36	require_once($config['base_path'] . '/lib/poller.php');

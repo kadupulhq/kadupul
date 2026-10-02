@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -23,6 +24,9 @@
 */
 
 include_once('./include/global.php');
+
+/* this page loads global.php, not auth.php, so it runs the per-request session check itself */
+auth_session_enforce();
 
 $page = db_fetch_row_prepared('SELECT
 	id, title, style, contentfile, enabled, refresh
