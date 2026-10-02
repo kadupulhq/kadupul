@@ -544,7 +544,9 @@ function api_device_change_options($device_ids, $post)
 
                     // Update the local device and replicate
                     if ($old_poller !=  get_nfilter_request_var($field_name) && get_nfilter_request_var($field_name) > 1) {
-                        api_device_replicate_out($device_id, get_nfilter_request_var($field_name));
+                        if (!api_device_replicate_out($device_id, get_nfilter_request_var($field_name))) {
+                            raise_message('device_replication_failed_' . $device_id, __('Device replication failed. A FullSync is required; see the log for details.'), MESSAGE_LEVEL_ERROR);
+                        }
                     }
                 }
 
@@ -890,11 +892,20 @@ function api_device_gt_remove($device_id, $graph_template_id)
  * @param  (int) The id of the device
  * @param  (int) The poller id of the device.  If null, we determine it
  *
- * @return (void)
+ * @return bool Whether device replication completed successfully
  */
 function api_device_replicate_out($device_id, $poller_id = 1)
 {
     global $config;
+
+    if ($poller_id <= 1) {
+        return false;
+    }
+
+    if (!db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($poller_id))) {
+        cacti_log('ERROR: Unable to mark Poller ' . $poller_id . ' synchronization required. Device replication was not started.', false, 'REPLICATE');
+        return false;
+    }
 
     $rcnn_id = false;
 
@@ -1024,7 +1035,10 @@ function api_device_replicate_out($device_id, $poller_id = 1)
     );
 
     if ($poller_id > 1) {
-        replicate_table_to_poller($rcnn_id, $data, 'data_template_data', $poller_id);
+        if (replicate_table_to_poller($rcnn_id, $data, 'data_template_data', $poller_id) === false) {
+            cacti_log('ERROR: Replication of Device ' . $device_id . ' to Poller ' . $poller_id . ' failed while replicating data-source definitions.', false, 'REPLICATE');
+            return false;
+        }
     }
 
     $data = db_fetch_assoc_prepared(
@@ -2097,10 +2111,10 @@ function api_clone_get_unique_name($name, $table, $column = 'name')
  *
  * @param string - The current filename
  *
- * @return string|bool - The correct name for the object, else false
+ * @return string|false - The correct name for the object, else false
  *    If more than 20 attempts are made to find a good name.
  */
-function api_clone_get_unique_filename($file_name)
+function api_clone_get_unique_filename($file_name): string|false
 {
     $i = 1;
 

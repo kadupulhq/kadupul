@@ -24,6 +24,8 @@ function pollerQueueDbReset()
     );
     $GLOBALS['boost_delete_calls'] = 0;
     $GLOBALS['boost_delete_fail_at'] = 0;
+    $GLOBALS['boost_delete_explain'] = false;
+    $GLOBALS['boost_delete_plans'] = array();
 }
 
 beforeEach(function () {
@@ -37,6 +39,12 @@ function pollerQueueDbDeletePrepared($sql, $params)
         return false;
     }
     try {
+        if ($GLOBALS['boost_delete_explain']) {
+            // Observe the executable statement before acknowledgement changes its rows.
+            $explain = $GLOBALS['poller_contract_pdo']->prepare('EXPLAIN FORMAT=TRADITIONAL ' . $sql);
+            $explain->execute($params);
+            $GLOBALS['boost_delete_plans'][] = $explain->fetch(PDO::FETCH_ASSOC);
+        }
         $statement = $GLOBALS['poller_contract_pdo']->prepare($sql);
         $statement->execute($params);
         $GLOBALS['boost_delete_affected'] = $statement->rowCount();
@@ -102,12 +110,11 @@ test('poller acknowledgement preserves byte-distinct replacement values and uses
         }
         $db->exec('INSERT INTO poller_output VALUES ' . implode(',', $rows));
         $db->prepare('UPDATE poller_output SET output=? WHERE local_data_id=1')->execute(array($replacement));
+        $GLOBALS['boost_delete_explain'] = true;
         expect(pollerQueueDbDeleteOutputRows($keys, $failed))->toBe($batch_size - 1)->and($failed)->toBeFalse();
         expect($db->query('SELECT output FROM poller_output WHERE local_data_id=1')->fetchColumn())->toBe($replacement);
-        list($sql, $params) = $GLOBALS['boost_delete_statement'];
-        $explain = $db->prepare('EXPLAIN FORMAT=TRADITIONAL ' . $sql);
-        $explain->execute($params);
-        $plan = $explain->fetch(PDO::FETCH_ASSOC);
+        expect($GLOBALS['boost_delete_plans'])->toHaveCount(1);
+        $plan = $GLOBALS['boost_delete_plans'][0];
         expect($plan['key'])->toBe('PRIMARY')->and($plan['type'])->toBe('range');
     } finally {
         $db->exec('DROP TEMPORARY TABLE poller_output');

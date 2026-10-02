@@ -4,6 +4,27 @@ Kadupul sets its full HTTP security-header set in one place: `lib/headers_secure
 `include/global.php` calls `CactiSecureHeaders::emitHeaders()` once per request,
 early in the pipeline, so every authenticated page gets the same policy.
 
+## Forced HTTPS redirects
+
+When `force_https` is enabled, HTTP requests redirect to HTTPS using a validated
+`SERVER_NAME`. The raw request path and encoded query values are preserved;
+an HTTP listener port is removed. Missing or unsafe request targets use `url_path`.
+An unusable authority returns HTTP 400 before rendering the page.
+
+Configure the web server to supply the intended canonical name. For Apache, set
+`ServerName` and `UseCanonicalName On`: with the default `Off`, Apache can derive
+`SERVER_NAME` from the client's Host header. See the
+[Apache directive documentation](https://httpd.apache.org/docs/2.4/mod/core.html#usecanonicalname).
+For nginx, configure a real `server_name`; `_` is an invalid name often used in
+[catch-all examples](https://nginx.org/en/docs/http/server_names.html).
+
+If `SERVER_NAME` is empty or `_`, the redirect may use the host from the existing
+administrator-configured Base URL (`base_url`, under Reports settings). Set that
+URL to the installation's public address. Its scheme must be HTTP or HTTPS and
+it must have no credentials; the redirect always uses HTTPS with its default
+port. A missing or invalid Base URL leaves the authority invalid. The request's
+Host header never supplies this fallback.
+
 ## Header set
 
 | Header | Value |
