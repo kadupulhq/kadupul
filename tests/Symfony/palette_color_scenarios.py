@@ -235,7 +235,7 @@ def verify_palette_colors(h, s, uid, check):
           'palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
     check(guard_probe['stdout'].endswith('|PALETTE_PREFERENCE_GUARDS_OK'),
           'palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
-    check('|PALETTE_PERSISTENT_STORAGE_OK|' in guard_probe['stdout'],
+    check(guard_probe['exit'] == 0 and guard_probe['stdout'] == 'PALETTE_WRITE_GUARDS_OK|PALETTE_PREFERENCE_GUARDS_OK' and guard_probe['stderr'] == '',
           'palette writes and preferences reject all InnoDB temporary shadows without changing persistent observer rows')
     auth_probe = h.command('php', '-r', _mariadb_palette_authorization_probe(uid))
     check(auth_probe['exit'] == 0 and auth_probe['stdout'] == 'PALETTE_CONCURRENT_AUTHORIZATION_OK' and auth_probe['stderr'] == '',
@@ -351,6 +351,7 @@ function paletteProbeHex(PDO $db): string {
     return $hex;
 }
 $count = (int)$db->query('SELECT COUNT(*) FROM colors')->fetchColumn();
+$validatedInnoDbShadows = 0;
 foreach (['MyISAM','InnoDB'] as $shadowEngine) {
 foreach (['colors','graph_templates_item','color_template_items','settings','user_auth','user_auth_realm',
     'user_auth_group','user_auth_group_members','user_auth_group_realm'] as $table) {
@@ -364,6 +365,7 @@ foreach (['colors','graph_templates_item','color_template_items','settings','use
         if (!$denied || $db->inTransaction()) { throw new RuntimeException('The actual '.$table.' table engine was not refused.'); }
     } finally { $db->exec('DROP TEMPORARY TABLE `'.$table.'`'); }
     if ((int)$observer->query('SELECT COUNT(*) FROM colors')->fetchColumn() !== $count) { throw new RuntimeException('Temporary engine refusal changed persistent rows.'); }
+    if ($shadowEngine === 'InnoDB') { ++$validatedInnoDbShadows; }
 }
 }
 foreach ([2,'1',null] as $collector) {
@@ -427,6 +429,7 @@ try {
             if (!$denied || $db->inTransaction()) { throw new RuntimeException('Preference storage shadow was accepted.'); }
         } finally { $db->exec('DROP TEMPORARY TABLE `'.$table.'`'); }
         if ($readPreference() !== $beforePreference || $observePreference() !== $beforePreference) { throw new RuntimeException('Preference engine refusal changed persistent values.'); }
+        if ($shadowEngine === 'InnoDB') { ++$validatedInnoDbShadows; }
     }
     }
     foreach ([2,'1',null] as $collector) {
@@ -471,7 +474,8 @@ try {
     }
 }
 if ($readPreference() !== $beforePreference) { throw new RuntimeException('Preference fixture failed to restore prior bytes.'); }
-echo 'PALETTE_WRITE_GUARDS_OK|PALETTE_PERSISTENT_STORAGE_OK|PALETTE_PREFERENCE_GUARDS_OK';'''
+if ($validatedInnoDbShadows !== 16) { throw new RuntimeException('Not every InnoDB temporary participant was refused and observed.'); }
+echo 'PALETTE_WRITE_GUARDS_OK|PALETTE_PREFERENCE_GUARDS_OK';'''
 
 
 def _mariadb_palette_authorization_probe(actor_id):
