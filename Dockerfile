@@ -21,7 +21,7 @@ RUN composer install \
       --prefer-dist --optimize-autoloader --classmap-authoritative
 
 # Browser dependencies are built once; Node is not shipped in the runtime.
-FROM node:26.9.0-bookworm-slim@sha256:582460f614631b59b824ac6020533b9bf339c7fdf3a6d7db31abb6b4065f0212 AS assets
+FROM node:26.10.0-bookworm-slim@sha256:662933cf47f013bc8e4beb31a6116448427a82057ba7c42c97e4c5ba766504c2 AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY tools/dependencies ./tools/dependencies
