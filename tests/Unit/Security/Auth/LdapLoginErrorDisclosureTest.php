@@ -22,7 +22,8 @@ require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
 function ldap_login_run(array $scenario) : array {
 	$root = dirname(__DIR__, 4);
-	$body = cacti_test_function_source(file_get_contents($root . '/lib/auth.php'), 'ldap_login_process');
+	$auth = file_get_contents($root . '/lib/auth.php');
+	$body = cacti_test_function_source($auth, 'auth_log_username') . "\n\n" . cacti_test_function_source($auth, 'ldap_login_process');
 
 	$source = <<<'PHP'
 <?php
