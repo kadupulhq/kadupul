@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -1020,7 +1021,7 @@ function template_edit() {
 				} elseif (isset($fields_host_edit[$field['data_name']])) {
 					$help = $fields_host_edit[$field['data_name']]['description'];
 				} else {
-					$help = $field['name'];
+					$help = html_escape($field['name']);
 				}
 
 				print "<div class='formRow $class'>";
