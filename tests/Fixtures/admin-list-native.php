@@ -57,14 +57,34 @@ INSERT INTO user_auth_group_perms VALUES(7,10,4),(8,20,4),(7,20,1);");
     $_REQUEST['id'] = $target;
     $_REQUEST['associated'] = $scenario['associated'];
     $permissions_before = $db->query('SELECT * FROM ' . $table . '_perms')->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($scenario['graph_work'])) {
+        $db->exec("INSERT INTO graph_templates VALUES(30, 'Empty');
+ALTER TABLE graph_local RENAME TO graph_inventory;");
+        $insert = $db->prepare('INSERT INTO graph_inventory VALUES(?,10)');
+        for ($id = 1000; $id < 3000; $id++) {
+            $insert->execute(array($id));
+        }
+        // A transparent view records real SQLite reads of the graph join key.
+        $GLOBALS['graph_reads'] = 0;
+        $db->sqliteCreateFunction('native_graph_read', static function ($value) {
+            $GLOBALS['graph_reads']++;
+            return $value;
+        });
+        $db->exec('CREATE VIEW graph_local AS SELECT id, native_graph_read(graph_template_id) AS graph_template_id FROM graph_inventory');
+        $permissions_before = $db->query('SELECT * FROM ' . $table . '_perms')->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 $queries = array();
+$query_work = array();
 function db_fetch_assoc_prepared($sql, $params = array())
 {
     $GLOBALS['queries'][] = array($sql, $params);
+    $before = $GLOBALS['graph_reads'] ?? 0;
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
-    return $q->fetchAll(PDO::FETCH_ASSOC);
+    $result = $q->fetchAll(PDO::FETCH_ASSOC);
+    $GLOBALS['query_work'][] = array('sql' => $sql, 'graph_reads' => ($GLOBALS['graph_reads'] ?? 0) - $before, 'result' => $result);
+    return $result;
 }
 function db_fetch_row_prepared($sql, $params = array())
 {
@@ -78,9 +98,12 @@ function db_fetch_assoc($sql)
 function db_fetch_cell_prepared($sql, $params = array())
 {
     $GLOBALS['queries'][] = array($sql, $params);
+    $before = $GLOBALS['graph_reads'] ?? 0;
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
-    return $q->fetchColumn();
+    $result = $q->fetchColumn();
+    $GLOBALS['query_work'][] = array('sql' => $sql, 'graph_reads' => ($GLOBALS['graph_reads'] ?? 0) - $before, 'result' => $result);
+    return $result;
 }
 function db_fetch_cell($sql)
 {
@@ -151,6 +174,6 @@ if (!empty($scenario['grid'])) {
     $group ? user_group() : user();
 }
 $html = ob_get_clean();
-$state = array('html' => $html, 'queries' => $queries, 'permissions_before' => $permissions_before, 'permissions_after' => !empty($scenario['grid']) ? $db->query('SELECT * FROM ' . $table . '_perms')->fetchAll(PDO::FETCH_ASSOC) : null);
+$state = array('html' => $html, 'queries' => $queries, 'query_work' => $query_work, 'permissions_before' => $permissions_before, 'permissions_after' => !empty($scenario['grid']) ? $db->query('SELECT * FROM ' . $table . '_perms')->fetchAll(PDO::FETCH_ASSOC) : null);
 $nativeChildCoverageMarkers = array('native-list-rendered', 'list-state-readback');
 print json_encode($state, JSON_THROW_ON_ERROR);

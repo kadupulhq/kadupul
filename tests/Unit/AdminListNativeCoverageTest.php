@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 final class AdminListNativeCoverageTest extends TestCase
 {
     private static bool $coverageEvidenceChecked = false;
+    private static bool $gridCoverageEvidenceChecked = false;
 
     /** @dataProvider listCases */
     public function testNativeListsPreserveFiltersPaginationAndScopedRows(bool $group, array $request, array $expectedRows): void
@@ -105,6 +106,50 @@ final class AdminListNativeCoverageTest extends TestCase
         return $cases;
     }
 
+    /** @dataProvider templateWorkCases */
+    public function testTemplateCountsAvoidGraphInventoryWorkAndPreserveRowTotals(bool $group, string $associated, array $request, array $expectedRows, array $expectedTotals, int $total): void
+    {
+        $state = $this->render(array('group' => $group, 'grid' => true, 'graph_work' => true, 'policy' => 1, 'associated' => $associated, 'request' => $request));
+        $counts = array_values(array_filter($state['query_work'], static fn($query) => str_contains($query['sql'], 'COUNT(DISTINCT gt.id)')));
+        $lists = array_values(array_filter($state['query_work'], static fn($query) => str_contains($query['sql'], 'COUNT(DISTINCT gl.id)')));
+        self::assertCount(1, $counts);
+        self::assertCount(1, $lists);
+        self::assertSame(0, $counts[0]['graph_reads'], 'Template count must not scan graph instances.');
+        self::assertSame($total, $counts[0]['result']);
+        self::assertGreaterThan(0, $lists[0]['graph_reads']);
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $rows = array();
+        $totals = array();
+        foreach ($xpath->query('//tr[starts-with(@id,"line")]') as $row) {
+            $rows[] = $row->getAttribute('id');
+            $totals[] = trim($xpath->query('./td', $row)->item(3)->textContent);
+        }
+        self::assertSame($expectedRows, $rows);
+        self::assertSame($expectedTotals, $totals);
+        self::assertSame($state['permissions_before'], $state['permissions_after']);
+        if (($request['page'] ?? 1) === 2) {
+            self::assertGreaterThan(0, $xpath->query('//a[contains(@data-url,"page=3")]')->length);
+        } else {
+            self::assertSame('All ' . $total . ' Graph Templates', trim($xpath->query('//div[@class="navBarNavigationNone"]')->item(0)->textContent));
+        }
+    }
+
+    public static function templateWorkCases(): array
+    {
+        $cases = array();
+        foreach (array(false, true) as $group) {
+            $prefix = $group ? 'group ' : 'user ';
+            $cases[$prefix . 'all including empty'] = array($group, 'false', array('rows' => 10), array('line10', 'line20', 'line30'), array('2002', '1', '0'), 3);
+            $cases[$prefix . 'scoped exceptions with graph fanout'] = array($group, 'true', array('rows' => 10), array('line10'), array('2002'), 1);
+            $cases[$prefix . 'foreign and wrong-type grants'] = array($group, 'false', array('filter' => 'Beta'), array('line20'), array('1'), 1);
+            $cases[$prefix . 'empty graph template'] = array($group, 'false', array('filter' => 'Empty'), array('line30'), array('0'), 1);
+            $cases[$prefix . 'second page'] = array($group, 'false', array('rows' => 1, 'page' => 2), array('line20'), array('1'), 3);
+        }
+        return $cases;
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
@@ -127,10 +172,17 @@ final class AdminListNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/admin-list-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-list-rendered', 'list-state-readback'), array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/html.php'));
-                if (!self::$coverageEvidenceChecked) {
-                    self::assertSame(32, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/admin-list-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-list-rendered', 'list-state-readback'), array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/html.php'), 'lib/rrd.php'));
+                $requiredHits = array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/html.php');
+                if (!empty($scenario['grid'])) {
+                    $requiredHits[] = 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php';
+                }
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/admin-list-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-list-rendered', 'list-state-readback'), $requiredHits);
+                if (!self::$coverageEvidenceChecked || (!empty($scenario['grid']) && !self::$gridCoverageEvidenceChecked)) {
+                    self::assertSame(32, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/admin-list-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-list-rendered', 'list-state-readback'), $requiredHits, 'lib/rrd.php'));
                     self::$coverageEvidenceChecked = true;
+                    if (!empty($scenario['grid'])) {
+                        self::$gridCoverageEvidenceChecked = true;
+                    }
                 }
                 $coverage->merge($childCoverage);
             }

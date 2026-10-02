@@ -39,7 +39,6 @@ final class PermissionTemplateGrid
         return (int) db_fetch_cell_prepared(
             "SELECT COUNT(DISTINCT gt.id)
             FROM graph_templates AS gt
-            LEFT JOIN graph_local AS gl ON gt.id = gl.graph_template_id
             LEFT JOIN $table AS grants ON gt.id = grants.item_id
                 AND grants.type = 4 AND grants.$subject = ?
             $where",

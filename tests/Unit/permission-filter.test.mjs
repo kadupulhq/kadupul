@@ -30,7 +30,7 @@ for (const page of ['user_admin.php', 'user_group_admin.php']) {
       const script = scripts[0];
       const bindings = new Map();
       const calls = [];
-      const fields = { '#rows': '25', '#filter': 'literal search', '#graph_template_id': '3', '#host_template_id': '4' };
+      const fields = { '#rows': '25', '#filter': 'A & B#C+D?é', '#graph_template_id': '3', '#host_template_id': '4' };
       const context = vm.createContext({
         loadPageNoHeader(url) { calls.push(url); },
         $(selector) {
@@ -46,13 +46,15 @@ for (const page of ['user_admin.php', 'user_group_admin.php']) {
       const action = page === 'user_admin.php' ? 'user_edit' : 'edit';
       const base = `${page}?action=${action}&tab=${tab}&id=7`;
       const template = name === 'graph' ? '&graph_template_id=3' : name === 'device' ? '&host_template_id=4' : '';
-      const expected = `${base}&rows=25${template}&associated=true&filter=literal search&header=false`;
+      const expected = `${base}&rows=25${template}&associated=true&filter=${encodeURIComponent(fields['#filter'])}&header=false`;
       const extraField = name === 'graph' ? ', #graph_template_id' : name === 'device' ? ', #host_template_id' : '';
       assert.deepEqual([...bindings.keys()].sort(), ['#associated:click', '#clear:click', '#forms:submit', `#rows${extraField}:change`].sort());
       assert.equal(context.applyFilter.length, page === 'user_admin.php' && name === 'member' ? 1 : 0);
       assert.equal(context.clearFilter.length, page === 'user_admin.php' && ['graph', 'device', 'member'].includes(name) ? 1 : 0);
       context.applyFilter();
-      assert.equal(calls.pop(), expected);
+      const submitted = calls.pop();
+      assert.equal(submitted, expected);
+      assert.equal(new URL(submitted, 'https://fixture.invalid/').searchParams.get('filter'), fields['#filter']);
       bindings.get('#associated:click')();
       assert.equal(calls.pop(), expected);
       bindings.get(`#rows${extraField}:change`)();
@@ -63,6 +65,16 @@ for (const page of ['user_admin.php', 'user_group_admin.php']) {
       assert.equal(calls.pop(), expected);
       bindings.get('#clear:click')();
       assert.equal(calls.pop(), `${base}&clear=true&header=false`);
+      for (const search of ['', ' ', 'literal search', 'A & B', '#fragment', 'A+B', 'key=value?next', 'é 日本語', '%20']) {
+        fields['#filter'] = search;
+        context.applyFilter();
+        const parsed = new URL(calls.pop(), 'https://fixture.invalid/');
+        assert.equal(parsed.searchParams.get('filter'), search);
+        assert.equal(parsed.searchParams.get('header'), 'false');
+        assert.equal(parsed.searchParams.get('id'), '7');
+        assert.equal(parsed.searchParams.get('tab'), tab);
+        assert.equal(parsed.hash, '');
+      }
     });
   }
 }
