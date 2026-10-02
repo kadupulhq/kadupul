@@ -1,0 +1,319 @@
+<form action="user_admin.php" autocomplete="off" class="cactiFormStart" id="form1" method="post" name="form1">
+  <div class="cactiTable" id="user_admin_user_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>User Settings [edit: admin]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="User-Management.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="user_admin_user_edit1_child">
+      <div class="spacer formHeader collapsible" id="row_general"><div class="tableSubHeaderColumn" style="cursor:pointer;">General Settings<div style="float:right;padding-right:4px;"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_selected_theme"><div class="formColumnLeft"><div class="formFieldName">Theme<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Please select one of the available Themes to skin your Kadupul with.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="selected_theme" name="selected_theme">
+          <option value="classic">Classic</option>
+          <option value="dark">Dark</option>
+          <option value="midwinter">Midwinter</option>
+          <option selected="" value="modern">Modern</option>
+          <option value="paper-plane">Paper-plane</option>
+          <option value="paw">Paw</option>
+          <option value="sunrise">Sunrise</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_default_view_mode"><div class="formColumnLeft"><div class="formFieldName">Default View Mode<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Which Graph mode you want displayed by default when you first visit the Graphs page?</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_view_mode" name="default_view_mode">
+          <option selected="" value="1">Tree View</option>
+          <option value="2">List View</option>
+          <option value="3">Preview View</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_client_timezone_support"><div class="formColumnLeft"><div class="formFieldName">TimeZone Support<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How would you like Kadupul to present dates? This setting will also change the way that Kadupul Graphs dates are represented.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="client_timezone_support" name="client_timezone_support">
+          <option selected="" value="0">Kadupul Server Timezone</option>
+          <option value="1">My Browsers Timezone</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_user_language"><div class="formColumnLeft"><div class="formFieldName">User Language<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Defines the preferred GUI language.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="user_language" name="user_language">
+          <option data-class="fi-sa" value="ar-SA"><span class="fi fis fi-sa"></span>Arabic</option>
+          <option data-class="fi-bg" value="bg-BG"><span class="fi fis fi-bg"></span>Bulgarian</option>
+          <option data-class="fi-cn" value="zh-CN"><span class="fi fis fi-cn"></span>Chinese (China)</option>
+          <option data-class="fi-tw" value="zh-TW"><span class="fi fis fi-tw"></span>Chinese (Taiwan)</option>
+          <option data-class="fi-nl" value="nl-NL"><span class="fi fis fi-nl"></span>Dutch</option>
+          <option data-class="fi-us" selected="" value="en-US"><span class="fi fis fi-us"></span>English</option>
+          <option data-class="fi-fr" value="fr-FR"><span class="fi fis fi-fr"></span>French</option>
+          <option data-class="fi-de" value="de-DE"><span class="fi fis fi-de"></span>German</option>
+          <option data-class="fi-gr" value="el-GR"><span class="fi fis fi-gr"></span>Greek</option>
+          <option data-class="fi-il" value="he-IL"><span class="fi fis fi-il"></span>Hebrew</option>
+          <option data-class="fi-in" value="hi-IN"><span class="fi fis fi-in"></span>Hindi</option>
+          <option data-class="fi-it" value="it-IT"><span class="fi fis fi-it"></span>Italian</option>
+          <option data-class="fi-jp" value="ja-JP"><span class="fi fis fi-jp"></span>Japanese</option>
+          <option data-class="fi-kr" value="ko-KR"><span class="fi fis fi-kr"></span>Korean</option>
+          <option data-class="fi-lv" value="lv-LV"><span class="fi fis fi-lv"></span>Latvian</option>
+          <option data-class="fi-pl" value="pl-PL"><span class="fi fis fi-pl"></span>Polish</option>
+          <option data-class="fi-pt" value="pt-PT"><span class="fi fis fi-pt"></span>Portuguese</option>
+          <option data-class="fi-br" value="pt-BR"><span class="fi fis fi-br"></span>Portuguese (Brazil)</option>
+          <option data-class="fi-ru" value="ru-RU"><span class="fi fis fi-ru"></span>Russian</option>
+          <option data-class="fi-es" value="es-ES"><span class="fi fis fi-es"></span>Spanish</option>
+          <option data-class="fi-se" value="sv-SE"><span class="fi fis fi-se"></span>Swedish</option>
+          <option data-class="fi-tr" value="tr-TR"><span class="fi fis fi-tr"></span>Turkish</option>
+          <option data-class="fi-ua" value="uk-UA"><span class="fi fis fi-ua"></span>Ukrainian</option>
+          <option data-class="fi-vn" value="vi-VN"><span class="fi fis fi-vn"></span>Vietnamese</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_show_graph_title"><div class="formColumnLeft"><div class="formFieldName">Show Graph Title<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Display the graph title on the page so that it may be searched using the browser.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Show Graph Title"><input aria-checked="false" class="formCheckbox" id="show_graph_title" name="show_graph_title" title="Show Graph Title" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="show_graph_title">Show Graph Title</label></span></div></div></div>
+      <div class="formRow even" id="row_hide_disabled"><div class="formColumnLeft"><div class="formFieldName">Hide Disabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Hides Disabled Devices and Graphs when viewing outside of Console tab.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Hide Disabled"><input aria-checked="true" checked="" class="formCheckbox" id="hide_disabled" name="hide_disabled" title="Hide Disabled" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="hide_disabled">Hide Disabled</label></span></div></div></div>
+      <div class="formRow odd" id="row_show_aggregates"><div class="formColumnLeft"><div class="formFieldName">Show Device Aggregates<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If a Device Data Source is included in an Aggregate Graph, show that Graph along with other Device Graphs</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Show Device Aggregates"><input aria-checked="true" checked="" class="formCheckbox" id="show_aggregates" name="show_aggregates" title="Show Device Aggregates" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="show_aggregates">Show Device Aggregates</label></span></div></div></div>
+      <div class="formRow even" id="row_enable_hscroll"><div class="formColumnLeft"><div class="formFieldName">Enable Horizontal Scrolling<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enable Horizontal Scrolling of Tables, Disabling Responsive Column Visibility.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Enable Horizontal Scrolling"><input aria-checked="false" class="formCheckbox" id="enable_hscroll" name="enable_hscroll" title="Enable Horizontal Scrolling" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enable_hscroll">Enable Horizontal Scrolling</label></span></div></div></div>
+      <div class="formRow odd" id="row_default_date_format"><div class="formColumnLeft"><div class="formFieldName">Date Display Format<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The date format to use in Kadupul.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_date_format" name="default_date_format">
+          <option value="0">Month Number, Day, Year</option>
+          <option value="1">Month Name, Day, Year</option>
+          <option value="2">Day, Month Number, Year</option>
+          <option value="3">Day, Month Name, Year</option>
+          <option selected="" value="4">Year, Month Number, Day</option>
+          <option value="5">Year, Month Name, Day</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_default_datechar"><div class="formColumnLeft"><div class="formFieldName">Date Separator<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The date separator to be used in Kadupul.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_datechar" name="default_datechar">
+          <option selected="" value="0">-</option>
+          <option value="1">/</option>
+          <option value="2">.</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_page_refresh"><div class="formColumnLeft"><div class="formFieldName">Page Refresh<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of seconds between automatic page refreshes.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="page_refresh" name="page_refresh">
+          <option value="15">15 Seconds</option>
+          <option value="20">20 Seconds</option>
+          <option value="30">30 Seconds</option>
+          <option value="60">1 Minute</option>
+          <option selected="" value="300">5 Minutes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_preview_graphs_per_page"><div class="formColumnLeft"><div class="formFieldName">Preview Graphs Per Page<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of graphs to display on one page in preview mode.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="preview_graphs_per_page" name="preview_graphs_per_page">
+          <option value="4">4</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option selected="" value="10">10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="18">18</option>
+          <option value="20">20</option>
+          <option value="24">24</option>
+          <option value="25">25</option>
+          <option value="27">27</option>
+          <option value="28">28</option>
+          <option value="30">30</option>
+          <option value="32">32</option>
+          <option value="35">35</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_realtime_mode"><div class="formColumnLeft"><div class="formFieldName">Realtime View Mode<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How do you wish to view Realtime Graphs?</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="realtime_mode" name="realtime_mode">
+          <option selected="" value="1">Inline</option>
+          <option value="2">New Window</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_user_auto_logout_time"><div class="formColumnLeft"><div class="formFieldName">Auto Log Out Time<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">For users with Console access only, how long this user can stay logged in before being automatically logged out. Note that if you have not been active in more than an hour, you may have to refresh your browser. Also note that this setting has no affect when Authentication Cookies are enabled.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="user_auto_logout_time" name="user_auto_logout_time">
+          <option value="-1">System Setting</option>
+          <option value="900">15 Minutes</option>
+          <option value="1200">20 Minutes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_timespan"><div class="tableSubHeaderColumn" style="cursor:pointer;">Time Spanning/Shifting<div style="float:right;padding-right:4px;"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_default_rra_id"><div class="formColumnLeft"><div class="formFieldName">Default Time Range<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default RRA to use in rare occasions.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_rra_id" name="default_rra_id">
+          <option selected="" value="1">Daily (5 Minute Average)</option>
+          <option value="2">Weekly (30 Minute Average)</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_default_timespan"><div class="formColumnLeft"><div class="formFieldName">Default Timespan<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default Timespan displayed when viewing Graphs and other time specific data.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_timespan" name="default_timespan">
+          <option value="1">Last Half Hour</option>
+          <option value="2">Last Hour</option>
+          <option value="3">Last 2 Hours</option>
+          <option value="4">Last 4 Hours</option>
+          <option value="5">Last 6 Hours</option>
+          <option value="6">Last 12 Hours</option>
+          <option selected="" value="7">Last Day</option>
+          <option value="8">Last 2 Days</option>
+          <option value="9">Last 3 Days</option>
+          <option value="10">Last 4 Days</option>
+          <option value="11">Last Week</option>
+          <option value="12">Last 2 Weeks</option>
+          <option value="13">Last Month</option>
+          <option value="14">Last 2 Months</option>
+          <option value="15">Last 3 Months</option>
+          <option value="16">Last 4 Months</option>
+          <option value="17">Last 6 Months</option>
+          <option value="18">Last Year</option>
+          <option value="19">Last 2 Years</option>
+          <option value="20">Day Shift</option>
+          <option value="21">This Day</option>
+          <option value="22">This Week</option>
+          <option value="23">This Month</option>
+          <option value="24">This Year</option>
+          <option value="25">Previous Day</option>
+          <option value="26">Previous Week</option>
+          <option value="27">Previous Month</option>
+          <option value="28">Previous Year</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_default_timeshift"><div class="formColumnLeft"><div class="formFieldName">Default Timeshift<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default Timeshift displayed when viewing Graphs and other time specific data.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_timeshift" name="default_timeshift">
+          <option value="1">30 Min</option>
+          <option value="2">1 Hour</option>
+          <option value="3">2 Hours</option>
+          <option value="4">4 Hours</option>
+          <option value="5">6 Hours</option>
+          <option value="6">12 Hours</option>
+          <option selected="" value="7">1 Day</option>
+          <option value="8">2 Days</option>
+          <option value="9">3 Days</option>
+          <option value="10">4 Days</option>
+          <option value="11">1 Week</option>
+          <option value="12">2 Weeks</option>
+          <option value="13">1 Month</option>
+          <option value="14">2 Months</option>
+          <option value="15">3 Months</option>
+          <option value="16">4 Months</option>
+          <option value="17">6 Months</option>
+          <option value="18">1 Year</option>
+          <option value="19">2 Years</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_allow_graph_dates_in_future"><div class="formColumnLeft"><div class="formFieldName">Allow Graph to extend to Future<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When displaying Graphs, allow Graph Dates to extend 'to future'</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Allow Graph to extend to Future"><input aria-checked="true" checked="" class="formCheckbox" id="allow_graph_dates_in_future" name="allow_graph_dates_in_future" title="Allow Graph to extend to Future" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="allow_graph_dates_in_future">Allow Graph to extend to Future</label></span></div></div></div>
+      <div class="formRow odd" id="row_first_weekdayid"><div class="formColumnLeft"><div class="formFieldName">First Day of the Week<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The first Day of the Week for weekly Graph Displays</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="first_weekdayid" name="first_weekdayid">
+          <option value="0">Sunday</option>
+          <option selected="" value="1">Monday</option>
+          <option value="2">Tuesday</option>
+          <option value="3">Wednesday</option>
+          <option value="4">Thursday</option>
+          <option value="5">Friday</option>
+          <option value="6">Saturday</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_day_shift_start"><div class="formColumnLeft"><div class="formFieldName">Start of Daily Shift<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Start Time of the Daily Shift.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="day_shift_start" maxlength="5" name="day_shift_start" off="" size="7" type="text" value="07:00"></div></div></div>
+      <div class="formRow odd" id="row_day_shift_end"><div class="formColumnLeft"><div class="formFieldName">End of Daily Shift<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">End Time of the Daily Shift.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="day_shift_end" maxlength="5" name="day_shift_end" off="" size="7" type="text" value="18:00"></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_thumbnail"><div class="tableSubHeaderColumn" style="cursor:pointer;">Graph Thumbnail Settings<div style="float:right;padding-right:4px;"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_thumbnail_sections"><div class="formColumnLeft"><div class="formFieldName">Thumbnail Sections<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Which portions of Kadupul display Thumbnails by default.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <div class="checkboxgroup1" id="thumbnail_sections_group"><span class="nowrap"><label class="checkboxSwitch" title="Thumbnail Sections"><input aria-checked="true" checked="" class="formCheckbox" id="thumbnail_section_preview" name="thumbnail_section_preview" title="Thumbnail Sections" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel checkboxLabelWanted" for="thumbnail_section_preview">Preview Mode</label></span><br><span class="nowrap"><label class="checkboxSwitch" title="Thumbnail Sections"><input aria-checked="false" class="formCheckbox" id="thumbnail_section_tree_2" name="thumbnail_section_tree_2" title="Thumbnail Sections" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel checkboxLabelWanted" for="thumbnail_section_tree_2">Tree View</label></span><br></div>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_num_columns"><div class="formColumnLeft"><div class="formFieldName">Preview Thumbnail Columns<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of columns to use when displaying Thumbnail graphs in Preview mode.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="num_columns" name="num_columns">
+          <option value="1">1 Column</option>
+          <option selected="" value="2">2 Columns</option>
+          <option value="3">3 Columns</option>
+          <option value="4">4 Columns</option>
+          <option value="5">5 Columns</option>
+          <option value="6">6 Columns</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_num_columns_tree"><div class="formColumnLeft"><div class="formFieldName">Tree View Thumbnail Columns<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of columns to use when displaying Thumbnail graphs in Tree mode.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="num_columns_tree" name="num_columns_tree">
+          <option value="1">1 Column</option>
+          <option selected="" value="2">2 Columns</option>
+          <option value="3">3 Columns</option>
+          <option value="4">4 Columns</option>
+          <option value="5">5 Columns</option>
+          <option value="6">6 Columns</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_default_height"><div class="formColumnLeft"><div class="formFieldName">Thumbnail Height<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The height of Thumbnail graphs in pixels.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="default_height" maxlength="10" name="default_height" off="" size="7" type="text" value="100"></div></div></div>
+      <div class="formRow odd" id="row_default_width"><div class="formColumnLeft"><div class="formFieldName">Thumbnail Width<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The width of Thumbnail graphs in pixels.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="default_width" maxlength="10" name="default_width" off="" size="7" type="text" value="300"></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_tree"><div class="tableSubHeaderColumn" style="cursor:pointer;">Tree Settings<div style="float:right;padding-right:4px;"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_default_tree_id"><div class="formColumnLeft"><div class="formFieldName">Default Tree<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default graph tree to use when displaying graphs in tree mode.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="default_tree_id" name="default_tree_id">
+          <option value="1">Default &lt;tree&gt;</option>
+          <option value="2">Servers</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_treeview_graphs_per_page"><div class="formColumnLeft"><div class="formFieldName">Graphs Per Page<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of graphs to display on one page in preview mode.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="treeview_graphs_per_page" name="treeview_graphs_per_page">
+          <option value="4">4</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option selected="" value="10">10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="18">18</option>
+          <option value="20">20</option>
+          <option value="24">24</option>
+          <option value="25">25</option>
+          <option value="27">27</option>
+          <option value="28">28</option>
+          <option value="30">30</option>
+          <option value="32">32</option>
+          <option value="35">35</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_expand_hosts"><div class="formColumnLeft"><div class="formFieldName">Expand Devices<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose whether to expand the Graph Templates and Data Queries used by a Device on Tree.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Expand Devices"><input aria-checked="false" class="formCheckbox" id="expand_hosts" name="expand_hosts" title="Expand Devices" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="expand_hosts">Expand Devices</label></span></div></div></div>
+      <div class="formRow even" id="row_tree_history"><div class="formColumnLeft"><div class="formFieldName">Tree History<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Tree History"><input aria-checked="true" checked="" class="formCheckbox" id="tree_history" name="tree_history" title="Tree History" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="tree_history">Tree History</label></span></div></div></div>
+      <div class="formRow odd" id="row_min_tree_width"><div class="formColumnLeft"><div class="formFieldName">Minimum Tree Width<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Minimum width of the Tree to contract to.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="min_tree_width" maxlength="5" name="min_tree_width" off="" size="7" type="text" value="170"></div></div></div>
+      <div class="formRow even" id="row_max_tree_width"><div class="formColumnLeft"><div class="formFieldName">Maximum Tree Width<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Maximum width of the Tree to expand to, after which time, Tree branches will scroll on the page.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="max_tree_width" maxlength="5" name="max_tree_width" off="" size="7" type="text" value="300"></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_fonts"><div class="tableSubHeaderColumn" style="cursor:pointer;">Graph Fonts<div style="float:right;padding-right:4px;"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_custom_fonts"><div class="formColumnLeft"><div class="formFieldName">Use Custom Fonts<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose whether to use your own custom fonts and font sizes or utilize the system defaults.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Use Custom Fonts"><input aria-checked="false" class="formCheckbox" id="custom_fonts" name="custom_fonts" title="Use Custom Fonts" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="custom_fonts">Use Custom Fonts</label></span></div></div></div>
+      <div class="formRow even" id="row_title_size"><div class="formColumnLeft"><div class="formFieldName">Title Font Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The size of the font used for Graph Titles</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="title_size" maxlength="10" name="title_size" off="" size="40" type="text" value="12"></div></div></div>
+      <div class="formRow odd" id="row_title_font"><div class="formColumnLeft"><div class="formFieldName">Title Font File<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The font file to use for Graph Titles</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input id="title_font" maxlength="100" name="title_font" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_legend_size"><div class="formColumnLeft"><div class="formFieldName">Legend Font Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The size of the font used for Graph Legend items</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="legend_size" maxlength="10" name="legend_size" off="" size="40" type="text" value="10"></div></div></div>
+      <div class="formRow odd" id="row_legend_font"><div class="formColumnLeft"><div class="formFieldName">Legend Font File<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The font file to be used for Graph Legend items</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input id="legend_font" maxlength="100" name="legend_font" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_axis_size"><div class="formColumnLeft"><div class="formFieldName">Axis Font Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The size of the font used for Graph Axis</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="axis_size" maxlength="10" name="axis_size" off="" size="40" type="text" value="8"></div></div></div>
+      <div class="formRow odd" id="row_axis_font"><div class="formColumnLeft"><div class="formFieldName">Axis Font File<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The font file to be used for Graph Axis items</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input id="axis_font" maxlength="100" name="axis_font" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_unit_size"><div class="formColumnLeft"><div class="formFieldName">Unit Font Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The size of the font used for Graph Units</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="unit_size" maxlength="10" name="unit_size" off="" size="40" type="text" value="8"></div></div></div>
+      <div class="formRow odd" id="row_unit_font"><div class="formColumnLeft"><div class="formFieldName">Unit Font File<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The font file to be used for Graph Unit items</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input id="unit_font" maxlength="100" name="unit_font" size="40" type="text" value=""></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="tab" name="tab" style="height:0px;" type="hidden" value="settings"></div><div style="display:none;"><input id="save_component_graph_settings" name="save_component_graph_settings" style="height:0px;" type="hidden" value="1"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="user_admin.php" type="button" value="Return"><input class="return ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>

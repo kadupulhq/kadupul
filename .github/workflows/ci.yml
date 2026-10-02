@@ -107,7 +107,7 @@ jobs:
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: '8.4'
-        extensions: gd, gmp, intl, ldap, mbstring, pdo_mysql, sockets, sqlite3, xml
+        extensions: dom, gd, gmp, intl, ldap, mbstring, mysqlnd, pdo_mysql, sockets, sqlite3, xml
         coverage: none
 
     - name: Install application dependencies
@@ -127,6 +127,8 @@ jobs:
         KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=cacti_boost_contract;charset=utf8mb4
         KADUPUL_TEST_MYSQL_USER: cactiuser
         KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
+        KADUPUL_TEST_MYSQL_ADMIN_USER: root
+        KADUPUL_TEST_MYSQL_ADMIN_PASSWORD: cactiroot
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
@@ -208,12 +210,35 @@ jobs:
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
+      - name: Verify PHP 8.0 string and regex behavior
+        working-directory: tests
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
+
+      - name: Verify helper union return contracts
+        working-directory: tests
+        run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
+
+      - name: Verify token entropy failure and native identifiers
+        working-directory: tests
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/GenerateHashFailsClosedTest.php --colors=never
+
       - name: Exercise production CSV paths
         working-directory: tests
         # The old Pest runner emits dependency deprecations on PHP 8.4. The
         # isolated production subprocess explicitly enables E_ALL and throws
         # on every diagnostic, including CSV default-argument deprecations.
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
+
+      - name: Verify string predicates and directory boundaries
+        working-directory: tests
+        run: |
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/StringPredicateHelpersTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/PathHelpersTest.php --colors=never
+
+      - name: Legacy form goldens
+        working-directory: tests
+        # Pest 1 emits dependency deprecations on PHP 8.4.
+        run: php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never
 
       - name: Install RRDtool for spike-removal contracts
         run: sudo apt-get update && sudo apt-get install -y rrdtool
@@ -239,7 +264,7 @@ jobs:
           persist-credentials: false
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
-          install_args: python@3.12.12
+          install_args: python@3.12.12 node@22.22.2
       - name: Install PHP for native process-boundary self-tests
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
@@ -248,6 +273,8 @@ jobs:
           coverage: none
       - name: Verify observation normalization and failure reporting
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
+      - name: Verify offline build runtime selection
+        run: mise exec node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
       - name: Restore pinned compatibility libraries
         run: php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters
@@ -260,10 +287,14 @@ jobs:
         env:
           PHP_VERSION: '8.4'
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+      - name: Verify External Links through HTTP and MariaDB
+        run: mise exec python@3.12.12 -- python tests/Symfony/link_review_http.py
       - name: Verify the actual CLI upgrades an installed LTS database version
         run: mise exec python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
       - name: Refuse forbidden access at every entry point
-        run: mise exec python@3.12.12 -- python tests/security/entry_point_authorization.py
+        run: |
+          mise exec python@3.12.12 -- python tests/security/test_entry_route_samples.py
+          mise exec python@3.12.12 -- python tests/security/entry_point_authorization.py
       - name: Upload observations
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

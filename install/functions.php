@@ -315,7 +315,7 @@ function db_install_drop_column($table, $column)
     return $status;
 }
 
-function db_install_add_cache($status, $sql, $params = NULL)
+function db_install_add_cache($status, $sql, $params = null)
 {
     global $cacti_upgrade_version, $database_last_error, $database_upgrade_status;
 
