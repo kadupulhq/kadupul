@@ -29,6 +29,8 @@ if (!empty($scenario['empty'])) {
     $item_rows = false;
 }
 $queries = array();
+$affectedRows = 0;
+$deleteCounts = array();
 if (isset($scenario['association'])) {
     $_SESSION = array('sess_user_id' => 99);
     $db->sqliteCreateFunction('RAND', static fn() => random_int(1, 4294967294) / 4294967295);
@@ -57,12 +59,24 @@ if (isset($scenario['association'])) {
 function db_execute_prepared($sql, $parameters)
 {
     $GLOBALS['queries'][] = array($sql, $parameters);
-    return $GLOBALS['db']->prepare($sql)->execute($parameters);
+    $statement = $GLOBALS['db']->prepare($sql);
+    $written = $statement->execute($parameters);
+    $GLOBALS['affectedRows'] = $statement->rowCount();
+    if (str_starts_with($sql, 'DELETE FROM')) {
+        $GLOBALS['deleteCounts'][] = $GLOBALS['affectedRows'];
+    }
+    return $written;
+}
+function db_affected_rows()
+{
+    return $GLOBALS['affectedRows'];
 }
 function db_execute($sql)
 {
     $GLOBALS['queries'][] = array($sql, array());
-    return $GLOBALS['db']->exec($sql);
+    $result = $GLOBALS['db']->exec($sql);
+    $GLOBALS['affectedRows'] = $result === false ? 0 : $result;
+    return $result;
 }
 function db_fetch_assoc_prepared($sql, $parameters)
 {
@@ -168,7 +182,7 @@ if (!empty($scenario['no_association'])) {
 }
 if (isset($scenario['association'])) {
     register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn) {
-        print json_encode(array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']), JSON_THROW_ON_ERROR);
+        print json_encode(array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries'], 'delete_counts' => $GLOBALS['deleteCounts'], 'epochs' => $db->query('SELECT id, reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR)), JSON_THROW_ON_ERROR);
     });
     form_actions();
     throw new RuntimeException('Association did not complete its controller redirect');
