@@ -25,23 +25,6 @@ final readonly class DeviceSelection
 
     public static function validateIds(array $ids): array
     {
-        if ($ids === [] || count($ids) > 100) {
-            throw new \InvalidArgumentException('Select between 1 and 100 devices.');
-        }
-        if (!array_is_list($ids)) {
-            throw new \InvalidArgumentException('Invalid device selection.');
-        }
-        $normalized = [];
-        foreach ($ids as $id) {
-            if ((!is_int($id) && !is_string($id)) || !preg_match('/\A[1-9][0-9]{0,7}\z/D', (string) $id) || (int) $id > 16777215) {
-                throw new \InvalidArgumentException('Invalid device selection.');
-            }
-            $normalized[] = (int) $id;
-        }
-        if (count(array_unique($normalized)) !== count($normalized)) {
-            throw new \InvalidArgumentException('Invalid device selection.');
-        }
-        sort($normalized, SORT_NUMERIC);
-        return $normalized;
+        return SelectionIds::normalize($ids, 8, 16777215, 'Select between 1 and 100 devices.', 'Invalid device selection.');
     }
 }
