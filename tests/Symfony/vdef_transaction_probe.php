@@ -56,6 +56,29 @@ try {
 } finally {
     $database->executeStatement('DROP TEMPORARY TABLE vdef_items');
 }
+$observer = DriverManager::getConnection($database->getParams());
+$observerCatalog = new DoctrineVdefCatalog($observer);
+$persistentBefore = $observerCatalog->find($vdefId);
+foreach (['vdef', 'vdef_items', 'graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
+    $database->executeStatement('CREATE TEMPORARY TABLE `' . $table . '` (guard_fixture INT) ENGINE=InnoDB');
+    try {
+        $denied = false;
+        try {
+            $editor->save($actorId, $vdefId, 'must-not-save', $before['revision']);
+        } catch (RuntimeException $error) {
+            $denied = $error->getMessage() === 'VDEF writes require transactional tables.';
+        }
+        if (!$denied || $database->isTransactionActive() || $database->getNativeConnection()->inTransaction()) {
+            throw new RuntimeException('Persistent VDEF storage guard did not reject temporary ' . $table);
+        }
+        if ($observerCatalog->find($vdefId) !== $persistentBefore) {
+            throw new RuntimeException('Temporary VDEF shadow changed persistent observer values.');
+        }
+    } finally {
+        $database->executeStatement('DROP TEMPORARY TABLE `' . $table . '`');
+    }
+}
+$observer->close();
 $database->beginTransaction();
 $database->update('vdef', ['name' => 'caller-private'], ['id' => $vdefId]);
 try {
@@ -113,4 +136,4 @@ $editor->save($actorId, $vdefId, $before['name'], $before['revision']);
 if ($database->isTransactionActive() || $catalog->find($vdefId)['revision'] !== $before['revision']) {
     throw new RuntimeException('Primary mutation failed under alternate session isolation.');
 }
-echo json_encode(['caller_preserved' => true, 'native_preserved' => true, 'remote_refused' => true, 'primary_confirmed' => true, 'temporary_shadow_refused' => true], JSON_THROW_ON_ERROR), PHP_EOL;
+echo json_encode(['caller_preserved' => true, 'native_preserved' => true, 'remote_refused' => true, 'primary_confirmed' => true, 'temporary_shadow_refused' => true, 'persistent_shadows_refused' => true], JSON_THROW_ON_ERROR), PHP_EOL;

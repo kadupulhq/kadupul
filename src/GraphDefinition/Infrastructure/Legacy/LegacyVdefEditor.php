@@ -197,7 +197,9 @@ final readonly class LegacyVdefEditor implements VdefEditor
                 // Inspect the table this connection uses, including temporary
                 // tables that shadow otherwise transactional persistent tables.
                 $definition = $this->database->fetchNumeric('SHOW CREATE TABLE ' . $this->database->quoteIdentifier($table));
-                if ($definition === false || !preg_match('/\n\) ENGINE=InnoDB\b/i', (string) $definition[1])) {
+                if ($definition === false || !is_string($definition[1] ?? null)
+                    || preg_match('/\ACREATE TABLE /i', $definition[1]) !== 1
+                    || preg_match('/\n\) ENGINE=InnoDB\b/i', $definition[1]) !== 1) {
                     throw new \RuntimeException('VDEF writes require transactional tables.');
                 }
             }

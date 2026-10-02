@@ -317,7 +317,8 @@ def verify_vdefs(harness, session, user_id, check):
             harness.sql(f'ALTER TABLE {table} ENGINE=InnoDB')
     harness.compose('cp', str(Path(__file__).with_name('vdef_transaction_probe.php')), 'web:/tmp/vdef_transaction_probe.php')
     probe = harness.command('php', '-d', 'auto_prepend_file=/harness/errors.php', '/tmp/vdef_transaction_probe.php', str(user_id), str(vdef_id), check=True)
-    check(json.loads(probe['stdout']) == {'caller_preserved': True, 'native_preserved': True, 'remote_refused': True, 'primary_confirmed': True, 'temporary_shadow_refused': True}, 'VDEF caller transaction and remote collector guards verified on MariaDB')
+    check(json.loads(probe['stdout']) == {'caller_preserved': True, 'native_preserved': True, 'remote_refused': True, 'primary_confirmed': True, 'temporary_shadow_refused': True, 'persistent_shadows_refused': True}, 'VDEF caller transaction and remote collector guards verified on MariaDB')
+    check(json.loads(probe['stdout'])['persistent_shadows_refused'] is True, 'VDEF writes reject every InnoDB temporary participant and preserve persistent observer rows')
     harness.sql(f'DELETE FROM vdef_items WHERE vdef_id={vdef_id}; DELETE FROM vdef WHERE id={vdef_id}')
     if not original_direct:
         harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=14')

@@ -44,6 +44,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'VDEF caller transaction and remote collector guards verified on MariaDB',
+        'VDEF writes reject every InnoDB temporary participant and preserve persistent observer rows',
         'VDEF malformed list arrays return controlled 400 before catalog reads: filter',
         'VDEF malformed list arrays return controlled 400 before catalog reads: sort',
         'VDEF malformed list arrays return controlled 400 before catalog reads: direction',

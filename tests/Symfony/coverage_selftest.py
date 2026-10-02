@@ -175,6 +175,7 @@ def main():
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
         'vdef-test-hash': 'Integration test source differs',
+        'missing-vdef-persistent-storage': 'Incomplete Symfony integration',
         'vdef-probe-hash': 'Integration test source differs',
         'vdef-browser-probe-hash': 'Integration test source differs',
         'vdef-browser-handler-hash': 'Integration test source differs',
@@ -282,6 +283,8 @@ def main():
                 evidence['checks'].remove(omitted)
             elif case == 'missing-vdef-engine-check':
                 evidence['checks'].remove('VDEF nontransactional table refused: vdef')
+            elif case == 'missing-vdef-persistent-storage':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'VDEF writes reject every InnoDB temporary participant and preserve persistent observer rows']
             elif case == 'vdef-test-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_scenarios.py'] = '0' * 64
             elif case == 'missing-vdef-handoff':
