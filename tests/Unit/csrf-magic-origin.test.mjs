@@ -53,6 +53,14 @@ test('same-origin XHR posts carry the token', () => {
   assert.equal(xhrBody('POST', 'graphs.php', ''), `${field}=${token}`);
 });
 
+test('XHR methods use the browser case-insensitive POST contract', () => {
+  for (const method of ['post', 'PoSt']) {
+    for (const url of sameOrigin) assert.equal(xhrBody(method, url), withToken);
+    for (const url of crossOrigin) assert.equal(xhrBody(method, url), 'action=save');
+  }
+  assert.equal(xhrBody('get', 'graphs.php', null), null);
+});
+
 test('cross-origin XHR posts do not carry the token', () => {
   for (const url of crossOrigin) {
     assert.equal(xhrBody('POST', url), 'action=save', url);

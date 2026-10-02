@@ -28,7 +28,7 @@
     "include/vendor/csrf/NEWS.md": "e68a289e2cf84b20aa0401cde06921f42ef0187c20104200e01706a7f8312690",
     "include/vendor/csrf/README.md": "5f79ce32b88ad174563d80c7bfd0c89865fc26cdc8f0fb11d52a98d178f30f15",
     "include/vendor/csrf/csrf-conf.php": "61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514",
-    "include/vendor/csrf/csrf-magic.js": "0efc8a482b3079d53b6f64633a5715fdfca2840a9ea1623e3323f8c9679fd616",
+    "include/vendor/csrf/csrf-magic.js": "05f75535d15f4ba69f7417927798ca47bd880bf756e81053f93d0abec03ce569",
     "include/vendor/csrf/csrf-magic.php": "709ac05a227c3140ae7edbdfad505225e0dc916ace71a58497a2616295995f37",
     "include/vendor/csrf/index.php": "ab4a930fc908f8b59d7c6638572534c23d7899b77a092c3b5b7012a053753f4c",
     "include/vendor/flag-icons/country.json": "f5e99aee5051868b391b9f42e110cb104b7fcd6269807b2dc5e2c80b1e6c9436",
@@ -416,7 +416,7 @@
       "replacements": [
         {
           "before": "\t\tif (method == 'POST') this.csrf_isPost = true;\n",
-          "after": "\t\tif (method == 'POST' && CsrfMagic.isLocalUrl(url)) {\n\t\t\tthis.csrf_isPost = true;\n\t\t} else {\n\t\t\tdelete this.csrf_isPost;\n\t\t}\n"
+          "after": "\t\tif (String(method).toUpperCase() === 'POST' && CsrfMagic.isLocalUrl(url)) {\n\t\t\tthis.csrf_isPost = true;\n\t\t} else {\n\t\t\tdelete this.csrf_isPost;\n\t\t}\n"
         },
         {
           "before": "// callback function for when everything on the page has loaded\nCsrfMagic.end = function() {\n\t// This rewrites forms AGAIN, so in case buffering didn't work this\n\t// certainly will.\n\tforms = document.getElementsByTagName('form');\n\tfor (var i = 0; i < forms.length; i++) {\n\t\tform = forms[i];\n\t\tif (form.method.toUpperCase() !== 'POST') continue;\n\t\tif (form.elements[csrfMagicName]) continue;\n\t\tvar input = document.createElement('input');\n\t\tinput.setAttribute('name',  csrfMagicName);\n\t\tinput.setAttribute('value', csrfMagicToken);\n\t\tinput.setAttribute('type',  'hidden');\n\t\tform.appendChild(input);\n\t}\n}\n",
