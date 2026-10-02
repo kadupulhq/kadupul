@@ -158,6 +158,7 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
         $oldColumns = 'audit_old_columns_' . $suffix;
         $oldIndexes = 'audit_old_indexes_' . $suffix;
         $cleanup = [$columns, $indexes];
+        $cleanupOk = true;
         try {
             foreach ([[$columns, self::DUMP_COLUMNS, 'table_columns'], [$indexes, self::DUMP_INDEXES, 'table_indexes']] as [$name, $ddl, $table]) {
                 if (!$this->connections->execute($target, str_replace('`' . $table . '`', '`' . $name . '`', $ddl))) {
@@ -177,14 +178,16 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
             }
             $cleanup = [$oldColumns, $oldIndexes];
 
-            return true;
         } finally {
             foreach ($cleanup as $table) {
                 if (!$this->connections->execute($target, 'DROP TABLE IF EXISTS `' . $table . '`')) {
+                    $cleanupOk = false;
                     $this->connections->log($target, 'DBCALL', 'ERROR: failed to clean audit staging table ' . $table);
                 }
             }
         }
+
+        return $cleanupOk;
     }
 
     #[\Override]
