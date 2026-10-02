@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
 } else {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
@@ -17,6 +17,17 @@ if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
 if (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/rrdcleaner.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
+}
+if (defined('UTILITY_LOG_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/utilities.php');
+}
+if (defined('UTILITY_VIEW_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/utilities.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/UtilityRows.php');
 }
 if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
@@ -182,22 +193,39 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
-if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE')) {
+if (defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE') || defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
     foreach ($coverageFilter->files() as $file) {
-        // Only byte-identical copied CLI paths are attributed to the canonical producer.
+        // Preserve copied-source attribution only after the existing byte identity check.
         $source = defined('RRD_TEST_CLI_COVERAGE_COPY') && $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
         $nativeSources[] = substr($source, strlen($coverageRoot) + 1);
     }
-    if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
+    $nativeScenario = $argv[1];
+    if (defined('UTILITY_VIEW_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/UtilityViewNativeCoverageTest.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'lib/utility.php'));
+        $nativeProducer = 'tests/Fixtures/utility-view-native.php';
+    } elseif (defined('UTILITY_LOG_TEST_COVERAGE')) {
+        $nativeSources[] = 'tests/Symfony/UtilityLogPersistenceTest.php';
+        $nativeProducer = 'tests/Fixtures/utility-log-native.php';
+    } elseif (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/StringPredicateNativeTest.php', 'include/global_constants.php', 'lib/html.php'));
+        $nativeProducer = 'tests/Fixtures/string-predicates-native.php';
+        $nativeScenario = 'native-string-predicates';
+    } elseif (defined('PHP80_STRING_NATIVE_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/Php80StringNativeTest.php', 'include/global_constants.php'));
+        $nativeProducer = 'tests/Fixtures/php80-string-native.php';
+        $nativeScenario = 'native-string-selectors';
+    } elseif (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
         $nativeSources = array_merge($nativeSources, array('tests/Unit/HtmlRendererNativeCoverageTest.php', 'include/global_constants.php', 'lib/functions.php', 'lib/html_utility.php', 'lib/headers_secure.php'));
         $nativeProducer = 'tests/Fixtures/html-renderer-native.php';
-        $nativeScenario = $argv[1];
-    } else {
+    } elseif (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
         $nativeSources[] = 'tests/Unit/PerCsReviewRegressionTest.php';
         $nativeProducer = 'tests/Fixtures/per-cs-review-native.php';
         $nativeScenario = json_encode(array($argv[1], $argv[3]), JSON_THROW_ON_ERROR);
+    } else {
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/HelperUnionNativeTest.php', 'src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php'));
+        $nativeProducer = 'tests/Fixtures/helper-union-native.php';
     }
     $nativeCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, $nativeProducer, $nativeScenario, $nativeSources);
 }
