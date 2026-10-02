@@ -255,7 +255,7 @@ test('user_admin.php and user_group_admin.php refuse a GET default policy change
 		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $page);
 
 		expect(preg_match("/if \(isset_request_var\('update_policy'\)\) \{\n\tupdate_policies\(\);\n\}/", $source))->toBe(1, $page);
-		expect(preg_match('/function update_policies\(\) \{\n\t(csrf_require_post\(true\);)\n/', $source, $matches))->toBe(1, $page);
+		expect(preg_match('/function update_policies\(\)(?:: never)? \{\n\t(csrf_require_post\(true\);)\n/', $source, $matches))->toBe(1, $page);
 
 		$check = "if (isset_request_var('update_policy')) {\n\t" . $matches[1] . "\n\tset_request_var('action', 'updated');\n}";
 

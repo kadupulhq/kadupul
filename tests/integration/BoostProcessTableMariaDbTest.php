@@ -343,6 +343,9 @@ test('poller acknowledgement preserves byte-distinct replacement values and uses
 			if ($id <= $batch_size) { $keys[] = array($id, 'value', '2026-09-15 00:00:00', $observed); }
 		}
 		$db->exec('INSERT INTO poller_output VALUES ' . implode(',', $rows));
+		// The range-plan assertion needs statistics for the populated fixture,
+		// not InnoDB's initial estimate for a newly created temporary table.
+		$db->query('ANALYZE TABLE poller_output')->fetchAll();
 		$db->prepare('UPDATE poller_output SET output=? WHERE local_data_id=1')->execute(array($replacement));
 		expect(boostMariaDbDeleteOutputRows($keys, $failed))->toBe($batch_size - 1)->and($failed)->toBeFalse();
 		expect($db->query('SELECT output FROM poller_output WHERE local_data_id=1')->fetchColumn())->toBe($replacement);
