@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
+
 - Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
 - Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
