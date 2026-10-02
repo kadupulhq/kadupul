@@ -1257,6 +1257,13 @@ function create_tables($load = true) {
 	global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
 	global $altersopt, $database_ssl;
 
+	$schema_file = $config['base_path'] . '/docs/audit_schema.sql';
+	if ($load && (!is_file($schema_file) || !is_readable($schema_file))) {
+		fwrite(STDERR, "FATAL: Failed to find or read docs/audit_schema.sql.\n");
+
+		return false;
+	}
+
 	if (db_execute("CREATE TABLE IF NOT EXISTS table_columns (
 		table_name varchar(50) NOT NULL,
 		table_sequence int(10) unsigned NOT NULL,
@@ -1312,82 +1319,138 @@ function create_tables($load = true) {
 	}
 
 	if ($load) {
-		if (db_execute('TRUNCATE table_columns') === false || db_execute('TRUNCATE table_indexes') === false) {
-			fwrite(STDERR, "FATAL: Failed to clear the audit schema baseline tables.\n");
-
-			return false;
-		}
-
 		$output = array();
 		$error  = 0;
 
-		//Handle case to address Mariadb dropping the mysql command
-		if (file_exists('/usr/bin/mariadb')) {
-			$db_shell = '/usr/bin/mariadb';
-		} elseif (file_exists('/usr/bin/mysql')) {
-			$db_shell = '/usr/bin/mysql';
-		} elseif (file_exists('/usr/local/bin/mariadb')) {
-			$db_shell = '/usr/local/bin/mariadb';
-		} elseif (file_exists('/usr/local/bin/mysql')) {
-			$db_shell = '/usr/local/bin/mysql';
-		} else {
-			$db_shell = trim((string) shell_exec('which mysql'));
+		$db_shell = getenv('CACTI_MYSQL_CLIENT');
 
-			if ($db_shell == '') {
-				fwrite(STDERR, "FATAL: mysql or mariadb command not found.\n");
+		// Allow installations and isolated checks to select a specific client.
+		if ($db_shell === false || $db_shell === '') {
+			// Handle systems where MariaDB does not provide the mysql command.
+			if (file_exists('/usr/bin/mariadb')) {
+				$db_shell = '/usr/bin/mariadb';
+			} elseif (file_exists('/usr/bin/mysql')) {
+				$db_shell = '/usr/bin/mysql';
+			} elseif (file_exists('/usr/local/bin/mariadb')) {
+				$db_shell = '/usr/local/bin/mariadb';
+			} elseif (file_exists('/usr/local/bin/mysql')) {
+				$db_shell = '/usr/local/bin/mysql';
+			} else {
+				$db_shell = trim((string) shell_exec('which mysql'));
 
-				return false;
+				if ($db_shell == '') {
+					fwrite(STDERR, "FATAL: mysql or mariadb command not found.\n");
+
+					return false;
+				}
 			}
 		}
 
-		if (file_exists($config['base_path'] . '/docs/audit_schema.sql')) {
-			/* the credentials go in a private defaults file rather than on the
-			 * command line, where any local user could read them out of the
-			 * process list for as long as the import runs */
-			$defaults_file = audit_database_defaults_file($database_username, $database_password, $database_hostname, $database_port);
-
-			if ($defaults_file === false) {
-				fwrite(STDERR, "FATAL: Unable to create a private credentials file.\n");
-
-				return false;
+		$suffix = bin2hex(random_bytes(8));
+		$completion = 'audit_complete_' . $suffix;
+		$staging = array('table_columns' => 'audit_columns_' . $suffix, 'table_indexes' => 'audit_indexes_' . $suffix);
+		$backups = array('table_columns' => 'audit_old_columns_' . $suffix, 'table_indexes' => 'audit_old_indexes_' . $suffix);
+		$import_file = tempnam(sys_get_temp_dir(), 'kadupul-audit-');
+		if ($import_file === false) {
+			fwrite(STDERR, 'FATAL: Unable to stage the Audit Schema' . PHP_EOL);
+			return false;
+		}
+		$defaults_file = false;
+		$loaded = false;
+		$cleaned = true;
+		try {
+			$schema = file_get_contents($schema_file);
+			if ($schema === false) {
+				throw new RuntimeException('Unable to read the Audit Schema');
 			}
-
+			if (!preg_match('/-- Dump completed on [^\r\n]+\s*$/D', $schema)) {
+				throw new RuntimeException('Audit Schema completion footer is missing');
+			}
+			foreach ($staging as $live => $stage) {
+				$schema = str_replace('`' . $live . '`', '`' . $stage . '`', $schema);
+			}
+			$schema .= "\nCREATE TABLE `$completion` (id INTEGER PRIMARY KEY);\nINSERT INTO `$completion` VALUES (1);\n";
+			if (file_put_contents($import_file, $schema) !== strlen($schema)) {
+				throw new RuntimeException('Unable to stage the Audit Schema');
+			}
+			$defaults_file = audit_database_defaults_file($database_username, $database_password, $database_hostname, $database_port);
+			if ($defaults_file === false) {
+				throw new RuntimeException('Unable to create a private credentials file');
+			}
 			$version_output = array();
 			$version_status = 0;
 			exec(cacti_escapeshellarg($db_shell) . ' --version', $version_output, $version_status);
-
-			$ssl_option = $version_status === 0
-				? audit_database_ssl_option($database_ssl, implode(' ', $version_output))
-				: false;
-
+			$ssl_option = $version_status === 0 ? audit_database_ssl_option($database_ssl, implode(' ', $version_output)) : false;
 			if ($ssl_option === false) {
-				unlink($defaults_file);
-				fwrite(STDERR, "FATAL: Unable to determine a safe TLS option for the database client.\n");
-
-				return false;
+				throw new RuntimeException('Unable to determine a safe TLS option for the database client');
 			}
-
-			exec(cacti_escapeshellarg($db_shell) .
-				' --defaults-extra-file=' . cacti_escapeshellarg($defaults_file) .
-				$ssl_option .
-				' ' . cacti_escapeshellarg($database_default) .
-				' < ' . cacti_escapeshellarg($config['base_path'] . '/docs/audit_schema.sql'), $output, $error);
-
-			unlink($defaults_file);
-
-			if ($error == 0) {
-				print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
-			} else {
-				fwrite(STDERR, 'FATAL: Failed to load the audit schema.' . PHP_EOL);
-				fwrite(STDERR, 'ERROR: ' . implode(",\n   ", $output) . PHP_EOL);
-
-				return false;
+			$command = array($db_shell, '--defaults-extra-file=' . $defaults_file);
+			if ($ssl_option !== '') {
+				$command[] = trim($ssl_option);
 			}
-		} else {
-			fwrite(STDERR, "FATAL: Failed to find docs/audit_schema.sql.\n");
-
-			return false;
+			$command[] = '--database=' . $database_default;
+			$process = proc_open(
+				$command,
+				array(0 => array('file', $import_file, 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)),
+				$pipes
+			);
+			if (!is_resource($process)) {
+				throw new RuntimeException('Unable to start the Audit Schema client');
+			}
+			// Drain combined output without exposing credentials or blocking the client.
+			$client_output = stream_get_contents($pipes[1]);
+			fclose($pipes[1]);
+			$error = proc_close($process);
+			if ($error !== 0) {
+				// Redact before limiting diagnostic text so truncation cannot expose a password fragment.
+				$diagnostic = $database_password === '' ? $client_output : str_replace($database_password, '[redacted]', $client_output);
+				$diagnostic = trim(substr($diagnostic, 0, 4096));
+				throw new RuntimeException('Audit Schema import failed' . ($diagnostic === '' ? '' : ': ' . $diagnostic));
+			}
+			if (!db_table_exists($completion) || (int) db_fetch_cell('SELECT COUNT(*) FROM `' . $completion . '` WHERE id=1') !== 1) {
+				throw new RuntimeException('Audit Schema import did not reach its completion marker');
+			}
+			foreach ($staging as $stage) {
+				if (!db_table_exists($stage) || (int) db_fetch_cell('SELECT COUNT(*) FROM `' . $stage . '`') < 1) {
+					throw new RuntimeException('Audit Schema staging table is missing or empty');
+				}
+			}
+			$renames = array();
+			foreach ($staging as $live => $stage) {
+				$renames[] = "`$live` TO `{$backups[$live]}`";
+				$renames[] = "`$stage` TO `$live`";
+			}
+			if (!db_execute('RENAME TABLE ' . implode(', ', $renames))) {
+				throw new RuntimeException('Unable to install the Audit Schema');
+			}
+			$loaded = true;
+		} catch (Throwable $failure) {
+			fwrite(STDERR, 'FATAL: Failed to load the Audit Schema: ' . $failure->getMessage() . PHP_EOL);
+		} finally {
+			if ($defaults_file !== false && !unlink($defaults_file)) {
+				$cleaned = false;
+				fwrite(STDERR, 'FATAL: Unable to remove private database credentials file' . PHP_EOL);
+			}
+			if (!unlink($import_file)) {
+				$cleaned = false;
+				fwrite(STDERR, 'FATAL: Unable to remove private Audit Schema staging file' . PHP_EOL);
+			}
+			foreach (array_merge(array_values($staging), array_values($backups), array($completion)) as $temporary) {
+				try {
+					if (!db_execute('DROP TABLE IF EXISTS `' . $temporary . '`')) {
+						throw new RuntimeException('cleanup was not acknowledged');
+					}
+				} catch (Throwable $cleanupFailure) {
+					$cleaned = false;
+					fwrite(STDERR, 'FATAL: Unable to remove Audit Schema temporary table ' . $temporary . ': ' . $cleanupFailure->getMessage() . PHP_EOL);
+				}
+			}
 		}
+		if ($loaded && $cleaned) {
+			print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
+		}
+		return $loaded && $cleaned;
+
 	}
 
 	return true;
@@ -1525,6 +1588,7 @@ function display_help() {
 	print '    --missing-tables - Also report missing core tables, and create them with --repair' . PHP_EOL . PHP_EOL;
 	print '    --prune-plugins - During --upgrade, remove registrations for plugins whose INFO file is missing' . PHP_EOL . PHP_EOL;
 	print '    --allow-fork-repairs - Override an unknown/stale baseline or non-canonical schema warnings during --repair' . PHP_EOL . PHP_EOL;
+	print 'Environment: CACTI_MYSQL_CLIENT selects an explicit mysql/mariadb executable; unset or empty uses normal discovery.' . PHP_EOL . PHP_EOL;
 	print 'Developer Options:' . PHP_EOL;
 	print '    --create  - Initialize or Re-initialize the Audit Schema tables.' . PHP_EOL;
 	print '    --load    - Take a pristine Cacti install and create Audit Schema and file.' . PHP_EOL;
