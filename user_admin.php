@@ -6,6 +6,7 @@
  */
 
 include('./include/auth.php');
+require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php';
 
 cacti_require_post_actions(array('save', 'actions', 'perm_remove'));
 if (isset_request_var('update_policy')) {
@@ -73,10 +74,17 @@ function update_policies()
 {
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
+    $failed = false;
     foreach ($policies as $p) {
         if (isset_request_var($p)) {
-            db_execute_prepared("UPDATE `user_auth` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')));
+            if (!\Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write("UPDATE `user_auth` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')), false, (int) get_filter_request_var('id'))) {
+                $failed = true;
+            }
         }
+    }
+
+    if ($failed) {
+        raise_message(2);
     }
 
     header('Location: user_admin.php?action=user_edit&header=false&tab=' . get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));
@@ -87,147 +95,13 @@ function form_actions()
 {
     global $user_actions, $auth_realms;
 
-    /* if we are to save this form, instead of display it */
-    if (isset_request_var('associate_host')) {
-        foreach ($_POST as $var => $val) {
-            if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
-                /* ================= input validation ================= */
-                input_validate_input_number($matches[1]);
-                /* ==================================================== */
-
-                if (get_nfilter_request_var('drp_action') == '1') {
-                    db_execute_prepared(
-                        'REPLACE INTO user_auth_perms
-						(user_id, item_id, type)
-						VALUES (?, ?, 3)',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                } else {
-                    db_execute_prepared(
-                        'DELETE FROM user_auth_perms
-						WHERE user_id = ?
-						AND item_id = ?
-						AND type = 3',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                }
-            }
-        }
-
-        header('Location: user_admin.php?action=user_edit&header=false&tab=permsd&id=' . get_nfilter_request_var('id'));
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
+    $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(false);
+    if ($association_tab !== null) {
+        header('Location: user_admin.php?action=user_edit&header=false&tab=' . $association_tab . '&id=' . get_nfilter_request_var('id'));
         exit;
-    } elseif (isset_request_var('associate_graph')) {
-        foreach ($_POST as $var => $val) {
-            if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
-                /* ================= input validation ================= */
-                input_validate_input_number($matches[1]);
-                /* ==================================================== */
-
-                if (get_nfilter_request_var('drp_action') == '1') {
-                    db_execute_prepared(
-                        'REPLACE INTO user_auth_perms
-						(user_id, item_id, type)
-						VALUES (?, ?, 1)',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                } else {
-                    db_execute_prepared(
-                        'DELETE FROM user_auth_perms
-						WHERE user_id = ?
-						AND item_id = ?
-						AND type = 1',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                }
-            }
-        }
-
-        header('Location: user_admin.php?action=user_edit&header=false&tab=permsg&id=' . get_nfilter_request_var('id'));
-        exit;
-    } elseif (isset_request_var('associate_template')) {
-        foreach ($_POST as $var => $val) {
-            if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
-                /* ================= input validation ================= */
-                input_validate_input_number($matches[1]);
-                /* ==================================================== */
-
-                if (get_nfilter_request_var('drp_action') == '1') {
-                    db_execute_prepared(
-                        'REPLACE INTO user_auth_perms
-						(user_id, item_id, type)
-						VALUES (?, ?, 4)',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                } else {
-                    db_execute_prepared(
-                        'DELETE FROM user_auth_perms
-						WHERE user_id = ?
-						AND item_id = ?
-						AND type = 4',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                }
-            }
-        }
-
-        header('Location: user_admin.php?action=user_edit&header=false&tab=permste&id=' . get_nfilter_request_var('id'));
-        exit;
-    } elseif (isset_request_var('associate_groups')) {
-        foreach ($_POST as $var => $val) {
-            if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
-                /* ================= input validation ================= */
-                input_validate_input_number($matches[1]);
-                /* ==================================================== */
-
-                if (get_nfilter_request_var('drp_action') == '1') {
-                    db_execute_prepared(
-                        'REPLACE INTO user_auth_group_members
-						(user_id, group_id)
-						VALUES (?, ?)',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                } else {
-                    db_execute_prepared(
-                        'DELETE FROM user_auth_group_members
-						WHERE user_id = ?
-						AND group_id = ?',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                }
-            }
-        }
-
-        header('Location: user_admin.php?action=user_edit&header=false&tab=permsgr&id=' . get_nfilter_request_var('id'));
-        exit;
-    } elseif (isset_request_var('associate_tree')) {
-        foreach ($_POST as $var => $val) {
-            if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
-                /* ================= input validation ================= */
-                input_validate_input_number($matches[1]);
-                /* ==================================================== */
-
-                if (get_nfilter_request_var('drp_action') == '1') {
-                    db_execute_prepared(
-                        'REPLACE INTO user_auth_perms
-						(user_id, item_id, type)
-						VALUES (?, ?, 2)',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                } else {
-                    db_execute_prepared(
-                        'DELETE FROM user_auth_perms
-						WHERE user_id = ?
-						AND item_id = ?
-						AND type = 2',
-                        array(get_nfilter_request_var('id'), $matches[1])
-                    );
-                }
-            }
-        }
-
-        header('Location: user_admin.php?action=user_edit&header=false&tab=permstr&id=' . get_nfilter_request_var('id'));
-        exit;
-    } elseif (isset_request_var('selected_items')) {
+    }
+    if (isset_request_var('selected_items')) {
         if (get_nfilter_request_var('drp_action') == '2') { /* copy */
             /* ================= input validation ================= */
             get_filter_request_var('selected_items');
@@ -494,46 +368,58 @@ function form_save()
         /* ==================================================== */
 
         $add_button_clicked = false;
+        $permission_saved = true;
 
         if (isset_request_var('add_graph_x')) {
-            db_execute_prepared(
+            $permission_saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 1)',
-                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_graphs'))
+                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_graphs')),
+                false,
+                (int) get_filter_request_var('id')
             );
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_tree_x')) {
-            db_execute_prepared(
+            $permission_saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 2)',
-                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_trees'))
+                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_trees')),
+                false,
+                (int) get_filter_request_var('id')
             );
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_host_x')) {
-            db_execute_prepared(
+            $permission_saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 3)',
-                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_hosts'))
+                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_hosts')),
+                false,
+                (int) get_filter_request_var('id')
             );
 
             $add_button_clicked = true;
         } elseif (isset_request_var('add_graph_template_x')) {
-            db_execute_prepared(
+            $permission_saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
                 'REPLACE INTO user_auth_perms
 				(user_id,item_id,type)
 				VALUES (?, ?, 4)',
-                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_graph_templates'))
+                array(get_nfilter_request_var('id'), get_nfilter_request_var('perm_graph_templates')),
+                false,
+                (int) get_filter_request_var('id')
             );
 
             $add_button_clicked = true;
         }
 
         if ($add_button_clicked == true) {
+            if (!$permission_saved) {
+                raise_message(2);
+            }
             header('Location: user_admin.php?action=user_edit&header=false&tab=graph_perms_edit&id=' . get_nfilter_request_var('id'));
             exit;
         }
@@ -709,38 +595,51 @@ function perm_remove()
     get_filter_request_var('user_id');
     /* ==================================================== */
 
+    $saved = true;
     if (get_request_var('type') == 'graph') {
-        db_execute_prepared(
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
             'DELETE FROM user_auth_perms
 			WHERE type = 1
 			AND user_id = ?
 			AND item_id = ?',
-            array(get_request_var('user_id'), get_request_var('id'))
+            array(get_request_var('user_id'), get_request_var('id')),
+            false,
+            (int) get_request_var('user_id')
         );
     } elseif (get_request_var('type') == 'tree') {
-        db_execute_prepared(
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
             'DELETE FROM user_auth_perms
 			WHERE type = 2
 			AND user_id = ?
 			AND item_id = ?',
-            array(get_request_var('user_id'), get_request_var('id'))
+            array(get_request_var('user_id'), get_request_var('id')),
+            false,
+            (int) get_request_var('user_id')
         );
     } elseif (get_request_var('type') == 'host') {
-        db_execute_prepared(
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
             'DELETE FROM user_auth_perms
 			WHERE type = 3
 			AND user_id = ?
 			AND item_id = ?',
-            array(get_request_var('user_id'), get_request_var('id'))
+            array(get_request_var('user_id'), get_request_var('id')),
+            false,
+            (int) get_request_var('user_id')
         );
     } elseif (get_request_var('type') == 'graph_template') {
-        db_execute_prepared(
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write(
             'DELETE FROM user_auth_perms
 			WHERE type = 4
 			AND user_id = ?
 			AND item_id = ?',
-            array(get_request_var('user_id'), get_request_var('id'))
+            array(get_request_var('user_id'), get_request_var('id')),
+            false,
+            (int) get_request_var('user_id')
         );
+    }
+
+    if (!$saved) {
+        raise_message(2);
     }
 
     header('Location: user_admin.php?action=user_edit&header=false&tab=graph_perms_edit&id=' . get_request_var('user_id'));
@@ -1291,18 +1190,8 @@ function graph_perms_edit($tab, $header_label)
                 $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' (user_auth_perms.type=4 AND user_auth_perms.user_id=' . get_request_var('id', 0) . ')';
             }
 
-            $total_rows = db_fetch_cell_prepared(
-                "SELECT COUNT(DISTINCT gt.id)
-			FROM graph_templates AS gt
-			LEFT JOIN graph_local AS gl
-			ON gt.id = gl.graph_template_id
-			LEFT JOIN user_auth_perms
-			ON gt.id = user_auth_perms.item_id
-			AND user_auth_perms.type = 4
-			AND user_auth_perms.user_id = ?
-			$sql_where",
-                array(get_request_var('id'))
-            );
+            require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php';
+            $total_rows = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionTemplateGrid::countFromRequest(false);
 
             $sql_query = "SELECT gt.id, gt.name, COUNT(DISTINCT gl.id) AS totals, user_auth_perms.user_id
 			FROM graph_templates AS gt
@@ -1534,6 +1423,9 @@ function user_realms_edit($header_label)
     get_filter_request_var('id');
     /* ==================================================== */
 
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php';
+    $selected_realms = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRealms::selected(false, (int) get_request_var('id', 0));
+
     $all_realms = $user_auth_realms;
 
     print "<div class='cactiTable' style='width:100%;text-align:left;'>
@@ -1554,13 +1446,7 @@ function user_realms_edit($header_label)
 
         foreach ($perms as $realm) {
             if (isset($user_auth_realms[$realm])) {
-                $set = db_fetch_cell_prepared(
-                    'SELECT realm_id
-					FROM user_auth_realm
-					WHERE user_id = ?
-					AND realm_id = ?',
-                    array(get_request_var('id', 0), $realm)
-                );
+                $set = isset($selected_realms[$realm]);
 
                 if ($set) {
                     $old_value = 'on';
@@ -1603,13 +1489,7 @@ function user_realms_edit($header_label)
         foreach ($links as $r) {
             $realm = $r['id'] + 10000;
 
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_realm
-				WHERE user_id = ?
-				AND realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';
@@ -1659,13 +1539,7 @@ function user_realms_edit($header_label)
                 }
             }
 
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_realm
-				WHERE user_id = ?
-				AND realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';
@@ -1700,13 +1574,7 @@ function user_realms_edit($header_label)
         print "<tr class='tableHeader'><th class='left' colspan='2'>" . __('Legacy Permissions') . "</th></tr>";
 
         foreach ($all_realms as $realm => $name) {
-            $set = db_fetch_cell_prepared(
-                'SELECT realm_id
-				FROM user_auth_realm
-				WHERE user_id = ?
-				AND realm_id = ?',
-                array(get_request_var('id', 0), $realm)
-            );
+            $set = isset($selected_realms[$realm]);
 
             if ($set) {
                 $old_value = 'on';
@@ -2450,824 +2318,66 @@ function user()
 
 function process_graph_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'graph_template_id' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => '-1',
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uag');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'graph');
 }
 
 function process_group_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uagr');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'group');
 }
 
 function process_device_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'host_template_id' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => '-1',
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uad');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'device');
 }
 
 function process_template_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'graph_template_id' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => '-1',
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uate');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'template');
 }
 
 function process_tree_request_vars()
 {
-    /* ================= input validation and session storage ================= */
-    $filters = array(
-        'rows' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => read_config_option('num_rows_table')
-        ),
-        'page' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'default' => '1'
-        ),
-        'filter' => array(
-            'filter' => FILTER_DEFAULT,
-            'pageset' => true,
-            'default' => ''
-        ),
-        'graph_template_id' => array(
-            'filter' => FILTER_VALIDATE_INT,
-            'pageset' => true,
-            'default' => '-1',
-        ),
-        'associated' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(true|false)')),
-            'pageset' => true,
-            'default' => 'true'
-        )
-    );
-
-    validate_store_request_vars($filters, 'sess_uatr');
-    /* ================= input validation ================= */
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(false, 'tree');
 }
 
 function graph_filter($header_label)
 {
-    global $config, $item_rows;
-
-    ?>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-
-	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permsg&id=<?php print get_request_var('id');?>'
-		strURL += '&rows=' + $('#rows').val();
-		strURL += '&graph_template_id=' + $('#graph_template_id').val();
-		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
-		strURL += '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=permsg&id=<?php print get_request_var('id');?>&clear=true'
-		strURL = strURL + '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	$(function() {
-		$('#associated').on('click', function() {
-			applyFilter();
-		});
-
-		$('#clear').on('click', function() {
-			clearFilter();
-		});
-
-		$('#rows, #graph_template_id').on('change', function() {
-			applyFilter();
-		})
-
-		$('#forms').on('submit', function(event) {
-			event.preventDefault();
-			applyFilter();
-		});
-	});
-
-	</script>
-	<?php
-
-    html_start_box(__esc('Graph Permissions %s', $header_label), '100%', '', '3', 'center', '');
-
-    ?>
-	<tr class='even'>
-		<td>
-		<form id='forms' action='user_admin.php'>
-			<table class='filterTable'>
-				<tr>
-					<td>
-						<?php print __('Search');?>
-					</td>
-					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
-					</td>
-					<td>
-						<?php print __('Template');?>
-					</td>
-					<td>
-						<select id='graph_template_id'>
-							<option value='-1'<?php if (get_request_var('graph_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-							<option value='0'<?php if (get_request_var('graph_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
-							<?php
-                            $graph_templates = db_fetch_assoc('SELECT DISTINCT gt.id, gt.name
-								FROM graph_templates AS gt
-								INNER JOIN graph_local AS gl
-								ON gl.graph_template_id = gt.id
-								ORDER BY name');
-
-    if (cacti_sizeof($graph_templates)) {
-        foreach ($graph_templates as $gt) {
-            print "<option value='" . $gt['id'] . "'";
-            if (get_request_var('graph_template_id') == $gt['id']) {
-                print ' selected';
-            } print '>' . html_escape($gt['name']) . "</option>";
-        }
-    }
-    ?>
-						</select>
-					</td>
-					<td>
-						<?php print __('Graphs');?>
-					</td>
-					<td>
-						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
-							<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . "</option>";
-        }
-    }
-    ?>
-						</select>
-					</td>
-					<td>
-						<span>
-							<input type='checkbox' id='associated' <?php print(get_request_var('associated') == 'true' || get_request_var('associated') == 'on' ? 'checked' : '');?>>
-							<label for='associated'><?php print __('Show All');?></label>
-						</span>
-					</td>
-					<td>
-						<span>
-							<input type='submit' class='ui-button ui-corner-all ui-widget' id='go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
-							<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='action' value='user_edit'>
-			<input type='hidden' name='tab' value='permsg'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
-		</form>
-		</td>
-	</tr>
-	<?php
-
-    html_end_box();
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permsg', __esc('Graph Permissions %s', $header_label), __('Graphs'), __('Show All'), 'graph_template_id', __esc('Go'), __esc('Clear'), false, true);
 }
 
 function group_filter($header_label)
 {
-    global $config, $item_rows;
-
-    ?>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-
-	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permsgr&id=<?php print get_request_var('id');?>'
-		strURL += '&rows=' + $('#rows').val();
-		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
-		strURL += '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permsgr&id=<?php print get_request_var('id');?>&clear=true'
-		strURL = strURL + '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	$(function() {
-		$('#associated').on('click', function() {
-			applyFilter();
-		});
-
-		$('#clear').on('click', function() {
-			clearFilter();
-		});
-
-		$('#rows').on('change', function() {
-			applyFilter();
-		});
-
-		$('#forms').on('submit', function(event) {
-			event.preventDefault();
-			applyFilter();
-		});
-	});
-
-	</script>
-	<?php
-
-    html_start_box(__esc('Group Membership %s', $header_label), '100%', '', '3', 'center', '');
-
-    ?>
-	<tr class='even'>
-		<td>
-		<form id='forms' action='user_admin.php'>
-			<table class='filterTable'>
-				<tr>
-					<td>
-						<?php print __('Search');?>
-					</td>
-					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
-					</td>
-					<td>
-						<?php print __('Groups');?>
-					</td>
-					<td>
-						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
-							<?php
-                            if (cacti_sizeof($item_rows)) {
-                                foreach ($item_rows as $key => $value) {
-                                    print "<option value='" . $key . "'";
-                                    if (get_request_var('rows') == $key) {
-                                        print ' selected';
-                                    } print '>' . html_escape($value) . "</option>";
-                                }
-                            }
-    ?>
-						</select>
-					</td>
-					<td>
-						<span>
-							<input type='checkbox' id='associated' <?php print(get_request_var('associated') == 'true' || get_request_var('associated') == 'on' ? 'checked' : '');?>>
-							<label for='associated'><?php print __('Show All');?></label>
-						</span>
-					</td>
-					<td>
-						<span>
-							<input type='submit' class='ui-button ui-corner-all ui-widget' id='go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
-							<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='action' value='user_edit'>
-			<input type='hidden' name='tab' value='permsgr'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
-		</form>
-		</td>
-	</tr>
-	<?php
-
-    html_end_box();
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permsgr', __esc('Group Membership %s', $header_label), __('Groups'), __('Show All'), '', __esc('Go'), __esc('Clear'));
 }
 
 function device_filter($header_label)
 {
-    global $config, $item_rows;
-
-    ?>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-
-	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permsd&id=<?php print get_request_var('id');?>'
-		strURL += '&rows=' + $('#rows').val();
-		strURL += '&host_template_id=' + $('#host_template_id').val();
-		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
-		strURL += '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=permsd&id=<?php print get_request_var('id');?>&clear=true'
-		strURL = strURL + '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	$(function() {
-		$('#associated').on('click', function() {
-			applyFilter();
-		});
-
-		$('#clear').on('click', function() {
-			clearFilter();
-		});
-
-		$('#rows, #host_template_id').on('change', function() {
-			applyFilter();
-		});
-
-		$('#forms').on('submit', function(event) {
-			event.preventDefault();
-			applyFilter();
-		});
-	});
-
-	</script>
-	<?php
-
-    html_start_box(__esc('Devices Permission %s', $header_label), '100%', '', '3', 'center', '');
-
-    ?>
-	<tr class='even'>
-		<td>
-		<form id='forms' action='user_admin.php'>
-			<table class='filterTable'>
-				<tr>
-					<td>
-						<?php print __('Search');?>
-					</td>
-					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
-					</td>
-					<td>
-						<?php print __('Template');?>
-					</td>
-					<td>
-						<select id='host_template_id'>
-							<option value='-1'<?php if (get_request_var('host_template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
-							<option value='0'<?php if (get_request_var('host_template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
-							<?php
-                            $host_templates = db_fetch_assoc('SELECT id, name FROM host_template ORDER BY name');
-
-    if (cacti_sizeof($host_templates)) {
-        foreach ($host_templates as $host_template) {
-            print "<option value='" . $host_template['id'] . "'";
-            if (get_request_var('host_template_id') == $host_template['id']) {
-                print ' selected';
-            } print '>' . html_escape($host_template['name']) . "</option>";
-        }
-    }
-    ?>
-						</select>
-					</td>
-					<td>
-						<?php print __('Devices');?>
-					</td>
-					<td>
-						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
-							<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . "</option>";
-        }
-    }
-    ?>
-						</select>
-					</td>
-					<td>
-						<span>
-							<input type='checkbox' id='associated' <?php print(get_request_var('associated') == 'true' || get_request_var('associated') == 'on' ? 'checked' : '');?>>
-							<label for='associated'><?php print __('Only Show Exceptions');?></label>
-						</span>
-					</td>
-					<td>
-						<span>
-							<input type='submit' class='ui-button ui-corner-all ui-widget' id='go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
-							<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='action' value='user_edit'>
-			<input type='hidden' name='tab' value='permsd'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
-		</form>
-		</td>
-	</tr>
-	<?php
-
-    html_end_box();
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permsd', __esc('Devices Permission %s', $header_label), __('Devices'), __('Only Show Exceptions'), 'host_template_id', __esc('Go'), __esc('Clear'), false, true);
 }
 
 function template_filter($header_label)
 {
-    global $config, $item_rows;
-
-    ?>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-
-	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permste&id=<?php print get_request_var('id');?>'
-		strURL += '&rows=' + $('#rows').val();
-		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
-		strURL += '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permste&id=<?php print get_request_var('id');?>&clear=true'
-		strURL = strURL + '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	$(function() {
-		$('#associated').on('click', function() {
-			applyFilter();
-		});
-
-		$('#clear').on('click', function() {
-			clearFilter();
-		});
-
-		$('#rows').on('change', function() {
-			applyFilter();
-		});
-
-		$('#forms').on('submit', function(event) {
-			event.preventDefault();
-			applyFilter();
-		});
-	});
-
-	</script>
-	<?php
-
-    html_start_box(__esc('Template Permission %s', $header_label), '100%', '', '3', 'center', '');
-
-    ?>
-	<tr class='even'>
-		<td>
-		<form id='forms' action='user_admin.php'>
-			<table class='filterTable'>
-				<tr>
-					<td>
-						<?php print __('Search');?>
-					</td>
-					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
-					</td>
-					<td>
-						<?php print __('Templates');?>
-					</td>
-					<td>
-						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
-							<?php
-                            if (cacti_sizeof($item_rows)) {
-                                foreach ($item_rows as $key => $value) {
-                                    print "<option value='" . $key . "'";
-                                    if (get_request_var('rows') == $key) {
-                                        print ' selected';
-                                    } print '>' . html_escape($value) . "</option>";
-                                }
-                            }
-    ?>
-						</select>
-					</td>
-					<td>
-						<span>
-							<input type='checkbox' id='associated' <?php print(get_request_var('associated') == 'true' || get_request_var('associated') == 'on' ? 'checked' : '');?>>
-							<label for='associated'><?php print __('Only Show Exceptions');?></label>
-						</span>
-					</td>
-					<td>
-						<span>
-							<input type='submit' class='ui-button ui-corner-all ui-widget' id='go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
-							<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='action' value='user_edit'>
-			<input type='hidden' name='tab' value='permste'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
-		</form>
-		</td>
-	</tr>
-	<?php
-
-    html_end_box();
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permste', __esc('Template Permission %s', $header_label), __('Templates'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'));
 }
 
 function tree_filter($header_label)
 {
-    global $config, $item_rows;
-
-    ?>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-
-	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permstr&id=<?php print get_request_var('id');?>'
-		strURL += '&rows=' + $('#rows').val();
-		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
-		strURL += '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permstr&id=<?php print get_request_var('id');?>&clear=true'
-		strURL = strURL + '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	$(function() {
-		$('#associated').on('click', function() {
-			applyFilter();
-		});
-
-		$('#clear').on('click', function() {
-			clearFilter();
-		});
-
-		$('#rows').on('change', function() {
-			applyFilter();
-		});
-
-		$('#forms').on('submit', function(event) {
-			event.preventDefault();
-			applyFilter();
-		});
-	});
-
-	</script>
-	<?php
-
-    html_start_box(__esc('Tree Permission %s', $header_label), '100%', '', '3', 'center', '');
-
-    ?>
-	<tr class='even'>
-		<td>
-		<form id='forms' action='user_admin.php'>
-			<table class='filterTable'>
-				<tr>
-					<td>
-						<?php print __('Search');?>
-					</td>
-					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
-					</td>
-					<td>
-						<?php print __('Trees');?>
-					</td>
-					<td>
-						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
-							<?php
-                            if (cacti_sizeof($item_rows)) {
-                                foreach ($item_rows as $key => $value) {
-                                    print "<option value='" . $key . "'";
-                                    if (get_request_var('rows') == $key) {
-                                        print ' selected';
-                                    } print '>' . html_escape($value) . "</option>";
-                                }
-                            }
-    ?>
-						</select>
-					</td>
-					<td>
-						<span>
-							<input type='checkbox' id='associated' <?php print(get_request_var('associated') == 'true' || get_request_var('associated') == 'on' ? 'checked' : '');?>>
-							<label for='associated'><?php print __('Only Show Exceptions');?></label>
-						</span>
-					</td>
-					<td>
-						<span>
-							<input type='submit' class='ui-button ui-corner-all ui-widget' id='go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
-							<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='action' value='user_edit'>
-			<input type='hidden' name='tab' value='permstr'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
-		</form>
-		</td>
-	</tr>
-	<?php
-
-    html_end_box();
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'permstr', __esc('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'));
 }
 
 function member_filter($header_label)
 {
-    global $config, $item_rows;
-
-    ?>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-
-	function applyFilter(objForm) {
-		strURL  = 'user_admin.php?action=user_edit&tab=members&id=<?php print get_request_var('id');?>'
-		strURL += '&rows=' + $('#rows').val();
-		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
-		strURL += '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=members&id=<?php print get_request_var('id');?>&clear=true'
-		strURL = strURL + '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	$(function() {
-		$('#associated').on('click', function() {
-			applyFilter();
-		});
-
-		$('#clear').on('click', function() {
-			clearFilter();
-		});
-
-		$('#rows').on('change', function() {
-			applyFilter();
-		});
-
-		$('#forms').on('submit', function(event) {
-			event.preventDefault();
-			applyFilter();
-		});
-	});
-
-	</script>
-	<?php
-
-    html_start_box(__esc('Tree Permission %s', $header_label), '100%', '', '3', 'center', '');
-
-    ?>
-	<tr class='even'>
-		<td>
-		<form id='forms' action='user_admin.php'>
-			<table class='filterTable'>
-				<tr>
-					<td>
-						<?php print __('Search');?>
-					</td>
-					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
-					</td>
-					<td>
-						<?php print __('Trees');?>
-					</td>
-					<td>
-						<select id='rows'>
-							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
-							<?php
-                            if (cacti_sizeof($item_rows)) {
-                                foreach ($item_rows as $key => $value) {
-                                    print "<option value='" . $key . "'";
-                                    if (get_request_var('rows') == $key) {
-                                        print ' selected';
-                                    } print '>' . html_escape($value) . "</option>";
-                                }
-                            }
-    ?>
-						</select>
-					</td>
-					<td>
-						<span>
-							<input type='checkbox' id='associated' <?php print(get_request_var('associated') == 'true' || get_request_var('associated') == 'on' ? 'checked' : '');?>>
-							<label for='associated'><?php print __('Only Show Exceptions');?></label>
-						</span>
-					</td>
-					<td>
-						<span>
-							<input type='submit' class='ui-button ui-corner-all ui-widget' id='go' value='<?php print __esc('Go');?>' title='<?php print __esc('Set/Refresh Filters');?>'>
-							<input type='button' class='ui-button ui-corner-all ui-widget' id='clear' value='<?php print __esc('Clear');?>' title='<?php print __esc('Clear Filters');?>'>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='action' value='user_edit'>
-			<input type='hidden' name='tab' value='members'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
-		</form>
-		</td>
-	</tr>
-	<?php
-
-    html_end_box();
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_admin.php', 'user_edit', 'members', __esc('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __esc('Go'), __esc('Clear'), true, true);
 }
