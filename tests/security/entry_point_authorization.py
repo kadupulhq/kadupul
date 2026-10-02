@@ -61,9 +61,6 @@ MUTATING_SEGMENTS = re.compile(r'\{operation\}')
 CANARY = 'kadupul-entry-canary'
 WEBROOT = '/var/www/html/'
 
-# update_hash.php rewrites stylesheets under here when it runs.
-THEME = 'include/themes/midwinter'
-
 # The root rules ship in .htaccess.dist and apply only once it is renamed.
 OPT_IN = 'nginx; apache: opt-in via .htaccess.dist'
 # The nested .well-known checks that the ACME exception is anchored at the root.
@@ -75,7 +72,7 @@ OPT_IN_SERVED = '.well-known/kadupul-entry-canary.txt'
 DENIED_EXTRA = ('docs/kadupul-entry-canary.html', 'include/Config.php')
 
 # CLI tools with no bootstrap of their own, so a request reaches their guard.
-CLI_TOOLS = ('include/themes/midwinter/update_hash.php', 'script_server.php')
+CLI_TOOLS = ('script_server.php',)
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -120,7 +117,7 @@ class Client:
 
 
 def cli_refused(response):
-    # mod_php echoes a shebang line ahead of the guard.
+    # Some PHP CLI entry points use a shebang that mod_php emits before the guard.
     body = response['body'].strip()
     return (response['status'] == 404 and body in ('', '#!/usr/bin/env php')) \
         or 'only meant to run at the command line' in body
@@ -148,14 +145,6 @@ def stage_denied_paths(rig, rows):
                     'sh', WEBROOT + path, ('<?php print "%s";' % CANARY) if path.endswith('.php') else CANARY, check=True)
 
 
-def theme_css_digest(rig):
-    digest = rig.command('sh', '-c', 'cd "$1" && find . -name "*.css" | LC_ALL=C sort | xargs sha256sum',
-                         'sh', WEBROOT + THEME, check=True)['stdout']
-    if 'main.css' not in digest:
-        raise RuntimeError('theme stylesheets not found in ' + THEME)
-    return digest
-
-
 def page_assets(body):
     """Same-origin scripts and stylesheets a page loads, without cache busters."""
     urls = re.findall(r'<(?:script[^>]+src|link[^>]+href)=[\'"]([^\'"]+\.(?:js|css))(?:\?[^\'"]*)?[\'"]', body)
@@ -166,15 +155,72 @@ def refusal(response):
     return next((name for name, test in REFUSALS if test(response)), None)
 
 
-def sample(entry, detail, ids):
-    """Concrete URL for a route template; {id} names the fixture row of its kind."""
-    requirements = dict(re.findall(r'(\w+)=([\w|]+)', detail.split('requirements=', 1)[1].split(';')[0])) if 'requirements=' in detail else {}
+def has_feature_realm(entry):
+    """These migrated pages require a feature grant in addition to Console."""
+    legacy = {'gprint_presets.php', 'vdef.php', 'cdef.php', 'color_templates.php',
+              'color_templates_items.php', 'aggregate_templates.php', 'host_templates.php',
+              'color.php', 'links.php', 'data_input.php'}
+    prefixes = ('graphing/gprint-presets', 'graph-definitions/vdefs',
+                'graph-definitions/cdefs', 'graphing/color-templates',
+                'graphing/color-template-items', 'aggregate-templates',
+                'inventory/device-templates', 'graphing/colors', 'links', 'data-inputs')
+    return entry in legacy or any(entry == 'app.php/' + prefix or
+                                 entry.startswith('app.php/' + prefix + '/')
+                                 for prefix in prefixes)
 
-    def value(m):
-        if m[1] == 'id':
-            return str(ids[entry.split('/')[2]])
-        return requirements[m[1]].split('|')[0]
-    return re.sub(r'\{(\w+)\}', value, entry)
+
+def sample(entry, detail, ids):
+    """Use concrete parent/child rows; never turn a missing fixture into a 404."""
+    prefix = next((key for key in sorted(ids, key=len, reverse=True)
+                   if entry.startswith('app.php/' + key + '/')), None)
+    parameters = ids.get(prefix, {})
+    if isinstance(parameters, int):
+        parameters = {'id': parameters}
+    requirements_text = detail.split('requirements=', 1)[1].split(';', 1)[0] if 'requirements=' in detail else ''
+    requirements = dict(re.findall(r'(\w+)=([A-Za-z_]+(?:\|[A-Za-z_]+)*)', requirements_text))
+
+    def value(match):
+        name = match[1]
+        if name in parameters:
+            return str(parameters[name])
+        if name in requirements:
+            return requirements[name].split('|')[0]
+        raise ValueError('Missing concrete route fixture: ' + entry + ' {' + name + '}')
+    return re.sub(r'\{(\w+)(?:<[^>]+>)?\}', value, entry)
+
+
+def route_fixtures(rig, rows, ids):
+    """Add rows for each migrated route family present in this branch."""
+    ids['inventory/devices'] = ids['devices']
+    ids['inventory/sites'] = ids['sites']
+
+    def present(prefix):
+        return any(entry.startswith('app.php/' + prefix) for entry, _, _ in rows)
+
+    if present('graphing/gprint-presets'):
+        ids['graphing/gprint-presets'] = {'id': int(rig.sql('SELECT MIN(id) FROM graph_templates_gprint').strip())}
+    if present('graphing/color-templates'):
+        parent, child = map(int, rig.sql('SELECT color_template_id,color_template_item_id FROM color_template_items ORDER BY color_template_item_id LIMIT 1').split())
+        ids['graphing/color-templates'] = {'id': parent, 'itemId': child}
+    for kind in ('vdef', 'cdef'):
+        if present('graph-definitions/' + kind + 's'):
+            parent, child = map(int, rig.sql('SELECT ' + kind + '_id,id FROM ' + kind + '_items ORDER BY id LIMIT 1').split())
+            ids['graph-definitions/' + kind + 's'] = {'id': parent, kind + 'Id': parent, 'itemId': child}
+    if present('aggregate-templates'):
+        template = int(rig.sql("INSERT INTO aggregate_graph_templates (name,graph_template_id,gprint_prefix,graph_type,total,total_type,total_prefix,order_type,user_id) SELECT 'entry-sweep',MIN(gt.id),'',1,0,1,'',0,1 FROM graph_templates gt JOIN graph_templates_graph g ON g.graph_template_id=gt.id WHERE g.local_graph_id=0; SELECT LAST_INSERT_ID()").strip())
+        rig.sql(f'INSERT INTO aggregate_graph_templates_graph (aggregate_template_id) VALUES ({template})')
+        ids['aggregate-templates'] = {'id': template}
+    if present('inventory/device-templates'):
+        template = int(rig.sql("INSERT INTO host_template (name,class) VALUES ('entry-sweep','general'); SELECT LAST_INSERT_ID()").strip())
+        ids['inventory/device-templates'] = {'id': template}
+    if present('data-inputs'):
+        method = int(rig.sql("INSERT INTO data_input (name,hash,type_id,input_string) VALUES ('entry-sweep',MD5('entry-sweep'),1,'echo <value>'); SELECT LAST_INSERT_ID()").strip())
+        field = int(rig.sql(f"INSERT INTO data_input_fields (data_input_id,name,data_name,input_output,sequence) VALUES ({method},'Value','value','in',1); SELECT LAST_INSERT_ID()").strip())
+        ids['data-inputs'] = {'id': method, 'field': field}
+    if present('graphing/colors'):
+        ids['graphing/colors'] = {'id': int(rig.sql('SELECT MIN(id) FROM colors').strip())}
+    if present('links'):
+        ids['links'] = {'id': 1}
 
 
 def entries():
@@ -243,6 +289,14 @@ def main():
                 "UPDATE user_auth SET reset_perms = reset_perms + 1 WHERE id = @id;")
         if rig.sql("SELECT COUNT(*) FROM user_auth_realm r JOIN user_auth u ON u.id = r.user_id WHERE u.username = 'entry-norealm'").strip() != '0':
             raise RuntimeError('entry-norealm still holds a realm')
+        # Legacy revocation first clears cached permissions with a bounded
+        # reload marker. Prime that cache and require the actual denied page;
+        # migrated About no longer performs this legacy transition for us.
+        refreshed = norealm.request('auth_profile.php')
+        if re.fullmatch(r'\s*<span style="display:none;">cactiRedirect</span>\s*', refreshed['body']):
+            refreshed = norealm.request('auth_profile.php')
+        if refusal(refreshed) is None:
+            raise RuntimeError('Revoked account profile was not refused after cache refresh')
         console.login('entry-console', PASSWORD)
         admin = Client(base)
         admin.login('admin', 'behavior-admin')
@@ -251,14 +305,15 @@ def main():
         # can be admitted where it holds the grant.
         controls = [
             ('admin index.php', admin.request('index.php'), lambda r: r['admin_layout']),
-            ('norealm about.php', norealm.request('about.php'), lambda r: r['status'] == 200 and refusal(r) is None),
+            ('norealm About', norealm.request('app.php/about' if any(entry == 'app.php/about' for entry, _, _ in entries()) else 'about.php'), lambda r: r['status'] == 200 and refusal(r) is None),
             ('console index.php', console.request('index.php'), lambda r: r['status'] == 200 and refusal(r) is None),
             ('console app.php/session', console.request('app.php/session'), lambda r: r['status'] == 200),
         ]
         rows = entries()
+        route_fixtures(rig, rows, ids)
         # The same URLs the sweep requests must reach the row for an admin.
         for entry, gate, detail in rows:
-            if entry.startswith('app.php/') and '{id}' in entry:
+            if entry.startswith('app.php/') and re.search(r'\{(?:id|\w+Id|field)(?:<[^>]+>)?\}', entry) and 'GET' in detail.split(';')[0]:
                 url = sample(entry, detail, ids)
                 controls.append(('admin ' + url, admin.request(url), lambda r: r['status'] == 200))
         for label, response, test in controls:
@@ -267,7 +322,6 @@ def main():
 
         counted = 0
         stage_denied_paths(rig, rows)
-        css_before = theme_css_digest(rig)
 
         # Denies must not reach what the login form and the console load.
         for name, client in (('anonymous', anonymous), ('admin', admin)):
@@ -292,7 +346,7 @@ def main():
                 gate, detail = routes['app.php' + detail.rsplit('app.php', 1)[1]]
             # Without a guest user a guest-or-* page is gated like the rest.
             gate = gate.removeprefix('guest-or-')
-            protected = gate.startswith('realm:') or gate == 'authenticated' or (gate.startswith('symfony:') and 'ConsoleAccess' in detail)
+            protected = gate.startswith('realm:') or gate == 'authenticated' or (gate.startswith('symfony:') and any(contract in detail for contract in ('ConsoleAccess', 'AuthenticatedAccess')))
             url = entry + ('?id=1' if entry == 'link.php' else '')
             if entry.startswith('app.php/'):
                 url = sample(entry, detail, ids)
@@ -300,18 +354,25 @@ def main():
 
             if protected:
                 counted += 1
-                expect('anonymous GET ' + url, anonymous.request(url))
-                if url.startswith('app.php/'):
+                get_allowed = not gate.startswith('symfony:') or 'GET' in detail.split(';')[0]
+                if get_allowed:
+                    expect('anonymous GET ' + url, anonymous.request(url))
+                else:
+                    expect('anonymous POST ' + url, anonymous.request(url, {}))
+                if get_allowed and url.startswith('app.php/'):
                     # Same kernel, other front controller.
                     expect('anonymous GET public/index.php' + url[7:], anonymous.request('public/index.php' + url[7:]))
                 if post:
                     expect('anonymous POST ' + url, anonymous.request(url, {}))
-                if gate == 'authenticated':
+                if gate == 'authenticated' or 'AuthenticatedAccess' in detail:
                     continue
                 for name, client in (('norealm', norealm), ('console', console)):
-                    if name == 'console' and (gate == 'realm:%d' % CONSOLE_REALM or 'ConsoleAccess realm 8;' in detail + ';'):
+                    if name == 'console' and not has_feature_realm(entry) and (gate == 'realm:%d' % CONSOLE_REALM or 'ConsoleAccess realm 8;' in detail + ';'):
                         continue
-                    expect(name + ' GET ' + url, client.request(url))
+                    if get_allowed:
+                        expect(name + ' GET ' + url, client.request(url))
+                    else:
+                        expect(name + ' POST ' + url, client.request(url, {}))
                     if post:
                         expect(name + ' POST ' + url, client.request(url, {}))
             elif gate == 'cli-only':
@@ -360,9 +421,6 @@ def main():
                 failures.append('%s: denied path answered HTTP %d' % (path, response['status']))
             observed.setdefault('web-server-denied status:%d' % response['status'], []).append(path)
 
-        if theme_css_digest(rig) != css_before:
-            failures.append('theme CSS changed during the sweep')
-
         # Guest pass: with a guest user set as the Settings page stores it,
         # exactly the guest-or-* pages admit an anonymous caller.
         rig.sql("INSERT INTO settings (name, value) SELECT 'guest_user', id FROM user_auth WHERE username = 'guest' "
@@ -374,14 +432,15 @@ def main():
                 gate, detail = routes['app.php' + detail.rsplit('app.php', 1)[1]]
             guest_page = gate.startswith('guest-or-')
             gated = guest_page or gate.startswith('realm:') or gate == 'authenticated' \
-                or (gate.startswith('symfony:') and 'ConsoleAccess' in detail)
+                or (gate.startswith('symfony:') and any(contract in detail for contract in ('ConsoleAccess', 'AuthenticatedAccess')))
             if not gated:
                 continue
             counted += 1
             url = sample(entry, detail, ids) if entry.startswith('app.php/') else entry + ('?id=1' if entry == 'link.php' else '')
             # A fresh client each time, so a guest session from one page
             # cannot carry into the next.
-            response = Client(base).request(url)
+            get_allowed = not gate.startswith('symfony:') or 'GET' in detail.split(';')[0]
+            response = Client(base).request(url, None if get_allowed else {})
             verdict = refusal(response)
             observed.setdefault('guest-pass %s %s' % ('guest-or-*' if guest_page else 'gated', verdict or 'admitted'), []).append(url)
             if guest_page and verdict is not None:

@@ -1,0 +1,26 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "font_method",
+        "form_settings",
+        "realtime_enabled",
+        "row_axis_font",
+        "row_axis_size",
+        "row_legend_font",
+        "row_legend_size",
+        "row_path_rrdtool_default_font",
+        "row_realtime_cache_path",
+        "row_realtime_gwindow",
+        "row_realtime_interval",
+        "row_title_font",
+        "row_title_size",
+        "row_unit_font",
+        "row_unit_size",
+        "selected_theme",
+        "tab"
+    ],
+    "script_names": []
+}

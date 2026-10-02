@@ -26,6 +26,7 @@ dependencies:
 mise exec -- php "$(command -v composer)" install
 mise exec -- npm ci --ignore-scripts
 mise exec -- npm run build
+mise exec -- php bin/console asset-map:compile
 mise exec -- php bin/console about
 ```
 
