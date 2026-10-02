@@ -89,7 +89,7 @@ final readonly class AuditDatabase
     private function audit(AuditRun $run, AuditMode $mode): AuditReport
     {
         [$outcome, $baseline, $line, $uncreated] = $this->loadBaseline($run);
-        if ($mode === AuditMode::Create || $outcome === BaselineOutcome::CreateFailed) {
+        if ($mode === AuditMode::Create || !in_array($outcome, [BaselineOutcome::Loaded, BaselineOutcome::Planned], true)) {
             return $run->report($mode, $outcome, $line, uncreated: $uncreated);
         }
         $catalog = $this->schema->catalog($run->scope->target);
@@ -129,7 +129,7 @@ final readonly class AuditDatabase
 
     /**
      * create_tables(): the file is read first, so a dry run can report it, then
-     * the two tables are reset and, when the file parsed, replaced.
+     * the two tables are ensured and a complete file replaces them atomically.
      *
      * @return array{0: BaselineOutcome, 1: AuditBaseline, 2: ?int, 3: ?string}
      */
@@ -149,13 +149,12 @@ final readonly class AuditDatabase
             !$run->apply => BaselineOutcome::Planned,
             default => null,
         };
-        if ($run->apply) {
+        if ($run->apply && $outcome === null) {
             $uncreated = $this->reset($run);
             if ($uncreated !== null) {
                 $outcome = BaselineOutcome::CreateFailed;
             } elseif ($outcome === null) {
-                // Only a file that parsed reloads the two tables; a missing or
-                // unparsable one leaves them as the reset did, and says so.
+                // Only a valid complete file may replace the existing baseline.
                 $loaded = $this->baseline->replace($run->scope->target, $baseline);
                 $this->auditBaseline($run, $loaded);
                 $outcome = $loaded ? BaselineOutcome::Loaded : BaselineOutcome::LoadFailed;
@@ -163,7 +162,7 @@ final readonly class AuditDatabase
         }
         $usable = in_array($outcome, [BaselineOutcome::Loaded, BaselineOutcome::Planned], true);
 
-        // A table left empty, as a failed load left it, lists no baseline at all.
+        // Failed reads and imports cannot authorize comparison or repair.
         return [$outcome, $usable ? $baseline : AuditBaseline::empty(), $line, $uncreated];
     }
 
@@ -173,8 +172,7 @@ final readonly class AuditDatabase
         if ($uncreated !== null) {
             return $run->report(AuditMode::Load, BaselineOutcome::CreateFailed, uncreated: $uncreated);
         }
-        // Read after the reset, so the two audit tables are listed and
-        // imported empty, as SHOW TABLES listed them for the script.
+        // Read after ensuring both audit tables exist. Failed imports preserve them.
         $catalog = $this->schema->catalog($run->scope->target);
         $path = $this->baseline->dumpPath();
         if (!$run->apply) {
@@ -184,7 +182,7 @@ final readonly class AuditDatabase
         $ok = $this->baseline->import($run->scope->target, $catalog);
         $this->auditBaseline($run, $ok);
         $exported = null;
-        if ($path !== null) {
+        if ($ok && $path !== null) {
             $exported = $this->baseline->export($run->scope->target);
             $this->audit->step($run->correlation, $run->scope->actor->id, self::ACTION, $run->scope->target, 'audit-schema-export', $exported);
         }
@@ -212,7 +210,7 @@ final readonly class AuditDatabase
         return $names;
     }
 
-    /** create_tables()'s CREATE and TRUNCATE of the two audit tables: one step, whatever the file holds. */
+    /** Ensure audit tables exist without discarding the current baseline. */
     private function reset(AuditRun $run): ?string
     {
         $uncreated = $this->baseline->reset($run->scope->target);

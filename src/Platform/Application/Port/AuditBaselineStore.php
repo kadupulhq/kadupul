@@ -22,13 +22,13 @@ interface AuditBaselineStore
     public function read(): ?AuditBaseline;
 
     /**
-     * create_tables() before its load: both tables exist and are empty.
+     * Ensure both tables exist without clearing a previously valid baseline.
      *
      * @return ?string the first table that could not be created, or null
      */
     public function reset(DatabaseTarget $target): ?string;
 
-    /** What piping the file into the mysql client left behind: its own two table definitions, holding $baseline's rows. */
+    /** Atomically replace both baseline tables only after their complete rows are staged. */
     public function replace(DatabaseTarget $target, AuditBaseline $baseline): bool;
 
     /** load_audit_database(): every column and index $catalog lists, in one transaction. */
