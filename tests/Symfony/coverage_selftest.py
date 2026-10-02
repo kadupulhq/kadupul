@@ -21,6 +21,7 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'links.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -107,7 +108,6 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'script_server.php',
-        'include/themes/midwinter/update_hash.php',
         'cli/analyze_database.php',
         'src/Platform/Infrastructure/Symfony/Console/LegacyCli.php',
         'src/Platform/Infrastructure/Symfony/Console/LegacyArguments.php',

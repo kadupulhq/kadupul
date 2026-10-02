@@ -1,0 +1,25 @@
+{
+    "session": {
+        "form_change_actions": {
+            "custom_fonts": "graphSettings()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "chk",
+        "custom_fonts",
+        "row_axis_font",
+        "row_axis_size",
+        "row_custom_fonts",
+        "row_fonts",
+        "row_legend_font",
+        "row_legend_size",
+        "row_title_font",
+        "row_title_size",
+        "row_unit_font",
+        "row_unit_size"
+    ],
+    "script_names": []
+}

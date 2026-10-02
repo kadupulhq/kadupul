@@ -167,7 +167,7 @@ class MibCache
 			SET `value` = ?
 			WHERE `mib` = ?
 			AND `name` = ?',
-            array($value, $this->active_mib, $this->active_object)
+            array(is_string($value) ? str_replace(array("\r", "\n"), ' ', $value) : $value, $this->active_mib, $this->active_object)
         );
     }
 
@@ -218,7 +218,8 @@ class MibCache
 						`max-access`=VALUES(`max-access`), `value`=VALUES(`value`)',
                         array($column_params['oid'], $column_params['name'], $column_params['mib'],
                             $column_params['type'], $column_params['otype'], 'Column Data',
-                            $column_params['max-access'], trim($column_params['value']))
+                            $column_params['max-access'], str_replace(array("\r", "\n"), ' ', trim((string) $column_params['value']))
+                        )
                     );
                 }
                 return true;
@@ -389,7 +390,7 @@ class MibCache
                 foreach ($columns as $column_params) {
                     $column_params['oid'] .= '.' . $this->active_table_entry;
                     if (isset($values[$column_params['name']])) {
-                        $sql[] = '(' . db_qstr($column_params['name']) . ', ' . db_qstr($values[$column_params['name']]) . ', ' . db_qstr($column_params['oid']) . ', ' . db_qstr($column_params['mib']) . ')';
+                        $sql[] = '(' . db_qstr($column_params['name']) . ', ' . db_qstr(is_string($values[$column_params['name']]) ? str_replace(array("\r", "\n"), ' ', $values[$column_params['name']]) : $values[$column_params['name']]) . ', ' . db_qstr($column_params['oid']) . ', ' . db_qstr($column_params['mib']) . ')';
                     }
                 }
 
