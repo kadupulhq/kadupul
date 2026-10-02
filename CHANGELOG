@@ -1,3 +1,4 @@
+-issue: Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny
 Cacti CHANGELOG
 
 1.2.32
