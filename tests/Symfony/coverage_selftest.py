@@ -3,10 +3,37 @@ import argparse
 import copy
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def prepare_database_failure_reports(directory, scratch, source, mutation):
+    """Retain separate real reports and corrupt only the selected observation."""
+    if mutation not in ('unmeasured', 'stale'):
+        raise ValueError('Unknown database measurement mutation')
+    reports = [(path, json.loads(path.read_text()))
+               for path in sorted((directory / 'raw').glob('coverage-*.json'))]
+    names = {path.name for path, _ in reports}
+    if any(path.name not in names or path.is_symlink() or not path.is_file()
+           for path in (scratch / 'raw').iterdir()):
+        raise RuntimeError('Unexpected scratch coverage reports')
+    if not any(1 in (report['files'] or {}).get(source, {}).get('lines', {}).values()
+               for _, report in reports):
+        raise RuntimeError('Self-test requires real database-session authentication measurements')
+    for path, report in reports:
+        destination = scratch / 'raw' / path.name
+        shutil.copyfile(path, destination)
+        observation = (report['files'] or {}).get(source)
+        if observation is None:
+            continue
+        if mutation == 'unmeasured':
+            observation['lines'] = {line: -1 for line in observation['lines']}
+        else:
+            observation['sha256'] = '0' * 64
+        destination.write_text(json.dumps(report))
 
 
 def main():
@@ -342,24 +369,8 @@ def main():
             print('PASS ' + case, flush=True)
 
     database_manifest = json.loads((args.database / 'observations.json').read_text())
-    database_measured = {'php': '', 'files': {}}
-    for path in (args.database / 'raw').glob('coverage-*.json'):
-        report = json.loads(path.read_text())
-        database_measured['php'] = report['php']
-        for source, observation in (report['files'] or {}).items():
-            if source not in database_measured['files']:
-                database_measured['files'][source] = copy.deepcopy(observation)
-            else:
-                existing = database_measured['files'][source]
-                if existing['sha256'] != observation['sha256']:
-                    raise RuntimeError('Conflicting real database source measurements')
-                for line, hit in observation['lines'].items():
-                    existing['lines'][line] = max(existing['lines'].get(line, -1), hit)
     database_paths = [prefix + 'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
                       for name in ('AuthenticationDatabaseSessionHandler', 'ReadOnlyDatabaseSessionHandler')]
-    for source in database_paths:
-        if 1 not in database_measured['files'].get(source, {}).get('lines', {}).values():
-            raise RuntimeError('Self-test requires real database-session authentication measurements')
     with tempfile.TemporaryDirectory(prefix='symfony-database-authentication-negative-') as directory:
         scratch = Path(directory)
         (scratch / 'raw').mkdir()
@@ -367,15 +378,11 @@ def main():
         (scratch / 'observations.json').write_text(json.dumps(database_manifest))
         for source in database_paths:
             for mutation in ('unmeasured', 'stale'):
-                data = copy.deepcopy(database_measured)
-                observation = data['files'][source]
+                prepare_database_failure_reports(args.database, scratch, source, mutation)
                 if mutation == 'unmeasured':
-                    observation['lines'] = {line: -1 for line in observation['lines']}
                     expected = 'Missing measured execution: ' + source.removeprefix(prefix)
                 else:
-                    observation['sha256'] = '0' * 64
                     expected = 'Covered source differs'
-                (scratch / 'raw/coverage-probe.json').write_text(json.dumps(data))
                 output.write_text('previous report')
                 result = subprocess.run([args.php, str(ROOT / 'tests/Symfony/merge_coverage.php'),
                                          str(args.unit.resolve()), str(args.files.resolve()),
