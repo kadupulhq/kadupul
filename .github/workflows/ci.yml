@@ -293,6 +293,10 @@ jobs:
         working-directory: tests
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
 
+      - name: Verify token entropy failure and native identifiers
+        working-directory: tests
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/GenerateHashFailsClosedTest.php --colors=never
+
       - name: Exercise production CSV paths
         working-directory: tests
         # The old Pest runner emits dependency deprecations on PHP 8.4. The
