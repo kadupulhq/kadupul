@@ -83,6 +83,9 @@ jobs:
       - name: Build browser assets for compatibility tests
         run: npm ci --ignore-scripts && npm run build
 
+      - name: Compile installed browser assets for CLI coverage
+        run: php bin/console asset-map:compile --env=prod --no-debug
+
       - name: Symfony module coverage
         env:
           KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
