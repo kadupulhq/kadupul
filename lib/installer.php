@@ -3313,7 +3313,7 @@ class Installer implements JsonSerializable
     }
 
     /** Confirm the final marker without destroying a failed upgrade's retry state. */
-    private function recordInstalledVersion(): bool
+    public static function recordInstalledVersion(): bool
     {
         global $database_sessions, $database_hostname, $database_port, $database_default;
         $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;

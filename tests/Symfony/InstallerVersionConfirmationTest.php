@@ -4,21 +4,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
-use InstallerVersionConfirmationFixtureSpace\InstallerVersionConfirmationFixture;
 
-use const InstallerVersionConfirmationFixtureSpace\CACTI_VERSION;
-
-require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
-if (!class_exists(InstallerVersionConfirmationFixture::class, false)) {
-    eval('namespace InstallerVersionConfirmationFixtureSpace; use PDO; use RuntimeException; use Throwable; const CACTI_VERSION = '
-        . var_export(trim(file_get_contents(dirname(__DIR__, 2) . '/include/cacti_version')), true)
-        . '; final class InstallerVersionConfirmationFixture {' . test_php_function_source(
-            file_get_contents(dirname(__DIR__, 2) . '/lib/installer.php'),
-            'recordInstalledVersion'
-        ) . '}');
-}
-
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 final class InstallerVersionConfirmationTest extends TestCase
 {
     private PDO $database;
@@ -26,6 +17,10 @@ final class InstallerVersionConfirmationTest extends TestCase
 
     protected function setUp(): void
     {
+        // Exercise the actual shared public writer, isolating its legacy class
+        // and release constant from other kernel/legacy bootstrap test cases.
+        define('CACTI_VERSION', trim(file_get_contents(dirname(__DIR__, 2) . '/include/cacti_version')));
+        require_once dirname(__DIR__, 2) . '/lib/installer.php';
         $this->previousGlobals = [];
         foreach (['database_sessions', 'database_hostname', 'database_port', 'database_default'] as $key) {
             $this->previousGlobals[$key] = [array_key_exists($key, $GLOBALS), $GLOBALS[$key] ?? null];
@@ -54,7 +49,7 @@ final class InstallerVersionConfirmationTest extends TestCase
 
     private function confirm(): bool
     {
-        return (new InstallerVersionConfirmationFixture())->recordInstalledVersion();
+        return Installer::recordInstalledVersion();
     }
 
     private function versions(): array

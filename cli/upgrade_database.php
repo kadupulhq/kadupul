@@ -103,6 +103,14 @@ if ($check_rrd_storage && $migrate_poller_queue) {
     exit(1);
 }
 
+// A collector's primary connection does not establish a primary installer
+// identity. Preserve explicit local/offline and poller-queue maintenance modes.
+if (!$check_rrd_storage && !$migrate_poller_queue && !$local
+    && (int) ($config['poller_id'] ?? 1) > 1 && ($config['connection'] ?? 'online') === 'online') {
+    fwrite(STDERR, "Run schema upgrades from the primary collector; use --local only for this collector's own database.\n");
+    exit(1);
+}
+
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
 // Collectors hand samples to the main poller unless forced to write local RRD files.
 $storage_error = ($migrate_poller_queue || (!$check_rrd_storage && (int) ($config['poller_id'] ?? 1) > 1
@@ -248,7 +256,15 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
         }
     }
 
-    db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version));
+    if (CACTI_VERSION == $cacti_upgrade_version) {
+        require_once __DIR__ . '/../lib/installer.php';
+        if (!Installer::recordInstalledVersion()) {
+            fwrite(STDERR, "The final database version could not be confirmed; no successful upgrade was reported. Review the version table and database privileges before retrying.\n");
+            exit(1);
+        }
+    } else {
+        db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version));
+    }
 
     if (CACTI_VERSION == $cacti_upgrade_version) {
         break;

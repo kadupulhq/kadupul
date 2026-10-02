@@ -30,6 +30,12 @@ CASES = (
     ('web', 'web_installer', (), True),
     ('failure_upgrade_web', 'web_installer', ('failure-upgrade',), True),
     ('failure_cli', 'installer_failure', (), True),
+    ('cli_collector_online', 'cli_confirmation', ('collector-online',), True),
+    ('cli_collector_local', 'cli_confirmation', ('collector-local',), True),
+    ('cli_collector_offline', 'cli_confirmation', ('collector-offline',), True),
+    ('cli_marker_refusal', 'cli_confirmation', ('marker-refusal',), True),
+    ('cli_marker_coercion', 'cli_confirmation', ('marker-coercion',), True),
+    ('cli_marker_success', 'cli_confirmation', ('marker-success',), True),
 )
 
 

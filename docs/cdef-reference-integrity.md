@@ -32,6 +32,8 @@ Conflicting operator triggers, incompatible named indexes, temporary table shado
 
 This contract is primary-only. Collectors do not replicate CDEF parents, so installing these guards on their replicated graph item tables would break legitimate collector synchronization. The explicit CLI operation rejects a collector configuration instead of switching its connection to the primary.
 
+Normal schema upgrades also refuse an online collector's primary target before running migrations. Run that operation from the primary collector. An explicit `--local` upgrade and an offline collector continue to upgrade only their own database; poller-queue maintenance options retain their existing target selection.
+
 ## Runtime access and deletion
 
 The installer verifies `kadupul_cdef_reference_status`, a no-argument `SQL SECURITY DEFINER READS SQL DATA` procedure. The ordinary runtime identity needs its normal table access and scoped EXECUTE permission on that procedure; it does not need installer TRIGGER or CREATE ROUTINE privileges. The procedure checks the exact native guards and usable indexes. Runtime also checks accessible procedure properties and the connection's actual persistent tables, refusing temporary shadows. A settings flag cannot substitute for these checks.
@@ -56,7 +58,7 @@ Aggregate cache replacement checks the actual selected connection and persistent
 
 A stale browser Step 97 poll preserves a persisted failed Step 99 and its error instead of silently starting another background upgrade. A normal authenticated reload still starts the existing retry wizard. Constructor regressions cover failed polling, healthy polling, a wizard that has not started, and an explicit new-wizard request.
 
-The runner requires fourteen native probes, including the production cache replacement and final marker writers. Its web failure/retry case starts at version 1.2.33, uses normal local authentication and rendered CSRF, reaches a genuine background contract failure, confirms the old marker, repairs only the fixture orphan, and completes the normal authenticated retry. Cache races use two real connections under READ COMMITTED and REPEATABLE READ and confirm a server lock wait before releasing the deleting actor.
+The runner requires twenty native probes, including the production cache replacement and final marker writers. Six CLI cases cover an online collector refusal, admitted local/offline collector upgrades, native final-write refusal, coerced readback with rollback/retry, and a successful primary upgrade. The standalone CLI shares the Installer's checked final marker writer. Its web failure/retry case starts at version 1.2.33, uses normal local authentication and rendered CSRF, reaches a genuine background contract failure, confirms the old marker, repairs only the fixture orphan, and completes the normal authenticated retry. Cache races use two real connections under READ COMMITTED and REPEATABLE READ and confirm a server lock wait before releasing the deleting actor.
 
 ## Gettext compatibility generation
 
