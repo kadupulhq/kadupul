@@ -1041,8 +1041,8 @@ function create_tables($load = true)
                 ' -p' . cacti_escapeshellarg($database_password) .
                 ' -h' . cacti_escapeshellarg($database_hostname) .
                 ' -P' . cacti_escapeshellarg($database_port) .
-                ' ' . $database_default .
-                ' < ' . $config['base_path'] . '/docs/audit_schema.sql', $output, $error);
+                ' ' . cacti_escapeshellarg($database_default) .
+                ' < ' . cacti_escapeshellarg($config['base_path'] . '/docs/audit_schema.sql'), $output, $error);
 
             if ($error == 0) {
                 print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
