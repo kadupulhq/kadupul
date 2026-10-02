@@ -121,7 +121,7 @@ function loadMidwinter(options = {}) {
 		const promise = {
 			done(fn) {
 				if (ok) {
-					fn('', 'success');
+					fn('', options.scriptStatus || 'success');
 				}
 
 				return promise;
@@ -348,4 +348,16 @@ test('a system colour change follows the OS only while auto mode is on', () => {
 
 	assert.equal(harness.attributes.get('data-theme-color'), 'dark');
 	assert.equal(harness.calls.graphs, graphsAfterSetup + 1);
+});
+
+
+test('cache revalidation binds hotkeys once and preserves one shortcut action', () => {
+	const harness = loadMidwinter({ scriptStatus: 'notmodified' });
+	harness.context.setHotKeys();
+	harness.context.setHotKeys();
+	harness.context.setHotKeys();
+	assert.equal(harness.documentListeners.count('keydown'), 1);
+	assert.equal(harness.calls.scripts.filter((url) => url.endsWith(hotkeysPath)).length, 1);
+	press(harness, 67, 84);
+	assert.deepEqual(harness.calls.pages, ['/cacti/graph_view.php?action=tree']);
 });

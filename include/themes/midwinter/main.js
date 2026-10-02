@@ -963,7 +963,7 @@ function setHotKeys() {
 	themeHotkeysBound = true;
 
 	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/hotkeys/hotkeys.js').done(function (script, textStatus) {
-		if (textStatus === 'success') {
+		if (textStatus === 'success' || textStatus === 'notmodified') {
 			hotkeys('SHIFT+c,c+t,c+l,c+p,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
 				event.preventDefault();
 				switch (handler.key) {
