@@ -303,13 +303,18 @@ if (cacti_sizeof($parms)) {
 		}
 
 		if ($parentNode > 0) {
-			$parentNodeExists = db_fetch_cell_prepared("SELECT id
+			$parent = db_fetch_row_prepared('SELECT title, local_graph_id, host_id, site_id
 				FROM graph_tree_items
-				WHERE graph_tree_id = ?
-				AND id = ?", array((int) $treeId, (int) $parentNode));
+				WHERE graph_tree_id = ? AND id = ?', array((int) $treeId, (int) $parentNode));
 
-			if ($parentNodeExists === false) {
-				print "ERROR: parent-node $parentNode does not exist\n";
+			if (!cacti_sizeof($parent)) {
+				fwrite(STDERR, "ERROR: parent-node $parentNode does not exist in tree $treeId.\n");
+				exit(1);
+			}
+
+			if ($parent['title'] === '' || $parent['title'] === null
+				|| $parent['local_graph_id'] > 0 || $parent['host_id'] > 0 || $parent['site_id'] > 0) {
+				fwrite(STDERR, "ERROR: parent-node $parentNode is not a header in tree $treeId.\n");
 				exit(1);
 			}
 		}
