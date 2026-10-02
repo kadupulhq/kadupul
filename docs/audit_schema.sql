@@ -787,7 +787,7 @@ INSERT INTO `table_columns` VALUES ('processes',3,'tasktype','varchar(20)','NO',
 INSERT INTO `table_columns` VALUES ('processes',4,'taskname','varchar(40)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('processes',5,'taskid','int(10) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('processes',6,'timeout','int(10) unsigned','YES','','300','',NULL);
-INSERT INTO `table_columns` VALUES ('processes',7,'started','timestamp','NO','','current_timestamp()','1',NULL);
+INSERT INTO `table_columns` VALUES ('processes',7,'started','timestamp','NO','','current_timestamp()','',NULL);
 INSERT INTO `table_columns` VALUES ('processes',8,'last_update','timestamp','NO','','0000-00-00 00:00:00','',NULL);
 INSERT INTO `table_columns` VALUES ('reports',1,'id','mediumint(8) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('reports',2,'user_id','mediumint(8) unsigned','NO','','0','',NULL);
@@ -839,7 +839,7 @@ INSERT INTO `table_columns` VALUES ('sessions',3,'access','int(10) unsigned','YE
 INSERT INTO `table_columns` VALUES ('sessions',4,'data','mediumblob','YES','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('sessions',5,'user_id','int(10) unsigned','NO','','0','',NULL);
 INSERT INTO `table_columns` VALUES ('sessions',6,'user_agent','varchar(128)','NO','','','','utf8mb4_unicode_ci');
-INSERT INTO `table_columns` VALUES ('sessions',7,'start_time','timestamp','NO','','current_timestamp()','1',NULL);
+INSERT INTO `table_columns` VALUES ('sessions',7,'start_time','timestamp','NO','','current_timestamp()','',NULL);
 INSERT INTO `table_columns` VALUES ('sessions',8,'transactions','int(10) unsigned','NO','','1','',NULL);
 INSERT INTO `table_columns` VALUES ('settings',1,'name','varchar(255)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('settings',2,'value','varchar(4096)','NO','','','','utf8mb4_unicode_ci');
@@ -990,7 +990,7 @@ INSERT INTO `table_columns` VALUES ('user_auth',25,'reset_perms','int(10) unsign
 INSERT INTO `table_columns` VALUES ('user_auth_cache',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_cache',2,'user_id','int(10) unsigned','NO','MUL','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_cache',3,'hostname','varchar(100)','NO','MUL','','','utf8mb4_unicode_ci');
-INSERT INTO `table_columns` VALUES ('user_auth_cache',4,'last_update','timestamp','NO','MUL','current_timestamp()','1',NULL);
+INSERT INTO `table_columns` VALUES ('user_auth_cache',4,'last_update','timestamp','NO','MUL','current_timestamp()','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_cache',5,'token','varchar(191)','NO','UNI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_group',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group',2,'name','varchar(20)','NO','',NULL,'','utf8mb4_unicode_ci');
@@ -1021,7 +1021,7 @@ INSERT INTO `table_columns` VALUES ('user_auth_row_cache',1,'user_id','mediumint
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',2,'class','varchar(20)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',3,'hash','varchar(32)','NO','PRI','0','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',4,'total_rows','int(10) unsigned','NO','','0','',NULL);
-INSERT INTO `table_columns` VALUES ('user_auth_row_cache',5,'time','timestamp','NO','','current_timestamp()','1',NULL);
+INSERT INTO `table_columns` VALUES ('user_auth_row_cache',5,'time','timestamp','NO','','current_timestamp()','',NULL);
 INSERT INTO `table_columns` VALUES ('user_domains',1,'domain_id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('user_domains',2,'domain_name','varchar(20)','NO','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_domains',3,'type','int(10) unsigned','NO','','0','',NULL);
