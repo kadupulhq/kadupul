@@ -520,7 +520,7 @@ function perm_remove()
         $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     }
 
-    if ($removed) {
+    if ($removed && db_affected_rows() > 0) {
         reset_group_perms(get_request_var('group_id'));
     }
 

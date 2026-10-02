@@ -621,7 +621,7 @@ function perm_remove()
         );
     }
 
-    if ($removed) {
+    if ($removed && db_affected_rows() > 0) {
         reset_user_perms(get_request_var('user_id'));
     }
 

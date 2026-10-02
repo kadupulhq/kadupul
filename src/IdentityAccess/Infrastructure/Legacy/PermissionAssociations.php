@@ -38,6 +38,10 @@ final class PermissionAssociations
                     $parameters[] = $type;
                 }
                 $written = db_execute_prepared($sql, $parameters);
+                // A DELETE that matches nothing still returns true. Only a removed row changes grants.
+                if ($written && strncmp($sql, 'DELETE', 6) === 0) {
+                    $written = db_affected_rows() > 0;
+                }
                 $changed = $written || $changed;
                 if ($written && $group && $type === 0) {
                     reset_user_perms((int) $matches[1]);
