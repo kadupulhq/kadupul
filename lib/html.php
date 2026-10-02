@@ -1753,7 +1753,7 @@ function draw_actions_dropdown($actions_array, $delete_action = 1)
 /*
  * Deprecated functions
  */
-function DrawMatrixHeaderItem($matrix_name, $matrix_text_color, $column_span = 1)
+function drawMatrixHeaderItem($matrix_name, $matrix_text_color, $column_span = 1)
 {
     ?>
 	<th style='height:1px;' colspan='<?php print $column_span;?>'>
