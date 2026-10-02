@@ -43,6 +43,38 @@ if (cacti_sizeof($parms)) {
     }
 }
 
+if (empty($config['path_csrf_secret']) && ($config['poller_id'] ?? 1) != 1) {
+    print "FATAL: Run database CSRF rotation on the primary Data Collector." . PHP_EOL;
+    exit(1);
+}
+
+if (empty($config['path_csrf_secret']) && empty($GLOBALS['cacti_csrf_rotation_worker'])) {
+    require_once(__DIR__ . '/../lib/csrf_rotation.php');
+    $worker = null;
+    try {
+        $worker = new \Symfony\Component\Process\Process(array(
+            PHP_BINARY,
+            '-r',
+            '$GLOBALS["cacti_csrf_rotation_worker"] = true; $_SERVER["argv"] = array($argv[1]); require $argv[1];',
+            __FILE__,
+        ));
+        $worker->setTimeout(30);
+        exit($worker->run(static function (string $type, string $output): void {
+            fwrite($type === \Symfony\Component\Process\Process::ERR ? STDERR : STDOUT, $output);
+        }));
+    } catch (\Throwable $error) {
+        if ($worker !== null) {
+            try {
+                $worker->stop(0);
+            } catch (\Throwable $stop_error) {
+                // Failure to stop must never become a successful CLI outcome.
+            }
+        }
+        print "FATAL: Database CSRF rotation worker failed or exceeded its deadline." . PHP_EOL;
+        exit(1);
+    }
+}
+
 /* issue warnings and start message if applicable */
 print "NOTE: Updating csrf_secret file with new information" . PHP_EOL;
 
@@ -52,13 +84,27 @@ $new_secret = bin2hex(random_bytes(32));
 // Web requests read the secret from $path_csrf_secret when it is set, and
 // otherwise from the database; they no longer read the file under include/.
 if (empty($config['path_csrf_secret'])) {
-    if (set_config_option('csrf_secret', $new_secret, true) === false) {
-        print "FATAL: CSRF secret rotation could not be stored or propagated to every active collector." . PHP_EOL;
-        exit(1);
+    $rotated = false;
+    try {
+        require_once(__DIR__ . '/../lib/csrf_rotation.php');
+        $primary = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+        $rotated = $primary instanceof \PDO && cacti_rotate_database_csrf_secret(
+            $primary,
+            $new_secret,
+            (int) read_config_option('poller_interval') * 2,
+            'poller_connect_to_remote',
+            static function (int $id, bool $stale): void {
+                raise_message('poller_' . $id, $stale
+                    ? __('Settings save to Data Collector %d skipped due to heartbeat.', $id)
+                    : __('Settings save to Data Collector %d Failed.', $id), $stale ? MESSAGE_LEVEL_WARN : MESSAGE_LEVEL_ERROR);
+            }
+        );
+    } catch (\Throwable $error) {
+        // Database diagnostics can contain credentials; keep the CLI generic.
+        $rotated = false;
     }
-
-    if (read_config_option('csrf_secret', true) !== $new_secret) {
-        print "FATAL: Unable to store the new CSRF secret in the database." . PHP_EOL;
+    if (!$rotated) {
+        print "FATAL: CSRF secret rotation could not be stored or propagated to every active collector." . PHP_EOL;
         exit(1);
     }
 

@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Serialize database CSRF rotations on the primary and each collector, verify persisted keys, and bound the CLI worker to 30 seconds. Run database rotation on the primary collector; external-file rotation remains available on remote collectors.
+
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
 
