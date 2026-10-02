@@ -223,6 +223,7 @@ dynamic_include	./cli/rebuild_poller_cache.php:20	require_once($config['base_pat
 dynamic_include	./cli/rebuild_poller_cache.php:21	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/refresh_csrf.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/refresh_csrf.php:12	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/refresh_csrf.php:58	            '$GLOBALS["cacti_csrf_rotation_worker"] = true; $_SERVER["argv"] = array($argv[1]); require $argv[1];',
 dynamic_include	./cli/remove_broken_graphs.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./cli/remove_broken_graphs.php:11	require_once($config['base_path'] . '/lib/api_graph.php');
 dynamic_include	./cli/remove_device.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
@@ -536,7 +537,7 @@ fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosem
 fs_write	./cli/import_template.php:105				$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/input_whitelist.php:171			file_put_contents($config['input_whitelist'], json_encode($input));
 fs_write	./cli/md5sum.php:163		if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-fs_write	./cli/refresh_csrf.php:105	            && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
+fs_write	./cli/refresh_csrf.php:151	            && file_put_contents($temporary, $contents, LOCK_EX) === strlen($contents)
 fs_write	./cli/splice_rrd.php:268		$handle = fopen($xmlfile, 'x');
 fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:339	file_put_contents($newxmlfile, $new_xml);
