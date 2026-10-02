@@ -12,6 +12,7 @@ $directory = $argv[1];
 if (isset($argv[2])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('THEME_SELECTION_TEST_COVERAGE', 1);
+    define('PHP80_STRING_NATIVE_TEST_COVERAGE', 1);
     require __DIR__ . '/rrd-process-coverage.php';
 }
 require $root . '/include/global_constants.php';
@@ -102,4 +103,9 @@ foreach (['ERROR: failure', 'WARNING: warning', 'STATS: stats', 'NOTICE: notice'
     cacti_log($line, false, 'NATIVE');
 }
 $result['syslog'] = $native_syslog;
-file_put_contents($directory . '/result.json', json_encode($result, JSON_THROW_ON_ERROR));
+$encodedResult = json_encode($result, JSON_THROW_ON_ERROR);
+if (file_put_contents($directory . '/result.json', $encodedResult) !== strlen($encodedResult)
+    || file_get_contents($directory . '/result.json') !== $encodedResult) {
+    throw new RuntimeException('Native result persistence was not confirmed');
+}
+define('NATIVE_COVERAGE_COMPLETED', ['native-result-persisted']);
