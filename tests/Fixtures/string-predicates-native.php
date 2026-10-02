@@ -70,6 +70,8 @@ $result['runtime_regex_probe'] = [@preg_match("'(*NO_JIT)(?R)'", ''), preg_last_
 define('IN_CACTI_INSTALL', true);
 error_clear_last();
 $result['runtime_regex'] = validate_is_regex('(*NO_JIT)(?R)');
+$result['bounded_regex'] = validate_is_regex('(*NO_JIT)(*NO_START_OPT)(?:a?|b?){14}c');
+$result['regex_limits_unchanged'] = [ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit')];
 // Compilation warnings belong to this probe even after a real PCRE runtime failure.
 $result['regex_compile_after_runtime'] = validate_is_regex("abc'z");
 @trigger_error('unrelated previous warning', E_USER_WARNING);
@@ -122,6 +124,25 @@ try {
 } finally {
     fclose($listener);
 }
+
+// Non-Unix configured branches must leave the actual process identity untouched.
+$identity = function_exists('posix_geteuid') ? posix_geteuid() : null;
+$config['cacti_server_os'] = 'win32';
+$result['native_portable_uid'] = [$ping->seteuid(), $ping->setuid(0), function_exists('posix_geteuid') ? posix_geteuid() === $identity : true];
+$config['cacti_server_os'] = 'unix';
+
+// Complete configured SNMP adapter rejects missing v2 credentials before I/O.
+$config['php_snmp_support'] = false;
+$config['include_path'] = $root . '/include';
+$config['config_options_array']['max_get_size'] = 10;
+$config['config_options_array']['oid_increasing_check_disable'] = '';
+require $root . '/lib/snmp.php';
+$ping->host = ['hostname' => '127.0.0.1', 'snmp_community' => '', 'snmp_version' => '2',
+    'snmp_username' => '', 'snmp_password' => '', 'snmp_auth_protocol' => '', 'snmp_priv_passphrase' => '',
+    'snmp_priv_protocol' => '', 'snmp_context' => '', 'snmp_engine_id' => '', 'snmp_port' => 161, 'snmp_timeout' => 1];
+$ping->retries = 0;
+$ping->avail_method = AVAIL_SNMP;
+$result['native_snmp_missing_credentials'] = [$ping->ping_snmp(), $ping->snmp_status, $ping->snmp_response];
 
 // Complete LDAP module: real handler/session restoration and pre-network rejection.
 require $root . '/lib/ldap.php';
@@ -201,4 +222,12 @@ clearstatcache();
 foreach ($sources as $path => $contents) {
     $result['replicated'][$path] = [file_get_contents($directory . '/' . $path) === $contents, fileperms($directory . '/' . $path) & 0777];
 }
-file_put_contents($directory . '/result.json', json_encode($result, JSON_THROW_ON_ERROR));
+require_once $root . '/tests/Helpers/PredicateNativeEvidence.php';
+$resultJson = json_encode($result, JSON_THROW_ON_ERROR);
+if (file_put_contents($directory . '/result.json', $resultJson) !== strlen($resultJson)) {
+    throw new RuntimeException('Could not preserve predicate assertions');
+}
+$receiptJson = json_encode(PredicateNativeEvidence::capture($root, $resultJson), JSON_THROW_ON_ERROR);
+if (file_put_contents($directory . '/evidence.json', $receiptJson) !== strlen($receiptJson)) {
+    throw new RuntimeException('Could not preserve predicate source evidence');
+}

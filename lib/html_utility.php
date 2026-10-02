@@ -1256,7 +1256,9 @@ function validate_is_regex($regex): bool|string
         return is_callable($previous_handler) ? $previous_handler($severity, $message, $file, $line) : false;
     });
     try {
-        $result = @preg_match("'" . $regex . "'", '');
+        // Probe only a fixed empty subject with limits the pattern cannot raise.
+        // Keep request-wide PCRE configuration unchanged for subsequent callers.
+        $result = @preg_match("'(*NO_JIT)(*LIMIT_MATCH=10000)(*LIMIT_DEPTH=100)(*LIMIT_HEAP=1024)" . $regex . "'", '');
         $error = preg_last_error();
         $error_message = preg_last_error_msg();
     } finally {

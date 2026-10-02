@@ -196,8 +196,23 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
             $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
             $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
         }
-        if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
+        $serializedCoverage = serialize($childCoverage);
+        if (file_put_contents($childCoverageFile, $serializedCoverage) !== strlen($serializedCoverage)) {
             throw new RuntimeException('Unable to preserve child process coverage');
+        }
+        if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+            $root = dirname(__DIR__, 2);
+            require_once $root . '/tests/Helpers/PredicateNativeEvidence.php';
+            $result = file_get_contents(RRD_TEST_COVERAGE_DIRECTORY . '/result.json');
+            if ($result === false) {
+                throw new RuntimeException('Predicate coverage assertions missing');
+            }
+            $receipt = PredicateNativeEvidence::capture($root, $result);
+            $receipt['artifact'] = hash('sha256', $serializedCoverage);
+            $json = json_encode($receipt, JSON_THROW_ON_ERROR);
+            if (file_put_contents($childCoverageFile . '.json', $json) !== strlen($json)) {
+                throw new RuntimeException('Predicate coverage evidence missing');
+            }
         }
     });
 });
