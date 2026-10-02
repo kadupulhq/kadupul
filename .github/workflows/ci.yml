@@ -355,15 +355,15 @@ jobs:
           mise link "php@$fixture_php_version" "$RUNNER_TEMP/offline-fixture-php"
           echo "KADUPUL_OFFLINE_FIXTURE_PHP_VERSION=$fixture_php_version" >> "$GITHUB_ENV"
       - name: Verify observation normalization and failure reporting
-        run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/selftest.py
       - name: Verify offline build runtime selection
-        run: mise exec node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
       - name: Verify offline guest fixture mutations
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
       - name: Restore pinned compatibility libraries
-        run: php tools/dependencies/install-legacy.php
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" -- php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters
-        run: mise exec python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py
       # This exercises runtime invariants without claiming parity with upstream.
       # Observations are ephemeral CI artifacts; committed goldens stay untouched.
       - name: Load PHP base image for runtime provenance
@@ -371,15 +371,15 @@ jobs:
       - name: Exercise fresh install, authentication and collection
         env:
           PHP_VERSION: '8.4'
-        run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
       - name: Verify External Links through HTTP and MariaDB
-        run: mise exec python@3.12.12 -- python tests/Symfony/link_review_http.py
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/link_review_http.py
       - name: Verify the actual CLI upgrades an installed LTS database version
-        run: mise exec python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
       - name: Refuse forbidden access at every entry point
         run: |
-          mise exec python@3.12.12 -- python tests/security/test_entry_route_samples.py
-          mise exec python@3.12.12 -- python tests/security/entry_point_authorization.py
+          mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/security/test_entry_route_samples.py
+          mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/security/entry_point_authorization.py
       - name: Upload observations
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
