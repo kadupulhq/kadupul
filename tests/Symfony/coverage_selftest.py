@@ -57,6 +57,14 @@ def main():
         'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
         'links.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'color.php',
+        'src/Graphing/Domain/PaletteCsv.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorStore.php',
+        'src/Graphing/Infrastructure/Legacy/PaletteSql.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorPreferences.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorCsvController.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorEditController.php',
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
@@ -205,8 +213,28 @@ def main():
     failures = {
         'data-source-profile-test-hash': 'Integration test source differs',
         'about-authentication-test-hash': 'Integration test source differs',
+        'missing-data-source-profile-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'palette-test-hash': 'Integration test source differs',
+        'missing-palette-handoff-check': 'Incomplete Symfony integration',
+        'missing-palette-concurrent-auth': 'Incomplete Symfony integration',
+        'missing-palette-write-guards': 'Incomplete Symfony integration',
+        'missing-palette-persistent-storage': 'Incomplete Symfony integration',
+        'missing-palette-preference-guards': 'Incomplete Symfony integration',
+        'missing-links-locale-restoration': 'Incomplete Symfony integration',
+        'missing-palette-unicode-labels': 'Incomplete Symfony integration',
+        'missing-palette-review-check-0': 'Incomplete Symfony integration',
+        'missing-palette-review-check-1': 'Incomplete Symfony integration',
+        'missing-palette-review-check-2': 'Incomplete Symfony integration',
+        'missing-palette-review-check-3': 'Incomplete Symfony integration',
+        'missing-palette-review-check-4': 'Incomplete Symfony integration',
+        'missing-palette-review-check-5': 'Incomplete Symfony integration',
+        'missing-palette-review-check-6': 'Incomplete Symfony integration',
+        'missing-palette-review-check-7': 'Incomplete Symfony integration',
+        'missing-palette-review-check-8': 'Incomplete Symfony integration',
+        'palette-sql-probe-hash': 'Integration test source differs',
+
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -254,6 +282,8 @@ def main():
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
     }
+    for index in range(3):
+        failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -278,6 +308,33 @@ def main():
             elif case.startswith('missing-about-authentication-check-'):
                 missing = about_authentication_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case == 'missing-palette-handoff-check':
+                evidence['checks'].remove('CSV exact name data handoff')
+            elif case.startswith('missing-palette-review-check-'):
+                required_palette_checks = ['silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes', 'duplicate hex creation is a known validation failure after rollback', 'duplicate hex edit is a known validation failure after rollback', 'duplicate hex edit preserves the original name and hex', 'unnamed palette color has a visible edit link and accessible hex label', 'palette exports neutralize formulas and preserve exact versioned roundtrip names', 'unsupported or malformed palette literal marker rejects the whole import', 'ordinary legacy CSV import preserves its leading apostrophe literally', 'console-only palette account cannot parse or mutate any route']
+                missing = required_palette_checks[int(case.removeprefix('missing-palette-review-check-'))]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-palette-selection-check-'):
+                checks = ['palette large pages keep all rows readable but enable at most 100 deletable choices', 'palette 100-color confirmation preserves every selected identity and revision', 'palette forged 101-color selection is refused before mutation']
+                evidence['checks'].remove(checks[int(case.removeprefix('missing-palette-selection-check-'))])
+            elif case == 'missing-palette-persistent-storage':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'palette writes and preferences reject all InnoDB temporary shadows without changing persistent observer rows']
+            elif case == 'missing-palette-write-guards':
+                evidence['checks'].remove('palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
+            elif case == 'missing-palette-unicode-labels':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'palette Unicode invisible names use accessible hex labels while visible names and CSV bytes remain exact']
+            elif case == 'missing-links-locale-restoration':
+                evidence['checks'].remove('links French fixture restores exact original global and actor language settings')
+            elif case == 'missing-palette-preference-guards':
+                evidence['checks'].remove('palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
+            elif case == 'missing-palette-concurrent-auth':
+                evidence['checks'].remove('two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
+            elif case == 'palette-sql-probe-hash':
+                evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
+            elif case == 'palette-test-hash':
+                evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
+            elif case == 'missing-data-source-profile-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/data_source_profile_scenarios.py')
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'details-test-hash':

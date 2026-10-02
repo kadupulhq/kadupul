@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'data_source_profile_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'data_source_profile_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -56,6 +56,27 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'About replacement remembered token establishes a fresh native session',
         'About restored remembered session refuses a disabled account',
         'About requires login without console realm 8', 'About version and beta are escaped without legacy bootstrap',
+        'quoted newline CSV upload succeeds', 'CSV exact name data handoff',
+        'links French fixture restores exact original global and actor language settings',
+        'palette large pages keep all rows readable but enable at most 100 deletable choices',
+        'palette 100-color confirmation preserves every selected identity and revision',
+        'palette forged 101-color selection is refused before mutation',
+        'silent palette SQL failures preserve rows and refuse false saves imports and dependency deletes',
+        'palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work',
+        'palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit',
+        'palette writes and preferences reject all InnoDB temporary shadows without changing persistent observer rows',
+        'two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect',
+        'duplicate hex creation is a known validation failure after rollback',
+        'duplicate hex edit is a known validation failure after rollback',
+        'duplicate hex edit preserves the original name and hex',
+        'unnamed palette color has a visible edit link and accessible hex label',
+        'palette Unicode invisible names use accessible hex labels while visible names and CSV bytes remain exact',
+        'palette exports neutralize formulas and preserve exact versioned roundtrip names',
+        'unsupported or malformed palette literal marker rejects the whole import',
+        'ordinary legacy CSV import preserves its leading apostrophe literally',
+        'console-only palette account cannot parse or mutate any route',
+
+        'transaction rollback restores prior import updates', 'missing palette realm rejected',
         'links deletion cleans direct and group realms', 'links stale reorder rejected', 'links grant deletion failure rolls back link deletion',
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',
@@ -176,7 +197,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'about.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'about.php', 'color.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -208,8 +229,19 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'about.php', 'src/Platform/Infrastructure/Symfony/Controller/AboutController.php',
         'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
-        'bin/legacy-device-edit.php', 'links.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'color.php',
+        'src/Graphing/Domain/PaletteCsv.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorStore.php',
+        'src/Graphing/Infrastructure/Legacy/PaletteSql.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorPreferences.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorCsvController.php',
+        'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorEditController.php',
+        'bin/legacy-device-edit.php',
         'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'links.php',
+        'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',

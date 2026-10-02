@@ -25,8 +25,8 @@ def check(condition, message):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--database-sessions', action='store_true')
-    parser.add_argument('--project', default='kadupul-symfony-auth')
     parser.add_argument('--coverage-output', type=Path)
+    parser.add_argument('--project', default='kadupul-symfony-auth')
     args = parser.parse_args()
     database_sessions = args.database_sessions
     harness = Harness(SimpleNamespace(project=args.project, target='symfony-auth'))
@@ -120,6 +120,8 @@ def main():
         verify_site_lifecycle(harness, session, user_id, check)
         from device_create_scenarios import verify_device_create
         verify_device_create(harness, session, user_id, check)
+        from palette_color_scenarios import verify_palette_colors
+        verify_palette_colors(harness, session, user_id, check)
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()

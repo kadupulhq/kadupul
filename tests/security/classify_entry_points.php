@@ -202,7 +202,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => '1745bbda81910dad3cfc4ad4a890a7260e2a471a65d9321954c914284eb4b6e9',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b6a7a0e78791fe7afb40c2702e76232654ae941349db9c95c4c6d579c2e8ef91',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'b16be8b2f8e818c3ba61c4c8e149dfa185e9e23b1348c249b91a6490772a3c7a',
+    'config/services.yaml' => 'd7b95610905a6e64970377c0ed41cec396cc711cfdb5c94d04f76152c45ddf46',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -1073,7 +1073,9 @@ function classify(string $root, string $path, array $realms, array $early, array
         foreach (walk($stmt) as $node) {
             if ($node instanceof Expr\Include_) {
                 $target = resolve($node->expr, $root, $path);
-                $kind ??= BOOTSTRAP[$target] ?? null;
+                if ($target !== null) {
+                    $kind ??= BOOTSTRAP[$target] ?? null;
+                }
             }
         }
         // auth.php is the gate itself; its own bootstrap include starts it.
@@ -2012,6 +2014,73 @@ function authenticated_access_adapter(string $root): string
     return ABOUT_ACCESS_ADAPTER;
 }
 
+/** Prove a direct feature check or the first check of a final delegated use case. */
+function palette_feature_call(string $root, array $target, int $depth = 0): bool
+{
+    if ($target === ['Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess', 'authorize']) {
+        // Exact reviewed current-account and realm-5 authorization contract.
+        $adapter = $root . '/src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php';
+        $sql = $root . '/src/Graphing/Infrastructure/Legacy/PaletteSql.php';
+        return is_file($adapter) && hash_file('sha256', $adapter) === '833cb1e7506f07c4a2a4fbec7b9417b5a9e95ee97a8f629787d8749ba09ee27b'
+            && is_file($sql) && hash_file('sha256', $sql) === '85a0ca001343d01c7e611d5fc93a3bac1379e6b9a103f6c5dce3908de9b7b689';
+    }
+    if ($depth >= CALL_DEPTH) {
+        return false;
+    }
+    $loaded = load_class($root, $target[0]);
+    $callee = $loaded === null ? null : find_method($loaded, $target[1]);
+    if ($callee === null || !$loaded instanceof Stmt\Class_ || !$loaded->isFinal()) {
+        return false;
+    }
+    $found = first_service_call($root, $callee->stmts ?? [], receiver_types($root, $target[0], $callee), null);
+    return $found !== null && palette_feature_call($root, $found[0], $depth + 1);
+}
+
+function palette_feature_guard(string $root, string $class, Stmt\ClassMethod $method, array $files): bool
+{
+    $contract = 'Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess';
+    $adapter = 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyPaletteColorAccess';
+    foreach ($files as $path) {
+        foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+            if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== $adapter) {
+                foreach ($node->implements as $interface) {
+                    if ($interface->toString() === $contract) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    $typeOf = receiver_types($root, $class, $method);
+    $stmts = array_values($method->stmts ?? []);
+    foreach ($stmts as $index => $stmt) {
+        if (actor_assignment($root, $stmt, $typeOf) !== null) {
+            // guarded_checks already proved the actor assignment and its
+            // immediate refusal. The next service must authorize before
+            // request parsing, database reads, or another side effect.
+            $found = first_service_call($root, array_slice($stmts, $index + 2), $typeOf, fn(?Expr $e): bool => true);
+            if ($found !== null) {
+                foreach (walk(array_slice($stmts, $index + 2), false) as $node) {
+                    if ($node instanceof Stmt\Return_ && $node->getStartFilePos() < $found[1]->getStartFilePos()) {
+                        return false;
+                    }
+                    if ($node instanceof Expr\MethodCall && $node->getStartFilePos() < $found[1]->getEndFilePos()) {
+                        $receiver = $node->var;
+                        while ($receiver instanceof Expr\PropertyFetch) {
+                            $receiver = $receiver->var;
+                        }
+                        if ($typeOf($receiver) === 'Symfony\\Component\\HttpFoundation\\Request') {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return $found !== null && palette_feature_call($root, $found[0]);
+        }
+    }
+    return false;
+}
+
 /**
  * @return array<string, int> check method => realm it requires
  */
@@ -2188,6 +2257,13 @@ function symfony_routes(string $root, array $files): array
                             $grant = 'realm ' . $realms['consoleActor'];
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
+                            }
+                            if ($route['path'] === '/graphing/colors' || str_starts_with($route['path'], '/graphing/colors/')) {
+                                if (!palette_feature_guard($root, $name, $method, $sources)) {
+                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no reviewed first-effect palette realm-5 check'];
+                                    continue;
+                                }
+                                $grant .= ' + realm 5';
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

@@ -997,6 +997,20 @@ def main():
 
     with tempfile.TemporaryDirectory(prefix='entry-classifier-') as directory:
         root = tree(directory)
+        for source in ("<?php\ninclude($target);\n", "<?php\nrequire($_GET['target']);\n", "<?php\ninclude($target);\n" + AUTH):
+            count += 1
+            (root / 'dynamic.php').write_text(source)
+            request = {'root': str(root), 'files': ['dynamic.php'], 'served': ['dynamic.php'], 'plugin_realms': {}}
+            result = subprocess.run(
+                [os.environ.get('PHP', 'php'), '-d', 'display_errors=1', '-d', 'error_reporting=-1', str(inventory.CLASSIFIER)],
+                input=json.dumps(request), capture_output=True, text=True, timeout=inventory.CLASSIFIER_TIMEOUT_SECONDS)
+            try:
+                rows = json.loads(result.stdout)['rows']
+            except (json.JSONDecodeError, KeyError):
+                rows = []
+            if result.returncode != 0 or result.stderr or len(rows) != 1 or rows[0][1] != 'unknown':
+                failures.append('unresolved include must emit clean JSON and remain unknown: %s' % source.strip())
+        (root / 'dynamic.php').unlink()
         for case, (source, expected) in {**CASES, **NEW_CASES}.items():
             count += 1
             got = gate(root, 'page.php', source)[0]
@@ -1248,6 +1262,85 @@ final class AuthenticatedOnly {
         rows = run(root, [])
         if rows.get('app.php/aliased', ('missing',))[0] != 'unknown' or rows.get('app.php', ('missing',))[0] != 'unknown':
             failures.append('aliased #[Route]: expected unknown rows, got %s' % {k: v for k, v in rows.items() if 'aliased' in k or k == 'app.php'})
+
+    project = Path(__file__).resolve().parents[2]
+    feature_cases = {
+        'direct': ("$access->authorize();", True),
+        'delegated': ("$find(1);", True),
+        'conditional': ("if ($request->query->has('check')) { $access->authorize(); }", False),
+        'input first': ("$query = $request->query->all(); $access->authorize();", False),
+        'effect first': ("unlink('/tmp/x'); $access->authorize();", False),
+        'swallowed': ("try { $access->authorize(); } catch (\\Throwable) {}", False),
+        'refused exception': ("try { $access->authorize(); } catch (\\Throwable) { return new Response('', 403); }", True),
+        'missing': ("$query = $request->query->all();", False),
+        'wrong guard': ("$console->consoleActor();", False),
+        'early return': ("if (true) { return new Response('feature data'); } $access->authorize();", False),
+    }
+    for label, (body, admitted) in feature_cases.items():
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-palette-') as directory:
+            root = tree(directory)
+            files = ['src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php', 'src/Graphing/Infrastructure/Legacy/PaletteSql.php']
+            for path in files:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text((project / path).read_text())
+            delegated = root / 'src/Graphing/Application/Query/FindPalette.php'
+            delegated.parent.mkdir(parents=True, exist_ok=True)
+            delegated.write_text('''<?php namespace Kadupul\\Graphing\\Application\\Query;
+final class FindPalette {
+    public function __construct(private \\Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess $authorization) {}
+    public function __invoke(int $id): int { return $this->authorization->authorize(); }
+}''')
+            session = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+            session.parent.mkdir(parents=True, exist_ok=True)
+            session.write_text(SESSION)
+            controller = root / 'src/Fixture/PaletteAction.php'
+            controller.parent.mkdir(parents=True, exist_ok=True)
+            controller.write_text('''<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess;
+use Kadupul\\Graphing\\Application\\Query\\FindPalette;
+use Symfony\\Component\\HttpFoundation\\Request;
+use Symfony\\Component\\HttpFoundation\\Response;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+final class PaletteAction {
+    #[Route('/graphing/colors', name: 'palette_fixture')]
+    public function run(Request $request, ConsoleAccess $console, PaletteColorAccess $access, FindPalette $find): Response {
+        $actor = $console->consoleActor();
+        if ($actor === null) { return new Response('', 401); }
+        %s
+        return new Response();
+    }
+}
+''' % body)
+            row = run(root, []).get('app.php/graphing/colors', ('missing', ''))
+            count += 1
+            if (row[0] == 'symfony:palette_fixture' and row[1].endswith(' + realm 5')) != admitted:
+                failures.append('Palette feature %s: unexpected classification %s' % (label, row))
+            if admitted:
+                adapter = root / files[0]
+                adapter.write_text(adapter.read_text().replace('REALM_ID = 5', 'REALM_ID = 6'))
+                count += 1
+                if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                    failures.append('Palette changed authorization adapter was still certified')
+                adapter.write_text((project / files[0]).read_text())
+                sql = root / files[1]
+                sql.write_text(sql.read_text().replace("!== '00000'", "=== '00000'"))
+                count += 1
+                if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                    failures.append('Palette changed SQL confirmation helper was still certified')
+                sql.write_text((project / files[1]).read_text())
+                if label == 'delegated':
+                    delegated.write_text(delegated.read_text().replace('final class', 'class'))
+                    count += 1
+                    if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                        failures.append('Palette overridable delegated authorization was still certified')
+                    delegated.write_text(delegated.read_text().replace('class FindPalette', 'final class FindPalette'))
+                alternative = root / 'src/Fixture/OtherPaletteAccess.php'
+                alternative.write_text('<?php namespace Kadupul\\Fixture; final class OtherPaletteAccess implements \\Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess {}')
+                count += 1
+                if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
+                    failures.append('Palette alternative authorization implementation was still certified')
 
     for failure in failures:
         print('FAIL: ' + failure)

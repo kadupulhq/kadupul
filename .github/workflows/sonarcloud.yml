@@ -130,6 +130,9 @@ jobs:
       - name: Coverage self-test report preservation
         run: mise exec python@3.12.12 -- python tests/tools/test_coverage_selftest_database_reports.py
 
+      - name: Palette HTTP and MariaDB data handoff
+        run: mise exec python@3.12.12 -- python tests/Symfony/palette_color_review_http.py
+
       - name: Symfony HTTP and worker coverage
         env:
           PHP_VERSION: '8.4'
