@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 final class PermissionRequestNativeTest extends TestCase
 {
+    private static bool $coverageEvidenceChecked = false;
+
     /** @dataProvider requestCases */
     public function testNativePermissionFiltersPreserveSessionAndOrderedDefaults(bool $group, string $kind, string $prefix, string $selector, string $mode): void
     {
@@ -154,11 +156,20 @@ final class PermissionRequestNativeTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $coverage->merge(unserialize(file_get_contents($reports[0])));
+                require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/permission-request-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('request-validation-returned', 'request-session-observed'), array('src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php'));
+                if (!self::$coverageEvidenceChecked) {
+                    self::assertSame(31, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/permission-request-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('request-validation-returned', 'request-session-observed'), array('src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php'), 'lib/rrd.php'));
+                    self::$coverageEvidenceChecked = true;
+                }
+                $coverage->merge($childCoverage);
             }
             return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
         } finally {
             foreach (glob($directory . '/*.coverage') as $report) {
+                if (is_file($report . '.json')) {
+                    unlink($report . '.json');
+                }
                 unlink($report);
             }
             unlink($directory . '/include/auth.php');

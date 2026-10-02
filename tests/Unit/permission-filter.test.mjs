@@ -65,6 +65,16 @@ for (const page of ['user_admin.php', 'user_group_admin.php']) {
       assert.equal(calls.pop(), expected);
       bindings.get('#clear:click')();
       assert.equal(calls.pop(), `${base}&clear=true&header=false`);
+      for (const search of ['', ' ', 'literal search', 'A & B', '#fragment', 'A+B', 'key=value?next', 'é 日本語', '%20']) {
+        fields['#filter'] = search;
+        context.applyFilter();
+        const parsed = new URL(calls.pop(), 'https://fixture.invalid/');
+        assert.equal(parsed.searchParams.get('filter'), search);
+        assert.equal(parsed.searchParams.get('header'), 'false');
+        assert.equal(parsed.searchParams.get('id'), '7');
+        assert.equal(parsed.searchParams.get('tab'), tab);
+        assert.equal(parsed.hash, '');
+      }
     });
   }
 }

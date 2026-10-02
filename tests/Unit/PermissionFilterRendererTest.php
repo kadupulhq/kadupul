@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 final class PermissionFilterRendererTest extends TestCase
 {
     private static array $coverageEvidenceChecked = array();
+
     /** @dataProvider filters */
     public function testNativeControllersPreserveFilterChoicesAndRoutes(string $page, string $function, string $tab, string $label, bool $defaults): void
     {

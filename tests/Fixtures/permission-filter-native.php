@@ -182,13 +182,14 @@ if (!empty($scenario['no_association'])) {
     require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
     $tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php');
     $nativeChildCoverageMarkers = array('association-contract-returned');
-    print json_encode(array('tab' => $tab,'queries' => $queries), JSON_THROW_ON_ERROR);
+    print json_encode(array('tab' => $tab, 'queries' => $queries), JSON_THROW_ON_ERROR);
     exit;
 }
 if (isset($scenario['association'])) {
     register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn) {
+        $state = array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']);
         $GLOBALS['nativeChildCoverageMarkers'] = array('association-state-readback');
-        print json_encode(array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']), JSON_THROW_ON_ERROR);
+        print json_encode($state, JSON_THROW_ON_ERROR);
     });
     form_actions();
     throw new RuntimeException('Association did not complete its controller redirect');
@@ -211,5 +212,5 @@ $scripts = array();
 foreach ($document->getElementsByTagName('script') as $script) {
     $scripts[] = $script->textContent;
 }
-$nativeChildCoverageMarkers = array('native-filter-rendered','script-nodes-observed');
+$nativeChildCoverageMarkers = array('native-filter-rendered', 'script-nodes-observed');
 print json_encode(array('html' => $html, 'queries' => $queries, 'scripts' => $scripts), JSON_THROW_ON_ERROR);

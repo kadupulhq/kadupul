@@ -25,6 +25,7 @@
             <file>links.php</file>
             <file>lib/database.php</file>
             <file>lib/functions.php</file>
+            <file>utilities.php</file>
         </include>
     </source>
 </phpunit>
