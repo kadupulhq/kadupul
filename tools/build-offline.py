@@ -21,8 +21,20 @@ def run(*args, cwd):
     subprocess.run(args, cwd=cwd, check=True)
 
 
+def npm_cli_path(node):
+    """Use the npm JavaScript entry point from the selected Node installation."""
+    executable = Path(node).resolve()
+    for candidate in (
+        executable.parent.parent / 'lib/node_modules/npm/bin/npm-cli.js',
+        executable.parent / 'node_modules/npm/bin/npm-cli.js',
+    ):
+        if candidate.is_file():
+            return str(candidate.resolve())
+    raise RuntimeError('Selected Node installation is missing its npm CLI; install Node through mise')
+
+
 def build_runtimes():
-    php, node, composer, npm = (shutil.which(name) for name in ('php', 'node', 'composer', 'npm'))
+    php, node, composer = (shutil.which(name) for name in ('php', 'node', 'composer'))
     # mise resolves direct executables even when a shell has reordered PATH.
     if shutil.which('mise'):
         selected = {}
@@ -31,9 +43,9 @@ def build_runtimes():
             if result.returncode == 0 and Path(result.stdout.strip()).is_file():
                 selected[tool] = result.stdout.strip()
         php, node = selected.get('php', php), selected.get('node', node)
-    if not all((php, node, composer, npm)):
+    if not all((php, node, composer)):
         raise RuntimeError('Build requires PHP, Composer, Node and npm; run through mise')
-    return php, node, composer, npm
+    return php, node, composer, npm_cli_path(node)
 
 
 def main():
