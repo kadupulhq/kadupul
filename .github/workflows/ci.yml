@@ -285,6 +285,10 @@ jobs:
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
+      - name: Verify PHP 8.0 string and regex behavior
+        working-directory: tests
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
+
       - name: Verify helper union return contracts
         working-directory: tests
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
