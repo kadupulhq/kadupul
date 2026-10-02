@@ -466,3 +466,78 @@ REMOTE;
         rrd_cli_fixture_remove($dir);
     }
 })->with(array(array(true,false,false),array(false,false,false),array(true,true,false),array(false,true,false),array(true,false,true),array(false,false,true),array(false,false,false,'MEMORY'),array(false,false,true,'MEMORY'),array(false,false,false,false),array(true,false,true,'MEMORY','offline'),array(true,false,true,false,'recovery'),array(false,false,false,'InnoDB','online',true),array(true,false,false,'MEMORY','offline'),array(true,false,false,false,'recovery')));
+
+test('database upgrade reports rejected versions and completed migrations accurately', function () {
+    $root = dirname(__DIR__, 4);
+    $targetVersion = trim(file_get_contents($root . '/include/cacti_version'));
+    $cases = array(
+        array('1.2.999', 1, 'Invalid', false, 'none'),
+        array('0.6.0', 1, '0.6.x database', false, 'none'),
+        array('', 1, 'new database', false, 'none'),
+        array($targetVersion, 0, 'already up to date', false, 'none'),
+        array('1.2.30', 0, 'Upgrading from v1.2.30', $targetVersion, 'success'),
+        array('1.2.30', 0, 'Upgrading from v1.2.30', $targetVersion, 'missing'),
+        array('1.2.30', 1, 'fixture failure', '1.2.30.1', 'step-failure'),
+        array('1.2.30', 1, 'Upgrading from v1.2.30', false, 'write-failure'),
+    );
+
+    foreach ($cases as [$version, $expectedStatus, $expectedOutput, $expectedSchemaVersion, $migrationOutcome]) {
+        $dir = sys_get_temp_dir() . '/upgrade-version-' . bin2hex(random_bytes(8));
+        foreach (array('', '/cli', '/include', '/lib', '/install', '/install/upgrades', '/store') as $suffix) {
+            mkdir($dir . $suffix, 0700);
+        }
+        try {
+            copy($root . '/cli/upgrade_database.php', $dir . '/cli/upgrade_database.php');
+            symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
+            foreach (array('lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php') as $file) {
+                file_put_contents($dir . '/' . $file, '<?php');
+            }
+            if ($version === '1.2.30' && $migrationOutcome !== 'missing') {
+                $upgradeFile = str_replace('.', '_', $targetVersion);
+                $upgradeFunction = 'upgrade_to_' . $upgradeFile;
+                $body = $migrationOutcome === 'step-failure'
+                    ? '$GLOBALS["database_upgrade_status"][' . var_export($targetVersion, true) . '] = array(array("status" => DB_STATUS_ERROR, "error" => "fixture failure", "sql" => "ALTER TABLE fixture"));'
+                    : '';
+                file_put_contents($dir . '/install/upgrades/' . $upgradeFile . '.php', '<?php function ' . $upgradeFunction . '() {' . $body . '}');
+            }
+            $fixture = '<?php $config = ' . var_export(array(
+                'base_path' => $dir,
+                'rra_path' => $dir . '/store',
+                'poller_id' => 1,
+                'cacti_server_os' => 'unix',
+            ), true) . ';'
+                . '$cacti_version_codes = ' . var_export(array('1.2.30' => 'old', '1.2.30.1' => 'no-migration', $targetVersion => 'new'), true) . ';'
+                . '$GLOBALS["fixture_version"] = ' . var_export($version, true) . ';'
+                . 'define("CACTI_VERSION", ' . var_export($targetVersion, true) . ');'
+                . 'define("DB_STATUS_SKIPPED", 2);'
+                . 'define("DB_STATUS_ERROR", 0);'
+                . 'define("DB_STATUS_SUCCESS", 1);'
+                . '$GLOBALS["fail_version_write"] = ' . var_export($migrationOutcome === 'write-failure', true) . ';'
+                . 'function __($message) { return $message; }'
+                . 'function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }'
+                . 'function clean_up_lines($value) { return $value; }'
+                . 'function read_config_option($name) { return $name === "storage_location"; }'
+                . 'function get_cacti_version() { return $GLOBALS["fixture_version"]; }'
+                . 'function cacti_version_compare($left, $right, $operator) { return version_compare($left, $right, $operator); }'
+                . 'function db_fetch_cell_prepared(...$args) { return "InnoDB"; }'
+                . 'function db_execute_prepared(...$args) { if ($GLOBALS["fail_version_write"]) { return false; } file_put_contents(dirname(__DIR__) . "/schema-write", $args[1][0]); return true; }';
+            file_put_contents($dir . '/include/cli_check.php', $fixture);
+            $process = proc_open(array(PHP_BINARY, $dir . '/cli/upgrade_database.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+            $output = stream_get_contents($pipes[1]);
+            $error = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+
+            $actualStatus = proc_close($process);
+            if ($actualStatus !== $expectedStatus) {
+                throw new RuntimeException('Unexpected status for ' . $version . ' (' . $migrationOutcome . '): ' . $actualStatus . '; ' . $error . $output);
+            }
+            expect($actualStatus)->toBe($expectedStatus)
+                ->and($output)->toContain($expectedOutput)
+                ->and($error)->toBe('')
+                ->and(file_exists($dir . '/schema-write') ? file_get_contents($dir . '/schema-write') : false)->toBe($expectedSchemaVersion);
+        } finally {
+            rrd_cli_fixture_remove($dir);
+        }
+    }
+});
