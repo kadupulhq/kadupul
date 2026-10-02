@@ -11,6 +11,10 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
+}
+
 if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');

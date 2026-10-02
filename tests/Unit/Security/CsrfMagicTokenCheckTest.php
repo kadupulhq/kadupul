@@ -3,9 +3,19 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+// A native completion receipt binds the child producer, scenario and worker bytes.
+function verifyCsrfCallbackReceipt(array $receipt, array $expected): void
+{
+    if (($receipt['marker'] ?? null) !== 'native configured callback completed'
+        || ($receipt['php'] ?? null) !== PHP_VERSION
+        || ($receipt['sources'] ?? null) !== $expected) {
+        throw new RuntimeException('Incomplete or stale configured callback evidence');
+    }
+}
+
 // Loads the installed csrf-magic.php in a child process with a debug log
 // directory and runs $body there; returns what it printed and the log text.
-function runCsrfMagicProbe(string $body): array
+function runCsrfMagicProbe(string $body, bool $configured = false, $coverage = null): array
 {
     $directory = sys_get_temp_dir() . '/csrf-magic-probe-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
@@ -25,10 +35,49 @@ $_POST = array('probe-post-key' => array('probe-post-value'));
 session_id('probe-session');
 require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
 PHP;
+    if ($configured) {
+        $program = <<<'PHP'
+require $argv[1] . '/include/global_constants.php';
+require $argv[1] . '/lib/functions.php';
+require $argv[1] . '/lib/html_utility.php';
+function __($message) { return $message; }
+$messages = array('csrf_timeout' => array('message' => 'Session expired', 'type' => 'error'));
+$config = array('base_path' => $argv[1], 'include_path' => $argv[1] . '/include', 'url_path' => '/kadupul/', 'is_web' => true, 'path_csrf_secret' => $argv[2] . '/owned-secret.php');
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['REQUEST_URI'] = '/kadupul/graphs.php?probe-query-value';
+$_SERVER['SERVER_NAME'] = 'example.test';
+$_SERVER['SERVER_PORT'] = 80;
+$_GET = array('probe-get-key' => 'probe-get-value');
+$_POST = array();
+session_start(array('save_path' => $argv[2], 'use_cookies' => 0));
+require $argv[1] . '/include/csrf.php';
+csrf_conf('log_file', $argv[2] . '/csrf.log');
+PHP;
+    }
+    $expectedSources = array();
+    if ($coverage !== null) {
+        foreach (array('tests/Fixtures/rrd-process-coverage.php', 'tests/Unit/Security/CsrfMagicTokenCheckTest.php', 'include/csrf.php', 'include/vendor/csrf/csrf-magic.php') as $relative) {
+            $expectedSources[$relative] = hash_file('sha256', dirname(__DIR__, 3) . '/' . $relative);
+        }
+        $program = <<<'PHP'
+define('RRD_TEST_COVERAGE_DIRECTORY', $argv[2]);
+define('CSRF_CALLBACK_TEST_COVERAGE', 1);
+require $argv[1] . '/tests/Fixtures/rrd-process-coverage.php';
+register_shutdown_function(function () {
+    $sources = array();
+    foreach (array('tests/Fixtures/rrd-process-coverage.php', 'tests/Unit/Security/CsrfMagicTokenCheckTest.php', 'include/csrf.php', 'include/vendor/csrf/csrf-magic.php') as $relative) {
+        $sources[$relative] = hash_file('sha256', $GLOBALS['argv'][1] . '/' . $relative);
+    }
+    $completed = ($GLOBALS['csrf']['callback'] ?? null) === 'csrf_error_callback'
+        && ($_SESSION['sess_messages']['csrf_timeout']['message'] ?? null) === 'Session expired';
+    file_put_contents($GLOBALS['argv'][2] . '/callback-evidence.json', json_encode(array('marker' => $completed ? 'native configured callback completed' : 'incomplete', 'php' => PHP_VERSION, 'sources' => $sources), JSON_THROW_ON_ERROR));
+});
+PHP . $program;
+    }
 
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-r', $program . $body, dirname(__DIR__, 3), $directory),
+            array(PHP_BINARY, '-d', 'error_reporting=E_ALL & ~E_DEPRECATED', '-d', 'pcov.directory=/', '-r', $program . $body, dirname(__DIR__, 3), $directory),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes
         );
@@ -41,8 +90,20 @@ PHP;
             ->and($stderr)->toBe('');
 
         $log = '';
-        foreach (glob($directory . '/*') as $file) {
+        foreach (glob($directory . '/*.log') as $file) {
             $log .= file_get_contents($file);
+        }
+        if ($coverage !== null) {
+            $reports = glob($directory . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $receipt = json_decode(file_get_contents($directory . '/callback-evidence.json'), true, flags: JSON_THROW_ON_ERROR);
+            verifyCsrfCallbackReceipt($receipt, $expectedSources);
+            $childCoverage = unserialize(file_get_contents($reports[0]));
+            $observed = $childCoverage->getData()->lineCoverage();
+            $source = dirname(__DIR__, 3) . '/include/csrf.php';
+            expect(isset($observed[$source]))->toBeTrue();
+            expect(count(array_filter($observed[$source], static fn($hits) => !empty($hits))) > 0)->toBeTrue();
+            $coverage->merge($childCoverage);
         }
 
         return array($stdout, $log);
@@ -281,25 +342,15 @@ PHP);
 });
 
 test('configured failure callback redacts query values from the native log', function () {
-    require_once dirname(__DIR__, 3) . '/tests/Helpers/PhpSource.php';
-    $source = file_get_contents(dirname(__DIR__, 3) . '/include/csrf.php');
-    expect($source)->toBeString();
-    $callback = test_php_function_source($source, 'csrf_error_callback');
-    expect($callback)->toContain('function csrf_error_callback');
-    [$stdout, $log] = runCsrfMagicProbe($callback . <<<'PHP'
-require $argv[1] . '/include/global_constants.php';
-require $argv[1] . '/lib/functions.php';
-require $argv[1] . '/lib/html_utility.php';
-function __($message) { return $message; }
-$messages = array('csrf_timeout' => array('message' => 'Session expired', 'type' => 'error'));
-$config = array('url_path' => '/kadupul/');
-$_SERVER['SERVER_NAME'] = 'example.test';
-$_SERVER['SERVER_PORT'] = 80;
-session_start(array('save_path' => $argv[2], 'use_cookies' => 0));
-ob_start();
-csrf_conf('callback', 'csrf_error_callback');
-$GLOBALS['csrf']['callback']();
-PHP);
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    [$stdout, $log] = runCsrfMagicProbe(<<<'PHP'
+if ($GLOBALS['csrf']['callback'] !== 'csrf_error_callback') {
+    throw new RuntimeException('Native startup did not configure its failure callback');
+}
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_POST = array('__csrf_magic' => 'invalid-fixture-token');
+csrf_check();
+PHP, true, $coverage);
     expect($stdout)->toBe('')
         ->and($log)->toContain('Timeout, redirecting to /kadupul/graphs.php')
         ->and($log)->not->toContain('probe-query-value');
@@ -323,4 +374,22 @@ $result = csrf_write_secret($path, csrf_generate_secret());
 echo json_encode(array($result, file_get_contents($path) === $old, glob($argv[2] . '/.csrf-secret-*')));
 PHP);
     expect(json_decode($stdout, true))->toBe(array(false, true, array()));
+});
+
+
+test('configured callback coverage refuses omitted or stale producer and source evidence', function () {
+    $expected = array('producer' => 'a', 'scenario' => 'b', 'worker' => 'c', 'installed-library' => 'd');
+    $valid = array('marker' => 'native configured callback completed', 'php' => PHP_VERSION, 'sources' => $expected);
+    verifyCsrfCallbackReceipt($valid, $expected);
+    foreach (array_keys($expected) as $source) {
+        $omitted = $valid;
+        unset($omitted['sources'][$source]);
+        expect(fn() => verifyCsrfCallbackReceipt($omitted, $expected))->toThrow(RuntimeException::class);
+        $stale = $valid;
+        $stale['sources'][$source] = 'stale';
+        expect(fn() => verifyCsrfCallbackReceipt($stale, $expected))->toThrow(RuntimeException::class);
+    }
+    foreach (array(array('marker' => 'incomplete'), array('php' => 'incorrect'), array('sources' => array())) as $changed) {
+        expect(fn() => verifyCsrfCallbackReceipt(array_replace($valid, $changed), $expected))->toThrow(RuntimeException::class);
+    }
 });
