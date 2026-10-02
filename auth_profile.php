@@ -267,7 +267,7 @@ function form_save()
 
 function settings()
 {
-    global $tabs_graphs, $settings_user, $current_user, $graph_views, $current_user;
+    global $tabs_graphs, $settings_user, $current_user, $graph_views;
 
     /* you cannot have per-user graph settings if cacti's user management is not turned on */
     if (read_config_option('auth_method') == 0) {

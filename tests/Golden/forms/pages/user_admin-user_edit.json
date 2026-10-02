@@ -1,0 +1,18 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "enabled",
+        "form1",
+        "login_opts_2",
+        "login_opts_3",
+        "must_change_password",
+        "password",
+        "password_change",
+        "password_confirm",
+        "realm"
+    ],
+    "script_names": []
+}
