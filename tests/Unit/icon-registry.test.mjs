@@ -89,7 +89,6 @@ const hardCoded = new Map([
   ['user_admin.php', notMigrated],
   ['user_group_admin.php', notMigrated],
   ['utilities.php', notMigrated],
-  ['vdef.php', notMigrated],
 ]);
 
 // html_start_box() documents the plugin 'class' format with a placeholder.
