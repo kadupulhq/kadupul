@@ -10,6 +10,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Treat missing or invalid Host Resources allocation units and negative disk samples as unknown instead of reporting raw units, raising a type error, or guessing an unsigned wrap. Fixes #243.
 
+- Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
