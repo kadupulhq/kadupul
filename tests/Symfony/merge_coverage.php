@@ -55,6 +55,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'duplicate hex edit is a known validation failure after rollback',
         'duplicate hex edit preserves the original name and hex',
         'unnamed palette color has a visible edit link and accessible hex label',
+        'palette Unicode invisible names use accessible hex labels while visible names and CSV bytes remain exact',
         'palette exports neutralize formulas and preserve exact versioned roundtrip names',
         'unsupported or malformed palette literal marker rejects the whole import',
         'ordinary legacy CSV import preserves its leading apostrophe literally',

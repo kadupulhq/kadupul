@@ -18,6 +18,17 @@ final readonly class PaletteColor
     {
         return !$this->readOnly && $this->graphs === 0 && $this->templates === 0 && $this->otherReferences === 0;
     }
+
+    public function hasVisibleName(): bool
+    {
+        return preg_match('/[^\s\p{Z}\p{Cf}]/u', $this->name) === 1;
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->hasVisibleName() ? $this->name : $this->hex;
+    }
+
     public function previewHex(): string
     {
         if (preg_match('/\A[a-fA-F0-9]{3}\z/D', $this->hex) === 1) {

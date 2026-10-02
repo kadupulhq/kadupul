@@ -53,7 +53,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             </tr></thead>
             <tbody>
             {% for preset in page.presets %}
-                {% set displayName = preset.name|trim is not empty ? preset.name : preset.hex %}
+                {% set displayName = preset.displayName %}
                 <tr>
                     <td><input type="checkbox" name="ids[]" value="{{ preset.id }}"{% if not preset.deletable or loop.index > selectionLimit %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': displayName}, 'palette') }}"></td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}

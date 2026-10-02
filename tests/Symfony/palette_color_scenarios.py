@@ -27,9 +27,13 @@ class PaletteLabels(HTMLParser):
         self.labels = {}
         self.enabled = []
         self.href = None
+        self.items = []
+        self.item = None
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == 'li':
+            self.item = ''
         if tag == 'a':
             self.href = attrs.get('href')
         if tag == 'input' and attrs.get('name') == 'ids[]':
@@ -38,10 +42,15 @@ class PaletteLabels(HTMLParser):
                 self.enabled.append(attrs.get('value'))
 
     def handle_data(self, data):
+        if self.item is not None:
+            self.item += data
         if self.href is not None:
             self.links[self.href] = self.links.get(self.href, '') + data
 
     def handle_endtag(self, tag):
+        if tag == 'li' and self.item is not None:
+            self.items.append(self.item)
+            self.item = None
         if tag == 'a':
             self.href = None
 
@@ -125,6 +134,31 @@ def verify_palette_colors(h, s, uid, check):
     check(status == 200 and labels.labels.get(str(unnamed_id)) == 'Select ' + unnamed_hex
           and any(urlsplit(href).path.endswith(f'/colors/{unnamed_id}/edit') and text == unnamed_hex for href, text in labels.links.items()),
           'unnamed palette color has a visible edit link and accessible hex label')
+    invisible_names = ['\u00a0\u2003\u202f', '\u200b\ufeff\u2060', ' \u00a0\u200b']
+    visible_name = '\u00a0Visible\u200b '
+    try:
+        for exact_name in invisible_names + [visible_name]:
+            encoded_name = exact_name.encode().hex()
+            h.sql(f"UPDATE colors SET name=CONVERT(UNHEX('{encoded_name}') USING utf8mb4) WHERE id={unnamed_id}")
+            display_name = exact_name if exact_name == visible_name else unnamed_hex
+            status, body, _ = fetch('/app.php/graphing/colors?' + urlencode({'named':'false', 'filter':unnamed_hex}))
+            labels = PaletteLabels(); labels.feed(body)
+            check(status == 200 and labels.labels.get(str(unnamed_id)) == 'Select ' + display_name
+                  and any(urlsplit(href).path.endswith(f'/colors/{unnamed_id}/edit') and text == display_name for href, text in labels.links.items()),
+                  'palette Unicode name has a meaningful exact list and checkbox label: ' + repr(exact_name))
+            status, body, _ = fetch(f'/app.php/graphing/colors/actions/delete?ids[]={unnamed_id}')
+            labels = PaletteLabels(); labels.feed(body)
+            expected_confirmation = unnamed_hex if exact_name != visible_name else unnamed_hex + ' · ' + visible_name
+            check(status == 200 and expected_confirmation in labels.items,
+                  'palette Unicode deletion confirmation identifies the exact color: ' + repr(exact_name))
+            status, text, _ = fetch('/app.php/graphing/colors/export?' + urlencode({'named':'false','filter':unnamed_hex}))
+            check(status == 200 and list(csv.reader(io.StringIO(text)))
+                  == [['name','hex','kadupul_literal_v1'],["'" + exact_name,"'" + unnamed_hex,'1']]
+                  and h.sql(f'SELECT HEX(name) FROM colors WHERE id={unnamed_id}').strip().lower() == encoded_name,
+                  'palette Unicode display preserves exact stored and CSV name bytes: ' + repr(exact_name))
+        check(True, 'palette Unicode invisible names use accessible hex labels while visible names and CSV bytes remain exact')
+    finally:
+        h.sql(f"UPDATE colors SET name='' WHERE id={unnamed_id}")
     importer = '/app.php/graphing/colors/import'
     formula_names = ['=1+1', '+SUM(1,2)', '-1+2', '@SUM(1,2)', ' =1+1', '\t=1+1', '\r=1+1', '\n=1+1', "'original apostrophe"]
     roundtripped_names = []

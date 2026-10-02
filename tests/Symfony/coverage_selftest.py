@@ -186,6 +186,7 @@ def main():
         'missing-palette-write-guards': 'Incomplete Symfony integration',
         'missing-palette-preference-guards': 'Incomplete Symfony integration',
         'missing-links-locale-restoration': 'Incomplete Symfony integration',
+        'missing-palette-unicode-labels': 'Incomplete Symfony integration',
         'missing-palette-review-check-0': 'Incomplete Symfony integration',
         'missing-palette-review-check-1': 'Incomplete Symfony integration',
         'missing-palette-review-check-2': 'Incomplete Symfony integration',
@@ -272,6 +273,8 @@ def main():
                 evidence['checks'].remove(checks[int(case.removeprefix('missing-palette-selection-check-'))])
             elif case == 'missing-palette-write-guards':
                 evidence['checks'].remove('palette writes refuse actual nontransactional tables, invalid collectors and caller transactions without losing prior work')
+            elif case == 'missing-palette-unicode-labels':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'palette Unicode invisible names use accessible hex labels while visible names and CSV bytes remain exact']
             elif case == 'missing-links-locale-restoration':
                 evidence['checks'].remove('links French fixture restores exact original global and actor language settings')
             elif case == 'missing-palette-preference-guards':
