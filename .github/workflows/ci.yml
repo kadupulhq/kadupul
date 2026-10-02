@@ -210,9 +210,17 @@ jobs:
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
+      - name: Verify PHP 8.0 string and regex behavior
+        working-directory: tests
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
+
       - name: Verify helper union return contracts
         working-directory: tests
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
+
+      - name: Verify token entropy failure and native identifiers
+        working-directory: tests
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/GenerateHashFailsClosedTest.php --colors=never
 
       - name: Exercise production CSV paths
         working-directory: tests
@@ -220,6 +228,12 @@ jobs:
         # isolated production subprocess explicitly enables E_ALL and throws
         # on every diagnostic, including CSV default-argument deprecations.
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
+
+      - name: Verify string predicates and directory boundaries
+        working-directory: tests
+        run: |
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/StringPredicateHelpersTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/PathHelpersTest.php --colors=never
 
       - name: Legacy form goldens
         working-directory: tests
