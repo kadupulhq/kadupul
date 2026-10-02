@@ -255,13 +255,25 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
             }
             // Preserve canonical measured paths and support both installed filter APIs.
             $childCoverage->getData(true)->renameFile(realpath(RRD_TEST_CLI_COVERAGE_COPY), realpath(RRD_TEST_CLI_COVERAGE_SOURCE));
-            // PHPUnit 12's code-coverage filter is an allowlist and no longer
-            // exposes excludeFile(); the path remapping above removes the
-            // copied filename from collected coverage data.
             if (method_exists($childCoverage->filter(), 'excludeFile')) {
                 $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
+                $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
+            } else {
+                // The newer allowlist cannot remove a copy. Rebuild it with the
+                // canonical path so getData() cannot rediscover the old copy as
+                // uncovered after its measured lines have been renamed.
+                $canonicalFilter = new SebastianBergmann\CodeCoverage\Filter();
+                foreach ($childCoverage->filter()->files() as $file) {
+                    $canonicalFilter->includeFile($file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file);
+                }
+                $canonicalCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
+                    (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($canonicalFilter),
+                    $canonicalFilter
+                );
+                $canonicalCoverage->setData($childCoverage->getData(true));
+                $canonicalCoverage->setTests($childCoverage->getTests());
+                $childCoverage = $canonicalCoverage;
             }
-            $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
 
             // Test cleanup removes copied entrypoints before the aggregate
             // Clover report runs. Preserve their exact mapping outside the
