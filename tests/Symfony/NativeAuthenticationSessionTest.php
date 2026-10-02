@@ -43,6 +43,56 @@ final class NativeAuthenticationSessionTest extends TestCase
         self::assertCount(1, $deprecations);
     }
 
+    public static function databasePersistenceOutcomes(): iterable
+    {
+        yield 'confirmed insert' => ['valid', true];
+        yield 'silent failed insert' => ['silent', false];
+        yield 'throwing failed insert' => ['throw', false];
+        yield 'unconfirmed zero-row insert' => ['ignored', false];
+    }
+
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    #[DataProvider('databasePersistenceOutcomes')]
+    public function testActualDatabaseSessionCloseRequiresConfirmedPersistence(string $mode, bool $admitted): void
+    {
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, $mode === 'silent' ? \PDO::ERRMODE_SILENT : \PDO::ERRMODE_EXCEPTION);
+        $pdo->exec('CREATE TABLE sessions (id TEXT PRIMARY KEY, remote_addr TEXT, access INTEGER, data TEXT, user_id INTEGER, user_agent TEXT)');
+        if ($mode !== 'valid') {
+            $effect = $mode === 'ignored' ? 'IGNORE' : "ABORT, 'fixture insertion failure'";
+            $pdo->exec('CREATE TRIGGER refuse_session BEFORE INSERT ON sessions BEGIN SELECT RAISE(' . $effect . '); END');
+        }
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['root' => '/fixture', 'session_name' => 'AboutConfirmedUnit', 'database_sessions' => true, 'url_path' => '/', 'cookie_domain' => '']);
+        $database = $this->createMock(DatabaseConnection::class);
+        $database->method('get')->willReturn($pdo);
+        $sessions = new NativeAuthenticationSession($configuration, $database);
+        $request = Request::create('/about');
+        try {
+            try {
+                $id = $sessions->establish(9, $request, '127.0.0.1');
+                self::assertTrue($admitted, 'Failed native persistence must never publish a credential.');
+                self::assertSame(PHP_SESSION_NONE, session_status());
+                self::assertSame(1, (int) $pdo->query('SELECT COUNT(*) FROM sessions')->fetchColumn());
+                self::assertStringContainsString('sess_user_id|i:9;', (string) $pdo->query('SELECT data FROM sessions')->fetchColumn());
+                $sessions->publish($id, $request);
+                $sessions->revoke($id, $request);
+            } catch (\Throwable $failure) {
+                if ($admitted || $failure instanceof \PHPUnit\Framework\AssertionFailedError) {
+                    throw $failure;
+                }
+                self::assertInstanceOf(\RuntimeException::class, $failure);
+                self::assertSame(PHP_SESSION_NONE, session_status());
+            }
+            self::assertSame(0, (int) $pdo->query('SELECT COUNT(*) FROM sessions')->fetchColumn());
+        } finally {
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                session_abort();
+            }
+        }
+    }
+
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
     #[DataProvider('longerIds')]

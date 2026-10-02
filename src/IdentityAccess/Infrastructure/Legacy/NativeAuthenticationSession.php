@@ -54,7 +54,8 @@ final readonly class NativeAuthenticationSession
             }
             $created = session_id();
             $_SESSION = ['sess_user_id' => $user, 'cacti_cwd' => $config['root']];
-            if (!session_write_close() || !$handler->written) {
+            session_write_close();
+            if (session_status() !== PHP_SESSION_NONE || !$handler->written) {
                 throw new \RuntimeException('Authentication session was not persisted.');
             }
             return $created;

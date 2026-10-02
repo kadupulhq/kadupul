@@ -50,6 +50,12 @@ final class PaletteColorReviewPresentationTest extends TestCase
             self::assertSame('Select 0', $xpath->evaluate('string(//input[@name="ids[]" and @value="8"]/@aria-label)'));
             self::assertSame('456', $xpath->evaluate('string(//tbody/tr[3]/td[2]/a)'));
             self::assertSame('Select 456', $xpath->evaluate('string(//input[@name="ids[]" and @value="9"]/@aria-label)'));
+            foreach ([7 => 'AbC', 8 => '123', 9 => '456'] as $id => $hex) {
+                $previewId = 'palette-preview-' . $id;
+                self::assertSame(1.0, $xpath->evaluate('count(//input[@type="color" and @id="' . $previewId . '" and @disabled])'));
+                self::assertSame($hex, $xpath->evaluate('string(//label[@for="' . $previewId . '"])'));
+                self::assertSame('Color preview', $xpath->evaluate('string(//input[@id="' . $previewId . '"]/@aria-label)'));
+            }
         } finally {
             $kernel->shutdown();
         }
