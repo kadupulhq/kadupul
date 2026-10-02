@@ -7,7 +7,7 @@
 
 namespace Kadupul\Platform\Application\ReadModel;
 
-/** How the canonical baseline was read. Values are stable JSON strings. */
+/** How create_tables() ended. Backed, because the values are the stable JSON "baseline" strings. */
 enum BaselineOutcome: string
 {
     case Loaded = 'loaded';
@@ -15,4 +15,7 @@ enum BaselineOutcome: string
     case Planned = 'planned';
     case FileMissing = 'file_missing';
     case Unparsable = 'unparsable';
+    case LoadFailed = 'load_failed';
+    /** A table could not be created; the script stopped there. */
+    case CreateFailed = 'create_failed';
 }

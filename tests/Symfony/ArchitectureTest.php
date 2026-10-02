@@ -155,11 +155,16 @@ final class ArchitectureTest extends TestCase
                 'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
                 'config/services.yaml',
             ],
+            'DbalAuditBaselineStore' => [
+                'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
+                'config/services.yaml',
+            ],
             'MaintenanceConnections' => [
                 'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
                 'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
                 'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
                 'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
+                'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
             ],
         ]);
     }

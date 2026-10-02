@@ -27,6 +27,8 @@ use Kadupul\Platform\Domain\Schema\TableAudit;
 final readonly class AuditDatabase
 {
     private const string ACTION = 'database.audit';
+    private const array BASELINE_TABLES = ['table_columns', 'table_indexes'];
+
     public function __construct(
         private MaintenanceTarget $target,
         private DatabaseMaintenance $maintenance,
@@ -45,10 +47,10 @@ final readonly class AuditDatabase
     /**
      * @param ?AuditMode $mode null when no mode was given, which prints the help after the version check
      * @param ?string $operator account to act as; null means the admin_user setting
-     * @param bool $apply false reads the file and schema and changes nothing
+     * @param bool $apply false reads the file and the schema and changes nothing, not even the two audit tables
      * @throws RemoteCollectorRefused before any lookup, when this installation is a remote collector
      */
-    public function __invoke(?AuditMode $mode, bool $upgrade, ?string $operator, bool $apply, string $outputPath = '-'): AuditReport
+    public function __invoke(?AuditMode $mode, bool $upgrade, ?string $operator, bool $apply): AuditReport
     {
         // Checked here as well as by the command: "local" below is main only
         // on the primary, so this is what keeps the collector's copy unaltered.
@@ -79,16 +81,16 @@ final readonly class AuditDatabase
 
         return match ($mode) {
             null => new AuditReport(AuditOutcome::NoMode, null, !$apply, $upgraded, $run->upgradePlanned),
-            AuditMode::Load => $this->load($run, $outputPath),
+            AuditMode::Load => $this->load($run),
             default => $this->audit($run, $mode),
         };
     }
 
     private function audit(AuditRun $run, AuditMode $mode): AuditReport
     {
-        [$outcome, $baseline, $line] = $this->loadBaseline($run);
-        if ($mode === AuditMode::Create || in_array($outcome, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable], true)) {
-            return $run->report($mode, $outcome, $line);
+        [$outcome, $baseline, $line, $uncreated] = $this->loadBaseline($run);
+        if ($mode === AuditMode::Create || !in_array($outcome, [BaselineOutcome::Loaded, BaselineOutcome::Planned], true)) {
+            return $run->report($mode, $outcome, $line, uncreated: $uncreated);
         }
         $catalog = $this->schema->catalog($run->scope->target);
         // Only --report prints findings; the ported loops also decide slightly
@@ -125,13 +127,16 @@ final readonly class AuditDatabase
         return ['table' => $alter->table, 'legacy' => $alter->legacy(), 'result' => $ok ? AlterResult::Altered : AlterResult::Failed, 'statement' => $statement];
     }
 
-    /** Read and parse the canonical file without mutating the target database.
+    /**
+     * create_tables(): the file is read first, so a dry run can report it, then
+     * the two tables are ensured and a complete file replaces them atomically.
      *
-     * @return array{0: BaselineOutcome, 1: AuditBaseline, 2: ?int}
+     * @return array{0: BaselineOutcome, 1: AuditBaseline, 2: ?int, 3: ?string}
      */
     private function loadBaseline(AuditRun $run): array
     {
         $line = null;
+        $uncreated = null;
         try {
             $baseline = $this->baseline->read();
         } catch (InvalidAuditSchema $invalid) {
@@ -144,23 +149,80 @@ final readonly class AuditDatabase
             !$run->apply => BaselineOutcome::Planned,
             default => null,
         };
-        if ($outcome === null) {
-            // AuditBaseline is already in memory; it is never copied into the
-            // target database. --create remains a compatibility validation.
-            $outcome = BaselineOutcome::Loaded;
+        if ($run->apply && $outcome === null) {
+            $uncreated = $this->reset($run);
+            if ($uncreated !== null) {
+                $outcome = BaselineOutcome::CreateFailed;
+            } elseif ($outcome === null) {
+                // Only a valid complete file may replace the existing baseline.
+                $loaded = $this->baseline->replace($run->scope->target, $baseline);
+                $this->auditBaseline($run, $loaded);
+                $outcome = $loaded ? BaselineOutcome::Loaded : BaselineOutcome::LoadFailed;
+            }
         }
         $usable = in_array($outcome, [BaselineOutcome::Loaded, BaselineOutcome::Planned], true);
 
-        // An absent or invalid file supplies no baseline rows.
-        return [$outcome, $usable ? $baseline : AuditBaseline::empty(), $line];
+        // Failed reads and imports cannot authorize comparison or repair.
+        return [$outcome, $usable ? $baseline : AuditBaseline::empty(), $line, $uncreated];
     }
 
-    private function load(AuditRun $run, string $outputPath): AuditReport
+    private function load(AuditRun $run): AuditReport
     {
+        $uncreated = $run->apply ? $this->reset($run) : null;
+        if ($uncreated !== null) {
+            return $run->report(AuditMode::Load, BaselineOutcome::CreateFailed, uncreated: $uncreated);
+        }
+        // Read after ensuring both audit tables exist. Failed imports preserve them.
         $catalog = $this->schema->catalog($run->scope->target);
-        $tables = array_map(static fn(LiveTable $table): string => $table->name, $catalog->tables());
-        $content = $run->apply ? $this->baseline->export($catalog) : null;
+        $path = $this->baseline->dumpPath();
+        if (!$run->apply) {
+            return $run->report(AuditMode::Load, null, null, [], [], self::planned($catalog), $path);
+        }
+        $imported = array_map(static fn(LiveTable $table): string => $table->name, $catalog->tables());
+        $ok = $this->baseline->import($run->scope->target, $catalog);
+        $this->auditBaseline($run, $ok);
+        $exported = null;
+        if ($ok && $path !== null) {
+            $exported = $this->baseline->export($run->scope->target);
+            $this->audit->step($run->correlation, $run->scope->actor->id, self::ACTION, $run->scope->target, 'audit-schema-export', $exported);
+        }
 
-        return $run->report(AuditMode::Load, null, null, [], [], $tables, $outputPath, $content === null ? null : true, $content);
+        return $run->report(AuditMode::Load, $ok ? null : BaselineOutcome::LoadFailed, null, [], [], $imported, $path, $exported);
+    }
+
+    /**
+     * What an applied --load would list. A dry run does not create the two
+     * audit tables, so they are added where SHOW TABLES, which sorts names
+     * as bytes, would have listed them after the reset.
+     *
+     * @return list<string>
+     */
+    private static function planned(AuditCatalog $catalog): array
+    {
+        $names = array_map(static fn(LiveTable $table): string => $table->name, $catalog->tables());
+        foreach (self::BASELINE_TABLES as $table) {
+            if (!in_array($table, $names, true)) {
+                $at = array_find_key($names, static fn(string $name): bool => strcmp($name, $table) > 0) ?? count($names);
+                array_splice($names, $at, 0, [$table]);
+            }
+        }
+
+        return $names;
+    }
+
+    /** Ensure audit tables exist without discarding the current baseline. */
+    private function reset(AuditRun $run): ?string
+    {
+        $uncreated = $this->baseline->reset($run->scope->target);
+        $this->audit->step($run->correlation, $run->scope->actor->id, self::ACTION, $run->scope->target, 'audit-schema-reset', $uncreated === null);
+
+        return $uncreated;
+    }
+
+    private function auditBaseline(AuditRun $run, bool $ok): void
+    {
+        foreach (self::BASELINE_TABLES as $table) {
+            $this->audit->statement($run->correlation, $run->scope->actor->id, self::ACTION, $run->scope->target, $table, $ok);
+        }
     }
 }

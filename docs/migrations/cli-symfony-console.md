@@ -300,18 +300,18 @@ are the first.
 ### Audit
 
 `kadupul:database:audit` follows the rules above, with these exceptions and
-additions:
+additions, which the original requires:
 
 - **Target database.** `audit_database.php` refused a remote collector
   outright, before reading its arguments, and the audit does the same.
 - **Confirmation.** `--repair` is the one write mode that plans by default.
   It changes the schema only with `--force`, or after the operator has seen
   the plan on a terminal and answered yes to a question that defaults to no.
-  The shim keeps the original's immediate repair.
-- **Baseline storage.** The audit parses the checked-in SQL directly and
-  never creates or writes `table_columns` or `table_indexes` in the target
-  database. `--load` renders the live catalog as SQL to stdout by default, or
-  atomically to `--output=PATH`. The checked-in baseline path is protected.
+  The retained compatibility CLI keeps immediate repair.
+- **Transactions.** The audit's only row writes are the baseline inserts
+  into private staging tables. They run in one transaction before both
+  tables are published by an atomic rename. Failed inserts or publication
+  leave the existing baseline intact and stop comparison and repair.
 - **Names that do not exist yet.** A column or index an `ALTER` adds takes
   its name from the audit baseline parsed out of `docs/audit_schema.sql`, a
   shipped file, and the name must match `^[A-Za-z0-9_$-]{1,64}$`. The table
@@ -326,10 +326,14 @@ additions:
   `tests/Symfony/ArchitectureTest.php` enforces. The upgrade worker has no
   timeout: stopping it half way leaves the database between two versions,
   and the original ran it to the end.
-- **Audit events.** Core upgrades record a `database-maintenance` event and
-  each schema `ALTER TABLE` records a `database-table` event. Baseline
-  parsing and dump rendering do not write to the database. The action is
-  `database.audit`.
+- **Audit events for other steps.** An upgrade, the audit tables' reset or
+  a dump records one event with the type `database-maintenance` and the id
+  `<database>:<step>`, where `<step>` is a fixed name (`upgrade`,
+  `audit-schema-reset`, `audit-schema-export`). Every `ALTER TABLE`,
+  including the audit tables' reload, records a `database-table` event. The
+  audit tables' initialization is one step; their reload is recorded only
+  when attempted. Missing or unparsable files cause no table mutations. The action
+  is `database.audit`.
 
 ## Pilot: device commands
 

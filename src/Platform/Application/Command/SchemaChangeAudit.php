@@ -68,7 +68,7 @@ final readonly class SchemaChangeAudit
         $this->record($correlation, $actorId, $action, $type, $target->value . ':' . $id, AuditEvent::ALLOWED, $ok ? AuditEvent::SUCCEEDED : AuditEvent::FAILED);
     }
 
-    /** A non-table maintenance step, currently the core upgrade. */
+    /** A step that is not one table's DDL. $step is a fixed name such as 'upgrade' or 'audit-schema-export', never operator input. */
     public function step(string $correlation, int $actorId, string $action, DatabaseTarget $target, string $step, bool $ok): void
     {
         $this->record($correlation, $actorId, $action, 'database-maintenance', $target->value . ':' . $step, AuditEvent::ALLOWED, $ok ? AuditEvent::SUCCEEDED : AuditEvent::FAILED);

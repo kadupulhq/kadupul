@@ -100,7 +100,6 @@ final class AuditDatabaseTest extends TestCase
     {
         $store = $this->createMock(AuditBaselineStore::class);
         $store->method('read')->willReturn($baseline ?? self::baseline());
-        $store->method('export')->willReturn("-- schema dump\n");
 
         return $store;
     }
@@ -114,8 +113,8 @@ final class AuditDatabaseTest extends TestCase
     public function testAReportLoadsTheBaselineThenAuditsEveryTable(): void
     {
         $store = $this->store();
-
-
+        $store->expects(self::once())->method('reset')->with(DatabaseTarget::Local)->willReturn(null);
+        $store->expects(self::once())->method('replace')->with(DatabaseTarget::Local, self::baseline())->willReturn(true);
         $schema = $this->schema();
         $schema->expects(self::never())->method('alter');
 
@@ -126,13 +125,16 @@ final class AuditDatabaseTest extends TestCase
         self::assertSame(["ERROR Col: 'poller_id', Attribute 'Default' invalid. Should be: '7', Is: '1'", "WARNING Index: 'stray', does not exist in default Kadupul.  Dropping."], $report->tables[0]->findings);
         self::assertSame([], $report->alters);
         self::assertSame([
+            ['database.audit', 'database-maintenance local:audit-schema-reset', 'succeeded'],
+            ['database.audit', 'database-table local:table_columns', 'succeeded'],
+            ['database.audit', 'database-table local:table_indexes', 'succeeded'],
         ], $this->events());
     }
 
     public function testARepairSendsEachBuildableAlterAndAuditsIt(): void
     {
         $store = $this->store();
-
+        $store->method('replace')->willReturn(true);
         $schema = $this->schema();
         $schema->expects(self::once())->method('alter')->with(DatabaseTarget::Local, self::callback(static fn($alter): bool => $alter->table === 'poller_command'), self::catalog()->table('poller_command'))->willReturn(false);
 
@@ -140,7 +142,7 @@ final class AuditDatabaseTest extends TestCase
 
         self::assertSame([['table' => 'poller_command', 'legacy' => "ALTER TABLE `poller_command`\n   MODIFY COLUMN `poller_id` int(10) unsigned NOT NULL DEFAULT '7',\n   DROP INDEX stray,\n   ROW_FORMAT=Dynamic CHARSET=utf8mb4;",
             'result' => AlterResult::Failed, 'statement' => 'ALTER TABLE `poller_command` typed']], $report->alters);
-        self::assertSame(['database.audit', 'database-table local:poller_command', 'failed'], $this->events()[0]);
+        self::assertSame(['database.audit', 'database-table local:poller_command', 'failed'], $this->events()[3]);
         self::assertSame(1, $report->failed());
     }
 
@@ -149,7 +151,7 @@ final class AuditDatabaseTest extends TestCase
         $store = $this->store(new AuditBaseline([new BaselineColumn('poller_command', 1, 'poller_id', 'int(10) unsigned', 'NO', '', '7', '')], [
             new BaselineIndex('poller_command', 1, 'poller_id', 1, 'poller_id', 'A', 0, null, null, '', null, ''),
         ]));
-
+        $store->method('replace')->willReturn(true);
         $schema = $this->schema();
         $schema->expects(self::never())->method('statement');
         $schema->expects(self::never())->method('alter');
@@ -157,14 +159,14 @@ final class AuditDatabaseTest extends TestCase
         $report = $this->audit($schema, $store)(AuditMode::Repair, false, null, true);
 
         self::assertSame([AlterResult::Failed, null], [$report->alters[0]['result'], $report->alters[0]['statement']]);
-        self::assertSame(['database.audit', 'database-table local:poller_command', 'failed'], $this->events()[0]);
+        self::assertSame(['database.audit', 'database-table local:poller_command', 'failed'], $this->events()[3]);
     }
 
     public function testADryRunChangesNothingAndPlansTheAlters(): void
     {
         $store = $this->store();
-
-
+        $store->expects(self::never())->method('reset');
+        $store->expects(self::never())->method('replace');
         $schema = $this->schema();
         $schema->expects(self::never())->method('alter');
 
@@ -198,8 +200,8 @@ final class AuditDatabaseTest extends TestCase
     {
         $store = $this->createMock(AuditBaselineStore::class);
         $store->method('read')->willReturn(null);
-
-
+        $store->expects(self::never())->method('reset');
+        $store->expects(self::never())->method('replace');
         $schema = $this->schema();
 
         $report = $this->audit($schema, $store)(AuditMode::Report, false, null, true);
@@ -218,8 +220,8 @@ final class AuditDatabaseTest extends TestCase
             $this->events = [];
             $store = $this->createMock(AuditBaselineStore::class);
             $problem === null ? $store->method('read')->willReturn(null) : $store->method('read')->willThrowException($problem);
-
-
+            $store->expects(self::never())->method('reset');
+            $store->expects(self::never())->method('replace');
 
             $report = $this->audit($this->schema(), $store)(AuditMode::Repair, false, null, true);
 
@@ -228,24 +230,57 @@ final class AuditDatabaseTest extends TestCase
         }
     }
 
+    public function testAFailedReloadStopsBeforeComparisonAndRepair(): void
+    {
+        $store = $this->store();
+        $store->method('reset')->willReturn(null);
+        $store->expects(self::once())->method('replace')->willReturn(false);
+        $schema = $this->schema();
+        $schema->expects(self::never())->method('alter');
+
+        $report = $this->audit($schema, $store)(AuditMode::Report, false, null, true);
+
+        self::assertSame(BaselineOutcome::LoadFailed, $report->baseline);
+        // A failed publication cannot produce an audit result.
+        self::assertSame([], $report->tables);
+        self::assertSame([], $report->alters);
+        self::assertSame(1, $report->failed());
+        self::assertSame([
+            ['database.audit', 'database-maintenance local:audit-schema-reset', 'succeeded'],
+            ['database.audit', 'database-table local:table_columns', 'failed'],
+            ['database.audit', 'database-table local:table_indexes', 'failed'],
+        ], $this->events());
+    }
 
     public function testAnUnparsableFileIsReportedWithItsLine(): void
     {
         $store = $this->createMock(AuditBaselineStore::class);
         $store->method('read')->willThrowException(new InvalidAuditSchema(42));
-
-
+        $store->method('reset')->willReturn(null);
+        $store->expects(self::never())->method('replace');
 
         $report = $this->audit($this->schema(), $store)(AuditMode::Create, false, null, true);
 
         self::assertSame([BaselineOutcome::Unparsable, 42], [$report->baseline, $report->unparsableLine]);
     }
 
+    public function testACreateFailureStopsTheRun(): void
+    {
+        $store = $this->store();
+        $store->method('reset')->willReturn('table_indexes');
+        $schema = $this->schema();
+        $schema->expects(self::never())->method('catalog');
+
+        $report = $this->audit($schema, $store)(AuditMode::Repair, false, null, true);
+
+        self::assertSame([BaselineOutcome::CreateFailed, 'table_indexes'], [$report->baseline, $report->uncreated]);
+        self::assertSame('failed', $this->events()[0][2]);
+    }
 
     public function testAnOlderDatabaseStopsWithoutUpgrade(): void
     {
         $store = $this->store();
-
+        $store->expects(self::never())->method('reset');
 
         self::assertSame(AuditOutcome::UpgradeRequired, $this->audit($this->schema('1.2.31'), $store)(AuditMode::Report, false, null, true)->outcome);
     }
@@ -255,7 +290,7 @@ final class AuditDatabaseTest extends TestCase
         $upgrade = $this->createMock(InstallationUpgrade::class);
         $upgrade->expects(self::once())->method('run')->willReturn(new UpgradeOutput("upgraded\n", '', true));
         $store = $this->store();
-
+        $store->method('replace')->willReturn(true);
 
         $report = $this->audit($this->schema('1.2.31'), $store, $upgrade)(AuditMode::Create, true, null, true);
 
@@ -268,8 +303,8 @@ final class AuditDatabaseTest extends TestCase
         $upgrade = $this->createStub(InstallationUpgrade::class);
         $upgrade->method('run')->willReturn(new UpgradeOutput("half way\n", '', false));
         $store = $this->store();
-
-
+        $store->expects(self::never())->method('reset');
+        $store->expects(self::never())->method('replace');
         $schema = $this->schema('1.2.31');
         $schema->expects(self::never())->method('catalog');
         $schema->expects(self::never())->method('alter');
@@ -286,7 +321,7 @@ final class AuditDatabaseTest extends TestCase
         $upgrade = $this->createStub(InstallationUpgrade::class);
         $upgrade->method('run')->willReturn(new UpgradeOutput('', '', true));
         $store = $this->store();
-
+        $store->method('replace')->willReturn(true);
         $schema = $this->schema('1.2.31');
         $schema->expects(self::once())->method('alter')->willReturn(true);
 
@@ -307,30 +342,68 @@ final class AuditDatabaseTest extends TestCase
         self::assertNull($report->upgrade);
     }
 
+    public function testLoadImportsAfterTheResetThenExports(): void
+    {
+        $store = $this->createMock(AuditBaselineStore::class);
+        $store->expects(self::once())->method('reset')->willReturn(null);
+        $store->expects(self::once())->method('import')->with(DatabaseTarget::Local, self::catalog())->willReturn(true);
+        $store->method('dumpPath')->willReturn('/srv/kadupul/docs/audit_schema.sql');
+        $store->expects(self::once())->method('export')->willReturn(false);
 
+        $report = $this->audit($this->schema(), $store)(AuditMode::Load, false, null, true);
 
-    /** --load renders the catalog and leaves the database unchanged. */
-    public function testLoadRendersTheLiveCatalogAndDoesNotWriteToTheDatabase(): void
+        self::assertSame([['poller_command', 'thold_data'], false], [$report->imported, $report->exported]);
+        self::assertSame(['database.audit', 'database-maintenance local:audit-schema-export', 'failed'], $this->events()[3]);
+        self::assertNull($report->baseline);
+        // DbalAuditBaselineStore returns false for a timed-out or unwritable
+        // dump too (DbalSchemaAuditTest), so either is recorded as this failure.
+        self::assertCount(4, $this->events);
+        self::assertSame(1, $report->failed());
+    }
+
+    public function testAFailedImportFailsTheLoad(): void
+    {
+        $store = $this->createMock(AuditBaselineStore::class);
+        $store->method('reset')->willReturn(null);
+        $store->expects(self::once())->method('import')->willReturn(false);
+        $store->method('dumpPath')->willReturn('/srv/kadupul/docs/audit_schema.sql');
+        $store->expects(self::never())->method('export');
+
+        $report = $this->audit($this->schema(), $store)(AuditMode::Load, false, null, true);
+
+        self::assertSame([BaselineOutcome::LoadFailed, null, 1], [$report->baseline, $report->exported, $report->failed()]);
+        self::assertSame(['database.audit', 'database-table local:table_columns', 'failed'], $this->events()[1]);
+    }
+
+    /**
+     * An applied --load creates the two audit tables before it lists the
+     * schema; a dry run creates nothing, so it adds them where SHOW TABLES
+     * would have listed them, and both runs list the same tables.
+     */
+    public function testADryRunLoadListsWhatAnAppliedLoadImports(): void
     {
         $status = new TableStatus('InnoDB', 'utf8mb4_unicode_ci', 'Dynamic', 0);
         $before = new AuditCatalog([new LiveTable('host', $status, [], []), new LiveTable('poller', $status, [], []), new LiveTable('user_auth', $status, [], [])], PluginSchemaChanges::none());
+        $after = new AuditCatalog([new LiveTable('host', $status, [], []), new LiveTable('poller', $status, [], []), new LiveTable('table_columns', $status, [], []),
+            new LiveTable('table_indexes', $status, [], []), new LiveTable('user_auth', $status, [], [])], PluginSchemaChanges::none());
         $store = $this->createStub(AuditBaselineStore::class);
-        $store->method('export')->willReturn('CREATE TABLE `table_columns` (...);');
+        $store->method('reset')->willReturn(null);
+        $store->method('import')->willReturn(true);
 
         $dry = $this->audit($this->listing($before), $store)(AuditMode::Load, false, null, false);
-        $applied = $this->audit($this->listing($before), $store)(AuditMode::Load, false, null, true);
+        $applied = $this->audit($this->listing($after), $store)(AuditMode::Load, false, null, true);
 
-        self::assertSame(['host', 'poller', 'user_auth'], $dry->generatedTables);
-        self::assertSame($dry->generatedTables, $applied->generatedTables);
-        self::assertStringContainsString('CREATE TABLE `table_columns`', $applied->exportContent);
-        self::assertSame([], $this->events());
+        self::assertSame(['host', 'poller', 'table_columns', 'table_indexes', 'user_auth'], $dry->imported);
+        self::assertSame($applied->imported, $dry->imported);
+        // Already present, they are not listed twice.
+        self::assertSame($applied->imported, $this->audit($this->listing($after), $store)(AuditMode::Load, false, null, false)->imported);
     }
 
     public function testARemoteCollectorIsRefusedBeforeAnyLookup(): void
     {
         $store = $this->createMock(AuditBaselineStore::class);
         $store->expects(self::never())->method('read');
-
+        $store->expects(self::never())->method('reset');
         $schema = $this->createMock(SchemaAudit::class);
         $schema->expects(self::never())->method('databaseVersion');
         $schema->expects(self::never())->method('catalog');

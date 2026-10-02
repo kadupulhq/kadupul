@@ -29,7 +29,7 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
             $flags['--' . $option] = [$option, false];
         }
 
-        return $flags + ['--as' => ['as', true], '--output' => ['output', true]] + self::versionAndHelp();
+        return $flags + ['--as' => ['as', true]] + self::versionAndHelp();
     }
 
     /**
@@ -68,11 +68,11 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
                 continue;
             }
             [$name, $value] = str_contains($argument, '=') ? explode('=', substr($argument, 2), 2) : [substr($argument, 2), null];
-            if ($name === 'as' || $name === 'output') {
+            if ($name === 'as') {
                 if ($value === null || $value === '') {
                     throw new InvalidLegacyArgument($argument);
                 }
-                $input['--' . $name] = $value;
+                $input['--as'] = $value;
                 continue;
             }
             if (in_array($name, ['dry-run', 'json', 'force'], true)) {
@@ -114,9 +114,8 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
             '    --repair  - Repair any issues found during the audit of the database',
             '    --upgrade - Deprecated; run php cli/upgrade_database.php separately', '',
             'Developer Options:',
-            '    --create  - Validate the canonical audit schema file; creates no tables.',
-            '    --load    - Write the current schema dump to stdout (or --output=PATH).',
-            '    --output  - Write --load SQL to PATH; cannot overwrite docs/audit_schema.sql.',
+            '    --create  - Initialize or Re-initialize the Audit Schema tables.',
+            '    --load    - Take a pristine Kadupul install and create Audit Schema and file.',
             '    --alters  - Print out all the alter commands vs. executing for debugging.', ''];
     }
 
@@ -137,15 +136,16 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
             return [...$lines, $versionLine, ...$this->help()];
         }
         $prefix = $alters ? '-- ' : '';
+        if ($report->baseline === BaselineOutcome::CreateFailed) {
+            return [...$lines, "Failed to create '" . $report->uncreated . "'"];
+        }
         if ($report->mode === AuditMode::Load) {
             return [...$lines, ...self::load($report)];
         }
-        if ($report->mode === AuditMode::Create && in_array($report->baseline, [BaselineOutcome::Loaded, BaselineOutcome::Planned], true)) {
-            return [...$lines, 'SUCCESS: Validated docs/audit_schema.sql; no database tables were created'];
-        }
         $lines = [...$lines, ...self::baseline($report, $prefix)];
 
-        if (in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable], true)) {
+        if (in_array($report->mode, [AuditMode::Report, AuditMode::Repair, AuditMode::Alters], true)
+            && in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)) {
             return [...$lines, 'FATAL: Audit stopped because the canonical schema could not be loaded.'];
         }
 
@@ -247,10 +247,13 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
     /** @return list<string> */
     private static function load(AuditReport $report): array
     {
-        $lines = array_map(static fn(string $table): string => 'Reading Table: ' . $table . ' - Done', $report->generatedTables);
+        $lines = array_map(static fn(string $table): string => 'Importing Table: ' . $table . ' - Done', $report->imported);
+        if ($report->dumpPath === null) {
+            return [...$lines, '', 'FATAL: Docs directory does not exist!', ''];
+        }
 
-        return [...$lines, '', 'Audit schema SQL destination: ' . $report->dumpPath,
-            $report->dryRun ? 'Schema dump was not written' : 'Finished Creating Audit Schema', ''];
+        return [...$lines, '', 'Exporting Table Audit Table Creation Logic to ' . $report->dumpPath,
+            $report->exported === true ? 'Finished Creating Audit Schema' : 'Finished Creating Audit Schema with ERROR', ''];
     }
 
     /**

@@ -1183,9 +1183,9 @@ Known differences from `cli/fix_mediumint.php`:
 
 `php bin/console kadupul:database:audit` compares the schema with
 `docs/audit_schema.sql` (`--report`), prints the statements that would make
-them match (`--alters`), runs them (`--repair`), validates the canonical file
-(`--create`, compatibility alias), or renders a schema dump (`--load`).
-`--repair` changes the schema only with `--force`; without it
+them match (`--alters`), runs them (`--repair`), reloads the audit tables
+(`--create`), or rewrites the file from this database for developers
+(`--load`). `--repair` changes the schema only with `--force`; without it
 the run plans, and on a terminal it then asks before it runs the plan.
 `--upgrade` is deprecated: run `php cli/upgrade_database.php` separately
 before auditing. The flag remains accepted for compatibility and prints a
@@ -1194,29 +1194,26 @@ core and plugin upgrades. It needs the Console
 Access and Installation/Upgrades realms, the realm of the install wizard,
 which is the only place the web UI changes the core schema
 (`include/global_arrays.php:1284-1285`). `--dry-run` reads the file and the
-schema and changes nothing. `--json` prints
+schema and changes nothing, not even the two audit tables. `--json` prints
 `status`, `database`, `dry_run`, `mode`, `upgrade`, `baseline`, `tables`,
-`alters`, `generated_tables` and `exported`.
-
-For `--load`, SQL is written to stdout by default. `--output=PATH` writes it
-atomically to a chosen file; the command refuses a destination resolving to
-`docs/audit_schema.sql`. With `--json`, a named output path is required so SQL
-and the JSON result cannot share stdout. `--create` remains accepted as a
-read-only compatibility alias that validates the parsed baseline. Neither
-operation creates or populates database staging tables. JSON uses
-`generated_tables` instead of the former `imported` field.
+`alters`, `imported` and `exported`.
 
 Known differences from `cli/audit_database.php`:
 
 - It needs an operator with the Console Access and Installation/Upgrades
   realms, with the same Settings/Utilities fallback as convert-tables. The
   original ran for anyone who could run it.
-- `docs/audit_schema.sql` is parsed as data and is never sent to the server.
-  An `INSERT` into another table, multiple tuples, or an unsupported value
-  makes the file unusable and reports the line number. The SQL `CREATE TABLE`
-  and `INSERT` records describe the baseline format only; the audit never
-  creates or populates `table_columns` or `table_indexes` in the target.
-- Only base tables are audited; the original also walked views.
+- `docs/audit_schema.sql` is parsed and its rows inserted with bound values.
+  The original piped the file into the `mysql` client with the password on
+  its command line. `FATAL: mysql or mariadb command not found` no longer
+  occurs, and a file with an `INSERT` into any other table, a row with
+  several value lists, or a value that is not a string, number or `NULL` is
+  refused whole: `FATAL: Failed Load the Audit Schema` is followed by
+  `ERROR: docs/audit_schema.sql line <n> does not parse` instead of the
+  client's output, and the client's error, which the original let through
+  to stderr, is not printed. The two audit tables get the definitions in
+  the file, from constants that a test keeps equal to it.
+- Only base tables are audited and imported; the original also walked views.
   Table names are quoted in `SHOW COLUMNS` and `SHOW INDEXES`.
 - A repair statement is built from typed parts: names quoted, defaults as
   quoted literals, `FIRST` in capitals, one line. `--alters` and a failed
@@ -1259,8 +1256,18 @@ Known differences from `cli/audit_database.php`:
 - A column that is `NOT NULL` with no default in the audit schema, and whose
   `Extra` has drifted, is modified with `DEFAULT '1'`, as the original did:
   its comparison turns the missing default into `true`, which prints as `1`.
-  No row in the shipped `docs/audit_schema.sql` reaches this case, but an
-  operator-generated dump can.
+  No row in the shipped `docs/audit_schema.sql` reaches this case, but a file
+  rewritten by `--load` from another database can.
+- A failed import under `--load` makes the run fail. The original printed
+  `Importing Table: ... - Done` for every table either way and exited 0.
+- `--dry-run --load` lists the two audit tables even when they do not exist
+  yet, since an applied run creates them before it lists the schema.
+- `--load` reads every table before it imports any, so the rows it records
+  for the indexes of `table_columns` and `table_indexes` themselves carry
+  the cardinality of the empty tables. The original read each table as it
+  reached it, after importing the tables before it, so those two tables'
+  cardinality counted rows it had just inserted. Cardinality is the
+  server's estimate, and the audit never compares it.
 - Using the deprecated `--upgrade` flag prints a warning to stderr that directs
   operators to `php cli/upgrade_database.php`. It remains accepted for
   compatibility and runs `cli/upgrade_database.php` and each plugin's
@@ -1279,11 +1286,30 @@ Known differences from `cli/audit_database.php`:
 - An upgrade that stops before its end, on an exception or a crash, fails
   the run the same way, and the exception's text is not printed. The
   original died there with the PHP error, so no mode ran either.
-- A failed `ALTER TABLE` logs the server message as the original did, but no
-  `CMDPHP SQL Backtrace` line follows it, as with the other write commands.
+- `--load` writes `docs/audit_schema.sql` only when the dump program
+  succeeds. The original truncated the file first.
+- A failed export prints the original's `Finished Creating Audit Schema
+  with ERROR` and exits 0; under `--json` it reads `partial`, with
+  `exported: false`, and exits 1. A dump program that exits non-zero logs
+  the original's `DBCALL ERROR: mysqldump failed with exit code <n> for
+  database '<db>'`. The dump is stopped after 300 seconds, where the
+  original waited for it, and logs `DBCALL ERROR: mysqldump timed out after
+  300 seconds for database '<db>'`. A dump that cannot be written to
+  `docs/` logs `DBCALL ERROR: could not write the audit schema dump for
+  database '<db>'`. Neither of the last two lines names the command.
+- `--load` dumps from the configured database server: the dump program
+  gets the host and port from `include/config.php`, and the TLS CA,
+  certificate and key when the connection uses TLS. Its environment holds
+  only `PATH`, `HOME` and the password, so `MYSQL_HOST`, `MYSQL_TCP_PORT` or
+  `MYSQL_UNIX_PORT` cannot point it elsewhere. The original named neither
+  host nor port, so the client used its own default.
+- A failed statement, such as an `ALTER TABLE` the server refuses or the
+  `CREATE TABLE` of an audit table, logs the server's message as the
+  original did, but no `CMDPHP SQL Backtrace` line follows it, as with the
+  other write commands.
 - Any database fault prints the generic `ERROR: Database audit failed`.
-- `--dry-run` exists only under `bin/console`; it reads and plans without
-  issuing database statements.
+- `--dry-run` exists only under `bin/console`; there it runs no statement,
+  including the audit tables' reload, which every original mode ran.
 - Under `bin/console`, `--repair` without `--force` runs as `--dry-run` does
   and changes nothing. On a terminal the command then shows the plan and
   asks `Run these statements now?`, which defaults to no; a yes runs the

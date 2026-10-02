@@ -23,8 +23,6 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(name: 'kadupul:database:audit', description: 'Compare the schema with docs/audit_schema.sql, and repair it on request.')]
 final readonly class AuditDatabaseCommand
@@ -36,16 +34,11 @@ final readonly class AuditDatabaseCommand
         private InstallationVersion $version,
         private CliPresentation $presentation,
         private ResultRenderer $renderer,
-        private Filesystem $filesystem,
-        private string $projectDir,
     ) {}
 
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] AuditDatabaseInput $input): int
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
-        if ($input->json && $input->mode() === AuditMode::Load && $input->output === '-') {
-            return $this->renderer->failure($io, $output, $mode, 'Use --output=PATH with --load --json so SQL stays separate from the JSON result.', new CommandResult(['status' => 'invalid', 'error' => 'load needs an output path in json mode'], [], Command::INVALID));
-        }
         if ($input->upgrade) {
             $warning = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
             $warning->writeln('DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.');
@@ -58,29 +51,6 @@ final readonly class AuditDatabaseCommand
         $report = $this->run($io, $output, $mode, $legacy, $input, !$input->dryRun && !$ask);
         if (!$report instanceof AuditReport) {
             return $report;
-        }
-        if ($report->mode === AuditMode::Load && !$report->dryRun && $report->exportContent !== null) {
-            if ($input->output === '-') {
-                $output->write($report->exportContent, false, OutputInterface::OUTPUT_RAW);
-                $warning = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-                $warning->writeln('Wrote the audit schema SQL to stdout.');
-
-                return Command::SUCCESS;
-            }
-            try {
-                $destination = $this->outputDestination($input->output);
-                $canonical = realpath($this->projectDir . '/docs/audit_schema.sql') ?: $this->projectDir . '/docs/audit_schema.sql';
-                if ($destination === $canonical) {
-                    throw new IOException('The canonical audit schema is protected.');
-                }
-                $this->filesystem->dumpFile($destination, $report->exportContent);
-            } catch (IOException) {
-                return $this->renderer->failure($io, $output, $mode, 'Could not write the audit schema dump to the requested path.', new CommandResult(
-                    ['status' => 'failed', 'error' => 'schema dump write failed'],
-                    ['ERROR: Could not write the audit schema dump to the requested path.'],
-                    Command::FAILURE,
-                ));
-            }
         }
         if ($mode === OutputMode::Legacy) {
             return $this->legacy($output, $report, $legacy, $input->alters);
@@ -114,7 +84,7 @@ final readonly class AuditDatabaseCommand
             // A shim with no mode prints the help after the version check, as the
             // script did; under bin/console a missing mode is a usage error.
             $auditMode = $input->mode();
-            $report = $auditMode === null && $mode !== OutputMode::Legacy ? null : ($this->audit)($auditMode, $input->upgrade, $input->as, $apply, $input->output);
+            $report = $auditMode === null && $mode !== OutputMode::Legacy ? null : ($this->audit)($auditMode, $input->upgrade, $input->as, $apply);
         } catch (RemoteCollectorRefused) {
             return $this->renderer->failure($io, $output, $mode, 'The audit runs on the main data collector only.', new CommandResult(
                 ['status' => 'failed', 'error' => 'main data collector only'],
@@ -129,18 +99,6 @@ final readonly class AuditDatabaseCommand
         return $report ?? $this->renderer->failure($io, $output, $mode, 'Choose --report, --repair, --alters, --create or --load.', new CommandResult(['status' => 'invalid', 'error' => 'no mode selected'], [], Command::INVALID));
     }
 
-    private function outputDestination(string $path): string
-    {
-        $candidate = str_starts_with($path, DIRECTORY_SEPARATOR) ? $path : getcwd() . DIRECTORY_SEPARATOR . $path;
-        $resolved = realpath($candidate);
-        if ($resolved !== false) {
-            return $resolved;
-        }
-        $parent = realpath(dirname($candidate));
-
-        return ($parent === false ? dirname($candidate) : $parent) . DIRECTORY_SEPARATOR . basename($candidate);
-    }
-
     private function legacy(OutputInterface $output, AuditReport $report, AuditDatabaseLegacyArguments $legacy, bool $alters): int
     {
         // The original passed the upgrade script's stderr through as it ran; here it follows the upgrade.
@@ -149,13 +107,15 @@ final readonly class AuditDatabaseCommand
             ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->write($stderr, false, OutputInterface::OUTPUT_RAW);
         }
         $lines = $legacy->report($report, $alters, $report->outcome === AuditOutcome::NoMode ? $this->version->line(self::UTILITY) : '');
-        // An unusable baseline must not look like a successful audit.
-        $baselineFailed = in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable], true);
+        // Failed canonical-baseline audits must not report success.
+        // Preserve the old no-newline output for "Failed to create".
+        $baselineFailed = in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)
+            && in_array($report->mode, [AuditMode::Report, AuditMode::Repair, AuditMode::Alters], true);
         $exit = in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) || $baselineFailed
             ? Command::FAILURE
             : Command::SUCCESS;
 
-        return $this->renderer->render(new CommandResult([], $lines, $exit), OutputMode::Legacy, $output);
+        return $this->renderer->render(new CommandResult([], $lines, $exit, $report->baseline !== BaselineOutcome::CreateFailed), OutputMode::Legacy, $output);
     }
 
     private function report(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, AuditReport $report): int
@@ -178,7 +138,7 @@ final readonly class AuditDatabaseCommand
             + ($alter['statement'] === null ? [] : ['statement' => $alter['statement']]), $report->alters);
         if ($mode === OutputMode::Json) {
             // Always local: the audit runs only on the primary, where local is main.
-            return $this->renderer->written($output, false, $report->dryRun, $report->failed(), [
+            $fields = [
                 'mode' => $report->mode?->value,
                 'upgrade' => match (true) {
                     $report->upgrade !== null => 'upgraded',
@@ -186,8 +146,18 @@ final readonly class AuditDatabaseCommand
                     default => 'none',
                 },
                 'baseline' => $report->baseline?->value, 'tables' => $tables, 'alters' => $alters,
-                'generated_tables' => $report->generatedTables, 'exported' => $report->exported,
-            ]);
+                'imported' => $report->imported, 'exported' => $report->exported,
+            ];
+            if (in_array($report->mode, [AuditMode::Report, AuditMode::Repair, AuditMode::Alters], true)
+                && in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed, BaselineOutcome::CreateFailed], true)) {
+                return $this->renderer->render(new CommandResult(
+                    ['status' => 'failed', 'database' => 'local', 'dry_run' => $report->dryRun] + $fields,
+                    [],
+                    Command::FAILURE,
+                ), OutputMode::Json, $output);
+            }
+
+            return $this->renderer->written($output, false, $report->dryRun, $report->failed(), $fields);
         }
         $flagged = array_values(array_filter($tables, static fn(array $table): bool => $table['errors'] > 0 || $table['warnings'] > 0));
         if ($flagged !== []) {
@@ -200,24 +170,31 @@ final readonly class AuditDatabaseCommand
         return $this->renderer->summary($io, OutputFormatter::escape(self::summary($report, count($flagged))), $report->failed());
     }
 
-    /** --create and --load operate on the parsed baseline and catalog without creating staging tables. */
+    /** --create and --load audit no table, so their summary says what happened to the audit tables instead. */
     private static function summary(AuditReport $report, int $flagged): string
     {
-        if (in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable], true)) {
+        if ($report->baseline === BaselineOutcome::CreateFailed) {
+            return 'Could not create the ' . $report->uncreated . ' table';
+        }
+        if (in_array($report->mode, [AuditMode::Report, AuditMode::Repair, AuditMode::Alters], true)
+            && in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)) {
             return 'Audit stopped because the canonical schema could not be loaded';
         }
 
         return match ($report->mode) {
             AuditMode::Create => match ($report->baseline) {
-                BaselineOutcome::Loaded => 'Validated docs/audit_schema.sql; no database tables were created',
-                BaselineOutcome::Planned => 'Read docs/audit_schema.sql; no database tables were created',
+                BaselineOutcome::Loaded => 'Reloaded the audit tables from docs/audit_schema.sql',
+                BaselineOutcome::Planned => 'Read docs/audit_schema.sql; the audit tables were not reloaded',
                 BaselineOutcome::FileMissing => 'docs/audit_schema.sql was not found',
                 BaselineOutcome::Unparsable => 'docs/audit_schema.sql line ' . $report->unparsableLine . ' does not parse',
-                default => 'The canonical schema could not be read',
+                default => 'The audit tables could not be loaded',
             },
             AuditMode::Load => match (true) {
-                $report->dryRun => sprintf('Would write a schema dump to %s', $report->dumpPath),
-                default => sprintf('Wrote a schema dump to %s', $report->dumpPath),
+                $report->baseline === BaselineOutcome::LoadFailed => 'Importing ' . count($report->imported) . ' tables into the audit tables failed',
+                $report->dumpPath === null => sprintf($report->dryRun ? 'Would import %d tables; docs/ does not exist, so nothing would be exported' : 'Imported %d tables; docs/ does not exist, so nothing was exported', count($report->imported)),
+                $report->dryRun => sprintf('Would import %d tables and export them to %s', count($report->imported), $report->dumpPath),
+                $report->exported === false => sprintf('Imported %d tables, but exporting the audit schema to %s failed', count($report->imported), $report->dumpPath),
+                default => sprintf('Imported %d tables and exported them to %s', count($report->imported), $report->dumpPath),
             },
             default => sprintf('Audited %d tables, %d with problems', count($report->tables), $flagged),
         };

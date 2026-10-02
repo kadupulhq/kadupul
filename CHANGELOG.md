@@ -6,17 +6,20 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Remove the database audit's unused staging-table writes. `--create` now validates the canonical baseline, and `--load` writes SQL to stdout or an explicit `--output` path without overwriting `docs/audit_schema.sql`. JSON changes the `imported` field to `generated_tables`. Fixes #456.
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
+
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
 - Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
+
 - Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
 - Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
 - Move External Links into the Navigation Symfony module with Twig forms, transactional viewing grants, stale-order protection and safe legacy redirects.
+
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
+
 - Add the CSRF token only to same-origin XMLHttpRequest, jQuery and form posts in the installed CSRF Magic browser script. Form targets are read from the `action` attribute, so a control named `action` cannot hide them; relative URLs resolve against the document base; and token fields are withheld when a submit button's `formaction` points to another origin. The submit check is installed when the script loads rather than from `CsrfMagic.end()`, so an unclosed `plaintext`, `textarea`, `title`, `xmp` or comment that keeps the end-of-page call from running cannot switch it off. Browsers without `SubmitEvent.submitter` send no token from a form that has any button with a cross-origin `formaction`, or a non-POST/invalid `formmethod` override, including the form's same-origin buttons. The legacy dependency installer now applies checksum-verified patches recorded in `legacy-files.json`.
 - Stop the CSRF Magic output handler from adding the token to forms that post to another origin. Only forms with no action or a relative action get the field from the server; absolute and protocol-relative actions are left to the browser script, which checks their origin. Attributes are read as the browser reads them, so a quoted `>`, a second `action`, character references, backslashes or control characters cannot hide the target, and any `<base href>` that is not relative withholds the field from relative actions too, even when it names this origin, and GET forms no longer receive the token when another attribute contains `method="post"`. Form tags inside comments or the text of `textarea`, `title`, `script`, `style` and similar elements get no token, nor does a form opened while an earlier form is still open, since the browser would move the token into the outer form. A `<base href>` only counts where the browser would parse it, and a page the handler cannot read to the end gets no token in relative-action forms. Tag names, attribute names, the method and URL schemes are compared as ASCII, since Kadupul sets `LC_CTYPE` from the user's language and in a Turkish locale `strtolower()` on PHP 8.1 and the PCRE `/i` flag do not fold `I` to `i`: `ACTION`, `SCRIPT` and `XI:` were misread there, and upper-case `SCRIPT` or `TITLE` elements stopped legitimate forms from getting the token.
 - Read the document base URL in the CSRF Magic browser script through `Node.prototype`, so an element named `baseURI` cannot make every same-origin request lose its token.

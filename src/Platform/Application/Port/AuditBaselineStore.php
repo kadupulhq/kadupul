@@ -9,9 +9,8 @@ namespace Kadupul\Platform\Application\Port;
 
 use Kadupul\Platform\Domain\Schema\AuditBaseline;
 use Kadupul\Platform\Domain\Schema\InvalidAuditSchema;
-use Kadupul\Platform\Application\Port\AuditCatalog;
 
-/** The parsed canonical schema used by the audit, and a renderer for live schema metadata. */
+/** docs/audit_schema.sql and the two tables audit_database.php loaded it into. */
 interface AuditBaselineStore
 {
     /**
@@ -22,6 +21,22 @@ interface AuditBaselineStore
      */
     public function read(): ?AuditBaseline;
 
-    /** Render the live database catalog as a parseable SQL baseline dump. */
-    public function export(AuditCatalog $catalog): string;
+    /**
+     * Ensure both tables exist without clearing a previously valid baseline.
+     *
+     * @return ?string the first table that could not be created, or null
+     */
+    public function reset(DatabaseTarget $target): ?string;
+
+    /** Atomically replace both baseline tables only after their complete rows are staged. */
+    public function replace(DatabaseTarget $target, AuditBaseline $baseline): bool;
+
+    /** load_audit_database(): every column and index $catalog lists, in one transaction. */
+    public function import(DatabaseTarget $target, AuditCatalog $catalog): bool;
+
+    /** Where export() writes: <root>/docs/audit_schema.sql, or null when docs/ does not exist. */
+    public function dumpPath(): ?string;
+
+    /** db_dump_data() of both tables into dumpPath(). False when the dump program failed, which leaves the file as it was. */
+    public function export(DatabaseTarget $target): bool;
 }

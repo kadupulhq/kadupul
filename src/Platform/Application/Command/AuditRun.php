@@ -29,10 +29,10 @@ final readonly class AuditRun
     /**
      * @param list<TableAudit> $tables
      * @param list<array{table: string, legacy: string, result: AlterResult, statement: ?string}> $alters
-     * @param list<string> $generatedTables
+     * @param list<string> $imported
      */
-    public function report(AuditMode $mode, ?BaselineOutcome $baseline, ?int $line = null, array $tables = [], array $alters = [], array $generatedTables = [], ?string $path = null, ?bool $exported = null, ?string $exportContent = null): AuditReport
+    public function report(AuditMode $mode, ?BaselineOutcome $baseline, ?int $line = null, array $tables = [], array $alters = [], array $imported = [], ?string $path = null, ?bool $exported = null, ?string $uncreated = null): AuditReport
     {
-        return new AuditReport(AuditOutcome::Completed, $mode, !$this->apply, $this->upgraded, $this->upgradePlanned, $baseline, $line, $tables, $alters, $generatedTables, $path, $exported, $exportContent);
+        return new AuditReport(AuditOutcome::Completed, $mode, !$this->apply, $this->upgraded, $this->upgradePlanned, $baseline, $line, $tables, $alters, $imported, $path, $exported, $uncreated);
     }
 }

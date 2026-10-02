@@ -8,8 +8,8 @@
 namespace Kadupul\Platform\Domain\Schema;
 
 /**
- * The audit schema represented by table_columns and table_indexes INSERT rows
- * in docs/audit_schema.sql. The legacy script looked rows up
+ * The audit schema: what table_columns and table_indexes held after
+ * audit_database.php loaded docs/audit_schema.sql. The script looked rows up
  * with "WHERE table_name = ?" under utf8mb4_unicode_ci, so names match here
  * without letter case. mysqldump wrote the rows in primary key order, which
  * is the order a SELECT without ORDER BY returned them, so file order is kept.

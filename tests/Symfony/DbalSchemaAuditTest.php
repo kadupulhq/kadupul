@@ -7,8 +7,6 @@
 
 namespace Kadupul\Tests;
 
-use Kadupul\Platform\Application\Port\AuditCatalog;
-use Kadupul\Platform\Domain\Schema\AuditSchemaDump;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Kadupul\Platform\Application\Command\AuditDatabase;
@@ -28,7 +26,6 @@ use Kadupul\Platform\Domain\Schema\ColumnType;
 use Kadupul\Platform\Domain\Schema\DropIndex;
 use Kadupul\Platform\Domain\Schema\IndexAlgorithm;
 use Kadupul\Platform\Domain\Schema\LiveTable;
-use Kadupul\Platform\Domain\Schema\PluginSchemaChanges;
 use Kadupul\Platform\Domain\Schema\ModifyColumn;
 use Kadupul\Platform\Domain\Schema\RebuildIndex;
 use Kadupul\Platform\Domain\Schema\TableAlter;
@@ -92,7 +89,7 @@ final class DbalSchemaAuditTest extends TestCase
 
     private function store(Connection $db, float $dumpTimeout = 300.0, ?string $dumpBinary = null): DbalAuditBaselineStore
     {
-        return new DbalAuditBaselineStore($this->root, new Filesystem());
+        return new DbalAuditBaselineStore($this->root, new Filesystem(), $this->connections($db), new InstallationConfiguration($this->root), $dumpTimeout, $dumpBinary);
     }
 
     private function log(): string
@@ -200,27 +197,10 @@ final class DbalSchemaAuditTest extends TestCase
     {
         $store = $this->store(self::offline());
         self::assertNull($store->read());
-        (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, "INSERT INTO `table_columns` VALUES ('t',1,'x','int(10)','NO','',NULL,'');\n");
+        self::assertNull($store->dumpPath());
+        (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, "INSERT INTO `table_columns` VALUES ('t',1,'x','int(10)','NO','',NULL,'');\nINSERT INTO `table_indexes` VALUES ('t',0,'PRIMARY',1,'x','A',1,NULL,NULL,'','BTREE','');\n-- Dump completed on 2026-10-02 00:00:00\n");
         self::assertSame('x', $store->read()?->columnRows[0]->field);
-    }
-
-    public function testExportRendersCatalogRowsThatTheBaselineParserReadsBack(): void
-    {
-        $hostile = "quote' slash\\ newline\n tab\t control\x1a";
-        $catalog = new AuditCatalog([
-            new LiveTable('probe', new TableStatus('InnoDB', 'utf8mb4_unicode_ci', 'Dynamic', 2), [
-                ['Field' => 'id', 'Type' => 'int(10) unsigned', 'Null' => 'NO', 'Key' => 'PRI', 'Default' => null, 'Extra' => 'auto_increment'],
-                ['Field' => 'label', 'Type' => 'varchar(64)', 'Null' => 'YES', 'Key' => '', 'Default' => $hostile, 'Extra' => ''],
-            ], [[
-                'Table' => 'probe', 'Non_unique' => '1', 'Key_name' => 'label_idx', 'Seq_in_index' => '1', 'Column_name' => 'label',
-                'Collation' => 'A', 'Cardinality' => '2', 'Sub_part' => null, 'Packed' => null, 'Null' => '', 'Index_type' => 'BTREE', 'Comment' => '',
-            ]]),
-        ], PluginSchemaChanges::none());
-        $parsed = AuditSchemaDump::parse($this->store(self::offline())->export($catalog));
-
-        self::assertSame($hostile, $parsed->column('probe', 'label')?->default);
-        self::assertSame('label_idx', $parsed->indexes('probe')[0]->keyName);
-        self::assertSame('2', (string) $parsed->indexes('probe')[0]->cardinality);
+        self::assertSame($this->root . DbalAuditBaselineStore::FILE, $store->dumpPath());
     }
 
     public function testIncompleteCanonicalDumpsCannotBecomeABaseline(): void
@@ -553,8 +533,101 @@ final class DbalSchemaAuditTest extends TestCase
         }
     }
 
+    public function testResetEnsuresTablesWithoutDiscardingTheirRowsOnARealMariaDb(): void
+    {
+        $db = $this->mariaDb();
+        try {
+            $store = $this->store($db);
+            self::assertNull($store->reset(DatabaseTarget::Local));
+            self::assertStringContainsString('Holds Default Kadupul Table Definitions', (string) ($db->fetchAssociative('SHOW CREATE TABLE table_columns')['Create Table'] ?? ''));
+            self::assertStringContainsString('Holds Default Kadupul Index Definitions', (string) ($db->fetchAssociative('SHOW CREATE TABLE table_indexes')['Create Table'] ?? ''));
+            $db->executeStatement("INSERT INTO table_columns (table_name, table_sequence, table_field) VALUES ('t', 1, 'x')");
+            $db->executeStatement("INSERT INTO table_indexes (idx_table_name, idx_key_name, idx_seq_in_index, idx_column_name) VALUES ('t', 'k', 1, 'x')");
 
+            self::assertNull($store->reset(DatabaseTarget::Local));
+            self::assertSame([1, 1], [(int) $db->fetchOne('SELECT COUNT(*) FROM table_columns'), (int) $db->fetchOne('SELECT COUNT(*) FROM table_indexes')]);
+        } finally {
+            $this->dropAll($db);
+        }
+    }
 
+    public function testReplaceLeavesTheDumpDefinitionsAndBoundRowsOnARealMariaDb(): void
+    {
+        $db = $this->mariaDb();
+        $hostile = "x'); DROP TABLE settings; --\\";
+        try {
+            $store = $this->store($db);
+            self::assertNull($store->reset(DatabaseTarget::Local));
+
+            self::assertTrue($store->replace(DatabaseTarget::Local, new AuditBaseline(
+                [new BaselineColumn('host', 1, 'id', 'int(10) unsigned', 'NO', 'PRI', null, 'auto_increment'), new BaselineColumn('host', 2, 'n', 'varchar(20)', 'YES', '', $hostile, '')],
+                [new BaselineIndex('host', 0, 'PRIMARY', 1, 'id', 'A', 0, null, null, '', 'BTREE', '')],
+            )));
+
+            self::assertStringContainsString("COMMENT='Holds Default Cacti Table Definitions'", (string) ($db->fetchAssociative('SHOW CREATE TABLE table_columns')['Create Table'] ?? ''));
+            self::assertSame([['host', '1', 'id', 'int(10) unsigned', 'NO', 'PRI', null, 'auto_increment'], ['host', '2', 'n', 'varchar(20)', 'YES', '', $hostile, '']], array_map(
+                static fn(array $row): array => array_map(static fn(mixed $v): ?string => $v === null ? null : (string) $v, array_values($row)),
+                $db->fetchAllAssociative('SELECT * FROM table_columns ORDER BY table_sequence'),
+            ));
+            self::assertSame(1, (int) $db->fetchOne('SELECT COUNT(*) FROM table_indexes'));
+            self::assertSame(1, (int) $db->fetchOne('SELECT COUNT(*) FROM settings'));
+
+            self::assertFalse($store->replace(DatabaseTarget::Local, AuditBaseline::empty()));
+            self::assertSame(2, (int) $db->fetchOne('SELECT COUNT(*) FROM table_columns'));
+        } finally {
+            $this->dropAll($db);
+        }
+    }
+
+    public function testFailedStagedWritesPreserveBothExistingBaselineTables(): void
+    {
+        $db = $this->mariaDb();
+        try {
+            $store = $this->store($db);
+            self::assertNull($store->reset(DatabaseTarget::Local));
+            $column = new BaselineColumn("host", 1, "id", "int(10)", "NO", "PRI", null, "");
+            $index = new BaselineIndex("host", 0, "PRIMARY", 1, "id", "A", 1, null, null, "", "BTREE", "");
+            self::assertTrue($store->replace(DatabaseTarget::Local, new AuditBaseline([$column], [$index])));
+            $before = [$db->fetchAllAssociative("SELECT * FROM table_columns"), $db->fetchAllAssociative("SELECT * FROM table_indexes")];
+            foreach ([new AuditBaseline([$column, $column], [$index]), new AuditBaseline([$column], [$index, $index])] as $invalid) {
+                self::assertFalse($store->replace(DatabaseTarget::Local, $invalid));
+                self::assertSame($before, [$db->fetchAllAssociative("SELECT * FROM table_columns"), $db->fetchAllAssociative("SELECT * FROM table_indexes")]);
+                self::assertSame([], $db->fetchFirstColumn("SHOW TABLES LIKE ?", ["audit_%"]));
+            }
+        } finally {
+            $this->dropAll($db);
+        }
+    }
+
+    public function testImportWritesEveryTableAsShowColumnsListsItOnARealMariaDb(): void
+    {
+        $db = $this->mariaDb();
+        try {
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . " (id int(10) unsigned NOT NULL, name varchar(20) DEFAULT 'a', PRIMARY KEY (id)) ENGINE=InnoDB");
+            $store = $this->store($db);
+            $store->reset(DatabaseTarget::Local);
+            $catalog = $this->audit($db)->catalog(DatabaseTarget::Local);
+
+            self::assertTrue($store->import(DatabaseTarget::Local, $catalog));
+
+            self::assertSame([[self::PROBE, 1, 'id'], [self::PROBE, 2, 'name']], array_map(
+                static fn(array $row): array => [$row['table_name'], (int) $row['table_sequence'], $row['table_field']],
+                $db->fetchAllAssociative('SELECT * FROM table_columns WHERE table_name = ? ORDER BY table_sequence', [self::PROBE]),
+            ));
+            self::assertSame('a', $db->fetchOne('SELECT table_default FROM table_columns WHERE table_name = ? AND table_field = ?', [self::PROBE, 'name']));
+            self::assertSame([self::PROBE, '0', 'PRIMARY', '1', 'id'], array_map('strval', array_values($db->fetchAssociative(
+                'SELECT idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name FROM table_indexes WHERE idx_table_name = ?',
+                [self::PROBE],
+            ) ?: [])));
+            $imported = array_column($db->fetchAllAssociative('SELECT DISTINCT table_name FROM table_columns'), 'table_name');
+            $listed = array_map(static fn(LiveTable $table): string => $table->name, $catalog->tables());
+            sort($imported);
+            sort($listed);
+            self::assertSame($listed, $imported);
+        } finally {
+            $this->dropAll($db);
+        }
+    }
 
     /**
      * A stand-in dump program on PATH, written in PHP so it sees its
@@ -610,9 +683,106 @@ final class DbalSchemaAuditTest extends TestCase
         return $db;
     }
 
+    public function testExportDumpsFromTheConfiguredServerWithThePasswordOnlyInItsEnvironment(): void
+    {
+        $bin = $this->fakeDump(0);
+        $store = $this->store(self::noSettings(), dumpBinary: $bin . '/mariadb-dump');
 
+        $this->withPath($bin, static function () use ($store): void {
+            self::assertTrue($store->export(DatabaseTarget::Local));
+        });
 
+        $argv = json_decode((string) file_get_contents($this->root . '/argv.json'), true);
+        self::assertSame(realpath($bin . '/mariadb-dump'), json_decode((string) file_get_contents($this->root . '/binary.json'), true));
+        self::assertSame(['--extended-insert=FALSE', '--host=db.example', '--port=3307', '--ssl-ca=/tls/ca.pem', '--ssl-key=/tls/key.pem',
+            '--user=-u-root', '--', 'cacti', 'table_columns', 'table_indexes'], $argv);
+        self::assertStringNotContainsString('p w', implode(' ', $argv));
+        $env = json_decode((string) file_get_contents($this->root . '/env.json'), true);
+        self::assertIsArray($env);
+        $expected = ['MYSQL_PWD', 'PATH'];
+        if (getenv('HOME') !== false) {
+            $expected[] = 'HOME';
+        }
+        sort($expected);
+        // macOS's CoreFoundation sets this in every PHP process it starts,
+        // the fake included, even under an explicit environment.
+        $names = array_values(array_diff(array_keys($env), PHP_OS_FAMILY === 'Darwin' ? ['__CF_USER_TEXT_ENCODING'] : []));
+        sort($names);
+        self::assertSame($expected, $names);
+        self::assertSame('p w"\'$x', $env['MYSQL_PWD']);
+        self::assertSame("-- dump of " . implode(' ', $argv) . "\n", file_get_contents($this->root . DbalAuditBaselineStore::FILE));
+    }
 
+    public function testExportPassesNoTlsFilesWhenTheConnectionDoesNotUseTls(): void
+    {
+        $bin = $this->fakeDump(0, false);
+        $store = $this->store(self::noSettings(), dumpBinary: $bin . '/mariadb-dump');
 
+        $this->withPath($bin, static function () use ($store): void {
+            self::assertTrue($store->export(DatabaseTarget::Local));
+        });
 
+        self::assertSame(
+            ['--extended-insert=FALSE', '--host=db.example', '--port=3307', '--user=-u-root', '--', 'cacti', 'table_columns', 'table_indexes'],
+            json_decode((string) file_get_contents($this->root . '/argv.json'), true)
+        );
+    }
+
+    public function testAFailedExportLeavesTheFileAndLogsTheExitCode(): void
+    {
+        $bin = $this->fakeDump(2);
+        (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, "kept\n");
+        $store = $this->store(self::noSettings(), dumpBinary: $bin . '/mariadb-dump');
+
+        $this->withPath($bin, static function () use ($store): void {
+            self::assertFalse($store->export(DatabaseTarget::Local));
+        });
+
+        self::assertSame("kept\n", file_get_contents($this->root . DbalAuditBaselineStore::FILE));
+        self::assertMatchesRegularExpression("/^\\d{2}\\/\\d{2}\\/\\d{4} \\d{2}:\\d{2}:\\d{2} - DBCALL ERROR: mysqldump failed with exit code 2 for database 'cacti'\n$/", $this->log());
+    }
+
+    public function testATimedOutExportLeavesTheFileAndLogsTheTimeout(): void
+    {
+        $bin = $this->fakeDump(0, true, 30);
+        (new Filesystem())->dumpFile($this->root . DbalAuditBaselineStore::FILE, "kept\n");
+        $store = $this->store(self::noSettings(), 0.5, $bin . '/mariadb-dump');
+
+        $this->withPath($bin, static function () use ($store): void {
+            self::assertFalse($store->export(DatabaseTarget::Local));
+        });
+
+        self::assertSame("kept\n", file_get_contents($this->root . DbalAuditBaselineStore::FILE));
+        // Filesystem::dumpFile() writes a temporary file beside the target first.
+        self::assertSame([$this->root . DbalAuditBaselineStore::FILE], glob($this->root . '/docs/*.sql*'));
+        self::assertMatchesRegularExpression("/^\\d{2}\\/\\d{2}\\/\\d{4} \\d{2}:\\d{2}:\\d{2} - DBCALL ERROR: mysqldump timed out after 0.5 seconds for database 'cacti'\n$/", $this->log());
+    }
+
+    public function testAnExportThatCannotBeWrittenReturnsFalseAndLogsIt(): void
+    {
+        $bin = $this->fakeDump(0);
+        // A directory where the file should be makes the final rename fail.
+        mkdir($this->root . DbalAuditBaselineStore::FILE);
+        $store = $this->store(self::noSettings(), dumpBinary: $bin . '/mariadb-dump');
+
+        $this->withPath($bin, static function () use ($store): void {
+            self::assertFalse($store->export(DatabaseTarget::Local));
+        });
+
+        self::assertDirectoryExists($this->root . DbalAuditBaselineStore::FILE);
+        self::assertMatchesRegularExpression("/ - DBCALL ERROR: could not write the audit schema dump for database 'cacti'\n$/", $this->log());
+    }
+
+    public function testExportNeedsTheDocsDirectory(): void
+    {
+        $bin = $this->fakeDump(0);
+        rmdir($this->root . '/docs');
+        $store = $this->store(self::noSettings());
+
+        $this->withPath($bin, static function () use ($store): void {
+            self::assertFalse($store->export(DatabaseTarget::Local));
+        });
+
+        self::assertFileDoesNotExist($this->root . '/argv.json');
+    }
 }
