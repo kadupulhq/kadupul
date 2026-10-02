@@ -1621,6 +1621,11 @@ class spikekill {
 										if ($timestamp >= $this->out_start && $timestamp <= $this->out_end) {
 											$rra[$rra_num][$ds_num]['outwind_samples']++;
 
+											/* a sample that is already unknown needs no NaN replacement */
+											if ($this->avgnan == 'nan' && strcasecmp($sample, 'nan') === 0) {
+												continue;
+											}
+
 											if ($this->method == SPIKE_METHOD_FLOAT) {
 												$this->debug(sprintf("Window Float Found, Date:%s, Value:%s", date('Y-m-d H:i', $timestamp), $sample));
 
@@ -1896,6 +1901,18 @@ class spikekill {
 										$dsvalue = $rra[$rra_num][$ds_num]['last'];
 										$kills++;
 										$this->total_kills++;
+									} elseif ($this->avgnan == 'nan' && strcasecmp($dsvalue, 'nan') !== 0) {
+										$message = sprintf('Replacing dsvalue %s with NaN', $dsvalue);
+
+										if ($this->debug) {
+											cacti_log("DEBUG: $message", false, 'SPIKEKILL');
+										}
+
+										$this->debug($message);
+
+										$dsvalue = 'NaN';
+										$kills++;
+										$this->total_kills++;
 									}
 								} elseif ($this->debug) {
 									cacti_log("DEBUG: ignoring dsvalue {$dsvalue} as we are outside of the time range!", false, 'SPIKEKILL');
@@ -1929,6 +1946,20 @@ class spikekill {
 											$this->debug($message);
 
 											$dsvalue = $rra[$rra_num][$ds_num]['last'];
+											$kills++;
+											$this->total_kills++;
+										}
+									} elseif ($this->avgnan == 'nan') {
+										if ((!is_numeric($dsvalue) || $dsvalue == 0) && strcasecmp($dsvalue, 'nan') !== 0) {
+											$message = sprintf('Replacing dsvalue %s with NaN', $dsvalue);
+
+											if ($this->debug) {
+												cacti_log("DEBUG: $message", false, 'SPIKEKILL');
+											}
+
+											$this->debug($message);
+
+											$dsvalue = 'NaN';
 											$kills++;
 											$this->total_kills++;
 										}
