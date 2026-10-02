@@ -1,0 +1,152 @@
+<div class="formRow odd" id="row_host_id"><div class="formColumnLeft"><div class="formFieldName">Field drop_callback<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Plain text, <b>bold</b> &amp; a <a href="https://example.com/">link</a>.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget" id="host_id_wrap"><span class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s" id="host_id_click" style="z-index:4"></span><span class="ui-select-text"><input class="ui-state-default ui-corner-all" id="host_id_input" type="text" value="a&apos;b&quot;c&lt;d&gt;&amp;e"></span></span><input id="host_id" name="host_id" type="hidden" value="7">
+  <script nonce="&lt;NONCE&gt;" type="text/javascript">
+		var host_idTimer;
+		var host_idClickTimer;
+		var host_idOpen = false;
+
+		$(function() {
+		    $('#host_id_input').autocomplete({
+				source: 'form.php?action=ajax_hosts',
+				autoFocus: true,
+				minLength: 0,
+				select: function(event,ui) {
+					$('#host_id_input').val(ui.item.label);
+					if (ui.item.id) {
+						$('#host_id').val(ui.item.id);
+					} else {
+						$('#host_id').val(ui.item.value);
+					}
+					hostChanged();
+				}
+			}).css('border', 'none').css('background-color', 'transparent');
+
+			$('#host_id_wrap').on('dblclick', function() {
+				host_idOpen = false;
+				clearTimeout(host_idTimer);
+				clearTimeout(host_idClickTimer);
+				$('#host_id_input').autocomplete('close').select();
+			}).on('click', function() {
+				if (host_idOpen) {
+					$('#host_id_input').autocomplete('close');
+					clearTimeout(host_idTimer);
+					host_idOpen = false;
+				} else {
+					host_idClickTimer = setTimeout(function() {
+						$('#host_id_input').autocomplete('search', '');
+						clearTimeout(host_idTimer);
+						host_idOpen = true;
+					}, 200);
+				}
+				$('#host_id_input').select();
+			}).on('mouseleave', function() {
+				host_idTimer = setTimeout(function() { $('#host_id_input').autocomplete('close'); }, 800);
+			});
+
+			width = $('#host_id_input').textBoxWidth();
+			if (width < 100) {
+				width = 100;
+			}
+
+			$('#host_id_wrap').css('width', width+20);
+			$('#host_id_input').css('width', width);
+
+			$('ul[id^="ui-id"]').on('mouseenter', function() {
+				clearTimeout(host_idTimer);
+			}).on('mouseleave', function() {
+				host_idTimer = setTimeout(function() { $('#host_id_input').autocomplete('close'); }, 800);
+			});
+
+			$('ul[id^="ui-id"] > li').each().on('mouseenter', function() {
+				$(this).addClass('ui-state-hover');
+			}).on('mouseleave', function() {
+				$(this).removeClass('ui-state-hover');
+			});
+
+			$('#host_id_wrap').on('mouseenter', function() {
+				$(this).addClass('ui-state-hover');
+				$('input#host_id_input').addClass('ui-state-hover');
+			}).on('mouseleave', function() {
+				$(this).removeClass('ui-state-hover');
+				$('input#host_id_input').removeClass('ui-state-hover');
+			});
+		});
+		</script>
+  </div>
+  </div>
+</div>
+<div class="formRow even" id="row_site_id"><div class="formColumnLeft"><div class="formFieldName">Field drop_callback<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Plain text, <b>bold</b> &amp; a <a href="https://example.com/">link</a>.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="autodrop ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget" id="site_id_wrap"><span class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s" id="site_id_click" style="z-index:4"></span><span class="ui-select-text"><input class="ui-state-default ui-corner-all" id="site_id_input" type="text" value="Any"></span></span><input id="site_id" name="site_id" type="hidden" value="0">
+  <script nonce="&lt;NONCE&gt;" type="text/javascript">
+		var site_idTimer;
+		var site_idClickTimer;
+		var site_idOpen = false;
+
+		$(function() {
+		    $('#site_id_input').autocomplete({
+				source: 'form.php?action=ajax_sites',
+				autoFocus: true,
+				minLength: 0,
+				select: function(event,ui) {
+					$('#site_id_input').val(ui.item.label);
+					if (ui.item.id) {
+						$('#site_id').val(ui.item.id);
+					} else {
+						$('#site_id').val(ui.item.value);
+					}
+					;
+				}
+			}).css('border', 'none').css('background-color', 'transparent');
+
+			$('#site_id_wrap').on('dblclick', function() {
+				site_idOpen = false;
+				clearTimeout(site_idTimer);
+				clearTimeout(site_idClickTimer);
+				$('#site_id_input').autocomplete('close').select();
+			}).on('click', function() {
+				if (site_idOpen) {
+					$('#site_id_input').autocomplete('close');
+					clearTimeout(site_idTimer);
+					site_idOpen = false;
+				} else {
+					site_idClickTimer = setTimeout(function() {
+						$('#site_id_input').autocomplete('search', '');
+						clearTimeout(site_idTimer);
+						site_idOpen = true;
+					}, 200);
+				}
+				$('#site_id_input').select();
+			}).on('mouseleave', function() {
+				site_idTimer = setTimeout(function() { $('#site_id_input').autocomplete('close'); }, 800);
+			});
+
+			width = $('#site_id_input').textBoxWidth();
+			if (width < 100) {
+				width = 100;
+			}
+
+			$('#site_id_wrap').css('width', width+20);
+			$('#site_id_input').css('width', width);
+
+			$('ul[id^="ui-id"]').on('mouseenter', function() {
+				clearTimeout(site_idTimer);
+			}).on('mouseleave', function() {
+				site_idTimer = setTimeout(function() { $('#site_id_input').autocomplete('close'); }, 800);
+			});
+
+			$('ul[id^="ui-id"] > li').each().on('mouseenter', function() {
+				$(this).addClass('ui-state-hover');
+			}).on('mouseleave', function() {
+				$(this).removeClass('ui-state-hover');
+			});
+
+			$('#site_id_wrap').on('mouseenter', function() {
+				$(this).addClass('ui-state-hover');
+				$('input#site_id_input').addClass('ui-state-hover');
+			}).on('mouseleave', function() {
+				$(this).removeClass('ui-state-hover');
+				$('input#site_id_input').removeClass('ui-state-hover');
+			});
+		});
+		</script>
+  </div>
+  </div>
+</div>
