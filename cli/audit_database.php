@@ -96,36 +96,33 @@ if (cacti_sizeof($parms)) {
         print 'WARNING: Kadupul must be upgraded first.  Use the --upgrade option to perform that upgrade' . PHP_EOL;
         exit(1);
     } elseif ($db_version != CACTI_VERSION && $upgrade) {
-        upgrade_database();
+        if (!upgrade_database()) {
+            exit(1);
+        }
     }
 
+    $success = true;
     if ($repair) {
-        $action_result = repair_database();
+        $success = repair_database();
     } elseif ($create) {
-        $action_result = create_tables();
+        $success = create_tables();
     } elseif ($report) {
-        $action_result = report_audit_results();
+        $success = report_audit_results() !== false;
     } elseif ($altersopt) {
-        $action_result = repair_database(false);
+        $success = repair_database(false);
     } elseif ($loadopt) {
-        $action_result = load_audit_database();
+        $success = load_audit_database();
     } else {
         display_help();
-
-        exit(1);
     }
 
-    if ($action_result === false) {
-        exit(1);
-    }
-
-    exit(0);
+    exit($success ? 0 : 1);
 } else {
     display_help();
     exit(1);
 }
 
-function upgrade_database()
+function upgrade_database(): bool
 {
     global $config;
 
@@ -136,7 +133,7 @@ function upgrade_database()
     $return_var = 0;
     $output     = array();
 
-    exec('php ' . $config['base_path'] . '/cli/upgrade_database.php --debug', $output, $return_var);
+    exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/cli/upgrade_database.php') . ' --debug', $output, $return_var);
 
     $end = microtime(true);
 
@@ -147,8 +144,10 @@ function upgrade_database()
         print '---------------------------------------------------------------------------------------------' . PHP_EOL;
         print implode(PHP_EOL, $output) . PHP_EOL;
         print '---------------------------------------------------------------------------------------------' . PHP_EOL;
+        return false;
     }
 
+    $success = true;
     $pistart = microtime(true);
 
     // Upgrade plugins now
@@ -211,15 +210,27 @@ function upgrade_database()
                         // Some plugins don't upgrade in the proper way
                         if (function_exists($ufunc3)) {
                             cacti_log("NOTE: Running Plugin $pname install function due to some plugins not upgrading properly.", true, 'UPGRADE');
-                            $ufunc3(true);
+                            if ($ufunc3(true) === false) {
+                                $success = false;
+                                cacti_log("WARNING: Plugin $pname setup callback failed.", true, 'UPGRADE');
+                                continue;
+                            }
                         }
 
                         if (function_exists($ufunc2)) {
                             cacti_log("NOTE: Upgrading Plugin $pname from $old to $version using alternate upgrade path.", true, 'UPGRADE');
-                            $ufunc2(true);
+                            if ($ufunc2(true) === false) {
+                                $success = false;
+                                cacti_log("WARNING: Plugin $pname upgrade callback failed.", true, 'UPGRADE');
+                                continue;
+                            }
                         } elseif (function_exists($ufunc1)) {
                             cacti_log("NOTE: Upgrading Plugin $pname from $old to $version using standard upgrade path.", true, 'UPGRADE');
-                            $ufunc1;
+                            if ($ufunc1() === false) {
+                                $success = false;
+                                cacti_log("WARNING: Plugin $pname upgrade callback failed.", true, 'UPGRADE');
+                                continue;
+                            }
                         } else {
                             cacti_log("WARNING: Plugin $pname lacks an upgrade function.", true, 'UPGRADE');
                         }
@@ -229,7 +240,7 @@ function upgrade_database()
                             $return_var = 0;
                             $output     = array();
 
-                            exec('php ' . $config['base_path'] . '/plugins/' . $pname . '/database_upgrade.php --type=large --force-ver=' . $old, $output, $return_var);
+                            exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/plugins/' . $pname . '/database_upgrade.php') . ' --type=large --force-ver=' . cacti_escapeshellarg($old), $output, $return_var);
 
                             if ($return_var == 0) {
                                 print implode(PHP_EOL, $output) . PHP_EOL;
@@ -238,6 +249,7 @@ function upgrade_database()
                                 print implode(PHP_EOL, $output) . PHP_EOL;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                             } else {
+                                $success = false;
                                 cacti_log("WARNING: Kadupul Plugin $pname Upgrade Encountered Errors.", true, 'UPGRADE');
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                                 print implode(PHP_EOL, $output) . PHP_EOL;
@@ -290,6 +302,7 @@ function upgrade_database()
     cacti_log(sprintf('NOTE: Kadupul Plugin Upgrades completed in %.2f seconds', $end - $pistart), true, 'UPGRADE');
 
     cacti_log(sprintf('NOTE: Audit Upgrade completed in %.2f seconds.', $end - $start), true, 'UPGRADE');
+    return $success;
 }
 
 function plugin_installed($plugin)
@@ -310,7 +323,6 @@ function repair_database($run = true)
     global $altersopt, $database_default;
 
     $alters = report_audit_results(false);
-
     if ($alters === false) {
         return false;
     }
@@ -383,8 +395,6 @@ function report_audit_results($output = true)
     $db_name = 'Tables_in_' . $database_default;
 
     if (!create_tables()) {
-        print 'FATAL: Unable to load the audit schema baseline' . PHP_EOL;
-
         return false;
     }
 
@@ -959,8 +969,15 @@ function get_column_sequence_number($table, $index, $column)
 function create_tables($load = true)
 {
     global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
-    global $database_ssl;
     global $altersopt;
+
+    if ($load) {
+        $schema_file = $config['base_path'] . '/docs/audit_schema.sql';
+        if (!is_file($schema_file) || !is_readable($schema_file)) {
+            print 'FATAL: Failed to find or read Audit Schema' . PHP_EOL;
+            return false;
+        }
+    }
 
     db_execute("CREATE TABLE IF NOT EXISTS table_columns (
 		table_name varchar(50) NOT NULL,
@@ -1007,90 +1024,123 @@ function create_tables($load = true)
     }
 
     if ($load) {
-        db_execute('TRUNCATE table_columns');
-        db_execute('TRUNCATE table_indexes');
-
         $output = array();
         $error  = 0;
 
-        $db_shell = get_audit_database_client();
-        if ($db_shell === false) {
-            print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
+        $db_shell = getenv('CACTI_MYSQL_CLIENT');
 
-            return false;
-        }
-
-        if (file_exists($config['base_path'] . '/docs/audit_schema.sql')) {
-            $version_output = array();
-            $version_status = 0;
-            exec(cacti_escapeshellarg($db_shell) . ' --version', $version_output, $version_status);
-
-            $ssl_option = $version_status === 0
-                ? db_client_ssl_option($database_ssl, implode(' ', $version_output))
-                : false;
-
-            if ($ssl_option === false) {
-                fwrite(STDERR, "FATAL: Unable to determine a safe TLS option for the database client.\n");
-
-                return false;
-            }
-
-            exec(cacti_escapeshellarg($db_shell) .
-                $ssl_option .
-                ' -u' . cacti_escapeshellarg($database_username) .
-                ' -p' . cacti_escapeshellarg($database_password) .
-                ' -h' . cacti_escapeshellarg($database_hostname) .
-                ' -P' . cacti_escapeshellarg($database_port) .
-                ' ' . cacti_escapeshellarg($database_default) .
-                ' < ' . cacti_escapeshellarg($config['base_path'] . '/docs/audit_schema.sql'), $output, $error);
-
-            if ($error == 0) {
-                print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
+        // Allow installations and isolated checks to select a specific client.
+        if ($db_shell === false || $db_shell === '') {
+            // Handle systems where MariaDB does not provide the mysql command.
+            if (file_exists('/usr/bin/mariadb')) {
+                $db_shell = '/usr/bin/mariadb';
+            } elseif (file_exists('/usr/bin/mysql')) {
+                $db_shell = '/usr/bin/mysql';
+            } elseif (file_exists('/usr/local/bin/mariadb')) {
+                $db_shell = '/usr/local/bin/mariadb';
+            } elseif (file_exists('/usr/local/bin/mysql')) {
+                $db_shell = '/usr/local/bin/mysql';
             } else {
-                print 'FATAL: Failed Load the Audit Schema' . PHP_EOL;
-                print 'ERROR: ' . implode(",\n   ", $output) . PHP_EOL;
+                $db_shell = trim((string) shell_exec('which mysql'));
 
-                return false;
+                if ($db_shell == '') {
+                    print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
+                    return false;
+                }
             }
-        } else {
-            print 'FATAL: Failed to find Audit Schema' . PHP_EOL;
+        }
 
+        $suffix = bin2hex(random_bytes(8));
+        $completion = 'audit_complete_' . $suffix;
+        $staging = array('table_columns' => 'audit_columns_' . $suffix, 'table_indexes' => 'audit_indexes_' . $suffix);
+        $backups = array('table_columns' => 'audit_old_columns_' . $suffix, 'table_indexes' => 'audit_old_indexes_' . $suffix);
+        $import_file = tempnam(sys_get_temp_dir(), 'kadupul-audit-');
+        if ($import_file === false) {
+            print 'FATAL: Unable to stage the Audit Schema' . PHP_EOL;
             return false;
         }
+        $loaded = false;
+        $cleaned = true;
+        try {
+            $schema = file_get_contents($schema_file);
+            if ($schema === false) {
+                throw new RuntimeException('Unable to read the Audit Schema');
+            }
+            if (!preg_match('/-- Dump completed on [^\r\n]+\s*$/D', $schema)) {
+                throw new RuntimeException('Audit Schema completion footer is missing');
+            }
+            foreach ($staging as $live => $stage) {
+                $schema = str_replace('`' . $live . '`', '`' . $stage . '`', $schema);
+            }
+            $schema .= "\nCREATE TABLE `$completion` (id INTEGER PRIMARY KEY);\nINSERT INTO `$completion` VALUES (1);\n";
+            if (file_put_contents($import_file, $schema) !== strlen($schema)) {
+                throw new RuntimeException('Unable to stage the Audit Schema');
+            }
+            $command = array($db_shell,
+                '--user=' . $database_username,
+                '--host=' . $database_hostname,
+                '--port=' . $database_port,
+                '--database=' . $database_default);
+            $process = proc_open(
+                $command,
+                array(0 => array('file', $import_file, 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)),
+                $pipes,
+                null,
+                array_merge(getenv(), array('MYSQL_PWD' => $database_password))
+            );
+            if (!is_resource($process)) {
+                throw new RuntimeException('Unable to start the Audit Schema client');
+            }
+            // Drain combined output without exposing credentials or blocking the client.
+            stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            $error = proc_close($process);
+            if ($error !== 0) {
+                throw new RuntimeException('Audit Schema import failed');
+            }
+            if (!db_table_exists($completion) || (int) db_fetch_cell('SELECT COUNT(*) FROM `' . $completion . '` WHERE id=1') !== 1) {
+                throw new RuntimeException('Audit Schema import did not reach its completion marker');
+            }
+            foreach ($staging as $stage) {
+                if (!db_table_exists($stage) || (int) db_fetch_cell('SELECT COUNT(*) FROM `' . $stage . '`') < 1) {
+                    throw new RuntimeException('Audit Schema staging table is missing or empty');
+                }
+            }
+            $renames = array();
+            foreach ($staging as $live => $stage) {
+                $renames[] = "`$live` TO `{$backups[$live]}`";
+                $renames[] = "`$stage` TO `$live`";
+            }
+            if (!db_execute('RENAME TABLE ' . implode(', ', $renames))) {
+                throw new RuntimeException('Unable to install the Audit Schema');
+            }
+            $loaded = true;
+        } catch (Throwable $failure) {
+            print 'FATAL: Failed Load the Audit Schema: ' . $failure->getMessage() . PHP_EOL;
+        } finally {
+            if (!unlink($import_file)) {
+                $cleaned = false;
+                print 'FATAL: Unable to remove private Audit Schema staging file' . PHP_EOL;
+            }
+            foreach (array_merge(array_values($staging), array_values($backups), array($completion)) as $temporary) {
+                try {
+                    if (!db_execute('DROP TABLE IF EXISTS `' . $temporary . '`')) {
+                        throw new RuntimeException('cleanup was not acknowledged');
+                    }
+                } catch (Throwable $cleanupFailure) {
+                    $cleaned = false;
+                    print 'FATAL: Unable to remove Audit Schema temporary table ' . $temporary . ': ' . $cleanupFailure->getMessage() . PHP_EOL;
+                }
+            }
+        }
+        if ($loaded && $cleaned) {
+            print ($altersopt ? '-- ' : '') . 'SUCCESS: Loaded the Audit Schema' . PHP_EOL;
+        }
+        return $loaded && $cleaned;
+
     }
 
     return true;
-}
-
-/**
- * Resolve the MySQL-compatible client used to load the audit baseline.
- *
- * The test-only constant lets the CLI integration fixture use a fake client
- * even on hosts where a real client is installed. Normal callers always use
- * the existing absolute-path and PATH discovery order.
- *
- * @return string|false
- */
-function get_audit_database_client()
-{
-    if (defined('CACTI_TEST_DATABASE_CLIENT')) {
-        return CACTI_TEST_DATABASE_CLIENT;
-    }
-
-    // Handle case to address MariaDB dropping the mysql command.
-    if (file_exists('/usr/bin/mariadb')) {
-        return '/usr/bin/mariadb';
-    } elseif (file_exists('/usr/bin/mysql')) {
-        return '/usr/bin/mysql';
-    } elseif (file_exists('/usr/local/bin/mariadb')) {
-        return '/usr/local/bin/mariadb';
-    } elseif (file_exists('/usr/local/bin/mysql')) {
-        return '/usr/local/bin/mysql';
-    }
-
-    $db_shell = trim((string) shell_exec('which mysql'));
-
-    return $db_shell === '' ? false : $db_shell;
 }
 
 function load_audit_database()
@@ -1103,8 +1153,10 @@ function load_audit_database()
         return false;
     }
 
-    db_execute('TRUNCATE table_columns');
-    db_execute('TRUNCATE table_indexes');
+    if (!db_execute('TRUNCATE table_columns') || !db_execute('TRUNCATE table_indexes')) {
+        print 'FATAL: Failed to populate Audit Schema: baseline cleanup failed' . PHP_EOL;
+        return false;
+    }
 
     $tables = db_fetch_assoc('SHOW TABLES');
 
@@ -1120,7 +1172,7 @@ function load_audit_database()
             $i = 1;
             if (cacti_sizeof($columns)) {
                 foreach ($columns as $c) {
-                    db_execute_prepared(
+                    if (!db_execute_prepared(
                         'INSERT INTO table_columns
 						(table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra)
 						VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -1134,7 +1186,10 @@ function load_audit_database()
                             $c['Default'],
                             $c['Extra']
                         )
-                    );
+                    )) {
+                        print 'FATAL: Failed to populate Audit Schema: baseline row write failed' . PHP_EOL;
+                        return false;
+                    }
 
                     $i++;
                 }
@@ -1144,7 +1199,7 @@ function load_audit_database()
 
             if (cacti_sizeof($indexes)) {
                 foreach ($indexes as $i) {
-                    db_execute_prepared(
+                    if (!db_execute_prepared(
                         'INSERT INTO table_indexes
 						(idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name,
 						idx_collation, idx_cardinality, idx_sub_part, idx_packed, idx_null, idx_index_type, idx_comment)
@@ -1163,7 +1218,10 @@ function load_audit_database()
                             $i['Index_type'],
                             $i['Comment']
                         )
-                    );
+                    )) {
+                        print 'FATAL: Failed to populate Audit Schema: baseline row write failed' . PHP_EOL;
+                        return false;
+                    }
                 }
             }
         }
@@ -1181,7 +1239,6 @@ function load_audit_database()
 
     } else {
         print PHP_EOL . 'FATAL: Docs directory does not exist!' . PHP_EOL . PHP_EOL;
-
         return false;
     }
 

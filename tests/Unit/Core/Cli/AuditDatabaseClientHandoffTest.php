@@ -5,7 +5,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-test('the complete audit CLI preserves client arguments and stops on client failure', function ($version, $ssl, $versionExit, $importExit, $mode, $flag, $expectedExit, $message) {
+test('the complete audit CLI preserves client arguments and stops on client failure', function ($schemaComplete, $markerPresent, $importExit, $mode, $invoked, $expectedExit, $message) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/audit client space ' . bin2hex(random_bytes(8));
     foreach (['', '/cli', '/include', '/docs', '/bin'] as $suffix) {
@@ -19,7 +19,7 @@ test('the complete audit CLI preserves client arguments and stops on client fail
         }
     };
     $database = 'fixture; echo injected > ' . escapeshellarg($dir . '/injected') . '; #';
-    $schema = "-- complete fixture baseline\nSELECT 1;\n";
+    $schema = "-- complete fixture baseline\nSELECT 1;\n" . ($schemaComplete ? "-- Dump completed on 2026-10-02 00:00:00\n" : "");
     if (!copy($root . '/cli/audit_database.php', $dir . '/cli/audit_database.php')) {
         throw new RuntimeException('Unable to copy complete audit CLI');
     }
@@ -32,21 +32,20 @@ test('the complete audit CLI preserves client arguments and stops on client fail
     $bootstrap = '<?php ' . $helper
         . '$config = ["base_path" => dirname(__DIR__), "poller_id" => 1];'
         . 'define("CACTI_VERSION", "fixture"); define("COPYRIGHT_YEARS", "2026");'
-        . 'define("CACTI_TEST_DATABASE_CLIENT", dirname(__DIR__) . "/bin/mysql");'
+        . 'putenv("CACTI_MYSQL_CLIENT=" . dirname(__DIR__) . "/bin/mysql");'
         . '$database_default = ' . var_export($database, true) . ';'
         . '$database_username = "fixture"; $database_password = "fixture";'
         . '$database_hostname = "fixture"; $database_port = "3306";'
-        . '$database_ssl = ' . var_export($ssl, true) . ';'
+        . '$database_ssl = false;'
         . 'function cacti_sizeof($value) { return is_countable($value) ? count($value) : 0; }'
-        . 'function db_fetch_cell($sql) { return "fixture"; }'
+        . 'function db_fetch_cell($sql) { return strpos($sql, "COUNT(*)") !== false ? 1 : "fixture"; }'
         . 'function db_execute($sql) { return true; }'
-        . 'function db_table_exists($name) { return true; }'
+        . 'function db_table_exists($name) { return strpos($name, "audit_complete_") !== 0 || ' . var_export($markerPresent, true) . '; }'
         . 'function db_fetch_assoc($sql) { throw new LogicException("Forbidden scan after import failure"); }'
         . 'function cacti_escapeshellarg($value) { return escapeshellarg($value); }';
     $write($dir . '/include/cli_check.php', $bootstrap);
     $client = '#!' . PHP_BINARY . "\n<?php\n"
-        . 'if ($argv[1] === "--version") { print ' . var_export($version, true) . '; exit(' . $versionExit . '); }'
-        . '$receipt = ["argv" => array_slice($argv, 1), "stdin" => stream_get_contents(STDIN)];'
+        . '$receipt = ["argv" => array_slice($argv, 1), "stdin" => stream_get_contents(STDIN), "password" => getenv("MYSQL_PWD")];'
         . 'file_put_contents(__DIR__ . "/../handoff.json", json_encode($receipt, JSON_THROW_ON_ERROR));'
         . 'if (' . $importExit . ' !== 0) fwrite(STDERR, "fixture client import failed\n");'
         . 'exit(' . $importExit . ');';
@@ -71,12 +70,12 @@ test('the complete audit CLI preserves client arguments and stops on client fail
         }
         expect($output)->toContain($message);
         expect(is_file($dir . '/injected'))->toBeFalse();
-        if ($flag !== false) {
+        if ($invoked) {
             expect(is_file($dir . '/handoff.json'))->toBeTrue();
             $actual = json_decode(file_get_contents($dir . '/handoff.json'), true, flags: JSON_THROW_ON_ERROR);
-            $arguments = $flag === '' ? [] : [$flag];
-            array_push($arguments, '-ufixture', '-pfixture', '-hfixture', '-P3306', $database);
-            expect($actual)->toBe(['argv' => $arguments, 'stdin' => $schema]);
+            expect($actual['argv'])->toBe(['--user=fixture', '--host=fixture', '--port=3306', '--database=' . $database]);
+            expect($actual['password'])->toBe('fixture');
+            expect($actual['stdin'])->toStartWith($schema)->toMatch('/CREATE TABLE `audit_complete_[0-9a-f]{16}`/')->toMatch('/INSERT INTO `audit_complete_[0-9a-f]{16}` VALUES \(1\);/');
         } else {
             expect(is_file($dir . '/handoff.json'))->toBeFalse();
         }
@@ -95,12 +94,11 @@ test('the complete audit CLI preserves client arguments and stops on client fail
         }
     }
 })->with([
-    'MySQL TLS option' => ['mysql Ver 8.0.36', false, 0, 0, '--create', '--ssl-mode=DISABLED', 0, 'SUCCESS: Loaded the Audit Schema'],
-    'MariaDB TLS option' => ['mariadb Ver 15.1 Distrib 10.11.8-MariaDB', false, 0, 0, '--create', '--skip-ssl', 0, 'SUCCESS: Loaded the Audit Schema'],
-    'configured TLS preserves client policy' => ['mysql Ver 8.0.36', true, 0, 0, '--create', '', 0, 'SUCCESS: Loaded the Audit Schema'],
-    'unknown client refuses import' => ['unknown client', false, 0, 0, '--report', false, 1, 'Unable to determine a safe TLS option'],
-    'failed version command refuses import' => ['mysql Ver 8.0.36', false, 1, 0, '--report', false, 1, 'Unable to determine a safe TLS option'],
-    'failed import stops report' => ['mysql Ver 8.0.36', false, 0, 1, '--report', '--ssl-mode=DISABLED', 1, 'FATAL: Failed Load the Audit Schema'],
-    'failed import stops repair' => ['mysql Ver 8.0.36', false, 0, 1, '--repair', '--ssl-mode=DISABLED', 1, 'FATAL: Failed Load the Audit Schema'],
-    'failed import stops alters' => ['mysql Ver 8.0.36', false, 0, 1, '--alters', '--ssl-mode=DISABLED', 1, 'FATAL: Failed Load the Audit Schema'],
+    'literal database name and password environment' => [true, true, 0, '--create', true, 0, 'SUCCESS: Loaded the Audit Schema'],
+    'missing completion footer refuses client startup' => [false, true, 0, '--report', false, 1, 'Audit Schema completion footer is missing'],
+    'missing completion marker refuses schema publication' => [true, false, 0, '--report', true, 1, 'Audit Schema import did not reach its completion marker'],
+    'failed import stops create' => [true, true, 1, '--create', true, 1, 'Audit Schema import failed'],
+    'failed import stops report' => [true, true, 1, '--report', true, 1, 'Audit Schema import failed'],
+    'failed import stops repair' => [true, true, 1, '--repair', true, 1, 'Audit Schema import failed'],
+    'failed import stops alters' => [true, true, 1, '--alters', true, 1, 'Audit Schema import failed'],
 ]);
