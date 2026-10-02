@@ -15,6 +15,11 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
+
+- Add the CSRF token only to same-origin XMLHttpRequest, jQuery and form posts in the installed CSRF Magic browser script. Form targets are read from the `action` attribute, so a control named `action` cannot hide them; relative URLs resolve against the document base; and token fields are withheld when a submit button's `formaction` points to another origin. The submit check is installed when the script loads rather than from `CsrfMagic.end()`, so an unclosed `plaintext`, `textarea`, `title`, `xmp` or comment that keeps the end-of-page call from running cannot switch it off. Browsers without `SubmitEvent.submitter` send no token from a form that has any button with a cross-origin `formaction`, or a non-POST/invalid `formmethod` override, including the form's same-origin buttons. The legacy dependency installer now applies checksum-verified patches recorded in `legacy-files.json`.
+- Stop the CSRF Magic output handler from adding the token to forms that post to another origin. Only forms with no action or a relative action get the field from the server; absolute and protocol-relative actions are left to the browser script, which checks their origin. Attributes are read as the browser reads them, so a quoted `>`, a second `action`, character references, backslashes or control characters cannot hide the target, and any `<base href>` that is not relative withholds the field from relative actions too, even when it names this origin, and GET forms no longer receive the token when another attribute contains `method="post"`. Form tags inside comments or the text of `textarea`, `title`, `script`, `style` and similar elements get no token, nor does a form opened while an earlier form is still open, since the browser would move the token into the outer form. A `<base href>` only counts where the browser would parse it, and a page the handler cannot read to the end gets no token in relative-action forms. Tag names, attribute names, the method and URL schemes are compared as ASCII, since Kadupul sets `LC_CTYPE` from the user's language and in a Turkish locale `strtolower()` on PHP 8.1 and the PCRE `/i` flag do not fold `I` to `i`: `ACTION`, `SCRIPT` and `XI:` were misread there, and upper-case `SCRIPT` or `TITLE` elements stopped legitimate forms from getting the token.
+- Read the document base URL in the CSRF Magic browser script through `Node.prototype`, so an element named `baseURI` cannot make every same-origin request lose its token.
+- Port the remaining CSRF Magic library checks from 1.2: refuse more than eight submitted tokens, token times that are not digits or exceed the 300-second future clock-skew allowance, and generate fallback secrets with `random_bytes()`. The optional CSRF debug log and the default failure page no longer record tokens, the secret, form values or query strings. Secret rotation generates before modifying the working file, then exclusively writes and verifies a replacement in its directory, preserves existing UID/GID with verified ownership before applying mode 0640 and renaming atomically; generation or publication failure preserves the working key. Symlink file destinations are refused.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
 - Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
@@ -46,6 +51,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
+
+- Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
 - Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
 
@@ -69,6 +76,9 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Replace Font Awesome 4 icon names that render blank: the paper-plane scroll-to-top button and the sunrise logo now show their icons, and paper-plane and paw no longer turn delete icons into an undefined class. The paw theme also shows its logo on the logout page.
 - Make the offline bundle check fail when a font named in the Font Awesome stylesheet is missing. It checked only that `all.css` existed, so a bundle whose icons all drew as missing glyphs passed.
+
+- Center the About link logo in the classic, dark and modern themes, where it was clipped on the right. Add the missing semicolons that dropped the page-load progress bar glow in classic, paper-plane and paw and the graph zoom tooltip padding and border in midwinter, and give the midwinter `.moveArrowNone` padding its missing `px` unit. Remove theme declarations browsers already discarded, including stray comment terminators in the paper-plane and sunrise headers, and refresh the midwinter stylesheet content versions so browsers load the current CSS. Keep device states, log levels, popup/menu text and hover controls readable in dark, paper-plane and sunrise. Fixes #637.
+
 
 - Install only the Font Awesome stylesheet, its WOFF2 fonts and licence into a cleared `include/fa` with directory guards, instead of the whole 25 MB npm package. Font URLs now carry the package version, so a browser that cached Font Awesome 5 fonts under the same names fetches the new ones.
 - Disable network access while parsing imported package XML. Fixes #578.
@@ -145,6 +155,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Represent database table analysis results with typed immutable outcomes while preserving CLI text, JSON output and failure exit codes. Related to #682 and #683.
 - Declare precise union return contracts for existing filename, command, CSP process-owner and RRD maintenance helpers while preserving success, failure and empty-output behavior. Related to #717.
 
 - Serve legacy stylesheets and scripts from `public/assets/` with digested file names once `php bin/console asset-map:compile` has run, using Symfony AssetMapper 7.4. Theme `url()` and `@import` references are rewritten to the digested copies, so Midwinter no longer keeps hand-maintained import hashes and `update_hash.php` is gone. Without a compiled manifest, and for `custom.css`, plugins and the flag-icons stylesheet, pages keep the `?md5` URLs. Docker images and offline bundles ship the compiled files; source installations must rerun the compile after each upgrade.
