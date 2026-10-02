@@ -128,9 +128,12 @@ test.describe('Pilot pages carry matching nonces', () => {
             }
             expect(policy).not.toContain("'unsafe-inline'");
             expect(response.headers()['content-security-policy-report-only']).toBeUndefined();
+            expect(response.headers()['x-content-type-options']).toBe('nosniff');
+            expect(response.headers()['x-frame-options']).toBe('DENY');
+            expect(response.headers()['cache-control']).toContain('no-store');
         }
         await expect(page.locator('h1')).toContainText('About Kadupul');
-        await expect(page.locator('script:not([src]), style, [onclick], [onchange], [onsubmit]')).toHaveCount(0);
+        await expect(page.locator('script:not([src]), style, [nonce], [onclick], [onchange], [onsubmit]')).toHaveCount(0);
     });
 });
 

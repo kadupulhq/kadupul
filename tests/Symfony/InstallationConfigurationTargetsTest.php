@@ -101,7 +101,7 @@ final class InstallationConfigurationTargetsTest extends TestCase
         $request->attributes->set('_route', 'inventory_sites');
         $requests = new RequestStack();
         $requests->push($request);
-        $this->expectExceptionMessage('Online primary configuration is required for collector Sites, Navigation and About routes.');
+        $this->expectExceptionMessage('Online primary configuration is required for collector administration.');
         (new InstallationConfiguration($this->root, $requests))->values();
     }
 
@@ -122,7 +122,7 @@ final class InstallationConfigurationTargetsTest extends TestCase
 
     public static function onlineCollectorRoutes(): iterable
     {
-        foreach (['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action', 'navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action', 'platform_about', 'platform_about_legacy'] as $route) {
+        foreach (['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action', 'navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action', 'platform_about', 'platform_about_legacy', 'graph_vdefs', 'graph_vdef_create', 'graph_vdef_edit', 'graph_vdef_item_edit', 'graph_vdef_item_delete', 'graph_vdef_item_reorder', 'graph_vdef_action', 'graph_vdef_legacy'] as $route) {
             yield [$route];
         }
     }
@@ -135,7 +135,7 @@ final class InstallationConfigurationTargetsTest extends TestCase
         $request->attributes->set('_route', $route);
         $requests = new RequestStack();
         $requests->push($request);
-        $this->expectExceptionMessage('Online primary configuration is required for collector Sites, Navigation and About routes.');
+        $this->expectExceptionMessage('Online primary configuration is required for collector administration.');
         (new InstallationConfiguration($this->root, $requests))->values();
     }
 
