@@ -1,3 +1,4 @@
+-issue: Delete acknowledged recovery samples only when their buffered value is unchanged, so concurrent updates remain available for retry
 Cacti CHANGELOG
 
 1.2.32
