@@ -694,67 +694,19 @@ function install_file_paths()
         }
     }
 
-    /* RRDtool Binary Path */
-    $input['path_rrdtool'] = install_tool_path(
-        'rrdtool',
-        array(
-            'unix'  => '/usr/bin/rrdtool',
-            'win32' => 'c:/rrdtool/rrdtool.exe'
-        )
+    // Preserve registration order and platform-specific defaults.
+    $tools = array(
+        'path_rrdtool' => array('rrdtool', array('unix' => '/usr/bin/rrdtool', 'win32' => 'c:/rrdtool/rrdtool.exe')),
+        'path_snmpwalk' => array('snmpwalk', array('unix' => '/usr/bin/snmpwalk', 'win32' => 'c:/usr/bin/snmpwalk.exe')),
+        'path_snmpget' => array('snmpget', array('unix' => '/usr/bin/snmpget', 'win32' => 'c:/usr/bin/snmpget.exe')),
+        'path_snmpbulkwalk' => array('snmpbulkwalk', array('unix' => '/usr/bin/snmpbulkwalk', 'win32' => 'c:/usr/bin/snmpbulkwalk.exe')),
+        'path_snmpgetnext' => array('snmpgetnext', array('unix' => '/usr/bin/snmpgetnext', 'win32' => 'c:/usr/bin/snmpgetnext.exe')),
+        'path_snmptrap' => array('snmptrap', array('unix' => '/usr/bin/snmptrap', 'win32' => 'c:/usr/bin/snmptrap.exe')),
+        'settings_sendmail_path' => array('settings_sendmail_path', array('unix' => '/usr/sbin/sendmail')),
     );
-
-    /* snmpwalk Binary Path */
-    $input['path_snmpwalk'] = install_tool_path(
-        'snmpwalk',
-        array(
-            'unix'  => '/usr/bin/snmpwalk',
-            'win32' => 'c:/usr/bin/snmpwalk.exe'
-        )
-    );
-
-    /* snmpget Binary Path */
-    $input['path_snmpget'] = install_tool_path(
-        'snmpget',
-        array(
-            'unix'  => '/usr/bin/snmpget',
-            'win32' => 'c:/usr/bin/snmpget.exe'
-        )
-    );
-
-    /* snmpbulkwalk Binary Path */
-    $input['path_snmpbulkwalk'] = install_tool_path(
-        'snmpbulkwalk',
-        array(
-            'unix'  => '/usr/bin/snmpbulkwalk',
-            'win32' => 'c:/usr/bin/snmpbulkwalk.exe'
-        )
-    );
-
-    /* snmpgetnext Binary Path */
-    $input['path_snmpgetnext'] = install_tool_path(
-        'snmpgetnext',
-        array(
-            'unix'  => '/usr/bin/snmpgetnext',
-            'win32' => 'c:/usr/bin/snmpgetnext.exe'
-        )
-    );
-
-    /* snmptrap Binary Path */
-    $input['path_snmptrap'] = install_tool_path(
-        'snmptrap',
-        array(
-            'unix'  => '/usr/bin/snmptrap',
-            'win32' => 'c:/usr/bin/snmptrap.exe'
-        )
-    );
-
-    /* sendmail Binary Path */
-    $input['settings_sendmail_path'] = install_tool_path(
-        'settings_sendmail_path',
-        array(
-            'unix'  => '/usr/sbin/sendmail',
-        )
-    );
+    foreach ($tools as $key => [$name, $defaultPaths]) {
+        $input[$key] = install_tool_path($name, $defaultPaths);
+    }
 
     /* spine Binary Path */
     $input['path_spine'] = install_tool_path(
