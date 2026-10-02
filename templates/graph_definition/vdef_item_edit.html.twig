@@ -1,0 +1,20 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'VDEF Item'|trans({}, 'graph_definition') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ vdef.name }} — {{ form.vars.value.id ? 'Edit item'|trans({}, 'graph_definition') : 'New item'|trans({}, 'graph_definition') }}</h1>
+    <section aria-labelledby="vdef-preview"><h2 id="vdef-preview">{{ 'VDEF Preview'|trans({}, 'graph_definition') }}</h2><pre>vdef={{ preview }}</pre></section>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">{{ 'Save item'|trans({}, 'graph_definition') }}</button>
+    {{ form_end(form) }}
+    <script src="{{ type_handler_url }}" defer></script>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('graph_vdef_edit', {id: vdef.id}) }}">{{ 'Cancel'|trans({}, 'graph_definition') }}</a></p>
+</main>
+{% endblock %}

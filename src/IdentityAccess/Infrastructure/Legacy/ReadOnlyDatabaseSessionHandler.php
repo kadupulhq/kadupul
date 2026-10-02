@@ -14,14 +14,17 @@ use Kadupul\Platform\Contract\DatabaseConnection;
 final readonly class ReadOnlyDatabaseSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface
 {
     public function __construct(private DatabaseConnection $database) {}
+
     public function open(string $path, string $name): bool
     {
         return true;
     }
+
     public function close(): bool
     {
         return true;
     }
+
     public function read(string $id): string|false
     {
         $query = $this->database->get()->prepare('SELECT data FROM sessions WHERE id = ? AND access >= ?');
@@ -29,22 +32,27 @@ final readonly class ReadOnlyDatabaseSessionHandler implements \SessionHandlerIn
         $data = $query->fetchColumn();
         return $data === false ? '' : (string) $data;
     }
+
     public function write(string $id, string $data): bool
     {
         return $this->updateTimestamp($id, $data);
     }
+
     public function destroy(string $id): bool
     {
         return $this->database->get()->prepare('DELETE FROM sessions WHERE id = ?')->execute([$id]);
     }
+
     public function gc(int $max_lifetime): int|false
     {
         return 0;
     }
+
     public function validateId(string $id): bool
     {
         return $this->read($id) !== '';
     }
+
     public function updateTimestamp(string $id, string $data): bool
     {
         return $this->database->get()->prepare('UPDATE sessions SET access = ? WHERE id = ?')->execute([time(), $id]);
