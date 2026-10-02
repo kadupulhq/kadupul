@@ -1319,8 +1319,10 @@ function is_realm_allowed($realm, $check_user = false)
                         kill_session_var('sess_simple_template_perms');
                     }
 
-                    print '<span style="display:none;">cactiRedirect</span>';
-                    exit;
+                    if (!defined('CACTI_LINK_SYNC_PERMISSIONS') || !CACTI_LINK_SYNC_PERMISSIONS) {
+                        print '<span style="display:none;">cactiRedirect</span>';
+                        exit;
+                    }
                 } else {
                     kill_session_var('sess_user_realms');
                     kill_session_var('sess_user_config_array');

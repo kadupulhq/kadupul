@@ -218,6 +218,9 @@ if ($stage === 'init') {
     session_start();
     file_put_contents($directory . '/id', session_id());
     $_SESSION = ['cacti_cwd' => $root, 'sess_user_id' => 9, 'sess_user_perms_key' => 0, 'sess_user_realms' => [10001 => !str_starts_with($scenario, 'grant')]];
+    if ($scenario === 'grant-full-create') {
+        $_SESSION['sess_user_realms'][10002] = false;
+    }
     if (!str_starts_with($scenario, 'unbound')) {
         $_SESSION['sess_user_credential'] = auth_session_credential_key($scenario === 'stale' ? 'old-hash' : 'current-hash');
     }
@@ -275,7 +278,8 @@ if ($stage === 'save') {
     }
     $failed = false;
     try {
-        $store->save(9, 1, ['title' => 'Saved viewer', 'style' => 'TAB', 'filename' => '0', 'fileurl' => 'https://example.com/native-viewer', 'consolesection' => '', 'consolenewsection' => '', 'refresh' => 0, 'enabled' => true], $store->snapshot()['revision']);
+        $savedId = $store->save(9, $scenario === 'grant-full-create' ? null : 1, ['title' => 'Saved viewer', 'style' => 'TAB', 'filename' => '0', 'fileurl' => 'https://example.com/native-viewer', 'consolesection' => '', 'consolenewsection' => '', 'refresh' => 0, 'enabled' => true], $store->snapshot()['revision']);
+        file_put_contents($directory . '/link-id', (string) $savedId);
     } catch (PDOException|RuntimeException $error) {
         if (!str_contains($error->getMessage(), 'epoch-write-rejected') && !str_contains($error->getMessage(), 'Link permission invalidation')) {
             throw $error;
@@ -283,16 +287,40 @@ if ($stage === 'save') {
         $failed = true;
     }
     $GLOBALS['completed'] = true;
-    fwrite(STDOUT, json_encode(['epoch' => $db->query('SELECT reset_perms FROM user_auth WHERE id=9')->fetchColumn(), 'grant' => $db->query('SELECT COUNT(*) FROM user_auth_realm WHERE realm_id=10001')->fetchColumn(), 'title' => $db->query('SELECT title FROM external_links WHERE id=1')->fetchColumn(), 'failed' => $failed, 'transaction' => $db->inTransaction()], JSON_THROW_ON_ERROR));
+    $targetId = $savedId ?? 1;
+    fwrite(STDOUT, json_encode(['epoch' => $db->query('SELECT reset_perms FROM user_auth WHERE id=9')->fetchColumn(), 'grant' => $db->query('SELECT COUNT(*) FROM user_auth_realm WHERE realm_id=' . ($targetId + 10000))->fetchColumn(), 'title' => $db->query('SELECT title FROM external_links WHERE id=' . $targetId)->fetchColumn(), 'id' => $targetId, 'failed' => $failed, 'transaction' => $db->inTransaction()], JSON_THROW_ON_ERROR));
     exit;
 }
 session_id($id);
 session_start();
 $_REQUEST = ['id' => 1, 'header' => 'false'];
+if (str_starts_with($scenario, 'grant-full') && $stage === 'viewer-after') {
+    $_REQUEST = ['id' => (int) file_get_contents($directory . '/link-id')];
+    if ($scenario === 'grant-full-malformed') {
+        $_REQUEST['header'] = ['false'];
+    }
+    if ($scenario === 'grant-full-true') {
+        $_REQUEST['header'] = 'true';
+    }
+    if ($scenario === 'grant-full-revoked') {
+        $db->exec('DELETE FROM user_auth_realm WHERE realm_id=10001');
+        $db->exec('UPDATE user_auth SET reset_perms=2 WHERE id=9');
+    }
+}
+if ($stage === 'viewer-malformed') {
+    $_REQUEST['header'] = ['false'];
+}
+if ($stage === 'viewer-full') {
+    $_REQUEST = ['id' => 1];
+}
 if (!is_dir($directory . '/include')) {
     mkdir($directory . '/include', 0700);
 }
 file_put_contents($directory . '/include/global.php', '<?php // Native bootstrap already loaded.');
+// Keep header transport isolated while executing the real header selection functions.
+file_put_contents($directory . '/include/top_general_header.php', '<?php print "<header>Native transport</header>";');
+file_put_contents($directory . '/include/top_header.php', '<?php print "<header>Native transport</header>";');
+$config['base_path'] = $directory;
 chdir($directory);
 ob_start();
 register_shutdown_function(static function () use ($directory, $id, $cookie, $db, $storage) {
@@ -308,6 +336,6 @@ register_shutdown_function(static function () use ($directory, $id, $cookie, $db
         $replay = check_auth_cookie();
     }
     $GLOBALS['completed'] = true;
-    fwrite(STDOUT, json_encode(['status' => http_response_code() ?: 200, 'output' => $output, 'actor' => $actor, 'protected_queries' => $GLOBALS['queries'], 'revoked' => $revoked, 'remaining' => $remaining, 'replay' => $replay, 'message' => $GLOBALS['message'] ?? null], JSON_THROW_ON_ERROR));
+    fwrite(STDOUT, json_encode(['status' => http_response_code() ?: 200, 'output' => $output, 'actor' => $actor, 'protected_queries' => $GLOBALS['queries'], 'revoked' => $revoked, 'remaining' => $remaining, 'replay' => $replay, 'message' => $GLOBALS['message'] ?? null, 'permission_key' => $_SESSION['sess_user_perms_key'] ?? null, 'realms' => $_SESSION['sess_user_realms'] ?? []], JSON_THROW_ON_ERROR));
 });
 require $root . '/link.php';

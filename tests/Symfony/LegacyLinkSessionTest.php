@@ -14,6 +14,7 @@ require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 final class LegacyLinkSessionTest extends TestCase
 {
     private string $directory;
+    private bool $fullPageEvidenceChecked = false;
     protected function setUp(): void
     {
         $this->directory = sys_get_temp_dir() . '/native-link-session-' . bin2hex(random_bytes(8));
@@ -46,8 +47,9 @@ final class LegacyLinkSessionTest extends TestCase
             }
             $report = $this->directory . '/' . $stage . '.coverage';
             $child = \NativeChildCoverageEvidence::load($report, dirname(__DIR__, 2), 'tests/Fixtures/legacy-link-session-native.php', "$scenario:$storage:$stage", self::sources(), ['persisted-link-state-observed'], $hits);
-            if ($scenario === 'current' && $storage === 'file') {
+            if (($scenario === 'current' || ($scenario === 'grant-full-edit' && $stage === 'viewer-after' && !$this->fullPageEvidenceChecked)) && $storage === 'file') {
                 self::assertSame(24, \NativeChildCoverageEvidence::verifyRejections($report, dirname(__DIR__, 2), 'tests/Fixtures/legacy-link-session-native.php', "$scenario:$storage:$stage", self::sources(), ['persisted-link-state-observed'], $hits, 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php'));
+                $this->fullPageEvidenceChecked = true;
             }
             $coverage->merge($child);
         }
@@ -122,6 +124,77 @@ final class LegacyLinkSessionTest extends TestCase
         foreach (['file', 'database'] as $storage) {
             foreach (['grant', 'grant-wrap', 'grant-rollback', 'grant-coerce'] as $scenario) {
                 yield "$scenario:$storage" => [$scenario, $storage];
+            }
+        }
+    }
+
+    #[DataProvider('fullPageCases')]
+    public function testFirstFullPageViewerAfterSaveRefreshesPermissionsSynchronously(string $scenario, string $storage): void
+    {
+        $this->request($scenario, $storage, 'init');
+        $saved = $this->request($scenario, $storage, 'save');
+        self::assertFalse($saved['failed']);
+        self::assertSame(1, $saved['epoch']);
+        self::assertSame(1, $saved['grant']);
+        $viewer = $this->request($scenario, $storage, 'viewer-after');
+        self::assertSame(200, $viewer['status']);
+        self::assertStringContainsString('<iframe id="content"', $viewer['output']);
+        self::assertStringNotContainsString('cactiRedirect', $viewer['output']);
+        self::assertSame(1, $viewer['permission_key']);
+        self::assertTrue($viewer['realms'][$saved['id'] + 10000]);
+        self::assertSame(9, $viewer['actor']);
+        self::assertSame(1, $viewer['protected_queries']);
+        self::assertFalse($viewer['revoked']);
+        $repeated = $this->request($scenario, $storage, 'viewer-after');
+        self::assertSame(200, $repeated['status']);
+        self::assertStringContainsString('<iframe id="content"', $repeated['output']);
+        self::assertStringNotContainsString('cactiRedirect', $repeated['output']);
+        self::assertSame(1, $repeated['permission_key']);
+        self::assertTrue($repeated['realms'][$saved['id'] + 10000]);
+    }
+
+    public static function fullPageCases(): iterable
+    {
+        foreach (['file', 'database'] as $storage) {
+            foreach (['grant-full-create', 'grant-full-edit', 'grant-full-true'] as $scenario) {
+                yield "$scenario:$storage" => [$scenario, $storage];
+            }
+        }
+    }
+
+    #[DataProvider('fullPageFailureCases')]
+    public function testFullPageRefreshPreservesRevocationAndRejectsMalformedHeader(string $scenario, string $storage, string $stage): void
+    {
+        $this->request($scenario, $storage, 'init');
+        if (in_array($scenario, ['stale', 'locked'], true)) {
+            $state = $this->request($scenario, $storage, $stage);
+            self::assertSame(403, $state['status']);
+            self::assertNull($state['actor']);
+            self::assertSame(0, $state['protected_queries']);
+        } else {
+            self::assertFalse($this->request($scenario, $storage, 'save')['failed']);
+            $state = $this->request($scenario, $storage, 'viewer-after');
+            self::assertSame(9, $state['actor']);
+            if ($scenario === 'grant-full-malformed') {
+                self::assertSame(400, $state['status']);
+                self::assertSame(0, $state['protected_queries']);
+            } else {
+                self::assertSame('permission_denied', $state['message']);
+                self::assertSame(2, $state['permission_key']);
+                self::assertFalse($state['realms'][10001]);
+                self::assertSame(1, $state['protected_queries']);
+            }
+        }
+        self::assertSame('', $state['output']);
+    }
+
+    public static function fullPageFailureCases(): iterable
+    {
+        foreach (['file', 'database'] as $storage) {
+            foreach (['grant-full-revoked' => ['viewer-after'], 'grant-full-malformed' => ['viewer-after'], 'stale' => ['viewer-malformed', 'viewer-full'], 'locked' => ['viewer-full']] as $scenario => $stages) {
+                foreach ($stages as $stage) {
+                    yield "$scenario:$storage:$stage" => [$scenario, $storage, $stage];
+                }
             }
         }
     }
