@@ -115,6 +115,14 @@ Unthreaded review bodies and conversation findings are retained in full in the a
 - Aggregate and Device page migrations are deferred from the first straightforward batch. Their original native feedback, including unthreaded bodies, remains preserved here and in GitHub.
 - Do not transfer resolved status from an older head to a replacement automatically. Re-read every full review summary, conversation and inline comment, map actionable items, verify the published final head and checks, then reply and resolve through native GitHub records. No merge is authorized by this ledger.
 
+## Legacy list reachability found during #736 coverage review
+
+Status: **planned**, retained with the deferred CDEF #658 and Color template #659 migrations.
+
+The current legacy lists disable their shared selection checkbox for in-use records: `cdef.php` for graph/template use and `color_templates.php` for aggregate-template use. This also blocks selection for duplication and color synchronization. Their server handlers and rendered confirmations can be exercised directly over authenticated HTTP, but those tests do not establish that the initial list action is reachable.
+
+The #736 installed-page tests must distinguish enabled list selections from direct handler refusal/synchronization controls and retain the existing disabled-state evidence. The later page migrations must make supported duplication/synchronization actions reachable while enforcing action-specific deletion dependency checks on the server. Acceptance requires actual rendered controls, real CSRF/session submission, selected and unselected persisted-state observations, and failure-path evidence. This record does not resolve the original migration reviews or claim that the legacy list limitation is fixed.
+
 ## Archive completeness
 
 REST reviews, issue conversation comments and inline review comments were fetched with pagination. GraphQL review-thread and per-thread comment pagination were checked complete. Native records and retained local snapshots preserve complete bodies, original native links/identifiers, inline diff context, timestamps and thread state. They deliberately retain feedback on older source positions. Capture is a record-preservation step, not a new correctness assessment.
