@@ -19,6 +19,7 @@ use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineVdefCatalog;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
@@ -66,6 +67,47 @@ final class VdefPresentationTest extends TestCase
             } finally {
                 $kernel->shutdown();
             }
+        }
+    }
+
+    #[DataProvider('malformedListFields')]
+    public function testMalformedListArraysAreRefusedBeforeCatalogReads(string $field): void
+    {
+        $kernel = new Kernel('test', true);
+        $queries = 0;
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $console = $this->createMock(ConsoleAccess::class);
+            $console->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+            $container->set(ConsoleAccess::class, $console);
+            $realm = $this->createMock(VdefRealmAccess::class);
+            $realm->method('canManageDefinitions')->willReturn(true);
+            $container->set(VdefRealmAccess::class, $realm);
+            $catalog = $this->createMock(VdefCatalog::class);
+            $catalog->method('list')->willReturnCallback(static function () use (&$queries): array {
+                $queries++;
+                return [];
+            });
+            $catalog->method('count')->willReturnCallback(static function () use (&$queries): int {
+                $queries++;
+                return 0;
+            });
+            $container->set(VdefCatalog::class, $catalog);
+            $request = Request::create('/graph-definitions/vdefs', 'GET', [$field => ['malformed']]);
+            $response = $kernel->handle($request);
+            self::assertSame(400, $response->getStatusCode(), $field);
+            self::assertStringContainsString('Invalid VDEF list options.', $response->getContent());
+            self::assertSame(0, $queries, 'Malformed input must not reach the catalog.');
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public static function malformedListFields(): iterable
+    {
+        foreach (['filter', 'sort', 'direction', 'has_graphs'] as $field) {
+            yield $field => [$field];
         }
     }
 

@@ -178,6 +178,19 @@ def main():
         'vdef-probe-hash': 'Integration test source differs',
         'vdef-browser-probe-hash': 'Integration test source differs',
         'vdef-browser-handler-hash': 'Integration test source differs',
+        'missing-vdef-selection-check-0': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-1': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-2': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-3': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-4': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-5': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-6': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-7': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-8': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-9': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-10': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-11': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-12': 'Incomplete Symfony integration',
         'missing-vdef-array-type-check': 'Incomplete Symfony integration',
         'missing-vdef-french-item-check': 'Incomplete Symfony integration',
         'missing-vdef-reference-check': 'Incomplete Symfony integration',
@@ -257,6 +270,9 @@ def main():
                 evidence['source_sha256']['tests/Symfony/vdef_browser_probe.cjs'] = '0' * 64
             elif case == 'vdef-browser-handler-hash':
                 evidence['source_sha256']['public/js/vdef-item.js'] = '0' * 64
+            elif case.startswith('missing-vdef-selection-check-'):
+                checks = ['VDEF malformed list arrays return controlled 400 before catalog reads: filter', 'VDEF malformed list arrays return controlled 400 before catalog reads: sort', 'VDEF malformed list arrays return controlled 400 before catalog reads: direction', 'VDEF malformed list arrays return controlled 400 before catalog reads: has_graphs', 'VDEF own legacy reference deletes through CSRF form: 0', 'VDEF own legacy reference deletes through CSRF form: 1', 'VDEF own legacy reference deletes through CSRF form: 2', 'VDEF own legacy reference deletes through CSRF form: 3', 'VDEF own legacy reference deletes through CSRF form: 4', 'VDEF own legacy reference deletes through CSRF form: 5', 'VDEF own legacy reference deletes through CSRF form: 6', 'VDEF own legacy reference deletes through CSRF form: 7', 'VDEF whole selected reference set deletes through CSRF form']
+                evidence['checks'].remove(checks[int(case.rsplit('-', 1)[1])])
             elif case.startswith('missing-vdef-') and case in ['missing-vdef-array-type-check', 'missing-vdef-french-item-check', 'missing-vdef-reference-check', 'missing-vdef-browser-check', 'missing-vdef-legacy-bound-check']:
                 omitted = {'missing-vdef-array-type-check': 'VDEF array type query returns controlled 400 without mutation',
                            'missing-vdef-french-item-check': 'VDEF unknown item deletion uses French catalog label',

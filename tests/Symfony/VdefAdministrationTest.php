@@ -164,6 +164,15 @@ final class VdefAdministrationTest extends TestCase
         self::assertSame(1, (int) $this->database->fetchOne('SELECT COUNT(*) FROM vdef WHERE id = 1'));
     }
 
+    public function testReferencesWithinTheWholeDeletionSelectionDoNotBlockDeletion(): void
+    {
+        $this->database->executeStatement("INSERT INTO vdef VALUES (3, 'hash-three', 'Nested target')");
+        $this->database->executeStatement("INSERT INTO vdef_items VALUES (31, 'nested-ref', 2, 2, 5, '3 '), (32, 'return-ref', 3, 1, 5, '02')");
+        $this->editor->act(42, 'delete', [2, 3], '<vdef_title> (1)', [2 => $this->revision(2), 3 => $this->revision(3)]);
+        self::assertSame([1], array_map('intval', $this->database->fetchFirstColumn('SELECT id FROM vdef ORDER BY id')));
+        self::assertSame(0, (int) $this->database->fetchOne('SELECT COUNT(*) FROM vdef_items WHERE vdef_id IN (2, 3)'));
+    }
+
     public function testDeleteProtectsDefinitionsReferencedByAnotherVdefItem(): void
     {
         $this->database->executeStatement("INSERT INTO vdef VALUES (3, 'hash-three', 'Nested target')");
@@ -203,6 +212,27 @@ final class VdefAdministrationTest extends TestCase
         }
         self::assertSame($before, $this->database->fetchAllAssociative('SELECT * FROM vdef_items ORDER BY id'));
         self::assertSame('Nested target', $this->database->fetchOne('SELECT name FROM vdef WHERE id = 3'));
+    }
+
+    /** @dataProvider legacyReferenceValues */
+    public function testSelfReferenceDoesNotCountAsExternalUsage(string $value): void
+    {
+        $this->database->insert('vdef', ['id' => 3, 'hash' => 'self-parent', 'name' => 'Self reference']);
+        $this->database->insert('vdef_items', ['hash' => 'self-item', 'vdef_id' => 3, 'sequence' => 1, 'type' => 5, 'value' => $value]);
+        $rows = array_values(array_filter($this->catalog->list(new VdefListCriteria()), static fn($row): bool => $row->id === 3));
+        self::assertSame(0, $rows[0]->referencingVdefs);
+        self::assertFalse($rows[0]->inUse());
+    }
+
+    /** @dataProvider legacyReferenceValues */
+    public function testDeletingSelfReferenceRemovesOwnedItemsAtomically(string $value): void
+    {
+        $this->database->insert('vdef', ['id' => 3, 'hash' => 'self-parent', 'name' => 'Self reference']);
+        $this->database->insert('vdef_items', ['hash' => 'self-item', 'vdef_id' => 3, 'sequence' => 1, 'type' => 5, 'value' => $value]);
+        $this->editor->act(42, 'delete', [3], '', [3 => $this->revision(3)]);
+        self::assertSame(0, (int) $this->database->fetchOne('SELECT COUNT(*) FROM vdef WHERE id = 3'));
+        self::assertSame(0, (int) $this->database->fetchOne('SELECT COUNT(*) FROM vdef_items WHERE vdef_id = 3'));
+        self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM vdef'));
     }
 
     public static function legacyReferenceValues(): array

@@ -31,6 +31,11 @@ final class VdefListController
         try {
             $authorization->actor();
             $query = $request->query->all();
+            foreach (['filter', 'sort', 'direction', 'has_graphs'] as $field) {
+                if (array_key_exists($field, $query) && !is_string($query[$field])) {
+                    throw new \InvalidArgumentException('Invalid VDEF list options.');
+                }
+            }
             $page = self::int($query['page'] ?? 1, 'page');
             $pageSize = self::int($query['rows'] ?? 30, 'rows');
             if ($pageSize === -1) {

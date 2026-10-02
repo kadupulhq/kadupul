@@ -83,6 +83,13 @@ def verify_vdefs(harness, session, user_id, check):
     scenario = Scenario(harness, session)
     status, _, html = scenario.request("/graph-definitions/vdefs")
     check(status == 200 and "Variable definitions and graph usage" in html, "VDEF list route did not render")
+    before_arrays = harness.sql('SELECT COUNT(*) FROM vdef').strip()
+    for field in ['filter', 'sort', 'direction', 'has_graphs']:
+        status, _, body = scenario.request('/graph-definitions/vdefs?' + urllib.parse.urlencode({field + '[]': 'malformed'}))
+        check(status == 400 and 'Invalid VDEF list options.' in body
+              and harness.sql('SELECT COUNT(*) FROM vdef').strip() == before_arrays,
+              'VDEF malformed list arrays return controlled 400 before catalog reads: ' + field)
+    _verify_selected_reference_deletion(harness, scenario, check)
     name = "E2E " + uuid.uuid4().hex[:16]
     status, _, html = scenario.request("/graph-definitions/vdefs/new")
     check(status == 200, "VDEF create route did not render")
@@ -314,3 +321,46 @@ def verify_vdefs(harness, session, user_id, check):
     harness.sql(f'DELETE FROM vdef_items WHERE vdef_id={vdef_id}; DELETE FROM vdef WHERE id={vdef_id}')
     if not original_direct:
         harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=14')
+
+
+def _verify_selected_reference_deletion(harness, scenario, check):
+    owned = []
+    try:
+        formats = [lambda identity: '0' + str(identity), lambda identity: str(identity) + ' ',
+                   lambda identity: ' ' + str(identity), lambda identity: '+' + str(identity),
+                   lambda identity: str(identity) + 'tail', lambda identity: str(identity) + '.9',
+                   lambda identity: str(identity) + 'e0', lambda identity: str(identity * 10) + 'e-1']
+        for index, value in enumerate(formats):
+            parent_hash = uuid.uuid4().hex
+            harness.sql(f"INSERT INTO vdef (hash,name) VALUES ('{parent_hash}','Owned self reference {parent_hash}')")
+            identity = int(harness.sql(f"SELECT id FROM vdef WHERE hash='{parent_hash}'").strip())
+            owned.append((identity, parent_hash))
+            reference = value(identity)
+            harness.sql(f"INSERT INTO vdef_items (hash,vdef_id,sequence,type,value) VALUES ('{uuid.uuid4().hex}',{identity},1,5,'{reference}')")
+            status, _, body = scenario.request(f'/graph-definitions/vdefs/actions/delete?ids[]={identity}')
+            confirmation = scenario.form(body, lambda form: 'vdef_action[_token]' in form['fields'])
+            deleted = scenario.submit(confirmation, {})[0]
+            check(status == 200 and deleted == 200
+                  and harness.sql(f'SELECT COUNT(*) FROM vdef WHERE id={identity}').strip() == '0'
+                  and harness.sql(f'SELECT COUNT(*) FROM vdef_items WHERE vdef_id={identity}').strip() == '0',
+                  'VDEF own legacy reference deletes through CSRF form: ' + str(index))
+        pair = []
+        for _ in range(2):
+            parent_hash = uuid.uuid4().hex
+            harness.sql(f"INSERT INTO vdef (hash,name) VALUES ('{parent_hash}','Owned selected reference {parent_hash}')")
+            identity = int(harness.sql(f"SELECT id FROM vdef WHERE hash='{parent_hash}'").strip())
+            owned.append((identity, parent_hash))
+            pair.append(identity)
+        left, right = pair
+        harness.sql(f"INSERT INTO vdef_items (hash,vdef_id,sequence,type,value) VALUES ('{uuid.uuid4().hex}',{left},1,5,'{right} '),('{uuid.uuid4().hex}',{right},1,5,'0{left}')")
+        status, _, body = scenario.request(f'/graph-definitions/vdefs/actions/delete?ids[]={left}&ids[]={right}')
+        confirmation = scenario.form(body, lambda form: 'vdef_action[_token]' in form['fields'])
+        deleted = scenario.submit(confirmation, {})[0]
+        check(status == 200 and deleted == 200
+              and harness.sql(f'SELECT COUNT(*) FROM vdef WHERE id IN ({left},{right})').strip() == '0'
+              and harness.sql(f'SELECT COUNT(*) FROM vdef_items WHERE vdef_id IN ({left},{right})').strip() == '0',
+              'VDEF whole selected reference set deletes through CSRF form')
+    finally:
+        for identity, parent_hash in owned:
+            harness.sql(f'DELETE FROM vdef_items WHERE vdef_id={identity}')
+            harness.sql(f"DELETE FROM vdef WHERE id={identity} AND hash='{parent_hash}'")

@@ -42,7 +42,11 @@ final readonly class DoctrineVdefCatalog implements VdefCatalog
             WHERE $where ORDER BY $order $direction, v.id $direction LIMIT {$criteria->pageSize} OFFSET {$criteria->offset()}", $parameters);
         $references = [];
         foreach ($this->database->fetchAllAssociative('SELECT vdef_id, value FROM vdef_items WHERE type = 5') as $reference) {
-            $references[(int) $reference['value']][(int) $reference['vdef_id']] = true;
+            $target = (int) $reference['value'];
+            $owner = (int) $reference['vdef_id'];
+            if ($target !== $owner) {
+                $references[$target][$owner] = true;
+            }
         }
         return array_map(static fn(array $row): VdefSummary => new VdefSummary(
             (int) $row['id'],

@@ -109,7 +109,8 @@ final readonly class LegacyVdefEditor implements VdefEditor
                 if ($action === 'delete') {
                     $usage = $this->database->fetchFirstColumn('SELECT id FROM graph_templates_item WHERE vdef_id = ?' . $this->forUpdate(), [$id]);
                     // Preserve the PHP integer identity used by legacy preview/runtime.
-                    $references = $this->database->fetchFirstColumn('SELECT value FROM vdef_items WHERE type = 5' . $this->forUpdate());
+                    $marks = implode(',', array_fill(0, count($ids), '?'));
+                    $references = $this->database->fetchFirstColumn('SELECT value FROM vdef_items WHERE type = 5 AND vdef_id NOT IN (' . $marks . ')' . $this->forUpdate(), $ids);
                     $nestedUsage = array_filter($references, static fn(mixed $value): bool => (int) $value === $id);
                     if ($usage !== [] || $nestedUsage !== []) {
                         throw new \InvalidArgumentException('VDEFs in use cannot be deleted.');
