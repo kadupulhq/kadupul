@@ -63,8 +63,12 @@ function installerSeed(PDO $database, string $root): void
 
 function installerRun(string $root, array $environment, string $entry, array $arguments): array
 {
+    require_once $root . '/tests/Helpers/CdefCliCoverageRegistration.php';
+    [$prepend, $environment, $coverageReceipt] = CdefCliCoverageRegistration::invocation($root, $environment, $entry, $arguments);
     $process = proc_open(
-        [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'zend.exception_ignore_args=1', $root . '/' . $entry, ...$arguments],
+        [PHP_BINARY, '-d', 'auto_prepend_file=' . $prepend, '-d', 'zend.exception_ignore_args=1',
+            ...($coverageReceipt !== null ? ['-d', 'pcov.enabled=1', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~'] : []),
+            $root . '/' . $entry, ...$arguments],
         [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']],
         $pipes,
         $root,
@@ -79,6 +83,7 @@ function installerRun(string $root, array $environment, string $entry, array $ar
     fclose($pipes[1]);
     fclose($pipes[2]);
     $exit = proc_close($process);
+    CdefCliCoverageRegistration::receipt($coverageReceipt, $exit, $output, $errors);
     // Normal CLI output and argument-free exceptions contain no credentials.
     echo $output;
     echo $errors;
@@ -129,3 +134,4 @@ try {
         $database->exec("DROP DATABASE `$schema`");
     }
 }
+installerAssert(true, 'native current-version CLI and cleanup complete');

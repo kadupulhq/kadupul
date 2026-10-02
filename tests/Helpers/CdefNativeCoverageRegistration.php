@@ -37,6 +37,7 @@ final class CdefNativeCoverageRegistration
     {
         return array_merge(self::measured(), ['composer.lock','cacti.sql','include/cacti_version',
             'tests/Helpers/CdefNativeCoverageRegistration.php','tests/Helpers/NativeChildCoverageEvidence.php',
+            'tests/Helpers/CdefCliCoverageRegistration.php',
             'tests/Fixtures/cdef-native-coverage.php','tests/Symfony/CdefNativeProbeCoverageTest.php',
             'tests/Fixtures/aggregate-percentile-original.php','tests/security/cdef_reference_installer_native_probe.php','tests/Helpers/PhpSource.php',
             'aggregate_graphs.php','aggregate_templates.php','color_templates.php','lib/html_utility.php','lib/html_validate.php','lib/html.php','lib/html_form.php','lib/headers_secure.php',

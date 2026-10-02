@@ -139,3 +139,4 @@ try {
         throw new RuntimeException('Owned native CLI fixture cleanup could not be confirmed.');
     }
 }
+installerAssert(true, 'native CLI confirmation and cleanup complete');
