@@ -193,6 +193,9 @@ test('only a base element the browser parses decides where relative actions go',
 })->with(array(
     'base hidden in textarea before a real one' => array("<textarea><base x='</textarea><base href='https://evil.example/'><a x='>'></a><form method=post action=x.php></form><form method=post>{F}</form>"),
     'base hidden in comment before a real one' => array("<!-- <base x=' --><base href='https://evil.example/'><b x='' --><form method=post action=x.php></form><form method=post>{F}</form>"),
+    'inert template base' => array('<template><base href="//evil.example/"></template><form method=post action=save.php>{F}</form>'),
+    'nested inert template base' => array('<template><template><base href="//evil.example/"></template></template><form method=post action=save.php>{F}</form>'),
+    'real foreign base after inert template' => array('<template><base href="/local/"></template><base href="//evil.example/"><form method=post action=save.php></form>'),
     'unclosed base' => array("<form method=post action=x.php></form><form method=post>{F}</form><base href='/kadupul/"),
     'base text in textarea only' => array("<textarea><base href='https://evil.example/'></textarea><form method=post action=x.php>{F}</form>"),
 ));

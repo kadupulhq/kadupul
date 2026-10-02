@@ -257,10 +257,13 @@ for (const mode of ['', 'nonce']) {
 
 test.describe('server form rewriting without scripting', () => {
   test.use({ javaScriptEnabled: false });
-  for (const [name, markup, splitForm] of [
-    ['select form ownership', '<select><form method="post"></select><form method="post"><button>Save</button></form>', false],
-    ['foreign select form ownership', '<select><form method="post" action="https://other.example/"></select><form method="post"><button>Save</button></form>', false],
-    ['quoted DOCTYPE', '<form method="post" action="https://other.example/"><!DOCTYPE html PUBLIC "></form>" ""><form method="post"><button>Save</button></form>', true],
+  for (const [name, markup, expectedOwners, expectedAction] of [
+    ['select form ownership', '<select><form method="post"></select><form method="post"><button>Save</button></form>', [false]],
+    ['foreign select form ownership', '<select><form method="post" action="https://other.example/"></select><form method="post"><button>Save</button></form>', [false]],
+    ['quoted DOCTYPE', '<form method="post" action="https://other.example/"><!DOCTYPE html PUBLIC "></form>" ""><form method="post"><button>Save</button></form>', [false, true]],
+    ['inert template base', '<template><base href="https://other.example/"></template><form method="post" action="save.php"><button>Save</button></form>', [true], `${origin}/save.php`],
+    ['nested inert template base', '<template><template><base href="https://other.example/"></template></template><form method="post" action="save.php"><button>Save</button></form>', [true], `${origin}/save.php`],
+    ['real foreign base after inert template', '<template><base href="/local/"></template><base href="https://other.example/"><form method="post" action="save.php"><button>Save</button></form>', [false], 'https://other.example/save.php'],
   ]) {
     test(name, async ({ page }) => {
       const program = String.raw`
@@ -278,16 +281,17 @@ test.describe('server form rewriting without scripting', () => {
       const html = execFileSync('php', ['-r', program, root, markup], { encoding: 'utf8' });
       await page.route('**/*', route => route.fulfill({ contentType: 'text/html', body: html }));
       await page.goto(`${origin}/parser-fixture`);
-      await expect(page.locator('form')).toHaveCount(splitForm ? 2 : 1);
-      await expect(page.locator('input[name="__csrf_magic"]')).toHaveCount(splitForm ? 1 : 0);
+      await expect(page.locator('form')).toHaveCount(expectedOwners.length);
+      await expect(page.locator('input[name="__csrf_magic"]')).toHaveCount(expectedOwners.filter(Boolean).length);
       const tokenOwners = await page.locator('form').evaluateAll(forms => forms.map(form => new FormData(form).has('__csrf_magic')));
-      expect(tokenOwners).toEqual(splitForm ? [false, true] : [false]);
+      expect(tokenOwners).toEqual(expectedOwners);
+      if (expectedAction) { expect(await page.locator('form').evaluate(form => form.action)).toBe(expectedAction); }
       if (name === 'foreign select form ownership') {
         await expect(page.locator('form')).toHaveAttribute('action', 'https://other.example/');
       }
       // Controls outside the form subtree can still belong to its parser pointer.
       // No token may exist anywhere in either select-form case.
-      if (splitForm) {
+      if (name === 'quoted DOCTYPE') {
         await expect(page.locator('form').first()).toHaveAttribute('action', 'https://other.example/');
         await expect(page.locator('form').first().locator('input[name="__csrf_magic"]')).toHaveCount(0);
         await expect(page.locator('form').last().locator('input[name="__csrf_magic"]')).toHaveCount(1);
