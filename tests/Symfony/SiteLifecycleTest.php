@@ -146,7 +146,7 @@ final class SiteLifecycleTest extends TestCase
         mkdir($directory . '/include', 0700, true);
         file_put_contents($directory . '/include/config.php', '<?php $poller_id = 2;');
         try {
-            foreach ([null, 'inventory_devices', 'inventory_site_action'] as $route) {
+            foreach ([null, 'inventory_devices', 'inventory_site_action', 'platform_about', 'platform_about_legacy'] as $route) {
                 $stack = new \Symfony\Component\HttpFoundation\RequestStack();
                 if ($route !== null) {
                     $request = Request::create('/?route=inventory_sites');
@@ -157,7 +157,7 @@ final class SiteLifecycleTest extends TestCase
                     (new \Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration($directory, $stack))->values();
                     self::fail('Collector configuration was accepted');
                 } catch (\RuntimeException $error) {
-                    self::assertStringContainsString($route === 'inventory_site_action' ? 'Online primary configuration' : 'outside online collector Sites and Navigation routes', $error->getMessage());
+                    self::assertStringContainsString(in_array($route, ['inventory_site_action', 'platform_about', 'platform_about_legacy'], true) ? 'Online primary configuration' : 'outside supported online collector administration routes', $error->getMessage());
                 }
             }
         } finally {
