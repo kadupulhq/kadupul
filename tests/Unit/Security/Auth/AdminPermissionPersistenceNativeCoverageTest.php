@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
 {
-    /** @dataProvider realmCases */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('realmCases')]
     public function testRealmSavesReplaceOnlyTheTargetPrincipalAndResetItsUsers(bool $group, array $realms, bool $self): void
     {
         $state = $this->runController(array('group' => $group, 'operation' => 'realm', 'realms' => $realms, 'self' => $self));
@@ -47,7 +51,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider permissionCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('permissionCases')]
     public function testPermissionRemovalPreservesOtherTypesItemsAndPrincipals(bool $group, string $typeName, int $typeId): void
     {
         $state = $this->runController(array('group' => $group, 'operation' => 'remove', 'type' => $typeName));

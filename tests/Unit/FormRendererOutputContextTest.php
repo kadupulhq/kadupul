@@ -7,11 +7,16 @@ namespace Kadupul\Tests;
 
 use DOMDocument;
 use DOMXPath;
+
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class FormRendererOutputContextTest extends TestCase
 {
-    /** @dataProvider forms */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('forms')]
     public function testNativeFormEncodingRoundTrips(array $scenario, string $expectedId): void
     {
         $html = $this->render($scenario)['html'];
@@ -40,7 +45,7 @@ final class FormRendererOutputContextTest extends TestCase
         }
     }
 
-    public function forms(): array
+    public static function forms(): array
     {
         return array(
             array(array('action' => "save.php' autofocus onfocus='alert(1)</script><script>", 'id' => "form' onfocus='alert(1)</script><script>"), "form' onfocus='alert(1)</script><script>"),
@@ -59,7 +64,7 @@ final class FormRendererOutputContextTest extends TestCase
         self::assertStringContainsString('</form>', $plain);
     }
 
-    /** @dataProvider inputs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputs')]
     public function testSharedNativeInputStatePreservesDefaultsAndErrors(array $scenario, string $value, bool $error): void
     {
         $result = $this->render($scenario);
@@ -76,7 +81,7 @@ final class FormRendererOutputContextTest extends TestCase
         self::assertArrayNotHasKey('fixture', $result['session']['sess_error_fields'] ?? array());
     }
 
-    public function inputs(): array
+    public static function inputs(): array
     {
         $cases = array();
         foreach (array('directory', 'font') as $input) {

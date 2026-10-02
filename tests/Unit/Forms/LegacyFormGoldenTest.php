@@ -31,13 +31,13 @@ final class LegacyFormGoldenTest extends TestCase
     private const VOID = array('area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr');
     private const RAW = array('script', 'style');
 
-    /** @dataProvider methods */
+    #[\PHPUnit\Framework\Attributes\DataProvider('methods')]
     public function testFieldMethodMatchesGolden(string $name, array $scenario): void
     {
         $this->assertGolden('methods/' . $name, $scenario, false);
     }
 
-    /** @dataProvider pages */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pages')]
     public function testPageMatchesGoldenAndKeepsScriptTargets(string $name, array $scenario): void
     {
         $this->assertGolden('pages/' . $name, $scenario, true);

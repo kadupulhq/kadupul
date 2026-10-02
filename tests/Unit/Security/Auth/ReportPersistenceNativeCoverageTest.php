@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class ReportPersistenceNativeCoverageTest extends TestCase
 {
-    /** @dataProvider addCases */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('addCases')]
     public function testAddingReportItemsRespectsActualSqlOwnership(array $scenario, bool $accepted, int $itemType): void
     {
         $state = $this->runReport($scenario);
@@ -75,7 +79,7 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider reorderCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('reorderCases')]
     public function testReorderingCannotWriteOutsideTheAuthorizedReport(int $user, bool $accepted): void
     {
         $state = $this->runReport(array('operation' => 'reorder', 'user' => $user));
@@ -88,7 +92,7 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
         return array('owner' => array(42, true), 'other user' => array(55, false));
     }
 
-    /** @dataProvider removeCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('removeCases')]
     public function testRemovalUsesThePersistedParentOwner(array $scenario, array $remaining): void
     {
         $state = $this->runReport(array_merge(array('operation' => 'remove'), $scenario));

@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class ScriptServerCliOptionsNativeTest extends TestCase
 {
-    /** @dataProvider arguments */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('arguments')]
     public function testActualCliOptionDispatch(array $arguments, string $expected): void
     {
         $root = dirname(__DIR__, 2);

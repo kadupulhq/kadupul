@@ -33,6 +33,17 @@ function _csp_find_free_port()
     return (int) end($parts);
 }
 
+function _csp_install_startup_probe_handler(): void
+{
+    $previous = set_error_handler(function ($severity, $message, $file, $line) use (&$previous) {
+        if ($severity === E_WARNING && strpos($message, 'Unable to connect to tcp://127.0.0.1:') !== false) {
+            return true;
+        }
+
+        return $previous !== null ? $previous($severity, $message, $file, $line) : false;
+    });
+}
+
 /**
  * Launch php -S on a free port with the given CSP_TEST_MODE, wait for it
  * to accept connections, and return an array describing the running server.
@@ -77,9 +88,7 @@ function _csp_start_server($mode, $alternates = '')
         /* Connection refusal is expected until php -S binds the port. Pest 4
          * reports this warning even when PHP's @ suppression is used, so handle
          * only this startup probe warning explicitly. */
-        set_error_handler(function ($severity, $message) {
-            return $severity === E_WARNING && strpos($message, 'Unable to connect to tcp://127.0.0.1:') !== false;
-        });
+        _csp_install_startup_probe_handler();
         try {
             $probe = stream_socket_client('tcp://127.0.0.1:' . (int) $port, $errno, $errstr, 0.2);
         } finally {
@@ -316,5 +325,44 @@ test('calling emitHeaders twice does not emit duplicate headers', function () {
         }
     } finally {
         _csp_stop_server($server);
+    }
+});
+
+
+test('startup probe delegates unexpected warnings to the previous handler', function () {
+    $diagnostics = array();
+    set_error_handler(function ($severity, $message) use (&$diagnostics) {
+        $diagnostics[] = array($severity, $message);
+        return true;
+    });
+    _csp_install_startup_probe_handler();
+    try {
+        trigger_error('Unexpected readiness diagnostic', E_USER_WARNING);
+        expect($diagnostics)->toBe(array(array(E_USER_WARNING, 'Unexpected readiness diagnostic')));
+    } finally {
+        restore_error_handler();
+        restore_error_handler();
+    }
+});
+
+test('startup probe suppresses only the expected connection refusal', function () {
+    $port = _csp_find_free_port();
+    $diagnostics = array();
+    set_error_handler(function ($severity, $message) use (&$diagnostics) {
+        $diagnostics[] = array($severity, $message);
+        return true;
+    });
+    _csp_install_startup_probe_handler();
+    try {
+        $probe = stream_socket_client('tcp://127.0.0.1:' . $port, $errno, $errstr, 0.02);
+        if (is_resource($probe)) {
+            fclose($probe);
+        }
+        expect($probe)->toBeFalse();
+        expect($errno)->not->toBe(0);
+        expect($diagnostics)->toBe(array());
+    } finally {
+        restore_error_handler();
+        restore_error_handler();
     }
 });

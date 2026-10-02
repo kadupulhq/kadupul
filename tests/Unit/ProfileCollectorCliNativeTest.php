@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class ProfileCollectorCliNativeTest extends TestCase
 {
-    /** @dataProvider cases */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('cases')]
     public function testCliRetainsFailedPollerSynchronization(bool $failure, bool $selected, bool $state_failure = false, string $class = 'all'): void
     {
         $root = dirname(__DIR__, 2);

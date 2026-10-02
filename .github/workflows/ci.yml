@@ -211,15 +211,15 @@ jobs:
 
       - name: Verify PHP 8.0 string and regex behavior
         working-directory: tests
-        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
 
       - name: Verify helper union return contracts
         working-directory: tests
-        run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
+        run: php -d error_reporting=8191 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
 
       - name: Verify token entropy failure and native identifiers
         working-directory: tests
-        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/GenerateHashFailsClosedTest.php --colors=never
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/GenerateHashFailsClosedTest.php --colors=never
 
       - name: Exercise production CSV paths
         working-directory: tests
@@ -230,13 +230,12 @@ jobs:
       - name: Verify string predicates and directory boundaries
         working-directory: tests
         run: |
-          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/StringPredicateHelpersTest.php --colors=never
-          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/PathHelpersTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Core/StringPredicateHelpersTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Core/PathHelpersTest.php --colors=never
 
       - name: Legacy form goldens
         working-directory: tests
-        # Pest 1 emits dependency deprecations on PHP 8.4.
-        run: php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never
+        run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never
 
       - name: Install RRDtool for spike-removal contracts
         run: sudo apt-get update && sudo apt-get install -y rrdtool
