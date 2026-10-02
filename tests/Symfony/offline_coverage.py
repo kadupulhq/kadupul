@@ -68,7 +68,7 @@ def main():
         execute('tools/verify-offline.php')
         font = stage / 'include/fa/webfonts/fa-solid-900.woff2'
         font_bytes = font.read_bytes()
-        font.unlink()
+        execute('-r', arguments=['if (!unlink("include/fa/webfonts/fa-solid-900.woff2")) { throw new RuntimeException("Cannot remove icon font fixture"); }'])
         execute('tools/verify-offline.php', error='Missing offline asset: include/fa/webfonts/fa-solid-900.woff2')
         font.write_bytes(font_bytes)
         icon_css = stage / 'include/fa/css/all.css'

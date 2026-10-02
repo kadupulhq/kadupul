@@ -221,8 +221,8 @@ dynamic_include	./cli/push_out_hosts.php:13	require_once($config['base_path'] . 
 dynamic_include	./cli/rebuild_poller_cache.php:19	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/rebuild_poller_cache.php:20	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./cli/rebuild_poller_cache.php:21	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/refresh_csrf.php:10	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/refresh_csrf.php:11	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/refresh_csrf.php:11	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/refresh_csrf.php:12	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/remove_broken_graphs.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./cli/remove_broken_graphs.php:11	require_once($config['base_path'] . '/lib/api_graph.php');
 dynamic_include	./cli/remove_device.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
@@ -270,8 +270,8 @@ dynamic_include	./color_templates.php:469		include_once($config['base_path'] . '
 dynamic_include	./graph_realtime.php:384	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:120					require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:180				require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/csrf.php:15	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
-dynamic_include	./include/csrf.php:46	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
+dynamic_include	./include/csrf.php:16	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
+dynamic_include	./include/csrf.php:51	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/global.php:266	include_once($config['library_path'] . '/database.php');
 dynamic_include	./include/global.php:267	include_once($config['library_path'] . '/functions.php');
 dynamic_include	./include/global.php:268	include_once($config['library_path'] . '/headers_secure.php');
@@ -535,7 +535,6 @@ fs_write	./cli/float_rrdfiles.php:369					$lf = fopen($tmp_dir . '/clearer.log',
 fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/import_template.php:105				$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/md5sum.php:163		if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-fs_write	./cli/refresh_csrf.php:67		$fh = fopen($path_csrf_secret, 'w');
 fs_write	./cli/splice_rrd.php:268		$handle = fopen($xmlfile, 'x');
 fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:339	file_put_contents($newxmlfile, $new_xml);
@@ -825,7 +824,7 @@ header_redirect	./images/index.php:7	header("Location:../index.php");
 header_redirect	./include/auth.php:33		header ('Location: ' . $config['url_path'] . 'install/');
 header_redirect	./include/auth.php:69				header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
-header_redirect	./include/csrf.php:41		header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
+header_redirect	./include/csrf.php:44	    header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
 header_redirect	./include/global.php:425	            header('Location: ' . $https_redirect);
 header_redirect	./include/index.php:7	header("Location:../index.php");
 header_redirect	./include/js/LC_MESSAGES/index.php:7	header("Location:../index.php");
