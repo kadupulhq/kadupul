@@ -1,0 +1,17 @@
+{
+    "session": {
+        "form_change_actions": {
+            "snmp_query_id": "applySNMPQueryIdChange()"
+        }
+    },
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "chk",
+        "id",
+        "name",
+        "snmp_query_id"
+    ],
+    "script_names": []
+}

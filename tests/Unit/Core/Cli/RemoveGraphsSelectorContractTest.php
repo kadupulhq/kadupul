@@ -7,6 +7,8 @@
 
 namespace RemoveGraphsSelectorContractTest;
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 $root = dirname(__DIR__, 4);
 
 /**
@@ -49,19 +51,10 @@ function selection_outcome(array $selectors, $all = false, $list = false)
         . $fragment
         . 'echo "WHERE:" . $sql_where;';
 
-    $pipes   = array();
-    $process = proc_open(
-        array(PHP_BINARY, '-r', $code),
-        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes
-    );
-    expect($process)->not->toBeFalse();
-
-    $out = stream_get_contents($pipes[1]);
-    $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    $status = proc_close($process);
+    $result = \test_php_run($code);
+    $out = $result['out'];
+    $err = $result['err'];
+    $status = $result['status'];
 
     expect($err)->toBe('');
 
@@ -148,47 +141,16 @@ function rendered_help()
     $functions = '';
 
     foreach (array('function display_version()', 'function display_help()') as $signature) {
-        $start = strpos($source, $signature);
-        expect($start)->not->toBeFalse();
-
-        $open  = strpos($source, '{', $start);
-        $depth = 0;
-        $end   = $open;
-
-        for ($i = $open; $i < strlen($source); $i++) {
-            if ($source[$i] === '{') {
-                $depth++;
-            } elseif ($source[$i] === '}') {
-                $depth--;
-
-                if ($depth === 0) {
-                    $end = $i + 1;
-
-                    break;
-                }
-            }
-        }
-
-        $functions .= substr($source, $start, $end - $start) . "\n";
+        $functions .= \test_php_block_source($source, $signature) . "\n";
     }
 
     $code = 'define("COPYRIGHT_YEARS", "2004-2026");'
         . 'function get_cacti_cli_version() { return "1.2.32"; }'
         . $functions . 'display_help();';
 
-    $pipes   = array();
-    $process = proc_open(
-        array(PHP_BINARY, '-r', $code),
-        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes
-    );
-    expect($process)->not->toBeFalse();
-
-    $out = stream_get_contents($pipes[1]);
-    $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    proc_close($process);
+    $result = \test_php_run($code);
+    $out = $result['out'];
+    $err = $result['err'];
 
     expect($err)->toBe('');
     expect($out)->not->toBe('');
@@ -294,24 +256,8 @@ function parsed_selection(array $argv)
     expect($spec_start)->not->toBeFalse();
     expect($loop_start)->not->toBeFalse();
 
-    $open  = strpos($source, '{', $loop_start);
-    $depth = 0;
-    $loop_end = $open;
-
-    for ($i = $open; $i < strlen($source); $i++) {
-        if ($source[$i] === '{') {
-            $depth++;
-        } elseif ($source[$i] === '}') {
-            $depth--;
-
-            if ($depth === 0) {
-                $loop_end = $i + 1;
-
-                break;
-            }
-        }
-    }
-
+    $loop = \test_php_block_source($source, 'foreach ($options as $arg => $value)');
+    $loop_end = strpos($source, $loop) + strlen($loop);
     $parser = substr($source, $spec_start, $loop_end - $spec_start);
     expect($parser)->toContain('getopt(');
 
@@ -329,15 +275,10 @@ function parsed_selection(array $argv)
         . 'echo "WHERE:" . $sql_where;';
 
     $command = array_merge(array(PHP_BINARY, '-r', $code, '--'), $argv);
-    $pipes   = array();
-    $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
-    expect($process)->not->toBeFalse();
-
-    $out = stream_get_contents($pipes[1]);
-    $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    $status = proc_close($process);
+    $result = \test_php_run($command);
+    $out = $result['out'];
+    $err = $result['err'];
+    $status = $result['status'];
 
     $where = strpos($out, 'WHERE:') !== false ? substr($out, strpos($out, 'WHERE:') + 6) : null;
 

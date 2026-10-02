@@ -7,28 +7,99 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Limit Data Query Cache and Poller Cache views to devices the current user may access, including their default Any filters.
+- Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
+- Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
+
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
+- Move External Links into the Navigation Symfony module with Twig forms, transactional viewing grants, stale-order protection and safe legacy redirects.
+
+- Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
+- Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
+
+- Add the CSRF token only to same-origin XMLHttpRequest, jQuery and form posts in the installed CSRF Magic browser script. Form targets are read from the `action` attribute, so a control named `action` cannot hide them; relative URLs resolve against the document base; and token fields are withheld when a submit button's `formaction` points to another origin. The submit check is installed when the script loads rather than from `CsrfMagic.end()`, so an unclosed `plaintext`, `textarea`, `title`, `xmp` or comment that keeps the end-of-page call from running cannot switch it off. Browsers without `SubmitEvent.submitter` send no token from a form that has any button with a cross-origin `formaction`, or a non-POST/invalid `formmethod` override, including the form's same-origin buttons. The legacy dependency installer now applies checksum-verified patches recorded in `legacy-files.json`.
+- Stop the CSRF Magic output handler from adding the token to forms that post to another origin. Only forms with no action or a relative action get the field from the server; absolute and protocol-relative actions are left to the browser script, which checks their origin. Attributes are read as the browser reads them, so a quoted `>`, a second `action`, character references, backslashes or control characters cannot hide the target, and any `<base href>` that is not relative withholds the field from relative actions too, even when it names this origin, and GET forms no longer receive the token when another attribute contains `method="post"`. Form tags inside comments or the text of `textarea`, `title`, `script`, `style` and similar elements get no token, nor does a form opened while an earlier form is still open, since the browser would move the token into the outer form. A `<base href>` only counts where the browser would parse it, and a page the handler cannot read to the end gets no token in relative-action forms. Tag names, attribute names, the method and URL schemes are compared as ASCII, since Kadupul sets `LC_CTYPE` from the user's language and in a Turkish locale `strtolower()` on PHP 8.1 and the PCRE `/i` flag do not fold `I` to `i`: `ACTION`, `SCRIPT` and `XI:` were misread there, and upper-case `SCRIPT` or `TITLE` elements stopped legitimate forms from getting the token.
+- Read the document base URL in the CSRF Magic browser script through `Node.prototype`, so an element named `baseURI` cannot make every same-origin request lose its token.
+- Port the remaining CSRF Magic library checks from 1.2: refuse more than eight submitted tokens, token times that are not digits or exceed the 300-second future clock-skew allowance, and generate fallback secrets with `random_bytes()`. The optional CSRF debug log and the default failure page no longer record tokens, the secret, form values or query strings. Secret rotation generates before modifying the working file, then exclusively writes and verifies a replacement in its directory, preserves existing UID/GID with verified ownership before applying mode 0640 and renaming atomically; generation or publication failure preserves the working key. Symlink file destinations are refused.
+- Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
+
+- Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK. Fixes #229.
+- Scope remote-agent host operations to the requesting main poller and the receiver's assigned devices; require an authenticated session user for remote graph rendering.
+- Make `plugin_manage.php --allperms` grant existing plugin realms to the configured administrator and report failed grants. Fixes #224.
+- Reject plugin installs whose `INFO` compatibility floor is missing, malformed, or newer than the running core. Enforce the gate before install callbacks and return failure from the CLI. Related to #223.
+- Escape dynamic form ids and actions for their HTML attribute and JavaScript string contexts. Fixes #582.
+- Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
+- Remove the inert Poller Refresh Output Table setting; the queue is required to use InnoDB. Fixes #282.
+- Bound PCRE work when tree automation applies saved replacement patterns. Fixes #591.
+- Return a clean 404 for HTTP requests to the PHP Script Server under PHP-FPM. Fixes #377.
+- Honor the script server's documented `--environ`, `-v`/`-V`, and `-h`/`-H` options. Fixes #375 and #376.
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
 - Resolve ordered graph-item consolidation references in a Graphing collaborator while preserving GPRINT association behavior. Part of #502.
 - Reuse one RRDtool proxy session for the commands in a graph render, including consolidation-function lookups. Part of #502.
+- Preserve negative integer `--units-exponent` values accepted by graph forms. Fixes #228.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
+- Refresh the Midwinter theme's bundled hotkeys-js to 3.13.15 and ua-parser-js to 1.0.41, matching the 1.2 LTS branch.
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
 ### Tests
 
+- Exercise local login, password changes, logout, user/group realm and permission changes, and report ownership/persistence through native production files with isolated SQL fixtures. Part of #699.
+
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
 
+- Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
+- Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
+- Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
+
+- Build offline archives with the npm JavaScript CLI bundled with the selected Node runtime, avoiding shell-wrapper parse failures in CI. Related to #703.
+- Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
+- Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
+- Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
+- Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
+- Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.
+
+- Stop the Midwinter ESC shortcut throwing a script error outside fullscreen, and drop the unused `c+F1` shortcut that opened an `[object KeyboardEvent]` alert. SHIFT+k now leaves fullscreen as well as entering it.
+
+- Keep a manual Midwinter colour mode when the operating system switches between light and dark. After turning off the preferred colour theme in the same session, a system change still overrode the choice and reloaded the graphs.
+
+- Stop the Midwinter theme adding another copy of its keyboard shortcuts, menu search highlighting and menu click handlers on every page change, so one shortcut press no longer loads a page once per earlier navigation. A double-click anywhere no longer toggles fullscreen; use SHIFT+k.
+
+- Mark the Midwinter `CactiColorMode` cookie `Secure` only over HTTPS. Over plain HTTP the browser dropped it, so graphs ignored the dark or light colour set and reloaded on every page change.
+- Close an open select menu when its page or panel scrolls, so the detached list no longer floats over other fields. Forward-ported from lts/1.2 (issue #7506).
+
+- Fix theme script defects on page reloads: window resize handlers no longer pile up, the classic theme no longer removes the handler that closes open menus on an outside click, and filter search icons are added once. Select menus are sized through the widget, so a plugin field id with `.` or `:` no longer stops the theme setup.
+
+- Replace Font Awesome 4 icon names that render blank: the paper-plane scroll-to-top button and the sunrise logo now show their icons, and paper-plane and paw no longer turn delete icons into an undefined class. The paw theme also shows its logo on the logout page.
+- Make the offline bundle check fail when a font named in the Font Awesome stylesheet is missing. It checked only that `all.css` existed, so a bundle whose icons all drew as missing glyphs passed.
+
+- Center the About link logo in the classic, dark and modern themes, where it was clipped on the right. Add the missing semicolons that dropped the page-load progress bar glow in classic, paper-plane and paw and the graph zoom tooltip padding and border in midwinter, and give the midwinter `.moveArrowNone` padding its missing `px` unit. Remove theme declarations browsers already discarded, including stray comment terminators in the paper-plane and sunrise headers, and refresh the midwinter stylesheet content versions so browsers load the current CSS. Keep device states, log levels, popup/menu text and hover controls readable in dark, paper-plane and sunrise. Fixes #637.
+
+
+- Install only the Font Awesome stylesheet, its WOFF2 fonts and licence into a cleared `include/fa` with directory guards, instead of the whole 25 MB npm package. Font URLs now carry the package version, so a browser that cached Font Awesome 5 fonts under the same names fetches the new ones.
+- Disable network access while parsing imported package XML. Fixes #578.
+- Keep SNMP agent cache values on one `pass_persist` protocol line by removing embedded carriage returns and line feeds before storage and output.
+- Normalize Graph View graph-list values before storing them in the session, escape them in HTML, and encode them for JavaScript. Removing the last selected graph now clears the stored selection, while paging preserves it. Fixes #574.
+- Escape and type-check the posted local graph ID before rendering Aggregate Graphs bulk-action confirmation markup. Fixes #586.
+- Escape color-dropdown values and enclosing form row IDs in their HTML contexts; render color option identifiers as integers. Fixes #576.
+- Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
+- Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
+
+- Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.
+- Retain buffered Boost samples until remote acknowledgement, refuse missing database connections, and stop recovery when an acknowledged sample changed before cleanup. Fixes #268.
 
 - Keep the recursive RRD tuning report printer local to each `rrdtool_tune()` call, so repeated calls in one process do not redeclare a global function. Fixes #445.
+- Report missing stored graph data accurately when a zoom request has no usable RRA. Fixes #369.
 
 - Keep graph-group lookups scoped to the local graph ID, preserve the configuration cache map when setting an option, keep invalid structured filters from becoming unrestricted, and scope user-setting existence cache entries to the user. Public helper signatures and valid filter behavior are unchanged. Fixes #479.
+- Build forced HTTPS redirects from a validated server name or the administrator-configured Base URL for catch-all virtual hosts. Preserve raw encoded request targets and remove HTTP listener ports. Configure a canonical server name (Apache UseCanonicalName On); invalid authorities return HTTP 400. Fixes #584.
 
 - Accept only a number or `U` as a data source minimum, and only a number, `U` or an interface speed token as a maximum, refuse to create an RRD file whose stored minimum is anything else, and create realtime graph RRD files through the RRDtool pipe instead of a shell. A data source item that fails validation is no longer saved.
 
@@ -49,6 +120,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Pass `--y-grid` and `--units-exponent` to RRDtool once, quoted, instead of twice with the exponent once unquoted. The graph renders the same.
 
 - Mark stacked areas as stacked in graph export metadata, and key that metadata, and the name given to an unnamed export column, by the column's own number. The flag compared against a type name no item has, and the numbering started after the count of every graph item, so no key matched a column.
+
+- Keep VDEF-backed drawing items in graph images but omit them from CSV XPORT columns, which accept DEF/CDEF time series and reject scalar VDEF values. Fixes #273.
 
 - Show a blank line, not a NUL byte and `x27`, between the message and the file name in the graph error image for a missing or unwritable RRD file, and show a file outside the Kadupul directory as a custom RRA folder instead of its full directory.
 
@@ -81,6 +154,12 @@ Targeting `v1.3.0`, the first planned application release. See
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
 ### Changed
+
+- Represent database table analysis results with typed immutable outcomes while preserving CLI text, JSON output and failure exit codes. Related to #682 and #683.
+- Declare precise union return contracts for existing filename, command, CSP process-owner and RRD maintenance helpers while preserving success, failure and empty-output behavior. Related to #717.
+
+- Serve legacy stylesheets and scripts from `public/assets/` with digested file names once `php bin/console asset-map:compile` has run, using Symfony AssetMapper 7.4. Theme `url()` and `@import` references are rewritten to the digested copies, so Midwinter no longer keeps hand-maintained import hashes and `update_hash.php` is gone. Without a compiled manifest, and for `custom.css`, plugins and the flag-icons stylesheet, pages keep the `?md5` URLs. Docker images and offline bundles ship the compiled files; source installations must rerun the compile after each upgrade.
+- Reuse common row-count option rendering in automation previews while preserving each row filter.
 
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
 - Run legacy `exec_into_array()` commands through Symfony Process while preserving its public signature, stdout line array, exit-status handling, and unlimited wait behavior. Retain the native `exec()` path if Process cannot start because `proc_open()` is unavailable. Tracks #482.

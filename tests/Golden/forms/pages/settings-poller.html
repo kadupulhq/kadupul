@@ -1,0 +1,218 @@
+<form action="settings.php" autocomplete="off" class="cactiFormStart" id="form_settings" method="post" name="form_settings">
+  <div class="cactiTable" id="settings_poller1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Kadupul Settings (Poller)</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Settings-Poller.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="settings_poller1_child">
+      <div class="spacer formHeader collapsible" id="row_poller_header"><div class="formHeaderText">General<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_poller_enabled"><div class="formColumnLeft"><div class="formFieldName">Data Collection Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If you wish to stop the polling process completely, uncheck this box.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Data Collection Enabled"><input aria-checked="true" checked="" class="formCheckbox" id="poller_enabled" name="poller_enabled" title="Data Collection Enabled" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="poller_enabled">Data Collection Enabled</label></span></div></div></div>
+      <div class="formRow even" id="row_enable_snmp_agent"><div class="formColumnLeft"><div class="formFieldName">SNMP Agent Support Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If this option is checked, Kadupul will populate SNMP Agent tables with Kadupul device and system information. It does not enable the SNMP Agent itself.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="SNMP Agent Support Enabled"><input aria-checked="true" checked="" class="formCheckbox" id="enable_snmp_agent" name="enable_snmp_agent" title="SNMP Agent Support Enabled" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enable_snmp_agent">SNMP Agent Support Enabled</label></span></div></div></div>
+      <div class="formRow odd" id="row_poller_type"><div class="formColumnLeft"><div class="formFieldName">Poller Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The poller type to use. This setting will take affect at next polling interval.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="poller_type" name="poller_type">
+          <option selected="" value="1">cmd.php</option>
+          <option value="2">spine</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_poller_sync_interval"><div class="formColumnLeft"><div class="formFieldName">Poller Sync Interval<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default polling sync interval to use when creating a poller. This setting will affect how often remote pollers are checked and updated.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="poller_sync_interval" name="poller_sync_interval">
+          <option value="0">Disabled/Manual</option>
+          <option value="1800">Every 30 Minutes</option>
+          <option value="3600">Every Hour</option>
+          <option selected="" value="7200">Every 2 Hours</option>
+          <option value="14400">Every 4 Hours</option>
+          <option value="28800">Every 8 Hours</option>
+          <option value="57600">Every 16 Hours</option>
+          <option value="86400">Every day</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_poller_interval"><div class="formColumnLeft"><div class="formFieldName">Poller Interval<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The polling interval in use. This setting will affect how often RRDfiles are checked and updated. <strong><u>NOTE: If you change this value, you must re-populate the poller cache. Failure to do so, may result in lost data.</u></strong></span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="poller_interval" name="poller_interval">
+          <option value="10">Every 10 Seconds</option>
+          <option value="15">Every 15 Seconds</option>
+          <option value="20">Every 20 Seconds</option>
+          <option value="30">Every 30 Seconds</option>
+          <option value="60">Every Minute</option>
+          <option selected="" value="300">Every 5 Minutes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_cron_interval"><div class="formColumnLeft"><div class="formFieldName">Cron/Daemon Interval<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The frequency that the Kadupul data collector will be started. You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector. For instructions on using the cactid daemon, review the README.md file in the service directory.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="cron_interval" name="cron_interval">
+          <option value="60">Every Minute</option>
+          <option selected="" value="300">Every 5 Minutes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_process_leveling"><div class="formColumnLeft"><div class="formFieldName">Balance Process Load<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If you choose this option, Kadupul will attempt to balance the load of each poller process by equally distributing poller items per process.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Balance Process Load"><input aria-checked="true" checked="" class="formCheckbox" id="process_leveling" name="process_leveling" title="Balance Process Load" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="process_leveling">Balance Process Load</label></span></div></div></div>
+      <div class="formRow even" id="row_poller_debug"><div class="formColumnLeft"><div class="formFieldName">Debug Output Width<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If you choose this option, Kadupul will check for output that exceeds Kadupul's ability to store it and issue a warning when it finds it.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Debug Output Width"><input aria-checked="false" class="formCheckbox" id="poller_debug" name="poller_debug" title="Debug Output Width" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="poller_debug">Debug Output Width</label></span></div></div></div>
+      <div class="formRow odd" id="row_oid_increasing_check_disable"><div class="formColumnLeft"><div class="formFieldName">Disable increasing OID Check<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Controls disabling check for increasing OID while walking OID tree.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Disable increasing OID Check"><input aria-checked="false" class="formCheckbox" id="oid_increasing_check_disable" name="oid_increasing_check_disable" title="Disable increasing OID Check" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="oid_increasing_check_disable">Disable increasing OID Check</label></span></div></div></div>
+      <div class="formRow even" id="row_remote_agent_timeout"><div class="formColumnLeft"><div class="formFieldName">Remote Agent Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request. On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="remote_agent_timeout" name="remote_agent_timeout">
+          <option selected="" value="5">5 Seconds</option>
+          <option value="10">10 Seconds</option>
+          <option value="15">15 Seconds</option>
+          <option value="20">20 Seconds</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_snmp_bulk_walk_size"><div class="formColumnLeft"><div class="formFieldName">SNMP Bulkwalk Fetch Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How many OID's should be returned per snmpbulkwalk request? For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="snmp_bulk_walk_size" name="snmp_bulk_walk_size">
+          <option selected="" value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+          <option value="60">60</option>
+          <option value="70">70</option>
+          <option value="80">80</option>
+          <option value="90">90</option>
+          <option value="100">100</option>
+          <option value="150">150</option>
+          <option value="200">200</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_max_get_size"><div class="formColumnLeft"><div class="formFieldName">SNMP Get OID Limit<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default maximum number of SNMP Get OIDs to issue per snmpget request. For Devices, this setting is controlled at the Device level. You should only use this setting when using Kadupul's SNMP API natively in your scripts or plugins.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="max_get_size" maxlength="10" name="max_get_size" off="" size="5" type="text" value="10"></div></div></div>
+      <div class="formRow odd" id="row_poller_rejected_hours"><div class="formColumnLeft"><div class="formFieldName">Rejected Sample Retention<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Hours that samples refused by RRDtool, for example after a data source schema change, stay queued for retry before they are moved to the poller_output_rejected table. Repair the RRDfile, then run cli/replay_rejected_samples.php to process them.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="poller_rejected_hours" maxlength="5" name="poller_rejected_hours" off="" size="5" type="text" value="24"></div></div></div>
+      <div class="formRow even" id="row_poller_rejected_rows"><div class="formColumnLeft"><div class="formFieldName">Rejected Sample Limit<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The most refused samples one data source may keep queued. The oldest samples beyond this limit are moved to the poller_output_rejected table immediately.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="poller_rejected_rows" maxlength="8" name="poller_rejected_rows" off="" size="8" type="text" value="10000"></div></div></div>
+      <div class="formRow odd" id="row_disable_cache_replication"><div class="formColumnLeft"><div class="formFieldName">Disable Resource Cache Replication<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache. Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector. This Resource Cache essentially allows Remote Data Collectors to self upgrade. If you do not wish to use this option, you can disable it using this setting.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Disable Resource Cache Replication"><input aria-checked="false" class="formCheckbox" id="disable_cache_replication" name="disable_cache_replication" title="Disable Resource Cache Replication" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="disable_cache_replication">Disable Resource Cache Replication</label></span></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_data_collector1_header"><div class="formHeaderText">Additional Data Collector Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_spine_log_level"><div class="formColumnLeft"><div class="formFieldName">Invalid Data Logging<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How would you like the Data Collector output errors logged? Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spine_log_level" name="spine_log_level">
+          <option selected="" value="0">None</option>
+          <option value="1">Summary</option>
+          <option value="2">Detailed</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_php_servers"><div class="formColumnLeft"><div class="formFieldName">Number of PHP Script Servers<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of concurrent script server processes to run per spine process. Settings between 1 and 15 are accepted. This parameter will help if you are running several threads and script server scripts and is only valid for the spine Data Collector.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="php_servers" maxlength="10" name="php_servers" off="" size="5" type="text" value="1"></div></div></div>
+      <div class="formRow even" id="row_script_timeout"><div class="formColumnLeft"><div class="formFieldName">Script and Script Server Timeout Value<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum time that spine will wait on a script to complete. This timeout value is in seconds and is only valid for the spine Data Collector.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="script_timeout" maxlength="10" name="script_timeout" off="" size="5" type="text" value="25"></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_reindex_header"><div class="formHeaderText">Periodic All Device Re-Index<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_automatic_reindex"><div class="formColumnLeft"><div class="formFieldName">Re-Index All Device Schedule<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">At what frequency do you wish to Re-Index all Devices. This Re-Index will occur at midnight at the frequency that you select.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="automatic_reindex" name="automatic_reindex">
+          <option selected="" value="0">Disabled</option>
+          <option value="1">Daily</option>
+          <option value="2">Weekly on Sunday</option>
+          <option value="3">Monthly on Sunady</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_timeouts_header"><div class="formHeaderText">Background Timeout and Concurrent Process Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_reports_timeout"><div class="formColumnLeft"><div class="formFieldName">Report Generation Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="reports_timeout" name="reports_timeout">
+          <option value="60">1 Minute</option>
+          <option value="120">2 Minutes</option>
+          <option selected="" value="300">5 Minutes</option>
+          <option value="600">10 Minutes</option>
+          <option value="1200">20 Minutes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_dsstats_timeout"><div class="formColumnLeft"><div class="formFieldName">Data Source Statistics Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time Kadupul's Data Source Statistics script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="dsstats_timeout" name="dsstats_timeout">
+          <option value="60">1 Minute</option>
+          <option value="120">2 Minutes</option>
+          <option selected="" value="300">5 Minutes</option>
+          <option value="600">10 Minutes</option>
+          <option value="1200">20 Minutes</option>
+          <option value="1800">30 Minutes</option>
+          <option value="3600">1 Hour</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_rrdcheck_timeout"><div class="formColumnLeft"><div class="formFieldName">RRDChecker Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="rrdcheck_timeout" name="rrdcheck_timeout">
+          <option value="300">5 Minutes</option>
+          <option value="1800">30 Minutes</option>
+          <option selected="" value="3600">1 Hour</option>
+          <option value="7200">2 Hour</option>
+          <option value="14400">4 Hour</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_commands_timeout"><div class="formColumnLeft"><div class="formFieldName">Poller Commands Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time Kadupul's Background Commands script can run without generating a timeout error and being killed. This script will perform tasks such as re-indexing Devices and pruning devices from Remote Data Collectors.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="commands_timeout" name="commands_timeout">
+          <option value="60">1 Minute</option>
+          <option value="120">2 Minutes</option>
+          <option selected="" value="300">5 Minutes</option>
+          <option value="600">10 Minutes</option>
+          <option value="1200">20 Minutes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_commands_processes"><div class="formColumnLeft"><div class="formFieldName">Poller Command Concurrent Processes<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of concurrent Poller Command processes. The will be at most one concurrent command per host within the Poller Command pool.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="commands_processes" name="commands_processes">
+          <option selected="" value="1">1 Process</option>
+          <option value="2">2 Processes</option>
+          <option value="3">3 Processes</option>
+          <option value="4">4 Processes</option>
+          <option value="5">5 Processes</option>
+          <option value="6">6 Processes</option>
+          <option value="7">7 Processes</option>
+          <option value="8">8 Processes</option>
+          <option value="9">9 Processes</option>
+          <option value="10">10 Processes</option>
+          <option value="11">11 Processes</option>
+          <option value="12">12 Processes</option>
+          <option value="13">13 Processes</option>
+          <option value="14">14 Processes</option>
+          <option value="15">15 Processes</option>
+          <option value="16">16 Processes</option>
+          <option value="17">17 Processes</option>
+          <option value="18">18 Processes</option>
+          <option value="19">19 Processes</option>
+          <option value="20">20 Processes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_maintenance_timeout"><div class="formColumnLeft"><div class="formFieldName">Maintenance Background Generation Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="maintenance_timeout" name="maintenance_timeout">
+          <option value="60">1 Minute</option>
+          <option value="120">2 Minutes</option>
+          <option selected="" value="300">5 Minutes</option>
+          <option value="600">10 Minutes</option>
+          <option value="1200">20 Minutes</option>
+          <option value="3600">1 Hour</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_spikekill_timeout"><div class="formColumnLeft"><div class="formFieldName">Spikekill Background Generation Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="spikekill_timeout" name="spikekill_timeout">
+          <option value="60">1 Minute</option>
+          <option value="120">2 Minutes</option>
+          <option value="300">5 Minutes</option>
+          <option value="600">10 Minutes</option>
+          <option value="1200">20 Minutes</option>
+          <option selected="" value="3600">1 Hour</option>
+          <option value="7200">2 Hours</option>
+          <option value="14400">4 Hours</option>
+          <option value="28800">8 Hours</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_data_collector_header"><div class="formHeaderText">Data Collector Defaults<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">These settings are maintained at the Data Collector level. The values here are only defaults used when first creating a Data Collector.</span></div></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_concurrent_processes"><div class="formColumnLeft"><div class="formFieldName">Data Collector Processes<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The default number of concurrent processes to execute per Data Collector. NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector. Moving forward, this value is only a preset for the Data Collector. Using a higher number when using cmd.php will improve performance. Performance improvements in Spine are best resolved with the threads parameter. When using Spine, we recommend a lower number and leveraging threads instead. When using cmd.php, use no more than 2x the number of CPU cores.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="concurrent_processes" maxlength="10" name="concurrent_processes" off="" size="5" type="text" value="1"></div></div></div>
+      <div class="formRow even" id="row_max_threads"><div class="formColumnLeft"><div class="formFieldName">Threads per Process<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Default Threads allowed per process. NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset. Using a higher number when using Spine will improve performance. However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers). You must also ensure that you have enough spare connections for user login connections as well.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="max_threads" maxlength="10" name="max_threads" off="" size="5" type="text" value="1"></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="tab" name="tab" style="height:0px;" type="hidden" value="poller"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="save ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>
