@@ -410,8 +410,20 @@ if ($config['is_web']) {
     if (read_config_option('force_https') == 'on') {
         $is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && strtolower($_SERVER['HTTPS']) !== 'off');
 
-        if (!$is_https && isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
-            header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        if (!$is_https) {
+            $https_redirect = cacti_build_https_redirect_url(
+                $_SERVER['SERVER_NAME'] ?? '',
+                $_SERVER['REQUEST_URI'] ?? '',
+                $config['url_path'],
+                (string) read_config_option('base_url')
+            );
+
+            if ($https_redirect === '') {
+                http_response_code(400);
+                exit;
+            }
+
+            header('Location: ' . $https_redirect);
             exit;
         }
     }

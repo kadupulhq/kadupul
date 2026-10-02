@@ -1,0 +1,34 @@
+<form action="automation_templates.php" autocomplete="off" class="cactiFormStart" id="form_network" method="post" name="form_network">
+  <div class="cactiTable" id="automation_templates_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Automation Templates [new]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Device-Rules.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="automation_templates_edit1_child">
+      <div class="formRow odd" id="row_host_template"><div class="formColumnLeft"><div class="formFieldName">Device Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select a Device Template that Devices will be matched to.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="host_template" name="host_template"></select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_availability_method"><div class="formColumnLeft"><div class="formFieldName">Availability Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Choose the Availability Method to use for Discovered Devices.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="availability_method" name="availability_method">
+          <option value="0">None</option>
+          <option value="1">Ping and SNMP Uptime</option>
+          <option value="4">Ping or SNMP Uptime</option>
+          <option selected="" value="2">SNMP Uptime</option>
+          <option value="5">SNMP Desc</option>
+          <option value="6">SNMP getNext</option>
+          <option value="3">Ping</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_sysDescr"><div class="formColumnLeft"><div class="formFieldName">System Description Match<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This is a unique string that will be matched to a devices sysDescr string to pair it to this Automation Template. Any Perl regular expression can be used in addition to any SQL Where expression.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="sysDescr" maxlength="255" name="sysDescr" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_sysName"><div class="formColumnLeft"><div class="formFieldName">System Name Match<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This is a unique string that will be matched to a devices sysName string to pair it to this Automation Template. Any Perl regular expression can be used in addition to any SQL Where expression.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="sysName" maxlength="128" name="sysName" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_sysOid"><div class="formColumnLeft"><div class="formFieldName">System OID Match<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This is a unique string that will be matched to a devices sysOid string to pair it to this Automation Template. Any Perl regular expression can be used in addition to any SQL Where expression.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="sysOid" maxlength="128" name="sysOid" off="" size="40" type="text" value=""></div></div></div>
+      <div class="hidden formRow"><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="save_component_template" name="save_component_template" style="height:0px;" type="hidden" value="1"></div></div>
+    </div>
+  </div>
+  <div class="break"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="automation_templates.php" type="button" value="Cancel"><input class=" ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Create"></td></tr>
+    </tbody>
+  </table>
+</form>
