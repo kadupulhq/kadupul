@@ -1,0 +1,38 @@
+<form action="package_import.php" autocomplete="off" class="cactiFormStart" enctype="multipart/form-data" id="import" method="post" name="import">
+  <div class="cactiTable" id="package_import1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Package Import</span></div><div class="cactiTableButton"><span></span></div></div>
+    <div class="cactiTable" id="package_import1_child">
+      <div class="formRow odd" id="row_import_file"><div class="formColumnLeft"><div class="formFieldName">Local Package Import File<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The *.xml.gz file located on your Local machine to Upload and Import.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><div><label class="import_label" for="import_file">Select a File</label><input accept=".xml.gz" class="import_button ui-state-default ui-corner-all" id="import_file" name="import_file" size="40" type="file"><span class="import_text"></span></div></div></div></div>
+      <div class="hidden formRow"><div style="display:none;"><input id="trust_signer" name="trust_signer" style="height:0px;" type="hidden" value="on"></div></div>
+      <div class="spacer formHeader collapsible" id="row_data_header"><div class="formHeaderText">Data Source Overrides<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_data_source_profile"><div class="formColumnLeft"><div class="formFieldName">Data Source Profile<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Select the Data Source Profile. The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="data_source_profile" name="data_source_profile">
+          <option selected="" value="0">Create New from Template</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_graph_header"><div class="formHeaderText">Graph/Data Template Overrides<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_remove_orphans"><div class="formColumnLeft"><div class="formFieldName">Remove Orphaned Graph Items<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If checked, Kadupul will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Remove Orphaned Graph Items"><input aria-checked="true" checked="" class="formCheckbox" id="remove_orphans" name="remove_orphans" title="Remove Orphaned Graph Items" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="remove_orphans">Remove Orphaned Graph Items</label></span></div></div></div>
+      <div class="formRow even" id="row_replace_svalues"><div class="formColumnLeft"><div class="formFieldName">Replace Data Query Suggested Value Patterns<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Replace Data Source and Graph Template Suggested Value Records. Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Replace Data Query Suggested Value Patterns"><input aria-checked="true" checked="" class="formCheckbox" id="replace_svalues" name="replace_svalues" title="Replace Data Query Suggested Value Patterns" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="replace_svalues">Replace Data Query Suggested Value Patterns</label></span></div></div></div>
+      <div class="formRow odd" id="row_image_format"><div class="formColumnLeft"><div class="formFieldName">Graph Template Image Format<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Image Format to be used when importing or updating Graph Templates.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="image_format" name="image_format">
+          <option value="1">PNG</option>
+          <option selected="" value="3">SVG</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_graph_height"><div class="formColumnLeft"><div class="formFieldName">Graph Template Height<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Height to be used when importing or updating Graph Templates.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="graph_height" maxlength="5" name="graph_height" off="" size="5" type="text" value="200"></div></div></div>
+      <div class="formRow odd" id="row_graph_width"><div class="formColumnLeft"><div class="formFieldName">Graph Template Width<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Width to be used when importing or updating Graph Templates.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="graph_width" maxlength="5" name="graph_width" off="" size="5" type="text" value="700"></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div>
+  <div id="contents"></div>
+  <div id="dialog"></div>
+  <div style="display:none;"><input id="save_component_import" name="save_component_import" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="preview_only" name="preview_only" style="height:0px;" type="hidden" value="on"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="import ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Import"></td></tr>
+    </tbody>
+  </table>
+</form>
