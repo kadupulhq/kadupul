@@ -56,6 +56,10 @@ def main():
         'about.php', 'src/Platform/Infrastructure/Symfony/Controller/AboutController.php',
         'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
+        'vdef.php',
+        'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
         'links.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
         'color.php',
         'src/Graphing/Domain/PaletteCsv.php',
@@ -235,6 +239,31 @@ def main():
         'missing-palette-review-check-8': 'Incomplete Symfony integration',
         'palette-sql-probe-hash': 'Integration test source differs',
 
+        'vdef-test-hash': 'Integration test source differs',
+        'missing-vdef-persistent-storage': 'Incomplete Symfony integration',
+        'vdef-probe-hash': 'Integration test source differs',
+        'vdef-browser-probe-hash': 'Integration test source differs',
+        'vdef-browser-handler-hash': 'Integration test source differs',
+        'missing-vdef-selection-check-0': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-1': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-2': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-3': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-4': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-5': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-6': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-7': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-8': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-9': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-10': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-11': 'Incomplete Symfony integration',
+        'missing-vdef-selection-check-12': 'Incomplete Symfony integration',
+        'missing-vdef-array-type-check': 'Incomplete Symfony integration',
+        'missing-vdef-french-item-check': 'Incomplete Symfony integration',
+        'missing-vdef-reference-check': 'Incomplete Symfony integration',
+        'missing-vdef-browser-check': 'Incomplete Symfony integration',
+        'missing-vdef-legacy-bound-check': 'Incomplete Symfony integration',
+        'missing-vdef-engine-check': 'Incomplete Symfony integration',
+        'missing-vdef-handoff': 'Incomplete Symfony integration',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
@@ -335,6 +364,30 @@ def main():
                 evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
             elif case == 'missing-data-source-profile-test-hash':
                 evidence['source_sha256'].pop('tests/Symfony/data_source_profile_scenarios.py')
+            elif case == 'vdef-probe-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
+            elif case == 'vdef-browser-probe-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_browser_probe.cjs'] = '0' * 64
+            elif case == 'vdef-browser-handler-hash':
+                evidence['source_sha256']['public/js/vdef-item.js'] = '0' * 64
+            elif case.startswith('missing-vdef-selection-check-'):
+                checks = ['VDEF malformed list arrays return controlled 400 before catalog reads: filter', 'VDEF malformed list arrays return controlled 400 before catalog reads: sort', 'VDEF malformed list arrays return controlled 400 before catalog reads: direction', 'VDEF malformed list arrays return controlled 400 before catalog reads: has_graphs', 'VDEF own legacy reference deletes through CSRF form: 0', 'VDEF own legacy reference deletes through CSRF form: 1', 'VDEF own legacy reference deletes through CSRF form: 2', 'VDEF own legacy reference deletes through CSRF form: 3', 'VDEF own legacy reference deletes through CSRF form: 4', 'VDEF own legacy reference deletes through CSRF form: 5', 'VDEF own legacy reference deletes through CSRF form: 6', 'VDEF own legacy reference deletes through CSRF form: 7', 'VDEF whole selected reference set deletes through CSRF form']
+                evidence['checks'].remove(checks[int(case.rsplit('-', 1)[1])])
+            elif case.startswith('missing-vdef-') and case in ['missing-vdef-array-type-check', 'missing-vdef-french-item-check', 'missing-vdef-reference-check', 'missing-vdef-browser-check', 'missing-vdef-legacy-bound-check']:
+                omitted = {'missing-vdef-array-type-check': 'VDEF array type query returns controlled 400 without mutation',
+                           'missing-vdef-french-item-check': 'VDEF unknown item deletion uses French catalog label',
+                           'missing-vdef-reference-check': 'VDEF nested reference refuses function overwrite',
+                           'missing-vdef-browser-check': 'VDEF browser type change and save pass under CSP',
+                           'missing-vdef-legacy-bound-check': 'VDEF oversized legacy parent ID falls back'}[case]
+                evidence['checks'].remove(omitted)
+            elif case == 'missing-vdef-engine-check':
+                evidence['checks'].remove('VDEF nontransactional table refused: vdef')
+            elif case == 'missing-vdef-persistent-storage':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'VDEF writes reject every InnoDB temporary participant and preserve persistent observer rows']
+            elif case == 'vdef-test-hash':
+                evidence['source_sha256']['tests/Symfony/vdef_scenarios.py'] = '0' * 64
+            elif case == 'missing-vdef-handoff':
+                evidence['checks'].remove('VDEF duplicate preserves all item rows')
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
             elif case == 'details-test-hash':

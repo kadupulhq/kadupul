@@ -122,6 +122,8 @@ def main():
         verify_device_create(harness, session, user_id, check)
         from palette_color_scenarios import verify_palette_colors
         verify_palette_colors(harness, session, user_id, check)
+        from vdef_scenarios import verify_vdefs
+        verify_vdefs(harness, session, user_id, check)
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()

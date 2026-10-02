@@ -189,6 +189,9 @@ const SUPERGLOBALS = ['GLOBALS', '_SERVER', '_GET', '_POST', '_FILES', '_COOKIE'
 
 const ROUTE_ATTRIBUTES = ['Symfony\Component\Routing\Attribute\Route', 'Symfony\Component\Routing\Annotation\Route'];
 const ACCESS_CHECKS = ['consoleActor', 'canManageDevices'];
+const VDEF_AUTHORIZATION = 'Kadupul\\GraphDefinition\\Application\\Query\\VdefAuthorization';
+const VDEF_REALM_ADAPTER = 'Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DoctrineVdefRealmAccess';
+const VDEF_ACCESS_TYPES = ['Kadupul\\GraphDefinition\\Application\\Port\\VdefRealmAccess', VDEF_REALM_ADAPTER];
 const SESSION_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession';
 const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess';
 // Complete reviewed native-identity and persistence handoff, plus its scoped
@@ -202,7 +205,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => '1745bbda81910dad3cfc4ad4a890a7260e2a471a65d9321954c914284eb4b6e9',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b6a7a0e78791fe7afb40c2702e76232654ae941349db9c95c4c6d579c2e8ef91',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'd7b95610905a6e64970377c0ed41cec396cc711cfdb5c94d04f76152c45ddf46',
+    'config/services.yaml' => '30cfeccf69200ab2d83a25b39bc1f26e824e1ba36cd576802a61de863138a7c3',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -1501,7 +1504,8 @@ function call_target(Node $node, Closure $type_of): ?array
 
 function is_access_call(?array $target, string $check): bool
 {
-    return $target !== null && in_array($target[0], ACCESS_TYPES, true) && $target[1] === $check;
+    $types = $check === 'canManageDefinitions' ? VDEF_ACCESS_TYPES : ACCESS_TYPES;
+    return $target !== null && in_array($target[0], $types, true) && $target[1] === $check;
 }
 
 /**
@@ -1567,6 +1571,19 @@ function is_device_denial(Expr $expr, string $var, Closure $type_of): bool
         && $args !== null && count($args) === 1 && is_variable($args[0], $var);
 }
 
+function is_definition_denial(Expr $expr, string $var, Closure $type_of): bool
+{
+    if (!$expr instanceof Expr\BooleanNot || !$expr->expr instanceof Expr\CallLike) {
+        return false;
+    }
+    $args = plain_args($expr->expr);
+    $actorId = $args[0] ?? null;
+    return is_access_call(call_target($expr->expr, $type_of), 'canManageDefinitions')
+        && $args !== null && count($args) === 1 && $actorId instanceof Expr\PropertyFetch
+        && is_variable($actorId->var, $var) && $actorId->name instanceof Node\Identifier
+        && $actorId->name->toString() === 'id';
+}
+
 /**
  * The condition of an if with no other branch whose body ends in throw, or in
  * a return $stops accepts, so a true condition stops the action.
@@ -1600,7 +1617,7 @@ function refusal_guard(string $root, ?Stmt $stmt, ?Closure $stops, Closure $type
  * @param (Closure(?Expr): bool)|null $stops
  * @return array<string, true>
  */
-function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $stops): array
+function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $stops, ?array &$after = null): array
 {
     // Authenticated-only pages have no realm. Recognize this specific contract
     // only when the action immediately refuses its null actor before any effect.
@@ -1632,24 +1649,25 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $
         if ($terms === [] || !is_null_check($terms[0], $var)) {
             return [];
         }
+        $after = array_slice($list, $i + 2);
         $checks = ['consoleActor' => true];
         $next = refusal_guard($root, $list[$i + 2] ?? null, $stops, $type_of);
         foreach ([$terms, $next === null ? [] : disjuncts($next)] as $group) {
-            $denial = false;
+            $denials = [];
             foreach ($group as $expr) {
                 if (is_device_denial($expr, $var, $type_of)) {
-                    $denial = true;
+                    $denials['canManageDevices'] = true;
+                } elseif (is_definition_denial($expr, $var, $type_of)) {
+                    $denials['canManageDefinitions'] = true;
                 } elseif (!is_null_check($expr, $var) && !pure($root, $expr, $type_of)) {
                     if ($group === $terms) {
                         return [];
                     }
-                    $denial = false;
+                    $denials = [];
                     break;
                 }
             }
-            if ($denial) {
-                $checks['canManageDevices'] = true;
-            }
+            $checks += $denials;
         }
         return $checks;
     }
@@ -1947,7 +1965,18 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     if ($depth === 0) {
         $stops = fn(?Expr $e): bool => true;
     }
-    $checks = guarded_checks($root, $method->stmts ?? [], $type_of, $stops);
+    $after = null;
+    $checks = guarded_checks($root, $method->stmts ?? [], $type_of, $stops, $after);
+    if (isset($checks['consoleActor']) && !isset($checks['canManageDefinitions']) && $after !== null && $depth < CALL_DEPTH) {
+        $feature = first_service_call($root, $after, $type_of, $stops);
+        if ($feature !== null && $feature[0] === [VDEF_AUTHORIZATION, 'actor']) {
+            $authorization = load_class($root, VDEF_AUTHORIZATION);
+            $guard = $authorization === null ? null : find_method($authorization, 'actor');
+            if ($guard !== null) {
+                $checks += method_checks($root, VDEF_AUTHORIZATION, $guard, $depth + 1, $seen);
+            }
+        }
+    }
     if ($checks !== [] || $depth >= CALL_DEPTH) {
         return $checks;
     }
@@ -2124,6 +2153,34 @@ function session_realms(string $root, array $files): array
         $realms[$check] = $found[0];
     }
 
+    $definitions = load_class($root, VDEF_REALM_ADAPTER);
+    if ($definitions !== null) {
+        foreach ($files as $path) {
+            foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+                if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== VDEF_REALM_ADAPTER) {
+                    foreach ($node->implements as $interface) {
+                        if ($interface->toString() === VDEF_ACCESS_TYPES[0]) {
+                            fail($path . ' also implements ' . VDEF_ACCESS_TYPES[0]);
+                        }
+                    }
+                }
+            }
+        }
+        $definitionMethod = find_method($definitions, 'canManageDefinitions');
+        $found = [];
+        foreach (walk($definitionMethod?->stmts ?? []) as $node) {
+            if ($node instanceof Scalar\String_ && preg_match_all('/\b(?:[a-z]+\.)?realm_id\s*=\s*([0-9]+)\b/i', $node->value, $matches)) {
+                foreach ($matches[1] as $realm) {
+                    $found[(int) $realm] = true;
+                }
+            }
+        }
+        if (count($found) !== 1) {
+            fail('unique realm check for canManageDefinitions not found in DoctrineVdefRealmAccess');
+        }
+        $realms['canManageDefinitions'] = array_key_first($found);
+    }
+
     return $realms;
 }
 
@@ -2255,6 +2312,12 @@ function symfony_routes(string $root, array $files): array
                         } elseif (isset($checks['consoleActor'])) {
                             $realms ??= session_realms($root, $sources);
                             $grant = 'realm ' . $realms['consoleActor'];
+                            if (isset($checks['canManageDefinitions'])) {
+                                if (!isset($realms['canManageDefinitions'])) {
+                                    fail('VDEF realm adapter not found');
+                                }
+                                $grant .= ' + realm ' . $realms['canManageDefinitions'];
+                            }
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
                             }

@@ -1341,6 +1341,80 @@ final class PaletteAction {
                 count += 1
                 if run(root, []).get('app.php/graphing/colors', ('missing',))[0] != 'unknown':
                     failures.append('Palette alternative authorization implementation was still certified')
+    # Verify realm metadata from the actual VDEF authorization path, including
+    # the checked actor identity and side-effect ordering after console admission.
+    project = Path(__file__).resolve().parents[2]
+    adapter_source = (project / 'src/GraphDefinition/Infrastructure/Persistence/DoctrineVdefRealmAccess.php').read_text()
+    authorization_source = (project / 'src/GraphDefinition/Application/Query/VdefAuthorization.php').read_text()
+    controller_source = """<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Kadupul\\GraphDefinition\\Application\\Query\\VdefAuthorization;
+use Kadupul\\GraphDefinition\\Application\\Query\\VdefAccessDenied;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+use Symfony\\Component\\HttpFoundation\\Response;
+final class DefinitionActions {
+    #[Route('/definition-review', name: 'definition_review', methods: ['GET'])]
+    public function __invoke(ConsoleAccess $access, VdefAuthorization $authorization): Response {
+        $actor = $access->consoleActor();
+        if ($actor === null) { return new Response('Denied', 401); }
+        try { $authorization->actor(); return new Response('Admitted', 200); }
+        catch (VdefAccessDenied $error) { return new Response('Denied', 403); }
+    }
+}
+"""
+    variants = [
+        ('actual realm', adapter_source, authorization_source, controller_source, ' + realm 14'),
+        ('derive changed realm', adapter_source.replace('realm_id = 14', 'realm_id = 24'), authorization_source, controller_source, ' + realm 24'),
+        ('wrong actor', adapter_source, authorization_source.replace('$actor->id)', '777)'), controller_source, ''),
+        ('ignored refusal', adapter_source, authorization_source.replace("if (!$this->realm->canManageDefinitions($actor->id)) {\n            throw new VdefAccessDenied();\n        }", '$this->realm->canManageDefinitions($actor->id);'), controller_source, ''),
+        ('write before feature', adapter_source, authorization_source, controller_source.replace('$authorization->actor();', "file_put_contents('/tmp/fixture', 'x'); $authorization->actor();"), ''),
+        ('swallowed feature refusal', adapter_source, authorization_source, controller_source.replace("return new Response('Denied', 403);", "print 'ignored';"), ''),
+    ]
+    for label, adapter, authorization, controller, feature in variants:
+        count += 1
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-vdef-') as directory:
+            root = tree(directory)
+            for path, text in [
+                ('src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', SESSION),
+                ('src/GraphDefinition/Infrastructure/Persistence/DoctrineVdefRealmAccess.php', adapter),
+                ('src/GraphDefinition/Application/Query/VdefAuthorization.php', authorization),
+                ('src/GraphDefinition/Application/Query/VdefAccessDenied.php', (project / 'src/GraphDefinition/Application/Query/VdefAccessDenied.php').read_text()),
+                ('src/Fixture/DefinitionActions.php', controller),
+            ]:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text(text)
+            row = run(root, []).get('app.php/definition-review', ('missing', ''))
+            expected = '; ConsoleAccess realm 8' + feature
+            if not row[1].endswith(expected):
+                failures.append('VDEF %s: expected %s, got %s' % (label, expected, row))
+
+    # Missing, ambiguous, or replaceable adapter metadata must stop generation.
+    invalid_adapters = [
+        ('dynamic realm', adapter_source.replace('realm_id = 14', 'realm_id = ?'), None),
+        ('conflicting realms', adapter_source.replace('r.realm_id = 14', 'r.realm_id = 24'), None),
+        ('second implementation', adapter_source, "<?php\nnamespace Kadupul\\Fixture; final class AlternateRealm implements \\Kadupul\\GraphDefinition\\Application\\Port\\VdefRealmAccess { public function canManageDefinitions(int $actorId): bool { return true; } }"),
+    ]
+    for label, adapter, additional in invalid_adapters:
+        count += 1
+        with tempfile.TemporaryDirectory(prefix='entry-classifier-vdef-invalid-') as directory:
+            root = tree(directory)
+            for path, text in [
+                ('src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', SESSION),
+                ('src/GraphDefinition/Infrastructure/Persistence/DoctrineVdefRealmAccess.php', adapter),
+                ('src/GraphDefinition/Application/Query/VdefAuthorization.php', authorization_source),
+                ('src/GraphDefinition/Application/Query/VdefAccessDenied.php', (project / 'src/GraphDefinition/Application/Query/VdefAccessDenied.php').read_text()),
+                ('src/Fixture/DefinitionActions.php', controller_source),
+            ]:
+                (root / path).parent.mkdir(parents=True, exist_ok=True)
+                (root / path).write_text(text)
+            if additional:
+                (root / 'src/Fixture/AlternateRealm.php').write_text(additional)
+            try:
+                run(root, [])
+                failures.append('VDEF %s: expected generation to stop' % label)
+            except SystemExit:
+                pass
 
     for failure in failures:
         print('FAIL: ' + failure)

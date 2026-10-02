@@ -157,7 +157,7 @@ final class SiteLifecycleTest extends TestCase
                     (new \Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration($directory, $stack))->values();
                     self::fail('Collector configuration was accepted');
                 } catch (\RuntimeException $error) {
-                    self::assertStringContainsString(in_array($route, ['inventory_site_action', 'platform_about', 'platform_about_legacy'], true) ? 'Online primary configuration' : 'outside online collector Sites, Navigation and About routes', $error->getMessage());
+                    self::assertStringContainsString(in_array($route, ['inventory_site_action', 'platform_about', 'platform_about_legacy'], true) ? 'Online primary configuration' : 'outside supported online collector administration routes', $error->getMessage());
                 }
             }
         } finally {

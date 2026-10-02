@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
 - Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
 

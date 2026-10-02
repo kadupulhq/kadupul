@@ -26,9 +26,10 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'data_source_profile_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'data_source_profile_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
+        $sourcePaths[] = 'public/js/vdef-item.js';
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
         // cli_parity_scenarios.py and cli_schema_scenarios.py compare the shims
         // against these frozen originals.
@@ -77,6 +78,28 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'console-only palette account cannot parse or mutate any route',
 
         'transaction rollback restores prior import updates', 'missing palette realm rejected',
+        'VDEF caller transaction and remote collector guards verified on MariaDB',
+        'VDEF writes reject every InnoDB temporary participant and preserve persistent observer rows',
+        'VDEF malformed list arrays return controlled 400 before catalog reads: filter',
+        'VDEF malformed list arrays return controlled 400 before catalog reads: sort',
+        'VDEF malformed list arrays return controlled 400 before catalog reads: direction',
+        'VDEF malformed list arrays return controlled 400 before catalog reads: has_graphs',
+        'VDEF own legacy reference deletes through CSRF form: 0',
+        'VDEF own legacy reference deletes through CSRF form: 1',
+        'VDEF own legacy reference deletes through CSRF form: 2',
+        'VDEF own legacy reference deletes through CSRF form: 3',
+        'VDEF own legacy reference deletes through CSRF form: 4',
+        'VDEF own legacy reference deletes through CSRF form: 5',
+        'VDEF own legacy reference deletes through CSRF form: 6',
+        'VDEF own legacy reference deletes through CSRF form: 7',
+        'VDEF whole selected reference set deletes through CSRF form',
+        'VDEF array type query returns controlled 400 without mutation',
+        'VDEF unknown item deletion uses French catalog label',
+        'VDEF nested reference refuses function overwrite', 'VDEF browser type change and save pass under CSP',
+        'VDEF oversized legacy parent ID falls back',
+        'VDEF nontransactional table refused: vdef', 'VDEF nontransactional table refused: graph_templates_item',
+        'VDEF duplicate preserves all item rows', 'VDEF item deletion persists',
+        'VDEF failure rolls back parent deletion', 'VDEF console-only actor refused before malformed query',
         'links deletion cleans direct and group realms', 'links stale reorder rejected', 'links grant deletion failure rolls back link deletion',
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',
@@ -197,7 +220,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'about.php', 'color.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'about.php', 'color.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'vdef.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -238,10 +261,14 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorCsvController.php',
         'src/Graphing/Infrastructure/Symfony/Controller/PaletteColorEditController.php',
         'bin/legacy-device-edit.php',
-        'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'links.php',
         'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
         'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
+        'vdef.php',
+        'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
+        'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',
