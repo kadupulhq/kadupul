@@ -110,6 +110,10 @@ namespace LdapGroupProbe {
 	function ldap_search($conn, $base, $filter, $attributes = array()) {
 		$GLOBALS['calls']['searches'][] = $filter;
 
+		if (!empty($GLOBALS['scenario']['search_fails'])) {
+			return false;
+		}
+
 		preg_match_all('/\((uid|cn|userPrincipalName)=((?:[^()\\\\]|\\\\[0-9a-fA-F]{2})*)\)/', $filter, $assertions, PREG_SET_ORDER);
 
 		$hits = array();
@@ -277,6 +281,16 @@ test('a user outside the group is refused', function () {
 	$result = ldap_group_run(ldap_group_posix_scenario(array('bob')));
 
 	expect($result['error_num'])->toBe(8);
+});
+
+test('a failed group search does not fall back to the username', function () {
+	$scenario = ldap_group_posix_scenario();
+	$scenario['search_fails'] = true;
+
+	$result = ldap_group_run($scenario);
+
+	expect($result['error_num'])->not->toBe(0)
+		->and($result['compares'])->toBe(array());
 });
 
 test('a wrong password is refused before any group lookup', function () {
