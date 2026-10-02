@@ -163,6 +163,8 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceAssociations.php',
         'src/Inventory/Infrastructure/Legacy/DeviceAssociationRecords.php',
         'src/Inventory/Infrastructure/Legacy/DeviceAssociationWriter.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceCollectorGuard.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceWorkerTimeout.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceAssociationController.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceAssociationType.php',
         'src/Inventory/Domain/DeviceOptionsChange.php',

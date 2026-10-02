@@ -10,6 +10,7 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceAssignmentLock;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceMaintenanceRecords;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceMaintenanceExecutor;
+use Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorGuard;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization;
 
 require __DIR__ . '/legacy-assignment-bootstrap.php';
@@ -58,11 +59,7 @@ try {
     if (in_array($request->operation, ['reindex', 'reload-query', 'query-diagnostics'], true) && (int) $row['status'] === HOST_DOWN) {
         throw new InvalidArgumentException('Device is down');
     }
-    $query = $connection->prepare('SELECT id FROM poller WHERE id = ? FOR UPDATE');
-    $query->execute([$state->device->pollerId]);
-    if (!$query->fetchColumn()) {
-        throw new RuntimeException('Collector unavailable');
-    }
+    $collector = DeviceCollectorGuard::capture($connection, $state->device->pollerId, $state->device->pollerId > 1 ? (int) read_config_option('poller_interval') * 2 : null);
     $remote = null;
     if ($state->device->pollerId > 1) {
         if (!remote_poller_up($state->device->pollerId) || !(($remote = poller_connect_to_remote($state->device->pollerId)) instanceof PDO)) {
@@ -94,6 +91,7 @@ try {
         throw new RuntimeException('Device identity changed');
     }
     if ($result->completed) {
+        $collector->assertCurrent();
         if (!db_commit_transaction()) {
             throw new RuntimeException('Commit failed');
         }

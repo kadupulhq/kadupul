@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -13,6 +15,22 @@ use PDO;
 
 final class DeviceAssociationWriter
 {
+    /** Publish authoritative primary state before attempting collector commit. */
+    public function commit(PDO $primary, ?PDO $remote): void
+    {
+        if (!$primary->inTransaction() || ($remote !== null && !$remote->inTransaction())) {
+            throw new \RuntimeException('Association transaction unavailable');
+        }
+        if (!$primary->commit()) {
+            throw new \RuntimeException('Primary commit failed');
+        }
+        if ($remote !== null && !$remote->commit()) {
+            // Primary state is committed. The worker reports failure and keeps
+            // the collector transaction available for rollback/resynchronizing.
+            throw new \RuntimeException('Remote commit failed');
+        }
+    }
+
     public function apply(PDO $primary, ?PDO $remote, DeviceAssociations $device, DeviceAssociationChange $change): void
     {
         if ($change->kind === 'query') {

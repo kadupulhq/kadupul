@@ -36,3 +36,36 @@ Device assignment to a collector or template is part of Inventory and stays in
 this queue; administration of those referenced objects does not.
 
 Legacy device deletion has no restore operation: local rows are deleted and remote tombstones are temporary cleanup state, not recoverable inventory.
+
+## Association and maintenance operational boundaries
+
+Association and maintenance workers snapshot collector connection configuration
+without locking the heartbeat row during SNMP or HTTP work. Immediately before
+commit, they lock and recheck the current configuration and, for remote collectors,
+heartbeat availability. Configuration changes, disablement or deletion reject
+commit; transactional local writes roll back. Heartbeat/statistic updates alone
+do not invalidate the operation.
+
+The parent process allows the existing 120-second local-work margin plus 300
+seconds per possible remote request. This uses the HTTP timeout cap rather than
+the current setting, so increasing the setting during an operation cannot make
+its parent budget too short. Query association add/change budgets one request;
+remote full reindex budgets the number of queries in the validated immutable
+maintenance state passed from the use case to the adapter; selected
+query diagnostics, reload and connectivity budget one. Local and non-network
+maintenance retain 120 seconds. A changed association set changes the revision
+and is rejected by the worker before discovery.
+
+Deployments must allow the corresponding request duration through PHP/FPM and
+HTTP gateway limits when using these synchronous actions. This process budget
+does not make stream timeouts an absolute network deadline or make remote HTTP
+effects transactional. If a remote operation survives failure, inspect the
+collector and resynchronize before retrying. Rollback of this code change is a
+revert; there is no schema change or dependency upgrade.
+
+Association publication commits the authoritative primary first. Primary commit
+failure prevents collector commit. Collector commit failure after primary success
+is reported as failure, with the primary change retained; inspect the collector
+and perform a FullSync to reconcile it. This is a partial outcome, not distributed
+atomicity. Malformed command kinds and operations are rejected as invalid before
+mutation rather than reported as an uncertain write outcome.

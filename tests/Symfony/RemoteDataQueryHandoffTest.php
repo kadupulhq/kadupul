@@ -25,6 +25,7 @@ const HOST_DOWN = 1;
 final class RemoteQueryFixture
 {
     public static string $response;
+    public static string $timeout = '30';
     /** @var list<array{url: string, timeout: int, allowed: list<string>}> */
     public static array $http = [];
     /** @var list<array{host: int, query: int}> */
@@ -35,7 +36,7 @@ final class RemoteQueryFixture
 
 function read_config_option(string $name): string
 {
-    return $name === 'remote_agent_timeout' ? '30' : '';
+    return $name === 'remote_agent_timeout' ? RemoteQueryFixture::$timeout : '';
 }
 function db_column_exists(string $table, string $column): bool
 {
@@ -101,6 +102,7 @@ final class RemoteDataQueryHandoffTest extends TestCase
         $GLOBALS['_SESSION'] = ['debug_log' => ['data_query' => ['previous diagnostic'], 'response' => 'previous response']];
         $GLOBALS['input_types'] = [];
         RemoteQueryFixture::$http = [];
+        RemoteQueryFixture::$timeout = '30';
         RemoteQueryFixture::$automation = [];
         RemoteQueryFixture::$hooks = [];
     }
@@ -138,6 +140,18 @@ final class RemoteDataQueryHandoffTest extends TestCase
         yield 'string true' => [['diagnostics_sanitized' => 'true'], false];
         yield 'null' => [['diagnostics_sanitized' => null], false];
         yield 'missing' => [[], false];
+    }
+
+    public function testConfiguredRemoteTimeoutAlwaysFitsTheAssociationWorkerBudget(): void
+    {
+        foreach (['-5' => 1, '0' => 1, '30' => 30, '120' => 120, '300' => 300, '600' => 300] as $configured => $expected) {
+            RemoteQueryFixture::$timeout = (string) $configured;
+            RemoteQueryFixture::$response = '';
+            RemoteQueryFixture::$http = [];
+            self::assertFalse(run_data_query(7, 4));
+            self::assertSame($expected, RemoteQueryFixture::$http[0]['timeout']);
+            self::assertGreaterThanOrEqual($expected + 120, \Kadupul\Inventory\Infrastructure\Legacy\DeviceWorkerTimeout::forRemoteCalls(1));
+        }
     }
 
     #[DataProvider('invalidResponses')]

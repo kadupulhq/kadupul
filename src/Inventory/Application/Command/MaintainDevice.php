@@ -27,6 +27,6 @@ final readonly class MaintainDevice
             throw new InventoryAccessDenied(false);
         }
         $state->assertRequest($request, $revision);
-        return $this->maintenance->execute($actor->id, $id, $request, $revision);
+        return $this->maintenance->execute($actor->id, $id, $request, $revision, $state);
     }
 }

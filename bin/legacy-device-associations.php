@@ -10,6 +10,7 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceAssignmentLock;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceAssociationRecords;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceAssociationWriter;
+use Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorGuard;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization;
 
 require __DIR__ . '/legacy-assignment-bootstrap.php';
@@ -28,6 +29,7 @@ try {
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_int($command['id'] ?? null) || $command['id'] < 1 || $command['id'] > 16777215
         || !is_int($command['target'] ?? null) || !is_int($command['reindex'] ?? 0)
+        || !is_string($command['kind'] ?? null) || !is_string($command['operation'] ?? null)
         || !is_string($command['revision'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
@@ -54,11 +56,7 @@ try {
     if ($change->operation !== 'remove' && !array_key_exists($change->targetId, $records->available($connection, $change->kind, true, $device->snmpVersion))) {
         throw new InvalidArgumentException('Invalid association target');
     }
-    $query = $connection->prepare('SELECT id FROM poller WHERE id = ? FOR UPDATE');
-    $query->execute([$device->pollerId]);
-    if (!$query->fetchColumn()) {
-        throw new RuntimeException('Collector unavailable');
-    }
+    $collector = DeviceCollectorGuard::capture($connection, $device->pollerId, $device->pollerId > 1 ? (int) read_config_option('poller_interval') * 2 : null);
     $remote = null;
     if ($device->pollerId > 1) {
         if (!remote_poller_up($device->pollerId) || !(($remote = poller_connect_to_remote($device->pollerId)) instanceof PDO)) {
@@ -102,12 +100,8 @@ try {
             throw new RuntimeException('Cache invalidation failed');
         }
     }
-    if ($remote !== null && !$remote->commit()) {
-        throw new RuntimeException('Remote commit failed');
-    }
-    if (!db_commit_transaction()) {
-        throw new RuntimeException('Commit failed');
-    }
+    $collector->assertCurrent();
+    $writer->commit($connection, $remote);
     $status = 'ok';
     cacti_log('INVENTORY: User ' . $command['actor'] . ' changed ' . $change->kind . ' association for device ' . $device->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {

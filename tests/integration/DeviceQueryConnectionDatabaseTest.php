@@ -16,6 +16,23 @@ use Symfony\Component\Process\Process;
 
 final class DeviceQueryConnectionDatabaseTest extends TestCase
 {
+    public function testLegacyRefreshFailureRemainsNonThrowingWithTheStrictFlagAbsentOrFalse(): void
+    {
+        if (!getenv('KADUPUL_TEST_MYSQL_DSN')) {
+            self::markTestSkipped('KADUPUL_TEST_MYSQL_DSN is required for database contracts');
+        }
+        foreach (['add', 'change'] as $operation) {
+            foreach (['absent', 'false-flag'] as $flag) {
+                $process = new Process([PHP_BINARY, __DIR__ . '/../Fixtures/query-association-connection-native.php', $operation, 'local', 'commit', 'failed-refresh', $flag], dirname(__DIR__, 2));
+                $process->mustRun();
+                self::assertSame('', $process->getErrorOutput());
+                $result = json_decode($process->getOutput(), true, 32, JSON_THROW_ON_ERROR);
+                self::assertSame([[7, 9]], $result['reindexes']);
+                self::assertSame(2, $result['rows'][0]['mapping']);
+            }
+        }
+    }
+
     public function testLegacyQueryApisReuseTheWorkerConnectionAndPreserveItsTransaction(): void
     {
         if (!getenv('KADUPUL_TEST_MYSQL_DSN')) {

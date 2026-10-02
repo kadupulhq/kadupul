@@ -14,5 +14,5 @@ use Kadupul\Inventory\Application\ReadModel\DeviceMaintenanceResult;
 interface DeviceMaintenance
 {
     public function findVisible(int $actorId, int $id): ?DeviceMaintenanceState;
-    public function execute(int $actorId, int $id, DeviceMaintenanceRequest $request, string $revision): DeviceMaintenanceResult;
+    public function execute(int $actorId, int $id, DeviceMaintenanceRequest $request, string $revision, DeviceMaintenanceState $state): DeviceMaintenanceResult;
 }

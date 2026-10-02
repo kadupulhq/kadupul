@@ -15,6 +15,21 @@ use PHPUnit\Framework\TestCase;
 
 final class DeviceMaintenanceTest extends TestCase
 {
+    public function testTheValidatedRevisionStateIsPassedUnchangedToTheWorkerAdapter(): void
+    {
+        $actor = new \Kadupul\IdentityAccess\Contract\Actor(42, 'operator');
+        $access = $this->createMock(\Kadupul\IdentityAccess\Contract\ConsoleAccess::class);
+        $access->method('consoleActor')->willReturn($actor);
+        $access->method('canManageDevices')->willReturn(true);
+        $state = new DeviceMaintenanceState(new DeviceState(7, 'fixture', '192.0.2.1', true, 0, 3, 0), [3 => 'one', 5 => 'two'], [3 => 2, 5 => 2], false);
+        $request = new DeviceMaintenanceRequest('reindex');
+        $result = new \Kadupul\Inventory\Application\ReadModel\DeviceMaintenanceResult(true, 'completed');
+        $port = $this->createMock(\Kadupul\Inventory\Application\Port\DeviceMaintenance::class);
+        $port->expects(self::once())->method('findVisible')->with(42, 7)->willReturn($state);
+        $port->expects(self::once())->method('execute')->with(42, 7, $request, $state->revision(), self::identicalTo($state))->willReturn($result);
+        self::assertSame($result, (new \Kadupul\Inventory\Application\Command\MaintainDevice($access, $port))(7, $request, $state->revision()));
+    }
+
     public function testAuthorizationPrecedesMaintenanceReadsAndEffects(): void
     {
         foreach ([null, new \Kadupul\IdentityAccess\Contract\Actor(42, 'operator')] as $actor) {

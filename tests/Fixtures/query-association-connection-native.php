@@ -94,9 +94,9 @@ function read_config_option(string $name): int
 
 function run_data_query(int $device, int $query): bool
 {
-    global $reindexes;
+    global $reindexes, $refreshFailure;
     $reindexes[] = [$device, $query];
-    return true;
+    return !$refreshFailure;
 }
 
 function raise_message(...$arguments): never
@@ -112,6 +112,10 @@ function cacti_log(...$arguments): never
 $operation = $argv[1];
 $remoteDevice = $argv[2] === 'remote';
 $commit = $argv[3] === 'commit';
+$refreshFailure = ($argv[4] ?? '') === 'failed-refresh';
+if (($argv[5] ?? '') === 'false-flag') {
+    define('KADUPUL_THROW_DATABASE_ERRORS', false);
+}
 $primary = new AssociationDatabase('association_' . bin2hex(random_bytes(8)) . '_');
 $collector = new AssociationDatabase('association_' . bin2hex(random_bytes(8)) . '_');
 $config = ['poller_id' => 1];

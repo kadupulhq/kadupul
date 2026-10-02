@@ -24,7 +24,7 @@ final class DeviceAssignmentProcess
         $configured = $database->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
         $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $projectDir . '/bin/legacy-device-' . $kind . '.php'], $projectDir);
-        $process->setTimeout(120);
+        $process->setTimeout(DeviceWorkerTimeout::assignment($kind, $command));
         $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         $process->run();
         $marker = 'KADUPUL_' . strtoupper($kind) . '_RESULT';

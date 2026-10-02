@@ -26,12 +26,16 @@ final readonly class LegacyDeviceMaintenance implements DeviceMaintenance
         $row = $query->fetch(\PDO::FETCH_ASSOC);
         return $row ? $this->records->snapshot($this->database->get(), $row) : null;
     }
-    public function execute(int $actorId, int $id, DeviceMaintenanceRequest $request, string $revision): DeviceMaintenanceResult
+    public function execute(int $actorId, int $id, DeviceMaintenanceRequest $request, string $revision, DeviceMaintenanceState $state): DeviceMaintenanceResult
     {
+        if ($state->device->id !== $id) {
+            throw new \InvalidArgumentException('Maintenance state does not match the device.');
+        }
+        $state->assertRequest($request, $revision);
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
         $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-maintenance.php'], $this->projectDir);
-        $process->setTimeout(120);
+        $process->setTimeout(DeviceWorkerTimeout::maintenance($state, $request));
         $process->setInput(json_encode(['actor' => $actorId, 'id' => $id, 'operation' => $request->operation, 'query' => $request->queryId, 'revision' => $revision], JSON_THROW_ON_ERROR));
         $process->run();
         if (!preg_match('/KADUPUL_MAINTENANCE_RESULT=(\{[^\r\n]+\})/', $process->getOutput(), $match)) {
