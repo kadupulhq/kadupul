@@ -108,3 +108,39 @@ test('GHSA-2px8-gvmq-85f3: error_text is not used in a numeric comparison inside
     // The pre-fix bug was 'error_text' == 1; that pattern must not exist.
     expect($body)->not->toContain("'error_text'] == 1");
 });
+test('domain bind failures enforce the configured lockout using numeric error codes', function (int $code, string $text, bool $locked) {
+    $directory = sys_get_temp_dir() . '/domain-lockout-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    try {
+        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', dirname(__DIR__) . '/Fixtures/domain-lockout-native.php', (string) $code, $text);
+        $environment = array_merge(getenv(), array('DOMAIN_LOCKOUT_COVERAGE_DIRECTORY' => $coverage === null ? '' : $directory));
+        $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, $environment);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+        $state = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+        expect($state['first'])->toBe(array())->and($state['second'])->toBe(array())->and($state['third'])->toBe(array())
+            ->and((int) $state['after_first']['failed_attempts'])->toBe($locked ? 1 : 0)
+            ->and($state['after_first']['locked'])->toBe('')
+            ->and((int) $state['after_second']['failed_attempts'])->toBe($locked ? 2 : 0)
+            ->and($state['after_second']['locked'])->toBe($locked ? 'on' : '')
+            ->and($state['binds'])->toBe($locked ? 2 : 3)
+            ->and($state['error'])->toBeTrue()->and((int) $state['other'])->toBe(0);
+        if ($locked) {
+            expect($state['message'])->toContain('locked');
+        }
+        if ($coverage !== null) {
+            $reports = glob($directory . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
+    } finally {
+        foreach (glob($directory . '/*') as $file) {
+            unlink($file);
+        }
+        rmdir($directory);
+    }
+})->with(array(array(1, 'Invalid credentials', true), array(2, '1', false), array(2, 'Directory unavailable', false)));
