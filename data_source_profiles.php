@@ -10,6 +10,7 @@ include('./include/auth.php');
 cacti_require_post_actions(array('actions', 'item_remove'));
 include_once('./lib/poller.php');
 include_once('./lib/utility.php');
+require_once __DIR__ . '/lib/data_source_profile_integrity.php';
 
 $profile_actions = array(
     1 => __('Delete'),
@@ -93,6 +94,42 @@ switch (get_request_var('action')) {
 
 function form_save()
 {
+    $started = false;
+    try {
+        $id = isset_request_var('save_component_rra') ? get_filter_request_var('profile_id') : get_filter_request_var('id');
+        if (!data_source_profile_reference_guards_available() || !db_begin_transaction()) {
+            throw new RuntimeException('Profile definition write cannot start safely');
+        }
+        $started = true;
+        if ($id > 0) {
+            $parent = db_fetch_assoc_prepared('SELECT id FROM data_source_profiles WHERE id=? FOR UPDATE', array($id));
+            if (!is_array($parent) || count($parent) !== 1 || (int) $parent[0]['id'] !== (int) $id) {
+                throw new RuntimeException('Profile was deleted before its definition could be saved');
+            }
+        }
+        form_save_profile_components();
+        if (!db_commit_transaction()) {
+            throw new RuntimeException('Profile definition write commit failed');
+        }
+        if (!is_error_message()) {
+            raise_message(1);
+        }
+    } catch (Throwable $error) {
+        if ($started) {
+            try {
+                db_rollback_transaction();
+            } catch (Throwable $rollbackError) {
+                cacti_log('ERROR: Unable to roll back profile definition write: ' . $rollbackError->getMessage(), false, 'WEBUI');
+            }
+        }
+        cacti_log('ERROR: Unable to save profile definition: ' . $error->getMessage(), false, 'WEBUI');
+        raise_message(2);
+        header('Location: data_source_profiles.php?header=false');
+    }
+}
+
+function form_save_profile_components()
+{
     // make sure ids are numeric
     if (isset_request_var('id') && ! is_numeric(get_filter_request_var('id'))) {
         set_request_var('id', 0);
@@ -127,11 +164,16 @@ function form_save()
 
         if (isset_request_var('default')) {
             $save['default'] = (isset_request_var('default') ? 'on' : '');
-            db_execute('UPDATE data_source_profiles SET `default` = ""');
+            if (!db_execute('UPDATE data_source_profiles SET `default` = ""')) {
+                throw new RuntimeException('Default profile update failed');
+            }
         }
 
         if (!is_error_message()) {
             $profile_id = sql_save($save, 'data_source_profiles');
+            if (!$profile_id) {
+                throw new RuntimeException('Profile definition save failed');
+            }
 
             if ($profile_id) {
                 if (isset_request_var('step')) {
@@ -142,9 +184,11 @@ function form_save()
                             input_validate_input_number($cf);
                         }
 
-                        db_execute_prepared('DELETE FROM data_source_profiles_cf
+                        if (!db_execute_prepared('DELETE FROM data_source_profiles_cf
 							WHERE data_source_profile_id = ?
-							AND consolidation_function_id NOT IN (' . implode(',', $cfs) . ')', array($profile_id));
+							AND consolidation_function_id NOT IN (' . implode(',', $cfs) . ')', array($profile_id))) {
+                            throw new RuntimeException('Profile consolidation cleanup failed');
+                        }
                     }
 
 
@@ -152,9 +196,11 @@ function form_save()
                     $cfs = get_nfilter_request_var('consolidation_function_id');
                     if (cacti_sizeof($cfs) && !empty($cfs)) {
                         foreach ($cfs as $cf) {
-                            db_execute_prepared('REPLACE INTO data_source_profiles_cf
+                            if (!db_execute_prepared('REPLACE INTO data_source_profiles_cf
 								(data_source_profile_id, consolidation_function_id)
-								VALUES (?, ?)', array($profile_id, $cf));
+								VALUES (?, ?)', array($profile_id, $cf))) {
+                                throw new RuntimeException('Profile consolidation write failed');
+                            }
                         }
                     }
                 }
@@ -169,22 +215,21 @@ function form_save()
                     );
 
                     if ($existing) {
-                        db_execute_prepared(
+                        if (!db_execute_prepared(
                             'UPDATE data_template_rrd AS dtr
 							INNER JOIN data_template_data AS dtd
 							ON dtd.local_data_id = dtr.local_data_id
 							SET dtr.rrd_heartbeat = ?
 							WHERE dtd.data_source_profile_id = ?',
                             array(get_request_var('heartbeat'), get_request_var('id'))
-                        );
+                        )) {
+                            throw new RuntimeException('Data source heartbeat update failed');
+                        }
 
                         raise_message('heartbeat_change', __('Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool\'s \'tune\' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct.<br>'), MESSAGE_LEVEL_WARN);
                     }
                 }
 
-                raise_message(1);
-            } else {
-                raise_message(2);
             }
         }
 
@@ -194,6 +239,13 @@ function form_save()
         get_filter_request_var('id');
         get_filter_request_var('profile_id');
         /* ==================================================== */
+
+        if (get_request_var('id') > 0) {
+            $existing = db_fetch_assoc_prepared('SELECT id FROM data_source_profiles_rra WHERE id=? AND data_source_profile_id=? FOR UPDATE', array(get_request_var('id'), get_request_var('profile_id')));
+            if (!is_array($existing) || count($existing) !== 1) {
+                throw new RuntimeException('Profile RRA was deleted or belongs to another profile');
+            }
+        }
 
         $sampling_interval = db_fetch_cell_prepared(
             'SELECT step
@@ -221,12 +273,10 @@ function form_save()
 
         if (!is_error_message()) {
             $profile_rra_id = sql_save($save, 'data_source_profiles_rra');
-
-            if ($profile_rra_id) {
-                raise_message(1);
-            } else {
-                raise_message(2);
+            if (!$profile_rra_id) {
+                throw new RuntimeException('Profile RRA save failed');
             }
+
         }
 
         if (is_error_message()) {
@@ -255,9 +305,36 @@ function form_actions()
 
         if ($selected_items != false) {
             if (get_request_var('drp_action') == '1') { // delete
-                db_execute('DELETE FROM data_source_profiles WHERE ' . array_to_sql_or($selected_items, 'id'));
-                db_execute('DELETE FROM data_source_profiles_rra WHERE ' . array_to_sql_or($selected_items, 'data_source_profile_id'));
-                db_execute('DELETE FROM data_source_profiles_cf WHERE ' . array_to_sql_or($selected_items, 'data_source_profile_id'));
+                if (!db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
+                    cacti_log('ERROR: Unable to start transaction while deleting Data Source Profiles.', false, 'WEBUI');
+                    raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+                } else {
+                    try {
+                        $unused_profiles = profiles_not_in_use($selected_items);
+
+                        if ($unused_profiles !== false && cacti_sizeof($unused_profiles)) {
+                            $deleted = db_execute('DELETE FROM data_source_profiles WHERE ' . array_to_sql_or($unused_profiles, 'id'));
+                            $deleted = $deleted && db_execute('DELETE FROM data_source_profiles_rra WHERE ' . array_to_sql_or($unused_profiles, 'data_source_profile_id'));
+                            $deleted = $deleted && db_execute('DELETE FROM data_source_profiles_cf WHERE ' . array_to_sql_or($unused_profiles, 'data_source_profile_id'));
+
+                            if (!$deleted) {
+                                throw new \RuntimeException('Unable to delete all Data Source Profile definitions.');
+                            }
+                        }
+
+                        if (!db_commit_transaction()) {
+                            throw new \RuntimeException('Unable to commit Data Source Profile deletion.');
+                        }
+                    } catch (\Throwable $e) {
+                        try {
+                            db_rollback_transaction();
+                        } catch (\Throwable $rollback_error) {
+                            cacti_log('ERROR: Unable to roll back Data Source Profile deletion: ' . $rollback_error->getMessage(), false, 'WEBUI');
+                        }
+                        cacti_log('ERROR: Data Source Profile deletion failed: ' . $e->getMessage(), false, 'WEBUI');
+                        raise_message('profile_delete_failed', __('Unable to safely delete the selected Data Source Profiles. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+                    }
+                }
             } elseif (get_request_var('drp_action') == '2') { // duplicate
                 duplicate_data_source_profile($selected_items, get_nfilter_request_var('title_format'));
             }
@@ -336,6 +413,70 @@ function form_actions()
     bottom_footer();
 }
 
+/**
+ * Return selected profiles that are not referenced by templates or data sources.
+ *
+ * A failed usage lookup returns false so the caller can fail closed.
+ *
+ * @param array $selected_items
+ * @return array|false
+ */
+function profiles_not_in_use($selected_items)
+{
+    $unused_profiles = array();
+
+    if (!cacti_sizeof($selected_items)) {
+        return $unused_profiles;
+    }
+
+    try {
+        if (!data_source_profile_reference_guards_available()) {
+            throw new \RuntimeException('Profile reference guards or InnoDB tables are unavailable. Run the database upgrade before deleting profiles.');
+        }
+        // Coordinate with reference guards using the parent row lock before
+        // deciding whether its usage allows deletion.
+        $parents = db_fetch_assoc_prepared(
+            'SELECT id FROM data_source_profiles WHERE id IN (' .
+            implode(',', array_fill(0, cacti_sizeof($selected_items), '?')) . ') ORDER BY id FOR UPDATE',
+            array_values($selected_items)
+        );
+        if (!is_array($parents)) {
+            throw new \RuntimeException('Invalid parent lock result.');
+        }
+        $references = db_fetch_assoc_prepared(
+            'SELECT data_source_profile_id FROM data_template_data WHERE data_source_profile_id IN (' .
+            implode(',', array_fill(0, cacti_sizeof($selected_items), '?')) . ') FOR UPDATE',
+            array_values($selected_items)
+        );
+        if (!is_array($references)) {
+            throw new \RuntimeException('Invalid usage lookup result.');
+        }
+        $in_use = array();
+        foreach ($references as $reference) {
+            if (!isset($reference['data_source_profile_id']) || !is_numeric($reference['data_source_profile_id'])) {
+                throw new \RuntimeException('Invalid profile reference.');
+            }
+            $in_use[(int) $reference['data_source_profile_id']] = true;
+        }
+    } catch (\Throwable $e) {
+        cacti_log('ERROR: Unable to check Data Source Profile usage: ' . $e->getMessage(), false, 'WEBUI');
+        raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+
+        return false;
+    }
+
+    foreach ($selected_items as $profile_id) {
+        if (isset($in_use[(int) $profile_id])) {
+            cacti_log('WARNING: Refused to delete Data Source Profile ' . (int) $profile_id . ' in use by Data Templates or Data Sources for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+            raise_message('profile_in_use', __('Data Source Profiles in use by Data Templates or Data Sources can not be deleted.'), MESSAGE_LEVEL_ERROR);
+        } else {
+            $unused_profiles[] = $profile_id;
+        }
+    }
+
+    return $unused_profiles;
+}
+
 /* --------------------------
     CDEF Item Functions
    -------------------------- */
@@ -347,6 +488,10 @@ function duplicate_data_source_profile($source_profile, $title_format)
     }
 
     foreach ($source_profile as $id) {
+        if (!begin_data_source_profile_mutation((int) $id)) {
+            raise_message('profile_error', __('Unable to duplicate Data Source Profile.  Check Kadupul Log for errors.'), MESSAGE_LEVEL_ERROR);
+            continue;
+        }
         $profile = db_fetch_row_prepared(
             'SELECT *
 			FROM data_source_profiles
@@ -376,7 +521,7 @@ function duplicate_data_source_profile($source_profile, $title_format)
             $newid = sql_save($save, 'data_source_profiles');
 
             if ($newid > 0) {
-                db_execute_prepared(
+                $copied = db_execute_prepared(
                     "INSERT INTO data_source_profiles_cf
 					SELECT '$newid' AS data_source_profile_id, consolidation_function_id
 					FROM data_source_profiles_cf
@@ -384,7 +529,7 @@ function duplicate_data_source_profile($source_profile, $title_format)
                     array($id)
                 );
 
-                db_execute_prepared(
+                $copied = $copied && db_execute_prepared(
                     "INSERT INTO data_source_profiles_rra
 					(`data_source_profile_id`, `name`, `steps`, `rows`, `timespan`)
 					SELECT '$newid', `name`, `steps`, `rows`, `timespan`
@@ -393,11 +538,18 @@ function duplicate_data_source_profile($source_profile, $title_format)
                     array($id)
                 );
 
-                raise_message(1);
+                if ($copied && finish_data_source_profile_mutation(true)) {
+                    raise_message(1);
+                } else {
+                    finish_data_source_profile_mutation(false);
+                    raise_message(2);
+                }
             } else {
+                finish_data_source_profile_mutation(false);
                 raise_message(2);
             }
         } else {
+            finish_data_source_profile_mutation(false);
             raise_message('profile_error', __('Unable to duplicate Data Source Profile.  Check Kadupul Log for errors.'), MESSAGE_LEVEL_ERROR);
         }
     }

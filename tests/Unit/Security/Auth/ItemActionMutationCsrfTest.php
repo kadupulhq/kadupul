@@ -122,6 +122,7 @@ PHP;
     }
 }
 
+// External-link actions are covered by the Symfony Link presentation tests.
 function itemActionCases()
 {
     return array(
@@ -165,9 +166,6 @@ function itemActionCases()
         array('host_templates.php', 'item_remove_gt', array()),
         array('host_templates.php', 'item_add_dq', array()),
         array('host_templates.php', 'item_remove_dq', array()),
-        array('links.php', 'move_page_up', array()),
-        array('links.php', 'move_page_down', array()),
-        array('links.php', 'delete_page', array()),
         array('tree.php', 'tree_up', array()),
         array('tree.php', 'tree_down', array()),
         array('vdef.php', 'item_moveup', array()),
@@ -239,7 +237,7 @@ test('item editors and lists still open by GET', function ($controller, $action)
     array('data_queries.php', 'item_edit'), array('data_source_profiles.php', 'item_edit'),
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
     array('graphs_items.php', 'item_edit'), array('graph_templates_items.php', 'item_edit'),
-    array('host_templates.php', 'edit'), array('links.php', 'edit'), array('tree.php', 'edit'),
+    array('host_templates.php', 'edit'), array('tree.php', 'edit'),
     array('vdef.php', 'item_edit'),
     array('host.php', 'edit'), array('data_input.php', 'field_edit'), array('color.php', 'edit'),
     array('utilities.php', 'view_user_log'),

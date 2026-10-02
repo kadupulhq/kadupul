@@ -1974,7 +1974,166 @@ function array_minus($big_array, $small_array)
 
 function automation_string_replace($search, $replace, $target)
 {
-    $repl = preg_replace('/' . $search . '/i', $replace, $target);
+    $search = (string) $search;
+    $replace = (string) $replace;
+    $target = (string) $target;
+    $delimiter = null;
+    $pattern_search = $search;
+
+    foreach (array('~', '#', '%', '!', '@', ';', '`', '/') as $candidate) {
+        if (strpos($search, $candidate) === false) {
+            $delimiter = $candidate;
+
+            break;
+        }
+    }
+
+    if ($delimiter === null) {
+        $delimiter = chr(127);
+
+        // Escape only delimiter bytes interpreted by PHP, preserving PCRE quoting.
+        $escaped = false;
+        $quoted = false;
+        $block_comment = false;
+        $line_comment = false;
+        $verb_argument = false;
+        $callout_end = null;
+        $newline = 'LF';
+        $unicode = false;
+        $prefix_offset = 0;
+        while (preg_match('/\G\(\*([A-Z_]+)(?:=[^)]*)?\)/', $search, $prefix, 0, $prefix_offset)) {
+            if (in_array($prefix[1], array('CR', 'LF', 'CRLF', 'ANYCRLF', 'ANY', 'NUL'), true)) {
+                $newline = $prefix[1];
+            } elseif ($prefix[1] === 'UTF') {
+                $unicode = true;
+            }
+            $prefix_offset += strlen($prefix[0]);
+        }
+        $extended = false;
+        $modes = array();
+        $class_start = null;
+        $posix_class = null;
+        $delimited_search = '';
+
+        for ($offset = 0, $length = strlen($search); $offset < $length; $offset++) {
+            $character = $search[$offset];
+            $next = $search[$offset + 1] ?? '';
+
+            if ($callout_end !== null) {
+                if ($character === $callout_end) {
+                    if ($next === $callout_end) {
+                        $delimited_search .= $character . $next;
+                        $offset++;
+                        $escaped = false;
+                        continue;
+                    }
+                    $callout_end = null;
+                }
+            } elseif ($block_comment) {
+                $block_comment = $character !== ')';
+            } elseif ($line_comment) {
+                $ends_comment = match ($newline) {
+                    'CR' => $character === "\r",
+                    'CRLF' => $character === "\r" && $next === "\n",
+                    'ANYCRLF' => $character === "\r" || $character === "\n",
+                    'NUL' => $character === "\0",
+                    'ANY' => in_array($character, array("\r", "\n", "\v", "\f"), true)
+                        || (!$unicode && $character === "\x85")
+                        || ($unicode && (substr($search, $offset, 2) === "\xc2\x85"
+                            || in_array(substr($search, $offset, 3), array("\xe2\x80\xa8", "\xe2\x80\xa9"), true))),
+                    default => $character === "\n",
+                };
+                $line_comment = !$ends_comment;
+            } elseif ($verb_argument) {
+                $verb_argument = $character !== ')';
+            } elseif ($quoted) {
+                if ($character === '\\' && $next === 'E') {
+                    $quoted = false;
+                }
+            } elseif (!$escaped) {
+                if ($character === '\\' && $next === 'Q') {
+                    $quoted = true;
+                } elseif ($class_start !== null) {
+                    if ($character === '[' && in_array($next, array(':', '.', '='), true)) {
+                        $posix_class = $next;
+                    } elseif ($character === ']' && $posix_class !== null && ($search[$offset - 1] ?? '') === $posix_class) {
+                        $posix_class = null;
+                    } elseif ($character === ']' && $posix_class === null && $offset !== $class_start + 1
+                        && !($offset === $class_start + 2 && $search[$class_start + 1] === '^')) {
+                        $class_start = null;
+                    }
+                } elseif ($character === '[') {
+                    $class_start = $offset;
+                } elseif ($character === '(' && substr($search, $offset, 3) === '(?C'
+                    && in_array($search[$offset + 3] ?? '', array('`', "'", '"', '^', '%', '#', '$', '{'), true)) {
+                    $opening = $search[$offset + 3];
+                    $callout_end = $opening === '{' ? '}' : $opening;
+                    $modes[] = $extended;
+                    $delimited_search .= substr($search, $offset, 4);
+                    $offset += 3;
+                    $escaped = false;
+                    continue;
+                } elseif ($character === '(' && preg_match('/\G\(\*[A-Z_]*:/', $search, $verb, 0, $offset)) {
+                    $verb_argument = true;
+                } elseif ($character === '(' && substr($search, $offset, 3) === '(?#') {
+                    $block_comment = true;
+                } elseif ($character === '#' && $extended) {
+                    $line_comment = true;
+                } elseif ($character === '(') {
+                    if (preg_match('/\G\(\?(\^?)([a-zA-Z]*)(?:-([a-zA-Z]*))?([:)])/', $search, $modifiers, 0, $offset)) {
+                        if ($modifiers[4] === ':') {
+                            $modes[] = $extended;
+                        }
+                        if ($modifiers[1] === '^') {
+                            $extended = false;
+                        }
+                        if (strpos($modifiers[3] ?? '', 'x') !== false) {
+                            $extended = false;
+                        } elseif (strpos($modifiers[2], 'x') !== false) {
+                            $extended = true;
+                        }
+                        $delimited_search .= $modifiers[0];
+                        $offset += strlen($modifiers[0]) - 1;
+                        $escaped = false;
+                        continue;
+                    }
+                    $modes[] = $extended;
+                } elseif ($character === ')' && $modes) {
+                    $extended = array_pop($modes);
+                }
+            }
+
+            if ($character === $delimiter && $quoted) {
+                // An escape inside \Q is literal: leave quoting around this byte.
+                $delimited_search .= '\\E\\' . $character . '\\Q';
+            } else {
+                if ($character === $delimiter && !$escaped) {
+                    $delimited_search .= '\\';
+                }
+                $delimited_search .= $character;
+            }
+            $escaped = $character === '\\' ? !$escaped : false;
+        }
+
+        $pattern_search = $delimited_search;
+    }
+
+    /*
+     * A short nested-quantifier pattern can take exponential time on a
+     * near-match. Keep each tree header replacement within a fixed PCRE budget;
+     * PCRE2 permits this directive to lower, but not raise, the runtime limit.
+     */
+    $pattern = $delimiter . '(*LIMIT_MATCH=10000)' . $pattern_search . $delimiter . 'i';
+    $repl = @preg_replace($pattern, $replace, $target);
+
+    if ($repl === null || preg_last_error() !== PREG_NO_ERROR) {
+        if (function_exists('cacti_log')) {
+            cacti_log('WARNING: Tree automation regex failed: ' . preg_last_error_msg() . '. Pattern: ' . json_encode($search, JSON_INVALID_UTF8_SUBSTITUTE), false, 'AUTOM8');
+        }
+
+        return array();
+    }
+
     return preg_split('/\\\\n/', $repl, -1, PREG_SPLIT_NO_EMPTY);
 }
 

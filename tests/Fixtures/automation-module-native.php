@@ -10,6 +10,12 @@ if (PHP_SAPI !== 'cli') {
 $root = dirname(__DIR__, 2);
 $directory = $argv[2];
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
+if (isset($scenario['search_base64'])) {
+    $scenario['search'] = base64_decode($scenario['search_base64'], true);
+    if ($scenario['search'] === false) {
+        throw new RuntimeException('Invalid binary pattern transport.');
+    }
+}
 mkdir($directory . '/include');
 mkdir($directory . '/lib');
 mkdir($directory . '/include/themes/classic', 0700, true);

@@ -1,0 +1,17 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [],
+    "elements_outside_forms": [],
+    "script_ids": [
+        "form_settings",
+        "row_path_stderrlog",
+        "row_rrd_archive",
+        "row_rrd_autoclean_method",
+        "rrd_archive",
+        "rrd_autoclean",
+        "rrd_autoclean_method",
+        "tab"
+    ],
+    "script_names": []
+}
