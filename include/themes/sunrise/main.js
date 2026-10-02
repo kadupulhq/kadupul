@@ -22,18 +22,7 @@ function themeReady() {
         $('.bottom_scroll_up').css({'color': ((scroll_position_x == 0 & scroll_position_y == 0) ? '' : '#93CEFF') });
     });
 
-	// Add nice search filter to filters
-	if ($('input[id="filter"]').length > 0 && $('input[id="filter"] > i[class="fa fa-search filter"]').length < 1) {
-		$('input[id="filter"]').after("<i class='fa fa-search filter'/>").attr('autocomplete', 'off').attr('placeholder', searchFilter).parent('td').css('white-space', 'nowrap');
-	}
-
-	if ($('input[id="filterd"]').length > 0 && $('input[id="filterd"] > i[class="fa fa-search filter"]').length < 1) {
-		$('input[id="filterd"]').after("<i class='fa fa-search filter'/>").attr('autocomplete', 'off').attr('placeholder', searchFilter).parent('td').css('white-space', 'nowrap');
-	}
-
-	if ($('input[id="rfilter"]').length > 0 && $('input[id="rfilter"] > i[class="fa fa-search filter"]').length < 1) {
-		$('input[id="rfilter"]').after("<i class='fa fa-search filter'/>").attr('autocomplete', 'off').attr('placeholder', searchRFilter).parent('td').css('white-space', 'nowrap');
-	}
+	setupThemeSearchIcons();
 
 	$('input#filter, input#rfilter').addClass('ui-state-default ui-corner-all');
 
@@ -42,8 +31,7 @@ function themeReady() {
 	/* Start clean up */
 
 	//login page
-	$('.cactiLoginLogo').html("<i class='fa fa-sun-o'/>");
-	$('.cactiLogoutLogo').html("<i class='fa fa-sun-o'/>");
+	setupThemeLogos('fa-sun');
 
 	/* clean up the navigation menu */
 	$('.cactiConsoleNavigationArea').find('#menu').appendTo($('.cactiConsoleNavigationArea').find('#navigation'));
@@ -147,31 +135,7 @@ function themeReady() {
 		$('.import_text').text(fileText);
 	}
 
-	$('select.colordropdown').dropcolor();
-
-	$('select').not('.colordropdown').each(function() {
-		if ($(this).prop('multiple') != true) {
-			$(this).each(function() {
-				id = $(this).attr('id');
-
-				$(this).selectmenu({
-					change: function(event, ui) {
-						$(this).val(ui.item.value).change();
-					},
-					position: {
-						my: "left top",
-						at: "left bottom",
-						collision: "flip"
-					},
-					width: 'auto'
-				});
-
-				$('#'+id+'-menu').css('max-height', '250px');
-			});
-		} else {
-			$(this).addClass('ui-state-default ui-corner-all');
-		}
-	});
+	setupThemeSelectmenus();
 
 	$('#host').unbind().autocomplete({
 		source: pageName+'?action=ajax_hosts',

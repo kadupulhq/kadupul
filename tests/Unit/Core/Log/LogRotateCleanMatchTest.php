@@ -57,7 +57,8 @@ echo json_encode(array("survivors" => $left, "log" => $GLOBALS["log"]));
     file_put_contents($file, $code);
 
     try {
-        $out    = (string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($file) . ' 2>&1');
+        $result = \test_php_run(array(PHP_BINARY, $file));
+        $out    = $result['out'] . $result['err'];
         $result = json_decode($out, true);
 
         expect($result)->toBeArray($out);
@@ -220,7 +221,8 @@ echo json_encode(array("rotated" => $GLOBALS["rotated"], "cleaned" => $GLOBALS["
     file_put_contents($file, $code);
 
     try {
-        $out    = (string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($file) . ' 2>&1');
+        $result = \test_php_run(array(PHP_BINARY, $file));
+        $out    = $result['out'] . $result['err'];
         $result = json_decode($out, true);
 
         expect($result)->toBeArray($out);

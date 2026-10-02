@@ -1,0 +1,8 @@
+{
+    "session": [],
+    "diagnostics": [],
+    "log": [
+        "06/15/2026 12:34:56 - CMDPHP WARNING: Kadupul Form field 'missing' does not include a 'value' Column.  Using default.",
+        "06/15/2026 12:34:56 - CMDPHP WARNING: Kadupul Form field 'missing' does not include a 'default' Column.  Using '0'."
+    ]
+}
