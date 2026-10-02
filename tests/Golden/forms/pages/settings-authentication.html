@@ -1,0 +1,208 @@
+<form action="settings.php" autocomplete="off" class="cactiFormStart" id="form_settings" method="post" name="form_settings">
+  <div class="cactiTable" id="settings_authentication1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Kadupul Settings (Authentication)</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Settings-Auth.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="settings_authentication1_child">
+      <div class="spacer formHeader collapsible" id="row_auth_header"><div class="formHeaderText">General<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_auth_method"><div class="formColumnLeft"><div class="formFieldName">Authentication Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;"><blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used. If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources. Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote></span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="auth_method" name="auth_method">
+          <option selected="" value="1">Builtin Authentication</option>
+          <option value="2">Web Basic Authentication</option>
+          <option value="3">LDAP Authentication</option>
+          <option value="4">Multiple LDAP/AD Domains</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_auth_cache_enabled"><div class="formColumnLeft"><div class="formFieldName">Support Authentication Cookies<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If a user authenticates and selects 'Keep me signed in', an authentication cookie will be created on the user's computer allowing that user to stay logged in. The authentication cookie expires after 90 days of non-use.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Support Authentication Cookies"><input aria-checked="true" checked="" class="formCheckbox" id="auth_cache_enabled" name="auth_cache_enabled" title="Support Authentication Cookies" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="auth_cache_enabled">Support Authentication Cookies</label></span></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_special_users_header"><div class="formHeaderText">Special Users<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow odd" id="row_admin_user"><div class="formColumnLeft"><div class="formFieldName">Primary Admin<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The name of the primary administrative account that will automatically receive Emails when the Kadupul system experiences issues. To receive these Emails, ensure that your mail settings are correct, and the administrative account has an Email address that is set.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="admin_user" name="admin_user">
+          <option value="0">No User</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_guest_user"><div class="formColumnLeft"><div class="formFieldName">Guest User<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The name of the guest user for viewing graphs; is 'No User' by default.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="guest_user" name="guest_user">
+          <option selected="" value="0">No User</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_user_template"><div class="formColumnLeft"><div class="formFieldName">User Template<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default. This user account will be disabled from logging in upon being selected.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="user_template" name="user_template">
+          <option selected="" value="0">No User</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_basic_header"><div class="formHeaderText">Basic Authentication Settings<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_basic_auth_fail_message"><div class="formColumnLeft"><div class="formFieldName">Basic Auth Login Failure Message<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When using basic authentication, if there are issues mapping the username to a valid Kadupul account, the message included here will be displayed to users. It can include both text and HTML.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <textarea aria-multiline="true" class=" ui-state-default ui-corner-all" cols="80" id="basic_auth_fail_message" name="basic_auth_fail_message" rows="4"></textarea>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_path_basic_mapfile"><div class="formColumnLeft"><div class="formFieldName">Basic Auth Mapfile<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">When using basic authentication, if the basic account needs to be translated to a different login account, you can specify a CSV file here to map the basic account to the desired login account.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="path_basic_mapfile" maxlength="255" name="path_basic_mapfile" placeholder="Enter a valid file path" size="40" type="text" value=""></div></div></div>
+      <div class="spacer formHeader collapsible" id="row_secpass_header"><div class="formHeaderText">Local Account Complexity Requirements<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_secpass_minlen"><div class="formColumnLeft"><div class="formFieldName">Minimum Length<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This is minimal length of allowed passwords.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="secpass_minlen" maxlength="2" name="secpass_minlen" off="" size="4" type="text" value="8"></div></div></div>
+      <div class="formRow odd" id="row_secpass_reqmixcase"><div class="formColumnLeft"><div class="formFieldName">Require Mix Case<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This will require new passwords to contains both lower and upper-case characters.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Require Mix Case"><input aria-checked="true" checked="" class="formCheckbox" id="secpass_reqmixcase" name="secpass_reqmixcase" title="Require Mix Case" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="secpass_reqmixcase">Require Mix Case</label></span></div></div></div>
+      <div class="formRow even" id="row_secpass_reqnum"><div class="formColumnLeft"><div class="formFieldName">Require Number<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This will require new passwords to contain at least 1 numerical character.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Require Number"><input aria-checked="true" checked="" class="formCheckbox" id="secpass_reqnum" name="secpass_reqnum" title="Require Number" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="secpass_reqnum">Require Number</label></span></div></div></div>
+      <div class="formRow odd" id="row_secpass_reqspec"><div class="formColumnLeft"><div class="formFieldName">Require Special Character<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This will require new passwords to contain at least 1 special character.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Require Special Character"><input aria-checked="true" checked="" class="formCheckbox" id="secpass_reqspec" name="secpass_reqspec" title="Require Special Character" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="secpass_reqspec">Require Special Character</label></span></div></div></div>
+      <div class="formRow even" id="row_secpass_forceold"><div class="formColumnLeft"><div class="formFieldName">Force Complexity Upon Old Passwords<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This will require all old passwords to also meet the new complexity requirements upon login. If not met, it will force a password change.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Force Complexity Upon Old Passwords"><input aria-checked="false" class="formCheckbox" id="secpass_forceold" name="secpass_forceold" title="Force Complexity Upon Old Passwords" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="secpass_forceold">Force Complexity Upon Old Passwords</label></span></div></div></div>
+      <div class="formRow odd" id="row_secpass_expireaccount"><div class="formColumnLeft"><div class="formFieldName">Expire Inactive Accounts<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This is maximum number of days before inactive accounts are disabled. The Admin account is excluded from this policy.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="secpass_expireaccount" name="secpass_expireaccount">
+          <option selected="" value="0">Disabled</option>
+          <option value="30">30 Days</option>
+          <option value="60">60 Days</option>
+          <option value="90">90 Days</option>
+          <option value="120">120 Days</option>
+          <option value="365">1 Year</option>
+          <option value="730">2 Years</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_secpass_expirepass"><div class="formColumnLeft"><div class="formFieldName">Expire Password<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This is maximum number of days before a password is set to expire.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="secpass_expirepass" name="secpass_expirepass">
+          <option selected="" value="0">Disabled</option>
+          <option value="30">30 Days</option>
+          <option value="60">60 Days</option>
+          <option value="90">90 Days</option>
+          <option value="120">120 Days</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_secpass_history"><div class="formColumnLeft"><div class="formFieldName">Password History<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Remember this number of old passwords and disallow reusing them.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="secpass_history" name="secpass_history">
+          <option selected="" value="0">Disabled</option>
+          <option value="1">1 Change</option>
+          <option value="2">2 Changes</option>
+          <option value="3">3 Changes</option>
+          <option value="4">4 Changes</option>
+          <option value="5">5 Changes</option>
+          <option value="6">6 Changes</option>
+          <option value="7">7 Changes</option>
+          <option value="8">8 Changes</option>
+          <option value="9">9 Changes</option>
+          <option value="10">10 Changes</option>
+          <option value="11">11 Changes</option>
+          <option value="12">12 Changes</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader collapsible" id="row_secpass_lock_header"><div class="formHeaderText">Account Locking<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
+      <div class="formRow even" id="row_secpass_lockfailed"><div class="formColumnLeft"><div class="formFieldName">Lock Accounts<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Lock an account after this many failed attempts in 1 hour.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="secpass_lockfailed" name="secpass_lockfailed">
+          <option selected="" value="0">Disabled</option>
+          <option value="1">1 Attempt</option>
+          <option value="2">2 Attempts</option>
+          <option value="3">3 Attempts</option>
+          <option value="4">4 Attempts</option>
+          <option value="5">5 Attempts</option>
+          <option value="6">6 Attempts</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_secpass_unlocktime"><div class="formColumnLeft"><div class="formFieldName">Auto Unlock<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">An account will automatically be unlocked after this many minutes. Even if the correct password is entered, the account will not unlock until this time limit has been met. Max of 1440 minutes (1 Day)</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="secpass_unlocktime" name="secpass_unlocktime">
+          <option value="0">Disabled</option>
+          <option value="1">1 Minute</option>
+          <option value="2">2 Minutes</option>
+          <option value="5">5 Minutes</option>
+          <option value="10">10 Minutes</option>
+          <option value="20">20 Minutes</option>
+          <option value="30">30 Minutes</option>
+          <option selected="" value="60">1 Hour</option>
+          <option value="120">2 Hours</option>
+          <option value="240">4 Hours</option>
+          <option value="480">8 Hours</option>
+          <option value="960">16 Hours</option>
+          <option value="1440">1 Day</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader" id="row_ldap_general_header"><div class="formHeaderText">LDAP General Settings<div class="formTooltip"></div></div></div>
+      <div class="formRow even" id="row_ldap_server"><div class="formColumnLeft"><div class="formFieldName">Server(s)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A space delimited list of DNS hostnames or IP address of for valid LDAP servers. Kadupul will attempt to use the LDAP servers from left to right to authenticate a user.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_server" maxlength="255" name="ldap_server" off="" size="80" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_ldap_port"><div class="formColumnLeft"><div class="formFieldName">Port Standard<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">TCP port for Non-SSL communications including LDAP + TLS. Default is 389.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_port" maxlength="5" name="ldap_port" off="" size="5" type="text" value="389"></div></div></div>
+      <div class="formRow even" id="row_ldap_port_ssl"><div class="formColumnLeft"><div class="formFieldName">Port SSL<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">TCP port for LDAPS for SSL communications. Default is 636.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_port_ssl" maxlength="5" name="ldap_port_ssl" off="" size="5" type="text" value="636"></div></div></div>
+      <div class="formRow odd" id="row_ldap_version"><div class="formColumnLeft"><div class="formFieldName">Protocol Version<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Protocol Version to connect to the server with.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="ldap_version" name="ldap_version">
+          <option value="2">Version 2</option>
+          <option selected="" value="3">Version 3</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_ldap_network_timeout"><div class="formColumnLeft"><div class="formFieldName">Connect Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Network Connect Timeout in seconds.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_network_timeout" maxlength="5" name="ldap_network_timeout" off="" size="5" type="text" value="2"></div></div></div>
+      <div class="formRow odd" id="row_ldap_bind_timeout"><div class="formColumnLeft"><div class="formFieldName">Bind Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The Bind Timeout in seconds.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_bind_timeout" maxlength="5" name="ldap_bind_timeout" off="" size="5" type="text" value="5"></div></div></div>
+      <div class="formRow even" id="row_ldap_debug"><div class="formColumnLeft"><div class="formFieldName">LDAP Debug Mode<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="LDAP Debug Mode"><input aria-checked="false" class="formCheckbox" id="ldap_debug" name="ldap_debug" title="LDAP Debug Mode" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="ldap_debug">LDAP Debug Mode</label></span></div></div></div>
+      <div class="formRow odd" id="row_ldap_encryption"><div class="formColumnLeft"><div class="formFieldName">Encryption<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Encryption that the server supports. NOTE: When using LDAP + TLS you must use version 3.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="ldap_encryption" name="ldap_encryption">
+          <option selected="" value="0">None</option>
+          <option value="1">LDAPS</option>
+          <option value="2">LDAP + TLS</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_ldap_tls_certificate"><div class="formColumnLeft"><div class="formFieldName">TLS Certificate Requirements<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should LDAP verify TLS Certificates when received by the Client.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="ldap_tls_certificate" name="ldap_tls_certificate">
+          <option selected="" value="0">Never</option>
+          <option value="1">Hard</option>
+          <option value="2">Demand</option>
+          <option value="3">Allow</option>
+          <option value="4">Try</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_ldap_referrals"><div class="formColumnLeft"><div class="formFieldName">Referrals<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Enable or Disable LDAP referrals. If disabled, it may increase the speed of searches.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="ldap_referrals" name="ldap_referrals">
+          <option selected="" value="0">Disabled</option>
+          <option value="1">Enable</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_ldap_mode"><div class="formColumnLeft"><div class="formFieldName">Mode<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN).</blockquote></span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="ldap_mode" name="ldap_mode">
+          <option selected="" value="0">No Searching</option>
+          <option value="1">Anonymous Searching</option>
+          <option value="2">Specific Searching</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_ldap_dn"><div class="formColumnLeft"><div class="formFieldName">Distinguished Name (DN)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The "Distinguished Name" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>"uid=&lt;username&gt;,ou=people,dc=domain,dc=local"</i>. Windows AD provides an alternative syntax: <i>"&lt;username&gt;@win2kdomain.local"</i>, commonly known as "userPrincipalName (UPN)". In this context, "&lt;username&gt;" represents the specific username provided during the login prompt. This is particularly pertinent when operating in "No Searching" mode, or "Require Group Membership" enabled.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_dn" maxlength="255" name="ldap_dn" off="" size="100" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_ldap_group_require"><div class="formColumnLeft"><div class="formFieldName">Require Group Membership<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Require user to be member of group to authenticate. Group settings must be set for this to work, enabling without proper group settings will cause authentication failure.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Require Group Membership"><input aria-checked="false" class="formCheckbox" id="ldap_group_require" name="ldap_group_require" title="Require Group Membership" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="ldap_group_require">Require Group Membership</label></span></div></div></div>
+      <div class="spacer formHeader" id="row_ldap_group_header"><div class="formHeaderText">LDAP Group Settings<div class="formTooltip"></div></div></div>
+      <div class="formRow odd" id="row_ldap_group_dn"><div class="formColumnLeft"><div class="formFieldName">Group Distinguished Name (DN)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Distinguished Name of the group that user must have membership.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_group_dn" maxlength="255" name="ldap_group_dn" off="" size="100" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_ldap_group_attrib"><div class="formColumnLeft"><div class="formFieldName">Group Member Attribute<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This refers to the specific attribute within the LDAP directory that holds the usernames of group members. It is crucial to ensure that the attribute value aligns with the configuration specified in the "Distinguished Name" or that the actual attribute value is searchable using the settings outlined in the "Distinguished Name".</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_group_attrib" maxlength="255" name="ldap_group_attrib" off="" size="100" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_ldap_group_member_type"><div class="formColumnLeft"><div class="formFieldName">Group Member Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Defines if users use full Distinguished Name or just Username in the defined Group Member Attribute.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="ldap_group_member_type" name="ldap_group_member_type">
+          <option selected="" value="1">Distinguished Name</option>
+          <option value="2">Username</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="spacer formHeader" id="row_ldap_search_base_header"><div class="formHeaderText">LDAP Specific Search Settings<div class="formTooltip"></div></div></div>
+      <div class="formRow even" id="row_ldap_search_base"><div class="formColumnLeft"><div class="formFieldName">Search Base<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Search base for searching the LDAP directory, such as <i>'dc=win2kdomain,dc=local'</i> or <i>'ou=people,dc=domain,dc=local'</i>.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_search_base" maxlength="255" name="ldap_search_base" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_ldap_search_filter"><div class="formColumnLeft"><div class="formFieldName">Search Filter<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&amp;(objectClass=account)(uid=&lt;username&amp;gt))'</i>. '&lt;username&amp;gt' is replaced with the username that was supplied at the login prompt. </span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_search_filter" maxlength="255" name="ldap_search_filter" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_ldap_specific_dn"><div class="formColumnLeft"><div class="formFieldName">Search Distinguished Name (DN)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Distinguished Name for Specific Searching binding to the LDAP directory.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="ldap_specific_dn" maxlength="255" name="ldap_specific_dn" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_ldap_specific_password"><div class="formColumnLeft"><div class="formFieldName">Search Password<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Password for Specific Searching binding to the LDAP directory.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="ldap_specific_password" maxlength="255" name="ldap_specific_password" placeholder="********" size="40" type="password" value="stored-ldap-secret"><br><input style="display:none" type="text" value=""><input autocomplete="current-password" style="display:none" type="password" value=""><input autocomplete="current-password" class="ui-state-default ui-corner-all" id="ldap_specific_password_confirm" maxlength="255" name="ldap_specific_password_confirm" placeholder="********" size="40" type="password" value="stored-ldap-secret"></div></div></div>
+      <div class="spacer formHeader" id="row_cn_header"><div class="formHeaderText">LDAP CN Settings<div class="formTooltip"></div></div></div>
+      <div class="formRow even" id="row_cn_full_name"><div class="formColumnLeft"><div class="formFieldName">Full Name<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) </span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="cn_full_name" maxlength="255" name="cn_full_name" off="" size="40" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_cn_email"><div class="formColumnLeft"><div class="formFieldName">Email<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Field that will replace the Email taken from LDAP. (on windows: mail)</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="cn_email" maxlength="255" name="cn_email" off="" size="40" type="text" value=""></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="tab" name="tab" style="height:0px;" type="hidden" value="authentication"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="save ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Save"></td></tr>
+    </tbody>
+  </table>
+</form>
