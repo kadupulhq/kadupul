@@ -37,7 +37,7 @@ function api_plugin_enable($id) { header('X-Test-Mutation: enable'); }
 function api_plugin_disable($id) { header('X-Test-Mutation: disable'); }
 function api_plugin_moveup($id) { header('X-Test-Mutation: moveup'); }
 function api_plugin_movedown($id) { header('X-Test-Mutation: movedown'); }
-$config = array('poller_id' => 2);
+$config = array('poller_id' => 2, 'url_path' => '/');
 $plugins_integrated = array();
 session_id('plugin-redirect-test');
 $_SESSION = array('sess_user_id' => 42, 'sess_plugins_state' => (int) $_POST['test_state']);
@@ -56,7 +56,7 @@ PHP;
     try {
         // Coverage hooks and JIT are incompatible in the HTTP-server SAPI.
         $server = proc_open(
-            array(PHP_BINARY, '-d', 'opcache.jit=off', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=' . $root,
+            array(PHP_BINARY, '-d', 'error_reporting=' . error_reporting(), '-d', 'opcache.jit=off', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=' . $root,
                 '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-S', $address, 'router.php'),
             array(0 => array('pipe', 'r'), 1 => array('file', $dir . '/server.log', 'a'),
                 2 => array('file', $dir . '/server.log', 'a')),
@@ -141,7 +141,35 @@ require $argv[1] . '/include/global_constants.php';
 function __($value) { return $value; }
 function read_config_option($name) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
-function db_execute_prepared(...$args) { echo 'WRITE'; exit; }
+// The real permission adapter now opens a transaction on the active PDO.
+// Use actual isolated SQL state so admitted requests reach and complete it.
+$db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+$db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER NOT NULL, policy_graphs INTEGER);
+CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY, policy_graphs INTEGER);
+CREATE TABLE user_auth_group_members(group_id INTEGER, user_id INTEGER);
+CREATE TABLE user_auth_perms(user_id INTEGER, item_id INTEGER, type INTEGER);
+CREATE TABLE user_auth_group_perms(group_id INTEGER, item_id INTEGER, type INTEGER);
+INSERT INTO user_auth VALUES(2,0,0),(42,0,0);
+INSERT INTO user_auth_group VALUES(2,0);
+INSERT INTO user_auth_group_members VALUES(2,2);
+INSERT INTO user_auth_perms VALUES(2,2,1);
+INSERT INTO user_auth_group_perms VALUES(2,2,1);');
+$database_hostname = 'isolated';
+$database_port = '0';
+$database_default = 'admin-csrf-fixture';
+$database_sessions = array("$database_hostname:$database_port:$database_default" => $db);
+$affected = 0;
+$mutationWrites = 0;
+function db_execute_prepared($sql, $parameters = array(), ...$options) {
+    global $db, $affected, $mutationWrites;
+    if ($GLOBALS['argv'][2] === 'plugins.php') { echo 'WRITE'; exit; }
+    $statement = $db->prepare($sql);
+    $result = $statement->execute($parameters);
+    $affected = $statement->rowCount();
+    if ($result) $mutationWrites++;
+    return $result;
+}
+function db_affected_rows($connection = null) { return $GLOBALS['affected']; }
 function sanitize_unserialize_selected_items($value) { echo 'WRITE'; exit; }
 function db_fetch_assoc($sql) { return array(array('directory' => '2')); }
 function sanitize_search_string($value) { return $value; }
@@ -151,7 +179,7 @@ function api_plugin_enable($id) { echo 'WRITE'; exit; }
 function api_plugin_disable($id) { echo 'WRITE'; exit; }
 function api_plugin_moveup($id) { echo 'WRITE'; exit; }
 function api_plugin_movedown($id) { echo 'WRITE'; exit; }
-$config = array('poller_id' => 2);
+$config = array('poller_id' => 2, 'url_path' => '/');
 $plugins_integrated = array();
 session_id('admin-csrf-test');
 $_SESSION = array('sess_user_id' => 42);
@@ -172,7 +200,16 @@ if ($argv[5] === 'valid') $_POST['__csrf_magic'] = csrf_get_tokens();
 if ($argv[5] === 'query') $_GET['__csrf_magic'] = $_REQUEST['__csrf_magic'] = csrf_get_tokens();
 if ($argv[5] === 'array') $_POST['__csrf_magic'] = array('bad');
 if ($argv[5] === 'forged') $_POST['__csrf_magic'] = 'sid:forged,1';
-register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
+register_shutdown_function(function () use ($db) {
+    if ($GLOBALS['mutationWrites'] > 0) echo 'WRITE';
+    $epochRoute = $GLOBALS['argv'][2] !== 'plugins.php'
+        && in_array($GLOBALS['argv'][3], array('update_policy', 'perm_remove'), true);
+    if ($epochRoute) {
+        echo 'EPOCH:' . $db->query('SELECT reset_perms FROM user_auth WHERE id = 2')->fetchColumn();
+        echo 'FOREIGN:' . $db->query('SELECT reset_perms FROM user_auth WHERE id = 42')->fetchColumn();
+    }
+    echo 'STATUS:' . (http_response_code() ?: 200);
+});
 require $argv[1] . '/' . $argv[2];
 PHP;
     $coverage = $this->getTestResultObject()->getCodeCoverage();
@@ -182,7 +219,7 @@ PHP;
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';' . $program;
     }
     try {
-        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $controller, $route, $method, $token), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $dir);
+        $process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=' . error_reporting(), '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $controller, $route, $method, $token), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $dir);
         $stdout = stream_get_contents($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -191,7 +228,10 @@ PHP;
             throw new RuntimeException($stderr . $stdout);
         }
         expect($stderr)->toBe('');
-        expect($stdout)->toBe(($expected === 200 ? 'WRITE' : '') . 'STATUS:' . $expected);
+        $epochRoute = $controller !== 'plugins.php' && in_array($route, array('update_policy', 'perm_remove'), true);
+        $epochs = $epochRoute ? 'EPOCH:' . ($expected === 200 ? '1' : '0') . 'FOREIGN:0' : '';
+        $status = $epochRoute && $expected === 200 ? 302 : $expected;
+        expect($stdout)->toBe(($expected === 200 ? 'WRITE' : '') . $epochs . 'STATUS:' . $status);
         if ($coverage !== null) {
             foreach (glob($dir . '/*.coverage') as $file) {
                 $coverage->merge(unserialize(file_get_contents($file)));
