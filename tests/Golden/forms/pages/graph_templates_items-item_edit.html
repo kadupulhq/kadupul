@@ -1,0 +1,122 @@
+<form action="graph_templates_items.php" autocomplete="off" class="cactiFormStart" id="graph_items" method="post" name="graph_items">
+  <div class="cactiTable" id="graph_templates_items_item_edit1" style="width:100%;text-align:center;"><div><div class="cactiTableTitle"><span>Graph Template Items [edit graph: ]</span></div><div class="cactiTableButton"><span class="cactiHelp" title="Get Page Help"><a class="linkOverDark helpPage" data-page="Graph-Templates.html" href="#"><i class="far fa-question-circle"></i></a></span><span></span></div></div>
+    <div class="cactiTable" id="graph_templates_items_item_edit1_child">
+      <div class="formRow odd" id="row_data_template_id"><div class="formColumnLeft"><div class="formFieldName">Data Template Filter<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This filter will limit the Data Sources visible in the Data Source dropdown.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="data_template_id" name="data_template_id">
+          <option selected="" value="0">Any</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_graph_type_id"><div class="formColumnLeft"><div class="formFieldName">Graph Item Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How data for this item is represented visually on the graph.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="graph_type_id" name="graph_type_id">
+          <option value="7">AREA</option>
+          <option value="8">AREA:STACK</option>
+          <option value="1">COMMENT</option>
+          <option value="9">GPRINT</option>
+          <option value="14">GPRINT:AVERAGE</option>
+          <option value="11">GPRINT:LAST</option>
+          <option value="12">GPRINT:MAX</option>
+          <option value="13">GPRINT:MIN</option>
+          <option value="2">HRULE</option>
+          <option value="10">LEGEND</option>
+          <option value="15">LEGEND_CAMM</option>
+          <option selected="" value="4">LINE1</option>
+          <option value="5">LINE2</option>
+          <option value="6">LINE3</option>
+          <option value="20">LINE:STACK</option>
+          <option value="40">TEXTALIGN</option>
+          <option value="30">TICK</option>
+          <option value="3">VRULE</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_task_item_id"><div class="formColumnLeft"><div class="formFieldName">Data Source<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The data source to use for this graph item.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="task_item_id" name="task_item_id">
+          <option selected="" value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_color_id"><div class="formColumnLeft"><div class="formFieldName">Color<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The color to use for the legend.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select class="colordropdown" id="color_id" name="color_id" style="background-color: #;">
+          <option value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_alpha"><div class="formColumnLeft"><div class="formFieldName">Opacity/Alpha Channel<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The opacity/alpha channel of the color.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="alpha" name="alpha">
+          <option value="00"> 0%</option>
+          <option value="19"> 10%</option>
+          <option value="33"> 20%</option>
+          <option value="4C"> 30%</option>
+          <option value="66"> 40%</option>
+          <option value="7F"> 50%</option>
+          <option value="99"> 60%</option>
+          <option value="B2"> 70%</option>
+          <option value="CC"> 80%</option>
+          <option value="E5"> 90%</option>
+          <option selected="" value="FF">100%</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_consolidation_function_id"><div class="formColumnLeft"><div class="formFieldName">Consolidation Function<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How data for this item is represented statistically on the graph.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="consolidation_function_id" name="consolidation_function_id">
+          <option value="1">AVERAGE</option>
+          <option value="2">MIN</option>
+          <option value="3">MAX</option>
+          <option value="4">LAST</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_cdef_id"><div class="formColumnLeft"><div class="formFieldName">CDEF Function<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A CDEF (math) function to apply to this item on the graph or legend.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="cdef_id" name="cdef_id">
+          <option selected="" value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_vdef_id"><div class="formColumnLeft"><div class="formFieldName">VDEF Function<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">A VDEF (math) function to apply to this item on the graph legend.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="vdef_id" name="vdef_id">
+          <option selected="" value="0">None</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_shift"><div class="formColumnLeft"><div class="formFieldName">Shift Data<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Offset your data on the time axis (x-axis) by the amount specified in the 'value' field.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Shift Data"><input aria-checked="false" class="formCheckbox" id="shift" name="shift" title="Shift Data" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="shift">Shift Data</label></span></div></div></div>
+      <div class="formRow even" id="row_value"><div class="formColumnLeft"><div class="formFieldName">Value<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">[HRULE|VRULE]: The value of the graph item.<br> [TICK]: The fraction for the tick line.<br> [SHIFT]: The time offset in seconds.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="value" maxlength="255" name="value" off="" size="80" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_gprint_id"><div class="formColumnLeft"><div class="formFieldName">GPRINT Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If this graph item is a GPRINT, you can optionally choose another format here. You can define additional types under "GPRINT Presets".</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="gprint_id" name="gprint_id"></select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow even" id="row_textalign"><div class="formColumnLeft"><div class="formFieldName">Text Alignment (TEXTALIGN)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">All subsequent legend line(s) will be aligned as given here. You may use this command multiple times in a single graph. This command does not produce tabular layout.<br><strong>Note: </strong>You may want to insert a &lt;HR&gt; on the preceding graph item.<br><strong>Note: </strong>A &lt;HR&gt; on this legend line will obsolete this setting!</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+        <select id="textalign" name="textalign">
+          <option selected="" value="">None</option>
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+          <option value="justified">Justified</option>
+          <option value="center">Center</option>
+        </select>
+        </div>
+        </div>
+      </div>
+      <div class="formRow odd" id="row_text_format"><div class="formColumnLeft"><div class="formFieldName">Text Format<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Text that will be displayed on the legend for this graph item.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="text_format" maxlength="255" name="text_format" off="" size="80" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_hard_return"><div class="formColumnLeft"><div class="formFieldName">Insert Hard Return<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Forces the legend to the next line after this item.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Insert Hard Return"><input aria-checked="false" class="formCheckbox" id="hard_return" name="hard_return" title="Insert Hard Return" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="hard_return">Insert Hard Return</label></span></div></div></div>
+      <div class="formRow odd" id="row_line_width"><div class="formColumnLeft"><div class="formFieldName">Line Width<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="line_width" maxlength="5" name="line_width" off="" size="5" type="text" value="1.00"></div></div></div>
+      <div class="formRow even" id="row_dashes"><div class="formColumnLeft"><div class="formFieldName">Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The dashes modifier enables dashed line style.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="dashes" maxlength="40" name="dashes" off="" size="30" type="text" value=""></div></div></div>
+      <div class="formRow odd" id="row_dash_offset"><div class="formColumnLeft"><div class="formFieldName">Dash Offset (dash-offset=offset)<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The dash-offset parameter specifies an offset into the pattern at which the stroke begins.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="dash_offset" maxlength="4" name="dash_offset" off="" size="4" type="text" value=""></div></div></div>
+      <div class="formRow even" id="row_sequence"><div class="formColumnLeft"><div class="formFieldName">Sequence<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The dash-offset parameter specifies an offset into the pattern at which the stroke begins.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><input class="ui-state-default ui-corner-all" id="sequence" maxlength="4" name="sequence" off="" size="4" type="text" value=""></div></div></div>
+    </div>
+  </div>
+  <div class="break"></div><div style="display:none;"><input id="graph_template_item_id" name="graph_template_item_id" style="height:0px;" type="hidden" value="0"></div><div style="display:none;"><input id="graph_template_id" name="graph_template_id" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="_graph_type_id" name="_graph_type_id" style="height:0px;" type="hidden" value="0"></div><div style="display:none;"><input id="_task_item_id" name="_task_item_id" style="height:0px;" type="hidden" value="0"></div><div style="display:none;"><input id="save_component_item" name="save_component_item" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="invisible_alpha" name="invisible_alpha" style="height:0px;" type="hidden" value="FF"></div><div style="display:none;"><input id="rrdtool_version" name="rrdtool_version" style="height:0px;" type="hidden" value="1.4.0"></div>
+  <table style="width:100%;text-align:center;">
+    <tbody>
+      <tr><td class="saveRow"><input name="action" type="hidden" value="save"><input class="ui-button ui-corner-all ui-widget cactiReturnTo" data-url="graph_templates.php?action=template_edit&amp;id=1" type="button" value="Cancel"><input class=" ui-button ui-corner-all ui-widget" id="submit" type="submit" value="Create"></td></tr>
+    </tbody>
+  </table>
+</form>

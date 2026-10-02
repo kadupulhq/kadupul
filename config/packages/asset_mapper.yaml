@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+framework:
+    asset_mapper:
+        # Logical paths keep the repository layout, so legacy pages look up
+        # "include/themes/modern/main.css" by the same path they already emit.
+        paths:
+            include/: include
+            # Theme stylesheets reference the shared icons under images/.
+            images/: images
+        # Exclusions apply to every mapped path, so include/vendor cannot be
+        # narrowed to flag-icons; that stylesheet keeps the ?md5 fallback.
+        # The bootstrap names mirror the deny in include/.htaccess, and
+        # custom.css stays unmapped so operator edits apply without a compile.
+        excluded_patterns:
+            - '*/include/config*'
+            - '*/include/global*'
+            - '*/include/plugins*'
+            - '*/include/cacti_version'
+            - '*/include/content/*'
+            - '*/include/fonts/*'
+            - '*/include/vendor/*'
+            - '*/include/themes/custom.css'
+        # The repository root is the web root; compiled files land in
+        # public/assets and are served as <url_path>public/assets/.
+        public_prefix: /assets/
+        # Legacy pages never boot the kernel, so a dev server would only
+        # answer for the migrated routes. Serve compiled files statically.
+        server: false
+        missing_import_mode: strict

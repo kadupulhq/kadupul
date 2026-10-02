@@ -48,6 +48,8 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
         if not all(re.fullmatch(r'[A-Za-z0-9_]+', table) for table in tables):
             raise RuntimeError('Unexpected fixture table name')
         harness.sql(';'.join(f'CREATE TABLE create_remote.`{table}` LIKE cacti.`{table}`' for table in tables))
+        from device_collector_scenarios import install_collector_profile_guards
+        install_collector_profile_guards(harness, 'create_remote')
         poller = int(harness.sql("INSERT INTO poller (name,hostname,dbhost,dbdefault,dbuser,dbpass,last_status) VALUES ('Creation collector','db','db','create_remote','root','behavior-root',NOW()); SELECT LAST_INSERT_ID()").strip())
         status, _ = submit('create-remote-fixture', {'device_create[poller_id]': str(poller)})
         check(status == 200, 'device creation succeeds on a disposable remote collector')
