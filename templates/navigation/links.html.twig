@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'navigation' %}
+{% block title %}{{ 'External Links'|trans }} · Kadupul{% endblock %}
+{% block body %}<main><h1>{{ 'External Links'|trans }}</h1>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route name, no supplied URL. #}
+<p><a href="{{ path('navigation_link_create') }}">{{ 'Add link'|trans }}</a></p>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route name, reset list filters on an explicit user action. #}
+<p><a href="{{ path('navigation_links', {clear: '1'}) }}">{{ 'Clear'|trans }}</a></p>
+<form method="get"><label>{{ 'Search'|trans }} <input name="filter" value="{{ filters.filter }}" maxlength="200"></label>
+<label>{{ 'Links'|trans }} <select name="rows">{% for size in constant('Kadupul\\Navigation\\Infrastructure\\Symfony\\LinkListParameters::ROW_CHOICES') %}<option value="{{ size }}"{% if filters.rows == size %} selected{% endif %}>{{ size == -1 ? 'Default'|trans : size }}</option>{% endfor %}</select></label>
+<label>{{ 'Sort'|trans }} <select name="sort_column">{% for column in ['sortorder','contentfile','title','style','enabled'] %}<option value="{{ column }}"{% if filters.sort_column == column %} selected{% endif %}>{{ column|trans }}</option>{% endfor %}</select></label>
+<label>{{ 'Sort direction'|trans }} <select name="sort_direction"><option value="ASC"{% if filters.sort_direction == 'ASC' %} selected{% endif %}>{{ 'Ascending'|trans }}</option><option value="DESC"{% if filters.sort_direction == 'DESC' %} selected{% endif %}>{{ 'Descending'|trans }}</option></select></label><button>{{ 'Apply Filter'|trans }}</button></form>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route name, not a supplied action URL. #}
+<form method="get" action="{{ path('navigation_link_action', {operation: 'delete'}) }}">
+<table><thead><tr>{% for heading in ['Select','Actions','Page','Title','Style','Enabled','Order'] %}<th>{{ heading|trans }}</th>{% endfor %}</tr></thead><tbody>
+{% for link in links %}<tr><td><input type="checkbox" name="ids[]" value="{{ link.id }}" aria-label="{{ link.title }}"></td><td>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and integer link identifier. #}
+<a href="{{ path('navigation_link_edit', {id: link.id}) }}">{{ 'Edit'|trans }}</a>
+{% if link.enabled %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Encoded integer identifier appended to fixed internal legacy viewing entry; no stored URL is used as href. #}
+<a href="{{ viewPath }}?id={{ link.id }}">{{ 'View Page'|trans }}</a>{% endif %}</td>
+<td>{{ link.contentfile }}</td><td>{{ link.title }}</td><td>{{ link.style|trans }}{% if link.style == 'CONSOLE' %} ({{ link.extendedstyle ?: 'External Links'|trans }}){% endif %}</td><td>{{ (link.enabled ? 'Yes' : 'No')|trans }}</td><td>{{ link.sortorder }}
+{% if filters.sort_column == 'sortorder' %}{% for operation in ['up','down'] %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route, enumerated operation and integer selected link identifier. #}
+<a href="{{ path('navigation_link_action', {operation: operation, ids: [link.id]}) }}">{{ operation|trans }}</a>{% endfor %}{% endif %}</td></tr>
+{% else %}<tr><td colspan="7">{{ 'No Pages Found'|trans }}</td></tr>{% endfor %}</tbody></table>
+{% for operation in ['delete','enable','disable'] %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route with enumerated operation encoded by Symfony. #}
+<button formaction="{{ path('navigation_link_action', {operation: operation}) }}">{{ operation|trans }}</button>{% endfor %}</form>
+<p>{{ 'Total links'|trans }}: {{ total }}</p>
+{% if filters.page > 1 %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route and validated list parameters, encoded by Symfony. #}
+<a href="{{ path('navigation_links', filters|merge({page: filters.page - 1, limit: null})) }}">{{ 'Previous'|trans }}</a>{% endif %}
+{% if filters.page * filters.limit < total %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route and validated list parameters, encoded by Symfony. #}
+<a href="{{ path('navigation_links', filters|merge({page: filters.page + 1, limit: null})) }}">{{ 'Next'|trans }}</a>{% endif %}
+</main>{% endblock %}
