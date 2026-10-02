@@ -1,7 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+if (PHP_SAPI !== 'cli') {
+    exit(1);
+}
+$root = dirname(__DIR__, 2);
+require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+if (getenv('DOMAIN_LOCKOUT_COVERAGE_DIRECTORY')) {
+    $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    $scenario = json_encode(array('code' => $argv[1], 'text' => $argv[2]), JSON_THROW_ON_ERROR);
+    $GLOBALS['nativeCoverageEvidence'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/domain-lockout-native.php', $scenario, $sources);
+}
 
 // Only the LDAP transport is substituted. Login, realm selection and lockout
 // execute from the actual production file against persistent SQLite rows.
@@ -85,4 +98,6 @@ $second = domains_login_process('alice');
 $after_second = $db->query('SELECT failed_attempts,locked FROM user_auth WHERE id=42')->fetch(PDO::FETCH_ASSOC);
 $error = false;
 $third = domains_login_process('alice');
-echo json_encode(array('first' => $first, 'second' => $second, 'third' => $third, 'after_first' => $after_first, 'after_second' => $after_second, 'binds' => $binds, 'error' => $error, 'message' => $error_msg, 'other' => $db->query('SELECT failed_attempts FROM user_auth WHERE id=43')->fetchColumn()), JSON_THROW_ON_ERROR);
+$encoded = json_encode(array('first' => $first, 'second' => $second, 'third' => $third, 'after_first' => $after_first, 'after_second' => $after_second, 'binds' => $binds, 'error' => $error, 'message' => $error_msg, 'other' => $db->query('SELECT failed_attempts FROM user_auth WHERE id=43')->fetchColumn()), JSON_THROW_ON_ERROR);
+define('NATIVE_COVERAGE_COMPLETED', array('domain-lockout-persisted-state-readback'));
+print $encoded;
