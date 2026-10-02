@@ -13,8 +13,8 @@ security fixes until those features migrate. It is not covered by Composer audit
 A `patches` entry in `legacy-files.json` applies exact replacements to one snapshot
 file: the installer checks the archive bytes against `source_sha256`, requires each
 `before` string to occur once, and checks the result against the digest in `files`.
-CSRF Magic's browser script uses this to add the token only to same-origin requests,
-as the 1.2 LTS copy does.
+CSRF Magic's browser script and output handler use this to add the token only to
+same-origin requests and forms, as the 1.2 LTS copy does.
 
 See [Symfony migration and offline bundles](../../docs/symfony-migration.md) for
 source installation, compatibility exceptions and disconnected deployment.
@@ -124,3 +124,5 @@ Upstream references: [phpseclib migration](https://phpseclib.com/docs/intro/migr
 [Pest upgrade guide](https://pestphp.com/docs/upgrade-guide),
 [jQuery 4 migration](https://jquery.com/upgrade-guide/4.0/),
 [DOMPurify releases](https://github.com/cure53/DOMPurify/releases).
+
+The patched CSRF library also supplies the rotation CLI with atomic secret publication: an exclusive temporary file in the configured destination directory, complete write/readback, preserved and verified existing UID/GID, mode 0640, synchronization and rename. Failed generation or publication retains the working key; symlink file destinations are rejected.
