@@ -11,6 +11,10 @@ if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
+}
+
 if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
@@ -213,6 +217,10 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
             if (file_put_contents($childCoverageFile . '.json', $json) !== strlen($json)) {
                 throw new RuntimeException('Predicate coverage evidence missing');
             }
+        }
+        if (defined('CSRF_ROTATION_TEST_COVERAGE')) {
+            require_once dirname(__DIR__) . '/Helpers/CsrfRotationCoverage.php';
+            CsrfRotationCoverage::record($childCoverageFile, dirname(__DIR__, 2));
         }
     });
 });
