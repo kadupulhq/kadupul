@@ -1295,3 +1295,29 @@ Inventory now coordinates bounded device selections through `PlaceDevices`. Dest
 The list retains collector/template/exact-location filters and the core not-up status filter. Legacy sort columns other than name/hostname are rejected rather than silently ignored. CSV compatibility intentionally uses the bounded public-data export; it never exports SNMP credentials or unrestricted host rows.
 
 Applying already configured device automation rules is available through a Symfony confirmation and `ApplyDeviceRules`, with rule execution owned by the Automation adapter. Rule authoring/administration remains a later module migration. Existing mutating hooks remain in the isolated workers. Legacy UI injection hooks (`device_top`, `host_edit_*`, `device_edit_*`, `device_filters`, `device_sql_where`, `device_display_text`, `device_table_*`, `device_change_javascript`) and custom `device_action_array`, `device_action_prepare` and `device_action_execute` hooks no longer run on core device pages. Plugin-owned pages are outside this queue; plugin authors must provide their own routes or a typed Symfony extension before relying on the new core UI. This is a main-only compatibility change and must be reviewed before release.
+### Palette CSV spreadsheet safety
+
+Palette downloads mark every operator-controlled name and hex cell as literal
+spreadsheet text with a leading apostrophe, following the device exporter.
+The downloaded schema is `name,hex,kadupul_literal_v1`; each marker cell must be
+`1`, and both text cells must carry that prefix. The importer validates the
+complete recognized marker before removing exactly one apostrophe from each
+cell, preserving original apostrophes, quotes, newlines and machine values.
+Unsupported versions or malformed marked rows fail before any writes.
+
+Ordinary two-column `name,hex` imports remain literal and never lose a leading
+apostrophe. Existing external consumers of palette downloads must allow the
+new marker column and literal prefixes; plain CSV readers see the prefixes.
+The import form accepts both downloaded exports and ordinary legacy files.
+### VDEF administration
+
+VDEF listing, create/edit, item create/edit/delete/reorder, and bulk duplicate/delete
+now use Symfony routes, Forms and Twig. The catalog preserves graph/template usage
+counts and nested VDEF references; the editor preserves item type/value/sequence
+and previews nested VDEF expressions. Mutations require console access and the
+VDEF realm, recheck account/policy/console and VDEF realm grants inside the write
+transaction, and use CSRF tokens plus revision checks to reject stale forms.
+Deletion refuses definitions referenced by graphs, graph templates or other VDEFs.
+The old `vdef.php` URL redirects safe GET navigation to the Symfony routes and
+rejects posted actions; legacy procedural VDEF functions remain available to
+graph rendering.
