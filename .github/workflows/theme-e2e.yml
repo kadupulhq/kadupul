@@ -47,6 +47,9 @@ jobs:
         run: ./node_modules/.bin/playwright install --with-deps chromium
         working-directory: tests/e2e
 
+      - name: Install checksum-verified legacy browser dependencies
+        run: php tools/dependencies/install-legacy.php
+
       - name: Run theme Playwright suite
         run: npm run test:themes -- --config=playwright.config.js
         working-directory: tests/e2e
