@@ -97,6 +97,8 @@ jobs:
         working-directory: tests
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+          KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
+          KADUPUL_TEST_MYSQL_PASSWORD: kadupul-ci-only
         run: |
           set -euo pipefail
           test -x "$RRDTOOL_TEST_BINARY"
@@ -146,7 +148,7 @@ jobs:
 
       - name: Dependency maintenance tests with coverage
         run: |
-          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/browser-build.test.mjs tests/Unit/csrf-magic-origin.test.mjs
+          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/permission-filter.test.mjs tests/Unit/browser-build.test.mjs tests/Unit/csrf-magic-origin.test.mjs
           test -s tests/vendor-sync.lcov
 
       - name: Native browser layout and theme coverage
