@@ -205,7 +205,7 @@ jobs:
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
           mise exec php@8.4.25 -- php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' include/vendor/bin/phpunit \
-            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest' \
+            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest' \
             --coverage-php "$RUNNER_TEMP/cdef-api-coverage/native.php" \
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
           mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \

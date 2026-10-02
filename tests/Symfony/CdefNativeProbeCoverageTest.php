@@ -98,7 +98,8 @@ final class CdefNativeProbeCoverageTest extends TestCase
                     count(\CdefNativeCoverageRegistration::sources()) + count($markers) + 10,
                     \NativeChildCoverageEvidence::verifyRejections(...[...$arguments,'lib/boost.php'])
                 );
-                if ($case === 'branches') {
+                if (in_array($case, ['branches', 'regeneration'], true)) {
+                    $requiredSource = $case === 'branches' ? 'lib/api_graph.php' : 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php';
                     $report = $directory . '/native.coverage';
                     $originalReport = file_get_contents($report);
                     $originalEvidence = file_get_contents($report . '.json');
@@ -106,7 +107,7 @@ final class CdefNativeProbeCoverageTest extends TestCase
                         $missing = unserialize($originalReport);
                         $data = $missing->getData();
                         $lines = $data->lineCoverage();
-                        unset($lines[realpath($root . '/lib/api_graph.php')]);
+                        unset($lines[realpath($root . '/' . $requiredSource)]);
                         $data->setLineCoverage($lines);
                         $missing->setData($data);
                         $serialized = serialize($missing);
@@ -116,9 +117,9 @@ final class CdefNativeProbeCoverageTest extends TestCase
                         file_put_contents($report . '.json', json_encode($evidence, JSON_THROW_ON_ERROR));
                         try {
                             \NativeChildCoverageEvidence::load(...$arguments);
-                            self::fail('Graph API completion was accepted without graph API execution.');
+                            self::fail('Native completion was accepted without required execution: ' . $requiredSource);
                         } catch (\RuntimeException $error) {
-                            self::assertSame('Required native source was not executed: lib/api_graph.php', $error->getMessage());
+                            self::assertSame('Required native source was not executed: ' . $requiredSource, $error->getMessage());
                         }
                     } finally {
                         file_put_contents($report, $originalReport);

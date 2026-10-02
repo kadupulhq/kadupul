@@ -10,7 +10,7 @@ final class CdefNativeCoverageRegistration
     public static function cases(): array
     {
         return [
-            'regeneration' => ['aggregate_generation_native_probe.php', 'PASS native aggregate regeneration and cleanup complete', ['lib/api_aggregate.php','lib/aggregate.php','lib/reference_write.php']],
+            'regeneration' => ['aggregate_generation_native_probe.php', 'PASS native aggregate regeneration and cleanup complete', ['lib/api_aggregate.php','lib/aggregate.php','lib/reference_write.php','src/Platform/Infrastructure/Legacy/HostDataSubstitution.php']],
             'branches' => ['aggregate_generation_branches_native_probe.php', 'PASS native aggregate admitted branch matrix complete', ['lib/api_aggregate.php', 'lib/aggregate.php', 'lib/api_graph.php']],
             'outer' => ['aggregate_outer_caller_native_probe.php', 'PASS native aggregate outer callers and cleanup complete', ['lib/api_aggregate.php','lib/aggregate.php','lib/api_graph.php']],
             'contract' => ['cdef_reference_contract_native_probe.php', 'PASS native contract and cleanup complete', ['src/Platform/Infrastructure/Legacy/CdefReferenceContract.php']],
@@ -23,7 +23,7 @@ final class CdefNativeCoverageRegistration
 
     public static function measured(): array
     {
-        return ['lib/cdef.php', 'lib/import.php', 'lib/api_aggregate.php','lib/aggregate.php','lib/api_graph.php','lib/reference_write.php',
+        return ['src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/cdef.php', 'lib/import.php', 'lib/api_aggregate.php','lib/aggregate.php','lib/api_graph.php','lib/reference_write.php',
             'lib/installer.php','lib/cdef_reference.php','lib/functions.php',
             'src/Platform/Infrastructure/Legacy/CdefReferenceContract.php',
             'src/Platform/Infrastructure/Legacy/CdefReferenceReadiness.php',

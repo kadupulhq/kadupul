@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/HostDataSubstitution.php';
+
 /* update_data_source_title_cache_from_template - updates the title cache for all data sources
     that match a given data template
    @arg $data_template_id - (int) the ID of the data template to match */
@@ -313,83 +315,7 @@ function substitute_host_data($string, $l_escape_string, $r_escape_string, $host
             return $string;
         }
 
-        $search  = array();
-        $replace = array();
-
-        $search[]  = $l_escape_string . 'host_management_ip' . $r_escape_string; /* for compatibility */
-        $replace[] = $host['hostname']; /* for compatibility */
-
-        /* common host columns */
-        $search[]  = $l_escape_string . 'host_id' . $r_escape_string;
-        $replace[] = $host['id'];
-        $search[]  = $l_escape_string . 'host_hostname' . $r_escape_string;
-        $replace[] = $host['hostname'];
-        $search[]  = $l_escape_string . 'host_description' . $r_escape_string;
-        $replace[] = $host['description'];
-        $search[]  = $l_escape_string . 'host_site' . $r_escape_string;
-        $replace[] = $host['site_name'];
-        $search[]  = $l_escape_string . 'host_notes' . $r_escape_string;
-        $replace[] = $host['notes'];
-        $search[]  = $l_escape_string . 'host_location' . $r_escape_string;
-        $replace[] = $host['location'];
-        $search[]  = $l_escape_string . 'host_polling_time' . $r_escape_string;
-        $replace[] = $host['polling_time'];
-        $search[]  = $l_escape_string . 'host_avg_time' . $r_escape_string;
-        $replace[] = $host['avg_time'];
-        $search[]  = $l_escape_string . 'host_cur_time' . $r_escape_string;
-        $replace[] = $host['cur_time'];
-        $search[]  = $l_escape_string . 'host_availability' . $r_escape_string;
-        $replace[] = $host['availability'];
-        $search[]  = $l_escape_string . 'host_uptime' . $r_escape_string;
-        $replace[] = get_uptime($host);
-
-        /* snmp connectivity information */
-        $search[]  = $l_escape_string . 'host_snmp_community' . $r_escape_string;
-        $replace[] = $host['snmp_community'];
-        $search[]  = $l_escape_string . 'host_snmp_version' . $r_escape_string;
-        $replace[] = $host['snmp_version'];
-        $search[]  = $l_escape_string . 'host_snmp_username' . $r_escape_string;
-        $replace[] = $host['snmp_username'];
-        $search[]  = $l_escape_string . 'host_snmp_password' . $r_escape_string;
-        $replace[] = $host['snmp_password'];
-        $search[]  = $l_escape_string . 'host_snmp_auth_protocol' . $r_escape_string;
-        $replace[] = $host['snmp_auth_protocol'];
-        $search[]  = $l_escape_string . 'host_snmp_priv_passphrase' . $r_escape_string;
-        $replace[] = $host['snmp_priv_passphrase'];
-        $search[]  = $l_escape_string . 'host_snmp_priv_protocol' . $r_escape_string;
-        $replace[] = $host['snmp_priv_protocol'];
-        $search[]  = $l_escape_string . 'host_snmp_context' . $r_escape_string;
-        $replace[] = $host['snmp_context'];
-        $search[]  = $l_escape_string . 'host_snmp_engine_id' . $r_escape_string;
-        $replace[] = $host['snmp_engine_id'];
-        $search[]  = $l_escape_string . 'host_snmp_port' . $r_escape_string;
-        $replace[] = $host['snmp_port'];
-        $search[]  = $l_escape_string . 'host_snmp_timeout' . $r_escape_string;
-        $replace[] = $host['snmp_timeout'];
-
-        /* snmp system information */
-        $search[]  = $l_escape_string . 'host_snmp_sysDescr' . $r_escape_string;
-        $replace[] = $host['snmp_sysDescr'];
-        $search[]  = $l_escape_string . 'host_snmp_sysObjectID' . $r_escape_string;
-        $replace[] = $host['snmp_sysObjectID'];
-        $search[]  = $l_escape_string . 'host_snmp_sysContact' . $r_escape_string;
-        $replace[] = $host['snmp_sysContact'];
-        $search[]  = $l_escape_string . 'host_snmp_sysLocation' . $r_escape_string;
-        $replace[] = $host['snmp_sysLocation'];
-        $search[]  = $l_escape_string . 'host_snmp_sysName' . $r_escape_string;
-        $replace[] = $host['snmp_sysName'];
-        $search[]  = $l_escape_string . 'host_snmp_sysUpTimeInstance' . $r_escape_string;
-        $replace[] = $host['snmp_sysUpTimeInstance'];
-
-        $search[]  = $l_escape_string . 'host_ping_retries' . $r_escape_string;
-        $replace[] = $host['ping_retries'];
-        $search[]  = $l_escape_string . 'host_max_oids' . $r_escape_string;
-        $replace[] = $host['max_oids'];
-
-        /* handle the external id */
-        $search[]  = $l_escape_string . 'host_external_id' . $r_escape_string;
-        $replace[] = $host['external_id'];
-
+        [$search, $replace] = \Kadupul\Platform\Infrastructure\Legacy\HostDataSubstitution::replacements($l_escape_string, $r_escape_string, $host);
         $string = str_replace($search, $replace, $string);
 
         $temp = api_plugin_hook_function(
