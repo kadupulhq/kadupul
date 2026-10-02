@@ -83,7 +83,6 @@ const hardCoded = new Map([
   ['lib/html_tree.php', notMigrated],
   ['lib/html_utility.php', notMigrated],
   ['lib/installer.php', notMigrated],
-  ['links.php', notMigrated],
   ['plugins.php', notMigrated],
   ['tools/dependencies/fontawesome.mjs', 'writes the fa-circle-thin alias into the built stylesheet'],
   ['tree.php', notMigrated],
