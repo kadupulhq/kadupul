@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 2) . '/Helpers/CsrfRotationCoverage.php';
+
 // A native completion receipt binds the child producer, scenario and worker bytes.
 function verifyCsrfCallbackReceipt(array $receipt, array $expected): void
 {
@@ -229,9 +231,12 @@ test('the complete rotation CLI preserves the working secret when generation thr
 <?php
 $config = array('base_path' => dirname(__DIR__), 'path_csrf_secret' => dirname(__DIR__) . '/working.php');
 function cacti_sizeof($items) { return count($items); }
-function csrf_generate_secret() { throw new RuntimeException('Simulated entropy failure'); }
+function csrf_generate_secret() { $GLOBALS['csrf_rotation_entropy_threw'] = true; throw new RuntimeException('Simulated entropy failure'); }
 PHP);
-        $result = test_php_run(array(PHP_BINARY, $root . '/cli/refresh_csrf.php'));
+        $coverage = $this->getTestResultObject()->getCodeCoverage();
+        $command = $coverage === null ? array(PHP_BINARY, $root . '/cli/refresh_csrf.php')
+            : CsrfRotationCoverage::prepare(dirname(__DIR__, 3), $root, $root . '/working.php', 'entropy-failure');
+        $result = test_php_run($command);
         expect(file_exists($root . '/working.php'))->toBeTrue()
             ->and($result['status'])->toBe(1)
             ->and($result['err'])->toBe('')
@@ -239,7 +244,9 @@ PHP);
             ->and($result['out'])->not->toContain('working-fixture-secret')
             ->and(file_get_contents($root . '/working.php'))->toBe($old)
             ->and(hash_file('sha256', $root . '/cli/refresh_csrf.php'))->toBe(hash('sha256', $source));
+        CsrfRotationCoverage::merge($coverage, dirname(__DIR__, 3), $root, 'entropy-failure');
     } finally {
+        CsrfRotationCoverage::cleanup($root);
         foreach (array('/cli/refresh_csrf.php', '/include/cli_check.php', '/lib/poller.php', '/lib/utility.php', '/working.php') as $file) {
             if (file_exists($root . $file)) {
                 unlink($root . $file);
@@ -282,7 +289,11 @@ PHP;
                 test()->markTestSkipped('This host bypasses directory mode restrictions; exclusive-create refusal cannot be exercised');
             }
         }
-        $result = test_php_run(array(PHP_BINARY, $root . '/cli/refresh_csrf.php'));
+        $coverage = $this->getTestResultObject()->getCodeCoverage();
+        $mode = $blocked ? 'blocked' : 'success';
+        $command = $coverage === null ? array(PHP_BINARY, $root . '/cli/refresh_csrf.php')
+            : CsrfRotationCoverage::prepare($repository, $root, $root . '/keys/working.php', $mode);
+        $result = test_php_run($command);
         expect($result['status'])->toBe($blocked ? 1 : 0)
             ->and($result['err'])->toBe('')
             ->and($result['out'])->not->toContain('working-fixture-secret')
@@ -297,7 +308,9 @@ PHP;
                 ->and(preg_match('/\A<\?php \$secret = \'[0-9a-f]{64}\';\R\z/', $contents))->toBe(1)
                 ->and(fileperms($root . '/keys/working.php') & 0777)->toBe(0640);
         }
+        CsrfRotationCoverage::merge($coverage, $repository, $root, $mode);
     } finally {
+        CsrfRotationCoverage::cleanup($root);
         chmod($root . '/keys', 0700);
         foreach (array('/cli/refresh_csrf.php', '/include/cli_check.php', '/lib/poller.php', '/lib/utility.php', '/keys/working.php') as $file) {
             if (file_exists($root . $file)) {

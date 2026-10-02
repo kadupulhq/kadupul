@@ -197,8 +197,13 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
             $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
             $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
         }
-        if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
+        $serializedCoverage = serialize($childCoverage);
+        if (file_put_contents($childCoverageFile, $serializedCoverage) !== strlen($serializedCoverage)) {
             throw new RuntimeException('Unable to preserve child process coverage');
+        }
+        if (defined('CSRF_ROTATION_TEST_COVERAGE')) {
+            require_once dirname(__DIR__) . '/Helpers/CsrfRotationCoverage.php';
+            CsrfRotationCoverage::record($childCoverageFile, dirname(__DIR__, 2));
         }
     });
 });
