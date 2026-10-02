@@ -21,6 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CLASSIFIER = Path(__file__).resolve().parent / 'classify_entry_points.php'
+CLASSIFIER_TIMEOUT_SECONDS = 120
 
 
 def git_files(pattern, root=None):
@@ -155,8 +156,11 @@ def plugin_realms(root):
 def classify(root, files, served):
     """Rows for the served files and the Symfony routes, from the PHP classifier."""
     request = {'root': str(root), 'files': files, 'served': served, 'plugin_realms': plugin_realms(root)}
-    proc = subprocess.run([os.environ.get('PHP', 'php'), str(CLASSIFIER)], input=json.dumps(request),
-                          capture_output=True, text=True)
+    try:
+        proc = subprocess.run([os.environ.get('PHP', 'php'), str(CLASSIFIER)], input=json.dumps(request),
+                              capture_output=True, text=True, timeout=CLASSIFIER_TIMEOUT_SECONDS)
+    except subprocess.TimeoutExpired as error:
+        raise SystemExit('ERROR: classify_entry_points.php timed out after %d seconds' % CLASSIFIER_TIMEOUT_SECONDS) from error
     if proc.returncode != 0:
         raise SystemExit(proc.stderr.strip() or 'ERROR: classify_entry_points.php exited %d' % proc.returncode)
     return [tuple(row) for row in json.loads(proc.stdout)['rows']]
