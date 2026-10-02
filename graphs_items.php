@@ -5,6 +5,7 @@
  */
 
 include('./include/auth.php');
+require_once(__DIR__ . '/lib/graph_item_editor.php');
 include_once('./lib/poller.php');
 include_once('./lib/utility.php');
 
@@ -86,74 +87,14 @@ function form_save()
         get_filter_request_var('local_graph_template_item_id');
         /* ==================================================== */
 
-        $items[0] = array();
-
-        if ($graph_item_types[get_nfilter_request_var('graph_type_id')] == 'LEGEND') {
-            /* this can be a major time saver when creating lots of graphs with the typical
-            GPRINT LAST/AVERAGE/MAX legends */
-            $items = array(
-                0 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '4',
-                    'text_format' => 'Cur:',
-                    'hard_return' => ''
-                ),
-                1 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '1',
-                    'text_format' => 'Avg:',
-                    'hard_return' => ''
-                ),
-                2 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '3',
-                    'text_format' => 'Max:',
-                    'hard_return' => 'on'
-                ));
-        } elseif ($graph_item_types[get_nfilter_request_var('graph_type_id')] == 'LEGEND_CAMM') {
-            /* this can be a major time saver when creating lots of graphs with the typical
-               GPRINT LAST/AVERAGE/MAX legends */
-            $items = array(
-                0 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '4',
-                    'text_format' => __('Cur:'),
-                    'hard_return' => ''
-                ),
-                1 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '1',
-                    'text_format' => __('Avg:'),
-                    'hard_return' => ''
-                ),
-                2 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '2',
-                    'text_format' => __('Min:'),
-                    'hard_return' => ''
-                ),
-                3 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '3',
-                    'text_format' => __('Max:'),
-                    'hard_return' => 'on'
-                )
-            );
-        }
+        $items = graph_item_editor_legend_items($graph_item_types[get_nfilter_request_var('graph_type_id')], $graph_item_types[get_nfilter_request_var('graph_type_id')] !== 'LEGEND');
 
         $sequence = get_nfilter_request_var('sequence');
 
         foreach ($items as $item) {
             /* generate a new sequence if needed */
             if (empty($sequence)) {
-                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', 'local_graph_id=' . get_nfilter_request_var('local_graph_id'));
+                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', array('local_graph_id' => get_nfilter_request_var('local_graph_id')));
             }
             $save['id']                           = get_nfilter_request_var('graph_template_item_id');
             $save['graph_template_id']            = get_nfilter_request_var('graph_template_id');
@@ -243,7 +184,7 @@ function item_movedown()
     if ((!empty($next_id)) && (isset($arr[get_request_var('id')]))) {
         move_graph_group(get_request_var('id'), $arr, $next_id, 'next');
     } elseif (preg_match('/(GPRINT|VRULE|HRULE|COMMENT)/', $graph_item_types[db_fetch_cell_prepared('SELECT graph_type_id FROM graph_templates_item WHERE id = ?', array(get_request_var('id')))])) {
-        move_item_down('graph_templates_item', get_request_var('id'), 'local_graph_id=' . get_request_var('local_graph_id'));
+        move_item_down('graph_templates_item', get_request_var('id'), array('local_graph_id' => get_request_var('local_graph_id')));
     }
 }
 
@@ -262,7 +203,7 @@ function item_moveup()
     if ((!empty($previous_id)) && (isset($arr[get_request_var('id')]))) {
         move_graph_group(get_request_var('id'), $arr, $previous_id, 'previous');
     } elseif (preg_match('/(GPRINT|VRULE|HRULE|COMMENT)/', $graph_item_types[db_fetch_cell_prepared('SELECT graph_type_id FROM graph_templates_item WHERE id = ?', array(get_request_var('id')))])) {
-        move_item_up('graph_templates_item', get_request_var('id'), 'local_graph_id=' . get_request_var('local_graph_id'));
+        move_item_up('graph_templates_item', get_request_var('id'), array('local_graph_id' => get_request_var('local_graph_id')));
     }
 }
 
@@ -687,6 +628,22 @@ function item_edit()
 		case '4': // LINE1
 		case '5': // LINE2
 		case '6': // LINE3
+			$('#row_task_item_id').show();
+			$('#row_color_id').show();
+			$('#row_line_width').hide();
+			$('#row_dashes').show();
+			$('#row_dash_offset').show();
+			$('#row_textalign').hide();
+			$('#row_shift').show();
+			$('#row_alpha').show();
+			$('#row_consolidation_function_id').show();
+			$('#row_cdef_id').show();
+			$('#row_vdef_id').hide();
+			$('#row_value').hide();
+			$('#row_gprint_id').hide();
+			$('#row_text_format').show();
+			$('#row_hard_return').show();
+			break;
 		case '20': // LINE:STACK
 			$('#row_task_item_id').show();
 			$('#row_color_id').show();

@@ -5,6 +5,7 @@
  */
 
 include('./include/auth.php');
+require_once(__DIR__ . '/lib/graph_item_editor.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/template.php');
 include_once('./lib/utility.php');
@@ -107,75 +108,14 @@ function form_save()
 
         global $graph_item_types;
 
-        $items[0] = array();
-
-        if ($graph_item_types[get_nfilter_request_var('graph_type_id')] == 'LEGEND') {
-            /* this can be a major time saver when creating lots of graphs with the typical
-            GPRINT LAST/AVERAGE/MAX legends */
-            $items = array(
-                0 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '4',
-                    'text_format' => __('Cur:'),
-                    'hard_return' => ''
-                ),
-                1 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '1',
-                    'text_format' => __('Avg:'),
-                    'hard_return' => ''
-                ),
-                2 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '3',
-                    'text_format' => __('Max:'),
-                    'hard_return' => 'on'
-                )
-            );
-        } elseif ($graph_item_types[get_nfilter_request_var('graph_type_id')] == 'LEGEND_CAMM') {
-            /* this can be a major time saver when creating lots of graphs with the typical
-               GPRINT LAST/AVERAGE/MAX legends */
-            $items = array(
-                0 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '4',
-                    'text_format' => __('Cur:'),
-                    'hard_return' => ''
-                ),
-                1 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '1',
-                    'text_format' => __('Avg:'),
-                    'hard_return' => ''
-                ),
-                2 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '2',
-                    'text_format' => __('Min:'),
-                    'hard_return' => ''
-                ),
-                3 => array(
-                    'color_id' => '0',
-                    'graph_type_id' => '9',
-                    'consolidation_function_id' => '3',
-                    'text_format' => __('Max:'),
-                    'hard_return' => 'on'
-                )
-            );
-        }
+        $items = graph_item_editor_legend_items($graph_item_types[get_nfilter_request_var('graph_type_id')], true);
 
         $sequence = get_request_var('sequence');
 
         foreach ($items as $item) {
             /* generate a new sequence if needed */
             if (empty($sequence)) {
-                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0');
+                $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0));
             }
 
             $task_item_changed = true;
@@ -350,40 +290,15 @@ function form_save()
 
 function item_movedown()
 {
-    /* ================= input validation ================= */
-    get_filter_request_var('id');
-    get_filter_request_var('graph_template_id');
-    /* ==================================================== */
-
-    global $graph_item_types;
-
-    $arr        = get_graph_group(get_request_var('id'));
-    $next_id    = get_graph_parent(get_request_var('id'), 'next');
-
-    $graph_type = db_fetch_cell_prepared(
-        'SELECT graph_type_id
-		FROM graph_templates_item
-		WHERE id = ?',
-        array(get_request_var('id'))
-    );
-
-    $text_type  = $graph_item_types[$graph_type];
-
-    if (!empty($next_id) && isset($arr[get_request_var('id')])) {
-        move_graph_group(get_request_var('id'), $arr, $next_id, 'next');
-    } elseif (!preg_match('/(AREA|STACK|LINE)/', $text_type)) {
-        /* this is so we know the "other" graph item to propagate the changes to */
-        $next_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0', 'next');
-
-        move_item_down('graph_templates_item', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0');
-    }
-
-    if (!isempty_request_var('graph_template_id')) {
-        resequence_graphs_simple(get_request_var('graph_template_id'));
-    }
+    item_move('next');
 }
 
 function item_moveup()
+{
+    item_move('previous');
+}
+
+function item_move($direction)
 {
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -392,8 +307,8 @@ function item_moveup()
 
     global $graph_item_types;
 
-    $arr = get_graph_group(get_request_var('id'));
-    $next_id = get_graph_parent(get_request_var('id'), 'previous');
+    $arr        = get_graph_group(get_request_var('id'));
+    $next_id    = get_graph_parent(get_request_var('id'), $direction);
 
     $graph_type = db_fetch_cell_prepared(
         'SELECT graph_type_id
@@ -405,12 +320,13 @@ function item_moveup()
     $text_type  = $graph_item_types[$graph_type];
 
     if (!empty($next_id) && isset($arr[get_request_var('id')])) {
-        move_graph_group(get_request_var('id'), $arr, $next_id, 'previous');
+        move_graph_group(get_request_var('id'), $arr, $next_id, $direction);
     } elseif (!preg_match('/(AREA|STACK|LINE)/', $text_type)) {
         /* this is so we know the "other" graph item to propagate the changes to */
-        $last_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0', 'previous');
+        $next_item = get_item('graph_templates_item', 'sequence', get_request_var('id'), array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0), $direction);
 
-        move_item_up('graph_templates_item', get_request_var('id'), 'graph_template_id=' . get_request_var('graph_template_id') . ' AND local_graph_id=0');
+        $move = $direction === 'next' ? 'move_item_down' : 'move_item_up';
+        $move('graph_templates_item', get_request_var('id'), array('graph_template_id' => get_request_var('graph_template_id'), 'local_graph_id' => 0));
     }
 
     if (!isempty_request_var('graph_template_id')) {
@@ -721,7 +637,7 @@ function item_edit()
 			$('#row_data_template_id').show();
 			$('#row_task_item_id').show();
 			$('#row_color_id').show();
-			$('#row_line_width').show();
+			$('#row_line_width').hide();
 			$('#row_dashes').show();
 			$('#row_dash_offset').show();
 			$('#row_textalign').hide();
