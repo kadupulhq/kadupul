@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+use Kadupul\Platform\Infrastructure\Legacy\UtilityRows;
+
 include('./include/auth.php');
 
 cacti_require_post_actions(array(
@@ -1068,14 +1070,7 @@ function utilities_view_user_log()
 						<select id='rows'>
 							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
 							<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . '</option>';
-        }
-    }
+    UtilityRows::renderOptions($item_rows, get_request_var('rows'));
     ?>
 						</select>
 					</td>
@@ -1112,7 +1107,7 @@ function utilities_view_user_log()
 
     /* filter by username */
     if (get_request_var('username') == '-2') {
-        $sql_where = 'WHERE ul.username NOT IN (SELECT DISTINCT username FROM user_auth)';
+        $sql_where = 'WHERE NOT EXISTS (SELECT 1 FROM user_auth WHERE user_auth.id = ul.user_id AND user_auth.username = ul.username)';
     } elseif (get_request_var('username') != '-1') {
         $sql_where = 'WHERE ul.username = ?';
         $params[] = get_request_var('username');
@@ -1137,13 +1132,13 @@ function utilities_view_user_log()
         $params[] = '%' . get_request_var('filter') . '%';
     }
 
-    $total_rows = get_total_row_data($_SESSION['sess_user_id'], "SELECT COUNT(*) FROM user_auth AS ua RIGHT JOIN user_log AS ul ON ua.username=ul.username $sql_where", $params);
+    $total_rows = get_total_row_data($_SESSION['sess_user_id'], "SELECT COUNT(*) FROM user_auth AS ua RIGHT JOIN user_log AS ul ON ua.username=ul.username AND ua.id=ul.user_id $sql_where", $params);
 
     $user_log_sql = "SELECT ul.username, ua.full_name, ua.realm,
 		ul.time, ul.result, ul.ip
 		FROM user_auth AS ua
 		RIGHT JOIN user_log AS ul
-		ON ua.username=ul.username
+		ON ua.username=ul.username AND ua.id=ul.user_id
 		$sql_where
 		" . get_order_string() . "
 		LIMIT " . ($rows * (get_request_var('page') - 1)) . ',' . $rows;
@@ -1216,7 +1211,7 @@ function utilities_view_user_log()
 
 function utilities_clear_user_log()
 {
-    $users = db_fetch_assoc('SELECT DISTINCT username FROM user_auth');
+    $users = db_fetch_assoc('SELECT id, username FROM user_auth');
 
     if (cacti_sizeof($users)) {
         /* remove active users */
@@ -1224,27 +1219,30 @@ function utilities_clear_user_log()
             $total_login_rows = db_fetch_cell_prepared(
                 'SELECT COUNT(username)
 				FROM user_log
-				WHERE username = ?
+				WHERE user_id = ?
+				AND username = ?
 				AND result IN (1)',
-                array($user['username'])
+                array($user['id'], $user['username'])
             );
 
             $total_token_rows = db_fetch_cell_prepared(
                 'SELECT COUNT(username)
 				FROM user_log
-				WHERE username = ?
+				WHERE user_id = ?
+				AND username = ?
 				AND result IN (2)',
-                array($user['username'])
+                array($user['id'], $user['username'])
             );
 
             if ($total_login_rows > 1) {
                 db_execute_prepared(
                     'DELETE
 					FROM user_log
-					WHERE username = ?
+					WHERE user_id = ?
+					AND username = ?
 					AND result IN(1)
 					ORDER BY time LIMIT ' . ($total_login_rows - 1),
-                    array($user['username'])
+                    array($user['id'], $user['username'])
                 );
             }
 
@@ -1252,29 +1250,35 @@ function utilities_clear_user_log()
                 db_execute_prepared(
                     'DELETE
 					FROM user_log
-					WHERE username = ?
+					WHERE user_id = ?
+					AND username = ?
 					AND result IN(2)
 					ORDER BY time
 					LIMIT ' . ($total_token_rows - 1),
-                    array($user['username'])
+                    array($user['id'], $user['username'])
                 );
             }
 
             db_execute_prepared(
                 'DELETE
 				FROM user_log
-				WHERE username = ?
+				WHERE user_id = ?
+				AND username = ?
 				AND result = 0',
-                array($user['username'])
+                array($user['id'], $user['username'])
             );
         }
 
-        /* delete inactive users */
-        db_execute('DELETE
-			FROM user_log
-			WHERE user_id NOT IN (SELECT id FROM user_auth)
-			OR username NOT IN (SELECT username FROM user_auth)');
     }
+
+    /* delete inactive users, including when no accounts remain */
+    db_execute('DELETE
+			FROM user_log
+			WHERE NOT EXISTS (
+				SELECT 1 FROM user_auth
+				WHERE user_auth.id = user_log.user_id
+				AND user_auth.username = user_log.username
+			)');
 }
 
 function utilities_view_logfile()
@@ -2140,14 +2144,7 @@ function utilities_view_poller_cache()
 						<select id='rows'>
 							<option value='-1'<?php print (get_request_var('rows') == '-1' ? ' selected>' : '>') . __('Default');?></option>
 							<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . '</option>';
-        }
-    }
+    UtilityRows::renderOptions($item_rows, get_request_var('rows'));
     ?>
 						</select>
 					</td>
@@ -3108,14 +3105,7 @@ function snmpagent_utilities_run_cache()
 							<select id='rows'>
 								<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
 								<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . '</option>';
-        }
-    }
+    UtilityRows::renderOptions($item_rows, get_request_var('rows'));
     ?>
 							</select>
 						</td>
@@ -3387,14 +3377,7 @@ function snmpagent_utilities_run_eventlog()
 							<select id='rows'>
 								<option value='-1'<?php if (get_request_var('rows') == '-1') {?> selected<?php }?>><?php print __('Default');?></option>
 								<?php
-    if (cacti_sizeof($item_rows)) {
-        foreach ($item_rows as $key => $value) {
-            print "<option value='" . $key . "'";
-            if (get_request_var('rows') == $key) {
-                print ' selected';
-            } print '>' . html_escape($value) . '</option>';
-        }
-    }
+    UtilityRows::renderOptions($item_rows, get_request_var('rows'));
     ?>
 							</select>
 						</td>
@@ -3430,7 +3413,7 @@ function snmpagent_utilities_run_eventlog()
 
     /* filter by search string */
     if (get_request_var('filter') != '') {
-        $sql_where .= ' AND (`varbinds` LIKE ' . db_qstr('%' . get_request_var('filter') . '%');
+        $sql_where .= ' AND (`varbinds` LIKE ' . db_qstr('%' . get_request_var('filter') . '%') . ')';
     }
 
     $sql_where .= ' ORDER by `time` DESC';
