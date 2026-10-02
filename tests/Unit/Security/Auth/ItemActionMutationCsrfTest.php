@@ -60,8 +60,7 @@ function db_fetch_assoc(...$args) { handler_reached(); }
 function db_fetch_assoc_prepared(...$args) { handler_reached(); }
 function db_column_exists(...$args) { handler_reached(); }
 function raise_message(...$args) { handler_reached(); }
-// include/global.php loads lib/functions.php and lib/snmpagent.php; color.php
-// calls color_remove() although no file defines it.
+// Legacy global includes load the helpers supplied by this isolated fixture.
 function enable_device_debug($host_id) { handler_reached(); }
 function disable_device_debug($host_id) { handler_reached(); }
 function snmpagent_cache_rebuilt() { handler_reached(); }
@@ -123,6 +122,8 @@ PHP;
 }
 
 // External-link actions are covered by the Symfony Link presentation tests.
+// Palette and VDEF now use Symfony. Their presentation and authorization tests
+// cover legacy URL rejection, GET editors, POST mutations and CSRF failures.
 function itemActionCases()
 {
     return array(
@@ -168,9 +169,6 @@ function itemActionCases()
         array('host_templates.php', 'item_remove_dq', array()),
         array('tree.php', 'tree_up', array()),
         array('tree.php', 'tree_down', array()),
-        array('vdef.php', 'item_moveup', array()),
-        array('vdef.php', 'item_movedown', array()),
-        array('vdef.php', 'item_remove', array()),
         array('host.php', 'gt_add', array('host_id' => '1')),
         array('host.php', 'gt_remove', array('host_id' => '1')),
         array('host.php', 'query_add', array('host_id' => '1', 'reindex_method' => '1')),
@@ -194,7 +192,6 @@ function itemActionCases()
         array('tree.php', 'unlock', array()),
         array('tree.php', 'ajax_dnd', array('tree_ids' => array('line1', 'line2'))),
         array('cdef.php', 'ajax_dnd', array('cdef_item' => array('line1', 'line2'))),
-        array('vdef.php', 'ajax_dnd', array('vdef_item' => array('line1', 'line2'))),
         array('automation_snmp.php', 'ajax_dnd', array('snmp_item' => array('line1', 'line2'))),
         array('automation_templates.php', 'ajax_dnd', array('template_ids' => array('line1', 'line2'))),
         array('color_templates_items.php', 'ajax_dnd', array('color_item' => array('line1', 'line2'))),
@@ -204,7 +201,6 @@ function itemActionCases()
         array('data_sources.php', 'ds_enable', array()),
         array('data_sources.php', 'ds_disable', array()),
         array('data_input.php', 'field_remove', array('data_input_id' => '1')),
-        array('color.php', 'remove', array()),
         array('utilities.php', 'clear_poller_cache', array()),
         array('utilities.php', 'rebuild_resource_cache', array()),
         // utilities_clear_logfile() draws the page header before it truncates the log.
@@ -238,8 +234,7 @@ test('item editors and lists still open by GET', function ($controller, $action)
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
     array('graphs_items.php', 'item_edit'), array('graph_templates_items.php', 'item_edit'),
     array('host_templates.php', 'edit'), array('tree.php', 'edit'),
-    array('vdef.php', 'item_edit'),
-    array('host.php', 'edit'), array('data_input.php', 'field_edit'), array('color.php', 'edit'),
+    array('host.php', 'edit'), array('data_input.php', 'field_edit'),
     array('utilities.php', 'view_user_log'),
 ));
 
@@ -335,7 +330,7 @@ test('no page triggers ajax_dnd or query_reload by GET', function () {
 
     expect($offenders)->toBe(array());
 
-    foreach (array('cdef.php', 'vdef.php', 'automation_snmp.php', 'automation_templates.php', 'color_templates.php', 'tree.php') as $file) {
+    foreach (array('cdef.php', 'automation_snmp.php', 'automation_templates.php', 'color_templates.php', 'tree.php') as $file) {
         expect(file_get_contents($root . '/' . $file))
             ->toMatch("/loadPageUsingPost(?:Checked)?\\('[a-z_]+\\.php\\?action=ajax_dnd.*?', \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
     }
