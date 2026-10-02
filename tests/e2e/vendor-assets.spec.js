@@ -142,6 +142,26 @@ test("spike removal and dry-run requests carry POST tokens", async ({ page }) =>
   expect(requests[1].url).toContain("dryrun=true");
 });
 
+test("DOMPurify refuses to return an in-place raw-text root selected for removal", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("style");
+    root.textContent = "</style><img src=x onerror=alert(1)>";
+    document.body.append(root);
+    let message;
+    try {
+      DOMPurify.sanitize(root, { IN_PLACE: true, ADD_TAGS: ["style"] });
+    } catch (error) {
+      message = error.message;
+    }
+    return { message, connected: root.isConnected };
+  });
+  expect(result).toEqual({
+    message: "a node selected for removal could not be safely returned; refusing to sanitize in place",
+    connected: false,
+  });
+});
+
 test("DOMPurify abort clears shadow and template trees and unsafe URI attributes", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {
@@ -249,7 +269,7 @@ test("D3 quantileIndex ignores invalid members while retaining original indexes"
 
 test("DOMPurify final template scrub includes a template root", async ({ page }) => {
   const source = fs.readFileSync(path.resolve(__dirname, "../../include/js/purify.js"), "utf8");
-  const anchor = "    DOMPurify.setConfig = function () {";
+  const anchor = "DOMPurify.setConfig = function() {";
   expect(source.split(anchor)).toHaveLength(2);
   await page.addScriptTag({ content: source.replace(anchor, "    DOMPurify.testTemplateScrub = _scrubTemplateExpressions2;\n" + anchor) });
   const result = await page.evaluate(() => {
@@ -325,7 +345,7 @@ test("DOMPurify final template scrub handles deeply nested fragments without rec
   // Expose the production closure only in this isolated test, exercising the final
   // scrub independently of the separate element-sanitization traversal.
   const source = fs.readFileSync(path.resolve(__dirname, "../../include/js/purify.js"), "utf8");
-  const anchor = "    DOMPurify.setConfig = function () {";
+  const anchor = "DOMPurify.setConfig = function() {";
   expect(source.split(anchor)).toHaveLength(2);
   await page.addScriptTag({ content: source.replace(anchor, "    DOMPurify.testTemplateScrub = _scrubTemplateExpressions2;\n" + anchor) });
   const result = await page.evaluate(() => {
@@ -722,7 +742,7 @@ test("DOMPurify keeps harmless markup and strips executable HTML and SVG", async
     };
   });
   expect(result).toEqual({
-    version: "3.4.15",
+    version: "3.4.16",
     text: "safe",
     scripts: 0,
     handlers: 0,
@@ -818,4 +838,88 @@ test("D3 retains the browser global, scales and SVG rendering", async ({
     };
   });
   expect(result).toEqual({ version: "7.9.0", cx: "50" });
+});
+
+async function loadMidwinter(page, file) {
+  await page.addScriptTag({
+    path: path.resolve(__dirname, "../../include/themes/midwinter/vendor", file),
+  });
+}
+
+test("Midwinter hotkeys keeps the theme's key names in handler.key", async ({
+  page,
+}) => {
+  await page.setContent('<input id="field" type="text">');
+  await loadMidwinter(page, "hotkeys/hotkeys.js");
+  await page.evaluate(() => {
+    window.seen = [];
+    hotkeys("SHIFT+c,c+t, SHIFT+g, ESC", (event, handler) => {
+      window.seen.push(handler.key);
+    });
+  });
+  await page.keyboard.press("Shift+KeyC");
+  await page.keyboard.press("Shift+KeyG");
+  await page.keyboard.press("Escape");
+  await page.keyboard.down("KeyC");
+  await page.keyboard.press("KeyT");
+  await page.keyboard.up("KeyC");
+  expect(await page.evaluate(() => window.seen)).toEqual([
+    "SHIFT+c",
+    "SHIFT+g",
+    "ESC",
+    "c+t",
+  ]);
+});
+
+test("Midwinter hotkeys ignores typing in inputs and stops after unbind", async ({
+  page,
+}) => {
+  await page.setContent('<input id="field" type="text">');
+  await loadMidwinter(page, "hotkeys/hotkeys.js");
+  await page.evaluate(() => {
+    window.count = 0;
+    hotkeys("SHIFT+k", () => window.count++);
+  });
+  await page.focus("#field");
+  await page.keyboard.press("Shift+KeyK");
+  expect(await page.inputValue("#field")).toBe("K");
+  await page.evaluate(() => document.activeElement.blur());
+  await page.keyboard.press("Shift+KeyK");
+  await page.evaluate(() => hotkeys.unbind("SHIFT+k"));
+  await page.keyboard.press("Shift+KeyK");
+  expect(await page.evaluate(() => window.count)).toBe(1);
+});
+
+test("Midwinter UAParser identifies the client and tolerates unknown agents", async ({
+  page,
+}) => {
+  await loadMidwinter(page, "ua-parser/ua-parser.js");
+  const result = await page.evaluate(() => {
+    const pick = (ua) => {
+      const env = new UAParser(ua).getResult();
+      return { browser: env.browser.name, os: env.os.name };
+    };
+    return {
+      defaultsToNavigator: new UAParser().getResult().ua === navigator.userAgent,
+      chrome: pick(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      ),
+      firefox: pick(
+        "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0",
+      ),
+      unknown: pick("not-a-browser"),
+      // An empty string falls back to navigator.userAgent, as dialog_client relies on.
+      emptyIsCurrent:
+        JSON.stringify(pick("")) === JSON.stringify(pick(navigator.userAgent)),
+      libVersion: UAParser.VERSION,
+    };
+  });
+  expect(result).toEqual({
+    defaultsToNavigator: true,
+    chrome: { browser: "Chrome", os: "Windows" },
+    firefox: { browser: "Firefox", os: "Linux" },
+    unknown: { browser: undefined, os: undefined },
+    emptyIsCurrent: true,
+    libVersion: "1.0.41",
+  });
 });

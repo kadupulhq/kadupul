@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -13,7 +14,8 @@ function themeReady() {
 
 	keepWindowSize();
 
-	$(window).unbind().resize(function(event) {
+	// A bare unbind() here also removed the handlers layout.js binds on window
+	$(window).off('resize.classicTheme').on('resize.classicTheme', function(event) {
 		if (pageName == 'graph_view.php') {
 			treeWidth    = $('#navigation').width();
 			totalWidth   = $('body').width();
