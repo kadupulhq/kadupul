@@ -4,6 +4,7 @@
 import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
 import { syncAssets } from './sync.mjs';
 import { installFontAwesome } from './fontawesome.mjs';
+import { versionCssImports } from './css-imports.mjs';
 
 const manifest = JSON.parse(await readFile(new URL('./assets.json', import.meta.url)));
 const root = new URL('../../', import.meta.url);
@@ -47,3 +48,6 @@ const icons = await installFontAwesome(
   new URL('include/fa/', root),
 );
 console.log(`Font Awesome ${icons.version}: stylesheet and ${icons.fonts.length} fonts installed`);
+
+await versionCssImports(new URL('include/themes/midwinter/main.css', root));
+console.log('Midwinter: source CSS import versions refreshed');
