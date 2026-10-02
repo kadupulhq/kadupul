@@ -131,3 +131,49 @@ for (const mode of ['', 'nonce']) {
     expect(requests[0].body).toBeNull();
   });
 }
+
+for (const mode of ['', 'nonce']) {
+  test(`native XHR normalizes lowercase POST under ${mode || 'default'} CSP`, async ({ page }) => {
+    const policy = execFileSync('php', ['-r',
+      'require $argv[1]; echo CactiSecureHeaders::buildCspPolicy($argv[2], $argv[3], "https://other.example");',
+      path.join(root, 'lib/headers_secure.php'), mode, nonce], { encoding: 'utf8' });
+    const requests = [];
+    await page.route('**/*', async route => {
+      const request = route.request();
+      const url = new URL(request.url());
+      if (url.pathname === '/xhr-fixture') {
+        await route.fulfill({ contentType: 'text/html', headers: { 'Content-Security-Policy': policy }, body: `
+          <!doctype html><html><body>
+          <script nonce="${nonce}">
+            var csrfMagicName = '__csrf_magic', csrfMagicToken = '${token}';
+            window.violations = [];
+            document.addEventListener('securitypolicyviolation', event => violations.push(event.violatedDirective));
+          </script>
+          <script nonce="${nonce}" src="/xhr-csrf.js"></script>
+          </body></html>` });
+      } else if (url.pathname === '/xhr-csrf.js') {
+        await route.fulfill({ contentType: 'application/javascript', body: readFileSync(path.join(root, 'include/vendor/csrf/csrf-magic.js')) });
+      } else {
+        requests.push({ url: request.url(), method: request.method(), body: request.postData() });
+        await route.fulfill({ contentType: 'text/plain', body: 'ok', headers: { 'Access-Control-Allow-Origin': origin } });
+      }
+    });
+    await page.goto(`${origin}/xhr-fixture`);
+    await page.evaluate(async () => {
+      for (const url of ['/xhr-local', 'https://other.example/xhr-foreign']) {
+        await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('post', url);
+          xhr.onload = resolve;
+          xhr.onerror = reject;
+          xhr.send('action=save');
+        });
+      }
+    });
+    expect(requests).toHaveLength(2);
+    expect(requests[0].method).toBe('POST');
+    expect(new URLSearchParams(requests[0].body).get('__csrf_magic')).toBe(token);
+    expect(requests[1]).toEqual({ url: 'https://other.example/xhr-foreign', method: 'POST', body: 'action=save' });
+    expect(await page.evaluate(() => violations)).toEqual([]);
+  });
+}
