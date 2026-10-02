@@ -52,28 +52,21 @@ if (isset($config['path_csrf_secret'])) {
     $path_csrf_secret = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
 }
 
-if (!file_exists($path_csrf_secret)) {
-    print "WARNING: csrf_secret.php file does not exist!" . PHP_EOL;
-} elseif (!is_writable($path_csrf_secret)) {
-    print "FATAL: unable to unlink csrf_secret.php!" . PHP_EOL;
+// Generate before touching the working key; entropy failure must preserve it.
+try {
+    $new_secret = csrf_generate_secret();
+} catch (Throwable $error) {
+    print "FATAL: Unable to generate a new CSRF secret." . PHP_EOL;
     exit(1);
-} else {
-    print "NOTE: Removing old csrf_secret.php file." . PHP_EOL;
-    unlink($path_csrf_secret);
 }
 
-$new_secret = csrf_generate_secret();
-if (csrf_writable($path_csrf_secret)) {
-    umask(0027);
-    $fh = fopen($path_csrf_secret, 'w');
-    fwrite($fh, '<?php $secret = "' . $new_secret . '";' . PHP_EOL);
-    fclose($fh);
-    print "NOTE: New csrf_secret.php file written." . PHP_EOL;
-    exit(0);
-} else {
+if (!csrf_write_secret($path_csrf_secret, $new_secret)) {
     print "FATAL: Unable to write new csrf_secret.php file." . PHP_EOL;
     exit(1);
 }
+
+print "NOTE: New csrf_secret.php file written." . PHP_EOL;
+exit(0);
 
 /*  display_version - displays version information */
 function display_version()
