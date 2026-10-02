@@ -8,19 +8,25 @@ app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness pro
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/assign/{kind}	symfony:inventory_device_bulk_assignment	methods=GET|HEAD|POST requirements=kind=site|template|collector; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/new	symfony:inventory_device_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/remove	symfony:inventory_device_remove	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}	symfony:inventory_device_details	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/collector	symfony:inventory_device_collector	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/edit	symfony:inventory_device_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/template	symfony:inventory_device_template	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
-app.php/inventory/devices/{operation}	symfony:inventory_device_state	methods=GET|HEAD|POST requirements=operation=enable|disable|clear-statistics; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{operation}	symfony:inventory_device_state	methods=GET|HEAD|POST requirements=operation=enable|disable|clear-statistics|sync-template|options; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites	symfony:inventory_sites	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites.json	symfony:inventory_sites_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/legacy	symfony:inventory_sites_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/new	symfony:inventory_site_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/{id}/edit	symfony:inventory_site_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/{operation}	symfony:inventory_site_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 3
+app.php/links	symfony:navigation_links	methods=GET|HEAD; ConsoleAccess realm 8
+app.php/links/action/{operation}	symfony:navigation_link_action	methods=GET|HEAD|POST requirements=operation=delete|enable|disable|up|down; ConsoleAccess realm 8
+app.php/links/legacy	symfony:navigation_links_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
+app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
 auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 783892662d44
@@ -81,10 +87,10 @@ include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at 80bc6
 include/global.php	web-server-denied	nginx; apache .htaccess
 include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 68f2974f3548; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
-include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 9fdc825797b5; included by include/global.php
+include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at aadb66a8a7cc; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 0db939a69dc9; included by auth_changepassword.php, auth_login.php, graph_realtime.php
-include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 0e36496c6cea; included by include/global.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at c283385e45ca; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only
@@ -104,7 +110,6 @@ include/themes/midwinter/default/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/images/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
-include/themes/midwinter/update_hash.php	cli-only	guard: php_sapi_name() check
 include/themes/modern/default/index.php	anonymous-allowed	redirect-only
 include/themes/modern/images/index.php	anonymous-allowed	redirect-only
 include/themes/modern/index.php	anonymous-allowed	redirect-only
@@ -188,13 +193,15 @@ install/upgrades/1_2_26.php	anonymous-allowed	inert: declarations and literal as
 install/upgrades/1_2_27.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_3.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_31.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_33.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_34.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/index.php	anonymous-allowed	redirect-only
 lib/	web-server-denied	nginx; apache .htaccess
 link.php	realm:10000+id	own realm check per external link id; reviewed at 929a564cf868
-links.php	realm:15	include/auth.php
+links.php	symfony:forward	forwards to app.php/links/legacy
 locales/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 locales/index.php	anonymous-allowed	redirect-only
 locales/po/index.php	anonymous-allowed	redirect-only
@@ -219,7 +226,7 @@ poller_rrdcheck.php	cli-only	guard: include/cli_check.php
 poller_spikekill.php	cli-only	guard: include/cli_check.php
 pollers.php	realm:3	include/auth.php
 public/index.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
-remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at 5d7a425129b8
+remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at a623320051ce
 reports_admin.php	realm:21	include/auth.php
 reports_user.php	realm:22	include/auth.php
 resource/index.php	anonymous-allowed	redirect-only

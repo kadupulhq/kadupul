@@ -1,0 +1,86 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+test('production graph item editors preserve fixed widths and source associations', function ($script, $mode) {
+    $root = dirname(__DIR__, 2);
+    $dir = sys_get_temp_dir() . '/graph-item-native-' . bin2hex(random_bytes(8));
+    mkdir($dir, 0700);
+    mkdir($dir . '/include', 0700);
+    mkdir($dir . '/lib', 0700);
+    copy($root . '/' . $script, $dir . '/' . $script);
+    foreach (array('poller', 'utility', 'api_data_source', 'template') as $name) {
+        file_put_contents($dir . '/lib/' . $name . '.php', '<?php');
+    }
+    file_put_contents($dir . '/lib/graph_item_editor.php', '<?php require_once ' . var_export($root . '/lib/graph_item_editor.php', true) . ';');
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $bootstrap = '<?php define("GRAPH_ITEM_EDITOR_TEST_COVERAGE", true); ';
+    if ($coverage !== null) {
+        foreach (array('RRD_TEST_COVERAGE_DIRECTORY' => $dir, 'RRD_TEST_CLI_COVERAGE_COPY' => $dir . '/' . $script, 'RRD_TEST_CLI_COVERAGE_SOURCE' => $root . '/' . $script) as $name => $value) {
+            $bootstrap .= 'define(' . var_export($name, true) . ',' . var_export($value, true) . ');';
+        }
+        $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/graph-item-native-bootstrap.php', true) . ';';
+    file_put_contents($dir . '/include/auth.php', $bootstrap);
+    try {
+        $process = proc_open(array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'display_errors=stderr', '-d', 'pcov.directory=/', $dir . '/' . $script), array(1 => array('pipe','w'), 2 => array('pipe','w')), $pipes, $dir, array_merge(getenv(), array('GRAPH_ITEM_TEST_MODE' => $mode, 'GRAPH_ITEM_TEST_ROOT' => $root)));
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $this->assertSame(0, proc_close($process), $error);
+        expect($error)->toBe('');
+        list($body, $json) = explode("\nRESULT:", $output);
+        $calls = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        if ($mode === 'save' || str_starts_with($mode, 'save-')) {
+            $saves = array_values(array_filter($calls, static function ($call) {
+                return $call[0] === 'save';
+            }));
+            $type = $mode === 'save' ? 4 : (int) substr($mode, 5);
+            expect($saves)->toHaveCount($type === 10 ? 3 : ($type === 15 ? 4 : 1));
+            foreach ($saves as $save) {
+                expect($save[1]['line_width'])->toBe($type === 20 ? '2.50' : ($type >= 4 && $type <= 6 ? $type - 3 : 0))
+                    ->and($save[1]['task_item_id'])->toBe(6);
+            }
+            if ($type === 10 || $type === 15) {
+                expect(array_column(array_column($saves, 1), 'consolidation_function_id'))->toBe($type === 10 ? array('4', '1', '3') : array('4', '1', '2', '3'));
+                expect(end($saves)[1]['hard_return'])->toBe('on');
+                expect($saves[0][1]['text_format'])->toBe($script === 'graphs_items.php' && $type === 10 ? 'Cur:' : 'translated:Cur:');
+            }
+        } elseif ($mode === 'item_edit') {
+            $forms = array_values(array_filter($calls, static function ($call) {
+                return $call[0] === 'form';
+            }));
+            expect($forms)->toHaveCount(1)->and($forms[0][1]['fields']['line_width']['value'])->toBe('1');
+            expect($body)->toContain("$('#row_line_width').hide();")->and($body)->toContain("$('#row_line_width').show();");
+        } elseif (str_starts_with($mode, 'item_move')) {
+            expect($calls)->toHaveCount(1);
+            $direction = str_starts_with($mode, 'item_moveup') ? 'previous' : 'next';
+            if (str_ends_with($mode, '-single')) {
+                expect($calls[0][0])->toBe('move-single')->and($calls[0][1])->toBe($direction);
+            } else {
+                expect($calls[0][0])->toBe('move')->and($calls[0][1][3])->toBe($direction);
+            }
+        } else {
+            expect($body)->toContain('First')->and($body)->toContain('Second')->and($body)->toContain('Third');
+        }
+        if ($coverage !== null) {
+            foreach (glob($dir . '/*.coverage') as $report) {
+                $coverage->merge(unserialize(file_get_contents($report)));
+            }
+        }
+    } finally {
+        foreach (array('/include','/lib','') as $suffix) {
+            foreach (glob($dir . $suffix . '/*') as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            } rmdir($dir . $suffix);
+        }
+    }
+})->with(array(
+    array('graph_templates_items.php', 'item_moveup-single'), array('graph_templates_items.php', 'item_movedown-single'),
+    array('graphs_items.php', 'save-5'), array('graphs_items.php', 'save-6'), array('graphs_items.php', 'save-20'), array('graphs_items.php', 'save-10'), array('graphs_items.php', 'save-15'),
+    array('graph_templates_items.php', 'save-5'), array('graph_templates_items.php', 'save-6'), array('graph_templates_items.php', 'save-20'), array('graph_templates_items.php', 'save-10'), array('graph_templates_items.php', 'save-15'),array('graphs_items.php','save'),array('graphs_items.php','item_edit'),array('graph_templates_items.php','save'),array('graph_templates_items.php','item_edit'),array('graph_templates_items.php','ajax_data_sources'),array('graph_templates_items.php','item_moveup'),array('graph_templates_items.php','item_movedown')));
