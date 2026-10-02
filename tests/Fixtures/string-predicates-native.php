@@ -103,4 +103,9 @@ clearstatcache();
 foreach ($sources as $path => $contents) {
     $result['replicated'][$path] = [file_get_contents($directory . '/' . $path) === $contents, fileperms($directory . '/' . $path) & 0777];
 }
-file_put_contents($directory . '/result.json', json_encode($result, JSON_THROW_ON_ERROR));
+$encodedResult = json_encode($result, JSON_THROW_ON_ERROR);
+if (file_put_contents($directory . '/result.json', $encodedResult) !== strlen($encodedResult)
+    || file_get_contents($directory . '/result.json') !== $encodedResult) {
+    throw new RuntimeException('Native result persistence was not confirmed');
+}
+define('NATIVE_COVERAGE_COMPLETED', ['native-result-persisted']);
