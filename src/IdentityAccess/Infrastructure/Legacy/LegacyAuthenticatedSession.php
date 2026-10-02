@@ -9,14 +9,21 @@ namespace Kadupul\IdentityAccess\Infrastructure\Legacy;
 
 use Kadupul\IdentityAccess\Application\Port\AuthenticatedSession;
 use Kadupul\IdentityAccess\Contract\Actor;
+use Kadupul\IdentityAccess\Contract\AuthenticatedAccess;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
-final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess
+final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess, AuthenticatedAccess
 {
     public function __construct(private SharedSession $session, private DatabaseConnection $database) {}
 
     public function consoleActor(): ?Actor
+    {
+        $actor = $this->authenticatedActor();
+        return $actor !== null && $this->hasRealm($actor->id, 8) ? $actor : null;
+    }
+
+    public function authenticatedActor(): ?Actor
     {
         $snapshot = $this->session->read();
         $id = (int) ($snapshot['sess_user_id'] ?? 0);
@@ -41,7 +48,7 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
             return null;
         }
         $guest = $this->database->get()->query("SELECT value FROM settings WHERE name = 'guest_user'" . $this->readLock())->fetchColumn();
-        if ($id === (int) $guest || $user['username'] === $guest || !$this->hasRealm($id, 8)) {
+        if ($id === (int) $guest || $user['username'] === $guest) {
             return null;
         }
         return new Actor($id, $user['username']);

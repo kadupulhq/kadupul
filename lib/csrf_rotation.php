@@ -58,6 +58,10 @@ function cacti_rotate_database_csrf_secret(PDO $primary, string $secret, int $he
         if ($write === false || !$write->execute(array('csrf_secret', $secret))) {
             return false;
         }
+        $read = $primary->prepare('SELECT value FROM settings WHERE name = ?');
+        if ($read === false || !$read->execute(array('csrf_secret')) || $read->fetchColumn() !== $secret) {
+            return false;
+        }
         // The primary still commits independently. Collector failure cannot
         // roll it back, and must never be reported as complete propagation.
         $pollers = $primary->query('SELECT id, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(last_status) AS last_polled FROM poller WHERE id > 1 AND disabled=""');

@@ -28,11 +28,15 @@ jobs:
           node-version-file: .node-version
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
-          install_args: python@3.12.12
+          install_args: python@3.12.12 node@22.22.2
       - name: Build dependency-complete archive
         run: mise exec python@3.12.12 -- python tools/build-offline.py
       - name: Build isolated verification runtime
         run: docker build -f tests/behavior/Dockerfile -t kadupul-offline-verifier .
+      - name: Install pinned browser workflow test runtime
+        run: |
+          mise exec node@22.22.2 -- npm ci --ignore-scripts --no-audit --no-fund --prefix tests/e2e
+          mise exec node@22.22.2 -- node tests/e2e/node_modules/@playwright/test/cli.js install --with-deps chromium
       - name: Verify shared authentication over HTTP
         run: |
           mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py
