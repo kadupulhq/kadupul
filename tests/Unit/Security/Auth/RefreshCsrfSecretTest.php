@@ -71,20 +71,24 @@ function __($message,...$args) { return $message; }
 define('MESSAGE_LEVEL_WARN',2);define('MESSAGE_LEVEL_ERROR',3);
 function read_config_option($name, $force = false) { if($name==='poller_interval')return 300;return getenv('REFRESH_CSRF_STORE') === 'broken' ? '' : ($GLOBALS['stored'][$name] ?? ''); }
 require getenv('REFRESH_CSRF_ROOT') . '/include/csrf.php';
-register_shutdown_function(function () { echo 'PUSHED:' . (!empty($GLOBALS['pushed']) ? 'yes' : 'no') . ':STORED:' . (isset($GLOBALS['stored']['csrf_secret']) ? strlen($GLOBALS['stored']['csrf_secret']) : 0); });
+register_shutdown_function(function () { echo 'PUSHED:' . (!empty($GLOBALS['pushed']) ? 'yes' : 'no') . ':STORED:' . (isset($GLOBALS['stored']['csrf_secret']) ? strlen($GLOBALS['stored']['csrf_secret']) : 0); $secret = getenv('REFRESH_CSRF_SECRET'); if ($secret === '' || !file_exists($secret) || file_get_contents($secret) !== false) { $GLOBALS['nativeChildCoverageMarkers'][] = 'rotation-store-file-readback'; } });
 PHP;
     require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
     $bootstrap .= test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'set_config_option');
     file_put_contents($dir . '/include/cli_check.php', $bootstrap);
 
-    $coverage = $test->getTestResultObject()->getCodeCoverage();
-    $prelude = '';
-    if ($coverage !== null) {
-        $prelude = 'define("INSTALLER_CSRF_BOOTSTRAP_COVERAGE",true);'
-            . 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($dir, true) . ');'
-            . 'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($dir . '/cli/refresh_csrf.php', true) . ');'
-            . 'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/cli/refresh_csrf.php', true) . ');'
-            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    $identical = hash_equals(hash_file('sha256', $root . '/cli/refresh_csrf.php'), hash_file('sha256', $dir . '/cli/refresh_csrf.php'));
+    $registration = child_coverage_registration(
+        __FILE__,
+        $identical ? 'canonical-csrf-rotation' : 'injected-csrf-rotation-control',
+        array($scenario, hash_file('sha256', $dir . '/cli/refresh_csrf.php'), hash('sha256', $bootstrap)),
+        array('rotation-store-file-readback'),
+        $identical ? array('include/csrf.php', 'cli/refresh_csrf.php') : array('include/csrf.php'),
+        array('tests/Helpers/PhpSource.php')
+    );
+    if ($identical) {
+        $registration['collectorPrelude'] = 'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($dir . '/cli/refresh_csrf.php', true) . ');'
+            . 'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/cli/refresh_csrf.php', true) . ');';
     }
     $env = array(
         'REFRESH_CSRF_DIR' => $dir,
@@ -97,7 +101,7 @@ PHP;
 
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . '$_SERVER["argv"] = array("refresh_csrf.php"); require $argv[1];', $dir . '/cli/refresh_csrf.php'),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', '$_SERVER["argv"] = array("refresh_csrf.php"); require $argv[1];', $dir . '/cli/refresh_csrf.php'), $coverage_dir, $registration),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir,
@@ -108,11 +112,7 @@ PHP;
         fclose($pipes[1]);
         fclose($pipes[2]);
         $exit = proc_close($process);
-        if ($coverage !== null) {
-            foreach (glob($dir . '/*.coverage') as $report) {
-                $coverage->merge(unserialize(file_get_contents($report)));
-            }
-        }
+        child_coverage_collect($coverage_dir);
 
         return array(
             'exit' => $exit,
@@ -194,7 +194,7 @@ test('failed local settings persistence cannot update collectors or the active c
     file_put_contents($directory . '/lib/poller.php', '<?php');
     try {
         $program = 'require ' . var_export(dirname(__DIR__, 3) . '/Fixtures/config-propagation-native.php', true) . ';';
-        $process = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $directory, $mode), $coverage_dir), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $directory, $mode), $coverage_dir, child_coverage_registration(__FILE__, 'config-propagation', array($mode), array('config-propagation-readback'), array('lib/functions.php'), array('tests/Fixtures/config-propagation-native.php'))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);

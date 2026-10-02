@@ -72,7 +72,7 @@ $_POST = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_REQUEST : array();
 if (getenv('PAGE_FLAG_TOKEN') === 'valid') {
     $_POST['__csrf_magic'] = csrf_get_tokens();
 }
-register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
+register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); if (file_get_contents(getcwd() . '/cacti.log') !== false) { $GLOBALS['nativeChildCoverageMarkers'][] = 'page-status-log-readback'; } });
 PHP;
     file_put_contents($dir . '/include/auth.php', $auth);
 
@@ -84,9 +84,11 @@ PHP;
         'PAGE_FLAG_TOKEN' => $token,
     ) + getenv();
 
+    $registration = child_coverage_registration(__FILE__, 'page-flag-guard:' . $page, array($page, $method, $query, $headers, $token, $real, hash('sha256', $auth)), array('page-status-log-readback'), array($page, 'lib/html_utility.php'), array($page, 'include/global_constants.php'));
+    $registration['collectorPrelude'] = 'define("PAGE_FLAG_TEST_COVERAGE_SOURCE",' . var_export($root . '/' . $page, true) . ');';
     try {
         $process = proc_open(
-            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require $argv[1];', $root . '/' . $page), $coverage_dir),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', 'require $argv[1];', $root . '/' . $page), $coverage_dir, $registration),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir,

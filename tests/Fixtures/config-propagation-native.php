@@ -40,3 +40,5 @@ function poller_connect_to_remote($id)
 require dirname(__DIR__, 2) . '/lib/functions.php';
 $result = set_config_option('csrf_secret', 'replacement', true);
 echo json_encode(array('result' => $result, 'connections' => $connections, 'central' => $central->query("SELECT value FROM settings WHERE name='csrf_secret'")->fetchColumn(), 'collector' => $collector->query("SELECT value FROM settings WHERE name='csrf_secret'")->fetchColumn(), 'cache' => $web ? $_SESSION['sess_config_array']['csrf_secret'] : $config['config_options_array']['csrf_secret']), JSON_THROW_ON_ERROR);
+
+$GLOBALS['nativeChildCoverageMarkers'][] = 'config-propagation-readback';

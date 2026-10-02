@@ -57,12 +57,13 @@ register_shutdown_function(function () {
         'logs' => $GLOBALS['logs'],
         'session' => $_SESSION,
     ));
+    $GLOBALS['nativeChildCoverageMarkers'][] = 'secret-state-readback';
 });
 require $argv[1] . '/include/csrf.php';
 PHP;
 
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, json_encode($scenario)), $coverage_dir),
+        child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, json_encode($scenario)), $coverage_dir, child_coverage_registration(__FILE__, 'csrf-secret-source', array($scenario), array('secret-state-readback'), array('include/csrf.php'), array())),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );

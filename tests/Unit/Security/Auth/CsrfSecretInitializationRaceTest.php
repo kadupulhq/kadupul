@@ -33,11 +33,12 @@ function cacti_log(...$args){}
 register_shutdown_function(function()use($file){
  while(ob_get_level()>0){ob_end_clean();}
  print json_encode(array('returned'=>$GLOBALS['csrf']['secret'],'stored'=>read_config_option('csrf_secret'),'winner'=>$GLOBALS['winner']));
+ $GLOBALS['nativeChildCoverageMarkers'][] = 'winning-secret-readback';
  unlink($file);
 });
 require $argv[1].'/include/csrf.php';
 PHP;
-    $worker = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $initial), $coverage_dir), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $worker = proc_open(child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $initial), $coverage_dir, child_coverage_registration(__FILE__, 'secret-initialization-race', array($initial), array('winning-secret-readback'), array('include/csrf.php'), array())), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $output = stream_get_contents($pipes[1]);
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
