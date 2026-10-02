@@ -248,3 +248,79 @@ PHP;
         }
     }
 })->with(array('successful rotation' => array(false), 'unwritable publication directory' => array(true)));
+
+test('atomic rotation retains an existing reader ownership', function () {
+    [$stdout] = runCsrfMagicProbe(<<<'PHP'
+$path = $argv[2] . '/ownership.php';
+file_put_contents($path, '<?php $secret = "old-owned-key";');
+$group = filegroup($path);
+$alternate = null;
+foreach (posix_getgroups() as $candidate) {
+    if ($candidate !== $group) { $alternate = $candidate; break; }
+}
+if (posix_geteuid() === 0) {
+    chown($path, 65534);
+    $alternate = 65534;
+}
+if ($alternate === null || !@chgrp($path, $alternate)) {
+    echo json_encode(array('unsupported ownership setup'));
+} else {
+    clearstatcache(true, $path);
+    $owner = fileowner($path);
+    $group = filegroup($path);
+    $written = csrf_write_secret($path, csrf_generate_secret());
+    clearstatcache(true, $path);
+    echo json_encode(array($written, fileowner($path) === $owner, filegroup($path) === $group, glob($argv[2] . '/.csrf-secret-*')));
+}
+PHP);
+    $result = json_decode($stdout, true);
+    if ($result === array('unsupported ownership setup')) {
+        test()->markTestSkipped('The host cannot create an alternate reader ownership fixture');
+    }
+    expect($result)->toBe(array(true, true, true, array()));
+});
+
+test('configured failure callback redacts query values from the native log', function () {
+    require_once dirname(__DIR__, 3) . '/tests/Helpers/PhpSource.php';
+    $source = file_get_contents(dirname(__DIR__, 3) . '/include/csrf.php');
+    expect($source)->toBeString();
+    $callback = test_php_function_source($source, 'csrf_error_callback');
+    expect($callback)->toContain('function csrf_error_callback');
+    [$stdout, $log] = runCsrfMagicProbe($callback . <<<'PHP'
+require $argv[1] . '/include/global_constants.php';
+require $argv[1] . '/lib/functions.php';
+require $argv[1] . '/lib/html_utility.php';
+function __($message) { return $message; }
+$messages = array('csrf_timeout' => array('message' => 'Session expired', 'type' => 'error'));
+$config = array('url_path' => '/kadupul/');
+$_SERVER['SERVER_NAME'] = 'example.test';
+$_SERVER['SERVER_PORT'] = 80;
+session_start(array('save_path' => $argv[2], 'use_cookies' => 0));
+ob_start();
+csrf_conf('callback', 'csrf_error_callback');
+$GLOBALS['csrf']['callback']();
+PHP);
+    expect($stdout)->toBe('')
+        ->and($log)->toContain('Timeout, redirecting to /kadupul/graphs.php')
+        ->and($log)->not->toContain('probe-query-value');
+});
+
+
+test('unavailable reader ownership preserves the old key and removes only the owned temporary', function () {
+    if (!function_exists('posix_geteuid') || posix_geteuid() !== 0) {
+        test()->markTestSkipped('A privileged fixture is needed to create ownership this publisher cannot apply');
+    }
+    [$stdout] = runCsrfMagicProbe(<<<'PHP'
+$path = $argv[2] . '/unavailable-owner.php';
+$old = '<?php $secret = "working-owned-key";';
+file_put_contents($path, $old);
+chmod($path, 0666);
+chmod($argv[2], 0777);
+if (!posix_setgid(65534) || !posix_setuid(65534)) {
+    throw new RuntimeException('Could not enter the owned unprivileged fixture');
+}
+$result = csrf_write_secret($path, csrf_generate_secret());
+echo json_encode(array($result, file_get_contents($path) === $old, glob($argv[2] . '/.csrf-secret-*')));
+PHP);
+    expect(json_decode($stdout, true))->toBe(array(false, true, array()));
+});

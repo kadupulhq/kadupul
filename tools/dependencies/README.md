@@ -125,4 +125,4 @@ Upstream references: [phpseclib migration](https://phpseclib.com/docs/intro/migr
 [jQuery 4 migration](https://jquery.com/upgrade-guide/4.0/),
 [DOMPurify releases](https://github.com/cure53/DOMPurify/releases).
 
-The patched CSRF library also supplies the rotation CLI with atomic secret publication: an exclusive temporary file in the configured destination directory, complete write/readback, mode 0640, synchronization and rename. Failed generation or publication retains the working key; symlink file destinations are rejected.
+The patched CSRF library also supplies the rotation CLI with atomic secret publication: an exclusive temporary file in the configured destination directory, complete write/readback, preserved and verified existing UID/GID, mode 0640, synchronization and rename. Failed generation or publication retains the working key; symlink file destinations are rejected.
