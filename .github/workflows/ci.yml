@@ -107,8 +107,11 @@ jobs:
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: '8.4'
-        extensions: pdo_mysql
+        extensions: dom, gd, gmp, intl, ldap, mbstring, mysqlnd, pdo_mysql, sockets, sqlite3, xml
         coverage: none
+
+    - name: Install application dependencies
+      run: composer install --no-dev --no-interaction --no-progress --prefer-dist
 
     - name: Install test dependencies
       working-directory: tests
@@ -121,12 +124,25 @@ jobs:
         BOOST_DB_NAME: cacti_boost_contract
         BOOST_DB_USER: cactiuser
         BOOST_DB_PASSWORD: cactiuser
+        KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=cacti_boost_contract;charset=utf8mb4
+        KADUPUL_TEST_MYSQL_USER: cactiuser
+        KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
+        KADUPUL_TEST_MYSQL_ADMIN_USER: root
+        KADUPUL_TEST_MYSQL_ADMIN_PASSWORD: cactiroot
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
         # Pest 1 dependency deprecations: see docs/testing/php84-modernization-audit.md.
         php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-database.xml --colors=never
+        php Symfony/data_input_lock_probe.php
         php Support/verify_row_cache.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --cache-result-file="$RUNNER_TEMP/reference-transaction-phpunit.cache" Symfony/LegacyReferenceWriteTransactionNativeTest.php
+        # Use the disposable matrix server's existing administrator identity;
+        # the probe creates/drops only its own random schema in a finally block.
+        KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \
+          KADUPUL_REFERENCE_TEST_USER="$KADUPUL_TEST_MYSQL_ADMIN_USER" \
+          KADUPUL_REFERENCE_TEST_PASSWORD="$KADUPUL_TEST_MYSQL_ADMIN_PASSWORD" \
+          php -d zend.exception_ignore_args=1 security/reference_write_transaction_native_probe.php
 
   php:
     name: PHP ${{ matrix.php }}
@@ -182,10 +198,6 @@ jobs:
           # shellcheck disable=SC2016
           php -r '$manifest = json_decode(file_get_contents("composer.json"), true, 512, JSON_THROW_ON_ERROR); echo "available=" . (isset($manifest["scripts"]["test"]) ? "true" : "false") . PHP_EOL;' >> "$GITHUB_OUTPUT"
 
-      - name: Tests
-        if: steps.composer-test.outputs.available == 'true'
-        run: composer test
-
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22.22.2'
@@ -193,8 +205,29 @@ jobs:
       - name: Build installed browser assets for compatibility tests
         run: npm ci --ignore-scripts && npm run build
 
+      # The production command, strict about unresolved url() and @import.
+      # CompiledLegacyAssetsTest compiles again into a scratch directory.
+      - name: Compile browser assets
+        run: php bin/console asset-map:compile
+
+      - name: Tests
+        if: steps.composer-test.outputs.available == 'true'
+        run: composer test
+
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
+
+      - name: Verify PHP 8.0 string and regex behavior
+        working-directory: tests
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
+
+      - name: Verify helper union return contracts
+        working-directory: tests
+        run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
+
+      - name: Verify token entropy failure and native identifiers
+        working-directory: tests
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/GenerateHashFailsClosedTest.php --colors=never
 
       - name: Exercise production CSV paths
         working-directory: tests
@@ -202,6 +235,17 @@ jobs:
         # isolated production subprocess explicitly enables E_ALL and throws
         # on every diagnostic, including CSV default-argument deprecations.
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
+
+      - name: Verify string predicates and directory boundaries
+        working-directory: tests
+        run: |
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/StringPredicateHelpersTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/PathHelpersTest.php --colors=never
+
+      - name: Legacy form goldens
+        working-directory: tests
+        # Pest 1 emits dependency deprecations on PHP 8.4.
+        run: php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never
 
       - name: Install RRDtool for spike-removal contracts
         run: sudo apt-get update && sudo apt-get install -y rrdtool
@@ -227,19 +271,31 @@ jobs:
           persist-credentials: false
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
-          install_args: python@3.12.12
+          install_args: python@3.12.12 node@22.22.2
       - name: Install PHP for native process-boundary self-tests
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: '8.4'
           extensions: posix
           coverage: none
+      - name: Register actual installed PHP with mise
+        run: |
+          fixture_php_version=$(php -r 'echo PHP_VERSION;')
+          php -r 'exit(PHP_MAJOR_VERSION === 8 && PHP_MINOR_VERSION === 4 ? 0 : 1);'
+          mkdir -p "$RUNNER_TEMP/offline-fixture-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/offline-fixture-php/bin/php"
+          mise link "php@$fixture_php_version" "$RUNNER_TEMP/offline-fixture-php"
+          echo "KADUPUL_OFFLINE_FIXTURE_PHP_VERSION=$fixture_php_version" >> "$GITHUB_ENV"
+      - name: Verify guest offline fixture byte handoff
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
       - name: Verify observation normalization and failure reporting
-        run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/selftest.py
+      - name: Verify offline build runtime selection
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
       - name: Restore pinned compatibility libraries
-        run: php tools/dependencies/install-legacy.php
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" -- php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters
-        run: mise exec python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py
       # This exercises runtime invariants without claiming parity with upstream.
       # Observations are ephemeral CI artifacts; committed goldens stay untouched.
       - name: Load PHP base image for runtime provenance
@@ -247,9 +303,15 @@ jobs:
       - name: Exercise fresh install, authentication and collection
         env:
           PHP_VERSION: '8.4'
-        run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+      - name: Verify External Links through HTTP and MariaDB
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/link_review_http.py
+      - name: Verify the actual CLI upgrades an installed LTS database version
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
       - name: Refuse forbidden access at every entry point
-        run: mise exec python@3.12.12 -- python tests/security/entry_point_authorization.py
+        run: |
+          mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/security/test_entry_route_samples.py
+          mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/security/entry_point_authorization.py
       - name: Upload observations
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -328,7 +390,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs
 
   changelog:
     name: Changelog

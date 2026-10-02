@@ -14,3 +14,10 @@
 
 # Composer-installed trees are not our code; do not let them skew language stats.
 /include/vendor/** linguist-vendored
+
+# Form goldens are byte-for-byte page output, whitespace included.
+/tests/Golden/forms/** -whitespace
+
+# Pinned upstream browser assets retain the bytes recorded in the asset manifest.
+/include/themes/midwinter/vendor/hotkeys/hotkeys.js -whitespace
+/include/themes/midwinter/vendor/ua-parser/ua-parser.js -whitespace

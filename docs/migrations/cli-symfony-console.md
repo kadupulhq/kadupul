@@ -307,12 +307,11 @@ additions, which the original requires:
 - **Confirmation.** `--repair` is the one write mode that plans by default.
   It changes the schema only with `--force`, or after the operator has seen
   the plan on a terminal and answered yes to a question that defaults to no.
-  The shim keeps the original's immediate repair.
+  The retained compatibility CLI keeps immediate repair.
 - **Transactions.** The audit's only row writes are the baseline inserts
-  into `table_columns` and `table_indexes`. They run in one
-  `transactional()`, after the DDL that resets the two tables, which commits
-  on its own. A refused insert rolls back every row, and the run reports
-  that the baseline did not load.
+  into private staging tables. They run in one transaction before both
+  tables are published by an atomic rename. Failed inserts or publication
+  leave the existing baseline intact and stop comparison and repair.
 - **Names that do not exist yet.** A column or index an `ALTER` adds takes
   its name from the audit baseline parsed out of `docs/audit_schema.sql`, a
   shipped file, and the name must match `^[A-Za-z0-9_$-]{1,64}$`. The table
@@ -332,8 +331,8 @@ additions, which the original requires:
   `<database>:<step>`, where `<step>` is a fixed name (`upgrade`,
   `audit-schema-reset`, `audit-schema-export`). Every `ALTER TABLE`,
   including the audit tables' reload, records a `database-table` event. The
-  audit tables' reset is one step; their reload is recorded only when it
-  ran, so a missing or unparsable file records the reset alone. The action
+  audit tables' initialization is one step; their reload is recorded only
+  when attempted. Missing or unparsable files cause no table mutations. The action
   is `database.audit`.
 
 ## Pilot: device commands
@@ -387,3 +386,19 @@ them.
 - Reformatting a legacy script to PER-CS counts every line as new code for
   SonarCloud. Shims replace scripts entirely, so the new code is the shim and
   the command, both of which the parity tests cover.
+
+
+### Audit baseline safety during migration
+
+The compatibility `cli/audit_database.php` remains the hardened legacy
+entry point. The independently available `kadupul:database:audit` command
+must preserve the same import and upgrade failure protections before the
+compatibility implementation can be retired.
+
+A missing, incomplete, unparsable, or failed canonical baseline stops the
+new command before comparison or repair. Existing baseline rows are preserved;
+both replacement tables are populated privately and published together with
+an atomic rename. Failed live-schema imports do not export a new dump.
+Plugin upgrade callbacks returning false stop the worker before audit work.
+Database schema changes still require backups: atomic baseline replacement
+does not make application schema repairs reversible.
