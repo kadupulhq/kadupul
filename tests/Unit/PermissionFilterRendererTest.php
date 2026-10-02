@@ -7,11 +7,15 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 final class PermissionFilterRendererTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static array $coverageEvidenceChecked = array();
 
-    /** @dataProvider filters */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filters')]
     public function testNativeControllersPreserveFilterChoicesAndRoutes(string $page, string $function, string $tab, string $label, bool $defaults): void
     {
         $scenario = array('page' => $page, 'function' => $function);
@@ -44,7 +48,7 @@ final class PermissionFilterRendererTest extends TestCase
         }
     }
 
-    public function filters(): array
+    public static function filters(): array
     {
         $cases = array();
         foreach (array('user_admin.php', 'user_group_admin.php') as $page) {
@@ -107,7 +111,7 @@ final class PermissionFilterRendererTest extends TestCase
         self::assertStringContainsString('&#96;', $result['html']);
     }
 
-    /** @dataProvider associations */
+    #[\PHPUnit\Framework\Attributes\DataProvider('associations')]
     public function testNativeAssociationWritesPreserveOtherItemsAndSubjects(string $page, string $flag, int $type, bool $add): void
     {
         $result = $this->render(array('page' => $page, 'association' => $flag, 'type' => $type, 'add' => $add));
@@ -117,7 +121,7 @@ final class PermissionFilterRendererTest extends TestCase
         self::assertCount(2, $result['queries']);
     }
 
-    public function associations(): array
+    public static function associations(): array
     {
         $cases = array();
         foreach (array('user_admin.php', 'user_group_admin.php') as $page) {

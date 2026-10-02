@@ -5,11 +5,15 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 final class PermissionRequestNativeTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static bool $coverageEvidenceChecked = false;
 
-    /** @dataProvider requestCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('requestCases')]
     public function testNativePermissionFiltersPreserveSessionAndOrderedDefaults(bool $group, string $kind, string $prefix, string $selector, string $mode): void
     {
         $session = array('sentinel' => 'keep', 'sess_unrelated_filter' => 'foreign', 'sess_unrelated_page' => 6);
@@ -118,7 +122,7 @@ final class PermissionRequestNativeTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider rejectedChoices */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rejectedChoices')]
     public function testClosedHelperRejectsUnknownContextsWithoutChangingState(bool $group, string $kind): void
     {
         $session = array('sess_default_rows' => 13, 'sentinel' => 'keep');
