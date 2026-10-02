@@ -20,6 +20,7 @@ final class PermissionAssociations
                 continue;
             }
             $associate = get_nfilter_request_var('drp_action') == '1';
+            $changed = false;
             foreach ($_POST as $name => $value) {
                 if (!preg_match('/^chk_([0-9]+)$/', $name, $matches)) {
                     continue;
@@ -36,14 +37,15 @@ final class PermissionAssociations
                         : ($associate ? 'REPLACE INTO user_auth_perms (user_id, item_id, type) VALUES (?, ?, ?)' : 'DELETE FROM user_auth_perms WHERE user_id = ? AND item_id = ? AND type = ?');
                     $parameters[] = $type;
                 }
-                db_execute_prepared($sql, $parameters);
-                if ($group && $type === 0) {
+                $written = db_execute_prepared($sql, $parameters);
+                $changed = $written || $changed;
+                if ($written && $group && $type === 0) {
                     reset_user_perms((int) $matches[1]);
                 }
             }
-            if (!$group) {
+            if ($changed && !$group) {
                 reset_user_perms(get_filter_request_var('id'));
-            } elseif ($type !== 0) {
+            } elseif ($changed && $type !== 0) {
                 reset_group_perms(get_filter_request_var('id'));
             }
             return $tab;

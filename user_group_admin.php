@@ -509,17 +509,18 @@ function perm_remove()
     get_filter_request_var('group_id');
     /* ==================================================== */
 
+    $removed = false;
     if (get_request_var('type') == 'graph') {
-        db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=1 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=1 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     } elseif (get_request_var('type') == 'tree') {
-        db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=2 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=2 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     } elseif (get_request_var('type') == 'host') {
-        db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=3 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=3 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     } elseif (get_request_var('type') == 'graph_template') {
-        db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
+        $removed = db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));
     }
 
-    if (in_array(get_request_var('type'), array('graph', 'tree', 'host', 'graph_template'), true)) {
+    if ($removed) {
         reset_group_perms(get_request_var('group_id'));
     }
 

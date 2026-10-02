@@ -12,7 +12,7 @@ $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/admin-permission-native.php', $argv[1], array('user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/admin-permission-native.php', $argv[1], array('src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Unit/Security/Auth/AdminPermissionPersistenceNativeCoverageTest.php', 'tests/Unit/Security/Auth/AdminPolicyAndMembershipNativeCoverageTest.php', 'user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
 }
 $directory = $argv[2];
 chdir($directory);
@@ -50,7 +50,9 @@ if ($operation === 'bulk' || ($operation === 'membership' && isset($scenario['re
     $request['id'] = $target;
     $request['drp_action'] = $scenario['replace'] ? '1' : '2';
     $request[$operation === 'membership' ? ($group ? 'associate_member' : 'associate_groups') : 'associate_' . $scenario['kind']] = '1';
-    $_POST['chk_' . ($operation === 'membership' ? 42 : 100)] = 'on';
+    foreach ($scenario['selected'] ?? array($operation === 'membership' ? 42 : 100) as $selected) {
+        $_POST['chk_' . $selected] = 'on';
+    }
 }
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_SESSION = ['sess_user_id' => ($scenario['self'] ?? false) ? $target : 41, 'sess_user_perms_key' => 0, 'sess_user_realms' => [99], 'sess_user_config_array' => ['stale'], 'sess_config_array' => ['stale'], 'sess_auth_names' => ['stale']];
@@ -90,6 +92,28 @@ if ($scenario['replace'] ?? false) {
         $db->prepare('DELETE FROM ' . $table . ' WHERE ' . $principal . ' = 42 AND item_id = 100 AND type = ?')->execute([$scenario['type_id']]);
     }
 }
+$write_outcomes = array();
+if (isset($scenario['selected'])) {
+    foreach ($scenario['selected'] as $selected) {
+        if ($operation === 'membership') {
+            $params = $group ? array(42, $selected) : array($selected, 42);
+            $db->prepare(($scenario['replace'] ? 'DELETE FROM user_auth_group_members WHERE group_id = ? AND user_id = ?' : 'REPLACE INTO user_auth_group_members (group_id, user_id) VALUES (?, ?)'))->execute($params);
+        } elseif ($scenario['replace'] ?? false) {
+            $db->prepare('DELETE FROM ' . ($group ? 'user_auth_group_perms' : 'user_auth_perms') . ' WHERE ' . ($group ? 'group_id' : 'user_id') . ' = 42 AND item_id = ? AND type = ?')->execute(array($selected, $scenario['type_id']));
+        }
+    }
+}
+// Real SQL failures from a native trigger, translated to the legacy driver's
+// false-on-error contract. Successful writes still use the same SQLite handle.
+if (isset($scenario['failed_ids'])) {
+    $table = $operation === 'membership' ? 'user_auth_group_members' : ($group ? 'user_auth_group_perms' : 'user_auth_perms');
+    $column = $operation === 'membership' ? ($group ? 'user_id' : 'group_id') : 'item_id';
+    $event = ($scenario['replace'] ?? false) ? 'INSERT' : 'DELETE';
+    $row = $event === 'INSERT' ? 'NEW' : 'OLD';
+    foreach ($scenario['failed_ids'] as $index => $failed) {
+        $db->exec('CREATE TRIGGER failed_mutation_' . $index . ' BEFORE ' . $event . ' ON ' . $table . ' WHEN ' . $row . '.' . $column . ' = ' . (int) $failed . " BEGIN SELECT RAISE(ABORT, 'native permission write failure'); END");
+    }
+}
 function input_validate_input_number($value)
 {
     if (!ctype_digit((string) $value)) {
@@ -101,7 +125,18 @@ function db_execute_prepared($sql, $params = [])
     if (($GLOBALS['scenario']['write_error'] ?? false) && (str_starts_with($sql, 'REPLACE INTO user_auth_perms') || str_starts_with($sql, 'UPDATE `user_auth` SET `policy_') || str_starts_with($sql, 'UPDATE `user_auth_group` SET `policy_'))) {
         return false;
     }
-    return $GLOBALS['db']->prepare($sql)->execute($params);
+    try {
+        $result = $GLOBALS['db']->prepare($sql)->execute($params);
+    } catch (PDOException $error) {
+        if (!isset($GLOBALS['scenario']['failed_ids']) || !str_contains($error->getMessage(), 'native permission write failure')) {
+            throw $error;
+        }
+        $result = false;
+    }
+    if (str_starts_with($sql, 'REPLACE INTO user_auth') || str_starts_with($sql, 'DELETE FROM user_auth')) {
+        $GLOBALS['write_outcomes'][] = array('parameters' => $params, 'success' => $result);
+    }
+    return $result;
 }
 function db_execute($sql)
 {
@@ -198,31 +233,38 @@ register_shutdown_function(static function () use ($db, $group, $initial_session
     // marker through the native validity helper after the controller writes.
     $perms_valid = is_user_perms_valid($session['sess_user_id']);
     $next_valid = null;
+    $next_valid_accounts = array();
     if (in_array($operation, array('add', 'policy', 'bulk'), true) || ($operation === 'membership' && isset($scenario['replace']))) {
         $program = <<<'PHP'
 $config = array('cacti_db_version' => '1.2.33');
-$_SESSION = array('sess_user_id' => 42, 'sess_user_perms_key' => 0);
+$account = (int) $argv[3];
+$_SESSION = array('sess_user_id' => $account, 'sess_user_perms_key' => 0);
 $db = new PDO('sqlite:' . $argv[1]);
 function db_fetch_cell_prepared($sql, $params = array()) { $q = $GLOBALS['db']->prepare($sql); $q->execute($params); return $q->fetchColumn(); }
 function cacti_version_compare($a, $b, $op) { return version_compare($a, $b, $op); }
 require $argv[2];
-print json_encode(is_user_perms_valid(42));
+print json_encode(is_user_perms_valid($account));
 PHP;
-        $process = proc_open([PHP_BINARY, '-r', $program, $directory . '/state.sqlite', $root . '/lib/auth.php'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
-        $result = stream_get_contents($pipes[1]);
-        $errors = stream_get_contents($pipes[2]);
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        if (proc_close($process) !== 0 || $errors !== '') {
-            throw new RuntimeException($errors);
+        foreach (array(41, 42, 43, 44) as $account) {
+            $process = proc_open([PHP_BINARY, '-r', $program, $directory . '/state.sqlite', $root . '/lib/auth.php', (string) $account], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+            $result = stream_get_contents($pipes[1]);
+            $errors = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            if (proc_close($process) !== 0 || $errors !== '') {
+                throw new RuntimeException($errors);
+            }
+            $next_valid_accounts[$account] = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
         }
-        $next_valid = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+        $next_valid = $next_valid_accounts[42];
     }
     $principal = $group ? 'group_id' : 'user_id';
     $realm_table = $group ? 'user_auth_group_realm' : 'user_auth_realm';
     $perm_table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
     $state = ['controller_returned' => $GLOBALS['controller_returned'] ?? false, 'next_valid' => $next_valid, 'memberships' => $db->query('SELECT * FROM user_auth_group_members ORDER BY group_id, user_id')->fetchAll(PDO::FETCH_ASSOC), 'realms' => $db->query('SELECT * FROM ' . $realm_table . ' ORDER BY ' . $principal . ', realm_id')->fetchAll(PDO::FETCH_ASSOC), 'permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'session' => $session, 'perms_valid' => $perms_valid, 'initial_session' => $initial_session, 'messages' => $GLOBALS['messages'], 'output' => $output, 'policies' => $db->query('SELECT id, policy_graphs, policy_trees, policy_hosts, policy_graph_templates FROM ' . ($group ? 'user_auth_group' : 'user_auth') . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'membership' => $GLOBALS['membership'] ?? null];
-    $GLOBALS['nativeChildCoverageMarkers'] = array('admin-state-readback', 'permission-epoch-checked');
+    $state['next_valid_accounts'] = $next_valid_accounts;
+    $state['write_outcomes'] = $GLOBALS['write_outcomes'];
+    $GLOBALS['nativeChildCoverageMarkers'] = array('admin-state-readback', 'permission-epoch-checked', 'mutation-sql-outcomes-readback');
     if ($next_valid !== null) {
         $GLOBALS['nativeChildCoverageMarkers'][] = 'next-request-epoch-checked';
     }
