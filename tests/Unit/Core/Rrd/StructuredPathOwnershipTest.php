@@ -119,7 +119,8 @@ echo json_encode(array($GLOBALS["calls"], $GLOBALS["touched"]));
     file_put_contents($file, $probe);
 
     try {
-        $out    = (string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($file) . ' 2>&1');
+        $result = \test_php_run(array(PHP_BINARY, $file));
+        $out    = $result['out'] . $result['err'];
         $result = json_decode($out, true);
 
         expect($result)->toBeArray($out);
@@ -386,18 +387,9 @@ function create_ownership_calls($file, $function, $rrd, $create = true, $link = 
     $uid = strpos($body, $marker);
     expect($uid)->not->toBeFalse();
     $start = strrpos(substr($body, 0, $uid + 4), 'if (');
-
-    $depth = 0;
-    $end   = $start;
-    for ($i = $start; $i < strlen($body); $i++) {
-        if ($body[$i] === '{') {
-            $depth++;
-        } elseif ($body[$i] === '}' && --$depth === 0) {
-            $end = $i + 1;
-
-            break;
-        }
-    }
+    expect($start)->not->toBeFalse();
+    $body_source = '<?php ' . $body;
+    $if_block = \test_php_block_source($body_source, 'if (', '<?php ' . substr($body, 0, $start));
 
     $probe = '<?php
 namespace Probe;
@@ -415,7 +407,7 @@ $group_id = 0;
 $config = array("cacti_server_os" => "unix", "rra_path" => ' . var_export($base . '/rra', true) . ');
 $data_source_path = ' . var_export($base . $rrd, true) . ';
 $host_dir = $data_source_path;
-' . substr($body, $start, $end - $start) . '
+' . $if_block . '
 echo json_encode($GLOBALS["calls"]);
 ';
 
@@ -423,7 +415,8 @@ echo json_encode($GLOBALS["calls"]);
     file_put_contents($script, $probe);
 
     try {
-        $out   = (string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($script) . ' 2>&1');
+        $result = \test_php_run(array(PHP_BINARY, $script));
+        $out   = $result['out'] . $result['err'];
         $calls = json_decode($out, true);
         expect($calls)->toBeArray($out);
 

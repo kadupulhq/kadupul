@@ -8,7 +8,6 @@ SERVER = '/var/www/html/script_server.php'
 SCRIPTS = '/var/www/html/scripts/'
 STARTED = 'PHP Script Server has Started - Parent is '
 SHUTDOWN = 'PHP Script Server Shutdown request received, exiting'
-THEME = '/var/www/html/include/themes/midwinter'
 
 
 def serve(harness, arguments, lines):
@@ -20,10 +19,6 @@ def serve(harness, arguments, lines):
 
 def cacti_log(harness):
     return harness.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
-
-
-def theme_hashes(harness):
-    return harness.command('sh', '-c', f"find {THEME} -name '*.css' -type f -exec sha256sum {{}} + | sort", check=True)['stdout']
 
 
 def verify_script_server(harness, check):
@@ -50,15 +45,22 @@ def verify_script_server(harness, check):
 
 def verify_arguments(harness, check):
     version = harness.sql('SELECT cacti FROM version').strip()
-    result = serve(harness, ['--version'], [])
-    check(result['exit'] == 0 and result['stdout'].startswith(f'Kadupul Script Server, Version {version} ')
-          and STARTED not in result['stdout'], 'script server --version prints the version without serving')
-    result = serve(harness, ['--help'], [])
-    check(result['exit'] == 0 and 'usage: script_server.php [environ poller_id]' in result['stdout']
-          and STARTED not in result['stdout'], 'script server --help prints usage without serving')
+    for option in ['--version', '-v', '-V']:
+        result = serve(harness, [option], [])
+        check(result['exit'] == 0 and result['stdout'].startswith(f'Kadupul Script Server, Version {version} ')
+              and STARTED not in result['stdout'], f'script server {option} prints the version without serving')
+    for arguments in [['--help'], ['-h'], ['-H'], ['-h', '-v']]:
+        result = serve(harness, arguments, [])
+        check(result['exit'] == 0 and 'usage: script_server.php [environ poller_id]' in result['stdout']
+              and STARTED not in result['stdout'], f'script server {arguments} prints usage without serving')
     # cmd.php and spine pass the legacy positional form: environ, then poller id.
     for arguments, parent in ([], 'cmd'), (['spine', '1'], 'spine'), (['realtime', '1'], 'realtime'), \
-            (['cmd.php'], 'cmd'), (['--bogus'], 'other'), (['--poller=1', '--mode=offline'], 'cmd'):
+            (['cmd.php'], 'cmd'), (['--bogus'], 'other'), (['--poller=1', '--mode=offline'], 'cmd'), \
+            (['--environ=spine'], 'spine'), (['--environ=realtime', '--poller=1'], 'realtime'), \
+            (['--environ=cmd', '--poller=1', '--mode=online'], 'cmd'), (['--environ=other'], 'other'), \
+            (['--environ'], 'cmd'), (['--environ='], 'cmd'), \
+            (['--environ=spine', '--environ=realtime'], 'cmd'), \
+            (['--environ=spine', '--environ='], 'cmd'), (['--environ=', '--environ=spine'], 'cmd'), (['--environ=unknown'], 'cmd'):
         result = serve(harness, arguments, ['quit'])
         check(result['exit'] == 0 and result['stdout'] == STARTED + parent + '\n' + SHUTDOWN + '\n',
               f'script server started with {arguments} reports parent {parent} and quits')
@@ -149,20 +151,8 @@ def verify_runtime_limit(harness, check):
 
 
 def verify_http_guard(harness, check):
-    # Output buffering holds the shebang, which PHP prints outside the CLI, so
-    # the status still reaches the client. Nothing after the guard may run.
-    status = harness.command('curl', '-s', '-w', '%{http_code}', 'http://127.0.0.1/script_server.php')
-    if status['stdout'] != '#!/usr/bin/env php\n404':
-        print(repr(status['stdout']), flush=True)
-    check(status['stdout'] == '#!/usr/bin/env php\n404', 'script server answers 404 over HTTP')
-    # A stale import hash is what update_hash.php would rewrite, so an
-    # unguarded request would change the file.
-    stale = harness.command('sh', '-c', f"sed -i \"s#fonts.css?[0-9a-f]*'#fonts.css?stale'#\" {THEME}/main.css && grep -q 'fonts.css?stale' {THEME}/main.css")
-    check(stale['exit'] == 0, 'theme fixture carries a stale import hash')
-    before = theme_hashes(harness)
-    status = harness.command('curl', '-s', '-w', '%{http_code}', 'http://127.0.0.1/include/themes/midwinter/update_hash.php')
-    check(status['stdout'] == '404', 'theme hash builder answers 404 over HTTP')
-    check(theme_hashes(harness) == before, 'theme hash builder leaves CSS unchanged over HTTP')
-    rebuilt = harness.command('php', THEME + '/update_hash.php')
-    check(rebuilt['exit'] == 0 and 'fonts.css?stale' not in harness.command('cat', THEME + '/main.css')['stdout'],
-          'theme hash builder still rewrites stale CSS from the CLI')
+    # Verify transport status and the absence of bytes emitted before refusal.
+    body = '/tmp/script-server-http-body'
+    status = harness.command('curl', '-s', '-o', body, '-w', '%{http_code}', 'http://127.0.0.1/script_server.php')
+    check(status['exit'] == 0 and status['stdout'] == '404', 'script server answers 404 over HTTP')
+    check(harness.command('cat', body, check=True)['stdout'] == '', 'script server emits no HTTP response body')

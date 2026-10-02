@@ -8,6 +8,10 @@
 themeLoader('on');
 let themeInitialized = false;
 let themeUserMenu
+// themeReady() runs again after every AJAX page load, but this script and the
+// document it listens on persist, so vendor scripts and shortcuts load once.
+let hotkeysLoaded = false;
+let systemColorMode = null;
 
 function themeReady() {
 	/* load default values */
@@ -28,9 +32,6 @@ function themeReady() {
 	searchToHighlight();
 	updateNavigation();
 	themeLoader('off');
-	document.addEventListener("dblclick", () => {
-		toggleFullscreen();
-	})
 }
 
 function checkConsoleMenu() {
@@ -55,7 +56,7 @@ function midwinterInitialized() {
 }
 
 function extendAnchorActions() {
-	$('a[role="menuitem"]').on('click', function() {
+	$('a[role="menuitem"]').off('click.midwinter').on('click.midwinter', function() {
 		/* update MidWinter's BreadCrumb Navigation */
 		midWinterNavigation( $(this) );
 		/* close the Navigation Menu Box afterwards */
@@ -399,7 +400,7 @@ function setupTheme() {
 		return false;
 	});
 
-	$('.submenuoptions, .menuoptions').on('click', function() {
+	$('.submenuoptions, .menuoptions').off('click.midwinter').on('click.midwinter', function() {
 		if ($(window).width() < 640) {
 			$(this).stop().delay(100).slideUp(0);
 		} else {
@@ -417,7 +418,7 @@ function setupTheme() {
 	$('.toggleColorModeAuto').off().on('click', toggleColorModeAuto);
 	$('.toggleGuiFontSize').off().on('click',toggleGuiFontSize);
 
-	$('.cactiConsoleContentArea, .cactiGraphContentArea').on('mouseenter', toggleCactiNavigationBox);
+	$('.cactiConsoleContentArea, .cactiGraphContentArea').off('mouseenter.midwinter').on('mouseenter.midwinter', toggleCactiNavigationBox);
 }
 
 function redesignConsoleMenu(menu) {
@@ -718,7 +719,7 @@ function getDocumentAttribute(name) {
 }
 
 function setCookieValue(name, value) {
-	$.cookie(name, value.toString(), { expires: 365, path: urlPath + ';SameSite=Lax', secure: true });
+	$.cookie(name, value.toString(), { expires: 365, path: urlPath + ';SameSite=Lax', secure: (window.location.protocol === 'https:') });
 }
 
 function getCookieValue(name) {
@@ -795,22 +796,28 @@ function setThemeColor() {
 }
 
 function detectSystemColorSetup() {
-	const systemColorMode = window.matchMedia("(prefers-color-scheme: dark)");
+	if (systemColorMode === null) {
+		systemColorMode = window.matchMedia("(prefers-color-scheme: dark)");
 
-	try {
-		systemColorMode.addEventListener('change', (e) => {
-			checkThemeColorSetup((e.matches) ? 'dark' : 'light')
-		});
-    } catch (e1) {
 		try {
-			systemColorMode.addListener((e) => {
-				checkThemeColorSetup((e.matches) ? 'dark' : 'light')
-			});
-		} catch (e2) {
-			console.error(e2);
+			systemColorMode.addEventListener('change', followSystemColorMode);
+		} catch (e1) {
+			try {
+				systemColorMode.addListener(followSystemColorMode);
+			} catch (e2) {
+				console.error(e2);
+			}
 		}
 	}
+
 	checkThemeColorSetup(systemColorMode.matches === true ? 'dark' : 'light');
+}
+
+function followSystemColorMode(e) {
+	// The listener outlives a switch to a manual colour mode.
+	if (Storages.localStorage.get('midWinter_Color_Mode_Auto') === 'on') {
+		checkThemeColorSetup((e.matches) ? 'dark' : 'light');
+	}
 }
 
 function checkThemeColorSetup(color_mode) {
@@ -890,11 +897,20 @@ function setMenuVisibility() {
 }
 
 function searchToHighlight() {
+	if (typeof $.fn.markRegExp === 'function') {
+		bindKeywordHighlight();
+		return;
+	}
+
 	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/mark/jquery.mark.js').done(function (script, textStatus) {
 		if (textStatus === 'success') {
-			$("input[name='keyword']").on("input", highlight);
+			bindKeywordHighlight();
 		}
 	});
+}
+
+function bindKeywordHighlight() {
+	$("input[name='keyword']").off('input.midwinter').on('input.midwinter', highlight);
 }
 
 function highlight() {
@@ -917,9 +933,17 @@ function highlight() {
 
 
 function setHotKeys() {
-	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/hotkeys/hotkeys.js').done(function (script, textStatus) {
+	if (hotkeysLoaded) {
+		return;
+	}
+
+	hotkeysLoaded = true;
+
+	$.cachedScript(urlPath + 'include/themes/midwinter/vendor/hotkeys/hotkeys.js').fail(function () {
+		hotkeysLoaded = false;
+	}).done(function (script, textStatus) {
 		if (textStatus === 'success') {
-			hotkeys('SHIFT+c,c+t,c+l,c+p,c+F1,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
+			hotkeys('SHIFT+c,c+t,c+l,c+p,F5,SHIFT+m+d, SHIFT+g, SHIFT+p, ESC, SHIFT+k', function (event, handler) {
 				event.preventDefault();
 				switch (handler.key) {
 					case 'SHIFT+c':
@@ -951,9 +975,10 @@ function setHotKeys() {
 						toggleFullscreen('navigation_right');
 						break;
 					case 'ESC':
-						toggleFullscreen('');
+						if (getFullscreenElement()) {
+							toggleFullscreen();
+						}
 						break;
-					default: alert(event);
                 }
 
 				return false;
@@ -992,11 +1017,7 @@ function getFullscreenElement() {
 
 function toggleFullscreen(element = false){
 	if(getFullscreenElement()){
-		if(element === false) {
-			document.exitFullscreen();
-		}else {
-			document.documentElement.requestFullscreen().catch(console.log);
-		}
+		document.exitFullscreen().catch(console.log);
 	}else {
 		if(element === false) {
 			document.documentElement.requestFullscreen().catch(console.log);
