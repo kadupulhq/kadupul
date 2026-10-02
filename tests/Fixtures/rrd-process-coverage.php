@@ -275,17 +275,21 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
                 $childCoverage = $canonicalCoverage;
             }
 
-            // Test cleanup removes copied entrypoints before the aggregate
-            // Clover report runs. Preserve their exact mapping outside the
-            // fixture directory so PHPUnit can re-open each copied source.
-            $sourceMapFile = sys_get_temp_dir() . '/kadupul-coverage-source-map-' . bin2hex(random_bytes(8)) . '.json';
-            $sourceMap = json_encode(array(
-                'copy' => RRD_TEST_CLI_COVERAGE_COPY,
-                'source' => RRD_TEST_CLI_COVERAGE_SOURCE,
-                'sha256' => $sourceHash,
-            ), JSON_THROW_ON_ERROR);
-            if (file_put_contents($sourceMapFile, $sourceMap, LOCK_EX) === false) {
-                throw new RuntimeException('Unable to preserve child coverage source mapping');
+            // Newer reports carry only canonical paths, so no temporary-path
+            // repair manifest is necessary. Preserve the older reporting path.
+            if (method_exists($childCoverage->filter(), 'excludeFile')) {
+                // Test cleanup removes copied entrypoints before the aggregate
+                // Clover report runs. Preserve their exact mapping outside the
+                // fixture directory so PHPUnit can re-open each copied source.
+                $sourceMapFile = sys_get_temp_dir() . '/kadupul-coverage-source-map-' . bin2hex(random_bytes(8)) . '.json';
+                $sourceMap = json_encode(array(
+                    'copy' => RRD_TEST_CLI_COVERAGE_COPY,
+                    'source' => RRD_TEST_CLI_COVERAGE_SOURCE,
+                    'sha256' => $sourceHash,
+                ), JSON_THROW_ON_ERROR);
+                if (file_put_contents($sourceMapFile, $sourceMap, LOCK_EX) === false) {
+                    throw new RuntimeException('Unable to preserve child coverage source mapping');
+                }
             }
         }
         $serializedCoverage = serialize($childCoverage);
