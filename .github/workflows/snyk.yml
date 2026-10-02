@@ -61,7 +61,7 @@ jobs:
         with:
           node-version: '22'
       - name: Set up Snyk CLI
-        uses: snyk/actions/setup@12140f4059e244892ae643824a95459a102120dd
+        uses: snyk/actions/setup@b075801f26076be9bb50521154cafab73f44da0c
         with:
           snyk-version: v1.1307.4
       - name: Test Composer and npm dependencies
