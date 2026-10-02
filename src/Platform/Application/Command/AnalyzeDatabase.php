@@ -10,7 +10,9 @@ namespace Kadupul\Platform\Application\Command;
 use Kadupul\Platform\Application\Port\Clock;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
+use Kadupul\Platform\Application\ReadModel\AnalysisOutcome;
 use Kadupul\Platform\Application\ReadModel\AnalysisReport;
+use Kadupul\Platform\Application\ReadModel\TableAnalysis;
 
 final readonly class AnalyzeDatabase
 {
@@ -28,7 +30,8 @@ final readonly class AnalyzeDatabase
         $noBinlog = $this->maintenance->binlogEnabled($target);
         $tables = [];
         foreach ($this->maintenance->tables($target) as $table) {
-            $tables[] = ['name' => $table, 'ok' => $this->maintenance->analyze($target, $table, $noBinlog)];
+            $ok = $this->maintenance->analyze($target, $table, $noBinlog);
+            $tables[] = new TableAnalysis($table, $ok ? AnalysisOutcome::Succeeded : AnalysisOutcome::Failed);
         }
         // Whole-second timestamps, as the script's time() - time() reported.
         $seconds = $this->clock->now()->getTimestamp() - $start->getTimestamp();
