@@ -511,6 +511,26 @@ final class AuditSchemaTest extends TestCase
         self::assertContains('data_debug', $baseline->tableNames());
     }
 
+    #[DataProvider('freshTimestampColumns')]
+    public function testShippedTimestampBaselineHasNoSyntheticExtraAttribute(string $table, string $field): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql');
+        self::assertIsString($source);
+        $column = AuditSchemaDump::parse($source)->column($table, $field);
+        self::assertNotNull($column);
+        self::assertSame('', $column->extra);
+        self::assertSame('current_timestamp()', $column->default);
+    }
+
+    /** @return iterable<string, array{string, string}> */
+    public static function freshTimestampColumns(): iterable
+    {
+        yield 'process start' => ['processes', 'started'];
+        yield 'session start' => ['sessions', 'start_time'];
+        yield 'permission cache update' => ['user_auth_cache', 'last_update'];
+        yield 'row cache update' => ['user_auth_row_cache', 'time'];
+    }
+
     /** @return iterable<string, array{string, ?string}> */
     public static function columnTypes(): iterable
     {
