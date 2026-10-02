@@ -6,7 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Hide graph tree names from users who cannot access those trees.
+- Skip unauthorized graph trees before name lookup on bulk-action confirmation pages.
 
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
