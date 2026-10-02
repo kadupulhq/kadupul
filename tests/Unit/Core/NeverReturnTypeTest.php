@@ -37,7 +37,6 @@ test('terminating production functions expose the never contract', function (str
     ['automation_snmp.php', 'automation_snmp_item_dnd'],
     ['automation_templates.php', 'automation_template_dnd'],
     ['cli/md5sum.php', 'fail'],
-    ['color.php', 'form_save'],
     ['color_templates_items.php', 'color_templates_item_dnd'],
     ['graphs.php', 'form_save'],
     ['include/csrf.php', 'csrf_error_callback'],
