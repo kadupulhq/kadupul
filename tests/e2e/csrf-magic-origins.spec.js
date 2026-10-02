@@ -204,12 +204,13 @@ for (const mode of ['', 'nonce']) {
     const policy = execFileSync('php', ['-r',
       'require $argv[1]; echo CactiSecureHeaders::buildCspPolicy($argv[2], $argv[3], "https://other.example");',
       path.join(root, 'lib/headers_secure.php'), mode, nonce], { encoding: 'utf8' });
+    const headers = { 'Content-Security-Policy': policy };
     const requests = [];
     await page.route('**/*', async route => {
       const request = route.request();
       const url = new URL(request.url());
       if (url.pathname === '/xhr-fixture') {
-        await route.fulfill({ contentType: 'text/html', headers: { 'Content-Security-Policy': policy }, body: `
+        await route.fulfill({ contentType: 'text/html', headers, body: `
           <!doctype html><html><body>
           <script nonce="${nonce}">
             var csrfMagicName = '__csrf_magic', csrfMagicToken = '${token}';
