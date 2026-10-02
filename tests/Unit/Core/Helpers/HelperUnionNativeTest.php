@@ -3,13 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
+
 test('native union helpers preserve filesystem and process results', function (string $case) {
     $root = dirname(__DIR__, 4);
     $directory = realpath(sys_get_temp_dir()) . '/helper-union-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
     try {
         $coverage = $this->getTestResultObject()->getCodeCoverage();
-        $command = [PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'error_reporting=24575', '-d', 'pcov.directory=/', '-d', 'sys_temp_dir=' . ($case === 'workspace-missing' ? $directory . '/missing' : $directory), $root . '/tests/Fixtures/helper-union-native.php', $case, $directory];
+        $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'error_reporting=24575', '-d', 'pcov.directory=/', '-d', 'sys_temp_dir=' . ($case === 'workspace-missing' ? $directory . '/missing' : $directory), $root . '/tests/Fixtures/helper-union-native.php', $case, $directory];
         if ($case === 'uid-fallback' || $case === 'uid-temp-refused') {
             array_splice($command, 1, 0, ['-d', 'disable_functions=posix_geteuid' . ($case === 'uid-temp-refused' ? ',tempnam' : '')]);
         }
@@ -80,7 +82,19 @@ test('native union helpers preserve filesystem and process results', function (s
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             $this->assertCount(1, $reports);
-            $coverage->merge(unserialize(file_get_contents($reports[0])));
+            $source = match (true) {
+                str_starts_with($case, 'filename-') => 'lib/api_device.php',
+                str_starts_with($case, 'command-') => 'lib/poller.php',
+                str_starts_with($case, 'uid-') => 'lib/csp_report_endpoint.php',
+                default => 'lib/rrd_maintenance.php',
+            };
+            $sources = array_unique(array_merge(array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/Core/Helpers/HelperUnionNativeTest.php', 'src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php'), [$source]));
+            $markers = ['helper-result-observed'];
+            $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/helper-union-native.php', $case, $sources, $markers, [$source]);
+            if ($case === 'filename-free') {
+                $this->assertSame(27, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/helper-union-native.php', $case, $sources, $markers, [$source], 'lib/boost.php'));
+            }
+            $coverage->merge($child);
         }
     } finally {
         $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
