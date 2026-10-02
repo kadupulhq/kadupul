@@ -21,6 +21,34 @@ final readonly class DeviceCollectorGuard
     /** @param array<string, mixed> $configuration */
     private function __construct(private PDO $connection, private int $pollerId, #[\SensitiveParameter] private array $configuration, private ?int $maximumHeartbeatAge) {}
 
+    /** Select current locking reads without changing the repeatable-read snapshot. */
+    public static function prepareTransaction(PDO $connection): void
+    {
+        if ($connection->inTransaction()) {
+            throw new \LogicException('Collector transaction is already active');
+        }
+        $query = $connection->query("SHOW SESSION VARIABLES LIKE 'innodb_snapshot_isolation'");
+        if (!$query instanceof PDOStatement) {
+            throw new RuntimeException('Collector transaction configuration unavailable');
+        }
+        $variable = $query->fetch(PDO::FETCH_ASSOC);
+        if ($query->errorCode() !== '00000') {
+            throw new RuntimeException('Collector transaction configuration unavailable');
+        }
+        if ($variable === false) {
+            // MySQL and older MariaDB do not expose this MariaDB-only setting.
+            return;
+        }
+        if ($connection->exec('SET SESSION innodb_snapshot_isolation = OFF') === false) {
+            throw new RuntimeException('Collector transaction configuration unavailable');
+        }
+        $query = $connection->query("SHOW SESSION VARIABLES LIKE 'innodb_snapshot_isolation'");
+        if (!$query instanceof PDOStatement || !is_array($row = $query->fetch(PDO::FETCH_ASSOC))
+            || $query->errorCode() !== '00000' || ($row['Value'] ?? null) !== 'OFF') {
+            throw new RuntimeException('Collector transaction configuration unavailable');
+        }
+    }
+
     public static function capture(PDO $connection, int $pollerId, ?int $maximumHeartbeatAge = null): self
     {
         $row = self::read($connection, $pollerId, false);

@@ -63,6 +63,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Verify worker-session MariaDB snapshot settings before association/maintenance transactions so heartbeat updates do not invalidate the final collector locking read on MariaDB 11.8.
+
 - Allow collector heartbeat updates during Inventory association and maintenance network work; revalidate collector configuration and availability immediately before commit.
 - Budget Inventory worker processes for every remote data-query request, preserving the existing local-work margin and the configured remote timeout cap.
 - Reject malformed association commands before mutation, propagate query refresh failures in strict workers, and publish authoritative primary changes before collector commits.

@@ -46,6 +46,13 @@ heartbeat availability. Configuration changes, disablement or deletion reject
 commit; transactional local writes roll back. Heartbeat/statistic updates alone
 do not invalidate the operation.
 
+Before beginning their owned transaction, these short-lived workers detect
+MariaDB's `innodb_snapshot_isolation` setting and select and verify session-level
+`OFF`. This retains repeatable nonlocking reads while permitting the final
+locking read to see a concurrently updated heartbeat. MariaDB's newer default
+otherwise rejects that read and rolls back the transaction. MySQL has no such
+setting and receives no setting change; no global server configuration is changed.
+
 The parent process allows the existing 120-second local-work margin plus 300
 seconds per possible remote request. This uses the HTTP timeout cap rather than
 the current setting, so increasing the setting during an operation cannot make

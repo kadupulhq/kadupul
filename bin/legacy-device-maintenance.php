@@ -36,6 +36,7 @@ try {
     }
     $request = new DeviceMaintenanceRequest($command['operation'], $command['query']);
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+    DeviceCollectorGuard::prepareTransaction($connection);
     if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
     }

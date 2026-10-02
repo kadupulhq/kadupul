@@ -16,6 +16,45 @@ use PHPUnit\Framework\TestCase;
 
 final class DeviceCollectorGuardTest extends TestCase
 {
+    public function testTransactionSetupVerifiesMariaDbCurrentReadSemanticsAndLeavesMysqlAlone(): void
+    {
+        foreach ([false, ['Variable_name' => 'innodb_snapshot_isolation', 'Value' => 'ON']] as $initial) {
+            $db = $this->createMock(PDO::class);
+            $db->method('inTransaction')->willReturn(false);
+            $first = $this->createMock(PDOStatement::class);
+            $first->method('fetch')->willReturn($initial);
+            $first->method('errorCode')->willReturn('00000');
+            $second = $this->createMock(PDOStatement::class);
+            $second->method('fetch')->willReturn(['Value' => 'OFF']);
+            $second->method('errorCode')->willReturn('00000');
+            $db->expects(self::exactly($initial === false ? 1 : 2))->method('query')->with("SHOW SESSION VARIABLES LIKE 'innodb_snapshot_isolation'")->willReturnOnConsecutiveCalls($first, $second);
+            $db->expects($initial === false ? self::never() : self::once())->method('exec')->with('SET SESSION innodb_snapshot_isolation = OFF')->willReturn(0);
+            DeviceCollectorGuard::prepareTransaction($db);
+        }
+    }
+
+    public function testTransactionSetupRejectsActiveTransactionAndUnconfirmedConfiguration(): void
+    {
+        foreach (['active', 'query', 'fetch-error', 'set', 'verify'] as $failure) {
+            $db = $this->createMock(PDO::class);
+            $db->method('inTransaction')->willReturn($failure === 'active');
+            $first = $this->createMock(PDOStatement::class);
+            $first->method('fetch')->willReturn(['Value' => 'ON']);
+            $first->method('errorCode')->willReturn($failure === 'fetch-error' ? 'HY000' : '00000');
+            $second = $this->createMock(PDOStatement::class);
+            $second->method('fetch')->willReturn(['Value' => 'ON']);
+            $second->method('errorCode')->willReturn('00000');
+            $db->method('query')->willReturnOnConsecutiveCalls($failure === 'query' ? false : $first, $second);
+            $db->method('exec')->willReturn($failure === 'set' ? false : 0);
+            try {
+                DeviceCollectorGuard::prepareTransaction($db);
+                self::fail('Unconfirmed transaction configuration accepted');
+            } catch (\LogicException|\RuntimeException) {
+                $this->addToAssertionCount(1);
+            }
+        }
+    }
+
     private function statement(array|false $row): PDOStatement
     {
         $query = $this->createMock(PDOStatement::class);

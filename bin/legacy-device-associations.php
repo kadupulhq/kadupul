@@ -38,6 +38,7 @@ try {
     if ($connection->exec('SET NAMES utf8mb4') === false || $connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
         throw new RuntimeException('Connection validation unavailable');
     }
+    DeviceCollectorGuard::prepareTransaction($connection);
     if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
     }

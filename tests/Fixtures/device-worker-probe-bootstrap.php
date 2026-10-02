@@ -120,6 +120,10 @@ if (getenv('KADUPUL_TEST_PROBE_PARENT') !== '1') {
     $database_port = '3306';
     $database_default = 'fixture';
     $connection = new DeviceWorkerProbeDatabase(getenv('KADUPUL_TEST_PROBE_PREFIX'));
+    if ($connection->query("SHOW SESSION VARIABLES LIKE 'innodb_snapshot_isolation'")->fetch(PDO::FETCH_ASSOC) !== false) {
+        // Exercise MariaDB's newer default even on supported older servers.
+        $connection->exec('SET SESSION innodb_snapshot_isolation = ON');
+    }
     $database_sessions = ['fixture:3306:fixture' => $connection];
     $_SESSION = [];
     $source = file_get_contents(getenv('KADUPUL_TEST_QUERY_API_SOURCE') ?: $root . '/lib/api_device.php');
