@@ -181,9 +181,9 @@ dynamic_include	./cli/import_package.php:15	require_once($config['base_path'] . 
 dynamic_include	./cli/import_template.php:10	require_once($config['base_path'] . '/lib/import.php');
 dynamic_include	./cli/import_template.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/import_template.php:12	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/input_whitelist.php:10	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/input_whitelist.php:11	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/input_whitelist.php:12	require_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./cli/input_whitelist.php:12	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/input_whitelist.php:13	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/input_whitelist.php:14	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/install_cacti.php:10	require_once($config['base_path'] . '/install/functions.php');
 dynamic_include	./cli/install_cacti.php:146	include_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/install_cacti.php:147	include_once($config['base_path'] . '/lib/api_automation_tools.php');
@@ -534,7 +534,6 @@ fs_write	./cli/float_rrdfiles.php:366				$fp = fopen($tmp_file, 'x');
 fs_write	./cli/float_rrdfiles.php:369					$lf = fopen($tmp_dir . '/clearer.log', 'x');
 fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/import_template.php:105				$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-fs_write	./cli/input_whitelist.php:171			file_put_contents($config['input_whitelist'], json_encode($input));
 fs_write	./cli/md5sum.php:163		if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/splice_rrd.php:268		$handle = fopen($xmlfile, 'x');
 fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
@@ -569,6 +568,9 @@ fs_write	./lib/functions.php:7502	    if (($f = @fopen($path, 'w'))) {
 fs_write	./lib/functions.php:7581	            file_put_contents($tmp_file, 'cacti');
 fs_write	./lib/import.php:420	    $f   = fopen($filename, 'r');
 fs_write	./lib/import.php:645	                        $file = fopen($filename, 'wb');
+fs_write	./lib/input_whitelist.php:111	        $stream = @fopen($temporary, 'x+b');
+fs_write	./lib/input_whitelist.php:41	            $lock = @fopen($lockPath, 'x+b');
+fs_write	./lib/input_whitelist.php:49	            $lock = @fopen($lockPath, 'r+b');
 fs_write	./lib/installer.php:3064	            $file = fopen($cacheFile, "r");
 fs_write	./lib/poller.php:1700	                                if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1707	                                            file_put_contents($mypath, $contents);
@@ -718,15 +720,6 @@ header_redirect	./data_debug.php:221					header('Location: data_debug.php?header
 header_redirect	./data_debug.php:224					header('Location: data_debug.php?header=false&debug=1');
 header_redirect	./data_debug.php:38				header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
 header_redirect	./data_debug.php:61				header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
-header_redirect	./data_input.php:106					header('Location: data_input.php?action=edit&id=' . (empty($save['id']) ? '' : $save['id']));
-header_redirect	./data_input.php:138			header('Location: data_input.php?header=false&action=edit&id=' . (empty($data_input_id) ? get_nfilter_request_var('id') : $data_input_id));
-header_redirect	./data_input.php:176				header('Location: data_input.php?header=false&action=field_edit&data_input_id=' . get_request_var('data_input_id') . '&id=' . (empty($data_input_field_id) ? get_request_var('id') : $data_input_field_id) . (!isempty_request_var('input_output') ? '&type=' . get_request_var('input_output') : ''));
-header_redirect	./data_input.php:178				header('Location: data_input.php?header=false&action=edit&id=' . get_request_var('data_input_id'));
-header_redirect	./data_input.php:233			header('Location: data_input.php?header=false');
-header_redirect	./data_input.php:283			header('Location: data_input.php?header=none');
-header_redirect	./data_input.php:40			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('data_input_id'));
-header_redirect	./data_input.php:445			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('data_input_id'));
-header_redirect	./data_input.php:508				header('Location: data_input.php');
 header_redirect	./data_queries.php:1091				header('Location: data_queries.php');
 header_redirect	./data_queries.php:138			header('Location: data_queries.php?header=false&action=edit&id=' . (empty($snmp_query_id) ? get_request_var('id') : $snmp_query_id));
 header_redirect	./data_queries.php:222			header('Location: data_queries.php?header=false&action=item_edit' . $header . '&id=' . (empty($snmp_query_graph_id) ? get_request_var('id') : $snmp_query_graph_id) . '&snmp_query_id=' . get_request_var('snmp_query_id'));
