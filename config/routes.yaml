@@ -16,6 +16,18 @@ inventory:
         namespace: Kadupul\Inventory\Infrastructure\Symfony\Controller
     type: attribute
 
+graphing:
+    resource:
+        path: '../src/Graphing/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\Graphing\Infrastructure\Symfony\Controller
+    type: attribute
+
+graph_definitions:
+    resource:
+        path: '../src/GraphDefinition/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\GraphDefinition\Infrastructure\Symfony\Controller
+    type: attribute
+
 navigation:
     resource:
         path: '../src/Navigation/Infrastructure/Symfony/Controller/'

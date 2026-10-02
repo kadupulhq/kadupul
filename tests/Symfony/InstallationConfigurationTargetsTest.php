@@ -120,15 +120,15 @@ final class InstallationConfigurationTargetsTest extends TestCase
         }
     }
 
-    public static function navigationRoutes(): iterable
+    public static function onlineCollectorRoutes(): iterable
     {
-        foreach (['navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action'] as $route) {
+        foreach (['inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action', 'navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action', 'platform_about', 'platform_about_legacy', 'graph_vdefs', 'graph_vdef_create', 'graph_vdef_edit', 'graph_vdef_item_edit', 'graph_vdef_item_delete', 'graph_vdef_item_reorder', 'graph_vdef_action', 'graph_vdef_legacy'] as $route) {
             yield [$route];
         }
     }
 
-    #[DataProvider('navigationRoutes')]
-    public function testNavigationCollectorRoutesStillRequireOnlinePrimaryConfiguration(string $route): void
+    #[DataProvider('onlineCollectorRoutes')]
+    public function testAllowedCollectorRoutesStillRequireOnlinePrimaryConfiguration(string $route): void
     {
         $this->config("\$poller_id = 2;\n\$conn_mode = 'offline';\n");
         $request = new Request();
