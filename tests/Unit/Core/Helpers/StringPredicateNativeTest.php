@@ -69,12 +69,16 @@ test('native predicates preserve rendering redirects and resource replication', 
         $this->assertSame([false, 'Internal error', null], $result['runtime_regex_probe']);
         $this->assertSame('There was an internal error!', $result['runtime_regex']);
         $this->assertSame('Backtrack limit was exhausted!', $result['bounded_regex']);
+        $this->assertSame('Backtrack limit was exhausted!', $result['raised_match_limit_regex']);
         $this->assertSame([ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit')], $result['regex_limits_unchanged']);
         $this->assertSame("Unknown modifier 'z'", $result['regex_compile_after_runtime']);
         $this->assertSame('There was an internal error!', $result['regex_runtime_after_warning']);
         $this->assertTrue($result['regex_valid_with_handler']);
         $this->assertSame("Unknown modifier 'z'", $result['regex_invalid_with_handler']);
         $this->assertTrue($result['regex_handler_restored']);
+        $this->assertSame('Backtrack limit was exhausted!', $result['lower_match_limit_regex']);
+        $this->assertSame('1', $result['lower_match_limit_preserved']);
+        $this->assertSame([ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit')], $result['regex_final_limits']);
         $this->assertSame([33439, bin2hex("\0\1\0cacti-monitoring-system\0"), 27], $result['native_udp']);
         $this->assertSame(['0800', '0000', 31], $result['native_icmp']);
         $this->assertSame('3b9d', $result['native_checksum']);

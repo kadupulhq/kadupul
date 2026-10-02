@@ -14,12 +14,13 @@ function __($message) {
     if (!empty($GLOBALS['php81_translation_pcre'])) { \preg_match('/translation/', 'translation'); }
     return 'translated: ' . $message;
 }
-function restore_error_handler() { return true; }
+function restore_error_handler() { $GLOBALS['php81_handler_restored'] = true; return true; }
 function set_error_handler($handler) { $GLOBALS['php81_handler'] = $handler; return null; }
 function cacti_session_close() { $GLOBALS['php81_session_closed'] = true; }
-function ini_get($name) { return false; }
-function ini_set($name, $value) { return false; }
+function ini_get($name) { return \ini_get($name); }
+function ini_set($name, $value) { return ($GLOBALS['php81_ini_fail'] ?? null) === $name ? false : \ini_set($name, $value); }
 function preg_match($pattern, $subject) {
+    $GLOBALS['php81_probe_calls'] = ($GLOBALS['php81_probe_calls'] ?? 0) + 1;
     return isset($GLOBALS['php81_pcre_error']) ? false : \preg_match($pattern, $subject);
 }
 function preg_last_error() { return $GLOBALS['php81_pcre_error'] ?? \preg_last_error(); }
@@ -44,7 +45,7 @@ foreach ([['Ping', 'lib/ping.php', 'set_ping_error_handler', 'ping_error_handler
 }
 
 afterEach(function () {
-    foreach (['handler', 'session_closed', 'pcre_error', 'pcre_message', 'socket_opened', 'dns_packet', 'translation_pcre'] as $key) {
+    foreach (['handler', 'session_closed', 'pcre_error', 'pcre_message', 'socket_opened', 'dns_packet', 'translation_pcre', 'ini_fail', 'probe_calls', 'handler_restored'] as $key) {
         unset($GLOBALS['php81_' . $key]);
     }
 });
@@ -94,3 +95,12 @@ test('regex diagnostics are captured before translation can change PCRE state', 
     $GLOBALS['php81_translation_pcre'] = true;
     expect(KadupulPhp81Tests\validate_is_regex('('))->toBe('translated: There was an internal error!');
 });
+
+test('regex validation fails closed and restores settings when a caller limit cannot be set', function ($setting) {
+    $before = [ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit')];
+    $GLOBALS['php81_ini_fail'] = $setting;
+    expect(KadupulPhp81Tests\validate_is_regex('pattern'))->toBe('translated: There was an internal error!');
+    expect($GLOBALS['php81_probe_calls'] ?? 0)->toBe(0);
+    expect([ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit')])->toBe($before);
+    expect($GLOBALS['php81_handler_restored'])->toBeTrue();
+})->with(['pcre.backtrack_limit', 'pcre.recursion_limit']);
