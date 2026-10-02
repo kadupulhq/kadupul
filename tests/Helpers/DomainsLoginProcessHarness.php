@@ -143,6 +143,11 @@ function get_auth_realms($login = false) {
 	return $realms;
 }
 
+/* login throttling is off by default and has its own test */
+function auth_login_throttle_check($username, $realm) {
+	return false;
+}
+
 function auth_checkclear_lockout($username, $realm) {
 }
 

@@ -105,7 +105,11 @@ if ($config['poller_id'] == 1) {
 
 	authcache_purge();
 
+	login_throttle_purge();
+
 	secpass_check_expired();
+
+	secpass_report_legacy_hashes();
 
 	reindex_devices();
 }
@@ -249,6 +253,14 @@ function authcache_purge() {
 	} else {
 		db_execute('TRUNCATE TABLE user_auth_cache');
 	}
+}
+
+/* the longest throttle window is an hour, so an older count can no longer
+   refuse a login; this also clears counts left after throttling is turned off */
+function login_throttle_purge() {
+	db_execute_prepared('DELETE FROM user_auth_throttle
+		WHERE window_start < ?',
+		array(time() - 3600));
 }
 
 function rrdfile_purge($force) {
@@ -567,6 +579,23 @@ function secpass_check_expired () {
 			AND enabled = 'on'
 			AND lastchange < ?",
 			array($t));
+	}
+}
+
+/**
+ * secpass_report_legacy_hashes - logs, once a day, how many local accounts
+ *   still store an MD5 password hash.  Nothing is changed; the owners would
+ *   notice a forced reset.
+ */
+function secpass_report_legacy_hashes() {
+	if (!debounce_run_notification('legacy_md5_hashes', 86400)) {
+		return;
+	}
+
+	$count = cacti_sizeof(auth_legacy_md5_users());
+
+	if ($count > 0) {
+		cacti_log(sprintf('WARNING: %d local account(s) still use a legacy MD5 password hash.  Each moves to a current hash at its next login, or when an administrator sets a new password.  User Management lists them.', $count), false, 'AUTH');
 	}
 }
 

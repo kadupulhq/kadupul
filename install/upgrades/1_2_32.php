@@ -54,4 +54,13 @@ function upgrade_to_1_2_32() {
 	 * without a stored row ran with the old 'on' default, so store that value
 	 * rather than change its collector HTTPS checks on upgrade. */
 	db_install_execute("INSERT IGNORE INTO settings (name, value) VALUES ('allow_unsafe_https', 'on')");
+
+	/* counters for the optional login throttle, which stays off until enabled */
+	db_install_execute("CREATE TABLE IF NOT EXISTS `user_auth_throttle` (
+		`id` char(64) NOT NULL DEFAULT '',
+		`failures` int(10) unsigned NOT NULL DEFAULT '0',
+		`window_start` int(10) unsigned NOT NULL DEFAULT '0',
+		PRIMARY KEY (`id`),
+		KEY `window_start` (`window_start`))
+		ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Login attempt counts for optional login throttling'");
 }

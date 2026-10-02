@@ -237,6 +237,11 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 					exit;
 				}
 
+				/* LDAP and Domains reach the guest account only after the directory accepted the password */
+				if (!$guest_user || $auth_method == 3 || $auth_method == 4) {
+					auth_login_throttle_release();
+				}
+
 				/* Mint a persistent credential only after the login transition succeeds. */
 				if ($auth_method != 2 && $user['id'] !== get_guest_account()
 					&& isset_request_var('remember_me')

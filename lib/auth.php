@@ -3715,6 +3715,189 @@ function auth_process_lockout($username, $realm) {
 }
 
 /**
+ * auth_login_throttle_keys - the throttle counters a login attempt belongs
+ *   to: the client address, with IPv6 grouped by /64 so one host cannot
+ *   rotate through its own prefix, and the login name in its realm.  Keys
+ *   are hashed so the table holds no login names.
+ *
+ *   user_auth matches names under utf8mb4_unicode_ci, which ignores case,
+ *   accents and trailing spaces, so every spelling that reaches one account
+ *   must land on one count.  The name is keyed on its collation weight.
+ *   WEIGHT_STRING() keeps trailing spaces while the PAD SPACE lookup ignores
+ *   them, and no-break, ideographic and other Unicode spaces weigh the same
+ *   as an ASCII space, so space weights are removed from the weight rather
+ *   than space characters from the name.  Directories also ignore leading
+ *   spaces and runs of spaces, so LDAP and Domains names drop those too.
+ *
+ * @param  (string) $username - the submitted login name
+ * @param  (int)    $realm    - the realm the attempt is checked against
+ *
+ * @return (array)  'addr' and 'login' keys
+ */
+function auth_login_throttle_keys($username, $realm) {
+	$addr   = get_client_addr();
+	$packed = @inet_pton($addr);
+
+	if ($packed !== false && strlen($packed) == 16) {
+		$mapped = str_repeat("\0", 10) . "\xff\xff";
+
+		/* ::ffff:192.0.2.1 and ::ffff:c000:201 are the same address. Count
+		 * them with the IPv4 form so the spelling does not split the counter. */
+		if (substr($packed, 0, 12) === $mapped) {
+			$addr = bin2hex(substr($packed, 12, 4));
+		} else {
+			$addr = bin2hex(substr($packed, 0, 8)) . '/64';
+		}
+	} elseif ($packed !== false && strlen($packed) == 4) {
+		$addr = bin2hex($packed);
+	}
+
+	$name   = (string) $username;
+	$weight = db_fetch_cell_prepared('SELECT HEX(WEIGHT_STRING(CONVERT(? USING utf8mb4) COLLATE utf8mb4_unicode_ci))',
+		array($name));
+
+	if ($weight != '') {
+		/* utf8mb4_unicode_ci weights come in 2 byte units; an ASCII space and
+		 * the Unicode spaces that compare equal to it all weigh 0209 */
+		$units = str_split(strtoupper($weight), 4);
+
+		while (cacti_sizeof($units) && end($units) === '0209') {
+			array_pop($units);
+		}
+
+		if ($realm != 0) {
+			$folded = array();
+
+			foreach ($units as $unit) {
+				if ($unit !== '0209' || (cacti_sizeof($folded) && end($folded) !== '0209')) {
+					$folded[] = $unit;
+				}
+			}
+
+			$units = $folded;
+		}
+
+		$weight = implode('', $units);
+	} else {
+		$name = (string) preg_replace('/\p{Zs}+$/u', '', $name);
+
+		if ($realm != 0) {
+			$name = (string) preg_replace('/^\p{Zs}+/u', '', preg_replace('/\p{Zs}+/u', ' ', $name));
+		}
+
+		$weight = mb_strtolower($name, 'UTF-8');
+	}
+
+	return array(
+		'addr'  => hash('sha256', 'addr|' . $addr),
+		'login' => hash('sha256', 'login|' . intval($realm) . '|' . $weight),
+	);
+}
+
+/**
+ * auth_login_throttle_check - when login throttling is on, counts this
+ *   attempt against the client address and the login name before any
+ *   password check or directory call, and refuses it once either count is
+ *   over its limit, even when the password is correct.  The count is taken
+ *   first and read back, so parallel requests cannot all pass under the
+ *   limit.  A successful login gives its count back through
+ *   auth_login_throttle_release().
+ *
+ *   With throttling off, nothing is read or written.
+ *
+ * @param  (string) $username - the submitted login name
+ * @param  (int)    $realm    - the realm the attempt is checked against
+ *
+ * @return (bool)   true if the attempt is refused
+ */
+function auth_login_throttle_check($username, $realm) {
+	global $error, $error_msg, $auth_login_throttle_held;
+
+	$auth_login_throttle_held = array();
+
+	if (read_config_option('secpass_throttle') != 'on') {
+		return false;
+	}
+
+	$now    = time();
+	$window = max(1, intval(read_config_option('secpass_throttle_window'))) * 60;
+	$limits = array(
+		'addr'  => max(1, intval(read_config_option('secpass_throttle_addr'))),
+		'login' => max(1, intval(read_config_option('secpass_throttle_login')))
+	);
+
+	$refused = false;
+
+	foreach (auth_login_throttle_keys($username, $realm) as $type => $key) {
+		/* addr is first. A client already over that limit must not add a
+		 * login-name row: unique names would grow the table until maintenance. */
+		if ($type === 'login' && $refused) {
+			break;
+		}
+
+		db_execute_prepared('INSERT INTO user_auth_throttle
+			(id, failures, window_start)
+			VALUES (?, 1, ?)
+			ON DUPLICATE KEY UPDATE
+			failures = IF(window_start <= ?, 1, failures + 1),
+			window_start = IF(window_start <= ?, VALUES(window_start), window_start)',
+			array($key, $now, $now - $window, $now - $window));
+
+		$auth_login_throttle_held[$type] = $key;
+
+		$failures = db_fetch_cell_prepared('SELECT failures
+			FROM user_auth_throttle
+			WHERE id = ?',
+			array($key));
+
+		if ($failures > $limits[$type]) {
+			$refused = true;
+		}
+	}
+
+	if ($refused) {
+		$error     = true;
+		$error_msg = __('Too many failed login attempts.  Please try again later.');
+
+		cacti_log(sprintf("LOGIN FAILED: Too many failed login attempts for user '%s' from IP Address '%s'.  Login throttled.", auth_log_username($username), get_client_addr()), false, 'AUTH');
+	}
+
+	return $refused;
+}
+
+/**
+ * auth_login_throttle_release - after a successful login, clears the count
+ *   for the login name and takes this attempt back off the address count.
+ *   Only the attempt's own count is returned, so one valid account cannot
+ *   clear the address count for guesses against others.
+ *
+ * @return (void)
+ */
+function auth_login_throttle_release() {
+	global $auth_login_throttle_held;
+
+	if (empty($auth_login_throttle_held)) {
+		return;
+	}
+
+	if (isset($auth_login_throttle_held['login'])) {
+		db_execute_prepared('DELETE FROM user_auth_throttle
+			WHERE id = ?',
+			array($auth_login_throttle_held['login']));
+	}
+
+	if (isset($auth_login_throttle_held['addr'])) {
+		db_execute_prepared('UPDATE user_auth_throttle
+			SET failures = failures - 1
+			WHERE id = ?
+			AND failures > 0',
+			array($auth_login_throttle_held['addr']));
+	}
+
+	$auth_login_throttle_held = array();
+}
+
+/**
  * basic_auth_login_process - login a basic auth account or generate an error
  *   if there is an error, the globals error and error_msg will be set to notify the caller
  *   that a lockout is present and not to proceed with login.  This function will also
@@ -3770,6 +3953,10 @@ function local_auth_login_process($username) {
 	$user = array();
 
 	if (!api_plugin_hook_function('login_process', false)) {
+		if (auth_login_throttle_check($username, 0)) {
+			return array();
+		}
+
 		/* refuse before any hashing; legitimate passwords are far shorter */
 		if (auth_password_too_long(get_nfilter_request_var('login_password'))) {
 			$error     = true;
@@ -3849,6 +4036,10 @@ function ldap_login_process($username) {
 
 		cacti_log('LOGIN FAILED: Empty LDAP Username provided', false, 'AUTH');
 
+		return array();
+	}
+
+	if (auth_login_throttle_check($username, 3)) {
 		return array();
 	}
 
@@ -3943,6 +4134,10 @@ function domains_login_process($username) {
 
 		cacti_log(sprintf("LOGIN FAILED: Unknown Login Realm '%s' provided for user '%s' from IP address %s", $realm, auth_log_username($username), get_client_addr()), false, 'AUTH');
 
+		return array();
+	}
+
+	if (auth_login_throttle_check($username, $realm)) {
 		return array();
 	}
 
@@ -4773,6 +4968,23 @@ function compat_password_needs_rehash($password, $algo, $options = array()) {
 	}
 
 	return true;
+}
+
+/**
+ * auth_legacy_md5_users - local accounts whose stored password is still an
+ *   unsalted MD5 digest.  A login rehashes it, so only accounts nobody has
+ *   logged into since the upgrade keep one.
+ *
+ * @return (array) id and username of each account, ordered by username
+ */
+function auth_legacy_md5_users() {
+	$users = db_fetch_assoc("SELECT id, username
+		FROM user_auth
+		WHERE realm = 0
+		AND password REGEXP '^[0-9a-fA-F]{32}$'
+		ORDER BY username");
+
+	return is_array($users) ? $users : array();
 }
 
 /**

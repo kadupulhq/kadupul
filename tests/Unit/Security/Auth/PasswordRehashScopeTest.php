@@ -153,6 +153,7 @@ PHP;
 	$source .= cacti_test_function_source($auth, 'auth_dummy_password_hash') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'auth_password_too_long') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'secpass_login_process') . "\n\n";
+	$source .= cacti_test_function_source($auth, 'auth_login_throttle_check') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'local_auth_login_process') . "\n\n";
 	$source .= "\$user = local_auth_login_process('alice');\n";
 	$source .= "print json_encode(array('user' => \$user, 'error' => \$error, 'passwords' => array_column(\$GLOBALS['users'], 'password', 'id')));\n";
