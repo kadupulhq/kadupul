@@ -300,7 +300,8 @@ def verify_audit_cases(harness, check, tables, version):
             shim = run(harness, AUDIT_SHIM, arguments)
             expected_exit = 0 if arguments[0] == '--create' else 1
             check(shim['exit'] == expected_exit and 'FATAL:' in shim['stdout']
-                  and 'Audit stopped because the canonical schema could not be loaded.' in shim['stdout']
+                  and (('Audit stopped because the canonical schema could not be loaded.' in shim['stdout'])
+                       == (arguments[0] != '--create'))
                   and 'Checking Table:' not in shim['stdout']
                   and 'Scanning Table:' not in shim['stdout']
                   and 'Audit was clean' not in shim['stdout']

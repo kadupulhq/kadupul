@@ -176,6 +176,26 @@ final class AuditDatabaseTest extends TestCase
         self::assertSame([], $this->events);
     }
 
+    public function testInvalidDryRunAndAltersNeverReadTheLiveCatalog(): void
+    {
+        foreach ([AuditMode::Report, AuditMode::Alters] as $mode) {
+            foreach ([null, new InvalidAuditSchema(3)] as $problem) {
+                $this->events = [];
+                $store = $this->createMock(AuditBaselineStore::class);
+                $problem === null ? $store->method('read')->willReturn(null) : $store->method('read')->willThrowException($problem);
+                $store->expects(self::never())->method('reset');
+                $store->expects(self::never())->method('replace');
+                $schema = $this->schema();
+                $schema->expects(self::never())->method('catalog');
+                $report = $this->audit($schema, $store)($mode, false, null, false);
+                self::assertSame($problem === null ? BaselineOutcome::FileMissing : BaselineOutcome::Unparsable, $report->baseline);
+                self::assertSame([], $report->tables);
+                self::assertSame([], $report->alters);
+                self::assertSame([], $this->events());
+            }
+        }
+    }
+
     public function testAMissingFileStopsBeforeResetOrComparison(): void
     {
         $store = $this->createMock(AuditBaselineStore::class);
