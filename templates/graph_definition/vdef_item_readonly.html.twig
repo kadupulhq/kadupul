@@ -1,0 +1,17 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'VDEF reference'|trans({}, 'graph_definition') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ vdef.name }} — {{ 'VDEF reference'|trans({}, 'graph_definition') }}</h1>
+    <p>{{ 'This legacy VDEF item is read-only. Its stored reference is preserved.'|trans({}, 'graph_definition') }}</p>
+    <dl><dt>{{ 'Value'|trans({}, 'graph_definition') }}</dt><dd>{{ item.value }}</dd></dl>
+    <section aria-labelledby="vdef-preview"><h2 id="vdef-preview">{{ 'VDEF Preview'|trans({}, 'graph_definition') }}</h2><pre>vdef={{ preview }}</pre></section>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route encodes the persisted parent identity. #}
+    <p><a href="{{ path('graph_vdef_edit', {id: vdef.id}) }}">{{ 'Back to VDEF'|trans({}, 'graph_definition') }}</a></p>
+</main>
+{% endblock %}
