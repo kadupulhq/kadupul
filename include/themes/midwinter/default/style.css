@@ -361,9 +361,6 @@
 .jstree-default.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked {
   background: transparent;
 }
-.jstree-default.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked.jstree-wholerow-hovered {
-  #background: #e7f4f9;
-}
 .jstree-default > .jstree-striped {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB/qqA+AAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMNAMM9s3UAAAAXSURBVHjajcEBAQAAAIKg/H/aCQZ70AUBjAATb6YPDgAAAABJRU5ErkJggg==") left top repeat;
 }
@@ -382,7 +379,6 @@
   box-sizing: border-box;
 }
 .jstree-default .jstree-wholerow-hovered {
-  #background: rgba(0,0,0,0.1);
   border: none;
 }
 .jstree-default .jstree-wholerow-clicked {
