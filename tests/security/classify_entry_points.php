@@ -197,12 +197,12 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // Complete reviewed native-identity and persistence handoff, plus its scoped
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => '6be265184fd79ab202dc361df6353d996cda44531648613fcf08e8f30c31bd96',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => 'f0b7ea43c87184ef542f753be934e2a83c761a2c888b7915bf90dd3d312ed84c',
-    'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '116486046577cec9817ef7413c103f54c9636cc755c2bb4d46a727e002767869',
-    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '7bc1cd5d3b3b0453e32f7a83ef77d569d351baa1bd1d4ce54e02fff9023835eb',
-    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '10dbd02c68320ad3c0e0c2885e1c353e6da23830b1f519092b5499802b566292',
-    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => '1745bbda81910dad3cfc4ad4a890a7260e2a471a65d9321954c914284eb4b6e9',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => '4a17f2792e0a8e3d8650178ec0ee94e148a1f48263934f461fe7137669ada1ae',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '94ac3a04015625cc2d90feed899a3717680db804480a027eaae8baeeda3f6cc7',
+    'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
+    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '106ab9e22fdc9ba3061082cb01e903aa5333824d43d5e1f554c6a8dd4172cfcf',
+    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
+    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b6a7a0e78791fe7afb40c2702e76232654ae941349db9c95c4c6d579c2e8ef91',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
     'config/services.yaml' => 'b17c0050fc85ee61344734deb5bb693852637812d79b1f89b60c54e56bd0ff9a',
@@ -2050,8 +2050,8 @@ function palette_feature_call(string $root, array $target, int $depth = 0): bool
         // Exact reviewed current-account and realm-5 authorization contract.
         $adapter = $root . '/src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php';
         $sql = $root . '/src/Graphing/Infrastructure/Legacy/PaletteSql.php';
-        return is_file($adapter) && hash_file('sha256', $adapter) === '833cb1e7506f07c4a2a4fbec7b9417b5a9e95ee97a8f629787d8749ba09ee27b'
-            && is_file($sql) && hash_file('sha256', $sql) === '85a0ca001343d01c7e611d5fc93a3bac1379e6b9a103f6c5dce3908de9b7b689';
+        return is_file($adapter) && hash_file('sha256', $adapter) === '20cdc2c2051fe11429a9adcdbbf75fcb6e5e20161ad8fe73758ef73424526801'
+            && is_file($sql) && hash_file('sha256', $sql) === '87a4a7c445777c474ef28235fe5c84b718c531c57a8e73d14c550456e72c2693';
     }
     if ($depth >= CALL_DEPTH) {
         return false;
