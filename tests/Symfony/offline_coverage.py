@@ -15,6 +15,56 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 
 
+class OfflineFixture:
+    """Execute and mutate the disposable fixture through its guest filesystem."""
+
+    def __init__(self, stage: Path, raw: Path, diagnostics: Path, image: str):
+        self.stage = stage
+        self.raw = raw
+        self.diagnostics = diagnostics
+        self.image = image
+
+    def execute(self, script, network='none', error=None, arguments=(), input_bytes=None):
+        command = ['docker', 'run', '--rm', '--network', network, '--entrypoint', 'php',
+                   '--user', f'{os.getuid()}:{os.getgid()}',
+                   '--volume', f'{self.stage}:/var/www/html', '--volume', f'{self.raw}:/coverage',
+                   '--volume', f'{self.diagnostics}:/artifacts',
+                   '--volume', f'{ROOT}/tests/Support/Behavior:/harness:ro',
+                   '--workdir', '/var/www/html', self.image,
+                   '-d', 'pcov.directory=/var/www/html',
+                   '-d', 'pcov.exclude=~/(include/vendor|tests)/|^/var/www/html/var/~',
+                   '-d', 'auto_prepend_file=/harness/coverage.php', script, *arguments]
+        if input_bytes is not None:
+            command.insert(3, '--interactive')
+        result = subprocess.run(command, input=input_bytes, capture_output=True, timeout=180)
+        output_text = (result.stdout + result.stderr).decode(errors='replace')
+        if error is None:
+            if result.returncode:
+                raise RuntimeError(output_text)
+        elif result.returncode == 0 or error not in output_text:
+            raise RuntimeError('Expected failure was not observed: ' + error + '\n' + output_text)
+
+    def remove_fixture(self, relative):
+        # Remove fixtures through the verifier's filesystem view. Host
+        # unlink can leave stale bind-mount metadata on Docker Desktop.
+        self.execute('-r', arguments=[
+            'if (!unlink($argv[1])) { throw new RuntimeException("Cannot remove offline fixture"); }',
+            relative,
+        ])
+
+    def write_fixture(self, relative, contents):
+        # Mutate through the same filesystem view as the verifier and
+        # confirm exact bytes; host writes can retain stale guest metadata.
+        self.execute('-r', arguments=[
+            '$bytes = stream_get_contents(STDIN); '
+            'if ($bytes === false || strlen($bytes) !== (int) $argv[2] '
+            '|| file_put_contents($argv[1], $bytes) !== (int) $argv[2] '
+            '|| hash_file("sha256", $argv[1]) !== $argv[3]) { '
+            'throw new RuntimeException("Offline fixture bytes were not confirmed"); }',
+            relative, str(len(contents)), hashlib.sha256(contents).hexdigest(),
+        ], input_bytes=contents)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--archive', type=Path, required=True)
@@ -36,45 +86,10 @@ def main():
             bundle.extractall(directory, filter='data')
         stage = Path(directory) / 'kadupul'
 
-        def execute(script, network='none', error=None, arguments=(), input_bytes=None):
-            command = ['docker', 'run', '--rm', '--network', network, '--entrypoint', 'php',
-                       '--user', f'{os.getuid()}:{os.getgid()}',
-                       '--volume', f'{stage}:/var/www/html', '--volume', f'{raw}:/coverage',
-                       '--volume', f'{diagnostics}:/artifacts',
-                       '--volume', f'{ROOT}/tests/Support/Behavior:/harness:ro',
-                       '--workdir', '/var/www/html', args.image,
-                       '-d', 'pcov.directory=/var/www/html',
-                       '-d', 'pcov.exclude=~/(include/vendor|tests)/|^/var/www/html/var/~',
-                       '-d', 'auto_prepend_file=/harness/coverage.php', script, *arguments]
-            if input_bytes is not None:
-                command.insert(3, '--interactive')
-            result = subprocess.run(command, input=input_bytes, capture_output=True, timeout=180)
-            output_text = (result.stdout + result.stderr).decode(errors='replace')
-            if error is None:
-                if result.returncode:
-                    raise RuntimeError(output_text)
-            elif result.returncode == 0 or error not in output_text:
-                raise RuntimeError('Expected failure was not observed: ' + error + '\n' + output_text)
-
-        def remove_fixture(relative):
-            # Remove fixtures through the verifier's filesystem view. Host
-            # unlink can leave stale bind-mount metadata on Docker Desktop.
-            execute('-r', arguments=[
-                'if (!unlink($argv[1])) { throw new RuntimeException("Cannot remove offline fixture"); }',
-                relative,
-            ])
-
-        def write_fixture(relative, contents):
-            # Mutate through the same filesystem view as the verifier and
-            # confirm exact bytes; host writes can retain stale guest metadata.
-            execute('-r', arguments=[
-                '$bytes = stream_get_contents(STDIN); '
-                'if ($bytes === false || strlen($bytes) !== (int) $argv[2] '
-                '|| file_put_contents($argv[1], $bytes) !== (int) $argv[2] '
-                '|| hash_file("sha256", $argv[1]) !== $argv[3]) { '
-                'throw new RuntimeException("Offline fixture bytes were not confirmed"); }',
-                relative, str(len(contents)), hashlib.sha256(contents).hexdigest(),
-            ], input_bytes=contents)
+        fixture = OfflineFixture(stage, raw, diagnostics, args.image)
+        execute = fixture.execute
+        remove_fixture = fixture.remove_fixture
+        write_fixture = fixture.write_fixture
 
         execute('tools/verify-offline.php')
         execute('tools/dependencies/install-legacy.php')
