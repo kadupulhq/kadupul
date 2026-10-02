@@ -35,4 +35,4 @@ fi
 echo "Updating Cacti language gettext language files"
 
 cd ${BASE_PATH}
-${XGETTEXT_BIN} -F -k__gettext -k__ -k__n:1,2 -k__x:1c,2 -k__xn:1c,2,3 -k__esc -k__esc_n:1,2 -k__esc_x:1c,2 -k__esc_xn:1c,2,3 -k__date -o locales/po/cacti.pot `find . -maxdepth 2 -name \*.php`
+${XGETTEXT_BIN} --from-code=UTF-8 --no-wrap --copyright-holder="The Cacti Group" --package-name="Kadupul" --package-version=`cat include/cacti_version` --msgid-bugs-address="https://github.com/kadupulhq/kadupul/issues" -F -k__gettext -k__ -k__n:1,2 -k__x:1c,2 -k__xn:1c,2,3 -k__esc -k__esc_n:1,2 -k__esc_x:1c,2 -k__esc_xn:1c,2,3 -k__date -o locales/po/cacti.pot `find . -maxdepth 2 -name \*.php` `find src -type f -name \*.php`
