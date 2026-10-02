@@ -136,6 +136,12 @@ jobs:
         php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-database.xml --colors=never
         php Symfony/data_input_lock_probe.php
         php Support/verify_row_cache.php
+        # Use the disposable matrix server's existing administrator identity;
+        # the probe creates/drops only its own random schema in a finally block.
+        KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \
+          KADUPUL_REFERENCE_TEST_USER="$KADUPUL_TEST_MYSQL_ADMIN_USER" \
+          KADUPUL_REFERENCE_TEST_PASSWORD="$KADUPUL_TEST_MYSQL_ADMIN_PASSWORD" \
+          php -d zend.exception_ignore_args=1 security/reference_write_transaction_native_probe.php
 
   php:
     name: PHP ${{ matrix.php }}
