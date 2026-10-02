@@ -81,6 +81,7 @@ def main():
         manifest_path = stage / 'tools/dependencies/legacy-files.json'
         manifest = json.loads(manifest_path.read_text())
         selected = next(iter(manifest['files']))
+        patched, patch = next(iter(manifest['patches'].items()))
         remove_fixture(selected)
         execute('tools/dependencies/install-legacy.php', network='bridge')
         if hashlib.sha256((stage / selected).read_bytes()).hexdigest() != manifest['files'][selected]:
@@ -108,17 +109,36 @@ def main():
         execute('tools/verify-offline.php')
         for fields, message in [
             ({'revision': 'invalid'}, 'Invalid legacy dependency revision'),
-            ({'files': {'include/vendor/../escape.php': '0' * 64}}, 'Invalid legacy dependency path'),
-            ({'files': {selected: 'invalid'}}, 'Invalid legacy dependency checksum'),
+            ({'files': {'include/vendor/../escape.php': '0' * 64}, 'patches': {}}, 'Invalid legacy dependency path'),
+            ({'files': {selected: 'invalid'}, 'patches': {}}, 'Invalid legacy dependency checksum'),
+            ({'files': {}}, 'Invalid legacy dependency patch'),
+            ({'patches': {patched: 'invalid'}}, 'Invalid legacy dependency patch'),
+            ({'patches': {patched: patch | {'replacements': ['invalid']}}}, 'Invalid legacy dependency patch'),
         ]:
             write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest | fields).encode())
             execute('tools/dependencies/install-legacy.php', error=message)
+        # A patched file that fails any check must not be written.
+        patched_bytes = (stage / patched).read_bytes()
+        remove_fixture(patched)
+        for fields, message in [
+            ({'patches': {patched: patch | {'source_sha256': '0' * 64}}}, 'Legacy dependency source checksum mismatch'),
+            ({'patches': {patched: patch | {'replacements': [{'before': 'kadupul-absent-anchor', 'after': ''}]}}},
+             'Legacy dependency patch no longer applies'),
+            ({'files': manifest['files'] | {patched: '0' * 64}}, 'Legacy dependency patched checksum mismatch'),
+        ]:
+            write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest | fields).encode())
+            execute('tools/dependencies/install-legacy.php', network='bridge', error=message)
+            execute('-r', arguments=[
+                'if (file_exists($argv[1])) { throw new RuntimeException("Rejected dependency patch was written: " . $argv[1]); }',
+                patched,
+            ])
+        write_fixture(patched, patched_bytes)
         write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest).encode())
         # Use a fresh path: Docker Desktop can retain regular-file metadata
         # briefly when a bind-mounted file is replaced by a symlink.
         link_path = 'include/vendor/coverage-symlink-fixture'
         dependency = stage / link_path
-        write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest | {'files': {link_path: manifest['files'][selected]}}).encode())
+        write_fixture('tools/dependencies/legacy-files.json', json.dumps(manifest | {'files': {link_path: manifest['files'][selected]}, 'patches': {}}).encode())
         dependency.symlink_to(os.path.relpath(stage / 'composer.json', dependency.parent))
         execute('tools/dependencies/install-legacy.php', error='Refusing symlink')
     if not list(raw.glob('coverage-*.json')):
