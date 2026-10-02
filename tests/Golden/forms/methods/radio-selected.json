@@ -1,0 +1,10 @@
+{
+    "session": {
+        "form_change_actions": {
+            "mode_1": "modeChanged()",
+            "mode_2": "modeChanged()"
+        }
+    },
+    "diagnostics": [],
+    "log": []
+}
