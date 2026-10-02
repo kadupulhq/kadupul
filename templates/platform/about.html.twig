@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'about' %}
+{% block title %}{{ 'About Kadupul'|trans }}{% endblock %}
+{% block body %}
+<main>
+<h1>{{ 'About Kadupul'|trans }}</h1>
+<h2>{{ 'Version %version%'|trans({'%version%': release.version}) }}{% if release.beta is not null %} {{ '- Beta %beta%'|trans({'%beta%': release.beta}) }}{% endif %}</h2>
+<p>{{ 'Kadupul is an independent open-source project for network monitoring and time-series graphing.'|trans }}</p>
+<p>{{ 'Development, contributions, and release decisions are managed by the Kadupul organization.'|trans }} <a href="https://github.com/kadupulhq">{{ 'Kadupul organization'|trans }}</a></p>
+<p>{{ 'For documentation and support, visit the Kadupul project.'|trans }} <a href="https://github.com/kadupulhq/kadupul">{{ 'Kadupul project'|trans }}</a></p>
+<h2>{{ 'License'|trans }}</h2>
+<p>{{ 'Kadupul is licensed under the GNU GPL:'|trans }}</p>
+<p>{{ 'This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.'|trans }}</p>
+<p>{{ 'This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.'|trans }}</p>
+</main>
+{% endblock %}

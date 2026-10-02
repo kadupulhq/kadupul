@@ -1,9 +1,26 @@
 entry	gate	detail
 .php-cs-fixer.php	web-server-denied	nginx; apache: opt-in via .htaccess.dist
-about.php	authenticated	include/auth.php realm -1
+about.php	symfony:forward	forwards to app.php/about/legacy
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
+app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
+app.php/graph-definitions/vdefs	symfony:graph_vdefs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 14
+app.php/graph-definitions/vdefs/actions/{operation}	symfony:graph_vdef_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 14
+app.php/graph-definitions/vdefs/legacy	symfony:graph_vdef_legacy	methods=GET|HEAD; ConsoleAccess realm 8 + realm 14
+app.php/graph-definitions/vdefs/new	symfony:graph_vdef_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 14
+app.php/graph-definitions/vdefs/{id<\d+>}/edit	symfony:graph_vdef_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 14
+app.php/graph-definitions/vdefs/{vdefId<\d+>}/items/reorder	symfony:graph_vdef_item_reorder	methods=POST requirements=vdefId=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 14
+app.php/graph-definitions/vdefs/{vdefId<\d+>}/items/{itemId<\d+>}	symfony:graph_vdef_item_edit	methods=GET|HEAD|POST requirements=vdefId=[1-9][0-9]{0,7},itemId=0|[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 14
+app.php/graph-definitions/vdefs/{vdefId<\d+>}/items/{itemId<\d+>}/delete	symfony:graph_vdef_item_delete	methods=GET|HEAD|POST requirements=vdefId=[1-9][0-9]{0,7},itemId=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 14
+app.php/graphing/colors	symfony:palette_color_list	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
+app.php/graphing/colors/actions/delete	symfony:palette_color_delete	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
+app.php/graphing/colors/export	symfony:palette_color_export	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
+app.php/graphing/colors/import	symfony:palette_color_import	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
+app.php/graphing/colors/legacy	symfony:palette_color_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
+app.php/graphing/colors/new	symfony:palette_color_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
+app.php/graphing/colors/{id}/edit	symfony:palette_color_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -46,7 +63,7 @@ clog.php	guest-or-realm:18	include/auth.php; guest_account
 clog_user.php	guest-or-realm:19	include/auth.php; guest_account
 cmd.php	cli-only	guard: include/cli_check.php
 cmd_realtime.php	cli-only	guard: include/cli_check.php
-color.php	realm:5	include/auth.php
+color.php	symfony:forward	forwards to app.php/graphing/colors/legacy
 color_templates.php	realm:5	include/auth.php
 color_templates_items.php	realm:5	include/auth.php
 config/	web-server-denied	nginx; apache .htaccess
@@ -258,4 +275,4 @@ user_domains.php	realm:1	include/auth.php
 user_group_admin.php	realm:1	include/auth.php
 utilities.php	realm:15	include/auth.php
 var/	web-server-denied	nginx; apache .htaccess
-vdef.php	realm:14	include/auth.php
+vdef.php	symfony:forward	forwards to app.php/graph-definitions/vdefs/legacy
