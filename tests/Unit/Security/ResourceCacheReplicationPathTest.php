@@ -81,9 +81,12 @@ $destinations = array(
 
 update_db_from_path($outside . '/outside.rrd', 'test', false);
 update_db_from_path($install . '/source.txt', 'test', false);
+ob_start();
 resource_cache_out('test', array('path' => $install, 'recursive' => true));
+$lintOutput = ob_get_clean();
 
 echo json_encode(array(
+    'lint_output' => $lintOutput,
     'destinations' => $destinations,
     'saved_paths' => array_column($GLOBALS['resource_cache_saves'], 'path'),
     'safe_contents' => file_get_contents($install . '/safe.php'),
@@ -154,6 +157,7 @@ test('resource-cache replication confines writes and keeps PHP validation argume
     expect(array_slice($result['destinations'], 1))->toBe(array(false, false, false, false, false, false));
     expect($result['saved_paths'])->toContain('source.txt');
     expect($result['safe_contents'])->toBe('<?php echo "valid";');
+    expect(substr_count($result['lint_output'], 'No syntax errors detected'))->toBe(1);
     expect($result['config_contents'])->toBe('local database secret');
     expect($result['outside_contents'])->toBe('outside data');
     expect(implode("\n", $result['logs']))->toContain('Refusing unsafe resource cache path');

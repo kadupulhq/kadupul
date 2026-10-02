@@ -1736,6 +1736,8 @@ function resource_cache_out($type, $path)
                                         fclose($pipes[1]);
                                         fclose($pipes[2]);
                                         $exit = proc_close($process);
+                                        // Preserve PHP lint stdout for replication callers.
+                                        echo $output;
                                         $output .= $error_output;
                                     }
 
