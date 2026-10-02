@@ -11,6 +11,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Reject non-positive and fractional poller-cache thread counts, include the audit baseline and runtime dependencies in Docker integration coverage, and fail before starting the test stack when its configured test pattern matches no files.
 
 
+- Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
+- Handle recovery CLI help and version flags before requiring remote database connections; retain recovery samples when a normal run cannot connect.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
