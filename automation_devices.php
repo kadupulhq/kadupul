@@ -686,7 +686,7 @@ function export_discovery_results() {
 	}
 }
 
-function purge_discovery_results() {
+function purge_discovery_results(): never {
 	get_filter_request_var('network');
 
 	if (get_request_var('network') > 0) {

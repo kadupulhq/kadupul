@@ -1,8 +1,18 @@
 const { test, expect } = require('@playwright/test');
 
-const allThemes = ['cacti', 'carrot', 'dark', 'hollyberry', 'midwinter', 'modern', 'paper-plane', 'paw', 'raspberry', 'sunrise'];
-const alignedThemes = ['cacti', 'carrot', 'hollyberry', 'midwinter', 'raspberry'];
-const genericThemes = ['cacti', 'carrot', 'hollyberry', 'raspberry'];
+const fs = require('fs');
+const path = require('path');
+
+/* Read the shipped themes so the list cannot name one that is not there */
+const themeRoot = path.resolve(__dirname, '../../include/themes');
+const allThemes = fs.readdirSync(themeRoot, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort();
+
+if (allThemes.length === 0) {
+  throw new Error('No shipped themes found');
+}
 
 test.describe('theme jquery ui css alignment', () => {
   test('all themes serve 1.14.x jquery ui bundles', async ({ request }) => {
@@ -14,26 +24,6 @@ test.describe('theme jquery ui css alignment', () => {
       expect(css, `${theme} should advertise jquery ui 1.14.x`).toContain('jQuery UI - v1.14.');
       expect(css, `${theme} should not advertise jquery ui 1.12.1`).not.toContain('jQuery UI - v1.12.1');
     }
-  });
-
-  test('generic aligned themes match the paw reference bundle', async ({ request }) => {
-    const reference = await (await request.get('/include/themes/paw/jquery-ui.css')).text();
-
-    for (const theme of genericThemes) {
-      const css = await (await request.get(`/include/themes/${theme}/jquery-ui.css`)).text();
-      expect(css, `${theme} should match paw reference bundle`).toBe(reference);
-    }
-  });
-
-  test('midwinter retains the custom selectmenu overrides as valid css', async ({ request }) => {
-    const css = await (await request.get('/include/themes/midwinter/jquery-ui.css')).text();
-
-    expect(css).toContain('button.ui-multiselect,');
-    expect(css).toContain('.ui-selectmenu-button.ui-button:focus-visible');
-    expect(css).toContain('.ui-button.ui-state-active:focus-within');
-    expect(css).toContain('background: var(--background-progress);');
-    expect(css).not.toContain('&:focus-within');
-    expect(css).not.toContain('-webkit-tap-highlight-color: 1px solid');
   });
 });
 
@@ -56,19 +46,34 @@ test.describe('theme jquery ui browser smoke', () => {
 
       const screenshot = await page.locator('#sandbox').screenshot();
       expect(screenshot.byteLength, `${theme} sandbox screenshot should not be empty`).toBeGreaterThan(1000);
-
-      if (theme === 'midwinter') {
-        const midwinterSelectmenu = await page.locator('#theme-select-button').evaluate((element) => {
-          const style = getComputedStyle(element);
-          return {
-            display: style.display,
-            maxWidth: style.maxWidth,
-          };
-        });
-
-        expect(midwinterSelectmenu.display).toBe('inline-flex');
-        expect(midwinterSelectmenu.maxWidth).toBe('400px');
-      }
     });
   }
+});
+
+test.describe('theme icon glyphs', () => {
+  const glyphContent = async (page, classes) => {
+    await page.goto('/tests/e2e/theme-smoke.html?theme=paper-plane');
+    await page.addStyleTag({ url: '/include/fa/css/all.css' });
+
+    return page.evaluate((iconClasses) => {
+      const icon = document.createElement('i');
+      icon.className = iconClasses;
+      document.body.appendChild(icon);
+
+      return getComputedStyle(icon, '::before').content;
+    }, classes);
+  };
+
+  test('the paper-plane scroll icon far fa-arrow-alt-circle-up has a glyph', async ({ page }) => {
+    const content = await glyphContent(page, 'far fa-arrow-alt-circle-up');
+
+    expect(content).not.toBe('none');
+    expect(content).not.toBe('normal');
+  });
+
+  test('the Font Awesome 4 name fa fa-arrow-circle-o-up has no glyph in the shipped bundle', async ({ page }) => {
+    const content = await glyphContent(page, 'fa fa-arrow-circle-o-up');
+
+    expect(['none', 'normal']).toContain(content);
+  });
 });

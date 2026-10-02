@@ -1,6 +1,7 @@
 /*
   +-------------------------------------------------------------------------+
   | Copyright (C) 2004-2026 The Cacti Group                                 |
+  | Copyright (C) 2026 The Kadupul project and contributors                 |
   |                                                                         |
   | This program is free software; you can redistribute it and/or           |
   | modify it under the terms of the GNU General Public License             |
@@ -61,7 +62,7 @@ function themeReady() {
 	$('.cactiConsoleNavigationArea').find('#navigation > table').remove();
 
 	if ($('#cactiPageBottom').length == 0) {
-		$('<div id="cactiPageBottom" class="cactiPageBottom"><a class="bottom_scroll_up action-icon-user" href="#"><i class="fa fa-arrow-circle-o-up"></i></a></div>').insertAfter('#cactiContent');
+		$('<div id="cactiPageBottom" class="cactiPageBottom"><a class="bottom_scroll_up action-icon-user" href="#"><i class="far fa-arrow-alt-circle-up"></i></a></div>').insertAfter('#cactiContent');
 	}
 
 	$('.maintabs nav ul li a.lefttab').each( function() {
