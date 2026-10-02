@@ -17,6 +17,7 @@ require $root . '/lib/auth.php';
 require $root . '/include/global_constants.php';
 require $root . '/lib/import.php';
 require $root . '/lib/api_aggregate.php';
+require $root . '/lib/api_graph.php';
 require $root . '/lib/aggregate.php';
 require $root . '/lib/variables.php';
 require $root . '/lib/html.php';
@@ -54,6 +55,149 @@ function callerAssert(bool $condition, string $message): void
         throw new RuntimeException($message);
     }
     echo "PASS $message\n";
+}
+
+function graphApiControls(PDO $database, PDO $observer): void
+{
+    // These expectations follow the original signed graph API: local copies
+    // share data sources, template copies remap input definitions and SNMP
+    // associations, and suggested titles retain their substitution expression.
+    api_resize_graphs(15000002, 777, 333);
+    callerAssert($observer->query('SELECT width,height FROM graph_templates_graph WHERE local_graph_id=15000002')->fetch(PDO::FETCH_NUM) === [777, 333], 'graph resize persists exact requested dimensions');
+    callerAssert((int) $observer->query('SELECT width FROM graph_templates_graph WHERE local_graph_id=15000003')->fetchColumn() === 640, 'graph resize leaves the sibling unchanged');
+    $lookup = api_get_graphs_from_datasource(15000002);
+    // The legacy lookup has no ORDER BY; its contract is the ID/name mapping.
+    ksort($lookup);
+    callerAssert($lookup === [15000001 => 'Measured aggregate', 15000002 => 'Member A'], 'data-source lookup returns distinct original graph IDs and title caches');
+    callerAssert(api_get_graphs_from_datasource(16000999) === [], 'unknown data source has no related graphs');
+    $copy = api_duplicate_graph(15000002, 0, 'Copy <graph_title>');
+    callerAssert((int) $copy > 0 && (int) $copy !== 15000002, 'local graph copy returns a distinct persisted graph');
+    $sourceItems = $observer->query('SELECT task_item_id,sequence,graph_type_id,text_format FROM graph_templates_item WHERE local_graph_id=15000002 ORDER BY sequence')->fetchAll(PDO::FETCH_ASSOC);
+    $read = $observer->prepare('SELECT task_item_id,sequence,graph_type_id,text_format FROM graph_templates_item WHERE local_graph_id=? ORDER BY sequence');
+    $read->execute([$copy]);
+    callerAssert($read->fetchAll(PDO::FETCH_ASSOC) === $sourceItems, 'local graph copy preserves exact item ordering and shared data-source handoff');
+    $read = $observer->prepare('SELECT title,title_cache FROM graph_templates_graph WHERE local_graph_id=?');
+    $read->execute([$copy]);
+    callerAssert($read->fetch(PDO::FETCH_ASSOC) === ['title' => 'Copy Member A', 'title_cache' => 'Copy Member A'], 'local graph copy expands the original title and refreshes its cache');
+    callerAssert(api_duplicate_graph(16000999, 0, 'missing') === false, 'missing local graph copy refuses without a new parent');
+
+    $database->exec("INSERT INTO graph_templates(id,name,multiple) VALUES(16000001,'Native template','on')");
+    $database->exec("INSERT INTO graph_templates_graph(graph_template_id,local_graph_id,title,title_cache,width,height) VALUES(16000001,0,'Template title','Template title',555,222)");
+    $database->exec("INSERT INTO graph_templates_item(graph_template_id,local_graph_id,task_item_id,sequence,graph_type_id,text_format,color_id) VALUES(16000001,0,15000101,1,4,'Template item',1)");
+    $originalItem = (int) $database->lastInsertId();
+    $database->exec("INSERT INTO graph_template_input(id,graph_template_id,name,description,column_name) VALUES(16000001,16000001,'Native color','Native input','color_id')");
+    $database->exec("INSERT INTO graph_template_input_defs(graph_template_input_id,graph_template_item_id) VALUES(16000001,$originalItem)");
+    $database->exec("INSERT INTO snmp_query_graph(id,snmp_query_id,name,graph_template_id) VALUES(50001,1,'Native query',16000001)");
+    $database->exec("INSERT INTO snmp_query_graph_rrd(snmp_query_graph_id,data_template_id,data_template_rrd_id,snmp_field_name) VALUES(50001,1,15000101,'ifInOctets')");
+    $database->exec("INSERT INTO snmp_query_graph_rrd_sv(snmp_query_graph_id,data_template_id,sequence,field_name,text) VALUES(50001,1,2,'name','Native data |query_ifDescr|')");
+    $database->exec("INSERT INTO snmp_query_graph_sv(snmp_query_graph_id,sequence,field_name,text) VALUES(50001,1,'title','|query_missing|'),(50001,2,'title','Resolved |query_ifDescr|')");
+    $templateCopy = (int) api_duplicate_graph(0, 16000001, 'Copy <template_title>');
+    callerAssert($templateCopy > 0 && $templateCopy !== 16000001, 'template copy returns a new template identity');
+    $read = $observer->prepare('SELECT name,multiple FROM graph_templates WHERE id=?');
+    $read->execute([$templateCopy]);
+    callerAssert($read->fetch(PDO::FETCH_ASSOC) === ['name' => 'Copy Native template', 'multiple' => 'on'], 'template copy preserves multiple mode and expands its original name');
+    $read = $observer->prepare('SELECT width,height FROM graph_templates_graph WHERE graph_template_id=? AND local_graph_id=0');
+    $read->execute([$templateCopy]);
+    callerAssert($read->fetch(PDO::FETCH_NUM) === [555, 222], 'template copy preserves original graph dimensions');
+    $read = $observer->prepare('SELECT gi.column_name,gi.name,gti.graph_template_id,gti.sequence FROM graph_template_input gi INNER JOIN graph_template_input_defs gid ON gid.graph_template_input_id=gi.id INNER JOIN graph_templates_item gti ON gti.id=gid.graph_template_item_id WHERE gi.graph_template_id=?');
+    $read->execute([$templateCopy]);
+    callerAssert($read->fetch(PDO::FETCH_ASSOC) === ['column_name' => 'color_id', 'name' => 'Native color', 'graph_template_id' => $templateCopy, 'sequence' => 1], 'template copy remaps input definitions to the copied child item');
+    $queryCopy = $observer->prepare('SELECT id,name FROM snmp_query_graph WHERE graph_template_id=?');
+    $queryCopy->execute([$templateCopy]);
+    $mappedQuery = $queryCopy->fetch(PDO::FETCH_ASSOC);
+    callerAssert(is_array($mappedQuery) && $mappedQuery['name'] === 'Copy Native template' && (int) $mappedQuery['id'] !== 50001, 'template copy remaps the associated data query');
+    $read = $observer->prepare('SELECT data_template_id,data_template_rrd_id,snmp_field_name FROM snmp_query_graph_rrd WHERE snmp_query_graph_id=?');
+    $read->execute([$mappedQuery['id']]);
+    callerAssert($read->fetch(PDO::FETCH_ASSOC) === ['data_template_id' => 1, 'data_template_rrd_id' => 15000101, 'snmp_field_name' => 'ifInOctets'], 'copied query retains exact data-source mapping');
+    $read = $observer->prepare('SELECT sequence,field_name,text FROM snmp_query_graph_rrd_sv WHERE snmp_query_graph_id=?');
+    $read->execute([$mappedQuery['id']]);
+    callerAssert($read->fetch(PDO::FETCH_ASSOC) === ['sequence' => 2, 'field_name' => 'name', 'text' => 'Native data |query_ifDescr|'], 'copied query retains data-source suggested values');
+    $read = $observer->prepare('SELECT sequence,field_name,text FROM snmp_query_graph_sv WHERE snmp_query_graph_id=? ORDER BY sequence');
+    $read->execute([$mappedQuery['id']]);
+    callerAssert($read->fetchAll(PDO::FETCH_ASSOC) === [['sequence' => 1, 'field_name' => 'title', 'text' => '|query_missing|'], ['sequence' => 2, 'field_name' => 'title', 'text' => 'Resolved |query_ifDescr|']], 'copied query retains ordered graph suggested values');
+    $withoutQuery = (int) api_duplicate_graph(0, 16000001, 'Unmapped <template_title>', false);
+    callerAssert($withoutQuery > 0 && (int) $observer->query("SELECT COUNT(*) FROM snmp_query_graph WHERE graph_template_id=$withoutQuery")->fetchColumn() === 0, 'template copy can explicitly omit data-query associations');
+    $database->exec("UPDATE graph_template_input SET column_name='not_a_column' WHERE id=16000001");
+    $before = (int) $observer->query('SELECT COUNT(*) FROM graph_templates')->fetchColumn();
+    callerAssert(api_duplicate_graph(0, 16000001, 'Invalid copy') === false && (int) $observer->query('SELECT COUNT(*) FROM graph_templates')->fetchColumn() === $before, 'invalid input column refuses a template clone before a parent write');
+    callerAssert(api_duplicate_graph(0, 16000999, 'Missing copy') === false, 'missing template clone refuses');
+
+    $database->exec("INSERT INTO graph_local(id,graph_template_id,host_id,snmp_query_id,snmp_query_graph_id,snmp_index) VALUES(16000101,16000001,1,1,50001,'native'),(16000102,0,0,0,0,''),(16000103,1,1,0,0,'')");
+    $database->exec("INSERT INTO graph_templates_graph(local_graph_id,graph_template_id,title,title_cache) VALUES(16000101,16000001,'Old title','Old title'),(16000102,0,'No template','No template'),(16000103,1,'Simple title','Simple title')");
+    $database->exec("INSERT INTO host_snmp_cache(host_id,snmp_query_id,field_name,field_value,snmp_index,oid) VALUES(1,1,'ifDescr','Native interface','native','1.3.6.1.2.1.2.2.1.2.1')");
+    callerAssert(api_reapply_suggested_graph_title(16000101) === true && $observer->query('SELECT title FROM graph_templates_graph WHERE local_graph_id=16000101')->fetchColumn() === 'Resolved |query_ifDescr|', 'suggested title skips unresolved candidates and stores the original resolvable expression');
+    callerAssert(api_reapply_suggested_graph_title(16000102) === null && api_reapply_suggested_graph_title(16000103) === null && api_reapply_suggested_graph_title(16000999) === null, 'non-template simple and missing graphs do not reapply a suggested title');
+    $database->exec('DELETE FROM snmp_query_graph_sv WHERE snmp_query_graph_id=50001');
+    callerAssert(api_reapply_suggested_graph_title(16000101) === false, 'data-query graph without suggested values reports no title match');
+    $database->exec("INSERT INTO data_local(id,host_id) VALUES(15000002,1)");
+    $database->exec("INSERT INTO poller_item(local_data_id,host_id,rrd_name) VALUES(15000002,1,'fixture')");
+    callerAssert(api_graph_change_device(15000002, 0) === true, 'simple graph admits an actual device change without querying a device');
+    callerAssert((int) $observer->query('SELECT host_id FROM graph_local WHERE id=15000002')->fetchColumn() === 0 && (int) $observer->query('SELECT host_id FROM data_local WHERE id=15000002')->fetchColumn() === 0 && (int) $observer->query('SELECT host_id FROM poller_item WHERE local_data_id=15000002')->fetchColumn() === 0, 'device change hands the new identity to graph data and poller rows');
+    callerAssert(api_graph_change_device(16000101, 0) === false && (int) $observer->query('SELECT host_id FROM graph_local WHERE id=16000101')->fetchColumn() === 1, 'data-query graph refuses device reassignment and preserves its host');
+    callerAssert(api_graph_change_device(16000103, 0) === true && $observer->query('SELECT title_cache FROM graph_templates_graph WHERE local_graph_id=16000103')->fetchColumn() === 'Simple title', 'device change without data-source children preserves the literal title cache');
+    $database->exec("INSERT INTO graph_templates_graph(local_graph_id,graph_template_id,title,title_cache) VALUES(16000106,16000001,'Orphan fixture','Orphan fixture')");
+    callerAssert(api_reapply_suggested_graph_title(16000106) === null, 'suggested title refuses a missing graph-local parent');
+
+    $database->exec("INSERT INTO data_template_data(local_data_id,name,name_cache) VALUES(15000002,'Task-owned source','Task-owned source')");
+    try {
+        $reviewed = [$copy];
+        api_delete_graphs($reviewed, '2', [], static function (): void {});
+        throw new RuntimeException('Widened data-source scope was accepted');
+    } catch (RuntimeException $error) {
+        callerAssert($error->getMessage() === 'Graph data-source scope changed' && (int) $observer->query("SELECT COUNT(*) FROM graph_local WHERE id=$copy")->fetchColumn() === 1 && (int) $observer->query('SELECT COUNT(*) FROM data_template_rrd WHERE id=15000102')->fetchColumn() === 1, 'reviewed removal refuses unconfirmed shared data-source scope before graph or source deletion');
+    }
+    api_graph_remove($copy);
+    callerAssert((int) $observer->query("SELECT COUNT(*) FROM graph_local WHERE id=$copy")->fetchColumn() === 0 && (int) $observer->query("SELECT COUNT(*) FROM graph_templates_item WHERE local_graph_id=$copy")->fetchColumn() === 0, 'single graph removal deletes only its own persisted graph and items');
+    callerAssert((int) $observer->query('SELECT COUNT(*) FROM data_template_rrd WHERE id=15000102')->fetchColumn() === 1, 'single graph removal preserves the shared data source');
+    $verified = 0;
+    api_graph_remove_multi([16000102, 16000103], true, static function () use (&$verified): void {
+        $verified++;
+    });
+    callerAssert($verified === 1 && (int) $observer->query('SELECT COUNT(*) FROM graph_local WHERE id IN(16000102,16000103)')->fetchColumn() === 0, 'reviewed multi removal checks scope before removing the exact cohort');
+    $batch = range(16002000, 16003000);
+    $database->exec('INSERT INTO graph_local(id) VALUES(' . implode('),(', $batch) . ')');
+    foreach ([16002000, 16002999, 16003000] as $id) {
+        $database->exec("INSERT INTO graph_templates_graph(local_graph_id,title,title_cache) VALUES($id,'Batch child','Batch child')");
+        $database->exec("INSERT INTO graph_templates_item(local_graph_id,sequence,graph_type_id,text_format) VALUES($id,1,1,'Batch comment')");
+        $database->exec("INSERT INTO graph_tree_items(local_graph_id) VALUES($id)");
+        $database->exec("INSERT INTO reports_items(local_graph_id,item_text) VALUES($id,'Task-owned report child')");
+    }
+    api_graph_remove_multi($batch);
+    callerAssert((int) $observer->query('SELECT COUNT(*) FROM graph_local WHERE id BETWEEN 16002000 AND 16003000')->fetchColumn() === 0, 'multi removal deletes the complete thousand-item batch and its trailing cohort');
+    foreach (['graph_templates_graph', 'graph_templates_item', 'graph_tree_items', 'reports_items'] as $table) {
+        callerAssert((int) $observer->query("SELECT COUNT(*) FROM $table WHERE local_graph_id BETWEEN 16002000 AND 16003000")->fetchColumn() === 0, "multi removal deletes exact first full-batch and trailing $table dependents");
+    }
+    try {
+        api_graph_remove_multi([15000002], true, static function (): void {
+            throw new RuntimeException('Task-owned reviewed scope refusal');
+        });
+        throw new RuntimeException('Reviewed refusal was ignored');
+    } catch (RuntimeException $error) {
+        callerAssert($error->getMessage() === 'Task-owned reviewed scope refusal' && (int) $observer->query('SELECT COUNT(*) FROM graph_local WHERE id=15000002')->fetchColumn() === 1, 'reviewed scope failure preserves the requested graph before deletion');
+    }
+    $ids = [0];
+    api_graph_remove_bad_graphs($ids);
+    callerAssert($ids === [], 'bad graph cleanup removes the zero sentinel from the request');
+    api_graph_remove(0);
+    api_graph_remove_multi([]);
+    $ids = [];
+    api_delete_graphs($ids, '1');
+    callerAssert($ids === [], 'empty deletion requests remain empty');
+    foreach (['1', '2'] as $type) {
+        $id = $type === '1' ? 16000104 : 16000105;
+        $database->exec("INSERT INTO graph_local(id) VALUES($id)");
+        $database->exec("INSERT INTO graph_templates_graph(local_graph_id,title,title_cache) VALUES($id,'Delete fixture','Delete fixture')");
+        $ids = [$id];
+        api_delete_graphs($ids, $type, [], static function (): void {});
+        callerAssert((int) $observer->query("SELECT COUNT(*) FROM graph_local WHERE id=$id")->fetchColumn() === 0, "delete type $type removes its exact no-data-source graph");
+    }
+    try {
+        $ids = [15000002];
+        api_delete_graphs($ids, '1', []);
+        throw new RuntimeException('Missing reviewed verifier was accepted');
+    } catch (RuntimeException $error) {
+        callerAssert($error->getMessage() === 'Reviewed graph removal requires a dependency verifier' && (int) $observer->query('SELECT COUNT(*) FROM graph_local WHERE id=15000002')->fetchColumn() === 1, 'reviewed delete rejects a missing verifier before touching the graph');
+    }
 }
 
 $dsn = getenv('KADUPUL_REFERENCE_TEST_DSN');
@@ -155,6 +299,7 @@ foreach ($cases as $name => [$graphType,$total,$totalType,$order,$sourceType]) {
                 libxml_clear_errors();
                 libxml_use_internal_errors($previousXml);
             }
+            graphApiControls($database, $observer);
         }
         if (in_array($name, ['total-all', 'total-similar'], true)) {
             // The reviewed percentile body only changes checked SQL boundaries.

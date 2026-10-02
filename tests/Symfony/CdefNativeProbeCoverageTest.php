@@ -98,6 +98,33 @@ final class CdefNativeProbeCoverageTest extends TestCase
                     count(\CdefNativeCoverageRegistration::sources()) + count($markers) + 10,
                     \NativeChildCoverageEvidence::verifyRejections(...[...$arguments,'lib/boost.php'])
                 );
+                if ($case === 'branches') {
+                    $report = $directory . '/native.coverage';
+                    $originalReport = file_get_contents($report);
+                    $originalEvidence = file_get_contents($report . '.json');
+                    try {
+                        $missing = unserialize($originalReport);
+                        $data = $missing->getData();
+                        $lines = $data->lineCoverage();
+                        unset($lines[realpath($root . '/lib/api_graph.php')]);
+                        $data->setLineCoverage($lines);
+                        $missing->setData($data);
+                        $serialized = serialize($missing);
+                        self::assertSame(strlen($serialized), file_put_contents($report, $serialized));
+                        $evidence = json_decode($originalEvidence, true, 512, JSON_THROW_ON_ERROR);
+                        $evidence['report'] = hash_file('sha256', $report);
+                        file_put_contents($report . '.json', json_encode($evidence, JSON_THROW_ON_ERROR));
+                        try {
+                            \NativeChildCoverageEvidence::load(...$arguments);
+                            self::fail('Graph API completion was accepted without graph API execution.');
+                        } catch (\RuntimeException $error) {
+                            self::assertSame('Required native source was not executed: lib/api_graph.php', $error->getMessage());
+                        }
+                    } finally {
+                        file_put_contents($report, $originalReport);
+                        file_put_contents($report . '.json', $originalEvidence);
+                    }
+                }
                 $active->merge($coverage);
             }
         } finally {
