@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 use PHPUnit\Framework\TestCase;
+
+require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
 
 final class AuthControllerNativeCoverageTest extends TestCase
 {
@@ -118,11 +122,23 @@ final class AuthControllerNativeCoverageTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $coverage->merge(unserialize(file_get_contents($reports[0])));
+                $sources = array('tests/Unit/Security/Auth/AuthControllerNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/auth-controller-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'auth_login.php', 'auth_changepassword.php', 'logout.php', 'lib/ldap.php', 'include/global_constants.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+                $mode = $scenario['mode'] ?? 'login';
+                $controller = array('login' => 'auth_login.php', 'password' => 'auth_changepassword.php', 'logout' => 'logout.php')[$mode];
+                $markers = array('auth-controller-observed:' . $mode, 'auth-controller-persisted-state-readback');
+                $hits = $mode === 'logout' ? array($controller) : array('lib/auth.php', $controller);
+                $arguments = array($reports[0], $root, 'tests/Fixtures/auth-controller-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $sources, $markers, $hits);
+                $measured = NativeChildCoverageEvidence::load(...$arguments);
+                static $verifiedOmissions = false;
+                if (!$verifiedOmissions) {
+                    self::assertSame(count($sources) + 12, NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, array('lib/boost.php'))));
+                    $verifiedOmissions = true;
+                }
+                $coverage->merge($measured);
             }
             return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         } finally {
-            foreach (glob($directory . '/*.coverage') as $report) {
+            foreach (glob($directory . '/child-*') as $report) {
                 unlink($report);
             }
             foreach (glob($directory . '/include/*') as $file) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,6 +12,12 @@ if (PHP_SAPI !== 'cli') {
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
+$mode = $scenario['mode'] ?? 'login';
+require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+if (isset($argv[3])) {
+    $coverageSources = array('tests/Unit/Security/Auth/AuthControllerNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/auth-controller-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'auth_login.php', 'auth_changepassword.php', 'logout.php', 'lib/ldap.php', 'include/global_constants.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    $GLOBALS['nativeCoverageEvidence'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-controller-native.php', $argv[1], $coverageSources);
+}
 chdir($directory);
 $config = array('base_path' => $root, 'url_path' => '/', 'library_path' => $root . '/lib');
 $options = array_merge(array('auth_method' => 1, 'secpass_lockfailed' => 3, 'secpass_unlocktime' => 15, 'secpass_expireaccount' => 1, 'secpass_minlen' => 8), $scenario['options'] ?? array());
@@ -225,13 +233,15 @@ if (isset($argv[3])) {
 }
 require $root . '/lib/auth.php';
 ob_start();
-register_shutdown_function(static function () use ($db) {
+register_shutdown_function(static function () use ($db, $mode) {
     $html = ob_get_clean();
     $account = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = 42');
     $state = array('credential_valid' => isset($_SESSION['sess_user_id']) && auth_session_credentials_valid($account['password']), 'session' => $_SESSION, 'events' => $GLOBALS['events'], 'messages' => $GLOBALS['messages'], 'error' => $GLOBALS['error'] ?? false, 'error_message' => $GLOBALS['error_msg'] ?? '', 'password_error' => $GLOBALS['errorMessage'] ?? '', 'failed_attempts' => $account['failed_attempts'], 'locked' => $account['locked'], 'must_change' => $account['must_change_password'], 'lastlogin' => $account['lastlogin'] > 0, 'password_matches_original' => password_verify('Correct1!', $account['password']), 'password_matches_new' => password_verify('NewCorrect2!', $account['password']), 'legacy_hash_retained' => strlen($account['password']) === 32, 'audit' => $db->query('SELECT result FROM user_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN), 'cache_users' => $db->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'session_users' => $db->query('SELECT user_id FROM sessions ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'html' => $html);
-    print json_encode($state, JSON_THROW_ON_ERROR);
+    $encoded = json_encode($state, JSON_THROW_ON_ERROR);
+    // The collector appends serialization after application shutdown handlers.
+    define('NATIVE_COVERAGE_COMPLETED', array('auth-controller-observed:' . $mode, 'auth-controller-persisted-state-readback'));
+    print $encoded;
 });
-$mode = $scenario['mode'] ?? 'login';
 if ($mode === 'logout') {
     $_SESSION['sess_user_id'] = 42;
     require $root . '/logout.php';
