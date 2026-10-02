@@ -6,4 +6,4 @@
 # the diff before committing it: every change is a change in what users get.
 set -eu
 cd "$(dirname "$0")/.."
-FORMS_GOLDEN_UPDATE=1 exec "${PHP:-php}" -d error_reporting=24575 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never "$@"
+FORMS_GOLDEN_UPDATE=1 exec "${PHP:-php}" -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never "$@"

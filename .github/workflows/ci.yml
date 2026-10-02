@@ -132,7 +132,7 @@ jobs:
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
-        php -d error_reporting=24575 vendor/bin/pest --test-directory=. --configuration=phpunit-database.xml --colors=never
+        php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-database.xml --colors=never
         php Symfony/data_input_lock_probe.php
         php Support/verify_row_cache.php
 
@@ -211,31 +211,31 @@ jobs:
 
       - name: Verify PHP 8.0 string and regex behavior
         working-directory: tests
-        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
 
       - name: Verify helper union return contracts
         working-directory: tests
-        run: php -d error_reporting=8191 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
+        run: php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Core/Helpers/HelperUnionReturnTypeTest.php --colors=never
 
       - name: Verify token entropy failure and native identifiers
         working-directory: tests
-        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/GenerateHashFailsClosedTest.php --colors=never
+        run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/GenerateHashFailsClosedTest.php --colors=never
 
       - name: Exercise production CSV paths
         working-directory: tests
         # The isolated production subprocess explicitly enables E_ALL and
         # throws on every diagnostic, including CSV default-argument deprecations.
-        run: php -d error_reporting=8191 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
+        run: php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
 
       - name: Verify string predicates and directory boundaries
         working-directory: tests
         run: |
-          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Core/StringPredicateHelpersTest.php --colors=never
-          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Core/PathHelpersTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Core/StringPredicateHelpersTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Core/PathHelpersTest.php --colors=never
 
       - name: Legacy form goldens
         working-directory: tests
-        run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never
+        run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never
 
       - name: Install RRDtool for spike-removal contracts
         run: sudo apt-get update && sudo apt-get install -y rrdtool
@@ -244,11 +244,11 @@ jobs:
         working-directory: tests
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
-        run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --configuration=phpunit-spikekill.xml --colors=never
+        run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-spikekill.xml --colors=never
 
       - name: Verify privileged spike-removal boundaries
         working-directory: tests
-        run: sudo -- "$(command -v php)" -d error_reporting=24575 vendor/bin/pest --test-directory=. --configuration=phpunit-spikekill.xml --colors=never
+        run: sudo -- "$(command -v php)" -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-spikekill.xml --colors=never
 
   application-smoke:
     name: Install, login and poller smoke

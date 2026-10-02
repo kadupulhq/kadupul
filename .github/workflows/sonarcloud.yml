@@ -102,7 +102,7 @@ jobs:
           test -x "$RRDTOOL_TEST_BINARY"
           php -d error_reporting=24575 -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' \
-            vendor/bin/pest --test-directory=. --configuration phpunit-coverage.xml --coverage-php coverage.php
+            vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration phpunit-coverage.xml --coverage-php coverage.php
           test -s coverage.xml
           # PHP variables must remain literal until PHP parses the expression.
           # shellcheck disable=SC2016
