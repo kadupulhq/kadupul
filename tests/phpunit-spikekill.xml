@@ -20,6 +20,7 @@
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
       <file>./Unit/Installer/InstallerPhpBinaryPathTest.php</file>
       <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
+      <file>./Unit/Installer/DataInputIndexUpgradeTest.php</file>
       <file>./Unit/Core/Cli/BoostMasterFailureTest.php</file>
       <file>./Unit/Core/Cli/BoostWorkerNativeTest.php</file>
       <file>./Unit/Core/Cli/PollerDrainNativeTest.php</file>
@@ -42,6 +43,9 @@
       <file>./Unit/Security/Auth/BulkMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/SpikeMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/LoginMutationCsrfTest.php</file>
+      <file>./Unit/Security/CsrfMagicFormRewriteTest.php</file>
+      <file>./Unit/Security/CsrfMagicLocaleTest.php</file>
+      <file>./Unit/Security/CsrfMagicTokenCheckTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>

@@ -3,6 +3,8 @@
 
 import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
 import { syncAssets } from './sync.mjs';
+import { installFontAwesome } from './fontawesome.mjs';
+import { versionCssImports } from './css-imports.mjs';
 
 const manifest = JSON.parse(await readFile(new URL('./assets.json', import.meta.url)));
 const root = new URL('../../', import.meta.url);
@@ -41,11 +43,11 @@ for (const path of ['css', 'flags', 'LICENSE', 'package.json']) {
 }
 console.log('flag-icons: npm assets installed');
 
-await cp(new URL("node_modules/@fortawesome/fontawesome-free/", root), new URL("include/fa/", root), { recursive: true });
+const icons = await installFontAwesome(
+  new URL('node_modules/@fortawesome/fontawesome-free/', root),
+  new URL('include/fa/', root),
+);
+console.log(`Font Awesome ${icons.version}: stylesheet and ${icons.fonts.length} fonts installed`);
 
-// Preserve the legacy circle-thin alias used by existing screens/plugins.
-const allCss = new URL('include/fa/css/all.css', root);
-const css = await readFile(allCss, 'utf8');
-const anchor = '.fa-circle-notch {\n  --fa: "\\f1ce";\n}';
-if (css.split(anchor).length !== 2) throw new Error('Font Awesome compatibility patch no longer applies');
-await writeFile(allCss, css.replace(anchor, anchor + '\n\n.fa.fa-circle-thin {\n  --fa: "\\f111";\n}'));
+await versionCssImports(new URL('include/themes/midwinter/main.css', root));
+console.log('Midwinter: source CSS import versions refreshed');
