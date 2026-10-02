@@ -25,8 +25,8 @@ def check(condition, message):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--database-sessions', action='store_true')
-    parser.add_argument('--project', default='kadupul-symfony-auth')
     parser.add_argument('--coverage-output', type=Path)
+    parser.add_argument('--project', default='kadupul-symfony-auth')
     args = parser.parse_args()
     database_sessions = args.database_sessions
     harness = Harness(SimpleNamespace(project=args.project, target='symfony-auth'))
@@ -102,6 +102,10 @@ def main():
                   'legacy database session handler owns the authenticated session')
         check(session.request('/public/index.php/session').get('json') == expected,
               'Symfony public entry owns authentication for the same session')
+        from about_authentication_scenarios import verify_about_authentication
+        verify_about_authentication(harness, user_id, database_sessions, check)
+        from about_scenarios import verify_about
+        verify_about(harness, session, user_id, check)
         from inventory_scenarios import verify_inventory
         verify_inventory(harness, session, user_id, check)
         from data_source_profile_scenarios import verify_data_source_profile_deletion
@@ -118,6 +122,10 @@ def main():
         verify_site_lifecycle(harness, session, user_id, check)
         from device_create_scenarios import verify_device_create
         verify_device_create(harness, session, user_id, check)
+        from palette_color_scenarios import verify_palette_colors
+        verify_palette_colors(harness, session, user_id, check)
+        from vdef_scenarios import verify_vdefs
+        verify_vdefs(harness, session, user_id, check)
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()
