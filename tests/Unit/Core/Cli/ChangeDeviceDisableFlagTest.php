@@ -7,6 +7,8 @@
 
 namespace ChangeDeviceDisableFlagTest;
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 $root = dirname(__DIR__, 4);
 
 /**
@@ -32,19 +34,10 @@ function change_device_disable($value)
         . 'switch ("--disable") {' . substr($source, $start, $end - $start) . '}'
         . 'echo json_encode($overrides);';
 
-    $pipes   = array();
-    $process = proc_open(
-        array(PHP_BINARY, '-r', $code),
-        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes
-    );
-    expect($process)->not->toBeFalse();
-
-    $out = stream_get_contents($pipes[1]);
-    $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    $status = proc_close($process);
+    $result = \test_php_run($code);
+    $out = $result['out'];
+    $err = $result['err'];
+    $status = $result['status'];
 
     expect($err)->toBe('');
     $overrides = json_decode($out, true);
@@ -98,31 +91,9 @@ test('change_device and add_device agree on what a numeric flag means', function
  */
 test('every option in the argument loop ends its own case', function () use ($root) {
     $source = file_get_contents($root . '/cli/change_device.php');
-    $start  = strpos($source, 'switch ($arg)');
-
-    expect($start)->not->toBeFalse();
-
-    // Balance braces rather than match the closing line, so the check does not
-    // depend on whether the file is tab- or space-indented.
-    $open  = strpos($source, '{', $start);
-    $depth = 0;
-    $end   = $open;
-
-    for ($i = $open; $i < strlen($source); $i++) {
-        if ($source[$i] === '{') {
-            $depth++;
-        } elseif ($source[$i] === '}') {
-            $depth--;
-
-            if ($depth === 0) {
-                $end = $i;
-
-                break;
-            }
-        }
-    }
-
-    $lines  = explode("\n", substr($source, $open, $end - $open));
+    $switch = \test_php_block_source($source, 'switch ($arg)');
+    $switch_body = substr($switch, strpos($switch, "\n") + 1, -1);
+    $lines  = explode("\n", $switch_body);
     $widths = array();
 
     foreach ($lines as $index => $line) {
@@ -191,19 +162,10 @@ test('a valid --bulk_walk applies its size instead of printing the version', fun
         . 'switch ("--bulk_walk") {' . $fragment . '}'
         . 'echo json_encode($overrides);';
 
-    $pipes   = array();
-    $process = proc_open(
-        array(PHP_BINARY, '-r', $code),
-        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes
-    );
-    expect($process)->not->toBeFalse();
-
-    $out = stream_get_contents($pipes[1]);
-    $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    $status = proc_close($process);
+    $result = \test_php_run($code);
+    $out = $result['out'];
+    $err = $result['err'];
+    $status = $result['status'];
 
     expect($err)->toBe('');
     expect($status)->toBe(0);
