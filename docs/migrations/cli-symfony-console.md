@@ -396,9 +396,16 @@ must preserve the same import and upgrade failure protections before the
 compatibility implementation can be retired.
 
 A missing, incomplete, unparsable, or failed canonical baseline stops the
-new command before comparison or repair. Existing baseline rows are preserved;
+new command before comparison or repair. This refusal exits nonzero and never
+prints a clean audit, including through the legacy presentation adapter.
+Existing baseline rows are preserved;
 both replacement tables are populated privately and published together with
 an atomic rename. Failed live-schema imports do not export a new dump.
 Plugin upgrade callbacks returning false stop the worker before audit work.
 Database schema changes still require backups: atomic baseline replacement
 does not make application schema repairs reversible.
+
+The installed parity harness invokes the native audit through a test-only
+`LegacyCli` bridge while the production compatibility CLI remains supported.
+Canonical imports retain the dump table comments; live-schema `--load` keeps
+the comments created by the compatibility CLI.
