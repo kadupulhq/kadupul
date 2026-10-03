@@ -1,8 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
+
+require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 $authSource = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
 
@@ -80,37 +85,49 @@ test('GHSA-3jj2-v5ch-wmq5: realm boundary comment cites the advisory', function 
 
 // --- GHSA-2px8-gvmq-85f3: LDAP lockout call-site ---
 
-test('GHSA-2px8-gvmq-85f3: lockout condition uses error_num not error_text', function () use ($authSource) {
-    // error_text is a human-readable string; using it in a numeric comparison
-    // always evaluates to zero (false), silently skipping the lockout call.
-    // The condition sits ~4865 chars into the function; use 5200 to be safe.
-    $start = strpos($authSource, 'function domains_login_process(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 5200);
-    expect($body)->toContain('$ldap_auth_response[\'error_num\'] == 1');
-});
-
-test('GHSA-2px8-gvmq-85f3: error_num == 1 appears adjacent to auth_process_lockout', function () use ($authSource) {
-    $start = strpos($authSource, 'function domains_login_process(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 5200);
-
-    $errorNumPos = strpos($body, "'error_num'] == 1");
-    $lockoutPos  = strpos($body, 'auth_process_lockout(');
-
-    expect($errorNumPos)->not->toBeFalse();
-    expect($lockoutPos)->not->toBeFalse();
-    // The lockout call must follow closely (within 150 chars) after the condition.
-    expect($lockoutPos - $errorNumPos)->toBeLessThan(150);
-});
-
-test('GHSA-2px8-gvmq-85f3: error_text is not used in a numeric comparison inside domains_login_process', function () use ($authSource) {
-    $start = strpos($authSource, 'function domains_login_process(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 5200);
-    // The pre-fix bug was 'error_text' == 1; that pattern must not exist.
-    expect($body)->not->toContain("'error_text'] == 1");
-});
+test('domain bind failures enforce the configured lockout using numeric error codes', function (int $code, string $text, bool $locked) {
+    $directory = sys_get_temp_dir() . '/domain-lockout-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    try {
+        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', dirname(__DIR__) . '/Fixtures/domain-lockout-native.php', (string) $code, $text);
+        $environment = array_merge(getenv(), array('DOMAIN_LOCKOUT_COVERAGE_DIRECTORY' => $coverage === null ? '' : $directory));
+        $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, $environment);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+        $state = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+        expect($state['first'])->toBe(array())->and($state['second'])->toBe(array())->and($state['third'])->toBe(array())
+            ->and((int) $state['after_first']['failed_attempts'])->toBe($locked ? 1 : 0)
+            ->and($state['after_first']['locked'])->toBe('')
+            ->and((int) $state['after_second']['failed_attempts'])->toBe($locked ? 2 : 0)
+            ->and($state['after_second']['locked'])->toBe($locked ? 'on' : '')
+            ->and($state['binds'])->toBe($locked ? 2 : 3)
+            ->and($state['error'])->toBeTrue()->and((int) $state['other'])->toBe(0);
+        if ($locked) {
+            expect($state['message'])->toContain('locked');
+        }
+        if ($coverage !== null) {
+            $reports = glob($directory . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $root = dirname(__DIR__, 2);
+            $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+            $scenario = json_encode(array('code' => (string) $code, 'text' => $text), JSON_THROW_ON_ERROR);
+            $arguments = array($reports[0], $root, 'tests/Fixtures/domain-lockout-native.php', $scenario, $sources, array('domain-lockout-persisted-state-readback'), array('lib/auth.php'));
+            $measured = NativeChildCoverageEvidence::load(...$arguments);
+            static $verifiedOmissions = false;
+            if (!$verifiedOmissions) {
+                expect(NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, array('lib/boost.php'))))->toBe(count($sources) + 11);
+                $verifiedOmissions = true;
+            }
+            $coverage->merge($measured);
+        }
+    } finally {
+        foreach (glob($directory . '/*') as $file) {
+            unlink($file);
+        }
+        rmdir($directory);
+    }
+})->with(array(array(1, 'Invalid credentials', true), array(2, '1', false), array(2, 'Directory unavailable', false)));
