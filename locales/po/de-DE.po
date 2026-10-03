@@ -7634,7 +7634,7 @@ msgid "Tree Rule Items"
 msgstr "Elemente der Baumregel"
 
 #: include/global_arrays.php:2854 include/global_arrays.php:2870
-#: lib/api_device.php:1935
+#: lib/api_device.php:1941
 msgid "days"
 msgstr "Tage"
 
@@ -7650,11 +7650,11 @@ msgstr "Minuten"
 msgid "secs"
 msgstr "Sekunden"
 
-#: include/global_arrays.php:2871 lib/api_device.php:1935
+#: include/global_arrays.php:2871 lib/api_device.php:1941
 msgid "hours"
 msgstr "Stunden"
 
-#: include/global_arrays.php:2872 lib/api_device.php:1935
+#: include/global_arrays.php:2872 lib/api_device.php:1941
 msgid "minutes"
 msgstr "Minuten"
 
@@ -10161,7 +10161,7 @@ msgstr "Verfahren zur Auswahl von Schriften"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Wie sollen Schriften standardmäßig behandelt werden?"
 
-#: include/global_settings.php:1060 lib/api_device.php:1890
+#: include/global_settings.php:1060 lib/api_device.php:1896
 msgid "System"
 msgstr "System"
 
@@ -12252,8 +12252,8 @@ msgstr "FEHLER: IP-Bereiche in Form von range1-range2 werden nicht mehr unterst�
 #: lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1301
 #: lib/api_device.php:1314 lib/api_device.php:1318 lib/api_device.php:1363
 #: lib/api_device.php:1366 lib/api_device.php:1553 lib/api_device.php:1557
-#: lib/api_device.php:1592 lib/api_device.php:1596 lib/api_device.php:1636
-#: lib/api_device.php:1640 lib/api_device.php:1701 lib/api_device.php:1705
+#: lib/api_device.php:1593 lib/api_device.php:1597 lib/api_device.php:1642
+#: lib/api_device.php:1646 lib/api_device.php:1707 lib/api_device.php:1711
 #: lib/utility.php:663 lib/utility.php:667 lib/utility.php:743
 #: lib/utility.php:747 lib/utility.php:769 lib/utility.php:773
 #: lib/utility.php:796 lib/utility.php:799
@@ -12265,72 +12265,72 @@ msgstr "Remote Poller %s ist deaktiviert, Sie müssen eine FullSync durchführen
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1811
+#: lib/api_device.php:1817
 msgid "ERROR: Device ID is Blank"
 msgstr "FEHLER: Geräte-ID ist leer"
 
-#: lib/api_device.php:1824 lib/api_device.php:1826
+#: lib/api_device.php:1830 lib/api_device.php:1832
 msgid "ERROR: Device["
 msgstr "FEHLER: Gerät["
 
-#: lib/api_device.php:1842
+#: lib/api_device.php:1848
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "FEHLER: Die Verbindung zum entfernten Kollektor konnte nicht hergestellt werden."
 
-#: lib/api_device.php:1849
+#: lib/api_device.php:1855
 msgid "Device is Disabled"
 msgstr "Gerät ist deaktiviert"
 
-#: lib/api_device.php:1850
+#: lib/api_device.php:1856
 msgid "Device Availability Check Bypassed"
 msgstr "Geräteverfügbarkeitsprüfung Bypassed"
 
-#: lib/api_device.php:1857
+#: lib/api_device.php:1863
 msgid "SNMP Information"
 msgstr "SNMP Information"
 
-#: lib/api_device.php:1861
+#: lib/api_device.php:1867
 msgid "SNMP not in use"
 msgstr "SNMP nicht in Gebrauch"
 
-#: lib/api_device.php:1882 lib/api_device.php:1890 lib/api_device.php:1909
+#: lib/api_device.php:1888 lib/api_device.php:1896 lib/api_device.php:1915
 msgid "SNMP error"
 msgstr "SNMP-Fehler"
 
-#: lib/api_device.php:1882
+#: lib/api_device.php:1888
 msgid "Session"
 msgstr "Sitzung"
 
-#: lib/api_device.php:1909
+#: lib/api_device.php:1915
 msgid "Host"
 msgstr "Zielsystem"
 
-#: lib/api_device.php:1927
+#: lib/api_device.php:1933
 msgid "System:"
 msgstr "System"
 
-#: lib/api_device.php:1934
+#: lib/api_device.php:1940
 msgid "Uptime:"
 msgstr "Angeschaltet seit:"
 
-#: lib/api_device.php:1936
+#: lib/api_device.php:1942
 msgid "Hostname:"
 msgstr "Gerätename:"
 
-#: lib/api_device.php:1937
+#: lib/api_device.php:1943
 msgid "Location:"
 msgstr "Umgebung:"
 
-#: lib/api_device.php:1938
+#: lib/api_device.php:1944
 msgid "Contact:"
 msgstr "Kontakt:"
 
-#: lib/api_device.php:1969 lib/functions.php:5966 lib/functions.php:5968
+#: lib/api_device.php:1975 lib/functions.php:5966 lib/functions.php:5968
 #: lib/functions.php:5972
 msgid "Ping Results"
 msgstr "Ping Ergebnisse"
 
-#: lib/api_device.php:1974
+#: lib/api_device.php:1980
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Keine Ping- oder SNMP-Verfügbarkeitsprüfung im Einsatz"
 
