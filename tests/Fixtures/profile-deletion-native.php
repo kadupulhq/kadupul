@@ -12,6 +12,8 @@ $directory = $argv[2];
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
 mkdir($directory . '/include');
 mkdir($directory . '/lib');
+mkdir($directory . '/config');
+copy($root . '/config/icons.json', $directory . '/config/icons.json');
 mkdir($directory . '/include/themes/classic', 0700, true);
 file_put_contents($directory . '/include/themes/classic/main.css', '');
 foreach (array('include/auth.php', 'include/global_session.php', 'include/top_header.php', 'include/bottom_footer.php', 'lib/poller.php', 'lib/utility.php') as $stub) {
@@ -25,6 +27,8 @@ if (isset($argv[3])) {
     define('RRD_TEST_CLI_COVERAGE_SOURCE', $root . '/data_source_profiles.php');
     require __DIR__ . '/rrd-process-coverage.php';
 }
+// Match the application's Composer bootstrap for shared rendering contracts.
+require_once $root . '/include/vendor/autoload.php';
 require $root . '/include/vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php';
 $mysql = getenv('PROFILE_DELETE_MYSQL') === '1';
 $db = $mysql ? new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '') : new PDO('sqlite::memory:');
