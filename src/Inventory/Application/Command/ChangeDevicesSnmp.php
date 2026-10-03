@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -16,7 +18,7 @@ final readonly class ChangeDevicesSnmp
 {
     public function __construct(private ConsoleAccess $access, private DeviceSnmpSettings $devices) {}
 
-    public function __invoke(DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceSnmpChange $change): void
+    public function __invoke(DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceBulkSnmpChange $change): void
     {
         $actor = $this->access->consoleActor();
         if ($actor === null || !$this->access->canManageDevices($actor)) {

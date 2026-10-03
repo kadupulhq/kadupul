@@ -388,3 +388,5 @@
 "Confirm applying automation rules": "Confirm applying automation rules"
 "Device automation rules applied.": "Device automation rules applied."
 "Apply existing graph and tree automation rules to the selected devices. Rules may create graphs, data sources and tree entries.": "Apply existing graph and tree automation rules to the selected devices. Rules may create graphs, data sources and tree entries."
+"Only checked SNMP settings are changed. Unchecked settings and credentials retain their current values.": "Only checked SNMP settings are changed. Unchecked settings and credentials retain their current values."
+"Select at least one supported SNMP setting.": "Select at least one supported SNMP setting."

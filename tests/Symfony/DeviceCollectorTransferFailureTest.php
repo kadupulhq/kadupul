@@ -1,40 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-namespace Kadupul\Tests\CollectorTransfer;
+namespace Kadupul\Tests;
 
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
-
-function api_device_replicate_out($device, $target)
-{
-    TestCase::assertSame([7, 3], [$device, $target]);
-    return false;
-}
+use Symfony\Component\Process\Process;
 
 final class DeviceCollectorTransferFailureTest extends TestCase
 {
-    public function testExplicitReplicationFailureStopsBeforeGraphReadsAndWrites(): void
+    public function testExplicitTransferFailureStopsBeforeGraphReplication(): void
     {
-        $source = file_get_contents(dirname(__DIR__, 2) . '/src/Inventory/Infrastructure/Legacy/DeviceCollectorTransfer.php');
-        $start = strpos($source, '            if (api_device_replicate_out(');
-        self::assertNotFalse($start);
-        $end = strpos($source, '        } else {', $start);
-        self::assertNotFalse($end);
-        $transfer = substr($source, $start, $end - $start);
-        self::assertStringContainsString('replicate_table_to_poller(', $transfer);
-        $connection = $this->createMock(\PDO::class);
-        $connection->expects(self::never())->method('prepare');
-        $deviceId = 7;
-        $target = 3;
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Collector replication failed');
-        // Intentional source-execution regression: fixed repository path and
-        // asserted boundaries above; no request, fixture or remote input enters code.
-        eval('namespace ' . __NAMESPACE__ . '; use RuntimeException; use PDO;' . $transfer); // nosemgrep: php.lang.security.eval-use.eval-use
+        $process = new Process([PHP_BINARY, dirname(__DIR__) . '/Fixtures/collector-transfer-failure-native.php', 'single']);
+        $process->mustRun();
+        self::assertSame('', $process->getErrorOutput());
+        $result = json_decode($process->getOutput(), true, 16, JSON_THROW_ON_ERROR);
+        self::assertSame('Collector replication failed', $result['error']);
+        self::assertSame([[7, 3]], $result['calls']);
+        self::assertCount(1, $result['primary_queries']);
+        self::assertCount(1, $result['remote_queries']);
+        foreach ([$result['primary_queries'][0], $result['remote_queries'][0]] as $query) {
+            self::assertStringStartsWith('DELETE FROM poller_command', $query);
+        }
+        self::assertTrue($result['transaction_active']);
     }
 }

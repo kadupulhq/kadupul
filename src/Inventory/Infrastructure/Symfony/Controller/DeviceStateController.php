@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -17,7 +19,7 @@ use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Application\Query\PrepareDeviceStateChange;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Domain\DeviceOptionsChange;
-use Kadupul\Inventory\Domain\DeviceSnmpChange;
+use Kadupul\Inventory\Domain\DeviceBulkSnmpChange;
 use Kadupul\Inventory\Domain\DeviceSnmpConfiguration;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceSelectionForm;
 use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceStateType;
@@ -83,7 +85,13 @@ final class DeviceStateController
                     $data = $form->getData();
                     $selection = $selectionForm->selection($data, $ids);
                     if ($operation === 'snmp') {
-                        $changeSnmp($selection, new DeviceSnmpChange($data['snmp']));
+                        $changes = ['keep_credentials' => $data['snmp']['keep_credentials']];
+                        foreach (DeviceSnmpConfiguration::PUBLIC_DEFAULTS + DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS as $field => $default) {
+                            if ($data['snmp']['apply_' . $field] ?? false) {
+                                $changes[$field] = $data['snmp'][$field];
+                            }
+                        }
+                        $changeSnmp($selection, new DeviceBulkSnmpChange($changes));
                     } elseif ($operation === 'options') {
                         $changes = [];
                         foreach (DeviceOptionsChange::DEFAULTS as $field => $default) {

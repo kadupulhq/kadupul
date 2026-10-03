@@ -1234,20 +1234,47 @@ worker authorizes and revision-checks the complete selection before effects, loc
 the target and participating collectors, and keeps primary writes transactional.
 Site/template unassignment is explicit. Template changes preserve existing graphs;
 collector moves use the same transfer adapter as single-device assignment, including
-destination verification and old-collector cleanup. Remote writes are not distributed
-transactions: a failure may leave remote effects and requires inspection before retry.
+destination verification and old-collector cleanup. Old collector copies remain
+available until primary ownership commits, including when a later device in a batch
+fails. Cleanup runs after that commit, reacquires authorization and site/device/collector
+locks, confirms ownership has not changed again, and verifies removal before
+reporting success.
+An unchanged positive template is reapplied to repair missing associations; site
+and template assignments preserve the remote enabled state captured at preflight.
+
+Remote writes are not distributed transactions. A failure before primary commit
+can leave destination copies while primary ownership and old copies remain intact.
+A cleanup failure after commit retains the confirmed destination ownership and may
+leave old copies. Both outcomes report failure: inspect every selected device and
+use the existing Full Sync/recovery workflow to reconcile collector state before
+retrying. Deploy the worker and shared adapter together after draining in-flight
+assignment requests. No schema change is required; application rollback restores
+the prior worker behavior and does not undo collector effects already delivered.
 
 
 ### Bulk SNMP settings
 
-`/inventory/devices/snmp` uses the existing SNMP form and domain validation through
-`ChangeDevicesSnmp` and a `DeviceSnmpSettings` port. Public SNMP settings participate
-in selection revisions; stored secrets never leave the isolated worker. It resolves
-each device's retained credentials and validates the entire selection before any
-writes. Explicit replacement applies the submitted credentials to every selected
-device. Leaving version 3 clears its credentials as in the single-device editor.
-Primary changes are transactional, remote values are verified, and failures use
-the existing uncertain-outcome response with empty password controls.
+`/inventory/devices/snmp` uses explicit per-field checkboxes with
+`ChangeDevicesSnmp`, `DeviceBulkSnmpChange` and the `DeviceSnmpSettings` port.
+An untouched submission is rejected before worker startup. Unchecked settings and
+credentials retain each device's stored values, including when the selected SNMP
+version changes. This matches legacy bulk field selection; the single-device editor
+keeps its distinct complete-form contract. Explicit replacement affects only checked
+credential fields. Stored secrets never leave the isolated worker.
+
+Public SNMP settings participate in selection revisions. The worker resolves and
+validates the complete selection before writes. It owns remote batch transactions,
+checks that the exact primary and collector sessions use persistent InnoDB tables
+for every SNMP/cache mutation participant, rejects unsupported engines before writes,
+updates all primary host rows before remote effects, rebuilds polling caches through
+`push_out_host`, and verifies every copy. A later precommit failure rolls back primary
+and active collector transactions. The primary commits first; a later collector
+commit failure reports an uncertain outcome and may require Full Sync/recovery.
+This is not a distributed transaction. Failure pages retain empty password controls.
+
+Deploy the form, domain command and worker together after draining in-flight bulk
+requests; older bulk forms without explicit selections fail validation. No schema or
+dependency changes are required. Code rollback cannot undo committed credentials.
 
 
 ### Device graph-template associations

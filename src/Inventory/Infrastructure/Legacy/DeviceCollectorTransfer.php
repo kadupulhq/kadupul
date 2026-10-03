@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -13,7 +15,7 @@ use RuntimeException;
 /** Shared collector move effects; callers own locks, authorization and transactions. */
 final class DeviceCollectorTransfer
 {
-    public function apply(PDO $connection, array $connections, int $deviceId, int $previous, int $target): void
+    public function apply(PDO $connection, array $connections, int $deviceId, int $previous, int $target, bool $deferPreviousCleanup = false): void
     {
         if ($previous === $target) {
             return;
@@ -64,11 +66,8 @@ final class DeviceCollectorTransfer
         if ($target > 1) {
             $verifier->verifyTarget($connection, $connections[$target], $deviceId);
         }
-        // Verify the target before removing the old collector's polling state.
-        if ($previous > 1) {
-            $verifier->purgeDependents($connections[$previous], $deviceId);
-            api_device_purge_from_remote($deviceId, $previous);
-            $verifier->verifyPurged($connections[$previous], $deviceId);
+        if (!$deferPreviousCleanup) {
+            $this->cleanupPrevious($connections, $deviceId, $previous, $target);
         }
         foreach ($pollers as $pollerId) {
             $stats = $connection->prepare('UPDATE poller SET snmp = (SELECT COUNT(*) FROM poller_item WHERE poller_id = ? AND action = 0), script = (SELECT COUNT(*) FROM poller_item WHERE poller_id = ? AND action = 1), server = (SELECT COUNT(*) FROM poller_item WHERE poller_id = ? AND action = 2) WHERE id = ?');
@@ -87,4 +86,58 @@ final class DeviceCollectorTransfer
             }
         }
     }
+    /**
+     * Serialize cleanup with later moves; primary ownership is already committed.
+     *
+     * @param array<int, PDO> $connections
+     * @param array<int, int> $previousOwners
+     */
+    public function finish(PDO $connection, int $actorId, array $connections, array $previousOwners, int $target): void
+    {
+        $previousOwners = array_filter($previousOwners, static fn(int $previous): bool => $previous > 1 && $previous !== $target);
+        if ($previousOwners === []) {
+            return;
+        }
+        if ($connection->inTransaction() || !$connection->beginTransaction()) {
+            throw new RuntimeException('Collector cleanup transaction unavailable');
+        }
+        try {
+            $ids = array_keys($previousOwners);
+            sort($ids, SORT_NUMERIC);
+            $locked = (new DeviceMutationSelection())->lock($connection, $actorId, $ids, static function (string $status): void {}, [], array_values(array_unique([...array_values($previousOwners), $target])));
+            foreach ($locked['rows'] as $index => $row) {
+                if ((int) $row['poller_id'] !== $target || (int) $row['site_id'] !== (int) $locked['associations'][$index]['site_id']) {
+                    throw new RuntimeException('Collector ownership changed before cleanup');
+                }
+            }
+            foreach ($ids as $id) {
+                $this->cleanupPrevious($connections, $id, $previousOwners[$id], $target);
+            }
+            if (!$connection->commit()) {
+                throw new RuntimeException('Collector cleanup commit failed');
+            }
+        } catch (\Throwable $failure) {
+            if ($connection->inTransaction()) {
+                try {
+                    $connection->rollBack();
+                } catch (\Throwable) {
+                    // Preserve the original cleanup failure.
+                }
+            }
+            throw $failure;
+        }
+    }
+
+    /** Remove the old copy only after the caller has committed primary ownership. */
+    public function cleanupPrevious(array $connections, int $deviceId, int $previous, int $target): void
+    {
+        if ($previous <= 1 || $previous === $target) {
+            return;
+        }
+        $verifier = new DeviceCollectorReplication();
+        $verifier->purgeDependents($connections[$previous], $deviceId);
+        api_device_purge_from_remote($deviceId, $previous);
+        $verifier->verifyPurged($connections[$previous], $deviceId);
+    }
+
 }
