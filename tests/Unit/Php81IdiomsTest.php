@@ -39,7 +39,7 @@ $root = dirname(__DIR__, 2);
 foreach (['validate_is_regex' => 'lib/html_utility.php', 'automation_get_dns_from_ip' => 'lib/api_automation.php'] as $function => $file) {
     eval('namespace KadupulPhp81Tests; ' . test_php_function_source(file_get_contents($root . '/' . $file), $function));
 }
-foreach ([['Ping', 'lib/ping.php', 'set_ping_error_handler', 'ping_error_handler'], ['Ldap', 'lib/ldap.php', 'SetLdapHandler', 'ErrorHandler']] as [$class, $file, $register, $handler]) {
+foreach ([['Ping', 'lib/ping.php', 'set_ping_error_handler', 'ping_error_handler'], ['Ldap', 'lib/ldap.php', 'setLdapHandler', 'errorHandler']] as [$class, $file, $register, $handler]) {
     $source = file_get_contents($root . '/' . $file);
     eval('namespace KadupulPhp81Tests; class ' . $class . ' {' . test_php_function_source($source, $register) . test_php_function_source($source, $handler) . '}');
 }
@@ -61,7 +61,7 @@ test('native callables preserve receiver and overridden error handlers', functio
     if ($class === 'Ldap') {
         expect($GLOBALS['php81_session_closed'])->toBeTrue();
     }
-})->with([['Ping', 'set_ping_error_handler', 'ping_error_handler'], ['Ldap', 'SetLdapHandler', 'ErrorHandler']]);
+})->with([['Ping', 'set_ping_error_handler', 'ping_error_handler'], ['Ldap', 'setLdapHandler', 'errorHandler']]);
 
 test('DNS request preserves one two and three byte segment prefixes', function () {
     expect(KadupulPhp81Tests\automation_get_dns_from_ip('1.22.123.4', 'unused'))->toBe('1.22.123.4');
