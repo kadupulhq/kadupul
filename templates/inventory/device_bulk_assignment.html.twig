@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% set heading = {'site': 'Assign device sites', 'template': 'Assign device templates', 'collector': 'Assign device collectors'}[kind] %}
+{% block title %}{{ heading|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ heading|trans({}, 'inventory') }}</h1>
+    <p>{{ 'The selected assignment is applied to every listed device. Template changes preserve existing graphs; automation may create new graphs. Collector changes transfer polling ownership.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'Affected remote collectors must be online. A failed operation may have changed remote devices; verify every selected device before retrying.'|trans({}, 'inventory') }}</p>
+    <ul>{% for device in devices %}<li>{{ device.description }} (#{{ device.id }}) — {{ device.hostname }} — {{ (device.enabled ? 'Enabled' : 'Disabled')|trans({}, 'inventory') }}</li>{% endfor %}</ul>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">{{ 'Confirm assignments'|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and validated list context. #}
+    <p><a href="{{ path('inventory_devices', filters) }}">{{ 'Cancel'|trans({}, 'inventory') }}</a></p>
+</main>
+{% endblock %}

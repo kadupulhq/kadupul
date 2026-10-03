@@ -40,11 +40,13 @@ final class DeviceTemplateSynchronizationPresentationTest extends TestCase
             $access->method('canManageDevices')->willReturn(true);
             $container->set(ConsoleAccess::class, $access);
             $device = new DeviceState(7, '<router>', 'router.invalid', true, 0, 1, 0);
-            $port = $this->createMockForIntersectionOfInterfaces([DeviceStates::class, \Kadupul\Inventory\Application\Port\DeviceStatistics::class, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization::class]);
+            $port = $this->createMockForIntersectionOfInterfaces([DeviceStates::class, \Kadupul\Inventory\Application\Port\DeviceStatistics::class, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization::class, \Kadupul\Inventory\Application\Port\DeviceOptions::class, \Kadupul\Inventory\Application\Port\DeviceSnmpSettings::class]);
             $port->method('findVisible')->willReturn([$device]);
             $port->expects(self::once())->method('synchronizeTemplates')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]));
             $port->expects(self::never())->method('setEnabled');
             $port->expects(self::never())->method('clearStatistics');
+            $port->expects(self::never())->method('changeOptions');
+            $port->expects(self::never())->method('changeSnmp');
             $container->set(DeviceStates::class, $port);
             $path = '/inventory/devices/sync-template?ids[]=7';
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
