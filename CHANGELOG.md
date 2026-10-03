@@ -75,6 +75,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
+- Validate replicated resource-cache paths against the installation tree, protect `include/config.php`, and run PHP syntax checks without a shell.
+
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.

@@ -258,6 +258,9 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('RESOURCE_CACHE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/poller.php');
+}
 if (defined('PERMISSION_FILTER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
