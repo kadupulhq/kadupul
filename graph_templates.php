@@ -532,7 +532,7 @@ function item()
 				__csrf_magic: csrfMagicToken
 			});
 		});
-		$('.deleteMarker:not(.inputDeleteMarker), .moveArrow').on('click', function(event) {
+		$('.deleteMarker:not(.inputDeleteMarker), .moveArrow').not('.cactiPostAction').on('click', function(event) {
 			event.preventDefault();
 			loadPageNoHeader($(this).attr('href'));
 		});

@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -12,7 +13,7 @@
 $src = file_get_contents(__DIR__ . '/../../host.php');
 
 test('host.php requires validated POST intent for reindexing', function () use ($src) {
-    expect($src)->toContain("cacti_require_post_actions(array('actions', 'reindex'));");
+    expect($src)->toMatch("/cacti_require_post_actions\\(array\\([^)]*'reindex'/");
 });
 
 test('host.php no longer executes a shell command', function () use ($src) {

@@ -176,6 +176,16 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
+- Require a POST with a CSRF token to move, delete or add items on the CDEF, VDEF, color template, graph, graph template, data source, data template, data query, data source profile, device template, automation, tree and external link pages. Their move and delete links now post from the page and load the result in place; a GET for these actions gets 405.
+
+- Require a POST with a CSRF token to add or remove device graph templates and data queries, to create, rename, copy, move or delete tree branches, set their sort order, or sort the tree list, to delete automation rules and data input fields, to enable or disable a data source, to remove a color, and to rebuild the poller, resource and SNMP agent caches, purge data source statistics, or clear or purge the Kadupul and user logs. The pages that offer these actions now post them with the token.
+
+- Require a POST with a CSRF token to lock or unlock a tree for editing, reorder trees by drag and drop, change, reload or verbosely re-run a device data query, turn device debugging on or off, and repopulate a device's poller cache. The tree, device and new graph pages now post these actions with the token.
+
+- Require a POST with a CSRF token to reorder items by drag and drop on the CDEF, VDEF, automation SNMP, automation template and color template pages, and to re-run a data query from the new graphs page. These pages now post the reorder and the reload with the token.
+
 ### Changed
 
 - Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.

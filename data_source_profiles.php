@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'item_remove'));
 include_once('./lib/poller.php');
 include_once('./lib/utility.php');
 require_once __DIR__ . '/lib/data_source_profile_integrity.php';

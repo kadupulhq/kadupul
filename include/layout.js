@@ -761,6 +761,25 @@ function handleTableNav() {
 		var url = $(this).data('url');
 		cactiReturnTo(url);
 	});
+
+	/* applySkin() reruns this after every refresh, so the namespaced off()
+	 * keeps one handler per link and a click posts once. */
+	$('.cactiPostAction').off('click.cactiPostAction').on('click.cactiPostAction', function(event) {
+		/* Like ajaxAnchors(), keep the click from also selecting the table row
+		 * or folding the filter header that holds the button. */
+		event.preventDefault();
+		event.stopPropagation();
+		/* Without data-url the href is '#' or a GET to the action; posting
+		 * either would send the token to the wrong place. */
+		var url = $(this).data('url');
+		if (url) {
+			if ($(this).data('navigation') === 'fullpage') {
+				navigateUsingPost(url);
+			} else {
+				loadPage(url, false, true);
+			}
+		}
+	});
 }
 
 /** setupSelectmenuScrollClose - Close open select menus when their scroll
@@ -2324,6 +2343,30 @@ function loadTopTab(href, id, force) {
 	}
 }
 
+/** cactiPreparePostRequestFromUrl - Turn a same-origin action URL into a POST
+ *  that carries its query as form fields plus the CSRF token. A URL on another
+ *  origin throws, so the token never leaves this server. The request URL keeps
+ *  the checked origin, because a path such as //host/x alone names another
+ *  host. */
+function cactiPreparePostRequestFromUrl(href) {
+	var target = new URL(href, window.location.href);
+	if (target.origin !== window.location.origin) {
+		throw new Error('Refusing to send a CSRF token to a different origin');
+	}
+
+	var fields = [{name: '__csrf_magic', value: csrfMagicToken}];
+	target.searchParams.forEach(function(value, name) {
+		if (name !== '__csrf_magic') {
+			fields.push({name: name, value: value});
+		}
+	});
+
+	return {
+		url: target.origin + target.pathname,
+		data: $.param(fields)
+	};
+}
+
 function loadPageUsingPost(href, postData, returnLocation) {
 	$.post(href, postData, function(data) {
 		if (returnLocation !== undefined) {
@@ -2334,6 +2377,41 @@ function loadPageUsingPost(href, postData, returnLocation) {
 
 		applySkin();
 	});
+}
+
+/* Posts as loadPageUsingPost() does, but first asks before discarding unsaved
+ * form edits, as loadPageNoHeader() did for these actions when they were GETs.
+ * Continue sends the same POST. */
+function loadPageUsingPostChecked(href, postData) {
+	var send = function() {
+		loadPageUsingPost(href, postData);
+	};
+
+	if (checkFormStatus(href, 'postdata', send)) {
+		send();
+	}
+}
+
+/* Let the browser follow a cross-page POST redirect and retain its safe GET URL. */
+function navigateUsingPost(href) {
+	var request = cactiPreparePostRequestFromUrl(href);
+	var send = function() {
+		var form = document.createElement('form');
+		form.method = 'post';
+		form.action = request.url;
+		new URLSearchParams(request.data).forEach(function(value, name) {
+			var input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = name;
+			input.value = value;
+			form.appendChild(input);
+		});
+		document.body.appendChild(form);
+		HTMLFormElement.prototype.submit.call(form);
+	};
+	if (checkFormStatus(href, 'postdata', send)) {
+		send();
+	}
 }
 
 /** Symfony Sites pages own their full document rather than legacy AJAX fragments. */
@@ -2351,7 +2429,7 @@ function navigateToSymfonySites(href) {
 	return true;
 }
 
-function loadPage(href, force) {
+function loadPage(href, force, post) {
 	statePushed = false;
 	cont = false;
 
@@ -2360,7 +2438,7 @@ function loadPage(href, force) {
 	}
 
 	if (!force) {
-		cont = checkFormStatus(href, 'loadpage');
+		cont = checkFormStatus(href, post ? 'post' : 'loadpage');
 	} else {
 		cont = true;
 	}
@@ -2373,8 +2451,14 @@ function loadPage(href, force) {
 
 		clearAllTimeouts();
 
+		/* A post action keeps its query string in href so the unsaved form
+		 * dialog can replay it, but history and redirects must never repeat
+		 * the action by GET. */
+		var returnHref = (post ? undefined : href);
+		var request    = (post ? cactiPreparePostRequestFromUrl(href) : null);
+
 		$.ajaxQ.abortAll();
-		$.get(href)
+		(post ? $.post(request.url, request.data) : $.get(href))
 			.done(function(html) {
 				var htmlObject  = $(html);
 				var matches     = html.match(/<title>(.*?)<\/title>/);
@@ -2385,7 +2469,7 @@ function loadPage(href, force) {
 					var html        = htmlObject.find('#main').html();
 					var jstree		= htmlObject.find('.cactiTreeNavigationArea').html();
 
-					checkForRedirects(html, href);
+					checkForRedirects(html, returnHref);
 					if(typeof jstree !== 'undefined' && $('.cactiTreeNavigationArea').length !== 0) {
 						$('.cactiTreeNavigationArea').html(jstree);
 					}
@@ -2400,16 +2484,20 @@ function loadPage(href, force) {
 					myTitle = htmlTitle;
 					myHref  = cleanHeader(href);
 
-					pushState(myTitle, href);
+					if (!post) {
+						pushState(myTitle, href);
+					}
 				} else {
-					checkForRedirects(html, href);
+					checkForRedirects(html, returnHref);
 
 					$('#main').empty().hide();
 					$('#main').html(html);
 
 					thref = stripHeaderSuppression(href);
 
-					pushState(myTitle, href);
+					if (!post) {
+						pushState(myTitle, href);
+					}
 				}
 
 				var hrefParts = href.split('?');
@@ -2453,7 +2541,7 @@ function loadPage(href, force) {
 				return false;
 			})
 			.fail(function(html) {
-				getPresentHTTPErrorOrRedirect(html, href);
+				getPresentHTTPErrorOrRedirect(html, (post ? document.location.href : href));
 			}
 		);
 	}

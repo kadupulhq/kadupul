@@ -8,6 +8,11 @@
 use Kadupul\Platform\Infrastructure\Legacy\UtilityRows;
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array(
+    'clear_poller_cache', 'rebuild_resource_cache', 'clear_logfile', 'purge_logfile',
+    'clear_user_log', 'purge_data_source_statistics', 'rebuild_snmpagent_cache'
+));
 include_once('./lib/api_data_source.php');
 include_once('./lib/boost.php');
 include_once('./lib/rrd.php');
@@ -975,8 +980,11 @@ function utilities_view_user_log()
 	}
 
 	function purgeLog() {
-		strURL = urlPath+'utilities.php?action=clear_user_log&header=false';
-		loadPageNoHeader(strURL);
+		loadPageUsingPost(urlPath+'utilities.php', {
+			action: 'clear_user_log',
+			header: 'false',
+			__csrf_magic: csrfMagicToken
+		});
 	}
 
 	$(function() {
@@ -1352,8 +1360,12 @@ function utilities_view_logfile()
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function purgeLog() {
-		strURL = urlPath+'utilities.php?action=purge_logfile&header=false&filename='+$('#filename').val();
-		loadPageNoHeader(strURL);
+		loadPageUsingPost(urlPath+'utilities.php', {
+			action: 'purge_logfile',
+			header: 'false',
+			filename: $('#filename').val(),
+			__csrf_magic: csrfMagicToken
+		});
 	}
 
 	$(function() {
@@ -2343,6 +2355,7 @@ function utilities()
         ),
         __('Rebuild Poller Cache') => array(
             'link'  => 'utilities.php?action=clear_poller_cache',
+            'post'  => true,
             'mode'  => 'online',
             'description' => __('The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems.'),
             'note'        => array(
@@ -2352,6 +2365,7 @@ function utilities()
         ),
         __('Rebuild Resource Cache') => array(
             'link'  => 'utilities.php?action=rebuild_resource_cache',
+            'post'  => true,
             'mode'  => 'online',
             'description' => __('When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency.')
         ),
@@ -2367,6 +2381,7 @@ function utilities()
     $utilities[__('Data Source Statistics Utilities')] = array(
         __('Purge Data Source Statistics') => array(
             'link'  => 'utilities.php?action=purge_data_source_statistics',
+            'post'  => true,
             'mode'  => 'online',
             'description' => __('This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass.')
         ),
@@ -2396,6 +2411,7 @@ function utilities()
             ),
             __('Rebuild SNMP Agent Cache') => array(
                 'link'  => 'utilities.php?action=rebuild_snmpagent_cache',
+                'post'  => true,
                 'mode'  => 'online',
                 'description' => __('The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely.')
             ),
@@ -2427,7 +2443,11 @@ function utilities()
 
                 form_alternate_row();
                 print "<td class='nowrap' style='vertical-align:top;'>";
-                print "<a class='hyperLink' href='" . html_escape($details['link']) . "'>" . $title . '</a>';
+                if (isset($details['post']) && $details['post'] === true) {
+                    print "<a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape($details['link']) . "'>" . $title . '</a>';
+                } else {
+                    print "<a class='hyperLink' href='" . html_escape($details['link']) . "'>" . $title . '</a>';
+                }
                 print '</td>';
                 print '<td>';
                 print html_escape($details['description']);

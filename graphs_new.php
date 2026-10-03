@@ -1,10 +1,13 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('query_reload'));
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_graph.php');
 include_once('./lib/api_tree.php');
@@ -389,7 +392,12 @@ function graphs()
 	$(function() {
 		$('[id^="reload"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			loadPageNoHeader('graphs_new.php?action=query_reload&header=false&id='+$(this).attr('data-id')+'&host_id='+$('#host_id').val());
+			loadPageUsingPost('graphs_new.php?action=query_reload', {
+				header: 'false',
+				id: $(this).attr('data-id'),
+				host_id: $('#host_id').val(),
+				__csrf_magic: csrfMagicToken
+			});
 		});
 
 		$('#graph_type, #rows').on('change', function() {
@@ -885,7 +893,7 @@ function graphs()
                         }
 
                         if (!cacti_sizeof($snmp_query_indexes)) {
-                            print "<tr class='odd'><td>" . __('This Data Query returned 0 rows, perhaps there was a problem executing this Data Query.') . "<a href='" . html_escape('host.php?action=query_verbose&id=' . $snmp_query['id'] . '&host_id=' . $host['id']) . "'>" . __('You can run this Data Query in debug mode') . "</a> " . __('From there you can get more information.') . '</td></tr>';
+                            print "<tr class='odd'><td>" . __('This Data Query returned 0 rows, perhaps there was a problem executing this Data Query.') . "<a class='cactiPostAction' href='#' data-navigation='fullpage' data-url='" . html_escape('host.php?action=query_verbose&header=true&id=' . $snmp_query['id'] . '&host_id=' . $host['id']) . "'>" . __('You can run this Data Query in debug mode') . "</a> " . __('From there you can get more information.') . '</td></tr>';
                         } else {
                             print "<tr class='tableHeader'>
 									$html_dq_header

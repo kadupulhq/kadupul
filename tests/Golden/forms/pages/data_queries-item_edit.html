@@ -31,8 +31,8 @@
 
 	$('.remover').on('click', function(event) {
 		event.preventDefault();
-		href=$(this).attr('href');
-		$.get(href)
+		var request = cactiPreparePostRequestFromUrl($(this).data('url'));
+		$.post(request.url, request.data)
 			.done(function(data) {
 				$('form[action="data_queries.php"]').off();
 				$('#main').html(data);

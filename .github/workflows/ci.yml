@@ -479,7 +479,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/permission-filter.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/post-action-links.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/permission-filter.test.mjs
 
   changelog:
     name: Changelog
