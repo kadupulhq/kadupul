@@ -14,15 +14,23 @@ $table = $argv[2];
 $id = $table === 'aggregate_graphs_graph_item' ? 'aggregate_graph_id' : 'aggregate_template_id';
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+class AggregateRecordingStatement extends PDOStatement {
+    protected function __construct() {}
+    public function execute(?array $parameters = null): bool {
+        $GLOBALS['queries'][] = array($this->queryString, $parameters ?? array());
+        return parent::execute($parameters);
+    }
+}
+$db->setAttribute(PDO::ATTR_STATEMENT_CLASS, array(AggregateRecordingStatement::class, array()));
+$database_hostname = 'query-fixture';
+$database_port = 0;
+$database_default = 'query-fixture';
+$database_sessions = array("$database_hostname:$database_port:$database_default" => $db);
 $db->exec("CREATE TABLE $table ($id INTEGER, graph_templates_item_id INTEGER, sequence INTEGER, color_template INTEGER, t_graph_type_id TEXT, graph_type_id INTEGER, t_cdef_id TEXT, cdef_id INTEGER, item_skip TEXT, item_total TEXT)");
 $db->exec("INSERT INTO $table ($id, graph_templates_item_id) VALUES (1, 10), (2, 20)");
 $queries = array();
 function cacti_log(...$args) {}
-function db_execute_prepared($sql, $parameters) {
-    global $db, $queries;
-    $queries[] = array($sql, $parameters);
-    return $db->prepare($sql)->execute($parameters);
-}
+function db_execute_prepared(...$args) { throw new RuntimeException('Unconfirmed SQL wrapper execution'); }
 function db_execute(...$args) { throw new RuntimeException('Unbound SQL execution'); }
 function db_qstr(...$args) { throw new RuntimeException('Values must remain bound'); }
 $item = array($id => $argv[3], 'graph_templates_item_id' => 11,
