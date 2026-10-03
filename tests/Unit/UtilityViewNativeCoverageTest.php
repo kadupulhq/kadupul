@@ -378,7 +378,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources);
                 static $omissionsVerified = false;
                 if (!$omissionsVerified) {
-                    self::assertSame(35, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources, 'lib/boost.php'));
+                    self::assertSame(35, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources, $scenario['view'] === 'boost' ? 'lib/rrd_maintenance.php' : 'lib/boost.php'));
                     $omissionsVerified = true;
                 }
                 $coverage->merge($child);
