@@ -278,7 +278,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $this->presentation->forLegacy(LegacyRequest::Run);
         $tester = $this->tester(null, $this->store('table_columns'));
 
-        self::assertSame(0, $tester->execute(['--create' => true]));
+        self::assertSame(1, $tester->execute(['--create' => true]));
         self::assertSame("Failed to create 'table_columns'", $tester->getDisplay());
     }
 
@@ -340,6 +340,21 @@ final class AuditDatabaseCommandTest extends TestCase
         $none = $this->tester();
         self::assertSame(0, $none->execute(['--upgrade' => true]));
         self::assertSame(implode("\n", $this->help()) . "\n", $none->getDisplay());
+    }
+
+    public function testLegacyMissingBaselineFailsWithoutCleanOrRepairSuccess(): void
+    {
+        foreach (['--report', '--repair', '--create'] as $mode) {
+            $this->presentation->forLegacy(LegacyRequest::Run);
+            $store = $this->createMock(AuditBaselineStore::class);
+            $store->method('read')->willReturn(null);
+            $store->expects(self::never())->method('reset');
+            $store->expects(self::never())->method('replace');
+            $schema = $this->schema();
+            $tester = $this->tester($schema, $store);
+            self::assertSame(1, $tester->execute([$mode => true]));
+            self::assertSame("FATAL: Failed to find Audit Schema\n", $tester->getDisplay());
+        }
     }
 
     public function testLegacyVersion(): void

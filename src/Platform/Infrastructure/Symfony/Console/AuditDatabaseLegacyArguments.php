@@ -143,6 +143,9 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
             return [...$lines, ...self::load($report)];
         }
         $lines = [...$lines, ...self::baseline($report, $prefix)];
+        if (in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)) {
+            return $lines;
+        }
 
         return match ($report->mode) {
             AuditMode::Create => $lines,

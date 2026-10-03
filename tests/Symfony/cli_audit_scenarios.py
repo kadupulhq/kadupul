@@ -16,7 +16,8 @@ from cli_parity_scenarios import ROOT, clock_free, install_original, normalise, 
 from cli_schema_scenarios import REFUSED, compare, realm_fallback, verify_refusals
 
 AUDIT_ORIGINAL = 'tests/Fixtures/legacy-cli/audit_database.php'
-AUDIT_SHIM = 'cli/audit_database.php'
+# The production CLI remains legacy; test the native adapter through its bridge.
+AUDIT_SHIM = 'tests/Fixtures/native-cli/audit_database.php'
 AUDIT_UTILITY = 'Kadupul Database Audit Utility'
 DOCS = f'{ROOT}/docs'
 DUMP = f'{DOCS}/audit_schema.sql'
@@ -245,6 +246,7 @@ def found(harness):
 
 def verify_audit(harness, check, admin):
     install_original(harness, AUDIT_ORIGINAL)
+    install_original(harness, AUDIT_SHIM)
     version = harness.sql('SELECT cacti FROM version').strip()
     # Taken before anything is set up, so a restore that misses a change
     # fails the final check instead of hiding.
@@ -287,6 +289,20 @@ def verify_audit_cases(harness, check, tables, version):
             dumps.append(dump_file(h))
             reset(h, state, tables, version)
 
+        if state in ('no dump', 'unparsable', 'create denied'):
+            starting(harness)
+            original = run(harness, AUDIT_ORIGINAL, arguments)
+            starting(harness)
+            start = schema(harness)
+            native = run(harness, AUDIT_SHIM, arguments)
+            expected = ("Failed to create 'table_columns'" if state == 'create denied' else
+                        'FATAL: Failed Load the Audit Schema\nERROR: docs/audit_schema.sql line 1 does not parse\n' if state == 'unparsable' else
+                        'FATAL: Failed to find Audit Schema\n')
+            check(original['exit'] == 0, f'{label}: frozen original records its historical success exit on baseline failure')
+            check(native == {'exit': 1, 'stdout': expected, 'stderr': ''},
+                  f'{label}: native command fails without claiming a clean audit')
+            check(schema(harness) == start, f'{label}: refused native audit preserves all schema and baseline state')
+            continue
         unparsed = label == UNPARSED
         stdout = (lambda text: LOAD_ERROR.sub('ERROR: <load error>', masked(text), count=1)) if unparsed else masked
         stderr_filter = (lambda text: CLIENT_ERROR.sub('', text)) if unparsed else None
