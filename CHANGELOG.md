@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and consistently convert the 120-minute fallback interval to seconds. Fixes #270.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
@@ -20,6 +21,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
+- Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
 - Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
 
