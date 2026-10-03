@@ -84,6 +84,7 @@ test('production graph item editors preserve fixed widths and source association
         }
     }
 })->with(array(
+    array('graphs_items.php', 'invalid-line_width'), array('graph_templates_items.php', 'invalid-line_width'),
     array('graphs_items.php', 'invalid-alpha'), array('graphs_items.php', 'invalid-dashes'), array('graphs_items.php', 'invalid-dash_offset'),
     array('graph_templates_items.php', 'invalid-alpha'), array('graph_templates_items.php', 'invalid-dashes'), array('graph_templates_items.php', 'invalid-dash_offset'),
     array('graph_templates_items.php', 'item_moveup-single'), array('graph_templates_items.php', 'item_movedown-single'),
