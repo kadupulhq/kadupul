@@ -15,7 +15,7 @@ require_once __DIR__ . '/../Helpers/PhpSource.php';
 $source = file_get_contents(__DIR__ . '/../../lib/api_graph.php');
 foreach (['api_graph_remove_aggregate_items', 'api_graph_remove_multi'] as $function) {
     // Fixed first-party function bodies; no request or external executable input.
-    eval('namespace ' . __NAMESPACE__ . '; use RuntimeException;' . \test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
+    eval('namespace ' . __NAMESPACE__ . '; use RuntimeException;' . str_replace('__DIR__', var_export(dirname(__DIR__, 2) . '/lib', true), \test_php_function_source($source, $function))); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 function cacti_sizeof($rows)
 {
@@ -45,7 +45,16 @@ function db_fetch_assoc_prepared($sql, $parameters)
     if (str_contains($sql, 'FOR UPDATE')) {
         $GLOBALS['aggregate_locks'][] = [$table, $parameters];
     }
-    return $GLOBALS['aggregate_live'] === $table ? [['local_graph_id' => 7, 'aggregate_graph_id' => 11]] : [];
+    return $GLOBALS['aggregate_live'] === $table ? [['local_graph_id' => 42, 'aggregate_graph_id' => 11]] : [];
+}
+
+function aggregate_graph_mutation(callable $operation): bool
+{
+    return $operation() === true;
+}
+function aggregate_graph_fetch_rows($sql, $parameters)
+{
+    return db_fetch_assoc_prepared($sql, $parameters);
 }
 
 final class ReviewedAggregateRemovalTest extends TestCase
@@ -82,6 +91,6 @@ final class ReviewedAggregateRemovalTest extends TestCase
         $GLOBALS['aggregate_live'] = 'aggregate_graphs_items';
         $GLOBALS['aggregate_detached'] = [];
         api_graph_remove_aggregate_items([7]);
-        self::assertSame([[11, 7]], $GLOBALS['aggregate_detached']);
+        self::assertSame([[42, [7]]], $GLOBALS['aggregate_detached']);
     }
 }
