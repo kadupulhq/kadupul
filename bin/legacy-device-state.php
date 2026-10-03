@@ -94,7 +94,7 @@ try {
     $rows = $locked['rows'];
     $pollers = $locked['pollers'];
     $read = $locked['read'];
-    if ($assignDevices && $assignment->kind === 'site' && count($locked['site_locks'][$assignment->targetId] ?? []) !== 1) {
+    if ($assignDevices && $assignment->kind === 'site' && $assignment->targetId > 0 && count($locked['site_locks'][$assignment->targetId] ?? []) !== 1) {
         throw new RuntimeException('Assignment site unavailable');
     }
     if ($assignDevices && $assignment->kind === 'collector') {
