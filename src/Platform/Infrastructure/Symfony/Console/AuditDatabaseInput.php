@@ -25,7 +25,7 @@ final class AuditDatabaseInput
     #[Option(description: 'Print the statements a repair would run instead of running them.')]
     public bool $alters = false;
 
-    #[Option(description: 'Upgrade the database first when its version is behind the code.')]
+    #[Option(description: 'Deprecated: run php cli/upgrade_database.php separately before auditing.')]
     public bool $upgrade = false;
 
     #[Option(description: 'Reload the audit schema tables from docs/audit_schema.sql.')]

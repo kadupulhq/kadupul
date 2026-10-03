@@ -1186,8 +1186,11 @@ Known differences from `cli/fix_mediumint.php`:
 them match (`--alters`), runs them (`--repair`), reloads the audit tables
 (`--create`), or rewrites the file from this database for developers
 (`--load`). `--repair` changes the schema only with `--force`; without it
-the run plans, and on a terminal it then asks before it runs the plan. `--upgrade` first runs `cli/upgrade_database.php` and the plugin
-upgrades when the database version is behind the code. It needs the Console
+the run plans, and on a terminal it then asks before it runs the plan.
+`--upgrade` is deprecated: run `php cli/upgrade_database.php` separately
+before auditing. The flag remains accepted for compatibility and prints a
+deprecation warning to stderr; while the database is behind, it still runs the
+core and plugin upgrades. It needs the Console
 Access and Installation/Upgrades realms, the realm of the install wizard,
 which is the only place the web UI changes the core schema
 (`include/global_arrays.php:1284-1285`). `--dry-run` reads the file and the
@@ -1265,7 +1268,9 @@ Known differences from `cli/audit_database.php`:
   reached it, after importing the tables before it, so those two tables'
   cardinality counted rows it had just inserted. Cardinality is the
   server's estimate, and the audit never compares it.
-- `--upgrade` runs `cli/upgrade_database.php` and each plugin's
+- Using the deprecated `--upgrade` flag prints a warning to stderr that directs
+  operators to `php cli/upgrade_database.php`. It remains accepted for
+  compatibility and runs `cli/upgrade_database.php` and each plugin's
   `database_upgrade.php` through Symfony Process with an argument array and
   the PHP binary the command runs under, not `php` from `PATH` through a
   shell; a plugin's recorded version reaches its script as one argument. The
