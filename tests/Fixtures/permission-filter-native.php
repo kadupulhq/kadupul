@@ -11,7 +11,7 @@ $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/permission-filter-native.php', $argv[1], array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/permission-filter-native.php', $argv[1], array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'lib/auth.php', 'user_admin.php', 'user_group_admin.php', 'lib/html.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
 }
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
@@ -22,6 +22,10 @@ $item_rows = array(10 => 'Ten', 25 => 'Twenty & five');
 $request = array_merge(array('id' => 7, 'rows' => 25, 'associated' => 'true', 'filter' => 'A & B', 'graph_template_id' => 3, 'host_template_id' => 4), $scenario);
 $request['action'] = 'fixture';
 $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+$database_hostname = 'native';
+$database_port = '0';
+$database_default = 'filter';
+$database_sessions = array('native:0:filter' => $db);
 $db->exec("CREATE TABLE graph_templates(id INTEGER, name TEXT);
     CREATE TABLE graph_local(graph_template_id INTEGER);
     CREATE TABLE host_template(id INTEGER, name TEXT);
@@ -33,7 +37,15 @@ if (!empty($scenario['empty'])) {
     $item_rows = false;
 }
 $queries = array();
+$deleteCounts = array();
 if (isset($scenario['association'])) {
+    $_SESSION = array('sess_user_id' => 99);
+    $db->sqliteCreateFunction('RAND', static fn() => random_int(1, 4294967294) / 4294967295);
+    $db->sqliteCreateFunction('FLOOR', static fn($number) => floor($number));
+    $db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER DEFAULT 0);
+        INSERT INTO user_auth(id) VALUES(7),(41),(42),(43),(77);
+        CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY);
+        INSERT INTO user_auth_group VALUES(7),(41),(42),(43),(77);');
     $request[$scenario['association']] = '1';
     $request['drp_action'] = $scenario['add'] ? '1' : '2';
     $_POST = array('chk_41' => 'on', 'chk_43' => '', 'chk_invalid' => 'on', 'chk_42_extra' => 'on');
@@ -53,10 +65,46 @@ if (isset($scenario['association'])) {
         $statement->execute($row);
     }
 }
-function db_execute_prepared($sql, $parameters)
+function db_execute_prepared($sql, $parameters, $log = true, $connection = false)
+{
+    if ($connection !== false && $connection !== $GLOBALS['db']) {
+        throw new RuntimeException('Native filter changed mutation PDO.');
+    }
+    $GLOBALS['queries'][] = array($sql, $parameters);
+    $statement = $GLOBALS['db']->prepare($sql);
+    $result = $statement->execute($parameters);
+    $GLOBALS['permission_affected_rows'] = $statement->rowCount();
+    if (str_starts_with($sql, 'DELETE FROM')) {
+        $GLOBALS['deleteCounts'][] = $GLOBALS['permission_affected_rows'];
+    }
+    return $result;
+}
+function db_affected_rows($connection = false)
+{
+    if ($connection !== false && $connection !== $GLOBALS['db']) {
+        throw new RuntimeException('Native filter changed affected-row PDO.');
+    }
+    return $GLOBALS['permission_affected_rows'] ?? false;
+}
+function db_execute($sql)
+{
+    $GLOBALS['queries'][] = array($sql, array());
+    return $GLOBALS['db']->exec($sql);
+}
+function db_fetch_assoc_prepared($sql, $parameters)
 {
     $GLOBALS['queries'][] = array($sql, $parameters);
-    return $GLOBALS['db']->prepare($sql)->execute($parameters);
+    $statement = $GLOBALS['db']->prepare($sql);
+    $statement->execute($parameters);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+function array_rekey($rows, $key, $value)
+{
+    return array_column($rows, $value, $key);
+}
+function get_filter_request_var($name)
+{
+    return get_request_var($name);
 }
 function input_validate_input_number($number)
 {
@@ -109,9 +157,15 @@ function clean_up_name($name)
 {
     return $name;
 }
-function is_realm_allowed($realm)
+if (!isset($scenario['association'])) {
+    function is_realm_allowed($realm)
+    {
+        return false;
+    }
+}
+function raise_message($key, ...$arguments)
 {
-    return false;
+    throw new RuntimeException('Native association unexpectedly failed.');
 }
 function api_plugin_hook($name) {}
 function cacti_require_post_actions($actions) {}
@@ -129,6 +183,9 @@ final class CactiSecureHeaders
     }
 }
 require $root . '/lib/html.php';
+if (isset($scenario['association'])) {
+    require $root . '/lib/auth.php';
+}
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('PERMISSION_FILTER_TEST_COVERAGE', true);
@@ -144,7 +201,7 @@ if (!empty($scenario['no_association'])) {
 }
 if (isset($scenario['association'])) {
     register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn) {
-        $state = array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries']);
+        $state = array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries'], 'delete_counts' => $GLOBALS['deleteCounts'], 'epochs' => $db->query('SELECT id, reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR));
         $GLOBALS['nativeChildCoverageMarkers'] = array('association-state-readback');
         print json_encode($state, JSON_THROW_ON_ERROR);
     });
