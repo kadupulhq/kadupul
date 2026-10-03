@@ -363,6 +363,8 @@ jobs:
           echo "KADUPUL_OFFLINE_FIXTURE_PHP_VERSION=$fixture_php_version" >> "$GITHUB_ENV"
       - name: Verify observation normalization and failure reporting
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/selftest.py
+      - name: Verify audit snapshot structural comparisons
+        run: mise exec python@3.12.12 -- python tests/tools/test_cli_audit_snapshot.py
       - name: Verify offline build runtime selection
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
       - name: Verify offline guest fixture mutations
