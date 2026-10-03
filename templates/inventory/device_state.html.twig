@@ -1,15 +1,21 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ (operation == 'clear-statistics' ? 'Clear device statistics' : (operation == 'enable' ? 'Enable devices' : 'Disable devices'))|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% set heading = {'enable': 'Enable devices', 'disable': 'Disable devices', 'clear-statistics': 'Clear device statistics', 'sync-template': 'Synchronize device templates'}[operation] %}
+{% set confirmation = {'enable': 'Confirm enabling', 'disable': 'Confirm disabling', 'clear-statistics': 'Confirm clearing statistics', 'sync-template': 'Confirm synchronization'}[operation] %}
+{% block title %}{{ heading|trans({}, 'inventory') }} · Kadupul{% endblock %}
 {% block body %}
 <main>
-    <h1>{{ (operation == 'clear-statistics' ? 'Clear device statistics' : (operation == 'enable' ? 'Enable devices' : 'Disable devices'))|trans({}, 'inventory') }}</h1>
+    <h1>{{ heading|trans({}, 'inventory') }}</h1>
+    {% if operation == 'sync-template' %}
+    <p>{{ 'Apply the current assigned templates to these devices. Missing graph and data-query associations are added, and unused graph-template associations may be removed. Devices without templates are skipped. Existing graphs and historical data are retained; automation may create new graphs.'|trans({}, 'inventory') }}</p>
+    {% else %}
     <p>{{ (operation == 'clear-statistics' ? 'Reset response times, poll counts and availability for these devices. Graphs, historical data and device settings are retained. Statistics resume with the next poll.' : 'Confirm the polling state for these devices. Their graphs, data and other settings are retained.')|trans({}, 'inventory') }}</p>
+    {% endif %}
     <p>{{ 'Affected remote collectors must be online. A failed operation may have changed remote devices; verify every selected device before retrying.'|trans({}, 'inventory') }}</p>
     <ul>{% for device in devices %}<li>{{ device.description }} (#{{ device.id }}) — {{ device.hostname }} — {{ (device.enabled ? 'Enabled' : 'Disabled')|trans({}, 'inventory') }}</li>{% endfor %}</ul>
     {{ form_start(form) }}
         {{ form_errors(form) }}
         {{ form_widget(form) }}
-        <button type="submit">{{ (operation == 'clear-statistics' ? 'Confirm clearing statistics' : (operation == 'enable' ? 'Confirm enabling' : 'Confirm disabling'))|trans({}, 'inventory') }}</button>
+        <button type="submit">{{ confirmation|trans({}, 'inventory') }}</button>
     {{ form_end(form) }}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and validated list context. #}
     <p><a href="{{ path('inventory_devices', filters) }}">{{ 'Cancel'|trans({}, 'inventory') }}</a></p>
