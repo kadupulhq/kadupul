@@ -107,13 +107,9 @@ final readonly class AuditDatabaseCommand
             ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->write($stderr, false, OutputInterface::OUTPUT_RAW);
         }
         $lines = $legacy->report($report, $alters, $report->outcome === AuditOutcome::NoMode ? $this->version->line(self::UTILITY) : '');
-        // Failed canonical-baseline audits must not report success.
-        // Preserve the old no-newline output for "Failed to create".
-        $baselineFailed = in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)
-            && in_array($report->mode, [AuditMode::Report, AuditMode::Repair, AuditMode::Alters], true);
-        $exit = in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) || $baselineFailed
-            ? Command::FAILURE
-            : Command::SUCCESS;
+        // An unusable baseline cannot produce a successful audit outcome.
+        $failedBaseline = in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed, BaselineOutcome::CreateFailed], true);
+        $exit = $failedBaseline || in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) ? Command::FAILURE : Command::SUCCESS;
 
         return $this->renderer->render(new CommandResult([], $lines, $exit, $report->baseline !== BaselineOutcome::CreateFailed), OutputMode::Legacy, $output);
     }
