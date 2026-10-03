@@ -157,6 +157,11 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
     #[\Override]
     public function replace(DatabaseTarget $target, AuditBaseline $baseline): bool
     {
+        return $this->publish($target, $baseline, false);
+    }
+
+    private function publish(DatabaseTarget $target, AuditBaseline $baseline, bool $fromCatalog): bool
+    {
         if ($baseline->columnRows === [] || $baseline->indexRows === []) {
             return false;
         }
@@ -171,6 +176,10 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
         $cleanupOk = true;
         try {
             foreach ([[$columns, self::DUMP_COLUMNS, 'table_columns'], [$indexes, self::DUMP_INDEXES, 'table_indexes']] as [$name, $ddl, $table]) {
+                // A canonical import keeps the dump metadata; --load uses the CLI-created table comments.
+                if ($fromCatalog) {
+                    $ddl = str_replace('Holds Default Cacti', 'Holds Default Kadupul', $ddl);
+                }
                 if (!$this->connections->execute($target, str_replace('`' . $table . '`', '`' . $name . '`', $ddl))) {
                     return false;
                 }
@@ -214,7 +223,7 @@ final readonly class DbalAuditBaselineStore implements AuditBaselineStore
             }
         }
 
-        return $this->replace($target, new AuditBaseline($columns, $indexes));
+        return $this->publish($target, new AuditBaseline($columns, $indexes), true);
     }
 
     #[\Override]

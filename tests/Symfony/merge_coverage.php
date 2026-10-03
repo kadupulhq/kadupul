@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'data_source_profile_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'cli_audit_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'data_source_profile_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'cli_audit_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'public/js/vdef-item.js';
@@ -37,6 +37,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/convert_tables.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/fix_mediumint.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/audit_database.php';
+        $sourcePaths[] = 'tests/Fixtures/native-cli/audit_database.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -44,6 +45,17 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'system page size fixture restores original absence and value',
+        'profile deletion confirmation page renders',
+        'unused profile is normally removable',
+        'collector retry builds real poller item from the saved command',
+        'offline collector yields explicit partial handoff without undoing local definition',
+        'whitelist update publishes the exact saved command and verifies it',
+        'worker independently rechecks feature grants before executing the handoff',
+        'French session authenticates through legacy login',
+        'French editor translates presentation without changing raw command definition',
+        'English field deletion confirmation uses a readable action label',
+        'French field deletion confirmation honors the authenticated preference',
         'About unprotected Basic headers cannot establish a web-server principal',
         'About Basic identity is verified by Apache before PHP',
         'About first Basic request restores native identity through the legacy forwarder',
@@ -197,6 +209,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'widen falls back to Settings/Utilities while nobody holds Installation/Upgrades',
         'widen --dry-run through bin/console plans each table and changes nothing',
         'widen scenarios leave the schema as they found it',
+        'retained audit compatibility report executes successfully',
         'audit report on a drifted table: shim stdout matches the original',
         'audit repair on a drifted table: shim schema matches the original',
         'audit repair on a drifted table: shim logs the same cacti.log lines, date included',
@@ -252,7 +265,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'about.php', 'color.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'vdef.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'about.php', 'color.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'vdef.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -276,6 +289,11 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
+        'links.php',
+        'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'src/DataInput/Infrastructure/Legacy/DataInputHandoff.php',
+        'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php',
         'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php',
