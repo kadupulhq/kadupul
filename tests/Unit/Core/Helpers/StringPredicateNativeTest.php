@@ -32,6 +32,8 @@ test('native predicates preserve rendering redirects and resource replication', 
         $this->assertSame(0, $status, $error . $output);
         $this->assertSame('', $output . $error);
         $result = json_decode(file_get_contents($directory . '/result.json'), true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame([false, 'app.js', 'app.js', ''], $result['include_fallback']);
+        $this->assertSame([true, 'app.js', 'app.js', ''], $result['include_resolver']);
         $this->assertStringContainsString("class='odd selectable tableRow' id='12'", $result['rows'][0]);
         $this->assertStringContainsString("class='even tableRow' id='row_12'", $result['rows'][1]);
         $this->assertStringContainsString("class='probe selectable' id='ROW_12'", $result['rows'][2]);
@@ -53,11 +55,11 @@ test('native predicates preserve rendering redirects and resource replication', 
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             $this->assertCount(1, $reports);
-            $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'lib/functions.php', 'include/global_constants.php', 'lib/html_utility.php', 'lib/database.php', 'lib/path_helpers.php', 'lib/html.php', 'tests/Unit/Core/Helpers/StringPredicateNativeTest.php'];
+            $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'lib/functions.php', 'include/global_constants.php', 'lib/html_utility.php', 'lib/database.php', 'lib/path_helpers.php', 'lib/html.php', 'tests/Unit/Core/Helpers/StringPredicateNativeTest.php', 'src/Platform/Infrastructure/Legacy/LegacyIncludePathResolver.php'];
             $markers = ['native-result-persisted'];
-            $hits = ['lib/functions.php', 'lib/html_utility.php', 'lib/database.php', 'lib/path_helpers.php', 'lib/poller.php'];
+            $hits = ['lib/functions.php', 'lib/html_utility.php', 'lib/database.php', 'lib/path_helpers.php', 'lib/poller.php', 'src/Platform/Infrastructure/Legacy/LegacyIncludePathResolver.php'];
             $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/string-predicates-native.php', 'native-string-predicates', $sources, $markers, $hits);
-            $this->assertSame(31, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/string-predicates-native.php', 'native-string-predicates', $sources, $markers, $hits, 'lib/boost.php'));
+            $this->assertSame(32, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/string-predicates-native.php', 'native-string-predicates', $sources, $markers, $hits, 'lib/boost.php'));
             $coverage->merge($child);
         }
     } finally {
