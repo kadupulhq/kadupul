@@ -50,7 +50,7 @@
                 "--font WATERMARK:6:'Arial'",
                 "DEF:a='rra/router_traffic_11.rrd':'traffic_in':MAX",
                 "DEF:b='rra/router_traffic_11.rrd':'traffic_in':LAST",
-                "AREA:a#00CF00FF:'Inbound' ",
+                "AREA:a#00CF00'FF':'Inbound' ",
                 "GPRINT:b:LAST:'Now\\:%8.2lf %s' \r\nquit\r\n"
             ]
         }
