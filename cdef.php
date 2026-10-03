@@ -160,44 +160,6 @@ function form_save()
     }
 }
 
-function duplicate_cdef($_cdef_id, $cdef_title)
-{
-    global $fields_cdef_edit;
-
-    $cdef       = db_fetch_row_prepared('SELECT * FROM cdef WHERE id = ?', array($_cdef_id));
-    $cdef_items = db_fetch_assoc_prepared('SELECT * FROM cdef_items WHERE cdef_id = ?', array($_cdef_id));
-
-    /* substitute the title variable */
-    $cdef['name'] = str_replace('<cdef_title>', $cdef['name'], $cdef_title);
-
-    /* create new entry: host_template */
-    $save['id']   = 0;
-    $save['hash'] = get_hash_cdef(0);
-
-    foreach ($fields_cdef_edit as $field => $array) {
-        if (!preg_match('/^hidden/', $array['method'])) {
-            $save[$field] = $cdef[$field];
-        }
-    }
-
-    $cdef_id = sql_save($save, 'cdef');
-
-    /* create new entry(s): cdef_items */
-    if (cacti_sizeof($cdef_items) > 0) {
-        foreach ($cdef_items as $cdef_item) {
-            unset($save);
-
-            $save['id']       = 0;
-            $save['hash']     = get_hash_cdef(0, 'cdef_item');
-            $save['cdef_id']  = $cdef_id;
-            $save['sequence'] = $cdef_item['sequence'];
-            $save['type']     = $cdef_item['type'];
-            $save['value']    = $cdef_item['value'];
-
-            sql_save($save, 'cdef_items');
-        }
-    }
-}
 
 /* ------------------------
     The 'actions' function
@@ -217,11 +179,18 @@ function form_actions()
 
         if ($selected_items != false) {
             if (get_nfilter_request_var('drp_action') == '1') { /* delete */
-                db_execute('DELETE FROM cdef WHERE ' . array_to_sql_or($selected_items, 'id'));
-                db_execute('DELETE FROM cdef_items WHERE ' . array_to_sql_or($selected_items, 'cdef_id'));
+                require_once __DIR__ . '/lib/cdef_reference.php';
+                try {
+                    cdef_reference_delete($selected_items);
+                } catch (Throwable $error) {
+                    raise_message('cdef_delete', __('CDEF deletion could not be confirmed. Reload the selection before retrying.'), MESSAGE_LEVEL_ERROR);
+                }
             } elseif (get_nfilter_request_var('drp_action') == '2') { /* duplicate */
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
-                    duplicate_cdef($selected_items[$i], get_nfilter_request_var('title_format'));
+                    if (duplicate_cdef($selected_items[$i], get_nfilter_request_var('title_format')) === false) {
+                        raise_message('cdef_duplicate', __('CDEF duplication could not be confirmed. A partial copy may remain; reload before retrying.'), MESSAGE_LEVEL_ERROR);
+                        break;
+                    }
                 }
             }
         }
