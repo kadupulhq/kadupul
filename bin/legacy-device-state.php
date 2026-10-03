@@ -24,6 +24,8 @@ ob_start();
 require __DIR__ . '/../include/cli_check.php';
 require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/../lib/api_automation_tools.php';
+require_once __DIR__ . '/../lib/api_automation.php';
+require_once __DIR__ . '/../lib/sort.php';
 require_once __DIR__ . '/../lib/api_device.php';
 require_once __DIR__ . '/../lib/api_data_source.php';
 require_once __DIR__ . '/../lib/api_graph.php';
@@ -50,7 +52,8 @@ try {
     $changeOptions = is_array($command) && ($command['operation'] ?? null) === 'options';
     $assignDevices = is_array($command) && ($command['operation'] ?? null) === 'assign';
     $changeSnmp = is_array($command) && ($command['operation'] ?? null) === 'snmp';
-    $preserveState = $clearStatistics || $syncTemplates || $changeOptions || $assignDevices || $changeSnmp;
+    $applyRules = is_array($command) && ($command['operation'] ?? null) === 'automation';
+    $preserveState = $applyRules || $clearStatistics || $syncTemplates || $changeOptions || $assignDevices || $changeSnmp;
     if (!is_array($command) || array_diff(array_keys($command), $assignDevices ? ['actor', 'selection', 'operation', 'kind', 'target'] : (($changeOptions || $changeSnmp) ? ['actor', 'selection', 'operation', 'changes'] : ($preserveState ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled']))) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0
         || !is_array($command['selection'] ?? null) || (!$preserveState && !is_bool($command['enabled'] ?? null))) {
@@ -77,6 +80,8 @@ try {
     if ($connection->exec('SET NAMES utf8mb4') === false) {
         throw new RuntimeException('Primary connection encoding unavailable');
     }
+    $additionalSites = $assignDevices && $assignment->kind === 'site' ? [$assignment->targetId] : [];
+    $additionalPollers = $assignDevices && $assignment->kind === 'collector' ? [$assignment->targetId] : [];
     $locked = (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceMutationSelection())->lock(
         $connection,
         $command['actor'],
@@ -84,13 +89,22 @@ try {
         static function (string $next) use (&$status): void {
             $status = $next;
         },
-        $assignDevices && $assignment->kind === 'site' ? [$assignment->targetId] : [],
-        $assignDevices && $assignment->kind === 'collector' ? [$assignment->targetId] : []
+        $additionalSites,
+        $additionalPollers
     );
     $associations = $locked['associations'];
     $rows = $locked['rows'];
     $pollers = $locked['pollers'];
     $read = $locked['read'];
+    if ($assignDevices && $assignment->kind === 'site' && $assignment->targetId > 0 && count($locked['site_locks'][$assignment->targetId] ?? []) !== 1) {
+        throw new RuntimeException('Assignment site unavailable');
+    }
+    if ($assignDevices && $assignment->kind === 'collector') {
+        $targetPoller = $locked['poller_locks'][$assignment->targetId] ?? [];
+        if (count($targetPoller) !== 1 || $targetPoller[0]['disabled'] !== '') {
+            throw new RuntimeException('Assignment collector unavailable');
+        }
+    }
     if ($syncTemplates || ($assignDevices && $assignment->kind === 'template')) {
         // Lock current template definitions in a deterministic order before effects.
         $templates = array_unique(array_map(static fn($row) => (int) $row['host_template_id'], $rows));
@@ -176,7 +190,9 @@ try {
         // Legacy SQL helpers retain their last error even after later successes.
         // Check it without exposing diagnostics or credentials to the parent.
         $database_last_error = '';
-        if ($changeSnmp) {
+        if ($applyRules) {
+            (new \Kadupul\Automation\Infrastructure\Legacy\LegacyDeviceRules())->apply(array_keys($changed));
+        } elseif ($changeSnmp) {
             // Verify persistent InnoDB participants on the exact sessions used
             // by the writer and legacy cache helpers, before their first write.
             (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($connection))->run(
@@ -239,7 +255,7 @@ try {
         } elseif (!api_device_disable_devices(array_keys($changed))) {
             throw new RuntimeException('Disabling devices failed');
         }
-        $action = ($changeOptions || $assignDevices || $changeSnmp) ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3')));
+        $action = $applyRules ? '6' : (($changeOptions || $assignDevices || $changeSnmp) ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3'))));
         if (!$syncTemplates && !$changeOptions) {
             set_request_var('drp_action', $action);
             snmpagent_device_action_bottom([$action, $ids]);
@@ -375,7 +391,7 @@ try {
         }
     }
     $status = 'ok';
-    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($changeSnmp ? 'changed SNMP settings' : ($assignDevices ? 'assigned ' . $assignment->kind : ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled')))))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
+    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($applyRules ? 'applied automation rules' : ($changeSnmp ? 'changed SNMP settings' : ($assignDevices ? 'assigned ' . $assignment->kind : ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled'))))))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = $associationsCommitted ? 'failed' : 'conflict';
 } catch (Throwable) {

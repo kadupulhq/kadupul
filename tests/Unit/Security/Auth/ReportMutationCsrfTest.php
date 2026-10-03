@@ -563,6 +563,7 @@ function ImageString($image, $font, $x, $y, $string, $color) {}
 function imagejpeg($image) { echo 'jpeg'; }
 function imagegif($image) { echo 'gif'; }
 $source = file_get_contents(getcwd() . '/lib/reports.php');
+if (!is_string($source)) { throw new \RuntimeException('Unable to read report image conversion source'); }
 if ($argv[1] === 'reformatted') {
     // Column-zero nested closing braces remain valid PHP.
     $source = preg_replace('/^[ \t]+}/m', '}', $source);
