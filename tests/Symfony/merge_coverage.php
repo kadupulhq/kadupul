@@ -129,6 +129,63 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk state confirmation enables selected devices',
         'bulk state SQL failure rolls back the whole primary batch',
         'bulk state remote failure cannot report success',
+        'bulk state observer records original production source identity',
+        'bulk state observer uses a separate fixture source outside production coverage',
+        'bulk state observer restores exact production bytes and removes owned fixtures',
+        'template synchronization saves through Symfony',
+        'deferred discovery failure does not publish a success audit record',
+        'failed synchronization does not publish a success audit record',
+        'successful synchronization publishes exactly one success audit record',
+        'template synchronization refuses unauthenticated POST requests',
+        'collector identity mismatch invokes no action 7 callback',
+        'collector identity mismatch rolls back the primary batch',
+        'deferred discovery failure reports uncertain completion',
+        'deferred discovery failure retains committed associations without a success callback',
+        'deferred synchronization discovery fixture registered',
+        'denied synchronization performs no writes or callbacks',
+        'each synchronized device receives only its own template associations',
+        'failed synchronization does not invoke the bulk action callback',
+        'missing template invokes no callbacks and preserves the marker',
+        'missing template preserves all primary associations',
+        'multiple templates do not leak associations across devices',
+        'multiple templates preserve per-device and complete-selection callback contracts',
+        'slow synchronization discovery does not block a concurrent poller write',
+        'template synchronization GET does not add associations',
+        'template synchronization GET does not add data-query associations',
+        'template synchronization adds required data-query associations',
+        'template synchronization adds required graph associations',
+        'template synchronization association failure cannot report success',
+        'template synchronization conceals inaccessible devices on GET and POST',
+        'template synchronization denied-realm fixture starts authorized',
+        'template synchronization discovery runs without an active primary transaction',
+        'template synchronization hook registered',
+        'template synchronization preserves the configured data-query reindex method',
+        'template synchronization refuses an actor without the device-management realm',
+        'template synchronization refuses unauthenticated requests',
+        'template synchronization rejects a missing assigned template',
+        'template synchronization rejects altered collector template identity',
+        'template synchronization rejects offline collectors before writes',
+        'template synchronization rejects stale device revisions',
+        'template synchronization rejects unexpected fields',
+        'template synchronization removes unused graph associations',
+        'template synchronization repairs associations despite existing query cache',
+        'template synchronization requires CSRF token',
+        'template synchronization requires same-origin CSRF',
+        'template synchronization resolves the effective default reindex method',
+        'template synchronization retains associations used by existing graphs',
+        'template synchronization retries safely after deferred discovery failure',
+        'template synchronization skips unassigned devices',
+        'template synchronization supports a selection spanning different templates',
+        'template synchronization supports repeated synchronization',
+        'template synchronization worker independently refuses a revoked realm',
+        'template synchronization accepts an all-unassigned selection as a no-op',
+        'all-unassigned template synchronization invokes no mutation callbacks',
+        'all-unassigned template synchronization preserves the device-change marker',
+        'template synchronization invokes the template-change hook once per assigned device',
+        'template synchronization retains existing graphs',
+        'template synchronization failure rolls back primary associations',
+        'remote template synchronization preserves assigned template identity',
+        'template synchronization invokes action 7 once with complete selection',
         'statistics confirmation resets selected devices',
         'statistics SQL rejection rolls back entire primary selection',
         'remote statistics match the legacy reset',
@@ -231,7 +288,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -239,7 +296,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
                 throw new RuntimeException('Invalid integration source path');
             }
             if (!is_array($file) || ($file['sha256'] ?? null) !== hash_file('sha256', $local)) {
-                throw new RuntimeException('Covered source differs from checkout');
+                throw new RuntimeException('Covered source differs from checkout: ' . $relative . ' (' . $handler . ', ' . basename($report) . ')');
             }
             if (!is_array($file['lines'] ?? null)) {
                 throw new RuntimeException('Invalid line coverage inventory');
@@ -314,6 +371,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bin/legacy-device-template.php',
         'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'bin/legacy-device-state.php',
+        'lib/api_device.php',
         'bin/legacy-device-remove.php',
         'src/Inventory/Domain/DeviceRemoval.php',
         'src/Inventory/Application/Command/RemoveDevices.php',
@@ -331,6 +389,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Application/Query/PrepareDeviceStateChange.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceStates.php',
         'src/Inventory/Application/Command/ClearDeviceStatistics.php',
+        'src/Inventory/Application/Command/SynchronizeDeviceTemplates.php',
         'src/Inventory/Infrastructure/Legacy/DeviceStatisticsReset.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceStateType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceStateController.php',
