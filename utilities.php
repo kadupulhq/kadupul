@@ -3462,7 +3462,7 @@ function snmpagent_utilities_run_eventlog()
 	$('.tooltip').tooltip({
 		track: true,
 		position: { collision: 'flipfit' },
-		content: function() { return $(this).attr('title'); }
+		content: function() { return DOMPurify.sanitize($(this).attr('title')); }
 	});
 	</script>
 	<?php
