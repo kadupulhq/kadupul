@@ -332,7 +332,7 @@ if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST
         $nativeProducer = 'tests/Fixtures/per-cs-review-native.php';
         $nativeScenario = json_encode(array($argv[1], $argv[3]), JSON_THROW_ON_ERROR);
     } elseif (defined('UTILITY_VIEW_TEST_COVERAGE')) {
-        $nativeSources = array_merge($nativeSources, array('tests/Unit/UtilityViewNativeCoverageTest.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'lib/utility.php'));
+        $nativeSources = array_merge($nativeSources, array('tests/Unit/UtilityViewNativeCoverageTest.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/utility.php'));
         $nativeProducer = 'tests/Fixtures/utility-view-native.php';
         if (defined('DATA_DEBUG_NATIVE_TEST_COVERAGE')) {
             $nativeSources = array_merge($nativeSources, array('tests/Unit/DataDebugNativeCoverageTest.php', 'tests/Fixtures/data-debug-records.php', 'include/global_session.php'));
