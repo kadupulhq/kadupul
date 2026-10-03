@@ -227,6 +227,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'rejected bulk template does not invoke action 4',
         'bulk site displays its assignment completion notice',
         'bulk template displays its assignment completion notice',
+        'bulk site supports explicit unassignment',
+        'bulk template supports explicit unassignment',
         'bulk existing template repairs missing association',
         'bulk existing template restores primary and collector association',
         'bulk template assignment retains existing graphs and data',
