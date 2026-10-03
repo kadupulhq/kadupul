@@ -268,12 +268,41 @@ final class AuditSchemaTest extends TestCase
         $baseline = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'));
 
         self::assertCount(1019, $baseline->columnRows);
-        self::assertCount(372, $baseline->indexRows);
+        self::assertCount(374, $baseline->indexRows);
         self::assertSame(['data_source_profile_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_data', 'data_source_profile_id')));
         self::assertSame(['data_input_field_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_rrd', 'data_input_field_id')));
         self::assertSame(['class', 'time'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('user_auth_row_cache', 'class_time')));
         // mysqldump wrote each table's rows in primary key order under a case-insensitive collation.
         self::assertSame(['graph_template_id', 'PRIMARY', 'user_id'], array_values(array_unique(array_map(static fn(BaselineIndex $index): string => $index->keyName, $baseline->indexes('AGGREGATE_GRAPH_TEMPLATES')))));
+    }
+
+    public function testInstalledCdefReferenceIndexesArePreservedByTheShippedAudit(): void
+    {
+        $baseline = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'));
+        foreach (['aggregate_graph_templates_item', 'aggregate_graphs_graph_item'] as $name) {
+            $columns = array_map(static fn(BaselineColumn $column): array => [
+                'Field' => $column->field, 'Type' => $column->type, 'Null' => $column->null,
+                'Key' => $column->key, 'Default' => $column->default, 'Extra' => $column->extra,
+            ], $baseline->columns($name));
+            $indexes = array_map(static fn(BaselineIndex $index): array => [
+                'Table' => $name, 'Non_unique' => (string) $index->nonUnique, 'Key_name' => $index->keyName,
+                'Seq_in_index' => (string) $index->seqInIndex, 'Column_name' => $index->columnName,
+                'Collation' => $index->collation, 'Cardinality' => '0', 'Sub_part' => $index->subPart,
+                'Packed' => $index->packed, 'Null' => $index->null, 'Index_type' => $index->indexType,
+                'Comment' => $index->comment,
+            ], array_values(array_filter($baseline->indexes($name), static fn(BaselineIndex $index): bool => $index->keyName !== 'kadupul_cdef_reference')));
+            // The real primary installer adds this CDEF lookup index. It must
+            // remain a supported part of the installed schema during repairs.
+            $indexes[] = ['Table' => $name, 'Non_unique' => '1', 'Key_name' => 'kadupul_cdef_reference',
+                'Seq_in_index' => '1', 'Column_name' => 'cdef_id', 'Collation' => 'A',
+                'Cardinality' => '0', 'Sub_part' => null, 'Packed' => null, 'Null' => 'YES',
+                'Index_type' => 'BTREE', 'Comment' => ''];
+            $table = new LiveTable($name, new TableStatus('InnoDB', self::UTF8, 'Dynamic', 0), $columns, $indexes);
+            $audit = TableAudit::of($table, $baseline, PluginSchemaChanges::none(), false);
+            self::assertSame(0, $audit->errors, $name . ': the required CDEF index must not be removed');
+            self::assertSame(0, $audit->warnings, $name);
+            self::assertSame([], $audit->clauses, $name);
+        }
     }
 
     /** @return iterable<string, array{string}> */
