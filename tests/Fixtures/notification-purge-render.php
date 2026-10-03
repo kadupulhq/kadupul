@@ -7,6 +7,7 @@ require dirname(__DIR__) . '/Helpers/PhpSource.php';
 $root = dirname(__DIR__, 2);
 require $root . '/include/global_constants.php';
 require $root . '/lib/headers_secure.php';
+require $root . '/src/Platform/Infrastructure/Legacy/UtilityRows.php';
 function get_request_var($name) { return array('id' => 3, 'severity' => '-1', 'receiver' => '-1', 'filter' => '', 'rows' => '10', 'page' => 1, 'mib' => '', 'filename' => 'cacti.log')[$name] ?? ''; }
 function get_nfilter_request_var($name) { return get_request_var($name); }
 function get_filter_request_var($name) { return get_request_var($name); }
@@ -38,7 +39,8 @@ $item_rows = array();
 $config = array('url_path' => '/');
 switch ($argv[1] ?? 'manager') {
     case 'utilities':
-        eval(test_php_function_source(file_get_contents($root . '/utilities.php'), 'snmpagent_utilities_run_eventlog'));
+        // eval has its own import scope; retain the controller's real dependency alias.
+        eval('use Kadupul\\Platform\\Infrastructure\\Legacy\\UtilityRows;' . test_php_function_source(file_get_contents($root . '/utilities.php'), 'snmpagent_utilities_run_eventlog'));
         snmpagent_utilities_run_eventlog();
         break;
     case 'clog':
