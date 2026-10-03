@@ -40,7 +40,8 @@ putenv('TZ=UTC');
 putenv('LANG=en_US.UTF-8');
 putenv('RRDCACHED_ADDRESS');
 $config = array(
-    'cacti_server_os' => 'unix',
+    // include/global_arrays.php picks OS-specific paths when it is loaded.
+    'cacti_server_os' => $scenario['server_os'] ?? 'unix',
     'is_web' => false,
     'poller_id' => 1,
     'base_path' => $root,
@@ -239,6 +240,10 @@ foreach ($scenario['calls'] as $call) {
         $returned = array('thrown' => get_class($thrown), 'message' => $thrown->getMessage());
     }
     $printed = ob_get_clean();
+    // The results travel as JSON, which would mangle binary output such as a PNG.
+    if (!empty($call['base64']) && is_string($returned)) {
+        $returned = base64_encode($returned);
+    }
     if (isset($call['rrdp_argument'])) {
         rrd_close($args[$call['rrdp_argument']]);
         $args[$call['rrdp_argument']] = '<rrdp>';

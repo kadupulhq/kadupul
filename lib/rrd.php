@@ -3479,13 +3479,13 @@ function rrdtool_function_set_font($type, $no_legend, $themefonts)
     }
 
     if ($type == 'title') {
+        $size = graph_font_size($size, 12);
+
         if (!empty($no_legend)) {
             $size = $size * .70;
-        } elseif (($size <= 4) || !is_numeric($size)) {
-            $size = 12;
         }
-    } elseif (($size <= 4) || !is_numeric($size)) {
-        $size = 8;
+    } else {
+        $size = graph_font_size($size, 8);
     }
 
     return '--font ' . strtoupper($type) . ':' . floatval($size) . ':' . $font . RRD_NL;
@@ -4756,9 +4756,176 @@ function rrdtool_parse_error($string)
     return $string;
 }
 
-function rrdtool_create_error_image($string, $width = '', $height = '')
+/**
+ * rrdtool_error_image_font - the TrueType font for the graph error image
+ *
+ * include/fonts ships only the Bold DejaVu faces, so it is the last resort
+ * after any system DejaVu Sans.
+ *
+ * @return - a readable font file, or '' when none is available
+ */
+function rrdtool_error_image_font()
 {
     global $config, $dejavu_paths;
+
+    $candidates = array();
+
+    if ($config['cacti_server_os'] != 'unix') {
+        $candidates[] = 'C:/Windows/Fonts/Arial.ttf';
+    }
+
+    foreach (array('DejaVuSans.ttf', 'DejaVuSans-Bold.ttf') as $face) {
+        foreach ($dejavu_paths as $dejavupath) {
+            $candidates[] = rtrim($dejavupath, '/') . '/' . $face;
+        }
+    }
+
+    foreach ($candidates as $candidate) {
+        if (is_file($candidate) && is_readable($candidate)) {
+            return $candidate;
+        }
+    }
+
+    return '';
+}
+
+/**
+ * rrdtool_error_image_layout - wrap error text into the 450x200 error image
+ *
+ * Text is measured in pixels and broken between characters, never inside a
+ * UTF-8 sequence. Without FreeType the GD built-in fonts draw only ASCII, so
+ * other characters become '?' one for one.
+ *
+ * @param $text      - the error text, lines separated by "\n"
+ * @param $font_file - a TrueType font, or '' for the GD built-in font
+ * @param $font_size - the size in points
+ *
+ * @return - array('font', 'size', 'line_height', 'lines' => array(array('text', 'x', 'y', 'width')))
+ */
+function rrdtool_error_image_layout($text, $font_file, $font_size)
+{
+    $left   = 125;
+    $right  = 440;
+    $top    = 4;
+    $bottom = 195;
+
+    // The error image has room for a handful of lines, so theme sizes are kept small.
+    $font_size = min(graph_font_size($font_size, 8), 12);
+    $ttf       = $font_file != '' && function_exists('imagettfbbox') && function_exists('imagettftext');
+
+    $text = (string) $text;
+
+    if (!mb_check_encoding($text, 'UTF-8')) {
+        $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
+    }
+
+    $text = trim(str_replace(array("\r\n", "\r"), "\n", $text));
+
+    if ($text == '') {
+        $text = __('Unknown RRDtool Error');
+    }
+
+    if ($ttf) {
+        $box         = imagettfbbox($font_size, 0, $font_file, 'ÁHgjy');
+        $line_height = -$box[7];
+        $descent     = $box[1];
+        $font        = $font_file;
+        $measure     = function ($string) use ($font_size, $font_file) {
+            if ($string == '') {
+                return 0;
+            }
+
+            $box = imagettfbbox($font_size, 0, $font_file, $string);
+
+            return max($box[2], $box[4]) - min($box[0], $box[6]);
+        };
+    } else {
+        $font        = $font_size >= 10 ? 3 : 2;
+        $line_height = imagefontheight($font);
+        $descent     = 0;
+        $char_width  = imagefontwidth($font);
+        $text        = preg_replace('/[^\x20-\x7E\n]/u', '?', $text);
+        $measure     = function ($string) use ($char_width) {
+            return mb_strlen($string) * $char_width;
+        };
+    }
+
+    $step      = $line_height + $descent + 3;
+    $max_width = $right - $left;
+    $max_lines = max(1, intdiv($bottom - $top - $line_height - $descent, $step) + 1);
+
+    $lines = array();
+
+    foreach (explode("\n", $text) as $paragraph) {
+        $line = '';
+
+        foreach (preg_split('/ +/u', trim($paragraph)) as $word) {
+            $candidate = $line == '' ? $word : $line . ' ' . $word;
+
+            if ($measure($candidate) <= $max_width) {
+                $line = $candidate;
+
+                continue;
+            }
+
+            if ($line != '') {
+                $lines[] = $line;
+            }
+
+            $line = '';
+
+            foreach (mb_str_split($word) as $character) {
+                if ($line != '' && $measure($line . $character) > $max_width) {
+                    $lines[] = $line;
+                    $line    = '';
+                }
+
+                $line .= $character;
+            }
+        }
+
+        $lines[] = $line;
+    }
+
+    if (count($lines) > $max_lines) {
+        $lines = array_slice($lines, 0, $max_lines);
+        $last  = rtrim($lines[$max_lines - 1]);
+
+        while ($last != '' && $measure($last . '...') > $max_width) {
+            $last = mb_substr($last, 0, -1);
+        }
+
+        $lines[$max_lines - 1] = $last . '...';
+    }
+
+    $block = count($lines) * $step - $step + $line_height + $descent;
+    $ypos  = max($top, intdiv(200 - $block, 2));
+
+    $layout = array(
+        'font'        => $font,
+        'size'        => $font_size,
+        'line_height' => $line_height,
+        'lines'       => array(),
+    );
+
+    foreach ($lines as $line) {
+        $layout['lines'][] = array(
+            'text'  => $line,
+            'x'     => $left,
+            // imagettftext() places the baseline at y, imagestring() the top edge.
+            'y'     => $ttf ? $ypos + $line_height : $ypos,
+            'width' => $measure($line),
+        );
+
+        $ypos += $step;
+    }
+
+    return $layout;
+}
+
+function rrdtool_create_error_image($string, $width = '', $height = '')
+{
+    global $config;
 
     $string = rrdtool_parse_error($string);
 
@@ -4772,16 +4939,7 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
     $shadea      = 'CBCBCB';
     $shadeb      = '999999';
 
-    if ($config['cacti_server_os'] == 'unix') {
-        foreach ($dejavu_paths as $dejavupath) {
-            if (file_exists($dejavupath . '/DejaVuSans.ttf')) {
-                $font_file = $dejavupath . '/DejaVuSans.ttf';
-                break;
-            }
-        }
-    } else {
-        $font_file = 'C:/Windows/Fonts/Arial.ttf';
-    }
+    $font_file = rrdtool_error_image_font();
 
     $themefile  = $config['base_path'] . '/include/themes/' . get_selected_theme() . '/rrdtheme.php';
 
@@ -4844,49 +5002,19 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
     list($red, $green, $blue) = sscanf($font_color, '%02x%02x%02x');
     $text_color = imagecolorallocate($image, $red, $green, $blue);
 
-    /* see the size of the string */
-    $string    = trim($string);
-    $maxstring = ceil((450 - (125 + 10)) / ($font_size / 0.9));
-    $stringlen = strlen($string) * $font_size;
-    $padding   = 5;
+    $layout = rrdtool_error_image_layout($string, $font_file, $font_size);
 
-    if ($stringlen > $maxstring) {
-        $cstring = wordwrap($string, $maxstring, "\n", true);
-        $strings = explode("\n", $cstring);
-        $strings = array_reverse($strings);
-        $lines   = cacti_sizeof($strings);
-    } elseif (strlen(trim($string)) == 0) {
-        $strings = array(__('Unknown RRDtool Error'));
-        $lines   = 1;
-    } else {
-        $strings = array($string);
-        $lines   = 1;
-    }
-
-    /* setup the text position, image is 450x200, we start at 125 pixels from the left */
-    $xpos  = 125;
-    $texth = ($lines * $font_size + (($lines - 1) * $padding));
-    $ypos  = round((200 / 2) + ($texth / 2), 0);
-
-    /* blank lines still take their place, as $texth counts them */
-    /* set the font of the image */
-    if (isset($font_file) && file_exists($font_file) && is_readable($font_file) && function_exists('imagettftext')) {
-        foreach ($strings as $string) {
-            if (trim($string) != '') {
-                if (@imagettftext($image, $font_size, 0, $xpos, $ypos, $text_color, $font_file, $string) === false) {
-                    cacti_log('TTF text overlay failed');
-                }
-            }
-            $ypos -= ($font_size + $padding);
+    foreach ($layout['lines'] as $line) {
+        if ($line['text'] == '') {
+            continue;
         }
-    } else {
-        foreach ($strings as $string) {
-            if (trim($string) != '') {
-                if (@imagestring($image, $font_size, $xpos, $ypos, $string, $text_color) === false) {
-                    cacti_log('Text overlay failed');
-                }
+
+        if (is_string($layout['font'])) {
+            if (@imagettftext($image, $layout['size'], 0, $line['x'], $line['y'], $text_color, $layout['font'], $line['text']) === false) {
+                cacti_log('TTF text overlay failed');
             }
-            $ypos -= ($font_size + $padding);
+        } elseif (@imagestring($image, $layout['font'], $line['x'], $line['y'], $line['text'], $text_color) === false) {
+            cacti_log('Text overlay failed');
         }
     }
 
