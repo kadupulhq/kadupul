@@ -35,8 +35,12 @@ test('GHSA-pmgm-67h9-59hw: isUserInLDAPGroup does not interpolate user or group 
     expect($body)->not->toContain('"(&(distinguishedName=' . '$ldapUser');
 });
 
-test('GHSA-pmgm-67h9-59hw: cacti_ldap_filter escapes each variable with ldap_escape', function () use ($ldapSource) {
+test('GHSA-pmgm-67h9-59hw: cacti_ldap_filter escapes each variable with ldap_escape', function (bool $padded) use ($ldapSource) {
+    if ($padded) {
+        // Comments may grow without changing the escaping contract.
+        $ldapSource = preg_replace('/(function cacti_ldap_filter[^\{]*\{)/', '$1' . '/*' . str_repeat('padding ', 100) . '*/', $ldapSource, 1);
+    }
     $body = test_php_function_source($ldapSource, 'cacti_ldap_filter');
     expect($body)->toContain("ldap_escape((string) \$value, '', LDAP_ESCAPE_FILTER)");
     expect($body)->toContain("str_replace('<' . \$key . '>', \$escaped, \$result)");
-});
+})->with(['original layout' => false, 'long harmless comment' => true]);
