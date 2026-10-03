@@ -1197,6 +1197,19 @@ in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
 
+
+### Device template synchronization
+
+`/inventory/devices/sync-template` confirms a bounded selection through Symfony
+Form/Twig and dispatches `SynchronizeDeviceTemplates` through the
+`DeviceTemplateSynchronization` port. It reuses the bulk worker's authorization,
+visibility, identity revisions and collector preflight. Current template definitions
+are locked before legacy synchronization adds missing graph/data-query associations
+and removes unused graph associations. Devices without a template are skipped.
+Existing graph/data records are retained; legacy automation may create new graphs.
+Primary and remote associations are verified before primary commit. Remote changes
+may survive a later failure, which returns the existing uncertain-outcome response.
+Action 7 and template-change callbacks retain legacy semantics. LTS is unchanged.
 ### Palette CSV spreadsheet safety
 
 Palette downloads mark every operator-controlled name and hex cell as literal
@@ -1223,3 +1236,30 @@ Deletion refuses definitions referenced by graphs, graph templates or other VDEF
 The old `vdef.php` URL redirects safe GET navigation to the Symfony routes and
 rejects posted actions; legacy procedural VDEF functions remain available to
 graph rendering.
+
+### Template synchronization discovery boundary
+
+Bulk template synchronization first validates and commits the primary template
+associations, after confirming collector identity and required association parity.
+It then runs data-query discovery outside the association transaction. Short
+current-account and device-scope checks release their locks before each query.
+The existing 120-second worker budget remains in force. Discovery failure or
+termination can leave committed associations and partial collector effects; the
+HTTP response is an uncertain outcome, and the operator must inspect the selected
+devices and retry synchronization. Retrying also repairs an association missing
+from a device whose discovery cache already exists. Unselected credentials,
+graphs, and historical data retain their existing contracts.
+
+Template-change and graph-template hooks remain per-device during association
+updates; discovery is deferred until association commit, and the complete-selection
+action-7 callback runs only after successful discovery. This ordering intentionally
+changes the bulk workflow's discovery timing. Legacy callers that omit the optional
+reindex dispatcher retain synchronous discovery and the void helper return contract.
+Plugins execute in the trusted legacy process and may have irreversible side effects.
+A database rollback cannot undo plugin, discovery, or committed collector effects.
+
+Roll out the worker and helper together. No schema or dependency upgrade is needed.
+Application rollback must restore both files together and account for in-flight
+workers. It does not restore previously committed associations or collector state.
+The new boundary belongs to the main-only Symfony migration; LTS callers do not
+opt into it.
