@@ -12,6 +12,7 @@ function cacti_sizeof($value)
 function get_uptime($host)
 {
     $GLOBALS['host_uptime_calls'][] = $host;
+    $GLOBALS['host_evaluation_events'][] = 'uptime';
     return 'observed uptime';
 }
 function db_fetch_row_prepared($sql, $parameters)

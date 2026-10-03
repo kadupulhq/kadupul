@@ -48,9 +48,9 @@ final class HostDataSubstitutionTest extends TestCase
         return ['substitute_host_data', 'aggregate_graph_substitute_host_data'];
     }
 
-    public function testEveryOriginalOrderedTokenAndHookPayload(): void
+    private function originalTokens(): array
     {
-        $tokens = [
+        return [
             ['host_management_ip', 'hostname'],
             ['host_id', 'id'],
             ['host_hostname', 'hostname'],
@@ -84,6 +84,11 @@ final class HostDataSubstitutionTest extends TestCase
             ['host_max_oids', 'max_oids'],
             ['host_external_id', 'external_id'],
         ];
+    }
+
+    public function testEveryOriginalOrderedTokenAndHookPayload(): void
+    {
+        $tokens = $this->originalTokens();
         self::assertCount(32, $tokens);
         $input = implode(' / ', array_map(static fn($entry) => '[[' . $entry[0] . ']]', $tokens));
         $expected = implode(' / ', array_map(fn($entry) => $entry[1] === null ? 'observed uptime' : $this->host[$entry[1]], $tokens));
@@ -92,6 +97,38 @@ final class HostDataSubstitutionTest extends TestCase
             self::assertSame(['substitute_host_data', ['string' => $expected, 'l_escape_string' => '[[', 'r_escape_string' => ']]', 'host_id' => '7']], end($GLOBALS['host_hook_calls']));
         }
         self::assertCount(2, $GLOBALS['host_uptime_calls']);
+    }
+
+    public function testOrderedPlanRetainsRawValuesAliasesAndUptimeEvaluationPosition(): void
+    {
+        $host = $this->host;
+        $host['id'] = 17;
+        $host['notes'] = null;
+        $host['polling_time'] = 1.5;
+        $host['availability'] = false;
+        [$search, $replace] = \Kadupul\Platform\Infrastructure\Legacy\HostDataSubstitution::replacements('[[', ']]', $host);
+        $tokens = $this->originalTokens();
+        self::assertSame(array_map(static fn($entry) => '[[' . $entry[0] . ']]', $tokens), $search);
+        self::assertSame(array_map(static fn($entry) => $entry[1] === null ? 'observed uptime' : $host[$entry[1]], $tokens), $replace);
+        self::assertSame(17, $replace[1]);
+        self::assertNull($replace[5]);
+        self::assertSame(1.5, $replace[7]);
+        self::assertFalse($replace[10]);
+        self::assertSame('observed uptime', $replace[11]);
+
+        unset($host['availability'], $host['snmp_community']);
+        $GLOBALS['host_evaluation_events'] = [];
+        set_error_handler(static function (int $level, string $message): bool {
+            self::assertSame(E_WARNING, $level);
+            $GLOBALS['host_evaluation_events'][] = $message;
+            return true;
+        });
+        try {
+            \Kadupul\Platform\Infrastructure\Legacy\HostDataSubstitution::replacements('|', '|', $host);
+        } finally {
+            restore_error_handler();
+        }
+        self::assertSame(['Undefined array key "availability"', 'uptime', 'Undefined array key "snmp_community"'], $GLOBALS['host_evaluation_events']);
     }
 
     public function testEmptyAndMissingHostKeepInputAndSkipPlugin(): void
