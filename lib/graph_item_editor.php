@@ -39,3 +39,13 @@ function graph_item_editor_line_width_field(): array
         'description' => __('LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported.'),
     );
 }
+
+/** Apply the same RRDtool field validation in the graph and template editors. */
+function graph_item_editor_rrd_fields(mixed $alpha): array
+{
+    return array(
+        'alpha' => form_input_validate($alpha, 'alpha', '^[a-fA-F0-9]{2}\\z', true, 3),
+        'dashes' => form_input_validate(isset_request_var('dashes') ? get_nfilter_request_var('dashes') : '', 'dashes', '^[0-9]+[,0-9]*\\z', true, 3),
+        'dash_offset' => form_input_validate(isset_request_var('dash_offset') ? get_nfilter_request_var('dash_offset') : '', 'dash_offset', '^[0-9]+\\z', true, 3),
+    );
+}

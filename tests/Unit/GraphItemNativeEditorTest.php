@@ -34,7 +34,10 @@ test('production graph item editors preserve fixed widths and source association
         expect($error)->toBe('');
         list($body, $json) = explode("\nRESULT:", $output);
         $calls = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        if ($mode === 'save' || str_starts_with($mode, 'save-')) {
+        if (str_starts_with($mode, 'invalid-')) {
+            expect(array_filter($calls, static fn($call) => $call[0] === 'save'))->toBeEmpty();
+            expect(end($calls))->toBe(array('errors', array(substr($mode, 8))));
+        } elseif ($mode === 'save' || str_starts_with($mode, 'save-')) {
             $saves = array_values(array_filter($calls, static function ($call) {
                 return $call[0] === 'save';
             }));
@@ -81,6 +84,8 @@ test('production graph item editors preserve fixed widths and source association
         }
     }
 })->with(array(
+    array('graphs_items.php', 'invalid-alpha'), array('graphs_items.php', 'invalid-dashes'), array('graphs_items.php', 'invalid-dash_offset'),
+    array('graph_templates_items.php', 'invalid-alpha'), array('graph_templates_items.php', 'invalid-dashes'), array('graph_templates_items.php', 'invalid-dash_offset'),
     array('graph_templates_items.php', 'item_moveup-single'), array('graph_templates_items.php', 'item_movedown-single'),
     array('graphs_items.php', 'save-5'), array('graphs_items.php', 'save-6'), array('graphs_items.php', 'save-20'), array('graphs_items.php', 'save-10'), array('graphs_items.php', 'save-15'),
     array('graph_templates_items.php', 'save-5'), array('graph_templates_items.php', 'save-6'), array('graph_templates_items.php', 'save-20'), array('graph_templates_items.php', 'save-10'), array('graph_templates_items.php', 'save-15'),array('graphs_items.php','save'),array('graphs_items.php','item_edit'),array('graph_templates_items.php','save'),array('graph_templates_items.php','item_edit'),array('graph_templates_items.php','ajax_data_sources'),array('graph_templates_items.php','item_moveup'),array('graph_templates_items.php','item_movedown')));
