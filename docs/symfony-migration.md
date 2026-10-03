@@ -1197,6 +1197,84 @@ in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
 
+
+### Device template synchronization
+
+`/inventory/devices/sync-template` confirms a bounded selection through Symfony
+Form/Twig and dispatches `SynchronizeDeviceTemplates` through the
+`DeviceTemplateSynchronization` port. It reuses the bulk worker's authorization,
+visibility, identity revisions and collector preflight. Current template definitions
+are locked before legacy synchronization adds missing graph/data-query associations
+and removes unused graph associations. Devices without a template are skipped.
+Existing graph/data records are retained; legacy automation may create new graphs.
+Primary and remote associations are verified before primary commit. Remote changes
+may survive a later failure, which returns the existing uncertain-outcome response.
+Action 7 and template-change callbacks retain legacy semantics. LTS is unchanged.
+
+
+### Bulk location and polling options
+
+`/inventory/devices/options` uses explicit field selectors, a Symfony form and
+`ChangeDeviceOptions` through the `DeviceOptions` port. `DeviceOptionsChange`
+rejects unsupported fields and validates selected polling values with the existing
+domain rules. Unchecked values are retained; an explicitly selected empty location
+clears it. Confirmation revisions include all supported options. The isolated
+worker rechecks authorization, writes the entire primary selection transactionally,
+refreshes polling configuration and invokes legacy action 4. Remote outcomes are
+verified and failures report uncertainty because remote writes are not distributed
+transactions. Bulk collector/site/template assignment and SNMP credential changes
+remain separate pending slices; the legacy bulk options page is not retired yet.
+
+
+### Bulk site, template and collector assignments
+
+`/inventory/devices/assign/{kind}` uses a Symfony choice form backed by
+`AssignDevices`, `DeviceBulkAssignment` and the `DeviceBulkAssignments` port. The
+worker authorizes and revision-checks the complete selection before effects, locks
+the target and participating collectors, and keeps primary writes transactional.
+Site/template unassignment is explicit. Template changes preserve existing graphs;
+collector moves use the same transfer adapter as single-device assignment, including
+destination verification and old-collector cleanup. Old collector copies remain
+available until primary ownership commits, including when a later device in a batch
+fails. Cleanup runs after that commit, reacquires authorization and site/device/collector
+locks, confirms ownership has not changed again, and verifies removal before
+reporting success.
+An unchanged positive template is reapplied to repair missing associations; site
+and template assignments preserve the remote enabled state captured at preflight.
+
+Remote writes are not distributed transactions. A failure before primary commit
+can leave destination copies while primary ownership and old copies remain intact.
+A cleanup failure after commit retains the confirmed destination ownership and may
+leave old copies. Both outcomes report failure: inspect every selected device and
+use the existing Full Sync/recovery workflow to reconcile collector state before
+retrying. Deploy the worker and shared adapter together after draining in-flight
+assignment requests. No schema change is required; application rollback restores
+the prior worker behavior and does not undo collector effects already delivered.
+
+
+### Bulk SNMP settings
+
+`/inventory/devices/snmp` uses explicit per-field checkboxes with
+`ChangeDevicesSnmp`, `DeviceBulkSnmpChange` and the `DeviceSnmpSettings` port.
+An untouched submission is rejected before worker startup. Unchecked settings and
+credentials retain each device's stored values, including when the selected SNMP
+version changes. This matches legacy bulk field selection; the single-device editor
+keeps its distinct complete-form contract. Explicit replacement affects only checked
+credential fields. Stored secrets never leave the isolated worker.
+
+Public SNMP settings participate in selection revisions. The worker resolves and
+validates the complete selection before writes. It owns remote batch transactions,
+checks that the exact primary and collector sessions use persistent InnoDB tables
+for every SNMP/cache mutation participant, rejects unsupported engines before writes,
+updates all primary host rows before remote effects, rebuilds polling caches through
+`push_out_host`, and verifies every copy. A later precommit failure rolls back primary
+and active collector transactions. The primary commits first; a later collector
+commit failure reports an uncertain outcome and may require Full Sync/recovery.
+This is not a distributed transaction. Failure pages retain empty password controls.
+
+Deploy the form, domain command and worker together after draining in-flight bulk
+requests; older bulk forms without explicit selections fail validation. No schema or
+dependency changes are required. Code rollback cannot undo committed credentials.
 ### Palette CSV spreadsheet safety
 
 Palette downloads mark every operator-controlled name and hex cell as literal
@@ -1223,3 +1301,30 @@ Deletion refuses definitions referenced by graphs, graph templates or other VDEF
 The old `vdef.php` URL redirects safe GET navigation to the Symfony routes and
 rejects posted actions; legacy procedural VDEF functions remain available to
 graph rendering.
+
+### Template synchronization discovery boundary
+
+Bulk template synchronization first validates and commits the primary template
+associations, after confirming collector identity and required association parity.
+It then runs data-query discovery outside the association transaction. Short
+current-account and device-scope checks release their locks before each query.
+The existing 120-second worker budget remains in force. Discovery failure or
+termination can leave committed associations and partial collector effects; the
+HTTP response is an uncertain outcome, and the operator must inspect the selected
+devices and retry synchronization. Retrying also repairs an association missing
+from a device whose discovery cache already exists. Unselected credentials,
+graphs, and historical data retain their existing contracts.
+
+Template-change and graph-template hooks remain per-device during association
+updates; discovery is deferred until association commit, and the complete-selection
+action-7 callback runs only after successful discovery. This ordering intentionally
+changes the bulk workflow's discovery timing. Legacy callers that omit the optional
+reindex dispatcher retain synchronous discovery and the void helper return contract.
+Plugins execute in the trusted legacy process and may have irreversible side effects.
+A database rollback cannot undo plugin, discovery, or committed collector effects.
+
+Roll out the worker and helper together. No schema or dependency upgrade is needed.
+Application rollback must restore both files together and account for in-flight
+workers. It does not restore previously committed associations or collector state.
+The new boundary belongs to the main-only Symfony migration; LTS callers do not
+opt into it.
