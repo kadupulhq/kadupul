@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -34,6 +36,8 @@ require_once __DIR__ . '/../lib/utility.php';
 
 $status = 'failed';
 $transactionStarted = false;
+$associationsCommitted = false;
+$pendingQueries = [];
 try {
     $input = stream_get_contents(STDIN, 16001);
     if (strlen($input) > 16000) {
@@ -41,9 +45,11 @@ try {
     }
     $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
     $clearStatistics = is_array($command) && ($command['operation'] ?? null) === 'clear-statistics';
-    if (!is_array($command) || array_diff(array_keys($command), $clearStatistics ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled']) !== []
+    $syncTemplates = is_array($command) && ($command['operation'] ?? null) === 'sync-template';
+    $preserveState = $clearStatistics || $syncTemplates;
+    if (!is_array($command) || array_diff(array_keys($command), $preserveState ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0
-        || !is_array($command['selection'] ?? null) || (!$clearStatistics && !is_bool($command['enabled'] ?? null))) {
+        || !is_array($command['selection'] ?? null) || (!$preserveState && !is_bool($command['enabled'] ?? null))) {
         throw new RuntimeException('Invalid command');
     }
     $selection = new DeviceSelection($command['selection']);
@@ -69,6 +75,21 @@ try {
     $rows = $locked['rows'];
     $pollers = $locked['pollers'];
     $read = $locked['read'];
+    if ($syncTemplates) {
+        // Lock current template definitions in a deterministic order before effects.
+        $templates = array_unique(array_map(static fn($row) => (int) $row['host_template_id'], $rows));
+        sort($templates, SORT_NUMERIC);
+        foreach ($templates as $templateId) {
+            if ($templateId === 0) {
+                continue;
+            }
+            if (count($read($connection, 'SELECT id FROM host_template WHERE id = ? LOCK IN SHARE MODE', [$templateId])) !== 1) {
+                throw new RuntimeException('Assigned template unavailable');
+            }
+            $read($connection, 'SELECT graph_template_id FROM host_template_graph WHERE host_template_id = ? ORDER BY graph_template_id LOCK IN SHARE MODE', [$templateId]);
+            $read($connection, 'SELECT snmp_query_id FROM host_template_snmp_query WHERE host_template_id = ? ORDER BY snmp_query_id LOCK IN SHARE MODE', [$templateId]);
+        }
+    }
     $changed = [];
     $remotes = [];
     $remoteStates = [];
@@ -98,7 +119,10 @@ try {
             $remoteStates[$device->id] = $remoteRows[0]['disabled'] !== 'on';
             $remoteMatches = $remoteStates[$device->id] === $enabled;
         }
-        if (!$clearStatistics && $device->enabled === $enabled && $remoteMatches && ($enabled || (int) $row['status'] === 0)) {
+        if ($syncTemplates && $device->templateId === 0) {
+            continue;
+        }
+        if (!$preserveState && $device->enabled === $enabled && $remoteMatches && ($enabled || (int) $row['status'] === 0)) {
             continue;
         }
         $changed[$device->id] = $device;
@@ -114,7 +138,13 @@ try {
         // Legacy SQL helpers retain their last error even after later successes.
         // Check it without exposing diagnostics or credentials to the parent.
         $database_last_error = '';
-        if ($clearStatistics) {
+        if ($syncTemplates) {
+            foreach ($changed as $device) {
+                api_device_update_host_template($device->id, $device->templateId, static function ($id, $query) use (&$pendingQueries): void {
+                    $pendingQueries[] = [(int) $id, (int) $query];
+                });
+            }
+        } elseif ($clearStatistics) {
             $reset = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceStatisticsReset();
             foreach ($changed as $device) {
                 $reset->apply($connection, $device);
@@ -127,10 +157,12 @@ try {
         } elseif (!api_device_disable_devices(array_keys($changed))) {
             throw new RuntimeException('Disabling devices failed');
         }
-        $action = $clearStatistics ? '5' : ($enabled ? '2' : '3');
-        set_request_var('drp_action', $action);
-        snmpagent_device_action_bottom([$action, $ids]);
-        api_plugin_hook_function('device_action_bottom', [$action, $ids]);
+        $action = $syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3'));
+        if (!$syncTemplates) {
+            set_request_var('drp_action', $action);
+            snmpagent_device_action_bottom([$action, $ids]);
+            api_plugin_hook_function('device_action_bottom', [$action, $ids]);
+        }
         if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
             throw new RuntimeException('Device operation could not be confirmed');
         }
@@ -149,15 +181,18 @@ try {
     foreach ($rows as $row) {
         $device = LegacyDeviceStates::state($row);
         $verify = $read($connection, "SELECT disabled, status, site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
-        if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($clearStatistics ? $device->enabled : $enabled)
+        if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($preserveState ? $device->enabled : $enabled)
             || (int) $verify[0]['site_id'] !== $device->siteId || (int) $verify[0]['poller_id'] !== $device->pollerId
             || (int) $verify[0]['host_template_id'] !== $device->templateId
-            || (!$clearStatistics && !$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
+            || (!$preserveState && !$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
             throw new RuntimeException('Device state could not be confirmed');
         }
+        if ($syncTemplates && $device->templateId > 0) {
+            (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier())->verify($connection, $remotes[$device->pollerId] ?? null, $device->id, $device->templateId, true);
+        }
         if (isset($remotes[$device->pollerId])) {
-            $verify = $read($remotes[$device->pollerId], "SELECT disabled, poller_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
-            if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($clearStatistics ? $remoteStates[$device->id] : $enabled) || (int) $verify[0]['poller_id'] !== $device->pollerId) {
+            $verify = $read($remotes[$device->pollerId], "SELECT disabled, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
+            if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($preserveState ? $remoteStates[$device->id] : $enabled) || (int) $verify[0]['poller_id'] !== $device->pollerId || ($syncTemplates && (int) $verify[0]['host_template_id'] !== $device->templateId)) {
                 throw new RuntimeException('Collector state could not be confirmed');
             }
         }
@@ -166,10 +201,56 @@ try {
         throw new RuntimeException('Commit failed');
     }
     $transactionStarted = false;
+    $associationsCommitted = true;
+    if ($syncTemplates && $changed !== []) {
+        // Discovery runs after association commit. Short rechecks release all
+        // selection and permission locks before each external query.
+        $recheck = static function (array $scope) use ($connection, $command, $selection, &$transactionStarted): void {
+            if (!$connection->beginTransaction()) {
+                throw new RuntimeException('Synchronization recheck unavailable');
+            }
+            $transactionStarted = true;
+            $current = (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceMutationSelection())->lock($connection, $command['actor'], $scope, static function (string $next): void {});
+            foreach ($current['rows'] as $row) {
+                $device = LegacyDeviceStates::state($row);
+                $device->assertRevision($selection->revisions[$device->id]);
+            }
+            if (!$connection->commit()) {
+                throw new RuntimeException('Synchronization recheck unavailable');
+            }
+            $transactionStarted = false;
+        };
+        foreach ($pendingQueries as [$deviceId, $queryId]) {
+            $recheck([$deviceId]);
+            if ($connection->inTransaction() || !run_data_query($deviceId, $queryId)
+                || db_error() !== '' || is_error_message()) {
+                throw new RuntimeException('Template discovery could not be confirmed');
+            }
+        }
+        $recheck($ids);
+        set_request_var('drp_action', '7');
+        snmpagent_device_action_bottom(['7', $ids]);
+        api_plugin_hook_function('device_action_bottom', ['7', $ids]);
+        if (db_error() !== '' || is_error_message() || $connection->inTransaction()) {
+            throw new RuntimeException('Template callbacks could not be confirmed');
+        }
+        $recheck($ids);
+        foreach ($changed as $device) {
+            (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier())->verify($connection, $remotes[$device->pollerId] ?? null, $device->id, $device->templateId);
+            if (isset($remotes[$device->pollerId])) {
+                $copy = $read($remotes[$device->pollerId], "SELECT host_template_id, poller_id, disabled FROM host WHERE id = ? AND deleted = ''", [$device->id]);
+                if (count($copy) !== 1 || (int) $copy[0]['host_template_id'] !== $device->templateId
+                    || (int) $copy[0]['poller_id'] !== $device->pollerId
+                    || ($copy[0]['disabled'] !== 'on') !== $remoteStates[$device->id]) {
+                    throw new RuntimeException('Collector synchronization could not be confirmed');
+                }
+            }
+        }
+    }
     $status = 'ok';
-    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled')) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
+    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled'))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
 } catch (DeviceEditConflict) {
-    $status = 'conflict';
+    $status = $associationsCommitted ? 'failed' : 'conflict';
 } catch (Throwable) {
     // Remote effects may survive a primary rollback; never report false success.
 } finally {
