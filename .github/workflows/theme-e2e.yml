@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   theme-e2e:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
 
     steps:
       - name: Checkout
