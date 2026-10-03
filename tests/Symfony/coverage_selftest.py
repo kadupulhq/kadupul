@@ -37,6 +37,8 @@ def prepare_database_failure_reports(directory, scratch, source, mutation):
 
 
 def main():
+    from cdef_legacy_page_scenarios import REQUIRED_CHECKS
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--php', default='php')
     parser.add_argument('--unit', type=Path, required=True)
@@ -105,6 +107,7 @@ def main():
         'bin/legacy-device-template.php',
         'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'bin/legacy-device-state.php',
+        'lib/api_device.php',
         'bin/legacy-device-remove.php',
         'src/Inventory/Domain/DeviceRemoval.php',
         'src/Inventory/Application/Command/RemoveDevices.php',
@@ -121,12 +124,27 @@ def main():
         'src/Inventory/Application/Command/SetDevicesEnabled.php',
         'src/Inventory/Application/Query/PrepareDeviceStateChange.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceStates.php',
+        'src/Inventory/Domain/DeviceBulkAssignment.php',
+        'src/Inventory/Application/Command/AssignDevices.php',
+        'src/Inventory/Application/Query/ListDeviceAssignmentTargets.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceBulkAssignmentWriter.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceCollectorTransfer.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceBulkAssignmentType.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
+        'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceSnmpWriter.php',
+        'src/Inventory/Domain/DeviceOptionsChange.php',
+        'src/Inventory/Application/Command/ChangeDeviceOptions.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceOptionsWriter.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceOptionsType.php',
         'src/Inventory/Application/Command/ClearDeviceStatistics.php',
+        'src/Inventory/Application/Command/SynchronizeDeviceTemplates.php',
         'src/Inventory/Infrastructure/Legacy/DeviceStatisticsReset.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceStateType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceStateController.php',
         'src/Inventory/Domain/DeviceSnmpConfiguration.php',
         'src/Inventory/Domain/DeviceSnmpChange.php',
+        'src/Inventory/Domain/DeviceBulkSnmpChange.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceSnmpType.php',
         'src/Inventory/Infrastructure/Symfony/Form/DevicePollingType.php',
         'src/Inventory/Application/Query/ListAssignableSites.php',
@@ -209,6 +227,8 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
+    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php')
+    required += [prefix + path for path in legacy_pages]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -220,6 +240,19 @@ def main():
     about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
     about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
+    state_probe_checks = ['bulk state observer records original production source identity',
+                          'bulk state observer uses a separate fixture source outside production coverage',
+                          'bulk state observer restores exact production bytes and removes owned fixtures']
+    synchronization_checks = ['all-unassigned template synchronization invokes no mutation callbacks', 'all-unassigned template synchronization preserves the device-change marker', 'collector identity mismatch invokes no action 7 callback', 'collector identity mismatch rolls back the primary batch', 'deferred discovery failure does not publish a success audit record', 'deferred discovery failure reports uncertain completion', 'deferred discovery failure retains committed associations without a success callback', 'deferred synchronization discovery fixture registered', 'denied synchronization performs no writes or callbacks', 'each synchronized device receives only its own template associations', 'failed synchronization does not invoke the bulk action callback', 'failed synchronization does not publish a success audit record', 'missing template invokes no callbacks and preserves the marker', 'missing template preserves all primary associations', 'multiple templates do not leak associations across devices', 'multiple templates preserve per-device and complete-selection callback contracts', 'remote template synchronization preserves assigned template identity', 'slow synchronization discovery does not block a concurrent poller write', 'successful synchronization publishes exactly one success audit record', 'template synchronization GET does not add associations', 'template synchronization GET does not add data-query associations', 'template synchronization accepts an all-unassigned selection as a no-op', 'template synchronization adds required data-query associations', 'template synchronization adds required graph associations', 'template synchronization association failure cannot report success', 'template synchronization conceals inaccessible devices on GET and POST', 'template synchronization denied-realm fixture starts authorized', 'template synchronization discovery runs without an active primary transaction', 'template synchronization failure rolls back primary associations', 'template synchronization hook registered', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization preserves the configured data-query reindex method', 'template synchronization refuses an actor without the device-management realm', 'template synchronization refuses unauthenticated POST requests', 'template synchronization refuses unauthenticated requests', 'template synchronization rejects a missing assigned template', 'template synchronization rejects altered collector template identity', 'template synchronization rejects offline collectors before writes', 'template synchronization rejects stale device revisions', 'template synchronization rejects unexpected fields', 'template synchronization removes unused graph associations', 'template synchronization repairs associations despite existing query cache', 'template synchronization requires CSRF token', 'template synchronization requires same-origin CSRF', 'template synchronization resolves the effective default reindex method', 'template synchronization retains associations used by existing graphs', 'template synchronization retains existing graphs', 'template synchronization retries safely after deferred discovery failure', 'template synchronization saves through Symfony', 'template synchronization skips unassigned devices', 'template synchronization supports a selection spanning different templates', 'template synchronization supports repeated synchronization', 'template synchronization worker independently refuses a revoked realm']
+    option_checks = ['bulk options save through Symfony', 'bulk options failure rolls back entire primary batch', 'bulk options verifies remote values', 'bulk options changes selected fields and preserves unchecked values', 'bulk options invokes action 4 once for the complete selection', 'rejected bulk options do not invoke action 4', 'bulk options action hook registered', 'bulk options GET does not modify selected devices', 'bulk options requires an explicit field selection', 'bulk options requires same-origin CSRF', 'bulk options requires CSRF token', 'bulk options rejects assignment mass updates', 'bulk options validates selected polling values', 'bulk options rejects concurrent option edits', 'bulk option edits invalidate removal confirmations', 'stale options removal confirmation preserves selected devices', 'bulk options worker rejects enabled payload', 'bulk options worker rejects non-array changes', 'malformed options worker payloads preserve data and callbacks', 'bulk options rejects selected invalid ping choice', 'bulk options rejects selected invalid availability choice', 'bulk options rejects offline collectors before writes', 'bulk options write failure cannot report success', 'bulk options stored-value mismatch cannot report success', 'bulk options stored-value mismatch rolls back entire primary batch', 'bulk options stored-value mismatch does not invoke action 4', 'bulk options completion banner renders exactly once', 'bulk options unchanged values succeed on repeated submission', 'bulk options unchanged submissions preserve primary values', 'bulk options unchanged submissions preserve collector values', 'bulk options saves selected availability and ping choices', 'bulk options persists choices on primary', 'bulk options persists choices on collector', 'bulk options allows clearing location and ignores unchecked invalid values', 'bulk options ignores unchecked invalid choices']
+    assignment_checks = ['bulk site assigns through Symfony', 'bulk template assigns through Symfony', 'bulk site failure rolls back whole primary selection', 'bulk template failure rolls back whole primary selection', 'bulk collector moves full selection to remote', 'bulk collector returns full selection to primary', 'bulk collector purges old remote copies']
+    snmp_checks = ['bulk SNMP fixture has nonempty primary polling rows', 'bulk SNMP fixture has nonempty remote polling rows', 'bulk SNMP real data-source cache fixture initialized', 'bulk SNMP action hook registered', 'bulk SNMP never displays stored credentials', 'untouched bulk SNMP form leaves settings credentials and caches unchanged', 'bulk SNMP requires same-origin CSRF', 'bulk SNMP requires CSRF token', 'bulk SNMP rejects unrelated nested fields', 'bulk SNMP rejects concurrent protocol changes', 'bulk SNMP validates all stored credentials before writes', 'invalid stored credentials leave entire bulk selection unchanged', 'invalid stored credentials leave every collector and polling cache unchanged', 'bulk SNMP keeps each device credentials through Symfony', 'bulk SNMP invokes action 4 once for the complete selection', 'bulk SNMP failure hides submitted secrets', 'bulk SNMP failure rolls back entire primary selection', 'bulk SNMP later primary failure preserves collector credentials and caches', 'rejected bulk SNMP does not invoke action 4', 'bulk SNMP later cache failure rolls back primary and collector credentials', 'bulk SNMP cache rejection invokes no action callback', 'bulk SNMP replaces credentials through Symfony', 'bulk SNMP redirect displays its completion notice', 'bulk SNMP persists replacement credentials', 'bulk SNMP verifies remote credentials', 'bulk SNMP replacement reaches primary and collector polling rows', 'bulk SNMP applies validated version 3 credentials', 'bulk SNMP version 3 secrets reach primary and remote polling caches', 'untouched version 3 bulk form retains every secret and protocol', 'bulk SNMP rejects a later stored seven-byte passphrase without writes', 'bulk SNMP accepts stored eight-byte passphrases', 'bulk SNMP keeps distinct stored authentication secrets in polling rows', 'bulk SNMP rejects stored NUL credentials before every write', 'bulk SNMP permits leaving version 3', 'bulk version change preserves every unchecked credential and protocol', 'bulk SNMP disables protocol through Symfony', 'bulk SNMP success emits the actor and complete-selection audit line', 'bulk SNMP secrets stay out of database diagnostics', 'bulk SNMP preserves individual stored communities', 'bulk SNMP rebuilds polling rows with each devices credentials', 'bulk SNMP rejects oversized and NUL replacement credentials without writes', 'bulk SNMP disabling clears primary and remote reindex state']
+    snmp_checks += ['bulk SNMP stored passphrase denial uses the actual actor French preference']
+    snmp_checks += ['bulk SNMP rejects nontransactional primary cache participants before writes', 'bulk SNMP rejects nontransactional collector cache participants before writes']
+    assignment_checks += ['device list exposes all bulk assignment routes', 'default mutation selection retains existing missing-site and disabled-poller behavior', 'bulk site invokes action 4 once for the complete selection', 'bulk template invokes action 4 once for the complete selection', 'rejected bulk site does not invoke action 4', 'rejected bulk template does not invoke action 4', 'bulk site displays its assignment completion notice', 'bulk template displays its assignment completion notice', 'bulk existing template repairs missing association', 'bulk existing template restores primary and collector association', 'bulk template assignment retains existing graphs and data', 'bulk template unassignment invokes the zero-template hook for each device', 'bulk template preserves site membership cache marker', 'bulk collector worker rejects disabled destination after GET', 'disabled bulk collector destination writes no ownership or copy', 'bulk collector return failure reports uncertain outcome', 'bulk collector return failure rolls back primary ownership and statistics', 'bulk collector rollback retains every previous polling copy', 'bulk collector transfers a full remote selection to another remote', 'bulk remote transfer confirms primary and destination ownership', 'bulk remote transfer preserves nonempty polling ownership', 'bulk remote transfer removes old copies after commit', 'bulk collector can return to its previous remote', 'bulk remote return cleans the second collector', 'bulk collector mid-batch failure reports uncertain outcome', 'bulk collector mid-batch failure rolls back primary host and cache ownership', 'bulk collector mid-batch failure rolls back poller statistics', 'rejected bulk collector does not invoke action 4', 'bulk collector failure retains documented first-device remote residue', 'bulk site worker rejects deleted destination after GET without writes', 'malformed bulk assignment command cannot write', 'bulk assignment worker rejects extra command keys before writes']
+    assignment_checks += ['bulk site preserves preflight remote disabled state', 'bulk template preserves preflight remote disabled state']
+    assignment_checks += ['bulk collector cleanup rejects changed ownership before purging', 'bulk collector cleanup failure cannot report success', 'bulk collector cleanup failure retains committed destination ownership', 'bulk collector cleanup failure leaves recoverable old copies', 'bulk collector recovers old residue by returning to remote']
+    collector_cleanup_checks = ['collector cleanup failure retains committed primary ownership and polling rows', 'collector cleanup failure leaves a recoverable old host copy', 'collector cleanup failure emits no success audit', 'collector reassignment recovers old host and polling residue through confirmed moves']
     failures = {
         'data-source-profile-test-hash': 'Integration test source differs',
         'about-authentication-test-hash': 'Integration test source differs',
@@ -319,6 +352,25 @@ def main():
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
     }
+    failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
+    failures['stale-legacy-page-test-hash'] = 'Integration test source differs'
+    for index in range(len(REQUIRED_CHECKS)):
+        failures['missing-legacy-page-check-' + str(index)] = 'Incomplete Symfony integration'
+    for source in legacy_pages:
+        failures['stale-legacy-page-source-' + source] = 'Covered source differs'
+        failures['missing-legacy-page-source-' + source] = 'Missing measured execution'
+    for index in range(len(synchronization_checks)):
+        failures['missing-synchronization-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(assignment_checks)):
+        failures['missing-assignment-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(collector_cleanup_checks)):
+        failures['missing-collector-cleanup-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(snmp_checks)):
+        failures['missing-snmp-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(option_checks)):
+        failures['missing-option-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(state_probe_checks)):
+        failures['missing-state-probe-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(3):
         failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
@@ -368,6 +420,18 @@ def main():
                 evidence['checks'].remove('palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
             elif case == 'missing-palette-concurrent-auth':
                 evidence['checks'].remove('two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
+            elif case == 'missing-legacy-page-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/cdef_legacy_page_scenarios.py')
+            elif case == 'stale-legacy-page-test-hash':
+                evidence['source_sha256']['tests/Symfony/cdef_legacy_page_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-legacy-page-check-'):
+                omitted = REQUIRED_CHECKS[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
+            elif case.startswith('stale-legacy-page-source-'):
+                source = prefix + case.removeprefix('stale-legacy-page-source-')
+                data['files'][source]['sha256'] = '0' * 64
+            elif case.startswith('missing-legacy-page-source-'):
+                data['files'].pop(prefix + case.removeprefix('missing-legacy-page-source-'))
             elif case == 'palette-sql-probe-hash':
                 evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
             elif case == 'palette-test-hash':
@@ -456,14 +520,32 @@ def main():
                 evidence['checks'].remove('widen refuses an operator without the Installation/Upgrades realm')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
+            elif case.startswith('missing-statistics-check-'):
+                missing = statistics_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-collector-cleanup-check-'):
+                missing = collector_cleanup_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-synchronization-check-'):
+                missing = synchronization_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-assignment-check-'):
+                missing = assignment_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-snmp-check-'):
+                missing = snmp_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-option-check-'):
+                missing = option_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-state-probe-check-'):
+                missing = state_probe_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-removal-callback-check':
                 evidence['checks'] = [check for check in evidence['checks'] if check != 'rejected removal emits no bulk action callback']
             elif case in ['missing-removal-shared-check', 'missing-removal-rollback-check']:
                 omitted = 'remote removal rejects outside graph references before cleanup' if case == 'missing-removal-shared-check' else 'remote removal failure rolls back dependent cleanup'
                 evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
-            elif case.startswith('missing-statistics-check-'):
-                missing = statistics_checks[int(case.rsplit('-', 1)[1])]
-                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':

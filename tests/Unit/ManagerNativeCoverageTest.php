@@ -135,6 +135,7 @@ final class ManagerNativeCoverageTest extends TestCase
             'default persisted count and aggregates' => array(array(), array(2, 1), 3),
             'next page zero aggregates' => array(array('page' => 2), array(3), 3),
             'explicit rows with escaped label' => array(array('rows' => 1), array(2), 3),
+            'selected two row option' => array(array('rows' => 2), array(2, 1), 3),
             'description literal markup filter' => array(array('filter' => 'Alpha & <script>'), array(1), 1),
             'hostname filter' => array(array('filter' => '192.0.2.2'), array(2), 1),
             'empty search results' => array(array('filter' => 'missing'), array(), 0),
@@ -143,12 +144,40 @@ final class ManagerNativeCoverageTest extends TestCase
         );
     }
 
-    private function render(array $request, bool $hostnameMarkup = false): array
+    /** @dataProvider notificationMutationCases */
+    public function testNotificationMutationKeepsReceiverScopeAndAdmission(string $method, bool $csrf, string $action, bool $expectedPresent, int $status, string $notification = 'Name & <script>', string $mib = 'MIB-A'): void
+    {
+        $request = array('action' => 'actions', 'action_receiver_notifications' => 1, 'id' => 1, 'drp_action' => $action, 'selected_items' => serialize(array($mib => array($notification => true))));
+        $state = $this->render($request, false, array('method' => $method, 'csrf_valid' => $csrf));
+        self::assertSame($status, $state['status'] ?: 200);
+        $matches = array_values(array_filter($state['after']['snmpagent_managers_notifications'], static fn(array $row): bool => (int) $row['manager_id'] === 1 && $row['notification'] === $notification && $row['mib'] === $mib));
+        self::assertCount($expectedPresent ? 1 : 0, $matches);
+        if ($expectedPresent) {
+            self::assertSame(array(1, $notification, $mib), array((int) $matches[0]['manager_id'], $matches[0]['notification'], $matches[0]['mib']));
+        }
+        foreach ($state['before'] as $table => $rows) {
+            if ($table !== 'snmpagent_managers_notifications') {
+                self::assertSame($rows, $state['after'][$table]);
+            }
+        }
+        $unselected = static fn(array $row): bool => (int) $row['manager_id'] !== 1 || $row['notification'] !== $notification || $row['mib'] !== $mib;
+        self::assertSame(array_values(array_filter($state['before']['snmpagent_managers_notifications'], $unselected)), array_values(array_filter($state['after']['snmpagent_managers_notifications'], $unselected)));
+        if ($status !== 302) {
+            self::assertSame($state['before'], $state['after']);
+        }
+    }
+
+    public static function notificationMutationCases(): array
+    {
+        return array('valid POST disable' => array('POST', true, '1', false, 302), 'valid POST enable existing idempotent' => array('POST', true, '2', true, 302), 'valid POST enable new identity' => array('POST', true, '2', true, 302, 'Foreign', 'MIB-B'), 'GET denied before write' => array('GET', true, '1', true, 405), 'invalid token denied before write' => array('POST', false, '1', true, 403));
+    }
+
+    private function render(array $request, bool $hostnameMarkup = false, array $options = array()): array
     {
         $root = dirname(__DIR__, 2);
         $directory = sys_get_temp_dir() . '/manager-view-' . bin2hex(random_bytes(8));
         $coverage = $this->getTestResultObject()->getCodeCoverage();
-        $scenario = json_encode(array('view' => 'manager', 'request' => $request, 'hostname_markup' => $hostnameMarkup), JSON_THROW_ON_ERROR);
+        $scenario = json_encode(array_merge(array('view' => 'manager', 'request' => $request, 'hostname_markup' => $hostnameMarkup), $options), JSON_THROW_ON_ERROR);
         $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/utility-view-native.php', $scenario, $directory);
         if ($coverage !== null) {
             $command[] = 'coverage';
@@ -167,14 +196,15 @@ final class ManagerNativeCoverageTest extends TestCase
                 self::assertCount(1, $reports);
                 // Independent complete inventory: original nine RRD defaults,
                 // real utility filter files and every executable fixture dependency.
-                $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/UtilityViewNativeCoverageTest.php', 'tests/Unit/ManagerNativeCoverageTest.php', 'utilities.php', 'managers.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/clog_webapi.php', 'src/Platform/Infrastructure/Legacy/UtilityRows.php', 'include/global_constants.php', 'include/global_session.php', 'lib/html_form.php', 'lib/variables.php', 'lib/utility.php');
+                $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/UtilityViewNativeCoverageTest.php', 'tests/Unit/ManagerNativeCoverageTest.php', 'utilities.php', 'managers.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/clog_webapi.php', 'src/Platform/Infrastructure/Legacy/UtilityRows.php', 'include/global_constants.php', 'include/global_session.php', 'lib/html_form.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/utility.php');
                 $markers = array('utility-view-observed:manager');
-                $hits = array('managers.php', 'lib/html.php', 'lib/functions.php');
+                $hits = ($request['action'] ?? '') === 'actions' ? array('managers.php', 'lib/html_utility.php') : array('managers.php', 'lib/html.php', 'lib/functions.php');
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits);
-                static $omissionsVerified = false;
-                if (!$omissionsVerified) {
-                    self::assertSame(38, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits, 'lib/boost.php'));
-                    $omissionsVerified = true;
+                static $omissionsVerified = array();
+                $mode = ($request['action'] ?? '') === 'actions' ? 'actions' : 'render';
+                if (!isset($omissionsVerified[$mode])) {
+                    self::assertSame(39, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits, 'lib/boost.php'));
+                    $omissionsVerified[$mode] = true;
                 }
                 $coverage->merge($child);
             }
