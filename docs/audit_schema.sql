@@ -122,7 +122,7 @@ INSERT INTO `table_columns` VALUES ('aggregate_graph_templates_item',4,'color_te
 INSERT INTO `table_columns` VALUES ('aggregate_graph_templates_item',5,'t_graph_type_id','char(2)','YES','','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('aggregate_graph_templates_item',6,'graph_type_id','tinyint(3) unsigned','NO','','0','',NULL);
 INSERT INTO `table_columns` VALUES ('aggregate_graph_templates_item',7,'t_cdef_id','char(2)','YES','','','','utf8mb4_unicode_ci');
-INSERT INTO `table_columns` VALUES ('aggregate_graph_templates_item',8,'cdef_id','mediumint(8) unsigned','YES','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('aggregate_graph_templates_item',8,'cdef_id','mediumint(8) unsigned','YES','MUL',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('aggregate_graph_templates_item',9,'item_skip','char(2)','NO','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('aggregate_graph_templates_item',10,'item_total','char(2)','NO','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('aggregate_graphs',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
@@ -147,7 +147,7 @@ INSERT INTO `table_columns` VALUES ('aggregate_graphs_graph_item',4,'color_templ
 INSERT INTO `table_columns` VALUES ('aggregate_graphs_graph_item',5,'t_graph_type_id','char(2)','YES','','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('aggregate_graphs_graph_item',6,'graph_type_id','tinyint(3) unsigned','NO','','0','',NULL);
 INSERT INTO `table_columns` VALUES ('aggregate_graphs_graph_item',7,'t_cdef_id','char(2)','YES','','','','utf8mb4_unicode_ci');
-INSERT INTO `table_columns` VALUES ('aggregate_graphs_graph_item',8,'cdef_id','mediumint(8) unsigned','YES','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('aggregate_graphs_graph_item',8,'cdef_id','mediumint(8) unsigned','YES','MUL',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('aggregate_graphs_graph_item',9,'item_skip','char(2)','NO','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('aggregate_graphs_graph_item',10,'item_total','char(2)','NO','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('aggregate_graphs_items',1,'aggregate_graph_id','int(10) unsigned','NO','PRI',NULL,'',NULL);
@@ -1099,6 +1099,7 @@ INSERT INTO `table_indexes` VALUES ('aggregate_graph_templates',1,'graph_templat
 INSERT INTO `table_indexes` VALUES ('aggregate_graph_templates',0,'PRIMARY',1,'id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graph_templates',1,'user_id',1,'user_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graph_templates_graph',0,'PRIMARY',1,'aggregate_template_id','A',0,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('aggregate_graph_templates_item',1,'kadupul_cdef_reference',1,'cdef_id','A',0,NULL,NULL,'YES','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graph_templates_item',0,'PRIMARY',1,'aggregate_template_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graph_templates_item',0,'PRIMARY',2,'graph_templates_item_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graphs',1,'aggregate_template_id',1,'aggregate_template_id','A',0,NULL,NULL,'','BTREE','');
@@ -1106,6 +1107,7 @@ INSERT INTO `table_indexes` VALUES ('aggregate_graphs',1,'local_graph_id',1,'loc
 INSERT INTO `table_indexes` VALUES ('aggregate_graphs',0,'PRIMARY',1,'id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graphs',1,'title_format',1,'title_format','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graphs',1,'user_id',1,'user_id','A',0,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('aggregate_graphs_graph_item',1,'kadupul_cdef_reference',1,'cdef_id','A',0,NULL,NULL,'YES','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graphs_graph_item',0,'PRIMARY',1,'aggregate_graph_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graphs_graph_item',0,'PRIMARY',2,'graph_templates_item_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('aggregate_graphs_items',0,'PRIMARY',1,'aggregate_graph_id','A',0,NULL,NULL,'','BTREE','');
