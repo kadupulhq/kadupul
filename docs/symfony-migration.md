@@ -1234,8 +1234,22 @@ worker authorizes and revision-checks the complete selection before effects, loc
 the target and participating collectors, and keeps primary writes transactional.
 Site/template unassignment is explicit. Template changes preserve existing graphs;
 collector moves use the same transfer adapter as single-device assignment, including
-destination verification and old-collector cleanup. Remote writes are not distributed
-transactions: a failure may leave remote effects and requires inspection before retry.
+destination verification and old-collector cleanup. Old collector copies remain
+available until primary ownership commits, including when a later device in a batch
+fails. Cleanup runs after that commit, reacquires authorization and site/device/collector
+locks, confirms ownership has not changed again, and verifies removal before
+reporting success.
+An unchanged positive template is reapplied to repair missing associations; site
+and template assignments preserve the remote enabled state captured at preflight.
+
+Remote writes are not distributed transactions. A failure before primary commit
+can leave destination copies while primary ownership and old copies remain intact.
+A cleanup failure after commit retains the confirmed destination ownership and may
+leave old copies. Both outcomes report failure: inspect every selected device and
+use the existing Full Sync/recovery workflow to reconcile collector state before
+retrying. Deploy the worker and shared adapter together after draining in-flight
+assignment requests. No schema change is required; application rollback restores
+the prior worker behavior and does not undo collector effects already delivered.
 ### Palette CSV spreadsheet safety
 
 Palette downloads mark every operator-controlled name and hex cell as literal
