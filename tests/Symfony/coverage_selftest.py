@@ -384,6 +384,7 @@ def main():
         'unmeasured-LegacyDeviceCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'path-traversal': 'Invalid integration source path',
         'device_association_scenarios.py-test-hash': 'Integration test source differs',
+        'device_legacy_scenarios.py-test-hash': 'Integration test source differs',
         'device_maintenance_scenarios.py-test-hash': 'Integration test source differs',
         'device_placement_scenarios.py-test-hash': 'Integration test source differs',
         'placement_lock_probe.php-test-hash': 'Integration test source differs',
@@ -537,6 +538,8 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/plugins/compatibility_test/setup.php'] = '0' * 64
             elif case == 'device_association_scenarios.py-test-hash':
                 evidence['source_sha256']['tests/Symfony/device_association_scenarios.py'] = '0' * 64
+            elif case == 'device_legacy_scenarios.py-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_legacy_scenarios.py'] = '0' * 64
             elif case == 'device_maintenance_scenarios.py-test-hash':
                 evidence['source_sha256']['tests/Symfony/device_maintenance_scenarios.py'] = '0' * 64
             elif case == 'device_placement_scenarios.py-test-hash':
