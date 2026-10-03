@@ -12,6 +12,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
 - Migrate Data Input Methods and fields to Symfony/PHP 8.4 and Twig, with current authorization, revision checks, transaction rollback and explicit collector/whitelist retry outcomes.
+- Retain old collector polling copies until primary assignment commits, repair missing associations on unchanged template assignments, and preserve remote enabled-state drift during bulk site/template changes.
+
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
@@ -173,6 +175,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
 ### Changed
+
+- Add Symfony bulk site, template and collector assignments with whole-selection validation, primary rollback and verified collector replication.
 
 - Add Symfony bulk location and polling option edits with explicit field selection, domain validation, stale-option protection and verified collector writes.
 

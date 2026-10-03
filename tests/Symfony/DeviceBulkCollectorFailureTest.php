@@ -12,11 +12,11 @@ namespace Kadupul\Tests;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 
-final class DeviceCollectorTransferFailureTest extends TestCase
+final class DeviceBulkCollectorFailureTest extends TestCase
 {
     public function testExplicitTransferFailureStopsBeforeGraphReplication(): void
     {
-        $process = new Process([PHP_BINARY, dirname(__DIR__) . '/Fixtures/collector-transfer-failure-native.php', 'single']);
+        $process = new Process([PHP_BINARY, dirname(__DIR__) . '/Fixtures/collector-transfer-failure-native.php', 'bulk']);
         $process->mustRun();
         self::assertSame('', $process->getErrorOutput());
         $result = json_decode($process->getOutput(), true, 16, JSON_THROW_ON_ERROR);
