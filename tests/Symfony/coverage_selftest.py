@@ -499,7 +499,7 @@ def main():
             elif case == 'script-server-test-hash':
                 evidence['source_sha256']['tests/Symfony/script_server_scenarios.py'] = '0' * 64
             elif case == 'missing-script-server-check':
-                evidence['checks'].remove('script server refuses includes outside the base path')
+                evidence['checks'].remove('script server refuses includes outside the scripts directory')
             elif case == 'cli-parity-test-hash':
                 evidence['source_sha256']['tests/Symfony/cli_parity_scenarios.py'] = '0' * 64
             elif case == 'cli-original-test-hash':
