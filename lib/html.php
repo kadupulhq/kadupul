@@ -47,7 +47,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
     static $mode_count   = 0;
     static $beta_count   = 0;
 
-    if ($add_label === false) {
+    if ($add_label === false || trim((string) $add_label) === '') {
         $add_label = __('Add');
     }
 
@@ -138,6 +138,10 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                         if (isset($icon['title'])) {
                             $title = $icon['title'];
                         } else {
+                            $title = $add_label;
+                        }
+
+                        if (trim((string) $title) === '') {
                             $title = $add_label;
                         }
 
