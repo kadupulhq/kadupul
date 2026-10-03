@@ -8,6 +8,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Resolve JavaScript and CSS include paths through Symfony Filesystem while retaining the legacy helper's search order, relative-path rules, and missing-file notifications. Closes #489.
 - Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
+- Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
+- Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
 
 - Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
