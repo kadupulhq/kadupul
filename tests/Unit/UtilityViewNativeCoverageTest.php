@@ -370,7 +370,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/UtilityViewNativeCoverageTest.php', 'utilities.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/clog_webapi.php', 'src/Platform/Infrastructure/Legacy/UtilityRows.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'lib/utility.php');
+                $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/UtilityViewNativeCoverageTest.php', 'utilities.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/clog_webapi.php', 'src/Platform/Infrastructure/Legacy/UtilityRows.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/utility.php');
                 $markers = array('utility-view-observed:' . $scenario['view']);
                 $hitSources = array('utilities.php');
                 // The shared helper has four view callers; SNMP/log/Boost retain their original renderers.
@@ -381,7 +381,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources);
                 static $omissionsVerified = false;
                 if (!$omissionsVerified) {
-                    self::assertSame(35, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources, $scenario['view'] === 'boost' ? 'lib/rrd_maintenance.php' : 'lib/boost.php'));
+                    self::assertSame(36, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources, $scenario['view'] === 'boost' ? 'lib/rrd_maintenance.php' : 'lib/boost.php'));
                     $omissionsVerified = true;
                 }
                 $coverage->merge($child);
