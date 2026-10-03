@@ -83,7 +83,7 @@ final class DeviceOptionsPresentationTest extends TestCase
                 self::assertSame(422, $invalid->getStatusCode());
                 $document = new \DOMDocument();
                 @$document->loadHTML($invalid->getContent());
-                self::assertStringContainsString($message, $document->textContent);
+                self::assertSame(1, substr_count($document->textContent, $message));
                 self::assertStringNotContainsString('Sélection d’appareils invalide.', $document->textContent);
             }
             $request = Request::create($path, 'POST', ['device_state' => $fields], ['Cacti' => 'fixture']);
