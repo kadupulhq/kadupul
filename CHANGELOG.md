@@ -9,6 +9,10 @@ follows [Semantic Versioning](VERSIONING.md).
 - Skip unauthorized graph trees before name lookup on bulk-action confirmation pages.
 
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
+
+- Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
+
+- Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
 - Migrate Data Input Methods and fields to Symfony/PHP 8.4 and Twig, with current authorization, revision checks, transaction rollback and explicit collector/whitelist retry outcomes.
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
