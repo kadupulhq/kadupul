@@ -12,6 +12,38 @@ require_once __DIR__ . '/PermissionMutation.php';
 /** Shared selection writes; authenticated controllers retain their request gate. */
 final class PermissionAssociations
 {
+    /** The first submitted add button wins, as in the authenticated user form. */
+    public static function addUserPermission(): ?bool
+    {
+        foreach (array('add_graph_x' => array(1, 'perm_graphs'), 'add_tree_x' => array(2, 'perm_trees'), 'add_host_x' => array(3, 'perm_hosts'), 'add_graph_template_x' => array(4, 'perm_graph_templates')) as $flag => [$type, $field]) {
+            if (isset_request_var($flag)) {
+                return self::writePermission(false, true, $type, get_nfilter_request_var('id'), get_nfilter_request_var($field));
+            }
+        }
+        return null;
+    }
+
+    /** Unknown removal types retain the controller's successful no-op redirect. */
+    public static function removePermission(bool $group): bool
+    {
+        foreach (array('graph' => 1, 'tree' => 2, 'host' => 3, 'graph_template' => 4) as $name => $type) {
+            if (get_request_var('type') == $name) {
+                return self::writePermission($group, false, $type, get_request_var($group ? 'group_id' : 'user_id'), get_request_var('id'));
+            }
+        }
+        return true;
+    }
+
+    private static function writePermission(bool $group, bool $associate, int $type, mixed $principal, mixed $item): bool
+    {
+        $table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
+        $column = $group ? 'group_id' : 'user_id';
+        $sql = $associate
+            ? 'REPLACE INTO ' . $table . ' (' . $column . ', item_id, type) VALUES (?, ?, ?)'
+            : 'DELETE FROM ' . $table . ' WHERE ' . $column . ' = ? AND item_id = ? AND type = ?';
+        return PermissionMutation::write($sql, array($principal, $item, $type), $group, (int) $principal);
+    }
+
     public static function apply(bool $group): ?string
     {
         $choices = $group

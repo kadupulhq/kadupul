@@ -122,7 +122,7 @@ PHP;
 }
 
 // External-link actions are covered by the Symfony Link presentation tests.
-// Palette and VDEF now use Symfony. Their presentation and authorization tests
+// Data Input Methods, Palette and VDEF now use Symfony. Their presentation and authorization tests
 // cover legacy URL rejection, GET editors, POST mutations and CSRF failures.
 function itemActionCases()
 {
@@ -200,7 +200,6 @@ function itemActionCases()
         array('automation_tree_rules.php', 'remove', array()),
         array('data_sources.php', 'ds_enable', array()),
         array('data_sources.php', 'ds_disable', array()),
-        array('data_input.php', 'field_remove', array('data_input_id' => '1')),
         array('utilities.php', 'clear_poller_cache', array()),
         array('utilities.php', 'rebuild_resource_cache', array()),
         // utilities_clear_logfile() draws the page header before it truncates the log.
@@ -234,7 +233,7 @@ test('item editors and lists still open by GET', function ($controller, $action)
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
     array('graphs_items.php', 'item_edit'), array('graph_templates_items.php', 'item_edit'),
     array('host_templates.php', 'edit'), array('tree.php', 'edit'),
-    array('host.php', 'edit'), array('data_input.php', 'field_edit'),
+    array('host.php', 'edit'),
     array('utilities.php', 'view_user_log'),
 ));
 
@@ -304,7 +303,8 @@ test('pages send the device, tree, rule, data source and utility actions by POST
     expect($source('lib/html.php'))->toMatch('/\\$classo \\.= \' cactiPostAction\';\\s+\\$post\\s+= " data-url=\'\\$href\'";/');
     expect($source('lib/html_form.php'))->toMatch('/class=\'[^\']*cactiPostAction\' data-url=\'<\\?php print html_escape\\(\\$config\\[\'url_path\'\\] \\. \\$action_url \\. \'&confirm=true\'\\)/');
     expect($source('data_sources.php'))->toMatch('/class=\'hyperLink cactiPostAction\' href=\'#\' data-url=\'<\\?php print html_escape\\(\'data_sources\\.php\\?action=ds_\'/');
-    expect($source('data_input.php'))->toMatch("/\\$\\.post\\('data_input\\.php\\?action=field_remove', \\{" . $token . '/');
+    // Migrated field deletion and whitelist confirmations use Symfony forms.
+    // DataInputPresentationTest verifies missing/forged tokens before mutation.
 
     foreach (array('clear_poller_cache', 'rebuild_resource_cache', 'purge_data_source_statistics', 'rebuild_snmpagent_cache') as $action) {
         expect($source('utilities.php'))->toMatch("/'link'\\s+=> 'utilities\\.php\\?action=$action',\\s+'post'\\s+=> true,/");
