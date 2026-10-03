@@ -548,7 +548,7 @@ PHP;
         ->and($rendered[1])->not->toContain('<script>');
 });
 
-test('report image conversion uses unpredictable temporary files with cleanup', function () use ($root) {
+test('report image conversion uses unpredictable temporary files with cleanup', function (bool $reformatted) use ($root) {
     $program = <<<'PHP'
 namespace ReportPngRuntime;
 $GLOBALS['tmpdir'] = \sys_get_temp_dir() . '/report-png-' . bin2hex(random_bytes(4));
@@ -563,10 +563,14 @@ function ImageString($image, $font, $x, $y, $string, $color) {}
 function imagejpeg($image) { echo 'jpeg'; }
 function imagegif($image) { echo 'gif'; }
 $source = file_get_contents(getcwd() . '/lib/reports.php');
-preg_match('/^function png2jpeg .*?^}\n/ms', $source, $jpeg);
-preg_match('/^function png2gif .*?^}\n/ms', $source, $gif);
-if (empty($jpeg) || empty($gif)) { exit(2); }
-eval('namespace ReportPngRuntime; ' . $jpeg[0] . $gif[0]);
+if ($argv[1] === 'reformatted') {
+    // Column-zero nested closing braces remain valid PHP.
+    $source = preg_replace('/^[ \t]+}/m', '}', $source);
+}
+require_once getcwd() . '/tests/Helpers/PhpSource.php';
+$jpeg = \test_php_function_source($source, 'png2jpeg');
+$gif = \test_php_function_source($source, 'png2gif');
+eval('namespace ReportPngRuntime; ' . $jpeg . $gif);
 $GLOBALS['decode_ok'] = true;
 $jpegData1 = png2jpeg('png-data-1');
 $jpegData2 = png2jpeg('png-data-2');
@@ -579,7 +583,7 @@ echo json_encode(array($jpegData1, $jpegData2, $gifData, $remaining, $unique, co
 PHP;
 
     $process = proc_open(
-        array(PHP_BINARY, '-r', $program),
+        array(PHP_BINARY, '-r', $program, $reformatted ? 'reformatted' : 'original'),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes,
         $root
@@ -596,4 +600,4 @@ PHP;
 
     expect($exit)->toBe(0, $stderr)
         ->and(json_decode($stdout, true))->toBe(array('jpeg', 'jpeg', 'gif', array(), 3, 3));
-});
+})->with(['original layout' => false, 'column-zero nested braces' => true]);

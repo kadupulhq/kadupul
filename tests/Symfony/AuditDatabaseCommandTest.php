@@ -169,7 +169,12 @@ final class AuditDatabaseCommandTest extends TestCase
 
                 self::assertSame(1, $tester->execute($arguments), $failure . ' baseline should fail the legacy command');
                 self::assertStringContainsString('FATAL:', $tester->getDisplay());
-                self::assertStringContainsString('Audit stopped because the canonical schema could not be loaded.', $tester->getDisplay());
+                $expected = match ($failure) {
+                    'missing' => 'FATAL: Failed to find Audit Schema',
+                    'unparsable' => 'FATAL: Failed Load the Audit Schema',
+                    'reload' => 'FATAL: Failed Load the Audit Schema',
+                };
+                self::assertStringContainsString($expected, $tester->getDisplay());
                 self::assertStringNotContainsString('Checking Table:', $tester->getDisplay());
                 self::assertStringNotContainsString('Audit was clean', $tester->getDisplay());
             }
@@ -211,7 +216,7 @@ final class AuditDatabaseCommandTest extends TestCase
         foreach ($expected as $failure => [$legacy, $human]) {
             $this->presentation->forLegacy(LegacyRequest::Run);
             $tester = $this->tester(null, $this->failedBaselineStore($failure));
-            self::assertSame(0, $tester->execute(['--create' => true]));
+            self::assertSame(1, $tester->execute(['--create' => true]));
             self::assertSame($legacy . "\n", $tester->getDisplay());
             $this->presentation = new CliPresentation();
             $tester = $this->tester(null, $this->failedBaselineStore($failure));
@@ -235,7 +240,7 @@ final class AuditDatabaseCommandTest extends TestCase
         self::assertStringNotContainsString('canonical schema', $tester->getDisplay());
         $this->presentation->forLegacy(LegacyRequest::Run);
         $tester = $this->tester(null, $store);
-        self::assertSame(0, $tester->execute(['--load' => true]));
+        self::assertSame(1, $tester->execute(['--load' => true]));
         self::assertSame(implode("\n", ['Importing Table: host - Done', 'Importing Table: settings - Done', '', 'Exporting Table Audit Table Creation Logic to ' . $this->root . '/docs/audit_schema.sql', 'Finished Creating Audit Schema with ERROR', '']) . "\n", $tester->getDisplay());
     }
 
@@ -387,7 +392,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $this->presentation->forLegacy(LegacyRequest::Run);
         $tester = $this->tester(null, $this->store('table_columns'));
 
-        self::assertSame(0, $tester->execute(['--create' => true]));
+        self::assertSame(1, $tester->execute(['--create' => true]));
         self::assertSame("Failed to create 'table_columns'", $tester->getDisplay());
     }
 
@@ -449,6 +454,21 @@ final class AuditDatabaseCommandTest extends TestCase
         $none = $this->tester();
         self::assertSame(0, $none->execute(['--upgrade' => true]));
         self::assertSame(implode("\n", $this->help()) . "\n", $none->getDisplay());
+    }
+
+    public function testLegacyMissingBaselineFailsWithoutCleanOrRepairSuccess(): void
+    {
+        foreach (['--report', '--repair', '--create'] as $mode) {
+            $this->presentation->forLegacy(LegacyRequest::Run);
+            $store = $this->createMock(AuditBaselineStore::class);
+            $store->method('read')->willReturn(null);
+            $store->expects(self::never())->method('reset');
+            $store->expects(self::never())->method('replace');
+            $schema = $this->schema();
+            $tester = $this->tester($schema, $store);
+            self::assertSame(1, $tester->execute([$mode => true]));
+            self::assertSame("FATAL: Failed to find Audit Schema\n", $tester->getDisplay());
+        }
     }
 
     public function testLegacyVersion(): void

@@ -143,10 +143,8 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
             return [...$lines, ...self::load($report)];
         }
         $lines = [...$lines, ...self::baseline($report, $prefix)];
-
-        if (in_array($report->mode, [AuditMode::Report, AuditMode::Repair, AuditMode::Alters], true)
-            && in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)) {
-            return [...$lines, 'FATAL: Audit stopped because the canonical schema could not be loaded.'];
+        if (in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)) {
+            return $lines;
         }
 
         return match ($report->mode) {

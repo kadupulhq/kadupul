@@ -16,7 +16,8 @@ from cli_parity_scenarios import ROOT, clock_free, install_original, normalise, 
 from cli_schema_scenarios import REFUSED, compare, realm_fallback, verify_refusals
 
 AUDIT_ORIGINAL = 'tests/Fixtures/legacy-cli/audit_database.php'
-AUDIT_SHIM = 'cli/audit_database.php'
+# The production CLI remains legacy; test the native adapter through its bridge.
+AUDIT_SHIM = 'tests/Fixtures/native-cli/audit_database.php'
 AUDIT_UTILITY = 'Kadupul Database Audit Utility'
 DOCS = f'{ROOT}/docs'
 DUMP = f'{DOCS}/audit_schema.sql'
@@ -249,6 +250,7 @@ def found(harness):
 
 def verify_audit(harness, check, admin):
     install_original(harness, AUDIT_ORIGINAL)
+    install_original(harness, AUDIT_SHIM)
     version = harness.sql('SELECT cacti FROM version').strip()
     # Taken before anything is set up, so a restore that misses a change
     # fails the final check instead of hiding.
@@ -271,6 +273,16 @@ def verify_audit(harness, check, admin):
         proposed = touched_tables(harness, version)
         backup(harness, [table for table in proposed if table not in tables])
         tables = proposed
+        # The supported compatibility entry point remains a separate production
+        # implementation. Execute it as well as the native adapter and retain
+        # its measured source in the coverage acceptance contract.
+        compared = compare(
+            harness, check, 'retained audit compatibility report on a clean schema',
+            (AUDIT_ORIGINAL, 'cli/audit_database.php'), ['--report'], None,
+            lambda h: reset(h, 'clean', tables, version), schema, AUDIT_UTILITY,
+            stdout=masked, log_filter=log_masked)
+        check(compared['shim']['exit'] == 0,
+              'retained audit compatibility report executes successfully')
         verify_audit_cases(harness, check, tables, version)
         verify_audit_shim_only(harness, check, admin, tables, version)
     finally:
@@ -291,25 +303,20 @@ def verify_audit_cases(harness, check, tables, version):
             dumps.append(dump_file(h))
             reset(h, state, tables, version)
 
-        if state in ('no dump', 'unparsable') and arguments[0] in ('--report', '--alters', '--repair', '--create'):
-            # These are intentionally no longer parity cases: a missing or
-            # invalid canonical baseline must fail closed instead of reporting
-            # unknown tables as a clean audit or entering repair.
+        if state in ('no dump', 'unparsable', 'create denied'):
             starting(harness)
-            before = schema(harness)
-            shim = run(harness, AUDIT_SHIM, arguments)
-            expected_exit = 0 if arguments[0] == '--create' else 1
-            check(shim['exit'] == expected_exit and 'FATAL:' in shim['stdout']
-                  and (('Audit stopped because the canonical schema could not be loaded.' in shim['stdout'])
-                       == (arguments[0] != '--create'))
-                  and 'Checking Table:' not in shim['stdout']
-                  and 'Scanning Table:' not in shim['stdout']
-                  and 'Audit was clean' not in shim['stdout']
-                  and 'Executing Alter for Table :' not in shim['stdout'],
-                  f'{label}: invalid canonical baseline stops the command with a failure')
-            check(schema(harness) == before, f'{label}: invalid canonical baseline changes no database state')
+            original = run(harness, AUDIT_ORIGINAL, arguments)
+            starting(harness)
+            start = schema(harness)
+            native = run(harness, AUDIT_SHIM, arguments)
+            expected = ("Failed to create 'table_columns'" if state == 'create denied' else
+                        'FATAL: Failed Load the Audit Schema\nERROR: docs/audit_schema.sql line 1 does not parse\n' if state == 'unparsable' else
+                        'FATAL: Failed to find Audit Schema\n')
+            check(original['exit'] == 0, f'{label}: frozen original records its historical success exit on baseline failure')
+            check(native == {'exit': 1, 'stdout': expected, 'stderr': ''},
+                  f'{label}: native command fails without claiming a clean audit')
+            check(schema(harness) == start, f'{label}: refused native audit preserves all schema and baseline state')
             continue
-
         unparsed = label == UNPARSED
         stdout = (lambda text: LOAD_ERROR.sub('ERROR: <load error>', masked(text), count=1)) if unparsed else masked
         stderr_filter = (lambda text: CLIENT_ERROR.sub('', text)) if unparsed else None
