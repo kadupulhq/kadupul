@@ -192,11 +192,27 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT poller_id FROM collector_second.poller_item WHERE local_data_id={data}').strip() == str(second), 'remote-to-remote move transfers polling ownership')
         harness.sql("CREATE TRIGGER collector_second.reject_collector_cleanup BEFORE DELETE ON collector_second.host FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='collector cleanup fixture rejection'")
         cleanup_trigger = True
+        audit_message = 'assigned device collector for device ' + str(device_id)
+        def success_audit_count():
+            result = harness.php('-r', 'require "include/global.php"; echo substr_count(file_get_contents(cacti_log_file()), ' + json.dumps(audit_message) + ');')
+            if result['exit'] != 0 or not result['stdout'].strip().isdigit():
+                raise RuntimeError('Collector success audit could not be read')
+            return int(result['stdout'].strip())
+        audit_before = success_audit_count()
         check(form.assign(1) == 502, 'collector cleanup failure cannot report success')
-        check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == str(second), 'collector cleanup failure rolls back primary ownership')
+        check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == '1'
+              and harness.sql(f'SELECT poller_id FROM poller_item WHERE local_data_id={data}').strip() == '1',
+              'collector cleanup failure retains committed primary ownership and polling rows')
+        check(harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '1',
+              'collector cleanup failure leaves a recoverable old host copy')
+        check(success_audit_count() == audit_before, 'collector cleanup failure emits no success audit')
         harness.sql('DROP TRIGGER collector_second.reject_collector_cleanup')
         cleanup_trigger = False
         check(form.assign(1) == 200, 'collector reassignment can return to primary')
+        check(form.assign(second) == 200 and form.assign(1) == 200
+              and harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '0'
+              and harness.sql(f'SELECT COUNT(*) FROM collector_second.poller_item WHERE host_id={device_id}').strip() == '0',
+              'collector reassignment recovers old host and polling residue through confirmed moves')
         harness.sql("CREATE TRIGGER create_remote.reject_collector_graph BEFORE INSERT ON create_remote.host_graph FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='collector fixture rejection'")
         trigger = True
         check(form.assign(poller) == 502, 'collector replication failure cannot report success')
