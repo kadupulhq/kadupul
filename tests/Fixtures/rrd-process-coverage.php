@@ -95,6 +95,9 @@ if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
 }
 
 if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/ping.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/api_automation.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/ldap.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/database.php');
@@ -307,7 +310,7 @@ if (defined('DATA_INPUT_LIST_TEST_COVERAGE')) {
     }
     $dataInputListEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/data-input-list-native.php', DATA_INPUT_LIST_NATIVE_SCENARIO, $listSources);
 }
-if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE') || defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
+if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE') || defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
     foreach ($coverageFilter->files() as $file) {
@@ -339,10 +342,6 @@ if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST
     } elseif (defined('UTILITY_LOG_TEST_COVERAGE')) {
         $nativeSources[] = 'tests/Symfony/UtilityLogPersistenceTest.php';
         $nativeProducer = 'tests/Fixtures/utility-log-native.php';
-    } elseif (defined('STRING_PREDICATE_TEST_COVERAGE')) {
-        $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/StringPredicateNativeTest.php', 'include/global_constants.php', 'lib/html.php'));
-        $nativeProducer = 'tests/Fixtures/string-predicates-native.php';
-        $nativeScenario = 'native-string-predicates';
     } elseif (defined('PHP80_STRING_NATIVE_TEST_COVERAGE')) {
         $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/Php80StringNativeTest.php', 'include/global_constants.php'));
         $nativeProducer = 'tests/Fixtures/php80-string-native.php';
@@ -402,6 +401,21 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
                 throw new RuntimeException('Native coverage production scenario did not complete.');
             }
             NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeCoverageEvidence'], NATIVE_COVERAGE_COMPLETED);
+        }
+        if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+            // This producer has its own runtime, PCRE, result and coverage receipt.
+            $root = dirname(__DIR__, 2);
+            require_once $root . '/tests/Helpers/PredicateNativeEvidence.php';
+            $result = file_get_contents(RRD_TEST_COVERAGE_DIRECTORY . '/result.json');
+            if ($result === false) {
+                throw new RuntimeException('Predicate coverage assertions missing');
+            }
+            $receipt = PredicateNativeEvidence::capture($root, $result);
+            $receipt['artifact'] = hash('sha256', $serializedCoverage);
+            $json = json_encode($receipt, JSON_THROW_ON_ERROR);
+            if (file_put_contents($childCoverageFile . '.json', $json) !== strlen($json)) {
+                throw new RuntimeException('Predicate coverage evidence missing');
+            }
         }
         if (defined('CSRF_ROTATION_TEST_COVERAGE')) {
             require_once dirname(__DIR__) . '/Helpers/CsrfRotationCoverage.php';
