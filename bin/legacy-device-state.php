@@ -36,6 +36,7 @@ require_once __DIR__ . '/../lib/utility.php';
 
 $status = 'failed';
 $transactionStarted = false;
+$snmpTransactions = [];
 $associationsCommitted = false;
 $pendingQueries = [];
 try {
@@ -48,8 +49,9 @@ try {
     $syncTemplates = is_array($command) && ($command['operation'] ?? null) === 'sync-template';
     $changeOptions = is_array($command) && ($command['operation'] ?? null) === 'options';
     $assignDevices = is_array($command) && ($command['operation'] ?? null) === 'assign';
-    $preserveState = $clearStatistics || $syncTemplates || $changeOptions || $assignDevices;
-    if (!is_array($command) || array_diff(array_keys($command), $assignDevices ? ['actor', 'selection', 'operation', 'kind', 'target'] : ($changeOptions ? ['actor', 'selection', 'operation', 'changes'] : ($preserveState ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled']))) !== []
+    $changeSnmp = is_array($command) && ($command['operation'] ?? null) === 'snmp';
+    $preserveState = $clearStatistics || $syncTemplates || $changeOptions || $assignDevices || $changeSnmp;
+    if (!is_array($command) || array_diff(array_keys($command), $assignDevices ? ['actor', 'selection', 'operation', 'kind', 'target'] : (($changeOptions || $changeSnmp) ? ['actor', 'selection', 'operation', 'changes'] : ($preserveState ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled']))) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0
         || !is_array($command['selection'] ?? null) || (!$preserveState && !is_bool($command['enabled'] ?? null))) {
         throw new RuntimeException('Invalid command');
@@ -59,6 +61,9 @@ try {
     }
     $assignment = $assignDevices ? new \Kadupul\Inventory\Domain\DeviceBulkAssignment($command['kind'] ?? '', $command['target'] ?? -1) : null;
     $assignmentWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceBulkAssignmentWriter();
+    $snmpChange = $changeSnmp ? new \Kadupul\Inventory\Domain\DeviceBulkSnmpChange($command['changes'] ?? []) : null;
+    $snmpWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceSnmpWriter();
+    $resolvedSnmp = [];
     $optionsChange = $changeOptions ? new \Kadupul\Inventory\Domain\DeviceOptionsChange($command['changes'] ?? []) : null;
     $optionsWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceOptionsWriter();
     $selection = new DeviceSelection($command['selection']);
@@ -114,6 +119,15 @@ try {
         }
         $device = LegacyDeviceStates::state($row);
         $device->assertRevision($selection->revisions[$device->id]);
+        if ($changeSnmp) {
+            $stored = $read($connection, 'SELECT snmp_version, snmp_auth_protocol, snmp_priv_protocol, snmp_context, snmp_engine_id, snmp_community, snmp_username, snmp_password, snmp_priv_passphrase FROM host WHERE id = ? FOR UPDATE', [$device->id]);
+            try {
+                $resolvedSnmp[$device->id] = new \Kadupul\Inventory\Domain\DeviceSnmpConfiguration($snmpChange->resolve(array_map(static fn($value): string => (string) $value, $stored[0])));
+            } catch (InvalidArgumentException) {
+                $status = 'snmp_invalid';
+                throw new RuntimeException('SNMP settings and stored credentials are incompatible.');
+            }
+        }
         $remoteMatches = true;
         if ($device->pollerId > 1) {
             if (!isset($remotes[$device->pollerId])) {
@@ -162,7 +176,39 @@ try {
         // Legacy SQL helpers retain their last error even after later successes.
         // Check it without exposing diagnostics or credentials to the parent.
         $database_last_error = '';
-        if ($assignDevices) {
+        if ($changeSnmp) {
+            // Verify persistent InnoDB participants on the exact sessions used
+            // by the writer and legacy cache helpers, before their first write.
+            (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($connection))->run(
+                static fn(): bool => true,
+                ['host', 'host_snmp_query', 'poller_reindex', 'poller_item', 'data_input_data', 'settings']
+            );
+            // Each cached remote connection participates in the worker's batch.
+            // A later primary/cache/hook failure must not commit remote secrets.
+            ksort($remotes, SORT_NUMERIC);
+            foreach ($remotes as $pollerId => $remote) {
+                if ($remote->inTransaction()) {
+                    throw new RuntimeException('Collector SNMP transaction unavailable');
+                }
+                (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($remote))->run(
+                    static fn(): bool => true,
+                    ['host', 'host_snmp_query', 'poller_reindex', 'poller_item']
+                );
+                if (!$remote->beginTransaction()) {
+                    throw new RuntimeException('Collector SNMP transaction unavailable');
+                }
+                $snmpTransactions[$pollerId] = $remote;
+            }
+            foreach ($changed as $device) {
+                $snmpWriter->apply($connection, $device, $resolvedSnmp[$device->id]);
+            }
+            foreach ($changed as $device) {
+                if (isset($remotes[$device->pollerId])) {
+                    $snmpWriter->apply($remotes[$device->pollerId], $device, $resolvedSnmp[$device->id]);
+                }
+                push_out_host($device->id);
+            }
+        } elseif ($assignDevices) {
             foreach ($changed as $device) {
                 $assignmentWriter->apply($connection, $remotes, $device, $assignment);
             }
@@ -193,7 +239,7 @@ try {
         } elseif (!api_device_disable_devices(array_keys($changed))) {
             throw new RuntimeException('Disabling devices failed');
         }
-        $action = ($changeOptions || $assignDevices) ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3')));
+        $action = ($changeOptions || $assignDevices || $changeSnmp) ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3')));
         if (!$syncTemplates && !$changeOptions) {
             set_request_var('drp_action', $action);
             snmpagent_device_action_bottom([$action, $ids]);
@@ -229,6 +275,12 @@ try {
             || (int) $verify[0]['host_template_id'] !== $device->templateId
             || (!$preserveState && !$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
             throw new RuntimeException('Device state could not be confirmed');
+        }
+        if ($changeSnmp) {
+            $snmpWriter->verify($connection, $device, $resolvedSnmp[$device->id]);
+            if (isset($remotes[$device->pollerId])) {
+                $snmpWriter->verify($remotes[$device->pollerId], $device, $resolvedSnmp[$device->id]);
+            }
         }
         if ($changeOptions) {
             $optionsWriter->verify($connection, $device, $optionsChange);
@@ -267,6 +319,12 @@ try {
     }
     $transactionStarted = false;
     $associationsCommitted = true;
+    foreach ($snmpTransactions as $pollerId => $remote) {
+        if (!$remote->inTransaction() || !$remote->commit()) {
+            throw new RuntimeException('Collector SNMP commit failed');
+        }
+        unset($snmpTransactions[$pollerId]);
+    }
     if ($assignDevices && $assignment->kind === 'collector') {
         $previousOwners = array_map(static fn($device): int => $device->pollerId, $changed);
         (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $remotes, $previousOwners, $assignment->targetId);
@@ -317,14 +375,27 @@ try {
         }
     }
     $status = 'ok';
-    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($assignDevices ? 'assigned ' . $assignment->kind : ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled'))))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
+    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($changeSnmp ? 'changed SNMP settings' : ($assignDevices ? 'assigned ' . $assignment->kind : ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled')))))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = $associationsCommitted ? 'failed' : 'conflict';
 } catch (Throwable) {
     // Remote effects may survive a primary rollback; never report false success.
 } finally {
+    foreach ($snmpTransactions as $remote) {
+        try {
+            if ($remote->inTransaction()) {
+                $remote->rollBack();
+            }
+        } catch (Throwable) {
+            // The operation remains failed; retain a controlled result envelope.
+        }
+    }
     if ($transactionStarted && $connection->inTransaction()) {
-        db_rollback_transaction($connection);
+        try {
+            db_rollback_transaction($connection);
+        } catch (Throwable) {
+            // Never replace an uncertain outcome with a success response.
+        }
     }
 }
 while (ob_get_level() > 0) {

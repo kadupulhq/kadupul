@@ -43,7 +43,7 @@ final class DeviceMutationSelection
                 }
             }
         }
-        $rows = $read($connection, "SELECT id, description, hostname, disabled, status, site_id, poller_id, host_template_id, location, device_threads, snmp_port, snmp_timeout, max_oids, bulk_walk_size, availability_method, ping_method, ping_port, ping_timeout, ping_retries FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id FOR UPDATE", $ids);
+        $rows = $read($connection, "SELECT id, description, hostname, disabled, status, site_id, poller_id, host_template_id, location, device_threads, snmp_port, snmp_timeout, max_oids, bulk_walk_size, availability_method, ping_method, ping_port, ping_timeout, ping_retries, snmp_version, snmp_auth_protocol, snmp_priv_protocol, snmp_context, snmp_engine_id FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id FOR UPDATE", $ids);
         if (count($rows) !== count($ids)) {
             $markStatus('missing');
             throw new RuntimeException('Devices unavailable');
