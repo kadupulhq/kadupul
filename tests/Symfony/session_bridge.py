@@ -31,6 +31,12 @@ def main():
     args = parser.parse_args()
     database_sessions = args.database_sessions
     harness = Harness(SimpleNamespace(project=args.project, target='symfony-auth'))
+    command = harness.command
+    def installer_allowance(*arguments, check=False):
+        if 'cli/install_cacti.php' in arguments:
+            return harness.compose('exec', '-T', '-u', 'www-data', 'web', *arguments, check=check, timeout=600)
+        return command(*arguments, check=check)
+    harness.command = installer_allowance
     if args.coverage_output:
         from coverage_support import configure_coverage
         configure_coverage(harness, args.coverage_output)
@@ -108,6 +114,8 @@ def main():
                   'legacy database session handler owns the authenticated session')
         check(session.request('/public/index.php/session').get('json') == expected,
               'Symfony public entry owns authentication for the same session')
+        from data_input_scenarios import verify_data_inputs
+        verify_data_inputs(harness, session, check)
         from about_authentication_scenarios import verify_about_authentication
         verify_about_authentication(harness, user_id, database_sessions, check)
         from about_scenarios import verify_about
