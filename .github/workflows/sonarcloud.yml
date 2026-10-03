@@ -16,7 +16,7 @@ concurrency:
 jobs:
   analyze:
     name: SonarQube Cloud analysis
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Fork and Dependabot pull requests get no secrets, so the scan cannot authenticate there.
     if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
     permissions:
@@ -147,6 +147,9 @@ jobs:
           set -euo pipefail
           mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --coverage-output "$RUNNER_TEMP/symfony-files"
           mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions --coverage-output "$RUNNER_TEMP/symfony-database"
+
+      - name: Data input HTTP and MariaDB contract
+        run: mise exec python@3.12.12 -- python tests/Symfony/data_input_review_http.py
 
       - name: Offline builder and compatibility-tool coverage
         run: |

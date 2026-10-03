@@ -2557,7 +2557,6 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
             /* note the current item_id for easy access */
             $graph_item_id = $graph_item['graph_templates_item_id'];
-            $safe_graph_item_value = rrdtool_graph_item_numeric_value($graph_item['value']);
 
             /* loop through each field that we want to substitute values for:
             currently: text format and value */
@@ -2683,6 +2682,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
     if (cacti_sizeof($graph_items)) {
         foreach ($graph_items as $graph_item) {
+            $safe_graph_item_value = rrdtool_graph_item_numeric_value($graph_item['value']);
             // ToDO: The code blcok appears to not be required as at the end of the block
             // we simply discard the $cf_id for the computed 'cf_reference' that was
             // computed previously.
@@ -3075,7 +3075,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                         $txt_graph_items .= 'AREA:' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . ':STACK';
 
-                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && $safe_graph_item_value !== '' && (float) $safe_graph_item_value > 0) {      # create a SHIFT statement
+                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && abs((float) $safe_graph_item_value) > 0) {      # create a SHIFT statement
                             $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($safe_graph_item_value);
                         }
 
@@ -3087,7 +3087,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                         $txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . $dash;
 
-                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && $safe_graph_item_value !== '' && (float) $safe_graph_item_value > 0) {      # create a SHIFT statement
+                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && abs((float) $safe_graph_item_value) > 0) {      # create a SHIFT statement
                             $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($safe_graph_item_value);
                         }
 
@@ -3097,7 +3097,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                         $txt_graph_items .= 'LINE' . $graph_item['line_width'] . ':' . $data_source_name . $graph_item_color_code . ':' . rrdtool_pipe_quote($text_format . $hardreturn[$graph_item_id]) . ':STACK' . $dash;
 
-                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && $safe_graph_item_value !== '' && (float) $safe_graph_item_value > 0) {      # create a SHIFT statement
+                        if ($graph_item['shift'] == CHECKED && $safe_graph_item_value !== null && abs((float) $safe_graph_item_value) > 0) {      # create a SHIFT statement
                             $txt_graph_items .= RRD_NL . 'SHIFT:' . $data_source_name . ':' . rrdtool_pipe_quote($safe_graph_item_value);
                         }
 

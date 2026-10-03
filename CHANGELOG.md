@@ -6,6 +6,16 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Preserve each graph item's numeric SHIFT or TICK value, including backward shifts; validate numeric fields only when rendering uses them.
+
+- Keep permission writes and session epochs consistent, including failed writes and absent deletions.
+
+- Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
+
+- Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
+- Migrate Data Input Methods and fields to Symfony/PHP 8.4 and Twig, with current authorization, revision checks, transaction rollback and explicit collector/whitelist retry outcomes.
+- Retain old collector polling copies until primary assignment commits, repair missing associations on unchanged template assignments, and preserve remote enabled-state drift during bulk site/template changes.
+
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
@@ -53,6 +63,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
+
 - Exercise user-log cleanup against real MySQL and MariaDB, preserving each current account's latest login and token while removing failed and orphaned entries; collect coverage from the actual controller.
 
 - Exercise local login, password changes, logout, user/group realm and permission changes, and report ownership/persistence through native production files with isolated SQL fixtures. Part of #699.
@@ -60,6 +72,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
+- Invalidate the affected user or group members' permission caches after removing a typed permission exception.
+- Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
 - Run binary SNMP get, getnext and walk commands through Symfony Process argument arrays, keeping hostnames and SNMP credentials intact as single arguments on Windows. Fixes #531.
 - Bind the data-query output type when rebuilding poller cache entries and skip malformed values, so stored field text cannot alter the SQL query. Fixes #533.
@@ -169,6 +183,14 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
+
+- Add Symfony bulk site, template and collector assignments with whole-selection validation, primary rollback and verified collector replication.
+
+- Add Symfony bulk location and polling option edits with explicit field selection, domain validation, stale-option protection and verified collector writes.
+
+- Migrate device template synchronization to a Symfony confirmation and Inventory use case with current template locks and verified collector associations.
+- Fix bulk template synchronization to discover after association commit, reject unconfirmed collector identity before action 7, repair cached missing associations, and preserve no-op coverage checks.
 - Represent database table analysis results with typed immutable outcomes while preserving CLI text, JSON output and failure exit codes. Related to #682 and #683.
 - Declare precise union return contracts for existing filename, command, CSP process-owner and RRD maintenance helpers while preserving success, failure and empty-output behavior. Related to #717.
 
@@ -176,6 +198,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Reuse common row-count option rendering in automation previews while preserving each row filter.
 
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
+
 - Run legacy `exec_into_array()` commands through Symfony Process while preserving its public signature, stdout line array, exit-status handling, and unlimited wait behavior. Retain the native `exec()` path if Process cannot start because `proc_open()` is unavailable. Tracks #482.
 - Isolate Cacti session release and timezone-cookie handling in the legacy web context adapter used before one-off local RRDtool processes.
 

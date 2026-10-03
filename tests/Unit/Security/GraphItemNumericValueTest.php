@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 namespace Kadupul\Tests\Unit\Security;
@@ -29,22 +29,5 @@ final class GraphItemNumericValueTest extends TestCase
         foreach (["1\nupdate /tmp/rrd.rrd N:1", "1\rupdate /tmp/rrd.rrd N:1", '1 update /tmp/rrd.rrd N:1', '1:2', 'NaN'] as $value) {
             self::assertNull(rrdtool_graph_item_numeric_value($value));
         }
-    }
-
-    public function testGraphSinksQuoteValidatedValueAndFormsRejectNewlineSuffixes(): void
-    {
-        $root = dirname(__DIR__, 3);
-        $rrdSource = file_get_contents($root . '/lib/rrd.php');
-        $graphItemsSource = file_get_contents($root . '/graphs_items.php');
-        $templateItemsSource = file_get_contents($root . '/graph_templates_items.php');
-
-        self::assertIsString($rrdSource);
-        self::assertIsString($graphItemsSource);
-        self::assertIsString($templateItemsSource);
-        self::assertStringContainsString('rrdtool_pipe_quote($safe_graph_item_value)', $rrdSource);
-        self::assertStringContainsString('$save[\'value\']', $graphItemsSource);
-        self::assertStringContainsString('$save[\'value\']', $templateItemsSource);
-        self::assertStringContainsString('\\\\z', $graphItemsSource);
-        self::assertStringContainsString('\\\\z', $templateItemsSource);
     }
 }
