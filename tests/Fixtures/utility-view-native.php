@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,24 +13,41 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+$managerView = $scenario['view'] === 'manager';
+$debugView = $scenario['view'] === 'debug';
+$cleanerView = $scenario['view'] === 'cleaner';
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
 file_put_contents($directory . '/include/auth.php', '<?php');
 symlink($root . '/lib', $directory . '/lib');
 chdir($directory);
-$_SERVER['PHP_SELF'] = 'utilities.php';
-$_SERVER['SCRIPT_NAME'] = 'utilities.php';
-$_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['PHP_SELF'] = $managerView ? 'managers.php' : ($debugView ? 'data_debug.php' : ($cleanerView ? 'rrdcleaner.php' : 'utilities.php'));
+$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'];
+$_SERVER['REQUEST_METHOD'] = $scenario['method'] ?? 'GET';
+$_SERVER['REQUEST_URI'] = '/' . $_SERVER['PHP_SELF'] . '?' . http_build_query($scenario['request']);
+if (isset($scenario['csrf_valid'])) {
+    $_POST['__csrf_magic'] = 'isolated-csrf-boundary';
+}
+function csrf_check($fatal)
+{
+    // Explicit admission boundary; no installed CSRF authentication claim.
+    return $GLOBALS['scenario']['csrf_valid'] ?? false;
+}
 session_start();
 $_SESSION = array('sess_user_id' => 99, 'sentinel' => 'preserved');
 $config = array('base_path' => $root, 'poller_id' => 1, 'connection' => 'online', 'url_path' => '/', 'is_web' => false, 'cacti_version' => 'native', 'cacti_server_os' => 'unix', 'config_options_array' => array('num_rows_table' => 2, 'selected_theme' => 'classic', 'autocomplete_enabled' => '', 'path_cactilog' => $directory . '/cacti.log', 'path_stderrlog' => $directory . '/stderr.log', 'max_display_rows' => 2, 'log_refresh_interval' => 300, 'guest_user' => 0, 'auth_method' => 0));
-$no_session_write = array('utilities.php');
+$no_session_write = array('utilities.php', 'managers.php');
 $messages = array();
 $themes = array('classic' => 'Classic');
 $item_rows = $scenario['choices'] ?? array(1 => 'One', 2 => 'Two & more', 10 => 'Ten');
 $auth_realms = array(0 => 'Local & trusted');
 $poller_actions = array(0 => 'SNMP', 1 => 'Script', 2 => 'Script Server');
 $_REQUEST = array_merge(array('action' => 'native_fixture', 'header' => 'false'), $scenario['request']);
+if ($managerView || $debugView || $cleanerView) {
+    $_REQUEST['action'] = $scenario['request']['action'] ?? '';
+    $config['config_options_array']['auth_cache_enabled'] = '';
+    $config['config_options_array']['user_auto_logout_time'] = 0;
+}
 $log_tail_lines = array(-1 => 'Default', 2 => 'Two', 10 => 'Ten');
 $page_refresh_interval = array(60 => 'One minute', 300 => 'Five minutes');
 file_put_contents($directory . '/cacti.log', "STATS Device[1] DS[101] Alpha & <script>\nWARN Beta\nERROR Gamma\nDEBUG Delta\nPlain Fifth\n");
@@ -50,6 +69,13 @@ if ($boost) {
     $database_sessions = array('native-fixture:3306:' . $ownedDatabase => $db);
 } else {
     $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    if ($managerView) {
+        // SQLite dialect boundary for the unchanged production hostname sort.
+        // Like MySQL, invalid IPv4 names yield NULL; the SQL still orders names.
+        $db->sqliteCreateFunction('INET_ATON', static function ($value) {
+            return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false ? (int) sprintf('%u', ip2long($value)) : null;
+        }, 1);
+    }
 }
 $db->exec("CREATE TABLE settings_user(user_id INTEGER, name TEXT, value TEXT);
 INSERT INTO settings_user VALUES(99, 'selected_theme', 'classic');
@@ -84,7 +110,27 @@ CREATE TABLE snmpagent_notifications_log(id INTEGER, manager_id INTEGER, notific
 INSERT INTO snmpagent_cache VALUES('1.1','Name & <script>','MIB-A','read-only','Scalar','Value & <script>','Description & <script>'),('1.2','Other','MIB-A','read-write','Column Data','Second',''),('1.3','Foreign','MIB-B','not-accessible','Table','unused','');
 INSERT INTO snmpagent_managers VALUES(1,'Receiver & <script>'),(2,'Foreign receiver');
 INSERT INTO snmpagent_notifications_log VALUES(1,1,'Name & <script>',1,100,'Bind & <script>'),(2,1,'Other',3,200,'Second'),(3,2,'Foreign',4,300,'Foreign');");
+if ($managerView) {
+    $db->exec("INSERT INTO settings_user VALUES(99,'user_auto_logout_time','0');");
+    $db->exec("ALTER TABLE snmpagent_managers ADD COLUMN description TEXT;
+ALTER TABLE snmpagent_managers ADD COLUMN disabled TEXT;
+UPDATE snmpagent_managers SET hostname='192.0.2.10', description='Receiver Alpha & <script>', disabled='' WHERE id=1;
+UPDATE snmpagent_managers SET hostname='192.0.2.2', description='Receiver Beta', disabled='on' WHERE id=2;
+INSERT INTO snmpagent_managers VALUES(3,'192.0.2.30','Receiver Gamma','');
+CREATE TABLE snmpagent_managers_notifications(manager_id INTEGER, notification TEXT, disabled TEXT DEFAULT '', mib TEXT, PRIMARY KEY(manager_id,notification,mib));
+UPDATE snmpagent_cache SET kind='Notification';
+INSERT INTO snmpagent_managers_notifications VALUES(1,'Name & <script>','','MIB-A'),(1,'Other','on','MIB-A'),(2,'Foreign','','MIB-B');");
+    if ($scenario['hostname_markup'] ?? false) {
+        $db->exec("UPDATE snmpagent_managers SET hostname='Receiver & <script>' WHERE id=1;");
+    }
+}
 $tables = array('user_auth', 'user_log', 'host', 'snmp_query', 'host_snmp_cache', 'data_template', 'data_local', 'data_template_data', 'poller_item', 'settings_user', 'snmpagent_cache', 'snmpagent_managers', 'snmpagent_notifications_log');
+if ($debugView || $cleanerView) {
+    require __DIR__ . '/data-debug-records.php';
+}
+if ($managerView) {
+    $tables[] = 'snmpagent_managers_notifications';
+}
 if ($boost) {
     $db->exec("CREATE TABLE settings(name VARCHAR(100) PRIMARY KEY, value TEXT);
 CREATE TABLE poller_output_boost(local_data_id INTEGER, output VARCHAR(100)) ENGINE=InnoDB;
@@ -121,6 +167,11 @@ $queries = array();
 function db_fetch_assoc_prepared($sql, $params = array())
 {
     $GLOBALS['queries'][] = array($sql, $params);
+    if ($GLOBALS['cleanerView']) {
+        // MySQL resolves this ordering to the selected rc.name; SQLite treats
+        // its quoted identifier as ambiguous with the joined template name.
+        $sql = str_replace('ORDER BY `name`', 'ORDER BY rc.name', $sql);
+    }
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
     return $q->fetchAll(PDO::FETCH_ASSOC);
@@ -129,14 +180,43 @@ function db_fetch_row_prepared($sql, $params = array())
 {
     return db_fetch_assoc_prepared($sql, $params)[0] ?? array();
 }
+function db_fetch_row($sql)
+{
+    if ($GLOBALS['cleanerView'] && $sql === "SHOW TABLE STATUS LIKE 'data_source_purge_temp'") {
+        // SQLite exposes no MySQL Update_time. Confirm the real owned table,
+        // then represent the supported MySQL NULL metadata outcome explicitly.
+        $exists = db_fetch_cell_prepared("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", array('data_source_purge_temp'));
+        return $exists ? array('Update_time' => null) : array();
+    }
+    return db_fetch_row_prepared($sql);
+}
 function db_table_exists($table)
 {
+    if ($GLOBALS['managerView'] || $GLOBALS['debugView'] || $GLOBALS['cleanerView']) {
+        return (bool) db_fetch_cell_prepared("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", array($table));
+    }
     return (bool) db_fetch_cell_prepared('SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=SCHEMA() AND TABLE_NAME=?', array($table));
 }
 function db_execute($sql)
 {
     $GLOBALS['queries'][] = array($sql, array());
+    if ($GLOBALS['debugView'] && str_starts_with($sql, 'DELETE dd')) {
+        // SQLite dialect only: preserve the actual join and filter predicate.
+        $sql = 'DELETE FROM data_debug WHERE datasource IN (SELECT dl.id ' . substr($sql, strpos($sql, 'FROM data_debug AS dd')) . ')';
+    }
     return $GLOBALS['db']->exec($sql) !== false;
+}
+function db_execute_prepared($sql, $params = array())
+{
+    $GLOBALS['queries'][] = array($sql, $params);
+    if ($GLOBALS['managerView']) {
+        $sql = str_replace('INSERT IGNORE INTO', 'INSERT OR IGNORE INTO', $sql);
+    }
+    if ($GLOBALS['managerView'] && str_starts_with($sql, 'DELETE FROM snmpagent_managers_notifications')) {
+        $sql = preg_replace('/\s+LIMIT 1$/', '', $sql);
+    }
+    $q = $GLOBALS['db']->prepare($sql);
+    return $q->execute($params);
 }
 function db_fetch_assoc($sql)
 {
@@ -162,9 +242,29 @@ function get_total_row_data($user, $sql, $params)
     $GLOBALS['total_rows'][] = (int) db_fetch_cell_prepared($sql, $params);
     return end($GLOBALS['total_rows']);
 }
+function get_allowed_sites($where)
+{
+    return db_fetch_assoc('SELECT * FROM sites ORDER BY name');
+}
+function db_qstr_rlike($value)
+{
+    // SQLite REGEXP has the same predicate role; this is a dialect boundary.
+    return 'REGEXP ' . db_qstr($value);
+}
 function get_allowed_devices($where)
 {
     return db_fetch_assoc('SELECT * FROM host ORDER BY description');
+}
+// Keep selected-device checks consistent with this renderer fixture's isolated
+// permission list. Production authorization is verified in the auth suites.
+function is_device_allowed($device_id)
+{
+    foreach (get_allowed_devices('') as $device) {
+        if ((int) $device['id'] === (int) $device_id) {
+            return true;
+        }
+    }
+    return false;
 }
 function __($text, ...$args)
 {
@@ -198,6 +298,13 @@ function csrf_get_tokens()
 }
 function number_format_i18n($number, $decimals = 0)
 {
+    if ($number === null) {
+        return '0';
+    }
+    if (is_string($number) && is_numeric($number)) {
+        $number = (float) $number;
+    }
+
     return number_format($number, $decimals);
 }
 final class CactiSecureHeaders
@@ -218,24 +325,71 @@ require $root . '/lib/html.php';
 require $root . '/lib/html_utility.php';
 require $root . '/lib/html_form.php';
 require $root . '/lib/variables.php';
+if ($managerView && ($_REQUEST['action'] ?? '') === 'actions') {
+    // Registered before collector shutdown: observe committed data and request
+    // admission before emitting the completion receipt after controller exit.
+    register_shutdown_function(static function () use ($scenario, $db, $tables, $before, $logBefore, $directory): void {
+        $after = array();
+        foreach ($tables as $table) {
+            $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
+        }
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        define('NATIVE_COVERAGE_COMPLETED', array('utility-view-observed:manager'));
+        fwrite(STDOUT, json_encode(array('before' => $before, 'after' => $after, 'queries' => $GLOBALS['queries'], 'status' => http_response_code(), 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR));
+    });
+}
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('UTILITY_VIEW_TEST_COVERAGE', true);
+    if ($managerView) {
+        define('MANAGER_VIEW_NATIVE_TEST_COVERAGE', true);
+    }
+    if ($debugView || $cleanerView) {
+        define('DATA_DEBUG_NATIVE_TEST_COVERAGE', true);
+    }
     require __DIR__ . '/rrd-process-coverage.php';
 }
 require $root . '/src/Platform/Infrastructure/Legacy/UtilityRows.php';
-require $root . '/utilities.php';
-ob_start();
-match ($scenario['view']) {
-    'user' => utilities_view_user_log(),
-    'snmp' => utilities_view_snmp_cache(),
-    'poller' => utilities_view_poller_cache(),
-    'agent' => snmpagent_utilities_run_cache(),
-    'event' => snmpagent_utilities_run_eventlog(),
-    'log' => utilities_view_logfile(),
-    'boost' => boost_display_run_status(),
-    'options' => \Kadupul\Platform\Infrastructure\Legacy\UtilityRows::renderOptions($scenario['choices'], $scenario['selected']),
-};
+if ($cleanerView) {
+    $config['library_path'] = $root . '/lib';
+    ob_start();
+    $fixtureErrorReporting = error_reporting();
+    try {
+        require $root . '/rrdcleaner.php';
+    } finally {
+        // The original read renderer sets error_reporting(0); restore the
+        // caller setting even on exceptions so fixture failures stay visible.
+        error_reporting($fixtureErrorReporting);
+    }
+} elseif ($debugView) {
+    ob_start();
+    require $root . '/data_debug.php';
+    if (($scenario['operation'] ?? '') === 'rerun') {
+        debug_rerun(array(101));
+    } elseif (($scenario['operation'] ?? '') === 'delete') {
+        debug_delete(array(101));
+    }
+} elseif ($managerView) {
+    // Execute the original controller dispatch; auth/bootstrap remains the
+    // explicit isolated boundary above. SQL, filters and HTML are real.
+    ob_start();
+    require $root . '/managers.php';
+} else {
+    require $root . '/utilities.php';
+    ob_start();
+    match ($scenario['view']) {
+        'user' => utilities_view_user_log(),
+        'snmp' => utilities_view_snmp_cache(),
+        'poller' => utilities_view_poller_cache(),
+        'agent' => snmpagent_utilities_run_cache(),
+        'event' => snmpagent_utilities_run_eventlog(),
+        'log' => utilities_view_logfile(),
+        'boost' => boost_display_run_status(),
+        'options' => \Kadupul\Platform\Infrastructure\Legacy\UtilityRows::renderOptions($scenario['choices'], $scenario['selected']),
+    };
+}
 $html = ob_get_clean();
 define('NATIVE_COVERAGE_COMPLETED', array('utility-view-observed:' . $scenario['view']));
 $after = array();
