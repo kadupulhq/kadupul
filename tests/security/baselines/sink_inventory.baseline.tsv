@@ -413,9 +413,9 @@ dynamic_include	./lib/rrd.php:2236	    include_once($config['library_path'] . '/
 dynamic_include	./lib/rrd.php:2237	    include_once($config['library_path'] . '/boost.php');
 dynamic_include	./lib/rrd.php:2238	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/rrd.php:2239	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:3404	        include($rrdtheme);
-dynamic_include	./lib/rrd.php:4049	    include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:4789	        include($themefile);
+dynamic_include	./lib/rrd.php:3426	        include($rrdtheme);
+dynamic_include	./lib/rrd.php:4071	    include_once($config['library_path'] . '/time.php');
+dynamic_include	./lib/rrd.php:4811	        include($themefile);
 dynamic_include	./lib/rrdcheck.php:752	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:783	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:33	    include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
@@ -574,8 +574,8 @@ fs_write	./lib/poller.php:1707	                                            file_
 fs_write	./lib/poller.php:1736	                            file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1785	        $f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1843	        $f = fopen($fn, 'wb');
-fs_write	./lib/rrd.php:3210	                    rrdtool_filesystem()->dumpFile($graph_data_array['export_realtime'], (string) $output);
-fs_write	./lib/rrd.php:3273	                file_put_contents('php://stderr', $buffer);
+fs_write	./lib/rrd.php:3213	                    rrdtool_filesystem()->dumpFile($graph_data_array['export_realtime'], (string) $output);
+fs_write	./lib/rrd.php:3295	                file_put_contents('php://stderr', $buffer);
 fs_write	./lib/rrd_maintenance.php:350	            $handle = @fopen($probe, 'x+b');
 fs_write	./lib/rrd_maintenance.php:93	    $handle = @fopen($canonical, 'r');
 fs_write	./lib/spikekill.php:1127				$handle    = @fopen($desired_path, 'xb');
@@ -775,8 +775,8 @@ header_redirect	./graph_templates.php:46			header('Location: graph_templates.php
 header_redirect	./graph_templates_inputs.php:104				header('Location: graph_templates_inputs.php?header=false&action=input_edit&graph_template_input_id=' . (empty($graph_template_input_id) ? get_nfilter_request_var('graph_template_input_id') : $graph_template_input_id) . '&graph_template_id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:107				header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:23			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
-header_redirect	./graph_templates_items.php:278	            header('Location: graph_templates_items.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('graph_template_id'));
-header_redirect	./graph_templates_items.php:281	            header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
+header_redirect	./graph_templates_items.php:289	            header('Location: graph_templates_items.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('graph_template_id'));
+header_redirect	./graph_templates_items.php:292	            header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:62	        header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:69	        header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:76	        header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
@@ -794,8 +794,8 @@ header_redirect	./graphs.php:639	                    header('Location: graphs.ph
 header_redirect	./graphs.php:643	                header("Location: aggregate_graphs.php?header=false&action=edit&tab=details&id=$local_graph_id");
 header_redirect	./graphs.php:676	            header('Location: graphs.php?header=false&template_id=-1');
 header_redirect	./graphs.php:678	            header('Location: graphs.php?header=false');
-header_redirect	./graphs_items.php:159	            header('Location: graphs.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('local_graph_id'));
-header_redirect	./graphs_items.php:162	            header('Location: graphs.php?header=false&action=graph_edit&id=' . get_nfilter_request_var('local_graph_id'));
+header_redirect	./graphs_items.php:170	            header('Location: graphs.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('local_graph_id'));
+header_redirect	./graphs_items.php:173	            header('Location: graphs.php?header=false&action=graph_edit&id=' . get_nfilter_request_var('local_graph_id'));
 header_redirect	./graphs_items.php:25	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
 header_redirect	./graphs_items.php:39	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
 header_redirect	./graphs_items.php:46	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));

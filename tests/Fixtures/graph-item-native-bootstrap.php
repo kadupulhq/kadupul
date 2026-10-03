@@ -17,14 +17,15 @@ if (str_starts_with($mode, 'save-')) {
 if ($mode === 'save-20') {
     $request['line_width'] = '2.50';
 }
+if (getenv('GRAPH_ITEM_TEST_VALIDATION') === '1') {
+    $request = array_replace($request, json_decode(getenv('GRAPH_ITEM_TEST_PAYLOAD'), true, 512, JSON_THROW_ON_ERROR));
+}
 $calls = array();
-$graph_item_types = array(4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 9 => 'GPRINT', 10 => 'LEGEND', 15 => 'LEGEND_CAMM', 20 => 'LINE:STACK');
+$graph_item_types = array(1 => 'COMMENT', 2 => 'HRULE', 3 => 'VRULE', 7 => 'AREA', 4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 9 => 'GPRINT', 10 => 'LEGEND', 15 => 'LEGEND_CAMM', 20 => 'LINE:STACK', 30 => 'TIC');
 $struct_graph_item = array('task_item_id' => array('default' => 0), 'alpha' => array(), 'line_width' => graph_item_editor_line_width_field());
 $consolidation_functions = array();
 $config = array('url_path' => '/');
-define('GRAPH_ITEM_TYPE_LINE1', 4);
-define('GRAPH_ITEM_TYPE_LINE2', 5);
-define('GRAPH_ITEM_TYPE_LINE3', 6);
+require_once $root . '/include/global_constants.php';
 function get_request_var($name)
 {
     return $GLOBALS['request'][$name] ?? '';
@@ -153,13 +154,20 @@ function get_hash_graph_template(...$args)
 {
     return 'fixture-hash';
 }
-function form_input_validate($value, ...$args)
-{
-    return $value;
+if (getenv('GRAPH_ITEM_TEST_VALIDATION') === '1') {
+    // Exercise the shipped validation procedure together with the actual editor.
+    // Function extraction is behavioral evidence; it does not add source coverage.
+    require_once $root . '/tests/Helpers/PhpSource.php';
+    eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'form_input_validate'));
+} else {
+    function form_input_validate($value, ...$args)
+    {
+        return $value;
+    }
 }
 function is_error_message()
 {
-    return false;
+    return !empty($_SESSION['sess_error_fields']);
 }
 function get_sequence(...$args)
 {
@@ -170,7 +178,12 @@ function sql_save($row, $table)
     $GLOBALS['calls'][] = array('save', $row, $table);
     return 8;
 }
-function raise_message(...$args) {}
+function raise_message(...$args)
+{
+    if (getenv('GRAPH_ITEM_TEST_VALIDATION') === '1') {
+        $GLOBALS['calls'][] = array('message', $args);
+    }
+}
 function push_out_graph_item(...$args)
 {
     $GLOBALS['calls'][] = array('push-item', $args);
@@ -193,6 +206,9 @@ function move_graph_group(...$args)
 }
 function resequence_graphs_simple(...$args) {}
 register_shutdown_function(function () {
+    if (getenv('GRAPH_ITEM_TEST_VALIDATION') === '1') {
+        $GLOBALS['calls'][] = array('validation', $_SESSION['sess_error_fields'] ?? array());
+    }
     print "\nRESULT:" . json_encode($GLOBALS['calls'], JSON_THROW_ON_ERROR);
 });
 
