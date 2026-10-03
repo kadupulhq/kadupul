@@ -1527,7 +1527,7 @@ function api_device_quick_save(&$save)
  *
  * @return (void)
  */
-function api_device_update_host_template($device_id, $device_template_id)
+function api_device_update_host_template($device_id, $device_template_id, ?callable $reindex = null)
 {
     global $config;
 
@@ -1570,8 +1570,9 @@ function api_device_update_host_template($device_id, $device_template_id)
         'SELECT snmp_query_id
 		FROM host_template_snmp_query AS htsq
 		WHERE host_template_id = ?
-		AND htsq.snmp_query_id NOT IN (SELECT snmp_query_id FROM host_snmp_cache WHERE host_id = ?)',
-        array($device_template_id, $device_id)
+		AND (htsq.snmp_query_id NOT IN (SELECT snmp_query_id FROM host_snmp_cache WHERE host_id = ?)
+            OR (? = 1 AND htsq.snmp_query_id NOT IN (SELECT snmp_query_id FROM host_snmp_query WHERE host_id = ?)))',
+        array($device_template_id, $device_id, $reindex !== null ? 1 : 0, $device_id)
     );
 
     if (cacti_sizeof($snmp_queries)) {
@@ -1604,8 +1605,13 @@ function api_device_update_host_template($device_id, $device_template_id)
                 }
             }
 
-            /* recache snmp data */
-            run_data_query($device_id, $snmp_query['snmp_query_id']);
+            /* An optional dispatcher defers discovery until bulk writes commit.
+             * Existing callers retain synchronous discovery and the void return contract. */
+            if ($reindex === null) {
+                run_data_query($device_id, $snmp_query['snmp_query_id']);
+            } else {
+                $reindex($device_id, $snmp_query['snmp_query_id']);
+            }
         }
     }
 
