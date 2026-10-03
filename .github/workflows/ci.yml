@@ -144,6 +144,81 @@ jobs:
           KADUPUL_REFERENCE_TEST_PASSWORD="$KADUPUL_TEST_MYSQL_ADMIN_PASSWORD" \
           php -d zend.exception_ignore_args=1 security/reference_write_transaction_native_probe.php
 
+  cdef-reference-contracts:
+    name: CDEF references (${{ matrix.database }})
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        database: ['mariadb:10.11', 'mysql:8.4']
+    services:
+      database:
+        image: ${{ matrix.database }}
+        env:
+          MYSQL_DATABASE: kadupul_cdef_reference_test
+          MYSQL_USER: cactiuser
+          MYSQL_PASSWORD: cactiuser
+          MYSQL_ROOT_PASSWORD: cactiroot
+        ports:
+          - 3306/tcp
+        options: --health-cmd="MYSQL_PWD=$MYSQL_PASSWORD mysqladmin ping -h 127.0.0.1 --user=$MYSQL_USER --silent || MYSQL_PWD=$MYSQL_PASSWORD mariadb-admin ping -h 127.0.0.1 --user=$MYSQL_USER --silent" --health-interval=5s --health-timeout=5s --health-retries=30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4.25'
+          extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, sqlite3, xml
+          coverage: pcov
+          tools: composer
+      - name: Preserve selected PHP for mise
+        run: |
+          mkdir -p "$RUNNER_TEMP/cdef-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/cdef-php/bin/php"
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          install_args: python@3.12.12 node@22.22.2
+          add_shims_to_path: false
+      - name: Build actual dependencies and installer assets
+        run: |
+          mise link php@8.4.25 "$RUNNER_TEMP/cdef-php"
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends rrdtool snmp
+          mise exec php@8.4.25 -- composer install --no-interaction --no-progress --prefer-dist
+          mise exec node@22.22.2 -- npm ci --ignore-scripts
+          mise exec node@22.22.2 -- npm run build
+          mise exec php@8.4.25 -- php bin/console asset-map:compile
+      - name: Native API coverage and actual installer caller proofs
+        env:
+          KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_cdef_reference_test;charset=utf8mb4
+          KADUPUL_TEST_MYSQL_USER: root
+          KADUPUL_TEST_MYSQL_PASSWORD: cactiroot
+          KADUPUL_REFERENCE_TEST_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_cdef_reference_test;charset=utf8mb4
+          KADUPUL_REFERENCE_TEST_USER: root
+          KADUPUL_REFERENCE_TEST_PASSWORD: cactiroot
+        run: |
+          mkdir -p "$RUNNER_TEMP/cdef-api-coverage"
+          mise exec python@3.12.12 -- python tests/security/test_cdef_reference_runner.py
+          mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
+          mise exec php@8.4.25 -- php -d pcov.directory="$GITHUB_WORKSPACE" \
+            -d pcov.exclude='~/(include/vendor|tests)/~' include/vendor/bin/phpunit \
+            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest' \
+            --coverage-php "$RUNNER_TEMP/cdef-api-coverage/native.php" \
+            --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
+          mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
+            --output "$RUNNER_TEMP/cdef-reference-proof"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: cdef-reference-${{ strategy.job-index }}
+          path: |
+            ${{ runner.temp }}/cdef-api-coverage
+            ${{ runner.temp }}/cdef-reference-proof
+          if-no-files-found: error
+
   php:
     name: PHP ${{ matrix.php }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
@@ -286,14 +361,16 @@ jobs:
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/offline-fixture-php/bin/php"
           mise link "php@$fixture_php_version" "$RUNNER_TEMP/offline-fixture-php"
           echo "KADUPUL_OFFLINE_FIXTURE_PHP_VERSION=$fixture_php_version" >> "$GITHUB_ENV"
-      - name: Verify guest offline fixture byte handoff
-        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
       - name: Verify observation normalization and failure reporting
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/selftest.py
       - name: Verify offline build runtime selection
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
       - name: Verify offline guest fixture mutations
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/tools/test_offline_fixture_mutation.py
+      - name: Verify installed legacy form controls and coverage marker bindings
+        run: mise exec python@3.12.12 -- python tests/tools/test_cdef_legacy_page_forms.py
+      - name: Verify coverage helper imports and database report preservation
+        run: mise exec python@3.12.12 -- python tests/tools/test_coverage_selftest_database_reports.py
       - name: Restore pinned compatibility libraries
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" -- php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters
