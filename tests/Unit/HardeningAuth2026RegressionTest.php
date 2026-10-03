@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 $authSource = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
@@ -85,6 +87,30 @@ test('GHSA-3jj2-v5ch-wmq5: realm boundary comment cites the advisory', function 
 
 // --- GHSA-2px8-gvmq-85f3: LDAP lockout call-site ---
 
+test('GHSA-2px8-gvmq-85f3: lockout condition uses error_num not error_text', function () use ($authSource) {
+    // error_text is a human-readable string; using it in a numeric comparison
+    // always evaluates to zero (false), silently skipping the lockout call.
+    $body = test_php_function_source($authSource, 'domains_login_process');
+    expect($body)->toContain('$ldap_auth_response[\'error_num\'] == 1');
+});
+
+test('GHSA-2px8-gvmq-85f3: error_num == 1 appears adjacent to auth_process_lockout', function () use ($authSource) {
+    $body = test_php_function_source($authSource, 'domains_login_process');
+
+    $errorNumPos = strpos($body, "'error_num'] == 1");
+    $lockoutPos  = strpos($body, 'auth_process_lockout(');
+
+    expect($errorNumPos)->not->toBeFalse();
+    expect($lockoutPos)->not->toBeFalse();
+    // The lockout call must follow closely (within 150 chars) after the condition.
+    expect($lockoutPos - $errorNumPos)->toBeLessThan(150);
+});
+
+test('GHSA-2px8-gvmq-85f3: error_text is not used in a numeric comparison inside domains_login_process', function () use ($authSource) {
+    $body = test_php_function_source($authSource, 'domains_login_process');
+    // The pre-fix bug was 'error_text' == 1; that pattern must not exist.
+    expect($body)->not->toContain("'error_text'] == 1");
+});
 test('domain bind failures enforce the configured lockout using numeric error codes', function (int $code, string $text, bool $locked) {
     $directory = sys_get_temp_dir() . '/domain-lockout-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
