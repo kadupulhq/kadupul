@@ -293,7 +293,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
                 throw new RuntimeException('Invalid integration source path');
             }
             if (!is_array($file) || ($file['sha256'] ?? null) !== hash_file('sha256', $local)) {
-                throw new RuntimeException('Covered source differs from checkout');
+                throw new RuntimeException('Covered source differs from checkout: ' . $relative . ' (' . $handler . ', ' . basename($report) . ')');
             }
             if (!is_array($file['lines'] ?? null)) {
                 throw new RuntimeException('Invalid line coverage inventory');
