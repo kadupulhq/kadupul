@@ -42,6 +42,22 @@
       <file>./Unit/Security/Auth/BulkMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/SpikeMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/LoginMutationCsrfTest.php</file>
+      <file>./Unit/Security/Auth/NoAuthenticationRecoveryTest.php</file>
+      <file>./Unit/Security/Auth/GuestProfileAccessTest.php</file>
+      <file>./Unit/Security/Auth/LdapLoginErrorDisclosureTest.php</file>
+      <file>./Unit/Security/Auth/LocalLoginTimingTest.php</file>
+      <file>./Unit/Security/Auth/RememberMePasswordChangeTest.php</file>
+      <file>./Unit/Security/Auth/LogoutTokenRevocationTest.php</file>
+      <file>./Unit/Security/Auth/PermissionDeniedPageTest.php</file>
+      <file>./Unit/Security/Auth/TemplateUserFailureTest.php</file>
+      <file>./Unit/Security/Auth/LoginPageRefreshTest.php</file>
+      <file>./Unit/Security/Auth/CrossSiteGetGuardTest.php</file>
+      <file>./Unit/Security/Auth/PageFlagCrossSiteGuardTest.php</file>
+      <file>./Unit/Security/Auth/CsrfTokenFormatTest.php</file>
+      <file>./Unit/Security/Auth/CsrfSecretSourceTest.php</file>
+      <file>./Unit/Security/Auth/CsrfSecretInitializationRaceTest.php</file>
+      <file>./Unit/Security/Auth/CsrfIpTokenTest.php</file>
+      <file>./Unit/Security/Auth/RefreshCsrfSecretTest.php</file>
       <file>./Unit/Security/CsrfMagicFormRewriteTest.php</file>
       <file>./Unit/Security/CsrfMagicLocaleTest.php</file>
       <file>./Unit/Security/CsrfMagicTokenCheckTest.php</file>

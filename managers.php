@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -38,6 +39,11 @@ switch (get_request_var('action')) {
         form_actions();
         break;
     case 'edit':
+        // The Logs tab purge deletes the notification log; the page posts it.
+        if (isset_request_var('purge')) {
+            cacti_require_post_request();
+        }
+
         top_header();
         manager_edit();
         bottom_footer();
@@ -731,6 +737,17 @@ function manager_logs($id, $header_label)
 
 		$('#form_snmpagent_manager_logs').on('submit', function() {
 			applyFilter();
+		});
+
+		$('#purge').on('click', function() {
+			loadPageUsingPost('managers.php', {
+				action: 'edit',
+				tab: 'logs',
+				id: $('#id').val(),
+				purge: 1,
+				header: 'false',
+				__csrf_magic: csrfMagicToken
+			});
 		});
 	});
 

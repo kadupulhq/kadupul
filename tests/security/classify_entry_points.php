@@ -170,6 +170,9 @@ const REVIEWED_FRAGMENT_CALLS = [
     'include/global_languages.php' => [
         ['get_list_of_locales()', 'declared in the same file; returns a literal locale map'],
     ],
+    'include/csrf.php' => [
+        ["csrf_token_is_well_formed(\$_POST['__csrf_magic'])", 'declared in the same file; splits the posted token string and returns whether its times are digits, writing nothing'],
+    ],
     'include/global_settings.php' => [
         ['$dir->read()', 'lists the theme directory opened by dir() on a fixed path'],
         ['$dir->close()', 'closes that directory handle'],
@@ -941,6 +944,42 @@ function auth_early_returns(string $root): array
     return $pages;
 }
 
+// The one shape include/auth.php uses to withdraw $guest_account from a page:
+// anonymous callers and the guest account itself get the login form there.
+const GUEST_REFUSAL = "isset(\$guest_account) && get_current_page() == %s && (empty(\$_SESSION['sess_user_id']) || \$_SESSION['sess_user_id'] == get_guest_account())";
+
+/**
+ * Pages include/auth.php refuses to the guest account even though they set
+ * $guest_account.
+ *
+ * @return list<string>
+ */
+function auth_guest_refusals(string $root): array
+{
+    $pages = [];
+    foreach (walk(program($root, 'include/auth.php') ?? [], false) as $node) {
+        if (!$node instanceof Stmt\If_ || $node->elseifs !== [] || $node->else !== null || count($node->stmts) !== 1) {
+            continue;
+        }
+        $unset = $node->stmts[0];
+        if (!$unset instanceof Stmt\Unset_ || count($unset->vars) !== 1 || !is_variable($unset->vars[0], 'guest_account')) {
+            continue;
+        }
+        foreach (walk($node->cond) as $page) {
+            if (!is_string_node($page)) {
+                continue;
+            }
+            $shape = (new ParserFactory())->createForNewestSupportedVersion()
+                ->parse('<?php ' . sprintf(GUEST_REFUSAL, var_export($page->value, true)) . ';');
+            if (same_node($node->cond, $shape[0]->expr)) {
+                $pages[] = $page->value;
+            }
+        }
+    }
+
+    return $pages;
+}
+
 /**
  * True when the statements reach exit, return or throw. At a page's top level
  * each of them ends the request. A break, continue or goto ahead of it, even
@@ -1056,10 +1095,11 @@ function preamble_clean(array $before, string $root, string $path): bool
 /**
  * @param array<string, int> $realms
  * @param list<string> $early
+ * @param list<string> $guest_refused
  * @param array<string, list<string>> $includers
  * @return array{0: string, 1: string}
  */
-function classify(string $root, string $path, array $realms, array $early, array $includers, array $functions): array
+function classify(string $root, string $path, array $realms, array $early, array $guest_refused, array $includers, array $functions): array
 {
     $stmts = program($root, $path);
     if ($stmts === null) {
@@ -1110,7 +1150,7 @@ function classify(string $root, string $path, array $realms, array $early, array
             if (!preamble_clean($before, $root, $path)) {
                 return ['unknown', 'statements with effects run before the auth include'];
             }
-            return auth_gate($path, $stmts, $before, $realms, $early);
+            return auth_gate($path, $stmts, $before, $realms, $early, $guest_refused);
         }
         if ($kind === 'symfony') {
             $expr = expression_of($stmt);
@@ -1155,9 +1195,10 @@ function classify(string $root, string $path, array $realms, array $early, array
  * @param list<Stmt> $before
  * @param array<string, int> $realms
  * @param list<string> $early
+ * @param list<string> $guest_refused
  * @return array{0: string, 1: string}
  */
-function auth_gate(string $path, array $stmts, array $before, array $realms, array $early): array
+function auth_gate(string $path, array $stmts, array $before, array $realms, array $early, array $guest_refused): array
 {
     // auth.php tests isset($guest_account), so any value but null opts in.
     $guest = false;
@@ -1167,7 +1208,14 @@ function auth_gate(string $path, array $stmts, array $before, array $realms, arr
             $guest = true;
         }
     }
-    $extras = $guest ? ['guest_account'] : [];
+    $name = basename($path);
+    $extras = [];
+    if ($guest && in_array($name, $guest_refused, true)) {
+        $guest = false;
+        $extras[] = 'guest_account withdrawn from anonymous and guest callers';
+    } elseif ($guest) {
+        $extras[] = 'guest_account';
+    }
     foreach (['auth_json', 'auth_text'] as $flag) {
         foreach (walk($stmts, false) as $node) {
             if ($node instanceof Expr\Assign && is_variable($node->var, $flag) && is_const($node->expr, 'true')) {
@@ -1177,7 +1225,6 @@ function auth_gate(string $path, array $stmts, array $before, array $realms, arr
         }
     }
     $suffix = $extras === [] ? '' : '; ' . implode(', ', $extras);
-    $name = basename($path);
     if (in_array($name, $early, true)) {
         return ['anonymous-allowed', 'include/auth.php returns before the session check' . $suffix];
     }
@@ -2427,11 +2474,12 @@ function main(): int
             $realms[$name] = $realm;
         }
         $early = auth_early_returns($root);
+        $guest_refused = auth_guest_refusals($root);
         $includers = includers($root, $files);
         $functions = declared_functions($root, $files);
         $rows = [];
         foreach ($request['served'] as $path) {
-            [$gate, $detail] = classify($root, $path, $realms, $early, $includers, $functions);
+            [$gate, $detail] = classify($root, $path, $realms, $early, $guest_refused, $includers, $functions);
             $rows[] = [$path, $gate, $detail];
         }
         array_push($rows, ...symfony_routes($root, $files));
