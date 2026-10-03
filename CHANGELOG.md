@@ -181,6 +181,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Migrate device template synchronization to a Symfony confirmation and Inventory use case with current template locks and verified collector associations.
+- Fix bulk template synchronization to discover after association commit, reject unconfirmed collector identity before action 7, repair cached missing associations, and preserve no-op coverage checks.
 - Represent database table analysis results with typed immutable outcomes while preserving CLI text, JSON output and failure exit codes. Related to #682 and #683.
 - Declare precise union return contracts for existing filename, command, CSP process-owner and RRD maintenance helpers while preserving success, failure and empty-output behavior. Related to #717.
 
