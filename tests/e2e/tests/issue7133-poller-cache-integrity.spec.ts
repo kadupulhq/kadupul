@@ -13,7 +13,7 @@ const FULL = process.env.E2E_CACTI_FULL === '1';
 async function loginAsAdmin(page: Page): Promise<void> {
     await page.goto('/');
     await page.locator('input[name="login_username"]').fill('admin');
-    await page.locator('input[name="login_password"]').fill('admin');
+    await page.locator('input[name="login_password"]').fill(process.env.E2E_ADMIN_PASSWORD ?? 'admin');
     await Promise.all([
         page.waitForLoadState('networkidle'),
         page.locator('form#login input[type="submit"]').click(),
@@ -69,19 +69,19 @@ test.describe('issue #7133 poller cache integrity', () => {
         /* Find a Data Input Method bound to multiple data sources, edit
          * a non-functional field (verbose log description), save, and
          * verify each affected DS still has a poller_item entry. */
-        await page.goto('/data_input.php');
-        const inputLink = page.locator('a[href^="data_input.php?action=edit&id="]').first();
+        await page.goto('/app.php/data-inputs');
+        const inputLink = page.locator('a[href*="/app.php/data-inputs/"][href*="/edit"]').first();
         const inputHref = await inputLink.getAttribute('href');
-        const inputId   = inputHref?.match(/id=(\d+)/)?.[1];
+        const inputId   = inputHref?.match(/data-inputs\/(\d+)\/edit/)?.[1];
         expect(inputId).toBeTruthy();
 
-        await page.goto(`/data_input.php?action=edit&id=${inputId}`);
-        const nameField = page.locator('input[name="name"]');
+        await page.goto(`/app.php/data-inputs/${inputId}/edit`);
+        const nameField = page.locator('input[name="data_input_method[name]"]');
         const original  = await nameField.inputValue();
         await nameField.fill(original);
         await Promise.all([
             page.waitForLoadState('networkidle'),
-            page.locator('input[name="save_component_data_input"]').click(),
+            page.getByRole('button', { name: 'Save', exact: true }).click(),
         ]);
 
         /* No "boundary data source" was lost — every poller still has
@@ -106,16 +106,16 @@ test.describe('issue #7133 poller cache integrity', () => {
          * without error and the cache view loads. */
         await loginAsAdmin(page);
 
-        await page.goto('/data_input.php');
-        const inputLink = page.locator('a[href^="data_input.php?action=edit&id="]').first();
+        await page.goto('/app.php/data-inputs');
+        const inputLink = page.locator('a[href*="/app.php/data-inputs/"][href*="/edit"]').first();
         const inputHref = await inputLink.getAttribute('href');
-        const inputId   = inputHref?.match(/id=(\d+)/)?.[1];
+        const inputId   = inputHref?.match(/data-inputs\/(\d+)\/edit/)?.[1];
         expect(inputId).toBeTruthy();
 
-        await page.goto(`/data_input.php?action=edit&id=${inputId}`);
+        await page.goto(`/app.php/data-inputs/${inputId}/edit`);
         await Promise.all([
             page.waitForLoadState('networkidle'),
-            page.locator('input[name="save_component_data_input"]').click(),
+            page.getByRole('button', { name: 'Save', exact: true }).click(),
         ]);
 
         /* No PCACHE error in cacti.log after the push. */
