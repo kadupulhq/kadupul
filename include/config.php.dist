@@ -187,10 +187,18 @@ $disable_log_rotation = false;
  * Allow the use of Proxy IPs when searching for client
  * IP to be used
  *
- * This can be set to one of the following:
- *   - false: to use only REMOTE_ADDR
- *   - true: to use all allowed headers (not advised)
- *   - array of one or more the following:
+ * Configure proxy client addresses only when REMOTE_ADDR is a trusted proxy.
+ * Set $proxy_trusted_addresses to exact proxy IP addresses and $proxy_headers
+ * to an array with exactly one server header key. The proxy must overwrite that
+ * header with exactly one client IP (no comma-separated chain). Requests from
+ * other peers always use REMOTE_ADDR. CIDR ranges and multiple headers are not
+ * supported. The old boolean true setting is ignored for security.
+ *
+ * Example for a proxy that overwrites X-Forwarded-For:
+ *   $proxy_trusted_addresses = array('192.0.2.10');
+ *   $proxy_headers = array('HTTP_X_FORWARDED_FOR');
+ *
+ * Header keys must be selected from the server-provided allowlist:
  *		'X-Forwarded-For',
  *		'X-Client-IP',
  *		'X-Real-IP',
@@ -204,10 +212,9 @@ $disable_log_rotation = false;
  *		'HTTP_FORWARDED',
  *		'HTTP_CLIENT_IP',
  *
- * NOTE: The following will always be checked:
- *		'REMOTE_ADDR',
  */
 $proxy_headers = null;
+$proxy_trusted_addresses = array();
 
 /*
  * Set this to define the default i18n handler if not set
