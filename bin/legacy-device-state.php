@@ -46,12 +46,15 @@ try {
     $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
     $clearStatistics = is_array($command) && ($command['operation'] ?? null) === 'clear-statistics';
     $syncTemplates = is_array($command) && ($command['operation'] ?? null) === 'sync-template';
-    $preserveState = $clearStatistics || $syncTemplates;
-    if (!is_array($command) || array_diff(array_keys($command), $preserveState ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled']) !== []
+    $changeOptions = is_array($command) && ($command['operation'] ?? null) === 'options';
+    $preserveState = $clearStatistics || $syncTemplates || $changeOptions;
+    if (!is_array($command) || array_diff(array_keys($command), $changeOptions ? ['actor', 'selection', 'operation', 'changes'] : ($preserveState ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled'])) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0
         || !is_array($command['selection'] ?? null) || (!$preserveState && !is_bool($command['enabled'] ?? null))) {
         throw new RuntimeException('Invalid command');
     }
+    $optionsChange = $changeOptions ? new \Kadupul\Inventory\Domain\DeviceOptionsChange($command['changes'] ?? []) : null;
+    $optionsWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceOptionsWriter();
     $selection = new DeviceSelection($command['selection']);
     $ids = array_keys($selection->revisions);
     $enabled = $command['enabled'] ?? false;
@@ -138,7 +141,15 @@ try {
         // Legacy SQL helpers retain their last error even after later successes.
         // Check it without exposing diagnostics or credentials to the parent.
         $database_last_error = '';
-        if ($syncTemplates) {
+        if ($changeOptions) {
+            foreach ($changed as $device) {
+                $optionsWriter->apply($connection, $device, $optionsChange);
+                if (isset($remotes[$device->pollerId])) {
+                    $optionsWriter->apply($remotes[$device->pollerId], $device, $optionsChange);
+                }
+                push_out_host($device->id);
+            }
+        } elseif ($syncTemplates) {
             foreach ($changed as $device) {
                 api_device_update_host_template($device->id, $device->templateId, static function ($id, $query) use (&$pendingQueries): void {
                     $pendingQueries[] = [(int) $id, (int) $query];
@@ -157,8 +168,8 @@ try {
         } elseif (!api_device_disable_devices(array_keys($changed))) {
             throw new RuntimeException('Disabling devices failed');
         }
-        $action = $syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3'));
-        if (!$syncTemplates) {
+        $action = $changeOptions ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3')));
+        if (!$syncTemplates && !$changeOptions) {
             set_request_var('drp_action', $action);
             snmpagent_device_action_bottom([$action, $ids]);
             api_plugin_hook_function('device_action_bottom', [$action, $ids]);
@@ -187,6 +198,12 @@ try {
             || (!$preserveState && !$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
             throw new RuntimeException('Device state could not be confirmed');
         }
+        if ($changeOptions) {
+            $optionsWriter->verify($connection, $device, $optionsChange);
+            if (isset($remotes[$device->pollerId])) {
+                $optionsWriter->verify($remotes[$device->pollerId], $device, $optionsChange);
+            }
+        }
         if ($syncTemplates && $device->templateId > 0) {
             (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier())->verify($connection, $remotes[$device->pollerId] ?? null, $device->id, $device->templateId, true);
         }
@@ -194,6 +211,22 @@ try {
             $verify = $read($remotes[$device->pollerId], "SELECT disabled, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
             if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($preserveState ? $remoteStates[$device->id] : $enabled) || (int) $verify[0]['poller_id'] !== $device->pollerId || ($syncTemplates && (int) $verify[0]['host_template_id'] !== $device->templateId)) {
                 throw new RuntimeException('Collector state could not be confirmed');
+            }
+        }
+    }
+    if ($changeOptions && $changed !== []) {
+        // A successful UPDATE can still be rewritten by a database trigger.
+        // Do not publish action 4 until every requested value is confirmed.
+        set_request_var('drp_action', '4');
+        snmpagent_device_action_bottom(['4', $ids]);
+        api_plugin_hook_function('device_action_bottom', ['4', $ids]);
+        if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
+            throw new RuntimeException('Device operation could not be confirmed');
+        }
+        foreach ($changed as $device) {
+            $optionsWriter->verify($connection, $device, $optionsChange);
+            if (isset($remotes[$device->pollerId])) {
+                $optionsWriter->verify($remotes[$device->pollerId], $device, $optionsChange);
             }
         }
     }
@@ -248,7 +281,7 @@ try {
         }
     }
     $status = 'ok';
-    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled'))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
+    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled')))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = $associationsCommitted ? 'failed' : 'conflict';
 } catch (Throwable) {

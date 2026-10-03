@@ -62,6 +62,7 @@
     </form>
     {% if completed|default('') == 'clear-statistics' %}<p><output>{{ 'Selected device statistics cleared.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'sync-template' %}<p><output>{{ 'Selected device templates synchronized.'|trans({}, 'inventory') }}</output></p>{% endif %}
+    {% if completed|default('') == 'options' %}<p><output>{{ 'Selected device options updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'remove' %}<p><output>{{ 'Selected devices removed.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') in ['enable', 'disable'] %}<p><output>{{ (completed == 'enable' ? 'Selected devices enabled.' : 'Selected devices disabled.')|trans({}, 'inventory') }}</output></p>{% endif %}
     <form method="get" action="{{ path('inventory_device_state', {operation: 'disable'}) }}">
@@ -87,6 +88,8 @@
     <button type="submit" formaction="{{ path('inventory_device_state', {operation: 'clear-statistics'}) }}">{{ 'Clear device statistics'|trans({}, 'inventory') }}</button>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
     <button type="submit" formaction="{{ path('inventory_device_state', {operation: 'sync-template'}) }}">{{ 'Synchronize device templates'|trans({}, 'inventory') }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+    <button type="submit" formaction="{{ path('inventory_device_state', {operation: 'options'}) }}">{{ 'Change device options'|trans({}, 'inventory') }}</button>
     </form>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
     <p><a href="{{ path('inventory_devices_csv', filters|merge({page: criteria.page})) }}">{{ 'Export this page (CSV)'|trans({}, 'inventory') }}</a></p>
