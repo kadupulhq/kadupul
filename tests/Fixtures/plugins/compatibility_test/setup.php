@@ -108,9 +108,26 @@ function compatibility_statistics_action($value)
     return $value;
 }
 
+function compatibility_template_sync($value) {
+    compatibility_test_record('template_sync', [$value]);
+    return $value;
+}
+
 function compatibility_data_input_where($where)
 {
     compatibility_test_record('data_input_actor', [$_SESSION['sess_user_id'] ?? 0]);
     $hidden = (int) read_config_option('data_input_test_hidden');
     return $hidden > 0 ? $where . ' AND di.id <> ' . $hidden : $where;
+}
+
+function compatibility_sync_discovery($value)
+{
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+    file_put_contents('/artifacts/sync-query-ready', $connection->inTransaction() ? 'locked' : 'unlocked');
+    $deadline = microtime(true) + 20;
+    while (!is_file('/artifacts/sync-query-release') && microtime(true) < $deadline) {
+        usleep(100000);
+    }
+    throw new RuntimeException('Deferred synchronization discovery fixture failure');
 }
