@@ -617,7 +617,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
                     $markers[] = 'next-request-epoch-checked';
                 }
                 $hits = array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/auth.php');
-                if ($association) {
+                if ($association || ($scenario['operation'] === 'add' && !($scenario['error'] ?? false)) || $scenario['operation'] === 'remove') {
                     $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
                 }
                 $mutation = in_array($scenario['operation'], array('add', 'policy', 'remove', 'bulk'), true) || $association;

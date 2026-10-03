@@ -102,6 +102,11 @@ const REVIEWED_ROUTES = [
     'session' => 'answers 401 with no identity when the actor is null',
 ];
 
+// Additional manually audited feature gates. Both the action and adapter
+// bodies are pinned in inventory output, so a changed call or refusal causes
+// baseline drift and requires review rather than inheriting this annotation.
+const REVIEWED_DATA_INPUT_ROUTES = ['data_inputs', 'data_input_bulk', 'data_input_legacy', 'data_input_create', 'data_input_edit', 'data_input_field', 'data_input_action'];
+
 const BOOTSTRAP = [
     'include/auth.php' => 'auth',
     'include/global.php' => 'global',
@@ -209,7 +214,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b233819dc23607a2d2ffd3231760ba2aeec52f39c2b1c8c564bf354681a90d93',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'b17c0050fc85ee61344734deb5bb693852637812d79b1f89b60c54e56bd0ff9a',
+    'config/services.yaml' => 'fc3428f9b269de58b14e4862656a8d485034070a40cdb258cab15b921de06159',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2368,6 +2373,20 @@ function symfony_routes(string $root, array $files): array
                             }
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
+                            }
+                            if (in_array($route['name'], REVIEWED_DATA_INPUT_ROUTES, true)) {
+                                $adapter = load_class($root, 'Kadupul\\DataInput\\Infrastructure\\Legacy\\LegacyDataInputAccess');
+                                if ($adapter === null) {
+                                    fail('Reviewed DataInputAccess adapter not found');
+                                }
+                                $workflow = load_class($root, 'Kadupul\\DataInput\\Application\\DataInputMethods');
+                                if ($workflow === null) {
+                                    fail('Reviewed DataInputMethods workflow not found');
+                                }
+                                $grant .= ' + realm 2';
+                                // The private editor and application execute() enforce
+                                // this realm for create/edit; pin their actual bodies.
+                                $reviewed .= '; reviewed DataInputAccess at ' . digest($adapter->stmts) . ' and action ' . digest($method->stmts) . ' and controller ' . digest($class->stmts) . ' and workflow ' . digest($workflow->stmts) . ': feature realm 2';
                             }
                             if ($route['path'] === '/graphing/colors' || str_starts_with($route['path'], '/graphing/colors/')) {
                                 if (!palette_feature_guard($root, $name, $method, $sources)) {

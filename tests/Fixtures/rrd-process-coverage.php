@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || defined('GROUP_COPY_TEST_COVERAGE') || defined('USER_COPY_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || defined('GROUP_COPY_TEST_COVERAGE') || defined('USER_COPY_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
 } else {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
@@ -32,6 +32,20 @@ if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
 if (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/rrdcleaner.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
+}
+if (defined('DATA_INPUT_LIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/data_input_worker.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/DataInput/Domain/DataInputState.php');
+}
+if (defined('INPUT_WHITELIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/input_whitelist.php');
+    if (in_array('--audit', $_SERVER['argv'], true)) {
+        $coverageFilter->includeFile($coverageRoot . '/lib/template.php');
+        $coverageFilter->includeFile($coverageRoot . '/lib/graph_template_input.php');
+    }
+}
+if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('AUTH_POLICY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
@@ -269,6 +283,24 @@ if (defined('REALM_RENDER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
 }
+if (defined('INPUT_WHITELIST_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $whitelistSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Unit/InputWhitelistNativeTest.php');
+    foreach ($coverageFilter->files() as $file) {
+        $source = $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
+        $whitelistSources[] = substr($source, strlen($coverageRoot) + 1);
+    }
+    $whitelistCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/input-whitelist-native.php', INPUT_WHITELIST_NATIVE_SCENARIO, $whitelistSources);
+}
+if (defined('DATA_INPUT_LIST_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $listSources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Symfony/DataInputStorageNativeTest.php'];
+    foreach ($coverageFilter->files() as $file) {
+        $source = $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
+        $listSources[] = substr($source, strlen($coverageRoot) + 1);
+    }
+    $dataInputListEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/data-input-list-native.php', DATA_INPUT_LIST_NATIVE_SCENARIO, $listSources);
+}
 if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
@@ -340,6 +372,18 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
                 throw new RuntimeException('Native session scenario did not complete.');
             }
             NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['sessionCoverageEvidence'], SYMFONY_SESSION_NATIVE_COMPLETED);
+        }
+        if (isset($GLOBALS['whitelistCoverageEvidence'])) {
+            if (!defined('INPUT_WHITELIST_NATIVE_COMPLETED')) {
+                throw new RuntimeException('Whitelist CLI completion evidence missing');
+            }
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['whitelistCoverageEvidence'], INPUT_WHITELIST_NATIVE_COMPLETED);
+        }
+        if (isset($GLOBALS['dataInputListEvidence'])) {
+            if (!defined('DATA_INPUT_LIST_NATIVE_COMPLETED')) {
+                throw new RuntimeException('List worker completion evidence missing');
+            }
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['dataInputListEvidence'], DATA_INPUT_LIST_NATIVE_COMPLETED);
         }
         if (isset($GLOBALS['nativeChildCoverageSnapshot'])) {
             require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
