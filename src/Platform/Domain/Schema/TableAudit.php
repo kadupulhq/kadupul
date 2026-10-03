@@ -48,6 +48,12 @@ final readonly class TableAudit
         );
     }
 
+    /** A table named by the baseline but absent from the catalog; intentionally carries no repair clause. */
+    public static function missing(string $table): self
+    {
+        return new self($table, AuditTableStatus::Missing, ["ERROR Table: '" . $table . "' exists in the audit schema but is missing from the database; it was not recreated"], 1, 0, []);
+    }
+
     public function alter(TableStatus $status): ?TableAlter
     {
         return $this->clauses === [] ? null : new TableAlter($this->table, $this->clauses, $status);

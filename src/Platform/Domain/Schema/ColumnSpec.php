@@ -25,5 +25,6 @@ final readonly class ColumnSpec
         public ?string $default,
         public bool $defaultNow,
         public ColumnExtra $extra,
+        public ?string $collation = null,
     ) {}
 }

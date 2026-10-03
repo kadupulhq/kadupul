@@ -74,12 +74,12 @@ final class AuditSchemaDump
     /** @param list<int|string|null> $values */
     private static function column(array $values, int $line): BaselineColumn
     {
-        if (count($values) !== 8 || !is_string($values[0]) || !is_int($values[1]) || !is_string($values[2])
+        if (!in_array(count($values), [8, 9], true) || !is_string($values[0]) || !is_int($values[1]) || !is_string($values[2])
             || array_any(array_slice($values, 3), static fn(mixed $value): bool => is_int($value))) {
             throw new InvalidAuditSchema($line);
         }
 
-        return new BaselineColumn($values[0], $values[1], $values[2], $values[3], $values[4], $values[5], $values[6], $values[7]);
+        return new BaselineColumn($values[0], $values[1], $values[2], $values[3], $values[4], $values[5], $values[6], $values[7], $values[8] ?? null);
     }
 
     /** @param list<int|string|null> $values */

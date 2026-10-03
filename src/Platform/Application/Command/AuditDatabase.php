@@ -93,10 +93,17 @@ final readonly class AuditDatabase
             return $run->report($mode, $outcome, $line, uncreated: $uncreated);
         }
         $catalog = $this->schema->catalog($run->scope->target);
-        // Only --report prints findings; the ported loops also decide slightly
-        // differently without output (ColumnDrift's "Extra" branch).
+        // All modes use the same comparison rules; this flag controls only
+        // whether the domain returns human-readable finding lines.
         $output = $mode === AuditMode::Report;
+        $liveNames = array_map(static fn(LiveTable $table): string => $table->name, $catalog->tables());
+        $missing = array_values(array_filter($baseline->tableNames(), static fn(string $name): bool => !in_array($name, self::BASELINE_TABLES, true)
+            && !in_array($name, $liveNames, true)));
         $tables = array_map(static fn(LiveTable $table): TableAudit => TableAudit::of($table, $baseline, $catalog->plugins, $output), $catalog->tables());
+        foreach ($missing as $name) {
+            $tables[] = TableAudit::missing($name);
+        }
+        usort($tables, static fn(TableAudit $a, TableAudit $b): int => strcmp($a->table, $b->table));
         if ($output) {
             return $run->report($mode, $outcome, $line, $tables);
         }

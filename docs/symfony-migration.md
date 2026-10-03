@@ -1211,7 +1211,20 @@ Known differences from `cli/audit_database.php`:
   to stderr, is not printed. The two audit tables get the definitions in
   the file, from constants that a test keeps equal to it.
 - Only base tables are audited and imported; the original also walked views.
-  Table names are quoted in `SHOW COLUMNS` and `SHOW INDEXES`.
+  Table names are quoted in `SHOW FULL COLUMNS` and `SHOW INDEXES` so column
+  collations are part of the audit baseline.
+- Column defaults compare with strict `NULL`/empty-string/value distinctions;
+  `EXTRA`, column collation, index collation, prefix length and index type are
+  checked. `utf8mb4_general_ci` is treated as UTF, not Latin. The baseline file
+  now stores each column's collation and accepts the old eight-field format
+  when reading older installations. Column names use case-insensitive exact
+  matching; underscores in names are not SQL `LIKE` wildcards.
+- A table in the baseline but missing from the live schema is reported as an
+  error. Repair does not recreate it. Column-collation drift and index drift
+  involving prefix lengths or descending columns are reported but block that
+  table's automatic ALTER until the repair builder can represent them without
+  changing their meaning. A supported BTREE/HASH type difference is rebuilt
+  from the baseline definition.
 - A repair statement is built from typed parts: names quoted, defaults as
   quoted literals, `FIRST` in capitals, one line. `--alters` and a failed
   repair print the original's statement text. A clause with no typed form
@@ -1250,11 +1263,17 @@ Known differences from `cli/audit_database.php`:
   `--alters` print the same line after the table's `Scanning Table` line,
   with `-- ` before it under `--alters`. Under `--json` each table lists
   these columns in `widened`.
-- A column that is `NOT NULL` with no default in the audit schema, and whose
-  `Extra` has drifted, is modified with `DEFAULT '1'`, as the original did:
-  its comparison turns the missing default into `true`, which prints as `1`.
-  No row in the shipped `docs/audit_schema.sql` reaches this case, but a file
-  rewritten by `--load` from another database can.
+- `--load` records column collations with `SHOW FULL COLUMNS`; resetting an
+  older audit table adds the nullable `table_collation` metadata column before
+  importing. `--load` still rewrites the checked-in baseline file.
+- `docs/audit_schema.sql` is the schema contract for the exact Kadupul release
+  and fork being audited. A fork that changes its schema must refresh and
+  review this file against a pristine database built from that fork's source
+  before relying on `--repair`. Run `--report` first. Do not refresh the
+  baseline from a production database with unreviewed drift: `--load` would
+  bless that drift as expected. `--repair` never drops columns or tables, but
+  it can add baseline columns, change supported column definitions, rebuild
+  indexes, and normalize table engine/row format.
 - A failed import under `--load` makes the run fail. The original printed
   `Importing Table: ... - Done` for every table either way and exited 0.
 - `--dry-run --load` lists the two audit tables even when they do not exist

@@ -19,12 +19,14 @@ final readonly class BaselineColumn
         public ?string $key,
         public ?string $default,
         public ?string $extra,
+        public ?string $collation = null,
     ) {}
 
     /** @return array<string, int|string|null> keyed as table_columns names its columns, which ColumnDrift rewrites in place */
     public function row(): array
     {
         return ['table_name' => $this->table, 'table_sequence' => $this->sequence, 'table_field' => $this->field, 'table_type' => $this->type,
-            'table_null' => $this->null, 'table_key' => $this->key, 'table_default' => $this->default, 'table_extra' => $this->extra];
+            'table_null' => $this->null, 'table_key' => $this->key, 'table_default' => $this->default, 'table_extra' => $this->extra,
+            'table_collation' => $this->collation];
     }
 }

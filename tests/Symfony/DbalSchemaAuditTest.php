@@ -229,10 +229,8 @@ final class DbalSchemaAuditTest extends TestCase
             $table = $catalog->table(self::PROBE);
 
             self::assertNotNull($table);
-            self::assertSame([
-                ['Field' => 'id', 'Type' => 'int(10) unsigned', 'Null' => 'NO', 'Key' => 'PRI', 'Default' => null, 'Extra' => 'auto_increment'],
-                ['Field' => 'name', 'Type' => 'varchar(20)', 'Null' => 'NO', 'Key' => 'MUL', 'Default' => 'a', 'Extra' => ''],
-            ], $table->columns);
+            $columns = $db->fetchAllAssociative('SHOW FULL COLUMNS FROM ' . $db->quoteSingleIdentifier(self::PROBE));
+            self::assertSame(array_map(static fn(array $column): array => array_intersect_key($column, array_flip(['Field', 'Type', 'Collation', 'Null', 'Key', 'Default', 'Extra'])), $columns), $table->columns);
             self::assertSame([['PRIMARY', '0', '1', 'id'], ['name', '1', '1', 'name']], array_map(static fn(array $index): array => [$index['Key_name'], $index['Non_unique'], $index['Seq_in_index'], $index['Column_name']], $table->indexes));
             self::assertSame('InnoDB', $table->status->engine);
             self::assertTrue($catalog->plugins->createdTable('THOLD_DATA'));
@@ -546,6 +544,10 @@ final class DbalSchemaAuditTest extends TestCase
 
             self::assertNull($store->reset(DatabaseTarget::Local));
             self::assertSame([1, 1], [(int) $db->fetchOne('SELECT COUNT(*) FROM table_columns'), (int) $db->fetchOne('SELECT COUNT(*) FROM table_indexes')]);
+            $db->executeStatement('ALTER TABLE table_columns DROP COLUMN table_collation');
+            self::assertNull($store->reset(DatabaseTarget::Local));
+            self::assertNotFalse($db->fetchOne("SHOW COLUMNS FROM table_columns LIKE 'table_collation'"));
+            self::assertSame([1, 1], [(int) $db->fetchOne('SELECT COUNT(*) FROM table_columns'), (int) $db->fetchOne('SELECT COUNT(*) FROM table_indexes')]);
         } finally {
             $this->dropAll($db);
         }
@@ -565,7 +567,7 @@ final class DbalSchemaAuditTest extends TestCase
             )));
 
             self::assertStringContainsString("COMMENT='Holds Default Cacti Table Definitions'", (string) ($db->fetchAssociative('SHOW CREATE TABLE table_columns')['Create Table'] ?? ''));
-            self::assertSame([['host', '1', 'id', 'int(10) unsigned', 'NO', 'PRI', null, 'auto_increment'], ['host', '2', 'n', 'varchar(20)', 'YES', '', $hostile, '']], array_map(
+            self::assertSame([['host', '1', 'id', 'int(10) unsigned', 'NO', 'PRI', null, 'auto_increment', null], ['host', '2', 'n', 'varchar(20)', 'YES', '', $hostile, '', null]], array_map(
                 static fn(array $row): array => array_map(static fn(mixed $v): ?string => $v === null ? null : (string) $v, array_values($row)),
                 $db->fetchAllAssociative('SELECT * FROM table_columns ORDER BY table_sequence'),
             ));
