@@ -16,7 +16,7 @@ concurrency:
 jobs:
   analyze:
     name: SonarQube Cloud analysis
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Fork and Dependabot pull requests get no secrets, so the scan cannot authenticate there.
     if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
     permissions:
@@ -82,6 +82,9 @@ jobs:
 
       - name: Build browser assets for compatibility tests
         run: npm ci --ignore-scripts && npm run build
+
+      - name: Compile installed browser assets for CLI coverage
+        run: php bin/console asset-map:compile --env=prod --no-debug
 
       - name: Symfony module coverage
         env:
