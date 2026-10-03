@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_fonts.php';
+
 define('RRD_NL', " \\\n");
 define('MAX_FETCH_CACHE_SIZE', 5);
 
@@ -163,8 +165,9 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
     global $config;
 
     /* set the rrdtool default font */
-    if (read_config_option('path_rrdtool_default_font')) {
-        putenv('RRD_DEFAULT_FONT=' . read_config_option('path_rrdtool_default_font'));
+    $font = rrdtool_default_font();
+    if (!empty($font)) {
+        putenv('RRD_DEFAULT_FONT=' . $font);
     }
 
     rrdtool_set_language();
@@ -378,7 +381,7 @@ function __rrd_proxy_init($logopt = 'WEBLOG')
     $rrdproxy = array($rrdp_socket, $rrdp_public_key);
 
     /* set the rrdtool default font */
-    $font = (string) read_config_option('path_rrdtool_default_font');
+    $font = rrdtool_default_font();
     if ($font !== '') {
         // rrdproxy splits the value on blanks and keeps any quotes as part of it.
         if (rrdtool_proxy_token_is_safe($font)) {
@@ -3432,21 +3435,16 @@ function rrdtool_function_theme_font_options(&$graph_data_array)
         }
     }
 
-    /* title fonts */
-    $graph_opts .= rrdtool_function_set_font('title', ((!empty($graph_data_array['graph_nolegend'])) ? $graph_data_array['graph_nolegend'] : ''), $themefonts);
-
-    /* axis fonts */
-    $graph_opts .= rrdtool_function_set_font('axis', '', $themefonts);
-
-    /* legend fonts */
-    $graph_opts .= rrdtool_function_set_font('legend', '', $themefonts);
-
-    /* unit fonts */
-    $graph_opts .= rrdtool_function_set_font('unit', '', $themefonts);
-
-    /* watermark fonts */
+    $elements = array('title', 'axis', 'legend', 'unit');
     if (isset($rrdversion) && cacti_version_compare($rrdversion, '1.3', '>')) {
-        $graph_opts .= rrdtool_function_set_font('watermark', '', $themefonts);
+        $elements[] = 'watermark';
+    }
+
+    $profile   = rrdtool_graph_font_profile(is_array($themefonts) ? $themefonts : array(), $elements);
+    $no_legend = !empty($graph_data_array['graph_nolegend']) ? $graph_data_array['graph_nolegend'] : '';
+
+    foreach ($elements as $element) {
+        $graph_opts .= rrdtool_graph_font_argument($profile, $element, $element == 'title' ? $no_legend : '');
     }
 
     return $graph_opts;
@@ -3459,41 +3457,102 @@ function rrdtool_set_font($type, $no_legend = '', $themefonts = array())
 
 function rrdtool_function_set_font($type, $no_legend, $themefonts)
 {
+    $profile = rrdtool_graph_font_profile(is_array($themefonts) ? $themefonts : array(), array((string) $type));
+
+    return rrdtool_graph_font_argument($profile, (string) $type, $no_legend);
+}
+
+/**
+ * rrdtool_theme_fonts - the $rrdfonts a theme's rrdtheme.php defines
+ *
+ * @param $theme - an installed theme name
+ *
+ * @return - the theme fonts, or an empty array when the theme sets none
+ */
+function rrdtool_theme_fonts($theme)
+{
     global $config;
 
-    if (read_config_option('font_method') == 0) {
+    $rrdtheme = $config['base_path'] . '/include/themes/' . $theme . '/rrdtheme.php';
+    if (!file_exists($rrdtheme) || !is_readable($rrdtheme)) {
+        return array();
+    }
+
+    $rrdfonts = array();
+    include($rrdtheme);
+
+    return is_array($rrdfonts) ? $rrdfonts : array();
+}
+
+/**
+ * rrdtool_graph_font_profile - the fonts a graph render uses
+ *
+ * Reads only the settings the resolver needs for $elements, so asking for one
+ * element does not look up the viewer's settings for the others.
+ *
+ * @param $themefonts - the theme's $rrdfonts
+ * @param $elements   - the graph elements to resolve
+ *
+ * @return - a \Kadupul\Graphing\Domain\Font\GraphFontProfile
+ */
+function rrdtool_graph_font_profile(array $themefonts, array $elements = array('title', 'axis', 'legend', 'unit', 'watermark')): \Kadupul\Graphing\Domain\Font\GraphFontProfile
+{
+    $resolver = graph_font_resolver();
+
+    $method = read_config_option('font_method') == 0 ? \Kadupul\Graphing\Domain\Font\GraphFontMethod::System : \Kadupul\Graphing\Domain\Font\GraphFontMethod::Theme;
+    $site   = array();
+    $viewer = null;
+
+    if ($method === \Kadupul\Graphing\Domain\Font\GraphFontMethod::System && $elements !== array()) {
         if (read_user_setting('custom_fonts') == 'on') {
-            $font = read_user_setting($type . '_font');
-            $size = read_user_setting($type . '_size');
+            $viewer = array();
+            foreach ($elements as $element) {
+                $viewer[$element] = array('font' => read_user_setting($element . '_font'), 'size' => read_user_setting($element . '_size'));
+            }
         } else {
-            $font = read_config_option($type . '_font');
-            $size = read_config_option($type . '_size');
+            foreach ($elements as $element) {
+                $site[$element] = array('font' => read_config_option($element . '_font'), 'size' => read_config_option($element . '_size'));
+            }
         }
-    } elseif (isset($themefonts[$type]['font']) && isset($themefonts[$type]['size'])) {
-        $font = $themefonts[$type]['font'];
-        $size = $themefonts[$type]['size'];
-    } else {
-        return;
     }
 
-    if ($font != '') {
-        /* verifying all possible pango font params is too complex to be tested here
-         * so we only escape the font
-         */
-        $font = rrdtool_pipe_quote($font);
+    return $resolver->resolve(array_values($elements), $method, $themefonts, $site, $viewer, read_config_option('path_rrdtool_default_font'));
+}
+
+/**
+ * rrdtool_default_font - the Default Font setting as RRDtool is given it
+ *
+ * @return - a Pango font description, or '' to leave RRDtool its own default
+ */
+function rrdtool_default_font()
+{
+    return graph_font_resolver()->family(read_config_option('path_rrdtool_default_font'));
+}
+
+/**
+ * rrdtool_graph_font_argument - the --font argument for one element of a profile
+ *
+ * @param $profile   - the render's font profile
+ * @param $type      - the graph element
+ * @param $no_legend - non-empty for a thumbnail, which draws a smaller title
+ *
+ * @return - the argument, or null when the element has no font
+ */
+function rrdtool_graph_font_argument(\Kadupul\Graphing\Domain\Font\GraphFontProfile $profile, $type, $no_legend = '')
+{
+    $font = $profile->element($type);
+    if ($font === null) {
+        return null;
     }
 
-    if ($type == 'title') {
-        $size = graph_font_size($size, 12);
-
-        if (!empty($no_legend)) {
-            $size = $size * .70;
-        }
-    } else {
-        $size = graph_font_size($size, 8);
+    $size = $font->size;
+    if ($type == 'title' && !empty($no_legend)) {
+        $size = $size * .70;
     }
 
-    return '--font ' . strtoupper($type) . ':' . floatval($size) . ':' . $font . RRD_NL;
+    $family = $font->family !== '' ? rrdtool_pipe_quote($font->family) : '';
+
+    return '--font ' . strtoupper($type) . ':' . floatval($size) . ':' . $family . RRD_NL;
 }
 
 function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item)
@@ -4939,7 +4998,6 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
 
     $image_data  = false;
     $font_color  = '000000';
-    $font_size   = 8;
     $back_color  = 'F3F3F3';
     $shadea      = 'CBCBCB';
     $shadeb      = '999999';
@@ -4950,10 +5008,6 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
 
     if (file_exists($themefile) && is_readable($themefile)) {
         include($themefile);
-
-        if (isset($rrdfonts['legend']['size'])) {
-            $font_size   = $rrdfonts['legend']['size'];
-        }
 
         if (isset($rrdcolors['font'])) {
             $font_color  = $rrdcolors['font'];
@@ -4971,6 +5025,10 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
             $shadeb = $rrdcolors['shadeb'];
         }
     }
+
+    /* the error text is drawn at the size the graph legend would have been */
+    $legend    = rrdtool_graph_font_profile(isset($rrdfonts) && is_array($rrdfonts) ? $rrdfonts : array(), array('legend'))->element('legend');
+    $font_size = $legend !== null ? $legend->size : 8;
 
     $image = imagecreatetruecolor(450, 200);
     imagesavealpha($image, true);

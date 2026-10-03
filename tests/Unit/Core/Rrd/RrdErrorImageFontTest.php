@@ -168,3 +168,33 @@ test('rendered error text leaves the right margin and the frame untouched', func
     'built-in GD font' => array(array('/nonexistent/dejavu/')),
     'bundled TrueType font' => array(array(dirname(__DIR__, 4) . '/include/fonts')),
 ));
+
+// The error image stands in for the graph, so its text follows the legend size
+// the graph would have used, from the theme or the System settings.
+test('error text is drawn at the resolved legend size', function () {
+    $render = fn(array $options) => array(
+        'fn' => 'rrdtool_create_error_image',
+        'args' => array('ERROR: opening the RRD file failed'),
+        'globals' => array('dejavu_paths' => array(dirname(__DIR__, 4) . '/include/fonts')),
+        'options' => $options,
+        'base64' => true,
+    );
+    $calls = array(
+        // modern draws its legend at 8 points.
+        $render(array('font_method' => '1', 'legend_size' => '12')),
+        $render(array('font_method' => '0', 'legend_size' => '8')),
+        $render(array('font_method' => '0', 'legend_size' => '12')),
+        // Capped at 72 by the resolver, then at 12 by the error image.
+        $render(array('font_method' => '0', 'legend_size' => '500')),
+        $render(array('font_method' => '0', 'legend_size' => '1e400')),
+        $render(array('font_method' => '0', 'legend_size' => '6')),
+    );
+
+    list($theme, $eight, $twelve, $huge, $infinite, $six) = rrd_error_image_run($this, $calls);
+
+    expect($eight)->toBe($theme)
+        ->and($twelve)->not->toBe($eight)
+        ->and($huge)->toBe($twelve)
+        ->and($infinite)->toBe($eight)
+        ->and($six)->not->toBe($eight)->not->toBe($twelve);
+});

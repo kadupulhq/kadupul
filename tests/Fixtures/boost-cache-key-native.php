@@ -21,7 +21,7 @@ if (isset($scenario['publication'])) {
     $cacheDirectory = 'boostwrite://cache';
 }
 $GLOBALS['cacheWriteCount'] = 0;
-$config = array('library_path' => $directory, 'poller_id' => 1, 'connection' => 'online');
+$config = array('library_path' => $directory, 'base_path' => $root, 'poller_id' => 1, 'connection' => 'online');
 $context = array();
 require $root . '/include/global_constants.php';
 require $root . '/lib/time.php';
@@ -30,6 +30,11 @@ $functions = file_get_contents($root . '/lib/functions.php');
 eval(test_php_function_source($functions, 'cacti_browser_zone_enabled')); // nosemgrep: php.lang.security.eval-use.eval-use
 eval(test_php_function_source($functions, 'cacti_time_zone_set')); // nosemgrep: php.lang.security.eval-use.eval-use
 eval(test_php_function_source($functions, 'cacti_system_zone_set')); // nosemgrep: php.lang.security.eval-use.eval-use
+// The render key resolves fonts the way the render does.
+require $root . '/lib/graph_fonts.php';
+$rrd = file_get_contents($root . '/lib/rrd.php');
+eval(test_php_function_source($rrd, 'rrdtool_theme_fonts')); // nosemgrep: php.lang.security.eval-use.eval-use
+eval(test_php_function_source($rrd, 'rrdtool_graph_font_profile')); // nosemgrep: php.lang.security.eval-use.eval-use
 function read_config_option($name)
 {
     $settings = array('boost_png_cache_enable' => 'on', 'boost_png_cache_directory' => $GLOBALS['cacheDirectory'],

@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_fonts.php';
+
 
 function get_rrdfiles($thread_id = 1, $max_threads = 1)
 {
@@ -827,8 +829,9 @@ function rrdcheck_rrdtool_init()
     }
 
     /* set the rrdtool default font */
-    if (read_config_option('path_rrdtool_default_font')) {
-        putenv('RRD_DEFAULT_FONT=' . read_config_option('path_rrdtool_default_font'));
+    $font = graph_font_resolver()->family(read_config_option('path_rrdtool_default_font'));
+    if ($font != '') {
+        putenv('RRD_DEFAULT_FONT=' . $font);
     }
 
     $command = read_config_option('path_rrdtool') . ' - ';
