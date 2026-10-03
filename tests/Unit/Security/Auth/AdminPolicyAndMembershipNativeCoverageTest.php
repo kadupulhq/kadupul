@@ -5,11 +5,15 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 3) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static bool $coverageEvidenceChecked = false;
 
-    /** @dataProvider grantCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('grantCases')]
     public function testTypedGrantAddsPreserveOtherItemsTypesAndUsers(string $type, string $field, int $typeId, int $item, bool $error, bool $self = false, array $extraButtons = array()): void
     {
         $state = $this->runController(array('group' => false, 'operation' => 'add', 'type' => $type, 'field' => $field, 'item' => $item, 'error' => $error, 'self' => $self, 'extra_add_buttons' => $extraButtons));
@@ -50,7 +54,7 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider policyCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('policyCases')]
     public function testPolicyUpdateChangesOnlyPostedPoliciesForTheTarget(bool $group, array $policies, bool $self = false): void
     {
         $state = $this->runController(array('group' => $group, 'operation' => 'policy', 'policies' => $policies, 'self' => $self));
@@ -86,7 +90,7 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
         self::assertSame('', $state['output']);
     }
 
-    /** @dataProvider failedWriteCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('failedWriteCases')]
     public function testFailedAuthorizationWritesLeavePermissionEpochsUnchanged(bool $group, string $operation): void
     {
         $state = $this->runController(array('group' => $group, 'operation' => $operation, 'type' => 'graph', 'field' => 'graphs', 'item' => 102, 'policies' => array('policy_graphs' => 2), 'write_error' => true));

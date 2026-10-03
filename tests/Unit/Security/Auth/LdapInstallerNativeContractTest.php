@@ -5,6 +5,8 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once __DIR__ . '/../../../Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
@@ -12,7 +14,8 @@ require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
 
 final class LdapInstallerNativeContractTest extends TestCase
 {
-    /** @dataProvider domainCases */
+    use \PestCodeCoverageCompatibility;
+    #[\PHPUnit\Framework\Attributes\DataProvider('domainCases')]
     public function testDomainSearchPreservesConfigurationAndRetries(array $scenario, array $hosts, array $expectedProperties, $result): void
     {
         $state = $this->runNative(['mode' => 'domain'] + $scenario);
@@ -78,7 +81,7 @@ final class LdapInstallerNativeContractTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider installerCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('installerCases')]
     public function testInstallerToolOrderDefaultsAndOverrides(string $os, string $variant): void
     {
         $names = ['php_binary', 'rrdtool', 'snmpwalk', 'snmpget', 'snmpbulkwalk', 'snmpgetnext', 'snmptrap', 'settings_sendmail_path', 'spine'];

@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 abstract class BoostRecoveryContract extends TestCase
 {
-    /** @dataProvider scenarios */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('scenarios')]
     public function testRecoveryKeepsUnacknowledgedOrChangedSamples(string $scenario): void
     {
         $state = $this->runNative($scenario);

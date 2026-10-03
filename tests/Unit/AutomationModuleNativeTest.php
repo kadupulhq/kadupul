@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class AutomationModuleNativeTest extends TestCase
 {
-    /** @dataProvider replacements */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('replacements')]
     public function testNativeReplacementFailsClosedOrPreservesExactResults(array $scenario, array $expected, string $diagnostic): void
     {
         $state = $this->runNative($scenario + array('mode' => 'helper'));
@@ -38,7 +42,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array_intersect_key($cases, array_flip(array('case insensitive','split empty segments','nonmatching')));
     }
 
-    /** @dataProvider handoffs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('handoffs')]
     public function testNativeTreeHandoffCreatesOnlyCompleteNestedHeaders(array $scenario, array $titles): void
     {
         $state = $this->runNative($scenario + array('mode' => 'handoff', 'repeat' => true));
@@ -69,7 +73,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array_intersect_key($cases, array_flip(array('nested')));
     }
 
-    /** @dataProvider previews */
+    #[\PHPUnit\Framework\Attributes\DataProvider('previews')]
     public function testNativePreviewRendersCompleteReplacementOrEmptyCell(array $scenario, string $expected): void
     {
         $state = $this->runNative($scenario + array('mode' => 'preview'));
@@ -110,7 +114,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array_intersect_key($cases, array_flip(array('nested')));
     }
 
-    /** @dataProvider eligibility */
+    #[\PHPUnit\Framework\Attributes\DataProvider('eligibility')]
     public function testNativeEligibilityRequiresAllMandatoryTemplateInputs(string $case, bool $expected): void
     {
         $state = $this->runNative(array('mode' => 'eligible', 'case' => $case));
@@ -123,7 +127,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array('complete' => array('complete', true), 'graph required' => array('graph', false), 'data required' => array('data', false), 'input required' => array('input', false), 'optional input' => array('optional', true));
     }
 
-    /** @dataProvider leaves */
+    #[\PHPUnit\Framework\Attributes\DataProvider('leaves')]
     public function testNativeLeafChangePrunesOnlyIncompatibleFieldsForSelectedRule(int $leaf, array $expected): void
     {
         $state = $this->runNative(array('mode' => 'leaf', 'leaf' => $leaf));
@@ -138,13 +142,19 @@ final class AutomationModuleNativeTest extends TestCase
         return array('device' => array(3, array(3, 4)), 'unchanged' => array(2, array(1, 2, 3, 4)), 'graph' => array(1, array(1, 2, 3, 4)));
     }
 
-    /** @dataProvider schedules */
+    #[\PHPUnit\Framework\Attributes\DataProvider('schedules')]
     public function testNativeSchedulerHonoursManualAndFutureTimes(array $scenario, bool $expected): void
     {
+        $startedAt = time();
         $state = $this->runNative($scenario + array('mode' => 'schedule'));
+        $finishedAt = time();
         self::assertSame($expected, $state['result']);
         if ($expected && $scenario['type'] === 2) {
-            self::assertGreaterThan(time() - 60, strtotime($state['contracts']['next_start']));
+            // The scheduler stores minute precision; compare against the invocation window,
+            // rather than a later parent clock which can cross a minute boundary.
+            $next = (new DateTimeImmutable($state['contracts']['next_start'], new DateTimeZone('UTC')))->getTimestamp();
+            self::assertGreaterThanOrEqual(intdiv($startedAt, 60) * 60, $next);
+            self::assertLessThanOrEqual($finishedAt + 86400, $next);
         }
         self::assertSame(8, (int) $state['contracts']['id']);
     }
@@ -162,7 +172,7 @@ final class AutomationModuleNativeTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider nodeKinds */
+    #[\PHPUnit\Framework\Attributes\DataProvider('nodeKinds')]
     public function testNativeNodeCallerPreservesOwnershipAndReusesExistingNode(string $kind, bool $reject): void
     {
         $state = $this->runNative(array('mode' => 'node', 'kind' => $kind, 'reject' => $reject));
@@ -188,7 +198,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array(array('host', false), array('site', false), array('graph', false), array('host', true), array('site', true), array('graph', true));
     }
 
-    /** @dataProvider devices */
+    #[\PHPUnit\Framework\Attributes\DataProvider('devices')]
     public function testNativeDeviceCallerPassesDefaultsAndRemovesOnlyAcknowledgedQueueEntry(array $scenario, string $description): void
     {
         $state = $this->runNative($scenario + array('mode' => 'device'));
@@ -209,7 +219,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array(array(array('name' => 'System', 'hostname' => 'dns', 'overrides' => false, 'reject' => false), 'System'), array(array('name' => '', 'hostname' => 'dns', 'overrides' => true, 'reject' => false), 'dns'), array(array('name' => '', 'hostname' => '', 'overrides' => false, 'reject' => true), '192.0.2.7'));
     }
 
-    /** @dataProvider snmpCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('snmpCases')]
     public function testNativeSnmpCredentialFallbackPreservesStatusAndClosesSuccessfulSession(string $case, bool $expected): void
     {
         $state = $this->runNative(array('mode' => 'snmp', 'case' => $case));
@@ -228,7 +238,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array(array('valid', true), array('fallback', true), array('unknown', false), array('session-failed', false), array('empty', false));
     }
 
-    /** @dataProvider graphQueries */
+    #[\PHPUnit\Framework\Attributes\DataProvider('graphQueries')]
     public function testNativeDataQueryCreatesOnlyMissingGraphsForSelectedDevice(string $case): void
     {
         $state = $this->runNative(array('mode' => 'dq', 'case' => $case));
@@ -268,7 +278,7 @@ final class AutomationModuleNativeTest extends TestCase
         self::assertStringNotContainsString('Warning:', $state['html']);
     }
 
-    /** @dataProvider editors */
+    #[\PHPUnit\Framework\Attributes\DataProvider('editors')]
     public function testNativeRuleEditorOffersFieldsForEachRuleType(int $type, int $leaf, string $title): void
     {
         $state = $this->runNative(array('mode' => 'edit', 'type' => $type, 'leaf' => $leaf));
@@ -285,7 +295,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array(array(1, 3, 'Device Match Rule'), array(2, 3, 'Create Graph Rule'), array(3, 3, 'Device Match Rule'), array(3, 2, 'Graph Match Rule'), array(4, 3, 'Create Tree Rule (Device)'), array(4, 2, 'Create Tree Rule (Graph)'));
     }
 
-    /** @dataProvider matchingLists */
+    #[\PHPUnit\Framework\Attributes\DataProvider('matchingLists')]
     public function testNativeMatchingListPreservesSelectedRowsAndObjectIdentity(string $kind): void
     {
         $state = $this->runNative(array('mode' => 'matches', 'kind' => $kind));
@@ -325,7 +335,7 @@ final class AutomationModuleNativeTest extends TestCase
         return array(array('host'), array('graph'));
     }
 
-    /** @dataProvider templateRenderPaths */
+    #[\PHPUnit\Framework\Attributes\DataProvider('templateRenderPaths')]
     public function testDatabaseTemplateRemainsSelected(string $mode): void
     {
         $state = $this->runNative(array('mode' => $mode, 'kind' => 'host', 'host_template_id' => 9, 'search' => '^host$', 'replace' => 'A\\nB', 'target' => 'host'));
@@ -342,7 +352,7 @@ final class AutomationModuleNativeTest extends TestCase
         self::assertSame('Fixture template', $xpath->query('//select[@id="host_template_id"]/option[@selected]')->item(0)->textContent);
     }
 
-    /** @dataProvider templateRenderPaths */
+    #[\PHPUnit\Framework\Attributes\DataProvider('templateRenderPaths')]
     public function testSearchValueRemainsTextAndHasAnAccessibleName(string $mode): void
     {
         $payload = "'\"/><script>alert(1)</script>` &lt;tag&gt;";

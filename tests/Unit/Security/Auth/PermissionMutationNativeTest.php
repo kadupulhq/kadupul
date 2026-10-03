@@ -7,11 +7,15 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../../../Helpers/PestCodeCoverageCompatibility.php';
+
 final class PermissionMutationNativeTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static bool $evidenceChecked = false;
 
-    /** @dataProvider singleAssociationCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('singleAssociationCases')]
     public function testSingleAssociationWritesRetainAtomicEpochsAndCallerOwnership(array $scenario): void
     {
         $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
@@ -55,7 +59,7 @@ final class PermissionMutationNativeTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider deleteReceiptCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('deleteReceiptCases')]
     public function testAbsentDeletesAndUnconfirmedReceiptsPreserveState(array $scenario): void
     {
         $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
@@ -91,7 +95,7 @@ final class PermissionMutationNativeTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider mixedDeleteCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('mixedDeleteCases')]
     public function testNoopSelectionsDoNotConsumeTheRealMutationsEpoch(array $scenario): void
     {
         $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
@@ -124,7 +128,7 @@ final class PermissionMutationNativeTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider cases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cases')]
     public function testAtomicMutationAndEpochOutcomes(array $scenario): void
     {
         $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
@@ -179,7 +183,7 @@ final class PermissionMutationNativeTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider batchCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('batchCases')]
     public function testMaximumConfiguredBatchHasBoundedMetadataAndEpochWork(bool $group, int $members): void
     {
         $scenario = array('engine' => getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite', 'kind' => 'batch', 'group' => $group, 'size' => 5000, 'members' => $members);

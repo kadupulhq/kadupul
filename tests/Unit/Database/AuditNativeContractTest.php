@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 2) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class AuditNativeContractTest extends TestCase
 {
-    /** @dataProvider cases */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('cases')]
     public function testCompleteCliPreservesBaselineAndReportsFailures(string $case, string $option, int $expected): void
     {
         $root = dirname(__DIR__, 3);
