@@ -87,12 +87,16 @@ CLIENT_ERROR = re.compile(r'^-{14}\n.*?\n-{14}\n\nERROR \d+ \([0-9A-Z]+\) at lin
 LOAD_ERROR = re.compile(r'^ERROR: .*$', re.M)
 # The upgrade stamps settings.install_updated with the time it finished.
 UPDATED = re.compile(r'^install_updated\t.*$', re.M)
-# --load reads every table before it imports any, so the shim records the two
-# audit tables' own indexes with the cardinality of empty tables; the original
-# read each table after importing the ones before it.
+# Index cardinality is a sampled, asynchronously refreshed engine estimate,
+# not an index definition. Separate --load runs can capture different estimates
+# even for unchanged data (including settings after fixture restoration).
+# Compare every structural field and row, omitting only numeric cardinality in
+# complete index records. NULL and malformed records remain visible.
+SQL_STRING = r"'(?:[^'\\]|\\.|'')*'"
+SQL_VALUE = rf"(?:{SQL_STRING}|NULL|[0-9]+)"
 IMPORTED_CARDINALITY = [
-    re.compile(r"^(table_(?:columns|indexes)\t\d+\t[^\t]+\t\d+\t[^\t]+\t[^\t]*\t)\d+", re.M),
-    re.compile(r"^(INSERT INTO `table_indexes` VALUES \('table_(?:columns|indexes)',\d+,'[^']*',\d+,'[^']*','[^']*',)\d+", re.M),
+    re.compile(r"^([^\t\n]+\t[01]\t[^\t\n]+\t[0-9]+\t[^\t\n]+\t(?:A|D|NULL)\t)[0-9]+((?:\t[^\t\n]*){5})$", re.M),
+    re.compile(rf"^(INSERT INTO `table_indexes` VALUES \({SQL_STRING},[01],{SQL_STRING},[0-9]+,{SQL_STRING},(?:{SQL_STRING}|NULL),)[0-9]+((?:,{SQL_VALUE}){{5}}\);)$", re.M),
 ]
 UNPARSED = 'audit report with an unparsable audit schema'
 EXPORT_FAILS = 'audit load with a failing export'
@@ -212,8 +216,8 @@ def schema(harness, with_dump=True, imported=False):
     """Every base table's columns, indexes and options, the audit tables' rows,
     the rows the upgrade changes, and docs/audit_schema.sql.
 
-    imported masks the cardinality --load records for the audit tables' own
-    indexes, in the rows and in the dump.
+    imported omits only numeric engine cardinality estimates from complete
+    index records captured by --load, in the rows and in the dump.
     """
     base = "FROM information_schema.{} WHERE TABLE_SCHEMA = DATABASE()"
     columns = harness.sql("SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_TYPE, IS_NULLABLE, COALESCE(COLUMN_DEFAULT, 'NULL'), EXTRA "
@@ -231,8 +235,8 @@ def schema(harness, with_dump=True, imported=False):
         'SELECT name, hook FROM plugin_hooks ORDER BY id; SELECT plugin, file FROM plugin_realms ORDER BY id'))
     listing, dump = dump_file(harness) if with_dump else ('', '')
     if imported:
-        rows = IMPORTED_CARDINALITY[0].sub(r'\1N', rows)
-        dump = IMPORTED_CARDINALITY[1].sub(r'\1N', dump)
+        rows = IMPORTED_CARDINALITY[0].sub(r'\1N\2', rows)
+        dump = IMPORTED_CARDINALITY[1].sub(r'\1N\2', dump)
     return columns, indexes, options, rows, state, listing, dump
 
 
