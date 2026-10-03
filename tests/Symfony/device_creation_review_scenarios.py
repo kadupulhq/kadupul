@@ -62,6 +62,16 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
         verify_remote_collector_assignment(harness, session, created[-1], poller, check)
         from device_state_scenarios import verify_remote_device_state
         verify_remote_device_state(harness, session, created[-1], poller, check)
+        from device_bulk_snmp_scenarios import verify_bulk_snmp
+        verify_bulk_snmp(harness, session, check, poller)
+        from device_bulk_assignment_scenarios import verify_bulk_assignments
+        verify_bulk_assignments(harness, session, check, poller)
+        from device_state_scenarios import verify_bulk_options
+        verify_bulk_options(harness, session, check)
+        verify_bulk_options(harness, session, check, poller)
+        from device_state_scenarios import verify_template_synchronization
+        verify_template_synchronization(harness, session, check)
+        verify_template_synchronization(harness, session, check, poller)
         from device_removal_scenarios import verify_device_removal
         verify_device_removal(harness, session, user_id, poller, check)
         harness.sql("UPDATE create_remote.host SET notes=''; ALTER TABLE create_remote.host MODIFY notes TEXT CHARACTER SET utf8mb3")
