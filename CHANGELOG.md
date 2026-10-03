@@ -75,6 +75,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
+- Treat missing or invalid Host Resources allocation units and negative disk samples as unknown instead of reporting raw units, raising a type error, or guessing an unsigned wrap. Fixes #243.
+
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
