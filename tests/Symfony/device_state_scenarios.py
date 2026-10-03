@@ -240,14 +240,15 @@ def verify_template_synchronization(harness, session, check, poller=1):
     graphs = [int(value) for value in harness.sql('SELECT id FROM graph_templates WHERE id NOT IN (SELECT graph_template_id FROM snmp_query_graph) ORDER BY id LIMIT 3').splitlines()]
     query = int(harness.sql('SELECT MIN(id) FROM snmp_query').strip())
     template = int(harness.sql("INSERT INTO host_template (hash,name) VALUES ('sync-template-fixture','Synchronization fixture'); SELECT LAST_INSERT_ID()").strip())
-    device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,host_template_id,snmp_version,availability_method) VALUES ('sync-device-fixture','127.0.0.1',{poller},{template},0,0); SELECT LAST_INSERT_ID()").strip())
-    unassigned = int(harness.sql("INSERT INTO host (description,hostname,poller_id,host_template_id,snmp_version,availability_method) VALUES ('sync-unassigned-fixture','127.0.0.1',1,0,0,0); SELECT LAST_INSERT_ID()").strip())
+    device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,host_template_id,snmp_version,availability_method,status) VALUES ('sync-device-fixture','127.0.0.1',{poller},{template},0,0,1); SELECT LAST_INSERT_ID()").strip())
+    unassigned = int(harness.sql("INSERT INTO host (description,hostname,poller_id,host_template_id,snmp_version,availability_method,status) VALUES ('sync-unassigned-fixture','127.0.0.1',1,0,0,0,1); SELECT LAST_INSERT_ID()").strip())
     ids = sorted([device, unassigned])
     form = StateForm(harness, session, ids)
     form.path = form.path.replace('/disable?', '/sync-template?')
     prefix = 'create_remote.' if poller > 1 else ''
     retained_graph = None
     trigger = False
+    second_template = second_query = slow_query = slow_input = None
     marker_rows = harness.sql("SELECT value FROM settings WHERE name='time_last_change_device'").splitlines()
     original_marker = marker_rows[0] if marker_rows else None
     check(harness.php('-r', 'require "include/global.php"; function setup_sync_hooks() { api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_statistics_action","setup.php",true); api_plugin_register_hook("compatibility_test","device_template_change","compatibility_template_sync","setup.php",true); } setup_sync_hooks();')['exit'] == 0, 'template synchronization hook registered')
@@ -291,16 +292,76 @@ def verify_template_synchronization(harness, session, check, poller=1):
                 check(form.apply() == 502, 'template synchronization rejects offline collectors before writes')
             finally:
                 harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')
+        snapshot = harness.sql(f'SELECT host_id,graph_template_id FROM host_graph WHERE host_id IN ({device},{unassigned}) ORDER BY host_id,graph_template_id')
+        query_snapshot = harness.sql(f'SELECT host_id,snmp_query_id FROM host_snmp_query WHERE host_id IN ({device},{unassigned}) ORDER BY host_id,snmp_query_id')
+        before_missing_actions, before_missing_templates = actions(), template_events()
+        before_marker = harness.sql("SELECT value FROM settings WHERE name='time_last_change_device'")
+        harness.sql(f'UPDATE host SET host_template_id=16777214 WHERE id={unassigned}')
+        try:
+            check(form.apply() == 502, 'template synchronization rejects a missing assigned template')
+            check(harness.sql(f'SELECT host_id,graph_template_id FROM host_graph WHERE host_id IN ({device},{unassigned}) ORDER BY host_id,graph_template_id') == snapshot and harness.sql(f'SELECT host_id,snmp_query_id FROM host_snmp_query WHERE host_id IN ({device},{unassigned}) ORDER BY host_id,snmp_query_id') == query_snapshot, 'missing template preserves all primary associations')
+            check(actions() == before_missing_actions and template_events() == before_missing_templates and harness.sql("SELECT value FROM settings WHERE name='time_last_change_device'") == before_marker, 'missing template invokes no callbacks and preserves the marker')
+        finally:
+            harness.sql(f'UPDATE host SET host_template_id=0 WHERE id={unassigned}')
+        from harness import Session
+        anonymous = Session(harness.base).request(form.path)
+        check(anonymous['status'] in (401,403) or anonymous['login_form'], 'template synchronization refuses unauthenticated requests')
+        anonymous_post = Session(harness.base).request(form.path, form.fields())
+        check(anonymous_post['status'] in (401,403) or anonymous_post['login_form'], 'template synchronization refuses unauthenticated POST requests')
+        actor = int(harness.sql("SELECT id FROM user_auth WHERE username='admin' AND realm=0").strip())
+        baseline_fields = form.fields()
+        saved_policy = harness.rows(f"SELECT JSON_OBJECT('hosts',policy_hosts,'graphs',policy_graphs,'templates',policy_graph_templates) FROM user_auth WHERE id={actor}")[0]
+        saved_mode = harness.sql("SELECT value FROM settings WHERE name='graph_auth_method'").splitlines()
+        try:
+            harness.sql("REPLACE INTO settings(name,value) VALUES ('graph_auth_method','3')")
+            harness.sql(f'UPDATE user_auth SET policy_hosts=2,policy_graphs=2,policy_graph_templates=2 WHERE id={actor}')
+            check(form.request()[0] == 404 and form.apply(baseline_fields) == 404, 'template synchronization conceals inaccessible devices on GET and POST')
+        finally:
+            harness.sql(f"UPDATE user_auth SET policy_hosts={saved_policy['hosts']},policy_graphs={saved_policy['graphs']},policy_graph_templates={saved_policy['templates']} WHERE id={actor}")
+            if saved_mode:
+                harness.sql("UPDATE settings SET value=UNHEX('" + saved_mode[0].encode().hex() + "') WHERE name='graph_auth_method'")
+            else:
+                harness.sql("DELETE FROM settings WHERE name='graph_auth_method'")
+        had_realm = harness.sql(f'SELECT COUNT(*) FROM user_auth_realm WHERE user_id={actor} AND realm_id=3').strip()
+        check(had_realm == '1', 'template synchronization denied-realm fixture starts authorized')
+        try:
+            harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={actor} AND realm_id=3')
+            check(form.request()[0] == 403 and form.apply(baseline_fields) == 403, 'template synchronization refuses an actor without the device-management realm')
+            command = {'actor':actor, 'selection':json.loads(baseline_fields['device_state[selection]']), 'operation':'sync-template'}
+            result = harness.compose('exec','-T','-u','www-data','web','php','bin/legacy-device-state.php',data=json.dumps(command),check=False)
+            check(result['exit'] != 0 and '"status":"denied"' in result['stdout'], 'template synchronization worker independently refuses a revoked realm')
+        finally:
+            harness.sql(f'REPLACE INTO user_auth_realm(user_id,realm_id) VALUES ({actor},3)')
+        check(actions() == before_missing_actions and template_events() == before_missing_templates and harness.sql(f'SELECT host_id,graph_template_id FROM host_graph WHERE host_id IN ({device},{unassigned}) ORDER BY host_id,graph_template_id') == snapshot, 'denied synchronization performs no writes or callbacks')
+        if poller > 1:
+            harness.sql(f'CREATE TRIGGER create_remote.sync_identity_mismatch BEFORE UPDATE ON create_remote.host FOR EACH ROW SET NEW.host_template_id=0')
+            try:
+                check(form.apply() == 502, 'template synchronization rejects altered collector template identity')
+                check(harness.sql(f'SELECT host_id,graph_template_id FROM host_graph WHERE host_id IN ({device},{unassigned}) ORDER BY host_id,graph_template_id') == snapshot and harness.sql(f'SELECT host_id,snmp_query_id FROM host_snmp_query WHERE host_id IN ({device},{unassigned}) ORDER BY host_id,snmp_query_id') == query_snapshot, 'collector identity mismatch rolls back the primary batch')
+                check(actions() == before_missing_actions, 'collector identity mismatch invokes no action 7 callback')
+            finally:
+                harness.sql('DROP TRIGGER create_remote.sync_identity_mismatch')
+                harness.sql(f'UPDATE create_remote.host SET host_template_id={template} WHERE id={device}')
+                harness.sql(f'DELETE FROM create_remote.host_graph WHERE host_id={device}; INSERT INTO create_remote.host_graph SELECT * FROM host_graph WHERE host_id={device}; DELETE FROM create_remote.host_snmp_query WHERE host_id={device}')
+        def audit_count():
+            message = ' confirmed synchronized templates for devices ' + ','.join(str(value) for value in ids)
+            result = harness.php('-r','require "include/global.php"; echo substr_count(file_get_contents(cacti_log_file()), ' + json.dumps(message) + ');')
+            if result['exit'] != 0:
+                raise AssertionError('Could not read the sanitized synchronization audit count')
+            return int(result['stdout'])
+        before_audit = audit_count()
         before = actions()
         harness.sql(f"CREATE TRIGGER {prefix}reject_template_sync BEFORE INSERT ON {prefix}host_graph FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='sync association rejection'")
         trigger = True
         check(form.apply() == 502, 'template synchronization association failure cannot report success')
         check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device} AND graph_template_id={graphs[0]}').strip() == '0', 'template synchronization failure rolls back primary associations')
         check(actions() == before, 'failed synchronization does not invoke the bulk action callback')
+        check(audit_count() == before_audit, 'failed synchronization does not publish a success audit record')
         harness.sql(f'DROP TRIGGER {prefix}reject_template_sync')
         trigger = False
         before_templates = template_events()
         check(form.apply() == 200, 'template synchronization saves through Symfony')
+        check(audit_count() == before_audit+1, 'successful synchronization publishes exactly one success audit record')
         check(template_events()[len(before_templates):] == [[{'device_id': device, 'device_template_id': template}]], 'template synchronization invokes the template-change hook once per assigned device')
         check(actions()[len(before):] == [[['7', ids]]], 'template synchronization invokes action 7 once with complete selection')
         configured_method = harness.php('-r', 'require "include/global.php"; echo read_config_option("reindex_method");')
@@ -316,7 +377,60 @@ def verify_template_synchronization(harness, session, check, poller=1):
         check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device} AND graph_template_id={graphs[2]}').strip() == '1', 'template synchronization retains associations used by existing graphs')
         check(harness.sql(f'SELECT host_template_id FROM host WHERE id={unassigned}').strip() == '0', 'template synchronization skips unassigned devices')
         check(form.apply() == 200, 'template synchronization supports repeated synchronization')
+        # Cached discovery must not prevent repair of a missing association.
+        for database in (['','create_remote.'] if poller > 1 else ['']):
+            harness.sql(f"DELETE FROM {database}host_snmp_query WHERE host_id={device} AND snmp_query_id={query}; INSERT INTO {database}host_snmp_cache (host_id,snmp_query_id,field_name,field_value,snmp_index,oid) VALUES ({device},{query},'syncFixture','cached','1','.1.3.6.1')")
+        check(form.apply() == 200, 'template synchronization repairs associations despite existing query cache')
+        second_template = int(harness.sql("INSERT INTO host_template(hash,name) VALUES ('sync-second-template','Second synchronization fixture'); SELECT LAST_INSERT_ID()").strip())
+        second_query = int(harness.sql(f"INSERT INTO snmp_query(hash,name,xml_path,data_input_id) SELECT 'sync-second-query','Second synchronization query',xml_path,data_input_id FROM snmp_query WHERE id={query}; SELECT LAST_INSERT_ID()").strip())
+        harness.sql(f'UPDATE host SET host_template_id={second_template} WHERE id={unassigned}; INSERT INTO host_template_graph(host_template_id,graph_template_id) VALUES ({second_template},{graphs[1]}); INSERT INTO host_template_snmp_query(host_template_id,snmp_query_id) VALUES ({second_template},{second_query}); INSERT INTO host_graph(host_id,graph_template_id) VALUES ({unassigned},{graphs[0]})')
+        before_multi_actions, before_multi_templates = actions(), template_events()
+        check(form.apply() == 200, 'template synchronization supports a selection spanning different templates')
+        check(harness.sql(f'SELECT graph_template_id FROM host_graph WHERE host_id={unassigned} ORDER BY graph_template_id').strip() == str(graphs[1]) and harness.sql(f'SELECT snmp_query_id FROM host_snmp_query WHERE host_id={unassigned}').strip() == str(second_query), 'each synchronized device receives only its own template associations')
+        check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device} AND graph_template_id={graphs[1]}').strip() == '0' and harness.sql(f'SELECT COUNT(*) FROM host_snmp_query WHERE host_id={device} AND snmp_query_id={second_query}').strip() == '0', 'multiple templates do not leak associations across devices')
+        expected = [[{'device_id':device,'device_template_id':template}],[{'device_id':unassigned,'device_template_id':second_template}]]
+        check(template_events()[len(before_multi_templates):] == expected and actions()[len(before_multi_actions):] == [[['7',ids]]], 'multiple templates preserve per-device and complete-selection callback contracts')
+        if poller == 1:
+            from concurrent.futures import ThreadPoolExecutor
+            import time
+            slow_input = int(harness.sql("INSERT INTO data_input(hash,name,type_id,input_string) VALUES ('sync-slow-input','Synchronization deferred fixture',127,''); SELECT LAST_INSERT_ID()").strip())
+            slow_query = int(harness.sql(f"INSERT INTO snmp_query(hash,name,xml_path,data_input_id) SELECT 'sync-slow-query','Synchronization deferred query',xml_path,{slow_input} FROM snmp_query WHERE id={query}; SELECT LAST_INSERT_ID()").strip())
+            harness.sql(f'DELETE FROM host_template_snmp_query WHERE host_template_id={template}; INSERT INTO host_template_snmp_query(host_template_id,snmp_query_id) VALUES ({template},{slow_query}); UPDATE host SET status=0 WHERE id={device}')
+            check(harness.php('-r','require "include/global.php"; function setup_sync_discovery() { api_plugin_register_hook("compatibility_test","run_data_query","compatibility_sync_discovery","setup.php",true); } setup_sync_discovery();')['exit'] == 0, 'deferred synchronization discovery fixture registered')
+            harness.command('rm','-f','/artifacts/sync-query-ready','/artifacts/sync-query-release')
+            before_slow_actions = actions()
+            before_slow_audit = audit_count()
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                future = pool.submit(form.apply)
+                try:
+                    deadline = time.monotonic()+20
+                    while harness.command('test','-f','/artifacts/sync-query-ready')['exit'] != 0:
+                        if future.done():
+                            raise AssertionError('Synchronization did not reach deferred discovery; HTTP '+str(future.result()))
+                        if time.monotonic()>deadline:
+                            raise AssertionError('Deferred discovery fixture timed out')
+                        time.sleep(0.1)
+                    check(harness.command('cat','/artifacts/sync-query-ready')['stdout'].strip() == 'unlocked', 'template synchronization discovery runs without an active primary transaction')
+                    result = harness.php('-r', 'require "include/global.php"; $db=$database_sessions["$database_hostname:$database_port:$database_default"]; $db->exec("SET SESSION innodb_lock_wait_timeout=1"); $db->exec("UPDATE host SET status=1 WHERE id='+str(device)+'"); echo "updated";')
+                    check(result['exit'] == 0 and result['stdout'] == 'updated', 'slow synchronization discovery does not block a concurrent poller write')
+                finally:
+                    harness.command('touch','/artifacts/sync-query-release')
+                check(future.result() == 502, 'deferred discovery failure reports uncertain completion')
+            check(harness.sql(f'SELECT COUNT(*) FROM host_snmp_query WHERE host_id={device} AND snmp_query_id={slow_query}').strip() == '1' and actions() == before_slow_actions, 'deferred discovery failure retains committed associations without a success callback')
+            check(audit_count() == before_slow_audit, 'deferred discovery failure does not publish a success audit record')
+            harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='run_data_query' AND `function`='compatibility_sync_discovery'")
+            check(form.apply() == 200, 'template synchronization retries safely after deferred discovery failure')
     finally:
+        harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='run_data_query' AND `function`='compatibility_sync_discovery'")
+        for database in (['','create_remote.'] if poller > 1 else ['']):
+            harness.sql(f'DELETE FROM {database}host_snmp_cache WHERE host_id IN ({device},{unassigned}); DELETE FROM {database}host_snmp_query WHERE host_id IN ({device},{unassigned})')
+        if second_template is not None:
+            harness.sql(f'DELETE FROM host_template_graph WHERE host_template_id={second_template}; DELETE FROM host_template_snmp_query WHERE host_template_id={second_template}; DELETE FROM host_template WHERE id={second_template}')
+        for owned_query in (second_query,slow_query):
+            if owned_query is not None:
+                harness.sql(f'DELETE FROM snmp_query WHERE id={owned_query}')
+        if slow_input is not None:
+            harness.sql(f'DELETE FROM data_input WHERE id={slow_input}')
         if trigger:
             harness.sql(f'DROP TRIGGER {prefix}reject_template_sync')
         harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='device_action_bottom' AND `function`='compatibility_statistics_action'")
