@@ -550,7 +550,7 @@ fs_write	./install/functions.php:1068	        file_put_contents($config['base_pa
 fs_write	./install/functions.php:374	        file_put_contents($cacheFile, '<[version]> ' . $cacti_upgrade_version . ' <[status]> ' . $status . ' <[sql]> ' . clean_up_lines($sql) . ' <[error]> ' . $database_last_error . PHP_EOL, FILE_APPEND);
 fs_write	./install/functions.php:66	            $fh = fopen($file, 'w');
 fs_write	./install/functions.php:851	                    $fp = fopen($config_file, 'w');
-fs_write	./lib/api_device.php:3046	                        file_put_contents($new_xmlfile, $data);
+fs_write	./lib/api_device.php:3052	                        file_put_contents($new_xmlfile, $data);
 fs_write	./lib/boost.php:514	                            if ($fileptr = fopen($cache_file, 'rb')) {
 fs_write	./lib/boost.php:639	                        if ($fileptr = fopen($cache_file, 'w')) {
 fs_write	./lib/clog_webapi.php:108	                $log_fh = fopen($logfile, 'w');
