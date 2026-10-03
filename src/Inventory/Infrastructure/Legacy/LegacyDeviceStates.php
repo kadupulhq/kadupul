@@ -55,7 +55,7 @@ final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Invent
     {
         $this->run($actorId, $selection, ['operation' => 'assign', 'kind' => $assignment->kind, 'target' => $assignment->targetId]);
     }
-    public function changeSnmp(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceSnmpChange $change): void
+    public function changeSnmp(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceBulkSnmpChange $change): void
     {
         $this->run($actorId, $selection, ['operation' => 'snmp', 'changes' => $change->fields]);
     }

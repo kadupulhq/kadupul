@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -59,7 +61,16 @@ final class DeviceBulkSnmpPresentationTest extends TestCase
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_state[_token]"]/@value)');
-            $fields = ['selection' => json_encode([7 => $device->revision()]), '_token' => $token, 'snmp' => ['keep_credentials' => 'replace', 'snmp_community' => 'fixture-bulk-secret'] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS];
+            $xpath = new \DOMXPath($document);
+            self::assertSame(9.0, $xpath->evaluate('count(//input[@type="checkbox"])'));
+            self::assertSame(0.0, $xpath->evaluate('count(//input[@type="checkbox" and @checked])'));
+            $untouched = ['selection' => json_encode([7 => $device->revision()]), '_token' => $token, 'snmp' => ['keep_credentials' => 'keep'] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS];
+            $request = Request::create($path, 'POST', ['device_state' => $untouched], ['Cacti' => 'fixture']);
+            $request->headers->set('Origin', 'http://localhost');
+            $response = $kernel->handle($request);
+            self::assertSame(422, $response->getStatusCode());
+            self::assertStringContainsString('Sélectionnez au moins un paramètre SNMP', $response->getContent());
+            $fields = ['selection' => json_encode([7 => $device->revision()]), '_token' => $token, 'snmp' => ['apply_snmp_community' => '1', 'keep_credentials' => 'replace', 'snmp_community' => 'fixture-bulk-secret'] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS];
             foreach (['', 'null', '{}', '{"8":"' . $device->revision() . '"}'] as $invalid) {
                 $request = Request::create($path, 'POST', ['device_state' => array_replace($fields, ['selection' => $invalid])], ['Cacti' => 'fixture']);
                 $request->headers->set('Origin', 'http://localhost');

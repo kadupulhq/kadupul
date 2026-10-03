@@ -16,7 +16,7 @@ final readonly class ChangeDevicesSnmp
 {
     public function __construct(private ConsoleAccess $access, private DeviceSnmpSettings $devices) {}
 
-    public function __invoke(DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceSnmpChange $change): void
+    public function __invoke(DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceBulkSnmpChange $change): void
     {
         $actor = $this->access->consoleActor();
         if ($actor === null || !$this->access->canManageDevices($actor)) {

@@ -6,7 +6,7 @@
 <main>
     <h1>{{ heading|trans({}, 'inventory') }}</h1>
     {% if operation == 'snmp' %}
-    <p>{{ 'Apply these SNMP settings to every selected device. Keep each device’s stored credentials or explicitly replace them. Stored secrets are never displayed.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'Only checked SNMP settings are changed. Unchecked settings and credentials retain their current values.'|trans({}, 'inventory') }}</p>
     {% elseif operation == 'options' %}
     <p>{{ 'Only checked options are changed. Unchecked options retain their current values. Selecting an empty location clears it.'|trans({}, 'inventory') }}</p>
     {% elseif operation == 'sync-template' %}

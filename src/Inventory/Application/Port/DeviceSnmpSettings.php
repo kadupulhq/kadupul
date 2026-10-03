@@ -11,5 +11,5 @@ use Kadupul\Inventory\Domain\DeviceSelection;
 
 interface DeviceSnmpSettings
 {
-    public function changeSnmp(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceSnmpChange $change): void;
+    public function changeSnmp(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceBulkSnmpChange $change): void;
 }

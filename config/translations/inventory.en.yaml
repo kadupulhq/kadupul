@@ -291,3 +291,6 @@
 "Confirm SNMP changes": "Confirm SNMP changes"
 "Selected device SNMP settings updated.": "Selected device SNMP settings updated."
 "Apply these SNMP settings to every selected device. Keep each device’s stored credentials or explicitly replace them. Stored secrets are never displayed.": "Apply these SNMP settings to every selected device. Keep each device’s stored credentials or explicitly replace them. Stored secrets are never displayed."
+
+"Only checked SNMP settings are changed. Unchecked settings and credentials retain their current values.": "Only checked SNMP settings are changed. Unchecked settings and credentials retain their current values."
+"Select at least one supported SNMP setting.": "Select at least one supported SNMP setting."

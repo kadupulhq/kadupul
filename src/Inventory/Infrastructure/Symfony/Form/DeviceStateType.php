@@ -18,7 +18,7 @@ final class DeviceStateType extends AbstractType
     {
         $builder->add('selection', HiddenType::class);
         if ($options['edit_snmp']) {
-            $builder->add('snmp', DeviceSnmpType::class, ['label' => 'SNMP settings']);
+            $builder->add('snmp', DeviceSnmpType::class, ['label' => 'SNMP settings', 'bulk' => true]);
         }
         if ($options['edit_options']) {
             $builder->add('options', DeviceOptionsType::class, ['label' => 'Device options']);

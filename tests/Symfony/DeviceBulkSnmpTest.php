@@ -25,7 +25,7 @@ final class DeviceBulkSnmpTest extends TestCase
         $selection = new DeviceSelection([7 => str_repeat('a', 64)]);
         $port = $this->createMock(DeviceSnmpSettings::class);
         $port->expects(self::once())->method('changeSnmp')->with(42, $selection, self::callback(fn($change) => $change->fields['keep_credentials'] === true));
-        (new ChangeDevicesSnmp($access, $port))($selection, new \Kadupul\Inventory\Domain\DeviceSnmpChange(['keep_credentials' => true] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS));
+        (new ChangeDevicesSnmp($access, $port))($selection, new \Kadupul\Inventory\Domain\DeviceBulkSnmpChange(['keep_credentials' => true] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS));
     }
 
     public function testAuthorizationPrecedesReset(): void
@@ -37,7 +37,7 @@ final class DeviceBulkSnmpTest extends TestCase
             $port = $this->createMock(DeviceSnmpSettings::class);
             $port->expects(self::never())->method('changeSnmp');
             try {
-                (new ChangeDevicesSnmp($access, $port))(new DeviceSelection([7 => str_repeat('a', 64)]), new \Kadupul\Inventory\Domain\DeviceSnmpChange(['keep_credentials' => true] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS));
+                (new ChangeDevicesSnmp($access, $port))(new DeviceSelection([7 => str_repeat('a', 64)]), new \Kadupul\Inventory\Domain\DeviceBulkSnmpChange(['keep_credentials' => true] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS));
                 self::fail('Unauthorized reset accepted');
             } catch (InventoryAccessDenied $error) {
                 self::assertSame($actor === null, $error->unauthenticated);
