@@ -1264,6 +1264,8 @@ credential fields. Stored secrets never leave the isolated worker.
 
 Public SNMP settings participate in selection revisions. The worker resolves and
 validates the complete selection before writes. It owns remote batch transactions,
+checks that the exact primary and collector sessions use persistent InnoDB tables
+for every SNMP/cache mutation participant, rejects unsupported engines before writes,
 updates all primary host rows before remote effects, rebuilds polling caches through
 `push_out_host`, and verifies every copy. A later precommit failure rolls back primary
 and active collector transactions. The primary commits first; a later collector

@@ -175,11 +175,24 @@ try {
         // Check it without exposing diagnostics or credentials to the parent.
         $database_last_error = '';
         if ($changeSnmp) {
+            // Verify persistent InnoDB participants on the exact sessions used
+            // by the writer and legacy cache helpers, before their first write.
+            (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($connection))->run(
+                static fn(): bool => true,
+                ['host', 'host_snmp_query', 'poller_reindex', 'poller_item', 'data_input_data', 'settings']
+            );
             // Each cached remote connection participates in the worker's batch.
             // A later primary/cache/hook failure must not commit remote secrets.
             ksort($remotes, SORT_NUMERIC);
             foreach ($remotes as $pollerId => $remote) {
-                if ($remote->inTransaction() || !$remote->beginTransaction()) {
+                if ($remote->inTransaction()) {
+                    throw new RuntimeException('Collector SNMP transaction unavailable');
+                }
+                (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($remote))->run(
+                    static fn(): bool => true,
+                    ['host', 'host_snmp_query', 'poller_reindex', 'poller_item']
+                );
+                if (!$remote->beginTransaction()) {
                     throw new RuntimeException('Collector SNMP transaction unavailable');
                 }
                 $snmpTransactions[$pollerId] = $remote;
