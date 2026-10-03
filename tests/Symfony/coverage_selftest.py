@@ -37,6 +37,8 @@ def prepare_database_failure_reports(directory, scratch, source, mutation):
 
 
 def main():
+    from cdef_legacy_page_scenarios import REQUIRED_CHECKS
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--php', default='php')
     parser.add_argument('--unit', type=Path, required=True)
@@ -272,6 +274,8 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseCommand.php',
         'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
         'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php')]
+    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php')
+    required += [prefix + path for path in legacy_pages]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -296,6 +300,7 @@ def main():
     assignment_checks += ['device list exposes all bulk assignment routes', 'default mutation selection retains existing missing-site and disabled-poller behavior', 'bulk site invokes action 4 once for the complete selection', 'bulk template invokes action 4 once for the complete selection', 'rejected bulk site does not invoke action 4', 'rejected bulk template does not invoke action 4', 'bulk site displays its assignment completion notice', 'bulk template displays its assignment completion notice', 'bulk existing template repairs missing association', 'bulk existing template restores primary and collector association', 'bulk template assignment retains existing graphs and data', 'bulk template unassignment invokes the zero-template hook for each device', 'bulk template preserves site membership cache marker', 'bulk collector worker rejects disabled destination after GET', 'disabled bulk collector destination writes no ownership or copy', 'bulk collector return failure reports uncertain outcome', 'bulk collector return failure rolls back primary ownership and statistics', 'bulk collector rollback retains every previous polling copy', 'bulk collector transfers a full remote selection to another remote', 'bulk remote transfer confirms primary and destination ownership', 'bulk remote transfer preserves nonempty polling ownership', 'bulk remote transfer removes old copies after commit', 'bulk collector can return to its previous remote', 'bulk remote return cleans the second collector', 'bulk collector mid-batch failure reports uncertain outcome', 'bulk collector mid-batch failure rolls back primary host and cache ownership', 'bulk collector mid-batch failure rolls back poller statistics', 'rejected bulk collector does not invoke action 4', 'bulk collector failure retains documented first-device remote residue', 'bulk site worker rejects deleted destination after GET without writes', 'malformed bulk assignment command cannot write', 'bulk assignment worker rejects extra command keys before writes']
     assignment_checks += ['bulk site preserves preflight remote disabled state', 'bulk template preserves preflight remote disabled state']
     assignment_checks += ['bulk collector cleanup rejects changed ownership before purging', 'bulk collector cleanup failure cannot report success', 'bulk collector cleanup failure retains committed destination ownership', 'bulk collector cleanup failure leaves recoverable old copies', 'bulk collector recovers old residue by returning to remote']
+    collector_cleanup_checks = ['collector cleanup failure retains committed primary ownership and polling rows', 'collector cleanup failure leaves a recoverable old host copy', 'collector cleanup failure emits no success audit', 'collector reassignment recovers old host and polling residue through confirmed moves']
     failures = {
         'data-source-profile-test-hash': 'Integration test source differs',
         'about-authentication-test-hash': 'Integration test source differs',
@@ -400,10 +405,19 @@ def main():
         'missing-audit-check': 'Incomplete Symfony integration checks',
         'missing-retained-audit-check': 'Incomplete Symfony integration checks',
     }
+    failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
+    failures['stale-legacy-page-test-hash'] = 'Integration test source differs'
+    for index in range(len(REQUIRED_CHECKS)):
+        failures['missing-legacy-page-check-' + str(index)] = 'Incomplete Symfony integration'
+    for source in legacy_pages:
+        failures['stale-legacy-page-source-' + source] = 'Covered source differs'
+        failures['missing-legacy-page-source-' + source] = 'Missing measured execution'
     for index in range(len(synchronization_checks)):
         failures['missing-synchronization-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(assignment_checks)):
         failures['missing-assignment-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(collector_cleanup_checks)):
+        failures['missing-collector-cleanup-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(snmp_checks)):
         failures['missing-snmp-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(option_checks)):
@@ -459,6 +473,18 @@ def main():
                 evidence['checks'].remove('palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
             elif case == 'missing-palette-concurrent-auth':
                 evidence['checks'].remove('two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
+            elif case == 'missing-legacy-page-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/cdef_legacy_page_scenarios.py')
+            elif case == 'stale-legacy-page-test-hash':
+                evidence['source_sha256']['tests/Symfony/cdef_legacy_page_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-legacy-page-check-'):
+                omitted = REQUIRED_CHECKS[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
+            elif case.startswith('stale-legacy-page-source-'):
+                source = prefix + case.removeprefix('stale-legacy-page-source-')
+                data['files'][source]['sha256'] = '0' * 64
+            elif case.startswith('missing-legacy-page-source-'):
+                data['files'].pop(prefix + case.removeprefix('missing-legacy-page-source-'))
             elif case == 'palette-sql-probe-hash':
                 evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
             elif case == 'palette-test-hash':
@@ -559,6 +585,9 @@ def main():
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case.startswith('missing-statistics-check-'):
                 missing = statistics_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-collector-cleanup-check-'):
+                missing = collector_cleanup_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-synchronization-check-'):
                 missing = synchronization_checks[int(case.rsplit('-', 1)[1])]

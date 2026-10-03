@@ -6,6 +6,8 @@ import copy
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -44,6 +46,22 @@ class DatabaseReportPreservationTest(unittest.TestCase):
     def write_reports(self):
         for name, report in self.reports.items():
             (self.directory / 'raw' / name).write_text(json.dumps(report, indent=2) + '\n')
+
+    def test_dynamic_helper_import_has_no_cli_scenario_dependency(self):
+        code = '''import importlib.util, sys
+original_path = list(sys.path)
+spec = importlib.util.spec_from_file_location('coverage_selftest', sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+assert sys.path == original_path
+assert 'cdef_legacy_page_scenarios' not in sys.modules
+assert callable(module.prepare_database_failure_reports)
+'''
+        result = subprocess.run(
+            [sys.executable, '-c', code, str(ROOT / 'tests/Symfony/coverage_selftest.py')],
+            cwd=self.temporary.name, capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(0, result.returncode, result.stderr)
 
     def test_each_mutation_preserves_all_reports_and_unrelated_hash_variants(self):
         original = {path.name: path.read_bytes() for path in (self.directory / 'raw').iterdir()}
