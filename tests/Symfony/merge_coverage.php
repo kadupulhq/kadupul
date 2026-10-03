@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'data_source_profile_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'public/js/vdef-item.js';
@@ -43,6 +43,17 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'system page size fixture restores original absence and value',
+        'profile deletion confirmation page renders',
+        'unused profile is normally removable',
+        'collector retry builds real poller item from the saved command',
+        'offline collector yields explicit partial handoff without undoing local definition',
+        'whitelist update publishes the exact saved command and verifies it',
+        'worker independently rechecks feature grants before executing the handoff',
+        'French session authenticates through legacy login',
+        'French editor translates presentation without changing raw command definition',
+        'English field deletion confirmation uses a readable action label',
+        'French field deletion confirmation honors the authenticated preference',
         'About unprotected Basic headers cannot establish a web-server principal',
         'About Basic identity is verified by Apache before PHP',
         'About first Basic request restores native identity through the legacy forwarder',
@@ -118,7 +129,58 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk state confirmation enables selected devices',
         'bulk state SQL failure rolls back the whole primary batch',
         'bulk state remote failure cannot report success',
+        'bulk state observer records original production source identity',
+        'bulk state observer uses a separate fixture source outside production coverage',
+        'bulk state observer restores exact production bytes and removes owned fixtures',
         'template synchronization saves through Symfony',
+        'deferred discovery failure does not publish a success audit record',
+        'failed synchronization does not publish a success audit record',
+        'successful synchronization publishes exactly one success audit record',
+        'template synchronization refuses unauthenticated POST requests',
+        'collector identity mismatch invokes no action 7 callback',
+        'collector identity mismatch rolls back the primary batch',
+        'deferred discovery failure reports uncertain completion',
+        'deferred discovery failure retains committed associations without a success callback',
+        'deferred synchronization discovery fixture registered',
+        'denied synchronization performs no writes or callbacks',
+        'each synchronized device receives only its own template associations',
+        'failed synchronization does not invoke the bulk action callback',
+        'missing template invokes no callbacks and preserves the marker',
+        'missing template preserves all primary associations',
+        'multiple templates do not leak associations across devices',
+        'multiple templates preserve per-device and complete-selection callback contracts',
+        'slow synchronization discovery does not block a concurrent poller write',
+        'template synchronization GET does not add associations',
+        'template synchronization GET does not add data-query associations',
+        'template synchronization adds required data-query associations',
+        'template synchronization adds required graph associations',
+        'template synchronization association failure cannot report success',
+        'template synchronization conceals inaccessible devices on GET and POST',
+        'template synchronization denied-realm fixture starts authorized',
+        'template synchronization discovery runs without an active primary transaction',
+        'template synchronization hook registered',
+        'template synchronization preserves the configured data-query reindex method',
+        'template synchronization refuses an actor without the device-management realm',
+        'template synchronization refuses unauthenticated requests',
+        'template synchronization rejects a missing assigned template',
+        'template synchronization rejects altered collector template identity',
+        'template synchronization rejects offline collectors before writes',
+        'template synchronization rejects stale device revisions',
+        'template synchronization rejects unexpected fields',
+        'template synchronization removes unused graph associations',
+        'template synchronization repairs associations despite existing query cache',
+        'template synchronization requires CSRF token',
+        'template synchronization requires same-origin CSRF',
+        'template synchronization resolves the effective default reindex method',
+        'template synchronization retains associations used by existing graphs',
+        'template synchronization retries safely after deferred discovery failure',
+        'template synchronization skips unassigned devices',
+        'template synchronization supports a selection spanning different templates',
+        'template synchronization supports repeated synchronization',
+        'template synchronization worker independently refuses a revoked realm',
+        'template synchronization accepts an all-unassigned selection as a no-op',
+        'all-unassigned template synchronization invokes no mutation callbacks',
+        'all-unassigned template synchronization preserves the device-change marker',
         'template synchronization invokes the template-change hook once per assigned device',
         'template synchronization retains existing graphs',
         'template synchronization failure rolls back primary associations',
@@ -218,6 +280,36 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk collector cleanup failure leaves recoverable old copies',
         'bulk collector recovers old residue by returning to remote',
         'bulk options save through Symfony',
+        'bulk options action hook registered',
+        'bulk options GET does not modify selected devices',
+        'bulk options requires an explicit field selection',
+        'bulk options requires same-origin CSRF',
+        'bulk options requires CSRF token',
+        'bulk options rejects assignment mass updates',
+        'bulk options validates selected polling values',
+        'bulk options rejects concurrent option edits',
+        'bulk option edits invalidate removal confirmations',
+        'stale options removal confirmation preserves selected devices',
+        'bulk options worker rejects enabled payload',
+        'bulk options worker rejects non-array changes',
+        'malformed options worker payloads preserve data and callbacks',
+        'bulk options rejects selected invalid ping choice',
+        'bulk options rejects selected invalid availability choice',
+        'bulk options rejects offline collectors before writes',
+        'bulk options write failure cannot report success',
+        'bulk options stored-value mismatch cannot report success',
+        'bulk options stored-value mismatch rolls back entire primary batch',
+        'bulk options stored-value mismatch does not invoke action 4',
+        'bulk options completion banner renders exactly once',
+        'bulk options unchanged values succeed on repeated submission',
+        'bulk options unchanged submissions preserve primary values',
+        'bulk options unchanged submissions preserve collector values',
+        'bulk options saves selected availability and ping choices',
+        'bulk options persists choices on primary',
+        'bulk options persists choices on collector',
+        'bulk options allows clearing location and ignores unchecked invalid values',
+        'bulk options ignores unchecked invalid choices',
+
         'bulk options failure rolls back entire primary batch',
         'bulk options verifies remote values',
         'bulk options changes selected fields and preserves unchecked values',
@@ -323,7 +415,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'about.php', 'color.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'vdef.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -331,7 +423,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
                 throw new RuntimeException('Invalid integration source path');
             }
             if (!is_array($file) || ($file['sha256'] ?? null) !== hash_file('sha256', $local)) {
-                throw new RuntimeException('Covered source differs from checkout');
+                throw new RuntimeException('Covered source differs from checkout: ' . $relative . ' (' . $handler . ', ' . basename($report) . ')');
             }
             if (!is_array($file['lines'] ?? null)) {
                 throw new RuntimeException('Invalid line coverage inventory');
@@ -347,6 +439,11 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
+        'links.php',
+        'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'src/DataInput/Infrastructure/Legacy/DataInputHandoff.php',
+        'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php',
         'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php',
@@ -401,6 +498,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bin/legacy-device-template.php',
         'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'bin/legacy-device-state.php',
+        'lib/api_device.php',
         'bin/legacy-device-remove.php',
         'src/Inventory/Domain/DeviceRemoval.php',
         'src/Inventory/Application/Command/RemoveDevices.php',
