@@ -27,7 +27,7 @@ REQUIRED_CHECKS = (
     'installed graph late generation refusal rolls back all nine participants',
     'installed graph editor renders persisted graph device and data source identities without mutation',
     'installed graph autocomplete returns exact persisted owned data source identity without mutation',
-    'installed deleted graph editor reports missing resource without mutation',
+    'installed deleted graph editor refuses stale identity without mutation',
     'installed color synchronization reports genuine empty usage',
     'installed color synchronization regenerates actual template and standalone cohorts',
     'installed color second cohort refusal preserves failed graph and reports earlier committed cohort',
@@ -368,11 +368,20 @@ def verify_graph_creation(harness, session, aggregate, color, check):
                   'installed owned aggregate graph cleanup uses actual API')
             if (identifier, local) == created[0]:
                 before = graph_snapshot(harness)
-                status, body, _ = request(session, f'/graphs.php?action=graph_edit&id={local}')
-                check(status == 200
-                      and 'Graph not found.  Either it has been deleted or your database needs repair.' in body
+                # This branch rejects stale graph identities at the authorization
+                # boundary, redirecting to the list before the editor is entered.
+                log = harness.command('cat', '/var/www/html/log/cacti.log')['stdout']
+                with session.opener.open(session.base + f'/graphs.php?action=graph_edit&id={local}', timeout=30) as response:
+                    status = response.status
+                    destination = response.geturl()
+                    body = response.read().decode('utf-8', errors='strict')
+                after_log = harness.command('cat', '/var/www/html/log/cacti.log')['stdout']
+                check(status == 200 and destination == session.base + '/graphs.php'
+                      and 'Graph not found.  Either it has been deleted or your database needs repair.' not in body
+                      and after_log.startswith(log)
+                      and after_log[len(log):].count('User attempted to access an unauthorized graph') == 1
                       and graph_snapshot(harness) == before,
-                      'installed deleted graph editor reports missing resource without mutation')
+                      'installed deleted graph editor refuses stale identity without mutation')
             harness.sql(f'DELETE FROM aggregate_graphs_graph_item WHERE aggregate_graph_id={identifier};'
                         f'DELETE FROM aggregate_graphs_items WHERE aggregate_graph_id={identifier};'
                         f'DELETE FROM aggregate_graphs WHERE id={identifier};')
