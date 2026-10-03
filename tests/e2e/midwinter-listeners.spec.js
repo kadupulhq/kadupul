@@ -17,7 +17,7 @@ const markup = `
 
 // Loads the real theme script and stubs only the page-building steps that
 // need the full Kadupul markup; applySkin() calls themeReady() the same way.
-async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true } = {}) {
+async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true, realDefaultElements = false } = {}) {
   await page.goto('/tests/e2e/theme-smoke.html');
   await page.setContent(markup);
   for (const file of ['include/js/jquery.js', 'include/js/js.storage.js', 'include/js/jquery.cookie.js', 'include/js/purify.js']) {
@@ -42,12 +42,23 @@ async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true } = 
     };
   }, { auto: autoColorMode, names: labels });
   await page.addScriptTag({ url: '/include/themes/midwinter/main.js' });
-  await page.evaluate(stub => {
-    const steps = ['setupTree', 'setupDefaultElements', 'setMenuVisibility', 'updateNavigation', 'checkConsoleMenu'];
+  if (realDefaultElements) {
+    for (const file of ['include/js/jquery-ui.js', 'include/js/jquery.tablesorter.js']) {
+      await page.addScriptTag({ url: '/' + file });
+    }
+    // Preserve the full production helpers; isolate only installed-page ready
+    // initialization because this case supplies its own controller markup.
+    await page.evaluate(() => { window.savedReady = $.fn.ready; $.fn.ready = function () { return this; }; });
+    await page.addScriptTag({ url: '/include/layout.js' });
+    await page.evaluate(() => { $.fn.ready = window.savedReady; });
+  }
+  await page.evaluate(({ stub, realDefaultElements }) => {
+    const steps = ['setupTree', 'setMenuVisibility', 'updateNavigation', 'checkConsoleMenu'];
+    if (!realDefaultElements) steps.push('setupDefaultElements');
     for (const name of stub ? [...steps, 'setupTheme'] : steps) {
       window[name] = () => {};
     }
-  }, stubPageSetup);
+  }, { stub: stubPageSetup, realDefaultElements });
 }
 
 async function navigate(page, times) {
@@ -114,6 +125,28 @@ test('the user menu and content area keep one handler each across page loads', a
     content: $._data($('.cactiConsoleContentArea')[0], 'events').mouseover.length,
   }));
   expect(bound).toEqual({ menuoptions: 1, content: 1 });
+});
+
+test('the relocated filter keeps its production sliders glyph and controls', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await loadTheme(page, { stubPageSetup: false, realDefaultElements: true });
+  await page.evaluate(() => {
+    window.cactiConsoleAllowed = true;
+    window.cactiGraphsAllowed = true;
+    $('body').append('<div class="maintabs"><ul><li><a id="tab-console" href="#">Console</a></li></ul></div>'
+      + '<div><ul class="menuoptions"><li><a href="#">Logout</a></li></ul></div>');
+    $('#navigation_right').append('<div class="cactiTable"><div class="cactiTableTitle">Device filters</div>'
+      + '<table class="filterTable"><tr><td><label for="native-filter">Search devices</label>'
+      + '<input id="native-filter" value="router"><input id="host" value="Any"></td></tr></table></div>');
+  });
+  await navigate(page, 1);
+  await expect(page.locator('#filterTableOnTop .cactiTableFilter i.fas.fa-sliders')).toHaveCount(1);
+  await expect(page.locator('#filterTableOnTop .cactiTableTitle')).toHaveText('Device filters');
+  await expect(page.locator('#filterTableOnTop #native-filter')).toHaveValue('router');
+  await expect(page.locator('#filterTableOnTop label')).toHaveAttribute('for', 'native-filter');
+  await expect(page.locator('i.fa-sliders-h')).toHaveCount(0);
+  expect(errors).toEqual([]);
 });
 
 test('auto colour mode follows the system scheme through one listener', async ({ page }) => {
