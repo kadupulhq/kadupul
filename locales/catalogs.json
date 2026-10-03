@@ -1,0 +1,28 @@
+{
+  "source_fallback": "en-US",
+  "translated_locales": [
+    "ar-SA",
+    "bg-BG",
+    "de-DE",
+    "el-GR",
+    "es-ES",
+    "fr-FR",
+    "he-IL",
+    "hi-IN",
+    "it-IT",
+    "ja-JP",
+    "ko-KR",
+    "lv-LV",
+    "nl-NL",
+    "pl-PL",
+    "pt-BR",
+    "pt-PT",
+    "ru-RU",
+    "sv-SE",
+    "tr-TR",
+    "uk-UA",
+    "vi-VN",
+    "zh-CN",
+    "zh-TW"
+  ]
+}
