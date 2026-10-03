@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-02 20:51-0700\n"
+"POT-Creation-Date: 2026-10-03 01:21-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -7754,7 +7754,7 @@ msgid "Tree Rule Items"
 msgstr "عناصر القاعدة الشجرية"
 
 #: include/global_arrays.php:2854 include/global_arrays.php:2870
-#: lib/api_device.php:1935
+#: lib/api_device.php:1941
 msgid "days"
 msgstr "أيام"
 
@@ -7770,11 +7770,11 @@ msgstr "دقيقة"
 msgid "secs"
 msgstr "ثانية"
 
-#: include/global_arrays.php:2871 lib/api_device.php:1935
+#: include/global_arrays.php:2871 lib/api_device.php:1941
 msgid "hours"
 msgstr "ساعات"
 
-#: include/global_arrays.php:2872 lib/api_device.php:1935
+#: include/global_arrays.php:2872 lib/api_device.php:1941
 msgid "minutes"
 msgstr "دقيقة"
 
@@ -10272,7 +10272,7 @@ msgstr "طريقة اختيار الخطوط"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "كيف تريد التعامل مع الخطوط افتراضيًا؟"
 
-#: include/global_settings.php:1060 lib/api_device.php:1890
+#: include/global_settings.php:1060 lib/api_device.php:1896
 msgid "System"
 msgstr "النظام"
 
@@ -12361,8 +12361,8 @@ msgstr "خطأ: لم تعد نطاقات IP في شكل range1-range2 مدعوم
 #: lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1301
 #: lib/api_device.php:1314 lib/api_device.php:1318 lib/api_device.php:1363
 #: lib/api_device.php:1366 lib/api_device.php:1553 lib/api_device.php:1557
-#: lib/api_device.php:1592 lib/api_device.php:1596 lib/api_device.php:1636
-#: lib/api_device.php:1640 lib/api_device.php:1701 lib/api_device.php:1705
+#: lib/api_device.php:1593 lib/api_device.php:1597 lib/api_device.php:1642
+#: lib/api_device.php:1646 lib/api_device.php:1707 lib/api_device.php:1711
 #: lib/utility.php:663 lib/utility.php:667 lib/utility.php:743
 #: lib/utility.php:747 lib/utility.php:769 lib/utility.php:773
 #: lib/utility.php:796 lib/utility.php:799
@@ -12374,72 +12374,72 @@ msgstr "%s الاقتراع عن بعد معطلة ، ستحتاج إلى إجر
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1811
+#: lib/api_device.php:1817
 msgid "ERROR: Device ID is Blank"
 msgstr "خطأ: معرف الجهاز فارغ"
 
-#: lib/api_device.php:1824 lib/api_device.php:1826
+#: lib/api_device.php:1830 lib/api_device.php:1832
 msgid "ERROR: Device["
 msgstr "خطأ: جهاز ["
 
-#: lib/api_device.php:1842
+#: lib/api_device.php:1848
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "خطأ: فشل الاتصال بجامع بعيد."
 
-#: lib/api_device.php:1849
+#: lib/api_device.php:1855
 msgid "Device is Disabled"
 msgstr "الجهاز معطل"
 
-#: lib/api_device.php:1850
+#: lib/api_device.php:1856
 msgid "Device Availability Check Bypassed"
 msgstr "تحقق من توفر الجهاز تم تجاوزه"
 
-#: lib/api_device.php:1857
+#: lib/api_device.php:1863
 msgid "SNMP Information"
 msgstr "معلومات SNMP"
 
-#: lib/api_device.php:1861
+#: lib/api_device.php:1867
 msgid "SNMP not in use"
 msgstr "SNMP غير مستخدم"
 
-#: lib/api_device.php:1882 lib/api_device.php:1890 lib/api_device.php:1909
+#: lib/api_device.php:1888 lib/api_device.php:1896 lib/api_device.php:1915
 msgid "SNMP error"
 msgstr "خطأ SNMP"
 
-#: lib/api_device.php:1882
+#: lib/api_device.php:1888
 msgid "Session"
 msgstr "الجلسة"
 
-#: lib/api_device.php:1909
+#: lib/api_device.php:1915
 msgid "Host"
 msgstr "المستضيف Host"
 
-#: lib/api_device.php:1927
+#: lib/api_device.php:1933
 msgid "System:"
 msgstr "النظام:"
 
-#: lib/api_device.php:1934
+#: lib/api_device.php:1940
 msgid "Uptime:"
 msgstr "مدة التشغيل"
 
-#: lib/api_device.php:1936
+#: lib/api_device.php:1942
 msgid "Hostname:"
 msgstr "أسم المضيف:"
 
-#: lib/api_device.php:1937
+#: lib/api_device.php:1943
 msgid "Location:"
 msgstr "موقعك:"
 
-#: lib/api_device.php:1938
+#: lib/api_device.php:1944
 msgid "Contact:"
 msgstr "بيانتت اتصال"
 
-#: lib/api_device.php:1969 lib/functions.php:6039 lib/functions.php:6041
+#: lib/api_device.php:1975 lib/functions.php:6039 lib/functions.php:6041
 #: lib/functions.php:6045
 msgid "Ping Results"
 msgstr "نتائج بينغ"
 
-#: lib/api_device.php:1974
+#: lib/api_device.php:1980
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "لا يوجد Ping أو SNMP Availability Check in Use"
 

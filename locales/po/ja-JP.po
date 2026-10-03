@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-02 20:51-0700\n"
+"POT-Creation-Date: 2026-10-03 01:21-0700\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -7584,7 +7584,7 @@ msgid "Tree Rule Items"
 msgstr "ツリールール項目"
 
 #: include/global_arrays.php:2854 include/global_arrays.php:2870
-#: lib/api_device.php:1935
+#: lib/api_device.php:1941
 msgid "days"
 msgstr "日"
 
@@ -7600,11 +7600,11 @@ msgstr "分"
 msgid "secs"
 msgstr "秒"
 
-#: include/global_arrays.php:2871 lib/api_device.php:1935
+#: include/global_arrays.php:2871 lib/api_device.php:1941
 msgid "hours"
 msgstr "時間"
 
-#: include/global_arrays.php:2872 lib/api_device.php:1935
+#: include/global_arrays.php:2872 lib/api_device.php:1941
 msgid "minutes"
 msgstr "分"
 
@@ -10101,7 +10101,7 @@ msgstr "フォント選択方法"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "フォントをデフォルトでどのように処理しますか。"
 
-#: include/global_settings.php:1060 lib/api_device.php:1890
+#: include/global_settings.php:1060 lib/api_device.php:1896
 msgid "System"
 msgstr "システム"
 
@@ -12181,8 +12181,8 @@ msgstr "エラー：range1-range2の形式のIP範囲はサポートされなく
 #: lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1301
 #: lib/api_device.php:1314 lib/api_device.php:1318 lib/api_device.php:1363
 #: lib/api_device.php:1366 lib/api_device.php:1553 lib/api_device.php:1557
-#: lib/api_device.php:1592 lib/api_device.php:1596 lib/api_device.php:1636
-#: lib/api_device.php:1640 lib/api_device.php:1701 lib/api_device.php:1705
+#: lib/api_device.php:1593 lib/api_device.php:1597 lib/api_device.php:1642
+#: lib/api_device.php:1646 lib/api_device.php:1707 lib/api_device.php:1711
 #: lib/utility.php:663 lib/utility.php:667 lib/utility.php:743
 #: lib/utility.php:747 lib/utility.php:769 lib/utility.php:773
 #: lib/utility.php:796 lib/utility.php:799
@@ -12194,72 +12194,72 @@ msgstr "リモートポーラー%sがダウンしています。再度アップ�
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1811
+#: lib/api_device.php:1817
 msgid "ERROR: Device ID is Blank"
 msgstr "エラー：デバイスIDが空白です"
 
-#: lib/api_device.php:1824 lib/api_device.php:1826
+#: lib/api_device.php:1830 lib/api_device.php:1832
 msgid "ERROR: Device["
 msgstr "エラー：デバイス["
 
-#: lib/api_device.php:1842
+#: lib/api_device.php:1848
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "エラー：リモートコレクタへの接続に失敗しました。"
 
-#: lib/api_device.php:1849
+#: lib/api_device.php:1855
 msgid "Device is Disabled"
 msgstr "デバイスは無効です"
 
-#: lib/api_device.php:1850
+#: lib/api_device.php:1856
 msgid "Device Availability Check Bypassed"
 msgstr "デバイスの利用可能性チェックのバイパス"
 
-#: lib/api_device.php:1857
+#: lib/api_device.php:1863
 msgid "SNMP Information"
 msgstr "SNMP情報"
 
-#: lib/api_device.php:1861
+#: lib/api_device.php:1867
 msgid "SNMP not in use"
 msgstr "SNMPが使用されていません"
 
-#: lib/api_device.php:1882 lib/api_device.php:1890 lib/api_device.php:1909
+#: lib/api_device.php:1888 lib/api_device.php:1896 lib/api_device.php:1915
 msgid "SNMP error"
 msgstr "SNMPエラー"
 
-#: lib/api_device.php:1882
+#: lib/api_device.php:1888
 msgid "Session"
 msgstr "セッション"
 
-#: lib/api_device.php:1909
+#: lib/api_device.php:1915
 msgid "Host"
 msgstr "ホスト"
 
-#: lib/api_device.php:1927
+#: lib/api_device.php:1933
 msgid "System:"
 msgstr "システム："
 
-#: lib/api_device.php:1934
+#: lib/api_device.php:1940
 msgid "Uptime:"
 msgstr "あなたのアップタイムロボットAPIキー："
 
-#: lib/api_device.php:1936
+#: lib/api_device.php:1942
 msgid "Hostname:"
 msgstr "ホスト："
 
-#: lib/api_device.php:1937
+#: lib/api_device.php:1943
 msgid "Location:"
 msgstr "位置:"
 
-#: lib/api_device.php:1938
+#: lib/api_device.php:1944
 msgid "Contact:"
 msgstr "連絡先:"
 
-#: lib/api_device.php:1969 lib/functions.php:6039 lib/functions.php:6041
+#: lib/api_device.php:1975 lib/functions.php:6039 lib/functions.php:6041
 #: lib/functions.php:6045
 msgid "Ping Results"
 msgstr "pingの結果"
 
-#: lib/api_device.php:1974
+#: lib/api_device.php:1980
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "PingまたはSNMP可用性チェックインが使用されていない"
 
