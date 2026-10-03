@@ -269,6 +269,16 @@ def verify_audit(harness, check, admin):
         proposed = touched_tables(harness, version)
         backup(harness, [table for table in proposed if table not in tables])
         tables = proposed
+        # The supported compatibility entry point remains a separate production
+        # implementation. Execute it as well as the native adapter and retain
+        # its measured source in the coverage acceptance contract.
+        compared = compare(
+            harness, check, 'retained audit compatibility report on a clean schema',
+            (AUDIT_ORIGINAL, 'cli/audit_database.php'), ['--report'], None,
+            lambda h: reset(h, 'clean', tables, version), schema, AUDIT_UTILITY,
+            stdout=masked, log_filter=log_masked)
+        check(compared['shim']['exit'] == 0,
+              'retained audit compatibility report executes successfully')
         verify_audit_cases(harness, check, tables, version)
         verify_audit_shim_only(harness, check, admin, tables, version)
     finally:

@@ -262,7 +262,8 @@ def main():
             if 1 in (report['files'] or {}).get(source, {}).get('lines', {}).values():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
-        raise RuntimeError('Self-test requires real HTTP and worker measurements')
+        missing = sorted(set(required) - set(measured['files']))
+        raise RuntimeError('Self-test requires real HTTP and worker measurements: ' + ', '.join(missing))
     data_input_checks = ['system page size fixture restores original absence and value', 'profile deletion confirmation page renders', 'unused profile is normally removable', 'collector retry builds real poller item from the saved command', 'offline collector yields explicit partial handoff without undoing local definition', 'whitelist update publishes the exact saved command and verifies it', 'worker independently rechecks feature grants before executing the handoff', 'French session authenticates through legacy login', 'French editor translates presentation without changing raw command definition', 'English field deletion confirmation uses a readable action label', 'French field deletion confirmation honors the authenticated preference']
     about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
     about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
@@ -369,6 +370,7 @@ def main():
         'cli-audit-original-test-hash': 'Integration test source differs',
         'cli-audit-native-test-hash': 'Integration test source differs',
         'missing-audit-check': 'Incomplete Symfony integration checks',
+        'missing-retained-audit-check': 'Incomplete Symfony integration checks',
     }
     for index in range(3):
         failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
@@ -513,6 +515,8 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/native-cli/audit_database.php'] = '0' * 64
             elif case == 'missing-audit-check':
                 evidence['checks'].remove('audit refuses an operator without the Installation/Upgrades realm')
+            elif case == 'missing-retained-audit-check':
+                evidence['checks'].remove('retained audit compatibility report executes successfully')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case == 'missing-removal-callback-check':

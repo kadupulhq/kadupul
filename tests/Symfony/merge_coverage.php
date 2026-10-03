@@ -209,6 +209,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'widen falls back to Settings/Utilities while nobody holds Installation/Upgrades',
         'widen --dry-run through bin/console plans each table and changes nothing',
         'widen scenarios leave the schema as they found it',
+        'retained audit compatibility report executes successfully',
         'audit report on a drifted table: shim stdout matches the original',
         'audit repair on a drifted table: shim schema matches the original',
         'audit repair on a drifted table: shim logs the same cacti.log lines, date included',
