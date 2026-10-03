@@ -206,9 +206,28 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '1',
               'collector cleanup failure leaves a recoverable old host copy')
         check(success_audit_count() == audit_before, 'collector cleanup failure emits no success audit')
+        receipt = f'poller_replicate_device_cleanup_{device_id}_{second}'
+        check(harness.sql(f"SELECT value FROM settings WHERE name='{receipt}'").strip() == '1', 'collector cleanup failure persists old-owner retry receipt')
+        check(form.assign(1) == 502, 'collector same-target retry reports repeated cleanup failure')
+        check(harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '1' and harness.sql(f"SELECT value FROM settings WHERE name='{receipt}'").strip() == '1', 'collector failed retry retains old copy and receipt')
+        harness.sql(f"UPDATE poller SET disabled='on' WHERE id={second}")
+        try:
+            check(form.assign(1) == 502, 'collector disabled pending owner refuses cleanup retry')
+            check(harness.sql(f"SELECT value FROM settings WHERE name='{receipt}'").strip() == '1', 'collector unavailable cleanup retains retry receipt')
+        finally:
+            harness.sql(f"UPDATE poller SET disabled='' WHERE id={second}")
         harness.sql('DROP TRIGGER collector_second.reject_collector_cleanup')
         cleanup_trigger = False
+        harness.sql(f"DELIMITER $$\nCREATE TRIGGER reject_collector_ack BEFORE DELETE ON settings FOR EACH ROW BEGIN IF OLD.name='{receipt}' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='collector receipt acknowledgement rejection'; END IF; END$$\nDELIMITER ;")
+        try:
+            check(form.assign(1) == 502, 'collector acknowledgement failure cannot report success after remote cleanup')
+            check(harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '0' and harness.sql(f"SELECT value FROM settings WHERE name='{receipt}'").strip() == '1', 'collector failed acknowledgement retains receipt despite verified remote absence')
+        finally:
+            harness.sql('DROP TRIGGER reject_collector_ack')
         check(form.assign(1) == 200, 'collector reassignment can return to primary')
+        check(harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '0' and harness.sql(f'SELECT COUNT(*) FROM collector_second.poller_item WHERE host_id={device_id}').strip() == '0' and harness.sql(f'SELECT COUNT(*) FROM collector_second.data_local WHERE host_id={device_id}').strip() == '0', 'collector successful same-target retry removes old dependent copies')
+        check(harness.sql(f"SELECT COUNT(*) FROM settings WHERE name='{receipt}'").strip() == '0', 'collector successful cleanup acknowledges retry receipt')
+        check(harness.sql(f"SELECT COUNT(*) FROM poller_command WHERE poller_id={second} AND action=3 AND command='{device_id}'").strip() == '0', 'collector verified cleanup publishes no redundant purge command')
         check(form.assign(second) == 200 and form.assign(1) == 200
               and harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '0'
               and harness.sql(f'SELECT COUNT(*) FROM collector_second.poller_item WHERE host_id={device_id}').strip() == '0',

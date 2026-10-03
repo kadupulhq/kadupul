@@ -113,7 +113,7 @@ final class DeviceCollectorReplication
                 throw new \RuntimeException('Previous collector dependent cleanup failed');
             }
             $verify = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where");
-            if (!$verify->execute([$deviceId]) || (int) $verify->fetchColumn() !== 0) {
+            if (!$this->confirmedAbsent($verify, [$deviceId])) {
                 throw new \RuntimeException('Previous collector dependents remain');
             }
         }
@@ -240,7 +240,7 @@ final class DeviceCollectorReplication
         $lock = $source->inTransaction() && $source->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite' ? ' FOR UPDATE' : '';
         foreach (['host' => 'id', 'host_graph' => 'host_id', 'host_snmp_query' => 'host_id', 'host_snmp_cache' => 'host_id', 'poller_item' => 'host_id', 'poller_reindex' => 'host_id', 'graph_tree_items' => 'host_id', 'reports_items' => 'host_id', 'data_local' => 'host_id', 'graph_local' => 'host_id'] as $table => $column) {
             $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column = ?" . $lock);
-            if (!$query->execute([$deviceId]) || (int) $query->fetchColumn() !== 0) {
+            if (!$this->confirmedAbsent($query, [$deviceId])) {
                 throw new \RuntimeException('Previous collector cleanup could not be confirmed');
             }
         }
@@ -250,7 +250,7 @@ final class DeviceCollectorReplication
                     continue;
                 }
                 $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE id IN (" . implode(',', array_fill(0, count($ids), '?')) . ')' . $lock);
-                if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
+                if (!$this->confirmedAbsent($query, $ids)) {
                     throw new \RuntimeException('Reviewed collector association remains');
                 }
             }
@@ -270,7 +270,7 @@ final class DeviceCollectorReplication
                 // Parents have already been removed: do not rediscover ownership
                 // through joins that would hide newly inserted orphan children.
                 $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column IN (" . implode(',', array_fill(0, count($ids), '?')) . ')' . $lock);
-                if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
+                if (!$this->confirmedAbsent($query, $ids)) {
                     throw new \RuntimeException('Reviewed collector dependents remain');
                 }
             }
@@ -282,7 +282,7 @@ final class DeviceCollectorReplication
                     continue;
                 }
                 $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE id IN (" . implode(',', array_fill(0, count($ids), '?')) . ')' . $lock);
-                if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
+                if (!$this->confirmedAbsent($query, $ids)) {
                     throw new \RuntimeException('Reviewed collector dependent identity remains');
                 }
             }
@@ -291,7 +291,7 @@ final class DeviceCollectorReplication
                     $where = $table === 'poller_item' ? 'local_data_id = ? AND rrd_name = ?' : 'id = ?';
                     $parameters = $table === 'poller_item' ? [$identity['local_data_id'], $identity['rrd_name']] : [$identity['id']];
                     $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where" . $lock);
-                    if (!$query || !$query->execute($parameters) || ($count = $query->fetchColumn()) === false || (int) $count !== 0) {
+                    if (!$this->confirmedAbsent($query, $parameters)) {
                         throw new \RuntimeException('Reviewed collector placement identity remains');
                     }
                 }
@@ -299,10 +299,19 @@ final class DeviceCollectorReplication
             $this->assertNoOutsideReferences($source, $snapshot->graphIds, $reviewedDependents['rrds'] ?? []);
         }
         $query = $source->prepare("SELECT COUNT(*) FROM poller_command WHERE SUBSTRING_INDEX(command, ':', 1) = ?" . $lock);
-        if (!$query->execute([(string) $deviceId]) || (int) $query->fetchColumn() !== 0) {
+        if (!$this->confirmedAbsent($query, [(string) $deviceId])) {
             throw new \RuntimeException('Previous collector commands remain');
         }
     }
+    private function confirmedAbsent(\PDOStatement|false $query, array $parameters): bool
+    {
+        if ($query === false || !$query->execute($parameters) || $query->errorCode() !== "00000") {
+            return false;
+        }
+        $count = $query->fetchColumn();
+        return ($count === 0 || $count === "0") && $query->errorCode() === "00000";
+    }
+
     private function assertNoOutsideReferences(PDO $source, array $graphIds, array $rrdIds): void
     {
         if ($rrdIds === []) {

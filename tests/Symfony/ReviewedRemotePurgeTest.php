@@ -36,17 +36,19 @@ function db_execute($sql, $log, $connection)
 }
 function db_execute_prepared($sql, $parameters)
 {
+    $GLOBALS['reviewed_remote_queued'][] = $parameters;
     return true;
 }
 
 final class ReviewedRemotePurgeTest extends TestCase
 {
     #[DataProvider('modes')]
-    public function testReviewedRemoteCleanupPreservesLateUnreviewedChildren(bool $reviewed): void
+    public function testReviewedRemoteCleanupPreservesLateUnreviewedChildren(bool $reviewed, bool $queue = true): void
     {
         $db = new PDO('sqlite::memory:');
         $GLOBALS['reviewed_remote_db'] = $db;
         $GLOBALS['reviewed_remote_connections'] = 0;
+        $GLOBALS['reviewed_remote_queued'] = [];
         $db->sqliteCreateFunction('SUBSTRING_INDEX', static fn($text, $separator, $count) => explode($separator, $text)[0]);
         foreach ([
             'host' => 'id INTEGER', 'host_graph' => 'host_id INTEGER', 'host_snmp_query' => 'host_id INTEGER',
@@ -66,8 +68,9 @@ final class ReviewedRemotePurgeTest extends TestCase
         if ($reviewed) {
             $db->beginTransaction();
         }
-        api_device_purge_from_remote([7], 2, $reviewed ? [7 => ['graphs' => [11], 'data_sources' => [12]]] : null, $reviewed ? $db : null);
-        self::assertSame($reviewed ? 0 : 1, $GLOBALS['reviewed_remote_connections']);
+        api_device_purge_from_remote([7], 2, $reviewed ? [7 => ['graphs' => [11], 'data_sources' => [12]]] : null, ($reviewed || !$queue) ? $db : null, $queue);
+        self::assertSame(($reviewed || !$queue) ? 0 : 1, $GLOBALS['reviewed_remote_connections']);
+        self::assertCount($queue ? 1 : 0, $GLOBALS['reviewed_remote_queued']);
         self::assertSame($reviewed ? [13, 90] : [90], array_map('intval', $db->query('SELECT local_data_id FROM poller_item ORDER BY local_data_id')->fetchAll(PDO::FETCH_COLUMN)));
         foreach (['graph_tree_items', 'reports_items'] as $table) {
             self::assertSame($reviewed ? [14, 91] : [91], array_map('intval', $db->query("SELECT local_graph_id FROM $table ORDER BY local_graph_id")->fetchAll(PDO::FETCH_COLUMN)));
@@ -87,5 +90,6 @@ final class ReviewedRemotePurgeTest extends TestCase
     {
         yield 'reviewed lifecycle preserves late children' => [true];
         yield 'legacy unscoped behavior preserved' => [false];
+        yield 'captured synchronous cleanup omits redundant queue' => [false, false];
     }
 }

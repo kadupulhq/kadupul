@@ -155,6 +155,9 @@ jobs:
         php Symfony/data_input_lock_probe.php
         php Support/verify_row_cache.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --cache-result-file="$RUNNER_TEMP/reference-transaction-phpunit.cache" Symfony/LegacyReferenceWriteTransactionNativeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --cache-result-file="$RUNNER_TEMP/collector-cleanup-phpunit.cache" Symfony/DeviceCollectorJournalNativeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --bootstrap ../include/vendor/autoload.php --cache-result-file="$RUNNER_TEMP/queued-purge-phpunit.cache" Symfony/QueuedCollectorPurgeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --bootstrap ../include/vendor/autoload.php --cache-result-file="$RUNNER_TEMP/poller-buffer-phpunit.cache" Symfony/PollerCacheBufferWriteTest.php
         # Use the disposable matrix server's existing administrator identity;
         # the probe creates/drops only its own random schema in a finally block.
         KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \
@@ -254,7 +257,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
           coverage: none
-          tools: none
+          tools: composer
 
       # Fails loudly on a parse error in any tracked source file. This is the
       # floor the rest of the pipeline builds on, and it runs even before there
