@@ -37,6 +37,21 @@ class RouteSamples(unittest.TestCase):
             with self.subTest(entry=entry):
                 self.assertEqual(expected, sample(entry, detail, fixtures))
 
+    def test_data_input_field_binds_to_its_actual_parent(self):
+        class Rig:
+            def sql(self, statement):
+                if 'INSERT INTO data_input (' in statement:
+                    return '12'
+                if 'INSERT INTO data_input_fields ' in statement:
+                    self.statement = statement
+                    return '31'
+                raise AssertionError(statement)
+        rig = Rig()
+        fixtures = {'devices': 7, 'sites': 9}
+        route_fixtures(rig, [('app.php/data-inputs/{id}/fields/{field}', 'symfony:data_input_field', '')], fixtures)
+        self.assertIn("VALUES (12,'Value','value','in',1)", rig.statement)
+        self.assertEqual('app.php/data-inputs/12/fields/31', sample('app.php/data-inputs/{id}/fields/{field}', 'methods=GET', fixtures))
+
     def test_missing_fixture_refuses_instead_of_using_arbitrary_id(self):
         with self.assertRaisesRegex(ValueError, 'Missing concrete route fixture'):
             sample('app.php/new-module/{id}', 'methods=GET', {})

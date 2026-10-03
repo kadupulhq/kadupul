@@ -8,6 +8,29 @@
 
 use phpseclib4\Crypt\RSA;
 
+/** Resolve usernames carried by legacy remember-me cookies in their recorded realm. */
+function auth_cookie_user_id($username, $realm_id)
+{
+    if ($realm_id == -1) {
+        // Cookies without a realm identify a local account.
+        return db_fetch_cell_prepared(
+            'SELECT id
+					FROM user_auth
+					WHERE username = ?
+					AND realm = 0',
+            array($username)
+        );
+    }
+
+    return db_fetch_cell_prepared(
+        'SELECT id
+					FROM user_auth
+					WHERE username = ?
+					AND realm = ?',
+        array($username, $realm_id)
+    );
+}
+
 /**
  * clear_auth_cookie - clears a users security token
  *
@@ -32,24 +55,7 @@ function clear_auth_cookie()
 
         // Legacy support which leaked usernames
         if (!is_numeric($user_id)) {
-            if ($realm_id == -1) {
-                // Assume local realm for tokens without a realm_id
-                $user_id = db_fetch_cell_prepared(
-                    'SELECT id
-					FROM user_auth
-					WHERE username = ?
-					AND realm = 0',
-                    array($user_id)
-                );
-            } else {
-                $user_id = db_fetch_cell_prepared(
-                    'SELECT id
-					FROM user_auth
-					WHERE username = ?
-					AND realm = ?',
-                    array($user_id, $realm_id)
-                );
-            }
+            $user_id = auth_cookie_user_id($user_id, $realm_id);
         }
 
         if ($user_id > 0) {
@@ -128,24 +134,7 @@ function check_auth_cookie()
 
         // Legacy support which leaked usernames
         if (!is_numeric($user_id)) {
-            if ($realm_id == -1) {
-                // Assume local realm for tokens without a realm_id
-                $user_id = db_fetch_cell_prepared(
-                    'SELECT id
-					FROM user_auth
-					WHERE username = ?
-					AND realm = 0',
-                    array($user_id)
-                );
-            } else {
-                $user_id = db_fetch_cell_prepared(
-                    'SELECT id
-					FROM user_auth
-					WHERE username = ?
-					AND realm = ?',
-                    array($user_id, $realm_id)
-                );
-            }
+            $user_id = auth_cookie_user_id($user_id, $realm_id);
         }
 
         if ($user_id > 0 && $user_id != get_guest_account()) {
@@ -1775,7 +1764,7 @@ function get_simple_device_perms($user)
         'SELECT COUNT(*)
 		FROM user_auth_perms
 		WHERE user_id = ?
-		AND type = 2',
+		AND type = 3',
         array($user)
     );
 
@@ -1789,7 +1778,7 @@ function get_simple_device_perms($user)
 			ON uag.id = uagp.group_id
 			INNER JOIN user_auth_group_members AS uagm
 			ON uagm.group_id = uag.id
-			WHERE uagp.type = 2
+			WHERE uagp.type = 3
 			AND uagm.user_id = ?
 			GROUP BY uag.id',
             array($user)
