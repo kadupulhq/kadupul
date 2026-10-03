@@ -7,6 +7,8 @@ import shutil
 import subprocess
 import tempfile
 
+from cdef_legacy_page_scenarios import REQUIRED_CHECKS
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -209,6 +211,8 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
+    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php')
+    required += [prefix + path for path in legacy_pages]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -319,6 +323,13 @@ def main():
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
     }
+    failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
+    failures['stale-legacy-page-test-hash'] = 'Integration test source differs'
+    for index in range(len(REQUIRED_CHECKS)):
+        failures['missing-legacy-page-check-' + str(index)] = 'Incomplete Symfony integration'
+    for source in legacy_pages:
+        failures['stale-legacy-page-source-' + source] = 'Covered source differs'
+        failures['missing-legacy-page-source-' + source] = 'Missing measured execution'
     for index in range(3):
         failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
@@ -368,6 +379,18 @@ def main():
                 evidence['checks'].remove('palette preferences refuse actual nontransactional tables, invalid collectors and caller transactions while primary saves commit')
             elif case == 'missing-palette-concurrent-auth':
                 evidence['checks'].remove('two palette actors authorize concurrently while policy, account and realm revokers wait and later denials take effect')
+            elif case == 'missing-legacy-page-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/cdef_legacy_page_scenarios.py')
+            elif case == 'stale-legacy-page-test-hash':
+                evidence['source_sha256']['tests/Symfony/cdef_legacy_page_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-legacy-page-check-'):
+                omitted = REQUIRED_CHECKS[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
+            elif case.startswith('stale-legacy-page-source-'):
+                source = prefix + case.removeprefix('stale-legacy-page-source-')
+                data['files'][source]['sha256'] = '0' * 64
+            elif case.startswith('missing-legacy-page-source-'):
+                data['files'].pop(prefix + case.removeprefix('missing-legacy-page-source-'))
             elif case == 'palette-sql-probe-hash':
                 evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
             elif case == 'palette-test-hash':
