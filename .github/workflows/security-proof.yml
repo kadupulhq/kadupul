@@ -30,7 +30,7 @@ concurrency:
 jobs:
   sink-inventory-guard:
     name: sink and architectural hotspot guard
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -54,7 +54,7 @@ jobs:
 
   entry-point-inventory:
     name: entry-point gate inventory
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -96,7 +96,7 @@ jobs:
 
   branding-migration-guard:
     name: branding migration (utf8mb4 and latin1)
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     services:
       database:
         image: mariadb:11.8
@@ -127,7 +127,7 @@ jobs:
   advisory-proof-matrix:
     name: private advisory proof matrix
     if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
