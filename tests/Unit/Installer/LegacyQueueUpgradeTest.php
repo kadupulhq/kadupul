@@ -44,6 +44,7 @@ test('legacy upgrade completion verifies the final queue engine', function ($eng
     $script .= '$root=' . var_export($root, true) . ';$engine=' . var_export($engine, true) . ';';
     $script .= '$collector=' . var_export($collector, true) . ';';
     $script .= <<<'INSTALLER'
+define('CACTI_VERSION',trim(file_get_contents($root.'/include/cacti_version')));
 $config=array('base_path'=>$root, 'poller_id'=>$collector==='local'?1:2, 'connection'=>$collector);$remote_db_cnn_id='primary-connection';
 require $root.'/include/global_constants.php';
 function __($message,...$args){return $args?vsprintf($message,$args):$message;}
