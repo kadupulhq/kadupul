@@ -71,6 +71,7 @@ PHP);
 $root = dirname(__DIR__, 2);
 $directory = $argv[2];
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
+define('CACTI_VERSION', trim(file_get_contents($root . '/include/cacti_version')));
 require_once $root . '/include/global_constants.php';
 require $root . '/lib/poller.php';
 require $root . '/lib/api_device.php';
@@ -352,7 +353,25 @@ function __($message)
 {
     return $message;
 }
+$upgradeSchema = null;
 try {
+    if (!empty($scenario['upgrade_entry'])) {
+        // Installer DDL uses the existing fixture administrator. Isolate an
+        // actual persistent version table for the public PDO writer.
+        $ownedName = 'profile_upgrade_' . bin2hex(random_bytes(8));
+        if ($installer->exec("CREATE DATABASE `$ownedName`") === false) {
+            throw new RuntimeException('Could not create the owned installer schema.');
+        }
+        $upgradeSchema = $ownedName;
+        $source = collector_connection(true);
+        $remote = collector_connection(true);
+        foreach ([$source, $remote, $installer] as $connection) {
+            $connection->exec("USE `$upgradeSchema`");
+        }
+        $database_sessions['profile-source:0:catalog'] = $source;
+        $local_db_cnn_id = $remote;
+        $maps['remote']['version'] = 'version';
+    }
     $source->exec('CREATE TABLE `' . $maps['source']['poller'] . '` (id INTEGER PRIMARY KEY, requires_sync VARCHAR(2), last_sync VARCHAR(30) DEFAULT "") ENGINE=InnoDB');
     $source->exec('INSERT INTO `' . $maps['source']['poller'] . '` VALUES (2,"",""),(3,"on","")');
     foreach ($maps as $side => $map) {
@@ -502,6 +521,8 @@ try {
         $source->exec('UPDATE `' . $maps['source']['data_source_profiles'] . '` SET step=301 WHERE id=1');
     }
     $upgrade_error = null;
+    $migration_version = null;
+    $version_confirmation = null;
     if (!empty($scenario['upgrade_entry'])) {
         $upgrade_active = true;
         $config = ['base_path' => $root, 'poller_id' => 2, 'connection' => 'recovery', 'is_web' => false, 'url_path' => '/', 'cacti_server_os' => 'unix'];
@@ -524,6 +545,10 @@ try {
             }
             $upgrade_active = false;
         }
+        $migration_version = get_cacti_cli_version();
+        if ($upgrade_error === null && $result === false) {
+            $version_confirmation = Installer::recordInstalledVersion();
+        }
     } elseif (isset($scenario['batch_rows'])) {
         $result = replicate_data_source_profile_children($remote, $data, $scenario['collector'] === 'bulk', $scenario['exclude'] ?? false);
     } elseif (!empty($scenario['entrypoint'])) {
@@ -542,14 +567,18 @@ try {
         $source->rollBack();
     }
     $callerAfter = $source->query('SELECT step FROM `' . $maps['source']['data_source_profiles'] . '` WHERE id=1')->fetchColumn();
-    file_put_contents($directory . '/result.json', json_encode(['upgrade_error' => $upgrade_error, 'remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    file_put_contents($directory . '/result.json', json_encode(['migration_version' => $migration_version, 'version_confirmation' => $version_confirmation, 'upgrade_error' => $upgrade_error, 'remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
 } finally {
-    $source->exec('DROP TABLE IF EXISTS `' . $maps['source']['poller'] . '`');
-    foreach ($maps as $map) {
-        $remote->exec('DROP TABLE IF EXISTS `' . $map['version'] . '`');
-        $remote->exec('DROP TABLE IF EXISTS `' . $map['data_template_data'] . '`');
-        $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_rra'] . '`');
-        $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_cf'] . '`');
-        $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles'] . '`');
+    if ($upgradeSchema !== null) {
+        $installer->exec("DROP DATABASE `$upgradeSchema`");
+    } else {
+        $source->exec('DROP TABLE IF EXISTS `' . $maps['source']['poller'] . '`');
+        foreach ($maps as $map) {
+            $remote->exec('DROP TABLE IF EXISTS `' . $map['version'] . '`');
+            $remote->exec('DROP TABLE IF EXISTS `' . $map['data_template_data'] . '`');
+            $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_rra'] . '`');
+            $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles_cf'] . '`');
+            $remote->exec('DROP TABLE IF EXISTS `' . $map['data_source_profiles'] . '`');
+        }
     }
 }
