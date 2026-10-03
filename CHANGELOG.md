@@ -75,6 +75,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
+- Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny. Fixes #263.
+
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
