@@ -408,7 +408,7 @@ $settings = array(
         ),
         'graph_auth_method' => array(
             'friendly_name' => __('Graph Permission Method'),
-            'description' => __('There are four methods for determining a User\'s Graph Permissions.  The first is \'Permissive\'.  Under the \'Permissive\' setting, a User only needs access to either the Graph, Device or Graph Template to gain access to the Graphs that apply to them.  Under \'Restrictive\', the User must have access to the Graph, the Device, and the Graph Template to gain access to the Graph.  These first two methods have scalability problems for very large installs.  So, two additional options are available.  They are \'Device Based\', which means if you have access to the Device, you get access to it\'s Graphs.  And lastly \'Graph Template Based\', which means if you have access to the \'Graph Template\' you get access to all Device Graphs of that Template.'),
+            'description' => __('Graph access is granted directly by a graph permission in every mode. Permissive also grants access when the user has permission for the graph\'s device or template. Restrictive requires permission for both the device and template when there is no direct graph permission. Device Based requires device permission, and Graph Template Based requires template permission. User and group policies are evaluated separately and their allowed results are combined. These modes trade query performance against fine-grained permissions on large installations.'),
             'method' => 'drop_array',
             'default' => '1',
             'array' => array(
@@ -496,7 +496,7 @@ $settings = array(
         'content_security_policy_script' => array(
             'method' => 'drop_array',
             'friendly_name' => __('Content-Security Script Policy'),
-            'description' => __('Controls the script-src CSP policy.  In Nonce Modes, Kadupul Plugins that use inline JavaScript must include the nonce attribute from Kadupul\'s builtin function \'CactiSecureHeaders::getNonceAttribute()\'. Otherwise, those scripts will be blocked by the browser.  Currently, Kadupul only allows reporting on Kadupul Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces.'),
+            'description' => __('Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts.'),
             'default' => '',
             'array' => array(
                 '0'            => __('Allow Non-Nonced Inline JavaScript'),

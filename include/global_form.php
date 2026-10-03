@@ -751,7 +751,7 @@ $struct_graph = array(
         'method' => 'checkbox',
         'default' => 'on',
         'form_id' => '|arg1:id|',
-        'description' => __('Auto scale the y-axis instead of defining an upper and lower limit. Note: if this is check both the Upper and Lower limit will be ignored.'),
+        'description' => __('When enabled, the selected Auto Scale Option determines which limits RRDtool uses: mode 1 ignores both limits, mode 2 keeps the lower limit, mode 3 keeps the upper limit, and mode 4 keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range.'),
         'size' => '7'
     ),
     'auto_scale_opts' => array(
