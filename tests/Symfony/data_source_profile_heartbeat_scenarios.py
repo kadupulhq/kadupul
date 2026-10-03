@@ -1,4 +1,6 @@
 """Keep profile heartbeat propagation scoped to the referenced data template."""
+from urllib.parse import urlencode
+from urllib.request import Request
 
 
 def verify_data_source_profile_heartbeat(harness, session, check):
@@ -74,18 +76,27 @@ def verify_data_source_profile_heartbeat(harness, session, check):
         other_template_rrd = create_rrd(0, other_template, 'other-template', 1200)
         other_local_rrd = create_rrd(other_local, other_template, 'other-local', 1400)
 
-        response = session.request('/data_source_profiles.php?action=save', {
+        harness.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
+        heartbeat_fields = {
             'save_component_profile': '1',
             'id': str(selected_profile),
             'name': 'heartbeat-selected-profile',
-            'step': '300',
             'heartbeat': '900',
-            'x_files_factor': '0.5',
             '__csrf_magic': session.token,
-        })
-        check(response['status'] == 200, 'profile heartbeat save completes')
+        }
+        request = Request(
+            harness.base + '/data_source_profiles.php?action=save',
+            data=urlencode(heartbeat_fields).encode(),
+            headers={'Origin': harness.base},
+        )
+        with session.opener.open(request, timeout=30) as response:
+            warning_page = response.read().decode('utf-8', errors='replace')
+            save_status = response.status
+        check(save_status == 200, 'profile heartbeat save completes')
         check(harness.sql(f'SELECT heartbeat FROM data_source_profiles WHERE id={selected_profile}').strip() == '900',
-              'selected profile heartbeat is saved')
+              'in-use profile heartbeat saves when the disabled step field is absent')
+        check(harness.sql(f'SELECT step FROM data_source_profiles WHERE id={selected_profile}').strip() == '300',
+              'heartbeat-only save leaves the read-only polling interval unchanged')
         check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={selected_template_rrd}').strip() == '900',
               'selected template RRD heartbeat follows its profile')
         check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={selected_local_rrd}').strip() == '900',
@@ -94,6 +105,25 @@ def verify_data_source_profile_heartbeat(harness, session, check):
               'unrelated template RRD heartbeat is unchanged')
         check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={other_local_rrd}').strip() == '1400',
               'unrelated local-source RRD heartbeat is unchanged')
+
+        check('Changing the Heartbeat from this page' in warning_page and 'tune' in warning_page,
+              'heartbeat save warns that existing RRD files still need tuning')
+        check(not harness.rrd_calls(), 'heartbeat metadata save does not claim to tune existing RRD files')
+
+        forged = session.request('/data_source_profiles.php?action=save', {
+            'save_component_profile': '1',
+            'id': str(selected_profile),
+            'name': 'heartbeat-selected-profile',
+            'step': '60',
+            'heartbeat': '1200',
+            'x_files_factor': '0.25',
+            '__csrf_magic': session.token,
+        })
+        check(forged['status'] == 200, 'forged structural profile update is safely refused')
+        check(harness.sql(f'SELECT step,heartbeat,x_files_factor FROM data_source_profiles WHERE id={selected_profile}').strip() == '300\t900\t0.5',
+              'server keeps read-only structural fields unchanged')
+        check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={selected_local_rrd}').strip() == '900',
+              'refused structural update leaves local-source heartbeat unchanged')
     finally:
         if rrd_ids:
             harness.sql('DELETE FROM data_template_rrd WHERE id IN (' + ','.join(map(str, rrd_ids)) + ')')
