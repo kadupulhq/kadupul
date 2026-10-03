@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-03 04:24-0700\n"
+"POT-Creation-Date: 2026-10-03 16:38-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -7938,7 +7938,7 @@ msgid "Tree Rule Items"
 msgstr "트리 규칙 항목"
 
 #: include/global_arrays.php:2854 include/global_arrays.php:2870
-#: lib/api_device.php:1941
+#: lib/api_device.php:1942
 msgid "days"
 msgstr "일"
 
@@ -7954,11 +7954,11 @@ msgstr "분"
 msgid "secs"
 msgstr "초second"
 
-#: include/global_arrays.php:2871 lib/api_device.php:1941
+#: include/global_arrays.php:2871 lib/api_device.php:1942
 msgid "hours"
 msgstr "시간"
 
-#: include/global_arrays.php:2872 lib/api_device.php:1941
+#: include/global_arrays.php:2872 lib/api_device.php:1942
 msgid "minutes"
 msgstr "분"
 
@@ -10461,7 +10461,7 @@ msgstr "글꼴 선택 방법"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "글꼴을 기본적으로 어떻게 처리 하시겠습니까?"
 
-#: include/global_settings.php:1060 lib/api_device.php:1896
+#: include/global_settings.php:1060 lib/api_device.php:1897
 msgid "System"
 msgstr "시스템"
 
@@ -12542,94 +12542,92 @@ msgstr "Kadupul Automation에 의해 추가됨"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "오류: range1-range2 형식의 IP 범위는 더 이상 지원되지 않습니다."
 
-#: lib/api_device.php:154 lib/api_device.php:157 lib/api_device.php:384
-#: lib/api_device.php:388 lib/api_device.php:450 lib/api_device.php:455
-#: lib/api_device.php:500 lib/api_device.php:504 lib/api_device.php:580
-#: lib/api_device.php:584 lib/api_device.php:639 lib/api_device.php:643
-#: lib/api_device.php:709 lib/api_device.php:712 lib/api_device.php:785
-#: lib/api_device.php:788 lib/api_device.php:837 lib/api_device.php:840
-#: lib/api_device.php:881 lib/api_device.php:884 lib/api_device.php:1301
-#: lib/api_device.php:1314 lib/api_device.php:1318 lib/api_device.php:1363
-#: lib/api_device.php:1366 lib/api_device.php:1553 lib/api_device.php:1557
-#: lib/api_device.php:1593 lib/api_device.php:1597 lib/api_device.php:1642
-#: lib/api_device.php:1646 lib/api_device.php:1707 lib/api_device.php:1711
-#: lib/utility.php:717 lib/utility.php:721 lib/utility.php:797
-#: lib/utility.php:801 lib/utility.php:823 lib/utility.php:827
-#: lib/utility.php:856 lib/utility.php:859
+#: lib/api_device.php:155 lib/api_device.php:158 lib/api_device.php:385
+#: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
+#: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
+#: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
+#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:786
+#: lib/api_device.php:789 lib/api_device.php:838 lib/api_device.php:841
+#: lib/api_device.php:882 lib/api_device.php:885 lib/api_device.php:1302
+#: lib/api_device.php:1315 lib/api_device.php:1319 lib/api_device.php:1364
+#: lib/api_device.php:1367 lib/api_device.php:1554 lib/api_device.php:1558
+#: lib/api_device.php:1594 lib/api_device.php:1598 lib/api_device.php:1643
+#: lib/api_device.php:1647 lib/api_device.php:1708 lib/api_device.php:1712
+#: lib/utility.php:737
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "원격 폴러 %s 이 (가) 다운되었습니다. 다시 시작되면 FullSync를 수행해야 합니다"
 
-#: lib/api_device.php:548
+#: lib/api_device.php:549
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1817
+#: lib/api_device.php:1818
 msgid "ERROR: Device ID is Blank"
 msgstr "오류 : 기기 ID가 비어 있습니다."
 
-#: lib/api_device.php:1830 lib/api_device.php:1832
+#: lib/api_device.php:1831 lib/api_device.php:1833
 msgid "ERROR: Device["
 msgstr "오류 : 장치 ["
 
-#: lib/api_device.php:1848
+#: lib/api_device.php:1849
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "오류 : 원격 수집기에 연결하지 못했습니다."
 
-#: lib/api_device.php:1855
+#: lib/api_device.php:1856
 msgid "Device is Disabled"
 msgstr "기기가 사용 중지되었습니다."
 
-#: lib/api_device.php:1856
+#: lib/api_device.php:1857
 msgid "Device Availability Check Bypassed"
 msgstr "장치 가용성 확인 무시 됨"
 
-#: lib/api_device.php:1863
+#: lib/api_device.php:1864
 msgid "SNMP Information"
 msgstr "SNMP 정보"
 
-#: lib/api_device.php:1867
+#: lib/api_device.php:1868
 msgid "SNMP not in use"
 msgstr "사용하지 않는 SNMP"
 
-#: lib/api_device.php:1888 lib/api_device.php:1896 lib/api_device.php:1915
+#: lib/api_device.php:1889 lib/api_device.php:1897 lib/api_device.php:1916
 msgid "SNMP error"
 msgstr "SNMP 오류"
 
-#: lib/api_device.php:1888
+#: lib/api_device.php:1889
 msgid "Session"
 msgstr "세션"
 
-#: lib/api_device.php:1915
+#: lib/api_device.php:1916
 msgid "Host"
 msgstr "호스트"
 
-#: lib/api_device.php:1933
+#: lib/api_device.php:1934
 msgid "System:"
 msgstr "시스템"
 
-#: lib/api_device.php:1940
+#: lib/api_device.php:1941
 msgid "Uptime:"
 msgstr "운영 시간"
 
-#: lib/api_device.php:1942
+#: lib/api_device.php:1943
 msgid "Hostname:"
 msgstr "호스트이름:"
 
-#: lib/api_device.php:1943
+#: lib/api_device.php:1944
 msgid "Location:"
 msgstr "위치:"
 
-#: lib/api_device.php:1944
+#: lib/api_device.php:1945
 msgid "Contact:"
 msgstr "연락처:"
 
-#: lib/api_device.php:1975 lib/functions.php:6039 lib/functions.php:6041
+#: lib/api_device.php:1976 lib/functions.php:6039 lib/functions.php:6041
 #: lib/functions.php:6045
 msgid "Ping Results"
 msgstr "Ping 결과"
 
-#: lib/api_device.php:1980
+#: lib/api_device.php:1981
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "사용중인 Ping 또는 SNMP 가용성 검사 없음"
 
@@ -13415,7 +13413,7 @@ msgid "User Community"
 msgstr "사용자 커뮤니티"
 
 #: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2642
-#: lib/utility.php:1552
+#: lib/utility.php:1439
 msgid "Documentation"
 msgstr "문서"
 
@@ -16751,191 +16749,191 @@ msgstr "잘못된 데이터로 인해 %s 에 대해 그래프가 생성되지 �
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "참고: 데이터 원본 확인 실패로 인해 데이터 쿼리 %s 및 인덱스 %s 에 그래프가 추가되지 않음"
 
-#: lib/utility.php:1260
+#: lib/utility.php:1147
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+와 MariaDB 10.0+는 훌륭한 릴리스이며 선택할 수있는 아주 좋은 버전입니다. 최신 릴리스를 실행했는지 확인하십시오. 안정성이있는 많은 문제를 야기하는 오랜 저급 네트워킹 문제가 수정되었습니다."
 
-#: lib/utility.php:1272
+#: lib/utility.php:1159
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "5.5.3보다 큰 %s 버전에서 InnoDB를 활성화하는 것이 좋습니다."
 
-#: lib/utility.php:1285 lib/utility.php:1322
+#: lib/utility.php:1172 lib/utility.php:1209
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "영어 이외의 언어로 Kadupul를 사용하는 경우 일부 문자는 1 바이트 이상을 사용하므로 utf8mb4_unicode_ci 데이터 정렬 유형을 사용하는 것이 중요합니다."
 
-#: lib/utility.php:1291 lib/utility.php:1297 lib/utility.php:1328
-#: lib/utility.php:1334
+#: lib/utility.php:1178 lib/utility.php:1184 lib/utility.php:1215
+#: lib/utility.php:1221
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "영어 이외의 언어로 Kadupul를 사용하는 경우 일부 문자는 1 바이트 이상을 사용하므로 utf8mb4 문자 세트를 사용하는 것이 중요합니다."
 
-#: lib/utility.php:1310
+#: lib/utility.php:1197
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "5.1보다 큰 %s 버전에서 InnoDB를 활성화하는 것이 좋습니다."
 
-#: lib/utility.php:1343
+#: lib/utility.php:1230
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "로그인 수 및 척추 데이터 수집기 사용에 따라  %s에 많은 연결이 필요합니다. 척추에 대한 계산은 total_connections = total_processes * (total_threads + script_servers + 1)이므로 사용자 연결을위한 헤드 룸을 남겨 두어야합니다. 이는 동시 로그인 계정의 수에 따라 변경됩니다."
 
-#: lib/utility.php:1348
+#: lib/utility.php:1235
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "테이블 캐쉬를 크게 유지하면 innodb_file_per_table을 사용할 때 파일 열기 / 닫기 작업이 줄어 듭니다."
 
-#: lib/utility.php:1353
+#: lib/utility.php:1240
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "원격 폴링 기능을 사용하면 많은 양의 데이터가 주 서버에서 원격 폴러로 동기화됩니다. 따라서이 값을 16M 이상으로 유지하십시오."
 
-#: lib/utility.php:1359
+#: lib/utility.php:1246
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "Kadupul Performance Booster를 사용하고 메모리 스토리지 엔진을 선택하는 경우 시스템의 메모리 테이블 공간이 부족해지기 전에 Performance Booster 버퍼를 플러시해야합니다. 이것은 두 가지 방법으로 수행됩니다. 먼저 출력 열의 크기를 적절한 크기로 줄입니다. 이 열은 poller_output 및 poller_output_boost 테이블에 있습니다. 두 번째로 할 수있는 것은 메모리 테이블에 더 많은 메모리를 할당하는 것입니다. 우리는 임의로 시스템 메모리의 권장 값 10 %%를 선택했지만, SSD 디스크 드라이브를 사용하거나 시스템이 더 작은 경우이 권장 사항을 무시하거나 다른 스토리지 엔진을 선택할 수 있습니다. 콘솔 -&gt; 시스템 유틸리티 -&gt; 부스트 상태보기에서 성능 향상 표의 예상 소비량을 볼 수 있습니다."
 
-#: lib/utility.php:1365
+#: lib/utility.php:1252
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "임시 테이블 크기가 더 큰 서브 쿼리를 실행할 때 임시 테이블을 메모리에 보관하십시오."
 
-#: lib/utility.php:1371 lib/utility.php:1377
+#: lib/utility.php:1258 lib/utility.php:1264
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1383
+#: lib/utility.php:1270
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "InnoDB 스토리지를 사용할 때 테이블 공간을 분리하여 보관하는 것이 중요합니다. 이렇게하면 오랫동안  %s 사용자에게 테이블을 더 간단하게 관리 할 수 있습니다. 현재이 기능을 사용하지 않고 실행중인 경우이 기능을 활성화 한 다음 모든 InnoDB 테이블에서 alter 문을 실행하여 파일 저장소 단위로 마이그레이션 할 수 있습니다."
 
-#: lib/utility.php:1389
+#: lib/utility.php:1276
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "innodb_file_per_table을 사용할 때, innodb_file_format을 바라쿠다로 설정하는 것이 중요합니다. 이 설정을 사용하면 특정 Kadupul 테이블에서 더 긴 인덱스를 사용할 수 있습니다."
 
-#: lib/utility.php:1395
+#: lib/utility.php:1282
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "테이블에 인덱스가 매우 큰 경우 Barracuda innodb_file_format 및 innodb_large_prefix를 1로 사용하여 작업해야합니다.이를 수행하지 않으면 테이블을 제대로 작성할 수없는 플러그인이 발생할 수 있습니다."
 
-#: lib/utility.php:1401
+#: lib/utility.php:1288
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB는 가능한 많은 테이블과 인덱스를 시스템 메모리에 보유합니다. 그러므로, innodb_buffer_pool을 메모리에서 많은 테이블과 인덱스를 저장할만큼 충분히 크게 만들어야한다. / var / lib / mysql / Kadupul 디렉토리의 크기를 확인하면이 값을 결정하는 데 도움이됩니다. 시스템 총 메모리의 25 %%를 권장하지만 사용자의 요구 사항은 시스템 크기에 따라 다릅니다."
 
-#: lib/utility.php:1407
+#: lib/utility.php:1294
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "갑작스러운 시스템 충돌을 수용하기 위해 내부 저널링이있는 ZFS 또는 FusionI / O에서 Kadupul 인스턴스를 실행하지 않는 한이 설정은 ON으로 유지되어야합니다. 그러나 전원이 매우 양호하고 시스템이 거의 다운되지 않고 백업이있는 경우이 설정을 끄면 데이터베이스 성능이 거의 50 % 향상 될 수 있습니다."
 
-#: lib/utility.php:1412
+#: lib/utility.php:1299
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "여기서 메타 데이터가 저장됩니다. 테이블이 많으면이 값을 늘리는 것이 좋습니다."
 
-#: lib/utility.php:1417
+#: lib/utility.php:1304
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "사기성 쿼리는 데이터베이스가 다른 데이터베이스로 오프라인 상태가되어서는 안됩니다. 그들이 시스템을 죽이기 전에 이러한 쿼리를 종료하십시오."
 
-#: lib/utility.php:1422
+#: lib/utility.php:1309
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "최대 I / O 성능은 O_DIRECT 메서드를 사용하여 페이지를 플러시 할 때 발생합니다."
 
-#: lib/utility.php:1432
+#: lib/utility.php:1319
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "이 값을 2로 설정하면 커밋보다 매초마다 모든 트랜잭션을 플러시합니다. 이렇게하면  %s에서 글을 자주 적게 수행 할 수 있습니다."
 
-#: lib/utility.php:1437
+#: lib/utility.php:1324
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "현대의 SSD 타입 스토리지에서, 다수의 IO 스레드를 갖는 것은 높은 IO 특성을 갖는 어플리케이션에 유리합니다."
 
-#: lib/utility.php:1445 lib/utility.php:1487
+#: lib/utility.php:1332 lib/utility.php:1374
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "%s  %s부터는  %s에서 트랜잭션을 디스크로 플러시하는 빈도를 제어 할 수 있습니다. 기본값은 1 초이지만 높은 I / O 시스템에서 1보다 큰 값으로 설정하면 디스크 I / O가보다 순차적으로 이루어질 수 있습니다"
 
-#: lib/utility.php:1450
+#: lib/utility.php:1337
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "최신 SSD 유형 저장 장치를 사용하면 다중 읽기 스레드를 갖는 것이 io 특성이 높은 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1455
+#: lib/utility.php:1342
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "최신 SSD 유형의 저장 장치를 사용하면 쓰기 스레드가 여러 개인 경우 높은 IO 특성을 가진 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1461
+#: lib/utility.php:1348
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s는 성능을 향상시키기 위해 innodb_buffer_pool을 메모리 영역으로 나눕니다. 최대 값은 64입니다. innodb_buffer_pool이 1GB보다 작 으면 풀 크기를 128MB로 나눈 값을 사용해야합니다. 이 방정식을 최대 64까지 계속 사용하십시오."
 
-#: lib/utility.php:1461
+#: lib/utility.php:1348
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s는 성능을 향상시키기 위해 innodb_buffer_pool을 메모리 영역으로 나눕니다. 최대 값은 64입니다. innodb_buffer_pool이 1GB보다 작 으면 풀 크기를 128MB로 나눈 값을 사용해야합니다. 이 방정식을 최대 64까지 계속 사용하십시오."
 
-#: lib/utility.php:1467 lib/utility.php:1503
+#: lib/utility.php:1354 lib/utility.php:1390
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 실제 하드 드라이브가있는 경우 어레이의 활성 드라이브 수를 200 * 사용하십시오. NVMe 또는 PCIe 플래시를 사용하는 경우 100,000만큼 큰 숫자를 사용할 수 있습니다."
 
-#: lib/utility.php:1473 lib/utility.php:1509
+#: lib/utility.php:1360 lib/utility.php:1396
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 물리적 하드 드라이브가있는 경우 2000 * 어레이의 활성 드라이브 수를 사용하십시오. NVMe 또는 PCIe 플래시를 사용하는 경우 200000보다 훨씬 큰 숫자를 사용할 수 있습니다."
 
-#: lib/utility.php:1479 lib/utility.php:1515
+#: lib/utility.php:1366 lib/utility.php:1402
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 그렇지 않은 경우이 설정을 지정하지 마십시오."
 
-#: lib/utility.php:1492
+#: lib/utility.php:1379
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "최신 SSD 유형 저장 장치를 사용하면 다중 읽기 스레드를 갖는 것이 io 특성이 높은 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1497
+#: lib/utility.php:1384
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "최신 SSD 유형의 저장 장치를 사용하면 쓰기 스레드가 여러 개인 경우 높은 IO 특성을 가진 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1528
+#: lib/utility.php:1415
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "MariaDB 10.2.4 이상을 사용할 때 원자 쓰기가 활성화된 경우 이 설정을 꺼야 합니다. 따라서 성능이 향상되므로 이중 쓰기 버퍼 대신 원자 쓰기를 활성화하십시오."
 
-#: lib/utility.php:1535
+#: lib/utility.php:1422
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "MariaDB 10.2.4 이상을 사용하는 경우 이중 쓰기 버퍼에 원자적 쓰기를 사용하여 성능을 높일 수 있습니다."
 
-#: lib/utility.php:1552
+#: lib/utility.php:1439
 #, php-format
 msgid "%s Tuning"
 msgstr "%s 튜닝"
 
-#: lib/utility.php:1552
+#: lib/utility.php:1439
 msgid "Note: Many changes below require a database restart"
 msgstr "참고 : 아래의 많은 변경 사항은 데이터베이스를 다시 시작해야합니다."
 
-#: lib/utility.php:1560
+#: lib/utility.php:1447
 msgid "Variable"
 msgstr "변수"
 
-#: lib/utility.php:1561
+#: lib/utility.php:1448
 msgid "Current Value"
 msgstr "현재 가치"
 
-#: lib/utility.php:1563
+#: lib/utility.php:1450
 msgid "Recommended Value"
 msgstr "권장 값"
 
-#: lib/utility.php:1564
+#: lib/utility.php:1451
 msgid "Comments"
 msgstr "댓글"
 
-#: lib/utility.php:2158
+#: lib/utility.php:2045
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP  %s이 (는) 최소 버전입니다."
 
-#: lib/utility.php:2160
+#: lib/utility.php:2047
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "최소  %s MB 메모리 제한"
 
-#: lib/utility.php:2162
+#: lib/utility.php:2049
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "최소  %sm 실행 시간"
 
-#: lib/utility.php:2164
+#: lib/utility.php:2051
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "MySQL 및 시스템과 일치하는 유효한 시간대"
 

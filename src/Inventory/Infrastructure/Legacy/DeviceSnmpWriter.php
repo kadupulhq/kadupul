@@ -37,10 +37,17 @@ final class DeviceSnmpWriter
             if ($ownsTransaction && !$connection->commit()) {
                 throw new \RuntimeException('SNMP commit failed.');
             }
-        } finally {
-            if ($ownsTransaction && $connection->inTransaction()) {
-                $connection->rollBack();
+        } catch (\Throwable $failure) {
+            if ($ownsTransaction) {
+                try {
+                    if ($connection->inTransaction()) {
+                        $connection->rollBack();
+                    }
+                } catch (\Throwable) {
+                    // Preserve the original unconfirmed write or commit failure.
+                }
             }
+            throw $failure;
         }
     }
 

@@ -198,7 +198,7 @@ if ($host_id === false) {
      * Get the poller command records for the host
      */
     $poller_commands = db_fetch_assoc_prepared(
-        'SELECT action, command,
+        'SELECT action, command, time, last_updated,
 		SUBSTRING_INDEX(command, ":", 1) AS host_id
 		FROM poller_command
 		WHERE poller_id = ?
@@ -210,7 +210,9 @@ if ($host_id === false) {
     );
 
     if (cacti_sizeof($poller_commands)) {
+        $queued_purge = new \Kadupul\Inventory\Infrastructure\Legacy\QueuedCollectorPurge();
         foreach ($poller_commands as $command) {
+            $acknowledge = true;
             switch ($command['action']) {
                 case POLLER_COMMAND_REINDEX:
                     list($device_id, $data_query_id) = explode(':', $command['command']);
@@ -233,13 +235,50 @@ if ($host_id === false) {
                     break;
                 case POLLER_COMMAND_PURGE:
                     $device_id = $command['command'];
-
-                    api_device_purge_from_remote($device_id, $poller_id);
-                    cacti_log("Device[$device_id] PURGE: Purged successfully.", true, 'PCOMMAND', $verbosity);
+                    $acknowledge = false;
+                    try {
+                        $primary = \Kadupul\Inventory\Infrastructure\Legacy\QueuedCollectorPurge::primary($config, $database_sessions, "$database_hostname:$database_port:$database_default", $remote_db_cnn_id ?? null);
+                        $outcome = $queued_purge->run(
+                            $primary,
+                            (int) $poller_id,
+                            $command,
+                            static function () use ($poller_id): PDO {
+                                if (!remote_poller_up($poller_id) || !(($remote = poller_connect_to_remote($poller_id)) instanceof PDO)) {
+                                    throw new RuntimeException('Collector unavailable');
+                                }
+                                return $remote;
+                            },
+                            static function (PDO $remote, int $id) use ($poller_id): bool {
+                                $verifier = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorReplication();
+                                $verifier->purgeDependents($remote, $id);
+                                api_device_purge_from_remote($id, $poller_id, null, $remote, false);
+                                $verifier->verifyPurged($remote, $id);
+                                return true;
+                            }
+                        );
+                        if ($outcome === 'purged') {
+                            cacti_log("Device[$device_id] PURGE: Purged successfully.", true, 'PCOMMAND', $verbosity);
+                        } else {
+                            cacti_log("Device[$device_id] PURGE: Stale command skipped.", true, 'PCOMMAND', $verbosity);
+                        }
+                    } catch (Throwable) {
+                        cacti_log("Device[$device_id] ERROR: Collector purge outcome could not be confirmed; verify persisted state before retry.", true, 'PCOMMAND', $verbosity);
+                    }
 
                     break;
                 default:
                     cacti_log('ERROR: Unknown poller command issued', true, 'PCOMMAND');
+            }
+            if ($acknowledge) {
+                try {
+                    $queue = $poller_db_cnn_id instanceof PDO ? $poller_db_cnn_id : ($database_sessions["$database_hostname:$database_port:$database_default"] ?? null);
+                    if (!$queue instanceof PDO) {
+                        throw new RuntimeException('Command queue connection unavailable');
+                    }
+                    $queued_purge->acknowledge($queue, (int) $poller_id, $command);
+                } catch (Throwable) {
+                    cacti_log('ERROR: Poller command acknowledgement could not be confirmed; verify persisted state before retry.', true, 'PCOMMAND', $verbosity);
+                }
             }
 
             /* record current_time */
@@ -252,15 +291,6 @@ if ($host_id === false) {
             }
         }
 
-        db_execute_prepared(
-            'DELETE FROM poller_command
-			WHERE poller_id = ?
-			AND SUBSTRING_INDEX(command, ":", 1) = ?
-			AND last_updated <= FROM_UNIXTIME(?)',
-            array($poller_id, $host_id, $max_updated),
-            true,
-            $poller_db_cnn_id
-        );
     }
 
     unregister_process('commands', 'child', $host_id + 1000);
