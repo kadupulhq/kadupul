@@ -29,7 +29,7 @@ function refresh_csrf_run($test, array $scenario): array
     }
     if (!empty($scenario['filesystem_failure'])) {
         $failure = $scenario['filesystem_failure'];
-        $stub = $failure === 'short_write' ? 'function file_put_contents($path,$contents,$flags=0) { return \file_put_contents($path,substr($contents,0,5),$flags); }' : ($failure === 'readback' ? 'function file_get_contents($path) { return false; }' : ($failure === 'rename' ? 'function rename($from,$to) { return false; }' : 'function tempnam($dir,$prefix) { return false; }'));
+        $stub = $failure === 'fallback' ? 'function tempnam($dir,$prefix) { $path = \tempnam(dirname($dir),$prefix); file_put_contents(getenv("REFRESH_CSRF_DIR") . "/fallback-path",$path); return $path; }' : ($failure === 'short_write' ? 'function file_put_contents($path,$contents,$flags=0) { return \file_put_contents($path,substr($contents,0,5),$flags); }' : ($failure === 'readback' ? 'function file_get_contents($path) { return false; }' : ($failure === 'rename' ? 'function rename($from,$to) { return false; }' : 'function tempnam($dir,$prefix) { return false; }')));
         $script = file_get_contents($dir . '/cli/refresh_csrf.php');
         file_put_contents($dir . '/cli/refresh_csrf.php', preg_replace('/<\?php/', '<?php namespace RefreshCsrfFilesystemProbe; ' . $stub, $script, 1));
     }
@@ -125,6 +125,7 @@ PHP;
         child_coverage_collect($coverage_dir);
 
         return array(
+            'fallback_removed' => !file_exists($dir . '/fallback-path') || !file_exists(trim(file_get_contents($dir . '/fallback-path'))),
             'exit' => $exit,
             'stdout' => $stdout,
             'stderr' => $stderr,
@@ -133,7 +134,7 @@ PHP;
             'secret' => $secret !== '' && file_exists($secret) ? file_get_contents($secret) : null,
         );
     } finally {
-        foreach (array_merge(glob($dir . '/*.coverage'), glob($dir . '/{cli,lib,include,include/vendor/csrf}/*.php', GLOB_BRACE), glob($outside . '/*'), glob($dir . '/*.php'), glob($dir . '/*.sqlite'), glob($dir . '/*.lock')) as $file) {
+        foreach (array_merge(glob($dir . '/fallback-path'), glob($dir . '/*.coverage'), glob($dir . '/{cli,lib,include,include/vendor/csrf}/*.php', GLOB_BRACE), glob($outside . '/*'), glob($dir . '/*.php'), glob($dir . '/*.sqlite'), glob($dir . '/*.lock')) as $file) {
             unlink($file);
         }
         foreach (array('cli', 'lib', 'include/vendor/csrf', 'include/vendor', 'include') as $part) {
@@ -251,8 +252,9 @@ test('CLI rejects external secrets when the served root is unknown or contains t
 test('failed atomic rotation preserves the prior external secret', function (string $failure) {
     $result = refresh_csrf_run($this, array('secret' => '{outside}/csrf-secret.php', 'existing' => true, 'filesystem_failure' => $failure));
     expect($result['exit'])->toBe(1)->and($result['secret'])->toBe('<?php $secret = "old";')
+        ->and($result['stderr'])->toBe('')->and($result['fallback_removed'])->toBeTrue()
         ->and($result['stdout'])->not->toContain('New csrf_secret.php file written');
-})->with(array('short_write', 'readback', 'rename', 'temporary'));
+})->with(array('short_write', 'readback', 'rename', 'temporary', 'fallback'));
 
 
 test('collector propagation failure is not reported as rotation success', function () {

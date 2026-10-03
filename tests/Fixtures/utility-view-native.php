@@ -11,24 +11,30 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+$managerView = $scenario['view'] === 'manager';
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
 file_put_contents($directory . '/include/auth.php', '<?php');
 symlink($root . '/lib', $directory . '/lib');
 chdir($directory);
-$_SERVER['PHP_SELF'] = 'utilities.php';
-$_SERVER['SCRIPT_NAME'] = 'utilities.php';
+$_SERVER['PHP_SELF'] = $managerView ? 'managers.php' : 'utilities.php';
+$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'];
 $_SERVER['REQUEST_METHOD'] = 'GET';
 session_start();
 $_SESSION = array('sess_user_id' => 99, 'sentinel' => 'preserved');
 $config = array('base_path' => $root, 'poller_id' => 1, 'connection' => 'online', 'url_path' => '/', 'is_web' => false, 'cacti_version' => 'native', 'cacti_server_os' => 'unix', 'config_options_array' => array('num_rows_table' => 2, 'selected_theme' => 'classic', 'autocomplete_enabled' => '', 'path_cactilog' => $directory . '/cacti.log', 'path_stderrlog' => $directory . '/stderr.log', 'max_display_rows' => 2, 'log_refresh_interval' => 300, 'guest_user' => 0, 'auth_method' => 0));
-$no_session_write = array('utilities.php');
+$no_session_write = array('utilities.php', 'managers.php');
 $messages = array();
 $themes = array('classic' => 'Classic');
 $item_rows = $scenario['choices'] ?? array(1 => 'One', 2 => 'Two & more', 10 => 'Ten');
 $auth_realms = array(0 => 'Local & trusted');
 $poller_actions = array(0 => 'SNMP', 1 => 'Script', 2 => 'Script Server');
 $_REQUEST = array_merge(array('action' => 'native_fixture', 'header' => 'false'), $scenario['request']);
+if ($managerView) {
+    $_REQUEST['action'] = $scenario['request']['action'] ?? '';
+    $config['config_options_array']['auth_cache_enabled'] = '';
+    $config['config_options_array']['user_auto_logout_time'] = 0;
+}
 $log_tail_lines = array(-1 => 'Default', 2 => 'Two', 10 => 'Ten');
 $page_refresh_interval = array(60 => 'One minute', 300 => 'Five minutes');
 file_put_contents($directory . '/cacti.log', "STATS Device[1] DS[101] Alpha & <script>\nWARN Beta\nERROR Gamma\nDEBUG Delta\nPlain Fifth\n");
@@ -50,6 +56,13 @@ if ($boost) {
     $database_sessions = array('native-fixture:3306:' . $ownedDatabase => $db);
 } else {
     $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    if ($managerView) {
+        // SQLite dialect boundary for the unchanged production hostname sort.
+        // Like MySQL, invalid IPv4 names yield NULL; the SQL still orders names.
+        $db->sqliteCreateFunction('INET_ATON', static function ($value) {
+            return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false ? (int) sprintf('%u', ip2long($value)) : null;
+        }, 1);
+    }
 }
 $db->exec("CREATE TABLE settings_user(user_id INTEGER, name TEXT, value TEXT);
 INSERT INTO settings_user VALUES(99, 'selected_theme', 'classic');
@@ -84,7 +97,24 @@ CREATE TABLE snmpagent_notifications_log(id INTEGER, manager_id INTEGER, notific
 INSERT INTO snmpagent_cache VALUES('1.1','Name & <script>','MIB-A','read-only','Scalar','Value & <script>','Description & <script>'),('1.2','Other','MIB-A','read-write','Column Data','Second',''),('1.3','Foreign','MIB-B','not-accessible','Table','unused','');
 INSERT INTO snmpagent_managers VALUES(1,'Receiver & <script>'),(2,'Foreign receiver');
 INSERT INTO snmpagent_notifications_log VALUES(1,1,'Name & <script>',1,100,'Bind & <script>'),(2,1,'Other',3,200,'Second'),(3,2,'Foreign',4,300,'Foreign');");
+if ($managerView) {
+    $db->exec("INSERT INTO settings_user VALUES(99,'user_auto_logout_time','0');");
+    $db->exec("ALTER TABLE snmpagent_managers ADD COLUMN description TEXT;
+ALTER TABLE snmpagent_managers ADD COLUMN disabled TEXT;
+UPDATE snmpagent_managers SET hostname='192.0.2.10', description='Receiver Alpha & <script>', disabled='' WHERE id=1;
+UPDATE snmpagent_managers SET hostname='192.0.2.2', description='Receiver Beta', disabled='on' WHERE id=2;
+INSERT INTO snmpagent_managers VALUES(3,'192.0.2.30','Receiver Gamma','');
+CREATE TABLE snmpagent_managers_notifications(manager_id INTEGER, notification TEXT, disabled TEXT, mib TEXT);
+UPDATE snmpagent_cache SET kind='Notification';
+INSERT INTO snmpagent_managers_notifications VALUES(1,'Name & <script>','','MIB-A'),(1,'Other','on','MIB-A'),(2,'Foreign','','MIB-B');");
+    if ($scenario['hostname_markup'] ?? false) {
+        $db->exec("UPDATE snmpagent_managers SET hostname='Receiver & <script>' WHERE id=1;");
+    }
+}
 $tables = array('user_auth', 'user_log', 'host', 'snmp_query', 'host_snmp_cache', 'data_template', 'data_local', 'data_template_data', 'poller_item', 'settings_user', 'snmpagent_cache', 'snmpagent_managers', 'snmpagent_notifications_log');
+if ($managerView) {
+    $tables[] = 'snmpagent_managers_notifications';
+}
 if ($boost) {
     $db->exec("CREATE TABLE settings(name VARCHAR(100) PRIMARY KEY, value TEXT);
 CREATE TABLE poller_output_boost(local_data_id INTEGER, output VARCHAR(100)) ENGINE=InnoDB;
@@ -131,6 +161,9 @@ function db_fetch_row_prepared($sql, $params = array())
 }
 function db_table_exists($table)
 {
+    if ($GLOBALS['managerView']) {
+        return (bool) db_fetch_cell_prepared("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", array($table));
+    }
     return (bool) db_fetch_cell_prepared('SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=SCHEMA() AND TABLE_NAME=?', array($table));
 }
 function db_execute($sql)
@@ -221,21 +254,31 @@ require $root . '/lib/variables.php';
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('UTILITY_VIEW_TEST_COVERAGE', true);
+    if ($managerView) {
+        define('MANAGER_VIEW_NATIVE_TEST_COVERAGE', true);
+    }
     require __DIR__ . '/rrd-process-coverage.php';
 }
 require $root . '/src/Platform/Infrastructure/Legacy/UtilityRows.php';
-require $root . '/utilities.php';
-ob_start();
-match ($scenario['view']) {
-    'user' => utilities_view_user_log(),
-    'snmp' => utilities_view_snmp_cache(),
-    'poller' => utilities_view_poller_cache(),
-    'agent' => snmpagent_utilities_run_cache(),
-    'event' => snmpagent_utilities_run_eventlog(),
-    'log' => utilities_view_logfile(),
-    'boost' => boost_display_run_status(),
-    'options' => \Kadupul\Platform\Infrastructure\Legacy\UtilityRows::renderOptions($scenario['choices'], $scenario['selected']),
-};
+if ($managerView) {
+    // Execute the original controller dispatch; auth/bootstrap remains the
+    // explicit isolated boundary above. SQL, filters and HTML are real.
+    ob_start();
+    require $root . '/managers.php';
+} else {
+    require $root . '/utilities.php';
+    ob_start();
+    match ($scenario['view']) {
+        'user' => utilities_view_user_log(),
+        'snmp' => utilities_view_snmp_cache(),
+        'poller' => utilities_view_poller_cache(),
+        'agent' => snmpagent_utilities_run_cache(),
+        'event' => snmpagent_utilities_run_eventlog(),
+        'log' => utilities_view_logfile(),
+        'boost' => boost_display_run_status(),
+        'options' => \Kadupul\Platform\Infrastructure\Legacy\UtilityRows::renderOptions($scenario['choices'], $scenario['selected']),
+    };
+}
 $html = ob_get_clean();
 define('NATIVE_COVERAGE_COMPLETED', array('utility-view-observed:' . $scenario['view']));
 $after = array();
