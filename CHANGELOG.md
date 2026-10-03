@@ -75,6 +75,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
+- Stop schema report, alters, and repair when the canonical baseline cannot be loaded, returning a failing CLI status and JSON `failed` status without results. Preserve explicit create/load mode messages and legacy exit conventions; missing or unparsable create inputs leave existing audit tables untouched. Fixes #242.
+
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.

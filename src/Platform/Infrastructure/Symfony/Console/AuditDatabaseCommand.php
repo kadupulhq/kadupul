@@ -130,7 +130,7 @@ final readonly class AuditDatabaseCommand
             + ($alter['statement'] === null ? [] : ['statement' => $alter['statement']]), $report->alters);
         if ($mode === OutputMode::Json) {
             // Always local: the audit runs only on the primary, where local is main.
-            return $this->renderer->written($output, false, $report->dryRun, $report->failed(), [
+            $fields = [
                 'mode' => $report->mode?->value,
                 'upgrade' => match (true) {
                     $report->upgrade !== null => 'upgraded',
@@ -139,7 +139,17 @@ final readonly class AuditDatabaseCommand
                 },
                 'baseline' => $report->baseline?->value, 'tables' => $tables, 'alters' => $alters,
                 'imported' => $report->imported, 'exported' => $report->exported,
-            ]);
+            ];
+            if (in_array($report->mode, [AuditMode::Report, AuditMode::Repair, AuditMode::Alters], true)
+                && in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed, BaselineOutcome::CreateFailed], true)) {
+                return $this->renderer->render(new CommandResult(
+                    ['status' => 'failed', 'database' => 'local', 'dry_run' => $report->dryRun] + $fields,
+                    [],
+                    Command::FAILURE,
+                ), OutputMode::Json, $output);
+            }
+
+            return $this->renderer->written($output, false, $report->dryRun, $report->failed(), $fields);
         }
         $flagged = array_values(array_filter($tables, static fn(array $table): bool => $table['errors'] > 0 || $table['warnings'] > 0));
         if ($flagged !== []) {
@@ -157,6 +167,10 @@ final readonly class AuditDatabaseCommand
     {
         if ($report->baseline === BaselineOutcome::CreateFailed) {
             return 'Could not create the ' . $report->uncreated . ' table';
+        }
+        if (in_array($report->mode, [AuditMode::Report, AuditMode::Repair, AuditMode::Alters], true)
+            && in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed], true)) {
+            return 'Audit stopped because the canonical schema could not be loaded';
         }
 
         return match ($report->mode) {

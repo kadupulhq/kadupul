@@ -176,17 +176,40 @@ final class AuditDatabaseTest extends TestCase
         self::assertSame([], $this->events);
     }
 
+    public function testInvalidDryRunAndAltersNeverReadTheLiveCatalog(): void
+    {
+        foreach ([AuditMode::Report, AuditMode::Alters] as $mode) {
+            foreach ([null, new InvalidAuditSchema(3)] as $problem) {
+                $this->events = [];
+                $store = $this->createMock(AuditBaselineStore::class);
+                $problem === null ? $store->method('read')->willReturn(null) : $store->method('read')->willThrowException($problem);
+                $store->expects(self::never())->method('reset');
+                $store->expects(self::never())->method('replace');
+                $schema = $this->schema();
+                $schema->expects(self::never())->method('catalog');
+                $report = $this->audit($schema, $store)($mode, false, null, false);
+                self::assertSame($problem === null ? BaselineOutcome::FileMissing : BaselineOutcome::Unparsable, $report->baseline);
+                self::assertSame([], $report->tables);
+                self::assertSame([], $report->alters);
+                self::assertSame([], $this->events());
+            }
+        }
+    }
+
     public function testAMissingFileStopsBeforeResetOrComparison(): void
     {
         $store = $this->createMock(AuditBaselineStore::class);
         $store->method('read')->willReturn(null);
         $store->expects(self::never())->method('reset');
         $store->expects(self::never())->method('replace');
+        $schema = $this->schema();
 
-        $report = $this->audit($this->schema(), $store)(AuditMode::Report, false, null, true);
+        $report = $this->audit($schema, $store)(AuditMode::Report, false, null, true);
 
         self::assertSame(BaselineOutcome::FileMissing, $report->baseline);
         self::assertSame([], $report->tables);
+        self::assertSame(1, $report->failed());
+        self::assertSame([], $this->events());
         self::assertSame([], $report->alters);
     }
 
@@ -197,7 +220,7 @@ final class AuditDatabaseTest extends TestCase
             $this->events = [];
             $store = $this->createMock(AuditBaselineStore::class);
             $problem === null ? $store->method('read')->willReturn(null) : $store->method('read')->willThrowException($problem);
-            $store->method('reset')->willReturn(null);
+            $store->expects(self::never())->method('reset');
             $store->expects(self::never())->method('replace');
 
             $report = $this->audit($this->schema(), $store)(AuditMode::Repair, false, null, true);
