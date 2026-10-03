@@ -65,6 +65,10 @@ switch (get_request_var('action')) {
 
         break;
     case 'item':
+        if (!isempty_request_var('id') && !graph_edit_graph_is_allowed(get_filter_request_var('id'))) {
+            graph_edit_access_denied();
+        }
+
         top_header();
         item();
         bottom_footer();
@@ -94,9 +98,17 @@ switch (get_request_var('action')) {
         break;
     case 'lock':
     case 'unlock':
+        if (!isempty_request_var('id') && !graph_edit_graph_is_allowed(get_filter_request_var('id'))) {
+            graph_edit_access_denied();
+        }
+
         $_SESSION['sess_graph_lock_id'] = get_filter_request_var('id');
         $_SESSION['sess_graph_locked']  = (get_request_var('action') == 'lock' ? true : false);
     case 'graph_edit':
+        if (!isempty_request_var('id') && !graph_edit_graph_is_allowed(get_filter_request_var('id'))) {
+            graph_edit_access_denied();
+        }
+
         top_header();
         graph_edit();
         bottom_footer();
@@ -226,6 +238,24 @@ function form_save()
         set_request_var('host_id', get_request_var('host_id_prev'));
     } else {
         get_filter_request_var('host_id');
+    }
+
+    $local_graph_id = get_request_var('local_graph_id');
+    $host_id        = get_request_var('host_id');
+    if (!empty($local_graph_id) && !graph_edit_graph_is_allowed($local_graph_id)) {
+        graph_edit_access_denied();
+    }
+
+    // The graph row posted with a save must belong to the graph being saved.
+    if (isset_request_var('save_component_graph') && !isempty_request_var('graph_template_graph_id')) {
+        $owner = db_fetch_cell_prepared('SELECT local_graph_id FROM graph_templates_graph WHERE id = ?', array(get_request_var('graph_template_graph_id')));
+        if (empty($local_graph_id) || $owner === false || $owner === null || (int) $owner !== (int) $local_graph_id) {
+            graph_edit_access_denied();
+        }
+    }
+
+    if (($host_id > 0) && !is_device_allowed($host_id)) {
+        graph_edit_access_denied();
     }
 
     $gt_id_unparsed      = get_nfilter_request_var('graph_template_id');
@@ -587,6 +617,12 @@ function form_actions()
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
         if ($selected_items != false) {
+            foreach ($selected_items as $selected_item) {
+                if (!graph_edit_graph_is_allowed($selected_item)) {
+                    graph_edit_access_denied();
+                }
+            }
+
             if (get_request_var('drp_action') == '1') { // delete
                 if (!isset_request_var('delete_type')) {
                     set_request_var('delete_type', 1);
@@ -692,6 +728,10 @@ function form_actions()
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
+
+            if (!graph_edit_graph_is_allowed($matches[1])) {
+                graph_edit_access_denied();
+            }
 
             $graph_list .= '<li>' . html_escape(get_graph_title($matches[1])) . '</li>';
             $graph_array[$i] = $matches[1];
@@ -1331,6 +1371,10 @@ function graph_edit()
     get_filter_request_var('id');
     /* ==================================================== */
 
+    if (!isempty_request_var('id') && !is_graph_allowed(get_request_var('id'))) {
+        graph_edit_access_denied();
+    }
+
     $use_graph_template = true;
 
     $locked = 'false';
@@ -1385,10 +1429,13 @@ function graph_edit()
 
         $host_id = db_fetch_cell_prepared(
             'SELECT host_id
-			FROM graph_local
-			WHERE id = ?',
+            FROM graph_local
+            WHERE id = ?',
             array(get_request_var('id'))
         );
+        if ($host_id > 0 && !is_device_allowed($host_id)) {
+            graph_edit_access_denied();
+        }
 
         /* case of a deleted graph */
         if (!cacti_sizeof($graph)) {
@@ -1403,6 +1450,10 @@ function graph_edit()
             $use_graph_template = 'false';
         }
     } else {
+        if (isset_request_var('host_id') && get_filter_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+            graph_edit_access_denied();
+        }
+
         $header_label = __('Graph [new]');
         $use_graph_template = false;
 
@@ -1787,6 +1838,36 @@ function graph_edit()
     } else {
         api_plugin_hook_function('graph_edit_after');
     }
+}
+
+/**
+ * Check that the user may see a graph and, when it has one, its device.
+ *
+ * @param int $local_graph_id Graph identifier.
+ *
+ * @return bool
+ */
+function graph_edit_graph_is_allowed($local_graph_id)
+{
+    if (!is_graph_allowed($local_graph_id)) {
+        return false;
+    }
+
+    $host_id = db_fetch_cell_prepared('SELECT host_id FROM graph_local WHERE id = ?', array($local_graph_id));
+
+    return !($host_id > 0 && !is_device_allowed($host_id));
+}
+
+/**
+ * Deny access to a graph that is outside the current user's device scope.
+ *
+ * @return never
+ */
+function graph_edit_access_denied()
+{
+    cacti_log('User attempted to access an unauthorized graph', false, 'AUTH');
+    header('Location: graphs.php');
+    exit;
 }
 
 function validate_graph_request_vars()
