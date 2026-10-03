@@ -70,7 +70,7 @@ if (isset_request_var('update_policy')) {
     Actions Function
    -------------------------- */
 
-function update_policies()
+function update_policies(): never
 {
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 

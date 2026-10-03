@@ -93,7 +93,7 @@ cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:36	       
 cmd_exec	./utilities.php:209	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
 cmd_exec	./utilities.php:227	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
 cmd_exec	./utilities.php:247	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
-dynamic_include	./automation_snmp.php:398		#include_once($config['base_path'].'/plugins/mactrack/lib/automation_functions.php');
+dynamic_include	./automation_snmp.php:415	    #include_once($config['base_path'].'/plugins/mactrack/lib/automation_functions.php');
 dynamic_include	./automation_tree_rules.php:522		include_once($config['base_path'].'/lib/html_tree.php');
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_data_query.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
@@ -532,7 +532,7 @@ dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.p
 dynamic_include	./tools/verify-offline.php:17	$kernel = require $root . '/config/bootstrap.php';
 host_header	./lib/html_utility.php:1118	    } elseif (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '') {
 host_header	./lib/html_utility.php:1119	        $srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
-sort_order_input	./automation_snmp.php:517				ORDER BY sequence', array(get_request_var('id')));
+sort_order_input	./automation_snmp.php:535				ORDER BY sequence', array(get_request_var('id')));
 sort_order_input	./data_queries.php:856						ORDER BY field_name, sequence', array(get_request_var('id'), $data_template['id']));
 sort_order_input	./graph_templates.php:489			ORDER BY name', array(get_request_var('id')));
 sort_order_input	./graph_templates_inputs.php:187			ORDER BY gti.sequence", array(get_request_var('id'), get_request_var('graph_template_id')));

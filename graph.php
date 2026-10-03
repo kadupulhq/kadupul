@@ -76,7 +76,7 @@ if (get_request_var('action') === 'zoom') {
 			ON dsp.id=dspr.data_source_profile_id
 			WHERE dspr.id = ?', array($selected_rra_id));
         },
-        static function () use ($graph_no_data_message) {
+        static function () use ($graph_no_data_message): never {
             raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
             cacti_header('graph_view.php');
             exit;
