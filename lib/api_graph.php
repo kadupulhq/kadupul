@@ -173,24 +173,35 @@ function api_graph_remove_aggregate_items($local_graph_ids, $reject_aggregates =
         return;
     }
 
-    foreach ($local_graph_ids as $lgid) {
-        $aggregate_graphs = array_rekey(
-            db_fetch_assoc_prepared(
-                'SELECT DISTINCT aggregate_graph_id
-				FROM aggregate_graphs_items
-				WHERE local_graph_id = ?',
-                array($lgid)
-            ),
-            'aggregate_graph_id',
-            'aggregate_graph_id'
-        );
+    require_once __DIR__ . '/api_aggregate.php';
 
-        if (cacti_sizeof($aggregate_graphs)) {
-            foreach ($aggregate_graphs as $ag) {
-                api_aggregate_disassociate($ag, $lgid);
+    if (aggregate_graph_mutation(function () use ($local_graph_ids) {
+        foreach ($local_graph_ids as $lgid) {
+            $aggregate_graphs = array_rekey(
+                aggregate_graph_fetch_rows(
+                    'SELECT DISTINCT ag.local_graph_id
+					FROM aggregate_graphs_items AS agi
+					INNER JOIN aggregate_graphs AS ag ON ag.id=agi.aggregate_graph_id
+					WHERE agi.local_graph_id = ?',
+                    array($lgid)
+                ),
+                'local_graph_id',
+                'local_graph_id'
+            );
+
+            if (cacti_sizeof($aggregate_graphs)) {
+                foreach ($aggregate_graphs as $ag) {
+                    if (api_aggregate_disassociate($ag, array($lgid)) === false) {
+                        throw new RuntimeException('Aggregate graph regeneration failed before graph removal.');
+                    }
+                }
             }
         }
+        return true;
+    }) === false) {
+        throw new RuntimeException('Aggregate graph regeneration failed before graph removal.');
     }
+
 }
 
 function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false, $verify_reviewed_scope = null)
