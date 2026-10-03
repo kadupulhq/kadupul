@@ -21,6 +21,7 @@ $installer_connection = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER')
     : $connect();
 $writer->exec('SET SESSION innodb_lock_wait_timeout=1');
 $root = dirname(__DIR__, 2);
+define('CACTI_VERSION', trim(file_get_contents($root . '/include/cacti_version')));
 $source = file_get_contents($root . '/cacti.sql');
 $created = [];
 function db_install_execute($sql)
@@ -103,6 +104,11 @@ function populate_reference_fixture(PDO $database): void
         $database->exec('INSERT INTO data_template_rrd (id,local_data_id,data_input_field_id,data_source_name) VALUES ' . implode(',', $rows));
     }
 }
+// Bind the public final-version writer to the actual connection used by migrations.
+$database_hostname = $host;
+$database_port = $port;
+$database_default = $database;
+$database_sessions = ["$host:$port:$database" => $installer_connection];
 $config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_web' => false, 'url_path' => '/', 'cacti_server_os' => 'unix'];
 require $root . '/include/global_constants.php';
 require $root . '/include/global_arrays.php';
@@ -191,14 +197,44 @@ try {
             } finally {
                 ob_end_clean();
             }
-            if ($result !== false || get_cacti_cli_version() === $installedVersion || get_cacti_cli_version() !== trim(file_get_contents($root . '/include/cacti_version'))) {
-                throw new RuntimeException('Native version-gated upgrade did not advance the installed ' . $installedVersion . ' database.');
+            // Migration readiness does not publish the current release: install()
+            // confirms that marker only after all required contracts succeed.
+            $migrationVersion = get_cacti_cli_version();
+            if ($result !== false || version_compare($migrationVersion, $installedVersion, '<')
+                || !version_compare($migrationVersion, CACTI_VERSION, '<')) {
+                throw new RuntimeException('Native version-gated migration published an invalid intermediate marker for ' . $installedVersion . '.');
             }
             upgrade_to_1_2_33(); // An already upgraded installation must remain valid.
             if (!data_source_profile_reference_guards_available() || !db_index_exists('data_template_data', 'data_source_profile_id')) {
                 throw new RuntimeException('Registered profile migration was skipped for installed ' . $installedVersion);
             }
             upgrade_to_1_2_34(); // Profile migration remains idempotent.
+            // A real server refusal must retain the intermediate marker on a
+            // separate connection; removing it must allow the public writer retry.
+            $installer_connection->exec("CREATE TRIGGER standalone_version_refusal BEFORE UPDATE ON version FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='standalone final marker refusal'");
+            try {
+                $installer_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
+                $refused = $installer_connection->prepare('UPDATE version SET cacti = ?');
+                if ($refused->execute([CACTI_VERSION]) || $refused->errorCode() !== '45000'
+                    || $writer->query('SELECT cacti FROM version')->fetchColumn() !== $migrationVersion) {
+                    throw new RuntimeException('The native final-version refusal fixture did not reject an actual write.');
+                }
+                $installer_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                if (Installer::recordInstalledVersion()
+                    || $writer->query('SELECT cacti FROM version')->fetchColumn() !== $migrationVersion
+                    || $installer_connection->inTransaction()) {
+                    throw new RuntimeException('Failed final confirmation did not retain the migration marker.');
+                }
+            } finally {
+                $installer_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $installer_connection->exec('DROP TRIGGER standalone_version_refusal');
+            }
+            if (!Installer::recordInstalledVersion()
+                || $writer->query('SELECT cacti FROM version')->fetchColumn() !== CACTI_VERSION
+                || $installer_connection->inTransaction()) {
+                throw new RuntimeException('Successful final confirmation did not publish the current release.');
+            }
+            echo 'PASS: ' . $mode . " migration retains an intermediate marker; failed final write and successful retry are observed on an independent connection.\n";
         }
         foreach ([65536, 16777215] as $userId) {
             $statement = $owner->prepare('REPLACE INTO settings_user (user_id, name, value) VALUES (?, ?, ?)');
@@ -253,7 +289,7 @@ try {
         echo 'PASS: ' . $mode . " preserves full-range user IDs and indexed reference locks permit unrelated writes.\n";
     }
 } finally {
-    foreach ([$owner, $writer] as $db) {
+    foreach ([$owner, $writer, $installer_connection] as $db) {
         if ($db->inTransaction()) {
             $db->rollBack();
         }
