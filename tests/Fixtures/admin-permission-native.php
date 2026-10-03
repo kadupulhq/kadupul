@@ -28,6 +28,7 @@ if ($operation === 'add') {
     $request['save_component_graph_perms'] = '1';
     $request['add_' . $scenario['type'] . '_x'] = '1';
     $request['perm_' . $scenario['field']] = $scenario['item'];
+    $request += $scenario['extra_add_buttons'] ?? array();
     foreach (array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates') as $policy) {
         $request[$policy] = 1;
     }

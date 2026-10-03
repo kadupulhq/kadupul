@@ -517,16 +517,8 @@ function perm_remove()
     get_filter_request_var('group_id');
     /* ==================================================== */
 
-    $saved = true;
-    if (get_request_var('type') == 'graph') {
-        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write('DELETE FROM user_auth_group_perms WHERE type=1 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')), true, (int) get_request_var('group_id'));
-    } elseif (get_request_var('type') == 'tree') {
-        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write('DELETE FROM user_auth_group_perms WHERE type=2 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')), true, (int) get_request_var('group_id'));
-    } elseif (get_request_var('type') == 'host') {
-        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write('DELETE FROM user_auth_group_perms WHERE type=3 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')), true, (int) get_request_var('group_id'));
-    } elseif (get_request_var('type') == 'graph_template') {
-        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write('DELETE FROM user_auth_group_perms WHERE type=4 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')), true, (int) get_request_var('group_id'));
-    }
+    require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
+    $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::removePermission(true);
 
     if (!$saved) {
         raise_message(2);
