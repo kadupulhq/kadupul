@@ -183,9 +183,9 @@ dynamic_include	./cli/import_package.php:15	require_once($config['base_path'] . 
 dynamic_include	./cli/import_template.php:10	require_once($config['base_path'] . '/lib/import.php');
 dynamic_include	./cli/import_template.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/import_template.php:12	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/input_whitelist.php:10	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/input_whitelist.php:11	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/input_whitelist.php:12	require_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./cli/input_whitelist.php:12	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/input_whitelist.php:13	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/input_whitelist.php:14	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/install_cacti.php:10	require_once($config['base_path'] . '/install/functions.php');
 dynamic_include	./cli/install_cacti.php:146	include_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/install_cacti.php:147	include_once($config['base_path'] . '/lib/api_automation_tools.php');
