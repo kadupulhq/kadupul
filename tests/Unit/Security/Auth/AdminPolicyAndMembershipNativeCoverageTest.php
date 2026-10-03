@@ -10,9 +10,9 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
     private static bool $coverageEvidenceChecked = false;
 
     /** @dataProvider grantCases */
-    public function testTypedGrantAddsPreserveOtherItemsTypesAndUsers(string $type, string $field, int $typeId, int $item, bool $error): void
+    public function testTypedGrantAddsPreserveOtherItemsTypesAndUsers(string $type, string $field, int $typeId, int $item, bool $error, bool $self = false, array $extraButtons = array()): void
     {
-        $state = $this->runController(array('group' => false, 'operation' => 'add', 'type' => $type, 'field' => $field, 'item' => $item, 'error' => $error));
+        $state = $this->runController(array('group' => false, 'operation' => 'add', 'type' => $type, 'field' => $field, 'item' => $item, 'error' => $error, 'self' => $self, 'extra_add_buttons' => $extraButtons));
         $expected = array();
         foreach (array(42 => array(100, 101), 43 => array(100)) as $principal => $items) {
             foreach ($items as $existingItem) {
@@ -31,6 +31,7 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
                 self::assertSame(1, $row[$policy]);
             }
         }
+        $this->assertInvalidation($state, false, !$error, $self);
         self::assertSame('', $state['output']);
     }
 
@@ -40,21 +41,26 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
         foreach (array('graph' => array('graphs', 1), 'tree' => array('trees', 2), 'host' => array('hosts', 3), 'graph_template' => array('graph_templates', 4)) as $type => $details) {
             $cases[$type . ' add'] = array($type, $details[0], $details[1], 102, false);
             $cases[$type . ' replace'] = array($type, $details[0], $details[1], 100, false);
+            $cases[$type . ' self add'] = array($type, $details[0], $details[1], 102, false, true);
             $cases[$type . ' existing error'] = array($type, $details[0], $details[1], 102, true);
         }
+        $cases['graph wins all submitted buttons'] = array('graph', 'graphs', 1, 102, false, false, array('add_tree_x' => '1', 'perm_trees' => 103, 'add_host_x' => '1', 'perm_hosts' => 104, 'add_graph_template_x' => '1', 'perm_graph_templates' => 105));
+        $cases['tree wins later buttons'] = array('tree', 'trees', 2, 102, false, false, array('add_host_x' => '1', 'perm_hosts' => 104, 'add_graph_template_x' => '1', 'perm_graph_templates' => 105));
+        $cases['host wins template button'] = array('host', 'hosts', 3, 102, false, false, array('add_graph_template_x' => '1', 'perm_graph_templates' => 105));
         return $cases;
     }
 
     /** @dataProvider policyCases */
-    public function testPolicyUpdateChangesOnlyPostedPoliciesForTheTarget(bool $group, array $policies): void
+    public function testPolicyUpdateChangesOnlyPostedPoliciesForTheTarget(bool $group, array $policies, bool $self = false): void
     {
-        $state = $this->runController(array('group' => $group, 'operation' => 'policy', 'policies' => $policies));
+        $state = $this->runController(array('group' => $group, 'operation' => 'policy', 'policies' => $policies, 'self' => $self));
         foreach ($state['policies'] as $row) {
             foreach (array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates') as $policy) {
                 self::assertSame($row['id'] === 42 ? ($policies[$policy] ?? 1) : 1, $row[$policy]);
             }
         }
         self::assertCount(12, $state['permissions']);
+        $this->assertInvalidation($state, $group, $policies !== array(), $self);
         self::assertSame('', $state['output']);
     }
 
@@ -64,6 +70,9 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
             'user subset' => array(false, array('policy_graphs' => 2, 'policy_hosts' => 2)),
             'user all' => array(false, array('policy_graphs' => 2, 'policy_trees' => 2, 'policy_hosts' => 2, 'policy_graph_templates' => 2)),
             'group subset' => array(true, array('policy_trees' => 2, 'policy_graph_templates' => 2)),
+            'self user policy' => array(false, array('policy_graphs' => 2), true),
+            'self group policy' => array(true, array('policy_graphs' => 2), true),
+            'user none' => array(false, array()),
             'group none' => array(true, array()),
         );
     }
@@ -75,6 +84,37 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
         self::assertCount(12, $state['permissions']);
         self::assertSame(array(0, 0, 0, 0), array_column($state['reset'], 'reset_perms'));
         self::assertSame('', $state['output']);
+    }
+
+    /** @dataProvider failedWriteCases */
+    public function testFailedAuthorizationWritesLeavePermissionEpochsUnchanged(bool $group, string $operation): void
+    {
+        $state = $this->runController(array('group' => $group, 'operation' => $operation, 'type' => 'graph', 'field' => 'graphs', 'item' => 102, 'policies' => array('policy_graphs' => 2), 'write_error' => true));
+        $this->assertInvalidation($state, $group, false, false);
+        self::assertCount(12, $state['permissions']);
+        self::assertFalse($state['controller_returned'], 'Failed writes retain the existing clicked-button redirect/exit instead of returning through the fallback save path.');
+        foreach ($state['policies'] as $row) {
+            self::assertSame(1, $row['policy_graphs']);
+        }
+    }
+
+    public static function failedWriteCases(): array
+    {
+        return array('typed add failure' => array(false, 'add'), 'user policy failure' => array(false, 'policy'), 'group policy failure' => array(true, 'policy'));
+    }
+
+    private function assertInvalidation(array $state, bool $group, bool $changed, bool $self): void
+    {
+        foreach ($state['reset'] as $account) {
+            if ($changed && ($account['id'] === 42 || ($group && $account['id'] === 44))) {
+                self::assertGreaterThan(0, $account['reset_perms']);
+            } else {
+                self::assertSame(0, $account['reset_perms']);
+            }
+        }
+        self::assertSame(!$changed, $state['next_valid'], 'An existing target session must observe the persistent epoch on its next request.');
+        self::assertSame(!($self && $changed), $state['perms_valid']);
+        self::assertSame($self && $changed && !$group ? array('sess_user_id' => 42, 'sess_user_perms_key' => 0) : $state['initial_session'], $state['session']);
     }
 
     private function runController(array $scenario): array
@@ -102,9 +142,9 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('admin-state-readback'), array_merge(array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php'), $scenario['operation'] === 'realm' ? array('lib/auth.php') : array()));
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Unit/Security/Auth/AdminPermissionPersistenceNativeCoverageTest.php', 'tests/Unit/Security/Auth/AdminPolicyAndMembershipNativeCoverageTest.php', 'user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array_merge(array('admin-state-readback', 'permission-epoch-checked', 'mutation-sql-outcomes-readback'), in_array($scenario['operation'], array('add', 'policy', 'bulk'), true) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? array('next-request-epoch-checked') : array()), array_merge(array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/auth.php'), (($scenario['operation'] === 'add' && !($scenario['error'] ?? false)) || in_array($scenario['operation'], array('remove', 'bulk'), true)) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php') : array(), in_array($scenario['operation'], array('add', 'policy', 'remove', 'bulk'), true) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? ((!isset($scenario['selected']) || $scenario['selected'] !== array()) && ($scenario['type'] ?? '') !== 'unknown' && !($scenario['error'] ?? false) && ($scenario['operation'] !== 'policy' || ($scenario['policies'] ?? array()) !== array()) ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php') : array()) : array()));
                 if (!self::$coverageEvidenceChecked) {
-                    self::assertSame(26, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('admin-state-readback'), array_merge(array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php'), $scenario['operation'] === 'realm' ? array('lib/auth.php') : array()), 'lib/rrd.php'));
+                    self::assertSame(33, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Unit/Security/Auth/AdminPermissionPersistenceNativeCoverageTest.php', 'tests/Unit/Security/Auth/AdminPolicyAndMembershipNativeCoverageTest.php', 'user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array_merge(array('admin-state-readback', 'permission-epoch-checked', 'mutation-sql-outcomes-readback'), in_array($scenario['operation'], array('add', 'policy', 'bulk'), true) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? array('next-request-epoch-checked') : array()), array_merge(array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/auth.php'), (($scenario['operation'] === 'add' && !($scenario['error'] ?? false)) || in_array($scenario['operation'], array('remove', 'bulk'), true)) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php') : array(), in_array($scenario['operation'], array('add', 'policy', 'remove', 'bulk'), true) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? ((!isset($scenario['selected']) || $scenario['selected'] !== array()) && ($scenario['type'] ?? '') !== 'unknown' && !($scenario['error'] ?? false) && ($scenario['operation'] !== 'policy' || ($scenario['policies'] ?? array()) !== array()) ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php') : array()) : array()), 'lib/rrd.php'));
                     self::$coverageEvidenceChecked = true;
                 }
                 $coverage->merge($childCoverage);
@@ -119,6 +159,9 @@ final class AdminPolicyAndMembershipNativeCoverageTest extends TestCase
             }
             unlink($directory . '/include/auth.php');
             rmdir($directory . '/include');
+            if (is_file($directory . '/state.sqlite')) {
+                unlink($directory . '/state.sqlite');
+            }
             rmdir($directory);
         }
     }
