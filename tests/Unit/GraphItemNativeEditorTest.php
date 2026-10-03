@@ -148,13 +148,19 @@ test('graph item numeric form validation follows the fields used by rendering', 
         foreach (array('3600', '-60', '.5', '') as $value) {
             yield array($script, $value, 'on', 4, false);
         }
-        foreach (array("1\n", '1:2', '1 2') as $value) {
+        foreach (array("1\n", '1:2', '1 2', 'NaN') as $value) {
             yield array($script, $value, 'on', 4, true);
+            yield array($script, $value, 'on', 7, true);
             yield array($script, $value, '', 30, true);
         }
         yield array($script, '|query_ifSpeed|', '', 4, false);
         yield array($script, '|query_ifSpeed|', '', 7, false);
         yield array($script, '|query_ifSpeed|', 'on', 7, true);
         yield array($script, '0.5', '', 30, false);
+        foreach (array(1, 2, 3) as $type) {
+            foreach (array('|query_ifSpeed|', '12:30') as $value) {
+                yield array($script, $value, '', $type, false);
+            }
+        }
     }
 });

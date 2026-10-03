@@ -30,21 +30,4 @@ final class GraphItemNumericValueTest extends TestCase
             self::assertNull(rrdtool_graph_item_numeric_value($value));
         }
     }
-
-    public function testGraphSinksQuoteValidatedValueAndFormsRejectNewlineSuffixes(): void
-    {
-        $root = dirname(__DIR__, 3);
-        $rrdSource = file_get_contents($root . '/lib/rrd.php');
-        $graphItemsSource = file_get_contents($root . '/graphs_items.php');
-        $templateItemsSource = file_get_contents($root . '/graph_templates_items.php');
-
-        self::assertIsString($rrdSource);
-        self::assertIsString($graphItemsSource);
-        self::assertIsString($templateItemsSource);
-        self::assertStringContainsString('rrdtool_pipe_quote($safe_graph_item_value)', $rrdSource);
-        self::assertStringContainsString('$save[\'value\']', $graphItemsSource);
-        self::assertStringContainsString('$save[\'value\']', $templateItemsSource);
-        self::assertStringContainsString('\\\\z', $graphItemsSource);
-        self::assertStringContainsString('\\\\z', $templateItemsSource);
-    }
 }

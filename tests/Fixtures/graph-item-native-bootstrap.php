@@ -21,7 +21,7 @@ if (getenv('GRAPH_ITEM_TEST_VALIDATION') === '1') {
     $request = array_replace($request, json_decode(getenv('GRAPH_ITEM_TEST_PAYLOAD'), true, 512, JSON_THROW_ON_ERROR));
 }
 $calls = array();
-$graph_item_types = array(7 => 'AREA', 4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 9 => 'GPRINT', 10 => 'LEGEND', 15 => 'LEGEND_CAMM', 20 => 'LINE:STACK', 30 => 'TIC');
+$graph_item_types = array(1 => 'COMMENT', 2 => 'HRULE', 3 => 'VRULE', 7 => 'AREA', 4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 9 => 'GPRINT', 10 => 'LEGEND', 15 => 'LEGEND_CAMM', 20 => 'LINE:STACK', 30 => 'TIC');
 $struct_graph_item = array('task_item_id' => array('default' => 0), 'alpha' => array(), 'line_width' => graph_item_editor_line_width_field());
 $consolidation_functions = array();
 $config = array('url_path' => '/');
