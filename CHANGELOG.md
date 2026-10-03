@@ -75,6 +75,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
+- Make the documented `add_tree.php --node-type=site --site-id=ID` workflow create a site tree item, persist its `site_id`, and render its current site devices. Reject unknown site IDs before inserting a row. Fixes #235.
+
 - Reject tree CLI nodes with a missing tree, a missing or foreign parent, or a non-header parent; report failed node creation with a nonzero exit status. Fixes #236.
 
 - Remove orphaned user-log entries even when no current user accounts remain.

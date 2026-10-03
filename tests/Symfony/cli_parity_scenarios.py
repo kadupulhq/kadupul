@@ -72,9 +72,20 @@ def verify_cli_parity(harness, check):
 def verify_tree_cli(harness, check):
     """Verify tree node creation rejects invalid tree and parent references."""
     prefix = 'kadupul-cli-parent-check'
+    host_id = None
+    old_host_site = None
+    old_host_disabled = None
+    site_id = None
     harness.sql(f"DELETE FROM graph_tree_items WHERE graph_tree_id IN (SELECT id FROM graph_tree WHERE name LIKE '{prefix}-%'); "
                 f"DELETE FROM graph_tree WHERE name LIKE '{prefix}-%';")
     try:
+        host = harness.sql('SELECT id, site_id, disabled, description FROM host ORDER BY id LIMIT 1').strip().split('\t')
+        host_id, old_host_site, old_host_disabled, description = host
+        site_name = prefix + '-site'
+        harness.sql(f"DELETE FROM sites WHERE name = '{site_name}'; INSERT INTO sites (name) VALUES ('{site_name}')")
+        site_id = int(harness.sql(f"SELECT id FROM sites WHERE name = '{site_name}'").strip())
+        harness.sql(f"UPDATE host SET site_id = {site_id}, disabled = '' WHERE id = {host_id}")
+
         harness.sql(f"INSERT INTO graph_tree (name, sort_type) VALUES ('{prefix}-one', 1), ('{prefix}-two', 1)")
         tree_one = int(harness.sql(f"SELECT id FROM graph_tree WHERE name = '{prefix}-one'").strip())
         tree_two = int(harness.sql(f"SELECT id FROM graph_tree WHERE name = '{prefix}-two'").strip())
@@ -120,6 +131,29 @@ def verify_tree_cli(harness, check):
         check(invalid_tree['exit'] == 1 and 'does not exist' in invalid_tree['stderr'],
               'tree CLI rejects a nonexistent target tree')
 
+        valid_site = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=site', f'--tree-id={tree_one}',
+                                                       f'--site-id={site_id}'])
+        site_item = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id = {tree_one} AND site_id = {site_id}").strip())
+        site_title = harness.sql(f"SELECT title FROM graph_tree_items WHERE id = {site_item}").strip()
+        check(valid_site['exit'] == 0 and site_title == site_name,
+              'tree CLI stores the selected site and uses its name as the node title')
+
+        from harness import Session
+        session = Session(harness.base)
+        login = session.login('behavior-admin')
+        tree_response = session.opener.open(
+            harness.base + f'/graph_view.php?action=get_node&id=tree_anchor-{tree_one}&tree_id=0'
+        )
+        rendered = tree_response.read().decode('utf-8', errors='replace')
+        check(not login['login_form'] and f'tbranch-{site_item}-site-{site_id}' in rendered and description in rendered,
+              'site tree nodes render current devices assigned to that site')
+
+        before_invalid_site = harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id = {tree_one}").strip()
+        invalid_site = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=site', f'--tree-id={tree_one}',
+                                                         '--site-id=999999999'])
+        after_invalid_site = harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id = {tree_one}").strip()
+        check(invalid_site['exit'] == 1 and before_invalid_site == after_invalid_site,
+              'tree CLI rejects a nonexistent site without creating a blank row')
         invalid_tree_id = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=header', '--tree-id=not-a-number',
                                                             '--parent-node=0', '--name=invalid-tree-id'])
         check(invalid_tree_id['exit'] == 1 and 'existing --tree-id' in invalid_tree_id['stderr'],
@@ -130,7 +164,6 @@ def verify_tree_cli(harness, check):
         check(invalid_parent_id['exit'] == 1 and 'non-negative integer' in invalid_parent_id['stderr'],
               'tree CLI rejects a negative parent id')
 
-        host_id = int(harness.sql('SELECT id FROM host ORDER BY id LIMIT 1').strip())
         harness.sql(f'INSERT INTO graph_tree_items (graph_tree_id, parent, host_id) VALUES ({tree_one}, 0, {host_id})')
         duplicate_host = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=host', f'--tree-id={tree_one}',
                                                            '--parent-node=0', f'--host-id={host_id}'])
@@ -158,6 +191,10 @@ echo json_encode($rejected);
     finally:
         harness.sql(f"DELETE FROM graph_tree_items WHERE graph_tree_id IN (SELECT id FROM graph_tree WHERE name LIKE '{prefix}-%'); "
                     f"DELETE FROM graph_tree WHERE name LIKE '{prefix}-%';")
+        if host_id is not None:
+            harness.sql(f"UPDATE host SET site_id = {old_host_site}, disabled = '{old_host_disabled}' WHERE id = {host_id}")
+        if site_id is not None:
+            harness.sql(f"DELETE FROM sites WHERE id = {site_id}")
 
 
 def verify_cases(harness, check):
