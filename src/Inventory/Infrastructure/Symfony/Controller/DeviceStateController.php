@@ -21,8 +21,8 @@ use Twig\Environment;
 
 final class DeviceStateController
 {
-    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, ClearDeviceStatistics $clearStatistics, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, \Kadupul\Inventory\Infrastructure\Symfony\DeviceSelectionForm $selectionForm): Response
+    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics|sync-template'], methods: ['GET', 'HEAD', 'POST'])]
+    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, ClearDeviceStatistics $clearStatistics, \Kadupul\Inventory\Application\Command\SynchronizeDeviceTemplates $synchronizeTemplates, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, \Kadupul\Inventory\Infrastructure\Symfony\DeviceSelectionForm $selectionForm): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $prepared = $selectionForm->prepare($request, $prepare);
@@ -44,7 +44,9 @@ final class DeviceStateController
                 try {
                     $data = $form->getData();
                     $selection = $selectionForm->selection($data, $ids);
-                    if ($operation === 'clear-statistics') {
+                    if ($operation === 'sync-template') {
+                        $synchronizeTemplates($selection);
+                    } elseif ($operation === 'clear-statistics') {
                         $clearStatistics($selection);
                     } else {
                         $setEnabled($selection, $operation === 'enable');
