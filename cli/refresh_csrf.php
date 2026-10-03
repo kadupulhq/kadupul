@@ -72,7 +72,7 @@ exit(0);
 function display_version()
 {
     $version = get_cacti_cli_version();
-    print "Kadupul Rebuild Poller Cache Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+    print "Kadupul CSRF Refresh Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /*	display_help - displays the usage of the function */
@@ -81,7 +81,7 @@ function display_help()
     display_version();
 
     print PHP_EOL . "usage: refresh_csrf.php" . PHP_EOL . PHP_EOL;
-    print "A utility to update the csrf_secret() key on a the Kadupul system.  Updating" . PHP_EOL;
+    print "A utility to update the csrf_secret() key on the Kadupul system.  Updating" . PHP_EOL;
     print "this key should happen periodically during non-production hours as it can" . PHP_EOL;
     print "impact the user experience." . PHP_EOL . PHP_EOL;
 }
