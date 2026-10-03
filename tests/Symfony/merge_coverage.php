@@ -29,6 +29,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'data_source_profile_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_snmp_scenarios.py', 'device_bulk_assignment_scenarios.py', 'cli_audit_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
+        $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
         $sourcePaths[] = 'public/js/vdef-item.js';
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
         // cli_parity_scenarios.py, cli_schema_scenarios.py and
@@ -197,6 +198,10 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk collector moves full selection to remote',
         'bulk collector returns full selection to primary',
         'bulk collector purges old remote copies',
+        'collector cleanup failure retains committed primary ownership and polling rows',
+        'collector cleanup failure leaves a recoverable old host copy',
+        'collector cleanup failure emits no success audit',
+        'collector reassignment recovers old host and polling residue through confirmed moves',
         'bulk SNMP never displays stored credentials',
         'bulk SNMP keeps each device credentials through Symfony',
         'bulk SNMP validates all stored credentials before writes',
@@ -425,6 +430,44 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'audit --repair through bin/console without --force plans the repair and changes nothing',
         'audit refuses a remote collector before any statement, --help included',
         'audit scenarios leave the schema, settings, grants and docs/ as they found them'];
+    // The original installed scenario, its completed behavior checks and each page's
+    // actual source hash are required before these legacy caller observations enter Clover.
+    $legacyCallerPaths = $handler === 'none' ? [] : ['graphs.php', 'cdef.php',
+        'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php'];
+    if ($handler !== 'none') {
+        $checks = array_merge($checks, [
+            'installed CDEF duplication preserves persisted parent and children',
+            'installed CDEF referenced deletion refuses and preserves actual records',
+            'installed CDEF unused deletion removes actual parent and children',
+            'installed CDEF child copy refusal reports exact partial parent and preserves original definition',
+            'installed legacy write requires actual CSRF before mutation: /cdef.php',
+            'installed legacy write refuses the revoked actor realm before mutation: /cdef.php',
+            'installed legacy write requires actual CSRF before mutation: /graphs.php',
+            'installed legacy write refuses the revoked actor realm before mutation: /graphs.php',
+            'installed aggregate template save persists rendered graph item cache',
+            'installed aggregate malformed item request refuses before metadata writes',
+            'installed aggregate cache refusal preserves cache and reports independently saved metadata',
+            'installed aggregate propagation refusal reports saved metadata and preserves graph participants',
+            'installed graphs confirmation leaves all nine participants unchanged: 9',
+            'installed graphs confirmation leaves all nine participants unchanged: 10',
+            'installed graphs aggregation persists exact selected member and generated items: 9',
+            'installed graphs aggregation persists exact selected member and generated items: 10',
+            'installed graph malformed color refuses with all nine participants unchanged',
+            'installed graph late generation refusal rolls back all nine participants',
+            'installed graph editor renders persisted graph device and data source identities without mutation',
+            'installed graph autocomplete returns exact persisted owned data source identity without mutation',
+            'installed deleted graph editor reports missing resource without mutation',
+            'installed color synchronization reports genuine empty usage',
+            'installed color synchronization regenerates actual template and standalone cohorts',
+            'installed color second cohort refusal preserves failed graph and reports earlier committed cohort',
+            'installed color discovery failure reports refusal instead of empty usage',
+            'installed aggregate graph editor saves actual rendered settings and member identity',
+            'installed aggregate graph malformed request refuses before all nine participant writes',
+            'installed aggregate graph cache refusal preserves cache and reports saved title',
+            'installed aggregate graph regeneration refusal preserves generated items and reports saved settings',
+            'installed legacy CDEF aggregate and color page scenarios completed cleanup',
+        ]);
+    }
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -449,7 +492,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'links.php', 'sites.php', 'about.php', 'color.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'vdef.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -702,6 +745,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
     }
+    $requiredPaths = array_merge($requiredPaths, $legacyCallerPaths);
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);
