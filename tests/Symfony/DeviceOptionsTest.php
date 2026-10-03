@@ -48,7 +48,8 @@ final class DeviceOptionsTest extends TestCase
     {
         $change = new \Kadupul\Inventory\Domain\DeviceOptionsChange(['location' => '', 'snmp_timeout' => '0500']);
         self::assertSame(['snmp_timeout' => '500', 'location' => ''], $change->fields);
-        foreach ([[], ['poller_id' => 2], ['snmp_community' => 'secret'], ['location' => []], ['location' => str_repeat('x', 41)], ['snmp_timeout' => '0'], ['ping_method' => '4'], ['max_oids' => '61']] as $fields) {
+        self::assertSame(['bulk_walk_size' => '-1'], (new \Kadupul\Inventory\Domain\DeviceOptionsChange(['bulk_walk_size' => '-1']))->fields);
+        foreach ([[], ['poller_id' => 2], ['snmp_community' => 'secret'], ['location' => []], ['location' => str_repeat('x', 41)], ['location' => "bad\0value"], ['location' => "\xC3\x28"], ['snmp_timeout' => '0'], ['ping_method' => '4'], ['max_oids' => '61']] as $fields) {
             try {
                 new \Kadupul\Inventory\Domain\DeviceOptionsChange($fields);
                 self::fail('Invalid options accepted');

@@ -169,7 +169,7 @@ try {
             throw new RuntimeException('Disabling devices failed');
         }
         $action = $changeOptions ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3')));
-        if (!$syncTemplates) {
+        if (!$syncTemplates && !$changeOptions) {
             set_request_var('drp_action', $action);
             snmpagent_device_action_bottom([$action, $ids]);
             api_plugin_hook_function('device_action_bottom', [$action, $ids]);
@@ -211,6 +211,22 @@ try {
             $verify = $read($remotes[$device->pollerId], "SELECT disabled, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
             if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($preserveState ? $remoteStates[$device->id] : $enabled) || (int) $verify[0]['poller_id'] !== $device->pollerId || ($syncTemplates && (int) $verify[0]['host_template_id'] !== $device->templateId)) {
                 throw new RuntimeException('Collector state could not be confirmed');
+            }
+        }
+    }
+    if ($changeOptions && $changed !== []) {
+        // A successful UPDATE can still be rewritten by a database trigger.
+        // Do not publish action 4 until every requested value is confirmed.
+        set_request_var('drp_action', '4');
+        snmpagent_device_action_bottom(['4', $ids]);
+        api_plugin_hook_function('device_action_bottom', ['4', $ids]);
+        if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
+            throw new RuntimeException('Device operation could not be confirmed');
+        }
+        foreach ($changed as $device) {
+            $optionsWriter->verify($connection, $device, $optionsChange);
+            if (isset($remotes[$device->pollerId])) {
+                $optionsWriter->verify($remotes[$device->pollerId], $device, $optionsChange);
             }
         }
     }
