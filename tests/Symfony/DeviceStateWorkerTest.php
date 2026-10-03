@@ -72,5 +72,28 @@ final class DeviceStateWorkerTest extends TestCase
             rmdir($directory);
         }
     }
+    public function testOptionsHandoffContainsOnlyActorSelectionOperationAndChanges(): void
+    {
+        $directory = sys_get_temp_dir() . '/kadupul-options-handoff-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/bin', 0700, true);
+        $capture = $directory . '/payload.json';
+        file_put_contents($directory . '/bin/legacy-device-state.php', '<?php file_put_contents(' . var_export($capture, true) . ', stream_get_contents(STDIN)); echo \'KADUPUL_STATE_RESULT={"status":"ok"}\';');
+        try {
+            $pdo = new \PDO('sqlite::memory:');
+            $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+            $database = $this->createMock(DatabaseConnection::class);
+            $database->method('get')->willReturn($pdo);
+            $selection = new DeviceSelection([7 => str_repeat('a', 64)]);
+            (new LegacyDeviceStates($database, new LegacyDeviceVisibility($database), $directory))->changeOptions(42, $selection, new \Kadupul\Inventory\Domain\DeviceOptionsChange(['location' => 'Rack']));
+            self::assertSame(['actor' => 42, 'selection' => [7 => str_repeat('a', 64)], 'operation' => 'options', 'changes' => ['location' => 'Rack']], json_decode(file_get_contents($capture), true, flags: JSON_THROW_ON_ERROR));
+        } finally {
+            if (is_file($capture)) {
+                unlink($capture);
+            }
+            unlink($directory . '/bin/legacy-device-state.php');
+            rmdir($directory . '/bin');
+            rmdir($directory);
+        }
+    }
 
 }
