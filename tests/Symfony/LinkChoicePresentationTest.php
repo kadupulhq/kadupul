@@ -134,6 +134,45 @@ final class LinkChoicePresentationTest extends TestCase
         }
     }
 
+    public function testZeroSectionSurvivesEditorSubmission(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $link = new ExternalLink(1, 1, 'Example', 'https://example.org', 'CONSOLE', '0', true, 0);
+            $fields = $link->fields([]) + ['revision' => str_repeat('a', 64)];
+            $form = $container->get(FormFactoryInterface::class)->create(LinkType::class, $fields, ['files' => [], 'sections' => ['0'], 'csrf_protection' => false]);
+            $html = $container->get('twig')->render('navigation/link_edit.html.twig', ['link' => $link, 'form' => $form->createView()]);
+            $document = new \DOMDocument();
+            self::assertTrue(@$document->loadHTML($html));
+            self::assertSame('0', (new \DOMXPath($document))->query('//select[@name="link[consolesection]"]/option[@selected]')->item(0)->getAttribute('value'));
+            $fields['refresh'] = '0';
+            $fields['enabled'] = '1';
+            $form->submit($fields);
+            self::assertTrue($form->isValid(), (string) $form->getErrors(true));
+            self::assertSame('0', ExternalLink::validate($form->getData(), [])['extendedstyle']);
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testZeroSectionIsShownLiterallyInTheListing(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $container->get('translator')->setLocale('en');
+            $html = $container->get('twig')->render('navigation/links.html.twig', ['links' => [new ExternalLink(1, 1, 'Example', 'Title', 'CONSOLE', '0', true, 0)], 'filters' => ['filter' => '', 'rows' => 10, 'sort_column' => 'sortorder', 'sort_direction' => 'ASC', 'page' => 1, 'limit' => 10], 'total' => 1, 'viewPath' => '/link.php']);
+            $document = new \DOMDocument();
+            self::assertTrue(@$document->loadHTML($html));
+            self::assertSame('Console (0)', trim((new \DOMXPath($document))->query('//tbody/tr/td[5]')->item(0)->textContent));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
     public function testEnglishListShowsFriendlyStyleNames(): void
     {
         $kernel = new Kernel('test', true);

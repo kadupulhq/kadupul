@@ -148,11 +148,11 @@
         </div>
         </div>
       </div>
-      <div class="formRow even" id="row_ldap_tls_certificate"><div class="formColumnLeft"><div class="formFieldName">TLS Certificate Requirements<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should LDAP verify TLS Certificates when received by the Client.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <div class="formRow even" id="row_ldap_tls_certificate"><div class="formColumnLeft"><div class="formFieldName">TLS Certificate Requirements<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Should LDAP verify TLS Certificates when received by the Client. Demand and Hard refuse a server whose certificate does not verify. Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
         <select id="ldap_tls_certificate" name="ldap_tls_certificate">
-          <option selected="" value="0">Never</option>
+          <option value="0">Never</option>
           <option value="1">Hard</option>
-          <option value="2">Demand</option>
+          <option selected="" value="2">Demand</option>
           <option value="3">Allow</option>
           <option value="4">Try</option>
         </select>

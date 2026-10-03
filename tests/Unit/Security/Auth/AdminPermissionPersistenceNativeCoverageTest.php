@@ -8,6 +8,266 @@ use PHPUnit\Framework\TestCase;
 final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
 {
     private static bool $coverageEvidenceChecked = false;
+    private static bool $parentCoverageEvidenceChecked = false;
+    private static bool $userCoverageEvidenceChecked = false;
+
+    /** @dataProvider affectedUserCases */
+    public function testMembershipAdditionRequiresItsLockedUser(bool $group, bool $associate, bool $missing, bool $caller): void
+    {
+        $state = $this->runController(array('group' => $group, 'operation' => 'membership', 'replace' => $associate, 'selected' => array(43), 'affected_user_missing' => $missing, 'parent_contract' => true, 'caller_transaction' => $caller));
+        $denied = $associate && $missing;
+        self::assertSame($denied ? array(2) : array(), $state['messages']);
+        self::assertSame(array(), $state['parent_refusal_logs']);
+        self::assertSame($caller, $state['transaction_open']);
+        $target = array_values(array_filter($state['memberships'], static fn($row) => (int) $row['group_id'] === ($group ? 42 : 43) && (int) $row['user_id'] === ($group ? 43 : 42)));
+        self::assertCount($associate && !$missing ? 1 : 0, $target);
+        if ($denied) {
+            self::assertSame(array(), $state['write_outcomes']);
+            self::assertSame($state['parent_before_state']['memberships'], $state['memberships']);
+            self::assertSame($state['parent_before_state']['reset'], $state['reset']);
+        } else {
+            self::assertCount(1, $state['write_outcomes']);
+            self::assertTrue($state['write_outcomes'][0]['success']);
+            $epochs = array_column($state['reset'], 'reset_perms', 'id');
+            if (!$missing) {
+                self::assertSame(1, $epochs[$group ? 43 : 42]);
+            } else {
+                self::assertSame($state['parent_before_state']['reset'], $state['reset']);
+            }
+        }
+        if ($caller) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertTrue($state['caller_rollback_confirmed']);
+            self::assertSame(0, $state['after_caller_rollback']['caller_work']);
+        }
+    }
+
+    public static function affectedUserCases(): iterable
+    {
+        foreach (array(false, true) as $group) {
+            foreach (array(false, true) as $associate) {
+                foreach (array(false, true) as $missing) {
+                    foreach (array(false, true) as $caller) {
+                        yield ($group ? 'group ' : 'user ') . ($associate ? 'add ' : 'remove ') . ($missing ? 'missing ' : 'present ') . ($caller ? 'caller' : 'owned') => array($group, $associate, $missing, $caller);
+                    }
+                }
+            }
+        }
+    }
+
+    /** @dataProvider affectedUserReadFaults */
+    public function testFailedLockedUserReadRefusesMembership(bool $group, string $fault, bool $caller): void
+    {
+        $state = $this->runController(array('group' => $group, 'operation' => 'membership', 'replace' => true, 'selected' => array(43), 'user_read_fault' => true, 'parent_read_fault' => $fault, 'parent_contract' => true, 'caller_transaction' => $caller));
+        self::assertSame(array(2), $state['messages']);
+        self::assertSame(array(), $state['write_outcomes']);
+        self::assertSame(array(), $state['parent_refusal_logs']);
+        self::assertSame($state['parent_before_state']['memberships'], $state['memberships']);
+        self::assertSame($state['parent_before_state']['reset'], $state['reset']);
+        self::assertSame($caller, $state['transaction_open']);
+        if ($caller) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertSame(0, $state['after_caller_rollback']['caller_work']);
+        }
+    }
+
+    public static function affectedUserReadFaults(): iterable
+    {
+        foreach (array(false, true) as $group) {
+            foreach (array('early', 'late') as $fault) {
+                foreach (array(false, true) as $caller) {
+                    yield ($group ? 'group ' : 'user ') . $fault . ($caller ? ' caller' : ' owned') => array($group, $fault, $caller);
+                }
+            }
+        }
+    }
+
+    /** @dataProvider affectedUserCleanupFaults */
+    public function testUnconfirmedUserCleanupPreservesOriginalError(bool $group, bool $caller, bool|string $fault): void
+    {
+        $state = $this->runController(array('group' => $group, 'operation' => 'membership', 'replace' => true, 'selected' => array(43), 'affected_user_missing' => true, 'parent_cleanup_failure' => $fault, 'parent_contract' => true, 'caller_transaction' => $caller));
+        self::assertTrue($state['child_failed']);
+        self::assertTrue($state['transaction_open']);
+        self::assertSame(array(), $state['messages']);
+        self::assertSame(array(), $state['parent_refusal_logs']);
+        self::assertSame(array(), $state['write_outcomes']);
+        self::assertSame($state['parent_before_state']['memberships'], $state['memberships']);
+        self::assertSame($state['parent_before_state']['reset'], $state['reset']);
+        if ($caller) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertFalse($state['caller_rollback_confirmed']);
+            self::assertSame(1, $state['caller_cleanup_state']['caller_work']);
+        }
+    }
+
+    public static function affectedUserCleanupFaults(): iterable
+    {
+        foreach (array(false, true) as $group) {
+            foreach (array(false, true) as $caller) {
+                yield ($group ? 'group ' : 'user ') . ($caller ? 'caller' : 'owned') => array($group, $caller, true);
+            }
+            foreach (array('executed-hy000', 'not-executed-hy000', 'active') as $fault) {
+                yield ($group ? 'group ' : 'user ') . $fault => array($group, $fault !== 'active', $fault);
+            }
+        }
+    }
+
+    /** @dataProvider reverseMembershipCases */
+    public function testReverseMembershipRequiresAParentOnlyForAdmission(bool $associate, bool $missing, bool $caller): void
+    {
+        $state = $this->runController(array('group' => false, 'operation' => 'membership', 'replace' => $associate, 'selected' => array(43), 'selected_group_missing' => $missing, 'parent_contract' => true, 'caller_transaction' => $caller));
+        self::assertSame($caller, $state['transaction_open']);
+        self::assertSame(array(), $state['parent_refusal_logs']);
+        $denied = $associate && $missing;
+        self::assertSame($denied ? array(2) : array(), $state['messages']);
+        if ($denied) {
+            self::assertSame(array(), $state['write_outcomes']);
+            self::assertSame($state['parent_before_state']['memberships'], $state['memberships']);
+            self::assertSame($state['parent_before_state']['reset'], $state['reset']);
+        } else {
+            self::assertCount(1, $state['write_outcomes']);
+            self::assertTrue($state['write_outcomes'][0]['success']);
+            $target = array_values(array_filter($state['memberships'], static fn($row) => (int) $row['group_id'] === 43 && (int) $row['user_id'] === 42));
+            self::assertCount($associate ? 1 : 0, $target);
+            self::assertSame(1, $state['reset'][1]['reset_perms']);
+        }
+        if ($caller) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertTrue($state['caller_rollback_confirmed']);
+            self::assertSame(0, $state['after_caller_rollback']['caller_work']);
+            self::assertSame($state['parent_before_state']['permissions'], $state['after_caller_rollback']['permissions']);
+        }
+    }
+
+    public static function reverseMembershipCases(): iterable
+    {
+        foreach (array(false, true) as $associate) {
+            foreach (array(false, true) as $missing) {
+                foreach (array(false, true) as $caller) {
+                    yield ($associate ? 'add' : 'remove') . ($missing ? ' missing' : ' present') . ($caller ? ' caller' : ' owned') => array($associate, $missing, $caller);
+                }
+            }
+        }
+    }
+
+    /** @dataProvider parentCleanupFailures */
+    public function testUnconfirmedParentCleanupPreservesTheOriginalError(bool $group, string $operation, bool $caller, bool|string $fault): void
+    {
+        $scenario = array('group' => $group, 'operation' => $operation, 'type' => 'graph', 'kind' => 'graph', 'type_id' => 1, 'parent_contract' => true, 'parent_cleanup_failure' => $fault, 'caller_transaction' => $caller);
+        $scenario[$group ? 'parent_missing' : 'selected_group_missing'] = true;
+        if ($operation !== 'remove') {
+            $scenario['replace'] = true;
+            $scenario['selected'] = array($group ? 109 : 43);
+        }
+        $state = $this->runController($scenario);
+        self::assertTrue($state['child_failed']);
+        self::assertTrue($state['transaction_open']);
+        self::assertSame(array(), $state['messages']);
+        self::assertSame(array(), $state['parent_refusal_logs']);
+        self::assertSame(array(), $state['write_outcomes']);
+        foreach (array('permissions', 'memberships', 'reset') as $component) {
+            self::assertSame($state['parent_before_state'][$component], $state[$component]);
+        }
+        if ($caller) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertFalse($state['caller_rollback_confirmed']);
+            self::assertSame(1, $state['caller_cleanup_state']['caller_work']);
+            self::assertArrayNotHasKey('after_caller_rollback', $state);
+        }
+    }
+
+    public static function parentCleanupFailures(): iterable
+    {
+        foreach (array(array(true, 'remove'), array(true, 'bulk'), array(false, 'membership')) as [$group, $operation]) {
+            foreach (array(false, true) as $caller) {
+                yield ($group ? 'group ' : 'user ') . $operation . ($caller ? ' caller' : ' owned') => array($group, $operation, $caller, true);
+            }
+            foreach (array('executed-hy000', 'not-executed-hy000', 'active') as $fault) {
+                $caller = $fault !== 'active';
+                yield ($group ? 'group ' : 'user ') . $operation . ' ' . $fault => array($group, $operation, $caller, $fault);
+            }
+        }
+    }
+
+    /** @dataProvider parentReadFaults */
+    public function testFailedParentReadReceiptRefusesTheGroupWrite(string $fault, bool $caller): void
+    {
+        $state = $this->runController(array('group' => true, 'operation' => 'remove', 'type' => 'graph', 'type_id' => 1, 'parent_contract' => true, 'parent_read_fault' => $fault, 'caller_transaction' => $caller));
+        self::assertSame(array(2), $state['messages']);
+        self::assertSame(array(), $state['parent_refusal_logs']);
+        self::assertSame(array(), $state['write_outcomes']);
+        foreach (array('permissions', 'memberships', 'reset') as $component) {
+            self::assertSame($state['parent_before_state'][$component], $state[$component]);
+        }
+        self::assertSame($caller, $state['transaction_open']);
+        if ($caller) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertSame(0, $state['after_caller_rollback']['caller_work']);
+        }
+    }
+
+    public static function parentReadFaults(): iterable
+    {
+        foreach (array('early', 'late') as $fault) {
+            foreach (array(false, true) as $caller) {
+                yield $fault . ($caller ? ' caller' : ' owned') => array($fault, $caller);
+            }
+        }
+    }
+
+    /** @dataProvider groupParentCases */
+    public function testGroupMutationsRequireTheirLockedParent(string $operation, bool $missing, bool $caller, bool $empty): void
+    {
+        $scenario = array('group' => true, 'operation' => $operation, 'type' => 'graph', 'kind' => 'graph', 'type_id' => 1, 'parent_contract' => true, 'parent_missing' => $missing, 'caller_transaction' => $caller);
+        if ($operation === 'remove') {
+            $scenario['item_id'] = $empty ? 109 : 100;
+        } else {
+            $scenario['replace'] = true;
+            $scenario['selected'] = $empty ? array() : array($operation === 'membership' ? 43 : 109);
+        }
+        $state = $this->runController($scenario);
+        self::assertSame($caller, $state['transaction_open']);
+        self::assertSame('', $state['output']);
+        if ($missing) {
+            self::assertSame(array('permission_denied'), $state['messages']);
+            self::assertCount(1, $state['parent_refusal_logs']);
+            self::assertStringContainsString('missing User Group ID 42', $state['parent_refusal_logs'][0]);
+            self::assertSame(array(), $state['write_outcomes']);
+            self::assertSame($state['parent_before_state']['permissions'], $state['permissions']);
+            self::assertSame($state['parent_before_state']['memberships'], $state['memberships']);
+            self::assertSame($state['parent_before_state']['reset'], $state['reset']);
+        } else {
+            self::assertSame(array(), $state['messages']);
+            self::assertSame(array(), $state['parent_refusal_logs']);
+            if ($empty) {
+                self::assertSame($state['parent_before_state']['permissions'], $state['permissions']);
+                self::assertSame($state['parent_before_state']['memberships'], $state['memberships']);
+                self::assertSame($state['parent_before_state']['reset'], $state['reset']);
+            } else {
+                self::assertCount(1, $state['write_outcomes']);
+                self::assertTrue($state['write_outcomes'][0]['success']);
+                self::assertNotSame($state['parent_before_state']['reset'], $state['reset']);
+            }
+        }
+        if ($caller) {
+            self::assertSame(1, $state['caller_work']);
+            self::assertSame(0, $state['after_caller_rollback']['caller_work']);
+            self::assertSame($state['parent_before_state']['permissions'], $state['after_caller_rollback']['permissions']);
+        }
+    }
+
+    public static function groupParentCases(): iterable
+    {
+        foreach (array('remove', 'bulk', 'membership') as $operation) {
+            foreach (array(false, true) as $missing) {
+                foreach (array(false, true) as $caller) {
+                    foreach (array(false, true) as $empty) {
+                        yield $operation . ($missing ? ' missing' : ' present') . ($caller ? ' caller' : ' owned') . ($empty ? ' empty' : ' selected') => array($operation, $missing, $caller, $empty);
+                    }
+                }
+            }
+        }
+    }
 
     /** @dataProvider epochFailureCases */
     public function testFailedEpochWritesUndoOnlyTheirPermissionUnit(bool $group, string $operation, string $failure, bool $caller): void
@@ -120,10 +380,13 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
             }
         }
         self::assertSame($expected, $state['permissions']);
+        if ($group) {
+            self::assertSame($typeId === 0 ? 0 : 1, $state['permission_delete_calls']);
+        }
         self::assertSame([[$principal => 42, 'realm_id' => 7], [$principal => 43, 'realm_id' => 9]], $state['realms']);
         foreach ($state['reset'] as $account) {
             if ($typeId !== 0 && ($account['id'] === 42 || ($group && $account['id'] === 44))) {
-                self::assertGreaterThan(0, $account['reset_perms']);
+                self::assertSame(1, $account['reset_perms']);
             } else {
                 self::assertSame(0, $account['reset_perms']);
             }
@@ -135,6 +398,19 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
             self::assertSame($state['initial_session'], $state['session']);
         }
         self::assertSame('', $state['output']);
+    }
+
+    public function testGroupRemovalPreservesTheCallerTransactionAndSingleAtomicEpoch(): void
+    {
+        $state = $this->runController(array('group' => true, 'operation' => 'remove', 'type' => 'graph', 'caller_transaction' => true));
+        self::assertSame(1, $state['permission_delete_calls']);
+        self::assertTrue($state['transaction_open']);
+        self::assertSame(1, $state['caller_work']);
+        self::assertCount(11, $state['permissions']);
+        self::assertSame(array(0, 1, 0, 1), array_column($state['reset'], 'reset_perms'));
+        self::assertCount(12, $state['after_caller_rollback']['permissions']);
+        self::assertSame(array(0, 0, 0, 0), array_column($state['after_caller_rollback']['reset'], 'reset_perms'));
+        self::assertSame(0, $state['after_caller_rollback']['caller_work']);
     }
 
     public static function permissionCases(): array
@@ -298,6 +574,11 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return [[false, 'bulk'], [true, 'bulk'], [false, 'membership'], [true, 'membership']];
     }
 
+    private static function coverageSources(): array
+    {
+        return array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Unit/Security/Auth/AdminPermissionPersistenceNativeCoverageTest.php', 'tests/Unit/Security/Auth/AdminPolicyAndMembershipNativeCoverageTest.php', 'user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    }
+
     private function runController(array $scenario): array
     {
         $root = dirname(__DIR__, 4);
@@ -306,7 +587,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         mkdir($directory . '/include', 0700);
         file_put_contents($directory . '/include/auth.php', '<?php');
         $coverage = $this->getTestResultObject()->getCodeCoverage();
-        $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory];
+        $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'display_errors=stderr', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory];
         if ($coverage !== null) {
             $command[] = 'coverage';
         }
@@ -317,20 +598,50 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
             $stderr = stream_get_contents($pipes[2]);
             fclose($pipes[1]);
             fclose($pipes[2]);
-            self::assertSame(0, proc_close($process), $stderr . $stdout);
-            self::assertSame('', $stderr);
+            $status = proc_close($process);
+            if ($scenario['parent_cleanup_failure'] ?? false) {
+                self::assertNotSame(0, $status, $stderr . $stdout);
+                self::assertStringContainsString(($scenario['affected_user_missing'] ?? false) ? 'MissingPermissionUser: Permission user does not exist.' : 'MissingPermissionGroup: Permission group does not exist.', $stderr);
+            } else {
+                self::assertSame(0, $status, $stderr . $stdout);
+                self::assertSame('', $stderr);
+            }
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Unit/Security/Auth/AdminPermissionPersistenceNativeCoverageTest.php', 'tests/Unit/Security/Auth/AdminPolicyAndMembershipNativeCoverageTest.php', 'user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array_merge(array('admin-state-readback', 'permission-epoch-checked', 'mutation-sql-outcomes-readback'), in_array($scenario['operation'], array('add', 'policy', 'bulk'), true) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? array('next-request-epoch-checked') : array()), array_merge(array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/auth.php'), (($scenario['operation'] === 'add' && !($scenario['error'] ?? false)) || in_array($scenario['operation'], array('remove', 'bulk'), true)) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php') : array(), in_array($scenario['operation'], array('add', 'policy', 'remove', 'bulk'), true) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? ((!isset($scenario['selected']) || $scenario['selected'] !== array()) && ($scenario['type'] ?? '') !== 'unknown' ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php') : array()) : array()));
-                if (!self::$coverageEvidenceChecked) {
-                    self::assertSame(32, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'tests/Unit/Security/Auth/AdminPermissionPersistenceNativeCoverageTest.php', 'tests/Unit/Security/Auth/AdminPolicyAndMembershipNativeCoverageTest.php', 'user_admin.php', 'user_group_admin.php', 'lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array_merge(array('admin-state-readback', 'permission-epoch-checked', 'mutation-sql-outcomes-readback'), in_array($scenario['operation'], array('add', 'policy', 'bulk'), true) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? array('next-request-epoch-checked') : array()), array_merge(array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/auth.php'), (($scenario['operation'] === 'add' && !($scenario['error'] ?? false)) || in_array($scenario['operation'], array('remove', 'bulk'), true)) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php') : array(), in_array($scenario['operation'], array('add', 'policy', 'remove', 'bulk'), true) || ($scenario['operation'] === 'membership' && isset($scenario['replace'])) ? ((!isset($scenario['selected']) || $scenario['selected'] !== array()) && ($scenario['type'] ?? '') !== 'unknown' ? array('src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php') : array()) : array()), 'lib/rrd.php'));
+                $markers = array('admin-state-readback', 'permission-epoch-checked', 'mutation-sql-outcomes-readback');
+                $association = $scenario['operation'] === 'bulk' || ($scenario['operation'] === 'membership' && isset($scenario['replace']));
+                $nextRequest = !str_starts_with(getenv('KADUPUL_ADMIN_PERMISSION_TEST_DSN') ?: 'sqlite:', 'mysql:') && (in_array($scenario['operation'], array('add', 'policy', 'bulk'), true) || $association);
+                if ($nextRequest) {
+                    $markers[] = 'next-request-epoch-checked';
+                }
+                $hits = array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/auth.php');
+                if ($association || ($scenario['operation'] === 'add' && !($scenario['error'] ?? false)) || $scenario['operation'] === 'remove') {
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
+                }
+                $mutation = in_array($scenario['operation'], array('add', 'policy', 'remove', 'bulk'), true) || $association;
+                if ($mutation && ($scenario['type'] ?? '') !== 'unknown' && (($scenario['group'] && $association) || !isset($scenario['selected']) || $scenario['selected'] !== array())) {
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php';
+                }
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), self::coverageSources(), $markers, $hits);
+                $parentRejection = ($scenario['parent_missing'] ?? false) && !self::$parentCoverageEvidenceChecked;
+                $userRejection = ($scenario['affected_user_missing'] ?? false) && ($scenario['replace'] ?? false) && !self::$userCoverageEvidenceChecked;
+                if (!self::$coverageEvidenceChecked || $parentRejection || $userRejection) {
+                    self::assertSame(count(self::coverageSources()) + 10 + count($markers), NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/admin-permission-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), self::coverageSources(), $markers, $hits, 'lib/rrd.php'));
                     self::$coverageEvidenceChecked = true;
+                    if ($userRejection) {
+                        self::$userCoverageEvidenceChecked = true;
+                    }
+                    if ($parentRejection) {
+                        self::$parentCoverageEvidenceChecked = true;
+                    }
                 }
                 $coverage->merge($childCoverage);
             }
-            return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+            $state = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+            $state['child_failed'] = $status !== 0;
+            return $state;
         } finally {
             foreach (glob($directory . '/*.coverage') as $report) {
                 if (is_file($report . '.json')) {

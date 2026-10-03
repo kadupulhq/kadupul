@@ -5,12 +5,27 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || defined('GROUP_COPY_TEST_COVERAGE') || defined('USER_COPY_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
 } else {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('USER_COPY_TEST_COVERAGE')) {
+    foreach (array('lib/auth.php', 'lib/database.php', 'lib/html_validate.php') as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
+}
+if (defined('GROUP_COPY_TEST_COVERAGE')) {
+    foreach (array('lib/auth.php', 'lib/database.php', 'user_group_admin.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php') as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
+}
+if (defined('MEMBERSHIP_EPOCH_TEST_COVERAGE')) {
+    foreach (array('lib/auth.php', 'lib/database.php', 'user_group_admin.php') as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
+}
 if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
 }
@@ -31,36 +46,6 @@ if (defined('INPUT_WHITELIST_TEST_COVERAGE')) {
 }
 if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
-}
-if (defined('PERMISSION_FILTER_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
-}
-if (defined('PERMISSION_REQUEST_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php');
-}
-if (defined('ADMIN_LIST_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php');
-}
-if (defined('REALM_RENDER_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
 }
 if (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
@@ -126,6 +111,11 @@ if (defined('AUTH_CONTROLLER_TEST_COVERAGE')) {
 if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_2_33.php');
     $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
+}
+if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
+    foreach (['lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php', 'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php'] as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
 }
 if (defined('AUDIT_TRAIL_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php');
@@ -223,7 +213,7 @@ if (defined('PAGE_FLAG_TEST_COVERAGE_SOURCE')) {
 }
 if (defined('AUTH_HARDENING_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
-    foreach (array('include/csrf.php', 'include/auth.php', 'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php', 'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php', 'cli/refresh_csrf.php', 'lib/csrf_rotation.php') as $coverageFile) {
+    foreach (array('include/csrf.php', 'lib/csrf_rotation.php', 'include/auth.php', 'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php', 'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php', 'cli/refresh_csrf.php', 'auth_changepassword.php', 'lib/ldap.php', 'install/functions.php') as $coverageFile) {
         $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
     }
 }
@@ -266,6 +256,11 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 }
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+}
+if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $sessionSources = array_merge(['composer.lock', 'tests/composer.lock', 'tests/Symfony/SessionCredentialBindingTest.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php'], array_map(static fn($file) => substr($file, strlen($coverageRoot) + 1), $coverageFilter->files()));
+    $sessionCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/symfony-credential-session-native.php', $argv[1] . ':' . $argv[3], $sessionSources);
 }
 if (defined('PERMISSION_FILTER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php');
@@ -390,6 +385,12 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
         $serializedCoverage = serialize($childCoverage);
         if (file_put_contents($childCoverageFile, $serializedCoverage) !== strlen($serializedCoverage)) {
             throw new RuntimeException('Unable to preserve child process coverage');
+        }
+        if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
+            if (!defined('SYMFONY_SESSION_NATIVE_COMPLETED')) {
+                throw new RuntimeException('Native session scenario did not complete.');
+            }
+            NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['sessionCoverageEvidence'], SYMFONY_SESSION_NATIVE_COMPLETED);
         }
         if (isset($GLOBALS['whitelistCoverageEvidence'])) {
             if (!defined('INPUT_WHITELIST_NATIVE_COMPLETED')) {

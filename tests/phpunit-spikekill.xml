@@ -58,6 +58,23 @@
       <file>./Unit/Security/Auth/CsrfSecretInitializationRaceTest.php</file>
       <file>./Unit/Security/Auth/CsrfIpTokenTest.php</file>
       <file>./Unit/Security/Auth/RefreshCsrfSecretTest.php</file>
+      <file>./Unit/Security/Auth/LdapTlsRequirementTest.php</file>
+      <file>./Unit/Security/Auth/PasswordChangeEndsSessionsTest.php</file>
+      <file>./Unit/Security/Auth/LocalLoginPolicyTest.php</file>
+      <file>./Unit/Security/Auth/LocalPasswordRehashTest.php</file>
+      <file>./Unit/Security/Auth/SessionlessPermissionResetTest.php</file>
+      <file>./Unit/Security/Auth/CredentialGenerationRehashTest.php</file>
+      <file>./Unit/Security/Auth/CredentialPreferenceIsolationTest.php</file>
+      <file>./Unit/Security/Auth/GroupChangeResetsPermsTest.php</file>
+      <file>./Unit/Security/Auth/GroupCopyTest.php</file>
+      <file>./Unit/Security/Auth/GroupMissingIdTest.php</file>
+      <file>./Unit/Security/Auth/AdminPasswordPolicyTest.php</file>
+      <file>./Unit/Security/Auth/UserListGroupFilterTest.php</file>
+      <file>./Unit/Security/Auth/BulkUserActionGuardTest.php</file>
+      <file>./Unit/Security/Auth/ChangePasswordLockoutTest.php</file>
+      <file>./Unit/Security/Auth/GraphViewSettingOutputTest.php</file>
+      <file>./Unit/Security/Auth/ProfileSettingValidationTest.php</file>
+      <file>./Unit/Security/Misc/HelpPageErrorNotificationTest.php</file>
       <file>./Unit/Security/CsrfMagicFormRewriteTest.php</file>
       <file>./Unit/Security/CsrfMagicLocaleTest.php</file>
       <file>./Unit/Security/CsrfMagicTokenCheckTest.php</file>

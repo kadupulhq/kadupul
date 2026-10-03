@@ -4,7 +4,24 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+/* Bootstrap also checks realms. Ordinary link navigation must refresh stale
+ * permission caches synchronously; header=false retains the AJAX retry marker. */
+define('CACTI_LINK_SYNC_PERMISSIONS', !isset($_REQUEST['header']) || $_REQUEST['header'] !== 'false');
+
 include_once('./include/global.php');
+
+/* This viewer owns a dynamic link realm and must validate identity even when
+ * header=false suppresses the normal authenticated page header. */
+if (auth_session_check_eligibility(read_config_option('auth_method')) !== 0) {
+	http_response_code(403);
+	exit;
+}
+
+$header = get_nfilter_request_var('header');
+if (is_array($header)) {
+	http_response_code(400);
+	exit;
+}
 
 $page = db_fetch_row_prepared('SELECT
 	id, title, style, contentfile, enabled, refresh

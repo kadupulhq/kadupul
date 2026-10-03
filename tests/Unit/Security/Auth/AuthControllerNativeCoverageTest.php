@@ -19,7 +19,9 @@ final class AuthControllerNativeCoverageTest extends TestCase
             self::assertSame($value, $state[$key], $key);
         }
         if (!$expected['error']) {
-            self::assertSame(array('sess_user_id' => 42), $state['session']);
+            self::assertSame(array('sess_user_id', 'sess_user_credential'), array_keys($state['session']));
+            self::assertSame(42, $state['session']['sess_user_id']);
+            self::assertTrue($state['credential_valid']);
             self::assertContains('ROTATE_SESSION', $state['events']);
         } else {
             self::assertArrayNotHasKey('sess_user_id', $state['session']);
@@ -62,7 +64,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
             self::assertArrayNotHasKey('sess_user_id', $state['session']);
             self::assertArrayNotHasKey('sess_change_password', $state['session']);
         } else {
-            self::assertSame(array(), $state['audit']);
+            self::assertSame($request['current_password'] === 'Wrong1!' ? array(0) : array(), $state['audit']);
             self::assertStringContainsString($message, $state['password_error']);
             self::assertSame(42, $state['session']['sess_user_id']);
         }

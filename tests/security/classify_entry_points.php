@@ -71,7 +71,7 @@ const SELF_GATED = [
     'link.php' => [
         'realm:10000+id',
         "is_realm_allowed(\$page['id'] + 10000)",
-        'own realm check per external link id',
+        'persisted session eligibility before protected lookup; own realm check per external link id',
         'admission',
     ],
     'remote_agent.php' => [
@@ -205,13 +205,14 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // Complete reviewed native-identity and persistence handoff, plus its scoped
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => '4a17f2792e0a8e3d8650178ec0ee94e148a1f48263934f461fe7137669ada1ae',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '133c42b831acf8274d46ad6f6f1f6947e1bc6348ed3ac23bbb333bb1c294e9c1',
+    'lib/auth.php' => '5f72c877cdc3f3c475570bae9abcf624ab64f8787a4786c4cf50fc969f254053',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '61f8ea837055c09bd58d8146ea3c18a7ae37b34abfcbfb00427253c087cbdacf',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
-    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => 'a1db787d701816d8bb226aa9bc9a30d2cf9b01ab33d8d54fb5e3c411385e7ba6',
+    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '0d9d146c13a1229cbb85593760bbb7ad62faeab4db3dd71b1d14dedbb3901199',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
-    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b6a7a0e78791fe7afb40c2702e76232654ae941349db9c95c4c6d579c2e8ef91',
+    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b233819dc23607a2d2ffd3231760ba2aeec52f39c2b1c8c564bf354681a90d93',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
     'config/services.yaml' => '7acd8fa93f3d07491c23934a58ad9f65ae8740586f499db52b9649f7db944046',
 ];
