@@ -94,10 +94,18 @@ def verify_remote_device_state(harness, session, device_id, poller, check):
     trigger = False
     probe = False
     probe_source = Path(__file__).with_name('device_state_connection_probe.php').read_text().removeprefix('<?php')
+    original_source = harness.php('-r', 'echo hash_file("sha256", "lib/api_device.php");')
+    check(original_source['exit'] == 0 and len(original_source['stdout']) == 64,
+          'bulk state observer records original production source identity')
     try:
         check(harness.php('-r', probe_source, 'install')['exit'] == 0,
               'bulk state runtime session observer installed in disposable container')
         probe = True
+        identity = harness.php('-r', 'echo json_encode([realpath("lib/api_device.php"),hash_file("sha256","/artifacts/api_device.state-probe.original"),hash_file("sha256","lib/api_device.php")]);')
+        check(identity['exit'] == 0 and json.loads(identity['stdout'])[:2] ==
+              ['/artifacts/api_device.state-probe.php', original_source['stdout']] and
+              json.loads(identity['stdout'])[2] != original_source['stdout'],
+              'bulk state observer uses a separate fixture source outside production coverage')
         harness.sql(f"UPDATE host SET disabled='' WHERE id={device_id}; UPDATE create_remote.host SET disabled='' WHERE id={device_id}")
         harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
         check(disable.apply() == 502, 'bulk state preflights offline collectors before any writes')
@@ -159,6 +167,10 @@ def verify_remote_device_state(harness, session, device_id, poller, check):
         if probe:
             check(harness.php('-r', probe_source, 'restore')['exit'] == 0,
                   'bulk state observer restores original container source')
+            restored = harness.php('-r', 'echo json_encode([is_link("lib/api_device.php"),hash_file("sha256","lib/api_device.php"),file_exists("/artifacts/api_device.state-probe.original"),file_exists("/artifacts/api_device.state-probe.php")]);')
+            check(restored['exit'] == 0 and json.loads(restored['stdout']) ==
+                  [False, original_source['stdout'], False, False],
+                  'bulk state observer restores exact production bytes and removes owned fixtures')
         if trigger:
             harness.sql('DROP TRIGGER create_remote.reject_bulk_state')
         harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')
