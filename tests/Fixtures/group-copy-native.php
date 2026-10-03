@@ -13,6 +13,9 @@ $root = dirname(__DIR__, 2);
 $scenario = $argv[1];
 $directory = $argv[2];
 require $root . '/include/vendor/autoload.php';
+if (str_starts_with($scenario, 'wiring-')) {
+    require $root . '/tests/vendor/autoload.php';
+}
 require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 $db = null;
 $messages = array();
@@ -31,6 +34,7 @@ register_shutdown_function(static function () use (&$db, &$messages, &$status, &
     $state['messages'] = $messages;
     $state['transaction'] = $db->inTransaction();
     $state['persisted_before_fault'] = $db->persistedFault;
+    $state['parent_insert_refused'] = $db->parentInsertRefused;
     if ($db->inTransaction()) {
         $db->fault = '';
         $db->rollBack();
@@ -51,6 +55,9 @@ register_shutdown_function(static function () use (&$db, &$messages, &$status, &
 });
 if (($argv[3] ?? '') === 'coverage') {
     $sources = array('composer.lock', 'tests/composer.lock', 'tests/Symfony/GroupCopyTransactionTest.php', 'cacti.sql', 'lib/auth.php', 'lib/functions.php', 'tests/Helpers/PhpSource.php', 'lib/database.php', 'user_group_admin.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    if (str_starts_with($scenario, 'wiring-')) {
+        $sources[] = 'tests/Unit/Security/Auth/GroupCopyTest.php';
+    }
     $GLOBALS['nativeChildCoverageSnapshot'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/group-copy-native.php', $scenario, $sources);
     define('GROUP_COPY_TEST_COVERAGE', true);
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
@@ -88,10 +95,15 @@ class GroupCopyPdo extends PDO
     public string $fault = '';
     public int $childPrepares = 0;
     public ?int $persistedFault = null;
+    public bool $parentInsertRefused = false;
     public function prepare(string $query, array $options = []): PDOStatement|false
     {
         if ($this->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
             $query = str_replace(' FOR UPDATE', '', $query);
+        }
+        if ($this->fault === 'parent-insert' && str_starts_with($query, 'INSERT INTO user_auth_group (')) {
+            $this->parentInsertRefused = true;
+            return false;
         }
         if (str_starts_with($query, 'INSERT INTO user_auth_group_perms')) {
             $this->childPrepares++;
@@ -181,6 +193,12 @@ $db->exec('CREATE TABLE caller_work(id INTEGER PRIMARY KEY)' . ($mysql ? ' ENGIN
 $db->exec("INSERT INTO user_auth_group(id,name,description) VALUES(5,'source','policy'),(7,'unrelated','other')");
 $db->exec('INSERT INTO user_auth_group_perms VALUES(5,9,1),(5,10,1),(7,11,2)');
 $db->exec('INSERT INTO user_auth_group_realm VALUES(5,8),(7,9)');
+if (str_starts_with($scenario, 'wiring-')) {
+    $db->exec('DELETE FROM user_auth_group_perms WHERE group_id=5');
+    $db->exec('DELETE FROM user_auth_group_realm WHERE group_id=5');
+    $db->exec('INSERT INTO user_auth_group_perms VALUES(5,12,2),(5,30,3)');
+    $db->exec('INSERT INTO user_auth_group_realm VALUES(5,7),(5,8)');
+}
 if (str_contains($scenario, 'empty')) {
     $db->exec('DELETE FROM user_auth_group_perms WHERE group_id=5');
     $db->exec('DELETE FROM user_auth_group_realm WHERE group_id=5');
@@ -198,7 +216,7 @@ if (str_contains($scenario, 'mismatch')) {
         throw new RuntimeException('Group-copy mismatch not installed');
     }
 }
-foreach (array('cleanup-failed', 'prepare', 'commit', 'parent-sqlstate', 'child-sqlstate', 'source-read', 'late-source') as $fault) {
+foreach (array('cleanup-failed', 'prepare', 'commit', 'parent-sqlstate', 'child-sqlstate', 'source-read', 'late-source', 'parent-insert') as $fault) {
     if (str_contains($scenario, $fault)) {
         $db->fault = $fault;
     }
