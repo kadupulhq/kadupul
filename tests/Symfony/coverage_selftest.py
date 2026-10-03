@@ -7,8 +7,6 @@ import shutil
 import subprocess
 import tempfile
 
-from cdef_legacy_page_scenarios import REQUIRED_CHECKS
-
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -39,6 +37,8 @@ def prepare_database_failure_reports(directory, scratch, source, mutation):
 
 
 def main():
+    from cdef_legacy_page_scenarios import REQUIRED_CHECKS
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--php', default='php')
     parser.add_argument('--unit', type=Path, required=True)
