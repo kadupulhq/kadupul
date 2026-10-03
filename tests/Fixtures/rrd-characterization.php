@@ -114,11 +114,19 @@ function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $db_conn 
 
 function db_execute($sql, $log = true, $db_conn = false)
 {
-    throw new RuntimeException('Unexpected write: ' . $sql);
+    return db_execute_prepared($sql);
 }
 
 function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array())
 {
+    // Boost counts cache reads and writes in the SNMP agent cache; a scenario may allow such writes.
+    $normalized = trim(preg_replace('/\s+/', ' ', $sql));
+    foreach ($GLOBALS['scenario']['writes'] ?? array() as $allowed) {
+        if (strpos($normalized, $allowed) !== false) {
+            return true;
+        }
+    }
+
     throw new RuntimeException('Unexpected write: ' . $sql);
 }
 

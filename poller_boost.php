@@ -1610,17 +1610,39 @@ function boost_purge_cached_png_files($forcerun)
                 /* goto the cache directory */
                 chdir($cache_directory);
 
+                /* removing a name needs the directory, not the file, to be writable. The web
+                 * server writes images 0644, so a poller running as another user could not
+                 * write them but may still remove them, unless the sticky bit limits removal
+                 * to their owner */
+                $directory_writable = is_writable('.');
+                $sticky             = (fileperms('.') & 01000) != 0;
+                $uid                = function_exists('posix_geteuid') ? posix_geteuid() : false;
+
                 /* check and fry as applicable */
                 foreach ($directory_contents as $file) {
-                    if (is_writable($file)) {
-                        $modify_time = filemtime($file);
-                        if ($modify_time < $remove_time) {
-                            /* only remove jpeg's and png's */
-                            if ((substr_count(strtolower($file), '.png')) ||
-                                (substr_count(strtolower($file), '.jpg'))) {
-                                unlink($file);
-                            }
-                        }
+                    if (!is_file($file)) {
+                        continue;
+                    }
+
+                    /* only remove jpeg's and png's, and temporary images a writer left behind */
+                    if (!preg_match('/\.(?:png|jpg)$/iD', $file) && strpos($file, BOOST_PNG_TEMP_PREFIX) !== 0) {
+                        continue;
+                    }
+
+                    if (filemtime($file) >= $remove_time) {
+                        continue;
+                    }
+
+                    if (!$directory_writable) {
+                        continue;
+                    }
+
+                    if ($sticky && $uid !== false && $uid !== 0 && fileowner($file) !== $uid && fileowner('.') !== $uid) {
+                        continue;
+                    }
+
+                    if (!@unlink($file)) {
+                        cacti_log("WARNING: Boost could not remove the cached image '$file'", false, 'BOOST');
                     }
                 }
             }

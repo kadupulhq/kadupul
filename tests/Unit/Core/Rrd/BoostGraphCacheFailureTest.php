@@ -25,6 +25,11 @@ function cacti_sizeof($value)
 {
     return count($value);
 }
+// The check names the cache file before it runs the updates.
+function read_config_option($name)
+{
+    return '';
+}
 function boost_process_poller_output(...$args)
 {
     return array_shift($GLOBALS['cache_results']);
