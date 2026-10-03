@@ -11,6 +11,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Reject non-positive and fractional poller-cache thread counts, include the audit baseline and runtime dependencies in Docker integration coverage, and fail before starting the test stack when its configured test pattern matches no files.
 
 
+- Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
+- Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
 
 - Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.

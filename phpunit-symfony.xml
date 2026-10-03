@@ -33,7 +33,9 @@
             <file>lib/database.php</file>
             <file>lib/reference_write.php</file>
             <file>lib/functions.php</file>
+            <file>lib/variables.php</file>
             <file>utilities.php</file>
+            <file>cli/upgrade_database.php</file>
         </include>
     </source>
 </phpunit>
