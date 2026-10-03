@@ -24,6 +24,8 @@ function read_config_option($name) {
 function db_fetch_row_prepared(...$args) { return array(); }
 function db_fetch_cell_prepared(...$args) { return '1'; }
 function cacti_log(...$args) {}
+function is_realm_allowed($realm) { return true; }
+function is_graph_allowed($local_graph_id, $user) { return true; }
 function cacti_exec($binary, $args, &$output, $timeout) {
     if ($binary !== '/php path/php' || $timeout !== null || $args !== array(
         '-q', '/application path/poller_realtime.php', '--graph=7', '--interval=' . (int) $GLOBALS['step'],

@@ -36,6 +36,12 @@ follows [Semantic Versioning](VERSIONING.md).
 - Port the remaining CSRF Magic library checks from 1.2: refuse more than eight submitted tokens, token times that are not digits or exceed the 300-second future clock-skew allowance, and generate fallback secrets with `random_bytes()`. The optional CSRF debug log and the default failure page no longer record tokens, the secret, form values or query strings. Secret rotation generates before modifying the working file, then exclusively writes and verifies a replacement in its directory, preserves existing UID/GID with verified ownership before applying mode 0640 and renaming atomically; generation or publication failure preserves the working key. Symlink file destinations are refused.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
+- Check graph permission on a remote data collector before it asks the main poller for a graph image.
+- Keep cached graph and tree permission answers separate for each user, so an emailed report only includes graphs and trees its owner may view.
+- Check that real-time graphs are enabled, that the user has the Real-time realm and that the user may view the graph before a real-time request polls any device or returns a cached image.
+- Save real-time graph preferences only from a token-checked POST; polling by GET no longer changes them.
+- Show the graph page's Real-time button only when real-time graphs are enabled and the user has the Real-time realm.
+- Show a report device item according to the owner's device permission rather than the permission of an unrelated tree.
 - Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
 
 - Render the color palette through Symfony and Twig, with protected named colors, revision-checked transactions and strict quoted CSV imports/exports.
