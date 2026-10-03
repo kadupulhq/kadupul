@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -17,9 +19,9 @@ use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-final class DeviceStatePresentationTest extends TestCase
+final class DeviceTemplateSynchronizationPresentationTest extends TestCase
 {
-    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(): void
+    public function testSynchronizationPresentationDispatchAndCompletion(): void
     {
         $kernel = new Kernel('test', true);
         try {
@@ -40,13 +42,19 @@ final class DeviceStatePresentationTest extends TestCase
             $device = new DeviceState(7, '<router>', 'router.invalid', true, 0, 1, 0);
             $port = $this->createMockForIntersectionOfInterfaces([DeviceStates::class, \Kadupul\Inventory\Application\Port\DeviceStatistics::class, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization::class]);
             $port->method('findVisible')->willReturn([$device]);
-            $port->expects(self::once())->method('setEnabled')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]), false);
+            $port->expects(self::once())->method('synchronizeTemplates')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]));
+            $port->expects(self::never())->method('setEnabled');
+            $port->expects(self::never())->method('clearStatistics');
             $container->set(DeviceStates::class, $port);
-            $path = '/inventory/devices/disable?ids[]=7';
+            $path = '/inventory/devices/sync-template?ids[]=7';
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(200, $response->getStatusCode());
-            self::assertStringContainsString('Désactiver les appareils', $response->getContent());
+            self::assertStringContainsString('Synchroniser les modèles des appareils', $response->getContent());
             self::assertStringContainsString('&lt;router&gt;', $response->getContent());
+            self::assertStringNotContainsString('<router>', $response->getContent());
+            self::assertStringContainsString('Appliquez les modèles actuellement affectés', $response->getContent());
+            self::assertStringContainsString('Confirmer la synchronisation', $response->getContent());
+            self::assertStringContainsString('<title>Synchroniser les modèles des appareils', $response->getContent());
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_state[_token]"]/@value)');
@@ -58,7 +66,18 @@ final class DeviceStatePresentationTest extends TestCase
             }
             $request = Request::create($path, 'POST', ['device_state' => $fields], ['Cacti' => 'fixture']);
             $request->headers->set('Origin', 'http://localhost');
-            self::assertSame(303, $kernel->handle($request)->getStatusCode());
+            $redirect = $kernel->handle($request);
+            self::assertSame(303, $redirect->getStatusCode());
+            self::assertStringContainsString('completed=sync-template', $redirect->headers->get('Location'));
+            $catalog = $this->createMock(\Kadupul\Inventory\Application\Port\DeviceCatalog::class);
+            $catalog->method('visibleTo')->willReturn(new \Kadupul\Inventory\Application\ReadModel\DevicePage([], false));
+            $container->set(\Kadupul\Inventory\Application\Port\DeviceCatalog::class, $catalog);
+            $sites = $this->createMock(\Kadupul\Inventory\Application\Port\DeviceSites::class);
+            $sites->method('visibleTo')->willReturn([]);
+            $container->set(\Kadupul\Inventory\Application\Port\DeviceSites::class, $sites);
+            $completed = $kernel->handle(Request::create($redirect->headers->get('Location'), 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $completed->getStatusCode());
+            self::assertSame(1, substr_count($completed->getContent(), 'Modèles des appareils sélectionnés synchronisés.'));
         } finally {
             $kernel->shutdown();
         }
