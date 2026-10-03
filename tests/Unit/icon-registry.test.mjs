@@ -63,7 +63,6 @@ const hardCoded = new Map([
   ['cdef.php', notMigrated],
   ['color_templates.php', notMigrated],
   ['data_debug.php', notMigrated],
-  ['data_input.php', notMigrated],
   ['data_queries.php', notMigrated],
   ['data_source_profiles.php', notMigrated],
   ['data_sources.php', notMigrated],
