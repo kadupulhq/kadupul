@@ -163,5 +163,17 @@ eval(str_replace(
     'function fixture_actual_aggregate_create_from_request(',
     test_php_function_source($aggregateSource, 'api_aggregate_create_from_request')
 ));
+if ($page === 'graphs.php') {
+    // This caller fixture grants only the selected graph and its persisted device.
+    // The native branch suite separately verifies inaccessible resources.
+    function is_graph_allowed($id): bool
+    {
+        return (int) $id === 11;
+    }
+    function is_device_allowed($id): bool
+    {
+        return (int) $id === 1;
+    }
+}
 eval(test_php_function_source(file_get_contents($source), $function));
 $function();
