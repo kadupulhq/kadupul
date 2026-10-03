@@ -199,6 +199,25 @@ final class DataInputStorageNativeTest extends TestCase
         return $this->database->query('SELECT name,value FROM settings_user WHERE user_id=9 ORDER BY name')->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
 
+    public function testChildCoverageExcludesOnlyTheOwnedVarDirectory(): void
+    {
+        foreach ([$this->root, '/var/www/html[fixture]~'] as $root) {
+            $exclude = $this->coverageExclusion($root);
+            self::assertSame(0, preg_match($exclude, $root . '/lib/data_input_worker.php'));
+            self::assertSame(0, preg_match($exclude, $root . '/bin/legacy-data-input.php'));
+            self::assertSame(1, preg_match($exclude, $root . '/var/cache/container.php'));
+            self::assertSame(1, preg_match($exclude, $root . '/include/vendor/autoload.php'));
+            self::assertSame(1, preg_match($exclude, $root . '/tests/Fixtures/data-input-list-native.php'));
+            self::assertSame(0, preg_match($exclude, $root . '-sibling/var/application.php'));
+            self::assertSame(0, preg_match($exclude, '/var/another-application/lib/worker.php'));
+        }
+    }
+
+    private function coverageExclusion(string $root): string
+    {
+        return '~/(include/vendor|tests)/|^' . preg_quote($root . '/var/', '~') . '~';
+    }
+
     private function worker(array $scenario): array
     {
         file_put_contents($this->directory . '/scenario.json', json_encode($scenario, JSON_THROW_ON_ERROR));
@@ -207,7 +226,7 @@ final class DataInputStorageNativeTest extends TestCase
         if ($coverage !== null) {
             $environment['KADUPUL_LIST_NATIVE_COVERAGE'] = '1';
         }
-        $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests|var)/~', $this->directory . '/bin/legacy-data-input.php'];
+        $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=' . $this->coverageExclusion($this->root), $this->directory . '/bin/legacy-data-input.php'];
         $process = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $environment);
         self::assertIsResource($process);
         fwrite($pipes[0], json_encode(['actor' => 9, 'id' => 0, 'nonce' => 'native-list', 'action' => 'list', 'payload' => ['filter' => 'Fixture']], JSON_THROW_ON_ERROR));
