@@ -6,6 +6,11 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add Docker MariaDB integration coverage for the maintenance CLI commands on `main`, and validate CLI selectors, permissions, audit reporting and selected-host poller-cache behavior.
+
+- Reject non-positive and fractional poller-cache thread counts, include the audit baseline and runtime dependencies in Docker integration coverage, and fail before starting the test stack when its configured test pattern matches no files.
+
+
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
@@ -18,6 +23,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
+- Handle recovery CLI help and version flags before requiring remote database connections; retain recovery samples when a normal run cannot connect.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
@@ -50,6 +56,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Bound PCRE work when tree automation applies saved replacement patterns. Fixes #591.
 - Return a clean 404 for HTTP requests to the PHP Script Server under PHP-FPM. Fixes #377.
 - Honor the script server's documented `--environ`, `-v`/`-V`, and `-h`/`-H` options. Fixes #375 and #376.
+
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
