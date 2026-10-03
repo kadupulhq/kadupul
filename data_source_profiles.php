@@ -219,6 +219,7 @@ function form_save_profile_components()
                             'UPDATE data_template_rrd AS dtr
 							INNER JOIN data_template_data AS dtd
 							ON dtd.local_data_id = dtr.local_data_id
+                            AND dtd.data_template_id = dtr.data_template_id
 							SET dtr.rrd_heartbeat = ?
 							WHERE dtd.data_source_profile_id = ?',
                             array(get_request_var('heartbeat'), get_request_var('id'))
