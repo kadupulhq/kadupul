@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -79,12 +81,15 @@ try {
         define('KADUPUL_THROW_DATABASE_ERRORS', true);
         $_SESSION['sess_user_id'] = $command['actor'];
         $writeStarted = true;
-        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->apply($connection, $connections, $assignment->id, $previous, $target);
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->apply($connection, $connections, $assignment->id, $previous, $target, true);
     }
     if (!db_commit_transaction()) {
         throw new RuntimeException('Commit failed');
     }
     $transactionStarted = false;
+    if ($previous !== $target) {
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $connections, [$assignment->id => $previous], $target);
+    }
     $status = 'ok';
     cacti_log('INVENTORY: User ' . $command['actor'] . ' assigned device collector for device ' . $assignment->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {

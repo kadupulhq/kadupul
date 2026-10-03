@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -19,13 +21,13 @@ final class DeviceBulkAssignmentWriter
     {
         $target = $change->targetId;
         if ($change->kind === 'collector') {
-            (new DeviceCollectorTransfer())->apply($connection, $connections, $device->id, $device->pollerId, $target);
+            (new DeviceCollectorTransfer())->apply($connection, $connections, $device->id, $device->pollerId, $target, true);
             return;
         }
         $remote = $connections[$device->pollerId] ?? null;
         $column = $change->kind === 'site' ? 'site_id' : 'host_template_id';
         $previous = $change->kind === 'site' ? $device->siteId : $device->templateId;
-        if ($previous === $target) {
+        if ($previous === $target && !($change->kind === 'template' && $target > 0)) {
             return;
         }
         if ($change->kind === 'template' && $target > 0) {
@@ -44,17 +46,19 @@ final class DeviceBulkAssignmentWriter
         api_plugin_hook_function('host_save', ['host_id' => $device->id]);
     }
 
-    public function verify(PDO $connection, array $connections, DeviceState $device, DeviceBulkAssignment $change): void
+    public function verify(PDO $connection, array $connections, DeviceState $device, DeviceBulkAssignment $change, ?bool $remoteEnabled = null): void
     {
         $poller = $change->kind === 'collector' ? $change->targetId : $device->pollerId;
         $template = $change->kind === 'template' ? $change->targetId : $device->templateId;
         $site = $change->kind === 'site' ? $change->targetId : $device->siteId;
         foreach (array_filter([$connection, $connections[$poller] ?? null]) as $database) {
+            $enabled = $database === $connection || ($change->kind === 'collector' && $device->pollerId !== $poller)
+                ? $device->enabled : ($remoteEnabled ?? $device->enabled);
             $query = $database->prepare("SELECT poller_id, host_template_id, site_id, disabled FROM host WHERE id = ? AND deleted = ''");
             $query->execute([$device->id]);
             $row = $query->fetch(PDO::FETCH_ASSOC);
             if (!$row || (int) $row['poller_id'] !== $poller || (int) $row['host_template_id'] !== $template
-                || (int) $row['site_id'] !== $site || ($row['disabled'] !== 'on') !== $device->enabled) {
+                || (int) $row['site_id'] !== $site || ($row['disabled'] !== 'on') !== $enabled) {
                 throw new RuntimeException('Assignment could not be confirmed');
             }
         }
@@ -67,9 +71,6 @@ final class DeviceBulkAssignmentWriter
             // queued configuration that has not reached its collector yet.
             if ($poller > 1 && $device->pollerId !== $poller) {
                 $verifier->verifyTarget($connection, $connections[$poller], $device->id);
-            }
-            if ($device->pollerId > 1 && $device->pollerId !== $poller) {
-                $verifier->verifyPurged($connections[$device->pollerId], $device->id);
             }
             $query = $connection->prepare('SELECT COUNT(*) FROM poller_item WHERE host_id = ? AND poller_id != ?');
             $query->execute([$device->id, $poller]);

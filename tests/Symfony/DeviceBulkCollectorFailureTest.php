@@ -1,37 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-namespace Kadupul\Inventory\Infrastructure\Legacy {
-    function api_device_replicate_out(int $deviceId, int $target): bool
-    {
-        return false;
-    }
-}
+namespace Kadupul\Tests;
 
-namespace Kadupul\Tests {
-    use Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer;
-    use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Process\Process;
 
-    final class DeviceBulkCollectorFailureTest extends TestCase
+final class DeviceBulkCollectorFailureTest extends TestCase
+{
+    public function testExplicitTransferFailureStopsBeforeGraphReplication(): void
     {
-        public function testExplicitTransferFailureStopsBeforeGraphReplication(): void
-        {
-            if (!defined('POLLER_COMMAND_PURGE')) {
-                define('POLLER_COMMAND_PURGE', 4);
-            }
-            $statement = $this->createMock(\PDOStatement::class);
-            $statement->method('execute')->willReturn(true);
-            $primary = $this->createMock(\PDO::class);
-            $remote = $this->createMock(\PDO::class);
-            $primary->expects(self::once())->method('prepare')->with(self::stringStartsWith('DELETE FROM poller_command'))->willReturn($statement);
-            $remote->expects(self::once())->method('prepare')->with(self::stringStartsWith('DELETE FROM poller_command'))->willReturn($statement);
-            $this->expectException(\RuntimeException::class);
-            $this->expectExceptionMessage('Collector replication failed');
-            (new DeviceCollectorTransfer())->apply($primary, [2 => $remote], 7, 1, 2);
+        $process = new Process([PHP_BINARY, dirname(__DIR__) . '/Fixtures/collector-transfer-failure-native.php', 'bulk']);
+        $process->mustRun();
+        self::assertSame('', $process->getErrorOutput());
+        $result = json_decode($process->getOutput(), true, 16, JSON_THROW_ON_ERROR);
+        self::assertSame('Collector replication failed', $result['error']);
+        self::assertSame([[7, 3]], $result['calls']);
+        self::assertCount(1, $result['primary_queries']);
+        self::assertCount(1, $result['remote_queries']);
+        foreach ([$result['primary_queries'][0], $result['remote_queries'][0]] as $query) {
+            self::assertStringStartsWith('DELETE FROM poller_command', $query);
         }
+        self::assertTrue($result['transaction_active']);
     }
 }

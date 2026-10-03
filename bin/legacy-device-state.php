@@ -54,6 +54,9 @@ try {
         || !is_array($command['selection'] ?? null) || (!$preserveState && !is_bool($command['enabled'] ?? null))) {
         throw new RuntimeException('Invalid command');
     }
+    if ($assignDevices && (!is_string($command['kind'] ?? null) || !is_int($command['target'] ?? null))) {
+        throw new RuntimeException('Invalid assignment command');
+    }
     $assignment = $assignDevices ? new \Kadupul\Inventory\Domain\DeviceBulkAssignment($command['kind'] ?? '', $command['target'] ?? -1) : null;
     $assignmentWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceBulkAssignmentWriter();
     $snmpChange = $changeSnmp ? new \Kadupul\Inventory\Domain\DeviceBulkSnmpChange($command['changes'] ?? []) : null;
@@ -244,7 +247,7 @@ try {
     foreach ($rows as $row) {
         $device = LegacyDeviceStates::state($row);
         if ($assignDevices) {
-            $assignmentWriter->verify($connection, $remotes, $device, $assignment);
+            $assignmentWriter->verify($connection, $remotes, $device, $assignment, $remoteStates[$device->id] ?? null);
             continue;
         }
         $verify = $read($connection, "SELECT disabled, status, site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
@@ -285,6 +288,10 @@ try {
             throw new RuntimeException('Collector SNMP commit failed');
         }
         unset($snmpTransactions[$pollerId]);
+    }
+    if ($assignDevices && $assignment->kind === 'collector') {
+        $previousOwners = array_map(static fn($device): int => $device->pollerId, $changed);
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $remotes, $previousOwners, $assignment->targetId);
     }
     $status = 'ok';
     cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($changeSnmp ? 'changed SNMP settings' : ($assignDevices ? 'assigned ' . $assignment->kind : ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled')))))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
