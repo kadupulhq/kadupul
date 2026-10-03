@@ -131,6 +131,11 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     check(shim['stderr'] == expected_err, f'{label}: shim stderr matches the original')
     if allowed != SECOND_LOOP_ALLOWED:
         # "rows" is plural, "schema" and "state" are not.
+        if after_shim != after_original:
+            from difflib import unified_diff
+            for index, (before, after) in enumerate(zip(after_original, after_shim)):
+                print(''.join(unified_diff(str(before).splitlines(True), str(after).splitlines(True),
+                                           fromfile=f'original state {index}', tofile=f'native state {index}')), flush=True)
         check(after_shim == after_original, f'{label}: shim {subject} {"match" if subject == "rows" else "matches"} the original')
     if log_filter is not None:
         if log_filter(shim_log) != log_filter(original_log):

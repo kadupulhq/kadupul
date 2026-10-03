@@ -103,8 +103,9 @@ final readonly class AuditDatabaseCommand
             ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->write($stderr, false, OutputInterface::OUTPUT_RAW);
         }
         $lines = $legacy->report($report, $alters, $report->outcome === AuditOutcome::NoMode ? $this->version->line(self::UTILITY) : '');
-        // Exit 1 only for a missing or failed upgrade; "Failed to create" ended without a newline.
-        $exit = in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) ? Command::FAILURE : Command::SUCCESS;
+        // An unusable baseline cannot produce a successful audit outcome.
+        $failedBaseline = in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed, BaselineOutcome::CreateFailed], true);
+        $exit = $failedBaseline || in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) ? Command::FAILURE : Command::SUCCESS;
 
         return $this->renderer->render(new CommandResult([], $lines, $exit, $report->baseline !== BaselineOutcome::CreateFailed), OutputMode::Legacy, $output);
     }
