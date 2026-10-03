@@ -22,10 +22,14 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     public function testActualInstallerRecordsVersionOnlyForAUsableReferenceIndex(string $failure, bool $ready): void
     {
         $state = $this->runNative(['collector' => 'bulk', 'upgrade_entry' => true, 'failure' => $failure]);
+        self::assertSame('1.2.33', $state['migration_version'], 'Migration alone must not publish the final release');
         self::assertSame($ready ? '1.2.34' : '1.2.33', $state['remote_version']);
         if ($ready) {
             self::assertNull($state['upgrade_error']);
+            self::assertTrue($state['version_confirmation'], 'The actual public writer confirms the persistent final marker');
+            self::assertFalse($state['result'], 'The actual migration returned no upgrade error');
         } else {
+            self::assertNull($state['version_confirmation'], 'Refused migration cannot invoke final confirmation');
             self::assertStringContainsString('reference index is missing or incompatible', $state['upgrade_error']);
             self::assertSame([], array_filter($state['calls'], static fn($call) => str_starts_with($call[1], 'UPDATE version')));
         }

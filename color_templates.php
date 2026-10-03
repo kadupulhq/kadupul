@@ -183,7 +183,8 @@ function aggregate_color_form_actions()
                 }
             } elseif (get_nfilter_request_var('drp_action') == '3') { // sync templates
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
-                    sync_color_templates($selected_items[$i]);
+                    if (sync_color_templates($selected_items[$i]) === false)
+                        break;
                 }
             }
         }
@@ -425,59 +426,74 @@ function sync_color_templates($color_template)
 
     include_once($config['base_path'] . '/lib/api_aggregate.php');
 
-    $name = db_fetch_cell_prepared(
-        'SELECT name
+    try {
+        $name = aggregate_graph_fetch_value(
+            'SELECT name
 		FROM color_templates
 		WHERE color_template_id = ?',
-        array($color_template)
-    );
+            array($color_template)
+        );
 
-    $aggregate_templates = array_rekey(
-        db_fetch_assoc_prepared(
-            'SELECT DISTINCT aggregate_template_id
+        if ($name === false)
+            throw new RuntimeException('Color Template no longer exists.');
+
+        $aggregate_templates = array_rekey(
+            aggregate_graph_fetch_rows(
+                'SELECT DISTINCT aggregate_template_id
 			FROM aggregate_graph_templates_item
 			WHERE color_template = ?',
-            array($color_template)
-        ),
-        'aggregate_template_id',
-        'aggregate_template_id'
-    );
+                array($color_template)
+            ),
+            'aggregate_template_id',
+            'aggregate_template_id'
+        );
 
-    $found     = false;
-    $templates = 0;
-    $graphs    = 0;
+        $found     = false;
+        $templates = 0;
+        $graphs    = 0;
 
-    if (cacti_sizeof($aggregate_templates)) {
-        $found = true;
-        $templates = cacti_sizeof($aggregate_templates);
-        foreach ($aggregate_templates as $id) {
-            push_out_aggregates($id);
+        if (cacti_sizeof($aggregate_templates)) {
+            $found = true;
+            $templates = cacti_sizeof($aggregate_templates);
+            foreach ($aggregate_templates as $id) {
+                if (push_out_aggregates($id) === false) {
+                    raise_message('color_template_sync_failed', __('Color Template synchronization failed. Some aggregates may already have been updated; retry after reviewing the settings.'), MESSAGE_LEVEL_ERROR);
+                    return false;
+                }
+            }
         }
-    }
 
-    $aggregate_graphs = db_fetch_assoc_prepared(
-        'SELECT DISTINCT ag.aggregate_template_id, ag.local_graph_id
+        $aggregate_graphs = aggregate_graph_fetch_rows(
+            'SELECT DISTINCT ag.aggregate_template_id, ag.local_graph_id
 		FROM aggregate_graphs_graph_item AS agi
 		LEFT JOIN aggregate_graphs AS ag
 		ON ag.id=agi.aggregate_graph_id
-		WHERE (ag.aggregate_template_id > 0 AND ag.template_propogation = "")
-		OR ag.aggregate_template_id = 0
+		WHERE ((ag.aggregate_template_id > 0 AND ag.template_propogation = "")
+		OR ag.aggregate_template_id = 0)
 		AND agi.color_template = ?',
-        array($color_template)
-    );
+            array($color_template)
+        );
 
-    if (cacti_sizeof($aggregate_graphs)) {
-        $found = true;
-        $graphs = cacti_sizeof($aggregate_graphs);
-        foreach ($aggregate_templates as $id) {
-            push_out_aggregates($id['aggregate_template_id'], $id['local_graph_id']);
+        if (cacti_sizeof($aggregate_graphs)) {
+            $found = true;
+            $graphs = cacti_sizeof($aggregate_graphs);
+            foreach ($aggregate_graphs as $id) {
+                if (push_out_aggregates($id['aggregate_template_id'], $id['local_graph_id']) === false) {
+                    raise_message('color_template_sync_failed', __('Color Template synchronization failed. Some aggregates may already have been updated; retry after reviewing the settings.'), MESSAGE_LEVEL_ERROR);
+                    return false;
+                }
+            }
         }
-    }
 
-    if ($found) {
-        raise_message('color_template_sync', __('Color Template \'%s\' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out', $name, $templates, $graphs), MESSAGE_LEVEL_INFO);
-    } else {
-        raise_message('color_template_sync', __('Color Template \'%s\' had no Aggregate Templates or Graphs using this Color Template.', $name, $templates, $graphs), MESSAGE_LEVEL_INFO);
+        if ($found) {
+            raise_message('color_template_sync', __('Color Template \'%s\' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out', $name, $templates, $graphs), MESSAGE_LEVEL_INFO);
+        } else {
+            raise_message('color_template_sync', __('Color Template \'%s\' had no Aggregate Templates or Graphs using this Color Template.', $name, $templates, $graphs), MESSAGE_LEVEL_INFO);
+        }
+        return true;
+    } catch (Throwable $error) {
+        raise_message('color_template_sync_failed', __('Color Template synchronization failed. Some aggregates may already have been updated; retry after reviewing the settings.'), MESSAGE_LEVEL_ERROR);
+        return false;
     }
 }
 
