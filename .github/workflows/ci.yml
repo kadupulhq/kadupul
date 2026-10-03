@@ -15,7 +15,7 @@ concurrency:
 jobs:
   runtime-floor:
     name: PHP runtime boundary (${{ matrix.php }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     strategy:
       matrix:
         # 8.3 is a rejection test, not a supported application runtime.
@@ -146,7 +146,7 @@ jobs:
 
   php:
     name: PHP ${{ matrix.php }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
@@ -263,7 +263,7 @@ jobs:
 
   application-smoke:
     name: Install, login and poller smoke
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -324,7 +324,7 @@ jobs:
 
   style:
     name: Code style
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -356,7 +356,7 @@ jobs:
 
   javascript:
     name: JavaScript
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -413,7 +413,7 @@ jobs:
     # describe. Finding that out at tag time is the worst moment, so catch it
     # here instead. Add the no-changelog label to skip deliberately.
     if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
