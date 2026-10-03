@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -30,27 +31,27 @@ api_plugin_hook('logout_post_session_destroy');
 
 /* allow for plugin based logout page */
 if (api_plugin_hook_function('custom_logout_message', OPER_MODE_NATIVE) === OPER_MODE_RESKIN) {
-	exit;
+    exit;
 }
 
 /* Check to see if we are using Web Basic Auth */
 if (get_request_var('action') == 'timeout' || get_request_var('action') == 'disabled' || get_request_var('action') == 'remote') {
-	if (get_request_var('action') == 'timeout') {
-		$message = __('You have been logged out of Kadupul due to a session timeout.');
-	} elseif (get_request_var('action') == 'disabled') {
-		$message = __('You have been logged out of Kadupul due to an account suspension.');
-	} elseif (get_request_var('action') == 'remove') {
-		$message = __('You have been logged out of Kadupul due to a Remote Data Collector state change');
-	} else {
-		$message = '';
-	}
+    if (get_request_var('action') == 'timeout') {
+        $message = __('You have been logged out of Kadupul due to a session timeout.');
+    } elseif (get_request_var('action') == 'disabled') {
+        $message = __('You have been logged out of Kadupul due to an account suspension.');
+    } elseif (get_request_var('action') == 'remove') {
+        $message = __('You have been logged out of Kadupul due to a Remote Data Collector state change');
+    } else {
+        $message = '';
+    }
 
-	print "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>";
-	print "<html>";
-	print "<head>";
-	html_common_header(__('Logout of Kadupul'));
-	print "</head>";
-	print "<body class='logoutBody'>
+    print "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>";
+    print "<html>";
+    print "<head>";
+    html_common_header(__('Logout of Kadupul'));
+    print "</head>";
+    print "<body class='logoutBody'>
 	<div class='logoutLeft'></div>
 	<div class='logoutCenter'>
 		<div class='logoutArea'>
@@ -75,13 +76,12 @@ if (get_request_var('action') == 'timeout' || get_request_var('action') == 'disa
 		$('.loginRight').css('width',parseInt($(window).width()*0.33)+'px');
 	});
 	</script>";
-	include('./include/global_session.php');
-	print "</body>
+    include('./include/global_session.php');
+    print "</body>
 	</html>";
 } else {
-	/* Default action */
-	clear_auth_cookie();
+    /* Default action */
+    clear_auth_cookie();
 
-	header('Location: index.php');
+    header('Location: index.php');
 }
-
