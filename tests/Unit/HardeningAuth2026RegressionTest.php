@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 $authSource = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
