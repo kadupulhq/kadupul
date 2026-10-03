@@ -299,12 +299,24 @@ services:
     Kadupul\Navigation\Application\Port\LinkPreferences:
         alias: Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkPreferences
 
+    Kadupul\Inventory\Application\Port\DeviceOptions:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
+    Kadupul\Inventory\Application\Command\ChangeDeviceOptions: ~
     # About requires an eligible login without a console/object realm.
     Kadupul\IdentityAccess\Contract\AuthenticatedAccess:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess
 
     Kadupul\Platform\Application\Port\ProductVersion:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationProductVersion
+
+    Kadupul\Inventory\Application\Port\DeviceBulkAssignments:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
+    Kadupul\Inventory\Application\Command\AssignDevices: ~
+    Kadupul\Inventory\Application\Query\ListDeviceAssignmentTargets: ~
+
+    Kadupul\Inventory\Application\Port\DeviceSnmpSettings:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
+    Kadupul\Inventory\Application\Command\ChangeDevicesSnmp: ~
 
 when@test:
     services:
