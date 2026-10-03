@@ -17,8 +17,8 @@ test('production graph item editors preserve fixed widths and source association
     $coverage = $this->getTestResultObject()->getCodeCoverage();
     $bootstrap = '<?php define("GRAPH_ITEM_EDITOR_TEST_COVERAGE", true); ';
     if ($coverage !== null) {
-        foreach (array('RRD_TEST_COVERAGE_DIRECTORY' => $dir, 'RRD_TEST_CLI_COVERAGE_COPY' => $dir . '/' . $script, 'RRD_TEST_CLI_COVERAGE_SOURCE' => $root . '/' . $script) as $name => $value) {
-            $bootstrap .= 'define(' . var_export($name, true) . ',' . var_export($value, true) . ');';
+        foreach (array('RRD_TEST_COVERAGE_DIRECTORY' => $dir, 'RRD_TEST_CLI_COVERAGE_COPY' => $dir . '/' . $script, 'RRD_TEST_CLI_COVERAGE_SOURCE' => $root . '/' . $script) as $name => $coverageValue) {
+            $bootstrap .= 'define(' . var_export($name, true) . ',' . var_export($coverageValue, true) . ');';
         }
         $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
@@ -84,3 +84,77 @@ test('production graph item editors preserve fixed widths and source association
     array('graph_templates_items.php', 'item_moveup-single'), array('graph_templates_items.php', 'item_movedown-single'),
     array('graphs_items.php', 'save-5'), array('graphs_items.php', 'save-6'), array('graphs_items.php', 'save-20'), array('graphs_items.php', 'save-10'), array('graphs_items.php', 'save-15'),
     array('graph_templates_items.php', 'save-5'), array('graph_templates_items.php', 'save-6'), array('graph_templates_items.php', 'save-20'), array('graph_templates_items.php', 'save-10'), array('graph_templates_items.php', 'save-15'),array('graphs_items.php','save'),array('graphs_items.php','item_edit'),array('graph_templates_items.php','save'),array('graph_templates_items.php','item_edit'),array('graph_templates_items.php','ajax_data_sources'),array('graph_templates_items.php','item_moveup'),array('graph_templates_items.php','item_movedown')));
+
+
+test('graph item numeric form validation follows the fields used by rendering', function ($script, $value, $shift, $type, $invalid) {
+    $root = dirname(__DIR__, 2);
+    $directory = sys_get_temp_dir() . '/graph-item-value-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    mkdir($directory . '/include', 0700);
+    mkdir($directory . '/lib', 0700);
+    foreach (array('poller', 'utility', 'api_data_source', 'template') as $name) {
+        file_put_contents($directory . '/lib/' . $name . '.php', '<?php');
+    }
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $bootstrap = '<?php define("GRAPH_ITEM_EDITOR_TEST_COVERAGE", true); ';
+    if ($coverage !== null) {
+        foreach (array('RRD_TEST_COVERAGE_DIRECTORY' => $directory, 'RRD_TEST_CLI_COVERAGE_COPY' => $directory . '/' . $script, 'RRD_TEST_CLI_COVERAGE_SOURCE' => $root . '/' . $script) as $name => $coverageValue) {
+            $bootstrap .= 'define(' . var_export($name, true) . ',' . var_export($coverageValue, true) . ');';
+        }
+        $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/graph-item-native-bootstrap.php', true) . ';';
+    file_put_contents($directory . '/include/auth.php', $bootstrap);
+    file_put_contents($directory . '/lib/graph_item_editor.php', '<?php require_once ' . var_export($root . '/lib/graph_item_editor.php', true) . ';');
+    copy($root . '/' . $script, $directory . '/' . $script);
+    try {
+        $environment = array_replace(getenv(), array('GRAPH_ITEM_TEST_ROOT' => $root, 'GRAPH_ITEM_TEST_MODE' => 'save-' . $type,
+            'GRAPH_ITEM_TEST_VALIDATION' => '1', 'GRAPH_ITEM_TEST_PAYLOAD' => json_encode(array('value' => $value, 'shift' => $shift), JSON_THROW_ON_ERROR)));
+        $process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=24575', $directory . '/' . $script), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
+        expect($process)->toBeResource();
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        \PHPUnit\Framework\Assert::assertSame(0, proc_close($process), $stderr . $stdout);
+        expect($stderr)->toBe('');
+        $calls = json_decode(substr($stdout, strrpos($stdout, 'RESULT:') + 7), true, 512, JSON_THROW_ON_ERROR);
+        if ($coverage !== null) {
+            $reports = glob($directory . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
+        $validation = array_values(array_filter($calls, static fn($call) => $call[0] === 'validation'));
+        expect($validation)->toHaveCount(1);
+        \PHPUnit\Framework\Assert::assertSame($invalid, isset($validation[0][1]['value']), json_encode($calls, JSON_THROW_ON_ERROR));
+        $saves = array_values(array_filter($calls, static fn($call) => $call[0] === 'save'));
+        if ($invalid) {
+            expect($saves)->toBe(array());
+        } else {
+            expect($saves)->toHaveCount(1)->and($saves[0][1]['value'])->toBe($value);
+        }
+    } finally {
+        foreach (array('/include', '/lib', '') as $suffix) {
+            foreach (glob($directory . $suffix . '/*') as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            rmdir($directory . $suffix);
+        }
+    }
+})->with(function () {
+    foreach (array('graphs_items.php', 'graph_templates_items.php') as $script) {
+        foreach (array('3600', '-60', '.5', '') as $value) {
+            yield array($script, $value, 'on', 4, false);
+        }
+        foreach (array("1\n", '1:2', '1 2') as $value) {
+            yield array($script, $value, 'on', 4, true);
+            yield array($script, $value, '', 30, true);
+        }
+        yield array($script, '|query_ifSpeed|', '', 4, false);
+        yield array($script, '|query_ifSpeed|', '', 7, false);
+        yield array($script, '|query_ifSpeed|', 'on', 7, true);
+        yield array($script, '0.5', '', 30, false);
+    }
+});

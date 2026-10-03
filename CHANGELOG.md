@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Preserve each graph item's numeric SHIFT or TICK value, including backward shifts; validate numeric fields only when rendering uses them.
+
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
 
 - Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
