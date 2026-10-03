@@ -1970,6 +1970,19 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache)
 {
     global $fields_cdef_edit, $preview_only, $import_debug_info;
 
+    $original_hash_cache = $hash_cache;
+    $fail = static function () use (&$hash_cache, $original_hash_cache, &$import_debug_info, $hash, &$xml_array): bool {
+        // The legacy importer may already have saved a parent or earlier items.
+        // Report failure without claiming rollback or caching partial success.
+        $hash_cache = $original_hash_cache;
+        $import_debug_info['type'] = 'damaged';
+        $import_debug_info['hash'] = $hash;
+        $import_debug_info['title'] = $xml_array['name'];
+        $import_debug_info['result'] = 'fail';
+
+        return false;
+    };
+
     /* track changes */
     $status = 0;
 
@@ -2013,6 +2026,9 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache)
 
     if (!$preview_only) {
         $cdef_id = sql_save($save, 'cdef');
+        if ($cdef_id === false || !is_numeric($cdef_id) || (int) $cdef_id < 1) {
+            return $fail();
+        }
 
         $hash_cache['cdef'][$hash] = $cdef_id;
     } else {
@@ -2033,7 +2049,7 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache)
 
             /* invalid/wrong hash */
             if ($parsed_hash == false) {
-                return false;
+                return $preview_only ? false : $fail();
             }
 
             unset($save);
@@ -2100,8 +2116,13 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache)
             if (!$preview_only) {
                 if (!$damaged_item) {
                     $cdef_item_id = sql_save($save, 'cdef_items');
+                    if ($cdef_item_id === false || !is_numeric($cdef_item_id) || (int) $cdef_item_id < 1) {
+                        return $fail();
+                    }
 
                     $hash_cache['cdef_item'][$parsed_hash['hash']] = $cdef_item_id;
+                } else {
+                    return $fail();
                 }
             } else {
                 $hash_cache['cdef_item'][$parsed_hash['hash']] = $_cdef_item_id;
