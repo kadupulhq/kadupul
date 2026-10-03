@@ -1250,3 +1250,30 @@ Deletion refuses definitions referenced by graphs, graph templates or other VDEF
 The old `vdef.php` URL redirects safe GET navigation to the Symfony routes and
 rejects posted actions; legacy procedural VDEF functions remain available to
 graph rendering.
+
+### Template synchronization discovery boundary
+
+Bulk template synchronization first validates and commits the primary template
+associations, after confirming collector identity and required association parity.
+It then runs data-query discovery outside the association transaction. Short
+current-account and device-scope checks release their locks before each query.
+The existing 120-second worker budget remains in force. Discovery failure or
+termination can leave committed associations and partial collector effects; the
+HTTP response is an uncertain outcome, and the operator must inspect the selected
+devices and retry synchronization. Retrying also repairs an association missing
+from a device whose discovery cache already exists. Unselected credentials,
+graphs, and historical data retain their existing contracts.
+
+Template-change and graph-template hooks remain per-device during association
+updates; discovery is deferred until association commit, and the complete-selection
+action-7 callback runs only after successful discovery. This ordering intentionally
+changes the bulk workflow's discovery timing. Legacy callers that omit the optional
+reindex dispatcher retain synchronous discovery and the void helper return contract.
+Plugins execute in the trusted legacy process and may have irreversible side effects.
+A database rollback cannot undo plugin, discovery, or committed collector effects.
+
+Roll out the worker and helper together. No schema or dependency upgrade is needed.
+Application rollback must restore both files together and account for in-flight
+workers. It does not restore previously committed associations or collector state.
+The new boundary belongs to the main-only Symfony migration; LTS callers do not
+opt into it.

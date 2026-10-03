@@ -48,6 +48,11 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'links.php',
+        'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'src/DataInput/Infrastructure/Legacy/DataInputHandoff.php',
+        'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php',
         'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php',
@@ -100,6 +105,7 @@ def main():
         'bin/legacy-device-template.php',
         'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'bin/legacy-device-state.php',
+        'lib/api_device.php',
         'bin/legacy-device-remove.php',
         'src/Inventory/Domain/DeviceRemoval.php',
         'src/Inventory/Application/Command/RemoveDevices.php',
@@ -216,10 +222,14 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
+    data_input_checks = ['system page size fixture restores original absence and value', 'profile deletion confirmation page renders', 'unused profile is normally removable', 'collector retry builds real poller item from the saved command', 'offline collector yields explicit partial handoff without undoing local definition', 'whitelist update publishes the exact saved command and verifies it', 'worker independently rechecks feature grants before executing the handoff', 'French session authenticates through legacy login', 'French editor translates presentation without changing raw command definition', 'English field deletion confirmation uses a readable action label', 'French field deletion confirmation honors the authenticated preference']
     about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
     about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
-    synchronization_checks = ['template synchronization saves through Symfony', 'template synchronization failure rolls back primary associations', 'remote template synchronization preserves assigned template identity', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization retains existing graphs']
+    state_probe_checks = ['bulk state observer records original production source identity',
+                          'bulk state observer uses a separate fixture source outside production coverage',
+                          'bulk state observer restores exact production bytes and removes owned fixtures']
+    synchronization_checks = ['all-unassigned template synchronization invokes no mutation callbacks', 'all-unassigned template synchronization preserves the device-change marker', 'collector identity mismatch invokes no action 7 callback', 'collector identity mismatch rolls back the primary batch', 'deferred discovery failure does not publish a success audit record', 'deferred discovery failure reports uncertain completion', 'deferred discovery failure retains committed associations without a success callback', 'deferred synchronization discovery fixture registered', 'denied synchronization performs no writes or callbacks', 'each synchronized device receives only its own template associations', 'failed synchronization does not invoke the bulk action callback', 'failed synchronization does not publish a success audit record', 'missing template invokes no callbacks and preserves the marker', 'missing template preserves all primary associations', 'multiple templates do not leak associations across devices', 'multiple templates preserve per-device and complete-selection callback contracts', 'remote template synchronization preserves assigned template identity', 'slow synchronization discovery does not block a concurrent poller write', 'successful synchronization publishes exactly one success audit record', 'template synchronization GET does not add associations', 'template synchronization GET does not add data-query associations', 'template synchronization accepts an all-unassigned selection as a no-op', 'template synchronization adds required data-query associations', 'template synchronization adds required graph associations', 'template synchronization association failure cannot report success', 'template synchronization conceals inaccessible devices on GET and POST', 'template synchronization denied-realm fixture starts authorized', 'template synchronization discovery runs without an active primary transaction', 'template synchronization failure rolls back primary associations', 'template synchronization hook registered', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization preserves the configured data-query reindex method', 'template synchronization refuses an actor without the device-management realm', 'template synchronization refuses unauthenticated POST requests', 'template synchronization refuses unauthenticated requests', 'template synchronization rejects a missing assigned template', 'template synchronization rejects altered collector template identity', 'template synchronization rejects offline collectors before writes', 'template synchronization rejects stale device revisions', 'template synchronization rejects unexpected fields', 'template synchronization removes unused graph associations', 'template synchronization repairs associations despite existing query cache', 'template synchronization requires CSRF token', 'template synchronization requires same-origin CSRF', 'template synchronization resolves the effective default reindex method', 'template synchronization retains associations used by existing graphs', 'template synchronization retains existing graphs', 'template synchronization retries safely after deferred discovery failure', 'template synchronization saves through Symfony', 'template synchronization skips unassigned devices', 'template synchronization supports a selection spanning different templates', 'template synchronization supports repeated synchronization', 'template synchronization worker independently refuses a revoked realm']
     option_checks = ['bulk options save through Symfony', 'bulk options failure rolls back entire primary batch', 'bulk options verifies remote values', 'bulk options changes selected fields and preserves unchecked values', 'bulk options invokes action 4 once for the complete selection', 'rejected bulk options do not invoke action 4']
     failures = {
         'data-source-profile-test-hash': 'Integration test source differs',
@@ -227,6 +237,8 @@ def main():
         'missing-data-source-profile-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'data-input-test-hash': 'Integration test source differs',
+        'data-input-review-test-hash': 'Integration test source differs',
         'palette-test-hash': 'Integration test source differs',
         'missing-palette-handoff-check': 'Incomplete Symfony integration',
         'missing-palette-concurrent-auth': 'Incomplete Symfony integration',
@@ -322,6 +334,8 @@ def main():
         failures['missing-synchronization-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(option_checks)):
         failures['missing-option-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(state_probe_checks)):
+        failures['missing-state-probe-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(3):
         failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
@@ -333,6 +347,8 @@ def main():
         output = scratch / 'result.xml'
         for index in range(len(statistics_checks)):
             failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
+        for index in range(len(data_input_checks)):
+            failures['missing-data-input-check-' + str(index)] = 'Incomplete Symfony integration'
         for index in range(len(about_authentication_checks)):
             failures['missing-about-authentication-check-' + str(index)] = 'Incomplete Symfony integration'
         for case, expected in failures.items():
@@ -401,6 +417,15 @@ def main():
                 evidence['checks'].remove('VDEF duplicate preserves all item rows')
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
+            elif case == 'data-input-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_input_scenarios.py'] = '0' * 64
+            elif case == 'data-input-review-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_input_review_http.py'] = '0' * 64
+            elif case == 'data-source-profile-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-data-input-check-'):
+                omitted = data_input_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
             elif case == 'details-test-hash':
                 evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'sites-test-hash':
@@ -456,6 +481,9 @@ def main():
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-option-check-'):
                 missing = option_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-state-probe-check-'):
+                missing = state_probe_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-removal-callback-check':
                 evidence['checks'] = [check for check in evidence['checks'] if check != 'rejected removal emits no bulk action callback']
