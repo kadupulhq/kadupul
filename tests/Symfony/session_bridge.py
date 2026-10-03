@@ -114,6 +114,8 @@ def main():
                   'legacy database session handler owns the authenticated session')
         check(session.request('/public/index.php/session').get('json') == expected,
               'Symfony public entry owns authentication for the same session')
+        from cdef_legacy_page_scenarios import verify_cdef_legacy_pages
+        verify_cdef_legacy_pages(harness, session, check)
         from data_input_scenarios import verify_data_inputs
         verify_data_inputs(harness, session, check)
         from about_authentication_scenarios import verify_about_authentication
