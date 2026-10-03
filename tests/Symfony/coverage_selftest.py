@@ -48,6 +48,11 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'links.php',
+        'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
+        'src/DataInput/Infrastructure/Legacy/DataInputHandoff.php',
+        'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'data_input.php', 'src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php', 'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php',
         'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php',
@@ -211,6 +216,7 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
+    data_input_checks = ['system page size fixture restores original absence and value', 'profile deletion confirmation page renders', 'unused profile is normally removable', 'collector retry builds real poller item from the saved command', 'offline collector yields explicit partial handoff without undoing local definition', 'whitelist update publishes the exact saved command and verifies it', 'worker independently rechecks feature grants before executing the handoff', 'French session authenticates through legacy login', 'French editor translates presentation without changing raw command definition', 'English field deletion confirmation uses a readable action label', 'French field deletion confirmation honors the authenticated preference']
     about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
     about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
@@ -220,6 +226,8 @@ def main():
         'missing-data-source-profile-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'data-input-test-hash': 'Integration test source differs',
+        'data-input-review-test-hash': 'Integration test source differs',
         'palette-test-hash': 'Integration test source differs',
         'missing-palette-handoff-check': 'Incomplete Symfony integration',
         'missing-palette-concurrent-auth': 'Incomplete Symfony integration',
@@ -322,6 +330,8 @@ def main():
         output = scratch / 'result.xml'
         for index in range(len(statistics_checks)):
             failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
+        for index in range(len(data_input_checks)):
+            failures['missing-data-input-check-' + str(index)] = 'Incomplete Symfony integration'
         for index in range(len(about_authentication_checks)):
             failures['missing-about-authentication-check-' + str(index)] = 'Incomplete Symfony integration'
         for case, expected in failures.items():
@@ -390,6 +400,15 @@ def main():
                 evidence['checks'].remove('VDEF duplicate preserves all item rows')
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
+            elif case == 'data-input-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_input_scenarios.py'] = '0' * 64
+            elif case == 'data-input-review-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_input_review_http.py'] = '0' * 64
+            elif case == 'data-source-profile-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
+            elif case.startswith('missing-data-input-check-'):
+                omitted = data_input_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
             elif case == 'details-test-hash':
                 evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'sites-test-hash':
