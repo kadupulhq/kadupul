@@ -236,7 +236,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
           coverage: none
-          tools: none
+          tools: composer
 
       # Fails loudly on a parse error in any tracked source file. This is the
       # floor the rest of the pipeline builds on, and it runs even before there
@@ -427,6 +427,9 @@ jobs:
 
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh
+
+      - name: Check merge validation preserves incoming content
+        run: bash tests/tools/test_githooks_merge.sh
 
   javascript:
     name: JavaScript

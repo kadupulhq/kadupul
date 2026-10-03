@@ -63,6 +63,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Validate locally authored and conflict-resolved merge content without rejecting whitespace inherited unchanged from the incoming branch.
 - Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
 
 - Exercise user-log cleanup against real MySQL and MariaDB, preserving each current account's latest login and token while removing failed and orphaned entries; collect coverage from the actual controller.
