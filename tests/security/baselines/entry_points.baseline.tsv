@@ -4,6 +4,13 @@ about.php	symfony:forward	forwards to app.php/about/legacy
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 1f46fb124365 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action af73f4343625 and controller e011435a3fdf and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/new	symfony:data_input_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 815bd496666c and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/edit	symfony:data_input_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action f5da79ca881e and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/fields/{field}	symfony:data_input_field	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},field=[0-9]{1,8}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 74a56be92e80 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/{operation}	symfony:data_input_action	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},operation=delete|duplicate|field_delete|propagate|whitelist; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 0326117ba140 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
 app.php/graph-definitions/vdefs	symfony:graph_vdefs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 14
@@ -75,7 +82,7 @@ config/	web-server-denied	nginx; apache .htaccess
 contrib/	web-server-denied	nginx; apache .htaccess
 csp_report.php	anonymous-allowed	CSP violation report sink; browsers post reports without credentials; reviewed at efe610420705
 data_debug.php	realm:15	include/auth.php
-data_input.php	realm:2	include/auth.php
+data_input.php	symfony:forward	forwards to app.php/data-inputs/legacy
 data_queries.php	realm:13	include/auth.php
 data_source_profiles.php	realm:9	include/auth.php
 data_sources.php	realm:3	include/auth.php

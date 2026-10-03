@@ -29,6 +29,20 @@ final class PlacementTransactionDatabaseTest extends TestCase
         self::assertSame($caller ? ['begin' => 0, 'commit' => 0, 'rollback' => 0] : ['begin' => 1, 'commit' => $missing || $throw ? 0 : 1, 'rollback' => $missing || $throw ? 1 : 0], $state['calls']);
     }
 
+    public function testReportDenialPrecedesLookupAndPreservesCallerTransaction(): void
+    {
+        foreach ([false, true] as $caller) {
+            $state = $this->runNative(['kind' => 'report', 'caller' => $caller, 'missing' => false, 'throw' => false, 'authorized' => false]);
+            self::assertFalse($state['result']);
+            self::assertFalse($state['failure']);
+            self::assertSame($caller, $state['active']);
+            self::assertSame(['begin' => 0, 'commit' => 0, 'rollback' => 0], $state['calls']);
+            self::assertSame(0, $state['inside']);
+            self::assertSame(0, $state['after']);
+            self::assertSame($caller ? 'caller work' : 'owned device', $state['caller_work']);
+        }
+    }
+
     /** @return array<string, array{string, bool, bool, bool}> */
     public static function outcomes(): array
     {
@@ -44,7 +58,7 @@ final class PlacementTransactionDatabaseTest extends TestCase
         return $cases;
     }
 
-    /** @param array{kind: string, caller: bool, missing: bool, throw: bool} $scenario
+    /** @param array{kind: string, caller: bool, missing: bool, throw: bool, authorized?: bool} $scenario
      * @return array<string, mixed>
      */
     private function runNative(array $scenario): array

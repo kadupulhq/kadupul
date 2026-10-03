@@ -50,6 +50,9 @@ function placement_sql(string $sql): string
 
 function db_fetch_cell_prepared(string $sql, array $parameters = []): mixed
 {
+    if (!($GLOBALS['scenario']['authorized'] ?? true)) {
+        throw new RuntimeException('Denied report performed a protected lookup');
+    }
     $statement = $GLOBALS['database']->prepare(placement_sql($sql));
     $statement->execute($parameters);
     return $statement->fetchColumn();
@@ -73,7 +76,7 @@ function db_execute_prepared(string $sql, array $parameters = []): bool
 // UI/authorization and sorting are boundaries outside this transaction contract.
 function cacti_authorize_resource(mixed ...$arguments): bool
 {
-    return true;
+    return $GLOBALS['scenario']['authorized'] ?? true;
 }
 function input_validate_input_number(mixed $value): void {}
 function form_input_validate(mixed $value, mixed ...$arguments): mixed

@@ -62,6 +62,10 @@ function duplicate_reports($_id, $_title)
 
 function reports_add_devices($report_id, $device_ids, $timespan, $align)
 {
+    if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $report_id, 'reports')) {
+        raise_message('reports_not_owner');
+        return false;
+    }
     global $database_sessions, $database_hostname, $database_port, $database_default;
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
     if (!$connection instanceof PDO) {
@@ -217,15 +221,15 @@ function reports_add_graphs($report_id, $local_graph_id, $timespan, $align)
                 array($local_graph_id)
             );
 
-            $host_template_id = db_fetch_cell_prepared(
-                'SELECT host_template_id
-				FROM host
-				WHERE id = ?',
-                array($gd['host_id'])
-            );
-
             if (cacti_sizeof($gd)) {
-                db_execute_prepared(
+                $host_template_id = db_fetch_cell_prepared(
+                    'SELECT host_template_id
+					FROM host
+					WHERE id = ?',
+                    array($gd['host_id'])
+                );
+
+                return db_execute_prepared(
                     'INSERT INTO reports_items
 					(report_id, item_type, host_template_id, host_id, graph_template_id, local_graph_id, timespan, align, sequence)
 					VALUES (?, 1, ?, ?, ?, ?, ?, ?, ?)',
@@ -241,7 +245,6 @@ function reports_add_graphs($report_id, $local_graph_id, $timespan, $align)
                     )
                 );
 
-                return true;
             } else {
                 raise_message('reports_graph_not_found');
 

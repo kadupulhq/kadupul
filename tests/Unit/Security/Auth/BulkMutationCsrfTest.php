@@ -79,7 +79,7 @@ test('bulk controllers reject unprotected confirmation requests before dispatch'
     'aggregate_graphs.php', 'aggregate_templates.php', 'automation_devices.php',
     'automation_graph_rules.php', 'automation_networks.php', 'automation_snmp.php',
     'automation_templates.php', 'automation_tree_rules.php', 'cdef.php',
-    'color_templates.php', 'data_debug.php', 'data_input.php', 'data_queries.php',
+    'color_templates.php', 'data_debug.php', 'data_queries.php',
     'data_source_profiles.php', 'data_sources.php', 'data_templates.php', 'gprint_presets.php',
     'graphs.php', 'host_templates.php', 'managers.php',
     'pollers.php', 'tree.php', 'user_domains.php',
