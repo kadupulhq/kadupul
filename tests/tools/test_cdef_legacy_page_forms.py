@@ -64,6 +64,15 @@ class RenderedFormTest(unittest.TestCase):
         self.assertIn("$sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';", consumer)
         self.assertIn('$requiredPaths = array_merge($requiredPaths, $legacyCallerPaths);', consumer)
 
+    def test_navigation_links_decode_html_entities_without_changing_query_bytes(self):
+        parser = RenderedForm()
+        parser.feed('<a href="host.php?action=edit&amp;id=7">Device</a>'
+                    '<form><input name="id" value="7">'
+                    '<a href="data_sources.php?action=ds_edit&amp;id=3&amp;filter=a%26b">Source</a></form>')
+        self.assertEqual(['host.php?action=edit&id=7',
+                          'data_sources.php?action=ds_edit&id=3&filter=a%26b'], parser.links)
+        self.assertEqual([{'id': '7'}], parser.forms)
+
 
 if __name__ == '__main__':
     unittest.main()

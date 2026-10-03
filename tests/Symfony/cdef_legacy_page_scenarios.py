@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Exercise the installed legacy callers through their actual authenticated forms."""
 from html.parser import HTMLParser
+import json
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 
@@ -24,6 +25,9 @@ REQUIRED_CHECKS = (
     'installed graphs aggregation persists exact selected member and generated items: 10',
     'installed graph malformed color refuses with all nine participants unchanged',
     'installed graph late generation refusal rolls back all nine participants',
+    'installed graph editor renders persisted graph device and data source identities without mutation',
+    'installed graph autocomplete returns exact persisted owned data source identity without mutation',
+    'installed deleted graph editor reports missing resource without mutation',
     'installed color synchronization reports genuine empty usage',
     'installed color synchronization regenerates actual template and standalone cohorts',
     'installed color second cohort refusal preserves failed graph and reports earlier committed cohort',
@@ -49,6 +53,7 @@ class RenderedForm(HTMLParser):
         self.textarea = None
         self.disabled_options = False
         self.checkboxes = []
+        self.links = []
 
     def control(self, name, value):
         if name in self.current:
@@ -58,6 +63,8 @@ class RenderedForm(HTMLParser):
     def handle_starttag(self, tag, attributes):
         attrs = dict(attributes)
         name = attrs.get('name')
+        if tag == 'a' and attrs.get('href') is not None:
+            self.links.append(attrs['href'])
         if tag == 'input' and attrs.get('type') == 'checkbox' and name:
             self.checkboxes.append((name, 'disabled' in attrs))
         if tag == 'form':
@@ -222,6 +229,41 @@ def verify_write_access(harness, session, page, form, realm, observe, check):
           'installed legacy restored actor realm admits its read control: ' + page)
 
 
+def verify_graph_editor(harness, session, graph, host, check):
+    """Read the real member editor and its persisted data-source choices."""
+    sources = harness.rows("SELECT JSON_OBJECT('id',dtr.id,'local',dtr.local_data_id,"
+                           "'name',dtd.name_cache,'source',dtr.data_source_name) "
+                           "FROM graph_templates_item AS gti "
+                           "JOIN data_template_rrd AS dtr ON dtr.id=gti.task_item_id "
+                           "JOIN data_template_data AS dtd ON dtd.local_data_id=dtr.local_data_id "
+                           f"WHERE gti.local_graph_id={graph} AND dtd.local_data_id>0 ORDER BY dtr.id")
+    check(bool(sources), 'installed graph editor has independently persisted owned data sources')
+    before = graph_snapshot(harness)
+    status, body, form = request(session, f'/graphs.php?action=graph_edit&id={graph}')
+    rendered = RenderedForm()
+    rendered.feed(body)
+    description = harness.sql(f'SELECT description FROM host WHERE id={host}').strip()
+    check(status == 200 and form.get('local_graph_id') == str(graph)
+          and form.get('host_id_prev') == str(host) and form.get('host_id') == description
+          and form.get('graph_template_id') == '4'
+          and form.get('save_component_graph') == '1' and '__csrf_magic' in form
+          and f'host.php?action=edit&id={host}' in rendered.links
+          and all(f"data_sources.php?action=ds_edit&id={source['local']}" in rendered.links for source in sources)
+          and graph_snapshot(harness) == before,
+          'installed graph editor renders persisted graph device and data source identities without mutation')
+    source = sources[0]
+    query = urlencode({'action': 'ajax_graph_items', 'rrd_id': str(source['id']),
+                       'host_id': str(host), 'term': source['name']})
+    status, body, _ = request(session, '/graphs.php?' + query)
+    rows = json.loads(body)
+    label = source['name'] + ' (' + source['source'] + ')'
+    check(status == 200 and isinstance(rows, list)
+          and any(str(row['id']) == str(source['id']) and row['name'] == label
+                  and row['label'] == label for row in rows)
+          and graph_snapshot(harness) == before,
+          'installed graph autocomplete returns exact persisted owned data source identity without mutation')
+
+
 def verify_graph_creation(harness, session, aggregate, color, check):
     """Submit the genuine standalone and template aggregation confirmations."""
     host = None
@@ -243,6 +285,7 @@ def verify_graph_creation(harness, session, aggregate, color, check):
         check(int(harness.sql(f'SELECT COUNT(*) FROM graph_templates_item WHERE '
                               f'local_graph_id={graph} AND task_item_id>0').strip()) > 0,
               'installed graph member has persisted data source items')
+        verify_graph_editor(harness, session, graph, host, check)
         for action in (9, 10):
             form = graph_confirmation(harness, session, graph, action, check)
             form['title_format'] = 'Owned HTTP aggregate ' + str(action)
@@ -323,6 +366,13 @@ def verify_graph_creation(harness, session, aggregate, color, check):
             check(result['exit'] == 0 and harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE id={local}').strip() == '0'
                   and harness.sql(f'SELECT COUNT(*) FROM graph_templates_item WHERE local_graph_id={local}').strip() == '0',
                   'installed owned aggregate graph cleanup uses actual API')
+            if (identifier, local) == created[0]:
+                before = graph_snapshot(harness)
+                status, body, _ = request(session, f'/graphs.php?action=graph_edit&id={local}')
+                check(status == 200
+                      and 'Graph not found.  Either it has been deleted or your database needs repair.' in body
+                      and graph_snapshot(harness) == before,
+                      'installed deleted graph editor reports missing resource without mutation')
             harness.sql(f'DELETE FROM aggregate_graphs_graph_item WHERE aggregate_graph_id={identifier};'
                         f'DELETE FROM aggregate_graphs_items WHERE aggregate_graph_id={identifier};'
                         f'DELETE FROM aggregate_graphs WHERE id={identifier};')
