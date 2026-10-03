@@ -29,6 +29,10 @@ if (($argv[4] ?? '') === 'coverage') {
 require $root . '/lib/auth.php';
 $scenario = $argv[1];
 $directory = $argv[2];
+$about = str_starts_with($scenario, 'about-');
+$credentialScenario = $about ? substr($scenario, 6) : $scenario;
+$restore = str_starts_with($credentialScenario, 'restore-');
+$policyCase = str_contains($credentialScenario, '-policy-');
 $databaseSessions = $argv[3] === 'database';
 $remembered = str_starts_with($scenario, 'unbound-remembered');
 $rollback = str_ends_with($scenario, '-rollback');
@@ -36,8 +40,12 @@ $dsn = getenv('KADUPUL_SESSION_TEST_DSN') ?: 'sqlite:' . $directory . '/credenti
 class RehashInterleavingPdo extends PDO
 {
     public ?Closure $interleave = null;
+    public int $generationReads = 0;
     public function prepare(string $query, array $options = []): PDOStatement|false
     {
+        if (str_starts_with($query, 'SELECT value FROM settings_user')) {
+            $this->generationReads++;
+        }
         if ($this->interleave !== null && str_starts_with($query, 'SELECT value FROM settings_user')) {
             $callback = $this->interleave;
             $this->interleave = null;
@@ -60,18 +68,23 @@ class CompletedAccountRead extends PDOStatement
     }
 }
 $db = new RehashInterleavingPdo($dsn, getenv('KADUPUL_SESSION_TEST_USER') ?: null, getenv('KADUPUL_SESSION_TEST_PASSWORD') ?: null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$database_hostname = 'native';
+$database_port = '0';
+$database_default = 'credential-fixture';
+$database_sessions = ['native:0:credential-fixture' => $db];
 if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
     $db->exec('PRAGMA journal_mode=WAL');
     $db->sqliteCreateFunction('NOW', static fn() => date('Y-m-d H:i:s'));
     $db->setAttribute(PDO::ATTR_STATEMENT_CLASS, [CompletedAccountRead::class]);
 }
-$db->exec("CREATE TABLE user_auth(id INTEGER PRIMARY KEY,username TEXT,enabled TEXT,locked TEXT,must_change_password TEXT,password TEXT,realm INTEGER);
-    INSERT INTO user_auth VALUES(9,'operator','on','','','old-password-hash',0);
+$cacheIdentity = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? 'INTEGER AUTO_INCREMENT PRIMARY KEY' : 'INTEGER PRIMARY KEY';
+$db->exec("CREATE TABLE user_auth(id INTEGER PRIMARY KEY,username TEXT,enabled TEXT,locked TEXT,must_change_password TEXT,password TEXT,realm INTEGER,password_change TEXT);
+    INSERT INTO user_auth VALUES(9,'operator','on','','','old-password-hash',0,'');
     CREATE TABLE settings(name TEXT,value TEXT); INSERT INTO settings VALUES('auth_method','1'),('guest_user','0');
     CREATE TABLE settings_user(user_id INTEGER,name VARCHAR(255),value TEXT,PRIMARY KEY(user_id,name));
     CREATE TABLE user_auth_realm(user_id INTEGER,realm_id INTEGER); INSERT INTO user_auth_realm VALUES(9,8),(9,15);
-    CREATE TABLE sessions(id VARCHAR(256) PRIMARY KEY,data TEXT,access INTEGER);
-    CREATE TABLE user_auth_cache(user_id INTEGER,hostname TEXT,last_update TEXT,token TEXT);
+    CREATE TABLE sessions(id VARCHAR(256) PRIMARY KEY,data TEXT,access INTEGER,remote_addr TEXT,user_id INTEGER,user_agent TEXT);
+    CREATE TABLE user_auth_cache(id $cacheIdentity,user_id INTEGER,hostname TEXT,last_update TEXT,token TEXT);
     CREATE TABLE user_log(username TEXT,user_id INTEGER,result INTEGER,ip TEXT,time TEXT)");
 $connection = new class ($db) implements DatabaseConnection {
     public function __construct(private PDO $db) {}
@@ -91,17 +104,25 @@ session_save_path($directory);
 session_name('Cacti');
 session_start();
 $_SESSION = ['cacti_cwd' => $root, 'sess_user_id' => 9];
-if (!str_starts_with($scenario, 'unbound')) {
+if (!str_starts_with($credentialScenario, 'unbound') && !$restore) {
     $_SESSION['sess_user_credential'] = auth_session_credential_key('old-password-hash');
+}
+if ($credentialScenario === 'empty') {
+    $_SESSION['sess_user_credential'] = '';
+} elseif ($credentialScenario === 'malformed') {
+    $_SESSION['sess_user_credential'] = array('not-a-generation');
 }
 if (str_contains($scenario, '-marker-')) {
     $_SESSION['sess_remember_token'] = ['user_id' => 9, 'hash' => hash('sha512', str_repeat('a', 64))];
+}
+if ($restore) {
+    unset($_SESSION['sess_user_id']);
 }
 $id = session_id();
 $payload = session_encode();
 session_write_close();
 if ($databaseSessions) {
-    $db->prepare('INSERT INTO sessions VALUES(?,?,?)')->execute([$id, $payload, time()]);
+    $db->prepare('INSERT INTO sessions(id,data,access) VALUES(?,?,?)')->execute([$id, $payload, time()]);
 }
 $_COOKIE = ['Cacti' => $id];
 if ($remembered) {
@@ -111,7 +132,7 @@ if ($remembered) {
         $_COOKIE['cacti_remembers'] = str_contains($scenario, '-marker-malformed') ? ['malformed'] : $cookie;
     }
     foreach ([[9,hash('sha512', $rawToken)], [9,hash('sha512', 'other-client')], [10,hash('sha512', $rawToken)]] as [$user,$token]) {
-        $db->prepare("INSERT INTO user_auth_cache VALUES(?,'127.0.0.1',CURRENT_TIMESTAMP,?)")->execute([$user,$token]);
+        $db->prepare("INSERT INTO user_auth_cache(user_id,hostname,last_update,token) VALUES(?,'127.0.0.1',CURRENT_TIMESTAMP,?)")->execute([$user,$token]);
     }
 }
 function db_table_exists($name)
@@ -168,10 +189,10 @@ $initial = null;
 if (in_array($scenario, ['reset-write', 'rehash-write'], true)) {
     $initial = $access->authorize()->id;
 }
-if (str_starts_with($scenario, 'reset')) {
+if (str_starts_with($credentialScenario, 'reset')) {
     $db->exec("UPDATE user_auth SET password='replacement-password-hash' WHERE id=9");
 }
-if (str_starts_with($scenario, 'rehash')) {
+if (str_starts_with($credentialScenario, 'rehash')) {
     if (!auth_rehash_password_preserving_sessions(9, 'old-password-hash', 'upgraded-password-hash', $db)) {
         throw new RuntimeException('Actual transparent hash upgrade failed.');
     }
@@ -185,6 +206,12 @@ if ($scenario === 'successive-rehash') {
         if (!auth_rehash_password_preserving_sessions(9, 'first-upgraded-hash', 'second-upgraded-hash', $writer)) {
             throw new RuntimeException('Interleaved actual transparent hash upgrade failed.');
         }
+    };
+}
+if ($credentialScenario === 'deleted-live') {
+    $db->prepare("INSERT INTO settings_user VALUES(9,'auth_credential_generation',?)")->execute([str_repeat('a', 64) . ':' . str_repeat('b', 64)]);
+    $db->interleave = static function () use ($db) {
+        $db->exec('DELETE FROM user_auth WHERE id=9');
     };
 }
 $accepted = false;
@@ -201,7 +228,58 @@ try {
         $access->assertCurrent(9);
         $accepted = true;
     } else {
-        $accepted = $access->authorize()->id === 9;
+        if ($about) {
+            if ($restore) {
+                $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+                if (str_starts_with($credentialScenario, 'restore-basic')) {
+                    $db->exec("UPDATE user_auth SET realm=2 WHERE id=9");
+                    $db->exec("UPDATE settings SET value='2' WHERE name='auth_method'");
+                    $_SERVER['REMOTE_USER'] = $_SERVER['PHP_AUTH_USER'] = 'operator';
+                } else {
+                    $db->exec("INSERT INTO settings VALUES('auth_cache_enabled','on')");
+                    $db->prepare("INSERT INTO user_auth_cache(user_id,hostname,last_update,token) VALUES(9,'127.0.0.1',CURRENT_TIMESTAMP,?)")->execute([hash('sha512', 'fixture-remembered-token')]);
+                    $_COOKIE['cacti_remembers'] = '9,0,fixture-remembered-token';
+                }
+                if ($policyCase) {
+                    $db->exec("UPDATE user_auth SET must_change_password='on',password_change='on' WHERE id=9");
+                    if (str_ends_with($credentialScenario, '-must-off')) {
+                        $db->exec("UPDATE user_auth SET must_change_password='' WHERE id=9");
+                    } elseif (str_ends_with($credentialScenario, '-change-off')) {
+                        $db->exec("UPDATE user_auth SET password_change='' WHERE id=9");
+                    } elseif (str_ends_with($credentialScenario, '-nonlocal')) {
+                        $db->exec("UPDATE user_auth SET realm=1 WHERE id=9");
+                        $_COOKIE['cacti_remembers'] = '9,1,fixture-remembered-token';
+                    }
+                    $policyBefore = ['generation_reads' => $db->generationReads, 'file_payload_sha256' => is_file($directory . '/sess_' . $id) ? hash_file('sha256', $directory . '/sess_' . $id) : null, 'session_id' => $id, 'sessions' => $db->query('SELECT * FROM sessions ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'tokens' => $db->query('SELECT * FROM user_auth_cache ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'logs' => $db->query('SELECT * FROM user_log')->fetchAll(PDO::FETCH_ASSOC)];
+                }
+                $requests->pop();
+                $request = Request::create('/about', cookies: $_COOKIE, server: $_SERVER);
+                $request->attributes->set('_route', 'platform_about');
+                $requests->push($request);
+            }
+            $audit = new class implements \Kadupul\IdentityAccess\Contract\AuditTrail {
+                public function record(\Kadupul\IdentityAccess\Contract\AuditEvent $event): void {}
+            };
+            $browser = new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyBrowserAuthentication($requests, $connection, $configuration, new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAuthenticationSession($configuration, $connection), $audit);
+            $actor = (new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess($session, $browser))->authenticatedActor();
+            $accepted = $actor?->id === 9;
+            $unauthenticated = !$accepted;
+            if ($policyCase) {
+                $policyAfter = ['generation_reads' => $db->generationReads, 'file_payload_sha256' => is_file($directory . '/sess_' . $id) ? hash_file('sha256', $directory . '/sess_' . $id) : null, 'session_id' => session_id(), 'sessions' => $db->query('SELECT * FROM sessions ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'tokens' => $db->query('SELECT * FROM user_auth_cache ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'logs' => $db->query('SELECT * FROM user_log')->fetchAll(PDO::FETCH_ASSOC)];
+            }
+            if ($restore && $accepted) {
+                $id = session_id();
+                $_COOKIE['Cacti'] = $id;
+                $requests->pop();
+                $requests->push(Request::create('/links', cookies: $_COOKIE));
+                $snapshot = $session->read();
+                $_SESSION = $snapshot;
+                $legacyValid = auth_session_credentials_valid('old-password-hash');
+                $nextConsole = $console->consoleActor()?->id === 9;
+            }
+        } else {
+            $accepted = $access->authorize()->id === 9;
+        }
     }
 } catch (LinkAccessDenied $error) {
     $unauthenticated = $error->unauthenticated;
@@ -248,5 +326,12 @@ if ($remembered) {
     $legacy = check_auth_cookie();
     $transition = ['cookie_cleared' => $cleared, 'legacy' => $legacy, 'remaining' => $db->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn()];
 }
-define('SYMFONY_SESSION_NATIVE_COMPLETED', isset($responseDispatched) ? ['session-state-observed', 'response-dispatched'] : ['session-state-observed']);
-fwrite(STDOUT, json_encode(['accepted' => $accepted, 'unauthenticated' => $unauthenticated, 'initial' => $initial, 'revoked' => $revoked, 'transition' => $transition, 'refused_while_active' => $refusedWhileActive], JSON_THROW_ON_ERROR));
+$completionMarkers = isset($responseDispatched) ? ['session-state-observed', 'response-dispatched'] : ['session-state-observed'];
+if ($policyCase) {
+    $completionMarkers[] = 'restoration-policy-state-observed';
+}
+if ($restore && $accepted && $legacyValid === true && $nextConsole === true) {
+    $completionMarkers[] = 'restore-handoff-observed';
+}
+define('SYMFONY_SESSION_NATIVE_COMPLETED', $completionMarkers);
+fwrite(STDOUT, json_encode(['policy_before' => $policyBefore ?? null, 'policy_after' => $policyAfter ?? null, 'accepted' => $accepted, 'unauthenticated' => $unauthenticated, 'initial' => $initial, 'revoked' => $revoked, 'transition' => $transition, 'refused_while_active' => $refusedWhileActive, 'legacy_valid' => $legacyValid ?? null, 'next_console' => $nextConsole ?? null], JSON_THROW_ON_ERROR));

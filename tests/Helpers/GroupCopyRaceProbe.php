@@ -1,68 +1,70 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 require __DIR__ . '/PhpSource.php';
-$scenario = json_decode($argv[1], true);
-$db = new PDO($scenario['dsn'], $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+$scenario = json_decode(fgets(STDIN), true, 512, JSON_THROW_ON_ERROR);
 function copy_race_sql($sql)
 {
-    return preg_replace('/\b(user_auth_group(?:_realm|_perms)?)\b/', $GLOBALS['scenario']['prefix'] . '_$1', $sql);
+    return preg_replace('/\b(user_auth(?:_group_members|_group_realm|_group_perms|_group)?)\b/', $GLOBALS['scenario']['prefix'] . '_$1', $sql);
 }
-function db_execute_prepared($sql, $params)
+class GroupCopyRacePdo extends PDO
 {
-    $q = $GLOBALS['db']->prepare(copy_race_sql($sql));
-    return $q->execute($params);
+    public function prepare(string $query, array $options = array()): PDOStatement|false
+    {
+        return parent::prepare(copy_race_sql($query), $options);
+    }
+    public function query(string $query, ?int $fetchMode = null, mixed ...$args): PDOStatement|false
+    {
+        return $fetchMode === null ? parent::query(copy_race_sql($query)) : parent::query(copy_race_sql($query), $fetchMode, ...$args);
+    }
 }
-function db_fetch_insert_id()
+class GroupCopyRaceStatement extends PDOStatement
 {
-    return $GLOBALS['db']->lastInsertId();
+    public function execute(?array $params = null): bool
+    {
+        $result = parent::execute($params);
+        if ($result && ($GLOBALS['scenario']['action'] ?? 'copy') === 'copy' && str_starts_with($this->queryString, 'INSERT INTO ' . $GLOBALS['scenario']['prefix'] . '_user_auth_group (')) {
+            print 'COPIED:' . $GLOBALS['db']->lastInsertId() . "\n";
+            flush();
+            fgets(STDIN);
+        }
+        return $result;
+    }
 }
-function db_qstr($value)
+$db = new GroupCopyRacePdo($scenario['dsn'], $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_STATEMENT_CLASS => array(GroupCopyRaceStatement::class)));
+$database_hostname = 'fixture';
+$database_port = 0;
+$database_default = 'auth';
+$database_sessions = array('fixture:0:auth' => $db);
+$config = array();
+$_SESSION = array();
+function cacti_count($value)
 {
-    return $GLOBALS['db']->quote($value);
+    return is_array($value) ? count($value) : 0;
 }
 function cacti_sizeof($value)
 {
-    return count($value);
+    return is_array($value) ? count($value) : 0;
 }
-function db_fetch_assoc_prepared($sql, $params)
-{
-    if (!isset($GLOBALS['paused'])) {
-        $GLOBALS['paused'] = true;
-        echo 'COPIED:' . db_fetch_insert_id() . "\n";
-        flush();
-        fgets(STDIN);
-    }
-    $q = $GLOBALS['db']->prepare(copy_race_sql($sql));
-    $q->execute($params);
-    return $q->fetchAll(PDO::FETCH_ASSOC);
-}
-function db_fetch_cell_prepared($sql, $params)
-{
-    $q = $GLOBALS['db']->prepare(copy_race_sql($sql));
-    $q->execute($params);
-    return $q->fetchColumn();
-}
-function db_begin_transaction()
-{
-    return $GLOBALS['db']->beginTransaction();
-}
-function db_commit_transaction()
-{
-    return $GLOBALS['db']->commit();
-}
-function db_rollback_transaction()
-{
-    return $GLOBALS['db']->rollBack();
-}
+function cacti_log(...$args) {} function cacti_debug_backtrace(...$args) {}
 $root = dirname(__DIR__, 2);
-eval(test_php_function_source(file_get_contents($root . '/lib/auth.php'), 'user_group_execute_child'));
-eval(test_php_function_source(file_get_contents($root . '/user_group_admin.php'), 'user_group_copy'));
-try {
-    user_group_copy(5);
-    echo 'COPIED_GRANTS';
-} catch (RuntimeException $error) {
-    echo 'REFUSED_REMOVED_PARENT';
+require $root . '/lib/database.php';
+require $root . '/lib/auth.php';
+$source = file_get_contents($root . '/user_group_admin.php');
+eval(test_php_function_source($source, 'user_group_copy'));
+eval(test_php_function_source($source, 'user_group_remove'));
+if (($scenario['action'] ?? 'copy') === 'remove') {
+    print 'REMOVER:' . $db->query('SELECT CONNECTION_ID()')->fetchColumn() . "\n";
+    flush();
+    user_group_remove($scenario['group_id']);
+    print 'REMOVED_COMPLETE';
+} else {
+    if (!user_group_copy(5)) {
+        throw new RuntimeException('Native group copy failed');
+    }
+    print 'COMPLETE_COPY';
 }

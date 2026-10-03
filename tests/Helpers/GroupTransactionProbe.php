@@ -4,7 +4,37 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 $scenario = json_decode($argv[1], true);
-$pdo = new PDO($scenario['dsn'], $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+class GroupTransactionProbePdo extends PDO
+{
+    public function prepare(string $query, array $options = array()): PDOStatement|false
+    {
+        if (str_starts_with($query, 'SELECT id FROM')) {
+            print "LOCK\n";
+            flush();
+        }
+        return parent::prepare(group_probe_sql($query), $options);
+    }
+    public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false
+    {
+        return $fetchMode === null ? parent::query(group_probe_sql($query)) : parent::query(group_probe_sql($query), $fetchMode, ...$fetchModeArgs);
+    }
+}
+class GroupTransactionProbeStatement extends PDOStatement
+{
+    public function fetchAll(int $mode = PDO::FETCH_DEFAULT, mixed ...$args): array
+    {
+        $rows = parent::fetchAll($mode, ...$args);
+        if (str_contains($this->queryString, 'SELECT user_id FROM') && str_contains($this->queryString, 'user_auth_group_members')) {
+            if (!str_contains($this->queryString, 'FOR UPDATE')) {
+                $GLOBALS['discovery_reads']++;
+            }
+            print "SNAPSHOT\n";
+            flush();
+        }
+        return $rows;
+    }
+}
+$pdo = new GroupTransactionProbePdo($scenario['dsn'], $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_STATEMENT_CLASS => array(GroupTransactionProbeStatement::class)));
 $prefix = $scenario['prefix'];
 $discovery_reads = 0;
 $database_hostname = 'native';
@@ -30,22 +60,15 @@ function db_rollback_transaction()
 }
 function db_fetch_cell_prepared($sql, $params)
 {
-    print "LOCK\n";
-    flush();
     $query = $GLOBALS['pdo']->prepare(group_probe_sql($sql));
     $query->execute($params);
     return $query->fetchColumn();
 }
 function db_fetch_assoc_prepared($sql, $params)
 {
-    if (str_contains($sql, 'SELECT user_id FROM user_auth_group_members') && !str_contains($sql, 'FOR UPDATE')) {
-        $GLOBALS['discovery_reads']++;
-    }
     $query = $GLOBALS['pdo']->prepare(group_probe_sql($sql));
     $query->execute($params);
     $rows = $query->fetchAll(PDO::FETCH_ASSOC);
-    print "SNAPSHOT\n";
-    flush();
     return $rows;
 }
 function db_execute_prepared($sql, $params)

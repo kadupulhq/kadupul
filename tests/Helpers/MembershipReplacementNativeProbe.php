@@ -6,7 +6,35 @@
 // Production functions are required directly; this adapter only routes their
 // SQL to isolated regular tables and exposes deterministic interleaving gates.
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
-$db = new PDO($scenario['dsn'], $scenario['user'] ?? null, $scenario['password'] ?? null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+class MembershipReplacementProbePdo extends PDO
+{
+    public function prepare(string $query, array $options = array()): PDOStatement|false
+    {
+        if (!empty($GLOBALS['scenario']['fail']) && str_starts_with($query, 'REPLACE INTO user_auth_group_members')) {
+            throw new RuntimeException('Injected membership persistence failure');
+        }
+        return parent::prepare(membership_probe_sql($query), $options);
+    }
+    public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false
+    {
+        return $fetchMode === null ? parent::query(membership_probe_sql($query)) : parent::query(membership_probe_sql($query), $fetchMode, ...$fetchModeArgs);
+    }
+}
+class MembershipReplacementProbeStatement extends PDOStatement
+{
+    public function fetchAll(int $mode = PDO::FETCH_DEFAULT, mixed ...$args): array
+    {
+        $rows = parent::fetchAll($mode, ...$args);
+        if (!empty($GLOBALS['scenario']['pause']) && !isset($GLOBALS['paused']) && str_contains($this->queryString, 'SELECT group_id') && str_contains($this->queryString, 'user_auth_group_members') && $this->queryString === membership_probe_sql('SELECT group_id FROM user_auth_group_members WHERE user_id = ? FOR UPDATE')) {
+            $GLOBALS['paused'] = true;
+            print "SNAPSHOT\n";
+            flush();
+            fgets(STDIN);
+        }
+        return $rows;
+    }
+}
+$db = new MembershipReplacementProbePdo($scenario['dsn'], $scenario['user'] ?? null, $scenario['password'] ?? null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_STATEMENT_CLASS => array(MembershipReplacementProbeStatement::class)));
 $database_hostname = 'native';
 $database_port = 0;
 $database_default = 'auth';

@@ -177,6 +177,7 @@ test('rotation fails closed at storage and lock boundaries without claiming prop
     $primary->exec("INSERT INTO poller VALUES(2,CURRENT_TIMESTAMP,'')");
     $connected = 0;
     $warnings = array();
+    $inventoryReads = 0;
     if ($failure === 'identity') {
         $primary->sqliteCreateFunction('DATABASE', static fn() => '');
     } elseif ($failure === 'transaction') {
@@ -191,6 +192,12 @@ test('rotation fails closed at storage and lock boundaries without claiming prop
         $primary->sqliteCreateFunction('IS_USED_LOCK', static fn($name) => 0);
     } elseif ($failure === 'primary write') {
         $primary->exec("CREATE TRIGGER reject_primary BEFORE INSERT ON settings BEGIN SELECT RAISE(FAIL,'fixture rejection'); END");
+    } elseif ($failure === 'primary readback') {
+        $primary->exec("CREATE TRIGGER change_primary AFTER UPDATE ON settings BEGIN UPDATE settings SET value='different-primary'; END");
+        $primary->sqliteCreateFunction('UNIX_TIMESTAMP', static function (...$args) use (&$inventoryReads) {
+            $inventoryReads++;
+            return $args ? strtotime($args[0]) : time();
+        });
     } elseif ($failure === 'inventory') {
         $primary->exec('DROP TABLE poller');
     } elseif ($failure === 'heartbeat') {
@@ -217,11 +224,14 @@ test('rotation fails closed at storage and lock boundaries without claiming prop
         );
         expect($result)->toBeFalse();
         $beforeWrite = in_array($failure, array('identity', 'transaction', 'preowned lock', 'lock timeout', 'lock error', 'ownership lost', 'primary write'), true);
-        expect($primary->query('SELECT value FROM settings')->fetchColumn())->toBe($beforeWrite ? 'old-key' : str_repeat('a', 64));
+        expect($primary->query('SELECT value FROM settings')->fetchColumn())->toBe($beforeWrite ? 'old-key' : ($failure === 'primary readback' ? 'different-primary' : str_repeat('a', 64)));
         $collectorValue = $failure === 'release' ? str_repeat('a', 64) : ($failure === 'collector readback' ? 'different-key' : 'old-key');
         expect($collector->query('SELECT value FROM settings')->fetchColumn())->toBe($collectorValue);
-        if ($beforeWrite || $failure === 'inventory' || $failure === 'heartbeat') {
+        if ($beforeWrite || $failure === 'primary readback' || $failure === 'inventory' || $failure === 'heartbeat') {
             expect($connected)->toBe(0);
+        }
+        if ($failure === 'primary readback') {
+            expect($inventoryReads)->toBe(0)->and($warnings)->toBe(array());
         }
         if ($failure === 'transaction') {
             expect($primary->inTransaction())->toBeTrue();
@@ -247,7 +257,7 @@ test('rotation fails closed at storage and lock boundaries without claiming prop
         }
         rmdir($fixture);
     }
-})->with(array('identity', 'transaction', 'preowned lock', 'lock timeout', 'lock error', 'ownership lost', 'primary write', 'inventory', 'heartbeat', 'connection', 'collector write', 'collector readback', 'release'));
+})->with(array('identity', 'transaction', 'preowned lock', 'lock timeout', 'lock error', 'ownership lost', 'primary write', 'primary readback', 'inventory', 'heartbeat', 'connection', 'collector write', 'collector readback', 'release'));
 
 test('supervisor timeout prevents a late remote SQL write from overtaking the next rotation', function () {
     [$root, $fixture, $connections] = csrf_rotation_fixture();

@@ -29,7 +29,7 @@ if (!function_exists('admin_action_probe_run')) {
     {
         $root = dirname(__DIR__, 2);
 
-        $program = <<<'PHP'
+        $program = 'require_once ' . var_export($root . '/include/vendor/autoload.php', true) . ";\n" . <<<'PHP'
 $scenario = json_decode(stream_get_contents(STDIN), true);
 define('MESSAGE_LEVEL_ERROR', 3);
 define('MESSAGE_LEVEL_INFO', 1);
@@ -47,6 +47,7 @@ $GLOBALS['logged'] = array();
 $GLOBALS['sent_headers'] = array();
 $GLOBALS['printed'] = '';
 $GLOBALS['insert_id'] = $scenario['insert_id'] ?? 0;
+$GLOBALS['permission_sql'] = $scenario['permission_sql'] ?? false;
 foreach ($scenario['globals'] ?? array() as $name => $value) {
     $GLOBALS[$name] = $value;
 }
@@ -63,6 +64,7 @@ register_shutdown_function(function () {
         'headers' => $GLOBALS['sent_headers'],
         'printed' => $GLOBALS['printed'],
         'session' => $_SESSION,
+        'epochs' => $GLOBALS['permission_sql'] ? $GLOBALS['database_sessions']['probe:0:auth']->query('SELECT id,reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR) : array(),
     )));
 });
 function probe_normalize($sql) { return trim(preg_replace('/\s+/', ' ', $sql)); }
@@ -115,13 +117,30 @@ function db_fetch_assoc_prepared($sql, $params = array(), $log = true) { return 
 function db_fetch_assoc($sql, $log = true) { return probe_answer('assoc', $sql, array(), array()); }
 function db_execute_prepared($sql, $params = array(), $log = true) {
     $GLOBALS['executed'][] = array('sql' => probe_normalize($sql), 'params' => array_values($params));
+    if($GLOBALS['permission_sql'] && preg_match('/^(?:REPLACE INTO|DELETE FROM|UPDATE) user_auth(?:_group_members|_group_perms|_perms|_group)?\b/',probe_normalize($sql))){
+        $query=$GLOBALS['database_sessions']['probe:0:auth']->prepare($sql);
+        $success=$query->execute($params);$GLOBALS['permission_affected']=$query->rowCount();return $success;
+    }
     return true;
 }
+function db_affected_rows($db){return $GLOBALS['permission_affected']??0;}
 function db_execute($sql, $log = true) {
     $GLOBALS['executed'][] = array('sql' => probe_normalize($sql), 'params' => array());
     return true;
 }
 $database_hostname='probe';$database_port=0;$database_default='auth';$database_sessions=array('probe:0:auth'=>new PDO('sqlite::memory:'));
+if($GLOBALS['permission_sql']){
+    $probeDb=$database_sessions['probe:0:auth'];
+    $probeDb->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER NOT NULL DEFAULT 1,policy_graphs INTEGER DEFAULT 1,policy_trees INTEGER DEFAULT 1,policy_hosts INTEGER DEFAULT 1,policy_graph_templates INTEGER DEFAULT 1)');
+    $probeDb->exec('INSERT INTO user_auth(id) VALUES(42),(43)');
+    $probeDb->exec("CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY,enabled TEXT DEFAULT '',policy_graphs INTEGER DEFAULT 1,policy_trees INTEGER DEFAULT 1,policy_hosts INTEGER DEFAULT 1,policy_graph_templates INTEGER DEFAULT 1)");
+    foreach($scenario['permission_groups']??array(5,9) as $group){$query=$probeDb->prepare('INSERT INTO user_auth_group(id) VALUES(?)');$query->execute(array($group));}
+    $probeDb->exec('CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER,PRIMARY KEY(group_id,user_id))');
+    foreach($scenario['permission_groups']??array(5,9) as $group){$query=$probeDb->prepare('INSERT INTO user_auth_group_members VALUES(?,42),(?,43)');$query->execute(array($group,$group));}
+    $probeDb->exec('CREATE TABLE user_auth_perms(user_id INTEGER,item_id INTEGER,type INTEGER,PRIMARY KEY(user_id,item_id,type))');
+    $probeDb->exec('CREATE TABLE user_auth_group_perms(group_id INTEGER,item_id INTEGER,type INTEGER,PRIMARY KEY(group_id,item_id,type))');
+    foreach(array(1,2,3,4) as $type){$probeDb->exec('INSERT INTO user_auth_perms VALUES(42,9,'.$type.')');foreach($scenario['permission_groups']??array(5,9) as $group){$query=$probeDb->prepare('INSERT INTO user_auth_group_perms VALUES(?,9,?)');$query->execute(array($group,$type));}}
+}
 function db_begin_transaction() { $GLOBALS['executed'][] = array('sql' => 'BEGIN', 'params' => array()); return $GLOBALS['database_sessions']['probe:0:auth']->beginTransaction(); }
 function db_commit_transaction() { $GLOBALS['executed'][] = array('sql' => 'COMMIT', 'params' => array()); return $GLOBALS['database_sessions']['probe:0:auth']->commit(); }
 function db_rollback_transaction() { $GLOBALS['executed'][] = array('sql' => 'ROLLBACK', 'params' => array()); return $GLOBALS['database_sessions']['probe:0:auth']->rollBack(); }
@@ -139,6 +158,19 @@ function array_rekey($array, $key, $key_value) {
     return $out;
 }
 function reset_user_perms($user_id) { $GLOBALS['resets'][] = 'user:' . $user_id; }
+// This wiring probe records affected IDs; native epoch fixtures verify actual persistence.
+function auth_membership_reset_users($unit, $ids, $required = true) { foreach ($ids as $id) { reset_user_perms($id); } }
+function auth_membership_execute($db, $sql, $parameters)
+{
+    if (!db_execute_prepared($sql, $parameters)) { throw new RuntimeException('Membership write could not be confirmed'); }
+}
+function auth_membership_rows($db, $sql, $params) {
+    if (str_starts_with($sql, 'SELECT id FROM')) {
+        $id = db_fetch_cell_prepared($sql . (str_ends_with($sql, ' FOR UPDATE') ? '' : ' FOR UPDATE'), $params);
+        return $id === false ? array() : array(array('id' => $id));
+    }
+    return db_fetch_assoc_prepared($sql, $params);
+}
 function reset_group_perms($group_id) { $GLOBALS['resets'][] = 'group:' . $group_id; }
 function kill_session_var($name) { unset($_SESSION[$name]); }
 function raise_message($id, $message = '', $level = 0) { $GLOBALS['messages'][] = $id; }
@@ -169,7 +201,9 @@ PHP;
 
             foreach ($functions as $function) {
                 // header() is built in, so the copied source calls a recorder instead.
-                $program .= "\n" . preg_replace('/\bheader\(/', 'probe_header(', test_php_function_source($source, $function)) . "\n";
+                $extracted = test_php_function_source($source, $function);
+                $extracted = str_replace('__DIR__', var_export(dirname($root . '/' . $file), true), $extracted);
+                $program .= "\n" . preg_replace('/\bheader\(/', 'probe_header(', $extracted) . "\n";
             }
         }
 

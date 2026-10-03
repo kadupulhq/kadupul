@@ -628,35 +628,39 @@ function form_save()
             raise_message(35);
         }
     } elseif (isset_request_var('save_component_graph_perms')) {
-        /* ================= input validation ================= */
-        get_filter_request_var('id');
-        get_filter_request_var('policy_hosts');
-        get_filter_request_var('policy_graphs');
-        get_filter_request_var('policy_trees');
-        get_filter_request_var('policy_graph_templates');
-        /* ==================================================== */
+        if (!is_error_message()) {
+            /* ================= input validation ================= */
+            get_filter_request_var('id');
+            get_filter_request_var('policy_hosts');
+            get_filter_request_var('policy_graphs');
+            get_filter_request_var('policy_trees');
+            get_filter_request_var('policy_graph_templates');
+            /* ==================================================== */
 
-        db_execute_prepared(
-            'UPDATE user_auth
+            db_execute_prepared(
+                'UPDATE user_auth
 			SET policy_graphs = ?,
 			policy_trees = ?,
 			policy_hosts = ?,
 			policy_graph_templates = ?
 			WHERE id = ?',
-            array(
-                get_nfilter_request_var('policy_graphs'),
-                get_nfilter_request_var('policy_trees'),
-                get_nfilter_request_var('policy_hosts'),
-                get_nfilter_request_var('policy_graph_templates'),
-                get_nfilter_request_var('id')
-            )
-        );
+                array(
+                    get_nfilter_request_var('policy_graphs'),
+                    get_nfilter_request_var('policy_trees'),
+                    get_nfilter_request_var('policy_hosts'),
+                    get_nfilter_request_var('policy_graph_templates'),
+                    get_nfilter_request_var('id')
+                )
+            );
 
-        reset_user_perms(get_nfilter_request_var('id'));
+            reset_user_perms(get_nfilter_request_var('id'));
+        }
     } else {
         api_plugin_hook('user_admin_user_save');
 
-        reset_user_perms(get_filter_request_var('id'));
+        if (!is_error_message()) {
+            reset_user_perms(get_filter_request_var('id'));
+        }
     }
 
     /* redirect to the appropriate page */

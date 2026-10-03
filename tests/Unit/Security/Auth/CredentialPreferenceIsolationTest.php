@@ -10,7 +10,7 @@ function credential_preference_probe(string $action): array
     $root = dirname(__DIR__, 4);
     $program = '';
     foreach (array(
-        'lib/auth.php' => array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_rehash_password_preserving_sessions', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'user_copy', 'auth_membership_begin', 'auth_membership_finish', 'auth_membership_lock_users', 'auth_membership_lock_groups', 'user_group_change_memberships', 'user_group_replace_memberships', 'user_group_update_membership'),
+        'lib/auth.php' => array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_rehash_password_preserving_sessions', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'user_copy', 'auth_user_copy_save', 'auth_membership_begin', 'auth_membership_finish', 'auth_membership_lock_users', 'auth_membership_lock_groups', 'auth_membership_rows', 'auth_membership_execute', 'auth_membership_reset_users', 'user_group_change_memberships', 'user_group_replace_memberships', 'user_group_update_membership'),
         'auth_profile.php' => array('api_auth_clear_user_settings', 'api_auth_clear_user_setting', 'api_auth_update_user_setting'),
         'lib/functions.php' => array('set_user_setting', 'clear_user_setting'),
     ) as $file => $functions) {
@@ -22,7 +22,8 @@ function credential_preference_probe(string $action): array
     $program .= <<<'PHP'
 $db = new PDO('sqlite::memory:', options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $database_hostname='fixture';$database_port=0;$database_default='auth';$database_sessions=array('fixture:0:auth'=>$db);
-$db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, full_name TEXT, email_address TEXT, must_change_password TEXT)');
+$db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, full_name TEXT, email_address TEXT, must_change_password TEXT, reset_perms INTEGER NOT NULL DEFAULT 0)');
+foreach(array('failed_attempts INTEGER NOT NULL DEFAULT 0','lastfail INTEGER NOT NULL DEFAULT 0','password_history TEXT NOT NULL DEFAULT \'-1\'','lastlogin INTEGER NOT NULL DEFAULT -1','lastchange INTEGER NOT NULL DEFAULT -1') as $column){$db->exec('ALTER TABLE user_auth ADD COLUMN '.$column);}
 $db->exec('CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY)');
 $db->exec('CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER,PRIMARY KEY(group_id,user_id))');
 $db->exec('CREATE TABLE user_auth_perms(user_id INTEGER,item_id INTEGER,type INTEGER)');
@@ -31,7 +32,8 @@ $db->exec('CREATE TABLE settings_tree(user_id INTEGER,graph_tree_item_id INTEGER
 $db->exec('INSERT INTO user_auth_group VALUES(1),(2)');
 $db->exec('INSERT INTO user_auth_group_members VALUES(1,42),(2,7)');
 $db->exec('CREATE TABLE settings_user(user_id INTEGER,name TEXT,value TEXT,PRIMARY KEY(user_id,name))');
-$db->exec("INSERT INTO user_auth VALUES(42,'alice',0,'on','','old-hash','','',''),(7,'template',0,'on','','new-hash','','','')");
+$db->exec("INSERT INTO user_auth(id,username,realm,enabled,locked,password,full_name,email_address,must_change_password,reset_perms) VALUES(42,'alice',0,'on','','old-hash','','','',0),(7,'template',0,'on','','new-hash','','','',0)");
+function db_get_table_column_types($table,$connection){$columns=array();foreach($connection->query('PRAGMA table_info('.$table.')')->fetchAll(PDO::FETCH_ASSOC) as $column){$columns[$column['name']]=array('type'=>strtolower($column['type']),'null'=>$column['notnull']?'NO':'YES','default'=>$column['dflt_value']===null?null:trim($column['dflt_value'],"'"),'extra'=>$column['name']==='id'?'auto_increment':'');}return $columns;}
 function db_fetch_row_prepared($sql,$params=array()) { $q=$GLOBALS['db']->prepare($sql);$q->execute($params);return $q->fetch(PDO::FETCH_ASSOC) ?: array(); }
 function db_fetch_cell_prepared($sql,$params=array()) { $q=$GLOBALS['db']->prepare(str_replace(' FOR UPDATE','',$sql));$q->execute($params);return $q->fetchColumn(); }
 function db_fetch_assoc_prepared($sql,$params=array()) { $q=$GLOBALS['db']->prepare(str_replace(' FOR UPDATE','',$sql));$q->execute($params);return $q->fetchAll(PDO::FETCH_ASSOC); }
@@ -53,7 +55,7 @@ function input_validate_input_number($value) {}
 function cacti_sizeof($rows) { return count($rows); }
 function api_plugin_hook_function($name,$value) { return $value; }
 $settings_user=array('general'=>array('auth_credential_generation'=>array('default'=>'forged')));
-$_SESSION=array('sess_user_id'=>42,'cached_group_grant'=>1);
+$_SESSION=array('sess_user_id'=>42,'sess_user_realms'=>array(99));
 auth_session_bind_credentials(42);
 $rehash=auth_rehash_password_preserving_sessions(42,'old-hash','new-hash',$db);
 $db->exec("INSERT INTO settings_user VALUES(42,'page_refresh','60')");
@@ -72,7 +74,7 @@ switch($argv[1]) {
 ob_end_clean();
 $mapping=db_fetch_cell_prepared("SELECT value FROM settings_user WHERE user_id=42 AND name='auth_credential_generation'");
 $preference=db_fetch_cell_prepared("SELECT value FROM settings_user WHERE user_id=42 AND name='page_refresh'");
-print json_encode(array('rehash'=>$rehash,'mapping_preserved'=>$mapping===$original,'valid'=>auth_session_credentials_valid('new-hash'),'preference'=>$preference,'not_template'=>$mapping!==$template_mapping,'groups'=>db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id=42 ORDER BY group_id'),'cache_cleared'=>!isset($_SESSION['cached_group_grant']),'reset_users'=>$GLOBALS['reset_users']??array()));
+print json_encode(array('rehash'=>$rehash,'mapping_preserved'=>$mapping===$original,'valid'=>auth_session_credentials_valid('new-hash'),'preference'=>$preference,'not_template'=>$mapping!==$template_mapping,'groups'=>db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id=42 ORDER BY group_id'),'cache_cleared'=>!isset($_SESSION['sess_user_realms']),'epoch'=>(int)db_fetch_cell_prepared('SELECT reset_perms FROM user_auth WHERE id=42')));
 PHP;
     $worker = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $action), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $output = stream_get_contents($pipes[1]);
@@ -98,5 +100,5 @@ test('batch copy replaces destination groups and invalidates the previous group 
     expect($result['groups'])->toBe(array(array('group_id' => 2)))
         ->and($result['cache_cleared'])->toBeTrue()
         // One epoch change invalidates the complete atomic replacement.
-        ->and($result['reset_users'])->toBe(array(42));
+        ->and($result['epoch'])->toBe(1);
 });

@@ -105,14 +105,30 @@ def verify_links(harness, session, user_id, check):
         check(post(path, form.fields)[0] == 200, 'links delete commits atomically')
         check(harness.sql(f'SELECT COUNT(*) FROM user_auth_realm WHERE realm_id={link_id + 10000}').strip() == '0' and harness.sql(f'SELECT COUNT(*) FROM user_auth_group_realm WHERE realm_id={link_id + 10000}').strip() == '0', 'links deletion cleans direct and group realms')
         harness.sql(f'DELETE FROM user_auth_group WHERE id={group_id}')
-        harness.sql("REPLACE INTO settings (name,value) VALUES ('i18n_language_support','1'),('i18n_auto_detection','0'),('i18n_default_language','en-US')")
-        harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language','fr-FR')")
-        french = Session(harness.base)
-        french.login('behavior-admin')
-        with french.opener.open(harness.base + base + '/new?language=en&_locale=en') as response:
-            french_body = response.read().decode()
-        check('Ajouter un lien' in french_body and 'Nom de l’onglet ou du menu' in french_body and 'value="60"' in french_body, 'links French session translates labels and preserves refresh values: ' + repr([value in french_body for value in ('Ajouter un lien', 'Nom de l’onglet ou du menu', 'value="60"')]))
-        harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language','en-US')")
+        locale_settings_query = "SELECT COALESCE(JSON_OBJECTAGG(name,value),JSON_OBJECT()) FROM settings WHERE name IN ('i18n_language_support','i18n_auto_detection','i18n_default_language')"
+        actor_language_query = f"SELECT COALESCE(JSON_ARRAYAGG(value),JSON_ARRAY()) FROM settings_user WHERE user_id={user_id} AND name='user_language'"
+        original_locale_settings = json.loads(harness.sql(locale_settings_query))
+        original_actor_language = json.loads(harness.sql(actor_language_query))
+        try:
+            harness.sql("REPLACE INTO settings (name,value) VALUES ('i18n_language_support','1'),('i18n_auto_detection','0'),('i18n_default_language','en-US')")
+            harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language','fr-FR')")
+            french = Session(harness.base)
+            french.login('behavior-admin')
+            with french.opener.open(harness.base + base + '/new?language=en&_locale=en') as response:
+                french_body = response.read().decode()
+            check('Ajouter un lien' in french_body and 'Nom de l’onglet ou du menu' in french_body and 'value="60"' in french_body, 'links French session translates labels and preserves refresh values: ' + repr([value in french_body for value in ('Ajouter un lien', 'Nom de l’onglet ou du menu', 'value="60"')]))
+        finally:
+            harness.sql("DELETE FROM settings WHERE name IN ('i18n_language_support','i18n_auto_detection','i18n_default_language')")
+            for name, value in original_locale_settings.items():
+                stored = 'NULL' if value is None else f"UNHEX('{value.encode().hex()}')"
+                harness.sql(f"INSERT INTO settings (name,value) VALUES ('{name}',{stored})")
+            harness.sql(f"DELETE FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+            for value in original_actor_language:
+                stored = 'NULL' if value is None else f"UNHEX('{value.encode().hex()}')"
+                harness.sql(f"INSERT INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language',{stored})")
+        check(json.loads(harness.sql(locale_settings_query)) == original_locale_settings
+              and json.loads(harness.sql(actor_language_query)) == original_actor_language,
+              'links French fixture restores exact original global and actor language settings')
         harness.sql('ALTER TABLE external_links ENGINE=MyISAM')
         form = get_form(base + '/new')
         check(post(base + '/new', form.fields | fields | {'link[revision]': form.fields['link[revision]']})[0] == 502, 'links nontransactional write refused')

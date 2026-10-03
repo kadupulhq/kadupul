@@ -22,6 +22,8 @@ function group_guard_run(string $function, array $request, array $existing = arr
 
     return admin_action_probe_run(array(
         'page' => 'user_group_admin.php',
+        'permission_sql' => true,
+        'permission_groups' => $existing,
         'functions' => array($function, 'user_group_exists', 'user_group_refuse', 'user_group_remove', 'user_group_enable', 'user_group_disable', 'user_group_copy'),
         'request' => $request,
         'session' => array('sess_user_id' => 1),
@@ -71,7 +73,7 @@ test('a membership or grant row is written only through the parent group', funct
     $write = admin_action_probe_writes($result, '/^REPLACE INTO user_auth_group_members/');
 
     expect($write[0]['sql'])->toContain('VALUES (?, ?)')
-        ->and($write[0]['params'])->toBe(array(5, '42'));
+        ->and($write[0]['params'])->toBe(array(5, 42));
 });
 
 test('removing a permission from a missing group is refused', function () {
@@ -79,6 +81,17 @@ test('removing a permission from a missing group is refused', function () {
 
     expect(group_guard_refused($result))->toBeTrue();
 });
+
+test('an empty group selection still validates its parent without writing', function (bool $existing) {
+    $result = group_guard_run('form_actions', array('id' => $existing ? 5 : 99, 'associate_graph' => 1, 'drp_action' => '1'));
+    expect($result['executed'])->toBe(array());
+    if ($existing) {
+        expect($result['messages'])->toBe(array())
+            ->and($result['headers'])->toBe(array('Location: user_group_admin.php?action=edit&header=false&tab=permsg&id=5'));
+    } else {
+        expect(group_guard_refused($result))->toBeTrue();
+    }
+})->with(array('existing' => true, 'missing' => false));
 
 test('creating a new group with id 0 is allowed', function () {
     $result = group_guard_run('form_save', array('save_component_group' => 1, 'id' => 0, 'name' => 'ops'), array());

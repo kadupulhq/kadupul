@@ -58,16 +58,79 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 $_SESSION = ['sess_user_id' => ($scenario['self'] ?? false) ? $target : 41, 'sess_user_perms_key' => 0, 'sess_user_realms' => [99], 'sess_user_config_array' => ['stale'], 'sess_config_array' => ['stale'], 'sess_auth_names' => ['stale']];
 $initial_session = $_SESSION;
 $messages = [];
-$db = new PDO('sqlite:' . $directory . '/state.sqlite');
+final class AdminPermissionCountedStatement extends PDOStatement
+{
+    private bool $parentFetched = false;
+    public function fetchAll(int $mode = PDO::FETCH_DEFAULT, mixed ...$args): array
+    {
+        $rows = parent::fetchAll($mode, ...$args);
+        $this->parentFetched = true;
+        return $rows;
+    }
+    public function errorCode(): ?string
+    {
+        if ((($GLOBALS['scenario']['user_read_fault'] ?? false) ? str_starts_with($this->queryString, 'SELECT id, reset_perms FROM user_auth WHERE id IN (') : str_starts_with($this->queryString, 'SELECT id FROM user_auth_group WHERE id = ?')) && (($GLOBALS['scenario']['parent_read_fault'] ?? '') === 'early' || ($GLOBALS['scenario']['parent_read_fault'] ?? '') === 'late' && $this->parentFetched)) {
+            return 'HY000';
+        }
+        return parent::errorCode();
+    }
+    public function execute(?array $params = null): bool
+    {
+        if (str_starts_with($this->queryString, 'DELETE FROM user_auth_group_perms')) {
+            $GLOBALS['permission_delete_calls']++;
+        }
+        return parent::execute($params);
+    }
+}
+$permission_delete_calls = 0;
+$nativeDsn = getenv('KADUPUL_ADMIN_PERMISSION_TEST_DSN') ?: 'sqlite:' . $directory . '/state.sqlite';
+final class AdminPermissionPdo extends PDO
+{
+    private bool $controlFault = false;
+    public function rollBack(): bool
+    {
+        if (($GLOBALS['scenario']['parent_cleanup_failure'] ?? false) === 'active') {
+            return true;
+        }
+        return ($GLOBALS['scenario']['parent_cleanup_failure'] ?? false) ? false : parent::rollBack();
+    }
+    public function errorCode(): ?string
+    {
+        return $this->controlFault ? 'HY000' : parent::errorCode();
+    }
+    public function exec(string $statement): int|false
+    {
+        $this->controlFault = false;
+        if (($GLOBALS['scenario']['parent_cleanup_failure'] ?? false) && str_starts_with($statement, 'ROLLBACK TO SAVEPOINT ')) {
+            $fault = $GLOBALS['scenario']['parent_cleanup_failure'];
+            if ($fault === 'executed-hy000' || $fault === 'not-executed-hy000') {
+                $result = $fault === 'executed-hy000' ? parent::exec($statement) : 0;
+                $this->controlFault = true;
+                return $result;
+            }
+            return false;
+        }
+        return parent::exec($statement);
+    }
+}
+$db = new AdminPermissionPdo($nativeDsn, getenv('KADUPUL_ADMIN_PERMISSION_TEST_USER') ?: null, getenv('KADUPUL_ADMIN_PERMISSION_TEST_PASSWORD') ?: null);
+$nativeSqlite = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite';
+if (!$nativeSqlite && $operation !== 'realm' && !($scenario['parent_contract'] ?? false)) {
+    throw new RuntimeException('The supported-engine admin fixture currently registers only realm scenarios.');
+}
+$db->setAttribute(PDO::ATTR_STATEMENT_CLASS, array(AdminPermissionCountedStatement::class));
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $database_hostname = 'native';
 $database_port = '0';
 $database_default = 'permission';
 $database_sessions = array('native:0:permission' => $db);
 // Native SQL's random reset marker stays a marker rather than a canned UPDATE.
-$db->sqliteCreateFunction('RAND', static fn() => random_int(1, 4294967294) / 4294967295);
-$db->sqliteCreateFunction('FLOOR', static fn($value) => floor($value));
-$db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, reset_perms INTEGER DEFAULT 0)');
+if ($nativeSqlite) {
+    $db->sqliteCreateFunction('RAND', static fn() => random_int(1, 4294967294) / 4294967295);
+    $db->sqliteCreateFunction('FLOOR', static fn($value) => floor($value));
+}
+$epochColumn = $nativeSqlite ? 'INTEGER' : 'INT UNSIGNED';
+$db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, reset_perms ' . $epochColumn . ' DEFAULT 0)');
 $db->exec('INSERT INTO user_auth (id) VALUES (41), (42), (43), (44)');
 $db->exec('CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY)');
 $db->exec('INSERT INTO user_auth_group VALUES (42), (43)');
@@ -238,6 +301,11 @@ function isset_request_var($name)
 }
 function db_fetch_cell_prepared($sql, $params = [])
 {
+    // SQLite persistence cases cannot establish row-lock semantics. Leave
+    // the real MySQL/MariaDB locking read intact for supported-engine cases.
+    if ($GLOBALS['db']->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+        $sql = preg_replace('/ FOR UPDATE$/D', '', $sql);
+    }
     $query = $GLOBALS['db']->prepare($sql);
     $query->execute($params);
     return $query->fetchColumn();
@@ -259,6 +327,14 @@ function raise_message($key, ...$args)
 {
     $GLOBALS['messages'][] = $key;
 }
+function get_client_addr()
+{
+    return '127.0.0.1';
+}
+function cacti_log($message, ...$args)
+{
+    $GLOBALS['parent_refusal_logs'][] = $message;
+}
 function cacti_require_post_actions($actions)
 {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -272,6 +348,17 @@ if (isset($argv[3])) {
     require __DIR__ . '/rrd-process-coverage.php';
 }
 require $root . '/lib/auth.php';
+$GLOBALS['parent_refusal_logs'] = array();
+if ($scenario['parent_missing'] ?? false) {
+    $db->exec('DELETE FROM user_auth_group WHERE id=42');
+}
+if ($scenario['selected_group_missing'] ?? false) {
+    $db->exec('DELETE FROM user_auth_group WHERE id=43');
+}
+if ($scenario['affected_user_missing'] ?? false) {
+    $db->exec('DELETE FROM user_auth WHERE id = ' . ($group ? 43 : 42));
+}
+$GLOBALS['parent_before_state'] = array('permissions' => $db->query('SELECT * FROM ' . ($group ? 'user_auth_group_perms ORDER BY group_id' : 'user_auth_perms ORDER BY user_id') . ',item_id,type')->fetchAll(PDO::FETCH_ASSOC), 'memberships' => $db->query('SELECT * FROM user_auth_group_members ORDER BY group_id,user_id')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT * FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC));
 ob_start();
 register_shutdown_function(static function () use ($db, $group, $initial_session, $operation, $directory, $root, $scenario) {
     $output = ob_get_clean();
@@ -281,7 +368,7 @@ register_shutdown_function(static function () use ($db, $group, $initial_session
     $perms_valid = is_user_perms_valid($session['sess_user_id']);
     $next_valid = null;
     $next_valid_accounts = array();
-    if (in_array($operation, array('add', 'policy', 'bulk'), true) || ($operation === 'membership' && isset($scenario['replace']))) {
+    if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' && (in_array($operation, array('add', 'policy', 'bulk'), true) || ($operation === 'membership' && isset($scenario['replace'])))) {
         $program = <<<'PHP'
 $config = array('cacti_db_version' => '1.2.33');
 $account = (int) $argv[3];
@@ -312,11 +399,15 @@ PHP;
     $state['transaction_open'] = $db->inTransaction();
     $state['caller_work'] = ($scenario['caller_transaction'] ?? false) ? (int) $db->query('SELECT COUNT(*) FROM caller_work')->fetchColumn() : null;
     if ($scenario['caller_transaction'] ?? false) {
-        $db->rollBack();
-        $state['after_caller_rollback'] = array('permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT id, reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'caller_work' => (int) $db->query('SELECT COUNT(*) FROM caller_work')->fetchColumn());
+        $confirmed = $db->rollBack();
+        $state['caller_rollback_confirmed'] = $confirmed;
+        $state[$confirmed ? 'after_caller_rollback' : 'caller_cleanup_state'] = array('permissions' => $db->query('SELECT * FROM ' . $perm_table . ' ORDER BY ' . $principal . ', item_id, type')->fetchAll(PDO::FETCH_ASSOC), 'reset' => $db->query('SELECT id, reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'caller_work' => (int) $db->query('SELECT COUNT(*) FROM caller_work')->fetchColumn());
     }
     $state['next_valid_accounts'] = $next_valid_accounts;
     $state['write_outcomes'] = $GLOBALS['write_outcomes'];
+    $state['permission_delete_calls'] = $GLOBALS['permission_delete_calls'];
+    $state['parent_before_state'] = $GLOBALS['parent_before_state'];
+    $state['parent_refusal_logs'] = $GLOBALS['parent_refusal_logs'];
     $GLOBALS['nativeChildCoverageMarkers'] = array('admin-state-readback', 'permission-epoch-checked', 'mutation-sql-outcomes-readback');
     if ($next_valid !== null) {
         $GLOBALS['nativeChildCoverageMarkers'][] = 'next-request-epoch-checked';
