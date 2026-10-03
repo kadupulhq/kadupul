@@ -50,6 +50,7 @@ function db_fetch_assoc($sql)
 }
 function __($text, ...$args)
 {
+    $text = $GLOBALS['case']['translations'][$text] ?? $text;
     return $args ? vsprintf($text, $args) : $text;
 }
 function __esc($text, ...$args)
@@ -93,7 +94,7 @@ switch ($case['kind']) {
         break;
     case 'location': html_location_filter($case['selected'] ?? '', 'reloadLocations', $case['where'] ?? '', $case['noany'] ?? false, $case['nonone'] ?? false);
         break;
-    case 'box': html_start_box('Inventory', '100%', true, 0, 'left', array(array('id' => 'add-item', 'href' => 'native.php?action=add', 'title' => 'Add Item', 'callback' => true, 'class' => 'fa fa-plus')));
+    case 'box': html_start_box('Inventory', '100%', true, 0, 'left', $case['add_text'] ?? array(array('id' => 'add-item', 'href' => 'native.php?action=add', 'title' => 'Add Item', 'callback' => true, 'class' => 'fa fa-plus')), $case['add_label'] ?? false);
         html_end_box(false, true);
         break;
     case 'checkbox': html_header_checkbox(array(array('display' => 'Name & Value', 'align' => 'left'), 'State'), true);

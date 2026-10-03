@@ -117,6 +117,10 @@ function get_nfilter_request_var($name)
 {
     return $GLOBALS['request'][$name];
 }
+function get_request_var($name)
+{
+    return $GLOBALS['request'][$name];
+}
 function get_filter_request_var($name)
 {
     return $GLOBALS['request'][$name];
@@ -195,7 +199,15 @@ $error = null;
 $startQueries = $db->calls;
 $startIndex = count($db->queries);
 try {
-    if ($kind === 'batch' || $kind === 'mixed') {
+    if ($kind === 'single') {
+        $request = array('id' => 100, 'user_id' => 42, 'group_id' => 42, 'type' => 'graph');
+        if ($scenario['associate']) {
+            $request = array('id' => 42, 'add_graph_x' => '1', 'perm_graphs' => 102);
+            $result = Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::addUserPermission();
+        } else {
+            $result = Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::removePermission($group);
+        }
+    } elseif ($kind === 'batch' || $kind === 'mixed') {
         $request = array('id' => 42,'associate_graph' => 1,'drp_action' => 2);
         $_POST = array();
         if ($kind === 'batch') {

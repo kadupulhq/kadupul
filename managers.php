@@ -233,7 +233,7 @@ function manager()
             form_selectable_cell('<a class="linkEditMain" href="' . html_escape($config['url_path'] . 'managers.php?action=edit&id=' . $item['id']) . '">' . $description . '</a>', $item['id']);
             form_selectable_cell($item['id'], $item['id']);
             form_selectable_cell($item['disabled'] ? '<span class="deviceDown">' . __('Disabled') . '</span>' : '<span class="deviceUp">' . __('Enabled') . '</span>', $item['id']);
-            form_selectable_ecell($hostname, $item['id']);
+            form_selectable_cell($hostname, $item['id']);
             form_selectable_cell('<a class="linkEditMain" href="' . html_escape($config['url_path'] . 'managers.php?action=edit&tab=notifications&id=' . $item['id']) . '">' . ($item['count_notify'] ? $item['count_notify'] : 0) . '</a>', $item['id']);
             form_selectable_cell('<a class="linkEditMain" href="' . html_escape($config['url_path'] . 'managers.php?action=edit&tab=logs&id=' . $item['id']) . '">' . ($item['count_log'] ? $item['count_log'] : 0) . '</a>', $item['id']);
             form_checkbox_cell($item['description'], $item['id']);

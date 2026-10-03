@@ -102,6 +102,33 @@ final class HtmlRendererNativeCoverageTest extends TestCase
         self::assertStringContainsString('linkOverDark', $xpath->query('//a[@id="add-item"]')->item(0)->getAttribute('class'));
     }
 
+    /** @dataProvider addLabelCases */
+    public function testActualBlankAddLabelsKeepTranslatedNamesAndLinkBehavior(array $addText, string $label, string $expected): void
+    {
+        $text = $addText['single'] ?? $addText;
+        $xpath = $this->document($this->render(array('kind' => 'box', 'add_text' => $text, 'add_label' => $label, 'translations' => array('Add' => 'Ajouter')))['html']);
+        $link = $xpath->query('//span[@class="cactiFilterAdd"]/a')->item(0);
+        self::assertSame($expected, $link->getAttribute('aria-label'));
+        self::assertSame($expected, $link->parentNode->getAttribute('title'));
+        self::assertSame('native.php?action=add', $link->getAttribute('href'));
+        self::assertStringContainsString('linkOverDark', $link->getAttribute('class'));
+        self::assertSame('true', $link->getElementsByTagName('i')->item(0)->getAttribute('aria-hidden'));
+        self::assertCount(0, $xpath->query('//script'));
+    }
+
+    public static function addLabelCases(): array
+    {
+        $icon = array('id' => 'add-item', 'href' => 'native.php?action=add', 'callback' => true, 'class' => 'fa fa-plus');
+        return array(
+            array(array('single' => 'native.php?action=add'), '', 'Ajouter'),
+            array(array('single' => 'native.php?action=add'), " \t\n", 'Ajouter'),
+            array(array($icon + array('title' => '')), 'Create', 'Create'),
+            array(array($icon + array('title' => " \t\n")), 'Create', 'Create'),
+            array(array($icon), " \t\n", 'Ajouter'),
+            array(array($icon + array('title' => '  Create & View  ')), '', '  Create & View  '),
+        );
+    }
+
     /** @dataProvider headerCases */
     public function testActualHeadersDefaultToCurrentPageAndKeepControls(string $kind): void
     {
