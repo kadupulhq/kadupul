@@ -362,6 +362,9 @@ test('a failed source open closes the destination handle before removing it', fu
     expect($branch_start)->not->toBeFalse();
 
     $branch_end = strpos($source, "\n\t\t}\n", $branch_start);
+    if ($branch_end === false) {
+        $branch_end = strpos($source, "\n        }\n", $branch_start);
+    }
     $branch     = substr($source, $branch_start, $branch_end - $branch_start);
 
     $fclose_pos = strpos($branch, 'fclose($handle)');
