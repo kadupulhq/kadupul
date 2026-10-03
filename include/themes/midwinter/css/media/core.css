@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 /* main styles */
 ::-webkit-scrollbar {
     width: 12px;
@@ -161,10 +167,70 @@ input[type="text"] {
     box-sizing: border-box;
 }
 
+/*
+ * The label draws the box. The native control stays where it sits so focus
+ * scrolls the drawn box into view, and lets clicks through to the label.
+ */
 input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name^="reindex"]) {
     opacity: 0;
-    top: -50px;
-    position: fixed;
+    position: absolute;
+    pointer-events: none;
+}
+
+/*
+ * Component rules strip outlines; !important keeps the keyboard ring from
+ * losing to them on specificity. The halo lets one ring serve the page and the
+ * panels that keep the other mode's fill.
+ */
+:focus-visible {
+    outline: 2px solid var(--focus-ring) !important;
+    outline-offset: 1px;
+    box-shadow: 0 0 0 5px var(--focus-halo) !important;
+}
+
+/* Light mode keeps these panels dark, so their icons and status text take the dark-mode colours. */
+html[data-theme-color='light'] :is(.cactiPageHead, .cactiConsoleNavigationArea, .cactiConsoleNavigationBox,
+.cactiConsoleNavigationUserBox, #compact_user_menu, .loginBody, .logoutBody, .cactiTableTitleRow, .messageBox,
+tr.selected, .cactiInstallArea) {
+    --text-color-highlight: var(--text-color-highlight-on-dark);
+    --text-color-lighter: var(--text-color-lighter-on-dark);
+    --status-up: var(--status-up-on-dark);
+    --status-down: var(--status-down-on-dark);
+    --status-unknown: var(--status-unknown-on-dark);
+    --status-disabled: var(--status-disabled-on-dark);
+    --status-recovering: var(--status-recovering-on-dark);
+    --status-error: var(--status-error-on-dark);
+    --status-down-muted: var(--status-down-muted-on-dark);
+    --status-threshold: var(--status-threshold-on-dark);
+    --status-unmonitored: var(--status-unmonitored-on-dark);
+    --status-warning: var(--status-warning-on-dark);
+    --status-alert: var(--status-alert-on-dark);
+    --status-graphed: var(--status-graphed-on-dark);
+    --status-not-graphed: var(--status-not-graphed-on-dark);
+    --status-verbose: var(--status-verbose-on-dark);
+}
+
+/* The page-coloured control border measures 1:1 in dark mode and 1.7:1 in light mode. */
+:is(input, textarea).ui-state-default, .ui-widget-content :is(input, textarea).ui-state-default,
+.ui-selectmenu-button.ui-button, button.ui-multiselect {
+    border-color: var(--control-border);
+}
+
+.checkboxSlider, .radioSlider {
+    box-shadow: inset 0 0 0 1px var(--control-border);
+}
+
+/* These surfaces stay dark in light mode, where the light link colour measures under 4.5:1. */
+.loginBody, .logoutBody, .cactiTableTitleRow, .messageBox, .cactiInstallArea {
+    --text-color-highlight-a: var(--text-color-highlight-a-on-dark);
+}
+
+/* The native box is transparent, so the ring goes on the drawn replacement. */
+input[type="checkbox"]:focus-visible + label:before,
+input[type="radio"]:not([name^="reindex"]):focus-visible + label {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 1px;
+    box-shadow: 0 0 0 5px var(--focus-halo);
 }
 
 input[type="checkbox"] + label:before {
@@ -202,8 +268,13 @@ input[type="checkbox"]:checked + label, input[type="radio"]:not([name^="reindex"
     vertical-align: middle;
 }
 
-.checkboxSwitch input {
-    display: none;
+.checkboxSwitch input[type="checkbox"] {
+    /* Hidden without display:none, which would take the control out of the tab order. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
 }
 
 #navigation_right {
@@ -269,7 +340,12 @@ label {
 
 label > span {
     border: none;
-    color: #969BA3;
+    color: var(--text-color-control);
+}
+
+/* The checked button fills with #3274d9 in both modes. */
+.ui-checkboxradio-label.ui-state-active {
+    color: #ffffff;
 }
 
 label.ui-state-active > span {
@@ -387,7 +463,7 @@ label.ui-state-hover > span {
 }
 
 .success {
-    color: green;
+    color: var(--status-graphed);
 }
 
 .failed {
@@ -464,47 +540,47 @@ label.ui-state-hover > span {
 }
 
 .deviceUp {
-    color: #009d00 !important;
+    color: var(--status-up) !important;
 }
 
 .deviceDown {
-    color: #ff0000 !important;
+    color: var(--status-down) !important;
 }
 
 .deviceUnknown {
-    color: #0000ff !important;
+    color: var(--status-unknown) !important;
 }
 
 .deviceDisabled {
-    color: #a1a1a1 !important;
+    color: var(--status-disabled) !important;
 }
 
 .deviceRecovering {
-    color: yellow !important;
+    color: var(--status-recovering) !important;
 }
 
 .deviceError {
-    color: #ffaa00 !important;
+    color: var(--status-error) !important;
 }
 
 .deviceDownMuted {
-    color: #ffe333 !important;
+    color: var(--status-down-muted) !important;
 }
 
 .deviceThreshold {
-    color: #ffa833 !important;
+    color: var(--status-threshold) !important;
 }
 
 .deviceUnmonitored {
-    color: rgba(250, 253, 158, 0.8) !important;
+    color: var(--status-unmonitored) !important;
 }
 
 .deviceWarning {
-    color: #aa7807 !important;
+    color: var(--status-warning) !important;
 }
 
 .deviceAlert {
-    color: #660000 !important;
+    color: var(--status-alert) !important;
 }
 
 .deviceUpBg {
@@ -574,11 +650,11 @@ label.ui-state-hover > span {
 }
 
 .beingGraphed {
-    color: green;
+    color: var(--status-graphed);
 }
 
 .notBeingGraphed {
-    color: #484848;
+    color: var(--status-not-graphed);
 }
 
 .submenuoptions {
@@ -655,14 +731,14 @@ label.ui-state-hover > span {
     cursor: pointer;
     padding: 2px;
     vertical-align: middle;
-    color: green;
+    color: var(--status-graphed);
 }
 
 .verbosequery {
     cursor: pointer;
     padding: 2px;
     vertical-align: middle;
-    color: orange;
+    color: var(--status-verbose);
 }
 
 .deletequery {
@@ -897,7 +973,7 @@ ul#breadcrumbs {
     height: 100%;
     float: left;
     display: none;
-    color: #7e818f;
+    color: var(--text-color-light);
 }
 
 .cactiTreeNavigationArea a {
@@ -999,7 +1075,13 @@ ul#breadcrumbs {
     text-align: center;
 }
 
-legend {
+.loginHeading {
+    margin: 0;
+    padding: 0 2px;
+    font-weight: inherit;
+}
+
+legend, .loginHeading {
     color: var(--text-color-highlight-a);
     font-size: var(--fs-huge);
     font-weight: bold;
@@ -1023,15 +1105,25 @@ legend {
 
 .loginBody input, .logoutBody input {
     color: white;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.45);
 }
 
+/* Light mode's progress grey would put the white label at 1.8:1. */
 .loginBody input[type='submit'] {
-    background-color: var(--background-progress);
+    background-color: hsl(var(--progress-hue), 84%, 40%);
+}
+
+.loginBody input[type='submit']:is(:hover, :focus) {
+    color: white;
+}
+
+/* The path check is coloured inline for light themes. */
+.formData .cactiTooltipHint.fa-check-circle {
+    color: var(--status-graphed) !important;
 }
 
 .versionInfo {
-    color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.55);
     margin-bottom: 2px;
 }
 
@@ -1965,7 +2057,7 @@ div.submenu span {
 }
 
 .tabs nav a.selected {
-    color: var(--text-color-lighter);
+    color: var(--text-color-lighter-on-dark);
     background: none;
     background-color: #1c1e2d;
     border-bottom: 3px solid var(--background-lowlight);
@@ -2317,8 +2409,10 @@ input:checked + .checkboxSlider {
     background: rgb(50,116,217);
 }
 
-input:focus + .checkboxSlider {
-    box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .checkboxSlider {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    box-shadow: inset 0 0 0 1px var(--control-border), 0 0 0 6px var(--focus-halo);
 }
 
 input:disabled + .checkboxSlider {
@@ -2352,8 +2446,13 @@ input:checked + .checkboxSlider:before {
     vertical-align: middle;
 }
 
-.radioSwitch input {
-    display: none;
+.radioSwitch input[type="radio"] {
+    /* Hidden without display:none, which would take the control out of the tab order. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
 }
 
 .radioSlider {
@@ -2389,8 +2488,17 @@ input:checked + .radioSlider {
     background: rgb(50,116,217);
 }
 
-input:focus + .radioSlider {
-    box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .radioSlider {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    box-shadow: inset 0 0 0 1px var(--control-border), 0 0 0 6px var(--focus-halo);
+}
+
+/* The sliders' transition also fades the focus ring in. */
+@media (prefers-reduced-motion: reduce) {
+    .checkboxSlider, .radioSlider {
+        transition: none;
+    }
 }
 
 input:disabled + .radioSlider {

@@ -41,6 +41,12 @@ table {
 	outline-style: none;
 }
 
+/* Component rules strip outlines; !important keeps the keyboard ring from losing to them on specificity. */
+:focus-visible {
+	outline: 2px solid #93CEFF !important;
+	outline-offset: 1px;
+}
+
 td, th {
 	padding: 2px 2px;
 	margin: 0px;
@@ -163,7 +169,19 @@ label {
 }
 
 input[type="checkbox"]:not([name^="multiselect"]), input[type="radio"]:not([name^="reindex"]) {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+}
+
+/* The native box is transparent, so the ring goes on the drawn replacement. */
+input[type="checkbox"]:not([name^="multiselect"]):focus-visible + label:before,
+input[type="radio"]:not([name^="reindex"]):focus-visible + label:before {
+	outline: 2px solid #93CEFF;
+	outline-offset: 1px;
 }
 
 input[type="checkbox"] + label:before {
@@ -350,7 +368,7 @@ label.ui-state-hover > span {
 }
 
 .success {
-	color: green;
+	color: #00c900;
 }
 
 .failed {
@@ -434,7 +452,7 @@ label.ui-state-hover > span {
 }
 
 .deviceUnknown {
-	color: #0000ff !important;
+	color: #a5a5ff !important;
 }
 
 .deviceDisabled {
@@ -547,7 +565,7 @@ label.ui-state-hover > span {
 }
 
 .beingGraphed {
-	color: green;
+	color: #00c900;
 }
 
 .notBeingGraphed {
@@ -662,7 +680,7 @@ label.ui-state-hover > span {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: red !important;
+	color: #ff8989 !important;
 	font-size: 14px;
 	padding-right: 15px;
 }
@@ -679,7 +697,7 @@ label.ui-state-hover > span {
 }
 
 .odd.tableRow {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .even {
@@ -687,11 +705,14 @@ label.ui-state-hover > span {
 }
 
 .even.tableRow {
-	color: #9d9d9d;
+	color: #d2d2d2;
+}
+
+.even-alternate {
 }
 
 .even-alternate.tableRow {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .tableRow {
@@ -810,7 +831,7 @@ label.ui-state-hover > span {
 }
 
 .cactiPageBottom a {
-	color: #9d9d9d;
+	color: #d2d2d2;
 	padding: 0px 8px;
 	text-decoration: none;
 	font-size: 16px;
@@ -902,7 +923,7 @@ label.ui-state-hover > span {
 
 .cactiVersion {
 	padding-left: 10px;
-	color: rgba(255,255,255,0.2);
+	color: rgba(255,255,255,0.55);
 	float: left;
 }
 
@@ -926,7 +947,7 @@ label.ui-state-hover > span {
 }
 
 .loginArea, .logoutArea {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .cactiLoginTable td {
@@ -939,7 +960,13 @@ label.ui-state-hover > span {
 	min-height: 15px;
 }
 
-legend {
+.loginHeading {
+	margin: 0;
+	padding: 0 2px;
+	font-weight: inherit;
+}
+
+legend, .loginHeading {
 	color: #93CEFF;
 	font-size: 22px;
 	font-weight: bold;
@@ -966,7 +993,7 @@ legend {
 	position: fixed;
 	left: 5px;
 	bottom: 5px;
-	color: rgba(255,255,255,0.2);
+	color: rgba(255,255,255,0.55);
 }
 
 .actionsDropdown {
@@ -1073,7 +1100,7 @@ legend {
 }
 
 .cactiGraphContentArea span[align="center"] {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .cactiGraphContentArea .tableHeader > td {
@@ -1095,7 +1122,7 @@ legend {
 }
 
 .cactiGraphContentAreaPreview span[align="center"] {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .cactiGraphContentAreaPreview .cactitable {
@@ -1196,7 +1223,7 @@ legend {
 
 .textInfo {
 	font-size: 14px;
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .textInfo.left {
@@ -1271,7 +1298,7 @@ legend {
 }
 
 .cactiTable {
-	color: #9d9d9d;
+	color: #d2d2d2;
 	width: 100%;
 	margin-left: auto;
 	margin-right: auto;
@@ -1552,7 +1579,7 @@ table.cactiTable {
 
 .tableHeader {
 	display: table-row;
-	color: #9d9d9d;
+	color: #d2d2d2;
 	font-weight: 700;
 }
 
@@ -1563,7 +1590,7 @@ table.cactiTable {
 
 .tableHeader th {
 	border-color: #333;
-	color: #9d9d9d;
+	color: #d2d2d2;
 	font-weight: 600;
 	vertical-align: middle;
 	text-align: left;
@@ -1619,7 +1646,7 @@ table.cactiTable {
 }
 
 .tablesorter-headerUnSorted  div.textSubHeaderDark {
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .graphSubHeaderColumn {
@@ -1651,7 +1678,7 @@ table.cactiTable {
 }
 
 .navBarNavigation {
-	color: #9D9D9D;
+	color: #d2d2d2;
 	width: 100%;
 	text-align: center;
 	line-height: 20px;
@@ -1661,7 +1688,7 @@ table.cactiTable {
 }
 
 .navBarNavigation a {
-	color: #9D9D9D;
+	color: #d2d2d2;
 }
 
 .navBarNavigation a:hover {
@@ -1834,7 +1861,7 @@ table.cactiTable {
 }
 
 .deleteMarkerDisabled {
-	color: #9d9d9d !important;
+	color: #d2d2d2 !important;
 	padding-right: 7px !important;
 }
 
@@ -2096,6 +2123,10 @@ tr th:last-child .formCheckboxLabel {
 	color: white !important;
 }
 
+th {
+	border-right: 1px groove #d2d2d2;
+}
+
 th:last-child {
 	border-right: none !important;
 }
@@ -2205,7 +2236,7 @@ ul#nav {
 
 .ui-tooltip-content div.content {
 	font-size: 10px;
-	color: #9d9d9d;
+	color: #d2d2d2;
 }
 
 .ui-tooltip-content {
@@ -2231,7 +2262,7 @@ ul.pagination li {
 }
 
 ul.pagination li a {
-	color: #9D9D9D;
+	color: #d2d2d2;
 	float: left;
 	padding: 0px 2px 2px 2px;
 	text-decoration: none;
@@ -2427,7 +2458,7 @@ tr#realtime td:first-child {
 	border: 1px solid rgba(255,255,255,0.2);
 	background: transparent;
 	font-weight: normal;
-	color: #555555;
+	color: #969BA3;
 }
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus {
@@ -2437,7 +2468,7 @@ tr#realtime td:first-child {
 	color: #93CEFF;
 }
 
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, .ui-button.ui-state-active:hover {
 	background: transparent;
 	color: #93CEFF;
 	border: 1px solid rgba(255,255,255,0.2);
@@ -2494,8 +2525,35 @@ tr#realtime td:first-child {
 }
 
 .ui-menu .ui-state-focus, .ui-menu .ui-state-active {
-	background: #3C8A3C;
+	background: #3a863a;
 	margin: -1px;
+	color: #ffffff;
+}
+
+/* Status-coloured menu icons are for the dark menu, not its green active item. */
+.ui-menu .ui-state-active i {
+	color: #ffffff !important;
+}
+
+/* Dialog text links take jQuery UI's #222222, which measures 1.3:1 on the black dialog. */
+.ui-widget-content a {
+	color: #93CEFF;
+}
+
+/* The 20% white control border measures 1.7:1 on the page glow. */
+:is(input, textarea).ui-state-default, .ui-widget-content :is(input, textarea).ui-state-default,
+.ui-selectmenu-button.ui-button, button.ui-multiselect {
+	border-color: rgba(255,255,255,0.55);
+}
+
+/* The path check is coloured inline for light themes. */
+.formData .cactiTooltipHint.fa-check-circle {
+	color: #00c400 !important;
+}
+
+/* The actions menu sits in the bottom right corner, over the brightest glow. */
+.actionsDropdown .ui-selectmenu-button:is(:hover, :focus, .ui-state-hover, .ui-state-focus) {
+	color: #a6d7ff;
 }
 
 .ui-menu .ui-menu-item {
@@ -2549,7 +2607,12 @@ tr#realtime td:first-child {
 }
 
 .checkboxSwitch input {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
 }
 
 .checkboxSlider {
@@ -2590,8 +2653,9 @@ input:checked + .checkboxSlider {
 	background-image: linear-gradient(to right, black, rgba(255, 170, 0, 0.5)) !important;
 }
 
-input:focus + .checkboxSlider {
-	box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .checkboxSlider {
+	outline: 2px solid #93CEFF;
+	outline-offset: 2px;
 }
 
 input:disabled + .checkboxSlider {
@@ -2624,7 +2688,12 @@ input:checked + .checkboxSlider:before {
 }
 
 .radioSwitch input {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
 }
 
 .radioSlider {
@@ -2670,8 +2739,9 @@ input:checked + .radioSlider {
 	background-image: -ms-radial-gradient(50% 50%, ellipse cover, #ffa254 1%, #04335b 35%, #000000 65%);
 }
 
-input:focus + .radioSlider {
-	box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .radioSlider {
+	outline: 2px solid #93CEFF;
+	outline-offset: 2px;
 }
 
 input:disabled + .radioSlider {

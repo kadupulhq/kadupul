@@ -111,6 +111,7 @@ tests/vendor-sync.lcov
 .php_cs.cache
 phpstan.neon.local
 tests/e2e/test-results/
+tests/e2e/theme-contrast-results/
 tests/e2e/playwright-report/
 semgrep.sarif
 

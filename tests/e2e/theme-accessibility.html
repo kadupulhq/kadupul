@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!--
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Theme Accessibility</title>
+	<link rel="icon" href="data:,">
+</head>
+<body>
+	<div class="cactiPageHead">
+		<div class="maintabs">
+			<nav><ul><li><a id="mainTab" class="lefttab" href="#">Console</a></li></ul></nav>
+		</div>
+	</div>
+	<!-- Matches lib/html.php draw_menu() for the open section. -->
+	<div id="navigation" class="cactiConsoleNavigationArea">
+		<div id="menu"><ul id="nav" role="menu">
+			<li class="menuitem" role="menuitem" aria-haspopup="true" id="menu_management"><a class="menu_parent active" href="#">Management</a>
+				<ul role="menu" id="menu_management_div" style="display:block;"><li><a id="navLink" href="#">Devices</a></li></ul>
+			</li>
+		</ul></div>
+	</div>
+	<div class="tabs">
+		<nav><ul><li><a id="pageTab" href="#">General</a></li></ul></nav>
+	</div>
+
+	<p><a id="plainLink" href="#">Plain link</a></p>
+	<p><input type="text" id="textInput" aria-label="Filter"></p>
+
+	<p>
+		<span class="nowrap"><label class="checkboxSwitch"><input class="formCheckbox" type="checkbox" id="switchBox" name="switchBox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="switchBox">Enabled</label></span>
+	</p>
+	<p>
+		<span class="nowrap"><label class="radioSwitch"><input value="1" class="formCheckbox" type="radio" id="switchRadio_1" name="switchRadio"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="switchRadio_1">One</label></span>
+		<span class="nowrap"><label class="radioSwitch"><input value="2" class="formCheckbox" type="radio" id="switchRadio_2" name="switchRadio"><span class="radioSlider radioRound"></span></label><label class="radioLabelWanted" for="switchRadio_2">Two</label></span>
+	</p>
+	<p><input class="checkbox" type="checkbox" id="rowCheck"><label class="formCheckboxLabel" for="rowCheck">Select row</label></p>
+
+	<div class="saveRow"><input type="button" class="ui-button ui-corner-all ui-widget" id="saveButton" value="Save"></div>
+
+	<table>
+		<tr>
+			<td id="dd1" class="noprint graphDrillDown">
+				<div class="iconWrapper">
+					<a class="iconLink utils" href="#" role="link" id="graph_1_util"><img class="drillDown" src="/images/cog.png" alt="Graph utilities"></a><br>
+					<a class="iconLink csvexport" href="#" role="link" id="graph_1_csv"><img class="drillDown" src="/images/table_go.png" alt="CSV export"></a><br>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<div id="contrastArea"></div>
+
+	<div class="cactiPageBottom"><a id="bottomLink" href="#">Version</a></div>
+
+	<script>
+		(function () {
+			const params = new URLSearchParams(window.location.search);
+			const theme = params.get('theme') || 'classic';
+			if (params.get('color')) {
+				document.documentElement.setAttribute('data-theme-color', params.get('color'));
+			}
+
+			let pending = 2;
+			for (const sheet of ['jquery-ui.css', 'main.css']) {
+				const link = document.createElement('link');
+				link.rel = 'stylesheet';
+				link.href = `/include/themes/${theme}/${sheet}`;
+				link.addEventListener('load', function () {
+					if (--pending === 0) {
+						window.__themeReady = true;
+					}
+				});
+				link.addEventListener('error', function () {
+					window.__themeError = `failed to load ${sheet} for ${theme}`;
+				});
+				document.head.appendChild(link);
+			}
+		}());
+	</script>
+</body>
+</html>

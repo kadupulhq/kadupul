@@ -74,6 +74,8 @@ function fakeJquery(nodes = {}) {
       click(fn) { if (fn) list.forEach(node => bind(node, 'click', fn)); return proxy; },
       closest() { return wrap(list.map(node => node.closest || node), selector); },
       attr(name, value) { if (value === undefined) return list[0]?.attrs?.[name]; return proxy; },
+      addClass(name) { list.forEach(node => { (node.classes ||= new Set()).add(name); }); return proxy; },
+      removeClass(name) { list.forEach(node => { node.classes?.delete(name); }); return proxy; },
     };
     const proxy = new Proxy(self, {
       get(target, prop) {
@@ -275,4 +277,33 @@ test('theme scripts only use icon classes the shipped Font Awesome defines', () 
   }
   assert.deepEqual(missing, []);
   assert.doesNotMatch(css, /\.fa-arrow-circle-o-up(?![a-z0-9-])/, 'the Font Awesome 4 names stay undefined');
+});
+
+test('dark shows the graph utility icons by class on hover and hides them on leave', () => {
+  const first = { attrs: { id: 'dd1' } };
+  const second = { attrs: { id: 'dd2' } };
+  // layout.js declares these page globals before any theme script runs.
+  const { context, calls } = loadTheme('dark', { '.graphDrillDown': [first, second], '#dd1': [first], '#dd2': [second] }, {
+    graphMenuElement: 0,
+    graphMenuTimer: undefined,
+  });
+
+  context.themeReady();
+  // Run the 400 ms show and hide timers straight away; only these handlers fire from here on.
+  context.setTimeout = fn => { fn(); return 1; };
+
+  const hover = calls.find(call => call.selector === '.graphDrillDown' && call.method === 'hover');
+  assert.ok(hover, 'dark binds hover handlers to graph cells');
+  const [enter, leave] = hover.args;
+  const shown = node => node.classes?.has('iconsShown') === true;
+
+  enter.call(first);
+  assert.ok(shown(first));
+
+  enter.call(second);
+  assert.ok(!shown(first), 'moving to another graph hides the previous icons');
+  assert.ok(shown(second));
+
+  leave.call(second);
+  assert.ok(!shown(second));
 });
