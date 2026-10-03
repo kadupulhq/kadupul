@@ -15,7 +15,6 @@
     <p>{{ 'Affected remote collectors must be online. A failed operation may have changed remote devices; verify every selected device before retrying.'|trans({}, 'inventory') }}</p>
     <ul>{% for device in devices %}<li>{{ device.description }} (#{{ device.id }}) — {{ device.hostname }} — {{ (device.enabled ? 'Enabled' : 'Disabled')|trans({}, 'inventory') }}</li>{% endfor %}</ul>
     {{ form_start(form) }}
-        {{ form_errors(form) }}
         {{ form_widget(form) }}
         <button type="submit">{{ confirmation|trans({}, 'inventory') }}</button>
     {{ form_end(form) }}

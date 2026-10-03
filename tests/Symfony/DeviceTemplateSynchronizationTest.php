@@ -38,7 +38,7 @@ final class DeviceTemplateSynchronizationTest extends TestCase
             $port->expects(self::never())->method('synchronizeTemplates');
             try {
                 (new SynchronizeDeviceTemplates($access, $port))(new DeviceSelection([7 => str_repeat('a', 64)]));
-                self::fail('Unauthorized reset accepted');
+                self::fail('Unauthorized template synchronization accepted');
             } catch (InventoryAccessDenied $error) {
                 self::assertSame($actor === null, $error->unauthenticated);
             }

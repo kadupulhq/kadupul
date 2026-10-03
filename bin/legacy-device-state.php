@@ -36,6 +36,8 @@ require_once __DIR__ . '/../lib/utility.php';
 
 $status = 'failed';
 $transactionStarted = false;
+$associationsCommitted = false;
+$pendingQueries = [];
 try {
     $input = stream_get_contents(STDIN, 16001);
     if (strlen($input) > 16000) {
@@ -174,7 +176,9 @@ try {
             }
         } elseif ($syncTemplates) {
             foreach ($changed as $device) {
-                api_device_update_host_template($device->id, $device->templateId);
+                api_device_update_host_template($device->id, $device->templateId, static function ($id, $query) use (&$pendingQueries): void {
+                    $pendingQueries[] = [(int) $id, (int) $query];
+                });
             }
         } elseif ($clearStatistics) {
             $reset = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceStatisticsReset();
@@ -190,9 +194,11 @@ try {
             throw new RuntimeException('Disabling devices failed');
         }
         $action = ($changeOptions || $assignDevices) ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3')));
-        set_request_var('drp_action', $action);
-        snmpagent_device_action_bottom([$action, $ids]);
-        api_plugin_hook_function('device_action_bottom', [$action, $ids]);
+        if (!$syncTemplates && !$changeOptions) {
+            set_request_var('drp_action', $action);
+            snmpagent_device_action_bottom([$action, $ids]);
+            api_plugin_hook_function('device_action_bottom', [$action, $ids]);
+        }
         if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
             throw new RuntimeException('Device operation could not be confirmed');
         }
@@ -240,18 +246,80 @@ try {
             }
         }
     }
+    if ($changeOptions && $changed !== []) {
+        // A successful UPDATE can still be rewritten by a database trigger.
+        // Do not publish action 4 until every requested value is confirmed.
+        set_request_var('drp_action', '4');
+        snmpagent_device_action_bottom(['4', $ids]);
+        api_plugin_hook_function('device_action_bottom', ['4', $ids]);
+        if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
+            throw new RuntimeException('Device operation could not be confirmed');
+        }
+        foreach ($changed as $device) {
+            $optionsWriter->verify($connection, $device, $optionsChange);
+            if (isset($remotes[$device->pollerId])) {
+                $optionsWriter->verify($remotes[$device->pollerId], $device, $optionsChange);
+            }
+        }
+    }
     if (!db_commit_transaction()) {
         throw new RuntimeException('Commit failed');
     }
     $transactionStarted = false;
+    $associationsCommitted = true;
     if ($assignDevices && $assignment->kind === 'collector') {
         $previousOwners = array_map(static fn($device): int => $device->pollerId, $changed);
         (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $remotes, $previousOwners, $assignment->targetId);
     }
+    if ($syncTemplates && $changed !== []) {
+        // Discovery runs after association commit. Short rechecks release all
+        // selection and permission locks before each external query.
+        $recheck = static function (array $scope) use ($connection, $command, $selection, &$transactionStarted): void {
+            if (!$connection->beginTransaction()) {
+                throw new RuntimeException('Synchronization recheck unavailable');
+            }
+            $transactionStarted = true;
+            $current = (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceMutationSelection())->lock($connection, $command['actor'], $scope, static function (string $next): void {});
+            foreach ($current['rows'] as $row) {
+                $device = LegacyDeviceStates::state($row);
+                $device->assertRevision($selection->revisions[$device->id]);
+            }
+            if (!$connection->commit()) {
+                throw new RuntimeException('Synchronization recheck unavailable');
+            }
+            $transactionStarted = false;
+        };
+        foreach ($pendingQueries as [$deviceId, $queryId]) {
+            $recheck([$deviceId]);
+            if ($connection->inTransaction() || !run_data_query($deviceId, $queryId)
+                || db_error() !== '' || is_error_message()) {
+                throw new RuntimeException('Template discovery could not be confirmed');
+            }
+        }
+        $recheck($ids);
+        set_request_var('drp_action', '7');
+        snmpagent_device_action_bottom(['7', $ids]);
+        api_plugin_hook_function('device_action_bottom', ['7', $ids]);
+        if (db_error() !== '' || is_error_message() || $connection->inTransaction()) {
+            throw new RuntimeException('Template callbacks could not be confirmed');
+        }
+        $recheck($ids);
+        foreach ($changed as $device) {
+            (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier())->verify($connection, $remotes[$device->pollerId] ?? null, $device->id, $device->templateId);
+            if (isset($remotes[$device->pollerId])) {
+                $copy = $read($remotes[$device->pollerId], "SELECT host_template_id, poller_id, disabled FROM host WHERE id = ? AND deleted = ''", [$device->id]);
+                if (count($copy) !== 1 || (int) $copy[0]['host_template_id'] !== $device->templateId
+                    || (int) $copy[0]['poller_id'] !== $device->pollerId
+                    || ($copy[0]['disabled'] !== 'on') !== $remoteStates[$device->id]) {
+                    throw new RuntimeException('Collector synchronization could not be confirmed');
+                }
+            }
+        }
+    }
     $status = 'ok';
     cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($assignDevices ? 'assigned ' . $assignment->kind : ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled'))))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
 } catch (DeviceEditConflict) {
-    $status = 'conflict';
+    $status = $associationsCommitted ? 'failed' : 'conflict';
 } catch (Throwable) {
     // Remote effects may survive a primary rollback; never report false success.
 } finally {
