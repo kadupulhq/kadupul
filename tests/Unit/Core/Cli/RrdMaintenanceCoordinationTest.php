@@ -497,6 +497,7 @@ test('remote schema upgrades do not require local RRD storage unless explicitly 
         }
         copy($root . '/cli/upgrade_database.php', $dir . '/cli/upgrade_database.php');
         symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
+        symlink($root . '/lib/installer.php', $dir . '/lib/installer.php');
         foreach (array('lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php') as $file) {
             file_put_contents($dir . '/' . $file, '<?php');
         }
@@ -506,6 +507,11 @@ test('remote schema upgrades do not require local RRD storage unless explicitly 
 $config=array('base_path'=>dirname(__DIR__),'rra_path'=>dirname(__DIR__).'/store','cacti_server_os'=>'unix','poller_id'=>2);
 define('CACTI_VERSION','1.2.31'); define('DB_STATUS_SKIPPED',2); define('DB_STATUS_ERROR',0);
 $remote_db_cnn_id='primary-database';
+$database_hostname='fixture';$database_port=0;$database_default='owned';
+$versionWriter=new PDO('sqlite:'.dirname(__DIR__).'/version.sqlite',null,null,array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
+$versionWriter->exec('CREATE TABLE version (cacti TEXT)');
+$versionWriter->exec("INSERT INTO version VALUES ('1.2.30')");
+$database_sessions=array('fixture:0:owned'=>$versionWriter);
 $cacti_version_codes=array('1.2.30'=>'old','1.2.31'=>'new');
 function __($message,...$args){return $args?vsprintf($message,$args):$message;}
 function read_config_option($key){return false;}
@@ -517,7 +523,7 @@ function db_execute_prepared($sql,$params){if (strpos($sql,'UPDATE version')===f
 REMOTE;
         $bootstrap .= '$config["connection"]=' . var_export($connection, true) . ';';
         $bootstrap .= '$config["force_storage_location_local"]=' . var_export($forced, true) . ';';
-        $bootstrap .= "\n" . 'function db_fetch_cell_prepared(...$args){return ' . var_export($engine, true) . ';}';
+        $bootstrap .= "\n" . 'function db_fetch_cell_prepared(...$args){touch(dirname(__DIR__)."/queue-read");return ' . var_export($engine, true) . ';}';
         file_put_contents($dir . '/include/cli_check.php', $bootstrap);
         $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php'), array($dir . '/cli/upgrade_database.php', '--forcever=1.2.30'), $probe ? array('--check-rrd-storage') : array(), $local ? array('--local') : array());
         $process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
@@ -525,15 +531,24 @@ REMOTE;
         $err = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        $accepted = !$probe && !$forced && ($engine === 'InnoDB' || $connection !== 'online');
+        $primaryDenied = !$probe && !$local && $connection === 'online';
+        $accepted = !$primaryDenied && !$probe && !$forced && ($engine === 'InnoDB' || $connection !== 'online');
         expect(proc_close($process))->toBe($accepted ? 0 : 1, $out . $err)
             ->and(file_exists($dir . '/upgraded'))->toBe($accepted)
-            // Only an online collector upgrades the primary; offline/recovery stay local.
-            ->and(file_exists($dir . '/main-db'))->toBe($accepted && !$local && $connection === 'online');
+            // Online primary upgrades are refused; admitted local/offline paths never switch.
+            ->and(file_exists($dir . '/main-db'))->toBeFalse();
+        if ($primaryDenied) {
+            expect(file_exists($dir . '/queue-read'))->toBeFalse('Primary role refusal must precede protected metadata reads.');
+        }
         if ($accepted) {
-            expect(file_get_contents($dir . '/version'))->toBe('1.2.31')->and($err)->toBe('');
+            $observer = new PDO('sqlite:' . $dir . '/version.sqlite');
+            expect($observer->query('SELECT cacti FROM version')->fetchAll(PDO::FETCH_COLUMN))->toBe(array('1.2.31'))
+                ->and(file_exists($dir . '/version'))->toBeFalse('The actual public writer must confirm the final marker, not the legacy fake write.')
+                ->and($err)->toBe('');
         } else {
-            expect($err)->toContain($probe || $forced ? 'RRD storage is not ready' : 'queue must use InnoDB');
+            expect($err)->toContain($primaryDenied ? 'Run schema upgrades from the primary collector' : ($probe || $forced ? 'RRD storage is not ready' : 'queue must use InnoDB'));
+            $observer = new PDO('sqlite:' . $dir . '/version.sqlite');
+            expect($observer->query('SELECT cacti FROM version')->fetchAll(PDO::FETCH_COLUMN))->toBe(array('1.2.30'));
         }
         rrd_cli_merge_coverage($this, $dir);
     } finally {
