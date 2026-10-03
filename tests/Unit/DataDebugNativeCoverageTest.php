@@ -150,6 +150,36 @@ final class DataDebugNativeCoverageTest extends TestCase
         return array('default rows' => array(array(), array('one.rrd', 'two.rrd')), 'selected rows' => array(array('rows' => 2), array('one.rrd', 'two.rrd')), 'filtered file' => array(array('filter' => 'one'), array('one.rrd')), 'empty result' => array(array('filter' => 'missing'), array()));
     }
 
+    /** @dataProvider iconCases */
+    public function testLoadedProductionStatusHelpersNameEachResult(mixed $result, string $status, string $valid): void
+    {
+        $state = $this->render(array(), array('view' => 'debug-icons', 'result' => $result));
+        foreach (array('status' => $status, 'valid' => $valid) as $kind => $label) {
+            $document = new DOMDocument();
+            self::assertTrue($document->loadHTML($state['icons'][$kind], LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING));
+            $icons = (new DOMXPath($document))->query('//i[@role="img"]');
+            self::assertCount(1, $icons);
+            self::assertSame($label, $icons->item(0)->getAttribute('aria-label'));
+            self::assertFalse($icons->item(0)->hasAttribute('aria-hidden'));
+        }
+        self::assertSame($state['before'], $state['after']);
+        self::assertSame($state['log_before'], $state['log_after']);
+        self::assertNotEmpty($state['queries']);
+    }
+
+    public static function iconCases(): array
+    {
+        return array(
+            'empty pending' => array('', 'Running', 'Running'),
+            'false pending' => array(false, 'Running', 'Running'),
+            'not applicable' => array('-', 'Not Applicable', 'Not Applicable'),
+            'valid values' => array(array('in' => '42', 'out' => '12.5'), 'Warning', 'Passed'),
+            'invalid value' => array(array('in' => '42', 'out' => 'invalid'), 'Warning', 'Failed'),
+            'valid scalar' => array('42', 'Warning', 'Passed'),
+            'invalid scalar' => array('invalid', 'Warning', 'Failed'),
+        );
+    }
+
     private function render(array $request, array $options = array()): array
     {
         $root = dirname(__DIR__, 2);
@@ -176,12 +206,15 @@ final class DataDebugNativeCoverageTest extends TestCase
                 // real utility filter files and every executable fixture dependency.
                 $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/UtilityViewNativeCoverageTest.php', 'tests/Unit/DataDebugNativeCoverageTest.php', 'tests/Fixtures/data-debug-records.php', 'utilities.php', 'data_debug.php', 'rrdcleaner.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/clog_webapi.php', 'src/Platform/Infrastructure/Legacy/UtilityRows.php', 'include/global_constants.php', 'include/global_session.php', 'lib/html_form.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/utility.php');
                 $markers = array('utility-view-observed:' . ($options['view'] ?? 'debug'));
+                if (($options['view'] ?? 'debug') === 'debug-icons') {
+                    $markers[] = 'debug-icons-rendered';
+                }
                 $hits = array(($options['view'] ?? 'debug') === 'cleaner' ? 'rrdcleaner.php' : 'data_debug.php', 'lib/html.php', 'lib/functions.php');
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits);
                 static $omissionsVerified = array();
                 $mode = $options['view'] ?? 'debug';
                 if (!isset($omissionsVerified[$mode])) {
-                    self::assertSame(41, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits, 'lib/boost.php'));
+                    self::assertSame(40 + count($markers), NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits, 'lib/boost.php'));
                     $omissionsVerified[$mode] = true;
                 }
                 $coverage->merge($child);

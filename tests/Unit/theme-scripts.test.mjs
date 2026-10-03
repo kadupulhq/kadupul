@@ -276,3 +276,40 @@ test('theme scripts only use icon classes the shipped Font Awesome defines', () 
   assert.deepEqual(missing, []);
   assert.doesNotMatch(css, /\.fa-arrow-circle-o-up(?![a-z0-9-])/, 'the Font Awesome 4 names stay undefined');
 });
+
+test('midwinter draws its filter icon from a face that has the glyph', () => {
+  const classes = read('include/themes/midwinter/main.js')
+    .match(/<div class="cactiTableFilter"><span><i class="([^"]+)">/)[1].split(' ');
+
+  // The free regular font has no sliders glyph, so .far draws a missing-glyph box.
+  assert.ok(!classes.includes('far') && !classes.includes('fa-regular'), classes.join(' '));
+  assert.ok(classes.includes('fa-sliders'), classes.join(' '));
+});
+
+test('multiselect link icons in layout.js exist in the shipped Font Awesome', () => {
+  let css;
+  for (const path of ['include/fa/css/all.css', 'node_modules/@fortawesome/fontawesome-free/css/all.css']) {
+    try {
+      css = read(path);
+      break;
+    } catch {
+      // try the next location
+    }
+  }
+  assert.ok(css, 'build the browser assets (npm ci && npm run build) before this test');
+
+  const context = createContext({});
+  runInContext(layout.match(/^var faIcons = \{[\s\S]*?^\};/m)[0], context);
+  const icons = runInContext('faIcons', context);
+  assert.ok(icons.collapseAll && icons.expandAll, 'jquery.multiselect reads collapseAll and expandAll');
+
+  const missing = [];
+  for (const [link, { icon }] of Object.entries(icons)) {
+    for (const name of icon.match(/\bfa-[a-z0-9-]+/g) || []) {
+      if (!new RegExp(`\\.${name}(?![a-z0-9-])`).test(css)) {
+        missing.push(`${link}: ${name}`);
+      }
+    }
+  }
+  assert.deepEqual(missing, []);
+});

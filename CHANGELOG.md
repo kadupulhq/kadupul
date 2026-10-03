@@ -113,6 +113,10 @@ Targeting `v1.3.0`, the first planned application release. See
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
 
 - Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
+- Fix blank and wrong Font Awesome 7 icons: the midwinter filter icon no longer shows a missing-glyph box, the multiselect collapse-all and expand-all buttons show their arrows, and the legacy `fa-circle-thin` class draws an outline circle again.
+
+- Give icon-only controls an accessible name: the Add and page help links, the tab menu buttons, the Console tab in themes that hide its text, and the Data Source troubleshooter's pass and fail icons.
+
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.

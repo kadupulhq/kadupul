@@ -18,7 +18,7 @@ async function load(page, ...files) {
 }
 
 test("Font Awesome legacy circle alias renders with the bundled font", async ({ page }) => {
-  await page.setContent('<i id="legacy" class="fa fa-circle-thin"></i><i id="circle" class="fa fa-circle"></i><i id="notch" class="fa fa-circle-notch"></i>');
+  await page.setContent('<i id="legacy" class="fa fa-circle-thin"></i><i id="circle" class="far fa-circle"></i><i id="notch" class="fa fa-circle-notch"></i>');
   await page.addStyleTag({ url: '/include/fa/css/all.css' });
   const icons = await page.evaluate(async () => {
     await document.fonts.ready;
@@ -27,11 +27,14 @@ test("Font Awesome legacy circle alias renders with the bundled font", async ({ 
       return {
         content: style.content,
         family: style.fontFamily,
+        weight: style.fontWeight,
         fontLoaded: document.fonts.check(`${style.fontWeight} 16px ${style.fontFamily}`),
       };
     });
   });
+  // Font Awesome 4 drew circle-thin as an outline, which is the regular circle.
   expect(icons[0]).toEqual(icons[1]);
+  expect(icons[0].weight).toBe('400');
   expect(icons[0].content).toContain('\uf111');
   expect(icons[2].content).toContain('\uf1ce');
   expect(icons[0].family).toContain('Font Awesome 7 Free');
