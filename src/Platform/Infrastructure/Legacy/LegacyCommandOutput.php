@@ -11,7 +11,10 @@ use Symfony\Component\Process\Exception\ProcessStartFailedException;
 use Symfony\Component\Process\Process;
 
 /**
- * Runs a legacy shell command and exposes stdout as an array of lines.
+ * Runs legacy commands through Symfony Process and exposes stdout as lines.
+ *
+ * Shell command strings remain available for existing callers. New commands
+ * should use argument arrays so user-controlled values are never shell-parsed.
  */
 final readonly class LegacyCommandOutput
 {
@@ -22,13 +25,7 @@ final readonly class LegacyCommandOutput
     {
         try {
             $process = Process::fromShellCommandline($commandLine);
-            $process->setTimeout(null);
-            $process->run(static function (string $type, string $data): void {
-                if ($type === Process::ERR) {
-                    fwrite(STDERR, $data);
-                }
-            });
-            $output = $process->getOutput();
+            return $this->readLines($process);
         } catch (ProcessStartFailedException|\Symfony\Component\Process\Exception\LogicException) {
             // Keep the native command path available when process creation is disabled.
             $lines = [];
@@ -37,6 +34,41 @@ final readonly class LegacyCommandOutput
 
             return array_values($lines);
         }
+    }
+
+    /**
+     * Run a command from individual arguments, without invoking a shell.
+     *
+     * @param list<string> $arguments Executable path followed by its arguments.
+     *
+     * @return list<string> Standard output lines.
+     */
+    public function linesFromArguments(array $arguments): array
+    {
+        try {
+            return $this->readLines(new Process($arguments));
+        } catch (ProcessStartFailedException|\Symfony\Component\Process\Exception\LogicException) {
+            // An argument-array command must never fall back to a shell.
+            return [];
+        }
+    }
+
+    /**
+     * Collect standard output while forwarding standard error to the parent.
+     *
+     * @param Process $process Process to run.
+     *
+     * @return list<string>
+     */
+    private function readLines(Process $process): array
+    {
+        $process->setTimeout(null);
+        $process->run(static function (string $type, string $data): void {
+            if ($type === Process::ERR) {
+                fwrite(STDERR, $data);
+            }
+        });
+        $output = $process->getOutput();
 
         if ($output === '') {
             return [];

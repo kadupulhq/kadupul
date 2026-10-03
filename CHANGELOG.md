@@ -75,6 +75,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
+- Run binary SNMP get, getnext and walk commands through Symfony Process argument arrays, keeping hostnames and SNMP credentials intact as single arguments on Windows. Fixes #531.
+
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
