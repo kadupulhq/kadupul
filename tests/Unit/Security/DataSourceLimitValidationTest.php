@@ -37,7 +37,7 @@ function limit_accepted(array $tokens, string $value): bool
  * Post one save to the real $page in a child process, with $fields over a
  * valid request, and return what it saved and which fields failed.
  */
-function limit_save($test, string $page, array $fields): array
+function limit_save($test, string $page, array $fields, array $environment_overrides = array()): array
 {
     $root = dirname(__DIR__, 3);
     $requests = array(
@@ -45,7 +45,7 @@ function limit_save($test, string $page, array $fields): array
             'save_component_data_source' => '1', 'local_data_id' => '5', 'data_template_id' => '0', '_data_template_id' => '0',
             'host_id' => '0', '_host_id' => '0', 'current_rrd' => '7', 'data_template_data_id' => '3',
             'local_data_template_data_id' => '0', 'data_input_id' => '1', '_data_input_id' => '1', 'name' => 'Traffic',
-            'data_source_path' => 'rra/traffic_5.rrd', 'data_source_profile_id' => '1', 'rrd_step' => '300',
+            'data_source_path' => '<path_rra>/traffic_5.rrd', 'data_source_profile_id' => '1', 'rrd_step' => '300',
             'rrd_heartbeat' => '600', 'data_source_type_id' => '1', 'data_source_name' => 'value',
         ),
         'data_templates.php' => array(
@@ -62,6 +62,7 @@ function limit_save($test, string $page, array $fields): array
     $coverage = $test->getTestResultObject()->getCodeCoverage();
     $environment = getenv();
     $environment['LIMIT_COVERAGE'] = $coverage === null ? '0' : '1';
+    $environment = $environment_overrides + $environment;
     try {
         $process = proc_open(
             array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~',
@@ -160,3 +161,24 @@ test('a data source page stores nothing for a limit that fails validation', func
     array('data_templates.php', 'rrd_minimum', '0;x'),
     array('data_templates.php', 'rrd_maximum', '|query_ifHighSpeed|'),
 ));
+
+test('a data source save for a device outside the user\'s scope stores nothing', function () {
+    $result = limit_save($this, 'data_sources.php', array(), array('LIMIT_DEVICE_DENIED' => '1'));
+
+    expect($result['saved'])->toBe(array());
+});
+
+test('a data source save naming another data source\'s rows stores nothing', function ($field) {
+    $result = limit_save($this, 'data_sources.php', array($field => '9'), array('LIMIT_ROW_OWNER' => '6'));
+
+    expect($result['saved'])->toBe(array());
+})->with(array('data_template_data_id', 'current_rrd'));
+
+test('a new data source without a device or template still saves', function () {
+    $result = limit_save($this, 'data_sources.php', array(
+        'local_data_id' => '0', 'data_template_data_id' => '0', 'current_rrd' => '0', 'save_component_data' => '1',
+    ));
+
+    expect($result['errors'])->toBe(array())
+        ->and($result['saved'])->toHaveKeys(array('data_local', 'data_template_data', 'data_template_rrd'));
+});
