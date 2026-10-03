@@ -186,6 +186,13 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         $db = $this->database;
         $db->exec('CREATE TABLE cleanup_host (id MEDIUMINT UNSIGNED PRIMARY KEY,poller_id INT UNSIGNED) ENGINE=InnoDB');
         $db->exec('INSERT INTO cleanup_host VALUES (7,2)');
+        $snapshotQuery = $db->query("SHOW SESSION VARIABLES LIKE 'innodb_snapshot_isolation'");
+        $snapshot = $snapshotQuery === false ? false : $snapshotQuery->fetch(PDO::FETCH_ASSOC);
+        $snapshotIsolation = $snapshot === false ? null : match ($snapshot['Value'] ?? null) {
+            'ON', '1', 1 => 1,
+            'OFF', '0', 0 => 0,
+            default => throw new \RuntimeException('Unexpected snapshot isolation capability value'),
+        };
         $db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
         $db->beginTransaction();
         $journal = new DeviceCollectorCleanup();
@@ -197,13 +204,35 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         self::assertIsResource($process);
         try {
             self::assertSame("READY\n", fgets($pipes[1]));
-            $row = $db->query('SELECT poller_id FROM cleanup_host WHERE id=7 FOR UPDATE')->fetchColumn();
-            self::assertSame(3, (int) $row);
+            $snapshotConflict = null;
+            try {
+                $row = $db->query('SELECT poller_id FROM cleanup_host WHERE id=7 FOR UPDATE')->fetchColumn();
+            } catch (\PDOException $error) {
+                if (($error->errorInfo[1] ?? null) !== 1020) {
+                    throw $error;
+                }
+                $snapshotConflict = $error;
+            }
             $proof = json_decode(stream_get_contents($pipes[1]), true, 16, JSON_THROW_ON_ERROR);
             self::assertTrue($proof['observed_host_lock_wait']);
-            self::assertSame([], $journal->pending($db, [7]));
-            self::assertSame([7 => [2 => 3]], $journal->pending($db, [7], true));
             self::assertSame('', stream_get_contents($pipes[2]));
+            if ($snapshotConflict !== null) {
+                // Newer MariaDB defaults abort an RR unit on a newer row version.
+                // This is a refused unit, not preservation of caller-owned writes.
+                self::assertSame(1, $snapshotIsolation);
+                self::assertSame('HY000', $snapshotConflict->errorInfo[0]);
+                self::assertSame(1020, $snapshotConflict->errorInfo[1]);
+                self::assertSame(0, (int) $db->query('SELECT @@SESSION.in_transaction')->fetchColumn());
+                self::assertFalse($db->inTransaction());
+                self::assertSame([7 => [2 => 3]], $journal->pending($db, [7]));
+                self::assertTrue($db->beginTransaction());
+                self::assertSame(3, (int) $db->query('SELECT poller_id FROM cleanup_host WHERE id=7 FOR UPDATE')->fetchColumn());
+                self::assertSame([7 => [2 => 3]], $journal->pending($db, [7], true));
+            } else {
+                self::assertSame(3, (int) $row);
+                self::assertSame([], $journal->pending($db, [7]));
+                self::assertSame([7 => [2 => 3]], $journal->pending($db, [7], true));
+            }
         } finally {
             foreach ($pipes as $pipe) {
                 fclose($pipe);
