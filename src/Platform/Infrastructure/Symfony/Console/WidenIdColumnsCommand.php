@@ -7,11 +7,9 @@
 
 namespace Kadupul\Platform\Infrastructure\Symfony\Console;
 
-use Kadupul\Platform\Application\Command\InstallationAccessDenied;
 use Kadupul\Platform\Application\Command\WidenIdColumns;
 use Kadupul\Platform\Application\ReadModel\WideningReport;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
-use Psr\Clock\ClockInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\MapInput;
 use Symfony\Component\Console\Command\Command;
@@ -29,7 +27,6 @@ final readonly class WidenIdColumnsCommand
         private InstallationVersion $version,
         private CliPresentation $presentation,
         private ResultRenderer $renderer,
-        private ClockInterface $clock,
     ) {}
 
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] WidenIdColumnsInput $input): int
@@ -37,16 +34,13 @@ final readonly class WidenIdColumnsCommand
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
         $legacy = new WidenIdColumnsLegacyArguments();
         try {
-            $early = $this->renderer->preflight($this->presentation->legacy, fn(): string => $this->version->line(self::UTILITY, $this->clock->now()), $legacy, $input->as, $io, $output, $mode);
+            $early = $this->renderer->preflight($this->presentation->legacy, $this->version, self::UTILITY, $legacy, $input->as, $io, $output, $mode);
             if ($early !== null) {
                 return $early;
             }
             $report = ($this->widen)($input->local, $input->as, !$input->dryRun);
-        } catch (InstallationAccessDenied) {
-            return $this->renderer->denied($io, $output, $mode);
         } catch (\Throwable $error) {
-            // failed() names only MainDatabaseNotConfigured, by type; other text stays hidden.
-            return $this->renderer->failed($io, $output, $mode, $error, 'Column widening failed');
+            return $this->renderer->refused($io, $output, $mode, $error, 'Column widening failed');
         }
 
         return $this->report($io, $output, $mode, $report, $input->debug, $legacy);
@@ -61,9 +55,7 @@ final readonly class WidenIdColumnsCommand
         $exit = $report->failed() === 0 ? Command::SUCCESS : Command::FAILURE;
         $tables = array_map(static fn(array $step): array => ['name' => $step['table'], 'result' => $step['event']->value, 'statement' => $step['statement']], $report->altered());
         if ($mode === OutputMode::Json) {
-            $json = ['status' => $exit === Command::SUCCESS ? 'ok' : 'partial', 'database' => $report->main ? 'main' : 'local', 'dry_run' => $report->dryRun, 'adjusted' => $report->tables(), 'tables' => $tables];
-
-            return $this->renderer->render(new CommandResult($json, [], $exit), $mode, $output);
+            return $this->renderer->written($output, $report->main, $report->dryRun, $report->failed(), ['adjusted' => $report->tables(), 'tables' => $tables]);
         }
         if ($tables === []) {
             $io->success('No id column needed widening.');

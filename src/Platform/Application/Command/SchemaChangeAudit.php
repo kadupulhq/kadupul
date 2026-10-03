@@ -12,10 +12,11 @@ use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
 
 /**
- * Audit events for command-line schema changes: one per table an applied run
- * tried to change, one per refusal. AuditEvent is closed, so the target
- * database goes into the target id and a dry run into the action name. A dry
- * run tries no change, so only a refusal can carry the dry-run suffix.
+ * Audit events for command-line maintenance: one per table an applied run
+ * tried to change, one per other step it ran (a row fix, an upgrade, a dump),
+ * one per refusal. AuditEvent is closed, so the target database goes into the
+ * target id and a dry run into the action name. A dry run tries no change, so
+ * only a refusal can carry the dry-run suffix.
  */
 final readonly class SchemaChangeAudit
 {
@@ -28,14 +29,15 @@ final readonly class SchemaChangeAudit
     }
 
     /**
-     * The target and operator for a schema change, with realm 26 required. A
-     * refusal is audited, with the dry-run suffix when $apply is false, then
-     * rethrown. A dry run passes the same check: it reads the same schema.
+     * The target and operator, with realm 26 required unless the caller names
+     * the realm its web page needs. A refusal is audited, with the dry-run
+     * suffix when $apply is false, then rethrown. A dry run passes the same
+     * check: it reads the same schema.
      */
-    public function select(MaintenanceTarget $target, string $action, bool $local, ?string $operator, bool $apply): MaintenanceScope
+    public function select(MaintenanceTarget $target, string $action, bool $local, ?string $operator, bool $apply, MaintenanceRealm $realm = MaintenanceRealm::Upgrade): MaintenanceScope
     {
         try {
-            return $target->select($local, $operator, MaintenanceRealm::Upgrade);
+            return $target->select($local, $operator, $realm);
         } catch (InstallationAccessDenied $denied) {
             $this->denied($action, $denied, !$apply);
 
@@ -64,6 +66,12 @@ final readonly class SchemaChangeAudit
             ? ['database-table', $table]
             : ['database-table-sha256', hash('sha256', $table)];
         $this->record($correlation, $actorId, $action, $type, $target->value . ':' . $id, AuditEvent::ALLOWED, $ok ? AuditEvent::SUCCEEDED : AuditEvent::FAILED);
+    }
+
+    /** A step that is not one table's DDL. $step is a fixed name such as 'upgrade' or 'audit-schema-export', never operator input. */
+    public function step(string $correlation, int $actorId, string $action, DatabaseTarget $target, string $step, bool $ok): void
+    {
+        $this->record($correlation, $actorId, $action, 'database-maintenance', $target->value . ':' . $step, AuditEvent::ALLOWED, $ok ? AuditEvent::SUCCEEDED : AuditEvent::FAILED);
     }
 
     private function record(string $correlation, ?int $actorId, string $action, string $type, string $target, string $decision, string $outcome): void

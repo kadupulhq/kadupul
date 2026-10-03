@@ -7,16 +7,12 @@
 
 namespace Kadupul\Tests;
 
-use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
-use Kadupul\IdentityAccess\Contract\ConsoleOperator;
 use Kadupul\Platform\Application\Command\ConvertTables;
 use Kadupul\Platform\Application\Command\InstallationAccessDenied;
-use Kadupul\Platform\Application\Command\MaintenanceTarget;
 use Kadupul\Platform\Application\Command\SchemaChangeAudit;
 use Kadupul\Platform\Application\Command\TableConversionStep;
-use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Application\Port\TableCatalog;
 use Kadupul\Platform\Application\Port\TableConversion;
@@ -29,30 +25,18 @@ use Kadupul\Platform\Domain\Schema\TableChange;
 use Kadupul\Platform\Domain\Schema\TableCharset;
 use Kadupul\Platform\Domain\Schema\TableStatus;
 use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
+use Kadupul\Tests\Fixtures\MaintenanceOperator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class ConvertTablesTest extends TestCase
 {
-    /** @var list<AuditEvent> */
-    private array $events = [];
+    use MaintenanceOperator;
 
-    private function convert(TableConversion $conversion, bool $collector = false, bool $upgrade = true, ?AuditTrail $trail = null): ConvertTables
+    private function convert(TableConversion $conversion, bool $collector = false, bool $upgrade = true, ?SchemaChangeAudit $audit = null): ConvertTables
     {
-        $operator = $this->createStub(ConsoleOperator::class);
-        $operator->method('actor')->willReturn(new Actor(1, 'admin'));
-        $operator->method('canUpgradeInstallation')->willReturn($upgrade);
-        $maintenance = $this->createStub(DatabaseMaintenance::class);
-        $maintenance->method('isRemoteCollector')->willReturn($collector);
-        if ($trail === null) {
-            $trail = $this->createStub(AuditTrail::class);
-            $trail->method('record')->willReturnCallback(function (AuditEvent $event): void {
-                $this->events[] = $event;
-            });
-        }
-
-        return new ConvertTables(new MaintenanceTarget($operator, $maintenance), $conversion, new TableConversionStep($conversion), new SchemaChangeAudit($trail));
+        return new ConvertTables($this->maintenanceTarget($collector, $upgrade), $conversion, new TableConversionStep($conversion), $audit ?? $this->recordingAudit());
     }
 
     /**
@@ -136,6 +120,27 @@ final class ConvertTablesTest extends TestCase
         self::assertSame($this->events[0]->correlationId, $this->events[1]->correlationId);
     }
 
+    /**
+     * The report walks baseTables(), never the catalog's own key order: a
+     * catalog built with its rows in a different order than baseTables()
+     * must still produce the same, baseTables()-ordered report. This pins
+     * that MaintenanceConnections::tableCatalog()'s ORDER BY (added for audit
+     * parity with the original's SHOW TABLES walk) cannot reorder convert's
+     * output, because status() and has() are name lookups, not a walk.
+     */
+    public function testTheReportOrderFollowsBaseTablesNotTheCatalogsKeyOrder(): void
+    {
+        $conversion = $this->conversion();
+        $conversion->method('baseTables')->willReturn(['a', 'b', 'c']);
+        $conversion->method('tableStatuses')->willReturn(new TableCatalog(['c' => self::myisam(), 'a' => self::myisam(), 'b' => self::myisam()]));
+        $conversion->method('statement')->willReturnCallback(static fn(DatabaseTarget $target, string $table): string => 'ALTER TABLE ' . $table);
+        $conversion->method('convert')->willReturn(true);
+
+        $report = $this->convert($conversion)(self::options([ConversionFlag::Innodb]), false, null, true);
+
+        self::assertSame(['a', 'b', 'c'], array_column($report->tables, 'name'));
+    }
+
     public function testAnAuditFailureDoesNotReplaceTheResult(): void
     {
         $trail = $this->createStub(AuditTrail::class);
@@ -145,7 +150,7 @@ final class ConvertTablesTest extends TestCase
         $conversion->method('statement')->willReturn('ALTER TABLE `host` ENGINE=InnoDB');
         $conversion->method('convert')->willReturn(true);
 
-        $report = $this->convert($conversion, trail: $trail)(self::options([ConversionFlag::Innodb], 'host'), false, null, true);
+        $report = $this->convert($conversion, audit: new SchemaChangeAudit($trail))(self::options([ConversionFlag::Innodb], 'host'), false, null, true);
 
         self::assertSame(TableResult::Converted, $report->tables[0]['result']);
     }

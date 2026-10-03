@@ -178,6 +178,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Run cli/audit_database.php through kadupul:database:audit, with --json and --dry-run. The flags are unchanged apart from --dry-run, --json, --force and a bare, empty or spaced --as, which the shim now refuses; it takes the operator only as --as=NAME. Under bin/console, --repair only plans unless --force is given or the operator confirms the plan at the prompt. The command requires an operator with the Console Access and Installation/Upgrades realms. It reads docs/audit_schema.sql itself instead of piping it into the mysql client with the database password on the command line, and it builds each repair statement from typed parts, so no text from the file or the server reaches the database unquoted. The upgrade and each plugin upgrade run with no shell, so a plugin's recorded version reaches its script as one argument. The schema dump targets the configured database server, so MYSQL_HOST and similar variables cannot point it elsewhere. A failed upgrade now stops the run before any repair.
 - Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
 
 - Add Symfony bulk site, template and collector assignments with whole-selection validation, primary rollback and verified collector replication.
@@ -191,7 +192,6 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Serve legacy stylesheets and scripts from `public/assets/` with digested file names once `php bin/console asset-map:compile` has run, using Symfony AssetMapper 7.4. Theme `url()` and `@import` references are rewritten to the digested copies, so Midwinter no longer keeps hand-maintained import hashes and `update_hash.php` is gone. Without a compiled manifest, and for `custom.css`, plugins and the flag-icons stylesheet, pages keep the `?md5` URLs. Docker images and offline bundles ship the compiled files; source installations must rerun the compile after each upgrade.
 - Reuse common row-count option rendering in automation previews while preserving each row filter.
-
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
 
 - Run legacy `exec_into_array()` commands through Symfony Process while preserving its public signature, stdout line array, exit-status handling, and unlimited wait behavior. Retain the native `exec()` path if Process cannot start because `proc_open()` is unavailable. Tracks #482.

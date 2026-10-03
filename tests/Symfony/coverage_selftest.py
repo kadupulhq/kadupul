@@ -208,6 +208,7 @@ def main():
         'src/Platform/Domain/Schema/TableStatus.php',
         'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
         'src/Platform/Infrastructure/Legacy/InstallerTableResult.php',
+        'src/Platform/Infrastructure/Persistence/CactiSchemaFile.php',
         'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
         'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
         'src/Platform/Infrastructure/Symfony/Console/ConvertTablesCommand.php',
@@ -226,7 +227,53 @@ def main():
         'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
-        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php',
+        'cli/audit_database.php',
+        'bin/legacy-audit-upgrade.php',
+        'src/Platform/Domain/Schema/AuditMode.php',
+        'src/Platform/Domain/Schema/BaselineColumn.php',
+        'src/Platform/Domain/Schema/BaselineIndex.php',
+        'src/Platform/Domain/Schema/AuditBaseline.php',
+        'src/Platform/Domain/Schema/InvalidAuditSchema.php',
+        'src/Platform/Domain/Schema/AuditSchemaDump.php',
+        'src/Platform/Domain/Schema/BaselineName.php',
+        'src/Platform/Domain/Schema/LiveTable.php',
+        'src/Platform/Domain/Schema/PluginSchemaChanges.php',
+        'src/Platform/Domain/Schema/ColumnBase.php',
+        'src/Platform/Domain/Schema/ColumnType.php',
+        'src/Platform/Domain/Schema/ColumnExtra.php',
+        'src/Platform/Domain/Schema/ColumnSpec.php',
+        'src/Platform/Domain/Schema/IndexAlgorithm.php',
+        'src/Platform/Domain/Schema/DefaultCharset.php',
+        'src/Platform/Domain/Schema/AlterClause.php',
+        'src/Platform/Domain/Schema/ModifyColumn.php',
+        'src/Platform/Domain/Schema/AddColumn.php',
+        'src/Platform/Domain/Schema/DropIndex.php',
+        'src/Platform/Domain/Schema/RebuildIndex.php',
+        'src/Platform/Domain/Schema/UnbuildableClause.php',
+        'src/Platform/Domain/Schema/ColumnDrift.php',
+        'src/Platform/Domain/Schema/IndexDrift.php',
+        'src/Platform/Domain/Schema/AuditTableStatus.php',
+        'src/Platform/Domain/Schema/TableAudit.php',
+        'src/Platform/Domain/Schema/TableAlter.php',
+        'src/Platform/Application/Port/AuditCatalog.php',
+        'src/Platform/Application/Port/SchemaAudit.php',
+        'src/Platform/Application/Port/AuditBaselineStore.php',
+        'src/Platform/Application/Port/InstallationUpgrade.php',
+        'src/Platform/Application/ReadModel/UpgradeOutput.php',
+        'src/Platform/Application/ReadModel/AuditOutcome.php',
+        'src/Platform/Application/ReadModel/BaselineOutcome.php',
+        'src/Platform/Application/ReadModel/AlterResult.php',
+        'src/Platform/Application/ReadModel/AuditReport.php',
+        'src/Platform/Application/Command/AuditRun.php',
+        'src/Platform/Application/Command/AuditDatabase.php',
+        'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
+        'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseLegacyArguments.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseCommand.php',
+        'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
+        'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php')]
     legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php')
     required += [prefix + path for path in legacy_pages]
     for path in (args.files / 'raw').glob('coverage-*.json'):
@@ -235,7 +282,8 @@ def main():
             if 1 in (report['files'] or {}).get(source, {}).get('lines', {}).values():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
-        raise RuntimeError('Self-test requires real HTTP and worker measurements')
+        missing = sorted(set(required) - set(measured['files']))
+        raise RuntimeError('Self-test requires real HTTP and worker measurements: ' + ', '.join(missing))
     data_input_checks = ['system page size fixture restores original absence and value', 'profile deletion confirmation page renders', 'unused profile is normally removable', 'collector retry builds real poller item from the saved command', 'offline collector yields explicit partial handoff without undoing local definition', 'whitelist update publishes the exact saved command and verifies it', 'worker independently rechecks feature grants before executing the handoff', 'French session authenticates through legacy login', 'French editor translates presentation without changing raw command definition', 'English field deletion confirmation uses a readable action label', 'French field deletion confirmation honors the authenticated preference']
     about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
     about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
@@ -351,6 +399,11 @@ def main():
         'missing-installer-conversion-check': 'Incomplete Symfony integration checks',
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
+        'cli-audit-test-hash': 'Integration test source differs',
+        'cli-audit-original-test-hash': 'Integration test source differs',
+        'cli-audit-native-test-hash': 'Integration test source differs',
+        'missing-audit-check': 'Incomplete Symfony integration checks',
+        'missing-retained-audit-check': 'Incomplete Symfony integration checks',
     }
     failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
     failures['stale-legacy-page-test-hash'] = 'Integration test source differs'
@@ -518,6 +571,16 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/legacy-cli/fix_mediumint.php'] = '0' * 64
             elif case == 'missing-widen-check':
                 evidence['checks'].remove('widen refuses an operator without the Installation/Upgrades realm')
+            elif case == 'cli-audit-test-hash':
+                evidence['source_sha256']['tests/Symfony/cli_audit_scenarios.py'] = '0' * 64
+            elif case == 'cli-audit-original-test-hash':
+                evidence['source_sha256']['tests/Fixtures/legacy-cli/audit_database.php'] = '0' * 64
+            elif case == 'cli-audit-native-test-hash':
+                evidence['source_sha256']['tests/Fixtures/native-cli/audit_database.php'] = '0' * 64
+            elif case == 'missing-audit-check':
+                evidence['checks'].remove('audit refuses an operator without the Installation/Upgrades realm')
+            elif case == 'missing-retained-audit-check':
+                evidence['checks'].remove('retained audit compatibility report executes successfully')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case.startswith('missing-statistics-check-'):
