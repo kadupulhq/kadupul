@@ -31,6 +31,7 @@ $session     = array();
 $forcever    = '';
 $check_rrd_storage = false;
 $migrate_poller_queue = false;
+$install_cdef_reference_contract = false;
 
 if (cacti_sizeof($parms)) {
     foreach ($parms as $parameter) {
@@ -42,6 +43,9 @@ if (cacti_sizeof($parms)) {
         }
 
         switch ($arg) {
+            case '--install-cdef-reference-contract':
+                $install_cdef_reference_contract = true;
+                break;
             case '--check-rrd-storage':
                 $check_rrd_storage = true;
                 break;
@@ -76,8 +80,34 @@ if (cacti_sizeof($parms)) {
     }
 }
 
+// This is a primary SQL schema operation, including already-current releases.
+// It does not need RRD filesystem access or switch a collector to the primary.
+if ($install_cdef_reference_contract) {
+    if ($check_rrd_storage || $migrate_poller_queue || $local || $forcever !== '') {
+        fwrite(STDERR, "ERROR: Run --install-cdef-reference-contract separately from other maintenance options.\n");
+        exit(1);
+    }
+    require_once __DIR__ . '/../lib/cdef_reference.php';
+    try {
+        cdef_reference_install();
+    } catch (Throwable $error) {
+        fwrite(STDERR, "CDEF reference contract installation could not be confirmed. Review the primary schema and installer privileges before retrying.\n");
+        exit(1);
+    }
+    print "Primary CDEF reference contract installed and exact metadata verified.\n";
+    exit(0);
+}
+
 if ($check_rrd_storage && $migrate_poller_queue) {
     fwrite(STDERR, "ERROR: Do not combine --check-rrd-storage and --migrate-poller-queue; run them separately.\n");
+    exit(1);
+}
+
+// A collector's primary connection does not establish a primary installer
+// identity. Preserve explicit local/offline and poller-queue maintenance modes.
+if (!$check_rrd_storage && !$migrate_poller_queue && !$local
+    && (int) ($config['poller_id'] ?? 1) > 1 && ($config['connection'] ?? 'online') === 'online') {
+    fwrite(STDERR, "Run schema upgrades from the primary collector; use --local only for this collector's own database.\n");
     exit(1);
 }
 
@@ -209,7 +239,7 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
             break;
         }
 
-        if (cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
+        if (CACTI_VERSION != $cacti_upgrade_version && cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
             if (db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version)) === false) {
                 $upgrade_failed = true;
                 break;
@@ -225,9 +255,28 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
         break;
     }
 
-    if (db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version)) === false) {
-        $upgrade_failed = true;
-        break;
+    if (CACTI_VERSION == $cacti_upgrade_version && (int) ($config['poller_id'] ?? 0) <= 1) {
+        require_once __DIR__ . '/../lib/cdef_reference.php';
+        try {
+            cdef_reference_install();
+        } catch (Throwable $error) {
+            fwrite(STDERR, "CDEF reference contract installation could not be confirmed; the final version was not recorded. Review the primary schema and installer privileges.\n");
+            exit(1);
+        }
+    }
+
+    if (CACTI_VERSION == $cacti_upgrade_version) {
+        require_once __DIR__ . '/../lib/installer.php';
+        if (!Installer::recordInstalledVersion()) {
+            fwrite(STDERR, "The final database version could not be confirmed; no successful upgrade was reported. Review the version table and database privileges before retrying.\n");
+            exit(1);
+        }
+    } else {
+        if (db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version)) === false) {
+            $upgrade_failed = true;
+            break;
+        }
+
     }
 
     if (CACTI_VERSION == $cacti_upgrade_version) {
@@ -294,6 +343,7 @@ function display_help()
     print 'Typically, this user account will be apache, www-run, or root.' . PHP_EOL . PHP_EOL;
     print 'If you are running a beta or alpha version of Kadupul and need to rerun' . PHP_EOL;
     print 'the upgrade script, simply set the forcever to the previous release.' . PHP_EOL . PHP_EOL;
+    print '--install-cdef-reference-contract - Install primary CDEF row guards, including an already-current schema' . PHP_EOL;
     print '--check-rrd-storage - Check storage and queue access as this service account without upgrading' . PHP_EOL;
     print '--migrate-poller-queue - Convert the selected queue to InnoDB; use --local on remote collectors' . PHP_EOL;
     print '--forcever - Force the starting version, say ' . CACTI_VERSION . PHP_EOL;
