@@ -9,6 +9,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Trust forwarded client IPs only when the TCP peer is an explicitly configured
   proxy and exactly one allowlisted header contains one IP address. The unsafe
   `proxy_headers = true` mode no longer authorizes forwarded addresses.
+- Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
+- Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
 
 - Report failed graph-to-report inserts accurately and handle missing graphs without PHP warnings.
