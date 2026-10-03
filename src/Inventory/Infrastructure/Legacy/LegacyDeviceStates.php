@@ -16,7 +16,7 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
-final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Inventory\Application\Port\DeviceStatistics
+final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Inventory\Application\Port\DeviceStatistics, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization
 {
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private string $projectDir) {}
     public static function state(array $row): DeviceState
@@ -42,6 +42,10 @@ final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Invent
     public function clearStatistics(int $actorId, DeviceSelection $selection): void
     {
         $this->run($actorId, $selection, ['operation' => 'clear-statistics']);
+    }
+    public function synchronizeTemplates(int $actorId, DeviceSelection $selection): void
+    {
+        $this->run($actorId, $selection, ['operation' => 'sync-template']);
     }
     private function run(int $actorId, DeviceSelection $selection, array $operation): void
     {
