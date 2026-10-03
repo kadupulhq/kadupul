@@ -48,6 +48,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'unused profile is normally removable',
         'collector retry builds real poller item from the saved command',
         'offline collector yields explicit partial handoff without undoing local definition',
+        'offline handoff fixture restores poller identities',
         'whitelist update publishes the exact saved command and verifies it',
         'worker independently rechecks feature grants before executing the handoff',
         'French session authenticates through legacy login',

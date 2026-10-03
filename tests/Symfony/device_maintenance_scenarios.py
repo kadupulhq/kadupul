@@ -66,7 +66,7 @@ def verify_device_maintenance(harness, session, check, poller=1):
             try:
                 for action in ['ping', 'runquery']:
                     url = f'http://127.0.0.1/remote_agent.php?action={action}&safe_diagnostics=1&host_id={device}&data_query_id={target}'
-                    response = harness.php('-r', 'echo file_get_contents(' + json.dumps(url) + ');')
+                    response = harness.php('-r', '$response = file_get_contents(' + json.dumps(url) + '); if ($response === false) { exit(1); } echo $response;')
                     check(response['exit'] == 0, 'collector diagnostic HTTP request completes')
                     payload = json.loads(response['stdout'])
                     check(payload.get('diagnostics_sanitized') is True, 'collector ' + action + ' returns sanitized diagnostics')
