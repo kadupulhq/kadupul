@@ -145,10 +145,16 @@ final class AutomationModuleNativeTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('schedules')]
     public function testNativeSchedulerHonoursManualAndFutureTimes(array $scenario, bool $expected): void
     {
+        $startedAt = time();
         $state = $this->runNative($scenario + array('mode' => 'schedule'));
+        $finishedAt = time();
         self::assertSame($expected, $state['result']);
         if ($expected && $scenario['type'] === 2) {
-            self::assertGreaterThan(time() - 60, strtotime($state['contracts']['next_start']));
+            // The scheduler stores minute precision; compare against the invocation window,
+            // rather than a later parent clock which can cross a minute boundary.
+            $next = (new DateTimeImmutable($state['contracts']['next_start'], new DateTimeZone('UTC')))->getTimestamp();
+            self::assertGreaterThanOrEqual(intdiv($startedAt, 60) * 60, $next);
+            self::assertLessThanOrEqual($finishedAt + 86400, $next);
         }
         self::assertSame(8, (int) $state['contracts']['id']);
     }
