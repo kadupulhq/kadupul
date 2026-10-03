@@ -39,6 +39,9 @@ $_SESSION = [];
 require $root . '/include/global_languages.php';
 require $root . '/include/global_arrays.php';
 require $root . '/include/global_form.php';
+// Resource authorization reads actual user-setting defaults while checking graphs.
+$no_http_header_files = []; // This isolated CLI probe has no HTTP logging entrypoints.
+require $root . '/include/global_settings.php';
 $_SESSION['sess_user_id'] = 1;
 // xml_to_cdef only reads the name from the production CDEF form field schema.
 $fields_cdef_edit = ['name' => ['method' => 'textbox']];
