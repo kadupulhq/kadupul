@@ -290,6 +290,7 @@ def main():
     assignment_checks += ['device list exposes all bulk assignment routes', 'default mutation selection retains existing missing-site and disabled-poller behavior', 'bulk site invokes action 4 once for the complete selection', 'bulk template invokes action 4 once for the complete selection', 'rejected bulk site does not invoke action 4', 'rejected bulk template does not invoke action 4', 'bulk site displays its assignment completion notice', 'bulk template displays its assignment completion notice', 'bulk existing template repairs missing association', 'bulk existing template restores primary and collector association', 'bulk template assignment retains existing graphs and data', 'bulk template unassignment invokes the zero-template hook for each device', 'bulk template preserves site membership cache marker', 'bulk collector worker rejects disabled destination after GET', 'disabled bulk collector destination writes no ownership or copy', 'bulk collector return failure reports uncertain outcome', 'bulk collector return failure rolls back primary ownership and statistics', 'bulk collector rollback retains every previous polling copy', 'bulk collector transfers a full remote selection to another remote', 'bulk remote transfer confirms primary and destination ownership', 'bulk remote transfer preserves nonempty polling ownership', 'bulk remote transfer removes old copies after commit', 'bulk collector can return to its previous remote', 'bulk remote return cleans the second collector', 'bulk collector mid-batch failure reports uncertain outcome', 'bulk collector mid-batch failure rolls back primary host and cache ownership', 'bulk collector mid-batch failure rolls back poller statistics', 'rejected bulk collector does not invoke action 4', 'bulk collector failure retains documented first-device remote residue', 'bulk site worker rejects deleted destination after GET without writes', 'malformed bulk assignment command cannot write', 'bulk assignment worker rejects extra command keys before writes']
     assignment_checks += ['bulk site preserves preflight remote disabled state', 'bulk template preserves preflight remote disabled state', 'bulk site supports explicit unassignment', 'bulk template supports explicit unassignment']
     assignment_checks += ['bulk collector cleanup rejects changed ownership before purging', 'bulk collector cleanup failure cannot report success', 'bulk collector cleanup failure retains committed destination ownership', 'bulk collector cleanup failure leaves recoverable old copies', 'bulk collector recovers old residue by returning to remote']
+    collector_cleanup_checks = ['collector cleanup failure retains committed primary ownership', 'collector cleanup failure retains committed primary polling ownership', 'collector cleanup failure leaves old collector residue', 'collector cleanup recovery restores the old collector before retrying', 'collector cleanup recovery removes old collector residue']
     cutover_checks = ['legacy device POST is never replayed', 'legacy device GET links do not mutate state', 'legacy device entry rechecks revoked management realm', 'legacy location suggestions use authorized Inventory query', 'Inventory preserves template collector and exact location filters', 'existing device automation rules run through Symfony', 'device automation preserves action 6 once with full selection', 'device automation SQL failure cannot report success']
     placement_checks = ['tree legacy placement shares destination locks and rejects duplicates', 'report legacy placement shares destination locks and rejects duplicates', 'tree placement verifies final state after callbacks', 'report placement verifies final state after callbacks', 'tree placement saves through Symfony', 'report placement saves through Symfony', 'tree placement rolls back entire selection', 'report placement rolls back entire selection', 'tree placement preserves selected parent', 'report placement preserves display settings', 'tree placement does not duplicate existing devices', 'report placement does not duplicate existing devices']
     maintenance_checks = ['maintenance enables debug through Symfony', 'maintenance confirms remote debug setting', 'maintenance SQL rejection cannot report success', 'maintenance failure rolls back primary debug settings', 'maintenance refreshes polling cache through Symfony', 'maintenance connectivity probes the real SNMP fixture', 'collector ping returns sanitized diagnostics', 'collector runquery returns sanitized diagnostics', 'maintenance executes reload-query against the SNMP fixture', 'maintenance executes reindex against the SNMP fixture', 'maintenance executes query-diagnostics against the SNMP fixture', 'maintenance rejects stale device settings']
@@ -386,6 +387,7 @@ def main():
         'device_maintenance_scenarios.py-test-hash': 'Integration test source differs',
         'device_placement_scenarios.py-test-hash': 'Integration test source differs',
         'placement_lock_probe.php-test-hash': 'Integration test source differs',
+        'collector-cleanup-test-hash': 'Integration test source differs',
         'script-server-test-hash': 'Integration test source differs',
         'missing-script-server-check': 'Incomplete Symfony integration checks',
         'cli-parity-test-hash': 'Integration test source differs',
@@ -404,6 +406,8 @@ def main():
         failures['missing-assignment-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(snmp_checks)):
         failures['missing-snmp-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(collector_cleanup_checks)):
+        failures['missing-collector-cleanup-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(cutover_checks)):
         failures['missing-cutover-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(placement_checks)):
@@ -539,6 +543,8 @@ def main():
                 evidence['source_sha256']['tests/Symfony/device_placement_scenarios.py'] = '0' * 64
             elif case == 'placement_lock_probe.php-test-hash':
                 evidence['source_sha256']['tests/Symfony/placement_lock_probe.php'] = '0' * 64
+            elif case == 'collector-cleanup-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_collector_scenarios.py'] = '0' * 64
             elif case == 'script-server-test-hash':
                 evidence['source_sha256']['tests/Symfony/script_server_scenarios.py'] = '0' * 64
             elif case == 'missing-script-server-check':
@@ -575,6 +581,9 @@ def main():
             elif case.startswith('missing-snmp-check-'):
                 missing = snmp_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-collector-cleanup-check-'):
+                omitted = collector_cleanup_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
             elif case.startswith('missing-cutover-check-'):
                 missing = cutover_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]

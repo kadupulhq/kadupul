@@ -321,6 +321,12 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk collector cleanup failure cannot report success',
         'bulk collector cleanup failure retains committed destination ownership',
         'bulk collector cleanup failure leaves recoverable old copies',
+        'collector cleanup failure retains committed primary ownership',
+        'collector cleanup failure retains committed primary polling ownership',
+        'collector cleanup failure leaves old collector residue',
+        'collector cleanup recovery restores the old collector before retrying',
+        'collector cleanup recovery removes old collector residue',
+
         'bulk collector recovers old residue by returning to remote',
         'bulk options save through Symfony',
         'bulk options action hook registered',
