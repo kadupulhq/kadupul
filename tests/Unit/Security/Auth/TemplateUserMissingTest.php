@@ -75,6 +75,7 @@ function __($text, ...$args) {
 
 PHP;
 
+	$source .= cacti_test_function_source($auth, 'auth_log_username') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'auth_login_create_user_from_template') . "\n\n";
 	$source .= "\$GLOBALS['user'] = auth_login_create_user_from_template('alice', 2);\n";
 

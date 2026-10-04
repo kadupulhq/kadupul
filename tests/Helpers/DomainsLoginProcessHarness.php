@@ -78,6 +78,11 @@ function cacti_test_run_domains_login_process_1_2(array $scenario, ?string $src 
 		throw new RuntimeException('domains_login_process() is unbalanced');
 	}
 
+	/* the login name in each log line goes through this helper */
+	if (preg_match('/^function auth_log_username\(.*?^}$/ms', $src, $match)) {
+		$body = $match[0] . "\n\n" . $body;
+	}
+
 	$harness = <<<'PHP'
 <?php
 $scenario = json_decode($argv[1], true);
