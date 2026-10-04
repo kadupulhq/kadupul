@@ -2,7 +2,7 @@ name: Offline bundle
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, 'chore/consolidate-main-*']
   push:
     branches: [main]
   workflow_call:
