@@ -8,6 +8,7 @@
       <file>integration/GraphItemOrderingDatabaseTest.php</file>
       <file>integration/ProfileDeletionDatabaseTest.php</file>
       <file>integration/BoostRecoveryDatabaseTest.php</file>
+      <file>./integration/GroupMembershipConcurrencyTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

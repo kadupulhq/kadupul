@@ -25,18 +25,23 @@ final readonly class LegacyBrowserAuthentication
 
     public function __construct(private RequestStack $requests, private DatabaseConnection $database, private LegacyConfiguration $configuration, private NativeAuthenticationSession $sessions, private AuditTrail $audit) {}
 
-    public function existingActor(int $id): ?Actor
+    public function existingActor(int $id, mixed $credential): ?Actor
     {
         $database = $this->database->get();
-        if ($id <= 0 || !in_array($this->method($database), [1, 2, 3, 4], true)) {
+        if ($id <= 0 || !is_string($credential) || preg_match('/\A[a-f0-9]{64}\z/D', $credential) !== 1 || !in_array($this->method($database), [1, 2, 3, 4], true)) {
             return null;
         }
         $request = $this->requests->getCurrentRequest();
         if ($this->setting($database, 'force_https') === 'on' && ($request === null || !$request->isSecure() || !Request::createFromGlobals()->isSecure())) {
             throw new AccessDeniedHttpException('HTTPS is required.');
         }
-        $user = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id, username, enabled, locked FROM user_auth WHERE id = ?', [$id]));
-        return $this->eligible($database, $user) ? new Actor($id, $user['username']) : null;
+        $user = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id, username, enabled, locked, password FROM user_auth WHERE id = ?', [$id]));
+        if (!$this->eligible($database, $user)) {
+            return null;
+        }
+        require_once dirname(__DIR__, 4) . '/lib/auth.php';
+        return hash_equals(\auth_session_credential_generation($id, $user['password'], $database), $credential)
+            ? new Actor($id, $user['username']) : null;
     }
 
     public function restore(): ?Actor
@@ -58,7 +63,7 @@ final readonly class LegacyBrowserAuthentication
             throw new \RuntimeException('Browser authentication cannot own an existing transaction.');
         }
         $config = $this->configuration->values();
-        $tables = ['settings', 'user_auth', 'user_log'];
+        $tables = ['settings', 'user_auth', 'settings_user', 'user_log'];
         if ($config['database_sessions']) {
             $tables[] = 'sessions';
         }
@@ -90,7 +95,7 @@ final readonly class LegacyBrowserAuthentication
             }
             if ($method === 2) {
                 $username = $basic === null ? null : $this->mappedBasic($database, $basic);
-                $user = $username === null ? false : BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id, username, realm, enabled, locked FROM user_auth WHERE realm = 2 AND username = ?' . $this->lock($database), [$username]));
+                $user = $username === null ? false : BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id, username, realm, enabled, locked, password FROM user_auth WHERE realm = 2 AND username = ?' . $this->lock($database), [$username]));
             } else {
                 $reason = 'cookie_restore';
                 if ($remember === null || $this->setting($database, 'auth_cache_enabled') !== 'on') {
@@ -106,6 +111,8 @@ final readonly class LegacyBrowserAuthentication
                 return null;
             }
             $id = (int) $user['id'];
+            require_once dirname(__DIR__, 4) . '/lib/auth.php';
+            $generation = \auth_session_credential_generation($id, $user['password'], $database);
             $actor = new Actor($id, $user['username']);
             if ($reason === 'cookie_restore') {
                 $removed = BrowserAuthenticationSql::execute($database, 'DELETE FROM user_auth_cache WHERE id = ? AND user_id = ? AND hostname = ? AND token = ?', [$credential['cache'], $id, $ip, $credential['hash']]);
@@ -118,7 +125,7 @@ final readonly class LegacyBrowserAuthentication
                     throw new \RuntimeException('Remembered authentication token insertion was not confirmed.');
                 }
             }
-            $session = $this->sessions->establish($id, $request, $ip);
+            $session = $this->sessions->establish($id, $request, $ip, $generation);
             $this->log($database, $user['username'], $id, $reason === 'basic_restore' ? 1 : 2, $ip);
             if (!$database->commit()) {
                 throw new \RuntimeException('Browser authentication commit was not confirmed.');
@@ -212,8 +219,10 @@ final readonly class LegacyBrowserAuthentication
             return null;
         }
         $field = ctype_digit($identity) ? 'id' : 'username';
-        $user = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id, username, realm, enabled, locked FROM user_auth WHERE ' . $field . ' = ? AND realm = ?' . $this->lock($database), [$identity, $realm]));
-        if (!$this->eligible($database, $user)) {
+        $user = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id, username, realm, enabled, locked, password, must_change_password, password_change FROM user_auth WHERE ' . $field . ' = ? AND realm = ?' . $this->lock($database), [$identity, $realm]));
+        // The locked account must satisfy the same local forced-change policy
+        // as legacy remembered authentication before any credential is consumed.
+        if (!$this->eligible($database, $user) || ((int) $user['realm'] === 0 && $user['must_change_password'] === 'on' && $user['password_change'] === 'on')) {
             return null;
         }
         $hash = hash('sha512', $token);

@@ -170,6 +170,22 @@ if (isset_request_var('update_policy')) {
     Actions Function
    -------------------------- */
 
+// A group mutation must name a group that exists. A forged id would otherwise
+// leave member, realm or permission rows that a group created later with that
+// id would inherit.
+function user_group_exists($id)
+{
+    return $id > 0 && db_fetch_cell_prepared('SELECT COUNT(*) FROM user_auth_group WHERE id = ?', array($id)) > 0;
+}
+
+function user_group_refuse($id)
+{
+    cacti_log('WARNING: Refused a change to missing User Group ID ' . $id . ' from IP ' . get_client_addr(), false, 'AUTH');
+    raise_message('permission_denied');
+    header('Location: user_group_admin.php?header=false');
+    exit;
+}
+
 function user_group_disable($id)
 {
     db_execute_prepared("UPDATE user_auth_group SET enabled = '' WHERE id = ?", array($id));
@@ -186,79 +202,139 @@ function user_group_enable($id)
 
 function user_group_remove($id)
 {
-    db_execute_prepared('DELETE FROM user_auth_group WHERE id = ?', array($id));
-    db_execute_prepared('DELETE FROM user_auth_group_members WHERE group_id = ?', array($id));
-    db_execute_prepared('DELETE FROM user_auth_group_realm WHERE group_id = ?', array($id));
-    db_execute_prepared('DELETE FROM user_auth_group_perms WHERE group_id = ?', array($id));
+    // A new member can commit between discovery and the group lock. Retry
+    // outside the rolled-back unit rather than acquiring a user out of order.
+    $known = array();
+    $retry_error = null;
+    for ($attempt = 0; $attempt < 8; $attempt++) {
+        $unit = auth_membership_begin(array('user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms'));
+        $finished = false;
+        try {
+            $discovered = auth_membership_rows($unit['db'], 'SELECT user_id FROM user_auth_group_members WHERE group_id = ?', array($id));
+            $known = array_unique(array_merge($known, array_column($discovered, 'user_id')));
+            auth_membership_lock_users($known, false, $unit['db']);
+            if (!isset(auth_membership_lock_groups(array($id), $unit['db'])[$id])) {
+                auth_membership_finish($unit, false);
+                return;
+            }
+            $lock = $unit['db']->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+            $users = array_column(auth_membership_rows($unit['db'], 'SELECT user_id FROM user_auth_group_members WHERE group_id = ?' . $lock, array($id)), 'user_id');
+            if (array_diff($users, $known)) {
+                $known = array_unique(array_merge($known, $users));
+                auth_membership_finish($unit, false);
+                $finished = true;
+                if (!$unit['owned']) {
+                    throw new RuntimeException('Concurrent membership change requires retry outside caller transaction');
+                }
+                continue;
+            }
+            foreach (array('user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms') as $table) {
+                auth_membership_execute($unit['db'], 'DELETE FROM ' . $table . ' WHERE group_id = ?', array($id));
+            }
+            auth_membership_execute($unit['db'], 'DELETE FROM user_auth_group WHERE id = ?', array($id));
+            auth_membership_reset_users($unit, $users, false);
+            auth_membership_finish($unit, true);
+            return;
+        } catch (Throwable $error) {
+            if ($error instanceof PDOException && (int) ($error->errorInfo[1] ?? 0) === 1020 && $unit['db']->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
+                // A successful read refreshes PDO's server transaction status:
+                // MariaDB may have aborted the transaction on the failed read.
+                try {
+                    $unit['db']->query('SELECT 1')->closeCursor();
+                } catch (Throwable $status_error) {
+                    throw $error;
+                }
+            }
+            if (!$finished && $unit['db']->inTransaction()) {
+                auth_membership_finish($unit, false);
+            }
+            // MariaDB can require a transaction restart when the locking read
+            // encounters a row inserted after the discovery snapshot.
+            if ($unit['owned'] && !$unit['db']->inTransaction() && $error instanceof PDOException && (int) ($error->errorInfo[1] ?? 0) === 1020) {
+                $retry_error = $error;
+                continue;
+            }
+            throw $error;
+        }
+    }
+    throw $retry_error ?? new RuntimeException('Group membership changed repeatedly during removal');
 }
 
 function user_group_copy($id, $prefix = 'New Group')
 {
     static $count = 1;
-
-    $name = $prefix . ' ' . $count;
-
-    db_execute_prepared('INSERT INTO user_auth_group
-		(name, description, graph_settings, login_opts, show_tree, show_list, show_preview,
-		policy_graphs, policy_trees, policy_hosts, policy_graph_templates, enabled)
-		SELECT ' . db_qstr($name) . ', description, graph_settings, login_opts, show_tree, show_list, show_preview,
-		policy_graphs, policy_trees, policy_hosts, policy_graph_templates, enabled
-		FROM user_auth_group WHERE id = ?', array($id));
-
-    $id = db_fetch_insert_id();
-
-    if (!empty($id)) {
-        $perms = db_fetch_assoc_prepared(
-            'SELECT *
-			FROM user_auth_group_perms
-			WHERE group_id = ?',
-            array($id)
-        );
-
-        if (cacti_sizeof($perms)) {
-            foreach ($perms as $p) {
-                db_execute_prepared(
-                    'INSERT INTO user_auth_group_perms
-					(group_id, item_id, type)
-					VALUES (?, ?, ?)',
-                    array($id, $p['item_id'], $p['type'])
-                );
+    $unit = null;
+    try {
+        $unit = auth_membership_begin(array('user_auth_group', 'user_auth_group_perms', 'user_auth_group_realm'));
+        $db = $unit['db'];
+        if (!isset(auth_membership_lock_groups(array($id), $db)[(int) $id])) {
+            throw new RuntimeException('Copy source group is unavailable');
+        }
+        $lock = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+        $fields = array('description', 'graph_settings', 'login_opts', 'show_tree', 'show_list', 'show_preview', 'policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates', 'enabled');
+        $source = auth_membership_rows($db, 'SELECT ' . implode(', ', $fields) . ' FROM user_auth_group WHERE id = ?' . $lock, array($id));
+        if (count($source) !== 1) {
+            throw new RuntimeException('Copy source group is unavailable');
+        }
+        $perms = auth_membership_rows($db, 'SELECT item_id, type FROM user_auth_group_perms WHERE group_id = ? ORDER BY item_id, type' . $lock, array($id));
+        $realms = auth_membership_rows($db, 'SELECT realm_id FROM user_auth_group_realm WHERE group_id = ? ORDER BY realm_id' . $lock, array($id));
+        $values = array_merge(array($prefix . ' ' . $count), array_values($source[0]));
+        $columns = array_merge(array('name'), $fields);
+        auth_membership_execute($db, 'INSERT INTO user_auth_group (' . implode(', ', $columns) . ') VALUES (' . implode(',', array_fill(0, count($values), '?')) . ')', $values);
+        $group_id = $db->lastInsertId();
+        if (!is_string($group_id) || !ctype_digit($group_id) || (float) $group_id < 1 || (float) $group_id > 4294967295) {
+            throw new RuntimeException('Copied group identity was not confirmed');
+        }
+        $stored = auth_membership_rows($db, 'SELECT ' . implode(', ', $columns) . ' FROM user_auth_group WHERE id = ?', array($group_id));
+        if (count($stored) !== 1 || array_values($stored[0]) !== $values) {
+            throw new RuntimeException('Copied group policy was not confirmed');
+        }
+        foreach ($perms as $permission) {
+            auth_membership_execute($db, 'INSERT INTO user_auth_group_perms (group_id, item_id, type) VALUES (?, ?, ?)', array($group_id, $permission['item_id'], $permission['type']));
+        }
+        foreach ($realms as $realm) {
+            auth_membership_execute($db, 'INSERT INTO user_auth_group_realm (group_id, realm_id) VALUES (?, ?)', array($group_id, $realm['realm_id']));
+        }
+        if (auth_membership_rows($db, 'SELECT item_id, type FROM user_auth_group_perms WHERE group_id = ? ORDER BY item_id, type', array($group_id)) !== $perms || auth_membership_rows($db, 'SELECT realm_id FROM user_auth_group_realm WHERE group_id = ? ORDER BY realm_id', array($group_id)) !== $realms) {
+            throw new RuntimeException('Copied group grants were not confirmed');
+        }
+        auth_membership_finish($unit, true);
+        $count++;
+        return true;
+    } catch (Throwable $error) {
+        if ($unit !== null && $unit['db']->inTransaction()) {
+            try {
+                auth_membership_finish($unit, false);
+            } catch (Throwable $cleanup_error) {
+                throw $error;
             }
         }
-
-        $realms = db_fetch_assoc_prepared(
-            'SELECT *
-			FROM user_auth_group_realm
-			WHERE group_id = ?',
-            array($id)
-        );
-
-        if (cacti_sizeof($realms)) {
-            foreach ($realms as $r) {
-                db_execute_prepared(
-                    'INSERT INTO user_auth_group_realm
-					(group_id, realm_id)
-					VALUES (?, ?)',
-                    array($id, $r['realm_id'])
-                );
-            }
-        }
+        return false;
     }
-
-    $count++;
 }
 
 function update_policies(): never
 {
+    if (!user_group_exists(get_filter_request_var('id'))) {
+        user_group_refuse(get_filter_request_var('id'));
+    }
+
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
     $failed = false;
-    foreach ($policies as $p) {
-        if (isset_request_var($p)) {
-            if (!\Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write("UPDATE `user_auth_group` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')), true, (int) get_filter_request_var('id'))) {
-                $failed = true;
+    try {
+        foreach ($policies as $p) {
+            if (isset_request_var($p)) {
+                if (!\Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write("UPDATE `user_auth_group` SET `$p` = ? WHERE `id` = ?", array(get_filter_request_var($p), get_filter_request_var('id')), true, (int) get_filter_request_var('id'))) {
+                    $failed = true;
+                }
             }
         }
+    } catch (\Kadupul\IdentityAccess\Infrastructure\Legacy\MissingPermissionGroup $error) {
+        if (!$error->rollbackConfirmed) {
+            throw $error;
+        }
+        user_group_refuse($error->principal);
     }
 
     if ($failed) {
@@ -274,7 +350,14 @@ function form_actions()
     global $group_actions, $user_auth_realms;
 
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
-    $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(true);
+    try {
+        $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(true);
+    } catch (\Kadupul\IdentityAccess\Infrastructure\Legacy\MissingPermissionGroup $error) {
+        if (!$error->rollbackConfirmed) {
+            throw $error;
+        }
+        user_group_refuse($error->principal);
+    }
     if ($association_tab !== null) {
         header('Location: user_group_admin.php?action=edit&header=false&tab=' . $association_tab . '&id=' . get_nfilter_request_var('id'));
         exit;
@@ -283,6 +366,12 @@ function form_actions()
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
         if ($selected_items != false) {
+            foreach ($selected_items as $selected) {
+                if (!user_group_exists($selected)) {
+                    user_group_refuse($selected);
+                }
+            }
+
             if (get_nfilter_request_var('drp_action') == '1') { /* delete */
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
                     user_group_remove($selected_items[$i]);
@@ -290,8 +379,14 @@ function form_actions()
                     api_plugin_hook_function('user_group_remove', $selected_items[$i]);
                 }
             } elseif (get_nfilter_request_var('drp_action') == '2') { /* copy */
+                $copy_failed = false;
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
-                    user_group_copy($selected_items[$i], get_nfilter_request_var('group_prefix'));
+                    if (!user_group_copy($selected_items[$i], get_nfilter_request_var('group_prefix'))) {
+                        $copy_failed = true;
+                    }
+                }
+                if ($copy_failed) {
+                    raise_message(2);
                 }
             } elseif (get_nfilter_request_var('drp_action') == '3') { /* enable */
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
@@ -422,6 +517,11 @@ function form_save()
         get_filter_request_var('realm');
         /* ==================================================== */
 
+        /* id 0 creates a group; any other id must be one that exists. */
+        if (get_request_var('id') != 0 && !user_group_exists(get_request_var('id'))) {
+            user_group_refuse(get_request_var('id'));
+        }
+
         /* check duplicate group */
         if (cacti_sizeof(db_fetch_row_prepared('SELECT * FROM user_auth_group WHERE name = ? AND id != ?', array(get_nfilter_request_var('name'), get_nfilter_request_var('id'))))) {
             raise_message(12);
@@ -454,12 +554,24 @@ function form_save()
         header('Location: user_group_admin.php?action=edit&header=false&tab=general&id=' . (isset($group_id) && $group_id > 0 ? $group_id : get_nfilter_request_var('id')));
         exit;
     } elseif (isset_request_var('save_component_realm_perms')) {
-        db_execute_prepared('DELETE FROM user_auth_group_realm WHERE group_id = ?', array(get_filter_request_var('id')));
+        if (!user_group_exists(get_filter_request_var('id'))) {
+            user_group_refuse(get_filter_request_var('id'));
+        }
+
+        user_group_execute_child(get_filter_request_var('id'), 'DELETE FROM user_auth_group_realm WHERE group_id = ?', array(get_filter_request_var('id')));
 
         foreach ($_POST as $var => $val) {
             if (preg_match('/^[section]/i', $var)) {
                 if (substr($var, 0, 7) == 'section') {
-                    db_execute_prepared('REPLACE INTO user_auth_group_realm (group_id, realm_id) VALUES (?, ?)', array(get_request_var('id'), substr($var, 7)));
+                    user_group_execute_child(
+                        get_filter_request_var('id'),
+                        'REPLACE INTO user_auth_group_realm
+						(group_id, realm_id)
+						SELECT id, ?
+						FROM user_auth_group
+						WHERE id = ?',
+                        array(substr($var, 7), get_request_var('id'))
+                    );
                 }
             }
         }
@@ -471,13 +583,17 @@ function form_save()
         header('Location: user_group_admin.php?action=edit&header=false&tab=realms&id=' . get_request_var('id'));
         exit;
     } elseif (isset_request_var('save_component_graph_settings')) {
+        if (!user_group_exists(get_filter_request_var('id'))) {
+            user_group_refuse(get_filter_request_var('id'));
+        }
+
         $refused = false;
 
         foreach ($settings_user as $tab_short_name => $tab_fields) {
             foreach ($tab_fields as $field_name => $field_array) {
                 if ((isset($field_array['items'])) && (is_array($field_array['items']))) {
                     foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
-                        db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_filter_request_var('id'), $sub_field_name, get_nfilter_request_var($sub_field_name, '')));
+                        user_group_execute_child(get_filter_request_var('id'), 'REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_filter_request_var('id'), $sub_field_name, get_nfilter_request_var($sub_field_name, '')));
                     }
                 } else {
                     $value = get_nfilter_request_var($field_name);
@@ -494,7 +610,7 @@ function form_save()
                         continue;
                     }
 
-                    db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, $value));
+                    user_group_execute_child(get_filter_request_var('id'), 'REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, $value));
                 }
             }
         }
@@ -533,7 +649,15 @@ function perm_remove()
     /* ==================================================== */
 
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
-    $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::removePermission(true);
+    $saved = true;
+    try {
+        $saved = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::removePermission(true);
+    } catch (\Kadupul\IdentityAccess\Infrastructure\Legacy\MissingPermissionGroup $error) {
+        if (!$error->rollbackConfirmed) {
+            throw $error;
+        }
+        user_group_refuse($error->principal);
+    }
 
     if (!$saved) {
         raise_message(2);

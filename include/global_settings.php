@@ -1772,9 +1772,9 @@ $settings = array(
         ),
         'ldap_tls_certificate' => array(
             'friendly_name' => __('TLS Certificate Requirements'),
-            'description' => __('Should LDAP verify TLS Certificates when received by the Client.'),
+            'description' => __('Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it.'),
             'method' => 'drop_array',
-            'default' => LDAP_OPT_X_TLS_NEVER,
+            'default' => LDAP_OPT_X_TLS_DEMAND,
             'array' => $ldap_tls_cert_req
         ),
         'ldap_referrals' => array(

@@ -48,6 +48,22 @@ $GLOBALS['probe'] = array(
     'page' => $scenario['page'] ?? 'probe.php',
 );
 
+// The successful-login timing scenario uses the same real PDO transaction
+// as production, so the test observes persisted credentials rather than writes.
+if (!empty($scenario['credential_database'])) {
+    $credential_db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    $credential_db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, realm INTEGER, locked TEXT, password TEXT)');
+    $credential_db->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT, PRIMARY KEY (user_id, name))');
+    $insert = $credential_db->prepare('INSERT INTO user_auth VALUES (?, ?, ?, ?, ?, ?)');
+    foreach ($GLOBALS['probe']['users'] as $row) {
+        $insert->execute(array($row['id'], $row['username'], $row['enabled'], $row['realm'], $row['locked'], $row['password']));
+    }
+    $database_hostname = 'native_fixture';
+    $database_port = 0;
+    $database_default = 'auth_contract';
+    $database_sessions = array('native_fixture:0:auth_contract' => $credential_db);
+}
+
 function probe_normalize_sql(string $sql): string
 {
     return trim(preg_replace('/\s+/', ' ', $sql));
@@ -198,6 +214,17 @@ function db_fetch_cell($sql, $col_name = '', $log = true)
 function db_execute_prepared($sql, $params = array(), $log = true)
 {
     $GLOBALS['probe']['executed'][] = array('sql' => probe_normalize_sql($sql), 'params' => $params);
+    if (str_contains($sql, 'DELETE FROM user_auth_cache')) {
+        $db = new PDO('sqlite::memory:');
+        $db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, token TEXT, hostname TEXT)');
+        $insert = $db->prepare('INSERT INTO user_auth_cache VALUES (?, ?, ?)');
+        foreach ($GLOBALS['probe']['cache'] as $row) {
+            $insert->execute(array($row['user_id'], $row['token'], $row['hostname']));
+        }
+        $db->prepare($sql)->execute($params);
+        $GLOBALS['probe']['cache'] = $db->query('SELECT * FROM user_auth_cache')->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     return true;
 }
@@ -297,15 +324,24 @@ function kill_session_var($var_name)
     unset($_SESSION[$var_name]);
 }
 
-function cacti_session_start($regenerate = false)
-{
-    $GLOBALS['probe']['events'][] = 'session_start';
-}
+if (empty($scenario['real_sessions'])) {
+    function cacti_session_start($regenerate = false)
+    {
+        $GLOBALS['probe']['events'][] = 'session_start';
+    }
 
-function cacti_session_destroy()
-{
-    $GLOBALS['probe']['events'][] = 'session_destroy';
-    $_SESSION = array();
+    function cacti_session_destroy()
+    {
+        $GLOBALS['probe']['events'][] = 'session_destroy';
+        $_SESSION = array();
+    }
+
+} else {
+    require_once __DIR__ . '/PhpSource.php';
+    $functions = file_get_contents($root . '/lib/functions.php');
+    foreach (array('cacti_session_start', 'cacti_session_regenerate', 'cacti_session_destroy') as $function) {
+        eval(test_php_function_source($functions, $function));
+    }
 }
 
 function cacti_cookie_logout()
@@ -355,6 +391,7 @@ file_put_contents($probe_dir . '/auth_login.php', "<?php\n\$GLOBALS['probe']['ev
 set_include_path($probe_dir);
 
 register_shutdown_function(function () use ($probe_dir): void {
+    $session_status = session_status();
     $output = '';
 
     while (ob_get_level() > 0) {
@@ -365,6 +402,12 @@ register_shutdown_function(function () use ($probe_dir): void {
         unlink($probe_dir . '/' . $file);
     }
 
+    if (!empty($GLOBALS['scenario']['real_sessions'])) {
+        session_write_close();
+        foreach (glob($probe_dir . '/sess_*') as $session_file) {
+            unlink($session_file);
+        }
+    }
     rmdir($probe_dir);
 
     foreach (headers_list() as $header) {
@@ -373,7 +416,11 @@ register_shutdown_function(function () use ($probe_dir): void {
 
     print json_encode(array(
         'return' => $GLOBALS['probe']['return'],
+        'session_id' => session_id(),
+        'session_status' => $session_status,
         'elapsed_seconds' => $GLOBALS['probe']['elapsed_seconds'] ?? null,
+        'cache' => $GLOBALS['probe']['cache'],
+        'credential_password' => isset($GLOBALS['credential_db']) ? $GLOBALS['credential_db']->query('SELECT password FROM user_auth WHERE id = 42')->fetchColumn() : null,
         'session' => $_SESSION,
         'executed' => $GLOBALS['probe']['executed'],
         'events' => $GLOBALS['probe']['events'],
@@ -393,7 +440,21 @@ $config = array(
     'url_path' => '/kadupul/',
 ) + ($scenario['runtime_config'] ?? array());
 
+if (!empty($scenario['real_sessions'])) {
+    $config['cacti_session_name'] = 'kadupulnative';
+    $config['cookie_options'] = array('use_cookies' => false, 'cache_limiter' => '');
+    session_save_path($probe_dir);
+    session_id('native-old-session-id');
+    cacti_session_start();
+}
 $_SESSION = $scenario['session'] ?? array();
+
+// Ordinary persisted-session fixtures represent a completed login. Tests of
+// pre-upgrade sessions explicitly opt out and retain their missing binding.
+if (($scenario['bind_session'] ?? true) && isset($_SESSION['sess_user_id'])
+    && !array_key_exists('sess_user_credential', $_SESSION)) {
+    auth_session_bind_credentials($_SESSION['sess_user_id']);
+}
 
 foreach (array('PHP_AUTH_USER', 'REMOTE_USER', 'REDIRECT_REMOTE_USER', 'HTTP_PHP_AUTH_USER', 'HTTP_REMOTE_USER', 'HTTP_REDIRECT_REMOTE_USER', 'HTTP_REFERER') as $key) {
     unset($_SERVER[$key]);
@@ -422,7 +483,7 @@ if ($call['type'] === 'include_auth') {
     require $root . '/include/auth.php';
 
     $GLOBALS['probe']['page_continued'] = true;
-} elseif (in_array($call['type'], array('check_auth_cookie', 'clear_auth_cookie', 'set_auth_cookie', 'local_auth_login_process', 'auth_login_create_user_from_template'), true)) {
+} elseif (in_array($call['type'], array('check_auth_cookie', 'clear_auth_cookie', 'set_auth_cookie', 'local_auth_login_process', 'auth_login_create_user_from_template', 'cacti_auth_transition'), true)) {
     $started = hrtime(true);
     $GLOBALS['probe']['return'] = call_user_func_array($call['type'], $call['args'] ?? array());
     $GLOBALS['probe']['elapsed_seconds'] = (hrtime(true) - $started) / 1000000000;

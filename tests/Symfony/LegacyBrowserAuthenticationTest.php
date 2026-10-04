@@ -116,8 +116,8 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         foreach (['auth_method' => $method, 'auth_cache_enabled' => $cache, 'guest_user' => '3', 'force_https' => ''] as $name => $value) {
             $statement->execute([$name, $value]);
         }
-        $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT)');
-        $pdo->prepare('INSERT INTO user_auth VALUES (9, ?, 0, ?, ?)')->execute(['account', $enabled, $locked]);
+        $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT DEFAULT "", must_change_password TEXT DEFAULT "", password_change TEXT DEFAULT "")');
+        $pdo->prepare('INSERT INTO user_auth(id,username,realm,enabled,locked) VALUES (9, ?, 0, ?, ?)')->execute(['account', $enabled, $locked]);
         $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, token TEXT, hostname TEXT)');
         $pdo->prepare('INSERT INTO user_auth_cache VALUES (1, 9, ?, ?)')->execute([hash('sha512', 'token'), $host]);
         $_COOKIE = ['cacti_remembers' => $cookie];
@@ -185,8 +185,9 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         $pdo = new PDO('sqlite::memory:');
         $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
         $pdo->exec("INSERT INTO settings VALUES ('auth_method','2'),('force_https',''),('guest_user','3')");
-        $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT)');
-        $pdo->exec("INSERT INTO user_auth VALUES (9, 'account', 2, 'on', '')");
+        $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT DEFAULT "", must_change_password TEXT DEFAULT "", password_change TEXT DEFAULT "")');
+        $pdo->exec("INSERT INTO user_auth(id,username,realm,enabled,locked) VALUES (9, 'account', 2, 'on', '')");
+        $pdo->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT)');
         $pdo->exec('CREATE TABLE user_log (username TEXT, user_id INTEGER, result INTEGER, ip TEXT, time TEXT)');
         $database = $this->createMock(DatabaseConnection::class);
         $database->method('get')->willReturn($pdo);
@@ -331,7 +332,7 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         $statement->method('errorCode')->willReturn('00000');
         $statement->method('closeCursor')->willReturn(true);
         $rows = [];
-        foreach (['settings', 'user_auth', 'user_log'] as $table) {
+        foreach (['settings', 'user_auth', 'settings_user', 'user_log'] as $table) {
             $rows[] = ['Create Table' => 'CREATE TABLE `' . $table . '` (id INTEGER) ENGINE=InnoDB'];
             $rows[] = ['Name' => $table, 'Engine' => 'InnoDB'];
             $rows[] = false;

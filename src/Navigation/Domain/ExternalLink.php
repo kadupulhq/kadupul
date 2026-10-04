@@ -60,7 +60,7 @@ final readonly class ExternalLink
     public function fields(array $files): array
     {
         return ['title' => $this->title, 'style' => $this->style, 'filename' => in_array($this->contentfile, $files, true) ? $this->contentfile : '0',
-            'fileurl' => $this->contentfile, 'consolesection' => $this->extendedstyle ?: 'External Links', 'consolenewsection' => '',
+            'fileurl' => $this->contentfile, 'consolesection' => $this->extendedstyle !== '' ? $this->extendedstyle : 'External Links', 'consolenewsection' => '',
             'enabled' => $this->enabled, 'refresh' => $this->refresh];
     }
 }

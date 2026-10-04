@@ -292,7 +292,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var refreshMSeconds = <?php print read_user_setting('page_refresh') * 1000;?>;
+	var refreshMSeconds = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 	var graph_start     = <?php print get_current_graph_start();?>;
 	var graph_end       = <?php print get_current_graph_end();?>;
 	</script>
@@ -390,7 +390,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var refreshMSeconds = <?php print read_user_setting('page_refresh') * 1000;?>;
+	var refreshMSeconds = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 	var graph_start     = <?php print get_current_graph_start();?>;
 	var graph_end       = <?php print get_current_graph_end();?>;
 	</script>

@@ -46,13 +46,8 @@ if (isset_request_var('update_policy')) {
 
             break;
         case 'checkpass':
-            $error = secpass_check_pass(get_nfilter_request_var('password'));
-
-            if ($error == '') {
-                print $error;
-            } else {
-                print 'ok';
-            }
+            // 'ok' or the rule the password breaks, which the form shows.
+            print secpass_check_pass(get_nfilter_request_var('password'));
 
             break;
         default:
@@ -149,10 +144,12 @@ function form_actions()
                     }
                 } elseif (get_nfilter_request_var('drp_action') == '4') { // disable
                     for ($i = 0;($i < cacti_count($selected_items));$i++) {
-                        if ($_SESSION['sess_user_id'] != $selected_items[$i]) {
-                            user_disable($selected_items[$i]);
-                        } else {
+                        if ($_SESSION['sess_user_id'] == $selected_items[$i]) {
                             raise_message('attempt current', __('You are not allowed to disable the current login account'), MESSAGE_LEVEL_ERROR);
+                        } elseif (read_config_option('admin_user') == $selected_items[$i]) {
+                            raise_message('attempt admin', __('You are not allowed to disable the primary administrator account'), MESSAGE_LEVEL_ERROR);
+                        } else {
+                            user_disable($selected_items[$i]);
                         }
                     }
                 } elseif (get_nfilter_request_var('drp_action') == '5') { // batch copy
@@ -161,14 +158,34 @@ function form_actions()
                     /* ==================================================== */
 
                     $copy_error = false;
+
+                    /* the form offers only local accounts as the template */
                     $template = db_fetch_row_prepared(
                         'SELECT username, realm
 						FROM user_auth
-						WHERE id = ?',
+						WHERE id = ?
+						AND realm = 0',
                         array(get_nfilter_request_var('template_user'))
                     );
 
+                    if (!cacti_sizeof($template)) {
+                        $copy_error = true;
+                        $selected_items = array();
+                    }
+
                     for ($i = 0;($i < cacti_count($selected_items));$i++) {
+                        // Batch Copy replaces realms and permissions, so it
+                        // could strip the operator or the primary administrator.
+                        if ($_SESSION['sess_user_id'] == $selected_items[$i]) {
+                            raise_message('attempt current', __('You are not allowed to overwrite the current login account'), MESSAGE_LEVEL_ERROR);
+
+                            continue;
+                        } elseif (read_config_option('admin_user') == $selected_items[$i]) {
+                            raise_message('attempt admin', __('You are not allowed to overwrite the primary administrator account'), MESSAGE_LEVEL_ERROR);
+
+                            continue;
+                        }
+
                         $user = db_fetch_row_prepared(
                             'SELECT username, realm
 							FROM user_auth
@@ -176,9 +193,11 @@ function form_actions()
                             array($selected_items[$i])
                         );
 
-                        if ((isset($user)) && (isset($template))) {
+                        if (cacti_sizeof($user)) {
                             if (user_copy($template['username'], $user['username'], $template['realm'], $user['realm'], true) === false) {
                                 $copy_error = true;
+                            } else {
+                                reset_user_perms($selected_items[$i]);
                             }
                         }
                     }
@@ -395,6 +414,21 @@ function form_save()
             array(get_nfilter_request_var('id'))
         );
 
+        $old_realm = db_fetch_cell_prepared('SELECT realm FROM user_auth WHERE id = ?', array(get_nfilter_request_var('id')));
+
+        // The local rules follow the realm this save stores, in the same order
+        // as the save below: is_template_account() also matches the primary
+        // administrator, who keeps any realm, while a template is always local.
+        if (read_config_option('admin_user') == get_nfilter_request_var('id')) {
+            $realm = (int) $old_realm;
+        } elseif (is_template_account(get_nfilter_request_var('id'))) {
+            $realm = 0;
+        } elseif (get_nfilter_request_var('realm') != '') {
+            $realm = get_nfilter_request_var('realm');
+        } else {
+            $realm = (int) $old_realm;
+        }
+
         if ((get_nfilter_request_var('password') == '') && (get_nfilter_request_var('password_confirm') == '')) {
             $password = $old_password;
         } else {
@@ -402,7 +436,7 @@ function form_save()
         }
 
         /* check duplicate username */
-        if (cacti_sizeof(db_fetch_row_prepared('SELECT * FROM user_auth WHERE realm = ? AND username = ? AND id != ?', array(get_nfilter_request_var('realm'), get_nfilter_request_var('username'), get_nfilter_request_var('id'))))) {
+        if (cacti_sizeof(db_fetch_row_prepared('SELECT * FROM user_auth WHERE realm = ? AND username = ? AND id != ?', array($realm, get_nfilter_request_var('username'), get_nfilter_request_var('id'))))) {
             raise_message(12);
         }
 
@@ -413,6 +447,36 @@ function form_save()
         /* check to make sure the passwords match; if not error */
         if (get_nfilter_request_var('password') != get_nfilter_request_var('password_confirm')) {
             raise_message(4);
+
+            $_SESSION['sess_error_fields']['password_confirm'] = 'password_confirm';
+        } elseif (get_nfilter_request_var('password') != '' && $realm == 0) {
+            // A local password set here obeys the rules a user's own change does.
+            $policy = secpass_check_pass(get_nfilter_request_var('password'));
+
+            if ($policy != 'ok') {
+                raise_message('password_policy', $policy, MESSAGE_LEVEL_ERROR);
+
+                $_SESSION['sess_error_fields']['password'] = 'password';
+            } elseif (!secpass_check_history(get_nfilter_request_var('id'), get_nfilter_request_var('password'))) {
+                raise_message('password_history', __('You cannot use a previously entered password!'), MESSAGE_LEVEL_ERROR);
+
+                $_SESSION['sess_error_fields']['password'] = 'password';
+            } elseif ($old_password != '' && intval(read_config_option('secpass_history')) > 0) {
+                $keep   = intval(read_config_option('secpass_history'));
+                $hashes = $history == '' ? array() : explode('|', $history);
+
+                while (cacti_count($hashes) > $keep - 1) {
+                    array_shift($hashes);
+                }
+
+                $hashes[] = $old_password;
+                $history  = implode('|', $hashes);
+            }
+        } elseif ($realm == 0 && (int) $old_realm != 0) {
+            // The stored hash was set in another realm and never met the local rules.
+            raise_message('password_policy', __('Set a new password to move this account to the Local realm.'), MESSAGE_LEVEL_ERROR);
+
+            $_SESSION['sess_error_fields']['password'] = 'password';
         }
 
         if (get_nfilter_request_var('must_change_password') == 'on' && get_nfilter_request_var('password_change') != 'on') {
@@ -435,13 +499,13 @@ function form_save()
         /* force enable/disable on template accounts */
         if (read_config_option('admin_user') == get_nfilter_request_var('id')) {
             $save['enabled'] = 'on';
-            $save['realm']   = get_nfilter_request_var('realm', 0);
+            $save['realm']   = $realm;
         } elseif (is_template_account(get_nfilter_request_var('id'))) {
             $save['enabled'] = '';
             $save['realm']   = 0;
         } else {
             $save['enabled'] = form_input_validate(get_nfilter_request_var('enabled', ''), 'enabled', '', true, 3);
-            $save['realm']   = get_nfilter_request_var('realm', 0);
+            $save['realm']   = $realm;
         }
 
         $save['email_address']        = form_input_validate(get_nfilter_request_var('email_address', ''), 'email_address', '', true, 3);
@@ -457,6 +521,11 @@ function form_save()
             $user_id = sql_save($save, 'user_auth');
 
             if ($user_id) {
+                /* An administrator who changes their own password keeps the session they used. */
+                if ($save['password'] !== $old_password && isset($_SESSION['sess_user_id']) && $user_id == $_SESSION['sess_user_id']) {
+                    auth_session_bind_credentials($user_id);
+                }
+
                 /* Revoke only after the validated, plugin-finalized save succeeds. */
                 if (($save['enabled'] ?? '') !== 'on' || ($save['must_change_password'] ?? '') === 'on') {
                     cacti_auth_revoke_user_credentials($user_id);
@@ -507,35 +576,45 @@ function form_save()
 
         reset_user_perms(get_request_var('id'));
 
-        raise_message(1);
+        if (!is_error_message()) {
+            raise_message(1);
+        } else {
+            raise_message(35);
+        }
     } elseif (isset_request_var('save_component_graph_perms')) {
-        /* ================= input validation ================= */
-        get_filter_request_var('id');
-        get_filter_request_var('policy_hosts');
-        get_filter_request_var('policy_graphs');
-        get_filter_request_var('policy_trees');
-        get_filter_request_var('policy_graph_templates');
-        /* ==================================================== */
+        if (!is_error_message()) {
+            /* ================= input validation ================= */
+            get_filter_request_var('id');
+            get_filter_request_var('policy_hosts');
+            get_filter_request_var('policy_graphs');
+            get_filter_request_var('policy_trees');
+            get_filter_request_var('policy_graph_templates');
+            /* ==================================================== */
 
-        db_execute_prepared(
-            'UPDATE user_auth
+            db_execute_prepared(
+                'UPDATE user_auth
 			SET policy_graphs = ?,
 			policy_trees = ?,
 			policy_hosts = ?,
 			policy_graph_templates = ?
 			WHERE id = ?',
-            array(
-                get_nfilter_request_var('policy_graphs'),
-                get_nfilter_request_var('policy_trees'),
-                get_nfilter_request_var('policy_hosts'),
-                get_nfilter_request_var('policy_graph_templates'),
-                get_nfilter_request_var('id')
-            )
-        );
+                array(
+                    get_nfilter_request_var('policy_graphs'),
+                    get_nfilter_request_var('policy_trees'),
+                    get_nfilter_request_var('policy_hosts'),
+                    get_nfilter_request_var('policy_graph_templates'),
+                    get_nfilter_request_var('id')
+                )
+            );
+
+            reset_user_perms(get_nfilter_request_var('id'));
+        }
     } else {
         api_plugin_hook('user_admin_user_save');
 
-        reset_user_perms(get_filter_request_var('id'));
+        if (!is_error_message()) {
+            reset_user_perms(get_filter_request_var('id'));
+        }
     }
 
     /* redirect to the appropriate page */
@@ -1917,10 +1996,9 @@ function user()
             'default' => ''
         ),
         'group' => array(
-            'filter' => FILTER_CALLBACK,
+            'filter' => FILTER_VALIDATE_INT,
             'default' => '-1',
-            'pageset' => true,
-            'options' => array('options' => 'sanitize_search_string')
+            'pageset' => true
         ),
         'sort_column' => array(
             'filter' => FILTER_CALLBACK,
@@ -2098,8 +2176,11 @@ function user()
         }
     }
 
+    $sql_params = array();
+
     if (get_request_var('group') > 0) {
-        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' ug.group_id = ' . get_request_var('group');
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' ug.group_id = ?';
+        $sql_params[] = get_request_var('group');
     }
 
     if (get_request_var('login') > 0) {
@@ -2118,7 +2199,7 @@ function user()
         }
     }
 
-    $total_rows = db_fetch_cell("SELECT
+    $total_rows = db_fetch_cell_prepared("SELECT
 		COUNT(DISTINCT ua.id)
 		FROM user_auth AS ua
 		LEFT JOIN (
@@ -2129,12 +2210,12 @@ function user()
 		ON ua.id = ul.user_id
 		LEFT JOIN user_auth_group_members AS ug
 		ON ua.id = ug.user_id
-		$sql_where");
+		$sql_where", $sql_params);
 
     $sql_order = get_order_string();
     $sql_limit = ' LIMIT ' . ($rows * (get_request_var('page') - 1)) . ',' . $rows;
 
-    $user_list = db_fetch_assoc("SELECT ua.id, ua.username, ua.full_name,
+    $user_list = db_fetch_assoc_prepared("SELECT ua.id, ua.username, ua.full_name,
 		ua.realm, ua.enabled, ua.policy_graphs, ua.policy_hosts, ua.policy_graph_templates,
 		time, MAX(UNIX_TIMESTAMP(time)) as dtime
 		FROM user_auth AS ua
@@ -2149,7 +2230,7 @@ function user()
 		$sql_where
 		GROUP BY ua.id
 		$sql_order
-		$sql_limit");
+		$sql_limit", $sql_params);
 
     $nav = html_nav_bar('user_admin.php?filter=' . get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 9, __('Users'), 'page', 'main');
 

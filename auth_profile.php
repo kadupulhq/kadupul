@@ -122,7 +122,7 @@ function api_auth_clear_user_settings()
         if (isset_request_var('tab') && get_nfilter_request_var('tab') == 'general') {
             db_execute_prepared(
                 'DELETE FROM settings_user
-				WHERE user_id = ?',
+				WHERE user_id = ? AND name != \'auth_credential_generation\'',
                 array($user)
             );
 
@@ -138,6 +138,10 @@ function api_auth_clear_user_settings()
 function api_auth_clear_user_setting($name)
 {
     global $settings_user;
+
+    if ($name === 'auth_credential_generation') {
+        return;
+    }
 
     $user = $_SESSION['sess_user_id'];
 
@@ -182,6 +186,10 @@ function api_auth_update_user_setting($name, $value)
 {
     global $settings_user;
 
+    if ($name === 'auth_credential_generation') {
+        return;
+    }
+
     $user = $_SESSION['sess_user_id'];
 
     // The page saves on every keystroke, so a value the setting refuses is left unsaved.
@@ -197,9 +205,13 @@ function api_auth_update_user_setting($name, $value)
 				WHERE id = ?",
                 array($value, $user)
             );
-        } else {
+        } elseif (is_view_allowed('graph_settings')) {
             foreach ($settings_user as $tab => $settings) {
                 if (isset($settings[$name])) {
+                    if (!user_setting_value_allowed($settings[$name], $value)) {
+                        break;
+                    }
+
                     db_execute_prepared(
                         'REPLACE INTO settings_user
 						(name, value, user_id)
@@ -236,8 +248,6 @@ function form_save()
         );
     }
 
-    $errors = array();
-
     // Save the users graph settings if they have permission
     if (is_view_allowed('graph_settings') == true && isset_request_var('tab') && get_nfilter_request_var('tab') == 'general') {
         save_user_settings($_SESSION['sess_user_id']);
@@ -245,14 +255,10 @@ function form_save()
         api_plugin_hook('auth_profile_save');
     }
 
-    if (cacti_sizeof($errors) == 0) {
+    if (!is_error_message()) {
         raise_message(1);
     } else {
         raise_message(35);
-
-        foreach ($errors as $error) {
-            raise_message($error);
-        }
     }
 
     /* reset local settings cache so the user sees the new settings */

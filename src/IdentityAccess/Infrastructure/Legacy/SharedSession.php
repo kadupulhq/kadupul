@@ -11,13 +11,15 @@ use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-final readonly class SharedSession
+final class SharedSession
 {
+    private ?array $pendingRevocation = null;
+
     public function __construct(
-        private RequestStack $requests,
-        private LegacyConfiguration $configuration,
-        private ReadOnlyDatabaseSessionHandler $databaseHandler,
-        private DatabaseConnection $database
+        private readonly RequestStack $requests,
+        private readonly LegacyConfiguration $configuration,
+        private readonly ReadOnlyDatabaseSessionHandler $databaseHandler,
+        private readonly DatabaseConnection $database
     ) {}
 
     public function read(): array
@@ -74,8 +76,68 @@ final readonly class SharedSession
     {
         if (session_status() === PHP_SESSION_NONE && session_id() !== '') {
             session_start();
+            if ($this->database->get()->inTransaction()) {
+                // A denied writer must roll back its own transaction first.
+                // Retain token ownership, never the authenticated identity.
+                if ($this->pendingRevocation !== null && !hash_equals($this->pendingRevocation['id'], session_id())) {
+                    throw new \RuntimeException('Native session ownership changed during revocation.');
+                }
+                $this->pendingRevocation ??= ['id' => session_id(),
+                    'session_token' => $_SESSION['sess_remember_token'] ?? null,
+                    'cookie' => $_COOKIE['cacti_remembers'] ?? null];
+                session_write_close();
+                $_SESSION = [];
+                $this->expireRememberedCookie();
+                return;
+            }
+            require_once dirname(__DIR__, 4) . '/lib/auth.php';
+            // Reuse the legacy realm-aware token revocation before discarding
+            // the session's remembered-token ownership metadata.
+            \clear_auth_cookie($this->database->get(), static function (): void {});
+            $this->expireRememberedCookie();
             $_SESSION = [];
             session_destroy();
         }
+    }
+
+    public function completeRevocation(): void
+    {
+        if ($this->pendingRevocation === null) {
+            return;
+        }
+        if ($this->database->get()->inTransaction()) {
+            throw new \RuntimeException('Session revocation requires the caller transaction to finish.');
+        }
+        require_once dirname(__DIR__, 4) . '/lib/auth.php';
+        $pending = $this->pendingRevocation;
+        \clear_auth_cookie($this->database->get(), static function (): void {}, $pending);
+        if ($this->configuration->values()['database_sessions']) {
+            if (!$this->databaseHandler->destroy($pending['id'])) {
+                throw new \RuntimeException('Persisted session could not be revoked.');
+            }
+        } else {
+            if (session_status() !== PHP_SESSION_NONE || !hash_equals($pending['id'], session_id())) {
+                throw new \RuntimeException('Native session ownership changed before revocation.');
+            }
+            if (!session_start()) {
+                throw new \RuntimeException('Native session could not be reopened for revocation.');
+            }
+            $_SESSION = [];
+            if (!session_destroy()) {
+                throw new \RuntimeException('Native session could not be revoked.');
+            }
+        }
+        $this->pendingRevocation = null;
+    }
+
+    private function expireRememberedCookie(): void
+    {
+        $config = $this->configuration->values();
+        $request = $this->requests->getCurrentRequest();
+        setcookie('cacti_remembers', '', ['expires' => time() - 3600,
+            'path' => $config['url_path'], 'domain' => $config['cookie_domain'],
+            'secure' => $request?->isSecure() ?? false, 'httponly' => true, 'samesite' => 'Strict']);
+        unset($_COOKIE['cacti_remembers']);
+        $request?->cookies->remove('cacti_remembers');
     }
 }
