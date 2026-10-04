@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class ForceHttpsNativeBootstrapTest extends TestCase
 {
-    /** @dataProvider requests */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('requests')]
     public function testActualGlobalBootstrapEmitsTheExpectedHttpResponse(array $scenario, int $status, ?string $location): void
     {
         $root = dirname(__DIR__, 2);
@@ -76,7 +80,7 @@ final class ForceHttpsNativeBootstrapTest extends TestCase
         }
     }
 
-    public function requests(): array
+    public static function requests(): array
     {
         $server = array('SERVER_NAME' => 'kadupul.example', 'HTTP_HOST' => 'attacker.example', 'REQUEST_URI' => '/cacti/host.php?q=a%26b%23c%20d&arr[]=1');
         $redirect = 'https://kadupul.example' . $server['REQUEST_URI'];

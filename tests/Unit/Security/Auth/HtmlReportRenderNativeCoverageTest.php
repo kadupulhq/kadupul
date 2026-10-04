@@ -5,11 +5,15 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../../../Helpers/PestCodeCoverageCompatibility.php';
+
 final class HtmlReportRenderNativeCoverageTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static bool $coverageEvidenceChecked = false;
 
-    /** @dataProvider filterCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filterCases')]
     public function testFilterOptionsPreserveSelectionAndLiteralLabels(string $theme, bool $restricted): void
     {
         $state = $this->runRender(['operation' => 'filters', 'theme' => $theme, 'noany' => $restricted, 'nonone' => $restricted]);
@@ -47,7 +51,7 @@ final class HtmlReportRenderNativeCoverageTest extends TestCase
         self::assertSame(0, $xpath->query('//literal')->length);
     }
 
-    /** @dataProvider reportCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('reportCases')]
     public function testReportReadsOnlyItsOwnItemsInOrderAndRendersLiteralText(bool $email): void
     {
         $state = $this->runRender(['operation' => 'report', 'email' => $email]);
@@ -76,7 +80,7 @@ final class HtmlReportRenderNativeCoverageTest extends TestCase
         return ['preview' => [false], 'email' => [true]];
     }
 
-    /** @dataProvider iconCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('iconCases')]
     public function testGraphDrilldownUsesActualGraphAssociationAndPassesTreeContextToHook(array $realms): void
     {
         $state = $this->runRender(['operation' => 'icons', 'realms' => $realms]);
