@@ -54,7 +54,7 @@ final class UtilityLogPersistenceTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Symfony/UtilityLogPersistenceTest.php', 'utilities.php');
+                $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Symfony/UtilityLogPersistenceTest.php', 'utilities.php', 'lib/html_utility.php', 'tests/Helpers/PhpSource.php');
                 $scenario = json_encode(['rows' => $count, 'current' => $current, 'identity' => $identity], JSON_THROW_ON_ERROR);
                 $markers = ['retained-history-readback'];
                 $child = \NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-log-native.php', $scenario, $sources, $markers, ['utilities.php']);
