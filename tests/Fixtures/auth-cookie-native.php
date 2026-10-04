@@ -46,8 +46,9 @@ if (in_array($scenario['operation'] ?? '', array('domain', 'domain-cn'), true)) 
     if ($scenario['foreign_realm'] ?? false) {
         $db->exec('UPDATE user_auth SET realm=1004 WHERE id=43');
     }
-    $db->exec('CREATE TABLE user_domains(domain_id INTEGER,domain_name TEXT,user_id INTEGER)');
-    $db->prepare('INSERT INTO user_domains VALUES(3,?,?)')->execute(array('fixture.example', ($scenario['missing_template'] ?? false) ? 55 : 0));
+    $db->exec('CREATE TABLE user_domains(domain_id INTEGER,domain_name TEXT,user_id INTEGER,enabled TEXT DEFAULT "on",defdomain INTEGER DEFAULT 0)');
+    $db->prepare('INSERT INTO user_domains(domain_id,domain_name,user_id) VALUES(3,?,?)')->execute(array('fixture.example', ($scenario['missing_template'] ?? false) ? 55 : 0));
+    $scenario['config']['auth_method'] = 4;
     $db->exec('CREATE TABLE user_domains_ldap(domain_id INTEGER,server TEXT,group_require TEXT)');
     $db->exec("INSERT INTO user_domains_ldap VALUES(3,'fixture.example','')");
 }
@@ -77,6 +78,10 @@ function get_nfilter_request_var($name)
 {
     return $name === 'realm' ? 1003 : ($GLOBALS['scenario']['password'] ?? 'test-password');
 }
+function get_filter_request_var($name)
+{
+    return filter_var(get_nfilter_request_var($name), FILTER_VALIDATE_INT);
+}
 $events = array();
 $issued = null;
 $identity_queries = array();
@@ -94,6 +99,14 @@ function db_fetch_cell_prepared($sql, $params = array())
     }
     $row = db_fetch_row_prepared($sql, $params);
     return $row ? reset($row) : false;
+}
+function db_fetch_assoc($sql)
+{
+    return $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_fetch_cell($sql)
+{
+    return db_fetch_cell_prepared($sql);
 }
 function db_execute_prepared($sql, $params = array())
 {

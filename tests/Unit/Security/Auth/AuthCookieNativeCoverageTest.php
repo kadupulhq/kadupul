@@ -176,7 +176,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
     {
         return array(
             'existing configured realm' => array(array(), 43, false, array('bind'), 0),
-            'matching name in foreign realm is not accepted' => array(array('foreign_realm' => true), null, false, array('bind'), 0),
+            'matching name in foreign realm is not accepted' => array(array('foreign_realm' => true), null, true, array('bind'), 0),
             'missing template cannot create a principal' => array(array('foreign_realm' => true, 'missing_template' => true), null, true, array('bind'), 0),
             'rejected bind increments only its realm' => array(array('bind_failure' => true), null, true, array('bind'), 1),
             'search failure never attempts bind' => array(array('search_failure' => true), null, true, array(), 0),

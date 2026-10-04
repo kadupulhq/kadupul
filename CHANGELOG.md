@@ -231,6 +231,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
+- Accept an LDAP Domains login only for a realm that is an enabled domain, and always bind against that domain's directory first. Any other realm, a domain without directory settings, and a directory user with no account and no domain template are refused instead of falling through to the default template or guest account. Domain login errors no longer show directory error text on the login page; the log keeps it.
+
 ### Changed
 
 - Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
