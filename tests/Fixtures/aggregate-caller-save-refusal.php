@@ -165,7 +165,7 @@ eval(str_replace(
 ));
 if ($page === 'graphs.php') {
     // This caller fixture grants only the selected graph and its persisted device.
-    // The native branch suite separately verifies inaccessible resources.
+    // Denial behavior is exercised by the branch's native authorization suite.
     function is_graph_allowed($id): bool
     {
         return (int) $id === 11;
@@ -174,6 +174,8 @@ if ($page === 'graphs.php') {
     {
         return (int) $id === 1;
     }
+    eval(test_php_function_source(file_get_contents($source), 'graph_edit_graph_is_allowed'));
+    eval(test_php_function_source(file_get_contents($source), 'graph_edit_access_denied'));
 }
 eval(test_php_function_source(file_get_contents($source), $function));
 $function();
