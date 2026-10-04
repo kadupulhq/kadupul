@@ -312,10 +312,10 @@ jobs:
       - name: Verify never and legacy regression contracts
         working-directory: tests
         run: |
-          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Core/NeverReturnTypeTest.php --colors=never
-          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Security/Auth/ReportAdminGroupRealmTest.php --colors=never
-          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/HardeningAuth2026RegressionTest.php --colors=never
-          php -d error_reporting=24575 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/TreeSortFalseGuardTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Core/NeverReturnTypeTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Security/Auth/ReportAdminGroupRealmTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/HardeningAuth2026RegressionTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/TreeSortFalseGuardTest.php --colors=never
 
       - name: Verify string predicates and directory boundaries
         working-directory: tests
