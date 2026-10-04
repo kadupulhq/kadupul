@@ -47,6 +47,7 @@ if (defined('PERMISSION_REQUEST_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php');
 }
 if (defined('ADMIN_LIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Contract/IconRegistry.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
@@ -320,6 +321,10 @@ if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST
         // Preserve copied-source attribution only after the existing byte identity check.
         $source = defined('RRD_TEST_CLI_COVERAGE_COPY') && $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
         $nativeSources[] = substr($source, strlen($coverageRoot) + 1);
+    }
+    if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('config/icons.json', 'src/Platform/Contract/IconRegistry.php'));
+        $coverageFilter->includeFile($coverageRoot . '/src/Platform/Contract/IconRegistry.php');
     }
     $nativeScenario = $argv[1];
     if (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
