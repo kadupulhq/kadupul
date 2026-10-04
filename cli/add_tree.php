@@ -225,18 +225,38 @@ if (cacti_sizeof($parms)) {
             exit(1);
         }
 
-        if (!is_numeric($parentNode)) {
-            print "ERROR: parent-node $parentNode must be numeric > 0\n";
-            display_help();
+        if (!ctype_digit((string) $treeId) || (int) $treeId <= 0) {
+            fwrite(STDERR, "ERROR: You must supply an existing --tree-id before creating a node.\n");
             exit(1);
-        } elseif ($parentNode > 0) {
-            $parentNodeExists = db_fetch_cell("SELECT id
-				FROM graph_tree_items
-				WHERE graph_tree_id=$treeId
-				AND id=$parentNode");
+        }
 
-            if (!isset($parentNodeExists)) {
-                print "ERROR: parent-node $parentNode does not exist\n";
+        $treeId = (int) $treeId;
+
+        if (db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE id = ?', array($treeId)) === false) {
+            fwrite(STDERR, "ERROR: Tree $treeId does not exist. Try --list-trees\n");
+            exit(1);
+        }
+
+        if (!ctype_digit((string) $parentNode)) {
+            fwrite(STDERR, "ERROR: parent-node $parentNode must be a non-negative integer\n");
+            exit(1);
+        }
+
+        $parentNode = (int) $parentNode;
+
+        if ($parentNode > 0) {
+            $parent = db_fetch_row_prepared('SELECT title, local_graph_id, host_id, site_id
+				FROM graph_tree_items
+				WHERE graph_tree_id = ? AND id = ?', array($treeId, $parentNode));
+
+            if (!cacti_sizeof($parent)) {
+                fwrite(STDERR, "ERROR: parent-node $parentNode does not exist in tree $treeId.\n");
+                exit(1);
+            }
+
+            if ($parent['title'] === '' || $parent['title'] === null
+                || $parent['local_graph_id'] > 0 || $parent['host_id'] > 0 || $parent['site_id'] > 0) {
+                fwrite(STDERR, "ERROR: parent-node $parentNode is not a header in tree $treeId.\n");
                 exit(1);
             }
         }
@@ -299,6 +319,11 @@ if (cacti_sizeof($parms)) {
 
         # $nodeId could be a Header Node, a Graph Node, or a Host node.
         $nodeId = api_tree_item_save(0, $treeId, $itemType, $parentNode, $name, $graphId, $hostId, $siteId, $hostGroupStyle, $sortMethods[$sortMethod], false);
+
+        if ($nodeId === false || (int) $nodeId <= 0) {
+            fwrite(STDERR, "ERROR: Failed to create the node.\n");
+            exit(1);
+        }
 
         print "Added Node node-id: ($nodeId)\n";
 

@@ -131,6 +131,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Allow collector heartbeat updates during Inventory association and maintenance network work; revalidate collector configuration and availability immediately before commit.
 - Budget Inventory worker processes for every remote data-query request, preserving the existing local-work margin and the configured remote timeout cap.
 - Reject malformed association commands before mutation, propagate query refresh failures in strict workers, and publish authoritative primary changes before collector commits.
+- Reject tree CLI nodes with a missing tree, a missing or foreign parent, or a non-header parent; report failed node creation with a nonzero exit status. Fixes #236.
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
