@@ -955,8 +955,10 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
             if (!$locked) {
                 /* acquire lock in order to prevent race conditions, only a problem pre-rrdtool 1.5 */
                 if (cacti_version_compare($rrdtool_version, '1.5', '<')) {
-                    while (!db_fetch_cell("SELECT GET_LOCK('boost.single_ds." . $item['local_data_id'] . "', 1)")) {
-                        usleep(50000);
+                    if (!boost_acquire_legacy_lock($item['local_data_id'])) {
+                        cacti_log('ERROR: Boost writer lock attempts exhausted for data source ' . (int) $item['local_data_id'] . '; queued samples retained', false, 'BOOST');
+                        restore_error_handler();
+                        return false;
                     }
                 }
 
@@ -1002,8 +1004,10 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
 
                 /* acquire lock in order to prevent race conditions, only a problem pre-rrdtool 1.5 */
                 if (cacti_version_compare($rrdtool_version, '1.5', '<')) {
-                    while (!db_fetch_cell("SELECT GET_LOCK('boost.single_ds." . $item['local_data_id'] . "', 1)")) {
-                        usleep(50000);
+                    if (!boost_acquire_legacy_lock($item['local_data_id'])) {
+                        cacti_log('ERROR: Boost writer lock attempts exhausted for data source ' . (int) $item['local_data_id'] . '; queued samples retained', false, 'BOOST');
+                        restore_error_handler();
+                        return false;
                     }
                 }
 

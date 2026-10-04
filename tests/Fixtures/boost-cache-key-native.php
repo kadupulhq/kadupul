@@ -83,6 +83,19 @@ class MibCache
 file_put_contents($directory . '/poller.php', '<?php');
 require $root . '/lib/boost.php';
 
+if (isset($scenario['legacy_lock'])) {
+    $GLOBALS['legacyLockCalls'] = array();
+    function db_fetch_cell_prepared($sql, $parameters)
+    {
+        $GLOBALS['legacyLockCalls'][] = array($sql, $parameters);
+        return count($GLOBALS['legacyLockCalls']) >= $GLOBALS['scenario']['legacy_lock']['succeed_at'];
+    }
+    $lock = $scenario['legacy_lock'];
+    $acquired = boost_acquire_legacy_lock($lock['id'], $lock['attempts']);
+    echo json_encode(array('acquired' => $acquired, 'calls' => $GLOBALS['legacyLockCalls']), JSON_THROW_ON_ERROR);
+    return;
+}
+
 function boost_fixture_enter(array $viewer)
 {
     $GLOBALS['context'] = $viewer;

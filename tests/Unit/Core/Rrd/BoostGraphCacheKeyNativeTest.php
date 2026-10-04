@@ -261,3 +261,17 @@ test('cache publication preserves complete images and removes temporary files', 
     'failed rename' => array('rename', 'existing complete PNG', 0, 1),
     'failed exclusive open' => array('open', 'existing complete PNG', 0, 0),
 ));
+
+
+test('legacy Boost lock acquisition is bounded and uses the prepared resource key', function ($attempts, $succeedAt, $expected, $count) {
+    $observed = boost_cache_key_run(array('legacy_lock' => array('id' => '42', 'attempts' => $attempts, 'succeed_at' => $succeedAt)), $this->getTestResultObject()->getCodeCoverage());
+    expect($observed['acquired'])->toBe($expected)->and($observed['calls'])->toHaveCount($count);
+    foreach ($observed['calls'] as $call) {
+        expect($call)->toBe(array('SELECT GET_LOCK(?, 1)', array('boost.single_ds.42')));
+    }
+})->with(array(
+    'exhausted budget' => array(2, 3, false, 2),
+    'first successful attempt' => array(3, 1, true, 1),
+    'success on the final permitted attempt' => array(3, 3, true, 3),
+    'non-positive budget still permits one attempt' => array(0, 2, false, 1),
+));

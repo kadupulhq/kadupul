@@ -153,7 +153,7 @@ final class DataDebugNativeCoverageTest extends TestCase
         return array('default rows' => array(array(), array('one.rrd', 'two.rrd')), 'selected rows' => array(array('rows' => 2), array('one.rrd', 'two.rrd')), 'filtered file' => array(array('filter' => 'one'), array('one.rrd')), 'empty result' => array(array('filter' => 'missing'), array()));
     }
 
-    /** @dataProvider iconCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('iconCases')]
     public function testLoadedProductionStatusHelpersNameEachResult(mixed $result, string $status, string $valid): void
     {
         $state = $this->render(array(), array('view' => 'debug-icons', 'result' => $result));
