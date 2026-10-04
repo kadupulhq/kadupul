@@ -1840,6 +1840,19 @@ function is_console_page($url)
     return false;
 }
 
+/** Render one classic-theme top tab as a text link.
+ *
+ * @param string $id the element id used by layout.js and plugins
+ * @param string $href the unescaped link target
+ * @param string $title the already translated label
+ * @param bool $selected whether the tab belongs to the current page
+ * @return string the anchor markup
+ */
+function html_classic_tab($id, $href, $title, $selected)
+{
+    return "<a id='" . html_escape($id) . "' class='classicTab" . ($selected ? ' selected' : '') . "' href='" . html_escape($href) . "'>" . html_escape($title) . '</a>';
+}
+
 function html_show_tabs_left()
 {
     global $config, $tabs_left;
@@ -1860,7 +1873,7 @@ function html_show_tabs_left()
 
     if (get_selected_theme() == 'classic') {
         if ($show_console_tab == true) {
-            ?><a id='tab-console' <?php print(is_console_page(get_current_page()) ? " class='selected'" : '');?> href='<?php print $config['url_path']; ?>index.php'><img src='<?php echo $config['url_path']; ?>images/tab_console<?php print(is_console_page(get_current_page()) ? '_down' : '');?>.gif' alt='<?php print __('Console');?>'></a><?php
+            print html_classic_tab('tab-console', $config['url_path'] . 'index.php', __('Console'), is_console_page(get_current_page()));
         }
 
         if ($realm_allowed[7]) {
@@ -1868,11 +1881,7 @@ function html_show_tabs_left()
                 // Don't show graphs tab when offline
             } else {
                 $file = get_current_page();
-                if ($file == 'graph_view.php' || $file == 'graph.php') {
-                    print "<a id='tab-graphs' class='selected' href='" . html_escape($config['url_path'] . 'graph_view.php') . "'><img src='" . $config['url_path'] . "images/tab_graphs_down.gif' alt='" . __('Graphs') . "'></a>";
-                } else {
-                    print "<a id='tab-graphs' href='" . html_escape($config['url_path'] . 'graph_view.php') . "'><img src='" . $config['url_path'] . "images/tab_graphs.gif' alt='" . __('Graphs') . "'></a>";
-                }
+                print html_classic_tab('tab-graphs', $config['url_path'] . 'graph_view.php', __('Graphs'), $file == 'graph_view.php' || $file == 'graph.php');
             }
         }
 
@@ -1880,20 +1889,12 @@ function html_show_tabs_left()
             if ($config['poller_id'] > 1) {
                 // Don't show reports table if not poller 1
             } else {
-                if (substr_count($_SERVER['REQUEST_URI'], 'reports_')) {
-                    print '<a id="tab-reports" href="' . $config['url_path'] . ($realm_allowed[21] === true ? 'reports_admin.php' : 'reports_user.php') . '"><img src="' . $config['url_path'] . 'images/tab_nectar_down.gif" alt="' . __('Reporting') . '"></a>';
-                } else {
-                    print '<a id="tab-reports" href="' . $config['url_path'] . ($realm_allowed[21] === true ? 'reports_admin.php' : 'reports_user.php') . '"><img src="' . $config['url_path'] . 'images/tab_nectar.gif" alt="' . __('Reporting') . '"></a>';
-                }
+                print html_classic_tab('tab-reports', $config['url_path'] . ($realm_allowed[21] === true ? 'reports_admin.php' : 'reports_user.php'), __('Reporting'), substr_count($_SERVER['REQUEST_URI'], 'reports_') > 0);
             }
         }
 
         if ($realm_allowed[18] || $realm_allowed[19]) {
-            if (substr_count($_SERVER['REQUEST_URI'], 'clog')) {
-                print '<a id="tab-logs" href="' . $config['url_path'] . ($realm_allowed[18] ? 'clog.php' : 'clog_user.php') . '"><img src="' . $config['url_path'] . 'images/tab_clog_down.png" alt="' . __('Logs') . '"></a>';
-            } else {
-                print '<a id="tab-logs" href="' . $config['url_path'] . ($realm_allowed[18] ? 'clog.php' : 'clog_user.php') . '"><img src="' . $config['url_path'] . 'images/tab_clog.png" alt="' . __('Logs') . '"></a>';
-            }
+            print html_classic_tab('tab-logs', $config['url_path'] . ($realm_allowed[18] ? 'clog.php' : 'clog_user.php'), __('Logs'), substr_count($_SERVER['REQUEST_URI'], 'clog') > 0);
         }
 
         api_plugin_hook('top_graph_header_tabs');
@@ -1928,7 +1929,7 @@ function html_show_tabs_left()
                             }
                         }
 
-                        print '<a id="tab-link' . $tab['id'] . '" href="' . $config['url_path'] . 'link.php?id=' . $tab['id'] . '"><img src="' . get_classic_tabimage($tab['title'], $down) . '" alt="' . html_escape($tab['title']) . '"></a>';
+                        print html_classic_tab('tab-link' . $tab['id'], $config['url_path'] . 'link.php?id=' . $tab['id'], $tab['title'], $down);
                     }
                 }
             }
