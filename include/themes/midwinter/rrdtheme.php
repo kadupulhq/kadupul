@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -53,5 +54,3 @@ $rrdfonts['watermark']['size'] = '6';
 $rrdborder = 0;
 $rrdborder_light = 0;
 $rrdborder_dark = 0;
-
-
