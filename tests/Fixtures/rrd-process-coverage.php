@@ -129,6 +129,7 @@ if (defined('CSRF_CALLBACK_TEST_COVERAGE')) {
 }
 
 if (defined('STRING_PREDICATE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyIncludePathResolver.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/database.php');

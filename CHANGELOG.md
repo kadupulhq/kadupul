@@ -28,6 +28,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Report schema audit drift for defaults, collations, indexes, and missing tables without treating a stale fork baseline as automatically repairable. Fixes #454.
 - Add Docker MariaDB integration coverage for the maintenance CLI commands on `main`, and validate CLI selectors, permissions, audit reporting and selected-host poller-cache behavior.
 - Reject non-positive and fractional poller-cache thread counts, include the audit baseline and runtime dependencies in Docker integration coverage, and fail before starting the test stack when its configured test pattern matches no files.
+- Resolve JavaScript and CSS include paths through Symfony Filesystem while retaining the legacy helper's search order, relative-path rules, and missing-file notifications. Closes #489.
+- Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.

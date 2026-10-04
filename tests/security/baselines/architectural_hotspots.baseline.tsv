@@ -24,11 +24,11 @@ cmd_exec	./lib/functions.php:3424	        return exec('whoami');
 cmd_exec	./lib/functions.php:4152	        exec($command_line, $out, $err);
 cmd_exec	./lib/functions.php:7418	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v');
 cmd_exec	./lib/functions.php:7420	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v 2>&1');
-cmd_exec	./lib/functions.php:7670	            exec('id -nu', $o, $r);
-cmd_exec	./lib/functions.php:7680	            exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
-cmd_exec	./lib/functions.php:7992	 * shell_exec() callers that already assemble the command string.
-cmd_exec	./lib/functions.php:8034	    $process = proc_open($argv, $descriptors, $pipes);
-cmd_exec	./lib/functions.php:8103	 * shell_exec() and expect a string return value.
+cmd_exec	./lib/functions.php:7677	            exec('id -nu', $o, $r);
+cmd_exec	./lib/functions.php:7687	            exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
+cmd_exec	./lib/functions.php:7999	 * shell_exec() callers that already assemble the command string.
+cmd_exec	./lib/functions.php:8041	    $process = proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/functions.php:8110	 * shell_exec() and expect a string return value.
 cmd_exec	./lib/installer.php:3636	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3672	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:851	            $process = @proc_open(
