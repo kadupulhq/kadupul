@@ -263,6 +263,13 @@ function user_group_remove($id)
 function user_group_copy($id, $prefix = 'New Group')
 {
     static $count = 1;
+    $name = $prefix . ' ' . $count;
+
+    // The copy skips form_save(), so its name gets the same character rule here.
+    if (!preg_match('/^[A-Za-z0-9._\\\\@ -]+$/', $name)) {
+        return false;
+    }
+
     $unit = null;
     try {
         $unit = auth_membership_begin(array('user_auth_group', 'user_auth_group_perms', 'user_auth_group_realm'));
@@ -386,7 +393,11 @@ function form_actions()
                     }
                 }
                 if ($copy_failed) {
-                    raise_message(2);
+                    if (!preg_match('/^[A-Za-z0-9._\\\\@ -]+$/', get_nfilter_request_var('group_prefix') . ' 1')) {
+                        raise_message('group_prefix', __('The Group Prefix may only contain letters, numbers, spaces and the characters . _ \\ @ -'), MESSAGE_LEVEL_ERROR);
+                    } else {
+                        raise_message(2);
+                    }
                 }
             } elseif (get_nfilter_request_var('drp_action') == '3') { /* enable */
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
@@ -971,7 +982,8 @@ function user_group_graph_perms_edit($tab, $header_label)
 			$(document).tooltip({
 				items: '[data-tooltip]',
 				content: function() {
-					return $(this).attr('data-tooltip');
+					// The reason is plain text; the attribute read has already decoded it.
+					return $('<div>').text($(this).attr('data-tooltip')).html();
 				}
 			});
 		});

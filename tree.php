@@ -1556,7 +1556,8 @@ function tree_edit($partial = false)
 			// as they would have been.
 			if ($(id).hasClass('jstree')) {
 				$(id).find('.jstree-node').each(function() {
-					var text   = DOMPurify.sanitize($(this).find('.jstree-anchor').text());
+					// .text() decodes the escaped name, so escape it again rather than sanitize it.
+					var text   = $('<div>').text($(this).find('.jstree-anchor').text()).html();
 					var id     = $(this).attr('id');
 					var jsdata = $(this).attr('data-jstree');
 

@@ -4490,7 +4490,9 @@ $.widget('custom.dropcolor', {
 		if (hex != null) {
 			this.wrapper.find('#bgc').css('background-color', '#'+hex[1]);
 		}
-		this.input = $('<input class="ui-autocomplete-input ui-state-default ui-selectmenu-text" style="background:transparent;border:0px;padding:0px;padding-left:24px;margin-left:-24px" value="'+value+'">')
+		// The option text is decoded, so it goes in as a property, never as markup.
+		this.input = $('<input class="ui-autocomplete-input ui-state-default ui-selectmenu-text" style="background:transparent;border:0px;padding:0px;padding-left:24px;margin-left:-24px">')
+		.val(value)
 		.appendTo(this.wrapper)
 		.on('click', function() {
 			$(this).autocomplete('search', '');
