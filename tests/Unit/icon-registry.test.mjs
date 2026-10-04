@@ -71,7 +71,6 @@ const hardCoded = new Map([
   ['graph_xport.php', notMigrated],
   ['graphs.php', notMigrated],
   ['graphs_new.php', notMigrated],
-  ['host.php', notMigrated],
   ['host_templates.php', notMigrated],
   ['install/install.js', notMigrated],
   ['install/install.php', notMigrated],
