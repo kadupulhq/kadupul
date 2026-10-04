@@ -456,7 +456,7 @@ dynamic_include	./poller_boost.php:20	require_once($config['base_path'] . '/lib/
 dynamic_include	./poller_boost.php:21	require_once($config['base_path'] . '/lib/dsstats.php');
 dynamic_include	./poller_boost.php:22	require_once($config['base_path'] . '/lib/rrdcheck.php');
 dynamic_include	./poller_boost.php:23	require_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./poller_boost.php:828	    include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./poller_boost.php:832	    include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./poller_commands.php:23	require_once($config['base_path'] . '/lib/api_device.php');
 dynamic_include	./poller_commands.php:24	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./poller_commands.php:25	require_once($config['base_path'] . '/lib/api_graph.php');
