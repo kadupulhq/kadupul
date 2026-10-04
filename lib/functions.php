@@ -122,6 +122,87 @@ function read_graph_config_option($config_name, $force = false)
 }
 
 /**
+ * graph_font_size_filter - FILTER_CALLBACK for the font size settings
+ *
+ * RRDtool refuses INF and Cairo fails on very large sizes. Sizes of 4 and below
+ * were always replaced by a default, so they are refused as well.
+ *
+ * @param $size - the submitted size
+ *
+ * @return - $size when RRDtool can draw it, otherwise false
+ */
+function graph_font_size_filter($size)
+{
+    if (!is_numeric($size)) {
+        return false;
+    }
+
+    $points = (float) $size;
+
+    if (!is_finite($points) || $points <= 4 || $points > 72) {
+        return false;
+    }
+
+    return $size;
+}
+
+/**
+ * graph_font_size - the point size to hand RRDtool for a stored font size
+ *
+ * Values saved before graph_font_size_filter() existed can be anything, so
+ * sizes it refuses fall back to $default, except that large ones are capped.
+ *
+ * @param $size    - the stored size
+ * @param $default - the size to use when $size is not usable
+ *
+ * @return - a size RRDtool can draw
+ */
+function graph_font_size($size, $default)
+{
+    if (is_numeric($size) && is_finite((float) $size) && (float) $size > 72) {
+        return 72;
+    }
+
+    if (graph_font_size_filter($size) === false) {
+        return $default;
+    }
+
+    return (float) $size;
+}
+
+/**
+ * settings_value_passes_filter - checks a value against the filter a setting declares
+ *
+ * @param $name         - the setting name
+ * @param $value        - the submitted value
+ * @param $user_setting - true to look in $settings_user, false for $settings
+ *
+ * @return - false only when the setting has a filter and the value fails it
+ */
+function settings_value_passes_filter($name, $value, $user_setting = false)
+{
+    global $settings, $settings_user;
+
+    $tabs = $user_setting ? $settings_user : $settings;
+
+    foreach ($tabs as $tab_fields) {
+        if (!isset($tab_fields[$name]['filter'])) {
+            continue;
+        }
+
+        $field_array = $tab_fields[$name];
+
+        if (isset($field_array['options'])) {
+            return filter_var($value, $field_array['filter'], $field_array['options']) !== false;
+        }
+
+        return filter_var($value, $field_array['filter']) !== false;
+    }
+
+    return true;
+}
+
+/**
  * save_user_setting - sets/updates aLL user settings
  *
  * @param $config_name - the name of the configuration setting as specified $settings array
@@ -141,7 +222,7 @@ function save_user_settings($user = -1)
     foreach ($settings_user as $tab_short_name => $tab_fields) {
         foreach ($tab_fields as $field_name => $field_array) {
             /* Check every field with a numeric default value and reset it to default if the inputted value is not numeric  */
-            if (isset($field_array['default']) && is_numeric($field_array['default']) && !is_numeric(get_nfilter_request_var($field_name))) {
+            if (isset($field_array['default']) && is_numeric($field_array['default']) && (!is_numeric(get_nfilter_request_var($field_name)) || !settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true))) {
                 set_request_var($field_name, $field_array['default']);
             }
 

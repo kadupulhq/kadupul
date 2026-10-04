@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -43,7 +44,7 @@ $rrdfonts['title']['font']     = 'Roboto';
 $rrdfonts['title']['size']     = '11';
 $rrdfonts['axis']['font']      = 'Roboto';
 $rrdfonts['axis']['size']      = '8';
-$rrdfonts['legend']['font']    = 'Roboto Mono';
+$rrdfonts['legend']['font']    = 'DejaVu Sans Mono';
 $rrdfonts['legend']['size']    = '8';
 $rrdfonts['unit']['font']      = 'Roboto';
 $rrdfonts['unit']['size']      = '8';

@@ -108,6 +108,12 @@ Targeting `v1.3.0`, the first planned application release. See
 - Build offline archives with the npm JavaScript CLI bundled with the selected Node runtime, avoiding shell-wrapper parse failures in CI. Related to #703.
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
 - Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
+- Ask for a Pango font description in the graph font settings instead of a TrueType font file. RRDtool 1.3 and later pass the value to Pango, which ignores a file path and draws its fallback font.
+- Draw Midwinter graph legends in DejaVu Sans Mono. Its `Roboto Mono` setting fell back to the proportional DejaVu Sans on hosts without Roboto, including the container image, and misaligned legend columns.
+- Draw the graph error image with the bundled DejaVu font when no system DejaVu Sans is installed, and wrap its text by measured width and whole characters. The GD fallback used the point size as a built-in font id, so lines overlapped and ran past the frame, and translated messages were cut inside UTF-8 characters.
+- Search the bundled `include/fonts` directory on Windows as well. Classic theme external-link tabs lost their labels there because Windows ships no DejaVu font.
+- Refuse graph font sizes of 4 points or less, or above 72 points, when System, User or User Group settings are saved. The profile page no longer stores a cleared or invalid size as the user types, and User Group settings store the default instead.
+- Replace graph font sizes that are empty, non-numeric, infinite or 4 points and below with the default, and cap larger ones at 72 points. A thumbnail with an empty title size threw a `TypeError`, and a size such as `1e400` made RRDtool reject every graph.
 - Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
 - Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
 - Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.

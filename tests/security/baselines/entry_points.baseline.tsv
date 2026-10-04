@@ -1,9 +1,10 @@
-entry	gate	detail
 .php-cs-fixer.php	web-server-denied	nginx; apache: opt-in via .htaccess.dist
 about.php	symfony:forward	forwards to app.php/about/legacy
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
+app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
 app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 1f46fb124365 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action af73f4343625 and controller e011435a3fdf and workflow b0abc0295d4c: feature realm 2
@@ -11,8 +12,6 @@ app.php/data-inputs/new	symfony:data_input_create	methods=GET|HEAD|POST; Console
 app.php/data-inputs/{id}/edit	symfony:data_input_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action f5da79ca881e and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/{id}/fields/{field}	symfony:data_input_field	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},field=[0-9]{1,8}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 74a56be92e80 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/{id}/{operation}	symfony:data_input_action	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},operation=delete|duplicate|field_delete|propagate|whitelist; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 0326117ba140 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
-app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
-app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
 app.php/graph-definitions/vdefs	symfony:graph_vdefs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 14
 app.php/graph-definitions/vdefs/actions/{operation}	symfony:graph_vdef_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 14
 app.php/graph-definitions/vdefs/legacy	symfony:graph_vdef_legacy	methods=GET|HEAD; ConsoleAccess realm 8 + realm 14
@@ -83,6 +82,7 @@ data_source_profiles.php	realm:9	include/auth.php
 data_sources.php	realm:3	include/auth.php
 data_templates.php	realm:11	include/auth.php
 docs/	web-server-denied	nginx; apache .htaccess
+entry	gate	detail
 formats/index.php	anonymous-allowed	redirect-only
 gprint_presets.php	realm:5	include/auth.php
 graph.php	guest-or-realm:7	include/auth.php; guest_account
@@ -109,12 +109,12 @@ include/config.php	web-server-denied	nginx; apache .htaccess
 include/content/index.php	anonymous-allowed	redirect-only
 include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at 80bc61dab43e; included by include/global.php
 include/global.php	web-server-denied	nginx; apache .htaccess
-include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at cbbd3885b419; included by include/global.php, lib/api_aggregate.php, lib/boost.php
+include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 7e957ef68e4b; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 95a0b48968a8; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 0db939a69dc9; included by auth_changepassword.php, auth_login.php, graph_realtime.php
-include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 7dc2639b19c4; included by include/global.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 32385467641b; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only

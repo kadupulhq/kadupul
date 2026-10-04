@@ -1063,7 +1063,7 @@ $settings = array(
         ),
         'path_rrdtool_default_font' => array(
             'friendly_name' => __('Default Font'),
-            'description' =>  __('When not using Theme based font control, the Pangon font-config font name to use for all Graphs. Optionally, you may leave blank and control font settings on a per object basis.'),
+            'description' =>  __('When not using Theme based font control, the Pango font description to use for all Graphs, such as DejaVu Sans. Optionally, you may leave blank and control font settings on a per object basis.'),
             'method' => 'font',
             'placeholder' =>  __('Enter Valid Font Config Value'),
             'max_length' => '255'
@@ -1074,11 +1074,13 @@ $settings = array(
             'method' => 'textbox',
             'default' => '10',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'title_font' => array(
             'friendly_name' => __('Title Font Setting'),
-            'description' => __('The font to use for Graph Titles.  Enter either a valid True Type Font file or valid Pango font-config value.'),
+            'description' => __('The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.'),
             'method' => 'font',
             'placeholder' => __('Enter Valid Font Config Value'),
             'max_length' => '100'
@@ -1089,11 +1091,13 @@ $settings = array(
             'method' => 'textbox',
             'default' => '8',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'legend_font' => array(
             'friendly_name' => __('Legend Font Setting'),
-            'description' => __('The font to use for Graph Legends.  Enter either a valid True Type Font file or valid Pango font-config value.'),
+            'description' => __('The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.'),
             'method' => 'font',
             'placeholder' => __('Enter Valid Font Config Value'),
             'max_length' => '100'
@@ -1104,11 +1108,13 @@ $settings = array(
             'method' => 'textbox',
             'default' => '7',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'axis_font' => array(
             'friendly_name' => __('Axis Font Setting'),
-            'description' => __('The font to use for Graph Axis items.  Enter either a valid True Type Font file or valid Pango font-config value.'),
+            'description' => __('The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.'),
             'method' => 'font',
             'placeholder' => __('Enter Valid Font Config Value'),
             'max_length' => '100'
@@ -1119,11 +1125,13 @@ $settings = array(
             'method' => 'textbox',
             'default' => '7',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'unit_font' => array(
             'friendly_name' => __('Unit Font Setting'),
-            'description' => __('The font to use for Graph Unit items.  Enter either a valid True Type Font file or valid Pango font-config value.'),
+            'description' => __('The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.'),
             'method' => 'font',
             'placeholder' => __('Enter Valid Font Config Value'),
             'max_length' => '100'
@@ -2823,11 +2831,13 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Titles'),
             'method' => 'textbox',
             'default' => '12',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'title_font' => array(
-            'friendly_name' => __('Title Font File'),
-            'description' => __('The font file to use for Graph Titles'),
+            'friendly_name' => __('Title Font Setting'),
+            'description' => __('The Pango font description to use for Graph Titles, such as DejaVu Sans Bold'),
             'method' => 'font',
             'max_length' => '100'
         ),
@@ -2836,11 +2846,13 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Legend items'),
             'method' => 'textbox',
             'default' => '10',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'legend_font' => array(
-            'friendly_name' => __('Legend Font File'),
-            'description' => __('The font file to be used for Graph Legend items'),
+            'friendly_name' => __('Legend Font Setting'),
+            'description' => __('The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono'),
             'method' => 'font',
             'max_length' => '100'
         ),
@@ -2849,11 +2861,13 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Axis'),
             'method' => 'textbox',
             'default' => '8',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'axis_font' => array(
-            'friendly_name' => __('Axis Font File'),
-            'description' => __('The font file to be used for Graph Axis items'),
+            'friendly_name' => __('Axis Font Setting'),
+            'description' => __('The Pango font description to use for Graph Axis items, such as DejaVu Sans'),
             'method' => 'font',
             'max_length' => '100'
         ),
@@ -2862,11 +2876,13 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Units'),
             'method' => 'textbox',
             'default' => '8',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'unit_font' => array(
-            'friendly_name' => __('Unit Font File'),
-            'description' => __('The font file to be used for Graph Unit items'),
+            'friendly_name' => __('Unit Font Setting'),
+            'description' => __('The Pango font description to use for Graph Unit items, such as DejaVu Sans'),
             'method' => 'font',
             'max_length' => '100'
         )
