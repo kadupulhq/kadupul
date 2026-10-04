@@ -200,6 +200,11 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
             return int(result['stdout'].strip())
         audit_before = success_audit_count()
         check(form.assign(1) == 502, 'collector cleanup failure cannot report success')
+        # Cleanup follows authoritative primary commit (#302). A later
+        # failure preserves destination ownership and recoverable old residue.
+        check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == '1', 'collector cleanup failure retains committed primary ownership')
+        check(harness.sql(f'SELECT poller_id FROM poller_item WHERE local_data_id={data}').strip() == '1', 'collector cleanup failure retains committed primary polling ownership')
+        check(harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '1', 'collector cleanup failure leaves old collector residue')
         check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == '1'
               and harness.sql(f'SELECT poller_id FROM poller_item WHERE local_data_id={data}').strip() == '1',
               'collector cleanup failure retains committed primary ownership and polling rows')
@@ -232,6 +237,10 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
               and harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '0'
               and harness.sql(f'SELECT COUNT(*) FROM collector_second.poller_item WHERE host_id={device_id}').strip() == '0',
               'collector reassignment recovers old host and polling residue through confirmed moves')
+        check(form.assign(second) == 200, 'collector cleanup recovery restores the old collector before retrying')
+        check(form.assign(1) == 200, 'collector reassignment can return to primary')
+        check(harness.sql(f'SELECT COUNT(*) FROM collector_second.host WHERE id={device_id}').strip() == '0'
+              and harness.sql(f'SELECT COUNT(*) FROM collector_second.poller_item WHERE local_data_id={data}').strip() == '0', 'collector cleanup recovery removes old collector residue')
         harness.sql("CREATE TRIGGER create_remote.reject_collector_graph BEFORE INSERT ON create_remote.host_graph FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='collector fixture rejection'")
         trigger = True
         check(form.assign(poller) == 502, 'collector replication failure cannot report success')

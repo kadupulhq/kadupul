@@ -7,6 +7,12 @@
 
 $databaseSource = file_get_contents(dirname(__DIR__, 2) . '/lib/database.php');
 
+test('legacy library transaction guards do not query MariaDB-only state', function () {
+    foreach (glob(dirname(__DIR__, 2) . '/lib/*.php') as $file) {
+        expect(file_get_contents($file))->not->toContain('SELECT @@in_transaction');
+    }
+});
+
 test('the commit path does not depend on the MariaDB in_transaction variable', function () use ($databaseSource) {
     $start = strpos($databaseSource, 'function db_commit_transaction(');
     $end   = strpos($databaseSource, "\nfunction ", $start + 1);

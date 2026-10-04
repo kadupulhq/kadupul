@@ -715,7 +715,9 @@ function api_device_dq_add($device_id, $data_query_id, $reindex_method)
     }
 
     /* recache snmp data */
-    run_data_query($device_id, $data_query_id);
+    if (run_data_query($device_id, $data_query_id) === false && defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+        throw new RuntimeException('Data query refresh failed');
+    }
 }
 
 /**
@@ -843,7 +845,9 @@ function api_device_dq_change($device_id, $data_query_id, $reindex_method)
     }
 
     /* finally rerun the data query */
-    run_data_query($device_id, $data_query_id);
+    if (run_data_query($device_id, $data_query_id) === false && defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+        throw new RuntimeException('Data query refresh failed');
+    }
 }
 
 /**

@@ -34,6 +34,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
 - Migrate Data Input Methods and fields to Symfony/PHP 8.4 and Twig, with current authorization, revision checks, transaction rollback and explicit collector/whitelist retry outcomes.
+- Add Symfony Inventory tree/report placement using owning Graphing and Reporting contracts, authorization, revisions and transactional confirmation.
 - Retain old collector polling copies until primary assignment commits, repair missing associations on unchanged template assignments, and preserve remote enabled-state drift during bulk site/template changes.
 
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
@@ -81,6 +82,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Bound PCRE work when tree automation applies saved replacement patterns. Fixes #591.
 - Return a clean 404 for HTTP requests to the PHP Script Server under PHP-FPM. Fixes #377.
 - Honor the script server's documented `--environ`, `-v`/`-V`, and `-h`/`-H` options. Fixes #375 and #376.
+
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
@@ -123,7 +125,10 @@ Targeting `v1.3.0`, the first planned application release. See
 - Limit profile heartbeat propagation to the matching data template as well as the local data source, so template rows sharing the zero local-data sentinel do not overwrite unrelated templates. Fixes #233.
 - Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 - Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny. Fixes #263.
-
+- Verify worker-session MariaDB snapshot settings before association/maintenance transactions so heartbeat updates do not invalidate the final collector locking read on MariaDB 11.8.
+- Allow collector heartbeat updates during Inventory association and maintenance network work; revalidate collector configuration and availability immediately before commit.
+- Budget Inventory worker processes for every remote data-query request, preserving the existing local-work margin and the configured remote timeout cap.
+- Reject malformed association commands before mutation, propagate query refresh failures in strict workers, and publish authoritative primary changes before collector commits.
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
@@ -263,6 +268,16 @@ Targeting `v1.3.0`, the first planned application release. See
 - Require a POST with a CSRF token to reorder items by drag and drop on the CDEF, VDEF, automation SNMP, automation template and color template pages, and to re-run a data query from the new graphs page. These pages now post the reorder and the reload with the token.
 
 ### Changed
+
+- Route Inventory device menus and legacy `host.php` links through Symfony. Legacy POSTs expire without replay; GET action links open confirmation forms. Existing automation rules are applied through an Inventory use case and Automation adapter. Preserve collector, template and exact-location list filters.
+- Device pages no longer execute legacy plugin UI hooks or custom device-page actions. Plugins must expose their own pages or adopt Symfony extensions; existing save/template/association/bulk action callbacks remain in isolated adapters. Legacy device CSV links now export the selected public-data page instead of unbounded host records.
+
+
+- Add Symfony device maintenance for reindexing, query diagnostics, polling cache refresh, debug controls and connectivity checks with secret-safe plain-text results.
+
+- Migrate device data-query associations and reindex settings to Symfony, retaining graph data and verifying primary/remote cache cleanup.
+
+- Add Symfony device graph-template association editing with legacy automation hooks, stale-association protection, remote verification and existing-graph retention.
 
 - Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
 

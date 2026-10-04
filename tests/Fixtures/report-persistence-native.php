@@ -14,7 +14,7 @@ $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 $coverageSources = array('tests/Unit/Security/Auth/ReportPersistenceNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/report-persistence-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
-    'lib/auth.php', 'lib/reports.php', 'lib/html_reports.php', 'include/global_constants.php', 'include/global_arrays.php', 'lib/time.php', 'lib/html.php', 'lib/html_form.php', 'lib/data_query.php', 'lib/sort.php', 'lib/html_tree.php', 'lib/html_utility.php',
+    'lib/auth.php', 'lib/database.php', 'tests/Helpers/PhpSource.php', 'lib/reports.php', 'lib/html_reports.php', 'include/global_constants.php', 'include/global_arrays.php', 'lib/time.php', 'lib/html.php', 'lib/html_form.php', 'lib/data_query.php', 'lib/sort.php', 'lib/html_tree.php', 'lib/html_utility.php',
     'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
 if (isset($argv[3])) {
     $GLOBALS['nativeCoverageEvidence'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/report-persistence-native.php', $argv[1], $coverageSources);
@@ -30,13 +30,33 @@ $_SESSION['sess_user_id'] = $scenario['user'] ?? 42;
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $messages = array();
 $messageDetails = array();
-$db = new PDO('sqlite::memory:');
+// SQLite exercises report outcomes and real transaction ownership here.
+// FOR UPDATE lock behavior is separately tested on MySQL/MariaDB by the
+// native placement database contracts, rather than simulated in this fixture.
+$db = new class ('sqlite::memory:') extends PDO {
+    public function prepare(string $query, array $options = []): PDOStatement|false
+    {
+        return parent::prepare(preg_replace('/\\s+FOR UPDATE\\b/i', '', $query), $options);
+    }
+};
+$database_hostname = 'report-fixture';
+$database_port = 0;
+$database_default = 'owned';
+$database_sessions = ['report-fixture:0:owned' => $db];
+require_once $root . '/tests/Helpers/PhpSource.php';
+$databaseSource = file_get_contents($root . '/lib/database.php');
+if (!is_string($databaseSource)) {
+    throw new RuntimeException('Cannot read report transaction helpers');
+}
+foreach (['db_begin_transaction', 'db_commit_transaction', 'db_rollback_transaction'] as $function) {
+    eval(test_php_function_source($databaseSource, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
+}
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)');
 $db->exec('CREATE TABLE user_auth_group (id INTEGER, enabled TEXT)');
 $db->exec('CREATE TABLE user_auth_group_members (user_id INTEGER, group_id INTEGER)');
 $db->exec('CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)');
-$db->exec('CREATE TABLE reports_items (id INTEGER PRIMARY KEY AUTOINCREMENT, report_id INTEGER, item_type INTEGER, host_template_id INTEGER, site_id INTEGER, host_id INTEGER, graph_template_id INTEGER, local_graph_id INTEGER, timespan INTEGER, align INTEGER, sequence INTEGER)');
+$db->exec('CREATE TABLE reports_items (id INTEGER PRIMARY KEY AUTOINCREMENT, report_id INTEGER, item_type INTEGER, host_template_id INTEGER, site_id INTEGER, host_id INTEGER, graph_template_id INTEGER, local_graph_id INTEGER, timespan INTEGER, align INTEGER, sequence INTEGER, item_text TEXT DEFAULT \'\')');
 $db->exec('CREATE TABLE host (id INTEGER PRIMARY KEY, description TEXT, host_template_id INTEGER, site_id INTEGER)');
 $db->exec('CREATE TABLE graph_local (id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER)');
 $db->exec("INSERT INTO host VALUES (100, 'Router <one>', 3, 4)");
@@ -189,7 +209,7 @@ if (str_starts_with($operation, 'legacy-')) {
     $alignment = array(1 => 'Left', 2 => 'Center');
     $graph_timespans = array(4 => 'Last four hours', 5 => 'Last six hours');
     $db->exec('INSERT INTO graph_local VALUES (201, 0, 0)');
-    foreach (array('tree_id INTEGER DEFAULT 0', 'branch_id INTEGER DEFAULT 0', "tree_cascade TEXT DEFAULT ''", "graph_name_regexp TEXT DEFAULT ''", "item_text TEXT DEFAULT ''", 'font_size INTEGER DEFAULT 10') as $column) {
+    foreach (array('tree_id INTEGER DEFAULT 0', 'branch_id INTEGER DEFAULT 0', "tree_cascade TEXT DEFAULT ''", "graph_name_regexp TEXT DEFAULT ''", 'font_size INTEGER DEFAULT 10') as $column) {
         $db->exec('ALTER TABLE reports_items ADD ' . $column);
     }
     $request['selected_items'] = serialize($scenario['graphs'] ?? array(200));

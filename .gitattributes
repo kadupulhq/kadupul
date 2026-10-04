@@ -17,3 +17,7 @@
 
 # Form goldens are byte-for-byte page output, whitespace included.
 /tests/Golden/forms/** -whitespace
+
+# Preserve pinned upstream asset bytes.
+/include/themes/midwinter/vendor/hotkeys/hotkeys.js -whitespace
+/include/themes/midwinter/vendor/ua-parser/ua-parser.js -whitespace

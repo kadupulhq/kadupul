@@ -17,14 +17,14 @@ final class DeviceAssignmentProcess
 {
     public static function run(PDO $database, string $projectDir, string $kind, array $command): void
     {
-        if (!in_array($kind, ['collector', 'template'], true)) {
+        if (!in_array($kind, ['collector', 'template', 'associations'], true)) {
             throw new \InvalidArgumentException('Unknown assignment worker.');
         }
         $label = ucfirst($kind);
         $configured = $database->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
         $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $projectDir . '/bin/legacy-device-' . $kind . '.php'], $projectDir);
-        $process->setTimeout(120);
+        $process->setTimeout(DeviceWorkerTimeout::assignment($kind, $command));
         $process->setInput(json_encode($command, JSON_THROW_ON_ERROR));
         $process->run();
         $marker = 'KADUPUL_' . strtoupper($kind) . '_RESULT';
@@ -43,7 +43,7 @@ final class DeviceAssignmentProcess
             throw new InventoryAccessDenied(false);
         }
         if ($status === 'invalid') {
-            throw new \InvalidArgumentException('Select a valid device ' . $kind . '.');
+            throw new \InvalidArgumentException('Select a valid device ' . ($kind === 'associations' ? 'association' : $kind) . '.');
         }
         if (!$process->isSuccessful() || $status !== 'ok') {
             throw new \RuntimeException($label . ' assignment could not be confirmed.');
