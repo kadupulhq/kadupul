@@ -19,6 +19,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Enforce device and graph access checks in Graph Management and Data Sources, including bulk confirmation lists and device reassignment.
 - Skip unauthorized graph trees before name lookup on bulk-action confirmation pages.
 - Restrict new graph creation and data query reloads to allowed devices.
+- Require graph access before spike handling reads or rewrites an RRD.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
