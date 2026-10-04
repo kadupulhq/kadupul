@@ -120,7 +120,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         $db->rollBack();
     }
 
-    /** @dataProvider malformedReceipts */
+    #[\PHPUnit\Framework\Attributes\DataProvider('malformedReceipts')]
     public function testMalformedPersistedReceiptFailsClosed(string $name, string $value): void
     {
         $this->database->prepare('INSERT INTO settings VALUES (?,?)')->execute([$name, $value]);
@@ -245,7 +245,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         $db->rollBack();
     }
 
-    /** @dataProvider unconfirmedStages */
+    #[\PHPUnit\Framework\Attributes\DataProvider('unconfirmedStages')]
     public function testUnconfirmedReadWriteOrAcknowledgementPreservesCallerUnit(string $stage): void
     {
         $db = $this->database;
