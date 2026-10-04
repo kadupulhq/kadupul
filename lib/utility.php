@@ -723,7 +723,8 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 		present = 1';
 
 
-    $changed = (new \Kadupul\Inventory\Infrastructure\Legacy\PollerCacheBufferWrite())->write(
+    $transactions = new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner();
+    $changed = (new \Kadupul\Inventory\Infrastructure\Legacy\PollerCacheBufferWrite($transactions))->write(
         $primary,
         $ids,
         $poller_items,

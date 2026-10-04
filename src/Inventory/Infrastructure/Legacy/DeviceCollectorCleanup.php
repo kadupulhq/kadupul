@@ -9,13 +9,15 @@ declare(strict_types=1);
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
-use Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction;
+use Kadupul\Platform\Contract\ReferenceWriteTransactionRunner;
 use PDO;
 use RuntimeException;
 
 /** Primary-owned cleanup receipts survive a committed collector transfer. */
 final class DeviceCollectorCleanup
 {
+    public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
+
     // Existing settings replication excludes poller_replicate* names.
     private const PREFIX = 'poller_replicate_device_cleanup_';
 
@@ -24,7 +26,7 @@ final class DeviceCollectorCleanup
      */
     public function pending(PDO $connection, array $ids, bool $lock = false): array
     {
-        return (new LegacyReferenceWriteTransaction($connection))->run(function () use ($connection, $ids, $lock): array {
+        return $this->transactions->run($connection, function () use ($connection, $ids, $lock): array {
             if ($ids === []) {
                 return [];
             }
@@ -69,7 +71,7 @@ final class DeviceCollectorCleanup
         if (!$connection->inTransaction()) {
             throw new RuntimeException('Collector cleanup receipt transaction unavailable');
         }
-        return (new LegacyReferenceWriteTransaction($connection))->run(function () use ($connection, $previousOwners, $target): array {
+        return $this->transactions->run($connection, function () use ($connection, $previousOwners, $target): array {
             $ids = array_keys($previousOwners);
             $existing = $this->pending($connection, $ids, true);
             $allExpected = [];

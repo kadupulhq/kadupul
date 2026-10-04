@@ -17,6 +17,8 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 require_once dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php';
+require_once dirname(__DIR__, 2) . '/src/Platform/Contract/ReferenceWriteTransactionRunner.php';
+require_once dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
 require_once dirname(__DIR__, 2) . '/src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php';
 require_once dirname(__DIR__, 2) . '/src/Inventory/Infrastructure/Legacy/QueuedCollectorPurge.php';
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
@@ -142,7 +144,7 @@ final class PollerCacheBufferWriteTest extends TestCase
 
     private function apply(array $ids = [11], ?array $items = null, int $poller = 3, ?PDO $remote = null, ?PDO $primary = null): ?int
     {
-        return (new PollerCacheBufferWrite())->write($primary ?? $this->primary, $ids, $items ?? [$this->tuple()], $poller, $this->prefix, $this->suffix, fn(): PDO => $remote ?? $this->remote, static fn(): bool => true);
+        return (new PollerCacheBufferWrite(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->write($primary ?? $this->primary, $ids, $items ?? [$this->tuple()], $poller, $this->prefix, $this->suffix, fn(): PDO => $remote ?? $this->remote, static fn(): bool => true);
     }
 
     private function rows(PDO $database): array
@@ -241,7 +243,7 @@ final class PollerCacheBufferWriteTest extends TestCase
     public function testHostZeroUsesDefaultPrimaryAndDoesNotConnectRemote(): void
     {
         $calls = 0;
-        $result = (new PollerCacheBufferWrite())->write($this->primary, [12], [$this->tuple(12, 1, 0)], 1, $this->prefix, $this->suffix, function () use (&$calls): bool {
+        $result = (new PollerCacheBufferWrite(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->write($this->primary, [12], [$this->tuple(12, 1, 0)], 1, $this->prefix, $this->suffix, function () use (&$calls): bool {
             $calls++;
             return false;
         }, static fn(): bool => true);
@@ -280,7 +282,7 @@ final class PollerCacheBufferWriteTest extends TestCase
     public function testUnavailableRemoteKeepsPrimaryAndOneWarning(): void
     {
         $warnings = 0;
-        $result = (new PollerCacheBufferWrite())->write($this->primary, [11], [$this->tuple()], 3, $this->prefix, $this->suffix, static fn(): bool => false, function () use (&$warnings): void {
+        $result = (new PollerCacheBufferWrite(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->write($this->primary, [11], [$this->tuple()], 3, $this->prefix, $this->suffix, static fn(): bool => false, function () use (&$warnings): void {
             $warnings++;
         });
         self::assertIsInt($result);

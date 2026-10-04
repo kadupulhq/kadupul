@@ -9,12 +9,15 @@ declare(strict_types=1);
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
+use Kadupul\Platform\Contract\ReferenceWriteTransactionRunner;
 use PDO;
 use RuntimeException;
 
 /** Shared collector move effects; callers own locks, authorization and transactions. */
 final class DeviceCollectorTransfer
 {
+    public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
+
     public function apply(PDO $connection, array $connections, int $deviceId, int $previous, int $target, bool $deferPreviousCleanup = false): void
     {
         if ($previous === $target) {
@@ -102,7 +105,7 @@ final class DeviceCollectorTransfer
             throw new RuntimeException("Collector cleanup transaction unavailable");
         }
         try {
-            (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($connection))->run(function () use ($connection, $actorId, $connections, $previousOwners, $target, $receipts): bool {
+            $this->transactions->run($connection, function () use ($connection, $actorId, $connections, $previousOwners, $target, $receipts): bool {
                 $pending = $receipts ?? array_map(static fn(int $owner): array => [$owner => $target], $previousOwners);
                 $ids = array_keys($pending);
                 sort($ids, SORT_NUMERIC);
@@ -118,7 +121,7 @@ final class DeviceCollectorTransfer
                         throw new RuntimeException("Collector ownership changed before cleanup");
                     }
                 }
-                $journal = new DeviceCollectorCleanup();
+                $journal = new DeviceCollectorCleanup($this->transactions);
                 if ($receipts !== null && $journal->pending($connection, $ids, true) !== $receipts) {
                     throw new RuntimeException("Collector cleanup ownership changed");
                 }

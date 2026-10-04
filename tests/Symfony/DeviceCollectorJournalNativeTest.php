@@ -14,6 +14,8 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php';
+require_once dirname(__DIR__, 2) . '/src/Platform/Contract/ReferenceWriteTransactionRunner.php';
+require_once dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
 require_once dirname(__DIR__, 2) . '/src/Inventory/Infrastructure/Legacy/DeviceCollectorReplication.php';
 if (!class_exists(DeviceCollectorCleanup::class, false)) {
     require_once dirname(__DIR__, 2) . '/src/Inventory/Infrastructure/Legacy/DeviceCollectorCleanup.php';
@@ -52,7 +54,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
     public function testPendingOwnersSurviveMovesAndReturningOwnerIsCancelled(): void
     {
         $db = $this->database;
-        $journal = new DeviceCollectorCleanup();
+        $journal = new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner());
         $db->beginTransaction();
         self::assertSame([7 => [2 => 3]], $journal->retain($db, [7 => 2], 3));
         self::assertTrue($db->inTransaction());
@@ -76,14 +78,14 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         $db->exec("INSERT INTO settings VALUES ('unrelated','retained')");
         $failure = null;
         try {
-            (new DeviceCollectorCleanup())->retain($db, [7 => 2, 8 => 2], 1);
+            (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->retain($db, [7 => 2, 8 => 2], 1);
         } catch (\PDOException $error) {
             $failure = $error;
         }
         self::assertInstanceOf(\PDOException::class, $failure);
         self::assertStringContainsString('fixture later receipt rejection', $failure->getMessage());
         self::assertTrue($db->inTransaction());
-        self::assertSame([], (new DeviceCollectorCleanup())->pending($db, [7, 8], true));
+        self::assertSame([], (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->pending($db, [7, 8], true));
         self::assertSame('retained', $db->query("SELECT value FROM settings WHERE name='unrelated'")->fetchColumn());
         $db->commit();
         self::assertSame('retained', $db->query("SELECT value FROM settings WHERE name='unrelated'")->fetchColumn());
@@ -92,7 +94,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
     public function testAcknowledgementRequiresExactOwnerAndBinaryReceipt(): void
     {
         $db = $this->database;
-        $journal = new DeviceCollectorCleanup();
+        $journal = new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner());
         $db->exec("INSERT INTO settings VALUES ('poller_replicate_device_cleanup_7_2','3'),('unrelated','retained')");
         $db->beginTransaction();
         $failure = null;
@@ -123,7 +125,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
     {
         $this->database->prepare('INSERT INTO settings VALUES (?,?)')->execute([$name, $value]);
         $this->expectException(\RuntimeException::class);
-        (new DeviceCollectorCleanup())->pending($this->database, [7]);
+        (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->pending($this->database, [7]);
     }
 
     public static function malformedReceipts(): iterable
@@ -144,7 +146,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         $this->database->beginTransaction();
         $failure = null;
         try {
-            (new DeviceCollectorCleanup())->retain($this->database, [7 => 2], 1);
+            (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->retain($this->database, [7 => 2], 1);
         } catch (\RuntimeException $error) {
             $failure = $error;
         }
@@ -159,7 +161,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         $this->database->beginTransaction();
         $failure = null;
         try {
-            (new DeviceCollectorCleanup())->retain($this->database, [7 => 2], 1);
+            (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->retain($this->database, [7 => 2], 1);
         } catch (\RuntimeException $error) {
             $failure = $error;
         }
@@ -174,11 +176,11 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         $db->beginTransaction();
         $db->metadataQueries = 0;
         $owners = array_fill_keys(range(1, 100), 2);
-        $result = (new DeviceCollectorCleanup())->retain($db, $owners, 1);
+        $result = (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->retain($db, $owners, 1);
         self::assertCount(100, $result);
         self::assertSame(6, $db->metadataQueries);
         $db->rollBack();
-        self::assertSame([], (new DeviceCollectorCleanup())->pending($db, array_keys($owners)));
+        self::assertSame([], (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->pending($db, array_keys($owners)));
     }
 
     public function testReceiptRecheckAfterHostWaitUsesCurrentRead(): void
@@ -195,7 +197,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         };
         $db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
         $db->beginTransaction();
-        $journal = new DeviceCollectorCleanup();
+        $journal = new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner());
         self::assertSame([], $journal->pending($db, [7]));
         $connectionId = (int) $db->query('SELECT CONNECTION_ID()')->fetchColumn();
         $fixture = __DIR__ . '/collector_cleanup_lock_probe.php';
@@ -260,13 +262,13 @@ final class DeviceCollectorJournalNativeTest extends TestCase
             if ($stage === 'ack') {
                 (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($db))->run(
                     static function () use ($db): bool {
-                        (new DeviceCollectorCleanup())->acknowledge($db, 7, 2, 3);
+                        (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->acknowledge($db, 7, 2, 3);
                         return true;
                     },
                     ['settings']
                 );
             } else {
-                (new DeviceCollectorCleanup())->retain($db, [7 => 2], 3);
+                (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->retain($db, [7 => 2], 3);
             }
         } catch (\RuntimeException $error) {
             $failure = $error;
@@ -276,7 +278,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         self::assertInstanceOf(\RuntimeException::class, $failure);
         self::assertStringContainsString($stage === 'read' ? 'receipts unavailable' : 'receipt operation unavailable', $failure->getMessage());
         self::assertTrue($db->inTransaction());
-        self::assertSame($stage === 'ack' ? [7 => [2 => 3]] : [], (new DeviceCollectorCleanup())->pending($db, [7], true));
+        self::assertSame($stage === 'ack' ? [7 => [2 => 3]] : [], (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->pending($db, [7], true));
         self::assertSame('retained', $db->query("SELECT value FROM settings WHERE name='caller_work'")->fetchColumn());
         self::assertSame('committed', $db->query("SELECT value FROM settings WHERE name='unrelated'")->fetchColumn());
         $db->rollBack();
@@ -296,7 +298,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         $db->rejectCommit = true;
         $failure = null;
         try {
-            (new DeviceCollectorCleanup())->pending($db, [7]);
+            (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->pending($db, [7]);
         } catch (\RuntimeException $error) {
             $failure = $error;
         } finally {
@@ -323,7 +325,7 @@ final class DeviceCollectorJournalNativeTest extends TestCase
             (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($db))->run(
                 static function () use ($db): bool {
                     (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorReplication())->verifyPurged($db, 7);
-                    (new DeviceCollectorCleanup())->acknowledge($db, 7, 2, 3);
+                    (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->acknowledge($db, 7, 2, 3);
                     return true;
                 },
                 ['settings']
@@ -336,9 +338,9 @@ final class DeviceCollectorJournalNativeTest extends TestCase
         self::assertInstanceOf(\RuntimeException::class, $failure);
         self::assertSame('Previous collector cleanup could not be confirmed', $failure->getMessage());
         self::assertTrue($db->inTransaction());
-        self::assertSame([7 => [2 => 3]], (new DeviceCollectorCleanup())->pending($db, [7], true));
+        self::assertSame([7 => [2 => 3]], (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->pending($db, [7], true));
         $db->commit();
-        self::assertSame([7 => [2 => 3]], (new DeviceCollectorCleanup())->pending($db, [7]));
+        self::assertSame([7 => [2 => 3]], (new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->pending($db, [7]));
     }
 }
 
