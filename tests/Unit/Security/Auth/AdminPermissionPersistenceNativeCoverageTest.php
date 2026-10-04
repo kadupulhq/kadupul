@@ -15,7 +15,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
     private static bool $parentCoverageEvidenceChecked = false;
     private static bool $userCoverageEvidenceChecked = false;
 
-    /** @dataProvider affectedUserCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('affectedUserCases')]
     public function testMembershipAdditionRequiresItsLockedUser(bool $group, bool $associate, bool $missing, bool $caller): void
     {
         $state = $this->runController(array('group' => $group, 'operation' => 'membership', 'replace' => $associate, 'selected' => array(43), 'affected_user_missing' => $missing, 'parent_contract' => true, 'caller_transaction' => $caller));
@@ -59,7 +59,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider affectedUserReadFaults */
+    #[\PHPUnit\Framework\Attributes\DataProvider('affectedUserReadFaults')]
     public function testFailedLockedUserReadRefusesMembership(bool $group, string $fault, bool $caller): void
     {
         $state = $this->runController(array('group' => $group, 'operation' => 'membership', 'replace' => true, 'selected' => array(43), 'user_read_fault' => true, 'parent_read_fault' => $fault, 'parent_contract' => true, 'caller_transaction' => $caller));
@@ -86,7 +86,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider affectedUserCleanupFaults */
+    #[\PHPUnit\Framework\Attributes\DataProvider('affectedUserCleanupFaults')]
     public function testUnconfirmedUserCleanupPreservesOriginalError(bool $group, bool $caller, bool|string $fault): void
     {
         $state = $this->runController(array('group' => $group, 'operation' => 'membership', 'replace' => true, 'selected' => array(43), 'affected_user_missing' => true, 'parent_cleanup_failure' => $fault, 'parent_contract' => true, 'caller_transaction' => $caller));
@@ -116,7 +116,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider reverseMembershipCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('reverseMembershipCases')]
     public function testReverseMembershipRequiresAParentOnlyForAdmission(bool $associate, bool $missing, bool $caller): void
     {
         $state = $this->runController(array('group' => false, 'operation' => 'membership', 'replace' => $associate, 'selected' => array(43), 'selected_group_missing' => $missing, 'parent_contract' => true, 'caller_transaction' => $caller));
@@ -154,7 +154,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider parentCleanupFailures */
+    #[\PHPUnit\Framework\Attributes\DataProvider('parentCleanupFailures')]
     public function testUnconfirmedParentCleanupPreservesTheOriginalError(bool $group, string $operation, bool $caller, bool|string $fault): void
     {
         $scenario = array('group' => $group, 'operation' => $operation, 'type' => 'graph', 'kind' => 'graph', 'type_id' => 1, 'parent_contract' => true, 'parent_cleanup_failure' => $fault, 'caller_transaction' => $caller);
@@ -193,7 +193,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider parentReadFaults */
+    #[\PHPUnit\Framework\Attributes\DataProvider('parentReadFaults')]
     public function testFailedParentReadReceiptRefusesTheGroupWrite(string $fault, bool $caller): void
     {
         $state = $this->runController(array('group' => true, 'operation' => 'remove', 'type' => 'graph', 'type_id' => 1, 'parent_contract' => true, 'parent_read_fault' => $fault, 'caller_transaction' => $caller));
@@ -219,7 +219,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider groupParentCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('groupParentCases')]
     public function testGroupMutationsRequireTheirLockedParent(string $operation, bool $missing, bool $caller, bool $empty): void
     {
         $scenario = array('group' => true, 'operation' => $operation, 'type' => 'graph', 'kind' => 'graph', 'type_id' => 1, 'parent_contract' => true, 'parent_missing' => $missing, 'caller_transaction' => $caller);
