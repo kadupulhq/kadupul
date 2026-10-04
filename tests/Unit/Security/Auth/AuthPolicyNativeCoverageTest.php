@@ -5,11 +5,15 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../../../Helpers/PestCodeCoverageCompatibility.php';
+
 final class AuthPolicyNativeCoverageTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static array $coverageEvidenceChecked = [];
 
-    /** @dataProvider realmCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('realmCases')]
     public function testRealmDecisionsUseScopedRealmsAndEnabledMembershipThenCurrentUserCache(array $scenario, bool $expected, bool $cached): void
     {
         $state = $this->runPolicy(array_merge(['operation' => 'realm'], $scenario));
@@ -38,7 +42,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         ];
     }
 
-    /** @dataProvider viewCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('viewCases')]
     public function testViewUsesActualGroupJoinVetoAndUserFallback(array $scenario, bool $expected): void
     {
         $state = $this->runPolicy(array_merge(['operation' => 'view'], $scenario));
@@ -71,7 +75,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         self::assertArrayNotHasKey('missing', $state['result']);
     }
 
-    /** @dataProvider simpleCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('simpleCases')]
     public function testSimplePermissionHelpersDistinguishDefaultsAndTypedExceptionsAndCacheGraphResults(array $scenario, bool $expected): void
     {
         $state = $this->runPolicy(array_merge(['operation' => 'simple'], $scenario));
@@ -93,7 +97,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         ];
     }
 
-    /** @dataProvider treeCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('treeCases')]
     public function testTreesRespectDirectPolicyAndEnabledMembershipAndReuseCurrentCache(array $scenario, bool $expected): void
     {
         $state = $this->runPolicy(array_merge(['operation' => 'tree'], $scenario));
@@ -128,7 +132,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         self::assertSame([1, 2], array_column($state['result'], 'policy_trees'));
     }
 
-    /** @dataProvider branchCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('branchCases')]
     public function testBranchEmptinessUsesActualChildrenGraphsAndOrphanSites(array $scenario, array $expected): void
     {
         $state = $this->runPolicy(['operation' => 'branch'] + $scenario);
@@ -140,7 +144,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         return ['empty nested branches' => [[], [true,true,true]], 'nested visible graph' => [['graph' => true], [false,false,true]], 'orphan site has no permitted device' => [['site' => true], [true,true,true]]];
     }
 
-    /** @dataProvider contentCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('contentCases')]
     public function testTreeContentIncludesVisibleNestedGraphOrSiteAndOmitsEmptyBranches(array $scenario, array $ids): void
     {
         $state = $this->runPolicy(['operation' => 'tree-content'] + $scenario);
@@ -152,7 +156,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         return [[[],[]], [['graph' => true],[11]], [['site' => true],[11]]];
     }
 
-    /** @dataProvider levelCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('levelCases')]
     public function testTreeLevelsScopeActualParentAndTreeInPositionOrder(int $parent, bool $editing, array $ids): void
     {
         $state = $this->runPolicy(['operation' => 'tree-level', 'parent' => $parent, 'editing' => $editing]);
@@ -187,7 +191,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         self::assertSame([['user_id' => 43,'class' => 'foreign','total_rows' => 77]], $state['result']['stored']);
     }
 
-    /** @dataProvider ownershipCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ownershipCases')]
     public function testResourceOwnershipUsesPersistedOwnerAndParentJoin(array $scenario, bool $expected): void
     {
         $state = $this->runPolicy(['operation' => 'ownership'] + $scenario);
@@ -199,7 +203,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         return [ [['type' => 'reports','resource' => 1],true], [['type' => 'reports','resource' => 2],false], [['type' => 'reports','resource' => 999],false], [['type' => 'report_item','resource' => 10],true], [['type' => 'report_item','resource' => 20],false], [['type' => 'report_item','resource' => 30],false], [['type' => 'report_item','resource' => 999],false], [['type' => 'reports','resource' => 1,'user' => 0],false], [['type' => 'unknown','resource' => 1],false] ];
     }
 
-    /** @dataProvider revokedCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('revokedCases')]
     public function testActualStalePermissionExitPreservesForeignTokensAndClearsStaleSession(bool $disabled): void
     {
         $state = $this->runPolicy(['operation' => 'revoked-account','disabled' => $disabled]);

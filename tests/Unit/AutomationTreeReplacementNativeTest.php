@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class AutomationTreeReplacementNativeTest extends TestCase
 {
-    /** @dataProvider replacements */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('replacements')]
     public function testNativeReplacementFailsClosedOrPreservesExactResults(array $scenario, array $expected, string $diagnostic): void
     {
         $state = $this->runNative($scenario + array('mode' => 'helper'));
@@ -86,7 +90,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
         );
     }
 
-    /** @dataProvider handoffs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('handoffs')]
     public function testNativeTreeHandoffCreatesOnlyCompleteNestedHeaders(array $scenario, array $titles): void
     {
         $state = $this->runNative($scenario + array('mode' => 'handoff', 'repeat' => true));
@@ -116,7 +120,7 @@ final class AutomationTreeReplacementNativeTest extends TestCase
         );
     }
 
-    /** @dataProvider previews */
+    #[\PHPUnit\Framework\Attributes\DataProvider('previews')]
     public function testNativePreviewRendersCompleteReplacementOrEmptyCell(array $scenario, string $expected): void
     {
         $state = $this->runNative($scenario + array('mode' => 'preview'));

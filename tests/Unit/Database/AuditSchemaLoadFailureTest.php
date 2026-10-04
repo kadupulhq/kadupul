@@ -7,10 +7,14 @@
 
 namespace Kadupul\Tests;
 
+require_once dirname(__DIR__, 2) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class AuditSchemaLoadFailureTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     public function testAuditRefusesToCompareOrRepairWhenItsCanonicalBaselineCannotBeLoaded(): void
     {
         $root = dirname(__DIR__, 3);

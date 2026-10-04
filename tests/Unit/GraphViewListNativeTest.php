@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class GraphViewListNativeTest extends TestCase
 {
-    /** @dataProvider lists */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('lists')]
     public function testNativeListFlowKeepsRequestSessionAndRenderedValuesConsistent(array $scenario, string $expected): void
     {
         $result = $this->runController($scenario);
@@ -39,7 +43,7 @@ final class GraphViewListNativeTest extends TestCase
         }
     }
 
-    public function lists(): array
+    public static function lists(): array
     {
         return array(
             'ordered unique addition' => array(array('request' => array('page' => 1, 'graph_list' => '3,1,3', 'graph_add' => '2')), '3,1,2'),
