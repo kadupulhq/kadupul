@@ -151,14 +151,27 @@ function form_save_profile_components()
     }
 
     if (isset_request_var('save_component_profile')) {
+        if (get_request_var('id') > 0 && profile_is_read_only(get_request_var('id'))
+            && (isset_request_var('step') || isset_request_var('x_files_factor') || isset_request_var('consolidation_function_id'))) {
+            profile_refuse_read_only(get_request_var('id'), 'the step, X-Files Factor or Consolidation Functions');
+
+            return;
+        }
+
         $save['id']             = form_input_validate(get_request_var('id'), 'id', '^[0-9]+$', false, 3);
         $save['hash']           = get_hash_data_source_profile(get_request_var('id'));
 
         $save['name']           = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
 
         if (isset_request_var('step')) {
-            $save['step']           = form_input_validate(get_nfilter_request_var('step'), 'step', '', false, 3);
-            $save['heartbeat']      = form_input_validate(get_nfilter_request_var('heartbeat'), 'heartbeat', '', false, 3);
+            $save['step'] = form_input_validate(get_nfilter_request_var('step'), 'step', '', false, 3);
+        }
+
+        if (isset_request_var('heartbeat')) {
+            $save['heartbeat'] = form_input_validate(get_nfilter_request_var('heartbeat'), 'heartbeat', '', false, 3);
+        }
+
+        if (isset_request_var('x_files_factor')) {
             $save['x_files_factor'] = form_input_validate(get_nfilter_request_var('x_files_factor'), 'x_files_factor', '', false, 3);
         }
 
@@ -205,7 +218,7 @@ function form_save_profile_components()
                     }
                 }
 
-                if ($prev_heartbeat != get_request_var('heartbeat')) {
+                if (isset_request_var('heartbeat') && $prev_heartbeat != get_request_var('heartbeat')) {
                     $existing = db_fetch_cell_prepared(
                         'SELECT COUNT(*)
 						FROM data_template_data
@@ -476,6 +489,48 @@ function profiles_not_in_use($selected_items)
     }
 
     return $unused_profiles;
+}
+
+/**
+ * Determine whether local data sources use a profile's structural settings.
+ *
+ * A failed usage query fails closed and protects the profile's RRA structure.
+ *
+ * @param int $profile_id
+ * @return bool
+ */
+function profile_is_read_only($profile_id)
+{
+    $in_use = db_fetch_cell_prepared(
+        'SELECT COUNT(*)
+        FROM data_template_data
+        WHERE data_source_profile_id = ?
+        AND local_data_id > 0',
+        array($profile_id)
+    );
+
+    if ($in_use === false || !is_numeric($in_use)) {
+        cacti_log('ERROR: Unable to check whether Data Source Profile ' . (int) $profile_id . ' is in use.', false, 'WEBUI');
+
+        return true;
+    }
+
+    return (int) $in_use > 0;
+}
+
+/**
+ * Refuse changes to structural fields on profiles used by local data sources.
+ *
+ * @param int    $profile_id
+ * @param string $what
+ * @return void
+ */
+function profile_refuse_read_only($profile_id, $what)
+{
+    cacti_log('WARNING: Refused to change ' . $what . ' of read only Data Source Profile ' . (int) $profile_id . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+    raise_message('profile_read_only', __('Profiles that are in use by Data Sources become read only for now.'), MESSAGE_LEVEL_ERROR);
+
+    header('Location: data_source_profiles.php?header=false&action=edit&id=' . (int) $profile_id);
 }
 
 /* --------------------------
