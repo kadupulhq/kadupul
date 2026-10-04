@@ -77,6 +77,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Validate replicated resource-cache paths against the installation tree, protect `include/config.php`, and run PHP syntax checks without a shell.
 - Restrict Script Server dispatch to PHP files under `scripts/` and only call functions declared by the selected file.
+- Validate graph-item dashes, dash offsets and alpha values before saving, and quote those fields and the SHIFT and TICK values when rendering graphs.
 
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.

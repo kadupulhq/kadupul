@@ -70,7 +70,7 @@
                 "CDEF:officehours6=a,POP,TIME,1700380800,LT,1,0,IF,TIME,1700400000,GT,1,0,IF,MAX,0,GT,0,1,IF",
                 "CDEF:dslimit6=INF,officehours6,*",
                 "AREA:dslimit6#ffeeaa80",
-                "AREA:a#3366CC99:'Inbound\\: 50%' \r\nquit\r\n"
+                "AREA:a#3366CC'99':'Inbound\\: 50%' \r\nquit\r\n"
             ]
         }
     ],

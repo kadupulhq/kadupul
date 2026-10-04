@@ -17,6 +17,10 @@ if (str_starts_with($mode, 'save-')) {
 if ($mode === 'save-20') {
     $request['line_width'] = '2.50';
 }
+if (str_starts_with($mode, 'invalid-')) {
+    $request['action'] = 'save';
+    $request[substr($mode, 8)] = "FF\ninvalid";
+}
 $calls = array();
 $graph_item_types = array(4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 9 => 'GPRINT', 10 => 'LEGEND', 15 => 'LEGEND_CAMM', 20 => 'LINE:STACK');
 $struct_graph_item = array('task_item_id' => array('default' => 0), 'alpha' => array(), 'line_width' => graph_item_editor_line_width_field());
@@ -153,13 +157,11 @@ function get_hash_graph_template(...$args)
 {
     return 'fixture-hash';
 }
-function form_input_validate($value, ...$args)
-{
-    return $value;
-}
+require_once $root . '/tests/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'form_input_validate'));
 function is_error_message()
 {
-    return false;
+    return !empty($_SESSION['sess_error_fields']);
 }
 function get_sequence(...$args)
 {
@@ -193,6 +195,9 @@ function move_graph_group(...$args)
 }
 function resequence_graphs_simple(...$args) {}
 register_shutdown_function(function () {
+    if (str_starts_with($GLOBALS['mode'], 'invalid-')) {
+        $GLOBALS['calls'][] = array('errors', array_keys($_SESSION['sess_error_fields'] ?? array()));
+    }
     print "\nRESULT:" . json_encode($GLOBALS['calls'], JSON_THROW_ON_ERROR);
 });
 
