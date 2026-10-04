@@ -5,7 +5,7 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-require __DIR__ . '/PhpSource.php';
+require_once __DIR__ . '/../Helpers/PhpSource.php';
 $scenario = json_decode(fgets(STDIN), true, 512, JSON_THROW_ON_ERROR);
 function copy_race_sql($sql)
 {
