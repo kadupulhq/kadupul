@@ -12,6 +12,8 @@ if (PHP_SAPI !== 'cli') {
     exit(1);
 }
 $root = dirname(__DIR__, 2);
+// Match the application's actual Composer bootstrap for semantic icons.
+require_once $root . '/include/vendor/autoload.php';
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $managerView = $scenario['view'] === 'manager';
 $debugView = in_array($scenario['view'], array('debug', 'debug-icons'), true);

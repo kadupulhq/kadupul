@@ -230,11 +230,11 @@ final class HtmlRendererNativeCoverageTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/HtmlRendererNativeCoverageTest.php', 'include/global_constants.php', 'lib/functions.php', 'lib/html_utility.php', 'lib/headers_secure.php', 'lib/html.php');
+                $sources = array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/HtmlRendererNativeCoverageTest.php', 'include/global_constants.php', 'lib/functions.php', 'lib/html_utility.php', 'lib/headers_secure.php', 'lib/html.php');
                 $markers = array('html-rendered:' . $case['kind']);
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/html-renderer-native.php', json_encode($case, JSON_THROW_ON_ERROR), $sources, $markers, array('lib/html.php'));
                 if ($case === array('kind' => 'host', 'selected' => 1)) {
-                    self::assertSame(30, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/html-renderer-native.php', json_encode($case, JSON_THROW_ON_ERROR), $sources, $markers, array('lib/html.php'), 'lib/boost.php'));
+                    self::assertSame(32, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/html-renderer-native.php', json_encode($case, JSON_THROW_ON_ERROR), $sources, $markers, array('lib/html.php'), 'lib/boost.php'));
                 }
                 $coverage->merge($child);
             }
