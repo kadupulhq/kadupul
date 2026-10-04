@@ -58,6 +58,12 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
 - Draw core icons from one registry, `config/icons.json`, which maps names such as `add` and `collapse-all` to Font Awesome 7 classes. `html_icon()` refuses an icon with no accessible label unless it is marked decorative, `layout.js` reads the same map, and themes redraw icons through registry overrides instead of rewriting classes in the page. Console menu glyphs are now registry names; a plugin's Font Awesome classes in `$menu_glyphs` still render as given. Plugin icons are no longer restyled by a theme: paw, paper-plane and sunrise leave `fa-arrow-down` and `fa-arrow-up` alone, and midwinter leaves plugin menu glyphs alone.
+- Check graph permission on a remote data collector before it asks the main poller for a graph image.
+- Keep cached graph and tree permission answers separate for each user, so an emailed report only includes graphs and trees its owner may view.
+- Check that real-time graphs are enabled, that the user has the Real-time realm and that the user may view the graph before a real-time request polls any device or returns a cached image.
+- Save real-time graph preferences only from a token-checked POST; polling by GET no longer changes them.
+- Show the graph page's Real-time button only when real-time graphs are enabled and the user has the Real-time realm.
+- Show a report device item according to the owner's device permission rather than the permission of an unrelated tree.
 - Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
 
 - Render the color palette through Symfony and Twig, with protected named colors, revision-checked transactions and strict quoted CSV imports/exports.

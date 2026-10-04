@@ -265,7 +265,7 @@ dynamic_include	./color_templates.php:166	    include_once($config['base_path'] 
 dynamic_include	./color_templates.php:376	    include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:427	    include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:506	    include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./graph_realtime.php:415	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
+dynamic_include	./graph_realtime.php:482	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:140	                require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:207	            require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:404	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');

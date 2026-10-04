@@ -11,6 +11,14 @@ final class AuthPolicyNativeCoverageTest extends TestCase
 {
     use \PestCodeCoverageCompatibility;
 
+    public function testRealPermissionCachesSeparateOwnersAndRecheckAdministrativeResets(): void
+    {
+        $state = $this->runPolicy(array('operation' => 'cache-owner-isolation'));
+        self::assertSame(array(array(true, true, true), array(false, false, false), array(true, true, true), array(true, true, true), array(true, true, true)), $state['result']);
+        self::assertSame(array(42 => array(100 => true), 43 => array(100 => true)), $state['session']['sess_tree_perms']);
+        self::assertSame(array(42 => true, 43 => true), $state['session']['sess_simple_perms']);
+        self::assertSame(array(42 => true, 43 => true), $state['session']['sess_simple_template_perms']);
+    }
     private static array $coverageEvidenceChecked = [];
 
     #[\PHPUnit\Framework\Attributes\DataProvider('realmCases')]
@@ -81,8 +89,8 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         $state = $this->runPolicy(array_merge(['operation' => 'simple'], $scenario));
         self::assertSame(array_fill(0, 3, $expected), $state['result']);
         self::assertSame(array_fill(0, 2, $expected), $state['cached']);
-        self::assertSame($expected, $state['session']['sess_simple_perms']);
-        self::assertSame($expected, $state['session']['sess_simple_template_perms']);
+        self::assertSame(array(42 => $expected), $state['session']['sess_simple_perms']);
+        self::assertSame(array(42 => $expected), $state['session']['sess_simple_template_perms']);
         self::assertSame(0, $state['extra_queries']);
     }
 
@@ -103,7 +111,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         $state = $this->runPolicy(array_merge(['operation' => 'tree'], $scenario));
         self::assertSame($expected, $state['result']);
         self::assertSame($expected, $state['cached']);
-        self::assertSame($expected, $state['session']['sess_tree_perms'][100]);
+        self::assertSame(array(!empty($scenario['anonymous']) ? 0 : 42 => array(100 => $expected)), $state['session']['sess_tree_perms']);
         self::assertSame(0, $state['extra_queries']);
     }
 

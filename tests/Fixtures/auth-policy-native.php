@@ -130,6 +130,15 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'cache-owner-isolation':
+        $db->exec('UPDATE user_auth SET policy_graphs=1,policy_graph_templates=1,policy_trees=1 WHERE id=42');
+        $db->exec('UPDATE user_auth SET policy_graphs=2,policy_graph_templates=2,policy_trees=2 WHERE id=43');
+        $answers = static fn(int $user): array => array(is_tree_allowed(100, $user), get_simple_graph_perms($user), get_simple_graph_template_perms($user));
+        $result = array($answers(42), $answers(43), $answers(42));
+        $db->exec('UPDATE user_auth SET policy_graphs=1,policy_graph_templates=1,policy_trees=1,reset_perms=1 WHERE id=43');
+        $result[] = $answers(43);
+        $result[] = $answers(42);
+        break;
     case 'branch':
         if (!empty($scenario['graph'])) {
             $db->exec('UPDATE graph_tree_items SET local_graph_id=100 WHERE id=12');
