@@ -578,12 +578,12 @@ fs_write	./lib/rrd.php:3216	                    rrdtool_filesystem()->dumpFile($
 fs_write	./lib/rrd.php:3298	                file_put_contents('php://stderr', $buffer);
 fs_write	./lib/rrd_maintenance.php:350	            $handle = @fopen($probe, 'x+b');
 fs_write	./lib/rrd_maintenance.php:93	    $handle = @fopen($canonical, 'r');
-fs_write	./lib/spikekill.php:1127				$handle    = @fopen($desired_path, 'xb');
-fs_write	./lib/spikekill.php:1145					$handle    = @fopen($candidate, 'xb');
-fs_write	./lib/spikekill.php:1166			$source_handle = fopen($source, 'rb');
-fs_write	./lib/spikekill.php:1256				$handle    = @fopen($candidate, 'xb+');
-fs_write	./lib/spikekill.php:514			$source_handle = @fopen($this->rrdfile, 'rb');
-fs_write	./lib/spikekill.php:932			$original = @fopen($rrdfile, 'rb');
+fs_write	./lib/spikekill.php:1152	            $handle    = @fopen($desired_path, 'xb');
+fs_write	./lib/spikekill.php:1170	                $handle    = @fopen($candidate, 'xb');
+fs_write	./lib/spikekill.php:1191	        $source_handle = fopen($source, 'rb');
+fs_write	./lib/spikekill.php:1283	            $handle    = @fopen($candidate, 'xb+');
+fs_write	./lib/spikekill.php:533	        $source_handle = @fopen($this->rrdfile, 'rb');
+fs_write	./lib/spikekill.php:954	        $original = @fopen($rrdfile, 'rb');
 fs_write	./package_import.php:373					file_put_contents($xmlfile, $data);
 fs_write	./package_import.php:79		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
 fs_write	./script_server.php:38	    define('STDIN', fopen('php://stdin', 'r'));
