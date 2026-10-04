@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
 use Closure;
-use Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction;
+use Kadupul\Platform\Contract\ReferenceWriteTransactionRunner;
 use PDO;
 use PDOStatement;
 use RuntimeException;
@@ -18,6 +18,8 @@ use RuntimeException;
 /** Keeps buffered cache replacement within the current device assignment. */
 final class PollerCacheBufferWrite
 {
+    public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
+
     /** @param list<int> $ids @param list<string|null|false> $items */
     public function write(PDO $primary, array $ids, array $items, int $poller, string $prefix, string $suffix, Closure $connect, Closure $unavailable): ?int
     {
@@ -54,9 +56,9 @@ final class PollerCacheBufferWrite
         $selected = array_values(array_unique(array_merge($ids, array_keys($identities))));
         sort($selected, SORT_NUMERIC);
         if ($selected === []) {
-            return (new LegacyReferenceWriteTransaction($primary))->run(fn(): int => $this->changed($primary), ['settings']);
+            return $this->transactions->run($primary, fn(): int => $this->changed($primary), ['settings']);
         }
-        return (new LegacyReferenceWriteTransaction($primary))->run(function () use ($primary, $ids, $selected, $identities, $records, $poller, $prefix, $suffix, $connect, $unavailable): int {
+        return $this->transactions->run($primary, function () use ($primary, $ids, $selected, $identities, $records, $poller, $prefix, $suffix, $connect, $unavailable): int {
             $mapping = $this->mapping($primary, $selected, false);
             $hosts = array_values(array_unique(array_filter(array_values($mapping), static fn(int $id): bool => $id > 0)));
             sort($hosts, SORT_NUMERIC);
@@ -83,7 +85,7 @@ final class PollerCacheBufferWrite
                 $this->confirmCache($connection, $selected, $ids, $mapping, $identities, $poller);
             };
             if ($remote instanceof PDO && $remote !== $primary) {
-                (new LegacyReferenceWriteTransaction($remote))->run(function () use ($primary, $remote, $hosts, $poller, $apply): bool {
+                $this->transactions->run($remote, function () use ($primary, $remote, $hosts, $poller, $apply): bool {
                     $this->lockHosts($remote, $hosts, $poller);
                     $apply($primary);
                     $apply($remote);

@@ -74,7 +74,7 @@ final class DeviceBulkAssignmentTest extends TestCase
         $remote = $this->createMock(\PDO::class);
         $remote->expects(self::once())->method('prepare')->with(self::stringStartsWith('SELECT poller_id'))->willReturn($identity);
         $remote->expects(self::never())->method('query');
-        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceBulkAssignmentWriter())->verify($primary, [2 => $remote], new \Kadupul\Inventory\Domain\DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), new \Kadupul\Inventory\Domain\DeviceBulkAssignment('collector', 2));
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceBulkAssignmentWriter(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->verify($primary, [2 => $remote], new \Kadupul\Inventory\Domain\DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), new \Kadupul\Inventory\Domain\DeviceBulkAssignment('collector', 2));
     }
 
 }
