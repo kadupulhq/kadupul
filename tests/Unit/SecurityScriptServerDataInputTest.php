@@ -64,11 +64,13 @@ test('script_server rejects PHP internal functions via ReflectionFunction', func
         ->not->toBeFalse('rejection must be logged so operators can see the attempt');
 });
 
-test('script_server rejects functions defined outside base_path', function () use ($scriptServerSource) {
+test('script_server rejects functions not defined by the selected script file', function () use ($scriptServerSource) {
     expect(strpos($scriptServerSource, '$ref->getFileName()'))
         ->not->toBeFalse('the source file of the function must be checked');
-    expect(strpos($scriptServerSource, "defined outside base path"))
-        ->not->toBeFalse('out-of-tree definitions must be rejected with a log line');
+    expect(strpos($scriptServerSource, "was not defined by script file"))
+        ->not->toBeFalse('definitions from another file must be rejected with a log line');
+    expect(strpos($scriptServerSource, '$fn_real === $include_cmp'))
+        ->not->toBeFalse('the defining file must match the selected script');
 });
 
 test('script_server emits U on every rejection branch', function () use ($scriptServerSource) {
