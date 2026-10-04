@@ -311,7 +311,7 @@ function __rrd_proxy_init($logopt = 'WEBLOG') {
 		$rrdproxy = array($rrdp_socket, $rrdp_public_key);
 		/* set the rrdtool default font */
 		if (read_config_option('path_rrdtool_default_font')) {
-			rrdtool_execute("setenv RRD_DEFAULT_FONT '" . read_config_option('path_rrdtool_default_font') . "'", false, RRDTOOL_OUTPUT_NULL, $rrdproxy, $logopt = 'WEBLOG');
+			rrdtool_execute('setenv RRD_DEFAULT_FONT ' . rrdtool_quote_argument(read_config_option('path_rrdtool_default_font')), false, RRDTOOL_OUTPUT_NULL, $rrdproxy, $logopt = 'WEBLOG');
 		}
 
 		/* keep message encryption on: the proxy honours a request to turn it off
@@ -3611,14 +3611,13 @@ function rrdtool_function_set_font($type, $no_legend, $themefonts) {
 		$font = rrdtool_quote_argument($font);
 	}
 
-	if ($type == 'title') {
-		if (!empty($no_legend)) {
-			$size = $size * .70;
-		} elseif (($size <= 4) || !is_numeric($size)) {
-			$size = 12;
-		}
-	} elseif (($size <= 4) || !is_numeric($size)) {
-		$size = 8;
+	/* sizes are free text in the settings, and rrdtool fails the whole graph on INF or a huge size */
+	if (!is_numeric($size) || !is_finite((float) $size) || $size <= 4 || $size > 100) {
+		$size = ($type == 'title') ? 12 : 8;
+	}
+
+	if ($type == 'title' && !empty($no_legend)) {
+		$size = $size * .70;
 	}
 
 	return '--font ' . strtoupper($type) . ':' . floatval($size) . ':' . $font . RRD_NL;
@@ -5020,8 +5019,72 @@ function rrdtool_parse_error($string) {
 	return $string;
 }
 
-function rrdtool_create_error_image($string, $width = '', $height = '') {
+function rrdtool_error_image_font() {
 	global $config, $dejavu_paths;
+
+	if ($config['cacti_server_os'] == 'unix') {
+		foreach ($dejavu_paths as $dejavupath) {
+			if (file_exists($dejavupath . '/DejaVuSans.ttf')) {
+				return $dejavupath . '/DejaVuSans.ttf';
+			}
+		}
+	} elseif (file_exists('C:/Windows/Fonts/Arial.ttf')) {
+		return 'C:/Windows/Fonts/Arial.ttf';
+	}
+
+	/* include/fonts ships only bold faces, which still beat GD's bitmap fonts that cannot draw UTF-8 */
+	if (file_exists($config['base_path'] . '/include/fonts/DejaVuSans-Bold.ttf')) {
+		return $config['base_path'] . '/include/fonts/DejaVuSans-Bold.ttf';
+	}
+
+	return false;
+}
+
+/* wordwrap($string, $width, "\n", true) counting UTF-8 characters instead of bytes */
+function rrdtool_error_image_wrap($string, $width) {
+	$chars = preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY);
+
+	if ($chars === false) {
+		return wordwrap($string, $width, "\n", true);
+	}
+
+	$count     = count($chars);
+	$output    = '';
+	$laststart = 0;
+	$lastspace = 0;
+
+	for ($current = 0; $current < $count; $current++) {
+		if ($chars[$current] == "\n" && $current + 1 < $count) {
+			$output   .= implode('', array_slice($chars, $laststart, $current - $laststart + 1));
+			$laststart = $current + 1;
+			$lastspace = $current + 1;
+		} elseif ($chars[$current] == ' ') {
+			if ($current - $laststart >= $width) {
+				$output   .= implode('', array_slice($chars, $laststart, $current - $laststart)) . "\n";
+				$laststart = $current + 1;
+			}
+
+			$lastspace = $current;
+		} elseif ($current - $laststart >= $width && $laststart >= $lastspace) {
+			$output   .= implode('', array_slice($chars, $laststart, $current - $laststart)) . "\n";
+			$laststart = $current;
+			$lastspace = $current;
+		} elseif ($current - $laststart >= $width && $laststart < $lastspace) {
+			$output   .= implode('', array_slice($chars, $laststart, $lastspace - $laststart)) . "\n";
+			$laststart = $lastspace + 1;
+			$lastspace = $lastspace + 1;
+		}
+	}
+
+	if ($laststart != $count) {
+		$output .= implode('', array_slice($chars, $laststart));
+	}
+
+	return $output;
+}
+
+function rrdtool_create_error_image($string, $width = '', $height = '') {
+	global $config;
 
 	$string = rrdtool_parse_error($string);
 
@@ -5035,16 +5098,7 @@ function rrdtool_create_error_image($string, $width = '', $height = '') {
 	$shadea      = 'CBCBCB';
 	$shadeb      = '999999';
 
-	if ($config['cacti_server_os'] == 'unix') {
-		foreach ($dejavu_paths as $dejavupath) {
-			if (file_exists($dejavupath . '/DejaVuSans.ttf')) {
-				$font_file = $dejavupath . '/DejaVuSans.ttf';
-				break;
-			}
-		}
-	} else {
-		$font_file = 'C:/Windows/Fonts/Arial.ttf';
-	}
+	$font_file = rrdtool_error_image_font();
 
 	$themefile  = $config['base_path'] . '/include/themes/' . get_selected_theme() . '/rrdtheme.php';
 
@@ -5104,14 +5158,26 @@ function rrdtool_create_error_image($string, $width = '', $height = '') {
 	list($red, $green, $blue) = sscanf($font_color, '%02x%02x%02x');
 	$text_color = imagecolorallocate($image, $red, $green, $blue);
 
+	$use_ttf = $font_file !== false && is_readable($font_file) && function_exists('imagettftext');
+
+	if ($use_ttf) {
+		$char_width  = $font_size / 0.9;
+		$line_height = $font_size;
+	} else {
+		/* GD has only built-in font ids 1 to 5; the old point size of 8 already drew as id 5 */
+		$gd_font     = 5;
+		$char_width  = imagefontwidth($gd_font);
+		$line_height = imagefontheight($gd_font);
+	}
+
 	/* see the size of the string */
 	$string    = trim($string);
-	$maxstring = ceil((450 - (125 + 10)) / ($font_size / 0.9));
+	$maxstring = ceil((450 - (125 + 10)) / $char_width);
 	$stringlen = strlen($string) * $font_size;
 	$padding   = 5;
 
 	if ($stringlen > $maxstring) {
-		$cstring = wordwrap($string, $maxstring, "\n", true);
+		$cstring = rrdtool_error_image_wrap($string, $maxstring);
 		$strings = explode("\n", $cstring);
 		$strings = array_reverse($strings);
 		$lines   = cacti_sizeof($strings);
@@ -5125,26 +5191,29 @@ function rrdtool_create_error_image($string, $width = '', $height = '') {
 
 	/* setup the text position, image is 450x200, we start at 125 pixels from the left */
 	$xpos  = 125;
-	$texth = ($lines * $font_size + (($lines - 1) * $padding));
+	$texth = ($lines * $line_height + (($lines - 1) * $padding));
 	$ypos  = round((200 / 2) + ($texth / 2),0);
 
 	/* set the font of the image */
-	if (isset($font_file) && file_exists($font_file) && is_readable($font_file) && function_exists('imagettftext')) {
+	if ($use_ttf) {
 		foreach($strings as $string) {
 			if (trim($string) != '') {
 				if (@imagettftext($image, $font_size, 0, $xpos, $ypos, $text_color, $font_file, $string) === false) {
 					cacti_log('TTF text overlay failed');
 				}
-				$ypos -= ($font_size + $padding);
+				$ypos -= ($line_height + $padding);
 			}
 		}
 	} else {
+		/* imagestring() places the top of the text at y, imagettftext() the baseline */
+		$ypos -= $line_height;
+
 		foreach($strings as $string) {
 			if (trim($string) != '') {
-				if (@imagestring($image, $font_size, $xpos, $ypos, $string, $text_color) === false) {
+				if (@imagestring($image, $gd_font, $xpos, $ypos, $string, $text_color) === false) {
 					cacti_log('Text overlay failed');
 				}
-				$ypos -= ($font_size + $padding);
+				$ypos -= ($line_height + $padding);
 			}
 		}
 	}
