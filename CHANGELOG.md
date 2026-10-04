@@ -105,6 +105,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Generate the audit baseline from a fresh install in CI and fail when its schema rows differ from the checked-in baseline. Fixes #453.
 - Audit both fresh installs and release-upgraded databases against the checked-in schema in CI. Fixes #452.
+- Validate locally authored and conflict-resolved merge content without rejecting whitespace inherited unchanged from the incoming branch.
 - Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
 
 - Exercise user-log cleanup against real MySQL and MariaDB, preserving each current account's latest login and token while removing failed and orphaned entries; collect coverage from the actual controller.

@@ -457,6 +457,9 @@ jobs:
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh
 
+      - name: Check merge validation preserves incoming content
+        run: bash tests/tools/test_githooks_merge.sh
+
   javascript:
     name: JavaScript
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
