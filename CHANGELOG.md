@@ -136,6 +136,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Budget Inventory worker processes for every remote data-query request, preserving the existing local-work margin and the configured remote timeout cap.
 - Reject malformed association commands before mutation, propagate query refresh failures in strict workers, and publish authoritative primary changes before collector commits.
 - Restore the `data_input_data.data_input_field_id` index and normalize the `aggregate_graphs.created` timestamp during the 1.2.31 upgrade so upgraded databases match the fresh-install schema.
+- Stop schema report, alters, and repair when the canonical baseline cannot be loaded, returning a failing CLI status and JSON `failed` status without results. Preserve explicit create/load mode messages and legacy exit conventions; missing or unparsable create inputs leave existing audit tables untouched. Fixes #242.
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
