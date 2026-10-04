@@ -599,3 +599,33 @@ test('a DEF path the RRDtool proxy cannot carry refuses the graph before it is s
     // The file check is refused first, so nothing reaches the proxy at all.
     'a blank' => array(array(11 => '<path_rra>/router traffic_11.rrd'), 'graph-proxy-def-blank'),
 ));
+
+
+test('numeric graph item commands use their own positive and negative offsets', function ($type) {
+    $items = array(
+        rrd_characterization_item(1, $type, rrd_characterization_ds('traffic_in') + array('hex' => '00CF00', 'shift' => 'on', 'value' => '60')),
+        rrd_characterization_item(2, $type, rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'shift' => 'on', 'value' => '-120')),
+        rrd_characterization_item(3, $type, rrd_characterization_ds('errors') + array('hex' => 'FF0000', 'shift' => 'on', 'value' => "1\ninvalid")),
+        rrd_characterization_item(4, 'COMMENT', array('text_format' => 'Last item', 'value' => '999')),
+    );
+    $output = rrd_characterization_run($this, rrd_characterization_graph_scenario(array('graph_start' => 1700000000, 'graph_end' => 1700003600), array(), array(), $items));
+    $command = implode('', array_column($output['results'][0]['sent'], 'stdin'));
+    preg_match_all("/SHIFT:[a-z]+:'([^']+)'/", $command, $offsets);
+    expect($offsets[1])->toBe(array('60', '-120'));
+    expect($command)->not->toContain("SHIFT:c:'1")
+        ->not->toContain('invalid');
+})->with(array('AREA', 'STACK', 'LINE1', 'LINE2', 'LINE3', 'LINESTACK'));
+
+test('numeric graph item ticks keep distinct fractions and discard malformed values', function () {
+    $items = array(
+        rrd_characterization_item(1, 'TIC', rrd_characterization_ds('traffic_in') + array('hex' => '00CF00', 'value' => '0.25')),
+        rrd_characterization_item(2, 'TIC', rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'value' => '0.5')),
+        rrd_characterization_item(3, 'TIC', rrd_characterization_ds('errors') + array('hex' => 'FF0000', 'value' => "1\ninvalid")),
+        rrd_characterization_item(4, 'COMMENT', array('text_format' => 'Last item', 'value' => '999')),
+    );
+    $output = rrd_characterization_run($this, rrd_characterization_graph_scenario(array('graph_start' => 1700000000, 'graph_end' => 1700003600), array(), array(), $items));
+    $command = implode('', array_column($output['results'][0]['sent'], 'stdin'));
+    preg_match_all("/TICK:[a-z]+#[0-9A-F]+'[0-9A-F]{2}':'([^']+)'/", $command, $fractions);
+    expect($fractions[1])->toBe(array('0.25', '0.5'));
+    expect($command)->not->toContain('invalid');
+});

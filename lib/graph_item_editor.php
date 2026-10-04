@@ -78,7 +78,18 @@ function graph_item_editor_save_fields(array $item, mixed $graph_type_id): array
     $fields['consolidation_function_id'] = form_input_validate((isset($item['consolidation_function_id']) ? $item['consolidation_function_id'] : get_nfilter_request_var('consolidation_function_id')), 'consolidation_function_id', '^[0-9]+$', true, 3);
     $fields['textalign']      = form_input_validate((isset_request_var('textalign') ? get_nfilter_request_var('textalign') : ''), 'textalign', '^[a-z]+$', true, 3);
     $fields['text_format']    = form_input_validate((isset($item['text_format']) ? $item['text_format'] : get_nfilter_request_var('text_format')), 'text_format', '', true, 3);
-    $fields['value']          = form_input_validate(get_nfilter_request_var('value'), 'value', '', true, 3);
+    $value_pattern = '';
+    if ((int) $graph_type_id === GRAPH_ITEM_TYPE_TIC || ($fields['shift'] === CHECKED && in_array((int) $graph_type_id, array(
+        GRAPH_ITEM_TYPE_LINE1,
+        GRAPH_ITEM_TYPE_LINE2,
+        GRAPH_ITEM_TYPE_LINE3,
+        GRAPH_ITEM_TYPE_LINESTACK,
+        GRAPH_ITEM_TYPE_AREA,
+        GRAPH_ITEM_TYPE_STACK,
+    ), true))) {
+        $value_pattern = '^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|[0-9]*\\.[0-9]+)(?:[eE][+-]?[0-9]+)?\\z';
+    }
+    $fields['value']          = form_input_validate(get_nfilter_request_var('value'), 'value', $value_pattern, true, 3);
     $fields['hard_return']    = form_input_validate(((isset($item['hard_return']) ? $item['hard_return'] : (isset_request_var('hard_return') ? get_nfilter_request_var('hard_return') : ''))), 'hard_return', '', true, 3);
     $fields['gprint_id']      = form_input_validate(get_nfilter_request_var('gprint_id'), 'gprint_id', '^[0-9]+$', true, 3);
 
