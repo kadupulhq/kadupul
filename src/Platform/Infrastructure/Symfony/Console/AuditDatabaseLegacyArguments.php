@@ -14,6 +14,7 @@ use Kadupul\Platform\Application\ReadModel\BaselineOutcome;
 use Kadupul\Platform\Domain\Schema\AuditMode;
 use Kadupul\Platform\Domain\Schema\AuditTableStatus;
 use Kadupul\Platform\Domain\Schema\TableAudit;
+use Kadupul\Platform\Domain\Schema\UnbuildableClause;
 
 final class AuditDatabaseLegacyArguments extends LegacyArguments
 {
@@ -176,16 +177,25 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
             $lines = [...$lines, ...match (true) {
                 $table->status === AuditTableStatus::Unknown => [$header . ' - Does not Exist.  Possible Plugin'],
                 $table->status === AuditTableStatus::Plugin => [$header . ' - Plugin Detected'],
+                $table->status === AuditTableStatus::Missing => [$header, ...$table->findings, '', 'ERRORS: 1, WARNINGS: 0'],
                 $table->errors > 0 || $table->warnings > 0 => [$header, ...$table->findings, '', 'ERRORS: ' . $table->errors . ', WARNINGS: ' . $table->warnings],
                 default => [$header . ' - Clean'],
             }];
         }
-        // Only tables with a clause count; warnings alone read as clean.
-        $fixable = array_any($report->tables, static fn(TableAudit $table): bool => $table->clauses !== []);
+        $differences = array_any($report->tables, static fn(TableAudit $table): bool => $table->errors > 0 || $table->warnings > 0);
+        $fixable = array_any($report->tables, static fn(TableAudit $table): bool => $table->clauses !== []
+            && array_all($table->clauses, static fn($clause): bool => !$clause instanceof UnbuildableClause));
+        $unfixable = array_any($report->tables, static fn(TableAudit $table): bool => $table->status === AuditTableStatus::Missing
+            || array_any($table->clauses, static fn($clause): bool => $clause instanceof UnbuildableClause));
 
-        return [...$lines, self::SEPARATOR, ...($fixable
-            ? ['ERRORS are fixable using the --repair option.  WARNINGS will not be repaired', 'due to ambiguous use of the column.']
-            : ['Audit was clean, no errors or warnings']), self::SEPARATOR];
+        $summary = match (true) {
+            $fixable && $unfixable => ['Some errors are fixable using --repair; other differences need manual review.'],
+            $fixable => ['ERRORS are fixable using the --repair option.  WARNINGS will not be repaired', 'due to ambiguous use of the column.'],
+            $differences => ['Audit found differences that automatic repair will not apply.'],
+            default => ['Audit was clean, no errors or warnings'],
+        };
+
+        return [...$lines, self::SEPARATOR, ...$summary, self::SEPARATOR];
     }
 
     /**
@@ -199,6 +209,9 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
         $lines = [];
         foreach ($report->tables as $table) {
             $lines[] = sprintf($prefix . 'Scanning Table: %-45s', "'" . $table->table . "'") . ' - Completed';
+            if ($table->status === AuditTableStatus::Missing) {
+                $lines[] = 'ERROR: Baseline table is missing; repair did not recreate it.';
+            }
             foreach ($table->widened as $column) {
                 $lines[] = $prefix . $column->line();
             }
@@ -232,6 +245,7 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
                 $lines = [...$lines, 'Executing Alter for Table : ' . $alter['table'] . ' - Failed', ...self::split($alter['legacy'] . "\n")];
             }
         }
+        $bad += count(array_filter($report->tables, static fn(TableAudit $table): bool => $table->status === AuditTableStatus::Missing));
         $lines[] = self::SEPARATOR;
         $lines[] = match (true) {
             $good === 0 && $bad === 0 => $prefix . 'Repair Completed!  No changes performed.',

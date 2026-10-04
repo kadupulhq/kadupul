@@ -49,6 +49,12 @@ final readonly class AuditBaseline
         return isset($this->columns[strtolower($table)]);
     }
 
+    /** @return list<string> table names represented by at least one baseline column */
+    public function tableNames(): array
+    {
+        return array_values(array_unique(array_map(static fn(BaselineColumn $column): string => $column->table, $this->columnRows)));
+    }
+
     /** @return list<BaselineColumn> */
     public function columns(string $table): array
     {

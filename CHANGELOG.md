@@ -10,7 +10,6 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Preserve each graph item's numeric SHIFT or TICK value, including backward shifts; validate numeric fields only when rendering uses them.
 - Constrain RRD cleaner scans and purge paths to the configured storage roots.
-
 - Normalize accepted exclamation-delimited multi-value poller output to the colon format consumed by the field mapper. Fixes #284.
 - Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and consistently convert the 120-minute fallback interval to seconds. Fixes #270.
 - Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
@@ -26,6 +25,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Restrict graph edit, create, and device-move operations to graphs and devices the user may access.
 - Require device access before viewing, saving, reindexing, pinging, reloading queries, or changing templates for a device; also enforce access in the web-facing device save API.
 - Limit Data Query Cache and Poller Cache views to devices the current user may access, including their default Any filters.
+- Report schema audit drift for defaults, collations, indexes, and missing tables without treating a stale fork baseline as automatically repairable. Fixes #454.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.

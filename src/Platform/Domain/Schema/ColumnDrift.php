@@ -7,18 +7,10 @@
 
 namespace Kadupul\Platform\Domain\Schema;
 
-/**
- * report_audit_results()'s column passes and make_column_*() (lines 440-556
- * and 705-793 of cli/audit_database.php on origin/main), kept expression for
- * expression. The loose comparisons, the "! $x ?: ..." rewrite that turns an
- * empty value into true, and the in-place changes to the baseline row decide
- * which columns --repair changes and what the MODIFY says, so none of them is
- * tidied. This file relies on PHP's coercions exactly as the script did,
- * which is why it must never declare strict_types.
- */
+/** Compares the live column definition with the checked-in schema baseline. */
 final class ColumnDrift
 {
-    private const array ATTRIBUTES = ['table_type' => 'Type', 'table_null' => 'Null', 'table_key' => 'Key', 'table_default' => 'Default', 'table_extra' => 'Extra'];
+    private const array ATTRIBUTES = ['table_type' => 'Type', 'table_null' => 'Null', 'table_default' => 'Default', 'table_extra' => 'Extra'];
 
     /**
      * @param bool $output true for --report, which prints what it finds
@@ -52,45 +44,39 @@ final class ColumnDrift
             $wider = self::widened($c, $dbc);
             $differs = false;
             foreach (self::ATTRIBUTES as $dbcol => $col) {
-                if ($col == 'Type' && $dbc[$dbcol] == 'text') {
-                    if ($latin) {
-                        $dbc[$dbcol] = 'mediumtext';
-                    }
+                if ($col === 'Type' && $dbc[$dbcol] === 'text' && $latin) {
+                    $dbc[$dbcol] = 'mediumtext';
                 }
-                $c[$col] = !$c[$col] ?: str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $c[$col]);
-                $dbc[$dbcol] = !$dbc[$dbcol] ?: str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $dbc[$dbcol]);
-                if (strpos($dbc[$dbcol], 'int(') !== false) {
-                    $parts = explode('(', $dbc[$dbcol]);
-                    $adbccol = $parts[0];
-                    $parts = explode(' ', $parts[1], 2);
-                    if (isset($parts[1])) {
-                        $adbccol .= ' ' . $parts[1];
-                    }
-                    $adbccol = trim($adbccol);
-                } else {
-                    $adbccol = $dbc[$dbcol];
-                }
-                $c[$col] = trim(str_replace('DEFAULT_GENERATED', '', $c[$col]));
-                if (($c[$col] != $dbc[$dbcol] && $c[$col] != $adbccol) && $c[$col] != 'mediumtext') {
+                $liveValue = self::normalize($col, $c[$col]);
+                $baselineValue = self::normalize($col, $dbc[$dbcol]);
+                $legacyIntegerType = $col === 'Type' ? self::withoutIntegerDisplayWidth($baselineValue) : $baselineValue;
+                if ($liveValue !== $baselineValue && $liveValue !== $legacyIntegerType && !($col === 'Type' && $liveValue === 'mediumtext')) {
                     if ($wider !== null) {
                         $differs = true;
 
                         continue;
                     }
-                    if ($output && $col != 'Key') {
-                        if ($col == 'Extra' && $dbc[$dbcol] == '1' && $c[$col] == '') {
-                            // The original skipped the rest of this attribute here, the
-                            // alter included; only --report reaches this branch.
-                            continue;
-                        }
-                        $lines[] = "ERROR Col: '" . $c['Field'] . "', Attribute '" . $col . "' invalid. Should be: '" . $dbc[$dbcol] . "', Is: '" . $c[$col] . "'";
+                    if ($output) {
+                        $lines[] = "ERROR Col: '" . $c['Field'] . "', Attribute '" . $col . "' invalid. Should be: "
+                            . self::display($dbc[$dbcol]) . ', Is: ' . self::display($c[$col]);
                     }
-                    if (array_search($dbc['table_field'], $altered) === false) {
+                    if (!in_array($dbc['table_field'], $altered, true)) {
                         $clauses[] = self::modify($dbc, $c['Field']);
                         $altered[] = $dbc['table_field'];
                         $errors++;
                     }
                 }
+            }
+            if ($found->collation !== null && array_key_exists('Collation', $c) && $found->collation !== $c['Collation']) {
+                if ($output) {
+                    $lines[] = "ERROR Col: '" . $c['Field'] . "', Attribute 'Collation' invalid. Should be: '" . $found->collation . "', Is: '" . ($c['Collation'] ?? 'NULL') . "'";
+                }
+                // A collation change may rewrite or reject stored text. The
+                // generic column DDL does not preserve this attribute, so repair
+                // must stop for the table instead of silently choosing one.
+                $clauses[] = new UnbuildableClause('MODIFY COLUMN `' . $c['Field'] . '` COLLATE ' . $found->collation);
+                $altered[] = $found->field;
+                $errors++;
             }
             if ($differs && $wider !== null) {
                 if ($output) {
@@ -101,7 +87,7 @@ final class ColumnDrift
             }
         }
         foreach ($baseline->columns($table->name) as $column) {
-            if (!$table->hasColumnLike($column->field) && array_search($column->field, $added) === false) {
+            if (!$table->hasColumn($column->field) && !in_array($column->field, $added, true)) {
                 if ($output) {
                     $lines[] = "WARNING Col: '" . $column->field . "' is missing from '" . $table->name . "'";
                 }
@@ -112,6 +98,39 @@ final class ColumnDrift
         }
 
         return ['lines' => $lines, 'errors' => $errors, 'warnings' => $warnings, 'clauses' => $clauses, 'widened' => $widened];
+    }
+
+    private static function normalize(string $attribute, mixed $value): mixed
+    {
+        if ($attribute === 'Extra' && is_string($value)) {
+            $value = trim(str_replace('DEFAULT_GENERATED', '', $value));
+        }
+        if (is_string($value)) {
+            $value = str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $value);
+            if ($attribute === 'Type') {
+                $value = trim($value);
+                $parsed = ColumnType::parse(strtolower($value));
+                if ($parsed !== null) {
+                    return $parsed->sql();
+                }
+            }
+        }
+
+        return $value;
+    }
+
+    private static function display(mixed $value): string
+    {
+        return $value === null ? 'NULL' : "'" . (string) $value . "'";
+    }
+
+    private static function withoutIntegerDisplayWidth(mixed $type): mixed
+    {
+        if (!is_string($type) || preg_match('/^(tinyint|smallint|mediumint|int|bigint)\\(\\d+\\)(.*)$/i', $type, $match) !== 1) {
+            return $type;
+        }
+
+        return $match[1] . $match[2];
     }
 
     /**
@@ -138,7 +157,8 @@ final class ColumnDrift
      */
     private static function modify(array $dbc, string $field): AlterClause
     {
-        $head = 'MODIFY COLUMN `' . $dbc['table_field'] . '` ' . $dbc['table_type'] . ($dbc['table_null'] == 'NO' ? ' NOT NULL' : '');
+        $head = 'MODIFY COLUMN `' . $dbc['table_field'] . '` ' . $dbc['table_type']
+            . ($dbc['table_collation'] === null ? '' : ' COLLATE ' . $dbc['table_collation']) . ($dbc['table_null'] == 'NO' ? ' NOT NULL' : '');
         [$props, $default, $now, $extra] = self::props($dbc);
         // The typed clause names the live column exactly, so the adapter can
         // hold it to the catalog; the original's text keeps the baseline's case.
@@ -152,7 +172,8 @@ final class ColumnDrift
     {
         $after = self::previous($baseline, $table, $dbc['table_field']);
         $position = $after === 'first' ? 'first' : 'AFTER `' . $after . '`';
-        $head = 'ADD COLUMN `' . $dbc['table_field'] . '` ' . $dbc['table_type'] . ($dbc['table_null'] == 'NO' ? ' NOT NULL' : '');
+        $head = 'ADD COLUMN `' . $dbc['table_field'] . '` ' . $dbc['table_type']
+            . ($dbc['table_collation'] === null ? '' : ' COLLATE ' . $dbc['table_collation']) . ($dbc['table_null'] == 'NO' ? ' NOT NULL' : '');
         [$props, $default, $now, $extra] = self::props($dbc);
         $legacy = $head . $props . ' ' . $position;
         $spec = self::spec((string) $dbc['table_field'], $dbc, $default, $now, $extra);
@@ -190,29 +211,22 @@ final class ColumnDrift
         $text = '';
         $default = null;
         $now = false;
-        if (isset($dbc['table_default'])) {
-            $dbc['table_default'] = str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $dbc['table_default']);
-        }
+        $dbc['table_default'] = is_string($dbc['table_default']) ? str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $dbc['table_default']) : $dbc['table_default'];
         if (isset($dbc['table_extra'])) {
             $dbc['table_extra'] = str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $dbc['table_extra']);
             $dbc['table_extra'] = trim(str_replace('DEFAULT_GENERATED', '', $dbc['table_extra']));
         }
-        if ($dbc['table_null'] == 'YES') {
-            if ($dbc['table_default'] == 'NULL' || $dbc['table_default'] === null || $dbc['table_default'] === '') {
-                // No default clause.
-            } elseif ($dbc['table_default'] != 'CURRENT_TIMESTAMP') {
-                $text .= ' DEFAULT "' . $dbc['table_default'] . '"';
+        if ($dbc['table_default'] === 'CURRENT_TIMESTAMP') {
+            $text .= ' DEFAULT CURRENT_TIMESTAMP';
+            $now = true;
+        } elseif ($dbc['table_default'] !== null) {
+            if ($dbc['table_null'] == 'YES') {
+                $text .= ' DEFAULT ' . (preg_match('/^(?:tinyint|smallint|mediumint|int|bigint|decimal|float|double)/i', (string) $dbc['table_type']) === 1
+                    && $dbc['table_default'] !== '' && is_numeric($dbc['table_default'])
+                    ? "'" . $dbc['table_default'] . "'" : '"' . $dbc['table_default'] . '"');
                 $default = (string) $dbc['table_default'];
             } else {
-                $text .= ' DEFAULT CURRENT_TIMESTAMP';
-                $now = true;
-            }
-        } elseif ($dbc['table_default'] !== 'NULL' && $dbc['table_default'] !== null) {
-            if ($dbc['table_default'] == 'CURRENT_TIMESTAMP') {
-                $text .= ' DEFAULT CURRENT_TIMESTAMP';
-                $now = true;
-            } elseif ($dbc['table_extra'] != 'auto_increment') {
-                if (strpos($dbc['table_type'], 'int(') !== false && $dbc['table_default'] == '') {
+                if (strpos((string) $dbc['table_type'], 'int(') !== false && $dbc['table_default'] === '') {
                     $text .= ' DEFAULT "0"';
                     $default = '0';
                 } else {
@@ -238,6 +252,6 @@ final class ColumnDrift
             return null;
         }
 
-        return new ColumnSpec($name, $type, $dbc['table_null'] == 'NO', $default, $now, $parsed);
+        return new ColumnSpec($name, $type, $dbc['table_null'] == 'NO', $default, $now, $parsed, $dbc['table_collation'] ?? null);
     }
 }

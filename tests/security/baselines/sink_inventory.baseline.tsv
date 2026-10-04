@@ -601,7 +601,7 @@ fs_write	./src/Graphing/Domain/PaletteCsv.php:101	        $stream = fopen('php:/
 fs_write	./src/Graphing/Domain/PaletteCsv.php:25	        $stream = fopen('php://temp', 'w+');
 fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:58	            $handle = fopen($path, 'r+b');
 fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:69	                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
-fs_write	./src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php:266	            $this->filesystem->dumpFile($path, $process->getOutput());
+fs_write	./src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php:276	            $this->filesystem->dumpFile($path, $process->getOutput());
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:120	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
 fs_write	./tools/dependencies/install-legacy.php:68	    $source = fopen($url, 'rb', false, $context);

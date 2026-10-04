@@ -61,6 +61,7 @@ final class ColumnDdl
             default => '',
         };
 
-        return $spec->type->sql() . ($spec->notNull ? ' NOT NULL' : '') . $default . ($spec->extra === ColumnExtra::None ? '' : ' ' . $spec->extra->value);
+        return $spec->type->sql() . ($spec->collation === null ? '' : ' COLLATE ' . $db->quoteSingleIdentifier($spec->collation))
+            . ($spec->notNull ? ' NOT NULL' : '') . $default . ($spec->extra === ColumnExtra::None ? '' : ' ' . $spec->extra->value);
     }
 }

@@ -148,7 +148,7 @@ final class AuditDatabaseCommandTest extends TestCase
             'SUCCESS: Loaded the Audit Schema',
             self::SEPARATOR,
             self::checking('host'),
-            "ERROR Col: 'ping', Attribute 'Default' invalid. Should be: '400', Is: '1'",
+            "ERROR Col: 'ping', Attribute 'Default' invalid. Should be: '400', Is: NULL",
             '',
             'ERRORS: 1, WARNINGS: 0',
             self::SEPARATOR,

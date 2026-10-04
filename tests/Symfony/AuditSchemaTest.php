@@ -40,7 +40,7 @@ final class AuditSchemaTest extends TestCase
     private static function live(string $table, array $live, string $collation = self::UTF8, string $engine = 'InnoDB'): LiveTable
     {
         return new LiveTable($table, new TableStatus($engine, $collation, 'Dynamic', 0), [
-            ['Field' => 'x', 'Type' => $live[0], 'Null' => $live[1], 'Key' => $live[2], 'Default' => $live[3], 'Extra' => $live[4]],
+            ['Field' => 'x', 'Type' => $live[0], 'Null' => $live[1], 'Key' => $live[2], 'Default' => $live[3], 'Extra' => $live[4], 'Collation' => null],
         ], []);
     }
 
@@ -51,26 +51,25 @@ final class AuditSchemaTest extends TestCase
     }
 
     /**
-     * Every expectation was produced while planning by running the script's
-     * own lines 478-527 and 705-755 against the same row pair with PHP 8.4.25.
-     *
      * @return iterable<string, array{0: list<?string>, 1: list<?string>, 2: list<string>, 3: ?string}>
      */
-    public static function originalColumnCases(): iterable
+    public static function columnCases(): iterable
     {
         yield 'lost auto_increment' => [['int(10) unsigned', 'NO', 'PRI', null, ''], ['int(10) unsigned', 'NO', 'PRI', null, 'auto_increment'],
-            ["ERROR Col: 'x', Attribute 'Extra' invalid. Should be: 'auto_increment', Is: '1'"], 'MODIFY COLUMN `x` int(10) unsigned NOT NULL auto_increment'];
+            ["ERROR Col: 'x', Attribute 'Extra' invalid. Should be: 'auto_increment', Is: ''"], 'MODIFY COLUMN `x` int(10) unsigned NOT NULL auto_increment'];
         yield 'lost default 5' => [['int(10) unsigned', 'NO', '', null, ''], ['int(10) unsigned', 'NO', '', '5', ''],
-            ["ERROR Col: 'x', Attribute 'Default' invalid. Should be: '5', Is: '1'"], "MODIFY COLUMN `x` int(10) unsigned NOT NULL DEFAULT '5'"];
-        yield 'lost default 0 reads as clean' => [['int(10) unsigned', 'NO', '', null, ''], ['int(10) unsigned', 'NO', '', '0', ''], [], null];
+            ["ERROR Col: 'x', Attribute 'Default' invalid. Should be: '5', Is: NULL"], "MODIFY COLUMN `x` int(10) unsigned NOT NULL DEFAULT '5'"];
+        yield 'lost default 0 is detected' => [['int(10) unsigned', 'NO', '', null, ''], ['int(10) unsigned', 'NO', '', '0', ''],
+            ["ERROR Col: 'x', Attribute 'Default' invalid. Should be: '0', Is: NULL"], "MODIFY COLUMN `x` int(10) unsigned NOT NULL DEFAULT '0'"];
         yield 'narrow type' => [['mediumint(8) unsigned', 'NO', '', '0', ''], ['int(10) unsigned', 'NO', '', '0', ''],
             ["ERROR Col: 'x', Attribute 'Type' invalid. Should be: 'int(10) unsigned', Is: 'mediumint(8) unsigned'"], "MODIFY COLUMN `x` int(10) unsigned NOT NULL DEFAULT '0'"];
         yield 'nullable drift' => [['varchar(20)', 'YES', '', '', ''], ['varchar(20)', 'NO', '', '', ''],
             ["ERROR Col: 'x', Attribute 'Null' invalid. Should be: 'NO', Is: 'YES'"], "MODIFY COLUMN `x` varchar(20) NOT NULL DEFAULT ''"];
-        yield 'baseline EXTRA of 1 matches an empty one' => [['timestamp', 'NO', '', 'current_timestamp()', ''], ['timestamp', 'NO', '', 'current_timestamp()', '1'], [], null];
-        yield 'key drift alters without a finding' => [['int(10) unsigned', 'NO', '', null, ''], ['int(10) unsigned', 'NO', 'MUL', '0', ''], [], "MODIFY COLUMN `x` int(10) unsigned NOT NULL DEFAULT '0'"];
+        yield 'unsupported baseline EXTRA is surfaced' => [['timestamp', 'NO', '', 'current_timestamp()', ''], ['timestamp', 'NO', '', 'current_timestamp()', '1'],
+            ["ERROR Col: 'x', Attribute 'Extra' invalid. Should be: '1', Is: ''"], 'MODIFY COLUMN `x` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP 1'];
+        yield 'key metadata is compared through indexes' => [['int(10) unsigned', 'NO', '', '0', ''], ['int(10) unsigned', 'NO', 'MUL', '0', ''], [], null];
         yield 'lost on update' => [['timestamp', 'YES', '', 'current_timestamp()', ''], ['timestamp', 'YES', '', 'current_timestamp()', 'on update current_timestamp()'],
-            ["ERROR Col: 'x', Attribute 'Extra' invalid. Should be: 'on update CURRENT_TIMESTAMP', Is: '1'"], 'MODIFY COLUMN `x` timestamp DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'];
+            ["ERROR Col: 'x', Attribute 'Extra' invalid. Should be: 'on update current_timestamp()', Is: ''"], 'MODIFY COLUMN `x` timestamp DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'];
         yield 'string default' => [['char(2)', 'YES', '', '00', ''], ['char(2)', 'YES', '', 'FF', ''],
             ["ERROR Col: 'x', Attribute 'Default' invalid. Should be: 'FF', Is: '00'"], 'MODIFY COLUMN `x` char(2) DEFAULT "FF"'];
     }
@@ -80,8 +79,8 @@ final class AuditSchemaTest extends TestCase
      * @param list<?string> $baseline
      * @param list<string> $findings
      */
-    #[DataProvider('originalColumnCases')]
-    public function testColumnDriftMatchesTheOriginalExpressions(array $live, array $baseline, array $findings, ?string $legacy): void
+    #[DataProvider('columnCases')]
+    public function testColumnDriftReportsDifferencesAndBuildsTheExpectedClause(array $live, array $baseline, array $findings, ?string $legacy): void
     {
         $result = ColumnDrift::audit(self::live('t', $live), self::baseline('t', $baseline), PluginSchemaChanges::none(), true);
 
@@ -153,6 +152,52 @@ final class AuditSchemaTest extends TestCase
         self::assertCount(1, $audit->widened);
     }
 
+    public function testNullAndEmptyStringDefaultsAreDifferentAndRepairPreservesTheEmptyDefault(): void
+    {
+        $result = ColumnDrift::audit(
+            self::live('t', ['varchar(20)', 'YES', '', null, '']),
+            self::baseline('t', ['varchar(20)', 'YES', '', '', '']),
+            PluginSchemaChanges::none(),
+            true,
+        );
+
+        self::assertSame(["ERROR Col: 'x', Attribute 'Default' invalid. Should be: '', Is: NULL"], $result['lines']);
+        self::assertInstanceOf(ModifyColumn::class, $result['clauses'][0]);
+        self::assertSame('', $result['clauses'][0]->spec->default);
+    }
+
+    public function testColumnCollationDriftIsReportedAndNeverRepairedAutomatically(): void
+    {
+        $table = new LiveTable('t', new TableStatus('InnoDB', 'utf8mb4_unicode_ci', 'Dynamic', 0), [
+            ['Field' => 'x', 'Type' => 'varchar(20)', 'Null' => 'NO', 'Key' => '', 'Default' => '', 'Extra' => '', 'Collation' => 'utf8mb4_bin'],
+        ], []);
+        $baseline = new AuditBaseline([new BaselineColumn('t', 1, 'x', 'varchar(20)', 'NO', '', '', '', 'utf8mb4_unicode_ci')], []);
+
+        $audit = TableAudit::of($table, $baseline, PluginSchemaChanges::none(), true);
+
+        self::assertSame(1, $audit->errors);
+        self::assertStringContainsString("Attribute 'Collation'", $audit->findings[0]);
+        self::assertInstanceOf(UnbuildableClause::class, $audit->clauses[0]);
+        self::assertFalse($audit->alter($table->status)?->buildable());
+    }
+
+    public function testPrefixIndexDriftIsReportedButRepairDoesNotDropThePrefix(): void
+    {
+        $baseline = new AuditBaseline([], [new BaselineIndex('t', 1, 'name', 1, 'name', 'A', 10, '10', null, '', 'BTREE', '')]);
+        $live = ['Table' => 't', 'Non_unique' => '1', 'Key_name' => 'name', 'Seq_in_index' => '1', 'Column_name' => 'name',
+            'Collation' => 'A', 'Cardinality' => '10', 'Sub_part' => '5', 'Packed' => null, 'Null' => '', 'Index_type' => 'BTREE', 'Comment' => ''];
+
+        $result = IndexDrift::audit(new LiveTable('t', new TableStatus('InnoDB', self::UTF8, 'Dynamic', 0), [], [$live]), $baseline, true);
+
+        self::assertStringContainsString("Attribute 'Sub_part'", $result['lines'][0]);
+        self::assertInstanceOf(UnbuildableClause::class, $result['clauses'][0]);
+    }
+
+    public function testUtf8MbGeneralCollationIsNotTreatedAsLatin(): void
+    {
+        self::assertFalse(self::live('t', ['text', 'NO', '', null, ''], 'utf8mb4_general_ci')->latin());
+    }
+
     public function testTheModifyCarriesTypedPartsFromTheRewrittenRow(): void
     {
         $clause = ColumnDrift::audit(self::live('t', ['timestamp', 'YES', '', 'current_timestamp()', '']), self::baseline('t', ['timestamp', 'YES', '', 'current_timestamp()', 'on update current_timestamp()']), PluginSchemaChanges::none(), false)['clauses'][0];
@@ -176,12 +221,12 @@ final class AuditSchemaTest extends TestCase
         self::assertSame(["ADD COLUMN `name` varchar(64) NOT NULL DEFAULT '' AFTER `x`", 'x'], [$result['clauses'][0]->legacy(), $result['clauses'][0]->after]);
     }
 
-    public function testColumnsMatchLikeDbColumnExists(): void
+    public function testColumnNamesUseCaseInsensitiveExactMatching(): void
     {
-        // SHOW COLUMNS ... LIKE 'host_id' also matches "hostXid" and ignores case.
+        // The old LIKE query treated underscores as wildcards and missed this drift.
         $table = new LiveTable('t', new TableStatus('InnoDB', self::UTF8, 'Dynamic', 0), [['Field' => 'HOSTXID', 'Type' => 'int', 'Null' => 'NO', 'Key' => '', 'Default' => null, 'Extra' => '']], []);
-        self::assertTrue($table->hasColumnLike('host_id'));
-        self::assertFalse($table->hasColumnLike('host_idx'));
+        self::assertFalse($table->hasColumn('host_id'));
+        self::assertTrue($table->hasColumn('hostxid'));
     }
 
     public function testTheShapeIgnoresRowCountsAndCardinalityOnly(): void
@@ -267,7 +312,7 @@ final class AuditSchemaTest extends TestCase
     {
         $baseline = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'));
 
-        self::assertCount(1019, $baseline->columnRows);
+        self::assertCount(1020, $baseline->columnRows);
         self::assertCount(374, $baseline->indexRows);
         self::assertSame(['data_source_profile_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_data', 'data_source_profile_id')));
         self::assertSame(['data_input_field_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_rrd', 'data_input_field_id')));
@@ -473,6 +518,46 @@ final class AuditSchemaTest extends TestCase
         $baseline = AuditSchemaDump::parse("INSERT INTO `table_columns` VALUES ('t',1,'x','varchar(5)','YES','','it\\'s \\\\ \\n','');");
 
         self::assertSame("it's \\ \n", $baseline->columnRows[0]->default);
+    }
+
+    public function testDumpReadsColumnCollationAndStillAcceptsTheOldEightFieldFormat(): void
+    {
+        $baseline = AuditSchemaDump::parse(implode("\n", [
+            "INSERT INTO `table_columns` VALUES ('t',1,'old','int(10)','NO','',NULL,'');",
+            "INSERT INTO `table_columns` VALUES ('t',2,'text','varchar(20)','NO','','','', 'utf8mb4_general_ci');",
+        ]));
+
+        self::assertNull($baseline->column('t', 'old')?->collation);
+        self::assertSame('utf8mb4_general_ci', $baseline->column('t', 'text')?->collation);
+        self::assertSame(['t'], $baseline->tableNames());
+    }
+
+    public function testShippedAuditBaselineContainsTheColumnCollations(): void
+    {
+        $baseline = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'));
+
+        self::assertNotNull($baseline->column('host', 'hostname')?->collation);
+        self::assertContains('data_debug', $baseline->tableNames());
+    }
+
+    #[DataProvider('freshTimestampColumns')]
+    public function testShippedTimestampBaselineHasNoSyntheticExtraAttribute(string $table, string $field): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql');
+        self::assertIsString($source);
+        $column = AuditSchemaDump::parse($source)->column($table, $field);
+        self::assertNotNull($column);
+        self::assertSame('', $column->extra);
+        self::assertSame('current_timestamp()', $column->default);
+    }
+
+    /** @return iterable<string, array{string, string}> */
+    public static function freshTimestampColumns(): iterable
+    {
+        yield 'process start' => ['processes', 'started'];
+        yield 'session start' => ['sessions', 'start_time'];
+        yield 'permission cache update' => ['user_auth_cache', 'last_update'];
+        yield 'row cache update' => ['user_auth_row_cache', 'time'];
     }
 
     /** @return iterable<string, array{string, ?string}> */

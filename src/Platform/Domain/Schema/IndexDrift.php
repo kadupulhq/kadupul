@@ -7,17 +7,12 @@
 
 namespace Kadupul\Platform\Domain\Schema;
 
-/**
- * report_audit_results()'s index passes and make_index_alter() (lines
- * 558-674 and 795-896 of cli/audit_database.php on origin/main), kept
- * expression for expression, loose comparisons included, like ColumnDrift.
- * An index can be rebuilt twice in one ALTER, which the server refuses, as it
- * refused the original's; that is kept too. Never declare strict_types here.
- */
+/** Compares live index metadata with the checked-in schema baseline. */
 final class IndexDrift
 {
     private const array ATTRIBUTES = ['idx_non_unique' => 'Non_unique', 'idx_key_name' => 'Key_name', 'idx_seq_in_index' => 'Seq_in_index',
-        'idx_column_name' => 'Column_name', 'idx_packed' => 'Packed', 'idx_comment' => 'Comment'];
+        'idx_column_name' => 'Column_name', 'idx_collation' => 'Collation', 'idx_sub_part' => 'Sub_part', 'idx_packed' => 'Packed',
+        'idx_null' => 'Null', 'idx_index_type' => 'Index_type', 'idx_comment' => 'Comment'];
 
     /**
      * @param bool $output true for --report, which prints what it finds
@@ -47,7 +42,9 @@ final class IndexDrift
                 continue;
             }
             foreach (self::ATTRIBUTES as $dbidx => $idx) {
-                if ($i[$idx] != $dbc[$dbidx] && $i['Key_name'] != 'PRIMARY' && array_search($i['Key_name'], $added) === false) {
+                $liveValue = $i[$idx] === null ? null : (string) $i[$idx];
+                $baselineValue = $dbc[$dbidx] === null ? null : (string) $dbc[$dbidx];
+                if ($liveValue !== $baselineValue && !in_array($i['Key_name'], $added, true)) {
                     if ($output) {
                         $lines[] = "ERROR Index: '" . $i['Key_name'] . "', Attribute '" . $idx . "' invalid. Should be: '" . $dbc[$dbidx] . "', Is: '" . $i[$idx] . "'";
                     }
@@ -139,7 +136,11 @@ final class IndexDrift
         $live = array_column($table->indexes, 'Key_name');
         $named = BaselineName::valid($key) && array_all($columns, BaselineName::valid(...))
             && array_all($drops, static fn(?string $drop): bool => $drop === null || in_array($drop, $live, true));
+        // The typed rebuild does not yet represent prefix lengths or DESC
+        // index columns. Detect these differences, but never rebuild by
+        // silently dropping part of an index definition.
+        $fullyRepresentable = array_all($parts, static fn(BaselineIndex $part): bool => $part->subPart === null && ($part->collation === null || $part->collation === 'A'));
 
-        return [$algorithm === null || !$named ? new UnbuildableClause($text) : new RebuildIndex($drops, $primary, $unique, $key, $columns, $algorithm, $text)];
+        return [$algorithm === null || !$named || !$fullyRepresentable ? new UnbuildableClause($text) : new RebuildIndex($drops, $primary, $unique, $key, $columns, $algorithm, $text)];
     }
 }

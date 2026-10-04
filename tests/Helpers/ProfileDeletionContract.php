@@ -183,7 +183,7 @@ abstract class ProfileDeletionContract extends TestCase
     {
         $baseline = new PDO('sqlite::memory:');
         $baseline->exec('CREATE TABLE table_indexes (idx_table_name, idx_non_unique, idx_key_name, idx_seq_in_index, idx_column_name, idx_collation, idx_cardinality, idx_sub_part, idx_packed, idx_null, idx_index_type, idx_comment)');
-        $baseline->exec('CREATE TABLE table_columns (table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra)');
+        $baseline->exec('CREATE TABLE table_columns (table_name, table_sequence, table_field, table_type, table_null, table_key, table_default, table_extra, table_collation)');
         foreach (file(dirname(__DIR__, 2) . '/docs/audit_schema.sql') as $statement) {
             if (str_starts_with($statement, 'INSERT INTO `table_indexes`') || str_starts_with($statement, 'INSERT INTO `table_columns`')) {
                 $baseline->exec($statement);
