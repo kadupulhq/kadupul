@@ -3,13 +3,16 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once __DIR__ . '/../Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 final class HtmlRendererNativeCoverageTest extends TestCase
 {
-    /** @dataProvider filterCases */
+    use \PestCodeCoverageCompatibility;
+    #[\PHPUnit\Framework\Attributes\DataProvider('filterCases')]
     public function testActualFiltersKeepOrderedOptionsSelectionAndEntities(array $case, string $selector, array $values, string $selected): void
     {
         $state = $this->render($case);
@@ -54,7 +57,7 @@ final class HtmlRendererNativeCoverageTest extends TestCase
         self::assertSame(array(1), $state['queries'][0][1]);
     }
 
-    /** @dataProvider graphCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('graphCases')]
     public function testActualGraphAreasKeepOrderingDisabledStateDimensionsAndNonce(string $kind, bool $empty, int $columns): void
     {
         $state = $this->render(array('kind' => $kind, 'empty' => $empty, 'columns' => $columns));
@@ -102,7 +105,7 @@ final class HtmlRendererNativeCoverageTest extends TestCase
         self::assertStringContainsString('linkOverDark', $xpath->query('//a[@id="add-item"]')->item(0)->getAttribute('class'));
     }
 
-    /** @dataProvider headerCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('headerCases')]
     public function testActualHeadersDefaultToCurrentPageAndKeepControls(string $kind): void
     {
         $xpath = $this->document($this->render(array('kind' => $kind))['html']);

@@ -69,6 +69,25 @@ def main():
                 raise RuntimeError(f'{case}: failed for an unexpected reason: {result.stderr}')
             print(f'PASS {case}', flush=True)
 
+        fixture_coverage = root / 'unit-with-temporary-source.php'
+        fixture = subprocess.run(
+            [args.php, str(ROOT / 'tests/Support/Behavior/coverage_source_map_fixture.php'),
+             str(args.unit.resolve()), str(fixture_coverage)],
+            capture_output=True, text=True, check=True, timeout=60)
+        temporary = json.loads(fixture.stdout)
+        output.write_text('original unit coverage')
+        result = subprocess.run(
+            [args.php, str(ROOT / 'tests/Support/Behavior/merge_poller_coverage.php'),
+             str(fixture_coverage), str(args.integration.resolve()), str(output)],
+            capture_output=True, text=True, timeout=60)
+        if result.returncode != 0:
+            raise RuntimeError(f'temporary-source-restore: {result.stderr}')
+        if not output.is_file() or output.read_text() == 'original unit coverage':
+            raise RuntimeError('temporary-source-restore: combined report was not published')
+        if Path(temporary['copy']).exists() or Path(temporary['manifest']).exists():
+            raise RuntimeError('temporary-source-restore: temporary source or manifest was not cleaned')
+        print('PASS temporary-source-restore', flush=True)
+
 
 if __name__ == '__main__':
     main()

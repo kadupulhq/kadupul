@@ -5,11 +5,15 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../../../Helpers/PestCodeCoverageCompatibility.php';
+
 final class AuthCookieNativeCoverageTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static bool $coverageEvidenceChecked = false;
 
-    /** @dataProvider acceptedCookies */
+    #[\PHPUnit\Framework\Attributes\DataProvider('acceptedCookies')]
     public function testAValidCookieRotatesOnlyItsPersistedPrincipalAndAuditsTheActualIdentity(array $scenario, int $principal, int $realm): void
     {
         $state = $this->runCookie($scenario);
@@ -42,7 +46,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider refusedCookies */
+    #[\PHPUnit\Framework\Attributes\DataProvider('refusedCookies')]
     public function testARefusedCookieCannotRotateCredentialsOrCreateAnAuthenticationAudit(array $scenario): void
     {
         $state = $this->runCookie($scenario);
@@ -72,7 +76,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider revokedCookies */
+    #[\PHPUnit\Framework\Attributes\DataProvider('revokedCookies')]
     public function testClearingAUsernameCookieRevokesOnlyItsRealmAndLeavesOtherTokens(array $scenario, int $principal): void
     {
         $state = $this->runCookie(array_merge($scenario, array('operation' => 'clear')));
@@ -88,7 +92,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
         return array('legacy local' => array(array(), 42), 'explicit local' => array(array('realm' => '0,'), 42), 'explicit domain' => array(array('realm' => '3,'), 43), 'numeric local bypasses name lookup' => array(array('identity' => '42'), 42), 'numeric domain bypasses name lookup' => array(array('identity' => '43', 'realm' => '3,'), 43));
     }
 
-    /** @dataProvider missingClearIdentities */
+    #[\PHPUnit\Framework\Attributes\DataProvider('missingClearIdentities')]
     public function testClearingAnUnresolvedUsernameDoesNotRevokeOtherAccounts(array $scenario): void
     {
         $state = $this->runCookie(['operation' => 'clear'] + $scenario);
@@ -113,7 +117,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
         self::assertSame([], $state['audit']);
     }
 
-    /** @dataProvider localPasswordCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('localPasswordCases')]
     public function testLocalPasswordVerificationAndLockoutStayInTheLocalRealm(string $password, bool $accepted, int $failed, bool $legacy = false): void
     {
         $state = $this->runCookie(['operation' => 'local-password','password' => $password,'legacy_schema' => $legacy,'config' => ['secpass_lockfailed' => $legacy ? 0 : 3]]);
@@ -129,7 +133,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
         return [['test-password',true,0], ['wrong-test-password',false,1], ['',false,1], ['test-password',true,0,true], ['wrong-test-password',false,0,true], ['',false,0,true]];
     }
 
-    /** @dataProvider historyCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('historyCases')]
     public function testNativePasswordHistoryEnforcesCurrentAndRetainedHashesButExpiresOldHashes(string $password, int $history, bool $allowed): void
     {
         $state = $this->runCookie(['operation' => 'password-history','password' => $password,'config' => ['secpass_history' => $history]]);
@@ -155,7 +159,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
         self::assertSame([], $missing['events']);
     }
 
-    /** @dataProvider domainCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('domainCases')]
     public function testDirectoryLoginBindsBeforeAcceptingOnlyTheConfiguredRealmAndScopesLockout(array $scenario, ?int $principal, bool $error, array $events, int $failures): void
     {
         $state = $this->runCookie(array_merge($scenario, array('operation' => 'domain')));
