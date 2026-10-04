@@ -262,6 +262,26 @@ def masked_audit(text):
                         'Run php cli/upgrade_database.php before auditing')
 
 
+def with_recorded_collations(text, collations):
+    """Require native ALTER text to retain each backed-up column's collation.
+
+    The frozen legacy formatter omitted this attribute. Add the independently
+    recorded value to its expected SQL; an explicit, incorrect native value
+    remains unchanged and therefore fails the complete output comparison.
+    """
+    table = None
+    lines = []
+    for line in text.splitlines(keepends=True):
+        match = re.match(r'ALTER TABLE `([^`]+)`', line)
+        if match:
+            table = match[1]
+        match = re.match(r'(\s+(?:ADD|MODIFY) COLUMN `([^`]+)` [a-z]+(?:\([^)]*\))?(?: unsigned)?)(.*)', line)
+        if match and (table, match[2]) in collations and not match[3].startswith(' COLLATE '):
+            line = line[:len(match[1])] + ' COLLATE ' + collations[table, match[2]] + line[len(match[1]):]
+        lines.append(line)
+    return ''.join(lines)
+
+
 def log_masked(lines):
     return [SECONDS.sub('in N seconds', line) for line in clock_free(lines, '') if BACKTRACE not in line and SYNTAX_ERROR not in line]
 
@@ -317,6 +337,12 @@ def verify_audit(harness, check, admin):
 
 
 def verify_audit_cases(harness, check, tables, version):
+    # BACKUP precedes the injected drift and is independent of the new audit
+    # baseline loader and native formatter.
+    collations = dict(((table, column), collation) for table, column, collation in
+                      (line.split('\t') for line in harness.sql(
+                          'SELECT TABLE_NAME, COLUMN_NAME, COLLATION_NAME FROM information_schema.COLUMNS '
+                          f"WHERE TABLE_SCHEMA = '{BACKUP}' AND COLLATION_NAME IS NOT NULL").splitlines()))
     for label, arguments, state in AUDIT_CASES:
         dumps = []
 
@@ -341,6 +367,8 @@ def verify_audit_cases(harness, check, tables, version):
             continue
         unparsed = label == UNPARSED
         stdout = (lambda text: LOAD_ERROR.sub('ERROR: <load error>', masked_audit(text), count=1)) if unparsed else masked_audit
+        previous_stdout = stdout
+        stdout = lambda text, previous_stdout=previous_stdout: with_recorded_collations(previous_stdout(text), collations)
         stderr_filter = (lambda text: CLIENT_ERROR.sub('', text)) if unparsed else None
         shim_stderr_filter = stderr_filter
         if '--upgrade' in arguments:
