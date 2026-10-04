@@ -1,4 +1,5 @@
 -issue: Treat missing or invalid Host Resources allocation units and negative disk samples as unknown instead of reporting raw units, raising a type error, or guessing an unsigned wrap
+-issue: Delete acknowledged recovery samples only when their buffered value is unchanged, so concurrent updates remain available for retry
 Cacti CHANGELOG
 
 1.2.32
