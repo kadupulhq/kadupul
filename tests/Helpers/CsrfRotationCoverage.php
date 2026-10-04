@@ -164,7 +164,7 @@ PHP;
         $required = ['$new_secret = csrf_generate_secret();'];
         $required[] = match ($mode) {
             'entropy-failure' => 'print "FATAL: Unable to generate a new CSRF secret."',
-            'blocked' => 'print "FATAL: Unable to write new csrf_secret.php file."',
+            'blocked' => 'print "FATAL: Unable to atomically replace the configured csrf_secret.php file."',
             'success' => 'print "NOTE: New csrf_secret.php file written."',
         };
         $lines = file($worker);

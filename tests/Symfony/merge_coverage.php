@@ -20,6 +20,22 @@ if (!$coverage instanceof CodeCoverage) {
     throw new RuntimeException('Invalid Symfony unit coverage');
 }
 $mapped = [];
+// Require the physical guarded caller, separately from any utility/helper hit.
+$wrapperStatement = '$changed = (new \Kadupul\Inventory\Infrastructure\Legacy\PollerCacheBufferWrite())->write(';
+$wrapperMatches = [];
+$wrapperSource = file_get_contents($root . '/lib/utility.php');
+if (!is_string($wrapperSource)) {
+    throw new RuntimeException('Missing or unreadable physical buffered-cache caller source');
+}
+foreach (explode("\n", $wrapperSource) as $index => $sourceLine) {
+    if (trim($sourceLine) === $wrapperStatement) {
+        $wrapperMatches[] = $index + 1;
+    }
+}
+if (count($wrapperMatches) !== 1) {
+    throw new RuntimeException('Ambiguous physical buffered-cache caller statement');
+}
+$wrapperLine = $wrapperMatches[0];
 foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) {
     $manifest = json_decode(file_get_contents($argv[$argument] . '/observations.json'), true, 512, JSON_THROW_ON_ERROR);
     $suite = $handler === 'none' ? 'offline-tools' : 'symfony-http';
@@ -284,6 +300,25 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk collector cleanup failure retains committed destination ownership',
         'bulk collector cleanup failure leaves recoverable old copies',
         'bulk collector recovers old residue by returning to remote',
+        'collector acknowledgement failure cannot report success after remote cleanup',
+        'collector failed acknowledgement retains receipt despite verified remote absence',
+        'bulk collector later acknowledgement failure cannot report success',
+        'bulk collector failed acknowledgement rolls back all receipts after remote absence',
+        'collector cleanup failure persists old-owner retry receipt',
+        'collector same-target retry reports repeated cleanup failure',
+        'collector failed retry retains old copy and receipt',
+        'collector disabled pending owner refuses cleanup retry',
+        'collector unavailable cleanup retains retry receipt',
+        'collector successful same-target retry removes old dependent copies',
+        'collector successful cleanup acknowledges retry receipt',
+        'collector verified cleanup publishes no redundant purge command',
+        'bulk collector cleanup failure persists complete retry inventory',
+        'bulk collector same-target retry reports repeated cleanup failure',
+        'bulk collector failed retry retains complete cleanup inventory',
+        'bulk collector same-target retry completes pending cleanup',
+        'bulk collector successful retry removes old polling copies',
+        'bulk collector successful cleanup acknowledges complete retry inventory',
+        'bulk collector verified cleanup publishes no redundant purge commands',
         'bulk options save through Symfony',
         'bulk options action hook registered',
         'bulk options GET does not modify selected devices',
@@ -399,7 +434,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     // The original installed scenario, its completed behavior checks and each page's
     // actual source hash are required before these legacy caller observations enter Clover.
     $legacyCallerPaths = $handler === 'none' ? [] : ['graphs.php', 'cdef.php',
-        'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php'];
+        'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php'];
     if ($handler !== 'none') {
         $checks = array_merge($checks, [
             'installed CDEF duplication preserves persisted parent and children',
@@ -444,6 +479,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         throw new RuntimeException('Missing integration coverage reports');
     }
     $observed = [];
+    $wrapperObserved = false;
     foreach ($reports as $report) {
         $data = json_decode(file_get_contents($report), true, 512, JSON_THROW_ON_ERROR);
         if (!is_array($data['files'] ?? null) || !is_string($data['php'] ?? null)) {
@@ -478,6 +514,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
                 }
                 $mapped[$local][$line] = max($mapped[$local][$line] ?? -1, $hit);
                 $observed[$relative] = ($observed[$relative] ?? false) || $hit === 1;
+                if ($relative === 'lib/utility.php' && $line === $wrapperLine && $hit === 1) {
+                    $wrapperObserved = true;
+                }
             }
         }
     }
@@ -563,6 +602,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Application/Query/ListDeviceAssignmentTargets.php',
         'src/Inventory/Infrastructure/Legacy/DeviceBulkAssignmentWriter.php',
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorTransfer.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceCollectorCleanup.php',
+        'src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceBulkAssignmentType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
         'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
@@ -669,6 +710,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);
         }
+    }
+    if ($handler !== 'none' && !$wrapperObserved) {
+        throw new RuntimeException('Missing physical buffered-cache caller execution: lib/utility.php');
     }
 }
 foreach (array_keys($mapped) as $path) {

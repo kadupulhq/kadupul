@@ -89,8 +89,9 @@ function api_device_remove($device_id)
  * @param  $device_ids - device id or an array of device_ids of a host or hosts
  * @param  $poller_id  - the previous poller if it changed
  * @param  $reviewed_associations - exact graph/data IDs reviewed per device
+ * @param  $queue_purge - retain legacy queued retries unless the caller verifies synchronous cleanup
  */
-function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_associations = null, $reviewed_connection = null)
+function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_associations = null, $reviewed_connection = null, $queue_purge = true)
 {
     if ($reviewed_associations !== null) {
         if (!($reviewed_connection instanceof PDO)) {
@@ -157,7 +158,7 @@ function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_ass
             raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
         }
 
-        foreach ($device_ids as $id) {
+        foreach ($queue_purge ? $device_ids : array() as $id) {
             db_execute_prepared(
                 'INSERT INTO poller_command
 				(poller_id, time, action, command)

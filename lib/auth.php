@@ -40,17 +40,37 @@ function clear_auth_cookie()
 {
     global $config;
 
-    if (isset($_COOKIE['cacti_remembers']) && read_config_option('auth_cache_enabled') == 'on') {
+    $revoked = $_SESSION['sess_remember_token'] ?? null;
+    if (!is_array($revoked) || !isset($revoked['user_id'], $revoked['hash'])) {
+        $revoked = null;
+    }
+    unset($_SESSION['sess_remember_token']);
+    if (is_array($revoked) && isset($revoked['user_id'], $revoked['hash']) && db_table_exists('user_auth_cache')) {
+        db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ? AND token = ?', array($revoked['user_id'], $revoked['hash']));
+        cacti_cookie_session_logout();
+    }
+
+    if (isset($_COOKIE['cacti_remembers']) && db_table_exists('user_auth_cache')) {
+        if (!is_string($_COOKIE['cacti_remembers'])) {
+            cacti_cookie_session_logout();
+
+            return;
+        }
+
         $parts = explode(',', $_COOKIE['cacti_remembers']);
 
         if (cacti_sizeof($parts) == 2) {
             $user_id  = $parts[0];
             $realm_id = -1;
             $token    = $parts[1];
-        } else {
+        } elseif (cacti_sizeof($parts) == 3) {
             $user_id  = $parts[0];
             $realm_id = $parts[1];
             $token    = $parts[2];
+        } else {
+            cacti_cookie_session_logout();
+
+            return;
         }
 
         // Legacy support which leaked usernames
@@ -63,12 +83,14 @@ function clear_auth_cookie()
 
             cacti_cookie_session_logout();
 
-            db_execute_prepared(
-                'DELETE FROM user_auth_cache
+            if (!is_array($revoked) || $revoked['user_id'] != $user_id || $revoked['hash'] !== $secret) {
+                db_execute_prepared(
+                    'DELETE FROM user_auth_cache
 				WHERE user_id = ?
 				AND token = ?',
-                array($user_id, $secret)
-            );
+                    array($user_id, $secret)
+                );
+            }
         }
     }
 }
@@ -97,16 +119,24 @@ function set_auth_cookie($user)
 
         $secret = hash('sha512', $nssecret, false);
 
-        db_execute_prepared(
+        if (!db_execute_prepared(
             'INSERT INTO user_auth_cache
 			(user_id, hostname, last_update, token)
 			VALUES
 			(?, ?, NOW(), ?);',
             array($user['id'], get_client_addr(), $secret)
-        );
+        )) {
+            return false;
+        }
+
+        $_SESSION['sess_remember_token'] = array('user_id' => $user['id'], 'hash' => $secret);
 
         cacti_cookie_session_set($user['id'], $user['realm'], $nssecret);
+
+        return true;
     }
+
+    return false;
 }
 
 /**
@@ -117,6 +147,7 @@ function set_auth_cookie($user)
 function check_auth_cookie()
 {
     if (isset($_COOKIE['cacti_remembers']) &&
+        is_string($_COOKIE['cacti_remembers']) &&
         read_config_option('auth_cache_enabled') == 'on' &&
         db_table_exists('user_auth_cache')) {
 
@@ -126,10 +157,12 @@ function check_auth_cookie()
             $user_id  = $parts[0];
             $realm_id = -1;
             $token    = $parts[1];
-        } else {
+        } elseif (cacti_sizeof($parts) == 3) {
             $user_id  = $parts[0];
             $realm_id = $parts[1];
             $token    = $parts[2];
+        } else {
+            return false;
         }
 
         // Legacy support which leaked usernames
@@ -3866,54 +3899,79 @@ function basic_auth_login_process($username)
  */
 function local_auth_login_process($username)
 {
-    $user = array();
+    $started = hrtime(true);
+    try {
+        $user = array();
 
-    if (!api_plugin_hook_function('login_process', false)) {
-        $user = secpass_login_process($username);
+        if (!api_plugin_hook_function('login_process', false)) {
+            $user = secpass_login_process($username);
 
-        /**
-         * If the password needs to be rehashed for security purposes,
-         * do that now.
-         */
-        $stored_pass = db_fetch_cell_prepared(
-            'SELECT password
+            /**
+             * If the password needs to be rehashed for security purposes,
+             * do that now.
+             */
+            $stored_pass = db_fetch_cell_prepared(
+                'SELECT password
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0',
-            array($username)
-        );
+                array($username)
+            );
 
-        if ($stored_pass != '') {
-            $password = get_nfilter_request_var('login_password');
+            if ($stored_pass != '') {
+                $password = get_nfilter_request_var('login_password');
 
-            $valid = compat_password_verify($password, $stored_pass);
+                $valid = compat_password_verify($password, $stored_pass);
 
-            cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+                cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
-            if ($valid) {
-                $user = db_fetch_row_prepared(
-                    'SELECT *
+                if ($valid) {
+                    $user = db_fetch_row_prepared(
+                        'SELECT *
 					FROM user_auth
 					WHERE username = ?
 					AND realm = 0',
-                    array($username)
-                );
+                        array($username)
+                    );
 
-                if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
-                    $password = compat_password_hash($password, PASSWORD_DEFAULT);
-                    db_check_password_length();
-                    db_execute_prepared(
-                        'UPDATE user_auth
+                    if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+                        $password = compat_password_hash($password, PASSWORD_DEFAULT);
+                        db_check_password_length();
+                        db_execute_prepared(
+                            'UPDATE user_auth
 						SET password = ?
 						WHERE username = ?',
-                        array($password, $username)
-                    );
+                            array($password, $username)
+                        );
+                    }
                 }
+            } else {
+                // A known account verifies here a second time; keep unknown usernames level.
+                auth_unknown_user_password_verify(get_nfilter_request_var('login_password'));
             }
         }
-    }
 
-    return $user;
+        return $user;
+    } finally {
+        auth_local_login_timing_floor($started);
+    }
+}
+
+/** Apply one minimum duration to the complete local login, independent of its stored hash cost. */
+function auth_local_login_timing_floor($started)
+{
+    global $config;
+
+    // Packagers may raise the floor for slower servers or higher-cost hashes.
+    $configured = filter_var(
+        $config['auth_login_timing_floor_ms'] ?? 1000,
+        FILTER_VALIDATE_INT,
+        array('options' => array('min_range' => 1000, 'max_range' => 60000))
+    );
+    $deadline = $started + ($configured === false ? 1000 : $configured) * 1000000;
+    while (($remaining = $deadline - hrtime(true)) > 0) {
+        time_nanosleep(intdiv($remaining, 1000000000), $remaining % 1000000000);
+    }
 }
 
 /**
@@ -3958,7 +4016,7 @@ function ldap_login_process($username)
         } else {
             /* error searching */
             $error     = true;
-            $error_msg =  __('Access Denied!  LDAP Search Error: %s', $ldap_dn_search_response['error_text']);
+            $error_msg = __('Access Denied!  Login Failed.');
 
             cacti_log('LOGIN FAILED: LDAP Error: ' . $ldap_dn_search_response['error_text'], false, 'AUTH');
         }
@@ -3981,7 +4039,7 @@ function ldap_login_process($username)
             } else {
                 /* error */
                 $error     = true;
-                $error_msg = __('Access Denied!  LDAP Error: %s', $ldap_auth_response['error_text']);
+                $error_msg = __('Access Denied!  Login Failed.');
 
                 cacti_log('LOGIN FAILED: LDAP Error: ' . $ldap_auth_response['error_text'], false, 'AUTH');
 
@@ -4421,6 +4479,10 @@ function secpass_login_process($username)
     auth_checkclear_lockout($username, 0);
 
     if (auth_process_lockout_check($username, 0)) {
+        if (trim($password) != '') {
+            auth_unknown_user_password_verify($password);
+        }
+
         return array();
     }
 
@@ -4444,6 +4506,10 @@ function secpass_login_process($username)
 
     if (cacti_sizeof($user)) {
         if ($user['enabled'] != 'on') {
+            if (trim($password) != '') {
+                auth_unknown_user_password_verify($password);
+            }
+
             $error     = true;
             $error_msg = __('Access Denied!  Login Failed.');
 
@@ -4477,6 +4543,12 @@ function secpass_login_process($username)
             return array();
         }
     } else {
+        // A known account verifies a non-blank password here, so an unknown
+        // username must cost the same or response time reveals which exist.
+        if (trim($password) != '') {
+            auth_unknown_user_password_verify($password);
+        }
+
         /* error */
         $error     = true;
         $error_msg = __('Access Denied!  Login Failed.');
@@ -4715,6 +4787,26 @@ function is_user_perms_valid($user_id)
 }
 
 /**
+ * auth_unknown_user_password_verify - spend the same bcrypt work on a login
+ *   for an account that has no stored password as a stored hash would cost,
+ *   and discard the result.
+ *
+ * Hashing with PASSWORD_DEFAULT runs one bcrypt pass at the cost local logins
+ * rehash stored passwords to, which is the work verifying such a hash takes.
+ * Hashing rather than verifying against a fixed hash keeps the cost in step
+ * with PASSWORD_DEFAULT and keeps a hash literal out of the source. A fixed
+ * public padding input also avoids bcrypt rejecting NUL bytes in client input.
+ *
+ * @param  (string) $password - the password the client sent
+ *
+ * @return (void)
+ */
+function auth_unknown_user_password_verify($password)
+{
+    compat_password_hash("kadupul-login-timing-padding", PASSWORD_DEFAULT);
+}
+
+/**
  * compat_password_verify - if the secure function exists, verify against that
  *   first.  If that checks fails or does not exist, check against older md5
  *   version
@@ -4726,6 +4818,12 @@ function is_user_perms_valid($user_id)
  */
 function compat_password_verify($password, $hash)
 {
+    // Legacy MD5, empty and malformed hashes otherwise return immediately,
+    // exposing those accounts against the fixed-cost unknown-user path.
+    if (password_get_info((string) $hash)['algo'] === null) {
+        compat_password_hash("kadupul-login-timing-padding", PASSWORD_DEFAULT);
+    }
+
     if (function_exists('password_verify')) {
         if (password_verify($password, $hash)) {
             return true;
@@ -5126,7 +5224,7 @@ function auth_login_create_user_from_template($username, $realm)
 
         cacti_log("LOGIN FAILED: Template user id '" . read_config_option('user_template') . "' does not exist.", false, 'AUTH');
 
-        if ($auth_method == 2) {
+        if (read_config_option('auth_method') == 2) {
             auth_display_custom_error_message($error_msg);
             exit;
         }
@@ -5141,29 +5239,32 @@ function auth_login_create_user_from_template($username, $realm)
  *
  * @param  (int)  $auth_method - The current auth method
  *
- * @return (bool) Returns false on failure to set user account, otherwise redirects
+ * @return (void) Redirects to the login flow when authentication was not set
  */
 function check_reset_no_authentication($auth_method)
 {
     global $config, $error, $error_msg;
 
     if ($auth_method == 0) {
-        $admin_id = db_execute_prepared(
-            'SELECT id
+        $admin_id = db_fetch_cell_prepared(
+            "SELECT id
 			FROM user_auth
-			WHERE id = ?',
+			WHERE id = ?
+			AND enabled = 'on'
+            AND realm = 0 AND password != '' AND locked != 'on'",
             array(read_config_option('admin_user'))
         );
 
         cacti_log('Admin User (' . read_config_option('admin_user') . ' vs ' . $admin_id . ')', true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
 
         if (!$admin_id) {
-            $admin_sql_query = 'SELECT TOP 1 id FROM (
+            $admin_sql_query = 'SELECT id FROM (
 				SELECT ua.id
 				FROM user_auth AS ua
 				INNER JOIN user_auth_realm AS uar
 				ON uar.user_id = ua.id
-				WHERE uar.realm_id = ?';
+				WHERE ua.enabled="on" AND ua.realm = 0 AND ua.password != "" AND ua.locked != "on"
+				AND uar.realm_id = ?';
 
             $admin_sql_params = array(15);
 
@@ -5177,15 +5278,17 @@ function check_reset_no_authentication($auth_method)
 				INNER JOIN user_auth_group AS uag
 				ON uag.id = uagm.group_id
 				INNER JOIN user_auth_group_realm AS uagr
-				ON uagr.group_id=uag.group_id
-				WHERE uag.enabled="on" AND ua.enabled="on"
+				ON uagr.group_id = uag.id
+				WHERE uag.enabled="on" AND ua.enabled="on" AND ua.realm = 0 AND ua.password != "" AND ua.locked != "on"
 				AND uagr.realm_id = ?';
 
                 $admin_sql_params[] = 15;
             }
 
             $admin_sql_query .= '
-				) AS id';
+				) AS id
+				ORDER BY id
+				LIMIT 1';
 
             cacti_log('SQL query ' . $admin_sql_query, true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
             cacti_log('SQL param ' . implode(',', $admin_sql_params), true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
@@ -5196,7 +5299,7 @@ function check_reset_no_authentication($auth_method)
         }
 
         if (!$admin_id) {
-            $admin_id = db_fetch_cell('SELECT id FROM user_auth WHERE username = \'admin\'');
+            $admin_id = db_fetch_cell('SELECT id FROM user_auth WHERE username = \'admin\' AND enabled = \'on\' AND realm = 0 AND password != \'\' AND locked != \'on\'');
 
             cacti_log('Final attempt ' . $admin_id, true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
         }
@@ -5205,26 +5308,26 @@ function check_reset_no_authentication($auth_method)
             $error     = true;
             $error_msg = __('Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found.');
 
-            return false;
+            cacti_log('ERROR: ' . $error_msg, false, 'AUTH');
+        } else {
+            // Keep the stored password so the administrator can still sign in,
+            // and require a new one at that login.
+            db_execute_prepared(
+                "UPDATE user_auth SET
+				must_change_password = 'on',
+				password_change = 'on'
+				WHERE id = ?",
+                array($admin_id)
+            );
         }
 
-        // Authentication method is currently set to none
-        // lets switch this to basic and allow setting of
-        // a password.
-        db_execute_prepared(
-            "UPDATE user_auth SET
-			password = '',
-			must_change_password = 'on',
-			password_change = 'on'
-			WHERE id = ?",
-            array($admin_id)
-        );
-
+        // Nothing about this request identifies the administrator, so switch
+        // to local authentication without starting a session. Staying on no
+        // authentication would leave every page open. Without a session,
+        // auth_changepassword.php sends the browser on to the login page.
         $auth_method = 1;
         set_config_option('auth_method', $auth_method, true);
 
-        $_SESSION['sess_user_id'] = $admin_id;
-        $_SESSION['sess_change_password'] = true;
         header('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
         exit;
     }

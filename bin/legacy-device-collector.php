@@ -51,18 +51,34 @@ try {
     $assignment->assign($command['collector_id'], $command['revision']);
     $previous = (int) $row['poller_id'];
     $target = $assignment->collectorId();
-    $pollers = array_unique([$previous, $target]);
+    $journal = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorCleanup();
+    $pending = $journal->pending($connection, [$assignment->id]);
+    $cleanupPollers = array_keys($pending[$assignment->id] ?? []);
+    $pollers = array_unique([$previous, $target, ...$cleanupPollers]);
     sort($pollers, SORT_NUMERIC);
     $connections = [];
+    (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($connection))->run(
+        static fn(): bool => true,
+        ['host', 'poller_item', 'poller', 'settings']
+    );
     // Take write locks up front: statistics updates must not upgrade shared
     // collector locks after remote effects have already started.
     foreach ($pollers as $pollerId) {
         $query = $connection->prepare('SELECT id, disabled FROM poller WHERE id = ? FOR UPDATE');
-        if (!$query->execute([$pollerId]) || !($poller = $query->fetch(PDO::FETCH_ASSOC))
-            || ($pollerId === $target && $poller['disabled'] !== '')) {
+        if ($query === false || !$query->execute([$pollerId]) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Collector selection unavailable');
+        }
+        $poller = $query->fetch(PDO::FETCH_ASSOC);
+        if ($query->errorCode() !== '00000') {
+            throw new RuntimeException('Collector selection unavailable');
+        }
+        if (in_array($pollerId, $cleanupPollers, true) && (!is_array($poller) || $poller['disabled'] !== '')) {
+            throw new RuntimeException('Pending cleanup collector unavailable');
+        }
+        if (!is_array($poller) || ($pollerId === $target && $poller['disabled'] !== '')) {
             throw new InvalidArgumentException('Invalid collector');
         }
-        if ($previous !== $target && $pollerId > 1) {
+        if (($previous !== $target || in_array($pollerId, $cleanupPollers, true)) && $pollerId > 1) {
             if (!remote_poller_up($pollerId) || !(($remote = poller_connect_to_remote($pollerId)) instanceof PDO)) {
                 throw new RuntimeException('Collector unavailable');
             }
@@ -73,23 +89,27 @@ try {
             $connections[$pollerId] = $remote;
         }
     }
+    if ($journal->pending($connection, [$assignment->id], true) !== $pending) {
+        throw new RuntimeException('Collector cleanup inventory changed');
+    }
     // Opening a legacy remote connection can reset the primary SQL modes.
     if ($connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
         throw new RuntimeException('Primary connection validation unavailable');
     }
-    if ($previous !== $target) {
+    if ($previous !== $target || $pending !== []) {
         define('KADUPUL_THROW_DATABASE_ERRORS', true);
         $_SESSION['sess_user_id'] = $command['actor'];
+    }
+    if ($previous !== $target) {
         $writeStarted = true;
         (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->apply($connection, $connections, $assignment->id, $previous, $target, true);
     }
-    if (!db_commit_transaction()) {
+    $receipts = $journal->retain($connection, [$assignment->id => $previous], $target);
+    if (!db_commit_transaction($connection)) {
         throw new RuntimeException('Commit failed');
     }
     $transactionStarted = false;
-    if ($previous !== $target) {
-        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $connections, [$assignment->id => $previous], $target);
-    }
+    (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $connections, [$assignment->id => $previous], $target, $receipts);
     $status = 'ok';
     cacti_log('INVENTORY: User ' . $command['actor'] . ' assigned device collector for device ' . $assignment->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {
@@ -100,7 +120,7 @@ try {
     // Side effects may already have reached a collector; report failure, never success.
 } finally {
     if ($transactionStarted && $connection->inTransaction()) {
-        db_rollback_transaction();
+        db_rollback_transaction($connection);
     }
 }
 while (ob_get_level() > 0) {

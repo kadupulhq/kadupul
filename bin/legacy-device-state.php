@@ -77,6 +77,21 @@ try {
     if ($connection->exec('SET NAMES utf8mb4') === false) {
         throw new RuntimeException('Primary connection encoding unavailable');
     }
+    $collectorJournal = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorCleanup();
+    $collectorPending = [];
+    $cleanupPollers = [];
+    if ($assignDevices && $assignment->kind === 'collector') {
+        if (!(new \Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization())->allows($connection, $command['actor'])) {
+            $status = 'denied';
+            throw new RuntimeException('Access denied');
+        }
+        $collectorPending = $collectorJournal->pending($connection, $ids);
+        foreach ($collectorPending as $receipt) {
+            $cleanupPollers = [...$cleanupPollers, ...array_keys($receipt)];
+        }
+        $cleanupPollers = array_values(array_unique($cleanupPollers));
+        sort($cleanupPollers, SORT_NUMERIC);
+    }
     $locked = (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceMutationSelection())->lock(
         $connection,
         $command['actor'],
@@ -85,8 +100,18 @@ try {
             $status = $next;
         },
         $assignDevices && $assignment->kind === 'site' ? [$assignment->targetId] : [],
-        $assignDevices && $assignment->kind === 'collector' ? [$assignment->targetId] : []
+        $assignDevices && $assignment->kind === 'collector' ? [$assignment->targetId] : [],
+        $cleanupPollers
     );
+    if ($assignDevices && $assignment->kind === 'collector' && $collectorJournal->pending($connection, $ids, true) !== $collectorPending) {
+        throw new RuntimeException('Collector cleanup inventory changed');
+    }
+    if ($assignDevices && $assignment->kind === 'collector') {
+        (new \Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction($connection))->run(
+            static fn(): bool => true,
+            ['host', 'poller_item', 'poller', 'settings']
+        );
+    }
     $associations = $locked['associations'];
     $rows = $locked['rows'];
     $pollers = $locked['pollers'];
@@ -164,6 +189,18 @@ try {
             throw new RuntimeException('Destination connection validation unavailable');
         }
         $remotes[$assignment->targetId] = $remote;
+    }
+    foreach ($cleanupPollers as $pollerId) {
+        if (!isset($remotes[$pollerId])) {
+            if (!remote_poller_up($pollerId) || !(($remote = poller_connect_to_remote($pollerId)) instanceof PDO)) {
+                throw new RuntimeException('Pending cleanup collector unavailable');
+            }
+            if ($remote->exec('SET NAMES utf8mb4') === false
+                || $remote->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+                throw new RuntimeException('Pending cleanup connection validation unavailable');
+            }
+            $remotes[$pollerId] = $remote;
+        }
     }
     if ($changed !== []) {
         // Opening a legacy remote connection can reset the primary SQL modes.
@@ -314,7 +351,12 @@ try {
             }
         }
     }
-    if (!db_commit_transaction()) {
+    $collectorReceipts = [];
+    if ($assignDevices && $assignment->kind === 'collector') {
+        $previousOwners = array_map(static fn($device): int => $device->pollerId, $changed);
+        $collectorReceipts = $collectorJournal->retain($connection, $previousOwners, $assignment->targetId);
+    }
+    if (!db_commit_transaction($connection)) {
         throw new RuntimeException('Commit failed');
     }
     $transactionStarted = false;
@@ -327,7 +369,7 @@ try {
     }
     if ($assignDevices && $assignment->kind === 'collector') {
         $previousOwners = array_map(static fn($device): int => $device->pollerId, $changed);
-        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $remotes, $previousOwners, $assignment->targetId);
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $remotes, $previousOwners, $assignment->targetId, $collectorReceipts);
     }
     if ($syncTemplates && $changed !== []) {
         // Discovery runs after association commit. Short rechecks release all

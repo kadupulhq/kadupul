@@ -152,6 +152,9 @@ $events = array();
 function raise_message($name) { $GLOBALS['events'][] = $name; }
 function is_urlencoded($value) { return urldecode($value) !== $value; }
 function sanitize_uri($value) { return $value; }
+function read_config_option($name, $force = false) { return $name === 'csrf_secret' ? str_repeat('ab', 32) : ''; }
+function set_config_option($name, $value, $remote = false) {}
+function cacti_log($message, $output = false, $environ = 'CMDPHP', $level = '') {}
 session_start();
 require $argv[1] . '/lib/html_utility.php';
 register_shutdown_function(function () { echo json_encode($GLOBALS['events']); session_destroy(); });

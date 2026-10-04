@@ -87,6 +87,11 @@ switch (get_request_var('action')) {
         exit;
         break;
     case 'view_snmpagent_events':
+        // Purge truncates the whole notification log; the page posts it.
+        if (isset_request_var('purge')) {
+            cacti_require_post_request();
+        }
+
         top_header();
         snmpagent_utilities_run_eventlog();
         bottom_footer();
@@ -3323,8 +3328,12 @@ function snmpagent_utilities_run_eventlog()
 	}
 
 	function purgeFilter() {
-		strURL = 'utilities.php?action=view_snmpagent_events&purge=1&header=false';
-		loadPageNoHeader(strURL);
+		loadPageUsingPost('utilities.php', {
+			action: 'view_snmpagent_events',
+			purge: 1,
+			header: 'false',
+			__csrf_magic: csrfMagicToken
+		});
 	}
 
 	$(function() {
