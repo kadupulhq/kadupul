@@ -110,6 +110,10 @@ namespace LdapGroupProbe {
 	function ldap_search($conn, $base, $filter, $attributes = array()) {
 		$GLOBALS['calls']['searches'][] = $filter;
 
+		if (!empty($GLOBALS['scenario']['search_fails'])) {
+			return false;
+		}
+
 		preg_match_all('/\((uid|cn|userPrincipalName)=((?:[^()\\\\]|\\\\[0-9a-fA-F]{2})*)\)/', $filter, $assertions, PREG_SET_ORDER);
 
 		$hits = array();
@@ -129,6 +133,10 @@ namespace LdapGroupProbe {
 		}
 
 		return $hits;
+	}
+
+	function ldap_count_entries($conn, $result) {
+		return count($result);
 	}
 
 	function ldap_first_entry($conn, $result) {
@@ -275,6 +283,16 @@ test('a user outside the group is refused', function () {
 	expect($result['error_num'])->toBe(8);
 });
 
+test('a failed group search does not fall back to the username', function () {
+	$scenario = ldap_group_posix_scenario();
+	$scenario['search_fails'] = true;
+
+	$result = ldap_group_run($scenario);
+
+	expect($result['error_num'])->not->toBe(0)
+		->and($result['compares'])->toBe(array());
+});
+
 test('a wrong password is refused before any group lookup', function () {
 	$result = ldap_group_run(ldap_group_posix_scenario(array('alice'), 'alice', 'wrong'));
 
@@ -310,6 +328,39 @@ test('a different entry sharing the login name does not satisfy the group check'
 	$result = ldap_group_run($scenario);
 
 	expect($result['compares'])->toBe(array(array('cn=ops,ou=groups,dc=example,dc=com', 'member', 'bob')))
+		->and($result['error_num'])->toBe(8);
+});
+
+/* a second entry whose cn is the user's UPN is listed in the group; the user's own entry is not */
+function ldap_group_duplicate_scenario(array $members) : array {
+	$scenario = ldap_group_upn_scenario();
+
+	$scenario['directory'] = array(
+		array(
+			'dn'   => 'cn=alice@example.com,ou=guests,dc=example,dc=com',
+			'bind' => 'cn=alice@example.com,ou=guests,dc=example,dc=com',
+			'password' => 'guest',
+			'cn'   => 'alice@example.com',
+		),
+		$scenario['directory'][0],
+	);
+	$scenario['groups'] = array('cn=ops,ou=groups,dc=example,dc=com' => array('member' => $members));
+
+	return $scenario;
+}
+
+test('a username lookup that matches two entries does not let the first one decide membership', function () {
+	$result = ldap_group_run(ldap_group_duplicate_scenario(array('cn=alice@example.com,ou=guests,dc=example,dc=com')));
+
+	expect($result['searches'])->toBe(array(ldap_group_expected_filter('alice@example.com')))
+		->and($result['compares'])->toBe(array())
+		->and($result['error_num'])->toBe(8);
+});
+
+test('a username lookup that matches two entries fails closed even when the user is a member', function () {
+	$result = ldap_group_run(ldap_group_duplicate_scenario(array('CN=Alice Smith,OU=Staff,DC=example,DC=com')));
+
+	expect($result['compares'])->toBe(array())
 		->and($result['error_num'])->toBe(8);
 });
 

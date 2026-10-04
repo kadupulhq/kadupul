@@ -86,7 +86,7 @@ function cacti_ldap_auth($username, $password = '', $dn = '', $host = '', $port 
 	if (!empty($group_member_type)) $ldap->group_member_type = $group_member_type;
 
 	/* If the server list is a space delimited set of servers
-	 * process each server until you get a bind, or fail
+	 * process each server until one answers, or fail
 	 */
 	$ldap_servers = preg_split('/\s+/', $ldap->host);
 
@@ -95,7 +95,7 @@ function cacti_ldap_auth($username, $password = '', $dn = '', $host = '', $port 
 
 		$response = $ldap->Authenticate();
 
-		if ($response['error_num'] == 0) {
+		if (!cacti_ldap_bind_next_server($response, $ldap->mode == '0')) {
 			return $response;
 		}
 	}
@@ -166,7 +166,7 @@ function cacti_ldap_search_dn($username, $dn = '', $host = '', $port = '', $port
 	if (!empty($specific_password)) $ldap->specific_password = $specific_password;
 
 	/* If the server list is a space delimited set of servers
-	 * process each server until you get a bind, or fail
+	 * process each server until one answers, or fail
 	 */
 	$ldap_servers = preg_split('/\s+/', $ldap->host);
 
@@ -175,7 +175,7 @@ function cacti_ldap_search_dn($username, $dn = '', $host = '', $port = '', $port
 
 		$response = $ldap->Search();
 
-		if ($response['error_num'] == 0) {
+		if (!cacti_ldap_search_next_server($response)) {
 			return $response;
 		}
 	}
@@ -490,7 +490,10 @@ class Ldap {
 		/* Set debug if selective debug is enabled.  This places log data into the apache error_log */
 		if (get_selective_log_level() == POLLER_VERBOSITY_DEBUG) {
 			cacti_log('LDAP: Setting php-ldap into DEBUG mode.  Check your Web Server error_log for details', false, 'AUTH', $this->debug);
-			ldap_set_option(null, LDAP_OPT_DEBUG_LEVEL, 7);
+
+			/* Trace and arguments only.  0x02 is libldap's packet level, and a simple bind
+			 * packet carries the password in clear, so it must never reach error_log. */
+			ldap_set_option(null, LDAP_OPT_DEBUG_LEVEL, 0x01 | 0x04);
 		}
 
 		if (getenv('TLS_CERT') != '' && defined('LDAP_OPT_X_TLS_CERTFILE')) {
@@ -689,14 +692,28 @@ class Ldap {
 					*/
 					$filter = cacti_ldap_filter('(|(uid=<dn>)(cn=<dn>)(userPrincipalName=<dn>))', array('dn' => $this->dn));
 					$true_dn_result = ldap_search($ldap_conn, $this->search_base, $filter, array('dn'));
-					$first_entry    = ldap_first_entry($ldap_conn, $true_dn_result);
 
-					/* we will test in two ways */
-					if ($first_entry !== false) {
-						$true_dn     = ldap_get_dn($ldap_conn, $first_entry);
-						$ldap_group_response = ldap_compare($ldap_conn, $this->group_dn, $this->group_attrib, $true_dn);
+					/* ldap_search() returns false when the operation fails.
+					 * A completed search with no entries is a result whose
+					 * count is zero, and only that result may fall back to
+					 * the username. Treating the failure as zero would grant
+					 * membership from memberUid when the lookup never ran. */
+					if ($true_dn_result === false) {
+						$ldap_group_response = false;
 					} else {
-						$ldap_group_response = ldap_compare($ldap_conn, $this->group_dn, $this->group_attrib, $this->username);
+						$true_dn_count = ldap_count_entries($ldap_conn, $true_dn_result);
+
+						/* we will test in two ways */
+						if ($true_dn_count == 1) {
+							$first_entry = ldap_first_entry($ldap_conn, $true_dn_result);
+							$true_dn     = ldap_get_dn($ldap_conn, $first_entry);
+							$ldap_group_response = ldap_compare($ldap_conn, $this->group_dn, $this->group_attrib, $true_dn);
+						} elseif ($true_dn_count == 0) {
+							$ldap_group_response = ldap_compare($ldap_conn, $this->group_dn, $this->group_attrib, $this->username);
+						} else {
+							/* several entries answer to the bound name; none of them is known to be this user */
+							$ldap_group_response = false;
+						}
 					}
 				}
 
@@ -743,6 +760,8 @@ class Ldap {
 				/* general bind error */
 				$output = LdapError::GetErrorDetails(LdapError::ProtocolErrorBind, $ldap_conn, $this->host);
 			}
+
+			$output['ldap_errno'] = $ldap_error;
 		}
 
 		/* Close LDAP connection */
@@ -793,6 +812,7 @@ class Ldap {
 			/* Just bind mode, make dn and return */
 			$output = LdapError::GetErrorDetails(LdapError::Success);
 			$output['dn'] = $this->dn;
+			$output['search_skipped'] = true;
 			$this->RestoreCactiHandler();
 			return $output;
 		} elseif ($this->mode == '2') {
@@ -839,6 +859,7 @@ class Ldap {
 			} else {
 				/* no search results, user not found*/
 				$output = LdapError::GetErrorDetails(LdapError::SearchFoundNoUser);
+				$output['ldap_errno'] = ldap_errno($ldap_conn);
 			}
 		} else {
 			/* unable to bind */
@@ -862,6 +883,8 @@ class Ldap {
 				/* general bind error */
 				$output = LdapError::GetErrorDetails(LdapError::ProtocolErrorBind, $ldap_conn, $this->host);
 			}
+
+			$output['ldap_errno'] = $ldap_error;
 		}
 
 		ldap_close($ldap_conn);
@@ -961,6 +984,7 @@ class Ldap {
 			} else {
 				/* no search results, user not found*/
 				$output = LdapError::GetErrorDetails(LdapError::SearchFoundNoUserDN);
+				$output['ldap_errno'] = ldap_errno($ldap_conn);
 			}
 		} else {
 			/* unable to bind */
@@ -984,6 +1008,8 @@ class Ldap {
 				/* general bind error */
 				$output = LdapError::GetErrorDetails(LdapError::ProtocolErrorBind, $ldap_conn, $this->host);
 			}
+
+			$output['ldap_errno'] = $ldap_error;
 		}
 
 		ldap_close($ldap_conn);
@@ -1013,6 +1039,76 @@ class Ldap {
 			return false;
 		}
 	}
+}
+
+/**
+ * cacti_ldap_server_unreachable - whether a failed response leaves the next
+ *   server in the list worth trying.  Only a server that could not be reached,
+ *   or could not secure the connection, qualifies.  A rejected password is the
+ *   same answer on every replica, and asking each of them counts one mistake
+ *   once per server toward the directory's own lockout.
+ *
+ * @param  (array|bool) $response - an Authenticate(), Search() or Getcn() response
+ *
+ * @return (bool) true when the next server should be tried
+ */
+function cacti_ldap_server_unreachable($response) {
+	if (!is_array($response) || !isset($response['error_num']) || $response['error_num'] == 0) {
+		return false;
+	}
+
+	switch ($response['error_num']) {
+		case LdapError::ProtocolErrorTls:
+		case LdapError::MissingLdapObject:
+		case LdapError::ConnectionUnavailable:
+		case LdapError::ConnectionTimeout:
+			return true;
+	}
+
+	/* OpenLDAP reports a lost server as -1, a timeout as -5 and a failed connect
+	 * as -11; busy (0x33) and unavailable (0x34) come from the server itself */
+	$unreachable = array(-1, -5, -11, 0x33, 0x34, 0x51, 0x55, 0x5b);
+
+	return isset($response['ldap_errno']) && in_array((int) $response['ldap_errno'], $unreachable, true);
+}
+
+/**
+ * cacti_ldap_bind_next_server - whether a failed user bind should move on to
+ *   the next server.  Besides an unreachable server, a rejected bind qualifies
+ *   in No Searching mode, as in 1.2.31: no server was asked whether the user
+ *   exists, so a rejection may only mean the user lives on another server.
+ *
+ * @param  (array|bool) $response       - an Authenticate() response
+ * @param  (bool)       $search_skipped - true when the DN came from the template, not a search
+ *
+ * @return (bool) true when the next server should be tried
+ */
+function cacti_ldap_bind_next_server($response, $search_skipped) {
+	if (cacti_ldap_server_unreachable($response)) {
+		return true;
+	}
+
+	return $search_skipped && is_array($response) && isset($response['error_num']) && $response['error_num'] == LdapError::Failure;
+}
+
+/**
+ * cacti_ldap_search_next_server - whether a failed user search should move on
+ *   to the next server.  Besides an unreachable server, a server that does not
+ *   hold the user qualifies, as in 1.2.31; the search binds only the service
+ *   account, so no user password is sent, and the user is then bound on the
+ *   server that found them.
+ *
+ * @param  (array|bool) $response - a Search() or Getcn() response
+ *
+ * @return (bool) true when the next server should be searched
+ */
+function cacti_ldap_search_next_server($response) {
+	if (cacti_ldap_server_unreachable($response)) {
+		return true;
+	}
+
+	return is_array($response) && isset($response['error_num']) &&
+		($response['error_num'] == LdapError::SearchFoundNoUser || $response['error_num'] == LdapError::SearchFoundNoUserDN);
 }
 
 /**
