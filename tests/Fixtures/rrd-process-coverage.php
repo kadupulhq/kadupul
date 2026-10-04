@@ -407,7 +407,7 @@ if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST
             $nativeSources = array_merge($nativeSources, array('tests/Unit/ManagerNativeCoverageTest.php', 'include/global_session.php'));
         }
     } elseif (defined('UTILITY_LOG_TEST_COVERAGE')) {
-        $nativeSources[] = 'tests/Symfony/UtilityLogPersistenceTest.php';
+        $nativeSources = array_merge($nativeSources, array('tests/Symfony/UtilityLogPersistenceTest.php', 'lib/html_utility.php', 'tests/Helpers/PhpSource.php'));
         $nativeProducer = 'tests/Fixtures/utility-log-native.php';
     } elseif (defined('STRING_PREDICATE_TEST_COVERAGE')) {
         $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/StringPredicateNativeTest.php', 'include/global_constants.php', 'lib/html.php'));
