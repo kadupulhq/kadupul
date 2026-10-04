@@ -60,6 +60,7 @@
       <file>Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
       <file>./Unit/Security/DataSourceAccessTest.php</file>
+      <file>./Unit/Security/Auth/TreeConfirmationAuthorizationTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

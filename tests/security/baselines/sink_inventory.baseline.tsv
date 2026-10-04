@@ -933,7 +933,7 @@ header_redirect	./tree.php:305	    header('Location: tree.php?header=false');
 header_redirect	./tree.php:530	            header('Location: tree.php');
 header_redirect	./tree.php:587	        header("Location: tree.php?header=false&action=edit&id=$tree_id");
 header_redirect	./tree.php:716	        header('Location: tree.php?header=false');
-header_redirect	./tree.php:784	        header('Location: tree.php?header=false');
+header_redirect	./tree.php:789	        header('Location: tree.php?header=false');
 header_redirect	./tree.php:81	        header('Location: tree.php?header=false');
 header_redirect	./tree.php:85	        header('Location: tree.php?header=false');
 header_redirect	./user_admin.php:101	        header('Location: user_admin.php?action=user_edit&header=false&tab=' . $association_tab . '&id=' . get_nfilter_request_var('id'));
