@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+
 $pingSource = file_get_contents(__DIR__ . '/../../lib/ping.php');
 $snmpSource = file_get_contents(__DIR__ . '/../../lib/snmp.php');
 $dqSource   = file_get_contents(__DIR__ . '/../../lib/data_query.php');
@@ -20,20 +22,17 @@ test('ping constructor casts timeout to int', function () use ($pingSource) {
 });
 
 test('snmp_escape_string always wraps Windows strings', function () use ($snmpSource) {
-    $start = strpos($snmpSource, 'function snmp_escape_string(');
-    $body = substr($snmpSource, $start, 500);
+    $body = test_php_function_source($snmpSource, 'snmp_escape_string');
     expect($body)->not->toContain('if (substr_count($string, SNMP_ESCAPE_CHARACTER))');
 });
 
 test('get_script_query_path uses cacti_escapeshellcmd on script path', function () use ($dqSource) {
-    $start = strpos($dqSource, 'function get_script_query_path(');
-    $body = substr($dqSource, $start, 800);
+    $body = test_php_function_source($dqSource, 'get_script_query_path');
     expect($body)->toContain('cacti_escapeshellcmd($parsed_script_path)');
 });
 
 test('get_script_query_path rejects path traversal', function () use ($dqSource) {
-    $start = strpos($dqSource, 'function get_script_query_path(');
-    $body = substr($dqSource, $start, 800);
+    $body = test_php_function_source($dqSource, 'get_script_query_path');
     expect(str_contains($body, "strpos(\$parsed_script_path, '..')"))->toBeTrue();
 });
 
@@ -48,8 +47,7 @@ test('data_query value_index_parse restores PCRE limits', function () use ($dqSo
 });
 
 test('data_query_duplicate uses strip_tags on name', function () use ($dqSource) {
-    $start = strpos($dqSource, 'function data_query_duplicate(');
-    $body = substr($dqSource, $start, 500);
+    $body = test_php_function_source($dqSource, 'data_query_duplicate');
     expect($body)->toContain('strip_tags($data_query_name)');
 });
 
