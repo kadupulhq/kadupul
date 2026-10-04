@@ -42,11 +42,8 @@ switch ($action) {
 
 		break;
 	default:
-		/* a session opened before the last password change is not logged in */
-		if (isset($_SESSION['sess_user_id']) && !auth_session_credentials_valid($_SESSION['sess_user_id'])) {
-			kill_session_var('sess_change_password');
-			kill_session_var('sess_user_id');
-		}
+		/* this page loads global.php, not auth.php, so it runs the per-request session check itself */
+		auth_session_enforce();
 
 		/**
 		 * If the user is not logged in, redirect back to the page they came

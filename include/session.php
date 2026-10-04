@@ -77,10 +77,67 @@ function cacti_db_session_read($id) {
 	return $session;
 }
 
+/**
+ * Keep the newer sess_last_activity when a slow request writes an older one.
+ *
+ * Database sessions have no request lock, so two requests for one session can
+ * finish out of order. The idle check reads this value, and an older write
+ * would expire a session whose newer request was still inside the limit.
+ *
+ * @param  (string) $stored The session blob already stored
+ * @param  (string) $data   The blob this request is about to store
+ *
+ * @return (string) $data, with sess_last_activity raised when the stored one is later
+ */
+function cacti_db_session_monotonic_activity($stored, $data) {
+	if (!is_string($stored) || !is_string($data)) {
+		return $data;
+	}
+
+	if (!preg_match('/(?:^|;)sess_last_activity\|i:(\d+);/', $stored, $old_activity)) {
+		return $data;
+	}
+
+	if (!preg_match('/(?:^|;)sess_last_activity\|i:(\d+);/', $data, $new_activity)) {
+		return $data;
+	}
+
+	if ((int) $old_activity[1] <= (int) $new_activity[1]) {
+		return $data;
+	}
+
+	$replaced = preg_replace(
+		'/((?:^|;)sess_last_activity\|i:)\d+;/',
+		'${1}' . $old_activity[1] . ';',
+		$data,
+		1
+	);
+
+	return is_string($replaced) ? $replaced : $data;
+}
+
 function cacti_db_session_write($id, $data) {
 	$access = time();
 
 	cacti_db_session_check();
+
+	$began = false;
+
+	try {
+		$began = db_begin_transaction();
+	} catch (Exception $e) {
+		$began = false;
+	}
+
+	if ($began) {
+		$stored = db_fetch_cell_prepared('SELECT data
+			FROM sessions
+			WHERE id = ?
+			FOR UPDATE',
+			array($id));
+		$data = cacti_db_session_monotonic_activity($stored, $data);
+	}
+
 
 	if (!isset($_SESSION['sess_user_id'])) {
 		session_decode($data);
@@ -115,6 +172,12 @@ function cacti_db_session_write($id, $data) {
 				user_agent = VALUES(user_agent),
 				transactions = transactions + 1',
 			array($id, $client_addr, $access, $data, $user_agent));
+	}
+
+	if ($began) {
+		if (!db_commit_transaction()) {
+			db_rollback_transaction();
+		}
 	}
 
 	return true;

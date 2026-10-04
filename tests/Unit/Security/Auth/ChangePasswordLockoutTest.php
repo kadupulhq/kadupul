@@ -20,7 +20,8 @@
  *
  * The shipped page runs in a child process from a directory whose
  * include/global.php is a stub over an in-memory user_auth table; the
- * lockout, policy and session binding functions are the shipped ones.
+ * lockout, policy, session binding and per-request session check functions
+ * are the shipped ones.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
@@ -119,6 +120,12 @@ function kill_session_var($name) {
 function cacti_header($location) {
 }
 
+function cacti_session_destroy() {
+}
+
+function cacti_session_start($regenerate = false) {
+}
+
 function cacti_log(...$args) {
 }
 
@@ -210,7 +217,7 @@ function db_execute_prepared($sql, $params = array()) {
 
 PHP;
 
-	foreach (array('auth_session_credential_key', 'auth_session_credentials_valid', 'auth_checkclear_lockout', 'auth_process_lockout_check', 'auth_process_lockout', 'secpass_check_pass') as $name) {
+	foreach (array('auth_session_credential_key', 'auth_session_credentials_valid', 'auth_session_epoch', 'auth_session_end_reason', 'auth_session_enforce', 'auth_checkclear_lockout', 'auth_process_lockout_check', 'auth_process_lockout', 'secpass_check_pass') as $name) {
 		$global .= cacti_test_function_source($auth, $name) . "\n\n";
 	}
 

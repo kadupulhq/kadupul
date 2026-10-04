@@ -150,6 +150,8 @@ $GLOBALS['probe'] = array(
 	'config'         => $scenario['config'] ?? array(),
 	'users'          => $scenario['users'] ?? array(),
 	'cache'          => $scenario['cache'] ?? array(),
+	'settings_user'  => $scenario['settings_user'] ?? array(),
+	'settings_user_fail' => !empty($scenario['settings_user_fail']),
 	'realms'         => $scenario['realms'] ?? null,
 	'groups'         => $scenario['groups'] ?? array(),
 	'group_members'  => $scenario['group_members'] ?? array(),
@@ -180,18 +182,23 @@ function probe_user_rows(string $sql, array $params) : array {
 		return array_values($GLOBALS['probe']['users']);
 	}
 
-	preg_match_all("/`?([a-z_]+)`?\s*=\s*(\?|'[^']*'|\d+)/i", $where, $matches, PREG_SET_ORDER);
+	preg_match_all("/`?([a-z_]+)`?\s*(!?=)\s*(\?|'[^']*'|\d+)/i", $where, $matches, PREG_SET_ORDER);
 
 	$bind    = 0;
 	$filters = array();
 
 	foreach ($matches as $match) {
-		$filters[] = array($match[1], $match[2] === '?' ? $params[$bind++] : trim($match[2], "'"));
+		$filters[] = array($match[1], $match[3] === '?' ? $params[$bind++] : trim($match[3], "'"), $match[2] === '!=');
 	}
 
 	foreach ($GLOBALS['probe']['users'] as $row) {
 		foreach ($filters as $filter) {
-			if (!array_key_exists($filter[0], $row) || (string) $row[$filter[0]] !== (string) $filter[1]) {
+			if ($filter[2]) {
+				/* a column the fixture leaves out holds the schema default, '' */
+				if ((string) ($row[$filter[0]] ?? '') === (string) $filter[1]) {
+					continue 2;
+				}
+			} elseif (!array_key_exists($filter[0], $row) || (string) $row[$filter[0]] !== (string) $filter[1]) {
 				continue 2;
 			}
 		}
@@ -260,6 +267,26 @@ function set_config_option($name, $value, $remote = false) {
 	$GLOBALS['probe']['config_writes'][] = array($name, $value);
 }
 
+function db_fetch_assoc_prepared($sql, $params = array(), $log = true) {
+	if (strpos($sql, 'FROM settings_user') !== false) {
+		if (!empty($GLOBALS['probe']['settings_user_fail'])) {
+			return false;
+		}
+
+		$rows = array();
+
+		foreach ($GLOBALS['probe']['settings_user'] as $row) {
+			if ($row['user_id'] == $params[0] && $row['name'] === $params[1]) {
+				$rows[] = array('value' => $row['value']);
+			}
+		}
+
+		return $rows;
+	}
+
+	return array();
+}
+
 function db_fetch_row_prepared($sql, $params = array(), $log = true) {
 	if (strpos($sql, 'FROM user_auth') === false || strpos($sql, 'user_auth_') !== false) {
 		return array();
@@ -272,9 +299,26 @@ function db_fetch_row_prepared($sql, $params = array(), $log = true) {
 
 function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true) {
 	if (strpos($sql, 'FROM user_auth_cache') !== false) {
+		/* a row carries its age in days; a lifetime clause in the query is applied to it */
+		$max_age = preg_match('/last_update\s*>=\s*NOW\(\)\s*-\s*INTERVAL\s+(\d+)\s+DAY/i', $sql, $interval) ? (int) $interval[1] : null;
+
 		foreach ($GLOBALS['probe']['cache'] as $row) {
+			if ($max_age !== null && ($row['age_days'] ?? 0) > $max_age) {
+				continue;
+			}
+
 			if ($row['user_id'] == $params[0] && $row['token'] === $params[1] && $row['hostname'] === $params[2]) {
 				return $row['user_id'];
+			}
+		}
+
+		return false;
+	}
+
+	if (strpos($sql, 'FROM settings_user') !== false) {
+		foreach ($GLOBALS['probe']['settings_user'] as $row) {
+			if ($row['user_id'] == $params[0] && $row['name'] === $params[1]) {
+				return $row['value'];
 			}
 		}
 
