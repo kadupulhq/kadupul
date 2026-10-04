@@ -21,6 +21,10 @@ function user_group_membership_run(array $request, array $existing = array(5)): 
     }
 
     return admin_action_probe_run(array(
+        'permission_sql' => true,
+        'permission_users' => array(7),
+        'permission_groups' => $existing,
+        'membership_rows' => ($request['drp_action'] ?? '') === '2' ? array(array(999,7)) : array(),
         'page' => 'user_admin.php',
         'functions' => array('form_actions'),
         'request' => $request + array('associate_groups' => 1, 'id' => 7),
@@ -33,17 +37,17 @@ function user_group_membership_run(array $request, array $existing = array(5)): 
 test('adding a user to a missing group is refused without writing', function () {
     $result = user_group_membership_run(array('drp_action' => '1', 'chk_999' => 'on'));
 
-    expect($result['executed'])->toBe(array())
-        ->and($result['messages'])->toBe(array('permission_denied'))
+    expect($result['memberships'])->toBe(array())
+        ->and($result['messages'])->toBe(array(2))
         ->and($result['headers'])->toBe(array('Location: user_admin.php?action=user_edit&header=false&tab=permsgr&id=7'))
-        ->and($result['logged'][0] ?? '')->toContain('missing User Group ID 999');
+        ->and((int) $result['epochs'][7])->toBe(1);
 });
 
 test('one missing group stops the whole request', function () {
     $result = user_group_membership_run(array('drp_action' => '1', 'chk_5' => 'on', 'chk_999' => 'on'));
 
-    expect($result['executed'])->toBe(array())
-        ->and($result['messages'])->toContain('permission_denied');
+    expect($result['memberships'])->toBe(array())
+        ->and($result['messages'])->toContain(2)->and((int) $result['epochs'][7])->toBe(1);
 });
 
 test('adding a user to an existing group writes through the parent group', function () {
@@ -53,8 +57,9 @@ test('adding a user to an existing group writes through the parent group', funct
     expect($result['messages'])->toBe(array())
         ->and($write)->toHaveCount(1)
         ->and($write[0]['sql'])->toContain('VALUES (?, ?)')
-        ->and($write[0]['params'])->toBe(array(5, 7))
-        ->and($result['resets'])->toBe(array('user:7'));
+        ->and($write[0]['params'])->toBe(array(7, 5))
+        ->and($result['memberships'])->toBe(array(array('group_id' => 5, 'user_id' => 7)))
+        ->and((int) $result['epochs'][7])->toBe(2);
 });
 
 test('removing a membership of a missing group still clears the row', function () {
@@ -63,5 +68,6 @@ test('removing a membership of a missing group still clears the row', function (
 
     expect($result['messages'])->toBe(array())
         ->and($delete)->toHaveCount(1)
-        ->and($delete[0]['params'])->toBe(array(999, 7));
+        ->and($delete[0]['params'])->toBe(array(7, 999))
+        ->and($result['memberships'])->toBe(array())->and((int) $result['epochs'][7])->toBe(2);
 });

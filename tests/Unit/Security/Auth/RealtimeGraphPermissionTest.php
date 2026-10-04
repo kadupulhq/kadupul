@@ -57,6 +57,7 @@ function read_config_option($name) {
 }
 function db_fetch_row_prepared(...$args) { return array(); }
 function db_fetch_cell_prepared(...$args) { return '1'; }
+function get_guest_account() { return 0; }
 function cacti_log(...$args) {}
 function __($text) { return $text; }
 function html_escape($text) { return htmlspecialchars((string) $text, ENT_QUOTES); }
@@ -128,6 +129,12 @@ dataset('refusals', array(
 
 test('a refused real-time request polls nothing and saves nothing', function ($action, $options, $message, $checks) {
     $run   = realtime_gate_run(array('action' => $action) + $options);
+    if ($message === 'Permission Denied') {
+        expect($run['polled'])->toBeFalse()->and($run['rendered'])->toBeFalse()
+            ->and($run['saved'])->toBe(array())->and($run['graph_checks'])->toBe($checks)
+            ->and($run['status'])->toBe(403)->and($run['output'])->toBe('');
+        return;
+    }
     $reply = json_decode($run['output'], true, 512, JSON_THROW_ON_ERROR);
 
     expect($run['polled'])->toBeFalse()

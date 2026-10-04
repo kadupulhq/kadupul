@@ -37,7 +37,8 @@ define('POLLER_VERBOSITY_DEBUG', 5);
 define('POLLER_VERBOSITY_LOW', 2);
 $db = new PDO('sqlite::memory:', options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $db->exec("CREATE TABLE user_auth(id INTEGER PRIMARY KEY,username TEXT,realm INTEGER,enabled TEXT,locked TEXT,password TEXT,lastfail INTEGER,failed_attempts INTEGER)");
-$db->exec("INSERT INTO user_auth VALUES(42,'alice',3,'on','','',0,0),(43,'other',3,'on','','',0,0)");
+$db->exec("INSERT INTO user_auth VALUES(42,'alice',1003,'on','','',0,0),(43,'other',1003,'on','','',0,0)");
+$db->exec("CREATE TABLE user_domains(domain_id INTEGER,domain_name TEXT,enabled TEXT,defdomain INTEGER); INSERT INTO user_domains VALUES(3,'Fixture','on',1)");
 $db->exec('CREATE TABLE user_log(username TEXT,user_id INTEGER,result INTEGER,ip TEXT,time TEXT)');
 function db_fetch_row_prepared($sql, $params = array())
 {
@@ -62,11 +63,23 @@ function db_execute_prepared($sql, $params = array())
 }
 function read_config_option($name)
 {
-    return $name === 'secpass_lockfailed' ? 2 : 0;
+    return $name === 'secpass_lockfailed' ? 2 : ($name === 'auth_method' ? 4 : 0);
 }
 function get_nfilter_request_var($name)
 {
-    return $name === 'realm' ? 3 : 'wrong-password';
+    return $name === 'realm' ? 1003 : 'wrong-password';
+}
+function get_filter_request_var($name)
+{
+    return (int) get_nfilter_request_var($name);
+}
+function db_fetch_assoc($sql)
+{
+    return $GLOBALS["db"]->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_fetch_cell($sql)
+{
+    return db_fetch_cell_prepared($sql);
 }
 function cacti_sizeof($rows)
 {

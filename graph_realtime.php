@@ -32,6 +32,9 @@ $is_guest = $user_id > 0 && $user_id === $guest_user_id;
 
 if (!$is_guest && !is_realm_allowed(25)) {
     http_response_code(403);
+    if (get_request_var('action') === '') {
+        print __('Permission Denied');
+    }
     exit;
 }
 
@@ -69,9 +72,8 @@ if (in_array(get_request_var('action'), array('init', 'timespan', 'interval', 'c
     if (read_config_option('realtime_enabled') == '') {
         $denied = __('Real-time has been disabled by your administrator.');
     } elseif (!is_realm_allowed(25)) {
-        $denied = __('Permission Denied');
-    } elseif (is_int($local_graph_id) && $local_graph_id > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id'])) {
-        $denied = __('Permission Denied');
+        http_response_code(403);
+        exit;
     }
 }
 
@@ -83,12 +85,6 @@ switch (get_request_var('action')) {
         $local_graph_id = get_filter_request_var('local_graph_id');
         if (!is_int($local_graph_id) || $local_graph_id < 1) {
             http_response_code(400);
-            exit;
-        }
-
-        $user_id = (int) ($_SESSION['sess_user_id'] ?? 0);
-        if ($user_id < 1 || !is_graph_allowed($local_graph_id, $user_id)) {
-            http_response_code(403);
             exit;
         }
 
@@ -112,6 +108,12 @@ switch (get_request_var('action')) {
                 'image_format'   => 'png'
             ));
 
+            exit;
+        }
+
+        $user_id = (int) ($_SESSION['sess_user_id'] ?? 0);
+        if ($user_id < 1 || !is_graph_allowed($local_graph_id, $user_id)) {
+            http_response_code(403);
             exit;
         }
 

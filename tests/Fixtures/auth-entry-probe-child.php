@@ -337,7 +337,7 @@ if (empty($scenario['real_sessions'])) {
     }
 
 } else {
-    require_once __DIR__ . '/PhpSource.php';
+    require_once __DIR__ . '/../Helpers/PhpSource.php';
     $functions = file_get_contents($root . '/lib/functions.php');
     foreach (array('cacti_session_start', 'cacti_session_regenerate', 'cacti_session_destroy') as $function) {
         eval(test_php_function_source($functions, $function));

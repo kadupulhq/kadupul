@@ -26,9 +26,8 @@ function db_fetch_cell_prepared(...$args) { return '1'; }
 function get_guest_account() { return 0; }
 function is_realm_allowed($realm) { return $realm === 25 && $GLOBALS['realmAllowed']; }
 function is_graph_allowed($id, $user) { return $id === 7 && $user === $GLOBALS['userId'] && $GLOBALS['graphAllowed']; }
+function __($message) { return $message; }
 function cacti_log(...$args) {}
-function is_realm_allowed($realm) { return true; }
-function is_graph_allowed($local_graph_id, $user) { return true; }
 function cacti_exec($binary, $args, &$output, $timeout) {
     if ($binary !== '/php path/php' || $timeout !== null || $args !== array(
         '-q', '/application path/poller_realtime.php', '--graph=7', '--interval=' . (int) $GLOBALS['step'],

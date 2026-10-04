@@ -18,8 +18,8 @@ if (isset($argv[3])) {
 $config = array();
 $db = new PDO('sqlite::memory:', options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $db->sqliteCreateFunction('NOW', static fn() => date('Y-m-d H:i:s'));
-$db->exec("CREATE TABLE user_auth(id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, lastfail INTEGER, failed_attempts INTEGER)");
-$db->exec("INSERT INTO user_auth VALUES(42,'alice',0,'on','','',0,0),(43,'alice',3,'on','','',0,0),(44,'foreign',0,'on','','',0,0)");
+$db->exec("CREATE TABLE user_auth(id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, lastfail INTEGER, failed_attempts INTEGER, password_change TEXT DEFAULT '', must_change_password TEXT DEFAULT '')");
+$db->exec("INSERT INTO user_auth(id,username,realm,enabled,locked,password,lastfail,failed_attempts) VALUES(42,'alice',0,'on','','',0,0),(43,'alice',3,'on','','',0,0),(44,'foreign',0,'on','','',0,0)");
 $db->exec('CREATE TABLE user_auth_cache(user_id INTEGER, hostname TEXT, last_update TEXT, token TEXT)');
 $db->exec('CREATE TABLE user_log(username TEXT,user_id INTEGER,result INTEGER,ip TEXT,time TEXT)');
 $old = str_repeat('a', 64);
