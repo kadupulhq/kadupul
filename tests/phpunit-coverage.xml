@@ -29,7 +29,7 @@
             <exclude>./handoff/PluginCspHandOffTest.php</exclude>
             <exclude>./handoff/SecurityHardening1_2xHandOffTest.php</exclude>
 
-            <!-- Pest 2 describe(); tests/composer.json pins Pest 1. -->
+            <!-- Describe-style tests remain excluded from this legacy coverage run. -->
             <exclude>./Unit/CactiAuthorizeTest.php</exclude>
             <exclude>./Unit/CactiBuildRemoteUrlTest.php</exclude>
             <exclude>./Unit/CactiHtmlContextEscapeTest.php</exclude>
@@ -107,6 +107,11 @@
         </testsuite>
     </testsuites>
     <coverage>
+        <report>
+            <clover outputFile="coverage.xml"/>
+        </report>
+    </coverage>
+    <source>
         <include>
             <directory suffix=".php">..</directory>
         </include>
@@ -123,8 +128,5 @@
             <directory>../rra</directory>
             <directory>../var</directory>
         </exclude>
-        <report>
-            <clover outputFile="coverage.xml"/>
-        </report>
-    </coverage>
+    </source>
 </phpunit>

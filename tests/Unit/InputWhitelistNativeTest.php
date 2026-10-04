@@ -7,8 +7,12 @@ use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
+require_once __DIR__ . '/../Helpers/PestCodeCoverageCompatibility.php';
+
 final class InputWhitelistNativeTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private array $running = [];
     private string $directory;
     private string $root;
@@ -161,7 +165,7 @@ final class InputWhitelistNativeTest extends TestCase
         self::assertSame($before, file_get_contents($this->directory . '/whitelist.json'));
     }
 
-    /** @dataProvider rejectedPaths */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rejectedPaths')]
     public function testInvalidExistingFileStatesPreserveBytesAndRejectSuccess(string $case): void
     {
         $path = $this->directory . '/whitelist.json';
@@ -346,7 +350,7 @@ final class InputWhitelistNativeTest extends TestCase
         self::assertSame(0, $status, $errors . $output);
         self::assertSame([$this->first => 'latest first', $this->second => 'old second'], $this->state());
     }
-    /** @dataProvider failedDatabaseSnapshots */
+    #[\PHPUnit\Framework\Attributes\DataProvider('failedDatabaseSnapshots')]
     public function testUnavailableAndEmptyDatabaseSnapshotsPreserveExistingWhitelist(string $case): void
     {
         $db = new PDO('sqlite:' . $this->directory . '/database.sqlite');

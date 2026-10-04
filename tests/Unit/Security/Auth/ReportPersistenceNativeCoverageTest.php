@@ -5,12 +5,15 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
 
 final class ReportPersistenceNativeCoverageTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
     public function testDeviceExpansionUsesRealTemplatePermissionsAndNaturalGraphOrdering(): void
     {
         $state = $this->runReport(array('operation' => 'expand-device', 'regexp' => '^Traffic', 'format' => false));
@@ -20,7 +23,7 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
         self::assertSame(array(70, 71, 80), array_column($state['items'], 'id'));
     }
 
-    /** @dataProvider emptyExpansionCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('emptyExpansionCases')]
     public function testEmptyAndDeniedExpansionsCannotRenderGraphs(array $scenario): void
     {
         $state = $this->runReport($scenario);
@@ -161,7 +164,7 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
         self::assertSame('cancel', $state['result']['drp_action']);
         self::assertSame('', $state['rendered']);
     }
-    /** @dataProvider addCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addCases')]
     public function testAddingReportItemsRespectsActualSqlOwnership(array $scenario, bool $accepted, int $itemType): void
     {
         $state = $this->runReport($scenario);
@@ -229,7 +232,7 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider reorderCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('reorderCases')]
     public function testReorderingCannotWriteOutsideTheAuthorizedReport(int $user, bool $accepted): void
     {
         $state = $this->runReport(array('operation' => 'reorder', 'user' => $user));
@@ -242,7 +245,7 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
         return array('owner' => array(42, true), 'other user' => array(55, false));
     }
 
-    /** @dataProvider removeCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('removeCases')]
     public function testRemovalUsesThePersistedParentOwner(array $scenario, array $remaining): void
     {
         $state = $this->runReport(array_merge(array('operation' => 'remove'), $scenario));
