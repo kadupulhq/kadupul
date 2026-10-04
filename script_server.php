@@ -289,21 +289,17 @@ while (1) {
 			 * passthru, exec satisfy function_exists() without ever loading a
 			 * script file, so the path guard cannot be gated on the function
 			 * being undefined. include_once() is idempotent, so re-running it
-			 * on cached entries is a no-op. The scripts_path setting is an
-			 * explicitly configured Cacti script root and may live outside the
-			 * web root, so it is an allowed containment root as well. */
+			 * on cached entries is a no-op. Script Server methods are confined
+			 * to the installation's scripts directory. */
 			$real_include = realpath($include_file);
-			$allowed_roots = [$config['base_path']];
-
-			if (!empty($config['scripts_path'])) {
-				$allowed_roots[] = $config['scripts_path'];
-			}
+			$script_root = realpath($config['base_path'] . DIRECTORY_SEPARATOR . 'scripts');
+			$allowed_roots = ($script_root === false) ? [] : [$script_root];
 
 			$path_ok = script_server_path_is_allowed($real_include, $allowed_roots);
 
 			if (!$path_ok) {
 				if ($real_include !== false) {
-					cacti_log("WARNING: Script file '$include_file' resolves outside base path. Rejected.", false, 'PHPSVR');
+					cacti_log("WARNING: Script file '$include_file' resolves outside scripts directory. Rejected.", false, 'PHPSVR');
 				} else {
 					cacti_log("WARNING: Script file '$include_file' could not be resolved. Rejected.", false, 'PHPSVR');
 				}
@@ -314,7 +310,7 @@ while (1) {
 
 			$include_file = $real_include;
 
-			if (!file_exists($include_file)) {
+			if (!is_file($include_file)) {
 				cacti_log('WARNING: PHP Script File to be included, does not exist', false, 'PHPSVR');
 				fputs(STDOUT, "U\n");
 				fflush(STDOUT);
@@ -344,10 +340,8 @@ while (1) {
 				continue;
 			}
 
-			/* Refuse to call PHP internals (system, passthru, exec, ...) and
-			 * any function whose source file lives outside base_path. The
-			 * script-server contract is to dispatch into user scripts in the
-			 * Cacti tree; anything else is a containment failure. */
+			/* Refuse PHP internals and functions that were not declared by the
+			 * selected script file. */
 			try {
 				$ref = new ReflectionFunction($function);
 			} catch (ReflectionException $e) {
@@ -379,8 +373,13 @@ while (1) {
 				$fn_real = str_replace('\\', '/', $fn_real);
 			}
 
-			if (!script_server_path_is_allowed($fn_real, $allowed_roots)) {
-				cacti_log("WARNING: Function '$function' defined outside base path ('$fn_file'). Rejected.", false, 'PHPSVR');
+			$include_cmp = str_replace('\\', '/', $include_file);
+			$path_matches = ($fn_real !== false) && ((DIRECTORY_SEPARATOR === '\\')
+				? strcasecmp($fn_real, $include_cmp) === 0
+				: $fn_real === $include_cmp);
+
+			if (!$path_matches) {
+				cacti_log("WARNING: Function '$function' was not defined by script file '$include_file'. Rejected.", false, 'PHPSVR');
 				fputs(STDOUT, "U\n");
 				fflush(STDOUT);
 				continue;
