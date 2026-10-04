@@ -3,10 +3,18 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Concrete route samples must preserve parent-child bindings and fail closed."""
 import unittest
-from entry_point_authorization import sample, route_fixtures, has_feature_realm
+from entry_point_authorization import BASELINE, entries, sample, route_fixtures, has_feature_realm
 
 
 class RouteSamples(unittest.TestCase):
+    def test_inventory_header_precedes_every_real_route(self):
+        lines = BASELINE.read_text().splitlines()
+        self.assertEqual('entry\tgate\tdetail', lines[0])
+        rows = entries()
+        self.assertEqual(len(lines) - 1, len(rows))
+        self.assertEqual(lines[1].split('\t')[0], rows[0][0])
+        self.assertNotIn(('entry', 'gate', 'detail'), rows)
+
     def test_feature_pages_are_probed_without_console_only_shortcut(self):
         for entry in ('app.php/data-inputs/actions/delete', 'app.php/links',
                       'app.php/graph-definitions/vdefs/{id}/items',
