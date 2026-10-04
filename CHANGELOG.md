@@ -98,6 +98,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Generate the audit baseline from a fresh install in CI and fail when its schema rows differ from the checked-in baseline. Fixes #453.
 - Audit both fresh installs and release-upgraded databases against the checked-in schema in CI. Fixes #452.
 - Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
 
