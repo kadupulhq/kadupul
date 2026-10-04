@@ -30,7 +30,7 @@ COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 
 # --- runtime ----------------------------------------------------------------
-FROM php@sha256:075b11566518bfa979bb9f2fe2e5359148326d659b15a2f414c2c305a0479a4e AS runtime
+FROM php@sha256:19642e172d3a542225225e202ddc2c11f67bdcbddf147b676c49338609b9290f AS runtime
 
 ARG VERSION=dev
 ARG TARGETARCH
