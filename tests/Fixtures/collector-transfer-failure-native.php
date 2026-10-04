@@ -47,9 +47,9 @@ $primary->beginTransaction();
 $error = null;
 try {
     if (($argv[1] ?? '') === 'bulk') {
-        (new DeviceBulkAssignmentWriter())->apply($primary, [3 => $remote], new DeviceState(7, 'fixture', '192.0.2.1', true, 0, 1, 0), new DeviceBulkAssignment('collector', 3));
+        (new DeviceBulkAssignmentWriter(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->apply($primary, [3 => $remote], new DeviceState(7, 'fixture', '192.0.2.1', true, 0, 1, 0), new DeviceBulkAssignment('collector', 3));
     } else {
-        (new DeviceCollectorTransfer())->apply($primary, [3 => $remote], 7, 1, 3);
+        (new DeviceCollectorTransfer(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->apply($primary, [3 => $remote], 7, 1, 3);
     }
 } catch (RuntimeException $failure) {
     $error = $failure->getMessage();

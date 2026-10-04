@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-03 19:59-0700\n"
+"POT-Creation-Date: 2026-10-03 21:25-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -12596,7 +12596,7 @@ msgstr "ΣΦΑΛΜΑ: Τα εύρη IP με τη μορφή εύρους1-εύρ
 #: lib/api_device.php:1373 lib/api_device.php:1560 lib/api_device.php:1564
 #: lib/api_device.php:1600 lib/api_device.php:1604 lib/api_device.php:1649
 #: lib/api_device.php:1653 lib/api_device.php:1714 lib/api_device.php:1718
-#: lib/utility.php:742
+#: lib/utility.php:743
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Η απομακρυσμένη δημοσκόπηση %s είναι κάτω, θα χρειαστεί να εκτελέσετε ένα FullSync μόλις ενεργοποιηθεί ξανά"
@@ -13452,7 +13452,7 @@ msgid "User Community"
 msgstr "Κοινότητα χρηστών"
 
 #: lib/functions.php:4206 lib/functions.php:4231 lib/html.php:2786
-#: lib/utility.php:1444
+#: lib/utility.php:1445
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
 
@@ -16775,191 +16775,191 @@ msgstr "Το γράφημα δεν δημιουργήθηκε για %s λόγω
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "ΣΗΜΕΊΩΣΗ: Το γράφημα δεν προστέθηκε για το ερώτημα δεδομένων %s και το ευρετήριο %s λόγω αποτυχίας επαλήθευσης προέλευσης δεδομένων"
 
-#: lib/utility.php:1152
+#: lib/utility.php:1153
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "Το MySQL 5.6+ και το MariaDB 10.0+ είναι εξαιρετικές εκδόσεις και είναι πολύ καλές εκδοχές για επιλογή. Βεβαιωθείτε ότι έχετε εκτελέσει την πιο πρόσφατη έκδοση, αν και καθορίζει ένα μακροχρόνιο ζήτημα δικτύωσης χαμηλού επιπέδου το οποίο προκαλεί πολλά προβλήματα με την αξιοπιστία της σπονδυλικής στήλης."
 
-#: lib/utility.php:1164
+#: lib/utility.php:1165
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "Συνιστάται να ενεργοποιήσετε το InnoDB σε οποιαδήποτε έκδοση %s μεγαλύτερη από 5.1."
 
-#: lib/utility.php:1177 lib/utility.php:1214
+#: lib/utility.php:1178 lib/utility.php:1215
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "Όταν χρησιμοποιείτε το Kadupul με γλώσσες διαφορετικές από την αγγλική, είναι σημαντικό να χρησιμοποιήσετε τον τύπο ταξινόμησης utf8mb4_unicode_ci καθώς ορισμένοι χαρακτήρες παίρνουν περισσότερα από ένα μόνο byte."
 
-#: lib/utility.php:1183 lib/utility.php:1189 lib/utility.php:1220
-#: lib/utility.php:1226
+#: lib/utility.php:1184 lib/utility.php:1190 lib/utility.php:1221
+#: lib/utility.php:1227
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "Όταν χρησιμοποιείτε το Kadupul με γλώσσες διαφορετικές από την αγγλική, είναι σημαντικό να χρησιμοποιήσετε το σύνολο χαρακτήρων utf8mb4 καθώς ορισμένοι χαρακτήρες παίρνουν περισσότερα από ένα μόνο byte."
 
-#: lib/utility.php:1202
+#: lib/utility.php:1203
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "Συνιστάται να ενεργοποιήσετε το InnoDB σε οποιαδήποτε έκδοση %s μεγαλύτερη από 5.1."
 
-#: lib/utility.php:1235
+#: lib/utility.php:1236
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "Ανάλογα με τον αριθμό των συνδέσεων και τη χρήση του συλλέκτη δεδομένων σπονδυλικής στήλης, το %s θα χρειαστεί πολλές συνδέσεις. Ο υπολογισμός για τη σπονδυλική στήλη είναι: total_connections = total_processes * (total_threads + script_servers + 1), τότε πρέπει να αφήσετε χώρο για συνδέσεις χρηστών, οι οποίοι θα αλλάξουν ανάλογα με τον αριθμό των ταυτόχρονων λογαριασμών σύνδεσης."
 
-#: lib/utility.php:1240
+#: lib/utility.php:1241
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "Η διατήρηση της μεγαλύτερης μνήμης cache του τραπέζι σημαίνει λιγότερες ανοικτές / κλειστές λειτουργίες κατά τη χρήση του innodb_file_per_table."
 
-#: lib/utility.php:1245
+#: lib/utility.php:1246
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "Με τις δυνατότητες απομακρυσμένης διερεύνησης, θα συγχρονίζονται μεγάλα ποσά δεδομένων από τον κύριο διακομιστή στους απομακρυσμένους παραλήπτες. Συνεπώς, διατηρήστε αυτήν την τιμή 16M ή μεγαλύτερη."
 
-#: lib/utility.php:1251
+#: lib/utility.php:1252
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "Εάν χρησιμοποιείτε το Kadupul Performance Booster και επιλέγετε μια μηχανή αποθήκευσης μνήμης, θα πρέπει να είστε προσεκτικοί για να ξεπλύνετε το ρυθμιστή απόδοσης Booster πριν το σύστημα ξεπεράσει το χώρο μνήμης. Αυτό γίνεται με δύο τρόπους, αρχικά μειώνοντας το μέγεθος της στήλης εξόδου σας στο σωστό μέγεθος. Αυτή η στήλη βρίσκεται στους πίνακες poller_output και poller_output_boost. Το δεύτερο πράγμα που μπορείτε να κάνετε είναι να διαθέσετε περισσότερη μνήμη στους πίνακες μνήμης. Έχουμε επιλέξει αυθαίρετα μια συνιστώμενη τιμή 10 %% μνήμης συστήματος, αλλά αν χρησιμοποιείτε SSD δίσκους ή έχετε μικρότερο σύστημα, μπορείτε να αγνοήσετε αυτή τη σύσταση ή να επιλέξετε διαφορετική μηχανή αποθήκευσης. Ενδέχεται να δείτε την αναμενόμενη κατανάλωση των πινάκων Performance Booster κάτω από την Κονσόλα -&gt; Συστήματα Utilities -&gt; View Boost Status."
 
-#: lib/utility.php:1257
+#: lib/utility.php:1258
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "Όταν εκτελείτε υποερωτήσεις, έχοντας ένα μεγαλύτερο προσωρινό μέγεθος πίνακα, κρατήστε αυτούς τους προσωρινούς πίνακες στη μνήμη."
 
-#: lib/utility.php:1263 lib/utility.php:1269
+#: lib/utility.php:1264 lib/utility.php:1270
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1275
+#: lib/utility.php:1276
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Όταν χρησιμοποιείτε χώρο αποθήκευσης InnoDB, είναι σημαντικό να διατηρείτε χωριστά τους πίνακες σας. Αυτό καθιστά τη διαχείριση των πινάκων απλούστερη για τους χρήστες με μεγάλο χρονικό διάστημα του %s. Εάν εκτελείτε αυτήν την περίοδο αυτήν τη στιγμή, μπορείτε να κάνετε μετεγκατάσταση στο χώρο αποθήκευσης ανά αρχείο ενεργοποιώντας τη λειτουργία και, στη συνέχεια, τρέχοντας μια μεταβολή δήλωση σε όλους τους πίνακες InnoDB."
 
-#: lib/utility.php:1281
+#: lib/utility.php:1282
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "Όταν χρησιμοποιείτε το innodb_file_per_table, είναι σημαντικό να ρυθμίσετε το innodb_file_format στο Barracuda. Αυτή η ρύθμιση θα επιτρέψει μεγαλύτερα ευρετήρια σημαντικά για ορισμένους πίνακες Kadupul."
 
-#: lib/utility.php:1287
+#: lib/utility.php:1288
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "Εάν τα τραπέζια σας έχουν πολύ μεγάλα ευρετήρια, πρέπει να λειτουργήσετε με το Barracuda innodb_file_format και το innodb_large_prefix ίσο με 1. Εάν δεν το κάνετε αυτό μπορεί να οδηγήσει σε προσθήκες που δεν μπορούν να δημιουργήσουν σωστά πίνακες."
 
-#: lib/utility.php:1293
+#: lib/utility.php:1294
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "Το InnoDB θα κρατήσει όσο το δυνατόν περισσότερους πίνακες και ευρετήρια στη μνήμη του συστήματος. Επομένως, θα πρέπει να κάνετε το innodb_buffer_pool αρκετά μεγάλο για να κρατήσετε όσο περισσότερους πίνακες και ευρετήριο στη μνήμη. Ο έλεγχος του μεγέθους του κατάλογο / var / lib / mysql / Kadupul θα βοηθήσει στον προσδιορισμό αυτής της τιμής. Συνιστούμε 25 %% από τα συστήματα σας για μνήμη, αλλά οι απαιτήσεις σας θα διαφέρουν ανάλογα με το μέγεθος των συστημάτων σας."
 
-#: lib/utility.php:1299
+#: lib/utility.php:1300
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Αυτές οι ρυθμίσεις θα πρέπει να παραμείνουν ΕΝΕΡΓΟ, εκτός εάν οι παρουσίες Kadupul εκτελούνται είτε σε ZFS είτε σε FusionI / O, τα οποία έχουν και τα δύο εσωτερικά περιοδικά για να εξυπηρετήσουν απότομες διακοπές λειτουργίας του συστήματος. Ωστόσο, εάν έχετε πολύ καλή ισχύ και τα συστήματά σας σπάνια κατεβαίνουν και έχετε αντίγραφα ασφαλείας, η απενεργοποίηση αυτής της ρύθμισης μπορεί να σας οδηγήσει σε αύξηση σχεδόν 50% στην απόδοση της βάσης δεδομένων."
 
-#: lib/utility.php:1304
+#: lib/utility.php:1305
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "Αυτό είναι όπου αποθηκεύονται τα μεταδεδομένα. Αν είχατε πολλά τραπέζια, θα ήταν χρήσιμο να αυξήσετε αυτό το ποσό."
 
-#: lib/utility.php:1309
+#: lib/utility.php:1310
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Τα ερωτήματα Rogue δεν πρέπει να αποσυνδεθούν από τη βάση δεδομένων για άλλους. Σκοτώστε αυτά τα ερωτήματα πριν σκοτώσουν το σύστημά σας."
 
-#: lib/utility.php:1314
+#: lib/utility.php:1315
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "Η μέγιστη απόδοση Ι / Ο συμβαίνει όταν χρησιμοποιείτε τη μέθοδο O_DIRECT για την εκκαθάριση σελίδων."
 
-#: lib/utility.php:1324
+#: lib/utility.php:1325
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "Ο ορισμός αυτής της τιμής σε 2 σημαίνει ότι θα ξεπλύνετε όλες τις συναλλαγές κάθε δευτερόλεπτο και όχι κατά τη διαδικασία δέσμευσης. Αυτό επιτρέπει στο %s να εκτελεί γραφή λιγότερο συχνά."
 
-#: lib/utility.php:1329
+#: lib/utility.php:1330
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η κατοχή πολλαπλών συνδέσμων io είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1337 lib/utility.php:1379
+#: lib/utility.php:1338 lib/utility.php:1380
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Από το %s %s, μπορείτε να ελέγξετε πόσο συχνά το %s ξεχειλίζει τις συναλλαγές στο δίσκο. Η προεπιλογή είναι 1 δευτερόλεπτο, αλλά σε υψηλά συστήματα εισόδου / εξόδου ρύθμιση σε τιμή μεγαλύτερη από 1 μπορεί να επιτρέψει δίσκο I / O να είναι πιο διαδοχική"
 
-#: lib/utility.php:1342
+#: lib/utility.php:1343
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η πολλαπλή ανάγνωση των νημάτων είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1347
+#: lib/utility.php:1348
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η ύπαρξη πολλαπλών κειμένων εγγραφής είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1353
+#: lib/utility.php:1354
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "Το %s θα διαιρέσει το innodb_buffer_pool σε περιοχές μνήμης για να βελτιώσει την απόδοση. Η μέγιστη τιμή είναι 64. Όταν το innodb_buffer_pool σας είναι μικρότερο από 1GB, θα πρέπει να χρησιμοποιήσετε το μέγεθος της πισίνας διαιρούμενο με 128MB. Συνεχίστε να χρησιμοποιείτε αυτήν την εξίσωση μέχρι το μέγιστο των 64."
 
-#: lib/utility.php:1353
+#: lib/utility.php:1354
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "Το %s θα διαιρέσει το innodb_buffer_pool σε περιοχές μνήμης για να βελτιώσει την απόδοση. Η μέγιστη τιμή είναι 64. Όταν το innodb_buffer_pool σας είναι μικρότερο από 1GB, θα πρέπει να χρησιμοποιήσετε το μέγεθος της πισίνας διαιρούμενο με 128MB. Συνεχίστε να χρησιμοποιείτε αυτήν την εξίσωση μέχρι το μέγιστο των 64."
 
-#: lib/utility.php:1359 lib/utility.php:1395
+#: lib/utility.php:1360 lib/utility.php:1396
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "Εάν διαθέτετε δίσκους SSD, χρησιμοποιήστε αυτήν την πρόταση. Εάν έχετε φυσικούς σκληρούς δίσκους, χρησιμοποιήστε 200 * τον αριθμό ενεργών μονάδων δίσκου στον πίνακα. Εάν χρησιμοποιείτε NVMe ή PCIe Flash, μπορούν να χρησιμοποιηθούν πολύ μεγαλύτεροι αριθμοί έως και 100000."
 
-#: lib/utility.php:1365 lib/utility.php:1401
+#: lib/utility.php:1366 lib/utility.php:1402
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "Εάν διαθέτετε δίσκους SSD, χρησιμοποιήστε αυτήν την πρόταση. Εάν διαθέτετε φυσικούς σκληρούς δίσκους, χρησιμοποιήστε 2000 * τον αριθμό ενεργών μονάδων δίσκου στον πίνακα. Εάν χρησιμοποιείτε NVMe ή PCIe Flash, μπορούν να χρησιμοποιηθούν πολύ μεγαλύτεροι αριθμοί έως 200000."
 
-#: lib/utility.php:1371 lib/utility.php:1407
+#: lib/utility.php:1372 lib/utility.php:1408
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "Εάν διαθέτετε δίσκους SSD, χρησιμοποιήστε αυτήν την πρόταση. Διαφορετικά, μην ορίσετε αυτήν τη ρύθμιση."
 
-#: lib/utility.php:1384
+#: lib/utility.php:1385
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η πολλαπλή ανάγνωση των νημάτων είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1389
+#: lib/utility.php:1390
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η ύπαρξη πολλαπλών κειμένων εγγραφής είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1420
+#: lib/utility.php:1421
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "Όταν χρησιμοποιείτε το MariaDB 10.2.4 και άνω, αυτή η ρύθμιση θα πρέπει να είναι απενεργοποιημένη εάν είναι ενεργοποιημένες οι ατομικές εγγραφές. Επομένως, ενεργοποιήστε τις ατομικές εγγραφές αντί για το buffer διπλής εγγραφής, καθώς θα αυξήσει την απόδοση."
 
-#: lib/utility.php:1427
+#: lib/utility.php:1428
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "Όταν χρησιμοποιείτε το MariaDB 10.2.4 και άνω, μπορείτε να χρησιμοποιήσετε ατομικές εγγραφές στο buffer διπλής εγγραφής για να αυξήσετε την απόδοση."
 
-#: lib/utility.php:1444
+#: lib/utility.php:1445
 #, php-format
 msgid "%s Tuning"
 msgstr "%s Συντονισμός"
 
-#: lib/utility.php:1444
+#: lib/utility.php:1445
 msgid "Note: Many changes below require a database restart"
 msgstr "Σημείωση: Πολλές αλλαγές παρακάτω απαιτούν την επανεκκίνηση της βάσης δεδομένων"
 
-#: lib/utility.php:1452
+#: lib/utility.php:1453
 msgid "Variable"
 msgstr "Μεταβλητή"
 
-#: lib/utility.php:1453
+#: lib/utility.php:1454
 msgid "Current Value"
 msgstr "Τρέχουσα αξία"
 
-#: lib/utility.php:1455
+#: lib/utility.php:1456
 msgid "Recommended Value"
 msgstr "Συνιστώμενη τιμή"
 
-#: lib/utility.php:1456
+#: lib/utility.php:1457
 msgid "Comments"
 msgstr "Σχόλια"
 
-#: lib/utility.php:2050
+#: lib/utility.php:2051
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "Η PHP %s είναι η έκδοση mimimum"
 
-#: lib/utility.php:2052
+#: lib/utility.php:2053
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "Ένα ελάχιστο όριο μνήμης %s MB"
 
-#: lib/utility.php:2054
+#: lib/utility.php:2055
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "Τουλάχιστον %s m χρόνος εκτέλεσης"
 
-#: lib/utility.php:2056
+#: lib/utility.php:2057
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "Μια έγκυρη ζώνη ώρας που ταιριάζει με τη MySQL και το σύστημα"
 
