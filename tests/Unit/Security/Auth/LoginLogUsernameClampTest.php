@@ -79,7 +79,7 @@ function compat_password_verify($password, $hash) {
 
 PHP;
 
-	foreach (array('auth_log_username', 'auth_password_too_long', 'auth_dummy_password_hash', 'secpass_login_process', 'local_auth_login_process') as $name) {
+	foreach (array('auth_log_username', 'auth_password_too_long', 'auth_dummy_password_hash', 'auth_login_throttle_check', 'secpass_login_process', 'local_auth_login_process') as $name) {
 		$source .= cacti_test_function_source($auth, $name) . "\n\n";
 	}
 
@@ -171,6 +171,11 @@ function get_client_addr() {
 
 function get_auth_realms($login = false) {
 	return array(0 => 'Local', 2 => 'Web Basic', 3 => 'LDAP', 1001 => 'Domain 1');
+}
+
+/* login throttling is off by default and has its own test */
+function auth_login_throttle_check($username, $realm) {
+	return false;
 }
 
 function auth_checkclear_lockout($username, $realm) {
