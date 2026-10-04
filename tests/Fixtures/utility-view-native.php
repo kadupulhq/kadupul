@@ -14,7 +14,7 @@ if (PHP_SAPI !== 'cli') {
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $managerView = $scenario['view'] === 'manager';
-$debugView = $scenario['view'] === 'debug';
+$debugView = in_array($scenario['view'], array('debug', 'debug-icons'), true);
 $cleanerView = $scenario['view'] === 'cleaner';
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
@@ -355,6 +355,12 @@ if ($cleanerView) {
 } elseif ($debugView) {
     ob_start();
     require $root . '/data_debug.php';
+    if ($scenario['view'] === 'debug-icons') {
+        // Full production helper calls, not extracted copies. The original
+        // controller above still executes against the owned real records.
+        $icons = array('status' => debug_icon($scenario['result']), 'valid' => debug_icon_valid_result($scenario['result']));
+        define('DEBUG_NATIVE_ICONS_RENDERED', true);
+    }
     if (($scenario['operation'] ?? '') === 'rerun') {
         debug_rerun(array(101));
     } elseif (($scenario['operation'] ?? '') === 'delete') {
@@ -380,10 +386,14 @@ if ($cleanerView) {
     };
 }
 $html = ob_get_clean();
-define('NATIVE_COVERAGE_COMPLETED', array('utility-view-observed:' . $scenario['view']));
+$completionMarkers = array('utility-view-observed:' . $scenario['view']);
+if (defined('DEBUG_NATIVE_ICONS_RENDERED')) {
+    $completionMarkers[] = 'debug-icons-rendered';
+}
+define('NATIVE_COVERAGE_COMPLETED', $completionMarkers);
 $after = array();
 foreach ($tables as $table) {
     $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
 }
 // This CLI-only fixture emits a JSON protocol, with HTML characters escaped.
-fwrite(STDOUT, json_encode(array('total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+fwrite(STDOUT, json_encode(array('icons' => $icons ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));

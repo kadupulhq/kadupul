@@ -963,47 +963,47 @@ function debug_view()
 function debug_icon_valid_result($result)
 {
     if ($result === '' || $result === false) {
-        return '<i class="fa fa-spinner fa-pulse fa-fw"></i>';
+        return '<i class="fa fa-spinner fa-pulse fa-fw" role="img" aria-label="' . __esc('Running') . '"></i>';
     }
 
     if ($result === '-') {
-        return '<i class="fa fa-info-circle"></i>';
+        return '<i class="fa fa-info-circle" role="img" aria-label="' . __esc('Not Applicable') . '"></i>';
     }
 
     if (is_array($result)) {
         foreach ($result as $variable => $value) {
             if (!prepare_validate_result($value)) {
-                return '<i class="fa fa-times" style="color:red"></i>';
+                return '<i class="fa fa-times" style="color:red" role="img" aria-label="' . __esc('Failed') . '"></i>';
             }
         }
 
-        return '<i class="fa fa-check" style="color:green"></i>';
+        return '<i class="fa fa-check" style="color:green" role="img" aria-label="' . __esc('Passed') . '"></i>';
     } elseif (prepare_validate_result($result)) {
-        return '<i class="fa fa-check" style="color:green"></i>';
+        return '<i class="fa fa-check" style="color:green" role="img" aria-label="' . __esc('Passed') . '"></i>';
     } else {
-        return '<i class="fa fa-times" style="color:red"></i>';
+        return '<i class="fa fa-times" style="color:red" role="img" aria-label="' . __esc('Failed') . '"></i>';
     }
 }
 
 function debug_icon($result)
 {
     if ($result === '' || $result === false) {
-        return '<i class="fa fa-spinner fa-pulse fa-fw"></i>';
+        return '<i class="fa fa-spinner fa-pulse fa-fw" role="img" aria-label="' . __esc('Running') . '"></i>';
     }
 
     if ($result === '-') {
-        return '<i class="fa fa-info-circle"></i>';
+        return '<i class="fa fa-info-circle" role="img" aria-label="' . __esc('Not Applicable') . '"></i>';
     }
 
     if ($result === 1 || $result === 'on') {
-        return '<i class="fa fa-check" style="color:green"></i>';
+        return '<i class="fa fa-check" style="color:green" role="img" aria-label="' . __esc('Passed') . '"></i>';
     }
 
     if ($result === 0 || $result === 'off') {
-        return '<i class="fa fa-times" style="color:red"></i>';
+        return '<i class="fa fa-times" style="color:red" role="img" aria-label="' . __esc('Failed') . '"></i>';
     }
 
-    return '<i class="fa fa-exclamation-triangle" style="color:orange"></i>';
+    return '<i class="fa fa-exclamation-triangle" style="color:orange" role="img" aria-label="' . __esc('Warning') . '"></i>';
 }
 
 function data_debug_filter()
