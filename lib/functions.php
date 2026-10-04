@@ -1973,7 +1973,7 @@ function is_hex_string(&$result) {
  */
 function prepare_validate_result(&$result) {
 	/* first trim the string */
-	$result = trim($result, "'\"\n\r");
+	$result = str_replace('!', ':', trim($result, "'\"\n\r"));
 
 	/* clean off ugly non-numeric data */
 	if (is_numeric($result)) {
