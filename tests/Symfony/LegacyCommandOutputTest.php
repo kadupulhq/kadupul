@@ -45,6 +45,26 @@ final class LegacyCommandOutputTest extends TestCase
         self::assertSame([], exec_into_array($command));
     }
 
+    public function testArgumentArrayKeepsQuotesAndCommandSeparatorsInsideEachArgument(): void
+    {
+        $arguments = [
+            'device" & echo injected:161',
+            'community" & echo injected',
+            'auth" & echo injected',
+        ];
+        $command = [
+            PHP_BINARY,
+            '-r',
+            'echo json_encode(array_slice($argv, 1), JSON_THROW_ON_ERROR);',
+            ...$arguments,
+        ];
+
+        self::assertSame(
+            [json_encode($arguments, JSON_THROW_ON_ERROR)],
+            (new LegacyCommandOutput())->linesFromArguments($command)
+        );
+    }
+
     public function testTrailingWhitespaceMatchesNativeExec(): void
     {
         $command = self::phpCommand('fwrite(STDOUT, "value  \\t\\nlast\\t \\ntrailing  \\t\\0\\n");');

@@ -64,9 +64,6 @@ cmd_exec	./lib/poller.php:88	                $fp = popen($command, 'rb');
 cmd_exec	./lib/rrd.php:225	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
 cmd_exec	./lib/rrd_maintenance.php:287	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
 cmd_exec	./lib/rrdcheck.php:836	    $process = proc_open($command, $fds, $pipes);
-cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
-cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
-cmd_exec	./lib/snmp.php:392			exec($command, $snmp_value);
 cmd_exec	./lib/snmpagent.php:642		/* add pollers of a distributed system (future) */
 cmd_exec	./lib/utility.php:1691						$nproc = system('nproc');
 cmd_exec	./lib/utility.php:1810			exec('wmic os get FreePhysicalMemory', $memInfo['FreePhysicalMemory']);
@@ -89,7 +86,7 @@ cmd_exec	./snmpagent_persist.php:66	    pclose(popen('start "CactiSNMPCache" /I 
 cmd_exec	./snmpagent_persist.php:68	    exec('ps -ef | grep -v grep | grep -v "sh -c" | grep snmpagent_mibcache.php', $output);
 cmd_exec	./snmpagent_persist.php:70	        exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./src/Graphing/Infrastructure/Rrd/LocalRrdtool.php:27	        $process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
-cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:36	            exec($commandLine, $lines, $status);
+cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:33	            exec($commandLine, $lines, $status);
 cmd_exec	./utilities.php:209	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
 cmd_exec	./utilities.php:227	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
 cmd_exec	./utilities.php:247	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
@@ -423,8 +420,8 @@ dynamic_include	./lib/rrd.php:4052	    include_once($config['library_path'] . '/
 dynamic_include	./lib/rrd.php:4792	        include($themefile);
 dynamic_include	./lib/rrdcheck.php:752	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:783	        include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
-dynamic_include	./lib/snmp.php:34		include_once($config['include_path'] . '/vendor/phpsnmp/classSNMP.php');
+dynamic_include	./lib/snmp.php:33	    include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
+dynamic_include	./lib/snmp.php:35	    include_once($config['include_path'] . '/vendor/phpsnmp/classSNMP.php');
 dynamic_include	./lib/snmpagent.php:316			include_once($config['base_path'] . '/plugins/maint/functions.php');
 dynamic_include	./lib/snmpagent.php:873				include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/template.php:1473		include_once($config['library_path'] . '/data_query.php');
