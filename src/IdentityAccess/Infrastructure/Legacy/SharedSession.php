@@ -24,6 +24,14 @@ final class SharedSession
 
     public function read(): array
     {
+        if ($this->pendingRevocation !== null) {
+            // A rejected identity cannot be resumed while its writer rolls back.
+            // Complete durable cleanup once the caller's transaction is finished.
+            if (!$this->database->get()->inTransaction()) {
+                $this->completeRevocation();
+            }
+            return [];
+        }
         $request = $this->requests->getCurrentRequest();
         if ($request === null || $request->cookies->count() === 0) {
             return [];
