@@ -376,6 +376,10 @@ jobs:
         mysql $MYSQL_AUTH_USR -e "GRANT ALL PRIVILEGES ON cacti.* TO 'cactiuser'@'localhost';"
         mysql $MYSQL_AUTH_USR -e "FLUSH PRIVILEGES;"
         mysql $MYSQL_AUTH_USR cacti < ${{ github.workspace }}/cacti.sql
+        # Seed the disposable login before any daemon or maintenance task starts.
+        # Otherwise an asynchronous audit can log the old seed after page checks clear logs.
+        password_hex=$(php -r 'echo bin2hex(password_hash("admin", PASSWORD_DEFAULT));')
+        mysql $MYSQL_AUTH_USR -e "UPDATE user_auth SET password=CONVERT(0x${password_hex} USING ascii) WHERE id = 1;" cacti
         mysql $MYSQL_AUTH_USR -e "INSERT INTO settings (name, value) VALUES ('path_php_binary', '/bin/php')" cacti
 
     - name: Prime Cacti config.php File
