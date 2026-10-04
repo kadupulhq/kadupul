@@ -59,7 +59,7 @@ final class UtilityLogPersistenceTest extends TestCase
                 $markers = ['retained-history-readback'];
                 $child = \NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-log-native.php', $scenario, $sources, $markers, ['utilities.php']);
                 if ($count === 1 && $current) {
-                    self::assertSame(26, \NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-log-native.php', $scenario, $sources, $markers, ['utilities.php'], 'lib/boost.php'));
+                    self::assertSame(28, \NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-log-native.php', $scenario, $sources, $markers, ['utilities.php'], 'lib/boost.php'));
                 }
                 $coverage->merge($child);
             }
