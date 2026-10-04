@@ -92,6 +92,8 @@ cmd_exec	./utilities.php:237	            $snmp_version = shell_exec(cacti_escape
 cmd_exec	./utilities.php:257	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
 dynamic_include	./automation_snmp.php:415	    #include_once($config['base_path'].'/plugins/mactrack/lib/automation_functions.php');
 dynamic_include	./automation_tree_rules.php:541	    include_once($config['base_path'] . '/lib/html_tree.php');
+dynamic_include	./bin/legacy-audit-upgrade.php:146	                        include_once($plugin . '/setup.php');
+dynamic_include	./bin/legacy-audit-upgrade.php:148	                            include_once($plugin . '/includes/database.php');
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_data_query.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/add_data_query.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');

@@ -92,6 +92,8 @@ cmd_exec	./utilities.php:257	            exec(cacti_escapeshellcmd(read_config_o
 deserialize	./lib/functions.php:5239	            $items = unserialize($unstripped, array('allowed_classes' => false));
 deserialize	./lib/functions.php:8615	    return @unserialize($strobj, array('allowed_classes' => false));
 dynamic_include	./automation_tree_rules.php:541	    include_once($config['base_path'] . '/lib/html_tree.php');
+dynamic_include	./bin/legacy-audit-upgrade.php:146	                        include_once($plugin . '/setup.php');
+dynamic_include	./bin/legacy-audit-upgrade.php:148	                            include_once($plugin . '/includes/database.php');
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_data_query.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/add_data_query.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
@@ -599,6 +601,7 @@ fs_write	./src/Graphing/Domain/PaletteCsv.php:101	        $stream = fopen('php:/
 fs_write	./src/Graphing/Domain/PaletteCsv.php:25	        $stream = fopen('php://temp', 'w+');
 fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:58	            $handle = fopen($path, 'r+b');
 fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:69	                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
+fs_write	./src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php:266	            $this->filesystem->dumpFile($path, $process->getOutput());
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:120	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
 fs_write	./tools/dependencies/install-legacy.php:68	    $source = fopen($url, 'rb', false, $context);
