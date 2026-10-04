@@ -67,6 +67,30 @@ function save_default_query_option()
     print __('Default Settings Saved') . "\n";
 }
 
+/**
+ * Find the first device the current user is allowed to access.
+ *
+ * @return int Allowed device ID, or zero when none are available
+ */
+function graphs_new_default_host_id()
+{
+    $total_rows = 0;
+    $devices = get_allowed_devices('', 'description, hostname', '1', $total_rows);
+
+    return cacti_sizeof($devices) ? (int) $devices[0]['id'] : 0;
+}
+
+/**
+ * Check whether the current user may use a device for graph creation.
+ *
+ * @param int $host_id Device ID
+ * @return bool
+ */
+function graphs_new_host_is_allowed($host_id)
+{
+    return (int) $host_id > 0 && is_device_allowed((int) $host_id);
+}
+
 function save_user_filter()
 {
     $rows = get_filter_request_var('rows');
@@ -102,6 +126,13 @@ function store_get_selected_dq_index($snmp_query_id)
 function form_save()
 {
     if (isset_request_var('save_component_graph')) {
+        $host_id = get_filter_request_var('host_id');
+        if (!graphs_new_host_is_allowed($host_id)) {
+            raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
+            header('Location: graphs_new.php?host_id=' . graphs_new_default_host_id() . '&header=false');
+            exit;
+        }
+
         $form_data = array();
 
         /* summarize the 'create graph from host template/snmp index' stuff into an array */
@@ -155,9 +186,16 @@ function form_save()
     }
 
     if (isset_request_var('save_component_new_graphs')) {
-        host_new_graphs_save(get_filter_request_var('host_id'));
+        $host_id = get_filter_request_var('host_id');
+        if (!graphs_new_host_is_allowed($host_id)) {
+            raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
+            header('Location: graphs_new.php?host_id=' . graphs_new_default_host_id() . '&header=false');
+            exit;
+        }
 
-        header('Location: graphs_new.php?host_id=' . get_filter_request_var('host_id') . '&header=false');
+        host_new_graphs_save($host_id);
+
+        header('Location: graphs_new.php?host_id=' . $host_id . '&header=false');
     }
 }
 
@@ -172,7 +210,13 @@ function host_reload_query()
     get_filter_request_var('host_id');
     /* ==================================================== */
 
-    run_data_query(get_request_var('host_id'), get_request_var('id'));
+    $host_id = get_request_var('host_id');
+    if (!graphs_new_host_is_allowed($host_id)) {
+        raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
+        return false;
+    }
+
+    run_data_query($host_id, get_request_var('id'));
 }
 
 /* -------------------
@@ -181,6 +225,11 @@ function host_reload_query()
 
 function host_new_graphs_save($host_id)
 {
+    if (!graphs_new_host_is_allowed($host_id)) {
+        cacti_log('WARNING: Graph creation rejected for a device the current user cannot access.', false, 'AUTH');
+        return false;
+    }
+
     $selected_graphs_array = cacti_unserialize(stripslashes(get_nfilter_request_var('selected_graphs_array')));
 
     $values = array();
@@ -307,7 +356,7 @@ function graphs()
         'host_id' => array(
             'filter' => FILTER_VALIDATE_INT,
             'pageset' => true,
-            'default' => db_fetch_cell('SELECT id FROM host ORDER BY description, hostname LIMIT 1')
+            'default' => graphs_new_default_host_id()
         ),
         'graph_type' => array(
             'filter' => FILTER_VALIDATE_INT,
@@ -317,6 +366,10 @@ function graphs()
 
     validate_store_request_vars($filters, 'sess_grn');
     /* ================= input validation ================= */
+    if (get_request_var('host_id') > 0 && !graphs_new_host_is_allowed(get_request_var('host_id'))) {
+        raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
+        set_request_var('host_id', graphs_new_default_host_id());
+    }
 
     if (get_request_var('rows') == '-1') {
         $rows = read_user_setting('num_rows_table', read_config_option('num_rows_table'), true);

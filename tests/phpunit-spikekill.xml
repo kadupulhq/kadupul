@@ -61,6 +61,7 @@
       <file>Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
       <file>./Unit/Security/DataSourceAccessTest.php</file>
       <file>./Unit/Security/Auth/TreeConfirmationAuthorizationTest.php</file>
+      <file>./Unit/Security/NewGraphDeviceAccessTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
