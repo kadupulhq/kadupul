@@ -98,6 +98,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Audit both fresh installs and release-upgraded databases against the checked-in schema in CI. Fixes #452.
 - Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
 
 - Exercise user-log cleanup against real MySQL and MariaDB, preserving each current account's latest login and token while removing failed and orphaned entries; collect coverage from the actual controller.
@@ -126,7 +127,6 @@ Targeting `v1.3.0`, the first planned application release. See
 - Make the documented `add_tree.php --node-type=site --site-id=ID` workflow create a site tree item, persist its `site_id`, and render its current site devices. Reject unknown site IDs before inserting a row. Fixes #235.
 
 - Reject tree CLI nodes with a missing tree, a missing or foreign parent, or a non-header parent; report failed node creation with a nonzero exit status. Fixes #236.
-
 - Limit profile heartbeat propagation to the matching data template as well as the local data source, so template rows sharing the zero local-data sentinel do not overwrite unrelated templates. Fixes #233.
 - Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 - Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny. Fixes #263.
@@ -134,7 +134,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Allow collector heartbeat updates during Inventory association and maintenance network work; revalidate collector configuration and availability immediately before commit.
 - Budget Inventory worker processes for every remote data-query request, preserving the existing local-work margin and the configured remote timeout cap.
 - Reject malformed association commands before mutation, propagate query refresh failures in strict workers, and publish authoritative primary changes before collector commits.
-- Reject tree CLI nodes with a missing tree, a missing or foreign parent, or a non-header parent; report failed node creation with a nonzero exit status. Fixes #236.
+- Restore the `data_input_data.data_input_field_id` index and normalize the `aggregate_graphs.created` timestamp during the 1.2.31 upgrade so upgraded databases match the fresh-install schema.
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
