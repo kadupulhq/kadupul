@@ -257,6 +257,17 @@ function get_allowed_devices($where)
 {
     return db_fetch_assoc('SELECT * FROM host ORDER BY description');
 }
+// Keep selected-device checks consistent with this renderer fixture's isolated
+// permission list. Production authorization is verified in the auth suites.
+function is_device_allowed($device_id)
+{
+    foreach (get_allowed_devices('') as $device) {
+        if ((int) $device['id'] === (int) $device_id) {
+            return true;
+        }
+    }
+    return false;
+}
 function __($text, ...$args)
 {
     return $args ? vsprintf($text, $args) : $text;
